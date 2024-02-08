@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
-require_once(__DIR__ . "/TransitionFactory.php");
+require_once(__DIR__ . '/TransitionFactory.php');
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

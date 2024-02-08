@@ -35,7 +35,7 @@ final class PathJoinUtil
         $path = implode('/', array_filter($elements, function ($element): bool {
             return self::notEmpty($element);
         }));
-        return preg_replace('%/{1,}%', "/", $path);
+        return preg_replace('%/{1,}%', '/', $path);
     }
 
     public static function userRepoPath($username, $namespace): string

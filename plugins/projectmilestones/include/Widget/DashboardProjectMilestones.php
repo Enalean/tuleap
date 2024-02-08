@@ -100,7 +100,7 @@ class DashboardProjectMilestones extends Widget
 
     public function getIcon(): string
     {
-        return "fa-map-signs";
+        return 'fa-map-signs';
     }
 
     public function getJavascriptAssets(): array

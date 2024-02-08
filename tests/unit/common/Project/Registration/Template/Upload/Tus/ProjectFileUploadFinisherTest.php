@@ -78,10 +78,10 @@ final class ProjectFileUploadFinisherTest extends TestCase
 
     public function testItDeletesTheSavedFileInDBWhenTheUploadIsFinished(): void
     {
-        $file_information = new FileBeingUploadedInformation(15, "test.zip", 996, 0);
+        $file_information = new FileBeingUploadedInformation(15, 'test.zip', 996, 0);
         $item_path        = $this->path_allocator->getPathForItemBeingUploaded($file_information);
 
-        copy(__DIR__ . "/_fixtures/test.zip", $item_path);
+        copy(__DIR__ . '/_fixtures/test.zip', $item_path);
 
         $this
             ->getFinisher(
@@ -94,10 +94,10 @@ final class ProjectFileUploadFinisherTest extends TestCase
 
     public function testItPostProcessTheUploadedFile(): void
     {
-        $file_information = new FileBeingUploadedInformation(15, "test.zip", 996, 0);
+        $file_information = new FileBeingUploadedInformation(15, 'test.zip', 996, 0);
         $item_path        = $this->path_allocator->getPathForItemBeingUploaded($file_information);
 
-        copy(__DIR__ . "/_fixtures/test.zip", $item_path);
+        copy(__DIR__ . '/_fixtures/test.zip', $item_path);
 
         $this
             ->getFinisher(
@@ -114,10 +114,10 @@ final class ProjectFileUploadFinisherTest extends TestCase
 
     public function testItThrowsWhenThereIsNoCurrentUser(): void
     {
-        $file_information = new FileBeingUploadedInformation(15, "test.zip", 996, 0);
+        $file_information = new FileBeingUploadedInformation(15, 'test.zip', 996, 0);
         $item_path        = $this->path_allocator->getPathForItemBeingUploaded($file_information);
 
-        copy(__DIR__ . "/_fixtures/test.zip", $item_path);
+        copy(__DIR__ . '/_fixtures/test.zip', $item_path);
 
         $this->expectException(ForbiddenException::class);
 
@@ -134,10 +134,10 @@ final class ProjectFileUploadFinisherTest extends TestCase
 
     public function testItThrowsWhenProjectCannotBeFound(): void
     {
-        $file_information = new FileBeingUploadedInformation(15, "test.zip", 996, 0);
+        $file_information = new FileBeingUploadedInformation(15, 'test.zip', 996, 0);
         $item_path        = $this->path_allocator->getPathForItemBeingUploaded($file_information);
 
-        copy(__DIR__ . "/_fixtures/test.zip", $item_path);
+        copy(__DIR__ . '/_fixtures/test.zip', $item_path);
 
         $this->expectException(ProjectNotFoundException::class);
 

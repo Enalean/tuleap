@@ -82,7 +82,7 @@ class UserPasswordCommand extends Command
         sodium_memzero($password_cleartext);
 
         if (! $this->password_sanity_checker->check($password)) {
-            throw new InvalidArgumentException("The provided password does not match the expected password policy.");
+            throw new InvalidArgumentException('The provided password does not match the expected password policy.');
         }
 
         $user->setPassword($password);

@@ -57,7 +57,7 @@ final class SystemEventTest extends RestBase
         $system_event_01 = $response_json[0];
         $this->assertEquals($system_event_01['id'], 1);
         $this->assertEquals($system_event_01['type'], 'Tuleap\\SystemEvent\\SystemEventUserActiveStatusChange');
-        $this->assertEquals($system_event_01['owner'], "root");
+        $this->assertEquals($system_event_01['owner'], 'root');
     }
 
     public function testOptions(): void

@@ -34,12 +34,12 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_cardwall_semantic_cardfields(
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_cardwall_semantic_cardfields(
             tracker_id int(11) NOT NULL,
             field_id int(11) NOT NULL,
             `rank` int(11) NOT NULL,
             PRIMARY KEY id_cardfields(tracker_id, field_id)
-        ) ENGINE=InnoDB";
+        ) ENGINE=InnoDB';
 
         $this->db->createTable('plugin_cardwall_semantic_cardfields', $sql);
     }

@@ -60,12 +60,12 @@ class UpdateSearchView implements DispatchableWithProject, DispatchableWithReque
             $this->columns_dao->saveColumns((int) $project->getID(), $columns);
             $layout->addFeedback(
                 \Feedback::INFO,
-                dgettext("tuleap-document", "Configuration of search view has been updated")
+                dgettext('tuleap-document', 'Configuration of search view has been updated')
             );
         } else {
             $layout->addFeedback(
                 \Feedback::ERROR,
-                dgettext("tuleap-document", "Invalid request")
+                dgettext('tuleap-document', 'Invalid request')
             );
         }
 

@@ -42,7 +42,7 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
     public function testValueIsNotEmptyIfSubmittingParent(): void
     {
         $submitted_value = [
-            "parent" => [
+            'parent' => [
                 '1004',
             ],
         ];
@@ -88,7 +88,7 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
     public function testValueIsNotEmptyIfRemovingSomeLinks(): void
     {
         $submitted_value = [
-            "removed_values" => [1004],
+            'removed_values' => [1004],
         ];
 
         self::assertFalse(
@@ -103,9 +103,9 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
     public function testValueIsEmptyIfNoDataAtAllForField(): void
     {
         $submitted_value = [
-            "new_values" => '',
-            "type" => '',
-            "parent" => [],
+            'new_values' => '',
+            'type' => '',
+            'parent' => [],
         ];
 
         self::assertTrue(
@@ -120,7 +120,7 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
     public function testValueIsEmptyIfRemovingAllLinks(): void
     {
         $submitted_value = [
-            "removed_values" => [1004, 1005],
+            'removed_values' => [1004, 1005],
         ];
 
         self::assertTrue(
@@ -136,7 +136,7 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
     {
         $field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
         $field->method('getReverseLinks')->willReturn([
-            new Tracker_ArtifactLinkInfo(1, "key", 101, 1, 1, null),
+            new Tracker_ArtifactLinkInfo(1, 'key', 101, 1, 1, null),
         ]);
 
         return $field;

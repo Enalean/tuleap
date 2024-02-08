@@ -101,7 +101,7 @@ final class PullRequestWithGitReferenceRetriever
         $repository = $this->git_repository_factory->getRepositoryById($repository_id);
 
         if (! $repository) {
-            throw new RestException(404, "Git repository not found");
+            throw new RestException(404, 'Git repository not found');
         }
 
         return $repository;

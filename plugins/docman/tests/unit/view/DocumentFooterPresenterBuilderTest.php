@@ -68,8 +68,8 @@ class DocumentFooterPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItShouldNotAddLinkWhenFolderIsNotInAMigratedView()
     {
         $item   = [
-            "parent_id" => 0,
-            "item_id"   => 100,
+            'parent_id' => 0,
+            'item_id'   => 100,
             'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
         ];
         $params = [
@@ -87,8 +87,8 @@ class DocumentFooterPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItShouldAddLinkWhenFolderIsInAMigratedView()
     {
         $item   = [
-            "parent_id" => 3,
-            "item_id"   => 100,
+            'parent_id' => 3,
+            'item_id'   => 100,
             'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
         ];
         $params = [

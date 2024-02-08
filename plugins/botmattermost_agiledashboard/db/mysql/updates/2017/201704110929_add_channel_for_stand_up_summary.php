@@ -38,20 +38,20 @@ EOT;
 
     public function up()
     {
-        $sql1 = "CREATE TABLE IF NOT EXISTS `plugin_botmattermost_agiledashboard_notification_channel` (
+        $sql1 = 'CREATE TABLE IF NOT EXISTS `plugin_botmattermost_agiledashboard_notification_channel` (
                     notification_id int(11) NOT NULL ,
                     channel_name VARCHAR(255) NOT NULL ,
                     PRIMARY KEY(notification_id, channel_name)
-                )";
-        $sql2 = "CREATE TABLE IF NOT EXISTS `plugin_botmattermost_agiledashboard_notification` (
+                )';
+        $sql2 = 'CREATE TABLE IF NOT EXISTS `plugin_botmattermost_agiledashboard_notification` (
                     id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
                     bot_id int(11) UNSIGNED NOT NULL ,
                     project_id int(11) UNSIGNED NOT NULL UNIQUE ,
                     send_time time NOT NULL
-                )";
+                )';
 
-        $sql3 = "INSERT INTO `plugin_botmattermost_agiledashboard_notification` (bot_id, project_id, send_time)
-                 SELECT * FROM plugin_botmattermost_agiledashboard";
+        $sql3 = 'INSERT INTO `plugin_botmattermost_agiledashboard_notification` (bot_id, project_id, send_time)
+                 SELECT * FROM plugin_botmattermost_agiledashboard';
 
         if ($this->db->dbh->exec($sql1) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating plugin_botmattermost_agiledashboard_notification_channel table: ' . implode(', ', $this->db->dbh->errorInfo()));

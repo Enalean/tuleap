@@ -244,7 +244,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     public function includeCalendarScripts()
     {
         $this->includeJavascriptSnippet("var useLanguage = '" . Codendi_HTMLPurifier::instance()->purify(substr($this->getUser()->getLocale(), 0, 2), CODENDI_PURIFIER_JS_QUOTE) . "';");
-        $this->includeJavascriptFile("/scripts/datepicker/datepicker.js");
+        $this->includeJavascriptFile('/scripts/datepicker/datepicker.js');
         return $this;
     }
 
@@ -350,7 +350,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $this->includeJavascriptPolyfills();
 
         $em = EventManager::instance();
-        $em->processEvent("javascript_file", ['layout' => $this]);
+        $em->processEvent('javascript_file', ['layout' => $this]);
 
         foreach ($this->javascript as $js) {
             if (isset($js['file'])) {
@@ -476,13 +476,13 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
         // Plugins css
         $em = $this->getEventManager();
-        $em->processEvent("cssfile", null);
+        $em->processEvent('cssfile', null);
 
         // Inline stylesheets
         echo '
         <style type="text/css">
         ';
-        $em->processEvent("cssstyle", null);
+        $em->processEvent('cssstyle', null);
         echo '
         </style>';
     }
@@ -572,11 +572,11 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     ): string {
         $hp = Codendi_HTMLPurifier::instance();
 
-        $format     = "yyyy-MM-dd";
+        $format     = 'yyyy-MM-dd';
         $date_class = 'tuleap_field_date';
 
         if ($is_time_displayed) {
-            $format     = "yyyy-MM-dd hh:mm";
+            $format     = 'yyyy-MM-dd hh:mm';
             $date_class = 'tuleap_field_datetime';
         }
 
@@ -735,7 +735,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         if (isset($this->bgpri[$index])) {
             return $this->bgpri[$index];
         } else {
-            return "";
+            return '';
         }
     }
 

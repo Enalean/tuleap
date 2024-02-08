@@ -34,9 +34,9 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_bugzilla_reference
+        $sql = 'ALTER TABLE plugin_bugzilla_reference
                 DROP COLUMN password,
-                ADD COLUMN api_key VARCHAR(255) NOT NULL";
+                ADD COLUMN api_key VARCHAR(255) NOT NULL';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

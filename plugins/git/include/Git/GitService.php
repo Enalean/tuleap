@@ -56,7 +56,7 @@ class GitService extends Service
 
     public static function getServiceUrlForProject(Project $project): string
     {
-        return GIT_BASE_URL . "/" . urlencode($project->getUnixNameLowerCase());
+        return GIT_BASE_URL . '/' . urlencode($project->getUnixNameLowerCase());
     }
 
     public function getUrl(?string $url = null): string

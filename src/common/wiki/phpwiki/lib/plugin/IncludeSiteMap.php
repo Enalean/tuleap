@@ -50,13 +50,13 @@ class WikiPlugin_IncludeSiteMap extends WikiPlugin_SiteMap
 {
     public function getName()
     {
-        return _("IncludeSiteMap");
+        return _('IncludeSiteMap');
     }
 
     public function getDescription()
     {
         return sprintf(
-            _("Include recursively all linked pages starting at %s"),
+            _('Include recursively all linked pages starting at %s'),
             $this->_pagename
         );
     }

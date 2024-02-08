@@ -32,11 +32,11 @@ class b201803211554_create_velocity_semantic_table extends ForgeUpgrade_Bucket /
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_velocity_semantic_field (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_velocity_semantic_field (
           tracker_id int(11) NOT NULL,
           field_id int(11) unsigned NOT NULL,
           PRIMARY KEY (tracker_id, field_id)
-        ) ENGINE=InnoDB";
+        ) ENGINE=InnoDB';
 
         $this->db->createTable('plugin_velocity_semantic_field', $sql);
     }

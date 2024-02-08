@@ -45,8 +45,8 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
-        $username = "mypreferredusername";
-        $this->userNameNormalizer->method("normalize")->with("mypreferredusername")->willReturn(
+        $username = 'mypreferredusername';
+        $this->userNameNormalizer->method('normalize')->with('mypreferredusername')->willReturn(
             $username
         );
 
@@ -66,9 +66,9 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule->method('isValid')->willReturn(true);
         $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
-        $username = "gfamilyname";
+        $username = 'gfamilyname';
 
-        $this->userNameNormalizer->method("normalize")->with($username)->willReturn(
+        $this->userNameNormalizer->method('normalize')->with($username)->willReturn(
             $username
         );
 
@@ -88,9 +88,9 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule->method('isValid')->willReturn(true);
         $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
-        $username = "familyname";
+        $username = 'familyname';
 
-        $this->userNameNormalizer->method("normalize")->with("familyname")->willReturn(
+        $this->userNameNormalizer->method('normalize')->with('familyname')->willReturn(
             $username
         );
 
@@ -109,9 +109,9 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule->method('isValid')->willReturn(true);
         $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
-        $username = "givenname";
+        $username = 'givenname';
 
-        $this->userNameNormalizer->method("normalize")->with($username)->willReturn(
+        $this->userNameNormalizer->method('normalize')->with($username)->willReturn(
             $username
         );
         $generated_username = $username_generator->getUsername(
@@ -129,7 +129,7 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule->method('isValid')->willReturn(true);
         $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
-        $this->userNameNormalizer->expects(self::never())->method("normalize");
+        $this->userNameNormalizer->expects(self::never())->method('normalize');
         $this->expectException(NotEnoughDataToGenerateUsernameException::class);
         $username_generator->getUsername([]);
     }
@@ -141,7 +141,7 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule->method('isValid')->willReturn(true);
         $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
-        $this->userNameNormalizer->method("normalize")->willThrowException(new DataIncompatibleWithUsernameGenerationException());
+        $this->userNameNormalizer->method('normalize')->willThrowException(new DataIncompatibleWithUsernameGenerationException());
         $this->expectException(
             DataIncompatibleWithUsernameGenerationException::class
         );
@@ -169,7 +169,7 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         });
         $username_generator = new UsernameGenerator(new UserNameNormalizer($rulename, new Slugify()));
 
-        $username = "gfamilyname";
+        $username = 'gfamilyname';
 
         $generated_username = $username_generator->getUsername(
             [

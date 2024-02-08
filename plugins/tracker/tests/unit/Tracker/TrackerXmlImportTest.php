@@ -407,10 +407,10 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_xml_importer->getInstanceFromXML(
             $xml,
             $this->project,
-            "tracker name",
-            "trcker description",
-            "bugs",
-            "peggy-pink",
+            'tracker name',
+            'trcker description',
+            'bugs',
+            'peggy-pink',
             []
         );
     }
@@ -437,7 +437,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getName')->andReturn("bugs");
+        $tracker->shouldReceive('getName')->andReturn('bugs');
         $tracker->shouldReceive('setCachePermission')
             ->with($this->contributors_ugroup_id, 'PLUGIN_TRACKER_ACCESS_FULL')->once();
         $tracker->shouldReceive('setCachePermission')->with(3, 'PLUGIN_TRACKER_ACCESS_FULL')->once();
@@ -490,7 +490,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
                   </tracker>'
         );
 
-        $expected_trackers = ["T101" => $xml_tracker1, "T102" => $xml_tracker2, "T103" => $xml_tracker3];
+        $expected_trackers = ['T101' => $xml_tracker1, 'T102' => $xml_tracker2, 'T103' => $xml_tracker3];
 
         $this->assertCount(3, $trackers_result);
         $this->assertEquals($expected_trackers, $trackers_result);
@@ -540,7 +540,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $hierarchy          = [];
         $expected_hierarchy = [444 => [555]];
-        $mapper             = ["T101" => 444, "T102" => 555];
+        $mapper             = ['T101' => 444, 'T102' => 555];
         $hierarchy          = $this->tracker_xml_importer->buildTrackersHierarchy($hierarchy, $tracker, $mapper);
 
         $this->assertNotEmpty($hierarchy);
@@ -552,7 +552,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $hierarchy          = [444 => [555]];
         $expected_hierarchy = [444 => [555, 666]];
-        $mapper             = ["T101" => 444, "T103" => 666];
+        $mapper             = ['T101' => 444, 'T103' => 666];
         $xml_tracker        = new SimpleXMLElement(
             '<tracker id="T103" parent_id="T101" instantiate_for_new_projects="1">
                     <name>t30</name>
@@ -601,9 +601,9 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected_mapping = [
-            "T101" => 444,
-            "T102" => 555,
-            "T103" => 666,
+            'T101' => 444,
+            'T102' => 555,
+            'T103' => 666,
         ];
 
         $this->assertEquals($expected_mapping, $result);
@@ -639,9 +639,9 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected_mapping = [
-            "T101" => 444,
-            "T102" => 555,
-            "T103" => 666,
+            'T101' => 444,
+            'T102' => 555,
+            'T103' => 666,
         ];
 
         $this->assertEquals($expected_mapping, $result);
@@ -655,9 +655,9 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockTracker103();
 
         $expected_mapping = [
-            "T101" => 444,
-            "T102" => 555,
-            "T103" => 666,
+            'T101' => 444,
+            'T102' => 555,
+            'T103' => 666,
         ];
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::type(ImportXMLProjectTrackerDone::class));
@@ -761,9 +761,9 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_xml_importer->getInstanceFromXML(
             $xml,
             $this->project,
-            "tracker name",
-            "trcker description",
-            "bugs",
+            'tracker name',
+            'trcker description',
+            'bugs',
             'peggy-pink',
             [],
             $feedback_collector,
@@ -807,15 +807,15 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->initXmlFieldMapping($xml, $tracker);
 
-        $this->feedback_collector->shouldReceive("addWarnings")
-            ->with("Tracker tracker_name : field field_2 (F692) has no permission")->once();
+        $this->feedback_collector->shouldReceive('addWarnings')
+            ->with('Tracker tracker_name : field field_2 (F692) has no permission')->once();
 
         $this->tracker_xml_importer->getInstanceFromXML(
             $xml,
             $this->project,
-            "tracker name",
-            "trcker description",
-            "bugs",
+            'tracker name',
+            'trcker description',
+            'bugs',
             'peggy-pink',
             [],
             $feedback_collector,
@@ -825,19 +825,19 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function initXmlFieldMapping(SimpleXMLElement $xml_tracker, Tracker $tracker): void
     {
-        $tracker->shouldReceive("getName")->andReturn("tracker_name");
+        $tracker->shouldReceive('getName')->andReturn('tracker_name');
 
         $this->tracker_factory->shouldReceive('getTrackerByShortnameAndProjectId')->andReturn($tracker);
         $field_1 = Mockery::mock(\Tracker_FormElement_Field::class);
-        $field_1->shouldReceive("getName")->andReturn("field_1");
-        $field_1->shouldReceive("hasCachedPermissions")->andReturn(true);
+        $field_1->shouldReceive('getName')->andReturn('field_1');
+        $field_1->shouldReceive('hasCachedPermissions')->andReturn(true);
 
         $field_2 = Mockery::mock(\Tracker_FormElement_Field::class);
-        $field_2->shouldReceive("getName")->andReturn("field_2");
-        $field_2->shouldReceive("hasCachedPermissions")->andReturn(false);
+        $field_2->shouldReceive('getName')->andReturn('field_2');
+        $field_2->shouldReceive('hasCachedPermissions')->andReturn(false);
 
-        $this->tracker_form_element_factory->shouldReceive("getFields")->andReturn([]);
-        $this->mapping_from_existing_tracker->shouldReceive("getXmlFieldsMapping")->andReturn(["F691" => $field_1, "F692" => $field_2]);
+        $this->tracker_form_element_factory->shouldReceive('getFields')->andReturn([]);
+        $this->mapping_from_existing_tracker->shouldReceive('getXmlFieldsMapping')->andReturn(['F691' => $field_1, 'F692' => $field_2]);
 
         $tracker->shouldReceive('getFormElementFields')->andReturn([
             $field_1,
@@ -886,7 +886,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $import_config       = Mockery::mock(ImportConfig::class);
         $extra_configuration = Mockery::mock(TrackerExtraConfiguration::class);
         $extra_configuration->shouldReceive('getServiceName')->andReturn(\trackerPlugin::SERVICE_SHORTNAME);
-        $extra_configuration->shouldReceive('getValue')->andReturn(["existing_tracker"]);
+        $extra_configuration->shouldReceive('getValue')->andReturn(['existing_tracker']);
 
         $this->tracker_form_element_factory->shouldReceive('getFields')->andReturn([]);
         $this->mapping_from_existing_tracker->shouldReceive('getXmlFieldsMapping');
@@ -947,7 +947,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name10', 'desc12', 'item11', 'inca-silver', [])
             ->once()->andReturns($tracker_101);
         $this->tracker_xml_importer->shouldReceive('createFromXML')
-            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name20', 'desc22', 'item21', 'inca-silver', ["T101" => 444])
+            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name20', 'desc22', 'item21', 'inca-silver', ['T101' => 444])
             ->once()->andReturns($tracker_102);
     }
 
@@ -956,7 +956,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_103 = Mockery::mock(Tracker::class);
         $tracker_103->shouldReceive('getId')->andReturn(666);
         $this->tracker_xml_importer->shouldReceive('createFromXML')
-            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name30', 'desc32', 'item31', 'inca-silver', ["T101" => 444, "T102" => 555])
+            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name30', 'desc32', 'item31', 'inca-silver', ['T101' => 444, 'T102' => 555])
             ->once()->andReturns($tracker_103);
     }
 }

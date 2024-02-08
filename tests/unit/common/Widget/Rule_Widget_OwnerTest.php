@@ -29,20 +29,20 @@ class Rule_Widget_OwnerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testOk(): void
     {
         $r = new Rule_Widget_Owner();
-        $this->assertTrue($r->isValid("u102"));
-        $this->assertTrue($r->isValid("g1023"));
-        $this->assertTrue($r->isValid("u1"));
-        $this->assertTrue($r->isValid("g1"));
+        $this->assertTrue($r->isValid('u102'));
+        $this->assertTrue($r->isValid('g1023'));
+        $this->assertTrue($r->isValid('u1'));
+        $this->assertTrue($r->isValid('g1'));
     }
 
     public function testBadFormat(): void
     {
         $r = new Rule_Widget_Owner();
-        $this->assertFalse($r->isValid("uw102"));
-        $this->assertFalse($r->isValid("10asd"));
-        $this->assertFalse($r->isValid("?"));
-        $this->assertFalse($r->isValid("a"));
-        $this->assertFalse($r->isValid("1"));
+        $this->assertFalse($r->isValid('uw102'));
+        $this->assertFalse($r->isValid('10asd'));
+        $this->assertFalse($r->isValid('?'));
+        $this->assertFalse($r->isValid('a'));
+        $this->assertFalse($r->isValid('1'));
         $this->assertFalse($r->isValid("\n"));
         $this->assertFalse($r->isValid("\0"));
     }

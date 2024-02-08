@@ -83,11 +83,11 @@ class LDAP_SyncMail
         try {
             $mail = $this->prepareMail($recipients, $unixProjectName, $subject, $body);
             if (! $mail->send()) {
-                $this->logger->error("LDAP daily synchro job has suspended this user " . $user->getRealName() . " (" . $user->getEmail() . ", but failed to notify administrators of <$unixProjectName> project (unix name)");
+                $this->logger->error('LDAP daily synchro job has suspended this user ' . $user->getRealName() . ' (' . $user->getEmail() . ", but failed to notify administrators of <$unixProjectName> project (unix name)");
                 $notificationStatus = false;
             }
         } catch (InvalidArgumentException $e) {
-            $this->logger->warning("LDAP daily synchro job has suspended this user " . $user->getRealName() . " (" . $user->getEmail() . ":" . $e->getMessage());
+            $this->logger->warning('LDAP daily synchro job has suspended this user ' . $user->getRealName() . ' (' . $user->getEmail() . ':' . $e->getMessage());
             $notificationStatus = false;
         }
         return $notificationStatus;

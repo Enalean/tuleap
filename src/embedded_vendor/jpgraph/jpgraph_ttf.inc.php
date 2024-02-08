@@ -9,42 +9,42 @@
 //========================================================================
 
 // TTF Font families
-define("FF_COURIER", 10);
-define("FF_VERDANA", 11);
-define("FF_TIMES", 12);
-define("FF_COMIC", 14);
-define("FF_ARIAL", 15);
-define("FF_GEORGIA", 16);
-define("FF_TREBUCHE", 17);
+define('FF_COURIER', 10);
+define('FF_VERDANA', 11);
+define('FF_TIMES', 12);
+define('FF_COMIC', 14);
+define('FF_ARIAL', 15);
+define('FF_GEORGIA', 16);
+define('FF_TREBUCHE', 17);
 
 // Gnome Vera font
 // Available from http://www.gnome.org/fonts/
-define("FF_VERA", 18);
-define("FF_VERAMONO", 19);
-define("FF_VERASERIF", 20);
+define('FF_VERA', 18);
+define('FF_VERAMONO', 19);
+define('FF_VERASERIF', 20);
 
 // Chinese font
-define("FF_SIMSUN", 30);
-define("FF_CHINESE", 31);
-define("FF_BIG5", 32);
+define('FF_SIMSUN', 30);
+define('FF_CHINESE', 31);
+define('FF_BIG5', 32);
 
 // Japanese font
-define("FF_MINCHO", 40);
-define("FF_PMINCHO", 41);
-define("FF_GOTHIC", 42);
-define("FF_PGOTHIC", 43);
+define('FF_MINCHO', 40);
+define('FF_PMINCHO', 41);
+define('FF_GOTHIC', 42);
+define('FF_PGOTHIC', 43);
 
 // Hebrew fonts
-define("FF_DAVID", 44);
-define("FF_MIRIAM", 45);
-define("FF_AHRON", 46);
+define('FF_DAVID', 44);
+define('FF_MIRIAM', 45);
+define('FF_AHRON', 46);
 
 // Dejavu-fonts http://sourceforge.net/projects/dejavu
-define("FF_DV_SANSSERIF", 47);
-define("FF_DV_SERIF", 48);
-define("FF_DV_SANSSERIFMONO", 49);
-define("FF_DV_SERIFCOND", 50);
-define("FF_DV_SANSSERIFCOND", 51);
+define('FF_DV_SANSSERIF', 47);
+define('FF_DV_SERIF', 48);
+define('FF_DV_SANSSERIFMONO', 49);
+define('FF_DV_SERIFCOND', 50);
+define('FF_DV_SANSSERIFCOND', 51);
 
 // Extra fonts
 // Download fonts from
@@ -54,30 +54,30 @@ define("FF_DV_SANSSERIFCOND", 51);
 // http://www.fontspace.com/category/famous
 
 // define("FF_SPEEDO",71);  // This font is also known as Bauer (Used for development gauge fascia)
-define("FF_DIGITAL", 72); // Digital readout font
-define("FF_COMPUTER", 73); // The classic computer font
-define("FF_CALCULATOR", 74); // Triad font
+define('FF_DIGITAL', 72); // Digital readout font
+define('FF_COMPUTER', 73); // The classic computer font
+define('FF_CALCULATOR', 74); // Triad font
 
-define("FF_USERFONT", 90);
-define("FF_USERFONT1", 90);
-define("FF_USERFONT2", 91);
-define("FF_USERFONT3", 92);
+define('FF_USERFONT', 90);
+define('FF_USERFONT1', 90);
+define('FF_USERFONT2', 91);
+define('FF_USERFONT3', 92);
 
 // Limits for fonts
-define("_FIRST_FONT", 10);
-define("_LAST_FONT", 99);
+define('_FIRST_FONT', 10);
+define('_LAST_FONT', 99);
 
 // TTF Font styles
-define("FS_NORMAL", 9001);
-define("FS_BOLD", 9002);
-define("FS_ITALIC", 9003);
-define("FS_BOLDIT", 9004);
-define("FS_BOLDITALIC", 9004);
+define('FS_NORMAL', 9001);
+define('FS_BOLD', 9002);
+define('FS_ITALIC', 9003);
+define('FS_BOLDIT', 9004);
+define('FS_BOLDITALIC', 9004);
 
 //Definitions for internal font
-define("FF_FONT0", 1);
-define("FF_FONT1", 2);
-define("FF_FONT2", 4);
+define('FF_FONT0', 1);
+define('FF_FONT1', 2);
+define('FF_FONT2', 4);
 
 //------------------------------------------------------------------------
 // Defines for font setup
@@ -89,19 +89,19 @@ define("FF_FONT2", 4);
 define('CHINESE_TTF_FONT', 'bkai00mp.ttf');
 
 // Special unicode greek language support
-define("LANGUAGE_GREEK", false);
+define('LANGUAGE_GREEK', false);
 
 // If you are setting this config to true the conversion of greek characters
 // will assume that the input text is windows 1251
-define("GREEK_FROM_WINDOWS", false);
+define('GREEK_FROM_WINDOWS', false);
 
 // Special unicode cyrillic language support
-define("LANGUAGE_CYRILLIC", false);
+define('LANGUAGE_CYRILLIC', false);
 
 // If you are setting this config to true the conversion
 // will assume that the input text is windows 1251, if
 // false it will assume koi8-r
-define("CYRILLIC_FROM_WINDOWS", false);
+define('CYRILLIC_FROM_WINDOWS', false);
 
 // The following constant is used to auto-detect
 // whether cyrillic conversion is really necessary
@@ -207,7 +207,7 @@ class LanguageConv
         for ($i = 0; $i < strlen($isoline); $i++) {
             $thischar = substr($isoline, $i, 1);
             $charcode = ord($thischar);
-            $uniline .= ($charcode > 175) ? "&#" . (1040 + ($charcode - 176)) . ";" : $thischar;
+            $uniline .= ($charcode > 175) ? '&#' . (1040 + ($charcode - 176)) . ';' : $thischar;
         }
         return $uniline;
     }
@@ -219,7 +219,7 @@ class LanguageConv
         for ($i = 0; $i < strlen($isoline); $i++) {
             $thischar = substr($isoline, $i, 1);
             $charcode = ord($thischar);
-            $uniline .= ($charcode > 179 && $charcode != 183 && $charcode != 187 && $charcode != 189) ? "&#" . (900 + ($charcode - 180)) . ";" : $thischar;
+            $uniline .= ($charcode > 179 && $charcode != 183 && $charcode != 187 && $charcode != 189) ? '&#' . (900 + ($charcode - 180)) . ';' : $thischar;
         }
         return $uniline;
     }
@@ -232,9 +232,9 @@ class LanguageConv
             $thischar = substr($winline, $i, 1);
             $charcode = ord($thischar);
             if ($charcode == 161 || $charcode == 162) {
-                $uniline .= "&#" . (740 + $charcode) . ";";
+                $uniline .= '&#' . (740 + $charcode) . ';';
             } else {
-                $uniline .= (($charcode > 183 && $charcode != 187 && $charcode != 189) || $charcode == 180) ? "&#" . (900 + ($charcode - 180)) . ";" : $thischar;
+                $uniline .= (($charcode > 183 && $charcode != 187 && $charcode != 189) || $charcode == 180) ? '&#' . (900 + ($charcode - 180)) . ';' : $thischar;
             }
         }
         return $uniline;

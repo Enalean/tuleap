@@ -41,7 +41,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifier implements VerifyStaticFiel
     ): bool {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
         if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
-            $logger->error(sprintf("Last changeset value is not a list for field #%d", $source_field->getId()));
+            $logger->error(sprintf('Last changeset value is not a list for field #%d', $source_field->getId()));
             return false;
         }
 
@@ -55,7 +55,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifier implements VerifyStaticFiel
             );
 
             if ($list_bind_value === null) {
-                $logger->debug(sprintf("Value %s not found in destination field #%d (%s)", $value->getId(), $destination_field->getId(), $destination_field->getName()));
+                $logger->debug(sprintf('Value %s not found in destination field #%d (%s)', $value->getId(), $destination_field->getId(), $destination_field->getName()));
                 return false;
             }
         }

@@ -41,7 +41,7 @@ class DeleteFailedException extends Exception
     public static function missingPermissionSubItems(): self
     {
         return new self(
-            "missing permission on a sub item",
+            'missing permission on a sub item',
             dgettext(
                 'tuleap-docman',
                 "Cannot delete this item because it contains items you are not allowed to modify (no 'Write' access, you may even not be able to read them). Please contact your document manager administrator."
@@ -52,7 +52,7 @@ class DeleteFailedException extends Exception
     public static function fromFile(\Docman_File $item): self
     {
         return new self(
-            "Missing permission to delete " . $item->getTitle(),
+            'Missing permission to delete ' . $item->getTitle(),
             sprintf(
                 dgettext(
                     'tuleap-docman',
@@ -74,7 +74,7 @@ class DeleteFailedException extends Exception
     public static function fromItem(\Docman_Item $item): self
     {
         return new self(
-            "Missing permission to delete " . $item->getTitle(),
+            'Missing permission to delete ' . $item->getTitle(),
             sprintf(
                 dgettext(
                     'tuleap-docman',
@@ -88,7 +88,7 @@ class DeleteFailedException extends Exception
     public static function fromFolder(Docman_Folder $item): self
     {
         return new self(
-            "Folder is not empty: " . $item->getTitle(),
+            'Folder is not empty: ' . $item->getTitle(),
             sprintf(
                 dgettext(
                     'tuleap-docman',

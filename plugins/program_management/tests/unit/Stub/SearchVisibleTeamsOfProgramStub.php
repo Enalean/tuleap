@@ -62,7 +62,7 @@ final class SearchVisibleTeamsOfProgramStub implements SearchVisibleTeamsOfProgr
             throw new ProgramHasNoTeamException($program);
         }
         if ($this->is_error_not_visible) {
-            throw new TeamIsNotVisibleException($program, $user, "project_name");
+            throw new TeamIsNotVisibleException($program, $user, 'project_name');
         }
         return $this->team_ids;
     }
@@ -73,7 +73,7 @@ final class SearchVisibleTeamsOfProgramStub implements SearchVisibleTeamsOfProgr
             throw new TeamIsNotAggregatedByProgramException($team_id, $program->getId());
         }
         if ($this->is_error_not_visible) {
-            throw new TeamIsNotVisibleException($program, $user, "project_name");
+            throw new TeamIsNotVisibleException($program, $user, 'project_name');
         }
         return $team_id;
     }

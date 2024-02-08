@@ -44,46 +44,46 @@ final class BindOpenValueForDuckTypingUpdaterTest extends TestCase
     {
         $xml                 = '<?xml version="1.0" encoding="UTF-8"?><artifacts />';
         $changeset_xml       = new SimpleXMLElement($xml);
-        $field_change        = $changeset_xml->addChild("field_change");
-        $field_change->value = "test";
+        $field_change        = $changeset_xml->addChild('field_change');
+        $field_change->value = 'test';
 
-        $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues(["test" => 309]);
+        $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues(['test' => 309]);
         $updater             = new BindOpenValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $updater->updateOpenValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        self::assertSame("test", (string) $changeset_xml->field_change[0]->value);
-        self::assertSame("label", (string) $changeset_xml->field_change[0]->value["format"]);
+        self::assertSame('test', (string) $changeset_xml->field_change[0]->value);
+        self::assertSame('label', (string) $changeset_xml->field_change[0]->value['format']);
     }
 
     public function testItBindsOpenValueWithStaticValues(): void
     {
         $xml                 = '<?xml version="1.0" encoding="UTF-8"?><artifacts />';
         $changeset_xml       = new SimpleXMLElement($xml);
-        $field_change        = $changeset_xml->addChild("field_change");
-        $field_change->value = "b101";
+        $field_change        = $changeset_xml->addChild('field_change');
+        $field_change->value = 'b101';
 
         $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([101 => 309]);
         $updater             = new BindOpenValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $updater->updateOpenValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        self::assertSame("309", (string) $changeset_xml->field_change[0]->value);
-        self::assertSame("id", (string) $changeset_xml->field_change[0]->value["format"]);
+        self::assertSame('309', (string) $changeset_xml->field_change[0]->value);
+        self::assertSame('id', (string) $changeset_xml->field_change[0]->value['format']);
     }
 
     public function testItBindsValueWithDefaultValue(): void
     {
         $xml                 = '<?xml version="1.0" encoding="UTF-8"?><artifacts />';
         $changeset_xml       = new SimpleXMLElement($xml);
-        $field_change        = $changeset_xml->addChild("field_change");
-        $field_change->value = "";
+        $field_change        = $changeset_xml->addChild('field_change');
+        $field_change->value = '';
 
         $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withoutAnyMatchingValue();
         $updater             = new BindOpenValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $this->target_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
-        $this->target_field->method("getDefaultValue")->willReturn("b309");
+        $this->target_field->method('getDefaultValue')->willReturn('b309');
         $updater->updateOpenValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        self::assertSame("309", (string) $changeset_xml->field_change[0]->value);
-        self::assertSame("id", (string) $changeset_xml->field_change[0]->value["format"]);
+        self::assertSame('309', (string) $changeset_xml->field_change[0]->value);
+        self::assertSame('id', (string) $changeset_xml->field_change[0]->value['format']);
     }
 }

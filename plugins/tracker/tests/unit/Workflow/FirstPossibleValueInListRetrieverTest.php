@@ -325,35 +325,35 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
     {
         $this->test_value_1        = new \Tracker_FormElement_Field_List_Bind_StaticValue(
             self::FIRST_VALUE_ID,
-            "value test 1",
+            'value test 1',
             'description',
             12,
             0
         );
         $this->test_value_2        = new \Tracker_FormElement_Field_List_Bind_StaticValue(
             self::SECOND_VALUE_ID,
-            "value test 2",
+            'value test 2',
             'description',
             12,
             0
         );
         $this->test_value_3        = new \Tracker_FormElement_Field_List_Bind_StaticValue(
             self::THIRD_VALUE_ID,
-            "value test 3",
+            'value test 3',
             'description',
             12,
             0
         );
         $this->test_value_4        = new \Tracker_FormElement_Field_List_Bind_StaticValue(
             self::FOURTH_VALUE_ID,
-            "value test 4",
+            'value test 4',
             'description',
             12,
             0
         );
         $this->value_from_artifact = new \Tracker_FormElement_Field_List_Bind_StaticValue(
             self::ORIGINAL_FIELD_CHANGED_VALUE_ID,
-            "value from artifact",
+            'value from artifact',
             'description',
             12,
             0
@@ -376,7 +376,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->condition_1 = $this->createStub(\Workflow_Transition_Condition_Permissions::class);
         $this->condition_2 = $this->createStub(\Workflow_Transition_Condition_Permissions::class);
 
-        $this->condition_factory->method("getPermissionsCondition")->willReturnCallback(
+        $this->condition_factory->method('getPermissionsCondition')->willReturnCallback(
             fn (Transition $transition): \Workflow_Transition_Condition_Permissions => match ($transition) {
                 $this->transition_1 => $this->condition_1,
                 $this->transition_2 => $this->condition_2,

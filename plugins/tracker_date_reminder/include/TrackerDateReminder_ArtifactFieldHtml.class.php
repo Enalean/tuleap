@@ -39,10 +39,10 @@ class TrackerDateReminder_ArtifactFieldHtml
         $notified_people  = db_result($res, 0, 'notified_people');
         $notified_groups  = [];
         $notified_users   = [];
-        if (trim($notified_people) != "") {
-            $notif = explode(",", $notified_people);
+        if (trim($notified_people) != '') {
+            $notif = explode(',', $notified_people);
             foreach ($notif as $value) {
-                if (preg_match("/^g/", $value)) {
+                if (preg_match('/^g/', $value)) {
                     array_push($notified_groups, $value);
                 } else {
                     array_push($notified_users, $value);
@@ -57,11 +57,11 @@ class TrackerDateReminder_ArtifactFieldHtml
         }
         $notif_type = db_result($res, 0, 'notification_type');
         if ($notif_type == 1) {
-            $after  = "selected";
-            $before = "";
+            $after  = 'selected';
+            $before = '';
         } else {
-            $after  = "";
-            $before = "selected";
+            $after  = '';
+            $before = 'selected';
         }
 
         $out = '';

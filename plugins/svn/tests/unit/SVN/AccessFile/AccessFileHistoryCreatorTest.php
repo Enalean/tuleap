@@ -102,7 +102,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository,
             1,
             1,
-            "[/] * = rw",
+            '[/] * = rw',
             time()
         );
 
@@ -125,7 +125,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository,
             1,
             1,
-            "[/] * = rw",
+            '[/] * = rw',
             time()
         );
 

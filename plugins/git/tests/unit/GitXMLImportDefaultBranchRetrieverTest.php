@@ -48,7 +48,7 @@ final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
         );
 
         self::assertSame(
-            "",
+            '',
             $default_branch,
         );
     }
@@ -75,7 +75,7 @@ final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
         );
 
         self::assertSame(
-            "master",
+            'master',
             $default_branch,
         );
     }
@@ -102,7 +102,7 @@ final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
         );
 
         self::assertSame(
-            "main",
+            'main',
             $default_branch,
         );
     }
@@ -129,7 +129,7 @@ final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
         );
 
         self::assertSame(
-            "test",
+            'test',
             $default_branch,
         );
     }
@@ -156,7 +156,7 @@ final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
         );
 
         self::assertSame(
-            "branch01",
+            'branch01',
             $default_branch,
         );
     }

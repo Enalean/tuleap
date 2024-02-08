@@ -38,7 +38,7 @@ class UserDao extends \Tuleap\DB\DataAccessObject
 
     public function searchAll(): array
     {
-        $sql = "SELECT * FROM user";
+        $sql = 'SELECT * FROM user';
         return $this->getDB()->run($sql);
     }
 
@@ -279,7 +279,7 @@ class UserDao extends \Tuleap\DB\DataAccessObject
                     last_access_date = ?
                 WHERE user_id = ?';
             $this->getDB()->run($sql, $time, $time, $user_id);
-            return 1 === $this->getDB()->cell("SELECT is_first_timer FROM user WHERE user_id = ?", $user_id);
+            return 1 === $this->getDB()->cell('SELECT is_first_timer FROM user WHERE user_id = ?', $user_id);
         });
     }
 
@@ -290,10 +290,10 @@ class UserDao extends \Tuleap\DB\DataAccessObject
      */
     public function storeLastAccessDate($user_id, $time): void
     {
-        $sql = "UPDATE user_access
+        $sql = 'UPDATE user_access
                 SET last_access_date = ?
                 WHERE user_id = ?
-                  AND last_access_date < ?";
+                  AND last_access_date < ?';
 
         $this->getDB()->run($sql, $time, $user_id, $time);
     }
@@ -307,10 +307,10 @@ class UserDao extends \Tuleap\DB\DataAccessObject
      */
     public function storeLoginFailure($login, $time): void
     {
-        $sql = "UPDATE user_access
+        $sql = 'UPDATE user_access
                 SET nb_auth_failure = IF(last_auth_success >= last_auth_failure, 1, nb_auth_failure + 1),
                 last_auth_failure = ?
-                WHERE user_id = (SELECT user_id from user WHERE user_name = ?)";
+                WHERE user_id = (SELECT user_id from user WHERE user_name = ?)';
         $this->getDB()->run($sql, $time, $login);
     }
 
@@ -324,12 +324,12 @@ class UserDao extends \Tuleap\DB\DataAccessObject
     {
         $name = '%' . $this->getDB()->escapeLikeValue($name) . '%';
 
-        $sql        = "SELECT SQL_CALC_FOUND_ROWS *" .
-            " FROM user" .
-            " WHERE (realname LIKE ?" .
-            " OR user_name LIKE ?)" .
+        $sql        = 'SELECT SQL_CALC_FOUND_ROWS *' .
+            ' FROM user' .
+            ' WHERE (realname LIKE ?' .
+            ' OR user_name LIKE ?)' .
             " AND status IN ('A', 'R')";
-        $sql       .= "ORDER BY realname ";
+        $sql       .= 'ORDER BY realname ';
         $limit_stmt = null;
         if ($limit > 0) {
             $limit_stmt = \ParagonIE\EasyDB\EasyStatement::open();
@@ -444,7 +444,7 @@ class UserDao extends \Tuleap\DB\DataAccessObject
         $from             = 'FROM user';
         $from_join_values = [];
         if ($group_id) {
-            $from              .= " INNER JOIN user_group ON (user.user_id = user_group.user_id AND user_group.group_id = ?)";
+            $from              .= ' INNER JOIN user_group ON (user.user_id = user_group.user_id AND user_group.group_id = ?)';
             $from_join_values[] = $group_id;
         }
 
@@ -478,7 +478,7 @@ class UserDao extends \Tuleap\DB\DataAccessObject
                     GROUP BY user_id
                 ) as member_of ON (member_of.user_id = user.user_id)
             $where
-            ORDER BY " . $sort_header . " " . $sort_order . ' ' . $limit;
+            ORDER BY " . $sort_header . ' ' . $sort_order . ' ' . $limit;
 
         return [
             'users'   => (array) $this->getDB()->safeQuery($sql, [...$from_join_values, ...$where_values, ...$limit_values]),
@@ -528,7 +528,7 @@ class UserDao extends \Tuleap\DB\DataAccessObject
 
     public function countAllUsers(): int
     {
-        $sql = "SELECT count(*) AS nb FROM user";
+        $sql = 'SELECT count(*) AS nb FROM user';
 
         return $this->getDB()->single($sql);
     }
@@ -549,7 +549,7 @@ class UserDao extends \Tuleap\DB\DataAccessObject
 
     public function removeConfirmHash($confirm_hash): void
     {
-        $sql = "UPDATE user SET confirm_hash = null WHERE confirm_hash=?";
+        $sql = 'UPDATE user SET confirm_hash = null WHERE confirm_hash=?';
         $this->getDB()->run($sql, $confirm_hash);
     }
 

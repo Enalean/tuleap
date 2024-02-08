@@ -84,7 +84,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         $forbid_writers_to_update = ! $this->forbid_writers_settings->areWritersAllowedToUpdateProperties((int) $project->getID());
         $forbid_writers_to_delete = ! $this->forbid_writers_settings->areWritersAllowedToDelete((int) $project->getID());
 
-        $renderer         = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
+        $renderer         = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
         $metadata_factory = new \Docman_MetadataFactory($project->getID());
         $renderer->renderToPage(
             'document-tree',
@@ -131,7 +131,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     {
         $docman_setting_bo = new \Docman_SettingsBo($project->getID());
 
-        return $docman_setting_bo->getMetadataUsage($label) === "1";
+        return $docman_setting_bo->getMetadataUsage($label) === '1';
     }
 
     private function getAssets(): IncludeAssets
@@ -153,7 +153,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project)
     {
         $layout->header(
-            HeaderConfigurationBuilder::get(dgettext('tuleap-document', "Document manager"))
+            HeaderConfigurationBuilder::get(dgettext('tuleap-document', 'Document manager'))
                 ->inProjectNotInBreadcrumbs($project, \DocmanPlugin::SERVICE_SHORTNAME)
                 ->withMainClass(['document-main'])
                 ->build()

@@ -36,19 +36,19 @@ class SemanticDoneDao extends DataAccessObject
      */
     public function getSelectedValues(int $tracker_id): array
     {
-        $sql = "SELECT value_id
+        $sql = 'SELECT value_id
                 FROM plugin_tracker_semantic_done
-                WHERE tracker_id = ?";
+                WHERE tracker_id = ?';
 
         return $this->getDB()->run($sql, $tracker_id);
     }
 
     public function isValueADoneValue(int $tracker_id, int $value_id): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_tracker_semantic_done
                 WHERE tracker_id = ?
-                  AND value_id = ?";
+                  AND value_id = ?';
 
         $rows = $this->getDB()->run($sql, $tracker_id, $value_id);
 

@@ -20,7 +20,7 @@ class b201510281350_add_incomingmail_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Add table to store incoming mail for artifact emailgateway";
+        return 'Add table to store incoming mail for artifact emailgateway';
     }
 
     public function preUp()
@@ -36,10 +36,10 @@ class b201510281350_add_incomingmail_table extends \Tuleap\ForgeUpgrade\Bucket
     private function createTable()
     {
         $this->exec(
-            "CREATE TABLE tracker_changeset_incomingmail(
+            'CREATE TABLE tracker_changeset_incomingmail(
                 changeset_id INT(11) NOT NULL PRIMARY KEY,
                 raw_mail TEXT NOT NULL
-            ) ENGINE=InnoDB",
+            ) ENGINE=InnoDB',
             'An error occured while adding tracker_changeset_incomingmail table.'
         );
     }

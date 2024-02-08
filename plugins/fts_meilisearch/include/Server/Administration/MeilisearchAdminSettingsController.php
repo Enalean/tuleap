@@ -48,7 +48,7 @@ final class MeilisearchAdminSettingsController implements DispatchableWithReques
         $key_local_meilisearch_server = $this->local_meilisearch_server->getCurrentKey();
         $is_using_local_server        = $key_local_meilisearch_server !== null;
         if ($is_using_local_server) {
-            throw new ForbiddenException("Cannot set url nor api key for a local meilisearch server");
+            throw new ForbiddenException('Cannot set url nor api key for a local meilisearch server');
         }
 
         $current_user = $this->current_user_provider->getCurrentUser();

@@ -27,7 +27,7 @@ final class ListToNowComparisonException extends InvalidFieldException
     public function __construct(Tracker_FormElement_Field $field)
     {
         $message = sprintf(
-            dgettext("tuleap-tracker", "The list field '%s' cannot be compared to NOW()."),
+            dgettext('tuleap-tracker', "The list field '%s' cannot be compared to NOW()."),
             $field->getName()
         );
         parent::__construct($message);

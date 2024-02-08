@@ -97,7 +97,7 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->logger->info("Previous GitLab webhook received.");
+        $this->logger->info('Previous GitLab webhook received.');
         $current_time = new DateTimeImmutable();
 
         try {

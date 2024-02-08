@@ -155,14 +155,14 @@ class Dao extends DataAccessObject
         if ($deletion_date) {
             $backup_path = $this->da->quoteSmart($backup_path);
         } else {
-            $backup_path = "NULL";
+            $backup_path = 'NULL';
         }
         $repository_id = $this->da->escapeInt($repository_id);
 
         if ($deletion_date) {
             $deletion_date = $this->da->quoteSmart($deletion_date);
         } else {
-            $deletion_date = "NULL";
+            $deletion_date = 'NULL';
         }
 
         $sql = "UPDATE plugin_svn_repositories SET
@@ -275,8 +275,8 @@ class Dao extends DataAccessObject
 
     public function countSVNCommits()
     {
-        $sql = "SELECT sum(svn_write_operations) AS nb
-                FROM plugin_svn_full_history";
+        $sql = 'SELECT sum(svn_write_operations) AS nb
+                FROM plugin_svn_full_history';
 
         $row = $this->retrieve($sql)->getRow();
 

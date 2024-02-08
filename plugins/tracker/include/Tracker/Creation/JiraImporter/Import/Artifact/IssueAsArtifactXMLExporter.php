@@ -80,7 +80,7 @@ class IssueAsArtifactXMLExporter
             $issue_api_representation
         );
 
-        $this->logger->debug("  |_ Exporting data for issue");
+        $this->logger->debug('  |_ Exporting data for issue');
         $this->data_changeset_xml_exporter->exportIssueDataInChangesetXML(
             $artifact_node,
             $jira_field_mapping_collection,
@@ -91,7 +91,7 @@ class IssueAsArtifactXMLExporter
         );
 
         //Export file info in XML
-        $this->logger->debug("  |_ Exporting attachements for issue");
+        $this->logger->debug('  |_ Exporting attachements for issue');
         $this->attachment_xml_exporter->exportCollectionOfAttachmentInXML(
             $attachment_collection,
             $artifact_node

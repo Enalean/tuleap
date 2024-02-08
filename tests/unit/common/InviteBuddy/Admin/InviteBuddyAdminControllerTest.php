@@ -95,7 +95,7 @@ final class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('renderANoFramedPresenter')
             ->with(
-                "Invitations",
+                'Invitations',
                 realpath(__DIR__ . '/../../../../../src/templates/admin/invitations'),
                 'invitations',
                 [

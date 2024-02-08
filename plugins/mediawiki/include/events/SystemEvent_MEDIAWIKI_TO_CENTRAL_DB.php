@@ -68,9 +68,9 @@ class SystemEvent_MEDIAWIKI_TO_CENTRAL_DB extends SystemEvent
     public function verbalizeParameters($with_link)
     {
         if ($this->areAllProjectsMigrated()) {
-            return "All projects";
+            return 'All projects';
         } else {
-            return "Project: " . $this->getProjectIdFromParameters();
+            return 'Project: ' . $this->getProjectIdFromParameters();
         }
     }
 }

@@ -33,7 +33,7 @@ class b202007221453_add_is_hidden_collumns_for_open_value extends \Tuleap\ForgeU
 
     public function up()
     {
-        $sql = "alter table tracker_field_openlist_value ADD COLUMN is_hidden BOOL DEFAULT FALSE";
+        $sql = 'alter table tracker_field_openlist_value ADD COLUMN is_hidden BOOL DEFAULT FALSE';
         $this->db->alterTable(
             'tracker_field_openlist_value',
             'tuleap',

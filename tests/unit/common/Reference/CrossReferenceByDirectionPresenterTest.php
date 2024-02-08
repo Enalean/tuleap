@@ -27,21 +27,21 @@ class CrossReferenceByDirectionPresenterTest extends \Tuleap\Test\PHPUnit\TestCa
 {
     public function testSortCrossReferenceNatureAlphabetically(): void
     {
-        $a_targets = new CrossReferenceNaturePresenter("A Targets", "", []);
-        $b_targets = new CrossReferenceNaturePresenter("b Targets", "", []);
+        $a_targets = new CrossReferenceNaturePresenter('A Targets', '', []);
+        $b_targets = new CrossReferenceNaturePresenter('b Targets', '', []);
 
-        $d_sources = new CrossReferenceNaturePresenter("d Sources", "", []);
-        $e_sources = new CrossReferenceNaturePresenter("E Sources", "", []);
-        $f_sources = new CrossReferenceNaturePresenter("f Sources", "", []);
+        $d_sources = new CrossReferenceNaturePresenter('d Sources', '', []);
+        $e_sources = new CrossReferenceNaturePresenter('E Sources', '', []);
+        $f_sources = new CrossReferenceNaturePresenter('f Sources', '', []);
 
         $nature = new CrossReferenceByDirectionPresenter([$e_sources, $d_sources, $f_sources], [$b_targets, $a_targets]);
 
         self::assertCount(2, $nature->targets_by_nature);
         self::assertCount(3, $nature->sources_by_nature);
-        self::assertEquals("A Targets", $nature->targets_by_nature[0]->label);
-        self::assertEquals("b Targets", $nature->targets_by_nature[1]->label);
-        self::assertEquals("d Sources", $nature->sources_by_nature[0]->label);
-        self::assertEquals("E Sources", $nature->sources_by_nature[1]->label);
-        self::assertEquals("f Sources", $nature->sources_by_nature[2]->label);
+        self::assertEquals('A Targets', $nature->targets_by_nature[0]->label);
+        self::assertEquals('b Targets', $nature->targets_by_nature[1]->label);
+        self::assertEquals('d Sources', $nature->sources_by_nature[0]->label);
+        self::assertEquals('E Sources', $nature->sources_by_nature[1]->label);
+        self::assertEquals('f Sources', $nature->sources_by_nature[2]->label);
     }
 }

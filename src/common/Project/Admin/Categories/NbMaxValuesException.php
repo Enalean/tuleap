@@ -45,7 +45,7 @@ final class NbMaxValuesException extends ProjectCategoriesException
     public function getI18NMessage(): string
     {
         return sprintf(
-            dgettext("tuleap-core", 'The category %d only allows %d values'),
+            dgettext('tuleap-core', 'The category %d only allows %d values'),
             $this->submitted_category_id,
             $this->nb_max_values,
         );

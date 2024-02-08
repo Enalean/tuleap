@@ -303,7 +303,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function getIcon(): string
     {
         $icon_name = $this->getIconName();
-        if ($icon_name !== "") {
+        if ($icon_name !== '') {
             return $this->getFontAwesomeIcon($icon_name);
         }
         throw new RuntimeException('Regular services must provide an icon');
@@ -314,7 +314,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getIconName(): string
     {
-        return self::ICONS[$this->getShortName()] ?? "";
+        return self::ICONS[$this->getShortName()] ?? '';
     }
 
     private function getFontAwesomeIcon(string $icon): string

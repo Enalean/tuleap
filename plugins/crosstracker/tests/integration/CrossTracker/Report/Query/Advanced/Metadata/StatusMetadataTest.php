@@ -108,7 +108,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@status = OPEN()",
+                '@status = OPEN()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -123,7 +123,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@status != OPEN()",
+                '@status != OPEN()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member

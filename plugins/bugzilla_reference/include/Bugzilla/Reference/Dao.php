@@ -47,7 +47,7 @@ class Dao extends \DataAccessObject
 
     public function searchAllReferences()
     {
-        $sql = "SELECT * FROM plugin_bugzilla_reference";
+        $sql = 'SELECT * FROM plugin_bugzilla_reference';
 
         return $this->retrieve($sql);
     }

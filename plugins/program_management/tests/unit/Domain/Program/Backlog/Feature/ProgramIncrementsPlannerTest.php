@@ -119,7 +119,7 @@ final class ProgramIncrementsPlannerTest extends \Tuleap\Test\PHPUnit\TestCase
                 GatherFieldValuesStub::withValues(
                     'outstream',
                     '',
-                    "commonmark",
+                    'commonmark',
                     1607291762,
                     1755522942,
                     ['improvisational']

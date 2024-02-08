@@ -441,7 +441,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
                     )
                 );
             $crumb = new BreadCrumb($crumb_link);
-            $crumb->setAdditionalClassname("breadcrumb-project");
+            $crumb->setAdditionalClassname('breadcrumb-project');
             $this->breadcrumbs->addFirst($crumb);
 
             $project_context = ProjectContextPresenter::build(

@@ -118,9 +118,9 @@ class ArtifactTest extends TrackerBase
     public function testPOSTArtifact()
     {
         $xml = "<request><tracker><id>$this->releases_tracker_id</id></tracker><values><item><field_id>" .
-            $this->release_name_field_id . "</field_id><value>Test Release</value></item><item><field_id>" .
-            $this->release_status_field_id . "</field_id><bind_value_ids><item>" .
-            $this->release_status_current_value_id . "</item></bind_value_ids></item></values></request>";
+            $this->release_name_field_id . '</field_id><value>Test Release</value></item><item><field_id>' .
+            $this->release_status_field_id . '</field_id><bind_value_ids><item>' .
+            $this->release_status_current_value_id . '</item></bind_value_ids></item></values></request>';
 
         $response = $this->getXMLResponse($this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream($xml)));
 
@@ -140,7 +140,7 @@ class ArtifactTest extends TrackerBase
     {
         $new_value = 'Test Release Updated';
         $xml       = "<request><tracker><id>$this->releases_tracker_id</id></tracker><values><item><field_id>" .
-            $this->release_name_field_id . "</field_id><value>" . $new_value . "</value></item></values></request>";
+            $this->release_name_field_id . '</field_id><value>' . $new_value . '</value></item></values></request>';
 
         $response = $this->getXMLResponse($this->request_factory->createRequest('PUT', 'artifacts/' . $artifact_id)->withBody($this->stream_factory->createStream($xml)));
 
@@ -152,7 +152,7 @@ class ArtifactTest extends TrackerBase
 
     public function testPOSTArtifactInXMLTracker()
     {
-        $xml = "<request><tracker><id>" . $this->tracker_id . "</id></tracker><values><item><field_id>" . $this->slogan_field_id . "</field_id><value>slogan</value></item><item><field_id>" . $this->desc_field_id . "</field_id><value>desc</value></item><item><field_id>" . $this->status_field_id . "</field_id><bind_value_ids><item>" . $this->status_value_id . "</item></bind_value_ids></item></values></request>";
+        $xml = '<request><tracker><id>' . $this->tracker_id . '</id></tracker><values><item><field_id>' . $this->slogan_field_id . '</field_id><value>slogan</value></item><item><field_id>' . $this->desc_field_id . '</field_id><value>desc</value></item><item><field_id>' . $this->status_field_id . '</field_id><bind_value_ids><item>' . $this->status_value_id . '</item></bind_value_ids></item></values></request>';
 
         $response = $this->getXMLResponse($this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream($xml)));
 
@@ -259,7 +259,7 @@ class ArtifactTest extends TrackerBase
      */
     public function testPOSTArtifactInXMLTrackerWithValuesByField()
     {
-        $xml = "<request><tracker><id>" . $this->tracker_id . "</id></tracker><values_by_field><slogan><value>Sloganv2</value></slogan><epic_desc><value><content>Descv2</content><format>html</format></value></epic_desc></values_by_field></request>";
+        $xml = '<request><tracker><id>' . $this->tracker_id . '</id></tracker><values_by_field><slogan><value>Sloganv2</value></slogan><epic_desc><value><content>Descv2</content><format>html</format></value></epic_desc></values_by_field></request>';
 
         $response = $this->getXMLResponse($this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream($xml)));
 

@@ -116,7 +116,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItMarkAsDoneWhenDumpWorks(): void
     {
-        $this->event->setParameters("7");
+        $this->event->setParameters('7');
 
         $this->gerrit_server_factory->shouldReceive('getServerById')->andReturns(\Mockery::spy(\Git_RemoteServer_GerritServer::class));
         $this->ssh_key_dumper->shouldReceive('dumpSSHKeys')->andReturns(true);
@@ -128,7 +128,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItMarkAsErrorWhenDumpDoesntWork(): void
     {
-        $this->event->setParameters("7");
+        $this->event->setParameters('7');
 
         $this->gerrit_server_factory->shouldReceive('getServerById')->andReturns(\Mockery::spy(\Git_RemoteServer_GerritServer::class));
         $this->ssh_key_dumper->shouldReceive('dumpSSHKeys')->andReturns(false);

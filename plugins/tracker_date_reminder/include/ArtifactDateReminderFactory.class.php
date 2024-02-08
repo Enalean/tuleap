@@ -344,7 +344,7 @@ class ArtifactDateReminderFactory
         );
         $res             = db_query($sql);
         $notif           = db_result($res, 0, 'notified_people');
-        $notif_array     = explode(",", $notif);
+        $notif_array     = explode(',', $notif);
         foreach ($notif_array as $item) {
             if ($item == 1) {
                 //Submitter
@@ -409,7 +409,7 @@ class ArtifactDateReminderFactory
                         }
                     }
                 }
-            } elseif (preg_match("/^g/", $item)) {
+            } elseif (preg_match('/^g/', $item)) {
                 // user-group
                 $ugr_id = (int) (substr($item, 1));
                 if ($ugr_id > 100) {
@@ -503,7 +503,7 @@ class ArtifactDateReminderFactory
         global $art_field_fact;
 
         $logger = new TrackerDateReminder_Logger_Prefix($this->logger, '[handleNotification]');
-        $logger->info("Start");
+        $logger->info('Start');
 
         $group          = ProjectManager::instance()->getProject($this->getGroupId());
         $at             = new ArtifactType($group, $this->getGroupArtifactId());
@@ -511,29 +511,29 @@ class ArtifactDateReminderFactory
         $field          = $art_field_fact->getFieldFromId($this->getFieldId());
         $art            = new Artifact($at, $this->getArtifactId(), false);
 
-        $logger->info("tracker: " . $this->getGroupArtifactId());
-        $logger->info("artifact: " . $this->getArtifactId());
+        $logger->info('tracker: ' . $this->getGroupArtifactId());
+        $logger->info('artifact: ' . $this->getArtifactId());
 
         $sent = true;
-        $week = date("W", $this->getDateValue());
+        $week = date('W', $this->getDateValue());
 
         $mail = new Codendi_Mail();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
-        $mail->setSubject("[" . $this->getTrackerName() . "] " . sprintf(dgettext('tuleap-tracker_date_reminder', 'Reminder: \'%1$s\' %2$s for \'%3$s\''), $field->getLabel(), date("j F Y", $this->getDateValue()), $art->getSummary()));
+        $mail->setSubject('[' . $this->getTrackerName() . '] ' . sprintf(dgettext('tuleap-tracker_date_reminder', 'Reminder: \'%1$s\' %2$s for \'%3$s\''), $field->getLabel(), date('j F Y', $this->getDateValue()), $art->getSummary()));
 
-        $body = "\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Codex was asked to remind you today that the \'%1$s\' in the artifact below is %2$s (Week %3$s).'), $field->getLabel(), date("l j F Y", $this->getDateValue()), $week) .
+        $body = "\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Codex was asked to remind you today that the \'%1$s\' in the artifact below is %2$s (Week %3$s).'), $field->getLabel(), date('l j F Y', $this->getDateValue()), $week) .
         "\n\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Project: \'%1$s\''), $group->getPublicName()) .
         "\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Tracker: \'%1$s\''), $this->getTrackerName()) .
         "\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Artifact: \'%1$s\''), $art->getSummary()) .
-        "\n" . $field->getLabel() . ": " . date("D j F Y", $this->getDateValue()) .
+        "\n" . $field->getLabel() . ': ' . date('D j F Y', $this->getDateValue()) .
         "\n\n" . dgettext('tuleap-tracker_date_reminder', 'You can access the artifact here:') .
-        "\n" . \Tuleap\ServerHostname::HTTPSUrl() . "/tracker/?func=detail&aid=" . $this->getArtifactId() . "&atid=" . $this->getGroupArtifactId() . "&group_id=" . $this->getGroupId() .
+        "\n" . \Tuleap\ServerHostname::HTTPSUrl() . '/tracker/?func=detail&aid=' . $this->getArtifactId() . '&atid=' . $this->getGroupArtifactId() . '&group_id=' . $this->getGroupId() .
         "\n\n______________________________________________________________________" .
         "\n" . dgettext('tuleap-tracker_date_reminder', 'This is an automatic message sent by Codex. Please do not reply to this email.') . "\n";
         $mail->setBodyText($body);
 
         $allNotified = $this->getNotifiedPeople();
-        $logger->info("notify: " . implode(', ', $allNotified));
+        $logger->info('notify: ' . implode(', ', $allNotified));
         foreach ($allNotified as $notified) {
             $mail->setTo($notified);
             if (! $mail->send()) {
@@ -542,7 +542,7 @@ class ArtifactDateReminderFactory
             }
         }
 
-        $logger->info("End");
+        $logger->info('End');
 
         return $sent;
     }
@@ -559,7 +559,7 @@ class ArtifactDateReminderFactory
      */
     public function checkReminderStatus($current_time)
     {
-        $this->logger->info("Start");
+        $this->logger->info('Start');
 
         $notificationSent = $this->getNotificationSent();
         $recurse          = $this->getRecurse();
@@ -572,7 +572,7 @@ class ArtifactDateReminderFactory
                 //previous notification mails were not sent (for different possible reasons: push to prod of the feature, mail server crash, bug, etc)
                 //in this case, re-adjust 'notification_sent' field
                 $this->updateNotificationSent($notificationToBeSent);
-                $this->logger->warn("update notification sent");
+                $this->logger->warn('update notification sent');
             }
 
             $next_day = intval($this->getNextReminderDate() + 24 * 3600);
@@ -582,9 +582,9 @@ class ArtifactDateReminderFactory
                     $this->updateNotificationSent();
                 }
             } else {
-                $this->logger->info("out of notification period");
+                $this->logger->info('out of notification period');
             }
         }
-        $this->logger->info("End");
+        $this->logger->info('End');
     }
 }

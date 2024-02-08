@@ -31,7 +31,7 @@ use Tuleap\Event\Dispatchable;
  */
 class AfterArtifactCopiedEvent implements Dispatchable
 {
-    public const NAME = "afterArtifactCopiedEvent";
+    public const NAME = 'afterArtifactCopiedEvent';
     public function __construct(
         private Tracker_XML_Importer_ArtifactImportedMapping $artifact_imported_mapping,
         private Project $project,

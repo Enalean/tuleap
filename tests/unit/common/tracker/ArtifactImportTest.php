@@ -328,15 +328,15 @@ final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $parsed_comments = [];
         $art_id          = '1149';
 
-        $followup_comments = "Follow-ups
+        $followup_comments = 'Follow-ups
 **********
 
 ------------------------------------------------------------------
-" . $GLOBALS['Language']->getText('tracker_import_utils', 'date') . ": 2005-09-02 18:18              " . $GLOBALS['Language']->getText('global', 'by') . ": doswald
+' . $GLOBALS['Language']->getText('tracker_import_utils', 'date') . ': 2005-09-02 18:18              ' . $GLOBALS['Language']->getText('global', 'by') . ': doswald
 8/17/2004 4:21:57 PM New Entry
 8/17/2004 4:24:38 PM DCO: Accepted for investigation, Prio Major 2 Assigned Cyrkin, Tonya
 9/14/2004 2:13:03 PM DCO: Waiting on new database from Craig DeHond.
-";
+';
 
         $um   = $this->createMock(\UserManager::class);
         $ai   = $this->getMockBuilder(\ArtifactImport::class)
@@ -356,18 +356,18 @@ final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('doswald', $parsed_comments[0]['by']);
 
         $parsed_comments   = [];
-        $followup_comments = "Follow-ups
+        $followup_comments = 'Follow-ups
 **********
 
 ------------------------------------------------------------------
-" . $GLOBALS['Language']->getText('tracker_import_utils', 'date') . ": 2005-10-19 18:28              " . $GLOBALS['Language']->getText('global', 'by') . ": doswald
+' . $GLOBALS['Language']->getText('tracker_import_utils', 'date') . ': 2005-10-19 18:28              ' . $GLOBALS['Language']->getText('global', 'by') . ': doswald
 Excel issue, reassigned to Gene, reduced to Ordinary
 
 ------------------------------------------------------------------
-" . $GLOBALS['Language']->getText('tracker_import_utils', 'date') . ": 2005-09-02 16:51              " . $GLOBALS['Language']->getText('global', 'by') . ": doswald
+' . $GLOBALS['Language']->getText('tracker_import_utils', 'date') . ': 2005-09-02 16:51              ' . $GLOBALS['Language']->getText('global', 'by') . ': doswald
 1/18/2005 10:09:24 AM New Entry
 1/18/2005 10:10:58 AM DCO: Accepted for investigation, Prio Major  Assigned Unassigned
-";
+';
 
         $ai->parseFollowUpComments($followup_comments, $parsed_comments, $art_id, true);
         self::assertFalse($ai->isError());
@@ -380,25 +380,25 @@ Excel issue, reassigned to Gene, reduced to Ordinary
 
         $parsed_comments = [];
 
-        $followup_comments = "==================================================
-" . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": " . $GLOBALS['Language']->getText('global', 'none') . "     " . $GLOBALS['Language']->getText('global', 'by') . ": jstidd      " . $GLOBALS['Language']->getText('global', 'on') . ": 2000-12-09 00:08
+        $followup_comments = '==================================================
+' . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ': ' . $GLOBALS['Language']->getText('global', 'none') . '     ' . $GLOBALS['Language']->getText('global', 'by') . ': jstidd      ' . $GLOBALS['Language']->getText('global', 'on') . ': 2000-12-09 00:08
 
 noreply was aliased to codendi-admin in order to prevent failure of delivery (to anybody) for the message.  This will cause all new bugs to be visible to the codendi administrators until an alternate solution is devised.  It seems ill-advised to set the email value in user=100 to null, because we are not sure where this value is used in the system and what the effects will be of possible syntax errors created by the use of null instead of a valid mail address.  What is needed is to alias noreply to a bit bucket.
 ==================================================
-" . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": " . $GLOBALS['Language']->getText('global', 'none') . "     " . $GLOBALS['Language']->getText('global', 'by') . ": jstidd      " . $GLOBALS['Language']->getText('global', 'on') . ": 2000-12-08 23:06
+' . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ': ' . $GLOBALS['Language']->getText('global', 'none') . '     ' . $GLOBALS['Language']->getText('global', 'by') . ': jstidd      ' . $GLOBALS['Language']->getText('global', 'on') . ": 2000-12-08 23:06
 
 The cause of this problem is that bugs assigned to 'None' are assigned by default to the default user, user_id=100 by bug_data_create in bugs/bug_data.php.  The email field for user 100 in the database was noreply@sourceforge.net.  This has been changed to noreply@codendi.com.  The Assigned To: field on this bug has been changed to None in order to test this change.
 ==================================================
-" . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": " . $GLOBALS['Language']->getText('global', 'none') . "     " . $GLOBALS['Language']->getText('global', 'by') . ": jstidd      " . $GLOBALS['Language']->getText('global', 'on') . ": 2000-12-08 22:30
+" . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ': ' . $GLOBALS['Language']->getText('global', 'none') . '     ' . $GLOBALS['Language']->getText('global', 'by') . ': jstidd      ' . $GLOBALS['Language']->getText('global', 'on') . ': 2000-12-08 22:30
 
 Confirming the previous Followup.  The bug was assigned to jstidd, who was present twice in the To: field of the message.  The followup message was not sent to noreply@sourceforge.net.
 
 ==================================================
-" . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": " . $GLOBALS['Language']->getText('global', 'none') . "     " . $GLOBALS['Language']->getText('global', 'by') . ": jstidd      " . $GLOBALS['Language']->getText('global', 'on') . ": 2000-12-08 22:27
+' . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ': ' . $GLOBALS['Language']->getText('global', 'none') . '     ' . $GLOBALS['Language']->getText('global', 'by') . ': jstidd      ' . $GLOBALS['Language']->getText('global', 'on') . ': 2000-12-08 22:27
 
 Problem also occurs for new bugs posted to a project *with* a New Bugs address.  Apparently, if a bug is assigned to None (which is always the case with a new bug), the copy of the message intended for Assigned To is sent to noreply@sourceforge.net.
 
-";
+';
 
         $test->parseLegacyDetails($followup_comments, $parsed_comments, $art_id, true);
         self::assertFalse($test->isError());
@@ -470,11 +470,11 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         self::assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;this is 'my test'&lt;/p&gt;"));
         self::assertTrue($ai->canApplyHtmlSpecialChars("<p>this is 'my test'</p>"));
 
-        self::assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;"));
-        self::assertTrue($ai->canApplyHtmlSpecialChars("<p>&lt;toto&gt;</p>"));
+        self::assertFalse($ai->canApplyHtmlSpecialChars('&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;'));
+        self::assertTrue($ai->canApplyHtmlSpecialChars('<p>&lt;toto&gt;</p>'));
 
-        self::assertFalse($ai->canApplyHtmlSpecialChars("test&lt;br/&gt;"));
-        self::assertTrue($ai->canApplyHtmlSpecialChars("test<br/>"));
+        self::assertFalse($ai->canApplyHtmlSpecialChars('test&lt;br/&gt;'));
+        self::assertTrue($ai->canApplyHtmlSpecialChars('test<br/>'));
     }
 
     /**
@@ -488,9 +488,9 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
     {
         $ai = $this->getMockBuilder(\ArtifactImport::class)->disableOriginalConstructor()->onlyMethods([])->getMock();
 
-        self::assertFalse($ai->canApplyHtmlSpecialChars("Test&amp;lt;"));
+        self::assertFalse($ai->canApplyHtmlSpecialChars('Test&amp;lt;'));
         // Should be assertTrue here
-        self::assertFalse($ai->canApplyHtmlSpecialChars("Test&lt;"));
+        self::assertFalse($ai->canApplyHtmlSpecialChars('Test&lt;'));
     }
 
     public function testCanApplyHtmlSpecialCharsWithRealTextTricks(): void

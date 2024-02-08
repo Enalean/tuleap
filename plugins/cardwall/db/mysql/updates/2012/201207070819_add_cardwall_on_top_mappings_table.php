@@ -34,7 +34,7 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column(
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column(
                     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     tracker_id INT(11) NOT NULL,
                     label VARCHAR(255) NOT NULL,
@@ -42,25 +42,25 @@ EOT;
                     bg_green TINYINT UNSIGNED NULL,
                     bg_blue TINYINT UNSIGNED NULL,
                     INDEX idx_tracker_id(tracker_id)
-                )";
+                )';
         $this->db->createTable('plugin_cardwall_on_top_column', $sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column_mapping_field(
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column_mapping_field(
                     cardwall_tracker_id INT(11) NOT NULL,
                     tracker_id INT(11) NOT NULL,
                     field_id INT(11) NULL,
                     PRIMARY KEY idx(cardwall_tracker_id, tracker_id)
-                )";
+                )';
         $this->db->createTable('plugin_cardwall_on_top_column_mapping_field', $sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column_mapping_field_value(
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column_mapping_field_value(
                     cardwall_tracker_id INT(11) NOT NULL,
                     tracker_id INT(11) NOT NULL,
                     field_id INT(11) NULL,
                     value_id INT(11) NOT NULL,
                     column_id INT(11) NOT NULL,
                     PRIMARY KEY idx(cardwall_tracker_id, tracker_id, field_id, value_id)
-                )";
+                )';
         $this->db->createTable('plugin_cardwall_on_top_column_mapping_field_value', $sql);
     }
 

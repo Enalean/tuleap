@@ -76,13 +76,13 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $existing_metadata             = new POSTCustomMetadataRepresentation();
-        $existing_metadata->short_name = "field_text_1";
-        $existing_metadata->value      = "list value";
+        $existing_metadata->short_name = 'field_text_1';
+        $existing_metadata->value      = 'list value';
         $existing_metadata->list_value = null;
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'field_text_1',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -94,7 +94,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_list_representation = new ProjectConfiguredMetadataRepresentation();
         $project_list_representation->build(
-            "field_list_1",
+            'field_list_1',
             'field_list_1',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_LIST,
@@ -105,7 +105,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$existing_metadata->short_name])->andReturn(
-            "field_list_1"
+            'field_list_1'
         );
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
@@ -124,13 +124,13 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $existing_metadata             = new POSTCustomMetadataRepresentation();
-        $existing_metadata->short_name = "field_text_1";
-        $existing_metadata->value      = "";
+        $existing_metadata->short_name = 'field_text_1';
+        $existing_metadata->value      = '';
         $existing_metadata->list_value = null;
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'field_text_1',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -141,7 +141,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$existing_metadata->short_name])->andReturn(
-            "field_list_1"
+            'field_list_1'
         );
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
@@ -160,13 +160,13 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $existing_metadata             = new POSTCustomMetadataRepresentation();
-        $existing_metadata->short_name = "field_list_1";
+        $existing_metadata->short_name = 'field_list_1';
         $existing_metadata->value      = null;
-        $existing_metadata->list_value = "";
+        $existing_metadata->list_value = '';
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_list_1",
+            'field_list_1',
             'field_list_1',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_LIST,
@@ -177,7 +177,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$existing_metadata->short_name])->andReturn(
-            "field_list_1"
+            'field_list_1'
         );
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
@@ -196,13 +196,13 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $existing_metadata             = new POSTCustomMetadataRepresentation();
-        $existing_metadata->short_name = "field_text_1";
+        $existing_metadata->short_name = 'field_text_1';
         $existing_metadata->value      = null;
         $existing_metadata->list_value = null;
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'field_text_1',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -213,7 +213,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$existing_metadata->short_name])->andReturn(
-            "field_list_1"
+            'field_list_1'
         );
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
@@ -232,13 +232,13 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $existing_metadata             = new POSTCustomMetadataRepresentation();
-        $existing_metadata->short_name = "field_text_1";
-        $existing_metadata->value      = "list value";
+        $existing_metadata->short_name = 'field_text_1';
+        $existing_metadata->value      = 'list value';
         $existing_metadata->list_value = null;
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'field_text_1',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -281,7 +281,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'field_text_1',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -309,7 +309,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'field_text_1',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -337,7 +337,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'field_text_1',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -361,18 +361,18 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $item                         = \Mockery::mock(\Docman_Item::class);
         $unknown_metadata             = new POSTCustomMetadataRepresentation();
-        $unknown_metadata->short_name = "unknown_short_name";
-        $unknown_metadata->value      = "text value";
+        $unknown_metadata->short_name = 'unknown_short_name';
+        $unknown_metadata->value      = 'text value';
         $unknown_metadata->list_value = null;
 
         $existing_metadata             = new POSTCustomMetadataRepresentation();
-        $existing_metadata->short_name = "field_text_1";
-        $existing_metadata->value      = "list value";
+        $existing_metadata->short_name = 'field_text_1';
+        $existing_metadata->value      = 'list value';
         $existing_metadata->list_value = null;
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -383,7 +383,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$unknown_metadata->short_name])->andReturn(null);
-        $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$existing_metadata->short_name])->andReturn("field_list_1");
+        $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$existing_metadata->short_name])->andReturn('field_list_1');
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
         $this->collection_builder->shouldReceive('build')->andReturn(
@@ -401,8 +401,8 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_list_1";
-        $metadata->value      = "my value";
+        $metadata->short_name = 'field_list_1';
+        $metadata->value      = 'my value';
         $metadata->list_value = null;
 
         $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
@@ -413,7 +413,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_list_1",
+            'field_list_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_LIST,
@@ -437,7 +437,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $element_two->initFromRow($value_two);
 
         $this->expectException(CustomMetadataException::class);
-        $this->expectExceptionMessage("metadata field_list_1 is a multiple list");
+        $this->expectExceptionMessage('metadata field_list_1 is a multiple list');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$metadata]);
     }
@@ -447,7 +447,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_list_1";
+        $metadata->short_name = 'field_list_1';
         $metadata->value      = null;
         $metadata->list_value = [100];
 
@@ -459,7 +459,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_list_1",
+            'field_list_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_LIST,
@@ -474,7 +474,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $this->expectException(CustomMetadataException::class);
-        $this->expectExceptionMessage("list field_list_1 has too many values");
+        $this->expectExceptionMessage('list field_list_1 has too many values');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$metadata]);
     }
@@ -484,7 +484,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_text_1";
+        $metadata->short_name = 'field_text_1';
         $metadata->value      = null;
         $metadata->list_value = [101];
 
@@ -498,7 +498,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -513,7 +513,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $this->expectException(CustomMetadataException::class);
-        $this->expectExceptionMessage("metadata field_text_1 is not a list and a list_value is provided");
+        $this->expectExceptionMessage('metadata field_text_1 is not a list and a list_value is provided');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$metadata]);
     }
@@ -523,7 +523,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_list_1";
+        $metadata->short_name = 'field_list_1';
         $metadata->value      = null;
         $metadata->list_value = [101, 102];
 
@@ -538,7 +538,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_list_1",
+            'field_list_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_LIST,
@@ -553,7 +553,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $this->expectException(CustomMetadataException::class);
-        $this->expectExceptionMessage("list field_list_1 has too many values");
+        $this->expectExceptionMessage('list field_list_1 has too many values');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$metadata]);
     }
@@ -563,7 +563,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_list_1";
+        $metadata->short_name = 'field_list_1';
         $metadata->value      = null;
         $metadata->list_value = [999];
 
@@ -587,13 +587,13 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $this->list_values_builder->shouldReceive('build')->withArgs([1, true])->andReturn([$element, $element_two]);
 
         $this->expectException(CustomMetadataException::class);
-        $this->expectExceptionMessage("value: 999 are unknown for metadata field_list_1");
+        $this->expectExceptionMessage('value: 999 are unknown for metadata field_list_1');
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_list_1",
+            'field_list_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_LIST,
@@ -614,7 +614,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $item                 = \Mockery::mock(\Docman_Item::class);
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_list_1";
+        $metadata->short_name = 'field_list_1';
         $metadata->value      = null;
         $metadata->list_value = [];
 
@@ -630,7 +630,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_list_1",
+            'field_list_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_LIST,
@@ -656,7 +656,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $item                 = \Mockery::mock(\Docman_Item::class);
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_text_1";
+        $metadata->short_name = 'field_text_1';
         $metadata->value      = null;
         $metadata->list_value = null;
 
@@ -677,7 +677,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -700,7 +700,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_list_1";
+        $metadata->short_name = 'field_list_1';
         $metadata->value      = null;
         $metadata->list_value = [1];
 
@@ -733,7 +733,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_list_1",
+            'field_list_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_LIST,
@@ -756,8 +756,8 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_text_1";
-        $metadata->value      = "my value";
+        $metadata->short_name = 'field_text_1';
+        $metadata->value      = 'my value';
         $metadata->list_value = null;
 
         $expected_representation     = MetadataToCreate::buildMetadataRepresentation(
@@ -776,7 +776,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -819,25 +819,25 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $unknown_metadata             = new POSTCustomMetadataRepresentation();
-        $unknown_metadata->short_name = "unknown_short_name";
-        $unknown_metadata->value      = "text value";
+        $unknown_metadata->short_name = 'unknown_short_name';
+        $unknown_metadata->value      = 'text value';
         $unknown_metadata->list_value = null;
 
         $existing_metadata             = new POSTCustomMetadataRepresentation();
-        $existing_metadata->short_name = "field_text_1";
-        $existing_metadata->value      = "list value";
+        $existing_metadata->short_name = 'field_text_1';
+        $existing_metadata->value      = 'list value';
         $existing_metadata->list_value = null;
 
         $this->factory->shouldReceive('getFromLabel')->withArgs([$unknown_metadata->short_name])->andReturn(null);
         $this->factory->shouldReceive('getFromLabel')->withArgs([$existing_metadata->short_name])->andReturn(
-            "field_list_1"
+            'field_list_1'
         );
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -861,8 +861,8 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $item                 = \Mockery::mock(\Docman_Item::class);
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_text_1";
-        $metadata->value      = "my value";
+        $metadata->short_name = 'field_text_1';
+        $metadata->value      = 'my value';
         $metadata->list_value = null;
 
         $expected_representation = MetadataToCreate::buildMetadataRepresentation(
@@ -888,7 +888,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_text_1",
+            'field_text_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -911,7 +911,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_list_1";
+        $metadata->short_name = 'field_list_1';
         $metadata->value      = 1;
         $metadata->list_value = null;
 
@@ -950,7 +950,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_list_1",
+            'field_list_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_LIST,
@@ -972,7 +972,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $item                 = \Mockery::mock(\Docman_Item::class);
         $metadata             = new POSTCustomMetadataRepresentation();
-        $metadata->short_name = "field_list_1";
+        $metadata->short_name = 'field_list_1';
         $metadata->value      = null;
         $metadata->list_value = [101, 102];
 
@@ -1011,7 +1011,7 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
-            "field_list_1",
+            'field_list_1',
             'name',
             'description',
             PLUGIN_DOCMAN_METADATA_TYPE_LIST,
@@ -1034,10 +1034,10 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new PUTCustomMetadataRepresentation();
-        $metadata->short_name = "field_text_1";
-        $metadata->value      = "my value";
+        $metadata->short_name = 'field_text_1';
+        $metadata->value      = 'my value';
         $metadata->list_value = null;
-        $metadata->recursion  = "none";
+        $metadata->recursion  = 'none';
 
         $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
         $project_configured_metadata->shouldReceive('getId')->andReturn(1);
@@ -1063,10 +1063,10 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new PUTCustomMetadataRepresentation();
-        $metadata->short_name = "field_list_1";
+        $metadata->short_name = 'field_list_1';
         $metadata->value      = 1;
         $metadata->list_value = null;
-        $metadata->recursion  = "none";
+        $metadata->recursion  = 'none';
 
         $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
         $project_configured_metadata->shouldReceive('getId')->andReturn(1);
@@ -1104,10 +1104,10 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $item = \Mockery::mock(\Docman_Item::class);
 
         $metadata             = new PUTCustomMetadataRepresentation();
-        $metadata->short_name = "field_list_1";
+        $metadata->short_name = 'field_list_1';
         $metadata->value      = null;
         $metadata->list_value = [101, 102];
-        $metadata->recursion  = "none";
+        $metadata->recursion  = 'none';
 
         $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
         $project_configured_metadata->shouldReceive('getId')->andReturn(1);

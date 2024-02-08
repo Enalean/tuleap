@@ -30,11 +30,11 @@ class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $comment = JiraCloudComment::buildFromAPIResponse(
             [
-                "body" => "Comment 01",
-                "renderedBody" => "<p>Comment 01</p>",
-                "created" => "2020-04-21T11:36:46.601+0200",
-                "updated" => "2020-04-21T11:36:46.601+0200",
-                "updateAuthor" => [
+                'body' => 'Comment 01',
+                'renderedBody' => '<p>Comment 01</p>',
+                'created' => '2020-04-21T11:36:46.601+0200',
+                'updated' => '2020-04-21T11:36:46.601+0200',
+                'updateAuthor' => [
                     'displayName' => 'user01',
                     'accountId'   => 'e8ds123qsd',
                 ],
@@ -42,7 +42,7 @@ class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertSame(1587461806, $comment->getDate()->getTimestamp());
-        $this->assertSame("<p>Comment 01</p>", $comment->getRenderedValue());
+        $this->assertSame('<p>Comment 01</p>', $comment->getRenderedValue());
     }
 
     public function testItThrowsAnExceptionIfAPIResponseIsNotWellFormed(): void
@@ -51,11 +51,11 @@ class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 
         JiraCloudComment::buildFromAPIResponse(
             [
-                "body" => "Comment 01",
-                "created" => "2020-04-21T11:36:46.601+0200",
-                "updated" => "2020-04-21T11:36:46.601+0200",
-                "updateAuthor" => [
-                    "displayName" => 'user01',
+                'body' => 'Comment 01',
+                'created' => '2020-04-21T11:36:46.601+0200',
+                'updated' => '2020-04-21T11:36:46.601+0200',
+                'updateAuthor' => [
+                    'displayName' => 'user01',
                 ],
             ]
         );
@@ -64,11 +64,11 @@ class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 
         JiraCloudComment::buildFromAPIResponse(
             [
-                "body" => "Comment 01",
-                "renderedBody" => "<p>Comment 01</p>",
-                "created" => "2020-04-21T11:36:46.601+0200",
-                "updateAuthor" => [
-                    "displayName" => 'user01',
+                'body' => 'Comment 01',
+                'renderedBody' => '<p>Comment 01</p>',
+                'created' => '2020-04-21T11:36:46.601+0200',
+                'updateAuthor' => [
+                    'displayName' => 'user01',
                 ],
             ]
         );
@@ -77,10 +77,10 @@ class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $comment = JiraCloudComment::buildFromAPIResponse(
             [
-                "body" => "Comment 01",
-                "renderedBody" => "<p>Comment 01</p>",
-                "created" => "2020-04-21T11:36:46.601+0200",
-                "updated" => "2020-04-21T11:36:46.601+0200",
+                'body' => 'Comment 01',
+                'renderedBody' => '<p>Comment 01</p>',
+                'created' => '2020-04-21T11:36:46.601+0200',
+                'updated' => '2020-04-21T11:36:46.601+0200',
             ]
         );
     }

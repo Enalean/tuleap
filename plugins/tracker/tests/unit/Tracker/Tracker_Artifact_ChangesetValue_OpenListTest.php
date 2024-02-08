@@ -122,10 +122,10 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends \Tuleap\Test\PHPUnit\
 
     public function testDiffAddedAndRemoved(): void
     {
-        $bind_value_1 = $this->getBindValueForLabel("Sandra");
-        $bind_value_2 = $this->getBindValueForLabel("Manon");
-        $bind_value_3 = $this->getBindValueForLabel("Marc");
-        $bind_value_4 = $this->getBindValueForLabel("Nicolas");
+        $bind_value_1 = $this->getBindValueForLabel('Sandra');
+        $bind_value_2 = $this->getBindValueForLabel('Manon');
+        $bind_value_3 = $this->getBindValueForLabel('Marc');
+        $bind_value_4 = $this->getBindValueForLabel('Nicolas');
 
         $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, [$bind_value_3, $bind_value_4]);
         $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, [$bind_value_1, $bind_value_2]);

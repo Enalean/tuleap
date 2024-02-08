@@ -76,7 +76,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
     public function __construct($id = 0)
     {
         parent::__construct($id);
-        $this->setName("mediawiki");
+        $this->setName('mediawiki');
         $this->addHook('cssfile');
 
         $this->addHook('permission_get_name');
@@ -204,7 +204,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         if ($this->isSearchEntryAvailable($params['project'])) {
             $params['project_presenters'][] = new Search_SearchTypePresenter(
                 $this->getName(),
-                "Mediawiki",
+                'Mediawiki',
                 [],
                 $this->getMediawikiSearchURI($params['project'], $params['words'])
             );
@@ -452,9 +452,9 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
             }
         }
 
-        $event->csv_exporter->buildDatas($number_of_page, "Mediawiki Pages");
-        $event->csv_exporter->buildDatas($number_of_page_between_two_dates, "Modified Mediawiki pages");
-        $event->csv_exporter->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
+        $event->csv_exporter->buildDatas($number_of_page, 'Mediawiki Pages');
+        $event->csv_exporter->buildDatas($number_of_page_between_two_dates, 'Modified Mediawiki pages');
+        $event->csv_exporter->buildDatas($number_of_page_since_a_date, 'Number of created Mediawiki pages since start date');
     }
 
     public function project_admin_ugroup_deletion($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -598,15 +598,15 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
     private function updateMediawikiDirectory(Project $project)
     {
         $logger         = BackendLogger::getDefaultLogger();
-        $project_id_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $project->getID();
+        $project_id_dir = forge_get_config('projects_path', 'mediawiki') . '/' . $project->getID();
 
         if (is_dir($project_id_dir)) {
             return true;
         }
 
-        $project_name_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $project->getUnixName();
+        $project_name_dir = forge_get_config('projects_path', 'mediawiki') . '/' . $project->getUnixName();
         if (is_dir($project_name_dir)) {
-            exec("mv " . escapeshellarg($project_name_dir) . " " . escapeshellarg($project_id_dir));
+            exec('mv ' . escapeshellarg($project_name_dir) . ' ' . escapeshellarg($project_id_dir));
             return true;
         }
 
@@ -629,7 +629,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $url = $params['url'];
 
         if (strpos($url, '/plugins/mediawiki/wiki/') === 0) {
-            $pieces       = explode("/", $url);
+            $pieces       = explode('/', $url);
             $project_name = $pieces[4];
 
             $dao         = $params['project_dao'];

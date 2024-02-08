@@ -53,10 +53,10 @@ class Docman_SqlFilterGlobalText extends \Docman_SqlFilterText
                 }
                 $stmt[] = '(' . \implode(' OR ', $matches) . ')';
             } else {
-                $matches[] = "MATCH (i.title, i.description) AGAINST ('" . \db_es($qv) . "' " . \Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ")";
-                $matches[] = "MATCH (v.label, v.changelog, v.filename) AGAINST ('" . \db_es($qv) . "' " . \Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ")";
+                $matches[] = "MATCH (i.title, i.description) AGAINST ('" . \db_es($qv) . "' " . \Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ')';
+                $matches[] = "MATCH (v.label, v.changelog, v.filename) AGAINST ('" . \db_es($qv) . "' " . \Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ')';
                 foreach ($this->filter->dynTextFields as $f) {
-                    $matches[] = "MATCH (mdv_" . $f . ".valueText, mdv_" . $f . ".valueString) AGAINST ('" . \db_es($qv) . "' " . \Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ")";
+                    $matches[] = 'MATCH (mdv_' . $f . '.valueText, mdv_' . $f . ".valueString) AGAINST ('" . \db_es($qv) . "' " . \Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ')';
                 }
                 $stmt[] = '(' . \implode(' OR ', $matches) . ')';
             }

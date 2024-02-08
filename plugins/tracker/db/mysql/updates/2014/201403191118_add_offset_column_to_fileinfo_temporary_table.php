@@ -32,8 +32,8 @@ class b201403191118_add_offset_column_to_fileinfo_temporary_table extends \Tulea
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_fileinfo_temporary
-                    ADD COLUMN offset int(11) UNSIGNED NOT NULL DEFAULT 0";
+        $sql = 'ALTER TABLE tracker_fileinfo_temporary
+                    ADD COLUMN offset int(11) UNSIGNED NOT NULL DEFAULT 0';
 
         $result = $this->db->dbh->exec($sql);
 

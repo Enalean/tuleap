@@ -68,7 +68,7 @@ final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->repository_name = 'repositoryname';
         $project_id            = 1;
-        $this->system_path     = $project_id . "/" . $this->repository_name;
+        $this->system_path     = $project_id . '/' . $this->repository_name;
 
         $this->repository = $this->createMock(\Tuleap\SVNCore\Repository::class);
         $this->repository->method('getId')->willReturn(1);
@@ -106,7 +106,7 @@ final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
     private function preCommitToTags(array $paths): void
     {
         $svn_look = $this->createMock(Svnlook::class);
-        $svn_look->method('getMessageFromTransaction')->willReturn(["COMMIT MSG"]);
+        $svn_look->method('getMessageFromTransaction')->willReturn(['COMMIT MSG']);
         $svn_look->method('getTransactionPath')->willReturn($paths);
         $svn_look->method('getContent');
         $svn_look->method('closeContentResource');
@@ -131,7 +131,7 @@ final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
         $immutable_tags = $this->createMock(ImmutableTag::class);
 
         $immutable_tags->method('getPaths')->willReturn(['/*/tags/']);
-        $immutable_tags->method('getWhitelist')->willReturn(["trunk/tags/v1/to to/"]);
+        $immutable_tags->method('getWhitelist')->willReturn(['trunk/tags/v1/to to/']);
 
         $this->immutable_tag_factory->method('getByRepositoryId')->willReturn($immutable_tags);
 
@@ -322,7 +322,7 @@ final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_allow_empty_svn_commit_message', false);
 
         $svn_look = $this->createMock(Svnlook::class);
-        $svn_look->method('getMessageFromTransaction')->willReturn([""]);
+        $svn_look->method('getMessageFromTransaction')->willReturn(['']);
 
         $hook_config = $this->createMock(\Tuleap\SVN\Repository\HookConfigRetriever::class);
         $hook_config->method('getHookConfig')->with(HookConfig::MANDATORY_REFERENCE)->willReturn(false);
@@ -345,7 +345,7 @@ final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_allow_empty_svn_commit_message', true);
 
         $svn_look = $this->createMock(Svnlook::class);
-        $svn_look->method('getMessageFromTransaction')->willReturn([""]);
+        $svn_look->method('getMessageFromTransaction')->willReturn(['']);
         $svn_look->method('getTransactionPath')->willReturn([]);
 
         $hook_config_retriever = $this->createMock(\Tuleap\SVN\Repository\HookConfigRetriever::class);
@@ -376,7 +376,7 @@ final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->withId(123)->build();
 
         $svn_look = $this->createMock(Svnlook::class);
-        $svn_look->method('getMessageFromTransaction')->willReturn(["Commit message without reference"]);
+        $svn_look->method('getMessageFromTransaction')->willReturn(['Commit message without reference']);
 
         $hook_config_retriever = $this->createMock(\Tuleap\SVN\Repository\HookConfigRetriever::class);
 
@@ -392,7 +392,7 @@ final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repository->expects(self::once())->method('getProject')->willReturn($project);
         $reference_manager->expects(self::once())
             ->method('stringContainsReferences')
-            ->with("Commit message without reference", self::anything())
+            ->with('Commit message without reference', self::anything())
             ->willReturn(false);
 
         $hook = new PreCommit(

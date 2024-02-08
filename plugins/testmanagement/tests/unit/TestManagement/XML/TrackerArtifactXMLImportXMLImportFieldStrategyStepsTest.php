@@ -54,10 +54,10 @@ final class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tul
         $artifact         = Mockery::mock(Artifact::class);
 
         $data = [
-            'description_format'      => ["text", "html"],
-            'description'             => ["Yep", "Yep"],
-            'expected_results_format' => ["text", "html"],
-            'expected_results'        => ["Non", "Non"],
+            'description_format'      => ['text', 'html'],
+            'description'             => ['Yep', 'Yep'],
+            'expected_results_format' => ['text', 'html'],
+            'expected_results'        => ['Non', 'Non'],
         ];
 
         $this->assertEquals($data, $import_strategie->getFieldData($field, $xml, $user, $artifact, PostCreationContext::withNoConfig(false)));

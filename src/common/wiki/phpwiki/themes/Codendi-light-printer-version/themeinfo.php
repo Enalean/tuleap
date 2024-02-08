@@ -41,9 +41,9 @@ $WikiTheme->setDefaultCSS(
 
 // This allows one to manually select "Printer" style (when browsing page)
 // to see what the printer style looks like.
-$WikiTheme->addAlternateCSS(_("Printer"), 'phpwiki-printer.css', 'print, screen');
-$WikiTheme->addAlternateCSS(_("Top & bottom toolbars"), 'phpwiki-topbottombars.css');
-$WikiTheme->addAlternateCSS(_("Modern"), 'phpwiki-modern.css');
+$WikiTheme->addAlternateCSS(_('Printer'), 'phpwiki-printer.css', 'print, screen');
+$WikiTheme->addAlternateCSS(_('Top & bottom toolbars'), 'phpwiki-topbottombars.css');
+$WikiTheme->addAlternateCSS(_('Modern'), 'phpwiki-modern.css');
 
 /**
  * The logo image appears on every page and links to the HomePage.
@@ -56,7 +56,7 @@ $WikiTheme->addImageAlias('logo', WIKI_NAME . 'Logo.png');
  * be omitted.
  */
 
-$WikiTheme->addImageAlias('signature', WIKI_NAME . "Signature.png");
+$WikiTheme->addImageAlias('signature', WIKI_NAME . 'Signature.png');
 // Uncomment this next line to disable the signature.
 //$WikiTheme->addImageAlias('signature', false);
 

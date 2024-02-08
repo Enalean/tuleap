@@ -51,13 +51,13 @@ class HtmlParser extends XmlParserPHPWiki
      *  dialect: "PhpWiki2", "PhpWiki"
      *  possible more dialects: MediaWiki, kwiki, c2
      */
-    public function __construct($dialect = "PhpWiki2", $encoding = '')
+    public function __construct($dialect = 'PhpWiki2', $encoding = '')
     {
-        $classname = "HtmlParser_" . $dialect;
+        $classname = 'HtmlParser_' . $dialect;
         if (class_exists($classname)) {
             $this->dialect = new $classname();
         } else {
-            trigger_error(sprintf("unknown HtmlParser dialect %s", $dialect), E_USER_ERROR);
+            trigger_error(sprintf('unknown HtmlParser dialect %s', $dialect), E_USER_ERROR);
         }
         $this->_handlers = $this->dialect->_handlers;
         parent::__construct($encoding);
@@ -112,7 +112,7 @@ class HtmlParser extends XmlParserPHPWiki
         } else {
             $output = $node;
             if ($parent and $parent->_tag != 'pre') {
-                preg_replace("/ {2,}/", " ", $output);
+                preg_replace('/ {2,}/', ' ', $output);
             }
             if (trim($output) == '') {
                 $output = '';
@@ -191,7 +191,7 @@ class HtmlParser extends XmlParserPHPWiki
     public function _elem_is_image_div($node)
     {
         // Return false if node is undefined or isn't a DIV at all
-        if (! $node or ! in_array($node->_tag, ["div", "p"])) {
+        if (! $node or ! in_array($node->_tag, ['div', 'p'])) {
             return false;
         }
         $contents = $node->getContent();
@@ -242,16 +242,16 @@ class HtmlParser_PhpWiki2 extends HtmlParser
                 'script' => '',
                 'body'   => '',
 
-                'br'     => "<br>",
-                'b'      => [ "*" ],
-                'strong' => [ "*" ],
-                'i'      => [ "_" ],
-                'em'     => [ "_" ],
+                'br'     => '<br>',
+                'b'      => [ '*' ],
+                'strong' => [ '*' ],
+                'i'      => [ '_' ],
+                'em'     => [ '_' ],
                 'hr'     => "----\n\n",
 
                   // PRE blocks are handled specially (see tidy_whitespace and
                   // wikify methods)
-                'pre'    => [ "<pre>", "</pre>" ],
+                'pre'    => [ '<pre>', '</pre>' ],
 
                 'dl'     => [ '', "\n\n" ],
                 'dt'     => [ ';', '' ],
@@ -261,28 +261,28 @@ class HtmlParser_PhpWiki2 extends HtmlParser
                 'ul'     => [ '', "\n" ],
                 'ol'     => [ '', "\n" ],
 
-                'li'     => "wikify_list_item",
-                'table'  => "wikify_table",
-                'tr'     => "wikify_tr",
-                'td'     => "wikify_td",
-                'th'     => "wikify_td",
+                'li'     => 'wikify_list_item',
+                'table'  => 'wikify_table',
+                'tr'     => 'wikify_tr',
+                'td'     => 'wikify_td',
+                'th'     => 'wikify_td',
                 'div'    => [ '', "\n\n" ],
-                'img'    => "wikify_img",
-                'a'      => "wikify_link",
+                'img'    => 'wikify_img',
+                'a'      => 'wikify_link',
                 'span'   => [ '', '' ],
 
-                'h1'     => "wikify_h",
-                'h2'     => "wikify_h",
-                'h3'     => "wikify_h",
-                'h4'     => "wikify_h",
-                'h5'     => "wikify_h",
-                'h6'     => "wikify_h",
+                'h1'     => 'wikify_h',
+                'h2'     => 'wikify_h',
+                'h3'     => 'wikify_h',
+                'h4'     => 'wikify_h',
+                'h5'     => 'wikify_h',
+                'h6'     => 'wikify_h',
 
                 'font'   => [ '', '' ],
-                'sup'    => "wikify_default",
-                'sub'    => "wikify_default",
-                'nowiki' => "wikify_verbatim",
-                'verbatim' => "wikify_default",
+                'sup'    => 'wikify_default',
+                'sub'    => 'wikify_default',
+                'nowiki' => 'wikify_verbatim',
+                'verbatim' => 'wikify_default',
             ];
     }
 
@@ -302,7 +302,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
         $ident   = empty($this->ident) ? '' : $this->ident;
         $output  = "$ident| ";
         $content = $this->elem_contents($node);
-        preg_replace("s/^\s+/", "", $content);
+        preg_replace('s/^\s+/', '', $content);
         $output      .= $content;
         $this->ident .= '  ';
         return "$output |\n";
@@ -310,7 +310,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
 
     public function wikify_list_item($node)
     {
-        return ($this->_elem_has_ancestor($node, 'ol') ? '*' : '#') . " " . trim($this->elem_contents($node)) . "\n";
+        return ($this->_elem_has_ancestor($node, 'ol') ? '*' : '#') . ' ' . trim($this->elem_contents($node)) . "\n";
     }
 
     public function wikify_link($node)
@@ -363,7 +363,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
         $image_url = $this->absolute_url($node->getAttr('src'));
         $file      = basename($image_url);
         $alignment = $node->getAttr('align');
-        $this->log("Processing IMG tag for SRC: " . $image_url . "...");
+        $this->log('Processing IMG tag for SRC: ' . $image_url . '...');
         // Grab attributes to be added to the [ Image ] markup (since 1.3.10)
         if (! $alignment) {
             if ($this->_elem_is_image_div($node->parent)) {
@@ -378,10 +378,10 @@ class HtmlParser_PhpWiki2 extends HtmlParser
 
             // float => align: Check for float attribute; if it's there,
             //                 then we'll add it to the [Image] syntax
-            if (! $alignment and preg_match("/float\:\s*(right|left)/i", $css_style, $m)) {
+            if (! $alignment and preg_match('/float\:\s*(right|left)/i', $css_style, $m)) {
                 $alignment = $m[1];
             }
-            if (! $alignment and preg_match("/float(right|left)/i", $css_class, $m)) {
+            if (! $alignment and preg_match('/float(right|left)/i', $css_class, $m)) {
             }
                 $alignment = $m[1];
             if ($alignment) {
@@ -389,10 +389,10 @@ class HtmlParser_PhpWiki2 extends HtmlParser
                 $this->log("  Image is contained within a DIV that specifies $alignment alignment");
                 $this->log("  Adding '$alignment' to [Image] markup attributes");
             } else {
-                $this->log("  Image is not contained within a DIV for alignment");
+                $this->log('  Image is not contained within a DIV for alignment');
             }
         } else {
-            $this->log("  Image is not contained within a DIV");
+            $this->log('  Image is not contained within a DIV');
         }
         if ($alignment) {
             $attrs[] = "align=$alignment";
@@ -402,7 +402,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
         // differs from the default size of the image
         if ($width = $node->getAttr('width')) {
             $this->log("  Image has WIDTH attribute of $width");
-            $this->log("  Checking whether resulting [Image] markup should specify a thumbnail...");
+            $this->log('  Checking whether resulting [Image] markup should specify a thumbnail...');
 
             // Download the image from the network and store
             $abs_url = $this->absolute_url($node->getAttr('src'));
@@ -412,7 +412,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
             // If the WIDTH attribute of the IMG tag is not equal
             // to the actual width of the image, then we need to
             // create a thumbnail
-            if (preg_match("/^\d+$/", $width) and $width != $actual_w) {
+            if (preg_match('/^\d+$/', $width) and $width != $actual_w) {
                 $this->log("    IMG tag's WIDTH attribute ($width) differs from actual width of image ($actual_w)");
                 $this->log("      -- that means we're going to need a thumbnail");
                 $this->log("    Adding 'width' to list of attributes for [Image] markup");
@@ -420,12 +420,12 @@ class HtmlParser_PhpWiki2 extends HtmlParser
                 $width_added = true;
             }
             $height = $node->getAttr('height');
-            if (preg_match("/^\d+$/", $height) and $height != $height_h) {
+            if (preg_match('/^\d+$/', $height) and $height != $height_h) {
                 $this->log("    IMG tag's HEIGHT attribute ($height) differs from actual height of image ($actual_h)");
                 $this->log("      -- that means we're going to need a thumbnail");
                 $this->log("    Adding 'height' to list of attributes for [Image] markup");
                 if (isset($width_added)) {
-                    $attrs[count($attr) - 1] = "size=" . $width . "x" . $height;
+                    $attrs[count($attr) - 1] = 'size=' . $width . 'x' . $height;
                 } else {
                     $attrs[] = "height=$height";
                 }

@@ -115,7 +115,7 @@ final class PossibleParentSelectorProxyTest extends TestCase
         $event_proxy->setPossibleParents(1, $this->feature_53_reference);
 
         if (! $event->getPossibleParents()) {
-            throw new \LogicException("Event does not have possible parents");
+            throw new \LogicException('Event does not have possible parents');
         }
 
         self::assertEquals([$this->feature_53?->id], array_map(static fn (Artifact $artifact) => $artifact->getId(), $event->getPossibleParents()->getArtifacts()));

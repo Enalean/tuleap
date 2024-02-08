@@ -44,14 +44,14 @@ final class ProgramManagementXMLConfigParserTest extends TestCase
 
         $extractor = new ProgramManagementXMLConfigParser();
 
-        $extractor->parseConfig(__DIR__ . "/__fixtures/invalid_xml");
+        $extractor->parseConfig(__DIR__ . '/__fixtures/invalid_xml');
     }
 
     public function testItReturnsTheContentOfTheConfigFile(): void
     {
         $extractor = new ProgramManagementXMLConfigParser();
 
-        $xml_config = $extractor->parseConfig(__DIR__ . "/__fixtures/valid_xml");
+        $xml_config = $extractor->parseConfig(__DIR__ . '/__fixtures/valid_xml');
 
         self::assertInstanceOf(\SimpleXMLElement::class, $xml_config);
     }

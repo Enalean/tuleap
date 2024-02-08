@@ -63,7 +63,7 @@ class Tracker_Artifact_ChavesetValue_ListTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testDiffCleared(): void
     {
-        $bind_value = $this->getBindValueForLabel("Sandra");
+        $bind_value = $this->getBindValueForLabel('Sandra');
         $list_1     = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, []);
         $list_2     = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value]);
 
@@ -72,8 +72,8 @@ class Tracker_Artifact_ChavesetValue_ListTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testDiffSetto(): void
     {
-        $bind_value_1 = $this->getBindValueForLabel("Sandra");
-        $bind_value_2 = $this->getBindValueForLabel("Manon");
+        $bind_value_1 = $this->getBindValueForLabel('Sandra');
+        $bind_value_2 = $this->getBindValueForLabel('Manon');
 
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1, $bind_value_2]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, []);
@@ -83,8 +83,8 @@ class Tracker_Artifact_ChavesetValue_ListTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testDiffChangedfrom(): void
     {
-        $bind_value_1 = $this->getBindValueForLabel("Sandra");
-        $bind_value_2 = $this->getBindValueForLabel("Manon");
+        $bind_value_1 = $this->getBindValueForLabel('Sandra');
+        $bind_value_2 = $this->getBindValueForLabel('Manon');
 
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_2]);
@@ -95,20 +95,20 @@ class Tracker_Artifact_ChavesetValue_ListTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testDifChangedfromWithPurification()
     {
-        $bind_value_1 = $this->getBindValueForLabel("Sandra <b>");
-        $bind_value_2 = $this->getBindValueForLabel("Manon  <b>");
+        $bind_value_1 = $this->getBindValueForLabel('Sandra <b>');
+        $bind_value_2 = $this->getBindValueForLabel('Manon  <b>');
 
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_2]);
 
-        $this->assertEquals(" changed from Manon  &lt;b&gt; to Sandra &lt;b&gt;", $list_1->diff($list_2));
-        $this->assertEquals(" changed from Sandra &lt;b&gt; to Manon  &lt;b&gt;", $list_2->diff($list_1));
+        $this->assertEquals(' changed from Manon  &lt;b&gt; to Sandra &lt;b&gt;', $list_1->diff($list_2));
+        $this->assertEquals(' changed from Sandra &lt;b&gt; to Manon  &lt;b&gt;', $list_2->diff($list_1));
     }
 
     public function testDiffAdded(): void
     {
-        $bind_value_1 = $this->getBindValueForLabel("Sandra");
-        $bind_value_2 = $this->getBindValueForLabel("Manon");
+        $bind_value_1 = $this->getBindValueForLabel('Sandra');
+        $bind_value_2 = $this->getBindValueForLabel('Manon');
 
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1, $bind_value_2]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1]);
@@ -118,8 +118,8 @@ class Tracker_Artifact_ChavesetValue_ListTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testDiffRemoved(): void
     {
-        $bind_value_1 = $this->getBindValueForLabel("Sandra");
-        $bind_value_2 = $this->getBindValueForLabel("Manon");
+        $bind_value_1 = $this->getBindValueForLabel('Sandra');
+        $bind_value_2 = $this->getBindValueForLabel('Manon');
 
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1, $bind_value_2]);
@@ -129,10 +129,10 @@ class Tracker_Artifact_ChavesetValue_ListTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testDiffAddedAndRemoved(): void
     {
-        $bind_value_1 = $this->getBindValueForLabel("Sandra");
-        $bind_value_2 = $this->getBindValueForLabel("Manon");
-        $bind_value_3 = $this->getBindValueForLabel("Marc");
-        $bind_value_4 = $this->getBindValueForLabel("Nicolas");
+        $bind_value_1 = $this->getBindValueForLabel('Sandra');
+        $bind_value_2 = $this->getBindValueForLabel('Manon');
+        $bind_value_3 = $this->getBindValueForLabel('Marc');
+        $bind_value_4 = $this->getBindValueForLabel('Nicolas');
 
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_3, $bind_value_4]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1, $bind_value_2]);

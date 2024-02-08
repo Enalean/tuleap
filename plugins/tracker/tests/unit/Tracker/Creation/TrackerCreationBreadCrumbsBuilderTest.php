@@ -56,7 +56,7 @@ class TrackerCreationBreadCrumbsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->builder = new TrackerCreationBreadCrumbsBuilder();
 
         $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getId')->andReturn("101");
+        $this->project->shouldReceive('getId')->andReturn('101');
         $this->project->shouldReceive('getUnixNameLowerCase')->andReturn('my-project');
 
         $this->user = Mockery::mock(PFUser::class);

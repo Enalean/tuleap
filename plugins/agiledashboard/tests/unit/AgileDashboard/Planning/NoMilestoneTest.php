@@ -74,7 +74,7 @@ final class NoMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNull($this->milestone->getArtifactTitle());
         $this->assertTrue(
             $this->milestone->userCanView(Mockery::mock(PFUser::class)),
-            "any user should be able to read an empty milstone"
+            'any user should be able to read an empty milstone'
         );
     }
 }

@@ -91,13 +91,13 @@ class LDAP_SearchPeople extends Search_SearchPeople
             $dom = new DOMDocument();
             @$dom->loadHTML($html_tag_from_custom_file);
 
-            $a_tag = $dom->getElementsByTagName("a")->item(0);
+            $a_tag = $dom->getElementsByTagName('a')->item(0);
 
             if ($a_tag === null) {
                 return '';
             }
 
-            return $a_tag->getAttribute("href");
+            return $a_tag->getAttribute('href');
         }
         return '';
     }

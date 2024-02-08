@@ -51,7 +51,7 @@ final class GroupLinkUpdaterTest extends TestCase
 
         $this->branch_prefix          = 'dev/';
         $this->allow_artifact_closure = true;
-        $this->gitlab_token           = GroupLinkApiToken::buildNewGroupToken(new ConcealedString("az3rty_s3cure_t0ken"));
+        $this->gitlab_token           = GroupLinkApiToken::buildNewGroupToken(new ConcealedString('az3rty_s3cure_t0ken'));
     }
 
     private function updateGroupLink(): Ok|Err
@@ -103,7 +103,7 @@ final class GroupLinkUpdaterTest extends TestCase
 
     public function testItReturnsAFaultIfPrefixIsNotValid(): void
     {
-        $this->branch_prefix          = "not_valid[[[~~~prefix";
+        $this->branch_prefix          = 'not_valid[[[~~~prefix';
         $this->allow_artifact_closure = null;
 
         $result = $this->updateGroupLink();
@@ -125,7 +125,7 @@ final class GroupLinkUpdaterTest extends TestCase
     {
         $this->branch_prefix          = null;
         $this->allow_artifact_closure = null;
-        $this->gitlab_token           = GroupLinkApiToken::buildNewGroupToken(new ConcealedString("az3rty_s3cure_t0ken"));
+        $this->gitlab_token           = GroupLinkApiToken::buildNewGroupToken(new ConcealedString('az3rty_s3cure_t0ken'));
 
         $result = $this->updateGroupLink();
         self::assertTrue(Result::isOk($result));

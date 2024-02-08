@@ -30,18 +30,18 @@ class PreReceiveHookDataTest extends \Tuleap\Test\PHPUnit\TestCase
     public function wrongNumberOfRefsTest(): void
     {
         $input          = "a b c\n\rd e";
-        $git_dir_path   = "/repo-git";
-        $guest_dir_path = "/repo-git-guest";
+        $git_dir_path   = '/repo-git';
+        $guest_dir_path = '/repo-git-guest';
         $result         = PreReceiveHookData::fromRawStdinHook($input, $git_dir_path, $guest_dir_path, new NullLogger());
         self::assertTrue(Result::isErr($result));
-        self::assertEquals("Wrong number of arguments submitted, three arguments of the form old_rev new_rev refname expected on STDIN", (string) $result->error);
+        self::assertEquals('Wrong number of arguments submitted, three arguments of the form old_rev new_rev refname expected on STDIN', (string) $result->error);
     }
 
     public function testNormalBehaviour(): void
     {
         $input                      = "a b ref1\n\rc d ref2";
-        $git_dir_path               = "/git-repo";
-        $guest_dir_path             = "/repo-git-guest";
+        $git_dir_path               = '/git-repo';
+        $guest_dir_path             = '/repo-git-guest';
         $updated_references         = [];
         $updated_references['ref1'] = new PreReceiveHookUpdatedReference('a', 'b');
         $updated_references['ref2'] = new PreReceiveHookUpdatedReference('c', 'd');

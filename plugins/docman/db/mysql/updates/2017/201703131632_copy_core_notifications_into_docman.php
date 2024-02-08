@@ -22,7 +22,7 @@ class b201703131632_copy_core_notifications_into_docman extends \Tuleap\ForgeUpg
 {
     public function description()
     {
-        return "Copy core notifications into docman plugin";
+        return 'Copy core notifications into docman plugin';
     }
 
     public function preUp()
@@ -57,9 +57,9 @@ class b201703131632_copy_core_notifications_into_docman extends \Tuleap\ForgeUpg
 
     private function copyData()
     {
-        $sql = "INSERT INTO plugin_docman_notifications (item_id, user_id, type)
+        $sql = 'INSERT INTO plugin_docman_notifications (item_id, user_id, type)
                 SELECT object_id, user_id, type
-                FROM notifications";
+                FROM notifications';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

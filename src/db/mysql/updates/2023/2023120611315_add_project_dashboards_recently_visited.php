@@ -25,13 +25,13 @@ final class b2023120611315_add_project_dashboards_recently_visited extends \Tule
 {
     public function description(): string
     {
-        return "Add project dashboards recently visited table";
+        return 'Add project dashboards recently visited table';
     }
 
     public function up(): void
     {
         $this->api->createTable(
-            "project_dashboards_recently_visited",
+            'project_dashboards_recently_visited',
             <<<EOS
             CREATE TABLE project_dashboards_recently_visited (
                 user_id INT(11) NOT NULL,

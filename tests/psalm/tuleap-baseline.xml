@@ -495,7 +495,6 @@
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupFieldPresenter.php">
     <MissingParamType>
       <code>$can_burnup_be_regenerated</code>
-      <code>$css_url</code>
       <code>$user_locale</code>
       <code>$warning</code>
     </MissingParamType>
@@ -5708,23 +5707,6 @@
     <MissingParamType>
       <code>$count</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Metadata/MetadataUsageChecker.php">
-    <MissingParamType>
-      <code>$trackers</code>
-      <code>$type</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>checkAssignedToIsUsedByAllTracker</code>
-      <code>checkDescriptionIsUsedByAllTrackers</code>
-      <code>checkLastUpdateByIsUsedByAllTracker</code>
-      <code>checkLastUpdateDateIsUsedByAllTrackers</code>
-      <code>checkMetadataIsUsedByAllTrackers</code>
-      <code>checkStatusIsUsedByAllTrackers</code>
-      <code>checkSubmittedByIsUsedByAllTracker</code>
-      <code>checkSubmittedOnIsUsedByAllTrackers</code>
-      <code>checkTitleIsUsedByAllTrackers</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Metadata/StatusIsMissingInAtLeastOneTrackerException.php">
     <MissingParamType>
@@ -15137,7 +15119,6 @@
       <code>$filename</code>
       <code>$log</code>
       <code>$path</code>
-      <code>$path</code>
       <code>$user</code>
       <code>$user_id</code>
     </MissingParamType>
@@ -15146,7 +15127,6 @@
       <code>cacheUserLastAccessDate</code>
       <code>isAReadAccess</code>
       <code>isNotASystemUser</code>
-      <code>parseAllLogs</code>
       <code>parseCurrentAndPreviousMonthLogs</code>
       <code>parseLine</code>
       <code>parseLogs</code>
@@ -19018,16 +18998,11 @@
   </file>
   <file src="plugins/git/include/History/Dao.php">
     <MissingParamType>
-      <code>$count</code>
-      <code>$day</code>
       <code>$end_date</code>
       <code>$project_id</code>
-      <code>$repository_id</code>
       <code>$start_date</code>
-      <code>$user_id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>addGitReadAccess</code>
       <code>commit</code>
       <code>searchStatistics</code>
       <code>startTransaction</code>
@@ -19209,7 +19184,7 @@
     <InvalidDocblock>
       <code>public function getBranches($id, $offset = 0, $limit = self::MAX_LIMIT)</code>
       <code>public function getTags($id, $offset = 0, $limit = self::MAX_LIMIT)</code>
-      <code><![CDATA[public function getTree(int $id, string $ref, string $path = "", int $offset = 0, int $limit = self::MAX_LIMIT): array]]></code>
+      <code><![CDATA[public function getTree(int $id, string $ref, string $path = '', int $offset = 0, int $limit = self::MAX_LIMIT): array]]></code>
     </InvalidDocblock>
     <MissingParamType>
       <code>$disconnect_from_gerrit</code>
@@ -19813,9 +19788,9 @@
   </file>
   <file src="plugins/git/tests/integration/GitXmlImporterTest.php">
     <ForbiddenCode>
-      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . \Git_Exec::getGitCommand() . " log --oneline| wc -l")]]></code>
-      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . \Git_Exec::getGitCommand() . " log --oneline| wc -l")]]></code>
-      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git && " . \Git_Exec::getGitCommand() . " log --oneline| wc -l")]]></code>
+      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . \Git_Exec::getGitCommand() . ' log --oneline| wc -l')]]></code>
+      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . \Git_Exec::getGitCommand() . ' log --oneline| wc -l')]]></code>
+      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git && " . \Git_Exec::getGitCommand() . ' log --oneline| wc -l')]]></code>
       <code><![CDATA[shell_exec(\Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable.git")]]></code>
       <code><![CDATA[shell_exec(\Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable.git")]]></code>
       <code><![CDATA[shell_exec(\Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git")]]></code>
@@ -19870,9 +19845,6 @@
       <code>$xml</code>
     </MissingParamType>
     <MissingPropertyType>
-      <code>$backup_access_config</code>
-      <code>$backup_sys_data_dir</code>
-      <code>$backup_tmp_dir</code>
       <code>$old_cwd</code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -20021,9 +19993,6 @@
     <MissingParamType>
       <code>$filename</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code>$backup_codendi_cache_dir</code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code>getFileConf</code>
       <code>getGitoliteConf</code>
@@ -20071,9 +20040,6 @@
       <code>\Mockery::spy(\Psr\Log\LoggerInterface::class)</code>
       <code>\Mockery::spy(\UserManager::class)</code>
     </InvalidPropertyAssignmentValue>
-    <MissingPropertyType>
-      <code>$backup_sys_data_dir</code>
-    </MissingPropertyType>
     <PossiblyFalseArgument>
       <code><![CDATA[$this->cwd]]></code>
     </PossiblyFalseArgument>
@@ -20164,7 +20130,7 @@
   </file>
   <file src="plugins/gitlab/include/API/ClientWrapper.php">
     <InvalidReturnStatement>
-      <code><![CDATA[preg_replace("/[<>]/", "", $next_link_entity[0][0])]]></code>
+      <code><![CDATA[preg_replace('/[<>]/', '', $next_link_entity[0][0])]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code>?string</code>
@@ -22558,7 +22524,7 @@
   </file>
   <file src="plugins/hudson/include/hudson_Widget_MyMonitoredJobs.class.php">
     <DeprecatedFunction>
-      <code><![CDATA[user_set_preference('plugin_hudson_my_not_monitored_jobs', implode(",", $this->_not_monitored_jobs))]]></code>
+      <code><![CDATA[user_set_preference('plugin_hudson_my_not_monitored_jobs', implode(',', $this->_not_monitored_jobs))]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code><![CDATA[$job_dao->searchByUserID($user->getId())]]></code>
@@ -22619,7 +22585,7 @@
   </file>
   <file src="plugins/hudson_git/include/HudsonGit/Git/Administration/XML/XMLImporter.php">
     <TypeDoesNotContainType>
-      <code><![CDATA[isset($xml_git->{"jenkins-servers-admin"})]]></code>
+      <code><![CDATA[isset($xml_git->{'jenkins-servers-admin'})]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="plugins/hudson_git/include/HudsonGit/GitWebhooksSettingsCreateJenkinsButtonPresenter.php">
@@ -22766,7 +22732,7 @@
   </file>
   <file src="plugins/hudson_git/tests/unit/HudsonGit/Git/Administration/XML/XMLExporterTest.php">
     <PossiblyNullArgument>
-      <code><![CDATA[$xml_git->{"jenkins-servers-admin"}->children()]]></code>
+      <code><![CDATA[$xml_git->{'jenkins-servers-admin'}->children()]]></code>
     </PossiblyNullArgument>
     <PossiblyNullArrayAccess>
       <code><![CDATA[$server_01['url']]]></code>
@@ -26707,8 +26673,8 @@
       <code>update_database</code>
     </MissingReturnType>
     <PossiblyInvalidOperand>
-      <code><![CDATA[str_replace("'", "&#039;", $URL)]]></code>
-      <code><![CDATA[str_replace("'", "&#039;", $title)]]></code>
+      <code><![CDATA[str_replace("'", '&#039;', $URL)]]></code>
+      <code><![CDATA[str_replace("'", '&#039;', $title)]]></code>
     </PossiblyInvalidOperand>
     <TypeDoesNotContainType>
       <code><![CDATA[$gFormGroupLevel < 0]]></code>
@@ -26816,33 +26782,33 @@
       <code>db_numrows($rs_grp)</code>
       <code>db_numrows($templLinks)</code>
       <code><![CDATA[db_query(
-                            "DELETE FROM plugin_projectlinks_link_type
-                            WHERE (group_id=" . db_ei($group_id) . ")AND (link_type_id=" . db_ei($link_type_id) . ");"
+                            'DELETE FROM plugin_projectlinks_link_type
+                            WHERE (group_id=' . db_ei($group_id) . ')AND (link_type_id=' . db_ei($link_type_id) . ');'
                         )]]></code>
       <code><![CDATA[db_query(
-                        "DELETE FROM plugin_projectlinks_relationship
-                         WHERE (master_group_id=" . db_ei($group_id) . ")
-                            AND (link_id=" . db_ei($link_id) . ");"
+                        'DELETE FROM plugin_projectlinks_relationship
+                         WHERE (master_group_id=' . db_ei($group_id) . ')
+                            AND (link_id=' . db_ei($link_id) . ');'
                     )]]></code>
       <code><![CDATA[db_query(
-                        "DELETE FROM plugin_projectlinks_relationship
-                    WHERE (master_group_id=" . db_ei($group_id) . ") AND (link_type_id=" . db_ei($link_type_id) . ");"
+                        'DELETE FROM plugin_projectlinks_relationship
+                    WHERE (master_group_id=' . db_ei($group_id) . ') AND (link_type_id=' . db_ei($link_type_id) . ');'
                     )]]></code>
       <code><![CDATA[db_query(
-                        "SELECT group_id
+                        'SELECT group_id
                              FROM `groups`
-                             WHERE (built_from_template = " . db_ei($target_group_id) . ");"
+                             WHERE (built_from_template = ' . db_ei($target_group_id) . ');'
                     )]]></code>
-      <code><![CDATA[db_query("
+      <code><![CDATA[db_query('
                         SELECT creation_date
                         FROM plugin_projectlinks_relationship
-                        WHERE ((master_group_id = " . db_ei($group_id) . ")
+                        WHERE ((master_group_id = ' . db_ei($group_id) . ')
                             AND (target_group_id =
-                            " . db_ei($row_templLinks['target_group_id']) . ")
+                            ' . db_ei($row_templLinks['target_group_id']) . ')
                             AND (link_type_id =
-                            " . db_ei($typeMatch[$row_templLinks['link_type_id']]) . ")
-                        );")]]></code>
-      <code><![CDATA[db_query("
+                            ' . db_ei($typeMatch[$row_templLinks['link_type_id']]) . ')
+                        );')]]></code>
+      <code><![CDATA[db_query('
             SELECT plugin_projectlinks_relationship.link_type_id,
                 name AS link_name, type, `groups`.group_id,
                 group_name, unix_group_name, uri_plus,
@@ -26853,114 +26819,114 @@
                     = plugin_projectlinks_link_type.link_type_id)
                 AND (plugin_projectlinks_relationship.target_group_id
                     = `groups`.group_id)
-                AND ((master_group_id = " . db_ei($template_id) . ")
-                    AND (target_group_id <> " . db_ei($group_id) . ")
+                AND ((master_group_id = ' . db_ei($template_id) . ')
+                    AND (target_group_id <> ' . db_ei($group_id) . ")
                     AND (status = 'A'))
             ORDER BY name, type, group_name;")]]></code>
-      <code><![CDATA[db_query("DELETE FROM plugin_projectlinks_link_type WHERE group_id=" . db_ei($group_id))]]></code>
-      <code><![CDATA[db_query("DELETE FROM plugin_projectlinks_relationship WHERE ((master_group_id=" . db_ei($group_id) . ") OR (target_group_id=" . db_ei($group_id) . "))")]]></code>
-      <code><![CDATA[db_query("INSERT INTO plugin_projectlinks_link_type (
+      <code><![CDATA[db_query('DELETE FROM plugin_projectlinks_link_type WHERE group_id=' . db_ei($group_id))]]></code>
+      <code><![CDATA[db_query('DELETE FROM plugin_projectlinks_relationship WHERE ((master_group_id=' . db_ei($group_id) . ') OR (target_group_id=' . db_ei($group_id) . '))')]]></code>
+      <code><![CDATA[db_query('INSERT INTO plugin_projectlinks_link_type (
                         group_id,
                         name,
                         reverse_name,
                         description,
                         uri_plus
                     ) VALUES (
-                    " . db_ei($group_id) . ",
+                    ' . db_ei($group_id) . ",
                         '" . db_es($row['name']) . "',
                         '" . db_es($row['reverse_name']) . "',
                         '" . db_es($row['description']) . "',
                         '" . db_es($row['uri_plus']) . "'
                     );")]]></code>
-      <code><![CDATA[db_query("INSERT INTO plugin_projectlinks_link_type (
+      <code><![CDATA[db_query('INSERT INTO plugin_projectlinks_link_type (
                     group_id,
                     name,
                     reverse_name,
                     description,
                     uri_plus
                 ) VALUES (
-                " . db_ei($group_id) . ",
+                ' . db_ei($group_id) . ",
                     '" . db_es($row['name']) . "',
                     '" . db_es($row['reverse_name']) . "',
                     '" . db_es($row['description']) . "',
                     '" . db_es($row['uri_plus']) . "'
                 );")]]></code>
-      <code><![CDATA[db_query("INSERT INTO plugin_projectlinks_relationship (
+      <code><![CDATA[db_query('INSERT INTO plugin_projectlinks_relationship (
                         link_type_id,
                         master_group_id,
                         target_group_id,
                         creation_date
                     ) VALUES (
-                        " . db_ei($row2['link_type_id']) . ",
-                        " . db_ei($group_id) . ",
-                        " . db_ei($row['target_group_id']) . ",
-                        " . db_ei(time()) . "
-                    );")]]></code>
-      <code><![CDATA[db_query("INSERT INTO plugin_projectlinks_relationship (
+                        ' . db_ei($row2['link_type_id']) . ',
+                        ' . db_ei($group_id) . ',
+                        ' . db_ei($row['target_group_id']) . ',
+                        ' . db_ei(time()) . '
+                    );')]]></code>
+      <code><![CDATA[db_query('INSERT INTO plugin_projectlinks_relationship (
                     link_type_id,
                     master_group_id,
                     target_group_id,
                     creation_date
                 ) VALUES (
-                    " . db_ei($row['link_type_id']) . ",
-                    " . db_ei($row['master_group_id']) . ",
-                    " . db_ei($group_id) . ",
-                    " . db_ei(time()) . "
-                );")]]></code>
-      <code><![CDATA[db_query("SELECT * FROM plugin_projectlinks_link_type
-                                WHERE (link_type_id = " . db_ei($template_type_id) . ");")]]></code>
-      <code><![CDATA[db_query("SELECT * FROM plugin_projectlinks_link_type
-                            WHERE (group_id = " . db_ei($template_id) . ");")]]></code>
-      <code><![CDATA[db_query("SELECT link_type_id FROM
+                    ' . db_ei($row['link_type_id']) . ',
+                    ' . db_ei($row['master_group_id']) . ',
+                    ' . db_ei($group_id) . ',
+                    ' . db_ei(time()) . '
+                );')]]></code>
+      <code><![CDATA[db_query('SELECT * FROM plugin_projectlinks_link_type
+                                WHERE (link_type_id = ' . db_ei($template_type_id) . ');')]]></code>
+      <code><![CDATA[db_query('SELECT * FROM plugin_projectlinks_link_type
+                            WHERE (group_id = ' . db_ei($template_id) . ');')]]></code>
+      <code><![CDATA[db_query('SELECT link_type_id FROM
                 plugin_projectlinks_link_type
-                WHERE ((group_id = " . db_ei($group_id) . ")
+                WHERE ((group_id = ' . db_ei($group_id) . ")
                     AND (name='" . db_es($row['name']) . "'));")]]></code>
-      <code><![CDATA[db_query("SELECT link_type_id FROM
+      <code><![CDATA[db_query('SELECT link_type_id FROM
             plugin_projectlinks_relationship
             WHERE (
-                (target_group_id=" . db_ei($target_group_id) . ")
-                AND (master_group_id=" . db_ei($group_id) . ")
-                AND (link_type_id=" . db_ei($link_type_id) . ")
-                " . (is_null($link_id) ? "" : " AND (link_id<>" . db_ei($link_id) . ")") . "
-            )")]]></code>
-      <code><![CDATA[db_query("SELECT link_type_id, group_id, name,
+                (target_group_id=' . db_ei($target_group_id) . ')
+                AND (master_group_id=' . db_ei($group_id) . ')
+                AND (link_type_id=' . db_ei($link_type_id) . ')
+                ' . (is_null($link_id) ? '' : ' AND (link_id<>' . db_ei($link_id) . ')') . '
+            )')]]></code>
+      <code><![CDATA[db_query('SELECT link_type_id, group_id, name,
                 reverse_name, description, uri_plus
                 FROM plugin_projectlinks_link_type
-                WHERE ((group_id = " . db_ei($group_id) . ")
-                    AND (link_type_id = " . db_ei($link_type_id) . "));")]]></code>
-      <code><![CDATA[db_query("SELECT link_type_id, group_id, name,
+                WHERE ((group_id = ' . db_ei($group_id) . ')
+                    AND (link_type_id = ' . db_ei($link_type_id) . '));')]]></code>
+      <code><![CDATA[db_query('SELECT link_type_id, group_id, name,
             reverse_name, description, uri_plus
             FROM plugin_projectlinks_link_type
-            WHERE (group_id = " . db_ei($template_id) . ");")]]></code>
-      <code><![CDATA[db_query("SELECT link_type_id, master_group_id
+            WHERE (group_id = ' . db_ei($template_id) . ');')]]></code>
+      <code><![CDATA[db_query('SELECT link_type_id, master_group_id
             FROM plugin_projectlinks_relationship
-            WHERE (target_group_id = " . db_ei($template_id) . ");")]]></code>
-      <code><![CDATA[db_query("SELECT link_type_id, name, reverse_name,
+            WHERE (target_group_id = ' . db_ei($template_id) . ');')]]></code>
+      <code><![CDATA[db_query('SELECT link_type_id, name, reverse_name,
                 description, uri_plus FROM plugin_projectlinks_link_type
-                WHERE ((group_id = " . db_ei($group_id) . ")
+                WHERE ((group_id = ' . db_ei($group_id) . ")
                     AND (name = '" . db_es($ltr_tmplt['name']) . "')
                     );")]]></code>
-      <code><![CDATA[db_query("SELECT link_type_id, name, reverse_name, description,
+      <code><![CDATA[db_query('SELECT link_type_id, name, reverse_name, description,
             uri_plus, group_id
             FROM plugin_projectlinks_link_type
-            WHERE (group_id=" . db_ei($group_id) . ")
-            ORDER BY (name);")]]></code>
-      <code><![CDATA[db_query("SELECT name
+            WHERE (group_id=' . db_ei($group_id) . ')
+            ORDER BY (name);')]]></code>
+      <code><![CDATA[db_query('SELECT name
                 FROM plugin_projectlinks_link_type
-                WHERE (((name=" . $q_name . ")
-                        OR (reverse_name=" . $q_reverse_name . "))
-                    AND ((group_id=" . db_ei($group_id) . ")" .
-                    (is_null($link_type_id) ? "" :
-                        " AND (link_type_id<>" . db_ei($link_type_id) . ")") .
-                    ")
-                );")]]></code>
-      <code><![CDATA[db_query("SELECT name, target_group_id
+                WHERE (((name=' . $q_name . ')
+                        OR (reverse_name=' . $q_reverse_name . '))
+                    AND ((group_id=' . db_ei($group_id) . ')' .
+                    (is_null($link_type_id) ? '' :
+                        ' AND (link_type_id<>' . db_ei($link_type_id) . ')') .
+                    ')
+                );')]]></code>
+      <code><![CDATA[db_query('SELECT name, target_group_id
             FROM plugin_projectlinks_relationship,
                 plugin_projectlinks_link_type
             WHERE ((plugin_projectlinks_relationship.link_type_id =
                     plugin_projectlinks_link_type.link_type_id)
-                AND (master_group_id = " . db_ei($template_id) . "));")]]></code>
-      <code><![CDATA[user_set_preference("pl_GroupId_master", $group_id)]]></code>
+                AND (master_group_id = ' . db_ei($template_id) . '));')]]></code>
+      <code><![CDATA[user_set_preference('pl_GroupId_master', $group_id)]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code><![CDATA[$dao->searchLinksByType($link_type_id)]]></code>
@@ -27705,7 +27671,6 @@
       <code>public $format;</code>
       <code>public $position;</code>
       <code>public $unidiff_offset;</code>
-      <code>public int|null $parent_id = 0;</code>
     </InvalidDocblock>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestLineUniDiffRepresentation.php">
@@ -27863,12 +27828,8 @@
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Reference/HTMLURLBuilder.php">
     <InvalidScalarArgument>
-      <code>$project_id</code>
       <code><![CDATA[$pull_request->getId()]]></code>
     </InvalidScalarArgument>
-    <MissingReturnType>
-      <code>getPullRequestDashboardUrl</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Reference/ProjectReferenceRetriever.php">
     <MissingParamType>
@@ -29380,18 +29341,6 @@
       <code>$dar</code>
     </PossiblyFalseIterator>
   </file>
-  <file src="plugins/svn/bin/migrate_to_plugin.php">
-    <MissingReturnType>
-      <code>usage</code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code>$user</code>
-    </PossiblyNullArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code>$argv[1]</code>
-      <code>$argv[2]</code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
   <file src="plugins/svn/bin/svn_post_commit.php">
     <InvalidOperand>
       <code>$revision</code>
@@ -29554,7 +29503,6 @@
       <code>$sections</code>
       <code>$select_version</code>
       <code>$title</code>
-      <code>$use_version</code>
       <code>$versions</code>
     </MissingPropertyType>
   </file>
@@ -29587,14 +29535,12 @@
       <code>$version_id</code>
       <code>$version_id</code>
       <code>$version_id</code>
-      <code>$version_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>logHistory</code>
       <code>logUseAVersionHistory</code>
       <code>saveUsedVersion</code>
       <code>useAVersion</code>
-      <code>useAVersionWithHistory</code>
       <code>useAVersionWithHistoryWithoutUpdateSVNAccessFile</code>
       <code>useVersion</code>
     </MissingReturnType>
@@ -30286,7 +30232,6 @@
       <code>markAsDeleted</code>
       <code>searchByProject</code>
       <code>searchByRepositoryId</code>
-      <code>searchByRepositoryIdAndProjectId</code>
       <code>searchPaginatedByProject</code>
       <code>searchPaginatedByProjectAndByName</code>
       <code>searchRepositoriesOfNonDeletedProjects</code>
@@ -30609,26 +30554,6 @@
       <code>exportUserCondition</code>
       <code>formatSpanDate</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/svn/include/SVN/Migration/RepositoryCopier.php">
-    <MissingReturnType>
-      <code>copy</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/svn/include/SVN/Migration/SettingsRetriever.php">
-    <DeprecatedMethod>
-      <code>$core_notifications</code>
-      <code>$core_notifications</code>
-    </DeprecatedMethod>
-    <MissingReturnType>
-      <code>getAccessFileHistory</code>
-      <code>getCommitRules</code>
-      <code>getSettingsFromCoreRepository</code>
-      <code>getUsedVersion</code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$repository->getProject()->getID()]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="plugins/svn/include/SVN/Notifications/CannotAddUgroupsNotificationException.php">
     <MissingParamType>
@@ -30963,11 +30888,6 @@
       <code>groupAddHistory</code>
       <code>groupAddHistory</code>
     </DeprecatedMethod>
-    <MissingParamType>
-      <code>$copy_from_core</code>
-      <code>$copy_from_core</code>
-      <code>$copy_from_core</code>
-    </MissingParamType>
     <MissingReturnType>
       <code>addSettingsToRepository</code>
       <code>checkRepositoryName</code>
@@ -32135,7 +32055,7 @@
     <InvalidDocblock>
       <code>public $artifact_id;</code>
       <code>public $date_time;</code>
-      <code><![CDATA[public $step = "";]]></code>
+      <code><![CDATA[public $step = '';]]></code>
       <code>public $time_value;</code>
     </InvalidDocblock>
     <MissingPropertyType>
@@ -33193,11 +33113,6 @@
       <code>checkQuery</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/REST/v1/LinkWithDirectionRepresentation.php">
-    <InvalidDocblock>
-      <code>public string | null $type = null;</code>
-    </InvalidDocblock>
-  </file>
   <file src="plugins/tracker/include/REST/v1/MilestonesBurndownResource.class.php">
     <MissingReturnType>
       <code>get</code>
@@ -33565,7 +33480,6 @@
       <code>linkArtifact</code>
     </DeprecatedMethod>
     <MissingReturnType>
-      <code>createArtifact</code>
       <code>linkArtifact</code>
       <code>process</code>
       <code>sendJSONErrors</code>
@@ -34827,9 +34741,6 @@
       <code>setInstance</code>
       <code>setTitles</code>
     </MissingReturnType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_ArtifactLinkInfo.class.php">
     <MissingParamType>
@@ -36761,11 +36672,9 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/BurndownFieldPresenter.php">
     <MissingParamType>
-      <code>$css_url</code>
       <code>$warning</code>
     </MissingParamType>
     <MissingPropertyType>
-      <code>$css_url</code>
       <code>$data_burndown</code>
       <code>$has_warning</code>
       <code>$locale</code>
@@ -38983,7 +38892,6 @@
       <code>$tracker</code>
       <code>$tracker</code>
       <code>$tracker</code>
-      <code>$tracker</code>
       <code>$tracker_id</code>
       <code>$tracker_id</code>
       <code>$tracker_is_empty</code>
@@ -39060,9 +38968,6 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(array) $this->getUsedFormElementsByType($tracker, ['tbl', 'sb', 'msb'])]]></code>
-    </RedundantCastGivenDocblockType>
     <RedundantPropertyInitializationCheck>
       <code>isset(self::$instance)</code>
     </RedundantPropertyInitializationCheck>
@@ -40769,7 +40674,6 @@
       <code>accept</code>
       <code>exportCriteriaValueToXML</code>
       <code>fetchArtifactValueWithEditionFormIfEditable</code>
-      <code>fetchUserGroupList</code>
       <code>getArtifactValueHTML</code>
       <code>getFieldDataFromArray</code>
       <code>getHiddenArtifactValueForEdition</code>
@@ -42941,48 +42845,11 @@
       <code>validateExpertQuery</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/BetweenComparisonVisitor.php">
-    <InvalidArgument>
-      <code>$element</code>
-    </InvalidArgument>
-    <MissingPropertyType>
-      <code>$OPERATOR</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>visitArtifactId</code>
-      <code>visitArtifactLink</code>
-      <code>visitBurndown</code>
-      <code>visitCheckbox</code>
-      <code>visitComputed</code>
-      <code>visitCrossReferences</code>
-      <code>visitDate</code>
-      <code>visitExternalField</code>
-      <code>visitFile</code>
-      <code>visitFloat</code>
-      <code>visitInteger</code>
-      <code>visitLastModifiedBy</code>
-      <code>visitLastUpdateDate</code>
-      <code>visitMultiSelectbox</code>
-      <code>visitOpenList</code>
-      <code>visitPerTrackerArtifactId</code>
-      <code>visitPermissionsOnArtifact</code>
-      <code>visitPriority</code>
-      <code>visitRadiobutton</code>
-      <code>visitSelectbox</code>
-      <code>visitString</code>
-      <code>visitSubmittedBy</code>
-      <code>visitSubmittedOn</code>
-      <code>visitText</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/Date/DateFormatValidator.php">
     <MissingParamType>
       <code>$value</code>
       <code>$value</code>
     </MissingParamType>
-    <MissingReturnType>
-      <code>checkValueIsValid</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/Date/DateToStringComparisonException.php">
     <MissingParamType>
@@ -42994,156 +42861,12 @@
       <code>$submitted_value</code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/EqualComparisonVisitor.php">
-    <InvalidArgument>
-      <code>$element</code>
-    </InvalidArgument>
-    <MissingReturnType>
-      <code>visitArtifactId</code>
-      <code>visitArtifactLink</code>
-      <code>visitBurndown</code>
-      <code>visitCheckbox</code>
-      <code>visitComputed</code>
-      <code>visitCrossReferences</code>
-      <code>visitDate</code>
-      <code>visitExternalField</code>
-      <code>visitFile</code>
-      <code>visitFloat</code>
-      <code>visitInteger</code>
-      <code>visitLastModifiedBy</code>
-      <code>visitLastUpdateDate</code>
-      <code>visitList</code>
-      <code>visitMultiSelectbox</code>
-      <code>visitOpenList</code>
-      <code>visitPerTrackerArtifactId</code>
-      <code>visitPermissionsOnArtifact</code>
-      <code>visitPriority</code>
-      <code>visitRadiobutton</code>
-      <code>visitSelectbox</code>
-      <code>visitString</code>
-      <code>visitSubmittedOn</code>
-      <code>visitText</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/FieldIsNotSupportedForComparisonException.php">
     <MissingParamType>
       <code>$operator</code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/File/FileToStringComparisonException.php">
-    <MissingParamType>
-      <code>$value</code>
-    </MissingParamType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/FloatFields/FloatToStringComparisonException.php">
-    <MissingParamType>
-      <code>$value</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/GreaterThanComparisonVisitor.php">
-    <InvalidArgument>
-      <code>$element</code>
-    </InvalidArgument>
-    <MissingPropertyType>
-      <code>$OPERATOR</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>visitArtifactId</code>
-      <code>visitArtifactLink</code>
-      <code>visitBurndown</code>
-      <code>visitCheckbox</code>
-      <code>visitComputed</code>
-      <code>visitCrossReferences</code>
-      <code>visitDate</code>
-      <code>visitExternalField</code>
-      <code>visitFile</code>
-      <code>visitFloat</code>
-      <code>visitInteger</code>
-      <code>visitLastModifiedBy</code>
-      <code>visitLastUpdateDate</code>
-      <code>visitMultiSelectbox</code>
-      <code>visitOpenList</code>
-      <code>visitPerTrackerArtifactId</code>
-      <code>visitPermissionsOnArtifact</code>
-      <code>visitPriority</code>
-      <code>visitRadiobutton</code>
-      <code>visitSelectbox</code>
-      <code>visitString</code>
-      <code>visitSubmittedBy</code>
-      <code>visitSubmittedOn</code>
-      <code>visitText</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/GreaterThanOrEqualComparisonVisitor.php">
-    <InvalidArgument>
-      <code>$element</code>
-    </InvalidArgument>
-    <MissingPropertyType>
-      <code>$OPERATOR</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>visitArtifactId</code>
-      <code>visitArtifactLink</code>
-      <code>visitBurndown</code>
-      <code>visitCheckbox</code>
-      <code>visitComputed</code>
-      <code>visitCrossReferences</code>
-      <code>visitDate</code>
-      <code>visitExternalField</code>
-      <code>visitFile</code>
-      <code>visitFloat</code>
-      <code>visitInteger</code>
-      <code>visitLastModifiedBy</code>
-      <code>visitLastUpdateDate</code>
-      <code>visitMultiSelectbox</code>
-      <code>visitOpenList</code>
-      <code>visitPerTrackerArtifactId</code>
-      <code>visitPermissionsOnArtifact</code>
-      <code>visitPriority</code>
-      <code>visitRadiobutton</code>
-      <code>visitSelectbox</code>
-      <code>visitString</code>
-      <code>visitSubmittedBy</code>
-      <code>visitSubmittedOn</code>
-      <code>visitText</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/InComparisonVisitor.php">
-    <InvalidArgument>
-      <code>$element</code>
-    </InvalidArgument>
-    <MissingPropertyType>
-      <code>$OPERATOR</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>visitArtifactId</code>
-      <code>visitArtifactLink</code>
-      <code>visitBurndown</code>
-      <code>visitCheckbox</code>
-      <code>visitComputed</code>
-      <code>visitCrossReferences</code>
-      <code>visitDate</code>
-      <code>visitExternalField</code>
-      <code>visitFile</code>
-      <code>visitFloat</code>
-      <code>visitInteger</code>
-      <code>visitLastModifiedBy</code>
-      <code>visitLastUpdateDate</code>
-      <code>visitList</code>
-      <code>visitMultiSelectbox</code>
-      <code>visitOpenList</code>
-      <code>visitPerTrackerArtifactId</code>
-      <code>visitPermissionsOnArtifact</code>
-      <code>visitPriority</code>
-      <code>visitRadiobutton</code>
-      <code>visitSelectbox</code>
-      <code>visitString</code>
-      <code>visitSubmittedBy</code>
-      <code>visitSubmittedOn</code>
-      <code>visitText</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/Integer/IntegerToFloatComparisonException.php">
     <MissingParamType>
       <code>$value</code>
     </MissingParamType>
@@ -43152,74 +42875,6 @@
     <MissingParamType>
       <code>$value</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/LesserThanComparisonVisitor.php">
-    <InvalidArgument>
-      <code>$element</code>
-    </InvalidArgument>
-    <MissingPropertyType>
-      <code>$OPERATOR</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>visitArtifactId</code>
-      <code>visitArtifactLink</code>
-      <code>visitBurndown</code>
-      <code>visitCheckbox</code>
-      <code>visitComputed</code>
-      <code>visitCrossReferences</code>
-      <code>visitDate</code>
-      <code>visitExternalField</code>
-      <code>visitFile</code>
-      <code>visitFloat</code>
-      <code>visitInteger</code>
-      <code>visitLastModifiedBy</code>
-      <code>visitLastUpdateDate</code>
-      <code>visitMultiSelectbox</code>
-      <code>visitOpenList</code>
-      <code>visitPerTrackerArtifactId</code>
-      <code>visitPermissionsOnArtifact</code>
-      <code>visitPriority</code>
-      <code>visitRadiobutton</code>
-      <code>visitSelectbox</code>
-      <code>visitString</code>
-      <code>visitSubmittedBy</code>
-      <code>visitSubmittedOn</code>
-      <code>visitText</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/LesserThanOrEqualComparisonVisitor.php">
-    <InvalidArgument>
-      <code>$element</code>
-    </InvalidArgument>
-    <MissingPropertyType>
-      <code>$OPERATOR</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>visitArtifactId</code>
-      <code>visitArtifactLink</code>
-      <code>visitBurndown</code>
-      <code>visitCheckbox</code>
-      <code>visitComputed</code>
-      <code>visitCrossReferences</code>
-      <code>visitDate</code>
-      <code>visitExternalField</code>
-      <code>visitFile</code>
-      <code>visitFloat</code>
-      <code>visitInteger</code>
-      <code>visitLastModifiedBy</code>
-      <code>visitLastUpdateDate</code>
-      <code>visitMultiSelectbox</code>
-      <code>visitOpenList</code>
-      <code>visitPerTrackerArtifactId</code>
-      <code>visitPermissionsOnArtifact</code>
-      <code>visitPriority</code>
-      <code>visitRadiobutton</code>
-      <code>visitSelectbox</code>
-      <code>visitString</code>
-      <code>visitSubmittedBy</code>
-      <code>visitSubmittedOn</code>
-      <code>visitText</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/ListFields/CollectionOfNormalizedBindLabelsExtractor.php">
     <MissingReturnType>
@@ -43232,82 +42887,10 @@
       <code>getUserName</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/ListFields/ListFieldChecker.php">
-    <ArgumentTypeCoercion>
-      <code>$field</code>
-    </ArgumentTypeCoercion>
-  </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/ListFields/ListValueDoNotExistComparisonException.php">
     <MissingParamType>
       <code>$value</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/NotEqualComparisonVisitor.php">
-    <InvalidArgument>
-      <code>$element</code>
-    </InvalidArgument>
-    <MissingReturnType>
-      <code>visitArtifactId</code>
-      <code>visitArtifactLink</code>
-      <code>visitBurndown</code>
-      <code>visitCheckbox</code>
-      <code>visitComputed</code>
-      <code>visitCrossReferences</code>
-      <code>visitDate</code>
-      <code>visitExternalField</code>
-      <code>visitFile</code>
-      <code>visitFloat</code>
-      <code>visitInteger</code>
-      <code>visitLastModifiedBy</code>
-      <code>visitLastUpdateDate</code>
-      <code>visitList</code>
-      <code>visitMultiSelectbox</code>
-      <code>visitOpenList</code>
-      <code>visitPerTrackerArtifactId</code>
-      <code>visitPermissionsOnArtifact</code>
-      <code>visitPriority</code>
-      <code>visitRadiobutton</code>
-      <code>visitSelectbox</code>
-      <code>visitString</code>
-      <code>visitSubmittedBy</code>
-      <code>visitSubmittedOn</code>
-      <code>visitText</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/NotInComparisonVisitor.php">
-    <InvalidArgument>
-      <code>$element</code>
-    </InvalidArgument>
-    <MissingPropertyType>
-      <code>$OPERATOR</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>visitArtifactId</code>
-      <code>visitArtifactLink</code>
-      <code>visitBurndown</code>
-      <code>visitCheckbox</code>
-      <code>visitComputed</code>
-      <code>visitCrossReferences</code>
-      <code>visitDate</code>
-      <code>visitExternalField</code>
-      <code>visitFile</code>
-      <code>visitFloat</code>
-      <code>visitInteger</code>
-      <code>visitLastModifiedBy</code>
-      <code>visitLastUpdateDate</code>
-      <code>visitList</code>
-      <code>visitMultiSelectbox</code>
-      <code>visitOpenList</code>
-      <code>visitPerTrackerArtifactId</code>
-      <code>visitPermissionsOnArtifact</code>
-      <code>visitPriority</code>
-      <code>visitRadiobutton</code>
-      <code>visitSelectbox</code>
-      <code>visitString</code>
-      <code>visitSubmittedBy</code>
-      <code>visitSubmittedOn</code>
-      <code>visitText</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidMetadata/BetweenComparisonChecker.php">
     <MissingReturnType>
@@ -43450,25 +43033,9 @@
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/DateTimeValueRounder.php">
     <InvalidScalarArgument>
-      <code><![CDATA[$date_value->format("H")]]></code>
-      <code><![CDATA[$date_value->format("i")]]></code>
+      <code><![CDATA[$date_value->format('H')]]></code>
+      <code><![CDATA[$date_value->format('i')]]></code>
     </InvalidScalarArgument>
-    <MissingParamType>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>floorDate</code>
-      <code>floorDateTime</code>
-      <code>getCeiledTimestampFromDate</code>
-      <code>getCeiledTimestampFromDateTime</code>
-      <code>getFlooredTimestampFromDate</code>
-      <code>getFlooredTimestampFromDateTime</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/EqualComparison/ForDateTime.php">
     <MissingParamType>
@@ -46566,7 +46133,6 @@
       <code>$name</code>
       <code>$notifications_level</code>
       <code>$notifications_level</code>
-      <code>$project_export_context</code>
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
@@ -46647,7 +46213,6 @@
       <code>getParentId</code>
       <code>getUGroupRetrieverWithLegacy</code>
       <code>getUserXMLExporter</code>
-      <code>hasFieldBindedToUserGroupsViewableByUser</code>
       <code>isEmailgatewayEnabled</code>
       <code>sendXML</code>
       <code>setChildren</code>
@@ -46668,18 +46233,10 @@
       <code><![CDATA[$this->getGroupId()]]></code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument>
-      <code>$child</code>
-      <code>$child</code>
-      <code>$child</code>
-      <code>$child</code>
-      <code>$child</code>
-      <code>$node_perms</code>
       <code>$source_artifact</code>
       <code>$user</code>
     </PossiblyNullArgument>
     <PossiblyNullReference>
-      <code>addAttribute</code>
-      <code>addChild</code>
       <code>getId</code>
     </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
@@ -49806,7 +49363,6 @@
       <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
-      <code>addHook</code>
     </DeprecatedMethod>
     <InvalidArgument>
       <code>$project_with_tracker_administration</code>
@@ -49817,7 +49373,6 @@
       <code>$id</code>
       <code>$keyword</code>
       <code>$legacy</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -49859,7 +49414,6 @@
       <code>buildRightVersionOfMilestonesBurndownResource</code>
       <code>build_reference</code>
       <code>burning_parrot_get_stylesheets</code>
-      <code>can_user_access_ugroup_info</code>
       <code>clearRecentlyVisitedArtifacts</code>
       <code>collectGlyphLocations</code>
       <code>collectRoutesEvent</code>
@@ -50073,31 +49627,6 @@
       <code>testItRaisesAnExceptionIfWeWantToMove1Before1</code>
       <code>testItStartsWithEmptyTable</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/tests/integration/ReportCriteriaDaoTest.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->db->insertReturnId('tracker_report_criteria', [
-            'report_id' => $report_id,
-            'field_id' => $field_id,
-            'rank' => $rank,
-            'is_advanced' => $is_advanced,
-        ])]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>int</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument>
-      <code>3</code>
-    </InvalidScalarArgument>
-    <PossiblyUndefinedVariable>
-      <code>$field_mapping</code>
-      <code>$field_mapping</code>
-      <code>$field_mapping</code>
-      <code>$field_mapping</code>
-      <code>$field_mapping</code>
-      <code>$field_mapping</code>
-      <code>$field_mapping</code>
-    </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/tracker_date_reminder/include/ArtifactDateReminder.class.php">
     <DeprecatedFunction>
@@ -51581,7 +51110,6 @@
   <file src="src/common/Dashboard/Project/ProjectDashboardSaver.php">
     <MissingParamType>
       <code>$dashboard_id</code>
-      <code>$dashboard_id</code>
       <code>$id</code>
       <code>$name</code>
       <code>$name</code>
@@ -51590,7 +51118,6 @@
     <MissingReturnType>
       <code>checkUserCanDeleteByDashboardId</code>
       <code>checkUserCanSaveByDashboardName</code>
-      <code>delete</code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
@@ -52695,7 +52222,7 @@
       <code>$backend</code>
     </ArgumentTypeCoercion>
     <ForbiddenCode>
-      <code><![CDATA[shell_exec("/usr/bin/find " . $src_dir . " -maxdepth 1 -type f -printf \"%f\\n\"")]]></code>
+      <code><![CDATA[shell_exec('/usr/bin/find ' . $src_dir . " -maxdepth 1 -type f -printf \"%f\\n\"")]]></code>
     </ForbiddenCode>
     <InvalidOperand>
       <code><![CDATA[$this->purgeFile($file, $backend)]]></code>
@@ -53921,13 +53448,13 @@
       <code>db_numrows($res)</code>
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id
+      <code>db_query($qry)</code>
+      <code>db_query($sql)</code>
+      <code><![CDATA[db_query('SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id
             FROM forum_group_list,forum
             WHERE forum_group_list.group_forum_id=forum.group_forum_id
               AND forum_group_list.is_public IN (0, 1)
-              AND forum.msg_id=" . db_ei($id))]]></code>
-      <code>db_query($qry)</code>
-      <code>db_query($sql)</code>
+              AND forum.msg_id=' . db_ei($id))]]></code>
       <code><![CDATA[db_result($result, 0, 'body')]]></code>
       <code><![CDATA[db_result($result, 0, 'date')]]></code>
       <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
@@ -55684,7 +55211,6 @@
       <code><![CDATA[$listener->plugin_id]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code>getHooksCacheFile</code>
       <code>invalidateCache</code>
       <code>loadPlugins</code>
       <code>restoreOwnershipOnCacheFile</code>
@@ -56975,10 +56501,10 @@
     <DeprecatedFunction>
       <code>db_fetch_array($result)</code>
       <code>db_fetch_array($result)</code>
-      <code><![CDATA[db_query("SELECT * FROM service WHERE group_id=100 ORDER BY `rank`")]]></code>
-      <code><![CDATA[db_query("SELECT * FROM service WHERE group_id=100 ORDER BY `rank`")]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($serv_short_name, $serv_label, "service_short_name")]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($serv_short_name, $serv_label, "service_short_name", $ref->getServiceShortName())]]></code>
+      <code><![CDATA[db_query('SELECT * FROM service WHERE group_id=100 ORDER BY `rank`')]]></code>
+      <code><![CDATA[db_query('SELECT * FROM service WHERE group_id=100 ORDER BY `rank`')]]></code>
+      <code><![CDATA[html_build_select_box_from_arrays($serv_short_name, $serv_label, 'service_short_name')]]></code>
+      <code><![CDATA[html_build_select_box_from_arrays($serv_short_name, $serv_label, 'service_short_name', $ref->getServiceShortName())]]></code>
     </DeprecatedFunction>
     <MissingParamType>
       <code>$controler</code>
@@ -57266,10 +56792,10 @@
       <code><![CDATA[db_query(
                         "SELECT * FROM user_group WHERE user_id='" . $db_escaped_user_id . "' AND group_id='1' AND admin_flags='A'"
                     )]]></code>
-      <code><![CDATA[db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($this->group_id))]]></code>
       <code><![CDATA[db_query("SELECT * FROM user_group WHERE user_id='" . $db_escaped_user_id . "' and group_id='" . db_ei($this->getGroupId()) . "'")]]></code>
       <code><![CDATA[db_query("SELECT user_id FROM user_group WHERE group_id='" . db_ei($this->getGroupId()) . "'")]]></code>
       <code><![CDATA[db_query("UPDATE `groups` SET type='$type' WHERE group_id='" . db_ei($this->group_id) . "'")]]></code>
+      <code><![CDATA[db_query('SELECT * FROM `groups` WHERE group_id=' . db_ei($this->group_id))]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code>userIsAdmin</code>
@@ -57668,52 +57194,6 @@
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="src/common/Project/ProjectCreationData.class.php">
-    <MissingParamType>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$service_id</code>
-      <code>$service_id</code>
-      <code>$service_id</code>
-      <code>$short_description</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$access</code>
-      <code>$data_services</code>
-      <code>$full_name</code>
-      <code>$inherit_from_template</code>
-      <code>$is_template</code>
-      <code>$is_test</code>
-      <code>$logger</code>
-      <code>$short_description</code>
-      <code>$unix_name</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>buildFromFormArray</code>
-      <code>buildFromXML</code>
-      <code>forceServiceUsage</code>
-      <code>fromForm</code>
-      <code>fromXML</code>
-      <code>getAccess</code>
-      <code>getAccessFromProjectArrayData</code>
-      <code>getFullName</code>
-      <code>getShortDescription</code>
-      <code>getUnixName</code>
-      <code>isTemplate</code>
-      <code>isTest</code>
-      <code>setFullName</code>
-      <code>setIsTemplate</code>
-      <code>setUnixName</code>
-      <code>unsetProjectServiceUsage</code>
-    </MissingReturnType>
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$attrs['access']]]></code>
-      <code><![CDATA[$attrs['description']]]></code>
-      <code><![CDATA[$attrs['full-name']]]></code>
-      <code><![CDATA[$attrs['icon-codepoint']]]></code>
-      <code><![CDATA[$attrs['unix-name']]]></code>
-    </PossiblyNullArrayAccess>
-  </file>
   <file src="src/common/Project/ProjectCreationDataServiceFromXmlInheritor.php">
     <PossiblyNullArgument>
       <code><![CDATA[$attrs['enabled']]]></code>
@@ -57727,7 +57207,6 @@
       <code><![CDATA[db_ei($arr['svn_commit_to_tag_denied'])]]></code>
       <code><![CDATA[db_ei($arr['svn_mandatory_ref'])]]></code>
       <code><![CDATA[db_ei($arr['svn_tracker'])]]></code>
-      <code><![CDATA[db_ei($data->getBuiltFromTemplateProject()->getProject()->getID())]]></code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
@@ -57740,19 +57219,11 @@
       <code>db_ei($template_id)</code>
       <code>db_ei($template_package_id)</code>
       <code><![CDATA[db_ei($template_project->getID())]]></code>
-      <code>db_ei($type)</code>
       <code><![CDATA[db_ei($user->getId())]]></code>
       <code>db_ei(db_insertid($rid))</code>
       <code>db_error()</code>
       <code>db_error()</code>
-      <code>db_error()</code>
-      <code><![CDATA[db_es($data->getFullName())]]></code>
-      <code><![CDATA[db_es($data->getShortDescription())]]></code>
-      <code><![CDATA[db_es($data->getUnixName())]]></code>
-      <code>db_es($http_domain)</code>
       <code><![CDATA[db_es($this->project_manager->getProject($group_id)->getUnixName())]]></code>
-      <code><![CDATA[db_es(EmojiCodepointConverter::convertEmojiToStoreFormat($data->getIconCodePoint()))]]></code>
-      <code>db_es(bin2hex(random_bytes(16)))</code>
       <code><![CDATA[db_escape_int($_SERVER['REQUEST_TIME'])]]></code>
       <code><![CDATA[db_escape_string($arr['svn_preamble'])]]></code>
       <code><![CDATA[db_escape_string($ath_temp->getDescription())]]></code>
@@ -57762,22 +57233,8 @@
       <code>db_fetch_array($result)</code>
       <code>db_fetch_array($result)</code>
       <code>db_fetch_array($result)</code>
-      <code>db_insertid($result)</code>
       <code>db_insertid($rid)</code>
       <code><![CDATA[db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('" . db_ei($group_id) . "','" . db_es($this->project_manager->getProject($group_id)->getUnixName()) . "')")]]></code>
-      <code><![CDATA[db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
-            . db_ei($user->getId()) . ","
-            . db_ei($group_id) . ","
-            . "'A'," // admin flags
-            . "2," // bug flags
-            . "2," // forum flags
-            . "2," // project flags
-            . "2," // patch flags
-            . "2," // support flags
-            . "2," // file_flags
-            . "2," // wiki_flags
-            . "2," // svn_flags
-            . "2)")]]></code>
       <code>db_query($query)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
@@ -57785,7 +57242,19 @@
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
-      <code>db_query($sql)</code>
+      <code><![CDATA[db_query('INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ('
+            . db_ei($user->getId()) . ','
+            . db_ei($group_id) . ','
+            . "'A'," // admin flags
+            . '2,' // bug flags
+            . '2,' // forum flags
+            . '2,' // project flags
+            . '2,' // patch flags
+            . '2,' // support flags
+            . '2,' // file_flags
+            . '2,' // wiki_flags
+            . '2,' // svn_flags
+            . '2)')]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code>getRow</code>
@@ -57906,7 +57375,6 @@
       <code>$_instance</code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code>activateWithoutNotifications</code>
       <code>assertProjectIsValid</code>
       <code>clear</code>
       <code>clearProjectFromCache</code>
@@ -58051,19 +57519,16 @@
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$project_id</code>
-      <code>$project_id</code>
       <code>$project_name_override</code>
       <code>$xml_file_path</code>
       <code>$xml_file_path</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>activateServices</code>
       <code>addProjectMember</code>
       <code>cleanProjectMembersFromUserCreator</code>
       <code>createProject</code>
       <code>importContent</code>
       <code>importDashboards</code>
-      <code>importFromXMLIntoExistingProject</code>
       <code>importUgroups</code>
     </MissingReturnType>
   </file>
@@ -58265,24 +57730,6 @@
       <code>Tuleap\Project\PaginatedProjects</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/common/Project/REST/v1/ServiceRepresentation.php">
-    <InvalidDocblock>
-      <code><![CDATA[public $icon = '';]]></code>
-      <code>public $id;</code>
-      <code>public $is_enabled;</code>
-      <code>public $label;</code>
-      <code>public $name;</code>
-      <code>public $uri;</code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code>$icon</code>
-      <code>$id</code>
-      <code>$is_enabled</code>
-      <code>$label</code>
-      <code>$name</code>
-      <code>$uri</code>
-    </MissingPropertyType>
-  </file>
   <file src="src/common/Project/REST/v1/ServiceRepresentationCollectionBuilder.php">
     <RedundantCast>
       <code><![CDATA[(bool) $service->isActive()]]></code>
@@ -58290,12 +57737,6 @@
     </RedundantCast>
   </file>
   <file src="src/common/Project/REST/v1/ServiceResource.php">
-    <MissingPropertyType>
-      <code><![CDATA[$body->is_enabled]]></code>
-      <code><![CDATA[$body->is_enabled]]></code>
-      <code><![CDATA[$body->label]]></code>
-      <code><![CDATA[$body->name]]></code>
-    </MissingPropertyType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
@@ -59089,26 +58530,6 @@
       <code>$ugroups</code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/common/Queue/Noop/PersistentQueue.php">
-    <MissingParamType>
-      <code>$content</code>
-      <code>$queue_id</code>
-      <code>$topic</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>listen</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Queue/PersistentQueue.php">
-    <MissingParamType>
-      <code>$content</code>
-      <code>$queue_id</code>
-      <code>$topic</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>listen</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Queue/Redis/EventMessageForPersistentQueue.php">
     <MissingReturnType>
       <code>getPayload</code>
@@ -59124,18 +58545,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Queue/Redis/RedisPersistentQueue.php">
-    <MissingParamType>
-      <code>$content</code>
-      <code>$event_queue_name</code>
-      <code>$queue_id</code>
-      <code>$topic</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$event_queue_name</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>listen</code>
-    </MissingReturnType>
     <PossiblyInvalidArgument>
       <code>$queue_size</code>
     </PossiblyInvalidArgument>
@@ -59321,14 +58730,6 @@
       <code>$parameter_name</code>
     </MissingParamType>
   </file>
-  <file src="src/common/REST/ProjectAuthorization.class.php">
-    <MissingReturnType>
-      <code>canUserAccessUserGroupInfo</code>
-      <code>userCanAccessProject</code>
-      <code>userCanAccessProjectAndCanManageMembership</code>
-      <code>userCanAccessProjectAndIsProjectAdmin</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/REST/ProjectStatusVerificator.php">
     <MissingReturnType>
       <code>blockRestAccess</code>
@@ -59362,7 +58763,6 @@
       <code>declarePhpWikiResource</code>
       <code>declareProjectResources</code>
       <code>declareProjectUserGroupResource</code>
-      <code>populate</code>
     </MissingReturnType>
   </file>
   <file src="src/common/REST/Token.class.php">
@@ -59997,23 +59397,6 @@
       <code>getDefaultLastUsedOn</code>
       <code>getDefaultUsedBy</code>
       <code>setDateForUser</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_DAO.php">
-    <DeprecatedMethod>
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$project_id</code>
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getImmutableTagsPathForProject</code>
-      <code>getImmutableTagsWhitelistForProject</code>
     </MissingReturnType>
   </file>
   <file src="src/common/Search/Presenters/AdditionalSearchTabsPresenter.class.php">
@@ -60865,7 +60248,6 @@
       <code>$access</code>
       <code>$access_title</code>
       <code>$account_details</code>
-      <code>$additional_details</code>
       <code>$change_passwd</code>
       <code>$change_password</code>
       <code>$current_projects</code>
@@ -61512,16 +60894,6 @@
       <code><![CDATA[(bool) $user->hasAvatar()]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="src/common/User/REST/UserRepresentation.class.php">
-    <InvalidDocblock>
-      <code>public $email;</code>
-      <code>public $status;</code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code>$email</code>
-      <code>$status</code>
-    </MissingPropertyType>
-  </file>
   <file src="src/common/User/REST/v1/UserMembershipRepresentation.class.php">
     <InvalidDocblock>
       <code>public $user_groups = [];</code>
@@ -61925,7 +61297,6 @@
       <code>$limit</code>
       <code>$limit</code>
       <code>$login_name</code>
-      <code>$name</code>
       <code>$new_ssh_keys</code>
       <code>$offset</code>
       <code>$offset</code>
@@ -62354,14 +61725,14 @@
       <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
       <code>db_error()</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT `groups`.group_name,"
-            . "`groups`.group_id,"
-            . "`groups`.unix_group_name,"
-            . "`groups`.status,"
-            . "`groups`.access,"
-            . "user_group.admin_flags "
-            . "FROM `groups`,user_group "
-            . "WHERE `groups`.group_id=user_group.group_id "
+      <code><![CDATA[db_query('SELECT `groups`.group_name,'
+            . '`groups`.group_id,'
+            . '`groups`.unix_group_name,'
+            . '`groups`.status,'
+            . '`groups`.access,'
+            . 'user_group.admin_flags '
+            . 'FROM `groups`,user_group '
+            . 'WHERE `groups`.group_id=user_group.group_id '
             . "AND user_group.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' "
             . "AND `groups`.status='A' ORDER BY group_name")]]></code>
       <code><![CDATA[db_result($result, $i, 'access')]]></code>
@@ -62704,7 +62075,7 @@
       <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
       <code>db_error()</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where " .
+      <code><![CDATA[db_query('SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ' .
             "user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' ORDER BY bookmark_title")]]></code>
       <code><![CDATA[db_result($result, $i, 'bookmark_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'bookmark_id')]]></code>
@@ -62818,12 +62189,12 @@
       <code><![CDATA[db_ei($request->get('group_id'))]]></code>
       <code>db_fetch_array($res_count)</code>
       <code>db_fetch_array($res_count)</code>
-      <code><![CDATA[db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=" . db_ei($group_id) . " "
-                . "AND is_public=1")]]></code>
-      <code><![CDATA[db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
-                . "forum_group_list.group_id=" . db_ei($group_id) . " AND forum.group_forum_id=forum_group_list.group_forum_id "
-                . "AND forum_group_list.is_public=1")]]></code>
       <code>db_query($sql)</code>
+      <code><![CDATA[db_query('SELECT count(*) AS count FROM forum_group_list WHERE group_id=' . db_ei($group_id) . ' '
+                . 'AND is_public=1')]]></code>
+      <code><![CDATA[db_query('SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE '
+                . 'forum_group_list.group_id=' . db_ei($group_id) . ' AND forum.group_forum_id=forum_group_list.group_forum_id '
+                . 'AND forum_group_list.is_public=1')]]></code>
       <code>db_result($result, 0, 0)</code>
     </DeprecatedFunction>
     <InvalidArgument>
@@ -64374,7 +63745,7 @@
       <code>getRow</code>
     </PossiblyFalseReference>
     <UnsupportedReferenceUsage>
-      <code><![CDATA[$dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id")]]></code>
+      <code><![CDATA[$dar =& $this->retrieve('SELECT LAST_INSERT_ID() AS id')]]></code>
     </UnsupportedReferenceUsage>
   </file>
   <file src="src/common/dao/CodendiDataAccess.class.php">
@@ -67451,8 +66822,8 @@
   <file src="src/common/include/TemplateSingleton.class.php">
     <DeprecatedFunction>
       <code>db_numrows($db_res)</code>
-      <code><![CDATA[db_query("SELECT * FROM group_type")]]></code>
       <code><![CDATA[db_query("SELECT group_id,group_name,unix_group_name,short_description,register_time FROM `groups` WHERE type='2' and status IN ('A','s')")]]></code>
+      <code><![CDATA[db_query('SELECT * FROM group_type')]]></code>
       <code><![CDATA[db_result($db_res, $i, 'name')]]></code>
       <code><![CDATA[db_result($db_res, $i, 'type_id')]]></code>
       <code><![CDATA[html_build_select_box_from_arrays(array_keys($this->data_array), $localizedTypes, $name, $checked_val, false)]]></code>
@@ -68947,11 +68318,6 @@
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
       <code><![CDATA[db_query("DELETE FROM artifact_cc WHERE artifact_cc_id='" . db_ei($artifact_cc_id) . "'")]]></code>
-      <code><![CDATA[db_query("SELECT *
-                FROM artifact
-                WHERE group_artifact_id = " . db_ei($ath->getID()) . "
-                AND submitted_by=" .  db_ei($user) . "
-                AND summary='" . db_es(htmlspecialchars($vfl['summary'])) . "'")]]></code>
       <code>db_query($latest)</code>
       <code>db_query($qry)</code>
       <code>db_query($qry)</code>
@@ -69002,6 +68368,11 @@
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
+      <code><![CDATA[db_query('SELECT *
+                FROM artifact
+                WHERE group_artifact_id = ' . db_ei($ath->getID()) . '
+                AND submitted_by=' .  db_ei($user) . "
+                AND summary='" . db_es(htmlspecialchars($vfl['summary'])) . "'")]]></code>
       <code><![CDATA[db_result($com_res, 0, 'mod_by')]]></code>
       <code><![CDATA[db_result($orig_date, 0, 'date')]]></code>
       <code><![CDATA[db_result($orig_date, 0, 'date')]]></code>
@@ -69663,8 +69034,8 @@
       <code>db_es($value)</code>
       <code>db_es($value)</code>
       <code>db_es($w)</code>
-      <code><![CDATA[db_es(implode(",", $value_function))]]></code>
-      <code><![CDATA[db_es(join(",", $values))]]></code>
+      <code><![CDATA[db_es(implode(',', $value_function))]]></code>
+      <code><![CDATA[db_es(join(',', $values))]]></code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
@@ -69716,20 +69087,20 @@
       <code>false</code>
     </FalsableReturnStatement>
     <InvalidArgument>
-      <code><![CDATA[$group_artifact_id . "#" . $this->field_id]]></code>
-      <code><![CDATA[$group_artifact_id . "#" . $this->field_id]]></code>
-      <code><![CDATA[$group_artifact_id . "#" . $this->field_id]]></code>
-      <code><![CDATA[$group_artifact_id . "#" . $this->field_id]]></code>
-      <code><![CDATA[$group_artifact_id . "#" . $this->field_id]]></code>
-      <code><![CDATA[$group_artifact_id . "#" . $this->field_id]]></code>
-      <code><![CDATA[$group_artifact_id . "#" . $this->field_id]]></code>
+      <code><![CDATA[$group_artifact_id . '#' . $this->field_id]]></code>
+      <code><![CDATA[$group_artifact_id . '#' . $this->field_id]]></code>
+      <code><![CDATA[$group_artifact_id . '#' . $this->field_id]]></code>
+      <code><![CDATA[$group_artifact_id . '#' . $this->field_id]]></code>
+      <code><![CDATA[$group_artifact_id . '#' . $this->field_id]]></code>
+      <code><![CDATA[$group_artifact_id . '#' . $this->field_id]]></code>
+      <code><![CDATA[$group_artifact_id . '#' . $this->field_id]]></code>
     </InvalidArgument>
     <InvalidReturnStatement>
-      <code><![CDATA["valueDate"]]></code>
-      <code><![CDATA["valueFloat"]]></code>
-      <code><![CDATA["valueInt"]]></code>
-      <code><![CDATA["valueText"]]></code>
       <code>$res</code>
+      <code><![CDATA['valueDate']]></code>
+      <code><![CDATA['valueFloat']]></code>
+      <code><![CDATA['valueInt']]></code>
+      <code><![CDATA['valueText']]></code>
       <code>true</code>
     </InvalidReturnStatement>
     <InvalidReturnType>
@@ -69904,9 +69275,9 @@
       <code><![CDATA[db_ei($field->getKeepHistory())]]></code>
       <code><![CDATA[db_ei($field->getRequired())]]></code>
       <code><![CDATA[db_ei($field->getSpecial())]]></code>
-      <code><![CDATA[db_ei($field_array["field_id"])]]></code>
-      <code><![CDATA[db_ei($field_array["order_id"])]]></code>
-      <code><![CDATA[db_ei($field_array["value_id"])]]></code>
+      <code><![CDATA[db_ei($field_array['field_id'])]]></code>
+      <code><![CDATA[db_ei($field_array['order_id'])]]></code>
+      <code><![CDATA[db_ei($field_array['value_id'])]]></code>
       <code>db_ei($field_id)</code>
       <code>db_ei($field_id)</code>
       <code>db_ei($field_id)</code>
@@ -69949,22 +69320,18 @@
       <code><![CDATA[db_es($field->getLabel())]]></code>
       <code><![CDATA[db_es($field->getName())]]></code>
       <code><![CDATA[db_es($field->getScope())]]></code>
-      <code><![CDATA[db_es($field_array["description"])]]></code>
-      <code><![CDATA[db_es($field_array["status"])]]></code>
-      <code><![CDATA[db_es($field_array["value"])]]></code>
+      <code><![CDATA[db_es($field_array['description'])]]></code>
+      <code><![CDATA[db_es($field_array['status'])]]></code>
+      <code><![CDATA[db_es($field_array['value'])]]></code>
       <code>db_es($field_name)</code>
       <code>db_es($label)</code>
-      <code><![CDATA[db_es(implode(",", $dest_val_func))]]></code>
+      <code><![CDATA[db_es(implode(',', $dest_val_func))]]></code>
       <code>db_fetch_array($db_res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_numrows($res)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT ugroup.name FROM ugroup,artifact_group_list agl " .
-        "WHERE ugroup.ugroup_id='" . db_ei($ug) . "' " .
-        "AND agl.group_artifact_id='" .  db_ei($atid_dest)  . "' " .
-        "AND ugroup.group_id!=agl.group_id")]]></code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
@@ -69980,7 +69347,11 @@
       <code>db_query($sql_insert)</code>
       <code>db_query($sql_insert)</code>
       <code>db_query($sql_insert)</code>
-      <code><![CDATA[db_result($res, $i, "artifact_id")]]></code>
+      <code><![CDATA[db_query('SELECT ugroup.name FROM ugroup,artifact_group_list agl ' .
+        "WHERE ugroup.ugroup_id='" . db_ei($ug) . "' " .
+        "AND agl.group_artifact_id='" .  db_ei($atid_dest)  . "' " .
+        'AND ugroup.group_id!=agl.group_id')]]></code>
+      <code><![CDATA[db_result($res, $i, 'artifact_id')]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code>SimpleSanitizer::unsanitize($f)</code>
@@ -70074,7 +69445,7 @@
       <code>$key</code>
     </PossiblyInvalidArgument>
     <TooManyArguments>
-      <code><![CDATA[new ArtifactField($this->ArtifactType->getID(), "")]]></code>
+      <code><![CDATA[new ArtifactField($this->ArtifactType->getID(), '')]]></code>
     </TooManyArguments>
     <TypeDoesNotContainType>
       <code>empty($ugroup_mapping)</code>
@@ -70405,11 +69776,11 @@
       <code>db_numrows($res)</code>
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT * FROM artifact WHERE group_artifact_id = " . db_ei($this->ath->getID()) .
-            " AND submitted_by=" .  db_ei($sub_user_id) . " AND summary='" .  db_es($summary) . "'")]]></code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
+      <code><![CDATA[db_query('SELECT * FROM artifact WHERE group_artifact_id = ' . db_ei($this->ath->getID()) .
+            ' AND submitted_by=' .  db_ei($sub_user_id) . " AND summary='" .  db_es($summary) . "'")]]></code>
       <code>db_result($predef_val, $i, 0)</code>
       <code>db_result($predef_val, $i, 1)</code>
       <code>db_result($predef_val, $p, 0)</code>
@@ -70699,14 +70070,14 @@
       <code>db_es($name)</code>
       <code>db_es($scope)</code>
       <code>db_es($scope)</code>
-      <code><![CDATA[db_es(implode(",", $aids))]]></code>
-      <code><![CDATA[db_es(implode(",", $prefs[$field->getName()]))]]></code>
       <code><![CDATA[db_es(implode(', ', $assigned_to))]]></code>
       <code><![CDATA[db_es(implode(', ', $assigned_to))]]></code>
       <code><![CDATA[db_es(implode(', ', $assigned_to))]]></code>
       <code><![CDATA[db_es(implode(', ', $assigned_to))]]></code>
       <code><![CDATA[db_es(implode(', ', $static_ugroups))]]></code>
       <code><![CDATA[db_es(implode(', ', $static_ugroups))]]></code>
+      <code><![CDATA[db_es(implode(',', $aids))]]></code>
+      <code><![CDATA[db_es(implode(',', $prefs[$field->getName()]))]]></code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
@@ -70715,18 +70086,9 @@
       <code>db_numrows($res)</code>
       <code>db_numrows($res)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("DELETE FROM artifact_report WHERE report_id=" . db_ei($this->report_id))]]></code>
-      <code><![CDATA[db_query("DELETE FROM artifact_report_field WHERE report_id=" . db_ei($this->report_id))]]></code>
-      <code><![CDATA[db_query("DELETE FROM artifact_report_field WHERE report_id=" . db_ei($this->report_id))]]></code>
-      <code><![CDATA[db_query("SELECT * FROM artifact_report_field " .
-        "WHERE report_id=" . db_ei($report_id))]]></code>
       <code><![CDATA[db_query("UPDATE artifact_report
                          SET user_id='" . db_ei($user_id) . "',name='" . db_es($name) . "', description='" . db_es($description) . "',scope='" . db_es($scope) . "',is_default='" . db_es($is_default) . "'
                          WHERE report_id=" . db_ei($this->report_id))]]></code>
-      <code><![CDATA[db_query("UPDATE artifact_report SET is_default=0 WHERE report_id <>" . db_ei($report_id) . " AND group_artifact_id=" . db_ei($this->group_artifact_id))]]></code>
-      <code><![CDATA[db_query("UPDATE artifact_report SET is_default=0 WHERE report_id <>" . db_ei($this->report_id) . " AND group_artifact_id=" . db_ei($this->group_artifact_id))]]></code>
-      <code><![CDATA[db_query("UPDATE artifact_report SET is_default=0 WHERE report_id <>" . db_ei($this->report_id) . " AND group_artifact_id=" . db_ei($this->group_artifact_id))]]></code>
-      <code><![CDATA[db_query("UPDATE artifact_report SET is_default=1 WHERE report_id =" . db_ei($this->report_id) . " AND group_artifact_id=" . db_ei($this->group_artifact_id))]]></code>
       <code>db_query($query)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
@@ -70735,6 +70097,15 @@
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
+      <code><![CDATA[db_query('DELETE FROM artifact_report WHERE report_id=' . db_ei($this->report_id))]]></code>
+      <code><![CDATA[db_query('DELETE FROM artifact_report_field WHERE report_id=' . db_ei($this->report_id))]]></code>
+      <code><![CDATA[db_query('DELETE FROM artifact_report_field WHERE report_id=' . db_ei($this->report_id))]]></code>
+      <code><![CDATA[db_query('SELECT * FROM artifact_report_field ' .
+        'WHERE report_id=' . db_ei($report_id))]]></code>
+      <code><![CDATA[db_query('UPDATE artifact_report SET is_default=0 WHERE report_id <>' . db_ei($report_id) . ' AND group_artifact_id=' . db_ei($this->group_artifact_id))]]></code>
+      <code><![CDATA[db_query('UPDATE artifact_report SET is_default=0 WHERE report_id <>' . db_ei($this->report_id) . ' AND group_artifact_id=' . db_ei($this->group_artifact_id))]]></code>
+      <code><![CDATA[db_query('UPDATE artifact_report SET is_default=0 WHERE report_id <>' . db_ei($this->report_id) . ' AND group_artifact_id=' . db_ei($this->group_artifact_id))]]></code>
+      <code><![CDATA[db_query('UPDATE artifact_report SET is_default=1 WHERE report_id =' . db_ei($this->report_id) . ' AND group_artifact_id=' . db_ei($this->group_artifact_id))]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code>getRow</code>
@@ -70872,9 +70243,9 @@
       <code>db_ei($group_artifact_id)</code>
       <code>db_ei($place_query)</code>
       <code>db_ei($place_result)</code>
-      <code><![CDATA[db_ei($report_array["report_id"])]]></code>
-      <code><![CDATA[db_ei($report_array["report_id"])]]></code>
-      <code><![CDATA[db_ei($report_array["user_id"])]]></code>
+      <code><![CDATA[db_ei($report_array['report_id'])]]></code>
+      <code><![CDATA[db_ei($report_array['report_id'])]]></code>
+      <code><![CDATA[db_ei($report_array['user_id'])]]></code>
       <code>db_ei($report_id)</code>
       <code>db_ei($report_id)</code>
       <code>db_ei($show_on_query)</code>
@@ -70884,11 +70255,11 @@
       <code>db_error()</code>
       <code>db_error()</code>
       <code>db_error()</code>
-      <code><![CDATA[db_es($field_array["field_name"])]]></code>
-      <code><![CDATA[db_es($report_array["description"])]]></code>
-      <code><![CDATA[db_es($report_array["is_default"])]]></code>
-      <code><![CDATA[db_es($report_array["name"])]]></code>
-      <code><![CDATA[db_es($report_array["scope"])]]></code>
+      <code><![CDATA[db_es($field_array['field_name'])]]></code>
+      <code><![CDATA[db_es($report_array['description'])]]></code>
+      <code><![CDATA[db_es($report_array['is_default'])]]></code>
+      <code><![CDATA[db_es($report_array['name'])]]></code>
+      <code><![CDATA[db_es($report_array['scope'])]]></code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res_fields)</code>
@@ -71356,9 +70727,9 @@
       <code>db_error()</code>
       <code>db_error()</code>
       <code>db_es($depend)</code>
-      <code><![CDATA[db_es(implode(",", $change_ids))]]></code>
-      <code><![CDATA[db_es(implode(",", $change_ids))]]></code>
-      <code><![CDATA[db_es(implode(",", $change_ids))]]></code>
+      <code><![CDATA[db_es(implode(',', $change_ids))]]></code>
+      <code><![CDATA[db_es(implode(',', $change_ids))]]></code>
+      <code><![CDATA[db_es(implode(',', $change_ids))]]></code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
@@ -71391,23 +70762,6 @@
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("INSERT INTO artifact (artifact_id, group_artifact_id,status_id,submitted_by,open_date,close_date,summary,details,severity) " .
-                "SELECT $aid, " . db_ei($this->getID()) . ",status_id,submitted_by," . time() . ",close_date,summary,details,severity " .
-                "FROM artifact " .
-                "WHERE artifact_id='" . db_ei($from_aid) . "' " .
-                "AND group_artifact_id='" . db_ei($from_atid) . "'")]]></code>
-      <code><![CDATA[db_query("INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) " .
-                "SELECT " . db_ei($aid) . ",email,added_by,comment,date " .
-                "FROM artifact_cc " .
-                "WHERE artifact_id='" . db_ei($from_aid) . "'")]]></code>
-      <code><![CDATA[db_query("INSERT INTO artifact_field_value (field_id,artifact_id,valueInt,valueText,valueFloat,valueDate) " .
-                "SELECT field_id," . db_ei($aid) . ",valueInt,valueText,valueFloat,valueDate " .
-                "FROM artifact_field_value " .
-                "WHERE artifact_id = '" . db_ei($from_aid) . "'")]]></code>
-      <code><![CDATA[db_query("INSERT INTO artifact_file (artifact_id,description,bin_data,filename,filesize,filetype,adddate,submitted_by) " .
-                "SELECT " . $aid . ",description,bin_data,filename,filesize,filetype,adddate,submitted_by " .
-                "FROM artifact_file " .
-                "WHERE artifact_id='" . db_ei($from_aid) . "'")]]></code>
       <code><![CDATA[db_query("SELECT artifact_id FROM artifact WHERE group_artifact_id='" . db_ei($from_atid) . "'")]]></code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
@@ -71451,6 +70805,23 @@
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
+      <code><![CDATA[db_query('INSERT INTO artifact (artifact_id, group_artifact_id,status_id,submitted_by,open_date,close_date,summary,details,severity) ' .
+                "SELECT $aid, " . db_ei($this->getID()) . ',status_id,submitted_by,' . time() . ',close_date,summary,details,severity ' .
+                'FROM artifact ' .
+                "WHERE artifact_id='" . db_ei($from_aid) . "' " .
+                "AND group_artifact_id='" . db_ei($from_atid) . "'")]]></code>
+      <code><![CDATA[db_query('INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) ' .
+                'SELECT ' . db_ei($aid) . ',email,added_by,comment,date ' .
+                'FROM artifact_cc ' .
+                "WHERE artifact_id='" . db_ei($from_aid) . "'")]]></code>
+      <code><![CDATA[db_query('INSERT INTO artifact_field_value (field_id,artifact_id,valueInt,valueText,valueFloat,valueDate) ' .
+                'SELECT field_id,' . db_ei($aid) . ',valueInt,valueText,valueFloat,valueDate ' .
+                'FROM artifact_field_value ' .
+                "WHERE artifact_id = '" . db_ei($from_aid) . "'")]]></code>
+      <code><![CDATA[db_query('INSERT INTO artifact_file (artifact_id,description,bin_data,filename,filesize,filetype,adddate,submitted_by) ' .
+                'SELECT ' . $aid . ',description,bin_data,filename,filesize,filetype,adddate,submitted_by ' .
+                'FROM artifact_file ' .
+                "WHERE artifact_id='" . db_ei($from_aid) . "'")]]></code>
       <code><![CDATA[db_result($res, 0, 'artifact_id')]]></code>
       <code><![CDATA[db_result($res, 0, 'artifact_id')]]></code>
       <code><![CDATA[db_result($res, 0, 'user_id')]]></code>
@@ -71495,12 +70866,12 @@
       <code>0</code>
     </InvalidPropertyAssignmentValue>
     <InvalidReturnStatement>
-      <code><![CDATA["field_" . $id]]></code>
       <code>$ok</code>
       <code>$ok</code>
       <code>$results</code>
       <code>$results</code>
       <code><![CDATA[$this->cannedresponses_res]]></code>
+      <code><![CDATA['field_' . $id]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code>array</code>
@@ -71511,12 +70882,12 @@
       <code>true</code>
     </InvalidReturnType>
     <InvalidScalarArgument>
-      <code><![CDATA["23"]]></code>
-      <code><![CDATA["59"]]></code>
-      <code><![CDATA["59"]]></code>
       <code>$keywords[0]</code>
       <code>$keywords[1]</code>
       <code>$keywords[2]</code>
+      <code><![CDATA['23']]></code>
+      <code><![CDATA['59']]></code>
+      <code><![CDATA['59']]></code>
       <code>count($chunk) / 2</code>
       <code>count($fields) / 2</code>
     </InvalidScalarArgument>
@@ -72558,7 +71929,7 @@
       <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$i]->getDescription())]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$i]->getName())]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$i]->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($description ? $description : "")]]></code>
+      <code><![CDATA[SimpleSanitizer::unsanitize($description ? $description : '')]]></code>
       <code>SimpleSanitizer::unsanitize($description)</code>
       <code>SimpleSanitizer::unsanitize($description)</code>
       <code>SimpleSanitizer::unsanitize($description)</code>
@@ -72581,7 +71952,7 @@
       <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset_name ? $fieldset_name : "")]]></code>
+      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset_name ? $fieldset_name : '')]]></code>
       <code>SimpleSanitizer::unsanitize($fieldset_name)</code>
       <code>SimpleSanitizer::unsanitize($label)</code>
       <code>SimpleSanitizer::unsanitize($label)</code>
@@ -73925,24 +73296,24 @@
                     VALUES ('WIKI_READ', CAST($group_id AS CHAR CHARACTER SET utf8), $ugroup_id)")]]></code>
       <code><![CDATA[db_query("INSERT INTO permissions (permission_type, object_id, ugroup_id)
                VALUES ('WIKIATTACHMENT_READ', CAST($new_attachment_id AS CHAR CHARACTER SET utf8), $permission)")]]></code>
-      <code><![CDATA[db_query("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
-                  . "VALUES ('WIKIPAGE_READ', CAST($wiki_page_clone_id AS CHAR CHARACTER SET utf8), $ugroup_id)")]]></code>
       <code><![CDATA[db_query("SELECT * FROM permissions
                                where permission_type='WIKI_READ' and object_id=CAST($template_id AS CHAR CHARACTER SET utf8)")]]></code>
+      <code><![CDATA[db_query('INSERT INTO permissions (permission_type, object_id, ugroup_id)'
+                  . "VALUES ('WIKIPAGE_READ', CAST($wiki_page_clone_id AS CHAR CHARACTER SET utf8), $ugroup_id)")]]></code>
       <code><![CDATA[db_query('SELECT count(*) AS nb FROM wiki_attachment'
                     . ' WHERE group_id=' . db_ei($this->template_id))]]></code>
       <code><![CDATA[db_query('SELECT count(*) AS nb FROM wiki_page'
                          . ' WHERE group_id=' . db_ei($this->template_id))]]></code>
       <code><![CDATA[db_query(sprintf(
-                        "INSERT INTO wiki_recent (id, latestversion, latestmajor, latestminor)"
-                              . "VALUES(%d, %d, %d, %d)",
+                        'INSERT INTO wiki_recent (id, latestversion, latestmajor, latestminor)'
+                              . 'VALUES(%d, %d, %d, %d)',
                         $new_id,
                         $recent_infos['latestversion'],
                         $recent_infos['latestmajor'],
                         $recent_infos['latestminor']
                     ))]]></code>
       <code><![CDATA[db_query(sprintf(
-                     "INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)"
+                     'INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)'
                      . "VALUES(%d, %d, %d, %d, '%s', '%s')",
                      db_ei($value),
                      db_ei($num_ver),
@@ -73952,7 +73323,7 @@
                      $this->escapeString($this->_serialize($tmpl_version_data[$num_ver]))
                  ))]]></code>
       <code><![CDATA[db_query(sprintf(
-                    "INSERT INTO wiki_attachment_revision (attachment_id, user_id, date, revision, mimetype, size)"
+                    'INSERT INTO wiki_attachment_revision (attachment_id, user_id, date, revision, mimetype, size)'
                                  . "VALUES (%d, %d, %d, %d, '%s', %d)",
                     db_ei($new_id),
                     db_ei($row['user_id']),
@@ -73962,7 +73333,7 @@
                     db_ei($row['size'])
                 ))]]></code>
       <code><![CDATA[db_query(sprintf(
-                "INSERT INTO wiki_group_list (group_id, wiki_name, wiki_link, description, rank, language_id)"
+                'INSERT INTO wiki_group_list (group_id, wiki_name, wiki_link, description, rank, language_id)'
                                     . "VALUES(%d, '%s', '%s', '%s', %d, %s)",
                 $this->group_id,
                 $this->escapeString($data['wiki_name']),
@@ -73972,44 +73343,44 @@
                 $this->escapeString($language)
             ))]]></code>
       <code><![CDATA[db_query(sprintf(
-            "INSERT INTO wiki_page (pagename, hits, pagedata, group_id)"
+            'INSERT INTO wiki_page (pagename, hits, pagedata, group_id)'
             . "VALUES('%s', %d,  '%s', %d)",
             db_es($pagename),
             0,
             db_es($this->_serialize($data)),
             $this->group_id
         ))]]></code>
-      <code><![CDATA[db_query(sprintf("INSERT INTO wiki_attachment (group_id, name)"
-        . "VALUES(%d, '%s')", $this->group_id, $this->escapeString($name)))]]></code>
-      <code><![CDATA[db_query(sprintf("INSERT INTO wiki_attachment_log (user_id, group_id, wiki_attachment_id, wiki_attachment_revision_id, time)"
-                . "VALUES (%d, %d, %d, %d, %d)", db_ei($row['user_id']), db_ei($this->group_id), db_ei($new_id), db_ei($array_rev[$tmpl_id]), db_ei($row['time'])))]]></code>
-      <code><![CDATA[db_query(sprintf("INSERT INTO wiki_link (linkfrom, linkto) VALUES (%d, %d)", $new_id, $clone_id))]]></code>
-      <code><![CDATA[db_query(sprintf("INSERT INTO wiki_nonempty (id) VALUES(%d)", $new))]]></code>
-      <code><![CDATA[db_query(sprintf("INSERT INTO wiki_recent (id, latestversion, latestmajor)"
-                     . "VALUES(%d, %d, %d)", $new_id, $recent_infos['latestversion'], $recent_infos['latestmajor']))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT * FROM wiki_attachment_log WHERE group_id=%d AND wiki_attachment_id=%d", $this->template_id, $tmpl_id))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT * from wiki_nonempty where id=%d", $id))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d", db_ei($this->group_id), db_ei($ugid)))]]></code>
       <code><![CDATA[db_query(sprintf("SELECT id FROM wiki_attachment WHERE group_id=%d AND name='%s'", $this->group_id, $this->escapeString($name)))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d", db_ei($new_id), db_ei($row['revision'])))]]></code>
       <code><![CDATA[db_query(sprintf("SELECT id from wiki_page where pagename='%s' and group_id=%d", db_es($pagename), $this->group_id))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", db_ei($this->template_id)))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT id, pagename FROM wiki_page WHERE group_id=%d", $this->template_id))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT id, wiki_name, wiki_link, description, rank, language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT is_used FROM service WHERE group_id=%d AND short_name='%s'", $this->group_id, $this->escapeString("wiki")))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT latestversion, latestmajor, latestminor FROM wiki_recent where id=%d", $id))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT name from wiki_attachment where id=%d", $id))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT object_id, ugroup_id "
-                                . "FROM permissions perm, wiki_page wpg "
-                                . "WHERE perm.permission_type='WIKIPAGE_READ' "
-                                . "AND wpg.group_id=%d "
-                                . "AND perm.object_id=wpg.id", $this->template_id))]]></code>
+      <code><![CDATA[db_query(sprintf("SELECT is_used FROM service WHERE group_id=%d AND short_name='%s'", $this->group_id, $this->escapeString('wiki')))]]></code>
       <code><![CDATA[db_query(sprintf("SELECT pagedata FROM wiki_page WHERE pagename='%s' AND group_id=%d", db_es($pagename), $this->template_id))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT user_id, date, revision, mimetype, size FROM wiki_attachment_revision WHERE attachment_id=%d", db_ei($tmpl_id)))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT version, versiondata FROM wiki_version WHERE id=%d", $id))]]></code>
-      <code><![CDATA[db_query(sprintf("select linkto FROM wiki_link WHERE linkfrom=%d", $tmpl_id))]]></code>
-      <code><![CDATA[db_query(sprintf("select version, mtime, minor_edit, content FROM wiki_version WHERE id=%d", $key))]]></code>
+      <code><![CDATA[db_query(sprintf('INSERT INTO wiki_attachment (group_id, name)'
+        . "VALUES(%d, '%s')", $this->group_id, $this->escapeString($name)))]]></code>
+      <code><![CDATA[db_query(sprintf('INSERT INTO wiki_attachment_log (user_id, group_id, wiki_attachment_id, wiki_attachment_revision_id, time)'
+                . 'VALUES (%d, %d, %d, %d, %d)', db_ei($row['user_id']), db_ei($this->group_id), db_ei($new_id), db_ei($array_rev[$tmpl_id]), db_ei($row['time'])))]]></code>
+      <code><![CDATA[db_query(sprintf('INSERT INTO wiki_link (linkfrom, linkto) VALUES (%d, %d)', $new_id, $clone_id))]]></code>
+      <code><![CDATA[db_query(sprintf('INSERT INTO wiki_nonempty (id) VALUES(%d)', $new))]]></code>
+      <code><![CDATA[db_query(sprintf('INSERT INTO wiki_recent (id, latestversion, latestmajor)'
+                     . 'VALUES(%d, %d, %d)', $new_id, $recent_infos['latestversion'], $recent_infos['latestmajor']))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT * FROM wiki_attachment_log WHERE group_id=%d AND wiki_attachment_id=%d', $this->template_id, $tmpl_id))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT * from wiki_nonempty where id=%d', $id))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d', db_ei($this->group_id), db_ei($ugid)))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d', db_ei($new_id), db_ei($row['revision'])))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT id, name FROM wiki_attachment WHERE group_id=%d', db_ei($this->template_id)))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT id, pagename FROM wiki_page WHERE group_id=%d', $this->template_id))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT id, wiki_name, wiki_link, description, rank, language_id FROM wiki_group_list WHERE group_id=%d', $this->template_id))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT language_id FROM wiki_group_list WHERE group_id=%d', $this->template_id))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT latestversion, latestmajor, latestminor FROM wiki_recent where id=%d', $id))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT name from wiki_attachment where id=%d', $id))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT object_id, ugroup_id '
+                                . 'FROM permissions perm, wiki_page wpg '
+                                . "WHERE perm.permission_type='WIKIPAGE_READ' "
+                                . 'AND wpg.group_id=%d '
+                                . 'AND perm.object_id=wpg.id', $this->template_id))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT user_id, date, revision, mimetype, size FROM wiki_attachment_revision WHERE attachment_id=%d', db_ei($tmpl_id)))]]></code>
+      <code><![CDATA[db_query(sprintf('SELECT version, versiondata FROM wiki_version WHERE id=%d', $id))]]></code>
+      <code><![CDATA[db_query(sprintf('select linkto FROM wiki_link WHERE linkfrom=%d', $tmpl_id))]]></code>
+      <code><![CDATA[db_query(sprintf('select version, mtime, minor_edit, content FROM wiki_version WHERE id=%d', $key))]]></code>
       <code><![CDATA[db_result($res, 0, 'dst_ugroup_id')]]></code>
       <code><![CDATA[db_result($res, 0, 'is_used')]]></code>
       <code><![CDATA[db_result($res, 0, 'nb')]]></code>
@@ -74434,8 +73805,8 @@
     <UndefinedFunction>
       <code>CheckActionPageUpdate($request, $check)</code>
       <code>CheckPgsrcUpdate($request, $check)</code>
-      <code><![CDATA[IniConfig(PHPWIKI_DIR . "/config/config.ini")]]></code>
-      <code><![CDATA[IniConfig(PHPWIKI_DIR . "/config/config.ini")]]></code>
+      <code><![CDATA[IniConfig(PHPWIKI_DIR . '/config/config.ini')]]></code>
+      <code><![CDATA[IniConfig(PHPWIKI_DIR . '/config/config.ini')]]></code>
     </UndefinedFunction>
   </file>
   <file src="src/common/wiki/views/WikiServiceAdminViews.class.php">
@@ -74730,18 +74101,18 @@
       <code>db_ei_implode($users_array)</code>
       <code>db_fetch_array($res_user)</code>
       <code>db_fetch_array($res_user)</code>
-      <code><![CDATA[db_query("SELECT email, confirm_hash, user_name FROM user "
-                 . " WHERE user_id IN (" . db_ei_implode($users_array) . ")")]]></code>
-      <code><![CDATA[db_query("SELECT email, confirm_hash, user_name FROM user "
-                 . " WHERE user_id IN ($users_ids)")]]></code>
       <code><![CDATA[db_query("UPDATE user SET expiry_date='" . $expiry_date . "', status='" . $newstatus . "'" .
                  ", approved_by='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'" .
-                 " WHERE user_id IN (" . db_ei_implode($users_array) . ")")]]></code>
+                 ' WHERE user_id IN (' . db_ei_implode($users_array) . ')')]]></code>
       <code><![CDATA[db_query("UPDATE user SET expiry_date='" . $expiry_date . "', status='" . $newstatus . "'" . $shell .
                  ", approved_by='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'" .
              " WHERE user_id IN ($users_ids)")]]></code>
       <code><![CDATA[db_query("UPDATE user SET status='D', approved_by='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'" .
-                 " WHERE user_id IN (" . db_ei_implode($users_array) . ")")]]></code>
+                 ' WHERE user_id IN (' . db_ei_implode($users_array) . ')')]]></code>
+      <code><![CDATA[db_query('SELECT email, confirm_hash, user_name FROM user '
+                 . " WHERE user_id IN ($users_ids)")]]></code>
+      <code><![CDATA[db_query('SELECT email, confirm_hash, user_name FROM user '
+                 . ' WHERE user_id IN (' . db_ei_implode($users_array) . ')')]]></code>
     </DeprecatedFunction>
     <InvalidScalarArgument>
       <code>$date_list[0]</code>
@@ -74796,12 +74167,12 @@
   <file src="src/www/admin/lastlogins.php">
     <DeprecatedFunction>
       <code>db_fetch_array($res_logins)</code>
-      <code><![CDATA[db_query("SELECT session.user_id AS user_id,"
-    . "session.ip_addr AS ip_addr,"
-    . "session.time AS time,"
-    . "user.user_name AS user_name FROM session,user "
-    . "WHERE session.user_id=user.user_id AND "
-    . "session.user_id>0 AND session.time>0 ORDER BY session.time DESC LIMIT 5000")]]></code>
+      <code><![CDATA[db_query('SELECT session.user_id AS user_id,'
+    . 'session.ip_addr AS ip_addr,'
+    . 'session.time AS time,'
+    . 'user.user_name AS user_name FROM session,user '
+    . 'WHERE session.user_id=user.user_id AND '
+    . 'session.user_id>0 AND session.time>0 ORDER BY session.time DESC LIMIT 5000')]]></code>
     </DeprecatedFunction>
   </file>
   <file src="src/www/admin/massmail.php">
@@ -74809,11 +74180,11 @@
       <code><![CDATA[db_query("SELECT COUNT(DISTINCT user.email) FROM user WHERE ( status='A' OR status='R' ) AND mail_siteupdates=1")]]></code>
       <code><![CDATA[db_query("SELECT COUNT(DISTINCT user.email) FROM user WHERE ( status='A' OR status='R' ) AND mail_va=1")]]></code>
       <code><![CDATA[db_query("SELECT COUNT(DISTINCT user.email) FROM user WHERE ( status='A' OR status='R' )")]]></code>
-      <code><![CDATA[db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE "
+      <code><![CDATA[db_query('SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE '
     . "user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) AND user_group.admin_flags='A'")]]></code>
-      <code><![CDATA[db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE "
+      <code><![CDATA[db_query('SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE '
     . "user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' )")]]></code>
-      <code><![CDATA[db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE "
+      <code><![CDATA[db_query('SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE '
     . "user.user_id=user_group.user_id AND( user.status='A' OR user.status='R' ) AND user_group.group_id=1")]]></code>
       <code>db_result($res_count, 0, null)</code>
       <code>db_result($res_count, 0, null)</code>
@@ -74984,13 +74355,13 @@
       <code>db_es($pname)</code>
       <code>db_es($pname)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT * FROM frs_filetype ORDER BY type_id")]]></code>
-      <code><![CDATA[db_query("SELECT * FROM frs_processor WHERE group_id=100 OR group_id=" . db_ei($group_id) . " ORDER BY `rank`")]]></code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
+      <code><![CDATA[db_query('SELECT * FROM frs_filetype ORDER BY type_id')]]></code>
+      <code><![CDATA[db_query('SELECT * FROM frs_processor WHERE group_id=100 OR group_id=' . db_ei($group_id) . ' ORDER BY `rank`')]]></code>
       <code><![CDATA[db_result($result, $j, 'group_id')]]></code>
       <code><![CDATA[db_result($result, $j, 'name')]]></code>
       <code><![CDATA[db_result($result, $j, 'processor_id')]]></code>
@@ -75149,11 +74520,11 @@
       <code>db_es(htmlspecialchars($forum_name))</code>
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT group_id FROM news_bytes WHERE forum_id=" . db_ei($forum_id))]]></code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
+      <code><![CDATA[db_query('SELECT group_id FROM news_bytes WHERE forum_id=' . db_ei($forum_id))]]></code>
       <code><![CDATA[db_result($gr, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'description')]]></code>
       <code><![CDATA[db_result($result, $i, 'forum_name')]]></code>
@@ -75181,13 +74552,13 @@
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT group_forum_id,forum_name " .
-                "FROM forum_group_list " .
+      <code>db_query($sql)</code>
+      <code>db_query($sql)</code>
+      <code><![CDATA[db_query('SELECT group_forum_id,forum_name ' .
+                'FROM forum_group_list ' .
                 "WHERE group_id='" . db_ei($group_id) . "' AND is_public IN ($public_flag)")]]></code>
-      <code><![CDATA[db_query("SELECT group_id FROM news_bytes WHERE forum_id=" . db_ei($f_id))]]></code>
-      <code><![CDATA[db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=" . db_ei($forum_id))]]></code>
-      <code>db_query($sql)</code>
-      <code>db_query($sql)</code>
+      <code><![CDATA[db_query('SELECT group_id FROM news_bytes WHERE forum_id=' . db_ei($f_id))]]></code>
+      <code><![CDATA[db_query('SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
       <code><![CDATA[db_result($gr, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'date')]]></code>
       <code><![CDATA[db_result($result, $i, 'date')]]></code>
@@ -75314,8 +74685,8 @@
       <code>db_es(htmlspecialchars($forum_name))</code>
       <code>db_es(htmlspecialchars($subject))</code>
       <code>db_es(htmlspecialchars($subject))</code>
-      <code><![CDATA[db_es(sprintf(_('Welcome to %1$s'), $group_name) . " " . htmlspecialchars($forum_name))]]></code>
-      <code><![CDATA[db_es(sprintf(_('Welcome to %1$s'), $hp->purify($group_name)) . " " . htmlspecialchars($forum_name))]]></code>
+      <code><![CDATA[db_es(sprintf(_('Welcome to %1$s'), $group_name) . ' ' . htmlspecialchars($forum_name))]]></code>
+      <code><![CDATA[db_es(sprintf(_('Welcome to %1$s'), $hp->purify($group_name)) . ' ' . htmlspecialchars($forum_name))]]></code>
       <code>db_fetch_array($result)</code>
       <code>db_insertid($result)</code>
       <code>db_insertid($result)</code>
@@ -75338,20 +74709,8 @@
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("INSERT INTO forum " .
-             "(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) " .
-             "VALUES (" . db_ei($forum_id) . ",100,'" . db_es(sprintf(_('Welcome to %1$s'), $hp->purify($group_name)) . " " . htmlspecialchars($forum_name)) . "'," .
-             "'" . db_es(sprintf(_('Welcome to %1$s'), $group_name) . " " . htmlspecialchars($forum_name)) . "','" . time() . "',0,'" . get_next_thread_id() . "')")]]></code>
       <code><![CDATA[db_query("INSERT INTO forum_thread_id VALUES ('')")]]></code>
-      <code><![CDATA[db_query("SELECT * FROM forum " .
-        "WHERE is_followup_to=" . db_ei($is_followup_to) . " " .
-        "AND subject='" .  db_es(htmlspecialchars($subject)) . "' " .
-        "AND group_forum_id=" . db_ei($group_forum_id) . " " .
-            "AND body='" . db_es(htmlspecialchars($body)) . "' " .
-        "AND posted_by='" . $db_escaped_user_id . "'")]]></code>
-      <code><![CDATA[db_query("SELECT * FROM forum WHERE msg_id=" . db_ei($is_followup_to) . " AND thread_id=" . db_ei($thread_id) . " AND group_forum_id=" . db_ei($group_forum_id))]]></code>
-      <code><![CDATA[db_query("SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id=" . db_ei($forum_id))]]></code>
-      <code><![CDATA[db_query("UPDATE forum SET has_followups='1' WHERE msg_id=" . db_ei($is_followup_to) . " AND thread_id=" . db_ei($thread_id) . " AND group_forum_id=" . db_ei($group_forum_id))]]></code>
+      <code><![CDATA[db_query("UPDATE forum SET has_followups='1' WHERE msg_id=" . db_ei($is_followup_to) . ' AND thread_id=' . db_ei($thread_id) . ' AND group_forum_id=' . db_ei($group_forum_id))]]></code>
       <code>db_query($del)</code>
       <code>db_query($qry)</code>
       <code>db_query($qry)</code>
@@ -75381,6 +74740,18 @@
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
+      <code><![CDATA[db_query('INSERT INTO forum ' .
+             '(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ' .
+             'VALUES (' . db_ei($forum_id) . ",100,'" . db_es(sprintf(_('Welcome to %1$s'), $hp->purify($group_name)) . ' ' . htmlspecialchars($forum_name)) . "'," .
+             "'" . db_es(sprintf(_('Welcome to %1$s'), $group_name) . ' ' . htmlspecialchars($forum_name)) . "','" . time() . "',0,'" . get_next_thread_id() . "')")]]></code>
+      <code><![CDATA[db_query('SELECT * FROM forum ' .
+        'WHERE is_followup_to=' . db_ei($is_followup_to) . ' ' .
+        "AND subject='" .  db_es(htmlspecialchars($subject)) . "' " .
+        'AND group_forum_id=' . db_ei($group_forum_id) . ' ' .
+            "AND body='" . db_es(htmlspecialchars($body)) . "' " .
+        "AND posted_by='" . $db_escaped_user_id . "'")]]></code>
+      <code><![CDATA[db_query('SELECT * FROM forum WHERE msg_id=' . db_ei($is_followup_to) . ' AND thread_id=' . db_ei($thread_id) . ' AND group_forum_id=' . db_ei($group_forum_id))]]></code>
+      <code><![CDATA[db_query('SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
       <code><![CDATA[db_result($res, 0, 'thread_id')]]></code>
       <code><![CDATA[db_result($res, 0, 'thread_id')]]></code>
       <code><![CDATA[db_result($res1, 0, 'group_id')]]></code>
@@ -75407,13 +74778,13 @@
       <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
       <code><![CDATA[db_result($result, ($rows - 1), 'msg_id')]]></code>
       <code><![CDATA[db_result($result, ($rows - 1), 'subject')]]></code>
-      <code><![CDATA[db_result($result, 0, "forum_name")]]></code>
-      <code><![CDATA[db_result($result, 0, "group_id")]]></code>
       <code><![CDATA[db_result($result, 0, 'body')]]></code>
       <code><![CDATA[db_result($result, 0, 'date')]]></code>
       <code><![CDATA[db_result($result, 0, 'details', $group_id)]]></code>
       <code><![CDATA[db_result($result, 0, 'forum_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
+      <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
+      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
@@ -75548,8 +74919,8 @@
       <code>db_ei($forum_id)</code>
       <code>db_ei($forum_id)</code>
       <code>db_numrows($res)</code>
-      <code><![CDATA[db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=" . db_ei($forum_id))]]></code>
       <code>db_query($qry)</code>
+      <code><![CDATA[db_query('SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
       <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
     </DeprecatedFunction>
@@ -75592,11 +74963,11 @@
       <code>db_error()</code>
       <code>db_numrows($res)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=" . db_ei($forum_id))]]></code>
       <code>db_query($qry)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
+      <code><![CDATA[db_query('SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
       <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
     </DeprecatedFunction>
@@ -75633,14 +75004,14 @@
       <code>db_es($bookmark_url)</code>
       <code><![CDATA[db_query("DELETE from user_bookmarks WHERE bookmark_id='" . db_es($bookmark_id) . "' "
     . "and user_id='" . $db_escaped_user_id . "'")]]></code>
-      <code><![CDATA[db_query("INSERT into user_bookmarks (user_id, bookmark_url, "
-    . "bookmark_title) values ('" . $db_escaped_user_id . "', '" . db_es($bookmark_url) . "', "
-    . "'" . db_es($bookmark_title) . "');")]]></code>
-      <code><![CDATA[db_query("SELECT bookmark_id from user_bookmarks where user_id=" . $db_escaped_user_id .
-                           " AND bookmark_url='" . db_es($bookmark_url) . "' AND bookmark_title='" . db_es($bookmark_title) . "'")]]></code>
       <code><![CDATA[db_query("UPDATE user_bookmarks SET bookmark_url='" . db_es($bookmark_url) . "', "
     . "bookmark_title='" . db_es($bookmark_title) . "' where bookmark_id='" . db_es($bookmark_id) . "' AND user_id='" . $db_escaped_user_id . "'")]]></code>
-      <code><![CDATA[db_result($result, 0, "bookmark_id")]]></code>
+      <code><![CDATA[db_query('INSERT into user_bookmarks (user_id, bookmark_url, '
+    . "bookmark_title) values ('" . $db_escaped_user_id . "', '" . db_es($bookmark_url) . "', "
+    . "'" . db_es($bookmark_title) . "');")]]></code>
+      <code><![CDATA[db_query('SELECT bookmark_id from user_bookmarks where user_id=' . $db_escaped_user_id .
+                           " AND bookmark_url='" . db_es($bookmark_url) . "' AND bookmark_title='" . db_es($bookmark_title) . "'")]]></code>
+      <code><![CDATA[db_result($result, 0, 'bookmark_id')]]></code>
     </DeprecatedFunction>
     <MissingParamType>
       <code>$bookmark_id</code>
@@ -75908,14 +75279,14 @@
       <code>db_fetch_array($res_topnodes)</code>
       <code>db_fetch_array($res_verifycat)</code>
       <code>db_numrows($res_verifycat)</code>
-      <code><![CDATA[db_query("SELECT parent FROM trove_cat WHERE "
-            . "trove_cat_id=" . db_ei($current_cat))]]></code>
       <code><![CDATA[db_query('DELETE FROM trove_group_link WHERE '
                  . 'group_id=' . db_ei($group_id) . ' AND trove_cat_id='
                  . db_ei($subnodeids[$i]))]]></code>
       <code><![CDATA[db_query('INSERT INTO trove_group_link (trove_cat_id,trove_cat_version,'
     . 'group_id,trove_cat_root) VALUES (' . db_ei($trove_cat_id) . ','
     . time() . ',' . db_ei($group_id) . ',' . db_ei($rootnode) . ')')]]></code>
+      <code><![CDATA[db_query('SELECT parent FROM trove_cat WHERE '
+            . 'trove_cat_id=' . db_ei($current_cat))]]></code>
       <code><![CDATA[db_query('SELECT trove_cat.trove_cat_id AS trove_cat_id,'
     . 'trove_cat.fullpath_ids AS fullpath_ids FROM trove_cat,trove_group_link '
     . 'WHERE trove_cat.trove_cat_id=trove_group_link.trove_cat_id AND '
@@ -75965,13 +75336,13 @@
       <code>db_query($sql)</code>
       <code><![CDATA[db_result($res, 0, 'user_id')]]></code>
       <code><![CDATA[db_result($res, 0, 'user_id')]]></code>
-      <code><![CDATA[db_result($result, 0, "email")]]></code>
-      <code><![CDATA[db_result($result, 0, "email")]]></code>
-      <code><![CDATA[db_result($result, 0, "user_name")]]></code>
+      <code><![CDATA[db_result($result, 0, 'email')]]></code>
+      <code><![CDATA[db_result($result, 0, 'email')]]></code>
+      <code><![CDATA[db_result($result, 0, 'user_name')]]></code>
     </DeprecatedFunction>
     <EmptyArrayAccess>
-      <code><![CDATA[$USER_RES["_" . $user_id . "_"]]]></code>
-      <code><![CDATA[$USER_RES["_" . $user_id . "_"]]]></code>
+      <code><![CDATA[$USER_RES['_' . $user_id . '_']]]></code>
+      <code><![CDATA[$USER_RES['_' . $user_id . '_']]]></code>
     </EmptyArrayAccess>
     <MissingParamType>
       <code>$email</code>
@@ -76152,8 +75523,8 @@
     <DeprecatedFunction>
       <code>db_ei($bookmark_id)</code>
       <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
-      <code><![CDATA[db_query("SELECT * from user_bookmarks where "
-                   . "bookmark_id=" . db_ei($bookmark_id) . " and user_id=" . db_ei(UserManager::instance()->getCurrentUser()->getId()))]]></code>
+      <code><![CDATA[db_query('SELECT * from user_bookmarks where '
+                   . 'bookmark_id=' . db_ei($bookmark_id) . ' and user_id=' . db_ei(UserManager::instance()->getCurrentUser()->getId()))]]></code>
       <code><![CDATA[db_result($result, 0, 'bookmark_title')]]></code>
       <code><![CDATA[db_result($result, 0, 'bookmark_url')]]></code>
     </DeprecatedFunction>
@@ -76735,7 +76106,6 @@
       <code>db_numrows($res)</code>
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT ugroup_id, name FROM ugroup WHERE ugroup_id IN (" . implode(',', $GLOBALS['UGROUPS']) . ") ")]]></code>
       <code>db_query($query)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
@@ -76758,6 +76128,7 @@
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($usersSql)</code>
+      <code><![CDATA[db_query('SELECT ugroup_id, name FROM ugroup WHERE ugroup_id IN (' . implode(',', $GLOBALS['UGROUPS']) . ') ')]]></code>
       <code><![CDATA[db_result($res, 0, 'name')]]></code>
       <code><![CDATA[db_result($res, 0, 'name')]]></code>
       <code><![CDATA[db_result($res, 0, 'name')]]></code>
@@ -76875,10 +76246,10 @@
       <code>db_fetch_array($res_dev)</code>
       <code>db_numrows($res_dev)</code>
       <code>db_numrows($res_dev)</code>
-      <code><![CDATA[db_query("SELECT * FROM user_group WHERE group_id=" . db_ei($group_id))]]></code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code><![CDATA[db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['filter'] . $sql['order'] . $sql['limit'])]]></code>
+      <code><![CDATA[db_query('SELECT * FROM user_group WHERE group_id=' . db_ei($group_id))]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code>groupAddHistory</code>
@@ -76953,7 +76324,7 @@
       <code>db_result($result, $pickone, $col)</code>
     </DeprecatedFunction>
     <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize(join(",", $label_values))]]></code>
+      <code><![CDATA[SimpleSanitizer::unsanitize(join(',', $label_values))]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code>$at</code>
@@ -77036,7 +76407,7 @@
       <code>db_query($sql)</code>
     </DeprecatedFunction>
     <InvalidOperand>
-      <code><![CDATA[substr($row["day"], 4, 2)]]></code>
+      <code><![CDATA[substr($row['day'], 4, 2)]]></code>
     </InvalidOperand>
     <InvalidScalarArgument>
       <code>1</code>
@@ -77087,8 +76458,8 @@
       <code>wiki_logs_extract</code>
     </MissingReturnType>
     <RedundantCast>
-      <code><![CDATA[(string) date("H:i", $row["time"])]]></code>
-      <code><![CDATA[(string) date("j M Y", $row['time'])]]></code>
+      <code><![CDATA[(string) date('H:i', $row['time'])]]></code>
+      <code><![CDATA[(string) date('j M Y', $row['time'])]]></code>
     </RedundantCast>
   </file>
   <file src="src/www/service/index.php">
@@ -77097,11 +76468,11 @@
       <code><![CDATA[db_ei((int) $request->get('id'))]]></code>
       <code>db_fetch_array($db_res)</code>
       <code>db_numrows($db_res)</code>
-      <code><![CDATA[db_query("SELECT *
+      <code><![CDATA[db_query('SELECT *
         FROM service
-        WHERE group_id   = " . db_ei((int) $request->get('group_id')) . "
-          AND service_id = " . db_ei((int) $request->get('id')) . "
-          AND is_used    = 1")]]></code>
+        WHERE group_id   = ' . db_ei((int) $request->get('group_id')) . '
+          AND service_id = ' . db_ei((int) $request->get('id')) . '
+          AND is_used    = 1')]]></code>
     </DeprecatedFunction>
   </file>
   <file src="src/www/softwaremap/trove_list.php">
@@ -77124,14 +76495,14 @@
       <code>db_fetch_array($res_total)</code>
       <code>db_fetch_array($res_trove_cat)</code>
       <code>db_numrows($res_trove_cat)</code>
-      <code><![CDATA[db_query("SELECT count(*) as count FROM `groups` WHERE " . trove_get_visibility_for_user('access', $current_user) . " AND status='A' and type=1")]]></code>
-      <code><![CDATA[db_query("SELECT trove_cat_id FROM trove_cat WHERE parent=0 ORDER BY fullname LIMIT 1")]]></code>
       <code>db_query($qry_root_trov)</code>
       <code>db_query($query_projlist)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code><![CDATA[db_query('SELECT * FROM trove_cat WHERE trove_cat_id=' . db_ei($form_cat))]]></code>
       <code><![CDATA[db_query('SELECT FOUND_ROWS() as nb')]]></code>
+      <code><![CDATA[db_query('SELECT count(*) as count FROM `groups` WHERE ' . trove_get_visibility_for_user('access', $current_user) . " AND status='A' and type=1")]]></code>
+      <code><![CDATA[db_query('SELECT trove_cat_id FROM trove_cat WHERE parent=0 ORDER BY fullname LIMIT 1')]]></code>
       <code><![CDATA[db_query('SELECT trove_cat_id,fullname FROM trove_cat WHERE '
     . 'parent=0 ORDER BY fullname')]]></code>
     </DeprecatedFunction>
@@ -77860,120 +77231,6 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="tests/integration/tests/Backend/BackendSVNTest.php">
-    <InvalidArgument>
-      <code>$project</code>
-      <code>$project</code>
-      <code>$project</code>
-      <code>$project</code>
-    </InvalidArgument>
-    <MissingPropertyType>
-      <code>$bin_dir</code>
-      <code>$cache_parameters</code>
-      <code>$fake_revprop</code>
-      <code>$initial_codendi_bin_prefix</code>
-      <code>$initial_http_user</code>
-      <code>$initial_svn_prefix</code>
-      <code>$initial_svn_root_file</code>
-      <code>$initial_svnadmin_cmd</code>
-      <code>$initial_sys_name</code>
-      <code>$initial_sys_project_backup_path</code>
-      <code>$initial_tmp_dir</code>
-      <code>$tmp_dir</code>
-    </MissingPropertyType>
-    <PossiblyUndefinedMethod>
-      <code>generateSVNApacheConf</code>
-      <code>setSVNPrivacy</code>
-      <code>setSVNPrivacy</code>
-      <code>setSVNPrivacy</code>
-      <code>setSVNPrivacy</code>
-      <code>shouldReceive</code>
-      <code>shouldReceive</code>
-      <code>shouldReceive</code>
-      <code>shouldReceive</code>
-      <code>shouldReceive</code>
-      <code>shouldReceive</code>
-      <code>shouldReceive</code>
-    </PossiblyUndefinedMethod>
-    <PropertyTypeCoercion>
-      <code><![CDATA[\Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods()]]></code>
-    </PropertyTypeCoercion>
-    <TooManyArguments>
-      <code><![CDATA[\TestHelper::arrayToDar([
-            "group_id"        => "101",
-            "group_name"      => "Guinea Pig",
-            "unix_group_name" => "gpig",
-        ], [
-            "group_id"        => "102",
-            "group_name"      => "Guinea Pig is \"back\"",
-            "unix_group_name" => "gpig2",
-        ], [
-            "group_id"        => "103",
-            "group_name"      => "Guinea Pig is 'angry'",
-            "unix_group_name" => "gpig3",
-        ])]]></code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-    </TooManyArguments>
-    <UndefinedInterfaceMethod>
-      <code>never</code>
-      <code>once</code>
-      <code>updateHooks</code>
-      <code>updateHooks</code>
-    </UndefinedInterfaceMethod>
-    <UndefinedMagicMethod>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>never</code>
-      <code>once</code>
-    </UndefinedMagicMethod>
-  </file>
-  <file src="tests/integration/tests/Backend/BackendSystemTest.php">
-    <MissingPropertyType>
-      <code>$initial_codendi_log</code>
-      <code>$initial_ftp_anon_dir_prefix</code>
-      <code>$initial_ftp_frs_dir_prefix</code>
-      <code>$initial_sys_custom_incdir</code>
-      <code>$initial_sys_file_deletion_delay</code>
-      <code>$initial_sys_incdir</code>
-      <code>$initial_sys_project_backup_path</code>
-      <code>$initial_tmp_dir</code>
-    </MissingPropertyType>
-    <TooManyArguments>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-    </TooManyArguments>
-    <UndefinedInterfaceMethod>
-      <code>cleanupFRS</code>
-      <code>renameFileReleasedDirectory</code>
-    </UndefinedInterfaceMethod>
-    <UndefinedMagicMethod>
-      <code>andReturn</code>
-      <code>andReturn</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-      <code>andReturns</code>
-    </UndefinedMagicMethod>
-  </file>
   <file src="tests/integration/tests/TrackersV3ToV5/DefectTrackerTest.php">
     <MissingParamType>
       <code>$columns</code>
@@ -78031,47 +77288,9 @@
       <code>$name</code>
     </MissingParamType>
     <MissingPropertyType>
-      <code>$backup_codendi_log</code>
       <code><![CDATA[$report->name]]></code>
       <code><![CDATA[$this->tasks_report->name]]></code>
     </MissingPropertyType>
-    <MissingReturnType>
-      <code>columnsContainOneColumnForField</code>
-      <code>compareValuesToLabel</code>
-      <code>convertTaskTracker</code>
-      <code>criteriaContainOneCriterionForField</code>
-      <code>getReportByName</code>
-      <code>resetForgeConfig</code>
-      <code>testItCreateReminderWhenTheListOfUgroupsIsEmptyButNotTheTrackerRoles</code>
-      <code>testItCreatedTrackerV5WithDefaultParameters</code>
-      <code>testItGivesFullAccessToAllUsers</code>
-      <code>testItHasADateFieldStartDate</code>
-      <code>testItHasAListFieldResolutionWithValues</code>
-      <code>testItHasAReportNamedBugs</code>
-      <code>testItHasAStatusSemantic</code>
-      <code>testItHasATableRenderer</code>
-      <code>testItHasATextFieldDescription</code>
-      <code>testItHasATitleSemantic</code>
-      <code>testItHasAnAssignedToSemantic</code>
-      <code>testItHasAnUnusedField</code>
-      <code>testItHasNoParent</code>
-      <code>testItHasOnlyOneOpenValueForStatusSemantic</code>
-      <code>testItHasSubmittedBy</code>
-      <code>testItHasThreeCriteria</code>
-      <code>testItHasTwoReports</code>
-      <code>testItSendsASecondEmailOnStartDate</code>
-      <code>testItSendsASecondEmailThreeDaysAfterDueDate</code>
-      <code>testItSendsAnEmailToProjectAndTrackerAdminsTwoDaysBeforeStartDate</code>
-      <code>testItSendsAnEmailToProjectMembersAndSubmitterOneDayAfterEndDate</code>
-      <code>testItSendsAnEmailToProjectMembersAndSubmitterThreeDaysAfterEndDate</code>
-      <code>testItSendsAnEmailToSubmitterOneDaysAfterDueDate</code>
-      <code>testItSendsTheLastEmailTwoDaysAfterStartDate</code>
-      <code>thereAreColumnsForFields</code>
-      <code>thereAreCriteriaForFields</code>
-    </MissingReturnType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$this->tracker_factory->getTrackerById(self::$task_tracker_id)]]></code>
-    </PossiblyNullPropertyAssignmentValue>
     <PossiblyNullReference>
       <code>getLabel</code>
       <code>getListValueById</code>

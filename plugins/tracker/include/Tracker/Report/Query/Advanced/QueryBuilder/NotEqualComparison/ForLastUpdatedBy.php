@@ -40,11 +40,11 @@ final class ForLastUpdatedBy implements ListReadOnlyConditionBuilder
     {
         $value = $values[0];
         if ($value === '') {
-            return new ParametrizedSQLFragment("1", []);
+            return new ParametrizedSQLFragment('1', []);
         }
 
         $user      = $this->user_manager->getUserByUserName($value);
-        $condition = "c.submitted_by != ?";
+        $condition = 'c.submitted_by != ?';
 
         return new ParametrizedSQLFragment($condition, [$user->getId()]);
     }

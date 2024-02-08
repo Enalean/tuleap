@@ -37,7 +37,7 @@ final class NbBackendWorkersConfigValidatorTest extends TestCase
 
         $this->expectException(InvalidConfigKeyValueException::class);
 
-        $validator->checkIsValid("-1");
+        $validator->checkIsValid('-1');
     }
 
     public function testEqualZeroWhenPluginsNeedWorkers(): void
@@ -67,9 +67,9 @@ final class NbBackendWorkersConfigValidatorTest extends TestCase
         );
 
         $this->expectException(InvalidConfigKeyValueException::class);
-        $this->expectErrorMessage("Nb backend workers cannot be 0, the following plugins need workers: CCE, Wiki");
+        $this->expectErrorMessage('Nb backend workers cannot be 0, the following plugins need workers: CCE, Wiki');
 
-        $validator->checkIsValid("0");
+        $validator->checkIsValid('0');
     }
 
     public function testEqualZeroWhenPluginsDoNotNeedWorkers(): void
@@ -90,7 +90,7 @@ final class NbBackendWorkersConfigValidatorTest extends TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $validator->checkIsValid("0");
+        $validator->checkIsValid('0');
     }
 
     public function testGreaterThanZeroWhenPluginsNeedWorkers(): void
@@ -121,7 +121,7 @@ final class NbBackendWorkersConfigValidatorTest extends TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $validator->checkIsValid("1");
+        $validator->checkIsValid('1');
     }
 
     public function testGreaterThanZeroWhenPluginsDoNotNeedWorkers(): void
@@ -144,6 +144,6 @@ final class NbBackendWorkersConfigValidatorTest extends TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $validator->checkIsValid("1");
+        $validator->checkIsValid('1');
     }
 }

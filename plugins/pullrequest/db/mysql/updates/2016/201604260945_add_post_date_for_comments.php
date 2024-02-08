@@ -34,7 +34,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_pullrequest_comments ADD (post_date INT(11) NOT NULL);";
+        $sql = 'ALTER TABLE plugin_pullrequest_comments ADD (post_date INT(11) NOT NULL);';
         $this->executeSql($sql);
     }
 

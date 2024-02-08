@@ -38,7 +38,7 @@ class XML_RNGValidator
      */
     private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element): DOMDocument
     {
-        $dom         = new DOMDocument("1.0", "UTF-8");
+        $dom         = new DOMDocument('1.0', 'UTF-8');
         $dom_element = $dom->importNode(dom_import_simplexml($xml_element), true);
         $dom->appendChild($dom_element);
         return $dom;
@@ -60,7 +60,7 @@ class XML_RNGValidator
             );
         } catch (System_Command_CommandException $ex) {
             unlink($temp);
-            throw new \RuntimeException("Unable to generate pretty print version of XML file for error handling: " . $ex->getMessage());
+            throw new \RuntimeException('Unable to generate pretty print version of XML file for error handling: ' . $ex->getMessage());
         }
 
         try {

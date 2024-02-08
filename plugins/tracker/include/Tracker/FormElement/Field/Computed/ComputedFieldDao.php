@@ -136,9 +136,9 @@ class ComputedFieldDao extends SpecificPropertiesDao
         $field_id    = $this->da->escapeInt($field_id);
 
         $manual_selection = 'null';
-        $manual_condition = "";
+        $manual_condition = '';
         if ($stop_on_manual_value) {
-            $manual_selection = "manual.value";
+            $manual_selection = 'manual.value';
 
             $manual_condition = "
                 LEFT JOIN tracker_field manual_field

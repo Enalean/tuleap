@@ -83,11 +83,11 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $immutable_tag = new ImmutableTag(
             $this->repository,
-            "/tags",
-            "/white"
+            '/tags',
+            '/white'
         );
 
-        $access_file = "[/] * = rw";
+        $access_file = '[/] * = rw';
 
         $mail_notifications = [];
 
@@ -97,15 +97,15 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository,
             1,
             1,
-            "",
+            '',
             time()
         );
 
         $this->immutable_tag_factory->method('getByRepositoryId')->willReturn(
             new ImmutableTag(
                 $this->repository,
-                "/dev",
-                ""
+                '/dev',
+                ''
             ),
         );
         $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn(
@@ -130,8 +130,8 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $immutable_tag = new ImmutableTag(
             $this->repository,
-            "/tags",
-            "/white"
+            '/tags',
+            '/white'
         );
 
         $access_file = "[/] * = rw\n";
@@ -144,15 +144,15 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository,
             1,
             1,
-            "[/] * = rw",
+            '[/] * = rw',
             time()
         );
 
         $this->immutable_tag_factory->method('getByRepositoryId')->willReturn(
             new ImmutableTag(
                 $this->repository,
-                "/dev",
-                ""
+                '/dev',
+                ''
             ),
         );
         $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn(
@@ -177,11 +177,11 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $immutable_tag = new ImmutableTag(
             $this->repository,
-            "/tags",
-            "/white"
+            '/tags',
+            '/white'
         );
 
-        $access_file = "[/] * = rw";
+        $access_file = '[/] * = rw';
 
         $mail_notifications = [];
 
@@ -191,15 +191,15 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository,
             1,
             1,
-            "[/] * = rw",
+            '[/] * = rw',
             time()
         );
 
         $this->immutable_tag_factory->method('getByRepositoryId')->willReturn(
             new ImmutableTag(
                 $this->repository,
-                "/dev",
-                ""
+                '/dev',
+                ''
             ),
         );
         $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn(
@@ -224,11 +224,11 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $immutable_tag = new ImmutableTag(
             $this->repository,
-            "/tags",
-            "/white"
+            '/tags',
+            '/white'
         );
 
-        $access_file = "[/] * = rw";
+        $access_file = '[/] * = rw';
 
         $mail_notifications = [];
 
@@ -238,11 +238,11 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository,
             1,
             1,
-            "",
+            '',
             time()
         );
 
-        $existing_tags = new ImmutableTag($this->repository, "/tags", "/whitelist");
+        $existing_tags = new ImmutableTag($this->repository, '/tags', '/whitelist');
         $this->immutable_tag_factory->method('getByRepositoryId')->willReturn($existing_tags);
         $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn(
             $current_access_file
@@ -266,11 +266,11 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $immutable_tag = new ImmutableTag(
             $this->repository,
-            "/tags",
-            "/white"
+            '/tags',
+            '/white'
         );
 
-        $access_file = "[/] * = rw";
+        $access_file = '[/] * = rw';
 
         $mail_notifications = [];
 
@@ -284,7 +284,7 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             time()
         );
 
-        $existing_tags = new ImmutableTag($this->repository, "/tags", "/whitelist");
+        $existing_tags = new ImmutableTag($this->repository, '/tags', '/whitelist');
         $this->immutable_tag_factory->method('getByRepositoryId')->willReturn($existing_tags);
         $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn(
             $current_access_file

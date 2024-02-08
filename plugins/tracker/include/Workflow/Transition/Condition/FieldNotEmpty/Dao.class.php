@@ -49,7 +49,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
 
         if (count($fields) > 0) {
             $sql  = "INSERT INTO $this->table_name (`transition_id`, `field_id`) VALUES ";
-            $sql .= implode(",", $fields);
+            $sql .= implode(',', $fields);
             return $this->update($sql);
         }
 
@@ -118,7 +118,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
     {
  // WAT ???
         $sql = sprintf(
-            "INSERT INTO permissions (object_id, permission_type, ugroup_id)" .
+            'INSERT INTO permissions (object_id, permission_type, ugroup_id)' .
                      " VALUES ('%s', '%s', '%s')",
             $object_id,
             $permission_type,

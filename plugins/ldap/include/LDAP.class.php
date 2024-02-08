@@ -93,8 +93,8 @@ class LDAP
 
     public const ERR_SUCCESS = 0x00;
 
-    public const SERVER_TYPE_ACTIVE_DIRECTORY = "ActiveDirectory";
-    public const SERVER_TYPE_OPEN_LDAP        = "OpenLDAP";
+    public const SERVER_TYPE_ACTIVE_DIRECTORY = 'ActiveDirectory';
+    public const SERVER_TYPE_OPEN_LDAP        = 'OpenLDAP';
 
     private $ds;
     private $bound;
@@ -456,7 +456,7 @@ class LDAP
     public function searchUser($words)
     {
         $words  = ldap_escape($words, '', LDAP_ESCAPE_FILTER);
-        $filter = str_replace("%words%", $words, $this->ldapParams['search_user']);
+        $filter = str_replace('%words%', $words, $this->ldapParams['search_user']);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
 
@@ -521,7 +521,7 @@ class LDAP
         if ($name && $this->_connectAndBind()) {
             $name = ldap_escape($name, '', LDAP_ESCAPE_FILTER);
             if (isset($this->ldapParams['tooltip_search_user'])) {
-                $filter = str_replace("%words%", $name, $this->ldapParams['tooltip_search_user']);
+                $filter = str_replace('%words%', $name, $this->ldapParams['tooltip_search_user']);
             } else {
                 $filter = '(' . $this->ldapParams['cn'] . '=' . $name . '*)';
             }
@@ -596,7 +596,7 @@ class LDAP
             $name = ldap_escape($name, '', LDAP_ESCAPE_FILTER);
             // Use display name if setting is found. Otherwise, fall back on old hard-coded filter.
             if (isset($this->ldapParams['tooltip_search_grp'])) {
-                $filter = str_replace("%words%", $name, $this->ldapParams['tooltip_search_grp']);
+                $filter = str_replace('%words%', $name, $this->ldapParams['tooltip_search_grp']);
             } else {
                 $filter = '(' . $this->ldapParams['grp_cn'] . '=*' . $name . '*)';
             }

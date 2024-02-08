@@ -187,7 +187,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'project_name',
                 false,
                 102,
-                "😬",
+                '😬',
             );
         $request->expects(self::atLeastOnce())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $request->expects(self::atLeastOnce())->method('existAndNonEmpty')->willReturn(false);

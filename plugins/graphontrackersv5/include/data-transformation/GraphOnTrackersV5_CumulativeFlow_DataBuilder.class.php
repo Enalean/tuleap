@@ -112,9 +112,9 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
                     FROM `tracker_changeset` as c
                     JOIN `tracker_changeset_value` v ON (v.changeset_id = c.id AND v.field_id = $this->observed_field_id )
                     JOIN tracker_changeset_value_list l ON (l.changeset_value_id = v.id)
-                    WHERE artifact_id in (" . $this->artifacts['id'] . ")
-                    AND c.id IN (" . db_ei_implode($changesets) . ")
-                    GROUP BY l.bindvalue_id";
+                    WHERE artifact_id in (" . $this->artifacts['id'] . ')
+                    AND c.id IN (' . db_ei_implode($changesets) . ')
+                    GROUP BY l.bindvalue_id';
 
             $res = db_query($sql);
             while ($data = db_fetch_array($res)) {
@@ -211,8 +211,8 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
         $sql = "SELECT MAX(id) as id
             FROM `tracker_changeset` c
             WHERE c.submitted_on < $timestamp
-            AND c.artifact_id IN (" . $this->artifacts['id'] . ")
-            GROUP BY artifact_id";
+            AND c.artifact_id IN (" . $this->artifacts['id'] . ')
+            GROUP BY artifact_id';
 
         $res        = db_query($sql);
         $changesets = [];

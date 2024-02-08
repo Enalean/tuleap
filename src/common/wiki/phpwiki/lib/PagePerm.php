@@ -247,7 +247,7 @@ function _requiredAuthorityForPagename($access, $pagename)
             if ($perm->isAuthorized('change', $request->_user)) {
                 // warn the user to set ACL of ".", if he has permissions to do so.
                 trigger_error(". (dotpage == rootpage for inheriting pageperm ACLs) exists without any ACL!\n" .
-                              "Please do ?action=setacl&pagename=.", E_USER_WARNING);
+                              'Please do ?action=setacl&pagename=.', E_USER_WARNING);
             }
             $result                        = ($perm->isAuthorized($access, $request->_user) === true);
             $permcache[$pagename][$access] = $result;
@@ -308,13 +308,13 @@ function getAccessDescription($access)
     static $accessDescriptions;
     if (! $accessDescriptions) {
         $accessDescriptions = [
-            'list'     => _("List this page and all subpages"),
-            'view'     => _("View this page and all subpages"),
-            'edit'     => _("Edit this page and all subpages"),
-            'create'   => _("Create a new (sub)page"),
-            'dump'     => _("Download the page contents"),
-            'change'   => _("Change page attributes"),
-            'remove'   => _("Remove this page"),
+            'list'     => _('List this page and all subpages'),
+            'view'     => _('View this page and all subpages'),
+            'edit'     => _('Edit this page and all subpages'),
+            'create'   => _('Create a new (sub)page'),
+            'dump'     => _('Download the page contents'),
+            'change'   => _('Change page attributes'),
+            'remove'   => _('Remove this page'),
         ];
     }
     if (in_array($access, array_keys($accessDescriptions))) {
@@ -368,7 +368,7 @@ class PagePermission
                     $this->perm[$access] = $requires;
                 } else {
                     trigger_error(
-                        sprintf(_("Unsupported ACL access type %s ignored."), $access),
+                        sprintf(_('Unsupported ACL access type %s ignored.'), $access),
                         E_USER_WARNING
                     );
                 }
@@ -585,7 +585,7 @@ class PagePermission
     public function groupName($group)
     {
         if ($group[0] == '_') {
-            return constant("GROUP" . $group);
+            return constant('GROUP' . $group);
         } else {
             return $group;
         }
@@ -630,15 +630,15 @@ class PagePermission
         $table->pushContent(HTML::tr(
             HTML::th(
                 ['align' => 'left'],
-                _("Access")
+                _('Access')
             ),
             HTML::th(
                 ['align' => 'right'],
-                _("Group/User")
+                _('Group/User')
             ),
-            HTML::th(_("Grant")),
-            HTML::th(_("Del/+")),
-            HTML::th(_("Description"))
+            HTML::th(_('Grant')),
+            HTML::th(_('Del/+')),
+            HTML::th(_('Description'))
         ));
 
         $allGroups = $this->_group->_specialGroups();
@@ -662,7 +662,7 @@ class PagePermission
                 'name' => "acl[_add_group][$access]",
                                            //'src'  => $addsrc,
                                            //'alt'   => "Add",
-                'title' => _("Add this ACL"),
+                'title' => _('Add this ACL'),
                 'value' => 1,
             ]);
             $newgroup   = HTML::select(['name' => "acl[_new_group][$access]",
@@ -683,7 +683,7 @@ class PagePermission
                 $table->pushContent(
                     HTML::tr(
                         ['valign' => 'top'],
-                        HTML::td(HTML::strong($access . ":")),
+                        HTML::td(HTML::strong($access . ':')),
                         HTML::td($newgroup),
                         HTML::td($nbsp, $newperm),
                         HTML::td($nbsp, $addbutton),
@@ -694,7 +694,7 @@ class PagePermission
             foreach ($groups as $group => $bool) {
                 $checkbox = HTML::input(['type' => 'checkbox',
                     'name' => "acl[$access][$group]",
-                    'title' => _("Allow / Deny"),
+                    'title' => _('Allow / Deny'),
                     'value' => 1,
                 ]);
                 if ($bool) {
@@ -712,13 +712,13 @@ class PagePermission
                     'style' => 'background: #aaa url(' . $deletesrc . ')',
                                                   //'src'  => $deletesrc,
                                                   //'alt'   => "Del",
-                    'title' => _("Delete this ACL"),
+                    'title' => _('Delete this ACL'),
                     'value' => 1,
                 ]);
                 if ($first_only) {
                     $table->pushContent(
                         HTML::tr(
-                            HTML::td(HTML::strong($access . ":")),
+                            HTML::td(HTML::strong($access . ':')),
                             HTML::td(
                                 ['class' => 'cal-today', 'align' => 'right'],
                                 HTML::strong($this->groupName($group))
@@ -748,11 +748,11 @@ class PagePermission
                 $table->pushContent(
                     HTML::tr(
                         ['valign' => 'top'],
-                        HTML::td(['align' => 'right'], _("add ")),
+                        HTML::td(['align' => 'right'], _('add ')),
                         HTML::td($newgroup),
                         HTML::td(['align' => 'center'], $nbsp, $newperm),
                         HTML::td(['align' => 'right', 'style' => 'background: #ccc url(' . $addsrc . ') no-repeat'], $addbutton),
-                        HTML::td(HTML::small(_("Check to add this ACL")))
+                        HTML::td(HTML::small(_('Check to add this ACL')))
                     )
                 );
             }
@@ -781,10 +781,10 @@ class PagePermission
             //    view:CREATOR,-OWNER,
             $line = $access . ':';
             foreach ($groups as $group => $bool) {
-                $line .= ($bool ? '' : '-') . $group . ",";
+                $line .= ($bool ? '' : '-') . $group . ',';
             }
             if (substr($line, -1) == ',') {
-                $s .= substr($line, 0, -1) . "; ";
+                $s .= substr($line, 0, -1) . '; ';
             }
         }
         if (substr($s, -2) == '; ') {

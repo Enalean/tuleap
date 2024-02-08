@@ -72,7 +72,7 @@ class LDAP_DirectorySynchronization
             $this->getLdapUserManager()->triggerRenameOfUsers();
             $this->remindAdminsBeforeCleanUp();
         } else {
-            echo "DB error: " . db_error() . PHP_EOL;
+            echo 'DB error: ' . db_error() . PHP_EOL;
         }
     }
 

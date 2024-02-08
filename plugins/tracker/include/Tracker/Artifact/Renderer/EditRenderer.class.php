@@ -186,7 +186,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         );
         if ($status->canUpdateArtifactInInsecureMode($this->tracker)) {
             $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/artifact');
-            $renderer->renderToPage("reply-by-mail-modal-info", [
+            $renderer->renderToPage('reply-by-mail-modal-info', [
                 'email' => $this->artifact->getInsecureEmailAddress(),
             ]);
         }
@@ -298,7 +298,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     private function displayANumberOfBlankTab($number)
     {
-        $html = "";
+        $html = '';
         for ($i = 1; $i <= $number; $i++) {
             $html .= '<div class="tree-blank">&nbsp;</div> ';
         }
@@ -328,7 +328,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                 $html .= $parent->getXRefAndTitle();
             }
             if ($parents) {
-                $html .= "</li><li>";
+                $html .= '</li><li>';
 
                 $div_prefix = '';
                 $div_suffix = '';

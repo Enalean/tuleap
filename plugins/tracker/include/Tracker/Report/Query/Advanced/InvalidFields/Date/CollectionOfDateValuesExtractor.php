@@ -72,13 +72,13 @@ final class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
 
         $min = $value_wrapper->getMinValue()->accept($this, $parameters);
         if (is_array($min)) {
-            throw new \Exception("Unsupported between value");
+            throw new \Exception('Unsupported between value');
         }
         $values[] = $min;
 
         $max = $value_wrapper->getMaxValue()->accept($this, $parameters);
         if (is_array($max)) {
-            throw new \Exception("Unsupported between value");
+            throw new \Exception('Unsupported between value');
         }
         $values[] = $max;
 

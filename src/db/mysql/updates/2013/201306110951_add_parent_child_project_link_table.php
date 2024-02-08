@@ -32,10 +32,10 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE project_parent (
+        $sql = 'CREATE TABLE project_parent (
                     group_id INT(11) PRIMARY KEY,
                     parent_group_id INT(11) NOT NULL
-                )";
+                )';
         if (! $this->db->tableNameExists('project_parent')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {

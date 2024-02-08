@@ -35,21 +35,21 @@ final class HudsonBuildTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonBuild("toto", new Client(), HTTPFactoryBuilder::requestFactory());
+        new HudsonBuild('toto', new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
     public function testMissingSchemeURL(): void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonBuild("code4:8080/hudson/jobs/tuleap", new Client(), HTTPFactoryBuilder::requestFactory());
+        new HudsonBuild('code4:8080/hudson/jobs/tuleap', new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
     public function testMissingHostURL(): void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonBuild("http://", new Client(), HTTPFactoryBuilder::requestFactory());
+        new HudsonBuild('http://', new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
     public function testSimpleJobBuild(): void
@@ -58,16 +58,16 @@ final class HudsonBuildTest extends \Tuleap\Test\PHPUnit\TestCase
         $xmldom     = simplexml_load_string(file_get_contents($build_file), \SimpleXMLElement::class, LIBXML_NONET);
 
         $build = new HudsonBuild(
-            "http://myCIserver/jobs/myCIjob/lastBuild/",
+            'http://myCIserver/jobs/myCIjob/lastBuild/',
             new Client(),
             HTTPFactoryBuilder::requestFactory(),
             $xmldom,
         );
 
-        self::assertEquals("freeStyleBuild", $build->getBuildStyle());
+        self::assertEquals('freeStyleBuild', $build->getBuildStyle());
         self::assertFalse($build->isBuilding());
-        self::assertEquals("http://example.com:8080/hudson/job/tuleap/87/", $build->getUrl());
-        self::assertEquals("UNSTABLE", $build->getResult());
+        self::assertEquals('http://example.com:8080/hudson/job/tuleap/87/', $build->getUrl());
+        self::assertEquals('UNSTABLE', $build->getResult());
         self::assertEquals(87, $build->getNumber());
         self::assertEquals(359231, $build->getDuration());
         self::assertEquals(1230051671000, $build->getTimestamp());

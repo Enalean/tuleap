@@ -62,7 +62,7 @@ class Tracker_Report_REST extends Tracker_Report
             $tracker_id,
             $is_query_displayed,
             false,
-            "",
+            '',
             $updated_by,
             $updated_at
         );
@@ -192,7 +192,7 @@ class Tracker_Report_REST extends Tracker_Report
 
         if ($non_existing_fields) {
             throw new Tracker_Report_InvalidRESTCriterionException(
-                "Following fields do not exist: " . implode(
+                'Following fields do not exist: ' . implode(
                     ', ',
                     $non_existing_fields
                 )

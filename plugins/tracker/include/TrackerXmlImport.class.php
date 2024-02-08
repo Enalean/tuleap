@@ -51,7 +51,7 @@ use Tuleap\XML\PHPCast;
 
 class TrackerXmlImport
 {
-    public const XML_PARENT_ID_EMPTY = "0";
+    public const XML_PARENT_ID_EMPTY = '0';
 
     public const DEFAULT_NOTIFICATIONS_LEVEL = 0;
 
@@ -466,14 +466,14 @@ class TrackerXmlImport
         $use_natures = $xml_element['use-natures'];
         if ($use_natures == 'true') {
             if ($this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
-                $this->logger->info("This project already uses artifact links nature feature.");
+                $this->logger->info('This project already uses artifact links nature feature.');
             } else {
                 $this->artifact_links_usage_updater->forceUsageOfArtifactLinkTypes($project);
-                $this->logger->info("Artifact links nature feature is now active.");
+                $this->logger->info('Artifact links nature feature is now active.');
             }
         } elseif ($use_natures == 'false') {
             if (! $this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
-                $this->logger->warning("This project will not be able to use artifact links nature feature.");
+                $this->logger->warning('This project will not be able to use artifact links nature feature.');
             }
         } else {
             $this->artifact_links_usage_updater->forceUsageOfArtifactLinkTypes($project);
@@ -821,7 +821,7 @@ class TrackerXmlImport
                 $this->feedback_collector
                     ->addWarnings(
                         sprintf(
-                            dgettext('tuleap-tracker', "Tracker %s : field %s (%s) has no permission"),
+                            dgettext('tuleap-tracker', 'Tracker %s : field %s (%s) has no permission'),
                             $tracker->getName(),
                             $field->getName(),
                             $xml_id

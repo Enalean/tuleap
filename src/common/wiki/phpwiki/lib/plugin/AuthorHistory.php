@@ -66,20 +66,20 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
 {
     public function getName()
     {
-        return _("AuthorHistory");
+        return _('AuthorHistory');
     }
 
     public function getDescription()
     {
-        return sprintf(_("List all page revisions edited by one user with diff links, or show a PageHistory-like list of a single page for only one user."));
+        return sprintf(_('List all page revisions edited by one user with diff links, or show a PageHistory-like list of a single page for only one user.'));
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.6 $"
+            '$Revision: 1.6 $'
         );
     }
 
@@ -130,12 +130,12 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
             $th->pushContent(HTML::tr(
                 HTML::td(
                     ['align' => 'right'],
-                    _("Version")
+                    _('Version')
                 ),
-                $includeminor ? HTML::td(_("Minor")) : "",
-                HTML::td(_("Author")),
-                HTML::td(_("Summary")),
-                HTML::td(_("Modified"))
+                $includeminor ? HTML::td(_('Minor')) : '',
+                HTML::td(_('Author')),
+                HTML::td(_('Summary')),
+                HTML::td(_('Modified'))
             ));
 
             $allrevisions_iter = $p->getAllRevisions();
@@ -157,7 +157,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                             $difflink,
                             $nbsp
                         ),
-                        $includeminor ? (HTML::td($nbsp, ($isminor ? "minor" : "major"), $nbsp)) : "",
+                        $includeminor ? (HTML::td($nbsp, ($isminor ? 'minor' : 'major'), $nbsp)) : '',
                         HTML::td($nbsp, WikiLink(
                             $rev->get('author'),
                             'if_known'
@@ -176,7 +176,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                 }
             }
             $captext = fmt(
-                $includeminor ? "History of all major and minor edits by %s to page %s."  : "History of all major edits by %s to page %s.",
+                $includeminor ? 'History of all major and minor edits by %s to page %s.'  : 'History of all major edits by %s to page %s.',
                 WikiLink($author, 'auto'),
                 WikiLink($page, 'auto')
             );
@@ -194,14 +194,14 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
             $tb = HTML::tbody();
 
             $th->pushContent(HTML::tr(
-                HTML::td(_("Page Name")),
+                HTML::td(_('Page Name')),
                 HTML::td(
                     ['align' => 'right'],
-                    _("Version")
+                    _('Version')
                 ),
-                $includeminor ? HTML::td(_("Minor")) : "",
-                HTML::td(_("Summary")),
-                HTML::td(_("Modified"))
+                $includeminor ? HTML::td(_('Minor')) : '',
+                HTML::td(_('Summary')),
+                HTML::td(_('Modified'))
             ));
             /////////////////////////////////////////////////////////////
 
@@ -231,7 +231,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                                 $difflink,
                                 $nbsp
                             ),
-                            $includeminor ? (HTML::td($nbsp, ($isminor ? "minor" : "major"), $nbsp)) : "",
+                            $includeminor ? (HTML::td($nbsp, ($isminor ? 'minor' : 'major'), $nbsp)) : '',
                             HTML::td($nbsp, $rev->get('summary')),
                             HTML::td(
                                 ['align' => 'right'],
@@ -251,7 +251,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
             }
 
             $captext = fmt(
-                $includeminor ? "History of all major and minor modifications for any page edited by %s."  : "History of major modifications for any page edited by %s.",
+                $includeminor ? 'History of all major and minor modifications for any page edited by %s.'  : 'History of major modifications for any page edited by %s.',
                 WikiLink($author, 'auto')
             );
             $t->pushContent(HTML::caption($captext));

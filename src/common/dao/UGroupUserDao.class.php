@@ -134,7 +134,7 @@ class UGroupUserDao extends DataAccessObject
                     AND u.status IN ("A", "R")
                     AND ug.group_id =' . $this->da->escapeInt($groupId) . '
                     AND u.status IN ("A", "R")
-                    AND uu.ugroup_id IN (' . implode(",", $ugroups) . ')';
+                    AND uu.ugroup_id IN (' . implode(',', $ugroups) . ')';
         return $this->retrieve($sql);
     }
 

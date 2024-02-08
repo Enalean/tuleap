@@ -36,7 +36,7 @@ final class ProgramManagementXMLConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 [12, 13],
                 ['101_3'],
                 "Crémants d'Alsace",
-                "Crémant",
+                'Crémant',
                 null,
                 null,
                 null
@@ -65,7 +65,7 @@ final class ProgramManagementXMLConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 [12, 13],
                 ['101_3'],
                 "Crémants d'Alsace",
-                "Crémant",
+                'Crémant',
                 14,
                 'Rations de survie',
                 'ration'

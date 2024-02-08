@@ -158,17 +158,17 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testFieldWillNotBeMigratedWhenTargetTrackerHasNoFieldWithTheSameName(): void
     {
         $source_string_field = StringFieldBuilder::aStringField(101)
-            ->withName("source_string")
+            ->withName('source_string')
             ->inTracker($this->source_tracker)
             ->build();
         $this->all_fields    = [
             $source_string_field,
             StringFieldBuilder::aStringField(102)
-                ->withName("destination_string")
+                ->withName('destination_string')
                 ->inTracker($this->destination_tracker)
                 ->build(),
             StringFieldBuilder::aStringField(103)
-                ->withName("another_destination_string")
+                ->withName('another_destination_string')
                 ->inTracker($this->destination_tracker)
                 ->build(),
         ];
@@ -186,11 +186,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testFieldWillNotBeMigratedWhenUserCanNotUpdateField(): void
     {
         $source_open_list = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
-        $source_open_list->method("getId")->willReturn(12);
-        $source_open_list->method("getTrackerId")->willReturn(self::SOURCE_TRACKER_ID);
-        $source_open_list->method("getLabel")->willReturn("string_field");
-        $source_open_list->method("getName")->willReturn("string_field");
-        $source_open_list->method("userCanUpdate")->willReturn(false);
+        $source_open_list->method('getId')->willReturn(12);
+        $source_open_list->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
+        $source_open_list->method('getLabel')->willReturn('string_field');
+        $source_open_list->method('getName')->willReturn('string_field');
+        $source_open_list->method('userCanUpdate')->willReturn(false);
         $this->all_fields = [
             $source_open_list,
             StringFieldBuilder::aStringField(102)
@@ -213,19 +213,19 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testFieldWillBeMigratedForReadOnlyField(): void
     {
         $source_burndown = $this->createStub(\Tracker_FormElement_Field_Burndown::class);
-        $source_burndown->method("getLabel")->willReturn("string_field");
-        $source_burndown->method("getName")->willReturn("string_field");
-        $source_burndown->method("userCanUpdate")->willReturn(false);
-        $source_burndown->method("getId")->willReturn(12);
-        $source_burndown->method("getTrackerId")->willReturn(self::SOURCE_TRACKER_ID);
+        $source_burndown->method('getLabel')->willReturn('string_field');
+        $source_burndown->method('getName')->willReturn('string_field');
+        $source_burndown->method('userCanUpdate')->willReturn(false);
+        $source_burndown->method('getId')->willReturn(12);
+        $source_burndown->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
         $this->all_fields = [
             $source_burndown,
             new Tracker_FormElement_Field_Burndown(
                 102,
                 self::DESTINATION_TRACKER_ID,
                 null,
-                "string_field",
-                "Release number",
+                'string_field',
+                'Release number',
                 null,
                 1,
                 null,
@@ -248,11 +248,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testFieldWillNotBeMigratedWhenFieldInTargetTrackerHasNoCompatibleType(): void
     {
         $source_string_field   = StringFieldBuilder::aStringField(101)
-            ->withName("release_number")
+            ->withName('release_number')
             ->inTracker($this->source_tracker)
             ->build();
         $destination_int_field = IntFieldBuilder::anIntField(102)
-            ->withName("release_number")
+            ->withName('release_number')
             ->inTracker($this->destination_tracker)
             ->build();
         $this->all_fields      = [$source_string_field, $destination_int_field];
@@ -270,11 +270,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testFieldWillBeMigratedWhenFieldInTargetTrackerHasTheSameNameAndIsAnEasilyMovableField(): void
     {
         $source_string_field      = StringFieldBuilder::aStringField(101)
-            ->withName("source_string")
+            ->withName('source_string')
             ->inTracker($this->source_tracker)
             ->build();
         $destination_string_field = StringFieldBuilder::aStringField(102)
-            ->withName("source_string")
+            ->withName('source_string')
             ->inTracker($this->destination_tracker)
             ->build();
         $this->all_fields         = [$source_string_field, $destination_string_field];
@@ -430,15 +430,15 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testPermissionsFieldWillNotBeMigratedDestinationFieldIsNotCompatible(): void
     {
         $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $source_permissions_field->method("getLabel")->willReturn("permissions");
-        $source_permissions_field->method("getName")->willReturn("permissions");
-        $source_permissions_field->method("getId")->willReturn(12);
-        $source_permissions_field->method("getTrackerId")->willReturn(self::SOURCE_TRACKER_ID);
+        $source_permissions_field->method('getLabel')->willReturn('permissions');
+        $source_permissions_field->method('getName')->willReturn('permissions');
+        $source_permissions_field->method('getId')->willReturn(12);
+        $source_permissions_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
 
         $this->all_fields = [
             $source_permissions_field,
             ListFieldBuilder::aListField(1)
-                ->withName("permissions")
+                ->withName('permissions')
                 ->inTracker($this->destination_tracker)
                 ->build(),
         ];
@@ -453,17 +453,17 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testPermissionsFieldWillNotBeMigratedIfThereIsNoPermissionToMigrate(): void
     {
         $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $source_permissions_field->method("getLabel")->willReturn("permissions");
-        $source_permissions_field->method("getName")->willReturn("permissions");
-        $source_permissions_field->method("getId")->willReturn(12);
-        $source_permissions_field->method("getTrackerId")->willReturn(self::SOURCE_TRACKER_ID);
+        $source_permissions_field->method('getLabel')->willReturn('permissions');
+        $source_permissions_field->method('getName')->willReturn('permissions');
+        $source_permissions_field->method('getId')->willReturn(12);
+        $source_permissions_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
 
         $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $destination_permissions_field->method("getLabel")->willReturn("permissions");
-        $destination_permissions_field->method("getName")->willReturn("permissions");
-        $destination_permissions_field->method("userCanUpdate")->willReturn(true);
-        $destination_permissions_field->method("isUpdateable")->willReturn(true);
-        $destination_permissions_field->method("getTrackerId")->willReturn(self::DESTINATION_TRACKER_ID);
+        $destination_permissions_field->method('getLabel')->willReturn('permissions');
+        $destination_permissions_field->method('getName')->willReturn('permissions');
+        $destination_permissions_field->method('userCanUpdate')->willReturn(true);
+        $destination_permissions_field->method('isUpdateable')->willReturn(true);
+        $destination_permissions_field->method('getTrackerId')->willReturn(self::DESTINATION_TRACKER_ID);
         $this->all_fields = [$source_permissions_field, $destination_permissions_field];
 
         $this->verify_permission = VerifyIsPermissionsOnArtifactFieldStub::withPermissionsOnArtifactField();
@@ -478,17 +478,17 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testPermissionsFieldWillBePartiallyMigratedWhenDestinationFieldDoesNotContainAllSourceValues(): void
     {
         $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $source_permissions_field->method("getLabel")->willReturn("permissions");
-        $source_permissions_field->method("getName")->willReturn("permissions");
-        $source_permissions_field->method("getId")->willReturn(12);
-        $source_permissions_field->method("getTrackerId")->willReturn(self::SOURCE_TRACKER_ID);
+        $source_permissions_field->method('getLabel')->willReturn('permissions');
+        $source_permissions_field->method('getName')->willReturn('permissions');
+        $source_permissions_field->method('getId')->willReturn(12);
+        $source_permissions_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
 
         $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $destination_permissions_field->method("getLabel")->willReturn("permissions");
-        $destination_permissions_field->method("getName")->willReturn("permissions");
-        $destination_permissions_field->method("userCanUpdate")->willReturn(true);
-        $destination_permissions_field->method("isUpdateable")->willReturn(true);
-        $destination_permissions_field->method("getTrackerId")->willReturn(self::DESTINATION_TRACKER_ID);
+        $destination_permissions_field->method('getLabel')->willReturn('permissions');
+        $destination_permissions_field->method('getName')->willReturn('permissions');
+        $destination_permissions_field->method('userCanUpdate')->willReturn(true);
+        $destination_permissions_field->method('isUpdateable')->willReturn(true);
+        $destination_permissions_field->method('getTrackerId')->willReturn(self::DESTINATION_TRACKER_ID);
         $this->all_fields = [$source_permissions_field, $destination_permissions_field];
 
         $this->verify_permission            = VerifyIsPermissionsOnArtifactFieldStub::withPermissionsOnArtifactField();
@@ -506,17 +506,17 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testPermissionsFieldWillBeFullyMigratedWhenAllValuesAreAvailableInDestinationField(): void
     {
         $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $source_permissions_field->method("getLabel")->willReturn("permissions");
-        $source_permissions_field->method("getName")->willReturn("permissions");
-        $source_permissions_field->method("getId")->willReturn(12);
-        $source_permissions_field->method("getTrackerId")->willReturn(self::SOURCE_TRACKER_ID);
+        $source_permissions_field->method('getLabel')->willReturn('permissions');
+        $source_permissions_field->method('getName')->willReturn('permissions');
+        $source_permissions_field->method('getId')->willReturn(12);
+        $source_permissions_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
 
         $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $destination_permissions_field->method("getLabel")->willReturn("permissions");
-        $destination_permissions_field->method("getName")->willReturn("permissions");
-        $destination_permissions_field->method("userCanUpdate")->willReturn(true);
-        $destination_permissions_field->method("isUpdateable")->willReturn(true);
-        $destination_permissions_field->method("getTrackerId")->willReturn(self::DESTINATION_TRACKER_ID);
+        $destination_permissions_field->method('getLabel')->willReturn('permissions');
+        $destination_permissions_field->method('getName')->willReturn('permissions');
+        $destination_permissions_field->method('userCanUpdate')->willReturn(true);
+        $destination_permissions_field->method('isUpdateable')->willReturn(true);
+        $destination_permissions_field->method('getTrackerId')->willReturn(self::DESTINATION_TRACKER_ID);
         $this->all_fields = [$source_permissions_field, $destination_permissions_field];
 
         $this->verify_permission            = VerifyIsPermissionsOnArtifactFieldStub::withPermissionsOnArtifactField();
@@ -535,14 +535,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testOpenListFieldWillNotBeMigratedDestinationFieldIsNotCompatible(): void
     {
         $source_open_list_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
-        $source_open_list_field->method("getLabel")->willReturn("open_list");
-        $source_open_list_field->method("getName")->willReturn("open_list");
-        $source_open_list_field->method("getId")->willReturn(12);
-        $source_open_list_field->method("getTrackerId")->willReturn(self::SOURCE_TRACKER_ID);
+        $source_open_list_field->method('getLabel')->willReturn('open_list');
+        $source_open_list_field->method('getName')->willReturn('open_list');
+        $source_open_list_field->method('getId')->willReturn(12);
+        $source_open_list_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
         $this->all_fields = [
             $source_open_list_field,
             ListFieldBuilder::aListField(1)
-                ->withName("open_list")
+                ->withName('open_list')
                 ->inTracker($this->destination_tracker)
                 ->build(),
         ];
@@ -557,17 +557,17 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testOpenListCanBeMigrated(): void
     {
         $source_open_list_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
-        $source_open_list_field->method("getLabel")->willReturn("open_list");
-        $source_open_list_field->method("getName")->willReturn("open_list");
-        $source_open_list_field->method("getId")->willReturn(12);
-        $source_open_list_field->method("getTrackerId")->willReturn(self::SOURCE_TRACKER_ID);
+        $source_open_list_field->method('getLabel')->willReturn('open_list');
+        $source_open_list_field->method('getName')->willReturn('open_list');
+        $source_open_list_field->method('getId')->willReturn(12);
+        $source_open_list_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
 
         $destination_open_list_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
-        $destination_open_list_field->method("getLabel")->willReturn("open_list");
-        $destination_open_list_field->method("getName")->willReturn("open_list");
-        $destination_open_list_field->method("userCanUpdate")->willReturn(true);
-        $destination_open_list_field->method("isUpdateable")->willReturn(true);
-        $destination_open_list_field->method("getTrackerId")->willReturn(self::DESTINATION_TRACKER_ID);
+        $destination_open_list_field->method('getLabel')->willReturn('open_list');
+        $destination_open_list_field->method('getName')->willReturn('open_list');
+        $destination_open_list_field->method('userCanUpdate')->willReturn(true);
+        $destination_open_list_field->method('isUpdateable')->willReturn(true);
+        $destination_open_list_field->method('getTrackerId')->willReturn(self::DESTINATION_TRACKER_ID);
         $this->all_fields = [$source_open_list_field, $destination_open_list_field];
 
         $this->verify_open_list                 = VerifyIsOpenListFieldStub::withOpenListField();
@@ -585,11 +585,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testExternalFieldsCannotBeMigratedWhenTheyHaveNotTheSameType(): void
     {
         $source_external_field      = ExternalFieldBuilder::anExternalField(1)
-            ->withName("external_field")
+            ->withName('external_field')
             ->inTracker($this->source_tracker)
             ->build();
         $destination_external_field = ExternalFieldBuilder::anExternalField(2)
-            ->withName("external_field")
+            ->withName('external_field')
             ->inTracker($this->destination_tracker)
             ->build();
         $this->all_fields           = [$source_external_field, $destination_external_field];
@@ -607,11 +607,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testExternalFieldsWontBeMigratedIfEventSaysSo(): void
     {
         $source_external_field      = ExternalFieldBuilder::anExternalField(1)
-            ->withName("external_field")
+            ->withName('external_field')
             ->inTracker($this->source_tracker)
             ->build();
         $destination_external_field = ExternalFieldBuilder::anExternalField(2)
-            ->withName("external_field")
+            ->withName('external_field')
             ->inTracker($this->destination_tracker)
             ->build();
         $this->all_fields           = [$source_external_field, $destination_external_field];
@@ -636,11 +636,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testExternalFieldsWillBeFullyMigratedIfEventSaysSo(): void
     {
         $source_external_field      = ExternalFieldBuilder::anExternalField(1)
-            ->withName("external_field")
+            ->withName('external_field')
             ->inTracker($this->source_tracker)
             ->build();
         $destination_external_field = ExternalFieldBuilder::anExternalField(2)
-            ->withName("external_field")
+            ->withName('external_field')
             ->inTracker($this->destination_tracker)
             ->build();
         $this->all_fields           = [$source_external_field, $destination_external_field];

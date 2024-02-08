@@ -125,10 +125,10 @@ class BackendSVN extends Backend
                 $this->log("Can't create project SVN dir: $system_path", Backend::LOG_ERROR);
                 return false;
             }
-            system(ForgeConfig::get('svnadmin_cmd') . " create " . escapeshellarg($system_path) . " --fs-type fsfs");
+            system(ForgeConfig::get('svnadmin_cmd') . ' create ' . escapeshellarg($system_path) . ' --fs-type fsfs');
 
             $this->setUserAndGroup($project, $system_path);
-            system("chmod g+rw " . escapeshellarg($system_path));
+            system('chmod g+rw ' . escapeshellarg($system_path));
         }
 
         return true;
@@ -341,8 +341,8 @@ class BackendSVN extends Backend
     public function generateSVNApacheConf()
     {
         $svn_root_file     = ForgeConfig::get('svn_root_file');
-        $svn_root_file_old = $svn_root_file . ".old";
-        $svn_root_file_new = $svn_root_file . ".new";
+        $svn_root_file_old = $svn_root_file . '.old';
+        $svn_root_file_new = $svn_root_file . '.new';
         try {
             $conf = $this->getApacheConf();
         } catch (Exception $ex) {
@@ -419,7 +419,7 @@ class BackendSVN extends Backend
      */
     public function isNameAvailable($name)
     {
-        $path = ForgeConfig::get('svn_prefix') . "/" . $name;
+        $path = ForgeConfig::get('svn_prefix') . '/' . $name;
         return (! $this->fileExists($path));
     }
 

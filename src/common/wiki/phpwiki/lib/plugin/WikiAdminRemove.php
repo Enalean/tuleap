@@ -38,20 +38,20 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
 {
     public function getName()
     {
-        return _("WikiAdminRemove");
+        return _('WikiAdminRemove');
     }
 
     public function getDescription()
     {
-        return _("Permanently remove all selected pages.");
+        return _('Permanently remove all selected pages.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.30 $"
+            '$Revision: 1.30 $'
         );
     }
 
@@ -135,14 +135,14 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         }
         return HTML(
             $ul,
-            HTML::p(fmt("%d pages have been permanently removed.", $count))
+            HTML::p(fmt('%d pages have been permanently removed.', $count))
         );
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
         if ($request->getArg('action') != 'browse') {
-            if ($request->getArg('action') != _("PhpWikiAdministration/Remove")) {
+            if ($request->getArg('action') != _('PhpWikiAdministration/Remove')) {
                 return $this->disabled("(action != 'browse')");
             }
         }
@@ -173,7 +173,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
             // check individual PagePermissions
             if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
-                $this->disabled("! user->isAdmin");
+                $this->disabled('! user->isAdmin');
             }
             if ($post_args['action'] == 'verify') {
                 // Real delete.
@@ -204,7 +204,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
             $args['exclude'],
             ['types' =>
                                                   ['remove'
-            => new _PageList_Column_remove('remove', _("Remove")),
+            => new _PageList_Column_remove('remove', _('Remove')),
                                                   ],
             ]
         );
@@ -212,29 +212,29 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
 
         $header = HTML::p();
         if ($next_action == 'verify') {
-            $button_label = _("Yes");
+            $button_label = _('Yes');
             $header->pushContent(HTML::strong(
-                _("Are you sure you want to permanently remove the selected files?")
+                _('Are you sure you want to permanently remove the selected files?')
             ));
         } else {
-            $button_label = _("Remove selected pages");
-            $header->pushContent(_("Permanently remove the selected files:"), HTML::br());
+            $button_label = _('Remove selected pages');
+            $header->pushContent(_('Permanently remove the selected files:'), HTML::br());
             if ($args['min_age'] > 0) {
                 $header->pushContent(
                     fmt(
-                        "Also pages which have been deleted at least %s days.",
+                        'Also pages which have been deleted at least %s days.',
                         $args['min_age']
                     )
                 );
             } else {
-                $header->pushContent(_("List all pages."));
+                $header->pushContent(_('List all pages.'));
             }
 
             if ($args['max_age'] > 0) {
                 $header->pushContent(
-                    " ",
+                    ' ',
                     fmt(
-                        "(Pages which have been deleted at least %s days are already checked.)",
+                        '(Pages which have been deleted at least %s days are already checked.)',
                         $args['max_age']
                     )
                 );
@@ -243,7 +243,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
 
         $buttons = HTML::p(
             Button('submit:admin_remove[remove]', $button_label, 'wikiadmin'),
-            Button('submit:admin_remove[cancel]', _("Cancel"), 'button')
+            Button('submit:admin_remove[cancel]', _('Cancel'), 'button')
         );
 
         // TODO: quick select by regex javascript?
@@ -272,7 +272,7 @@ class _PageList_Column_remove extends _PageList_Column
     {
         return Button(
             ['action' => 'remove'],
-            _("Remove"),
+            _('Remove'),
             $page_handle->getName()
         );
     }

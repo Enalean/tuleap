@@ -29,7 +29,7 @@ final class BotValidityCheckerTest extends TestCase
 {
     public function testItDoesNotThrowExceptionIfBotIsASystemBot(): void
     {
-        $bot = new Bot(1, "bot", "", "", null);
+        $bot = new Bot(1, 'bot', '', '', null);
 
         (new BotValidityChecker())->checkBotCanBeUsedInProject($bot, 101);
 
@@ -38,7 +38,7 @@ final class BotValidityCheckerTest extends TestCase
 
     public function testItDoesNotThrowExceptionIfBotIsAProjectBotInTheSameProject(): void
     {
-        $bot = new Bot(1, "bot", "", "", 101);
+        $bot = new Bot(1, 'bot', '', '', 101);
 
         (new BotValidityChecker())->checkBotCanBeUsedInProject($bot, 101);
 
@@ -47,7 +47,7 @@ final class BotValidityCheckerTest extends TestCase
 
     public function testItThrowsAnExceptionIfBotIsAProjectBotInAnotherProject(): void
     {
-        $bot = new Bot(1, "bot", "", "", 102);
+        $bot = new Bot(1, 'bot', '', '', 102);
 
         $this->expectException(BotCannotBeUsedInProjectException::class);
 

@@ -167,8 +167,8 @@ class TuleapTemplate extends BaseTemplate
 </div><!-- end of the left (by default at least) column -->
 <div class="visualClear"></div>
         <?php
-        $validFooterIcons = $this->getFooterIcons("icononly");
-        $validFooterLinks = $this->getFooterLinks("flat"); // Additional footer links
+        $validFooterIcons = $this->getFooterIcons('icononly');
+        $validFooterLinks = $this->getFooterLinks('flat'); // Additional footer links
 
         if (count($validFooterIcons) + count($validFooterLinks) > 0) { ?>
 <div id="footer"<?php $this->html('userlangattributes') ?>>

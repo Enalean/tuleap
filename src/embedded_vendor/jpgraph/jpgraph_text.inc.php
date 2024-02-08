@@ -19,8 +19,8 @@ class Text
     public $t;
     public $x                  = 0;
     public $y                  = 0;
-    public $halign             = "left";
-    public $valign             = "top";
+    public $halign             = 'left';
+    public $valign             = 'top';
     public $color              = [0, 0, 0];
     public $hide               = false;
     public $dir                = 0;
@@ -30,7 +30,7 @@ class Text
     public $font_family        = FF_DEFAULT;
     public $font_style         = FS_NORMAL; // old. FF_FONT1
     protected $boxed           = false; // Should the text be boxed
-    protected $paragraph_align = "left";
+    protected $paragraph_align = 'left';
     protected $icornerradius   = 0;
     protected $ishadowwidth    = 3;
     protected $fcolor          = 'white';
@@ -50,7 +50,7 @@ class Text
     // CONSTRUCTOR
 
     // Create new text at absolute pixel coordinates
-    public function __construct($aTxt = "", $aXAbsPos = 0, $aYAbsPos = 0)
+    public function __construct($aTxt = '', $aXAbsPos = 0, $aYAbsPos = 0)
     {
         if (! is_string($aTxt)) {
             JpGraphError::RaiseL(25050);//('First argument to Text::Text() must be s atring.');
@@ -69,7 +69,7 @@ class Text
     }
 
     // Alias for Pos()
-    public function SetPos($aXAbsPos = 0, $aYAbsPos = 0, $aHAlign = "left", $aVAlign = "top")
+    public function SetPos($aXAbsPos = 0, $aYAbsPos = 0, $aHAlign = 'left', $aVAlign = 'top')
     {
     //$this->Pos($aXAbsPos,$aYAbsPos,$aHAlign,$aVAlign);
         $this->x      = $aXAbsPos;
@@ -85,17 +85,17 @@ class Text
     }
 
     // Specify alignment for the text
-    public function Align($aHAlign, $aVAlign = "top", $aParagraphAlign = "")
+    public function Align($aHAlign, $aVAlign = 'top', $aParagraphAlign = '')
     {
         $this->halign = $aHAlign;
         $this->valign = $aVAlign;
-        if ($aParagraphAlign != "") {
+        if ($aParagraphAlign != '') {
             $this->paragraph_align = $aParagraphAlign;
         }
     }
 
     // Alias
-    public function SetAlign($aHAlign, $aVAlign = "top", $aParagraphAlign = "")
+    public function SetAlign($aHAlign, $aVAlign = 'top', $aParagraphAlign = '')
     {
         $this->Align($aHAlign, $aVAlign, $aParagraphAlign);
     }
@@ -177,7 +177,7 @@ class Text
     public function Center($aLeft, $aRight, $aYAbsPos = false)
     {
         $this->x      = $aLeft + ($aRight - $aLeft ) / 2;
-        $this->halign = "center";
+        $this->halign = 'center';
         if (is_numeric($aYAbsPos)) {
             $this->y = $aYAbsPos;
         }
@@ -199,9 +199,9 @@ class Text
     {
         if (is_numeric($aDirection)) {
             $this->dir = $aDirection;
-        } elseif ($aDirection == "h") {
+        } elseif ($aDirection == 'h') {
             $this->dir = 0;
-        } elseif ($aDirection == "v") {
+        } elseif ($aDirection == 'v') {
             $this->dir = 90;
         } else {
             JpGraphError::RaiseL(25051);//(" Invalid direction specified for text.");
@@ -304,7 +304,7 @@ class Text
         $aImg->SetTextAlign($this->halign, $this->valign);
 
         if ($this->boxed) {
-            if ($this->fcolor == "nofill") {
+            if ($this->fcolor == 'nofill') {
                 $this->fcolor = false;
             }
 
@@ -350,13 +350,13 @@ class Text
 
         // Create CSIM targets
         $coords          = $bbox[0] . ',' . $bbox[1] . ',' . $bbox[2] . ',' . $bbox[3] . ',' . $bbox[4] . ',' . $bbox[5] . ',' . $bbox[6] . ',' . $bbox[7];
-        $this->iCSIMarea = "<area shape=\"poly\" coords=\"$coords\" href=\"" . htmlentities($this->iCSIMtarget) . "\" ";
+        $this->iCSIMarea = "<area shape=\"poly\" coords=\"$coords\" href=\"" . htmlentities($this->iCSIMtarget) . '" ';
         if (trim($this->iCSIMalt) != '') {
-            $this->iCSIMarea .= " alt=\"" . $this->iCSIMalt . "\" ";
-            $this->iCSIMarea .= " title=\"" . $this->iCSIMalt . "\" ";
+            $this->iCSIMarea .= ' alt="' . $this->iCSIMalt . '" ';
+            $this->iCSIMarea .= ' title="' . $this->iCSIMalt . '" ';
         }
         if (trim($this->iCSIMWinTarget) != '') {
-            $this->iCSIMarea .= " target=\"" . $this->iCSIMWinTarget . "\" ";
+            $this->iCSIMarea .= ' target="' . $this->iCSIMWinTarget . '" ';
         }
         $this->iCSIMarea .= " />\n";
 

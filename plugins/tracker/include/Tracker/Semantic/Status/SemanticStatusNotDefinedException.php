@@ -28,7 +28,7 @@ class SemanticStatusNotDefinedException extends \RuntimeException
     public function __construct()
     {
         parent::__construct(
-            "No status semantic defined for the tracker."
+            'No status semantic defined for the tracker.'
         );
     }
 }

@@ -58,7 +58,7 @@ class AuthorizationsImpl implements Authorizations
     {
         $user = $this->user_manager->getUserById($identifier->getId());
         if (! $user) {
-            throw new \LogicException("User not found, this is not expected");
+            throw new \LogicException('User not found, this is not expected');
         }
 
         return $user;

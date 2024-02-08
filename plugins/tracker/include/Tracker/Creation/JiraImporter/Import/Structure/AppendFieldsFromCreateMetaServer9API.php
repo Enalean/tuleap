@@ -42,7 +42,7 @@ final class AppendFieldsFromCreateMetaServer9API implements AppendFieldsFromCrea
      */
     public function appendFromCreate(array $fields_by_id, string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
     {
-        $meta_url = ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta/" . urlencode($jira_project_key) . "/issuetypes/" . urlencode($jira_issue_type_id);
+        $meta_url = ClientWrapper::JIRA_CORE_BASE_URL . '/issue/createmeta/' . urlencode($jira_project_key) . '/issuetypes/' . urlencode($jira_issue_type_id);
         $this->logger->debug('GET ' . $meta_url);
 
         $iterator = JiraCollectionBuilder::iterateUntilIsLast(
@@ -54,7 +54,7 @@ final class AppendFieldsFromCreateMetaServer9API implements AppendFieldsFromCrea
 
         foreach ($iterator as $jira_field) {
             if (! isset($jira_field['fieldId']) && isset($jira_field['name'])) {
-                $this->logger->error("No field ID found for " . $jira_field['name'] . ". Skipping this field.");
+                $this->logger->error('No field ID found for ' . $jira_field['name'] . '. Skipping this field.');
                 continue;
             }
 

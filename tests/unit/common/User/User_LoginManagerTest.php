@@ -270,7 +270,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             public function afterLocalLogin(AfterLocalStandardLogin $event): void
             {
                 $this->after_called = true;
-                $event->refuseLogin("nope");
+                $event->refuseLogin('nope');
             }
 
             public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void

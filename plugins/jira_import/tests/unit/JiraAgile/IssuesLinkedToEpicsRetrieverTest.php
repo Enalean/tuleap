@@ -91,7 +91,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
                 if ($epic->key === 'SP-39') {
                     return ['10006'];
                 }
-                throw new RuntimeException("Must not happen");
+                throw new RuntimeException('Must not happen');
             }
         };
 
@@ -137,7 +137,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             $epic_issues_retriever,
         );
         $linked_issues           = $linked_issues_retriever->getLinkedIssuesFromIssueTypeInProject(
-            new IssueType("10000", 'Epic', false),
+            new IssueType('10000', 'Epic', false),
             'project'
         );
 
@@ -172,7 +172,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
                 if ($epic->key === 'SP-39') {
                     return ['10006'];
                 }
-                throw new RuntimeException("Must not happen");
+                throw new RuntimeException('Must not happen');
             }
         };
 
@@ -182,7 +182,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             $epic_issues_retriever,
         );
         $linked_issues           = $linked_issues_retriever->getLinkedIssuesFromIssueTypeInProject(
-            new IssueType("10000", 'Epic', false),
+            new IssueType('10000', 'Epic', false),
             'project'
         );
 

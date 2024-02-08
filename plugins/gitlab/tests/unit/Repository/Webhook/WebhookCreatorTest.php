@@ -299,7 +299,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->creator->generateWebhookInGitlabProject($credentials, $integration);
 
-        self::assertTrue($this->logger->hasWarningThatContains("The webhook is used by another integrations (it may come from old integration). It will be deleted on GitLab side and configuration must be regenerated for these integrations."));
+        self::assertTrue($this->logger->hasWarningThatContains('The webhook is used by another integrations (it may come from old integration). It will be deleted on GitLab side and configuration must be regenerated for these integrations.'));
         self::assertTrue($this->logger->hasInfoThatContains('Creating new hook for the_full_url'));
         self::assertTrue($this->logger->hasInfoThatContains('Deleting previous hook for the_full_url'));
     }
@@ -330,7 +330,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/2/hooks",
+                '/projects/2/hooks',
                 self::callback(
                     function (array $config) {
                         return count(array_keys($config)) === 6
@@ -384,7 +384,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/2/hooks",
+                '/projects/2/hooks',
                 self::callback(
                     function (array $config): bool {
                         return count(array_keys($config)) === 6

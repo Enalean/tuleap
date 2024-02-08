@@ -28,7 +28,7 @@ final class Docman_SqlReportColumnTest extends TestCase
     public function testItReturnsAnEmptyArrayIfTheFieldIsNotACustomMetadata(): void
     {
         $metadata        = new Docman_Metadata();
-        $metadata->label = "title";
+        $metadata->label = 'title';
 
         $report_column = new \Docman_ReportColumn($metadata);
 
@@ -42,7 +42,7 @@ final class Docman_SqlReportColumnTest extends TestCase
     public function testItReturnsAnEmptyArrayIfTheColumnIsAlreadyInFromStatement(): void
     {
         $metadata        = new Docman_Metadata();
-        $metadata->label = "field_18";
+        $metadata->label = 'field_18';
         $metadata->id    = 18;
 
         $report_column = new \Docman_ReportColumn($metadata);
@@ -51,8 +51,8 @@ final class Docman_SqlReportColumnTest extends TestCase
         $sql_report_column->isRealMetadata = true;
 
         $previous_from_statement = [
-            "plugin_docman_metadata_value AS mdv_field_18 ON (mdv_field_18.item_id = i.item_id  AND mdv_field_18.field_id = 18)",
-            "plugin_docman_metadata_value AS mdv_field_20 ON (mdv_field_20.item_id = i.item_id  AND mdv_field_20.field_id = 20)",
+            'plugin_docman_metadata_value AS mdv_field_18 ON (mdv_field_18.item_id = i.item_id  AND mdv_field_18.field_id = 18)',
+            'plugin_docman_metadata_value AS mdv_field_20 ON (mdv_field_20.item_id = i.item_id  AND mdv_field_20.field_id = 20)',
         ];
         $table_result            = $sql_report_column->getCustomMetadataFromIfNeeded($previous_from_statement);
         self::assertEmpty($table_result);
@@ -61,7 +61,7 @@ final class Docman_SqlReportColumnTest extends TestCase
     public function testItReturnsAnEmptyArrayIfTheColumnIsNotAColumnToSort(): void
     {
         $metadata        = new Docman_Metadata();
-        $metadata->label = "field_18";
+        $metadata->label = 'field_18';
         $metadata->id    = 18;
 
         $report_column = new \Docman_ReportColumn($metadata);
@@ -71,8 +71,8 @@ final class Docman_SqlReportColumnTest extends TestCase
         $sql_report_column->isRealMetadata = true;
 
         $previous_from_statement = [
-            "plugin_docman_metadata_value AS mdv_field_30 ON (mdv_field_30.item_id = i.item_id  AND mdv_field_30.field_id = 30)",
-            "plugin_docman_metadata_value AS mdv_field_20 ON (mdv_field_20.item_id = i.item_id  AND mdv_field_20.field_id = 20)",
+            'plugin_docman_metadata_value AS mdv_field_30 ON (mdv_field_30.item_id = i.item_id  AND mdv_field_30.field_id = 30)',
+            'plugin_docman_metadata_value AS mdv_field_20 ON (mdv_field_20.item_id = i.item_id  AND mdv_field_20.field_id = 20)',
         ];
         $table_result            = $sql_report_column->getCustomMetadataFromIfNeeded($previous_from_statement);
         self::assertEmpty($table_result);
@@ -81,7 +81,7 @@ final class Docman_SqlReportColumnTest extends TestCase
     public function testItReturnsTheFromStatement(): void
     {
         $metadata        = new Docman_Metadata();
-        $metadata->label = "field_18";
+        $metadata->label = 'field_18';
         $metadata->id    = 18;
 
         $report_column = new \Docman_ReportColumn($metadata);
@@ -91,13 +91,13 @@ final class Docman_SqlReportColumnTest extends TestCase
         $sql_report_column->isRealMetadata = true;
 
         $previous_from_statement = [
-            "plugin_docman_metadata_value AS mdv_field_30 ON (mdv_field_30.item_id = i.item_id  AND mdv_field_30.field_id = 30)",
-            "plugin_docman_metadata_value AS mdv_field_20 ON (mdv_field_20.item_id = i.item_id  AND mdv_field_20.field_id = 20)",
+            'plugin_docman_metadata_value AS mdv_field_30 ON (mdv_field_30.item_id = i.item_id  AND mdv_field_30.field_id = 30)',
+            'plugin_docman_metadata_value AS mdv_field_20 ON (mdv_field_20.item_id = i.item_id  AND mdv_field_20.field_id = 20)',
         ];
         $table_result            = $sql_report_column->getCustomMetadataFromIfNeeded($previous_from_statement);
 
         $expected_from_table_statements = [
-            "plugin_docman_metadata_value AS mdv_field_18 ON (mdv_field_18.item_id = i.item_id  AND mdv_field_18.field_id = 18)",
+            'plugin_docman_metadata_value AS mdv_field_18 ON (mdv_field_18.item_id = i.item_id  AND mdv_field_18.field_id = 18)',
         ];
 
         self::assertEquals(1, count($table_result));

@@ -72,7 +72,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent
 
     private function formatMessage(array $time_to_collect)
     {
-        $message = "";
+        $message = '';
         foreach ($time_to_collect as $service => $time) {
             $seconds = $time;
             $minutes = ($time / 60);
@@ -88,7 +88,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent
 
     private function todayIsSunday()
     {
-        return date("N") === "7";
+        return date('N') === '7';
     }
 
     private function purge()

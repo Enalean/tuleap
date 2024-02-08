@@ -51,7 +51,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
     {
         $this->expectException(\Tracker_Report_InvalidRESTCriterionException::class);
 
-        $this->report->setRESTCriteria("{fvf");
+        $this->report->setRESTCriteria('{fvf');
     }
 
     public function testItThrowsAnExceptionForAnInvalidQueryWithMissingOperator(): void
@@ -60,9 +60,9 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $query = new ArrayObject(
             [
-                "my_field" => new ArrayObject(
+                'my_field' => new ArrayObject(
                     [
-                        Tracker_Report_REST::VALUE_PROPERTY_NAME => "true",
+                        Tracker_Report_REST::VALUE_PROPERTY_NAME => 'true',
                     ]
                 ),
             ]
@@ -77,7 +77,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $query = new ArrayObject(
             [
-                "my_field" => new ArrayObject(
+                'my_field' => new ArrayObject(
                     [
                         Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR,
                     ]
@@ -94,9 +94,9 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $query = new ArrayObject(
             [
-                "my_field" => new ArrayObject(
+                'my_field' => new ArrayObject(
                     [
-                        Tracker_Report_REST::VALUE_PROPERTY_NAME    => "true",
+                        Tracker_Report_REST::VALUE_PROPERTY_NAME    => 'true',
                         Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR . 'xxx',
                     ]
                 ),
@@ -121,13 +121,13 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $query = new ArrayObject(
             [
-                "my_field"       => new ArrayObject(
+                'my_field'       => new ArrayObject(
                     [
-                        Tracker_Report_REST::VALUE_PROPERTY_NAME    => "true",
+                        Tracker_Report_REST::VALUE_PROPERTY_NAME    => 'true',
                         Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR,
                     ]
                 ),
-                "my_other_field" => "bla",
+                'my_other_field' => 'bla',
             ]
         );
 
@@ -135,8 +135,8 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $this->formelement_factory->method('getFormElementByName')->willReturnCallback(
             fn (int $tracker_id, string $field_name): Tracker_FormElement_Field => match (true) {
-                $this->tracker->getId() === $tracker_id && "my_field" === $field_name => $field_1,
-                $this->tracker->getId() === $tracker_id && "my_other_field" === $field_name => $field_2,
+                $this->tracker->getId() === $tracker_id && 'my_field' === $field_name => $field_1,
+                $this->tracker->getId() === $tracker_id && 'my_other_field' === $field_name => $field_2,
             }
         );
 
@@ -150,14 +150,14 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $query = new ArrayObject(
             [
-                "my_field"       => new ArrayObject(
+                'my_field'       => new ArrayObject(
                     [
-                        Tracker_Report_REST::VALUE_PROPERTY_NAME    => "true",
+                        Tracker_Report_REST::VALUE_PROPERTY_NAME    => 'true',
                         Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR,
                     ]
                 ),
-                "my_other_field" => "bla",
-                "another_field"  => "nope",
+                'my_other_field' => 'bla',
+                'another_field'  => 'nope',
             ]
         );
 
@@ -165,9 +165,9 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $this->formelement_factory->method('getFormElementByName')->willReturnCallback(
             fn (int $tracker_id, string $field_name): ?Tracker_FormElement_Field => match (true) {
-                $this->tracker->getId() === $tracker_id && "my_field" === $field_name => null,
-                $this->tracker->getId() === $tracker_id && "my_other_field" === $field_name => $field_1,
-                $this->tracker->getId() === $tracker_id && "another_field" === $field_name => null,
+                $this->tracker->getId() === $tracker_id && 'my_field' === $field_name => null,
+                $this->tracker->getId() === $tracker_id && 'my_other_field' === $field_name => $field_1,
+                $this->tracker->getId() === $tracker_id && 'another_field' === $field_name => null,
             }
         );
 

@@ -33,12 +33,12 @@ final class RetrieveUriStub implements \Tuleap\ProgramManagement\Domain\Program\
 
     public static function withDefault(): self
     {
-        return new self("/plugins/tracker/?aid=1");
+        return new self('/plugins/tracker/?aid=1');
     }
 
     public static function withId(int $id): self
     {
-        return new self("/plugins/tracker/?aid=" . $id);
+        return new self('/plugins/tracker/?aid=' . $id);
     }
 
     public function getUri(TimeboxIdentifier $timebox_identifier): string

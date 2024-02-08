@@ -37,7 +37,7 @@ final class BuildRedirectFormActionHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->program_redirection_parameters   = ProgramRedirectionParametersStub::withOtherValue();
-        $this->iteration_redirection_parameters = IterationRedirectionParametersStub::withValues("redirect", "100");
+        $this->iteration_redirection_parameters = IterationRedirectionParametersStub::withValues('redirect', '100');
         $this->event                            = BuildRedirectFormActionEventStub::withCount();
     }
 

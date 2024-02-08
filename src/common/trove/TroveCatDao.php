@@ -179,7 +179,7 @@ class TroveCatDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDecl
         $nb_max_values   = $this->da->escapeInt($nb_max_values);
         $is_project_flag = $is_project_flag ? 1 : 0;
 
-        $version = date("Ymd", time()) . '01';
+        $version = date('Ymd', time()) . '01';
 
         $sql = "UPDATE trove_cat SET
               shortname = $shortname,
@@ -225,7 +225,7 @@ class TroveCatDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDecl
 
         $is_project_flag = $is_project_flag ? 1 : 0;
 
-        $version = date("Ymd", time()) . '01';
+        $version = date('Ymd', time()) . '01';
 
         $this->startTransaction();
 

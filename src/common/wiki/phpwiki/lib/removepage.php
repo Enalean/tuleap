@@ -38,12 +38,12 @@ function RemovePage(&$request)
 
     if (! $current or ! ($version = $current->getVersion())) {
         $html = HTML(
-            HTML::h2(_("Already deleted")),
-            HTML::p(_("Sorry, this page is not in the database."))
+            HTML::h2(_('Already deleted')),
+            HTML::p(_('Sorry, this page is not in the database.'))
         );
     } elseif (! $request->isPost() || ! $request->getArg('verify')) {
-        $removeB = Button('submit:verify', _("Remove Page"), 'wikiadmin');
-        $cancelB = Button('submit:cancel', _("Cancel"), 'button'); // use generic wiki button look
+        $removeB = Button('submit:verify', _('Remove Page'), 'wikiadmin');
+        $cancelB = Button('submit:cancel', _('Cancel'), 'button'); // use generic wiki button look
 
         $html   = HTML(
             HTML::h2(fmt("You are about to remove '%s'!", $pagelink)),
@@ -75,8 +75,8 @@ function RemovePage(&$request)
         ));
     } elseif ($request->getArg('currentversion') != $version) {
         $html = HTML(
-            HTML::h2(_("Someone has edited the page!")),
-            HTML::p(fmt("Since you started the deletion process, someone has saved a new version of %s.  Please check to make sure you still want to permanently remove the page from the database.", $pagelink))
+            HTML::h2(_('Someone has edited the page!')),
+            HTML::p(fmt('Since you started the deletion process, someone has saved a new version of %s.  Please check to make sure you still want to permanently remove the page from the database.', $pagelink))
         );
     } else {
         // Codendi specific: remove the deleted wiki page from ProjectWantedPages
@@ -84,7 +84,7 @@ function RemovePage(&$request)
         $pagename        = $page->getName();
 
         $dbi = $request->getDbh();
-        require_once(PHPWIKI_DIR . "/lib/loadsave.php");
+        require_once(PHPWIKI_DIR . '/lib/loadsave.php');
         $pagehandle = $dbi->getPage($projectPageName);
         if ($pagehandle->exists()) {// don't replace default contents
             $current = $pagehandle->getCurrentRevision();
@@ -93,7 +93,7 @@ function RemovePage(&$request)
             $meta    = $current->_data;
         }
 
-        $text = str_replace("* [$pagename]", "", $text);
+        $text = str_replace("* [$pagename]", '', $text);
 
         $meta['summary'] =  $GLOBALS['Language']->getText(
             'wiki_lib_wikipagewrap',
@@ -117,7 +117,7 @@ function RemovePage(&$request)
         $user_manager  = UserManager::instance();
         $user          = $user_manager->getCurrentUser();
         $event_manager->processEvent(
-            "wiki_page_deleted",
+            'wiki_page_deleted',
             [
                 'group_id'  => GROUP_ID,
                 'wiki_page' => $pagename,
@@ -128,7 +128,7 @@ function RemovePage(&$request)
 
         $link = HTML::a(
             ['href' => 'javascript:history.go(-2)'],
-            _("Back to the previous page.")
+            _('Back to the previous page.')
         );
         $html = HTML(
             HTML::h2(fmt("Removed page '%s' successfully.", $pagename)),
@@ -137,7 +137,7 @@ function RemovePage(&$request)
         );
     }
 
-    GeneratePage($html, _("Remove Page"));
+    GeneratePage($html, _('Remove Page'));
 }
 
 

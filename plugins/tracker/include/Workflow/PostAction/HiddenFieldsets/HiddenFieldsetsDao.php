@@ -85,16 +85,16 @@ class HiddenFieldsetsDao extends DataAccessObject
     public function createPostActionForTransitionId(int $transition_id, array $fieldset_ids): void
     {
         $hidden_fieldsets_action_id = (int) $this->getDB()->insertReturnId(
-            "plugin_tracker_workflow_postactions_hidden_fieldsets",
-            ["transition_id" => $transition_id]
+            'plugin_tracker_workflow_postactions_hidden_fieldsets',
+            ['transition_id' => $transition_id]
         );
 
         foreach ($fieldset_ids as $fieldset_id) {
             $this->getDB()->insert(
-                "plugin_tracker_workflow_postactions_hidden_fieldsets_value",
+                'plugin_tracker_workflow_postactions_hidden_fieldsets_value',
                 [
-                    "postaction_id" => $hidden_fieldsets_action_id,
-                    "fieldset_id"   => $fieldset_id,
+                    'postaction_id' => $hidden_fieldsets_action_id,
+                    'fieldset_id'   => $fieldset_id,
                 ]
             );
         }
@@ -102,12 +102,12 @@ class HiddenFieldsetsDao extends DataAccessObject
 
     public function deletePostActionsByTransitionId(int $transition_id): void
     {
-        $sql = "
+        $sql = '
             DELETE plugin_tracker_workflow_postactions_hidden_fieldsets, plugin_tracker_workflow_postactions_hidden_fieldsets_value
             FROM plugin_tracker_workflow_postactions_hidden_fieldsets
             LEFT JOIN plugin_tracker_workflow_postactions_hidden_fieldsets_value
                 ON plugin_tracker_workflow_postactions_hidden_fieldsets_value.postaction_id = plugin_tracker_workflow_postactions_hidden_fieldsets.id
-            WHERE plugin_tracker_workflow_postactions_hidden_fieldsets.transition_id = ?";
+            WHERE plugin_tracker_workflow_postactions_hidden_fieldsets.transition_id = ?';
 
         $this->getDB()->run(
             $sql,
@@ -117,7 +117,7 @@ class HiddenFieldsetsDao extends DataAccessObject
 
     public function deleteAllPostActionsForWorkflow(int $workflow_id): void
     {
-        $sql = "
+        $sql = '
             DELETE plugin_tracker_workflow_postactions_hidden_fieldsets, plugin_tracker_workflow_postactions_hidden_fieldsets_value
             FROM tracker_workflow
                 INNER JOIN tracker_workflow_transition
@@ -126,7 +126,7 @@ class HiddenFieldsetsDao extends DataAccessObject
                     ON (tracker_workflow_transition.transition_id = plugin_tracker_workflow_postactions_hidden_fieldsets.transition_id)
                 LEFT JOIN plugin_tracker_workflow_postactions_hidden_fieldsets_value
                     ON plugin_tracker_workflow_postactions_hidden_fieldsets_value.postaction_id = plugin_tracker_workflow_postactions_hidden_fieldsets.id
-            WHERE tracker_workflow.workflow_id = ?";
+            WHERE tracker_workflow.workflow_id = ?';
 
         $this->getDB()->run(
             $sql,

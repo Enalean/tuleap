@@ -81,7 +81,7 @@ final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
 
     private function benchmarkPutAtTheEnd($n)
     {
-        $title = "Time taken for put at the end";
+        $title = 'Time taken for put at the end';
         echo "$title for $n artifacts\n";
         $k     = 10;
         $times = [];
@@ -99,28 +99,28 @@ final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
 
     private function benchmarkMove10Before1rank($n)
     {
-        $title = "Time taken for move 10 before (1 rank)";
+        $title = 'Time taken for move 10 before (1 rank)';
         echo "$title for $n artifacts\n";
         return [$title, $this->benchmarkMove10BeforeRank($n, $n - 10 - 2)];
     }
 
     private function benchmarkMoveBefore1rank($n)
     {
-        $title = "Time taken for move before (1 rank)";
+        $title = 'Time taken for move before (1 rank)';
         echo "$title for $n artifacts\n";
         return [$title, $this->benchmarkMoveBeforeRank($n, $n - 2)];
     }
 
     private function benchmarkMoveBeforeMiddle($n)
     {
-        $title = "Time taken for move before (middle)";
+        $title = 'Time taken for move before (middle)';
         echo "$title for $n artifacts\n";
         return [$title, $this->benchmarkMoveBeforeRank($n, floor($n / 2))];
     }
 
     private function benchmarkMoveBeforeAll($n)
     {
-        $title = "Time taken for move before (all)";
+        $title = 'Time taken for move before (all)';
         echo "$title for $n artifacts\n";
         return [$title, $this->benchmarkMoveBeforeRank($n, 1)];
     }
@@ -170,9 +170,9 @@ final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
     private function displayStats($times)
     {
         $avg = round(array_sum($times) * 1000 / count($times));
-        echo "Min: " . round(min($times) * 1000) . "\n";
-        echo "Max: " . round(max($times) * 1000) . "\n";
-        echo "Avg: " . $avg . "\n";
+        echo 'Min: ' . round(min($times) * 1000) . "\n";
+        echo 'Max: ' . round(max($times) * 1000) . "\n";
+        echo 'Avg: ' . $avg . "\n";
         echo "\n";
         echo "\n";
 
@@ -191,7 +191,7 @@ final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
 
         shuffle($inserts);
         foreach (array_chunk($inserts, 10000) as $chunk) {
-            $sql  = "INSERT INTO tracker_artifact_priority_rank (artifact_id, `rank`) VALUES ";
+            $sql  = 'INSERT INTO tracker_artifact_priority_rank (artifact_id, `rank`) VALUES ';
             $sql .= implode(',', $chunk);
             $this->db->run($sql);
         }
@@ -203,12 +203,12 @@ final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
         $bar_size = (int) floor($done * 30 / $total);
 
         $status_bar  = "\r[";
-        $status_bar .= str_repeat("=", $bar_size);
+        $status_bar .= str_repeat('=', $bar_size);
         if ($bar_size < 30) {
-            $status_bar .= ">";
-            $status_bar .= str_repeat(" ", 30 - $bar_size);
+            $status_bar .= '>';
+            $status_bar .= str_repeat(' ', 30 - $bar_size);
         } else {
-            $status_bar .= "=";
+            $status_bar .= '=';
         }
 
         $status_bar .= "] $done/$total";

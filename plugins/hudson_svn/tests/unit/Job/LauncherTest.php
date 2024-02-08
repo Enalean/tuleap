@@ -39,9 +39,9 @@ final class LauncherTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
 
         $this->project     = ProjectTestBuilder::aProject()->withId(101)->withUsedService('hudson')->build();
-        $this->repository  = SvnRepository::buildActiveRepository(1, "repository_name", $this->project);
+        $this->repository  = SvnRepository::buildActiveRepository(1, 'repository_name', $this->project);
         $this->commit_info = new CommitInfo();
-        $this->commit_info->setChangedDirectories(["/", "a", "a/trunk", "a/trunk/b", "a/trunk/c"]);
+        $this->commit_info->setChangedDirectories(['/', 'a', 'a/trunk', 'a/trunk/b', 'a/trunk/c']);
     }
 
     /**

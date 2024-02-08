@@ -75,7 +75,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     public function getQuerySelect(): string
     {
         // SubmittedOn is stored in the artifact
-        return "a.submitted_on AS " . $this->getQuerySelectName();
+        return 'a.submitted_on AS ' . $this->getQuerySelectName();
     }
 
     public function getQueryFrom()

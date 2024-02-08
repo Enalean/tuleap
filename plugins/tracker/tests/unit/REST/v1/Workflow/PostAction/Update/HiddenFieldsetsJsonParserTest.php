@@ -47,12 +47,12 @@ class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAcceptReturnsTrueWhenTypeMatches()
     {
-        $this->assertTrue($this->parser->accept(["type" => "hidden_fieldsets"]));
+        $this->assertTrue($this->parser->accept(['type' => 'hidden_fieldsets']));
     }
 
     public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
     {
-        $this->assertFalse($this->parser->accept(["type" => "set_date_value"]));
+        $this->assertFalse($this->parser->accept(['type' => 'set_date_value']));
     }
 
     public function testParseReturnsNewHiddenFieldsetsValueBasedOnGivenJson()
@@ -63,9 +63,9 @@ class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $hidden_fieldsets_value = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "hidden_fieldsets",
-                "fieldset_ids" => [43],
+                'id' => 2,
+                'type' => 'hidden_fieldsets',
+                'fieldset_ids' => [43],
             ]
         );
         $expected_action        = new HiddenFieldsetsValue([43]);
@@ -80,8 +80,8 @@ class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $hidden_fieldsets_value = $this->parser->parse(
             $workflow,
             [
-                "type" => "hidden_fieldsets",
-                "fieldset_ids" => [43],
+                'type' => 'hidden_fieldsets',
+                'fieldset_ids' => [43],
             ]
         );
         $expected_action        = new HiddenFieldsetsValue([43]);
@@ -99,8 +99,8 @@ class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "id" => 1,
-                "type" => "hidden_fieldsets",
+                'id' => 1,
+                'type' => 'hidden_fieldsets',
             ]
         );
     }
@@ -116,9 +116,9 @@ class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "id" => 1,
-                "type" => "hidden_fieldsets",
-                "fieldset_ids" => null,
+                'id' => 1,
+                'type' => 'hidden_fieldsets',
+                'fieldset_ids' => null,
             ]
         );
     }
@@ -134,9 +134,9 @@ class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "id" => 1,
-                "type" => "hidden_fieldsets",
-                "fieldset_ids" => [],
+                'id' => 1,
+                'type' => 'hidden_fieldsets',
+                'fieldset_ids' => [],
             ]
         );
     }
@@ -152,9 +152,9 @@ class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "id" => 1,
-                "type" => "hidden_fieldsets",
-                "fieldset_ids" => [1, 'aaa'],
+                'id' => 1,
+                'type' => 'hidden_fieldsets',
+                'fieldset_ids' => [1, 'aaa'],
             ]
         );
     }
@@ -165,6 +165,6 @@ class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $workflow->shouldReceive('isAdvanced')->andReturnTrue();
 
         $this->expectException(IncompatibleWorkflowModeException::class);
-        $this->parser->parse($workflow, ["type" => "hidden_fieldsets"]);
+        $this->parser->parse($workflow, ['type' => 'hidden_fieldsets']);
     }
 }

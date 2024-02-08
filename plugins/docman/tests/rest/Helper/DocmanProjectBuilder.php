@@ -229,7 +229,7 @@ class DocmanProjectBuilder extends REST_TestDataBuilder
 
         $reviewer_dao = new \Docman_ApprovalTableReviewerDao(\CodendiDataAccess::instance());
         $reviewer_dao->addUser($table_id, $this->docman_user_id);
-        $reviewer_dao->updateReview($table_id, $this->docman_user_id, time(), 1, "", 1);
+        $reviewer_dao->updateReview($table_id, $this->docman_user_id, time(), 1, '', 1);
     }
 
     public function lockItem(int $item_id, int $user_id)

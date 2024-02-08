@@ -41,7 +41,7 @@ final class TestPlanLinkedTestDefinitions
     private function __construct(array $requested_linked_test_definitions, int $total_number_of_linked_test_definitions)
     {
         if (count($requested_linked_test_definitions) > $total_number_of_linked_test_definitions) {
-            throw new \LogicException("The total number of linked artifacts cannot be smaller than the requested part");
+            throw new \LogicException('The total number of linked artifacts cannot be smaller than the requested part');
         }
 
         $this->requested_linked_test_definitions       = $requested_linked_test_definitions;

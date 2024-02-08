@@ -55,17 +55,17 @@ class Docman_NotificationsManager_DeleteTest extends \Tuleap\Test\PHPUnit\TestCa
         $folder->shouldReceive('getId')->andReturn(1);
         $params['parent'] = $folder;
         $params['path']   = Mockery::mock(Docman_Path::class);
-        $params['path']->shouldReceive('get')->andReturn("/my/folder/parent");
+        $params['path']->shouldReceive('get')->andReturn('/my/folder/parent');
         $item = Mockery::mock(Docman_File::class);
-        $item->shouldReceive('getTitle')->andReturn("my file name");
+        $item->shouldReceive('getTitle')->andReturn('my file name');
         $item->shouldReceive('getId')->andReturn(100);
         $params['item'] = $item;
         $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($folder);
 
         $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getRealName')->andReturn("UserName");
+        $user->shouldReceive('getRealName')->andReturn('UserName');
 
-        $plugin_url = "http://www.example.com/plugins/docman/";
+        $plugin_url = 'http://www.example.com/plugins/docman/';
         $this->link_provider->shouldReceive('getPluginLinkUrl')->andReturn($plugin_url);
 
         $message           = $this->notification_manager->_getMessageForUser(
@@ -85,19 +85,19 @@ class Docman_NotificationsManager_DeleteTest extends \Tuleap\Test\PHPUnit\TestCa
         $folder->shouldReceive('getId')->andReturn(1);
         $params['parent'] = $folder;
         $params['path']   = Mockery::mock(Docman_Path::class);
-        $params['path']->shouldReceive('get')->andReturn("/my/folder/parent");
+        $params['path']->shouldReceive('get')->andReturn('/my/folder/parent');
         $item = Mockery::mock(Docman_File::class);
-        $item->shouldReceive('getTitle')->andReturn("my file name");
+        $item->shouldReceive('getTitle')->andReturn('my file name');
         $item->shouldReceive('getId')->andReturn(100);
         $params['item'] = $item;
         $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($folder);
 
         $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getRealName')->andReturn("UserName");
+        $user->shouldReceive('getRealName')->andReturn('UserName');
 
-        $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
+        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/100/';
         $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
         $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
 
         $message           = $this->notification_manager->_getMessageForUser(

@@ -30,10 +30,10 @@ class b201312250950_add_reminder_roles_table extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql    = "CREATE TABLE IF NOT EXISTS tracker_reminder_notified_roles (
+        $sql    = 'CREATE TABLE IF NOT EXISTS tracker_reminder_notified_roles (
                     reminder_id INT(11) UNSIGNED NOT NULL,
                     role_id TINYINT(1) UNSIGNED NOT NULL
-                );";
+                );';
         $result = $this->db->createTable('tracker_reminder_notified_roles', $sql);
 
         if ($result === false) {
@@ -42,8 +42,8 @@ class b201312250950_add_reminder_roles_table extends \Tuleap\ForgeUpgrade\Bucket
         }
 
         //Remove the NOT NULL Constraint on ugroups column
-        $sql    = "ALTER TABLE tracker_reminder
-                    MODIFY COLUMN ugroups VARCHAR(255) NULL;";
+        $sql    = 'ALTER TABLE tracker_reminder
+                    MODIFY COLUMN ugroups VARCHAR(255) NULL;';
         $result = $this->db->dbh->exec($sql);
 
         if ($result === false) {
@@ -60,7 +60,7 @@ class b201312250950_add_reminder_roles_table extends \Tuleap\ForgeUpgrade\Bucket
         $row   = $res->fetch();
         $index = $row['CONSTRAINT_NAME'];
         $res->closeCursor();
-        $sql    = "ALTER TABLE `tracker_reminder` DROP INDEX " . $index . ";";
+        $sql    = 'ALTER TABLE `tracker_reminder` DROP INDEX ' . $index . ';';
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
                 $error_message = implode(', ', $this->db->dbh->errorInfo());

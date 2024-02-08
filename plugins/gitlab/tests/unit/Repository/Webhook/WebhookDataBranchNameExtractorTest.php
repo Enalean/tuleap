@@ -28,10 +28,10 @@ class WebhookDataBranchNameExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testParseRefToExtractBranchNameWithSlash(): void
     {
         $branch = WebhookDataBranchNameExtractor::extractBranchName(
-            "refs/heads/features/Story"
+            'refs/heads/features/Story'
         );
 
-        self::assertEquals("features/Story", $branch);
+        self::assertEquals('features/Story', $branch);
     }
 
     public function testParseEmptyRef(): void
@@ -39,16 +39,16 @@ class WebhookDataBranchNameExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(EmptyBranchNameException::class);
 
         WebhookDataBranchNameExtractor::extractBranchName(
-            ""
+            ''
         );
     }
 
     public function testParseBranchNotContainingRefsHeads(): void
     {
         $branch = WebhookDataBranchNameExtractor::extractBranchName(
-            "refs/features/UNO"
+            'refs/features/UNO'
         );
 
-        self::assertEquals("refs/features/UNO", $branch);
+        self::assertEquals('refs/features/UNO', $branch);
     }
 }

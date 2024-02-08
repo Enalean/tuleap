@@ -29,7 +29,7 @@ final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $row   = ['bg_red' => 255, 'bg_green' => 128, 'bg_blue' => 0, 'tlp_color_name' => null];
         $color = ColumnColorRetriever::getHeaderColorNameOrRGB($row);
 
-        self::assertSame("rgb(255, 128, 0)", $color);
+        self::assertSame('rgb(255, 128, 0)', $color);
     }
 
     public function testGetHeaderColorNameOrRGBReturnsTLPColorName(): void

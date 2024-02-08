@@ -29,6 +29,6 @@ final class InvalidSortTypeException extends Exception
 {
     public function __construct(string $sort_type)
     {
-        parent::__construct(sprintf("Unknown sort type: %s", $sort_type));
+        parent::__construct(sprintf('Unknown sort type: %s', $sort_type));
     }
 }

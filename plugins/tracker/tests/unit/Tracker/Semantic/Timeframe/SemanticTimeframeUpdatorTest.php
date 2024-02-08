@@ -72,7 +72,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao
             ->expects(self::never())
-            ->method("save");
+            ->method('save');
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
@@ -97,7 +97,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao
             ->expects(self::never())
-            ->method("save");
+            ->method('save');
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
@@ -122,7 +122,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao
             ->expects(self::never())
-            ->method("save");
+            ->method('save');
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
@@ -145,10 +145,10 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'duration-field-id'   => '5678',
         ]);
 
-        $this->formelement_factory->method("getUsedDateFieldById")->with($this->tracker, 1234)->willReturn(null);
+        $this->formelement_factory->method('getUsedDateFieldById')->with($this->tracker, 1234)->willReturn(null);
         $this->semantic_timeframe_dao
             ->expects(self::never())
-            ->method("save");
+            ->method('save');
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
@@ -179,8 +179,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date_field->method('getTrackerId')->willReturn($this->tracker_id);
         $duration_field->method('getTrackerId')->willReturn($this->tracker_id);
 
-        $this->formelement_factory->method("getUsedDateFieldById")->with($this->tracker, $start_date_field_id)->willReturn($start_date_field);
-        $this->formelement_factory->method("getUsedFieldByIdAndType")->with(
+        $this->formelement_factory->method('getUsedDateFieldById')->with($this->tracker, $start_date_field_id)->willReturn($start_date_field);
+        $this->formelement_factory->method('getUsedFieldByIdAndType')->with(
             $this->tracker,
             $duration_field_id,
             ['int', 'float', 'computed']
@@ -188,7 +188,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao
             ->expects(self::once())
-            ->method("save")->with(
+            ->method('save')->with(
                 $this->tracker_id,
                 $start_date_field_id,
                 $duration_field_id,
@@ -226,7 +226,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->method('getTrackerId')->willReturn($this->tracker_id);
 
         $this->formelement_factory
-            ->method("getUsedDateFieldById")
+            ->method('getUsedDateFieldById')
             ->willReturnCallback(
                 static fn ($tracker, $field_id) => match ($field_id) {
                     $start_date_field_id => $start_date_field,
@@ -236,7 +236,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao
             ->expects(self::once())
-            ->method("save")->with(
+            ->method('save')->with(
                 $this->tracker_id,
                 $start_date_field_id,
                 null,
@@ -275,7 +275,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao
             ->expects(self::once())
-            ->method("save")->with(
+            ->method('save')->with(
                 $this->tracker_id,
                 null,
                 null,
@@ -314,7 +314,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao
             ->expects(self::never())
-            ->method("save");
+            ->method('save');
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
@@ -351,14 +351,14 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->method('getTrackerId')->willReturn($this->tracker_id);
 
         $this->formelement_factory
-            ->method("getUsedDateFieldById")
+            ->method('getUsedDateFieldById')
             ->willReturnCallback(
                 static fn ($tracker, $field_id) => match ($field_id) {
                     $start_date_field_id => $start_date_field,
                     $end_date_field_id => $end_date_field,
                 }
             );
-        $this->formelement_factory->method("getUsedFieldByIdAndType")->with(
+        $this->formelement_factory->method('getUsedFieldByIdAndType')->with(
             $this->tracker,
             $duration_field_id,
             ['int', 'float', 'computed']
@@ -366,7 +366,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao
             ->expects(self::never())
-            ->method("save");
+            ->method('save');
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,

@@ -27,7 +27,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FileFieldBuilder
 {
-    private string $name = "file";
+    private string $name = 'file';
     private \Tracker $tracker;
     /** @var list<\PFUser> */
     private array $user_with_read_permission = [];
@@ -71,9 +71,9 @@ final class FileFieldBuilder
             15,
             $this->name,
             $this->name,
-            "",
+            '',
             true,
-            "",
+            '',
             false,
             false,
             10,

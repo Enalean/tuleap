@@ -35,7 +35,7 @@ final class TrackerFormElementUserPermissionsTest extends \Tuleap\Test\PHPUnit\T
     {
         $this->form_element = $this->createPartialMock(Tracker_FormElement_Field_String::class, ['getId', 'getLabel', 'getName']);
         $this->form_element->method('getId')->willReturn(300);
-        $this->form_element->method('getLabel')->willReturn("My field");
+        $this->form_element->method('getLabel')->willReturn('My field');
         $this->form_element->method('getName')->willReturn('my_field');
 
         $this->workflow_user = new Tracker_Workflow_WorkflowUser();

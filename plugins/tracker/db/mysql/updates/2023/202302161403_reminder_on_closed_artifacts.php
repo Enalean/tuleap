@@ -25,13 +25,13 @@ final class b202302161403_reminder_on_closed_artifacts extends \Tuleap\ForgeUpgr
 {
     public function description(): string
     {
-        return "Add notify_closed_artifacts in tracker_reminder table";
+        return 'Add notify_closed_artifacts in tracker_reminder table';
     }
 
     public function up(): void
     {
         $this->api->dbh->exec(
-            "ALTER TABLE tracker_reminder ADD COLUMN notify_closed_artifacts BOOLEAN DEFAULT TRUE"
+            'ALTER TABLE tracker_reminder ADD COLUMN notify_closed_artifacts BOOLEAN DEFAULT TRUE'
         );
     }
 }

@@ -38,7 +38,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
     private function insertListCriteria(array $data_to_insert): void
     {
         if (isset($data_to_insert['list']) && count($data_to_insert['list']) > 0) {
-            $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['list'])));
+            $data_to_insert_without_duplicates = array_map('unserialize', array_unique(array_map('serialize', $data_to_insert['list'])));
             $this->getDB()->insertMany('tracker_report_criteria_list_value', $data_to_insert_without_duplicates);
         }
     }
@@ -46,7 +46,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
     private function insertAlphaNumCriteria(array $data_to_insert): void
     {
         if (isset($data_to_insert['alphanum']) && count($data_to_insert['alphanum']) > 0) {
-            $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['alphanum'])));
+            $data_to_insert_without_duplicates = array_map('unserialize', array_unique(array_map('serialize', $data_to_insert['alphanum'])));
             $this->getDB()->insertMany('tracker_report_criteria_alphanum_value', $data_to_insert_without_duplicates);
         }
     }
@@ -54,7 +54,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
     private function insertOpenListCriteria(array $data_to_insert): void
     {
         if (isset($data_to_insert['openlist']) && count($data_to_insert['openlist']) > 0) {
-            $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['openlist'])));
+            $data_to_insert_without_duplicates = array_map('unserialize', array_unique(array_map('serialize', $data_to_insert['openlist'])));
             $this->getDB()->insertMany('tracker_report_criteria_openlist_value', $data_to_insert_without_duplicates);
         }
     }
@@ -62,7 +62,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
     private function insertFileCriteria(array $data_to_insert): void
     {
         if (isset($data_to_insert['file']) && count($data_to_insert['file']) > 0) {
-            $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['file'])));
+            $data_to_insert_without_duplicates = array_map('unserialize', array_unique(array_map('serialize', $data_to_insert['file'])));
             $this->getDB()->insertMany('tracker_report_criteria_file_value', $data_to_insert_without_duplicates);
         }
     }
@@ -70,7 +70,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
     private function insertPermissionsCriteria(array $data_to_insert): void
     {
         if (isset($data_to_insert['permissions']) && count($data_to_insert['permissions']) > 0) {
-            $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['permissions'])));
+            $data_to_insert_without_duplicates = array_map('unserialize', array_unique(array_map('serialize', $data_to_insert['permissions'])));
             $this->getDB()->insertMany('tracker_report_criteria_permissionsonartifact_value', $data_to_insert_without_duplicates);
         }
     }
@@ -78,7 +78,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
     private function insertDateCriteria(array $data_to_insert): void
     {
         if (isset($data_to_insert['date']) && count($data_to_insert['date']) > 0) {
-            $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['date'])));
+            $data_to_insert_without_duplicates = array_map('unserialize', array_unique(array_map('serialize', $data_to_insert['date'])));
             $this->getDB()->insertMany('tracker_report_criteria_date_value', $data_to_insert_without_duplicates);
         }
     }
@@ -91,7 +91,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
     private function getValueFromRow(array $row, array $mapping): ?string
     {
         switch ($row['field_type']) {
-            case "list":
+            case 'list':
                 if (! $this->hasCriteriaValue($mapping, $row['value'])) {
                     break;
                 }
@@ -100,15 +100,15 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
                     return $row['value'];
                 }
                 return $mapping['values'][$row['value']] ?? null;
-            case "alphanum":
-            case "file":
-            case "permissions":
+            case 'alphanum':
+            case 'file':
+            case 'permissions':
                 return $row['value'];
-            case "openlist":
+            case 'openlist':
                 return $this->replaceStoredValuesByMapping($row['value'], $mapping);
         }
 
-        throw new \LogicException($row['field_type'] . " can not return a value");
+        throw new \LogicException($row['field_type'] . ' can not return a value');
     }
 
     private function replaceStoredValuesByMapping(string $db_values, array $mapping): string
@@ -139,10 +139,10 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
      */
     private function duplicateComment($to_report_id, $from_report_id): void
     {
-        $sql = "INSERT INTO tracker_report_criteria_comment_value (report_id, comment)
+        $sql = 'INSERT INTO tracker_report_criteria_comment_value (report_id, comment)
                     SELECT ?, comment
                     FROM tracker_report_criteria_comment_value AS comment
-                    WHERE comment.report_id= ?";
+                    WHERE comment.report_id= ?';
         $this->getDB()->run($sql, $to_report_id, $from_report_id);
     }
 
@@ -153,10 +153,10 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
     private function duplicatedFields(array $field_mapping, $to_report_id, $from_report_id): void
     {
         foreach ($field_mapping as $mapping) {
-            $sql = "INSERT INTO tracker_report_criteria (report_id, field_id, `rank`, is_advanced)
+            $sql = 'INSERT INTO tracker_report_criteria (report_id, field_id, `rank`, is_advanced)
                 SELECT ?, field_id, `rank`, is_advanced
                 FROM tracker_report_criteria
-                WHERE report_id = ? AND field_id = ?";
+                WHERE report_id = ? AND field_id = ?';
             $this->getDB()->run($sql, $to_report_id, $from_report_id, $mapping['from']);
 
             $report_criteria_id = (int) $this->getDB()->lastInsertId();
@@ -164,8 +164,8 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
                 continue;
             }
 
-            $sql = "UPDATE tracker_report_criteria SET field_id = ?
-                    WHERE report_id = ? AND field_id = ?";
+            $sql = 'UPDATE tracker_report_criteria SET field_id = ?
+                    WHERE report_id = ? AND field_id = ?';
             $this->getDB()->run($sql, $mapping['to'], $to_report_id, $mapping['from']);
 
             $sql = "SELECT value, 'list' AS field_type, null AS op, null AS from_date, null as to_date
@@ -214,7 +214,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
 
             $data_to_insert = [];
             foreach ($criterias as $row) {
-                if ($row['field_type'] === "date") {
+                if ($row['field_type'] === 'date') {
                     $data_to_insert[$row['field_type']][] = [
                         'criteria_id' => $report_criteria_id,
                         'op' => $row['op'],
@@ -222,7 +222,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
                         'to_date' => $row['to_date'],
                     ];
                 }
-                if ($row['field_type'] === "comment") {
+                if ($row['field_type'] === 'comment') {
                     $data_to_insert[$row['field_type']][] = [
                         'report_id  ' => $report_criteria_id,
                         'comment' => $row['value'],

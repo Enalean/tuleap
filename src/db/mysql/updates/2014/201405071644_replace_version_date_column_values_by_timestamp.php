@@ -23,7 +23,7 @@ class b201405071644_replace_version_date_column_values_by_timestamp extends \Tul
 {
     public function description()
     {
-        return "Replace version date column values by timestamp";
+        return 'Replace version date column values by timestamp';
     }
 
     public function preUp()
@@ -33,8 +33,8 @@ class b201405071644_replace_version_date_column_values_by_timestamp extends \Tul
 
     public function up()
     {
-        $sql = "UPDATE svn_accessfile_history
-                SET version_date = UNIX_TIMESTAMP()";
+        $sql = 'UPDATE svn_accessfile_history
+                SET version_date = UNIX_TIMESTAMP()';
 
         $res = $this->db->dbh->exec($sql);
 

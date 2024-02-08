@@ -48,7 +48,7 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
         $this->user = UserTestBuilder::anActiveUser()->withId(114)->build();
 
         $this->field = $this->createStub(Tracker_FormElement_Field_List::class);
-        $this->field->method("getId")->willReturn(123);
+        $this->field->method('getId')->willReturn(123);
 
         $this->tracker = $this->createStub(Tracker::class);
         $this->tracker->method('getId')->willReturn(666);
@@ -69,18 +69,18 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
         $expected_result = [123 => 2];
         $request         = new Codendi_Request(
             [
-                "artifact" => [
-                    "field_id"        => '123',
-                    "possible_values" => "[1, 2, 3]",
+                'artifact' => [
+                    'field_id'        => '123',
+                    'possible_values' => '[1, 2, 3]',
                 ],
             ],
             $this->createStub(ProjectManager::class)
         );
 
         $collection = new StatusValuesCollection([1, 2, 3]);
-        $this->form_element_factory->method("getFieldById")->with(123)->willReturn($this->field);
+        $this->form_element_factory->method('getFieldById')->with(123)->willReturn($this->field);
 
-        $this->first_possible_value_retriever->method("getFirstPossibleValue")
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')
             ->with($this->artifact, $this->field, $collection)
             ->willReturn(2);
 
@@ -99,15 +99,15 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
         $expected_result = [123 => 12];
         $request         = new Codendi_Request(
             [
-                "artifact" => [
-                    "123" => '12',
+                'artifact' => [
+                    '123' => '12',
                 ],
             ],
             $this->createStub(ProjectManager::class)
         );
 
-        $this->tracker->method("augmentDataFromRequest")->with(
-            ["123" => '12', "request_method_called" => 'artifact-update']
+        $this->tracker->method('augmentDataFromRequest')->with(
+            ['123' => '12', 'request_method_called' => 'artifact-update']
         )->willReturn([123 => 12]);
 
         $this->assertEquals(

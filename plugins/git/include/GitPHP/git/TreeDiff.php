@@ -23,7 +23,7 @@ namespace Tuleap\Git\GitPHP;
 
 class TreeDiff implements \Iterator, \Countable
 {
-    public const EMPTY_TREE_HASH = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
+    public const EMPTY_TREE_HASH = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
 
     /**
      * fromHash

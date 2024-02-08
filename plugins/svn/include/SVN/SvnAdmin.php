@@ -73,8 +73,8 @@ class SvnAdmin
 
     private function removeReadPermissions(Repository $repository, $dump_path)
     {
-        $dump_name = escapeshellarg($dump_path . "/" . $repository->getBackupFileName());
-        $command   = "chown " . ForgeConfig::get('sys_http_user') . ":" . ForgeConfig::get('sys_http_user') .
+        $dump_name = escapeshellarg($dump_path . '/' . $repository->getBackupFileName());
+        $command   = 'chown ' . ForgeConfig::get('sys_http_user') . ':' . ForgeConfig::get('sys_http_user') .
             " $dump_name && chmod 640 $dump_name";
         $this->system_command->exec($command);
     }
@@ -82,7 +82,7 @@ class SvnAdmin
     private function svnAdminDumpRepository(Repository $repository, $dump_path)
     {
         $system_path = escapeshellarg($repository->getSystemPath());
-        $dump_name   = escapeshellarg($dump_path . "/" . $repository->getBackupFileName());
+        $dump_name   = escapeshellarg($dump_path . '/' . $repository->getBackupFileName());
 
         $command = "umask 77 && svnadmin dump --quiet $system_path > $dump_name";
         $this->system_command->exec($command);
@@ -96,7 +96,7 @@ class SvnAdmin
         $command = "umask 77 && mkdir -p $dump_path";
         $this->system_command->exec($command);
 
-        $command = "chown " . ForgeConfig::get('sys_http_user') . ":" . ForgeConfig::get('sys_http_user') .
+        $command = 'chown ' . ForgeConfig::get('sys_http_user') . ':' . ForgeConfig::get('sys_http_user') .
             " $dump_path && chmod 750 $dump_path";
         $this->system_command->exec($command);
     }
@@ -106,17 +106,17 @@ class SvnAdmin
         $system_path = escapeshellarg($repository->getSystemPath());
         $dump_name   = escapeshellarg($repository->getBackupFileName());
         $dump_path   = escapeshellarg($repository->getSystemBackupPath());
-        $dump_file   = $dump_path . "/" . $dump_name;
-        $permissions = escapeshellarg(ForgeConfig::get('sys_http_user') . ":" . $repository->getProject()->getUnixName());
+        $dump_file   = $dump_path . '/' . $dump_name;
+        $permissions = escapeshellarg(ForgeConfig::get('sys_http_user') . ':' . $repository->getProject()->getUnixName());
 
         try {
-            $command        = "su -l " . ForgeConfig::get('sys_http_user') . " -c 'svnadmin create " . $system_path . "'";
+            $command        = 'su -l ' . ForgeConfig::get('sys_http_user') . " -c 'svnadmin create " . $system_path . "'";
             $command_output = $this->system_command->exec($command);
             foreach ($command_output as $line) {
                 $this->logger->debug('[svn ' . $repository->getName() . '] svnadmin create: ' . $line);
             }
 
-            $command        = "su -l " . ForgeConfig::get('sys_http_user') . " -c 'cd $system_path && umask 77 && svnadmin load . < $dump_file'";
+            $command        = 'su -l ' . ForgeConfig::get('sys_http_user') . " -c 'cd $system_path && umask 77 && svnadmin load . < $dump_file'";
             $command_output = $this->system_command->exec($command);
             foreach ($command_output as $line) {
                 $this->logger->debug('[svn ' . $repository->getName() . '] svnadmin load: ' . $line);

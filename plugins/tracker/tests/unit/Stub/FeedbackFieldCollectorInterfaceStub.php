@@ -113,6 +113,6 @@ final class FeedbackFieldCollectorInterfaceStub implements FeedbackFieldCollecto
             return;
         }
 
-        throw new \RuntimeException("Attempted to use FeedbackFieldCollector while it was not expected");
+        throw new \RuntimeException('Attempted to use FeedbackFieldCollector while it was not expected');
     }
 }

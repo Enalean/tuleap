@@ -55,7 +55,7 @@ final class MetadataEqualComparisonFromWhereBuilder implements MetadataCompariso
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
-        throw new \RuntimeException("Metadata is not supported here.");
+        throw new \RuntimeException('Metadata is not supported here.');
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
@@ -65,22 +65,22 @@ final class MetadataEqualComparisonFromWhereBuilder implements MetadataCompariso
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
-        throw new \RuntimeException("Metadata is not supported here.");
+        throw new \RuntimeException('Metadata is not supported here.');
     }
 
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
-        throw new \RuntimeException("Metadata is not supported here.");
+        throw new \RuntimeException('Metadata is not supported here.');
     }
 
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
-        throw new \RuntimeException("Metadata is not supported here.");
+        throw new \RuntimeException('Metadata is not supported here.');
     }
 
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
-        throw new \RuntimeException("Metadata is not supported here.");
+        throw new \RuntimeException('Metadata is not supported here.');
     }
 
     private function searchComment(Comparison $comparison, $value): IProvideParametrizedFromAndWhereSQLFragments

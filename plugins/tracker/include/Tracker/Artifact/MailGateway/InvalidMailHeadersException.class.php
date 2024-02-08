@@ -22,6 +22,6 @@ class Tracker_Artifact_MailGateway_InvalidMailHeadersException extends Tracker_E
 {
     public function __construct()
     {
-        parent::__construct("Mail headers are not valid");
+        parent::__construct('Mail headers are not valid');
     }
 }

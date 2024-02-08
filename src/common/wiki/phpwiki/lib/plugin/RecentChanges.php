@@ -72,7 +72,7 @@ class _RecentChanges_Formatter
         $page = $rev->getPage();
         return WikiURL(
             $page,
-            ['action' => _("PageHistory")],
+            ['action' => _('PageHistory')],
             $this->_absurls
         );
     }
@@ -124,9 +124,9 @@ class _RecentChanges_Formatter
 
         switch ($this->status($rev)) {
             case 'deleted':
-                return _("Deleted");
+                return _('Deleted');
             case 'new':
-                return _("New page");
+                return _('New page');
             default:
                 return '';
         }
@@ -149,13 +149,13 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
     public function diffLink($rev)
     {
         global $WikiTheme;
-        return $WikiTheme->makeButton(_("(diff)"), $this->diffURL($rev), 'wiki-rc-action');
+        return $WikiTheme->makeButton(_('(diff)'), $this->diffURL($rev), 'wiki-rc-action');
     }
 
     public function historyLink($rev)
     {
         global $WikiTheme;
-        return $WikiTheme->makeButton(_("(hist)"), $this->historyURL($rev), 'wiki-rc-action');
+        return $WikiTheme->makeButton(_('(hist)'), $this->historyURL($rev), 'wiki-rc-action');
     }
 
     public function pageLink($rev, $link_text = false)
@@ -199,9 +199,9 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
         }
         return HTML::strong(
             ['class' => 'wiki-summary'],
-            "[",
+            '[',
             TransformLinks($summary, $rev->get('markup'), $rev->getPageName()),
-            "]"
+            ']'
         );
     }
 
@@ -212,7 +212,7 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
         $rss_url = $request->getURLtoSelf(['format' => 'rss']);
         return HTML::small(
             ['style' => 'font-weight:normal;vertical-align:middle;'],
-            $WikiTheme->makeButton("RSS", $rss_url, 'rssicon')
+            $WikiTheme->makeButton('RSS', $rss_url, 'rssicon')
         );
     }
 
@@ -223,7 +223,7 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
         $rss_url = $request->getURLtoSelf(['format' => 'rss2']);
         return HTML::small(
             ['style' => 'font-weight:normal;vertical-align:middle;'],
-            $WikiTheme->makeButton("RSS2", $rss_url, 'rssicon')
+            $WikiTheme->makeButton('RSS2', $rss_url, 'rssicon')
         );
     }
 
@@ -232,19 +232,19 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
         extract($this->_args);
         // FIXME: say something about show_all.
         if ($show_major && $show_minor) {
-            $edits = _("edits");
+            $edits = _('edits');
         } elseif ($show_major) {
-            $edits = _("major edits");
+            $edits = _('major edits');
         } else {
-            $edits = _("minor edits");
+            $edits = _('minor edits');
         }
-        if (isset($caption) and $caption == _("Recent Comments")) {
-            $edits = _("comments");
+        if (isset($caption) and $caption == _('Recent Comments')) {
+            $edits = _('comments');
         }
 
         if ($timespan = $days > 0) {
             if (intval($days) != $days) {
-                $days = sprintf("%.1f", $days);
+                $days = sprintf('%.1f', $days);
             }
         }
         $lmt = abs($limit);
@@ -267,13 +267,13 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
             if ($timespan) {
                 if (intval($days) == 1) {
                     $desc = fmt(
-                        "The %d most recent %s during the past day are listed below.",
+                        'The %d most recent %s during the past day are listed below.',
                         $limit,
                         $edits
                     );
                 } else {
                     $desc = fmt(
-                        "The %d most recent %s during the past %s days are listed below.",
+                        'The %d most recent %s during the past %s days are listed below.',
                         $limit,
                         $edits,
                         $days
@@ -281,7 +281,7 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
                 }
             } else {
                 $desc = fmt(
-                    "The %d most recent %s are listed below.",
+                    'The %d most recent %s are listed below.',
                     $limit,
                     $edits
                 );
@@ -290,13 +290,13 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
             if ($timespan) {
                 if (intval($days) == 1) {
                     $desc = fmt(
-                        "The %d oldest %s during the past day are listed below.",
+                        'The %d oldest %s during the past day are listed below.',
                         $lmt,
                         $edits
                     );
                 } else {
                     $desc = fmt(
-                        "The %d oldest %s during the past %s days are listed below.",
+                        'The %d oldest %s during the past %s days are listed below.',
                         $lmt,
                         $edits,
                         $days
@@ -304,7 +304,7 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
                 }
             } else {
                 $desc = fmt(
-                    "The %d oldest %s are listed below.",
+                    'The %d oldest %s are listed below.',
                     $lmt,
                     $edits
                 );
@@ -313,18 +313,18 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
             if ($timespan) {
                 if (intval($days) == 1) {
                     $desc = fmt(
-                        "The most recent %s during the past day are listed below.",
+                        'The most recent %s during the past day are listed below.',
                         $edits
                     );
                 } else {
                     $desc = fmt(
-                        "The most recent %s during the past %s days are listed below.",
+                        'The most recent %s during the past %s days are listed below.',
                         $edits,
                         $days
                     );
                 }
             } else {
-                $desc = fmt("All %s are listed below.", $edits);
+                $desc = fmt('All %s are listed below.', $edits);
             }
         }
         return $desc;
@@ -338,7 +338,7 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
     public function title()
     {
         extract($this->_args);
-        return [$show_minor ? _("RecentEdits") : _("RecentChanges"),
+        return [$show_minor ? _('RecentEdits') : _('RecentChanges'),
             ' ',
             $this->rss_icon(), HTML::raw('&nbsp;'), $this->rss2_icon(),
             $this->sidebar_link(),
@@ -347,30 +347,30 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
 
     public function empty_message()
     {
-        if (isset($this->_args['caption']) and $this->_args['caption'] == _("Recent Comments")) {
-            return _("No comments found");
+        if (isset($this->_args['caption']) and $this->_args['caption'] == _('Recent Comments')) {
+            return _('No comments found');
         } else {
-            return _("No changes found");
+            return _('No changes found');
         }
     }
 
     public function sidebar_link()
     {
         extract($this->_args);
-        $pagetitle = $show_minor ? _("RecentEdits") : _("RecentChanges");
+        $pagetitle = $show_minor ? _('RecentEdits') : _('RecentChanges');
 
         global $request;
         $sidebarurl = WikiURL($pagetitle, ['format' => 'sidebar'], 'absurl');
 
         $addsidebarjsfunc =
             "function addPanel() {\n"
-            . "    window.sidebar.addPanel (\"" . sprintf("%s - %s", WIKI_NAME, $pagetitle) . "\",\n"
+            . '    window.sidebar.addPanel ("' . sprintf('%s - %s', WIKI_NAME, $pagetitle) . "\",\n"
             . "       \"$sidebarurl\",\"\");\n"
             . "}\n";
         $jsf              = JavaScript($addsidebarjsfunc);
 
         global $WikiTheme;
-        $sidebar_button    = $WikiTheme->makeButton("sidebar", 'javascript:addPanel();', 'sidebaricon');
+        $sidebar_button    = $WikiTheme->makeButton('sidebar', 'javascript:addPanel();', 'sidebaricon');
         $addsidebarjsclick = asXML(HTML::small(['style' => 'font-weight:normal;vertical-align:middle;'], $sidebar_button));
         $jsc               = JavaScript("if ((typeof window.sidebar == 'object') &&\n"
                                 . "    (typeof window.sidebar.addPanel == 'function'))\n"
@@ -479,7 +479,7 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
     {
         //title click opens the normal RC or RE page in the main browser frame
         extract($this->_args);
-        $titlelink = WikiLink($show_minor ? _("RecentEdits") : _("RecentChanges"));
+        $titlelink = WikiLink($show_minor ? _('RecentEdits') : _('RecentChanges'));
         $titlelink->setAttr('target', '_content');
         return HTML($this->logo(), $titlelink);
     }
@@ -547,9 +547,9 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
         }
         return HTML::strong(
             ['class' => 'wiki-summary'],
-            "[",
+            '[',
             /*TransformLinks(*/$summary, /* $rev->get('markup')),*/
-            "]"
+            ']'
         );
     }
 
@@ -568,8 +568,8 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
 
         printf("<head>\n");
         extract($this->_args);
-        $title = WIKI_NAME . $show_minor ? _("RecentEdits") : _("RecentChanges");
-        printf("<title>" . $title . "</title>\n");
+        $title = WIKI_NAME . $show_minor ? _('RecentEdits') : _('RecentChanges');
+        printf('<title>' . $title . "</title>\n");
         global $WikiTheme;
         $css = $WikiTheme->getCSS();
         $css->PrintXML();
@@ -724,10 +724,10 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
 
     public function textinput_properties()
     {
-        return ['title' => _("Search"),
-            'description' => _("Title Search"),
+        return ['title' => _('Search'),
+            'description' => _('Title Search'),
             'name' => 's',
-            'link' => WikiURL(_("TitleSearch"), false, 'absurl'),
+            'link' => WikiURL(_('TitleSearch'), false, 'absurl'),
         ];
     }
 
@@ -738,7 +738,7 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
         $rc_url = WikiURL($request->getArg('pagename'), false, 'absurl');
         return ['title' => WIKI_NAME,
             'link' => $rc_url,
-            'description' => _("RecentChanges"),
+            'description' => _('RecentChanges'),
             'dc:date' => Iso8601DateTime(time()),
             'dc:language' => $GLOBALS['LANG'],
         ];
@@ -881,15 +881,15 @@ class WikiPlugin_RecentChanges extends WikiPlugin
 {
     public function getName()
     {
-        return _("RecentChanges");
+        return _('RecentChanges');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.108 $"
+            '$Revision: 1.108 $'
         );
     }
 
@@ -1003,7 +1003,7 @@ class WikiPlugin_RecentChanges extends WikiPlugin
             } elseif ($format == 'rss2') {
                 $fmt_class = '_RecentChanges_Rss2Formatter';
             } elseif ($format == 'rss091') {
-                include_once "lib/RSSWriter091.php";
+                include_once 'lib/RSSWriter091.php';
                 $fmt_class = '_RecentChanges_RssFormatter091';
             } elseif ($format == 'sidebar') {
                 $fmt_class = '_RecentChanges_SideBarFormatter';
@@ -1066,11 +1066,11 @@ class DayButtonBar extends HtmlElement
         // Custom caption
         if (! $caption) {
             if ($show_minor) {
-                $caption = _("Show minor edits for:");
+                $caption = _('Show minor edits for:');
             } elseif ($show_all) {
-                $caption = _("Show all changes for:");
+                $caption = _('Show all changes for:');
             } else {
-                $caption = _("Show changes for:");
+                $caption = _('Show changes for:');
             }
         }
 
@@ -1080,7 +1080,7 @@ class DayButtonBar extends HtmlElement
         $sep = $WikiTheme->getButtonSeparator();
 
         $n = 0;
-        foreach (explode(",", $daylist) as $days) {
+        foreach (explode(',', $daylist) as $days) {
             if ($n++) {
                 $this->pushContent($sep);
             }
@@ -1093,11 +1093,11 @@ class DayButtonBar extends HtmlElement
         global $WikiTheme, $request;
 
         if ($days == 1) {
-            $label = _("1 day");
+            $label = _('1 day');
         } elseif ($days < 1) {
-            $label = "..."; //alldays
+            $label = '...'; //alldays
         } else {
-            $label = sprintf(_("%s days"), abs($days));
+            $label = sprintf(_('%s days'), abs($days));
         }
 
         $url = $request->getURLtoSelf(['action' => $request->getArg('action'), 'days' => $days]);

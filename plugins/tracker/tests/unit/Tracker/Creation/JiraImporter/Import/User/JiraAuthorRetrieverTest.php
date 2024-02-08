@@ -60,7 +60,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->forge_user = \Mockery::mock(\PFUser::class);
-        $this->forge_user->shouldReceive('getRealName')->andReturn("Tracker Importer (forge__tracker_importer_user)");
+        $this->forge_user->shouldReceive('getRealName')->andReturn('Tracker Importer (forge__tracker_importer_user)');
 
         $this->user_manager = \Mockery::mock(\UserManager::class);
         $this->logger       = \Mockery::mock(LoggerInterface::class);
@@ -85,7 +85,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTheTuleapUserIfEmailAddressMatchesOnce(): void
     {
         $tuleap_user = \Mockery::mock(\PFUser::class);
-        $tuleap_user->shouldReceive('getRealName')->andReturn("John Doe");
+        $tuleap_user->shouldReceive('getRealName')->andReturn('John Doe');
         $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')->with('johndoe@example.com')->andReturn([$tuleap_user]);
 
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
@@ -97,13 +97,13 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'emailAddress' => 'johndoe@example.com',
         ]);
 
-        $this->assertEquals("John Doe", $submitter->getRealName());
+        $this->assertEquals('John Doe', $submitter->getRealName());
     }
 
     public function testItReturnsForgeUserWhenMoreThanOneEmailAddressMatchesOnTuleapSide(): void
     {
         $tuleap_user = \Mockery::mock(\PFUser::class);
-        $tuleap_user->shouldReceive('getRealName')->andReturn("John Doe");
+        $tuleap_user->shouldReceive('getRealName')->andReturn('John Doe');
         $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')
             ->with('johndoe@example.com')
             ->andReturn([
@@ -121,13 +121,13 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'emailAddress' => 'johndoe@example.com',
         ]);
 
-        $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
+        $this->assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
     }
 
     public function testItReturnsForgeUserWhenNoEmailAddressMatchesOnTuleapSide(): void
     {
         $tuleap_user = \Mockery::mock(\PFUser::class);
-        $tuleap_user->shouldReceive('getRealName')->andReturn("John Doe");
+        $tuleap_user->shouldReceive('getRealName')->andReturn('John Doe');
         $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')
             ->with('johndoe@example.com')
             ->andReturn([]);
@@ -141,7 +141,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'emailAddress' => 'johndoe@example.com',
         ]);
 
-        $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
+        $this->assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
     }
 
     public function testItReturnsForgeUserUserDoesNotShareHisEmailAddress(): void
@@ -154,7 +154,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'displayName' => 'John Doe',
         ]);
 
-        $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
+        $this->assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
     }
 
     public function testItDoesNotCallUserManagerWhenUserExistsInCache(): void
@@ -172,6 +172,6 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'displayName' => 'John Doe',
         ]);
 
-        $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
+        $this->assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
     }
 }

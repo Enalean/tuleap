@@ -85,7 +85,7 @@ class CrossTrackerArtifactReportFactory
         $limit,
         $offset,
     ) {
-        if ($report->getExpertQuery() === "") {
+        if ($report->getExpertQuery() === '') {
             return $this->getArtifactsFromGivenTrackers(
                 $report->getTrackers(),
                 $limit,

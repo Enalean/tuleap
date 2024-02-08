@@ -44,7 +44,7 @@ final class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $lock = new Lock(
             1,
-            "",
+            '',
             $lock_owner,
             1548080140
         );
@@ -63,7 +63,7 @@ final class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $lock = new Lock(
             1,
-            "",
+            '',
             $lock_owner,
             1548080140
         );
@@ -81,7 +81,7 @@ final class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $lock = new Lock(
             1,
-            "",
+            '',
             $lock_owner,
             1548080140
         );

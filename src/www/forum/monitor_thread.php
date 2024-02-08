@@ -116,18 +116,18 @@ if ($request->valid($vFrm)) {
         $user_id = UserManager::instance()->getCurrentUser()->getId();
 
         if (user_monitor_forum($forum_id, $user_id)) {
-            $disabled = "disabled";
+            $disabled = 'disabled';
         } else {
-            $disabled = "";
+            $disabled = '';
         }
 
         $i = 0;
         while ($i < $rows) {
             $thr_id = db_result($result, $i, 'thread_id');
             if (user_monitor_forum_thread($thr_id, $user_id)) {
-                $monitored = "CHECKED";
+                $monitored = 'CHECKED';
             } else {
-                $monitored = "";
+                $monitored = '';
             }
 
             $ret_val .= '<script language="JavaScript">
@@ -154,7 +154,7 @@ if ($request->valid($vFrm)) {
             '<INPUT TYPE="checkbox" ' . $disabled . ' NAME="mthread[]" VALUE="' . $purifier->purify($thr_id) . '" ' . $monitored . '></TD>' .
             '<TD><A HREF="/forum/message.php?msg_id=' .
             db_result($result, $i, 'msg_id') . '">' .
-            '<IMG SRC="' . util_get_image_theme("msg.png") . '" BORDER=0 HEIGHT=12 WIDTH=10> ';
+            '<IMG SRC="' . util_get_image_theme('msg.png') . '" BORDER=0 HEIGHT=12 WIDTH=10> ';
             $monitorer = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
             $ret_val  .= db_result($result, $i, 'subject') . '</A></TD>' .
             '<TD>' . UserHelper::instance()->getLinkOnUser($monitorer) . '</TD>' .

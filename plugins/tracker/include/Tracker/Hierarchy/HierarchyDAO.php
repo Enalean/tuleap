@@ -277,7 +277,7 @@ class HierarchyDAO extends DataAccessObject
      */
     public function getParentsInHierarchy(int $artifact_id): array
     {
-        $sql = "SELECT parent_art.*
+        $sql = 'SELECT parent_art.*
                 FROM           tracker_changeset_value_artifactlink artlink
                     INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
                     INNER JOIN tracker_changeset_value              cv         ON (cv.id = artlink.changeset_value_id)
@@ -286,7 +286,7 @@ class HierarchyDAO extends DataAccessObject
                     INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.parent_id = parent_art.tracker_id AND hierarchy.child_id = child_art.tracker_id)
                 WHERE artlink.artifact_id = ?
                     AND parent_tracker.deletion_date IS NULL
-                    ORDER BY parent_art.id";
+                    ORDER BY parent_art.id';
 
         return $this->getDB()->run($sql, $artifact_id);
     }

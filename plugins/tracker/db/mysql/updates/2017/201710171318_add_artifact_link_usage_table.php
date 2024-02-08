@@ -22,7 +22,7 @@ class b201710171318_add_artifact_link_usage_table extends \Tuleap\ForgeUpgrade\B
 {
     public function description()
     {
-        return "Add table to store the artifact link usage per project";
+        return 'Add table to store the artifact link usage per project';
     }
 
     public function preUp()
@@ -38,9 +38,9 @@ class b201710171318_add_artifact_link_usage_table extends \Tuleap\ForgeUpgrade\B
 
     private function createTable()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_tracker_projects_use_artifactlink_types (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_tracker_projects_use_artifactlink_types (
             project_id INT(11) UNSIGNED PRIMARY KEY
-        ) ENGINE=InnoDB";
+        ) ENGINE=InnoDB';
 
         $this->db->createTable('plugin_tracker_projects_use_artifactlink_types', $sql);
 

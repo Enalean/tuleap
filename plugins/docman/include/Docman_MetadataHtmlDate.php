@@ -34,7 +34,7 @@ class Docman_MetadataHtmlDate extends \Docman_MetadataHtml
             $selected = $this->md->getDefaultValue();
         }
         if ($selected != '' && $selected != 0) {
-            $selected = \date("Y-n-j", $selected);
+            $selected = \date('Y-n-j', $selected);
         } else {
             $selected = '';
         }

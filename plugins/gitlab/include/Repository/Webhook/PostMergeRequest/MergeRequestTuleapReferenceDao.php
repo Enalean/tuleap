@@ -77,12 +77,12 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
      */
     public function searchMergeRequestInRepositoryWithId(int $integration_id, int $merge_request_id): ?array
     {
-        $sql = "
+        $sql = '
             SELECT title, state, description, source_branch, created_at, author_name, author_email
             FROM plugin_gitlab_repository_integration_merge_request_info
             WHERE integration_id = ?
                 AND merge_request_id = ?
-        ";
+        ';
 
         return $this->getDB()->row($sql, $integration_id, $merge_request_id);
     }

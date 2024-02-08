@@ -377,7 +377,7 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo2        = $this->givenARepository(456);
         $repo2->setName('megaRepoGit');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('warning', "Got an unexpected error while forking " . $repo2->getName() . ": " . $errorMessage);
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('warning', 'Got an unexpected error while forking ' . $repo2->getName() . ': ' . $errorMessage);
 
         $this->backend->shouldReceive('fork')->andThrow(new Exception($errorMessage))->once();
 

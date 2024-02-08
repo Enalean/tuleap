@@ -36,15 +36,15 @@ class WikiPlugin_UserPreferences extends WikiPlugin
 
     public function getName()
     {
-        return _("UserPreferences");
+        return _('UserPreferences');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.35 $"
+            '$Revision: 1.35 $'
         );
     }
 
@@ -89,7 +89,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
 //            foreach ($no_args as $key => $value) {
 //                $no_args[$value] = false;
 //            }
-            $no_args['errmsg'] = HTML(HTML::h2(_("Error: The user HomePage must be a valid WikiWord. Sorry, UserPreferences cannot be saved."), HTML::hr()));
+            $no_args['errmsg'] = HTML(HTML::h2(_('Error: The user HomePage must be a valid WikiWord. Sorry, UserPreferences cannot be saved.'), HTML::hr()));
             $no_args['isForm'] = false;
             return Template('userprefs', $no_args);
         }
@@ -111,11 +111,11 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                     $default_prefs['userid'] = $user->UserName();
                     $user->setPreferences($default_prefs);
                     $request->_setUser($user);
-                    $request->setArg("verify", false);
-                    $request->setArg("delete", false);
+                    $request->setArg('verify', false);
+                    $request->setArg('delete', false);
                     $alert = new Alert(
-                        _("Message"),
-                        _("Your UserPreferences have been successfully deleted.")
+                        _('Message'),
+                        _('Your UserPreferences have been successfully deleted.')
                     );
                     $alert->show();
                     return;
@@ -126,17 +126,17 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                         ],
                         HiddenInputs(['verify' => 1]),
                         HiddenInputs($request->getArgs()),
-                        HTML::p(_("Do you really want to delete all your UserPreferences?")),
+                        HTML::p(_('Do you really want to delete all your UserPreferences?')),
                         HTML::p(
-                            Button('submit:delete', _("Yes"), 'delete'),
+                            Button('submit:delete', _('Yes'), 'delete'),
                             HTML::Raw('&nbsp;'),
-                            Button('cancel', _("Cancel"))
+                            Button('cancel', _('Cancel'))
                         )
                     );
                 } elseif ($rp = $request->getArg('pref')) {
                     // replace only changed prefs in $pref with those from request
                     if (! empty($rp['passwd']) and ($rp['passwd2'] != $rp['passwd'])) {
-                        $errmsg = _("Wrong password. Try again.");
+                        $errmsg = _('Wrong password. Try again.');
                     } else {
                         //trigger_error("DEBUG: reading prefs from request".print_r($rp));
                         //trigger_error("DEBUG: writing prefs with setPreferences".print_r($pref));
@@ -161,20 +161,20 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                                     $passchanged = $user->changePass($rp['passwd']);
                                 }
                                 if ($passchanged) {
-                                    $errmsg = _("Password updated.");
+                                    $errmsg = _('Password updated.');
                                 } else {
-                                    $errmsg = _("Password was not changed.");
+                                    $errmsg = _('Password was not changed.');
                                 }
                             } else {
-                                $errmsg = _("Password cannot be changed.");
+                                $errmsg = _('Password cannot be changed.');
                             }
                         }
                         if (! $num) {
-                            $errmsg .= " " . _("No changes.");
+                            $errmsg .= ' ' . _('No changes.');
                         } else {
                             $request->_setUser($user);
                             $pref    = $user->_prefs;
-                            $errmsg .= sprintf(_("%d UserPreferences fields successfully updated."), $num);
+                            $errmsg .= sprintf(_('%d UserPreferences fields successfully updated.'), $num);
                         }
                     }
                     $args['errmsg'] = HTML(HTML::h2($errmsg), HTML::hr());

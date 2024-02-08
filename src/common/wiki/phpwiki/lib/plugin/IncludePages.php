@@ -27,26 +27,26 @@ rcs_id('$Id: IncludePages.php,v 1.2 2005/09/30 18:41:39 uckelman Exp $');
  * author:  ReiniUrban
  */
 
-include_once("lib/plugin/IncludePage.php");
+include_once('lib/plugin/IncludePage.php');
 
 class WikiPlugin_IncludePages extends WikiPlugin_IncludePage
 {
     public function getName()
     {
-        return _("IncludePages");
+        return _('IncludePages');
     }
 
     public function getDescription()
     {
-        return _("Include multiple pages.");
+        return _('Include multiple pages.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.2 $"
+            '$Revision: 1.2 $'
         );
     }
 
@@ -71,15 +71,15 @@ class WikiPlugin_IncludePages extends WikiPlugin_IncludePage
 
         if (is_string($args['exclude']) and ! empty($args['exclude'])) {
             $args['exclude'] = explodePageList($args['exclude']);
-            $argstr          = preg_replace("/exclude=\S*\s/", "", $argstr);
+            $argstr          = preg_replace('/exclude=\S*\s/', '', $argstr);
         } elseif (is_array($args['exclude'])) {
-            $argstr = preg_replace("/exclude=<\?plugin-list.*?\>/", "", $argstr);
+            $argstr = preg_replace('/exclude=<\?plugin-list.*?\>/', '', $argstr);
         }
         if (is_string($args['pages']) and ! empty($args['pages'])) {
             $args['pages'] = explodePageList($args['pages']);
-            $argstr        = preg_replace("/pages=\S*\s/", "", $argstr);
+            $argstr        = preg_replace('/pages=\S*\s/', '', $argstr);
         } elseif (is_array($args['pages'])) {
-            $argstr = preg_replace("/pages=<\?plugin-list.*?\>/", "", $argstr);
+            $argstr = preg_replace('/pages=<\?plugin-list.*?\>/', '', $argstr);
         }
 
         foreach ($args['pages'] as $page) {

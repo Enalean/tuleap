@@ -30,7 +30,7 @@ final class EnforcedEmptyPatternException extends FilenamePatternException
         parent::__construct(
             dgettext(
                 'tuleap-docman',
-                "You cannot enforce an empty filename pattern"
+                'You cannot enforce an empty filename pattern'
             )
         );
     }

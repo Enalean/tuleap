@@ -58,7 +58,7 @@ class DateScale extends LinearScale
     // CONSTRUCTOR
     public function __construct($aMin = 0, $aMax = 0, $aType = 'x')
     {
-        assert($aType == "x");
+        assert($aType == 'x');
         assert($aMin <= $aMax);
 
         $this->type       = $aType;

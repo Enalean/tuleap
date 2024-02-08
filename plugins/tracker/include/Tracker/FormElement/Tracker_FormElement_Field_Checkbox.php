@@ -74,7 +74,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
             }
             $checked = in_array($bind_id, $selected_values_ids);
             $html   .= '<li>';
-            $html   .= '<span class="tracker-read-only-checkbox-list-item">' . ($checked ? "[x]" : "[ ]") . '</span> ' . $this->getBind()->formatChangesetValueWithoutLink($bind_value);
+            $html   .= '<span class="tracker-read-only-checkbox-list-item">' . ($checked ? '[x]' : '[ ]') . '</span> ' . $this->getBind()->formatChangesetValueWithoutLink($bind_value);
             $html   .= '</li>';
         }
         $html .= '</ul>';

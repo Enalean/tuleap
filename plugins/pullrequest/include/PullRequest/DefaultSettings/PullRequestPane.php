@@ -46,7 +46,7 @@ final class PullRequestPane extends Pane
     ) {
         parent::__construct(
             dgettext('tuleap-pullrequest', 'Pull requests'),
-            GIT_BASE_URL . "/?" . http_build_query(
+            GIT_BASE_URL . '/?' . http_build_query(
                 [
                     'action'   => 'admin-default-settings',
                     'group_id' => $project->getID(),
@@ -65,7 +65,7 @@ final class PullRequestPane extends Pane
      */
     public function content()
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(PULLREQUEST_BASE_DIR . "/templates");
+        $renderer = TemplateRendererFactory::build()->getRenderer(PULLREQUEST_BASE_DIR . '/templates');
 
         $merge_setting = $this->merge_setting_retriever->getMergeSettingForProject($this->project);
 

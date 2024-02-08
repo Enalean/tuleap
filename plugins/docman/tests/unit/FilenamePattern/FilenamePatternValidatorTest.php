@@ -27,21 +27,21 @@ final class FilenamePatternValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnTrueWhenThereIsNoPattern(): void
     {
-        self::assertTrue(FilenamePatternValidator::isPatternValid(""));
+        self::assertTrue(FilenamePatternValidator::isPatternValid(''));
     }
 
     public function testItReturnTrueWhenThePatternContainsTheTitleVariable(): void
     {
-        self::assertTrue(FilenamePatternValidator::isPatternValid("Un gros billet-\${TITLE}-\${STATUS}"));
+        self::assertTrue(FilenamePatternValidator::isPatternValid('Un gros billet-${TITLE}-${STATUS}'));
     }
 
     public function testItReturnTrueWhenThePatternContainsTheIdVariable(): void
     {
-        self::assertTrue(FilenamePatternValidator::isPatternValid("ter ter-\${ID}-\${STATUS}"));
+        self::assertTrue(FilenamePatternValidator::isPatternValid('ter ter-${ID}-${STATUS}'));
     }
 
     public function testItReturnFalseWhenThePatternDoesNotContainTheMandatoryVariable(): void
     {
-        self::assertFalse(FilenamePatternValidator::isPatternValid("some text-\${VERSION_NAME}-\${STATUS}-text"));
+        self::assertFalse(FilenamePatternValidator::isPatternValid('some text-${VERSION_NAME}-${STATUS}-text'));
     }
 }

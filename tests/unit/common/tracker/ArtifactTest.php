@@ -39,7 +39,7 @@ final class ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
         $a->method('validArtifact')->willReturn(true);
         $a->method('existDependency')->willReturn(false);
         $changes = null;
-        self::assertTrue($a->addDependencies("171", $changes, false), "It should be possible to add a dependency like 171");
+        self::assertTrue($a->addDependencies('171', $changes, false), 'It should be possible to add a dependency like 171');
     }
 
     public function testAddWrongDependency(): void
@@ -55,7 +55,7 @@ final class ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
         //$a->setReturnValue('existDependency', false);
         $changes = null;
         $GLOBALS['Response']->expects(self::exactly(2))->method('addFeedback');
-        self::assertFalse($a->addDependencies("99999", $changes, false), "It should be possible to add a dependency like 99999 because it is not a valid artifact");
+        self::assertFalse($a->addDependencies('99999', $changes, false), 'It should be possible to add a dependency like 99999 because it is not a valid artifact');
     }
 
     public function testAddDependenciesDouble(): void
@@ -70,7 +70,7 @@ final class ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
         $a->method('validArtifact')->willReturn(true);
         $a->method('existDependency')->willReturnOnConsecutiveCalls(false, true);
         $changes = null;
-        self::assertTrue($a->addDependencies("171, 171", $changes, false), "It should be possible to add two identical dependencies in the same time, without getting an exception");
+        self::assertTrue($a->addDependencies('171, 171', $changes, false), 'It should be possible to add two identical dependencies in the same time, without getting an exception');
     }
 
     public function testFormatFollowUp(): void

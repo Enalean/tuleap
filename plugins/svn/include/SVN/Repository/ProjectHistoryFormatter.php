@@ -30,7 +30,7 @@ class ProjectHistoryFormatter
 
     public function getFullHistory(Repository $repository)
     {
-        return "Repository: " . $repository->getName() .
+        return 'Repository: ' . $repository->getName() .
             PHP_EOL .
             implode(PHP_EOL, $this->messages);
     }
@@ -51,10 +51,10 @@ class ProjectHistoryFormatter
 
     public function getHookConfigHistory(array $hook_config)
     {
-        return HookConfig::MANDATORY_REFERENCE . ": " .
+        return HookConfig::MANDATORY_REFERENCE . ': ' .
             $this->extractHookReadableValue($hook_config, HookConfig::MANDATORY_REFERENCE) .
             PHP_EOL .
-            HookConfig::COMMIT_MESSAGE_CAN_CHANGE . ": " .
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE . ': ' .
             $this->extractHookReadableValue($hook_config, HookConfig::COMMIT_MESSAGE_CAN_CHANGE);
     }
 
@@ -70,9 +70,9 @@ class ProjectHistoryFormatter
 
     public function getImmutableTagsHistory(ImmutableTag $immutable_tag)
     {
-         return "Path:" . PHP_EOL .
+         return 'Path:' . PHP_EOL .
             $immutable_tag->getPathsAsString() . PHP_EOL .
-            "Whitelist:" . PHP_EOL .
+            'Whitelist:' . PHP_EOL .
             $immutable_tag->getWhitelistAsString();
     }
 
@@ -83,7 +83,7 @@ class ProjectHistoryFormatter
 
     public function getAccessFileHistory($access_file)
     {
-        return "Access file:" . PHP_EOL . $access_file;
+        return 'Access file:' . PHP_EOL . $access_file;
     }
 
     /**
@@ -95,12 +95,12 @@ class ProjectHistoryFormatter
     {
         $message = '';
         foreach ($mail_notifications as $mail_notification) {
-            $message .= "Path: " . $mail_notification->getPath() . PHP_EOL;
-            $message .= "Emails: " . $mail_notification->getNotifiedMailsAsString() . PHP_EOL;
-            $message .= "Users: " . $mail_notification->getNotifiedUsersAsString() . PHP_EOL;
-            $message .= "User Groups: " . $mail_notification->getNotifiedUserGroupsAsString() . PHP_EOL;
+            $message .= 'Path: ' . $mail_notification->getPath() . PHP_EOL;
+            $message .= 'Emails: ' . $mail_notification->getNotifiedMailsAsString() . PHP_EOL;
+            $message .= 'Users: ' . $mail_notification->getNotifiedUsersAsString() . PHP_EOL;
+            $message .= 'User Groups: ' . $mail_notification->getNotifiedUserGroupsAsString() . PHP_EOL;
         }
 
-        $this->messages[] = "Notifications:" . PHP_EOL . $message;
+        $this->messages[] = 'Notifications:' . PHP_EOL . $message;
     }
 }

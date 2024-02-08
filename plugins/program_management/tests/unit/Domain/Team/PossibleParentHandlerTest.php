@@ -127,7 +127,7 @@ final class PossibleParentHandlerTest extends TestCase
             )
         );
         assertEquals(
-            ["A fine feature"],
+            ['A fine feature'],
             array_map(
                 static fn(Artifact $feature): ?string => $feature->getTitle(),
                 $this->event->getPossibleParents()->getArtifacts()

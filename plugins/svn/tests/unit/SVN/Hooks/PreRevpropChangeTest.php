@@ -58,7 +58,7 @@ final class PreRevpropChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repo_manager          = $this->createMock(RepositoryManager::class);
         $this->hook_config           = $this->createMock(HookConfig::class);
         $this->hook_config_retriever = $this->createMock(HookConfigRetriever::class);
-        $this->repo_path             = "FOO";
+        $this->repo_path             = 'FOO';
 
         $this->repo_manager->method('getRepositoryFromSystemPath')->willReturn($repository);
         $this->hook_config_retriever->method('getHookConfig')->willReturn($this->hook_config);

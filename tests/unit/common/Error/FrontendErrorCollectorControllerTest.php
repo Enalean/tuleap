@@ -67,7 +67,7 @@ final class FrontendErrorCollectorControllerTest extends TestCase
     public function testLogsCollectedFrontendErrors(): void
     {
         $expected_user_agent   = 'My User Agent';
-        $expected_error_string = "Some error...";
+        $expected_error_string = 'Some error...';
         $request               = (new NullServerRequest())
             ->withHeader('User-Agent', $expected_user_agent)
             ->withBody(

@@ -149,7 +149,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 
     public function buildPresenter(Artifact $artifact, $can_burnup_be_regenerated, PFUser $user)
     {
-        $warning     = "";
+        $warning     = '';
         $burnup_data = null;
         try {
             $burnup_data = $this->getBurnupDataBuilder()->buildBurnupData($artifact, $user);
@@ -157,7 +157,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             if ($burnup_data->isBeingCalculated()) {
                 $warning = dgettext(
                     'tuleap-agiledashboard',
-                    "Burnup is under calculation. It will be available in few minutes."
+                    'Burnup is under calculation. It will be available in few minutes.'
                 );
             }
         } catch (Tracker_FormElement_Chart_Field_Exception $e) {

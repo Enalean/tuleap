@@ -81,7 +81,7 @@ final class FeatureFlagControllerTest extends TestCase
     {
         ForgeConfig::set(ForgeConfig::FEATURE_FLAG_PREFIX . 'feature_flag_not_feature_flag', null);
 
-        $request = (new NullServerRequest())->withQueryParams(["name" => "feature_flag_not_feature_flag"]);
+        $request = (new NullServerRequest())->withQueryParams(['name' => 'feature_flag_not_feature_flag']);
 
         $response = $this->handle($request);
 
@@ -95,7 +95,7 @@ final class FeatureFlagControllerTest extends TestCase
     public function testItReturnsTheFeatureFlagValue(): void
     {
         $request = (new NullServerRequest())->withQueryParams(
-            ["name" => ForgeConfig::FEATURE_FLAG_PREFIX . self::FEATURE_FLAG_KEY]
+            ['name' => ForgeConfig::FEATURE_FLAG_PREFIX . self::FEATURE_FLAG_KEY]
         );
 
         $response = $this->handle($request);

@@ -153,8 +153,8 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
         $owner_type,
         MappingRegistry $mapping_registry,
     ) {
-        $sql = "INSERT INTO widget_rss (owner_id, owner_type, title, url)
-        SELECT  " . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, url
+        $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url)
+        SELECT  ' . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, url
         FROM widget_rss
         WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' ";
         $res = db_query($sql);
@@ -163,7 +163,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
 
     public function loadContent($id)
     {
-        $sql = "SELECT * FROM widget_rss WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_es($id);
+        $sql = 'SELECT * FROM widget_rss WHERE owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_es($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data             = db_fetch_array($res);
@@ -219,7 +219,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
             }
 
             if ($url || $title) {
-                $sql  = "UPDATE widget_rss SET " . $title . ", " . $url . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei((int) $request->get('content_id'));
+                $sql  = 'UPDATE widget_rss SET ' . $title . ', ' . $url . ' WHERE owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei((int) $request->get('content_id'));
                 $res  = db_query($sql);
                 $done = true;
             }

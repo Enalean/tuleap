@@ -74,11 +74,11 @@ class Docman_View_Table extends Docman_View_Browse
         while ($itemIterator->valid()) {
             $item    = $itemIterator->current();
             $trclass = html_get_alt_row_color($altRowClass++);
-            $table  .=  "<tr class=\"" . $trclass . "\">\n";
+            $table  .=  '<tr class="' . $trclass . "\">\n";
             $ci->rewind();
             while ($ci->valid()) {
                 $column            = $ci->current();
-                $table            .= "<td>";
+                $table            .= '<td>';
                 $table            .= $column->getTableBox($item, $this, $params);
                 $this->javascript .= $column->getJavascript($item, $this);
                 $table            .= "</td>\n";

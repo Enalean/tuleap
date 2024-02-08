@@ -58,7 +58,7 @@ class FieldUpdator
         $description_fields = $this->fields_factory->getAllDescriptionFields();
 
         foreach ($description_fields as $field) {
-            $field_id    = $field["group_desc_id"];
+            $field_id    = $field['group_desc_id'];
             $desc_id_val = $data->getFieldValue($field_id);
             $this->storeFieldValue($group_id, $desc_id_val, $field_id);
         }
@@ -70,7 +70,7 @@ class FieldUpdator
             $result = $this->dao->createGroupDescription($group_id, $field_id, $submitted_value);
             if (! $result) {
                 $this->logger->debug(
-                    sprintf("Impossible to create field %s with value %s", $field_id, $submitted_value)
+                    sprintf('Impossible to create field %s with value %s', $field_id, $submitted_value)
                 );
             }
         }

@@ -56,9 +56,9 @@ class Tracker_ReportDao extends DataAccessObject
     public function searchByTrackerId($tracker_id, $user_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $user_stm   = " ";
+        $user_stm   = ' ';
         if ($user_id) {
-            $user_stm = "user_id = " . $this->da->escapeInt($user_id) . " OR ";
+            $user_stm = 'user_id = ' . $this->da->escapeInt($user_id) . ' OR ';
         }
 
         $sql = "SELECT *

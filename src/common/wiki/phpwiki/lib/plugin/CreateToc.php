@@ -45,20 +45,20 @@ class WikiPlugin_CreateToc extends WikiPlugin
 {
     public function getName()
     {
-        return _("CreateToc");
+        return _('CreateToc');
     }
 
     public function getDescription()
     {
-        return _("Automatically link headers at the top");
+        return _('Automatically link headers at the top');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.36 $"
+            '$Revision: 1.36 $'
         );
     }
 
@@ -66,7 +66,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
     {
         return [ 'pagename'  => '[pagename]', // TOC of another page here?
                       // or headers=1,2,3 is also possible.
-            'headers'   => "!!!,!!,!",   // "!!!"=>h1, "!!"=>h2, "!"=>h3
+            'headers'   => '!!!,!!,!',   // "!!!"=>h1, "!!"=>h2, "!"=>h3
             'noheader'  => 0,            // omit <h1>Table of Contents</h1>
             'position'  => 'right',      // or left
             'with_toclink' => 0,         // link back to TOC
@@ -109,7 +109,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
     public function preg_quote($heading)
     {
         return str_replace(
-            ["/", ".", "?", "*"],
+            ['/', '.', '?', '*'],
             ['\/', '\.', '\?', '\*'],
             $heading
         );
@@ -121,13 +121,13 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $count = substr_count($level, '!');
         switch ($count) {
             case 1:
-                $h = "h4";
+                $h = 'h4';
                 break;
             case 2:
-                $h = "h3";
+                $h = 'h3';
                 break;
             case 3:
-                $h = "h2";
+                $h = 'h2';
                 break;
         }
         return $h;
@@ -138,12 +138,12 @@ class WikiPlugin_CreateToc extends WikiPlugin
         if (TOC_FULL_SYNTAX) {
             $theading = TransformInline($heading);
             if ($theading) {
-                return preg_quote($theading->asXML(), "/");
+                return preg_quote($theading->asXML(), '/');
             } else {
-                return XmlContent::_quote(preg_quote($heading, "/"));
+                return XmlContent::_quote(preg_quote($heading, '/'));
             }
         } else {
-            return XmlContent::_quote(preg_quote($heading, "/"));
+            return XmlContent::_quote(preg_quote($heading, '/'));
         }
     }
 
@@ -229,7 +229,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $i      = 1;
         $anchor = $s;
         while (! empty($anchors[$anchor])) {
-            $anchor = sprintf("%s_%d", $s, $i++);
+            $anchor = sprintf('%s_%d', $s, $i++);
         }
         $anchors[$anchor] = $i;
         return $anchor;
@@ -286,7 +286,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
                         // And now change the to be printed markup (XmlTree):
                         // Search <hn>$s</hn> line in markup
                         /* Url for backlink */
-                        $url = WikiURL(new WikiPageName($basepage, false, "TOC"));
+                        $url = WikiURL(new WikiPageName($basepage, false, 'TOC'));
                         $j   = $this->searchHeader(
                             $markup->_content,
                             $j,
@@ -385,9 +385,9 @@ class WikiPlugin_CreateToc extends WikiPlugin
             $pagename = $page->name;
         }
         if (! $pagename) {
-            return $this->error(_("no page specified"));
+            return $this->error(_('no page specified'));
         }
-        if ($jshide and isBrowserIE() and browserDetect("Mac")) {
+        if ($jshide and isBrowserIE() and browserDetect('Mac')) {
             //trigger_error(_("jshide set to 0 on Mac IE"), E_USER_NOTICE);
             $jshide = 0;
         }
@@ -396,7 +396,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         //FIXME: I suspect this only to crash with Apache2
         if (! $current->get('markup') or $current->get('markup') < 2) {
             if (in_array(php_sapi_name(), ['apache2handler', 'apache2filter'])) {
-                trigger_error(_("CreateToc disabled for old markup"), E_USER_WARNING);
+                trigger_error(_('CreateToc disabled for old markup'), E_USER_WARNING);
                 return '';
             }
         }
@@ -411,15 +411,15 @@ class WikiPlugin_CreateToc extends WikiPlugin
             */
         $list = HTML::ul(['id' => 'toclist', 'class' => 'toc']);
 
-        if (! strstr($headers, ",")) {
+        if (! strstr($headers, ',')) {
             $headers = [$headers];
         } else {
-            $headers = explode(",", $headers);
+            $headers = explode(',', $headers);
         }
         $levels = [];
         foreach ($headers as $h) {
             //replace !!! with level 1, ...
-            if (strstr($h, "!")) {
+            if (strstr($h, '!')) {
                 $hcount   = substr_count($h, '!');
                 $level    = min(max(1, $hcount), 3);
                 $levels[] = $level;
@@ -429,7 +429,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
             }
         }
         if (TOC_FULL_SYNTAX) {
-            require_once("lib/InlineParser.php");
+            require_once('lib/InlineParser.php');
         }
         if (
             $headers = $this->extractHeaders(
@@ -471,8 +471,8 @@ class WikiPlugin_CreateToc extends WikiPlugin
             }
         }
         $list->setAttr('style', 'display:' . ($jshide ? 'none;' : 'block;'));
-        $open  = DATA_PATH . '/' . $WikiTheme->_findFile("images/folderArrowOpen.png");
-        $close = DATA_PATH . '/' . $WikiTheme->_findFile("images/folderArrowClosed.png");
+        $open  = DATA_PATH . '/' . $WikiTheme->_findFile('images/folderArrowOpen.png');
+        $close = DATA_PATH . '/' . $WikiTheme->_findFile('images/folderArrowClosed.png');
         $html->pushContent(Javascript("
 function toggletoc(a) {
   var toc=document.getElementById('toclist')
@@ -481,24 +481,24 @@ function toggletoc(a) {
   var close='" . $close . "'
   if (toc.style.display=='none') {
     toc.style.display='block'
-    a.title='" . _("Click to hide the TOC") . "'
+    a.title='" . _('Click to hide the TOC') . "'
     a.src = open
   } else {
     toc.style.display='none';
-    a.title='" . _("Click to display") . "'
+    a.title='" . _('Click to display') . "'
     a.src = close
   }
 }"));
         if ($extracollapse) {
             $toclink = HTML(
-                _("Table Of Contents"),
-                " ",
+                _('Table Of Contents'),
+                ' ',
                 HTML::a(['name' => 'TOC']),
                 HTML::img([
                     'id' => 'toctoggle',
                     'class' => 'wikiaction',
-                    'title' => _("Click to display to TOC"),
-                    'onClick' => "toggletoc(this)",
+                    'title' => _('Click to display to TOC'),
+                    'onClick' => 'toggletoc(this)',
                     'height' => 15,
                     'width' => 15,
                     'border' => 0,
@@ -509,15 +509,15 @@ function toggletoc(a) {
             $toclink = HTML::a(
                 ['name' => 'TOC',
                     'class' => 'wikiaction',
-                    'title' => _("Click to display"),
-                    'onclick' => "toggletoc(this)",
+                    'title' => _('Click to display'),
+                    'onclick' => 'toggletoc(this)',
                 ],
-                _("Table Of Contents"),
+                _('Table Of Contents'),
                 HTML::span(
                     ['style' => 'display:none',
                         'id' => 'toctoggle',
                     ],
-                    " "
+                    ' '
                 )
             );
         }

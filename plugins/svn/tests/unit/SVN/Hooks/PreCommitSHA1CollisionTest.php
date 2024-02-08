@@ -46,7 +46,7 @@ final class PreCommitSHA1CollisionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->onlyMethods(['getMessageFromTransaction', 'getTransactionPath', 'getContent'])
             ->disableOriginalConstructor()
             ->getMock();
-        $this->svnlook->method('getMessageFromTransaction')->willReturn(["COMMIT MSG"]);
+        $this->svnlook->method('getMessageFromTransaction')->willReturn(['COMMIT MSG']);
 
         $this->sha1_collision_detector = $this->createMock(\Tuleap\SVNCore\SHA1CollisionDetector::class);
 

@@ -37,7 +37,7 @@ class b201905061046_change_timetracking_overview_report_name extends ForgeUpgrad
 
     public function up()
     {
-        $sql = "RENAME TABLE plugin_timetracking_overview_report TO plugin_timetracking_overview_widget";
+        $sql = 'RENAME TABLE plugin_timetracking_overview_report TO plugin_timetracking_overview_widget';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Changing name did not work.');

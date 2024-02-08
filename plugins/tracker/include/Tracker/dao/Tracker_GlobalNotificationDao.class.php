@@ -145,7 +145,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
         foreach ($values as $field => $value) {
             $updates[] = $field . ' = ' . $this->da->quoteSmart($value);
         }
-        $sql = "UPDATE $this->table_name SET " . implode(', ', $updates) . " WHERE id = " . $this->da->quoteSmart($id);
+        $sql = "UPDATE $this->table_name SET " . implode(', ', $updates) . ' WHERE id = ' . $this->da->quoteSmart($id);
         return $this->update($sql);
     }
 

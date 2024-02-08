@@ -38,7 +38,7 @@ class SwitchTest extends TrackerBase
         $query          = '{"workflow": {"is_advanced": true}}';
         $response_patch = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->request_factory->createRequest('PATCH', "trackers/" . $this->simple_mode_workflow_to_switch_tracker_id . '?query=' . urlencode($query))
+            $this->request_factory->createRequest('PATCH', 'trackers/' . $this->simple_mode_workflow_to_switch_tracker_id . '?query=' . urlencode($query))
         );
 
         $this->assertSame(200, $response_patch->getStatusCode());
@@ -63,7 +63,7 @@ class SwitchTest extends TrackerBase
         $query          = '{"workflow": {"is_advanced": false}}';
         $response_patch = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->request_factory->createRequest('PATCH', "trackers/" . $this->simple_mode_workflow_to_switch_tracker_id . '?query=' . urlencode($query))
+            $this->request_factory->createRequest('PATCH', 'trackers/' . $this->simple_mode_workflow_to_switch_tracker_id . '?query=' . urlencode($query))
         );
 
         $this->assertSame(200, $response_patch->getStatusCode());

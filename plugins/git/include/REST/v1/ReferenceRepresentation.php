@@ -40,16 +40,16 @@ final class ReferenceRepresentation
 
     public static function inReferenceRepresentation(string $ref, string $url): ReferenceRepresentation
     {
-        return new self($ref, $url, "in");
+        return new self($ref, $url, 'in');
     }
 
     public static function outReferenceRepresentation(string $ref, string $url): ReferenceRepresentation
     {
-        return new self($ref, $url, "out");
+        return new self($ref, $url, 'out');
     }
 
     public static function bothReferenceRepresentation(string $ref, string $url): ReferenceRepresentation
     {
-        return new self($ref, $url, "both");
+        return new self($ref, $url, 'both');
     }
 }

@@ -42,7 +42,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(true);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
@@ -63,7 +63,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(true);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
@@ -91,7 +91,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(false);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
@@ -119,7 +119,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(true);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
@@ -154,7 +154,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(true);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
@@ -192,7 +192,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(true);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
@@ -226,7 +226,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(true);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
@@ -259,7 +259,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(true);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
@@ -304,7 +304,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(true);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
@@ -338,7 +338,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(true);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
@@ -350,7 +350,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $criteria = (new ListOfSearchCriterionPresenterBuilder(new class implements IRetrieveCriteria {
             public function searchByProjectId(int $project_id): array
             {
-                return ["id", "filename"];
+                return ['id', 'filename'];
             }
         }))->getSelectedCriteria($metadata_factory, $status_mapper, $project);
 
@@ -378,7 +378,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project->method('usesWiki')->willReturn(true);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);

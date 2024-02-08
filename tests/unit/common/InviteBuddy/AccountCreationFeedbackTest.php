@@ -483,7 +483,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger
             ->expects(self::once())
             ->method('error')
-            ->with("Invitation was referencing an unknown user #103");
+            ->with('Invitation was referencing an unknown user #103');
 
         $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
         $this->invitation_instrumentation->expects(self::once())->method('incrementCompletedInvitation');
@@ -533,7 +533,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger
             ->expects(self::once())
             ->method('warning')
-            ->with("Cannot send invitation feedback to inactive user #103");
+            ->with('Cannot send invitation feedback to inactive user #103');
 
         $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
         $this->invitation_instrumentation->expects(self::once())->method('incrementCompletedInvitation');
@@ -584,7 +584,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger
             ->expects(self::once())
             ->method('error')
-            ->with("Unable to send invitation feedback to user #103 after registration of user #104");
+            ->with('Unable to send invitation feedback to user #103 after registration of user #104');
 
         $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
         $this->invitation_instrumentation->expects(self::once())->method('incrementCompletedInvitation');

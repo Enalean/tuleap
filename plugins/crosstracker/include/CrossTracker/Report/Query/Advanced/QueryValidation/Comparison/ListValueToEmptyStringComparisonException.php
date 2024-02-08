@@ -28,7 +28,7 @@ final class ListValueToEmptyStringComparisonException extends InvalidQueryExcept
     public function __construct(Metadata $metadata, $operator)
     {
         $message = sprintf(
-            dgettext('tuleap-crosstracker', "%s cannot be compared to the empty string with %s operator."),
+            dgettext('tuleap-crosstracker', '%s cannot be compared to the empty string with %s operator.'),
             $metadata->getName(),
             $operator
         );

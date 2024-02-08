@@ -551,12 +551,12 @@ if ($group_id && ! $atid) {
                 $ath->adminHeader(['title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') .
                 $Language->getText('tracker_admin_field_values_details', 'values_admin'),
                 ]);
-                echo "<H2>" . $Language->getText('tracker_import_admin', 'tracker') .
-                ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . "&atid=" . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>'" .
+                echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') .
+                ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>'" .
                 $Language->getText('tracker_admin_field_values_details', 'manage_for', $hp->purify($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) . "'</H2>";
 
                 $value_array = $field->getFieldValue($atid, $request->getValidated('value_id', 'uint'));
-                $ath->displayFieldValueForm("value_update", $field_id, $value_array['value_id'], $value_array['value'], $value_array['order_id'], $value_array['status'], $value_array['description']);
+                $ath->displayFieldValueForm('value_update', $field_id, $value_array['value_id'], $value_array['value'], $value_array['order_id'], $value_array['status'], $value_array['description']);
                 $ath->footer([]);
             }
             break;
@@ -743,7 +743,7 @@ if ($group_id && ! $atid) {
                             $label,
                             $data_type,
                             $display_type,
-                            ($display_size == "N/A" ? "" : $display_size),
+                            ($display_size == 'N/A' ? '' : $display_size),
                             $rank_on_screen,
                             $empty_ok,
                             $keep_history,
@@ -823,11 +823,11 @@ if ($group_id && ! $atid) {
             if ($field) {
                 $ath->adminHeader(['title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') . $Language->getText('tracker_admin_index', 'modify_usage'),
                 ]);
-                echo "<H2>" . $Language->getText('tracker_import_admin', 'tracker') .
-                ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . "&atid=" . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>' " .
-                $Language->getText('tracker_admin_index', 'modify_usage_for', $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML)) . "</H2>";
+                echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') .
+                ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>' " .
+                $Language->getText('tracker_admin_index', 'modify_usage_for', $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML)) . '</H2>';
                 $ath->displayFieldUsageForm(
-                    "field_update",
+                    'field_update',
                     $field->getID(),
                     $field->getName(),
                     $field->getDescription(),
@@ -951,11 +951,11 @@ if ($group_id && ! $atid) {
             if ($fieldset) {
                 $ath->adminHeader(['title' => $Language->getText('tracker_admin_fieldset', 'tracker_admin') . $Language->getText('tracker_admin_index', 'modify_fieldset'),
                 ]);
-                echo "<H2>" . $Language->getText('tracker_import_admin', 'tracker') .
-                ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . "&atid=" . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>' " .
-                $Language->getText('tracker_admin_index', 'modify_fieldset_for', $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML)) . "</H2>";
+                echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') .
+                ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>' " .
+                $Language->getText('tracker_admin_index', 'modify_fieldset_for', $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML)) . '</H2>';
                 $ath->displayFieldSetCreateForm(
-                    "fieldset_update",
+                    'fieldset_update',
                     $fieldset->getID(),
                     $fieldset->getLabel(),
                     $fieldset->getDescriptionText(),

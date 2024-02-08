@@ -115,7 +115,7 @@ final class AccessKeyCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user = UserTestBuilder::aUser()->withId(102)->build();
 
-        $expiration_date = new \DateTimeImmutable("yesterday");
+        $expiration_date = new \DateTimeImmutable('yesterday');
 
         $this->expectException(AccessKeyAlreadyExpiredException::class);
 

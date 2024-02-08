@@ -32,13 +32,13 @@ class b201211221712_create_tracker_rule_date_table extends \Tuleap\ForgeUpgrade\
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_rule_date(
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_rule_date(
             tracker_rule_id int(11) unsigned NOT NULL PRIMARY KEY,
             source_field_id int(11) unsigned NOT NULL,
             target_field_id int(11) unsigned NOT NULL,
             comparator varchar(2) NOT NULL,
             KEY tracker_rule_id (tracker_rule_id)
-          ) ENGINE=InnoDB;";
+          ) ENGINE=InnoDB;';
 
         $this->createTable('tracker_rule_date', $sql);
     }

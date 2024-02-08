@@ -28,7 +28,7 @@ class I18NRestException extends RestException
     {
         parent::__construct(
             $httpStatusCode,
-            "",
+            '',
             ['i18n_error_message' => $i18n_message]
         );
     }

@@ -63,7 +63,7 @@ class AdminController
             $admin_presenter     = new AdminPresenter($this->csrf, $this->bot_factory->getSystemBots());
             $admin_page_renderer = new AdminPageRenderer();
             $admin_page_renderer->renderAPresenter(
-                dgettext('tuleap-botmattermost', "Bot Mattermost configuration"),
+                dgettext('tuleap-botmattermost', 'Bot Mattermost configuration'),
                 PLUGIN_BOT_MATTERMOST_BASE_DIR . '/templates/',
                 'index',
                 $admin_presenter

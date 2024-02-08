@@ -140,7 +140,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
         $forge_user                          = $user_manager->getUserById(TrackerImporterUser::ID);
 
         if ($forge_user === null) {
-            throw new \RuntimeException("Unable to find TrackerImporterUser");
+            throw new \RuntimeException('Unable to find TrackerImporterUser');
         }
 
         $jira_user_retriever = new JiraUserRetriever(
@@ -285,7 +285,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
         LinkedIssuesCollection $linked_issues_collection,
         string $import_mode,
     ): \SimpleXMLElement {
-        $this->logger->debug("Start export Jira issues " . $issue_type->getName() . " to XML: " . $issue_type->getId());
+        $this->logger->debug('Start export Jira issues ' . $issue_type->getName() . ' to XML: ' . $issue_type->getId());
 
         $jira_field_mapping_collection = new FieldMappingCollection();
         $status_values_collection      = new StatusValuesCollection(
@@ -293,21 +293,21 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
             $this->logger
         );
 
-        $this->logger->debug("Handle status");
+        $this->logger->debug('Handle status');
         $status_values_collection->initCollectionForProjectAndIssueType(
             $jira_project_key,
             $issue_type->getId(),
             $field_id_generator,
         );
 
-        $this->logger->debug("Export Always there fields");
+        $this->logger->debug('Export Always there fields');
         $xml_tracker = $this->always_there_fields_exporter->exportFields(
             $xml_tracker,
             $status_values_collection,
             $jira_field_mapping_collection,
         );
 
-        $this->logger->debug("Export Story Points field");
+        $this->logger->debug('Export Story Points field');
         $xml_tracker = $this->story_point_field_exporter->exportFields(
             $jira_platform_configuration,
             $xml_tracker,
@@ -316,7 +316,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
             $field_id_generator,
         );
 
-        $this->logger->debug("Export custom jira fields");
+        $this->logger->debug('Export custom jira fields');
         $xml_tracker = $this->exportJiraField(
             $xml_tracker,
             $field_id_generator,
@@ -327,7 +327,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
             $import_mode,
         );
 
-        $this->logger->debug("Export semantics");
+        $this->logger->debug('Export semantics');
         $tracker_for_semantic_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $this->semantics_xml_exporter->exportSemantics(
             $tracker_for_semantic_xml,
@@ -336,7 +336,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
         );
 
 
-        $this->logger->debug("Export reports");
+        $this->logger->debug('Export reports');
         $tracker_for_reports_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $this->report_exporter->exportReports(
             $tracker_for_reports_xml,
@@ -351,7 +351,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
 
         $node_tracker = JiraXMLNodeBuilder::buildTrackerXMLNode($xml_tracker, $tracker_for_semantic_xml, $tracker_for_reports_xml);
 
-        $this->logger->debug("Export artifacts");
+        $this->logger->debug('Export artifacts');
         $issue_representation_collection = new IssueAPIRepresentationCollection();
         $this->artifacts_xml_exporter->exportArtifacts(
             $node_tracker,
@@ -394,7 +394,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
         FieldMappingCollection $field_mapping_collection,
         string $import_mode,
     ): XMLTracker {
-        $this->logger->debug("Start exporting jira field structure (custom fields) ...");
+        $this->logger->debug('Start exporting jira field structure (custom fields) ...');
         $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $issue_type->getId(), $id_generator);
 
         foreach ($fields as $key => $field) {
@@ -407,7 +407,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
                 $import_mode,
             );
         }
-        $this->logger->debug("Field structure exported successfully");
+        $this->logger->debug('Field structure exported successfully');
         return $xml_tracker;
     }
 }

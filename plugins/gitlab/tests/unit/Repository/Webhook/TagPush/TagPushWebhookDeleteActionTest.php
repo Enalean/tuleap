@@ -61,28 +61,28 @@ final class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $integration = new GitlabRepositoryIntegration(
             1,
             12587,
-            "root/repo01",
-            "",
-            "https://example.com/root/repo01",
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
-            "Tag Push Event",
+            'Tag Push Event',
             12587,
-            "https://example.com",
-            "refs/tags/v1.0.2",
-            "before",
-            "0000000000000000000000000000000000000000",
+            'https://example.com',
+            'refs/tags/v1.0.2',
+            'before',
+            '0000000000000000000000000000000000000000',
         );
 
         $this->cross_reference_manager
             ->expects(self::once())
             ->method('deleteEntity')
             ->with(
-                "root/repo01/v1.0.2",
+                'root/repo01/v1.0.2',
                 GitlabTagReference::NATURE_NAME,
                 101
             );
@@ -92,7 +92,7 @@ final class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('deleteTagInGitlabRepository')
             ->with(
                 1,
-                "v1.0.2"
+                'v1.0.2'
             );
 
         $this->delete_action->deleteTagReferences(

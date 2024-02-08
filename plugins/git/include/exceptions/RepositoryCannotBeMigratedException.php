@@ -26,6 +26,6 @@ class RepositoryCannotBeMigratedException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("The repository cannot be migrated on Gerrit. The backend is not Gitolite or the repository is already migrated");
+        parent::__construct('The repository cannot be migrated on Gerrit. The backend is not Gitolite or the repository is already migrated');
     }
 }

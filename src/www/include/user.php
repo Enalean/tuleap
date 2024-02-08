@@ -57,11 +57,11 @@ function user_getname($user_id = 0)
             $result = db_query("SELECT user_id,user_name FROM user WHERE user_id='" . db_es($user_id) . "'");
             if ($result && db_numrows($result) > 0) {
                 //valid user - store and return
-                $USER_NAMES["user_$user_id"] = db_result($result, 0, "user_name");
+                $USER_NAMES["user_$user_id"] = db_result($result, 0, 'user_name');
                 return $USER_NAMES["user_$user_id"];
             } else {
                 //invalid user - store and return
-                $USER_NAMES["user_$user_id"] = "<B>" . $Language->getText('include_user', 'invalid_u_id') . "</B>";
+                $USER_NAMES["user_$user_id"] = '<B>' . $Language->getText('include_user', 'invalid_u_id') . '</B>';
                 return $USER_NAMES["user_$user_id"];
             }
         }
@@ -76,7 +76,7 @@ function user_getemail($user_id)
     global $Language;
         $result = user_get_result_set($user_id);
     if ($result && db_numrows($result) > 0) {
-        return db_result($result, 0, "email");
+        return db_result($result, 0, 'email');
     } else {
         return $Language->getText('include_user', 'email_not_found');
     }
@@ -88,7 +88,7 @@ function user_getemail_from_unix($user_name)
     global $Language;
         $result = user_get_result_set_from_unix($user_name);
     if ($result && db_numrows($result) > 0) {
-        return db_result($result, 0, "email");
+        return db_result($result, 0, 'email');
     } else {
         return $Language->getText('include_user', 'email_not_found');
     }
@@ -101,11 +101,11 @@ function user_get_result_set($user_id)
     //so it doesn't have to be fetched each time
 
     global $USER_RES;
-    if (! isset($USER_RES["_" . $user_id . "_"]) || ! $USER_RES["_" . $user_id . "_"]) {
-        $USER_RES["_" . $user_id . "_"] = db_query("SELECT * FROM user WHERE user_id='" . db_es($user_id) . "'");
-        return $USER_RES["_" . $user_id . "_"];
+    if (! isset($USER_RES['_' . $user_id . '_']) || ! $USER_RES['_' . $user_id . '_']) {
+        $USER_RES['_' . $user_id . '_'] = db_query("SELECT * FROM user WHERE user_id='" . db_es($user_id) . "'");
+        return $USER_RES['_' . $user_id . '_'];
     } else {
-        return $USER_RES["_" . $user_id . "_"];
+        return $USER_RES['_' . $user_id . '_'];
     }
 }
 
@@ -118,8 +118,8 @@ function user_get_result_set_from_unix($user_name)
     global $USER_RES;
     $res                            = db_query("SELECT * FROM user WHERE user_name='" . db_es($user_name) . "'");
     $user_id                        = db_result($res, 0, 'user_id');
-    $USER_RES["_" . $user_id . "_"] = $res;
-    return $USER_RES["_" . $user_id . "_"];
+    $USER_RES['_' . $user_id . '_'] = $res;
+    return $USER_RES['_' . $user_id . '_'];
 }
 function user_get_result_set_from_email($email)
 {
@@ -130,8 +130,8 @@ function user_get_result_set_from_email($email)
     $sql                            = "SELECT * FROM user WHERE (user_name='" . db_es($email) . "' or email='" . db_es($email) . "')";
     $res                            = db_query($sql);
     $user_id                        = db_result($res, 0, 'user_id');
-    $USER_RES["_" . $user_id . "_"] = $res;
-    return $USER_RES["_" . $user_id . "_"];
+    $USER_RES['_' . $user_id . '_'] = $res;
+    return $USER_RES['_' . $user_id . '_'];
 }
 
 //Deprecated. Use user->getTimezone() instead
@@ -160,7 +160,7 @@ function user_set_preference($preference_name, $value)
         if (db_affected_rows($result) < 1) {
             echo db_error();
             /** @psalm-suppress DeprecatedFunction */
-            db_query("INSERT INTO user_preferences (user_id,preference_name,preference_value) " .
+            db_query('INSERT INTO user_preferences (user_id,preference_name,preference_value) ' .
              "VALUES ('" . $db_escaped_user_id . "','" . db_es($preference_name) . "','" . db_es($value) . "')");
         }
 
@@ -196,7 +196,7 @@ function user_get_preference($preference_name)
             $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
          //we haven't returned prefs - go to the db
             /** @psalm-suppress DeprecatedFunction */
-            $result = db_query("SELECT preference_name,preference_value FROM user_preferences " .
+            $result = db_query('SELECT preference_name,preference_value FROM user_preferences ' .
             "WHERE user_id='" . $db_escaped_user_id . "'");
 
             if (db_numrows($result) < 1) {

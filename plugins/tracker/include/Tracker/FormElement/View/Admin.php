@@ -255,7 +255,7 @@ class Tracker_FormElement_View_Admin
             case 'date':
                 $html .= '<label for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
                 $value = $purifier->purify($property['value'] ? $this->formElement->formatDate($property['value']) : '');
-                $html .= $GLOBALS['HTML']->getDatePicker("formElement_properties_" . $key, "formElement_data[specific_properties][$key]", $value);
+                $html .= $GLOBALS['HTML']->getDatePicker('formElement_properties_' . $key, "formElement_data[specific_properties][$key]", $value);
                 break;
             case 'text':
                 $html .= '<label for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';

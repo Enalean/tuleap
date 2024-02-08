@@ -28,7 +28,7 @@ final class FromWhereComparisonFieldReadOnlyBuilder
     public function getFromWhere(
         ParametrizedSQLFragment $condition,
     ): IProvideParametrizedFromAndWhereSQLFragments {
-        $from = "";
+        $from = '';
 
         return new ParametrizedFromWhere($from, $condition->sql, [], $condition->parameters);
     }

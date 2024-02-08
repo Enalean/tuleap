@@ -143,8 +143,8 @@ class PlanningEditionPresenterBuilder
         if ($burnup_fields && $burnup_fields[0]->isUsed()) {
             $semantic_url = '/plugins/tracker?' . http_build_query(
                 [
-                    "tracker" => $planning_tracker->getId(),
-                    "func"    => "admin-formElements",
+                    'tracker' => $planning_tracker->getId(),
+                    'func'    => 'admin-formElements',
                 ]
             );
 

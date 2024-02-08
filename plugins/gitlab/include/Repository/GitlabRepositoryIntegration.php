@@ -114,7 +114,7 @@ class GitlabRepositoryIntegration
 
     public function getGitlabServerUrl(): string
     {
-        return str_replace($this->name, "", $this->gitlab_repository_url);
+        return str_replace($this->name, '', $this->gitlab_repository_url);
     }
 
     public function getLastPushDate(): DateTimeImmutable

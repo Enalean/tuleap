@@ -85,7 +85,7 @@ final class BannerResource extends AuthenticatedResource
             $expiration_date = DateTimeImmutable::createFromFormat(\DateTimeInterface::ATOM, $banner->expiration_date);
 
             if (! $expiration_date) {
-                throw new RestException(400, "Please provide a valid ISO-8601 date for expiration_date");
+                throw new RestException(400, 'Please provide a valid ISO-8601 date for expiration_date');
             }
         }
 

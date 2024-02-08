@@ -77,7 +77,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             }
 
             if ($destination_field->isUpdateable() && ! $destination_field->userCanUpdate($user)) {
-                $logger->debug(sprintf("User #%d (%s) can not update field #%d (%s) of project #%d", $user->getId(), $user->getUserName(), $destination_field->getId(), $destination_field->getName(), $destination_tracker->getGroupId()));
+                $logger->debug(sprintf('User #%d (%s) can not update field #%d (%s) of project #%d', $user->getId(), $user->getUserName(), $destination_field->getId(), $destination_field->getName(), $destination_tracker->getGroupId()));
                 $this->addFieldToNotMigrateableList($source_field);
                 continue;
             }
@@ -149,9 +149,9 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             $this->addFieldToNotMigrateableList($source_field);
         }
 
-        $logger->debug(sprintf("Fields totally migratable: %s", implode(',', array_column($this->migrateable_fields, 'label', 'id'))));
-        $logger->debug(sprintf("Fields partially migratable: %s", implode(',', array_column($this->partially_migrated_fields, 'label', 'id'))));
-        $logger->debug(sprintf("Fields not migratable: %s", implode(',', array_column($this->not_migrateable_fields, 'label', 'id'))));
+        $logger->debug(sprintf('Fields totally migratable: %s', implode(',', array_column($this->migrateable_fields, 'label', 'id'))));
+        $logger->debug(sprintf('Fields partially migratable: %s', implode(',', array_column($this->partially_migrated_fields, 'label', 'id'))));
+        $logger->debug(sprintf('Fields not migratable: %s', implode(',', array_column($this->not_migrateable_fields, 'label', 'id'))));
         return DuckTypedMoveFieldCollection::fromFields($this->migrateable_fields, $this->not_migrateable_fields, $this->partially_migrated_fields, $this->fields_mapping);
     }
 
@@ -162,7 +162,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         LoggerInterface $logger,
     ): void {
         if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $destination_field)) {
-            $logger->debug(sprintf("Static source field #%d (%s) and destination #%d (%s) does not have the same bound type", $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
+            $logger->debug(sprintf('Static source field #%d (%s) and destination #%d (%s) does not have the same bound type', $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
@@ -182,7 +182,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         LoggerInterface $logger,
     ): void {
         if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $destination_field)) {
-            $logger->debug(sprintf("User source field #%d (%s) and destination #%d (%s) does not have the same bound type", $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
+            $logger->debug(sprintf('User source field #%d (%s) and destination #%d (%s) does not have the same bound type', $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
@@ -202,7 +202,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         LoggerInterface $logger,
     ): void {
         if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $destination_field)) {
-            $logger->debug(sprintf("UGroup source field #%d (%s) and destination #%d (%s) does not have the same bound type", $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
+            $logger->debug(sprintf('UGroup source field #%d (%s) and destination #%d (%s) does not have the same bound type', $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
@@ -222,7 +222,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         LoggerInterface $logger,
     ): void {
         if (! $this->verify_are_permissions_to_migrate->areTherePermissionsToMigrate($source_field, $artifact)) {
-            $logger->debug("There is no permission on artifact to migrate");
+            $logger->debug('There is no permission on artifact to migrate');
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
@@ -241,7 +241,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         LoggerInterface $logger,
     ): void {
         if (! $this->verify_open_list_fields_are_compatible->areOpenListFieldsCompatible($source_field, $destination_field)) {
-            $logger->debug(sprintf("Open list source field #%d (%s) and destination #%d (%s) does not have the same bound type", $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
+            $logger->debug(sprintf('Open list source field #%d (%s) and destination #%d (%s) does not have the same bound type', $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }

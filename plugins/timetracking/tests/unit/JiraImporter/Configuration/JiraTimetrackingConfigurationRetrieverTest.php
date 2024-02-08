@@ -57,7 +57,7 @@ final class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPU
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 
         self::assertNotNull($configuration);
-        self::assertSame("jira_timetracking", $configuration);
+        self::assertSame('jira_timetracking', $configuration);
     }
 
     public function testItReturnsNullIfTheWrapperReturnsFalseForTimeTrackingEnabled(): void

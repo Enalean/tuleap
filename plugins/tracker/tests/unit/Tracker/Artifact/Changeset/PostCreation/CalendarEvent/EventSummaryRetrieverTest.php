@@ -42,7 +42,7 @@ final class EventSummaryRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->changeset = ChangesetTestBuilder::aChangeset("1001")->build();
+        $this->changeset = ChangesetTestBuilder::aChangeset('1001')->build();
         $this->recipient = UserTestBuilder::buildWithDefaults();
 
         $this->semantic_title = $this->createMock(Tracker_Semantic_Title::class);

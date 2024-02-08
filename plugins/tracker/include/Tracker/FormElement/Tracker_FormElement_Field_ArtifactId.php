@@ -36,7 +36,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
             return Option::nothing(ParametrizedFromWhere::class);
         }
 
-        return $this->buildMatchExpression("c.artifact_id", $criteria_value)->mapOr(
+        return $this->buildMatchExpression('c.artifact_id', $criteria_value)->mapOr(
             static fn (ParametrizedSQLFragment $match) => Option::fromValue(
                 new ParametrizedFromWhere('', $match->sql, [], $match->parameters)
             ),
@@ -46,7 +46,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
 
     public function getQuerySelect(): string
     {
-        return "a.id AS " . $this->getQuerySelectName();
+        return 'a.id AS ' . $this->getQuerySelectName();
     }
 
     public function getQueryFrom()
@@ -59,7 +59,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      */
     public function getQueryGroupby(): string
     {
-        return "a.id";
+        return 'a.id';
     }
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)

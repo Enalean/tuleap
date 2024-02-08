@@ -30,7 +30,7 @@ class CrossReferenceLinkListPresenterBuilder
     public function buildForTarget(array $cross_ref_link_collection): CrossReferenceLinkListPresenter
     {
         $icon_message = $GLOBALS['Language']->getText('cross_ref_fact_include', 'reference_to');
-        $icon_path    = "/themes/FlamingParrot/images/ic/right_arrow.png";
+        $icon_path    = '/themes/FlamingParrot/images/ic/right_arrow.png';
         return new CrossReferenceLinkListPresenter('reference_to', $icon_message, $icon_path, $cross_ref_link_collection);
     }
 
@@ -40,7 +40,7 @@ class CrossReferenceLinkListPresenterBuilder
     public function buildForSource(array $cross_ref_link_collection): CrossReferenceLinkListPresenter
     {
         $icon_message = $GLOBALS['Language']->getText('cross_ref_fact_include', 'referenced_in');
-        $icon_path    = "/themes/FlamingParrot/images/ic/left_arrow.png";
+        $icon_path    = '/themes/FlamingParrot/images/ic/left_arrow.png';
         return new CrossReferenceLinkListPresenter('referenced_by', $icon_message, $icon_path, $cross_ref_link_collection);
     }
 
@@ -50,7 +50,7 @@ class CrossReferenceLinkListPresenterBuilder
     public function buildForBoth(array $cross_ref_link_collection): CrossReferenceLinkListPresenter
     {
         $icon_message = $GLOBALS['Language']->getText('cross_ref_fact_include', 'cross_referenced');
-        $icon_path    = "/themes/FlamingParrot/images/ic/both_arrows.png";
+        $icon_path    = '/themes/FlamingParrot/images/ic/both_arrows.png';
         return new CrossReferenceLinkListPresenter('cross_reference', $icon_message, $icon_path, $cross_ref_link_collection);
     }
 }

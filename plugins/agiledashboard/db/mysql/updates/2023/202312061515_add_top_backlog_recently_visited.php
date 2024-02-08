@@ -25,13 +25,13 @@ final class b202312061515_add_top_backlog_recently_visited extends \Tuleap\Forge
 {
     public function description(): string
     {
-        return "Add top backlog recently visited table";
+        return 'Add top backlog recently visited table';
     }
 
     public function up(): void
     {
         $this->api->createTable(
-            "plugin_agiledashboard_top_backlog_recently_visited",
+            'plugin_agiledashboard_top_backlog_recently_visited',
             <<<EOS
             CREATE TABLE plugin_agiledashboard_top_backlog_recently_visited (
                 user_id INT(11) NOT NULL,

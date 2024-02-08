@@ -142,7 +142,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(2, $json);
-        $this->assertContains($this->project_private_member_id . "_3", $json);
+        $this->assertContains($this->project_private_member_id . '_3', $json);
         $this->assertContains('102', $json);
     }
 
@@ -154,7 +154,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         );
         $json     = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $expected_ugroup_id = $this->project_private_member_id . "_3";
+        $expected_ugroup_id = $this->project_private_member_id . '_3';
         $this->assertEquals($expected_ugroup_id, $json[0]['id']);
         $this->assertEquals('user_groups/' . $expected_ugroup_id, $json[0]['uri']);
         $this->assertEquals('Project members', $json[0]['label']);
@@ -215,7 +215,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $value = json_encode(
             [
                 'values' => [
-                    'status' => "R",
+                    'status' => 'R',
                 ],
             ]
         );
@@ -236,12 +236,12 @@ final class UsersTest extends RestBase // phpcs:ignore
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], $json['id']);
         $this->assertEquals('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], $json['uri']);
-        $this->assertEquals("R", $json['status']);
+        $this->assertEquals('R', $json['status']);
 
         $value    = json_encode(
             [
                 'values' => [
-                    'status' => "A",
+                    'status' => 'A',
                 ],
             ]
         );
@@ -260,7 +260,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $value = json_encode(
             [
                 'values' => [
-                    'status' => "R",
+                    'status' => 'R',
                 ],
             ]
         );
@@ -285,7 +285,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $value = json_encode(
             [
                 'values' => [
-                    'status' => "R",
+                    'status' => 'R',
                 ],
             ]
         );
@@ -311,7 +311,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $value = json_encode(
             [
                 'values' => [
-                    'username' => "codendiadm",
+                    'username' => 'codendiadm',
                 ],
             ]
         );
@@ -335,7 +335,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $value    = json_encode(
             [
                 'values' => [
-                    'status' => "R",
+                    'status' => 'R',
                 ],
             ]
         );

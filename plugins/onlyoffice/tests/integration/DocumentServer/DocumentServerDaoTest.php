@@ -151,7 +151,7 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
 
         try {
             $this->dao->unrestrict($server_a->id);
-            self::fail("Cannot unrestrict when there are more than one server");
+            self::fail('Cannot unrestrict when there are more than one server');
         } catch (TooManyServersException) {
         }
 

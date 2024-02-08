@@ -34,20 +34,20 @@ class WikiPlugin_Diff extends WikiPlugin
 {
     public function getName()
     {
-        return _("Diff");
+        return _('Diff');
     }
 
     public function getDescription()
     {
-        return _("Display differences between revisions");
+        return _('Display differences between revisions');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.3 $"
+            '$Revision: 1.3 $'
         );
     }
 
@@ -56,7 +56,7 @@ class WikiPlugin_Diff extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['pagename' => '[pagename]',
-            'name'     => _("World"),
+            'name'     => _('World'),
             'versions' => false,
             'version'  => false,
             'previous' => 'major', // author, minor or major
@@ -77,15 +77,15 @@ class WikiPlugin_Diff extends WikiPlugin
 
             $linked_version = WikiLink($rev, 'existing', $rev->getVersion());
             $row->pushContent(
-                HTML::td(fmt("version %s", $linked_version)),
+                HTML::td(fmt('version %s', $linked_version)),
                 HTML::td($WikiTheme->getLastModifiedMessage(
                     $rev,
                     false
                 )),
-                HTML::td(fmt("by %s", $authorlink))
+                HTML::td(fmt('by %s', $authorlink))
             );
         } else {
-            $row->pushContent(HTML::td(['colspan' => '3'], _("None")));
+            $row->pushContent(HTML::td(['colspan' => '3'], _('None')));
         }
         return $row;
     }
@@ -114,17 +114,17 @@ class WikiPlugin_Diff extends WikiPlugin
             if (! ($new = $page->getRevision($version))) {
                 NoSuchRevision($request, $page, $version);
             }
-            $new_version = fmt("version %d", $version);
+            $new_version = fmt('version %d', $version);
         } else {
             $new         = $current;
-            $new_version = _("current version");
+            $new_version = _('current version');
         }
 
         if (preg_match('/^\d+$/', $previous)) {
             if (! ($old = $page->getRevision($previous))) {
                 NoSuchRevision($request, $page, $previous);
             }
-            $old_version = fmt("version %d", $previous);
+            $old_version = fmt('version %d', $previous);
             $others      = ['major', 'minor', 'author'];
         } else {
             switch ($previous) {
@@ -135,13 +135,13 @@ class WikiPlugin_Diff extends WikiPlugin
                             break;
                         }
                     }
-                    $old_version = _("revision by previous author");
+                    $old_version = _('revision by previous author');
                     $others      = ['major', 'minor'];
                     break;
                 case 'minor':
                     $previous    = 'minor';
                     $old         = $page->getRevisionBefore($new);
-                    $old_version = _("previous revision");
+                    $old_version = _('previous revision');
                     $others      = ['major', 'author'];
                     break;
                 case 'major':
@@ -153,7 +153,7 @@ class WikiPlugin_Diff extends WikiPlugin
                     if ($old) {
                         $old = $page->getRevisionBefore($old);
                     }
-                    $old_version = _("predecessor to the previous major change");
+                    $old_version = _('predecessor to the previous major change');
                     $others      = ['minor', 'author'];
                     break;
             }
@@ -164,16 +164,16 @@ class WikiPlugin_Diff extends WikiPlugin
         $page_link = WikiLink($page);
 
         $html = HTML(HTML::p(fmt(
-            "Differences between %s and %s of %s.",
+            'Differences between %s and %s of %s.',
             $new_link,
             $old_link,
             $page_link
         )));
 
-        $otherdiffs = HTML::p(_("Other diffs:"));
-        $label      = ['major' => _("Previous Major Revision"),
-            'minor' => _("Previous Revision"),
-            'author' => _("Previous Author"),
+        $otherdiffs = HTML::p(_('Other diffs:'));
+        $label      = ['major' => _('Previous Major Revision'),
+            'minor' => _('Previous Revision'),
+            'author' => _('Previous Author'),
         ];
         foreach ($others as $other) {
             $args = ['pagename' => $pagename, 'previous' => $other];
@@ -181,9 +181,9 @@ class WikiPlugin_Diff extends WikiPlugin
                 $args['version'] = $version;
             }
             if (count($otherdiffs->getContent()) > 1) {
-                $otherdiffs->pushContent(", ");
+                $otherdiffs->pushContent(', ');
             } else {
-                $otherdiffs->pushContent(" ");
+                $otherdiffs->pushContent(' ');
             }
             $otherdiffs->pushContent(Button($args, $label[$other]));
         }
@@ -195,12 +195,12 @@ class WikiPlugin_Diff extends WikiPlugin
 
         $html->pushContent(HTML::Table(
             $this->PageInfoRow(
-                _("Newer page:"),
+                _('Newer page:'),
                 $new,
                 $request
             ),
             $this->PageInfoRow(
-                _("Older page:"),
+                _('Older page:'),
                 $old,
                 $request
             )
@@ -214,7 +214,7 @@ class WikiPlugin_Diff extends WikiPlugin
                     HTML::hr(),
                     HTML::p(
                         '[',
-                        _("Versions are identical"),
+                        _('Versions are identical'),
                         ']'
                     )
                 );
@@ -501,7 +501,7 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
             $prefix = HTML::raw('&nbsp;');
         }
         $prefix = HTML::td(['class' => 'prefix',
-            'width' => "1%",
+            'width' => '1%',
         ], $prefix);
         foreach ($lines as $line) {
             if (! trim($line)) {

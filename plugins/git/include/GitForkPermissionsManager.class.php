@@ -239,7 +239,7 @@ class GitForkPermissionsManager
             $is_fork,
             $this->areRegexpActivatedAtSiteLevel(),
             $this->isRegexpActivatedForProject($project),
-            ""
+            ''
         );
 
         return $renderer->renderToString('access-control', $presenter);

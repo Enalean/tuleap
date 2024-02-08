@@ -117,31 +117,31 @@ class RoadmapWidgetDao extends DataAccessObject
 
     public function searchById(int $id): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_roadmap_widget
-                WHERE id = ?";
+                WHERE id = ?';
 
         return $this->getDB()->row($sql, $id);
     }
 
     public function searchSelectedTrackers(int $id): ?array
     {
-        $sql = "SELECT tracker_id
+        $sql = 'SELECT tracker_id
                 FROM plugin_roadmap_widget_trackers
-                WHERE plugin_roadmap_widget_id = ?";
+                WHERE plugin_roadmap_widget_id = ?';
 
         return $this->getDB()->col($sql, 0, $id);
     }
 
     public function searchContent(int $id, int $owner_id, string $owner_type): ?array
     {
-        $sql = "SELECT plugin_roadmap_widget.*, plugin_roadmap_widget_filter.report_id
+        $sql = 'SELECT plugin_roadmap_widget.*, plugin_roadmap_widget_filter.report_id
                 FROM plugin_roadmap_widget
                     LEFT JOIN plugin_roadmap_widget_filter
                         ON (plugin_roadmap_widget.id = plugin_roadmap_widget_filter.widget_id)
                 WHERE id = ?
                   AND owner_id = ?
-                  AND owner_type = ?";
+                  AND owner_type = ?';
 
         return $this->getDB()->row($sql, $id, $owner_id, $owner_type);
     }

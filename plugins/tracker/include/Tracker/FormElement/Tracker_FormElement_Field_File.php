@@ -602,7 +602,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                     ob_end_clean();
                 }
                 flush();
-                $file = fopen($fileinfo->getPath(), "r");
+                $file = fopen($fileinfo->getPath(), 'r');
                 while (! feof($file)) {
                     print fread($file, 30 * 1024);
                     flush();

@@ -30,10 +30,10 @@ class FreestyleMappingDao extends DataAccessObject
 {
     public function searchMappedField(TaskboardTracker $taskboard_tracker): ?int
     {
-        $sql = "SELECT field_id
+        $sql = 'SELECT field_id
             FROM plugin_cardwall_on_top_column_mapping_field
             WHERE cardwall_tracker_id = ?
-                  AND tracker_id = ?";
+                  AND tracker_id = ?';
         return $this->getDB()->cell(
             $sql,
             $taskboard_tracker->getMilestoneTrackerId(),
@@ -43,10 +43,10 @@ class FreestyleMappingDao extends DataAccessObject
 
     public function doesFreestyleMappingExist(TaskboardTracker $taskboard_tracker): bool
     {
-        $sql = "SELECT 1
+        $sql = 'SELECT 1
             FROM plugin_cardwall_on_top_column_mapping_field
             WHERE cardwall_tracker_id = ?
-                AND tracker_id = ?";
+                AND tracker_id = ?';
         return $this->getDB()->exists(
             $sql,
             $taskboard_tracker->getMilestoneTrackerId(),
@@ -58,14 +58,14 @@ class FreestyleMappingDao extends DataAccessObject
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
     ): array {
-        $sql = "SELECT mapped_value.value_id
+        $sql = 'SELECT mapped_value.value_id
             FROM plugin_cardwall_on_top_column_mapping_field AS mapping_field
                  INNER JOIN plugin_cardwall_on_top_column_mapping_field_value AS mapped_value
             ON (mapping_field.cardwall_tracker_id = mapped_value.cardwall_tracker_id
                 AND mapped_value.tracker_id = mapping_field.tracker_id)
             WHERE mapping_field.cardwall_tracker_id = ?
                   AND mapping_field.tracker_id = ?
-                  AND mapped_value.column_id = ?";
+                  AND mapped_value.column_id = ?';
         return $this->getDB()->run(
             $sql,
             $taskboard_tracker->getMilestoneTrackerId(),

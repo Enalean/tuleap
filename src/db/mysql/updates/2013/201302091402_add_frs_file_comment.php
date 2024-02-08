@@ -32,7 +32,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE frs_file ADD COLUMN comment TEXT NULL AFTER user_id";
+        $sql = 'ALTER TABLE frs_file ADD COLUMN comment TEXT NULL AFTER user_id';
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {

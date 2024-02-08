@@ -189,7 +189,7 @@ class NavigationPresenterBuilder
         }
 
         $entries[self::OTHERS_ENTRY_SHORTNAME] = new NavigationDropdownPresenter(
-            "",
+            '',
             self::OTHERS_ENTRY_SHORTNAME,
             $current_pane_shortname,
             $other_items

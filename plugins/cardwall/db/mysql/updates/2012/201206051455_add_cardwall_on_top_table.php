@@ -34,9 +34,9 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top(
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top(
                   tracker_id int(11) NOT NULL PRIMARY KEY
-                )";
+                )';
         $this->db->createTable('plugin_cardwall_on_top', $sql);
     }
 

@@ -75,9 +75,9 @@ class MailSender implements SendMail
         $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
         $mail_enhancer->addPropertiesToLookAndFeel('unsubscribe_link', $this->getUnsubscribeLink($changeset->getArtifact()));
         $mail_enhancer->addPropertiesToLookAndFeel('title', $hp->purify($subject));
-        $mail_enhancer->addHeader("X-Codendi-Project", $project->getUnixName());
-        $mail_enhancer->addHeader("X-Codendi-Tracker", $tracker_name);
-        $mail_enhancer->addHeader("X-Codendi-Artifact-ID", $artifactId);
+        $mail_enhancer->addHeader('X-Codendi-Project', $project->getUnixName());
+        $mail_enhancer->addHeader('X-Codendi-Tracker', $tracker_name);
+        $mail_enhancer->addHeader('X-Codendi-Artifact-ID', $artifactId);
         $mail_enhancer->addHeader('From', $from);
 
         foreach ($headers as $header) {

@@ -25,7 +25,7 @@ final class b20221103_add_authoring_tool_column extends \Tuleap\ForgeUpgrade\Buc
 {
     public function description(): string
     {
-        return "Add authoring_tool column in plugin_docman_version";
+        return 'Add authoring_tool column in plugin_docman_version';
     }
 
     public function up(): void

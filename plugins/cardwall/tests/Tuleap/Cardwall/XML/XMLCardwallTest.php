@@ -30,31 +30,31 @@ class XMLCardwallTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $root_xml =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><plannings />');
 
-        $xml_tracker = (new XMLCardwallTracker("T154"))
-            ->withColumn((new XMLCardwallColumn("My Column")))
-            ->withMapping((new XMLCardwallMapping("T789", "F789")));
+        $xml_tracker = (new XMLCardwallTracker('T154'))
+            ->withColumn((new XMLCardwallColumn('My Column')))
+            ->withMapping((new XMLCardwallMapping('T789', 'F789')));
 
         $xml_cardwall = (new XMLCardwall())
             ->withTracker($xml_tracker)
             ->export($root_xml);
 
-        self::assertSame("cardwall", $xml_cardwall->getName());
+        self::assertSame('cardwall', $xml_cardwall->getName());
         self::assertCount(1, $xml_cardwall->trackers->children());
 
         $tracker = $xml_cardwall->trackers->tracker[0];
-        self::assertSame("tracker", $tracker->getName());
-        self::assertEquals("T154", $tracker['id']);
+        self::assertSame('tracker', $tracker->getName());
+        self::assertEquals('T154', $tracker['id']);
         self::assertCount(2, $tracker->children());
 
-        self::assertSame("columns", $tracker->children()[0]->getName());
+        self::assertSame('columns', $tracker->children()[0]->getName());
         self::assertCount(1, $tracker->columns->children());
-        self::assertSame("column", $tracker->columns->column[0]->getName());
-        self::assertEquals("My Column", $tracker->columns->column[0]['label']);
+        self::assertSame('column', $tracker->columns->column[0]->getName());
+        self::assertEquals('My Column', $tracker->columns->column[0]['label']);
 
-        self::assertSame("mappings", $tracker->children()[1]->getName());
+        self::assertSame('mappings', $tracker->children()[1]->getName());
         self::assertCount(1, $tracker->mappings->children());
-        self::assertSame("mapping", $tracker->mappings->mapping[0]->getName());
-        self::assertEquals("T789", $tracker->mappings->mapping[0]['tracker_id']);
-        self::assertEquals("F789", $tracker->mappings->mapping[0]['field_id']);
+        self::assertSame('mapping', $tracker->mappings->mapping[0]->getName());
+        self::assertEquals('T789', $tracker->mappings->mapping[0]['tracker_id']);
+        self::assertEquals('F789', $tracker->mappings->mapping[0]['field_id']);
     }
 }

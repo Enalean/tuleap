@@ -646,9 +646,9 @@ class Docman_Controller extends Controler
                 }
                 break;
             case \Docman_View_Admin_FilenamePattern::IDENTIFIER:
-                $this->view = "Admin_FilenamePattern";
+                $this->view = 'Admin_FilenamePattern';
                 break;
-            case "admin_change_filename_pattern":
+            case 'admin_change_filename_pattern':
                 Docman_View_Admin_FilenamePattern::getCSRFToken($this->getGroupId())->check();
                 $this->action                            = $view;
                 $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_FilenamePattern::IDENTIFIER];
@@ -1801,7 +1801,7 @@ class Docman_Controller extends Controler
     {
         // Redefine actions classes names building.
         $className = static::class;
-        $class     = substr($className, 0, -(strlen("Controller"))) . 'Actions';
+        $class     = substr($className, 0, -(strlen('Controller'))) . 'Actions';
         require_once($class . '.class.php');
         if (! class_exists($class)) {
             throw new LogicException("$class does not exist");

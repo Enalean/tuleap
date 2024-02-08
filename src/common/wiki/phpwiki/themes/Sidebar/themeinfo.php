@@ -40,11 +40,11 @@ class Theme_Sidebar extends PHPWikiTheme
     public function findTemplate($name)
     {
         // hack for navbar.tmpl to hide the buttonseparator
-        if ($name == "navbar") {
+        if ($name == 'navbar') {
             $this->setButtonSeparator(HTML::Raw("<br />\n&nbsp;&middot;&nbsp;"));
         }
-        if ($name == "actionbar" || $name == "signin") {
-            $this->setButtonSeparator(" ");
+        if ($name == 'actionbar' || $name == 'signin') {
+            $this->setButtonSeparator(' ');
         }
         return parent::findTemplate($name);
     }
@@ -52,7 +52,7 @@ class Theme_Sidebar extends PHPWikiTheme
     public function calendarLink($date = false)
     {
         return $this->calendarBase() . SUBPAGE_SEPARATOR .
-               date("Y-m-d", $date ? $date : time());
+               date('Y-m-d', $date ? $date : time());
     }
 
     public function calendarBase()
@@ -62,11 +62,11 @@ class Theme_Sidebar extends PHPWikiTheme
 
         if (! $UserCalPageTitle) {
             $UserCalPageTitle = $request->_user->getId() .
-                                SUBPAGE_SEPARATOR . _("Calendar");
+                                SUBPAGE_SEPARATOR . _('Calendar');
         }
         if (! $UserCalPageTitle) {
             $UserCalPageTitle = (BLOG_EMPTY_DEFAULT_PREFIX ? ''
-                                 : ($request->_user->getId() . SUBPAGE_SEPARATOR)) . "Blog";
+                                 : ($request->_user->getId() . SUBPAGE_SEPARATOR)) . 'Blog';
         }
         return $UserCalPageTitle;
     }
@@ -89,7 +89,7 @@ class Theme_Sidebar extends PHPWikiTheme
                 ['src' => $this->_findData('jscalendar/calendar' . (DEBUG ? '' : '_stripped') . '.js')]
             ));
             if (! ($langfile = $this->_findData("jscalendar/lang/calendar-$jslang.js"))) {
-                $langfile = $this->_findData("jscalendar/lang/calendar-en.js");
+                $langfile = $this->_findData('jscalendar/lang/calendar-en.js');
             }
             $this->addMoreHeaders(JavaScript('', ['src' => $langfile]));
             $this->addMoreHeaders(JavaScript(
@@ -100,8 +100,8 @@ class Theme_Sidebar extends PHPWikiTheme
             ));
 
             // Get existing date entries for the current user
-            require_once("lib/TextSearchQuery.php");
-            $iter     = $dbi->titleSearch(new TextSearchQuery("^" . $this->calendarBase() . SUBPAGE_SEPARATOR, true, "auto"));
+            require_once('lib/TextSearchQuery.php');
+            $iter     = $dbi->titleSearch(new TextSearchQuery('^' . $this->calendarBase() . SUBPAGE_SEPARATOR, true, 'auto'));
             $existing = [];
             while ($page = $iter->next()) {
                 if ($page->exists()) {
@@ -147,11 +147,11 @@ $WikiTheme = new Theme_Sidebar('Sidebar');
 // style.  The companion '*-heavy.css' file isn't defined, it's just
 // expected to be in the same directory that the base style is in.
 
-$WikiTheme->setDefaultCSS(_("Sidebar"), 'sidebar.css');
+$WikiTheme->setDefaultCSS(_('Sidebar'), 'sidebar.css');
 //$WikiTheme->addAlternateCSS('PhpWiki', 'phpwiki.css');
 //$WikiTheme->setDefaultCSS('PhpWiki', 'phpwiki.css');
-$WikiTheme->addAlternateCSS(_("Printer"), 'phpwiki-printer.css', 'print, screen');
-$WikiTheme->addAlternateCSS(_("Modern"), 'phpwiki-modern.css');
+$WikiTheme->addAlternateCSS(_('Printer'), 'phpwiki-printer.css', 'print, screen');
+$WikiTheme->addAlternateCSS(_('Modern'), 'phpwiki-modern.css');
 
 /**
  * The logo image appears on every page and links to the HomePage.

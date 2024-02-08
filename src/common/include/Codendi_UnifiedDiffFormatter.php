@@ -37,22 +37,22 @@ class Codendi_UnifiedDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignor
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
         if ($xlen != 1) {
-            $xbeg .= "," . $xlen;
+            $xbeg .= ',' . $xlen;
         }
         if ($ylen != 1) {
-            $ybeg .= "," . $ylen;
+            $ybeg .= ',' . $ylen;
         }
         return "@@ -{$xbeg} +{$ybeg} @@\n";
     }
 
     public function _added($lines)
     {
-        $this->_lines($lines, "+");
+        $this->_lines($lines, '+');
     }
 
     public function _deleted($lines)
     {
-        $this->_lines($lines, "-");
+        $this->_lines($lines, '-');
     }
 
     public function _changed($orig, $fin)

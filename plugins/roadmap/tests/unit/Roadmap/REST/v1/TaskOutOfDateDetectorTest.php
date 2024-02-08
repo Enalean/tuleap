@@ -131,24 +131,24 @@ final class TaskOutOfDateDetectorTest extends TestCase
         $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
         $this->artifact->setChangesets(
             [
-                $this->buildChangeset(1, "2021-04-13 15:30", true, self::TODO_VALUE_ID),
-                $this->buildChangeset(2, "2021-04-13 16:30", true, self::ON_GOING_VALUE_ID),
-                $this->buildChangeset(3, "2021-04-13 17:30", true, self::DONE_VALUE_ID), // Closed in this changeset
-                $this->buildChangeset(4, "2021-04-13 18:30", false, self::DONE_VALUE_ID),
-                $this->buildChangeset(5, "2021-04-13 19:30", false, self::DONE_VALUE_ID),
-                $this->buildChangeset(6, "2021-04-13 20:30", false, self::DONE_VALUE_ID),
+                $this->buildChangeset(1, '2021-04-13 15:30', true, self::TODO_VALUE_ID),
+                $this->buildChangeset(2, '2021-04-13 16:30', true, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(3, '2021-04-13 17:30', true, self::DONE_VALUE_ID), // Closed in this changeset
+                $this->buildChangeset(4, '2021-04-13 18:30', false, self::DONE_VALUE_ID),
+                $this->buildChangeset(5, '2021-04-13 19:30', false, self::DONE_VALUE_ID),
+                $this->buildChangeset(6, '2021-04-13 20:30', false, self::DONE_VALUE_ID),
             ]
         );
         $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangesetForREST')
             ->with($this->artifact->getLastChangeset(), $this->user, $this->logger)
             ->willReturn(
-                $this->getDatePeriodWithoutWeekend("2021-01-01", null)
+                $this->getDatePeriodWithoutWeekend('2021-01-01', null)
             );
 
         self::assertFalse(
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
-                new \DateTimeImmutable("2021-04-14 08:30"),
+                new \DateTimeImmutable('2021-04-14 08:30'),
                 $this->user,
                 $this->trackers_with_unreadable_status_collection,
             )
@@ -168,19 +168,19 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
         $this->artifact->setChangesets(
             [
-                $this->buildChangeset(1, "2018-04-13 15:30", true, self::TODO_VALUE_ID),
-                $this->buildChangeset(2, "2018-04-13 16:30", true, self::ON_GOING_VALUE_ID),
-                $this->buildChangeset(3, "2018-04-13 17:30", true, self::DONE_VALUE_ID), // Closed in this changeset
-                $this->buildChangeset(4, "2021-04-13 18:30", false, self::DONE_VALUE_ID),
-                $this->buildChangeset(5, "2021-04-13 19:30", false, self::DONE_VALUE_ID),
-                $this->buildChangeset(6, "2021-04-13 20:30", false, self::DONE_VALUE_ID),
+                $this->buildChangeset(1, '2018-04-13 15:30', true, self::TODO_VALUE_ID),
+                $this->buildChangeset(2, '2018-04-13 16:30', true, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(3, '2018-04-13 17:30', true, self::DONE_VALUE_ID), // Closed in this changeset
+                $this->buildChangeset(4, '2021-04-13 18:30', false, self::DONE_VALUE_ID),
+                $this->buildChangeset(5, '2021-04-13 19:30', false, self::DONE_VALUE_ID),
+                $this->buildChangeset(6, '2021-04-13 20:30', false, self::DONE_VALUE_ID),
             ]
         );
 
         self::assertTrue(
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
-                new \DateTimeImmutable("2021-04-14 08:30"),
+                new \DateTimeImmutable('2021-04-14 08:30'),
                 $this->user,
                 $this->trackers_with_unreadable_status_collection,
             )
@@ -199,28 +199,28 @@ final class TaskOutOfDateDetectorTest extends TestCase
         $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
         $this->artifact->setChangesets(
             [
-                $this->buildChangeset(1, "2018-04-13 15:30", true, self::TODO_VALUE_ID),
-                $this->buildChangeset(2, "2018-04-13 16:30", true, self::ON_GOING_VALUE_ID),
-                $this->buildChangeset(3, "2018-04-13 17:30", true, self::DONE_VALUE_ID),
+                $this->buildChangeset(1, '2018-04-13 15:30', true, self::TODO_VALUE_ID),
+                $this->buildChangeset(2, '2018-04-13 16:30', true, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(3, '2018-04-13 17:30', true, self::DONE_VALUE_ID),
                 // Closed in this changeset
-                $this->buildChangeset(4, "2021-04-13 18:30", true, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(4, '2021-04-13 18:30', true, self::ON_GOING_VALUE_ID),
                 // Re-open in this one
-                $this->buildChangeset(5, "2021-04-13 19:30", false, self::ON_GOING_VALUE_ID),
-                $this->buildChangeset(6, "2021-04-13 20:30", true, self::DONE_VALUE_ID),
+                $this->buildChangeset(5, '2021-04-13 19:30', false, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(6, '2021-04-13 20:30', true, self::DONE_VALUE_ID),
                 // Closed again
-                $this->buildChangeset(6, "2021-04-13 20:31", false, self::DONE_VALUE_ID),
+                $this->buildChangeset(6, '2021-04-13 20:31', false, self::DONE_VALUE_ID),
             ]
         );
         $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangesetForREST')
             ->with($this->artifact->getLastChangeset(), $this->user, $this->logger)
             ->willReturn(
-                $this->getDatePeriodWithoutWeekend("2021-01-01", null)
+                $this->getDatePeriodWithoutWeekend('2021-01-01', null)
             );
 
         self::assertFalse(
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
-                new \DateTimeImmutable("2021-04-14 08:30"),
+                new \DateTimeImmutable('2021-04-14 08:30'),
                 $this->user,
                 $this->trackers_with_unreadable_status_collection,
             )
@@ -237,7 +237,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
         $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
         $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
-        $submitted_on = new \DateTimeImmutable("2021-04-13 15:30");
+        $submitted_on = new \DateTimeImmutable('2021-04-13 15:30');
         $changeset    = new Tracker_Artifact_Changeset(
             1,
             $this->artifact,
@@ -260,14 +260,14 @@ final class TaskOutOfDateDetectorTest extends TestCase
         $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangesetForREST')
             ->with($this->artifact->getLastChangeset(), $this->user, $this->logger)
             ->willReturn(
-                $this->getDatePeriodWithoutWeekend("2021-01-01", null)
+                $this->getDatePeriodWithoutWeekend('2021-01-01', null)
             );
 
         $this->logger->expects(self::once())->method('error');
         self::assertTrue(
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
-                new \DateTimeImmutable("2021-04-14 08:30"),
+                new \DateTimeImmutable('2021-04-14 08:30'),
                 $this->user,
                 $this->trackers_with_unreadable_status_collection,
             )
@@ -286,18 +286,18 @@ final class TaskOutOfDateDetectorTest extends TestCase
         $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
         $this->artifact->setChangesets(
             [
-                $this->buildChangeset(1, "2018-04-13 15:30", true, self::TODO_VALUE_ID),
-                $this->buildChangeset(2, "2018-04-13 16:30", true, self::ON_GOING_VALUE_ID),
-                $this->buildChangeset(3, "2018-04-13 17:30", true, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(1, '2018-04-13 15:30', true, self::TODO_VALUE_ID),
+                $this->buildChangeset(2, '2018-04-13 16:30', true, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(3, '2018-04-13 17:30', true, self::ON_GOING_VALUE_ID),
             ]
         );
         $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangesetForREST')
             ->with($this->artifact->getLastChangeset(), $this->user, $this->logger)
             ->willReturn(
-                $this->getDatePeriodWithoutWeekend("2021-01-01", null)
+                $this->getDatePeriodWithoutWeekend('2021-01-01', null)
             );
 
-        $submitted_on = new \DateTimeImmutable("2021-04-13 15:30");
+        $submitted_on = new \DateTimeImmutable('2021-04-13 15:30');
         $changeset    = new Tracker_Artifact_Changeset(
             1,
             $this->artifact,
@@ -322,7 +322,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
         self::assertTrue(
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
-                new \DateTimeImmutable("2021-04-14 08:30"),
+                new \DateTimeImmutable('2021-04-14 08:30'),
                 $this->user,
                 $this->trackers_with_unreadable_status_collection,
             )
@@ -345,9 +345,9 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
         $this->artifact->setChangesets(
             [
-                $this->buildChangeset(1, "2018-04-13 15:30", true, self::TODO_VALUE_ID),
-                $this->buildChangeset(2, "2018-04-13 16:30", true, self::ON_GOING_VALUE_ID),
-                $this->buildChangeset(3, "2018-04-13 17:30", true, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(1, '2018-04-13 15:30', true, self::TODO_VALUE_ID),
+                $this->buildChangeset(2, '2018-04-13 16:30', true, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(3, '2018-04-13 17:30', true, self::ON_GOING_VALUE_ID),
             ]
         );
 
@@ -355,7 +355,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
         self::assertTrue(
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
-                new \DateTimeImmutable("2021-04-14 08:30"),
+                new \DateTimeImmutable('2021-04-14 08:30'),
                 $this->user,
                 $this->trackers_with_unreadable_status_collection,
             )
@@ -377,19 +377,19 @@ final class TaskOutOfDateDetectorTest extends TestCase
             ->with($this->user)
             ->willReturn(true);
 
-        $now_string_date = "2021-04-14";
+        $now_string_date = '2021-04-14';
 
         $this->artifact->setChangesets(
             [
-                $this->buildChangeset(1, "2021-04-13 15:30", true, self::TODO_VALUE_ID),
-                $this->buildChangeset(2, "2021-04-13 16:30", true, self::ON_GOING_VALUE_ID),
-                $this->buildChangeset(3, "2021-04-13 17:30", true, self::DONE_VALUE_ID), // Closed in this changeset
+                $this->buildChangeset(1, '2021-04-13 15:30', true, self::TODO_VALUE_ID),
+                $this->buildChangeset(2, '2021-04-13 16:30', true, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(3, '2021-04-13 17:30', true, self::DONE_VALUE_ID), // Closed in this changeset
             ]
         );
         $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangesetForREST')
             ->with($this->artifact->getLastChangeset(), $this->user, $this->logger)
             ->willReturn(
-                $this->getDatePeriodWithoutWeekend("2020-01-01", $end_string_date)
+                $this->getDatePeriodWithoutWeekend('2020-01-01', $end_string_date)
             );
 
         $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);

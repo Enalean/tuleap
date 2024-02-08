@@ -108,7 +108,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->rule_factory->shouldReceive('getInvolvedFieldsByTrackerIdCollection')->andReturn([$involved_fields_1, $involved_fields_2, $involved_fields_3]);
 
-        $this->tracker_rules_manager->shouldReceive("getRuleFactory")->andReturn($this->rule_factory);
+        $this->tracker_rules_manager->shouldReceive('getRuleFactory')->andReturn($this->rule_factory);
     }
 
     /**
@@ -122,22 +122,22 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
     public static function forbiddenSourceProvider()
     {
         return [
-            [1, 1, true, "Field 1 cannot be the source of field 1"],
-            [2, 1, true,"Field 2 cannot be the source of field 1 because 1->2->1 is cyclic"],
-            [3, 1, true, "Field 3 cannot be the source of field 1 because 1->2->3->1 is cyclic"],
-            [4, 1, false, "Field 4 can be the source of field 1"],
-            [1, 2, false,  "Field 1 is the source of field 2"],
-            [2, 2, true, "Field 2 cannot be the source of field 2"],
-            [3, 2, true,"Field 3 cannot be the source of field 2 because 2 is already a target"],
-            [4, 2, true,"Field 4 cannot be the source of field 2 because 2 is already a target"],
-            [1, 3, true, "Field 1 cannot be the source of field 3 because 3 is already a target"],
-            [2, 3, false,  "Field 2 is the source of field 3"],
-            [3, 3, true, "Field 3 cannot be the source of field 3"],
-            [4, 3, true,"Field 4 cannot be the source of field 3 because 3 is already a target"],
-            [1, 4, false, "Field 1 can be the source of field 4"],
-            [2, 4, false,  "Field 2 can be the source of field 4"],
-            [3, 4, false,  "Field 3 can be the source of field 4"],
-            [4, 4, true, "Field 4 cannot be the source of field 4"],
+            [1, 1, true, 'Field 1 cannot be the source of field 1'],
+            [2, 1, true,'Field 2 cannot be the source of field 1 because 1->2->1 is cyclic'],
+            [3, 1, true, 'Field 3 cannot be the source of field 1 because 1->2->3->1 is cyclic'],
+            [4, 1, false, 'Field 4 can be the source of field 1'],
+            [1, 2, false,  'Field 1 is the source of field 2'],
+            [2, 2, true, 'Field 2 cannot be the source of field 2'],
+            [3, 2, true,'Field 3 cannot be the source of field 2 because 2 is already a target'],
+            [4, 2, true,'Field 4 cannot be the source of field 2 because 2 is already a target'],
+            [1, 3, true, 'Field 1 cannot be the source of field 3 because 3 is already a target'],
+            [2, 3, false,  'Field 2 is the source of field 3'],
+            [3, 3, true, 'Field 3 cannot be the source of field 3'],
+            [4, 3, true,'Field 4 cannot be the source of field 3 because 3 is already a target'],
+            [1, 4, false, 'Field 1 can be the source of field 4'],
+            [2, 4, false,  'Field 2 can be the source of field 4'],
+            [3, 4, false,  'Field 3 can be the source of field 4'],
+            [4, 4, true, 'Field 4 cannot be the source of field 4'],
         ];
     }
 
@@ -152,22 +152,22 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
     public static function forbiddenTargetProvider()
     {
         return [
-            [1, 1, true, "Field 1 cannot be the target of field 1"],
-            [2, 1, false, "Field 2 is the target of field 1"],
-            [3, 1, true, "Field 3 cannot be the target of field 1 because 3 is already a target"],
-            [4, 1, false, "Field 4 can be the target of field 1"],
-            [1, 2, true, "Field 1 cannot be the target of field 2 because 1->2->1 is cyclic"],
-            [2, 2, true, "Field 2 cannot be the target of field 2"],
-            [3, 2, false, "Field 3 is the target of field 2"],
-            [4, 2, false, "Field 4 can be the target of field 2"],
-            [1, 3, true, "Field 1 cannot be the target of field 3 because 1->2->3->1 is cyclic"],
-            [2, 3, true, "Field 2 cannot be the target of field 3 because 2 is already a target"],
-            [3, 3, true, "Field 3 cannot be the target of field 3"],
-            [4, 3, false, "Field 4 can be the target of field 3"],
-            [1, 4, false, "Field 1 can be the target of field 4"],
-            [2, 4, true, "Field 2 cannot be the target of field 4 because 2 is already a target"],
-            [3, 4, true, "Field 3 cannot be the target of field 4 because 3 is already a target"],
-            [4, 4, true, "Field 4 cannot be the target of field 4"],
+            [1, 1, true, 'Field 1 cannot be the target of field 1'],
+            [2, 1, false, 'Field 2 is the target of field 1'],
+            [3, 1, true, 'Field 3 cannot be the target of field 1 because 3 is already a target'],
+            [4, 1, false, 'Field 4 can be the target of field 1'],
+            [1, 2, true, 'Field 1 cannot be the target of field 2 because 1->2->1 is cyclic'],
+            [2, 2, true, 'Field 2 cannot be the target of field 2'],
+            [3, 2, false, 'Field 3 is the target of field 2'],
+            [4, 2, false, 'Field 4 can be the target of field 2'],
+            [1, 3, true, 'Field 1 cannot be the target of field 3 because 1->2->3->1 is cyclic'],
+            [2, 3, true, 'Field 2 cannot be the target of field 3 because 2 is already a target'],
+            [3, 3, true, 'Field 3 cannot be the target of field 3'],
+            [4, 3, false, 'Field 4 can be the target of field 3'],
+            [1, 4, false, 'Field 1 can be the target of field 4'],
+            [2, 4, true, 'Field 2 cannot be the target of field 4 because 2 is already a target'],
+            [3, 4, true, 'Field 3 cannot be the target of field 4 because 3 is already a target'],
+            [4, 4, true, 'Field 4 cannot be the target of field 4'],
         ];
     }
 

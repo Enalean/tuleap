@@ -47,12 +47,12 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAcceptReturnsTrueWhenTypeMatches()
     {
-        $this->assertTrue($this->parser->accept(["type" => "frozen_fields"]));
+        $this->assertTrue($this->parser->accept(['type' => 'frozen_fields']));
     }
 
     public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
     {
-        $this->assertFalse($this->parser->accept(["type" => "set_date_value"]));
+        $this->assertFalse($this->parser->accept(['type' => 'set_date_value']));
     }
 
     public function testParseReturnsNewFrozenFieldsValueBasedOnGivenJson()
@@ -63,9 +63,9 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $frozen_fields_value = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "frozen_fields",
-                "field_ids" => [43],
+                'id' => 2,
+                'type' => 'frozen_fields',
+                'field_ids' => [43],
             ]
         );
         $expected_action     = new FrozenFieldsValue([43]);
@@ -80,8 +80,8 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $frozen_fields_value = $this->parser->parse(
             $workflow,
             [
-                "type" => "frozen_fields",
-                "field_ids" => [43],
+                'type' => 'frozen_fields',
+                'field_ids' => [43],
             ]
         );
         $expected_action     = new FrozenFieldsValue([43]);
@@ -99,8 +99,8 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "id" => 1,
-                "type" => "frozen_fields",
+                'id' => 1,
+                'type' => 'frozen_fields',
             ]
         );
     }
@@ -116,9 +116,9 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "id" => 1,
-                "type" => "frozen_fields",
-                "field_ids" => null,
+                'id' => 1,
+                'type' => 'frozen_fields',
+                'field_ids' => null,
             ]
         );
     }
@@ -134,9 +134,9 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "id" => 1,
-                "type" => "frozen_fields",
-                "field_ids" => [],
+                'id' => 1,
+                'type' => 'frozen_fields',
+                'field_ids' => [],
             ]
         );
     }
@@ -152,9 +152,9 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "id" => 1,
-                "type" => "frozen_fields",
-                "field_ids" => [1, 'aaa'],
+                'id' => 1,
+                'type' => 'frozen_fields',
+                'field_ids' => [1, 'aaa'],
             ]
         );
     }
@@ -165,6 +165,6 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $workflow->shouldReceive('isAdvanced')->andReturnTrue();
 
         $this->expectException(IncompatibleWorkflowModeException::class);
-        $this->parser->parse($workflow, ["type" => "frozen_fields"]);
+        $this->parser->parse($workflow, ['type' => 'frozen_fields']);
     }
 }

@@ -324,10 +324,10 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
             $select_fields[] = '0 as status';
         }
 
-        $sql = "SELECT " . implode(',', $select_fields) . "
+        $sql = 'SELECT ' . implode(',', $select_fields) . '
                 FROM tracker_artifact AS artifact
                     INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
-                    " . implode('', $join_fields) . "
+                    ' . implode('', $join_fields) . "
                 WHERE artifact.id IN ($artifact_ids)";
         return $this->retrieve($sql);
     }

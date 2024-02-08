@@ -62,7 +62,7 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
         $breadcrumbs[] = '<a href="' . \Tuleap\ServerHostname::HTTPSUrl() . '/projects/' . $project->getUnixName(true) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
 
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
-        $mail->addAdditionalHeader("X-Codendi-Project", $project->getUnixName());
+        $mail->addAdditionalHeader('X-Codendi-Project', $project->getUnixName());
 
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($user->getEmail());
@@ -86,9 +86,9 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
         if (count($this->log_stack) > 0) {
             $html .= '<ul><li>' . implode('</li><li>', $this->log_stack) . '</li></ul>';
         } else {
-            $html .= "No error detected";
+            $html .= 'No error detected';
         }
-        $html .= "<p>Done!<p>";
+        $html .= '<p>Done!<p>';
 
         return $html;
     }

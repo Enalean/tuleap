@@ -25,7 +25,7 @@ class b202206071200_remove_icons_preference extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
-        return "Icons view is not available anymore, removing it from preferences";
+        return 'Icons view is not available anymore, removing it from preferences';
     }
 
     public function up(): void

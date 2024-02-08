@@ -110,7 +110,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
 
         foreach ($values as $id => $value) {
             $dataset = $value->getDataset($this);
-            $html   .= "\n\t.addOption('" . $purifier->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . (in_array($id, array_values($changeset_values)) ? 'true' : 'false') . ", " . json_encode($dataset) . ")";
+            $html   .= "\n\t.addOption('" . $purifier->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . (in_array($id, array_values($changeset_values)) ? 'true' : 'false') . ', ' . json_encode($dataset) . ')';
         }
         $html .= ";\n";
         $html .= '</script>';
@@ -130,7 +130,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
 
         foreach ($values as $id => $value) {
             $dataset = $value->getDataset($this);
-            $html   .= "\n\t.addOption('" . $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . ($id == $default_value ? 'true' : 'false') . ', ' . json_encode($dataset) . ")";
+            $html   .= "\n\t.addOption('" . $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . ($id == $default_value ? 'true' : 'false') . ', ' . json_encode($dataset) . ')';
         }
         $html .= ";\n";
         $html .= '</script>';

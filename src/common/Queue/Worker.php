@@ -68,7 +68,7 @@ class Worker
             $this->locker = new DaemonLocker($this->pid_file);
             $this->locker->isRunning();
 
-            $this->logger->info("Start service");
+            $this->logger->info('Start service');
 
             $this->listen();
         } catch (Exception $exception) {
@@ -188,7 +188,7 @@ EOT;
     {
         $user = posix_getpwuid(posix_geteuid());
         if ($user['name'] !== ForgeConfig::get('sys_http_user')) {
-            $this->cliError("This must be run by " . ForgeConfig::get('sys_http_user') . "\n");
+            $this->cliError('This must be run by ' . ForgeConfig::get('sys_http_user') . "\n");
         }
     }
 

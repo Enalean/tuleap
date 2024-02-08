@@ -40,27 +40,27 @@ class WikiPlugin_text2png extends WikiPlugin
 {
     public function getName()
     {
-        return "text2png";
+        return 'text2png';
     }
 
     public function getDescription()
     {
-        return _("Convert text into a png image using GD.");
+        return _('Convert text into a png image using GD.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.13 $"
+            '$Revision: 1.13 $'
         );
     }
 
     public function getDefaultArguments()
     {
         global $LANG;
-        return ['text' => "Hello WikiWorld!",
+        return ['text' => 'Hello WikiWorld!',
             'l'    => $LANG,
         ];
     }
@@ -73,9 +73,9 @@ class WikiPlugin_text2png extends WikiPlugin
             return $this->text2png($text, $l);
         } else {
             // we don't have png and/or gd.
-            $error_html  = _("Sorry, this version of PHP cannot create PNG image files.");
-            $link        = "http://www.php.net/manual/pl/ref.image.php";
-            $error_html .= sprintf(_("See %s"), $link) . ".";
+            $error_html  = _('Sorry, this version of PHP cannot create PNG image files.');
+            $link        = 'http://www.php.net/manual/pl/ref.image.php';
+            $error_html .= sprintf(_('See %s'), $link) . '.';
             trigger_error($error_html, E_USER_NOTICE);
             return;
         }
@@ -90,7 +90,7 @@ class WikiPlugin_text2png extends WikiPlugin
          * change the drawing routines!
          */
 
-        $filename = $text . ".png";
+        $filename = $text . '.png';
 
         /**
          * FIXME: need something more elegant, and a way to gettext a
@@ -98,12 +98,12 @@ class WikiPlugin_text2png extends WikiPlugin
          *        user's locale preferences.
          */
 
-        if ($l == "C") {
-            $l = "en";
+        if ($l == 'C') {
+            $l = 'en';
         } //english=C
         $filepath = getcwd() . "/images/$l";
 
-        if (! file_exists($filepath . "/" . $filename)) {
+        if (! file_exists($filepath . '/' . $filename)) {
             if (! file_exists($filepath)) {
                 $oldumask = umask(0);
                 // permissions affected by user the www server is running as
@@ -112,7 +112,7 @@ class WikiPlugin_text2png extends WikiPlugin
             }
 
             // add trailing slash to save some keystrokes later
-            $filepath .= "/";
+            $filepath .= '/';
 
             /**
              * prepare a new image
@@ -126,14 +126,14 @@ class WikiPlugin_text2png extends WikiPlugin
                 $error_html = _("PHP was unable to create a new GD image stream. Read 'lib/plugin/text2png.php' for details.");
                 // FIXME: Error manager does not transform URLs passed
                 //        through it.
-                $link        = "http://www.php.net/manual/en/function.imagecreate.php";
-                $error_html .= sprintf(_("See %s"), $link) . ".";
+                $link        = 'http://www.php.net/manual/en/function.imagecreate.php';
+                $error_html .= sprintf(_('See %s'), $link) . '.';
                 trigger_error($error_html, E_USER_NOTICE);
                 return;
             }
             // get ready to draw
             $bg_color = ImageColorAllocate($im, 255, 255, 255);
-            $ttfont   = "/System/Library/Frameworks/JavaVM.framework/Versions/1.3.1/Home/lib/fonts/LucidaSansRegular.ttf";
+            $ttfont   = '/System/Library/Frameworks/JavaVM.framework/Versions/1.3.1/Home/lib/fonts/LucidaSansRegular.ttf';
 
             /* http://download.php.net/manual/en/function.imagettftext.php
              * array imagettftext (int im, int size, int angle, int x, int y,
@@ -162,7 +162,7 @@ class WikiPlugin_text2png extends WikiPlugin
             // to save to file:
             $success = ImagePng($im, $filepath . $filename);
         } else {
-            $filepath .= "/";
+            $filepath .= '/';
             $success   = 2;
         }
 
@@ -174,7 +174,7 @@ class WikiPlugin_text2png extends WikiPlugin
                     case 1:
                         trigger_error(
                             sprintf(
-                                _("Image saved to cache file: %s"),
+                                _('Image saved to cache file: %s'),
                                 $filepath . $filename
                             ),
                             E_USER_NOTICE
@@ -183,7 +183,7 @@ class WikiPlugin_text2png extends WikiPlugin
                     case 2:
                         trigger_error(
                             sprintf(
-                                _("Image loaded from cache file: %s"),
+                                _('Image loaded from cache file: %s'),
                                 $filepath . $filename
                             ),
                             E_USER_NOTICE

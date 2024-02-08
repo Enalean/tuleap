@@ -156,69 +156,69 @@ form_End();
 //=============================================================================
 // Options for form_End() parameters:
 // $SubmitLegend
-define("FORM_NO_SUBMIT_BUTTON", "");
-define("DEFAULT_SUBMIT_BUTTON", null);
+define('FORM_NO_SUBMIT_BUTTON', '');
+define('DEFAULT_SUBMIT_BUTTON', null);
 // $HaveResetButton:
-define("FORM_HAVE_RESET_BUTTON", 1);
-define("FORM_NO_RESET_BUTTON", 0);
+define('FORM_HAVE_RESET_BUTTON', 1);
+define('FORM_NO_RESET_BUTTON', 0);
 
 // FormValidation
-define("FORM_VAL_IS_EMAIL", 10);           // is a valid email address
-define("FORM_VAL_IS_NOT_ZERO_LENGTH", 11); // is present (not empty)
-define("FORM_VAL_IS_NUMBER", 12);          // is a number
-define("FORM_VAL_IS_EQ", 13);              // string identical with OptionalParameter
-define("FORM_VAL_IS_LT", 14);              // numerically less than OptionalParameter
-define("FORM_VAL_IS_GT", 15);              // numerically greater than OptionalParameter
-define("FORM_VAL_IS_CHECKED", 16);         // checkbox must be checked (ticked)
+define('FORM_VAL_IS_EMAIL', 10);           // is a valid email address
+define('FORM_VAL_IS_NOT_ZERO_LENGTH', 11); // is present (not empty)
+define('FORM_VAL_IS_NUMBER', 12);          // is a number
+define('FORM_VAL_IS_EQ', 13);              // string identical with OptionalParameter
+define('FORM_VAL_IS_LT', 14);              // numerically less than OptionalParameter
+define('FORM_VAL_IS_GT', 15);              // numerically greater than OptionalParameter
+define('FORM_VAL_IS_CHECKED', 16);         // checkbox must be checked (ticked)
 
 
 //=============================================================================
 // internal stuff
 
-define("FORM_CAPTION_STYLE", " style='font-weight: bold;'");
-define("FORM_BUTTON_STYLE", " class='button'");
-define("SUBMIT_BUTTON_NAME", "SubmitButton");    // don't call it "submit" - it over-rides the form.submit method!
+define('FORM_CAPTION_STYLE', " style='font-weight: bold;'");
+define('FORM_BUTTON_STYLE', " class='button'");
+define('SUBMIT_BUTTON_NAME', 'SubmitButton');    // don't call it "submit" - it over-rides the form.submit method!
 
 //-----------------------------------------------------------------------------------
-define("FORM_TEXT_AREA_WIDTH", 70);
-define("FORM_TEXT_AREA_DEPTH", 7);
-define("FORM_MAX_TEXT_AREA_ROWS", 60);        // maximum number of rows in a text area, unless user specifies more
-define("FORM_STD_COL_WIDTH", 25);   // used to calculate col span to help keep form neat!
-define("FORM_URL_WIDTH", 120);        // standard maxlen for a URL
+define('FORM_TEXT_AREA_WIDTH', 70);
+define('FORM_TEXT_AREA_DEPTH', 7);
+define('FORM_MAX_TEXT_AREA_ROWS', 60);        // maximum number of rows in a text area, unless user specifies more
+define('FORM_STD_COL_WIDTH', 25);   // used to calculate col span to help keep form neat!
+define('FORM_URL_WIDTH', 120);        // standard maxlen for a URL
 
 //globals
-$gFormID               = "";             // counter to identify each form uniquely
-$gFormName             = "";           // to identify each form uniquely by name
+$gFormID               = '';             // counter to identify each form uniquely
+$gFormName             = '';           // to identify each form uniquely by name
 $gInForm               = false;          // to control form errors
-$gFirstFormTextBox     = "";   // used to place the focus in the first text item box
+$gFirstFormTextBox     = '';   // used to place the focus in the first text item box
 $gFormSectionLevel     = 0;   // used to ensure form sections are controlled properly
 $gFormGroupLevel       = 0;   // used to ensure form groups are controlled properly
-$gFormHiddenParams     = "";   // to accumulate the values of hidden parameters
-$gFormCaptions         = "";
+$gFormHiddenParams     = '';   // to accumulate the values of hidden parameters
+$gFormCaptions         = '';
 $gValidationCollection = []; // validation control
 
 //=============================================================================
-function form_Start($serviceURI = "")
+function form_Start($serviceURI = '')
 {
     global $gInForm, $gFormID, $gFormName, $gFormUsedDateBox, $gFirstFormTextBox,
         $gFormHiddenParams, $gFormSectionLevel, $gFormGroupLevel,
         $gValidationCollection, $gPageDateCodeWritten, $gFormCaptions;
 
     $gFormID              += 1;
-    $gFormName             = "Form" . $gFormID;
+    $gFormName             = 'Form' . $gFormID;
     $gFormUsedDateBox      = false;
-    $gFirstFormTextBox     = "";
+    $gFirstFormTextBox     = '';
     $gFormHiddenParams     = [];
     $gFormCaptions         = [];
     $gValidationCollection = [];
 
     if ($gInForm) {
-        trigger_error("Nested forms - form_start() inside form");
+        trigger_error('Nested forms - form_start() inside form');
     } else {
         $gInForm = true;
     }
     if (strlen($serviceURI) <= 0) {
-        $serviceURI = "?";
+        $serviceURI = '?';
     }
     print "\n<Form ID='$gFormName' Action='$serviceURI' Method='post' enctype='multipart/form-data' onsubmit='return Validate" . $gFormName . "()'>\n";
     form_TableStart(0);
@@ -236,13 +236,13 @@ function form_End(
         $gPageDateCodeWritten, $gFormCaptions, $Language;
 
     if (! $gInForm) {
-        trigger_error("Nested forms - form_End() outside of form");
+        trigger_error('Nested forms - form_End() outside of form');
     }
     if ($gFormSectionLevel < 0) {
-        trigger_error("Unbalanced form_SectionStart/End()");
+        trigger_error('Unbalanced form_SectionStart/End()');
     }
     if ($gFormGroupLevel < 0) {
-        trigger_error("Unbalanced form_GroupStart/End()");
+        trigger_error('Unbalanced form_GroupStart/End()');
     }
     if (is_null($SubmitLegend)) {
         // passing an empty string is different from defaulting to standard button
@@ -278,7 +278,7 @@ function form_End(
         $gPageDateCodeWritten = true;
     }
     // Write form validation code
-    $script         = "function Validate" . $gFormName . "()\n";
+    $script         = 'function Validate' . $gFormName . "()\n";
     $script        .= "{\n";
     $script        .= "var result = true;\n";
     $EmitEmailCode  = false;
@@ -288,8 +288,8 @@ function form_End(
             trigger_error("Validation item '" .
                 $valItem->ParamName . "' is not a form item ($valItemKey => $valItem)");
         }
-        $jsItemRef      = form_JS_ElementRef($valItem->ParamName) . ".value";
-        $jsItemErrStart = "{result=false;alert('" . addslashes($gFormCaptions[$valItem->ParamName] ?? '') . ": ";
+        $jsItemRef      = form_JS_ElementRef($valItem->ParamName) . '.value';
+        $jsItemErrStart = "{result=false;alert('" . addslashes($gFormCaptions[$valItem->ParamName] ?? '') . ': ';
         $jsItemErrEnd   = "');}\n";
         $jsItemPresent  = "if ($jsItemRef == '')"
                     . $jsItemErrStart
@@ -313,18 +313,18 @@ function form_End(
                 break;
             case FORM_VAL_IS_NUMBER:
                 $EmitNumberCode = true;
-                $script        .= $jsItemPresent . " else " . $jsItemNumeric;
+                $script        .= $jsItemPresent . ' else ' . $jsItemNumeric;
                 break;
             case FORM_VAL_IS_LT:
                 $EmitNumberCode = true;
-                $script        .= $jsItemPresent . " else " . $jsItemNumeric . " else if ($jsItemRef>=" . $valItem->Param . ")"
+                $script        .= $jsItemPresent . ' else ' . $jsItemNumeric . " else if ($jsItemRef>=" . $valItem->Param . ')'
                     . $jsItemErrStart
                     . sprintf(dgettext('tuleap-projectlinks', 'must be less than %1$s'), $valItem->Param)
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_GT:
                 $EmitNumberCode = true;
-                $script        .= $jsItemPresent . " else " . $jsItemNumeric . " else if ($jsItemRef<=" . $valItem->Param . ")"
+                $script        .= $jsItemPresent . ' else ' . $jsItemNumeric . " else if ($jsItemRef<=" . $valItem->Param . ')'
                     . $jsItemErrStart
                     . sprintf(dgettext('tuleap-projectlinks', 'must be greater than %1$s'), $valItem->Param)
                     . $jsItemErrEnd;
@@ -337,13 +337,13 @@ function form_End(
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_CHECKED:
-                $script .= "if (!" . form_JS_ElementRef($valItem->ParamName) . ".checked)"
+                $script .= 'if (!' . form_JS_ElementRef($valItem->ParamName) . '.checked)'
                     . $jsItemErrStart
                     . dgettext('tuleap-projectlinks', 'must be checked')
                     . $jsItemErrEnd;
                 break;
             default:
-                trigger_error("Can't handle requested validation: " . $valItem->ParamName . " (" . $valItem->Test . ")");
+                trigger_error("Can't handle requested validation: " . $valItem->ParamName . ' (' . $valItem->Test . ')');
                 break;
         }
     }
@@ -382,7 +382,7 @@ function form_Validation($ParamName, $Tests, $OptionalParam = null)
     global $gValidationCollection, $gInForm;
 
     if (! $gInForm) {
-        trigger_error("form_Validation() outside of form");
+        trigger_error('form_Validation() outside of form');
     }
     if (! is_array($Tests)) {
         $Tests = [$Tests => $OptionalParam];
@@ -405,7 +405,7 @@ function form_Validation($ParamName, $Tests, $OptionalParam = null)
                 break;
 
             default:
-                trigger_error("form_Validation: Can't handle requested validation: " . $ParamName . " (" . $Test . ")");
+                trigger_error("form_Validation: Can't handle requested validation: " . $ParamName . ' (' . $Test . ')');
                 break;
         }
         $valItem->Test           = $Test;
@@ -418,10 +418,10 @@ function form_FocusFirstTextBox()
     global $gFormName, $gFirstFormTextBox, $gInForm;
 
     if (! $gInForm) {
-        trigger_error("form_FocusFirstTextBox() outside of form");
+        trigger_error('form_FocusFirstTextBox() outside of form');
     }
     if (strlen($gFirstFormTextBox) > 0) {
-        $GLOBALS['Response']->includeFooterJavascriptSnippet(form_JS_ElementRef($gFirstFormTextBox) . ".focus();");
+        $GLOBALS['Response']->includeFooterJavascriptSnippet(form_JS_ElementRef($gFirstFormTextBox) . '.focus();');
     }
 }
 
@@ -431,7 +431,7 @@ function form_SetFocusItem($ParamName)
     global $gFirstFormTextBox, $gInForm;
 
     if (! $gInForm) {
-        trigger_error("form_SetFocusItem() outside of form");
+        trigger_error('form_SetFocusItem() outside of form');
     }
     $gFirstFormTextBox = $ParamName;
     form_FocusFirstTextBox();
@@ -447,7 +447,7 @@ function form_NewRow()
     global $gInForm;
 
     if (! $gInForm) {
-        trigger_error("Form item outside form: Form_NewRow()");
+        trigger_error('Form item outside form: Form_NewRow()');
     }
     print "</tr>\n<tr style='vertical-align: top;'>\n";
 }
@@ -458,9 +458,9 @@ function form_Heading($Heading)
     global $gInForm;
 
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_Heading()");
+        trigger_error('Form item outside form: form_Heading()');
     }
-    print "</tr>\n<tr><th colspan='2'>" . nz($Heading, "&nbsp;") . "</th></tr>\n<tr>\n";
+    print "</tr>\n<tr><th colspan='2'>" . nz($Heading, '&nbsp;') . "</th></tr>\n<tr>\n";
 }
 
 //=============================================================================
@@ -468,9 +468,9 @@ function form_Text($Text, $SectionSpan = 1)
 {
     global $gInForm;
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_Text()");
+        trigger_error('Form item outside form: form_Text()');
     }
-    print "<td colspan='" . (ceil($SectionSpan) * 2) . "'>" . nz($Text, "&nbsp;") .
+    print "<td colspan='" . (ceil($SectionSpan) * 2) . "'>" . nz($Text, '&nbsp;') .
         "</td>\n";
 }
 
@@ -479,7 +479,7 @@ function form_SkipColumn()
 {
     global $gInForm;
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_SkipColumn()");
+        trigger_error('Form item outside form: form_SkipColumn()');
     }
     print "<td>&nbsp;</td><td>&nbsp;</td>\n";
 }
@@ -489,7 +489,7 @@ function form_genSubmit($SubmitLegend)
 {
     global $gInForm;
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_genSubmit: " . SubmitLegend);
+        trigger_error('Form item outside form: form_genSubmit: ' . SubmitLegend);
     }
     print "<td align='center'>
         <input type=submit name='" . SUBMIT_BUTTON_NAME . "'
@@ -501,7 +501,7 @@ function form_genSubmitImg($ImageFileHTMLPath)
 {
     global $gInForm;
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_genSubmitImg: " . ImageFileHTMLPath);
+        trigger_error('Form item outside form: form_genSubmitImg: ' . ImageFileHTMLPath);
     }
     print "<td align='center'>
         <input type='image'" . FORM_BUTTON_STYLE . " src='" . $ImageFileHTMLPath . "'
@@ -515,12 +515,12 @@ function form_SectionStart($Text = null)
     global $gInForm, $gFormSectionLevel;
     print "\n<!-- form_SectionStart (start) -->\n";
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_SectionStart()");
+        trigger_error('Form item outside form: form_SectionStart()');
     }
     form_TableEnd();
     form_TableStart(1);
-    print "<td>" . (is_null($Text) ?
-        "" : "<span style='font-weight: bold;'>$Text</span>") . "\n";
+    print '<td>' . (is_null($Text) ?
+        '' : "<span style='font-weight: bold;'>$Text</span>") . "\n";
     form_TableStart(0);
     $gFormSectionLevel += 1;
     print "\n<!-- form_SectionStart (end) -->\n";
@@ -532,10 +532,10 @@ function form_SectionEnd()
     global $gInForm, $gFormSectionLevel;
     print "\n<!-- form_SectionEnd (start) -->\n";
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_SectionEnd()");
+        trigger_error('Form item outside form: form_SectionEnd()');
     }
     if ($gFormSectionLevel <= 0) {
-        trigger_error("form_SectionEnd when no section started");
+        trigger_error('form_SectionEnd when no section started');
     }
     form_TableEnd();
     print "</td>\n";
@@ -546,15 +546,15 @@ function form_SectionEnd()
 }
 
 //=============================================================================
-function form_GroupStart($Caption = "", $GroupHeading = "", $ColSpan = 1)
+function form_GroupStart($Caption = '', $GroupHeading = '', $ColSpan = 1)
 {
     global $gInForm, $gFormGroupLevel;
 
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_GroupStart()");
+        trigger_error('Form item outside form: form_GroupStart()');
     }
     if (strlen($Caption) > 0) {
-        print "<td" . FORM_CAPTION_STYLE . ">$Caption</td>";
+        print '<td' . FORM_CAPTION_STYLE . ">$Caption</td>";
     }
     if ($ColSpan > 2) {
         print "<td Colspan='" . ($ColSpan - 1) . "'>\n";
@@ -563,7 +563,7 @@ function form_GroupStart($Caption = "", $GroupHeading = "", $ColSpan = 1)
     }
     print "<fieldset>\n";
     if (strlen($GroupHeading) > 0) {
-        print "<legend>" . $GroupHeading . "</legend>\n";
+        print '<legend>' . $GroupHeading . "</legend>\n";
     }
     form_TableStart(0);
     $gFormGroupLevel += 1;
@@ -575,10 +575,10 @@ function form_GroupEnd()
     global $gInForm, $gFormGroupLevel;
 
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_GroupEnd()");
+        trigger_error('Form item outside form: form_GroupEnd()');
     }
     if ($gFormGroupLevel <= 0) {
-        trigger_error("form_GroupEnd when no group started");
+        trigger_error('form_GroupEnd when no group started');
     }
     form_TableEnd();
     print "</fieldset>\n";
@@ -591,13 +591,13 @@ function form_GroupEnd()
 //=============================================================================
 
 //=============================================================================
-function form_SelectAllCheckbox($GroupName = "", $isChecked = false)
+function form_SelectAllCheckbox($GroupName = '', $isChecked = false)
 {
     global $gInForm, $gFormName, $Language;
     static $gFormSelectAllCodeWritten = false;
 
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_SelectAllCheckbox()");
+        trigger_error('Form item outside form: form_SelectAllCheckbox()');
     }
     if (! $gFormSelectAllCodeWritten) {
         $gFormSelectAllCodeWritten = true;
@@ -613,7 +613,7 @@ function form_SelectAllCheckbox($GroupName = "", $isChecked = false)
         $script .= "}\n";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($script);
     }
-    print "<INPUT onclick=\"formSelectDeselectAll(this, '$gFormName', '$GroupName');\" type='checkbox'" . ($isChecked ? " CHECKED" : "") . " Title='" . dgettext('tuleap-projectlinks', 'Select All') . "'>\n";
+    print "<INPUT onclick=\"formSelectDeselectAll(this, '$gFormName', '$GroupName');\" type='checkbox'" . ($isChecked ? ' CHECKED' : '') . " Title='" . dgettext('tuleap-projectlinks', 'Select All') . "'>\n";
 }
 
 //=============================================================================
@@ -622,11 +622,11 @@ function form_HiddenParams($params)
     global $gInForm, $gFormHiddenParams;
 
     if (! $gInForm) {
-        trigger_error("HiddenParams called outside of form");
+        trigger_error('HiddenParams called outside of form');
     }
     foreach ($params as $name => $value) {
         if (isset($gFormHiddenParams[$name])) {
-            $gFormHiddenParams[$name] .= "," . $value;
+            $gFormHiddenParams[$name] .= ',' . $value;
         } else {
             $gFormHiddenParams[$name] = $value;
         }
@@ -639,12 +639,12 @@ function form_genJSButton($Caption, $JavaScript, $ImageFileHTMLPath = null)
 // JavaScript must use only single quotes, since the double quotes are used to enclose it
     global $gInForm;
 
-    $CaptionReplaced = addslashes(strip_tags(nz($Caption, "Go")));
+    $CaptionReplaced = addslashes(strip_tags(nz($Caption, 'Go')));
     if (stristr($JavaScript, '"')) {
-        trigger_error("form_GenJSButton: JavaScript must not use double quotes");
+        trigger_error('form_GenJSButton: JavaScript must not use double quotes');
     }
     if ($gInForm) {
-        print "<td>";
+        print '<td>';
     }
     print "<button type='button'" . FORM_BUTTON_STYLE . " onclick=\"javascript:$JavaScript;\" title='$CaptionReplaced' name='$CaptionReplaced'>";
     if (is_null($ImageFileHTMLPath)) {
@@ -652,22 +652,22 @@ function form_genJSButton($Caption, $JavaScript, $ImageFileHTMLPath = null)
     } else {
         print "<img src='$ImageFileHTMLPath' alt='$Caption'>";
     }
-    print "</button>";
+    print '</button>';
     if ($gInForm) {
         print "</td>\n";
     }
 }
 
 //=============================================================================
-define("SUBMIT_ON_CHANGE", 1);
-define("NO_SUBMIT_ON_CHANGE", 0);
+define('SUBMIT_ON_CHANGE', 1);
+define('NO_SUBMIT_ON_CHANGE', 0);
 
 //=============================================================================
-define("NO_BLANK_ROW_PREFIX", false);
-define("BLANK_ROW_PREFIX", true);
+define('NO_BLANK_ROW_PREFIX', false);
+define('BLANK_ROW_PREFIX', true);
 
 //=============================================================================
-function form_genTextBox($ParamName, $Caption, $DefaultValue = "", $Width = FORM_TEXT_AREA_WIDTH, $MaxInputLength = 0)
+function form_genTextBox($ParamName, $Caption, $DefaultValue = '', $Width = FORM_TEXT_AREA_WIDTH, $MaxInputLength = 0)
 {
 // if the default value is prefixed with "COF:" (clear on focus) {
 // the box is displayed with the DefaultValue as help text, and the text
@@ -675,31 +675,31 @@ function form_genTextBox($ParamName, $Caption, $DefaultValue = "", $Width = FORM
     global $gInForm, $gFormCaptions, $gFirstFormTextBox;
 
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_genTextBox()");
+        trigger_error('Form item outside form: form_genTextBox()');
     }
     if (isset($gFormCaptions[$ParamName])) {
         trigger_error("Form item name is reused: $ParamName");
     }
     $gFormCaptions[$ParamName] = $Caption;
-    print "<td" . FORM_CAPTION_STYLE . ">$Caption</td>";
+    print '<td' . FORM_CAPTION_STYLE . ">$Caption</td>";
     if ($Width > FORM_STD_COL_WIDTH) {
-        print "<td colspan=" . ceil($Width / FORM_STD_COL_WIDTH) . ">";
+        print '<td colspan=' . ceil($Width / FORM_STD_COL_WIDTH) . '>';
     } else {
-        print "<td>";
+        print '<td>';
     }
     switch (strtoupper(substr($DefaultValue, 0, 4))) {
-        case "COF:":    // clear on focus
+        case 'COF:':    // clear on focus
             $DefaultValue = substr($DefaultValue, 4);
             $Script       = " onfocus=\"JavaScript:if (this.value == '" . addslashes($DefaultValue) . "') this.value='';\"";
             break;
         default:
-            $Script = "";
+            $Script = '';
             break;
     }
-    print "<input type='text'" . $Script . " name='$ParamName'" . ($Width > 0 ? " size=" . $Width : "") . ($MaxInputLength > 0 ? " maxlength=" . $MaxInputLength : "") .
+    print "<input type='text'" . $Script . " name='$ParamName'" . ($Width > 0 ? ' size=' . $Width : '') . ($MaxInputLength > 0 ? ' maxlength=' . $MaxInputLength : '') .
         " value='" . addslashes($DefaultValue) . "'>";
     print "</td>\n";
-    if ($gFirstFormTextBox == "") {
+    if ($gFirstFormTextBox == '') {
         $gFirstFormTextBox = $ParamName;
     }
 }
@@ -711,68 +711,68 @@ function form_genShowBox($Caption, $Value, $UpdateURL = null)
     global $gInForm;
 
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_genShowBox()");
+        trigger_error('Form item outside form: form_genShowBox()');
     }
     if (strlen($Caption) > 0) {
-        print "<td" . FORM_CAPTION_STYLE . ">$Caption</td><td>";
+        print '<td' . FORM_CAPTION_STYLE . ">$Caption</td><td>";
     } else {
-        print "<td colspan=2>";
+        print '<td colspan=2>';
     }
-    print nz($Value, "&nbsp;");
+    print nz($Value, '&nbsp;');
     if (! is_null($UpdateURL)) {
-        print "&nbsp;<span style='font-size: 80%;'" . mkAH("-&gt;&gt;", $UpdateURL) . "</span>";
+        print "&nbsp;<span style='font-size: 80%;'" . mkAH('-&gt;&gt;', $UpdateURL) . '</span>';
     }
     print "</td>\n";
 }
 
 //=============================================================================
-function form_genFileBox($ParamName, $Caption, $DefaultValue = "", $AcceptableMimeTypes = null)
+function form_genFileBox($ParamName, $Caption, $DefaultValue = '', $AcceptableMimeTypes = null)
 {
     global $gInForm, $gFormCaptions, $gFirstFormTextBox;
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_genFileBox()");
+        trigger_error('Form item outside form: form_genFileBox()');
     }
     if (isset($gFormCaptions[$ParamName])) {
         trigger_error("Form item name is reused: $ParamName");
     }
     $gFormCaptions[$ParamName] = $Caption;
-    print "<td" . FORM_CAPTION_STYLE . ">$Caption</td><td><input type='file' name='$ParamName'";
+    print '<td' . FORM_CAPTION_STYLE . ">$Caption</td><td><input type='file' name='$ParamName'";
     if (! is_null($AcceptableMimeTypes)) {
         print " accept='$AcceptableMimeTypes'";
     }
     print " value='" . addslashes($DefaultValue) . "' size='50%'></td>\n";    //note that most browsers see default here as a security issue and ignore it
-    if ($gFirstFormTextBox == "") {
+    if ($gFirstFormTextBox == '') {
         $gFirstFormTextBox = $ParamName;
     }
 }
 
 //=============================================================================
-function form_genCheckbox($ParamName, $Caption, $ValueIfChecked, $DefaultValue = "", $SubmitOnChange = NO_SUBMIT_ON_CHANGE)
+function form_genCheckbox($ParamName, $Caption, $ValueIfChecked, $DefaultValue = '', $SubmitOnChange = NO_SUBMIT_ON_CHANGE)
 {
     global $gInForm, $gFormCaptions;
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_genCheckbox()");
+        trigger_error('Form item outside form: form_genCheckbox()');
     }
     if (isset($gFormCaptions[$ParamName])) {
         // only a problem is the array notification is not used
-        if (substr($ParamName, -2) <> "[]") {
+        if (substr($ParamName, -2) <> '[]') {
             trigger_error("Form item name is reused without array[] identifier: $ParamName");
         }
     }
     $gFormCaptions[$ParamName] = $Caption;
-    print "<td colspan=2><input type='Checkbox' name='$ParamName'" . ($SubmitOnChange ? " onchange='this.form.submit();'" : "");
+    print "<td colspan=2><input type='Checkbox' name='$ParamName'" . ($SubmitOnChange ? " onchange='this.form.submit();'" : '');
     if (strlen($ValueIfChecked) > 0) {
         print " value='" . addslashes($ValueIfChecked) . "'";
     }
     if (is_bool($DefaultValue)) {
         if ($DefaultValue) {
-            print " Checked";
+            print ' Checked';
         }
     } elseif ($DefaultValue == $ValueIfChecked) {
-        print " Checked";
+        print ' Checked';
     }
     if (strlen($Caption) > 0) {
-        print ">&nbsp;<span" . FORM_CAPTION_STYLE . ">$Caption</span>\n";
+        print '>&nbsp;<span' . FORM_CAPTION_STYLE . ">$Caption</span>\n";
     } else {
         print ">\n";
     }
@@ -836,16 +836,16 @@ function form_genDateBox($ParamName, $Caption, $DefaultValue = "")
 */
 
 //=============================================================================
-function form_genRadioButton($ParamName, $options, $DefaultValue = "")
+function form_genRadioButton($ParamName, $options, $DefaultValue = '')
 {
     global $gInForm, $gFormCaptions;
 
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_genRadioButton()");
+        trigger_error('Form item outside form: form_genRadioButton()');
     }
     foreach ($options as $Caption => $ValueIfChecked) {
         if (isset($gFormCaptions[$ParamName])) {
-            $gFormCaptions[$ParamName] .= "; " . $Caption;
+            $gFormCaptions[$ParamName] .= '; ' . $Caption;
         } else {
             $gFormCaptions[$ParamName] = $Caption;
         }
@@ -855,22 +855,22 @@ function form_genRadioButton($ParamName, $options, $DefaultValue = "")
         }
         if (is_bool($DefaultValue)) {
             if ($DefaultValue) {
-                print " Checked";
+                print ' Checked';
             }
         } elseif ($DefaultValue == $ValueIfChecked) {
-            print " Checked";
+            print ' Checked';
         }
-        print "><span" . FORM_CAPTION_STYLE . ">$Caption</span></td>\n";
+        print '><span' . FORM_CAPTION_STYLE . ">$Caption</span></td>\n";
     }
 }
 
 //=============================================================================
-function form_genTextArea($ParamName, $Caption, $DefaultValue = "", $MinRows = FORM_TEXT_AREA_DEPTH, $Cols = FORM_TEXT_AREA_WIDTH)
+function form_genTextArea($ParamName, $Caption, $DefaultValue = '', $MinRows = FORM_TEXT_AREA_DEPTH, $Cols = FORM_TEXT_AREA_WIDTH)
 {
     global $gInForm, $gFormCaptions, $gFirstFormTextBox;
 
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_genTextArea()");
+        trigger_error('Form item outside form: form_genTextArea()');
     }
     if (isset($gFormCaptions[$ParamName])) {
         trigger_error("Form item name is reused: $ParamName");
@@ -887,16 +887,16 @@ function form_genTextArea($ParamName, $Caption, $DefaultValue = "", $MinRows = F
     } elseif (($Rows > FORM_MAX_TEXT_AREA_ROWS) && ($MinRows <= FORM_MAX_TEXT_AREA_ROWS)) {
         $Rows = FORM_MAX_TEXT_AREA_ROWS;
     }
-    print "<td" . FORM_CAPTION_STYLE . ">$Caption</td>";
+    print '<td' . FORM_CAPTION_STYLE . ">$Caption</td>";
     if ($Cols > FORM_STD_COL_WIDTH) {
-        print "<td colspan=" . ceil($Cols / FORM_STD_COL_WIDTH) . ">";
+        print '<td colspan=' . ceil($Cols / FORM_STD_COL_WIDTH) . '>';
     } else {
-        print "<td>";
+        print '<td>';
     }
     print "<TextArea name='$ParamName' rows=$Rows cols=$Cols wrap='soft'>"
         . $DefaultValue
         . "</textarea></td>\n";
-    if ($gFirstFormTextBox == "") {
+    if ($gFirstFormTextBox == '') {
         $gFirstFormTextBox = $ParamName;
     }
 }
@@ -920,7 +920,7 @@ function form_JS_ElementRef($Elementname)
     global $gFormName, $gInForm;
 
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_JS_ElementRef()");
+        trigger_error('Form item outside form: form_JS_ElementRef()');
     }
     return "document.forms['$gFormName'].elements['$Elementname']";
 }
@@ -931,7 +931,7 @@ function form_JS_ElementRef($Elementname)
  */
 function nz($item, $default)
 {
-    if (is_null($item) || ($item == "")) {
+    if (is_null($item) || ($item == '')) {
         return $default;
     } else {
         return $item;
@@ -939,25 +939,25 @@ function nz($item, $default)
 }
 
 //=============================================================================
-function mkAH($caption, $URL, $title = "", $params = null)
+function mkAH($caption, $URL, $title = '', $params = null)
 {
     // $params = array("param" => "value"); e.g. $params = array("onclick" => "function()") - NOTE: additional parameters must not use double quotes
-    return "<a href='" . str_replace("'", "&#039;", $URL) . "'" .
+    return "<a href='" . str_replace("'", '&#039;', $URL) . "'" .
         parseAdditionalParams($params) .
-        ((strlen($title) <= 0) ? "" : " title='" . str_replace("'", "&#039;", $title) . "'") .
+        ((strlen($title) <= 0) ? '' : " title='" . str_replace("'", '&#039;', $title) . "'") .
         ">$caption</a>";
 }
 
 //=============================================================================
 function parseAdditionalParams($params = null)
 {
-    $str = "";
+    $str = '';
     if (! is_null($params)) {
         foreach ($params as $item => $value) {
             if (stristr($value, '"')) {
-                trigger_error("additional parameters must not use double quotes");
+                trigger_error('additional parameters must not use double quotes');
             }
-            $str .= " " . $item . "=\"" . $value . "\"";
+            $str .= ' ' . $item . '="' . $value . '"';
         }
     }
     return $str;
@@ -967,7 +967,7 @@ function parseAdditionalParams($params = null)
 function graphicForBoolean($bool)
 {
     if ($bool) {
-        return '<img src="' . util_get_image_theme("ic/check.png") . '" border=0 alt="Y">';
+        return '<img src="' . util_get_image_theme('ic/check.png') . '" border=0 alt="Y">';
     } else {
         return '<span style="font-weight: bold">X</span>';
     }
@@ -990,30 +990,30 @@ function repeat_uri($new_params)
 **/
 
 //=============================================================================
-function update_database($tableName, $items, $selectCriteria = "")
+function update_database($tableName, $items, $selectCriteria = '')
 {
     // database utitlity to insert./update DB record
-    if (stristr($selectCriteria, ";")) {
+    if (stristr($selectCriteria, ';')) {
         exit_error(
-            "update_database: Select criteria contains illegal character",
+            'update_database: Select criteria contains illegal character',
             "$tableName: " . htmlentities($selectCriteria)
         );
     }
-    $sql = "";
+    $sql = '';
     if (strlen($selectCriteria) <= 0) {
         // Insert
-        $SQLitems  = "";
-        $SQLValues = "";
+        $SQLitems  = '';
+        $SQLValues = '';
         foreach ($items as $name => $value) {
-            $SQLitems  .= (strlen($SQLitems) ? "," : "") . " $name";
-            $SQLValues .= (strlen($SQLValues) ? "," : "") . " $value";
+            $SQLitems  .= (strlen($SQLitems) ? ',' : '') . " $name";
+            $SQLValues .= (strlen($SQLValues) ? ',' : '') . " $value";
         }
         $sql = "INSERT INTO $tableName ($SQLitems) VALUES ($SQLValues);";
     } else {
         // Update
-        $SQLstr = "";
+        $SQLstr = '';
         foreach ($items as $name => $value) {
-            $SQLstr .= (strlen($SQLstr) ? ", " : "") . " $name=$value";
+            $SQLstr .= (strlen($SQLstr) ? ', ' : '') . " $name=$value";
         }
         $sql = "UPDATE $tableName SET $SQLstr WHERE ($selectCriteria);";
     }

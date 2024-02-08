@@ -119,7 +119,7 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
             return new ParametrizedListFromWhere(
                 self::OPENLIST_FROM,
                 self::LIST_FROM,
-                "IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)",
+                'IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)',
                 "$filter_alias.artifact_id IS NOT NULL",
                 [Tracker_FormElement_Field_List::NONE_VALUE],
             );
@@ -132,7 +132,7 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,
             self::LIST_FROM,
-            "ugroup1.name = ? OR ugroup2.name = ?",
+            'ugroup1.name = ? OR ugroup2.name = ?',
             "$filter_alias.artifact_id IS NOT NULL",
             [$value, $value],
         );
@@ -148,7 +148,7 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
             return new ParametrizedListFromWhere(
                 self::OPENLIST_FROM,
                 self::LIST_FROM,
-                "IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)",
+                'IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)',
                 "$filter_alias.artifact_id IS NULL",
                 [Tracker_FormElement_Field_List::NONE_VALUE],
             );
@@ -161,7 +161,7 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,
             self::LIST_FROM,
-            "ugroup1.name = ? OR ugroup2.name = ?",
+            'ugroup1.name = ? OR ugroup2.name = ?',
             "$filter_alias.artifact_id IS NULL",
             [$value, $value],
         );
@@ -193,8 +193,8 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
 
             return $value;
         }, $wrapper->getValueWrappers());
-        $ugroup1_statement = EasyStatement::open()->in("ugroup1.name IN (?*)", $values);
-        $ugroup2_statement = EasyStatement::open()->in("ugroup2.name IN (?*)", $values);
+        $ugroup1_statement = EasyStatement::open()->in('ugroup1.name IN (?*)', $values);
+        $ugroup2_statement = EasyStatement::open()->in('ugroup2.name IN (?*)', $values);
 
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,
@@ -217,8 +217,8 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
 
             return $value;
         }, $wrapper->getValueWrappers());
-        $ugroup1_statement = EasyStatement::open()->in("ugroup1.name IN (?*)", $values);
-        $ugroup2_statement = EasyStatement::open()->in("ugroup2.name IN (?*)", $values);
+        $ugroup1_statement = EasyStatement::open()->in('ugroup1.name IN (?*)', $values);
+        $ugroup2_statement = EasyStatement::open()->in('ugroup2.name IN (?*)', $values);
 
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,

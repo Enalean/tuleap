@@ -28,7 +28,7 @@ final class InvalidMetadataForComparisonException extends \Exception
     {
         parent::__construct(
             sprintf(
-                dgettext("tuleap-tracker", "'%s' is not supported for the operator %s."),
+                dgettext('tuleap-tracker', "'%s' is not supported for the operator %s."),
                 $metadata->getName(),
                 $operator
             )

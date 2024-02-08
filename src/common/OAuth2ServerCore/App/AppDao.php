@@ -61,10 +61,10 @@ class AppDao extends DataAccessObject implements RetrieveAppMatchingClientID
      */
     public function searchByProject(\Project $project, string $app_type): array
     {
-        $sql = "SELECT id, project_id, name, redirect_endpoint, use_pkce
+        $sql = 'SELECT id, project_id, name, redirect_endpoint, use_pkce
                 FROM oauth2_server_app
                 WHERE project_id = ?
-                    AND app_type = ?";
+                    AND app_type = ?';
 
         return $this->getDB()->run($sql, $project->getID(), $app_type);
     }

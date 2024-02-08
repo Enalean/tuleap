@@ -70,7 +70,7 @@ class JiraToTuleapFieldTypeMapper
         $jira_field_label = $jira_field->getLabel();
 
         // ignore this jira always there mapping who is created like a custom one
-        if ($jira_field_label === "Flagged") {
+        if ($jira_field_label === 'Flagged') {
             return $xml_tracker;
         }
 
@@ -403,10 +403,10 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.pyxis.greenhopper.jira:gh-epic-label':
                 case 'com.pyxis.greenhopper.jira:gh-epic-status':
                 case 'issuerestriction':
-                    $this->logger->debug(" |_ Field " . $id . " (" . $jira_type . ") ignored ");
+                    $this->logger->debug(' |_ Field ' . $id . ' (' . $jira_type . ') ignored ');
                     break;
                 default:
-                    $this->error_collector->addError("Unknown mapping type " . $jira_type);
+                    $this->error_collector->addError('Unknown mapping type ' . $jira_type);
             }
         }
 

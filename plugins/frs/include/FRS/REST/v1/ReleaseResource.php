@@ -191,7 +191,7 @@ class ReleaseResource extends AuthenticatedResource
         $package = $this->package_factory->getFRSPackageFromDb($body->package_id);
 
         if (! $package) {
-            throw new RestException(400, "Package not found");
+            throw new RestException(400, 'Package not found');
         }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -199,11 +199,11 @@ class ReleaseResource extends AuthenticatedResource
         );
 
         if (! $package->isActive()) {
-            throw new RestException(403, "Package is not active");
+            throw new RestException(403, 'Package is not active');
         }
 
         if (! $this->package_factory->userCanUpdate($package->getGroupID(), $package->getPackageID(), $user->getId())) {
-            throw new RestException(403, "Write access to package denied");
+            throw new RestException(403, 'Write access to package denied');
         }
 
         if ($this->release_factory->isReleaseNameExist($body->name, $body->package_id)) {
@@ -220,12 +220,12 @@ class ReleaseResource extends AuthenticatedResource
 
         $id = $this->release_factory->create($release_array);
         if (! $id) {
-            throw new RestException(500, "An error occurred while creating the release");
+            throw new RestException(500, 'An error occurred while creating the release');
         }
 
         $release = $this->release_factory->getFRSReleaseFromDb($id);
         if (! $release) {
-            throw new RestException(500, "Unable to retrieve the release from the DB. Please contact site administrators");
+            throw new RestException(500, 'Unable to retrieve the release from the DB. Please contact site administrators');
         }
         return new ReleaseRepresentation($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder);
     }
@@ -258,7 +258,7 @@ class ReleaseResource extends AuthenticatedResource
         );
 
         if (! $this->release_factory->userCanUpdate($release->getGroupID(), $release->getReleaseID(), $user->getId())) {
-            throw new RestException(403, "Write access to release denied");
+            throw new RestException(403, 'Write access to release denied');
         }
 
         $release_array = $this->getArrayForUpdateRelease($release, $body);
@@ -266,7 +266,7 @@ class ReleaseResource extends AuthenticatedResource
         if (count($release_array) > 1) {
             $is_success = $this->release_factory->update($release_array);
             if (! $is_success) {
-                throw new RestException(500, "An error occurred while updating the release");
+                throw new RestException(500, 'An error occurred while updating the release');
             }
         }
     }
@@ -379,7 +379,7 @@ class ReleaseResource extends AuthenticatedResource
         $package = $release->getPackage();
 
         if ($package->isHidden() && ! $this->release_factory->userCanAdmin($user, $package->getGroupID())) {
-            throw new RestException(403, "Access to package denied");
+            throw new RestException(403, 'Access to package denied');
         }
 
         if (
@@ -390,7 +390,7 @@ class ReleaseResource extends AuthenticatedResource
                 $user->getId()
             )
         ) {
-            throw new RestException(403, "Access to release denied");
+            throw new RestException(403, 'Access to release denied');
         }
 
         return $user;

@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ServiceUrlCollector implements Dispatchable
 {
-    public const NAME = "serviceUrlCollector";
+    public const NAME = 'serviceUrlCollector';
     /**
      * @var \Project
      */

@@ -69,7 +69,7 @@ class ProjectKanban extends KanbanWidget
 
         $preference = $widget->addChild('preference');
         if ($preference === null) {
-            throw new \Exception("Unable to add preference node");
+            throw new \Exception('Unable to add preference node');
         }
         $preference->addAttribute('name', 'kanban');
 
@@ -83,7 +83,7 @@ class ProjectKanban extends KanbanWidget
 
         $reference = $preference->addChild('reference');
         if ($reference === null) {
-            throw new \Exception("Unable to add reference node");
+            throw new \Exception('Unable to add reference node');
         }
         $reference->addAttribute('name', 'id');
         $reference->addAttribute('REF', KanbanXMLExporter::KANBAN_ID_PREFIX . $this->kanban_id);

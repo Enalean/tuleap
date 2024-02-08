@@ -61,8 +61,8 @@ class RedisPersistentQueue implements PersistentQueue
                 $this->logger->debug('Connecting to redis server');
                 $this->connect();
                 $this->logger->debug('Connect OK');
-                if ($this->redis->echo("This is Tuleap") !== "This is Tuleap") {
-                    throw new QueueServerConnectionException("Unable to echo with redis server");
+                if ($this->redis->echo('This is Tuleap') !== 'This is Tuleap') {
+                    throw new QueueServerConnectionException('Unable to echo with redis server');
                 }
                 $this->logger->debug('Echoed to redis');
                 $this->queuePastEvents($this->redis, $processing_queue);

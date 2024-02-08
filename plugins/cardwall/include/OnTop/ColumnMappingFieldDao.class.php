@@ -42,7 +42,7 @@ class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $tracker_id          = $this->da->escapeInt($tracker_id);
         if ($field_id === null) {
-            $field_id = " NULL ";
+            $field_id = ' NULL ';
         } else {
             $field_id = $this->da->escapeInt($field_id);
         }
@@ -56,7 +56,7 @@ class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $tracker_id          = $this->da->escapeInt($tracker_id);
         if ($field_id === null) {
-            $field_id = " NULL ";
+            $field_id = ' NULL ';
         } else {
             $field_id = $this->da->escapeInt($field_id);
         }
@@ -89,23 +89,23 @@ class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject
     {
         $from_cardwall_tracker_id = $this->da->escapeInt($from_cardwall_tracker_id);
         $to_cardwall_tracker_id   = $this->da->escapeInt($to_cardwall_tracker_id);
-        $to_field_stmt            = " CASE field_id ";
+        $to_field_stmt            = ' CASE field_id ';
         foreach ($field_mapping as $mapping) {
             $from           = $this->da->escapeInt($mapping['from']);
             $to             = $this->da->escapeInt($mapping['to']);
             $to_field_stmt .= " WHEN $from THEN $to ";
         }
-        $to_field_stmt .= " ELSE NULL ";
-        $to_field_stmt .= " END ";
+        $to_field_stmt .= ' ELSE NULL ';
+        $to_field_stmt .= ' END ';
 
-        $to_tracker_stmt = " CASE tracker_id ";
+        $to_tracker_stmt = ' CASE tracker_id ';
         foreach ($tracker_mapping as $from_tracker_id => $to_tracker_id) {
             $from             = $this->da->escapeInt($from_tracker_id);
             $to               = $this->da->escapeInt($to_tracker_id);
             $to_tracker_stmt .= " WHEN $from THEN $to ";
         }
-        $to_tracker_stmt .= " ELSE NULL ";
-        $to_tracker_stmt .= " END ";
+        $to_tracker_stmt .= ' ELSE NULL ';
+        $to_tracker_stmt .= ' END ';
 
         $sql = "INSERT INTO plugin_cardwall_on_top_column_mapping_field (cardwall_tracker_id, tracker_id, field_id)
                 SELECT $to_cardwall_tracker_id, $to_tracker_stmt, $to_field_stmt

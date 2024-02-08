@@ -28,10 +28,10 @@ class KanbanColumnDao extends DataAccessObject
 {
     public function getColumnWipLimit(int $kanban_id, int $column_id): ?int
     {
-        $sql = "SELECT wip_limit
+        $sql = 'SELECT wip_limit
                 FROM plugin_agiledashboard_kanban_configuration_column
                 WHERE kanban_id = ?
-                AND value_id = ?";
+                AND value_id = ?';
 
         $wip = $this->getDB()->cell($sql, $kanban_id, $column_id);
 
@@ -40,8 +40,8 @@ class KanbanColumnDao extends DataAccessObject
 
     public function setColumnWipLimit(int $kanban_id, int $column_id, int $wip_limit): void
     {
-        $sql = "REPLACE INTO plugin_agiledashboard_kanban_configuration_column (kanban_id, value_id, wip_limit)
-                VALUES (?, ?, ?)";
+        $sql = 'REPLACE INTO plugin_agiledashboard_kanban_configuration_column (kanban_id, value_id, wip_limit)
+                VALUES (?, ?, ?)';
 
         $this->getDB()->run($sql, $kanban_id, $column_id, $wip_limit);
     }
@@ -53,9 +53,9 @@ class KanbanColumnDao extends DataAccessObject
     {
         $this->getDB()->tryFlatTransaction(static function (EasyDB $db) use ($kanban_id, $column_id, $before_delete) {
             if ($before_delete()) {
-                $sql = "DELETE FROM plugin_agiledashboard_kanban_configuration_column
+                $sql = 'DELETE FROM plugin_agiledashboard_kanban_configuration_column
                 WHERE kanban_id = ?
-                AND value_id = ?";
+                AND value_id = ?';
 
                 $db->run($sql, $kanban_id, $column_id);
             }

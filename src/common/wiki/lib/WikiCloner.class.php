@@ -62,7 +62,7 @@ class WikiCloner
     public function newWikiIsUsed()
     {
         if ($this->new_wiki_is_used === null) {
-            $res                    = db_query(sprintf("SELECT is_used FROM service WHERE group_id=%d AND short_name='%s'", $this->group_id, $this->escapeString("wiki")));
+            $res                    = db_query(sprintf("SELECT is_used FROM service WHERE group_id=%d AND short_name='%s'", $this->group_id, $this->escapeString('wiki')));
             $this->new_wiki_is_used = (db_result($res, 0, 'is_used') ==  1);
         }
         return $this->new_wiki_is_used;
@@ -130,7 +130,7 @@ class WikiCloner
         $we_data  = $this->getTemplateWikiEntries();
         foreach ($we_data as $id => $data) {
             $result = db_query(sprintf(
-                "INSERT INTO wiki_group_list (group_id, wiki_name, wiki_link, description, rank, language_id)"
+                'INSERT INTO wiki_group_list (group_id, wiki_name, wiki_link, description, rank, language_id)'
                                     . "VALUES(%d, '%s', '%s', '%s', %d, %s)",
                 $this->group_id,
                 $this->escapeString($data['wiki_name']),
@@ -154,11 +154,11 @@ class WikiCloner
     {
         foreach ($array as $key => $value) {
             $tmpl_version_data = $this->getTemplateWikiVersionData($key);
-            $result            = db_query(sprintf("select version, mtime, minor_edit, content FROM wiki_version WHERE id=%d", $key));
+            $result            = db_query(sprintf('select version, mtime, minor_edit, content FROM wiki_version WHERE id=%d', $key));
             while ($row = db_fetch_array($result)) {
                  $num_ver = $row['version'];
                  $res     = db_query(sprintf(
-                     "INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)"
+                     'INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)'
                      . "VALUES(%d, %d, %d, %d, '%s', '%s')",
                      db_ei($value),
                      db_ei($num_ver),
@@ -182,7 +182,7 @@ class WikiCloner
     public function cloneWikiPageTable()
     {
         $ids    = [];
-        $result = db_query(sprintf("SELECT id, pagename FROM wiki_page WHERE group_id=%d", $this->template_id));
+        $result = db_query(sprintf('SELECT id, pagename FROM wiki_page WHERE group_id=%d', $this->template_id));
         while ($row = db_fetch_array($result)) {
             $pagename           =  $row['pagename'];
             $tmpl_page_id       = $row['id'];
@@ -208,16 +208,16 @@ class WikiCloner
             if (! empty($recent_infos)) {
                 if (! empty($recent_infos['latestminor'])) {
                     $result = db_query(sprintf(
-                        "INSERT INTO wiki_recent (id, latestversion, latestmajor, latestminor)"
-                              . "VALUES(%d, %d, %d, %d)",
+                        'INSERT INTO wiki_recent (id, latestversion, latestmajor, latestminor)'
+                              . 'VALUES(%d, %d, %d, %d)',
                         $new_id,
                         $recent_infos['latestversion'],
                         $recent_infos['latestmajor'],
                         $recent_infos['latestminor']
                     ));
                 } else {
-                    $result = db_query(sprintf("INSERT INTO wiki_recent (id, latestversion, latestmajor)"
-                     . "VALUES(%d, %d, %d)", $new_id, $recent_infos['latestversion'], $recent_infos['latestmajor']));
+                    $result = db_query(sprintf('INSERT INTO wiki_recent (id, latestversion, latestmajor)'
+                     . 'VALUES(%d, %d, %d)', $new_id, $recent_infos['latestversion'], $recent_infos['latestmajor']));
                 }
             }
         }
@@ -234,12 +234,12 @@ class WikiCloner
     public function addWikiLinkEntries($array)
     {
         foreach ($array as $tmpl_id => $new_id) {
-            $result = db_query(sprintf("select linkto FROM wiki_link WHERE linkfrom=%d", $tmpl_id));
+            $result = db_query(sprintf('select linkto FROM wiki_link WHERE linkfrom=%d', $tmpl_id));
             while ($row = db_fetch_array($result)) {
                // Find the new page target link
                 $clone_id = $this->getWikiPageCloneId($array, $row['linkto']);
         // Insert a new link row in wiki_link table
-                $res = db_query(sprintf("INSERT INTO wiki_link (linkfrom, linkto) VALUES (%d, %d)", $new_id, $clone_id));
+                $res = db_query(sprintf('INSERT INTO wiki_link (linkfrom, linkto) VALUES (%d, %d)', $new_id, $clone_id));
             }
         }
     }
@@ -259,7 +259,7 @@ class WikiCloner
         }
 
         $ids    = [];
-        $result = db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", db_ei($this->template_id)));
+        $result = db_query(sprintf('SELECT id, name FROM wiki_attachment WHERE group_id=%d', db_ei($this->template_id)));
         while ($row = db_fetch_array($result)) {
             $id       = $row['id'];
             $name     = $row['name'];
@@ -308,7 +308,7 @@ class WikiCloner
     public function getMappedUGroupId($ugid)
     {
         if ($ugid > 100) {
-            $res = db_query(sprintf("SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d", db_ei($this->group_id), db_ei($ugid)));
+            $res = db_query(sprintf('SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d', db_ei($this->group_id), db_ei($ugid)));
             return db_result($res, 0, 'dst_ugroup_id');
         } else {
             return $ugid;
@@ -374,10 +374,10 @@ class WikiCloner
     {
         $array_rev = [];
         foreach ($array as $tmpl_id => $new_id) {
-            $result = db_query(sprintf("SELECT user_id, date, revision, mimetype, size FROM wiki_attachment_revision WHERE attachment_id=%d", db_ei($tmpl_id)));
+            $result = db_query(sprintf('SELECT user_id, date, revision, mimetype, size FROM wiki_attachment_revision WHERE attachment_id=%d', db_ei($tmpl_id)));
             while ($row = db_fetch_array($result)) {
                 $res = db_query(sprintf(
-                    "INSERT INTO wiki_attachment_revision (attachment_id, user_id, date, revision, mimetype, size)"
+                    'INSERT INTO wiki_attachment_revision (attachment_id, user_id, date, revision, mimetype, size)'
                                  . "VALUES (%d, %d, %d, %d, '%s', %d)",
                     db_ei($new_id),
                     db_ei($row['user_id']),
@@ -387,7 +387,7 @@ class WikiCloner
                     db_ei($row['size'])
                 ));
                 if (db_affected_rows($res) > 0) {
-                    $sql = db_query(sprintf("SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d", db_ei($new_id), db_ei($row['revision'])));
+                    $sql = db_query(sprintf('SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d', db_ei($new_id), db_ei($row['revision'])));
                     if (db_numrows($sql) > 0) {
                         $array_rev[$tmpl_id] = db_result($sql, 0, 'id');
                         // Clone attachment file revision.
@@ -411,7 +411,7 @@ class WikiCloner
    */
     public function cloneAttachmentFileRevision($id, $revision_num)
     {
-         $result = db_query(sprintf("SELECT name from wiki_attachment where id=%d", $id));
+         $result = db_query(sprintf('SELECT name from wiki_attachment where id=%d', $id));
         if (db_numrows($result) > 0) {
             $attacment_name = db_result($result, 0, 'name');
             $src            = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->template_id . '/' . $attacment_name . '/' . $revision_num;
@@ -445,10 +445,10 @@ class WikiCloner
     public function cloneWikiAttachmentLogTable($array, $array_rev)
     {
         foreach ($array as $tmpl_id => $new_id) {
-            $result = db_query(sprintf("SELECT * FROM wiki_attachment_log WHERE group_id=%d AND wiki_attachment_id=%d", $this->template_id, $tmpl_id));
+            $result = db_query(sprintf('SELECT * FROM wiki_attachment_log WHERE group_id=%d AND wiki_attachment_id=%d', $this->template_id, $tmpl_id));
             while ($row = db_fetch_array($result)) {
-                $res = db_query(sprintf("INSERT INTO wiki_attachment_log (user_id, group_id, wiki_attachment_id, wiki_attachment_revision_id, time)"
-                . "VALUES (%d, %d, %d, %d, %d)", db_ei($row['user_id']), db_ei($this->group_id), db_ei($new_id), db_ei($array_rev[$tmpl_id]), db_ei($row['time'])));
+                $res = db_query(sprintf('INSERT INTO wiki_attachment_log (user_id, group_id, wiki_attachment_id, wiki_attachment_revision_id, time)'
+                . 'VALUES (%d, %d, %d, %d, %d)', db_ei($row['user_id']), db_ei($this->group_id), db_ei($new_id), db_ei($array_rev[$tmpl_id]), db_ei($row['time'])));
             }
         }
     }
@@ -465,7 +465,7 @@ class WikiCloner
     public function getTemplatePageRecentInfos($id)
     {
         $recent = [];
-        $result = db_query(sprintf("SELECT latestversion, latestmajor, latestminor FROM wiki_recent where id=%d", $id));
+        $result = db_query(sprintf('SELECT latestversion, latestmajor, latestminor FROM wiki_recent where id=%d', $id));
         if (db_numrows($result) > 0) {
             $recent = ['latestversion' => (int) db_result($result, 0, 'latestversion'), 'latestmajor' => (int) db_result($result, 0, 'latestmajor')
                          , 'latestminor' => (int) db_result($result, 0, 'latestminor'),
@@ -487,7 +487,7 @@ class WikiCloner
     public function getTemplateWikiEntries()
     {
         $we     = [];
-        $result = db_query(sprintf("SELECT id, wiki_name, wiki_link, description, rank, language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id));
+        $result = db_query(sprintf('SELECT id, wiki_name, wiki_link, description, rank, language_id FROM wiki_group_list WHERE group_id=%d', $this->template_id));
         while ($row = db_fetch_array($result)) {
             $id      = $row['id'];
             $we[$id] = ['wiki_name' => $row['wiki_name'], 'wiki_link' => $row['wiki_link'], 'description' => $row['description'], 'rank' => $row['rank']];
@@ -505,7 +505,7 @@ class WikiCloner
    */
     public function getTemplateLanguageId()
     {
-        $result = db_query(sprintf("SELECT language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id));
+        $result = db_query(sprintf('SELECT language_id FROM wiki_group_list WHERE group_id=%d', $this->template_id));
         if ($row = db_fetch_array($result)) {
             $lang = $row['language_id'];
             return $lang;
@@ -541,7 +541,7 @@ class WikiCloner
     public function getTemplateWikiVersionData($id)
     {
         $version = [];
-        $result  = db_query(sprintf("SELECT version, versiondata FROM wiki_version WHERE id=%d", $id));
+        $result  = db_query(sprintf('SELECT version, versiondata FROM wiki_version WHERE id=%d', $id));
         while ($row = db_fetch_array($result)) {
             $version_number           = $row['version'];
             $version_data             = $this->_deserialize($row['versiondata']);
@@ -620,7 +620,7 @@ class WikiCloner
    */
     public function isTemplatePageNonEmpty($id)
     {
-        $result = db_query(sprintf("SELECT * from wiki_nonempty where id=%d", $id));
+        $result = db_query(sprintf('SELECT * from wiki_nonempty where id=%d', $id));
         if (db_numrows($result)) {
             return true;
         } else {
@@ -640,7 +640,7 @@ class WikiCloner
     {
         foreach ($array as $tmpl => $new) {
             if ($this->isTemplatePageNonEmpty($tmpl)) {
-                $result = db_query(sprintf("INSERT INTO wiki_nonempty (id) VALUES(%d)", $new));
+                $result = db_query(sprintf('INSERT INTO wiki_nonempty (id) VALUES(%d)', $new));
             }
         }
     }
@@ -654,7 +654,7 @@ class WikiCloner
    */
     public function insertNewAttachment($name)
     {
-        $result = db_query(sprintf("INSERT INTO wiki_attachment (group_id, name)"
+        $result = db_query(sprintf('INSERT INTO wiki_attachment (group_id, name)'
         . "VALUES(%d, '%s')", $this->group_id, $this->escapeString($name)));
         if (! empty($result)) {
             $res = db_query(sprintf("SELECT id FROM wiki_attachment WHERE group_id=%d AND name='%s'", $this->group_id, $this->escapeString($name)));
@@ -676,7 +676,7 @@ class WikiCloner
     public function insertNewWikiPage($data, $pagename)
     {
         $result = db_query(sprintf(
-            "INSERT INTO wiki_page (pagename, hits, pagedata, group_id)"
+            'INSERT INTO wiki_page (pagename, hits, pagedata, group_id)'
             . "VALUES('%s', %d,  '%s', %d)",
             db_es($pagename),
             0,
@@ -723,16 +723,16 @@ class WikiCloner
    */
     public function cloneWikiPagesPermissions($array)
     {
-        $result = db_query(sprintf("SELECT object_id, ugroup_id "
-                                . "FROM permissions perm, wiki_page wpg "
+        $result = db_query(sprintf('SELECT object_id, ugroup_id '
+                                . 'FROM permissions perm, wiki_page wpg '
                                 . "WHERE perm.permission_type='WIKIPAGE_READ' "
-                                . "AND wpg.group_id=%d "
-                                . "AND perm.object_id=wpg.id", $this->template_id));
+                                . 'AND wpg.group_id=%d '
+                                . 'AND perm.object_id=wpg.id', $this->template_id));
 
         while ($row = db_fetch_array($result)) {
             $wiki_page_clone_id = db_ei($this->getWikiPageCloneId($array, $row['object_id']));
             $ugroup_id          = db_ei($this->getMappedUGroupId($row['ugroup_id']));
-            db_query("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
+            db_query('INSERT INTO permissions (permission_type, object_id, ugroup_id)'
                   . "VALUES ('WIKIPAGE_READ', CAST($wiki_page_clone_id AS CHAR CHARACTER SET utf8), $ugroup_id)");
         }
     }

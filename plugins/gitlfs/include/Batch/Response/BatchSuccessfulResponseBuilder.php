@@ -195,7 +195,7 @@ class BatchSuccessfulResponseBuilder
 
         if (! $this->project_quota_checker->hasEnoughSpaceForProject($project, $wanted_size)) {
             throw new ProjectQuotaExceededException(
-                "Quota for project " . $project->getID() . " is exceeded",
+                'Quota for project ' . $project->getID() . ' is exceeded',
                 507
             );
         }

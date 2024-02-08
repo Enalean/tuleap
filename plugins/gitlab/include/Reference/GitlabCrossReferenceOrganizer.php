@@ -340,8 +340,8 @@ class GitlabCrossReferenceOrganizer
 
     private function getCreatedByPresenter(GitlabMergeRequest $gitlab_merge_request): ?CreatedByPresenter
     {
-        $author_email = $gitlab_merge_request->getAuthorEmail() ?? "";
-        $author_name  = $gitlab_merge_request->getAuthorName() ?? "";
+        $author_email = $gitlab_merge_request->getAuthorEmail() ?? '';
+        $author_name  = $gitlab_merge_request->getAuthorName() ?? '';
 
         if (! $author_email && ! $author_name) {
             return CreationMetadataPresenter::NO_CREATED_BY_PRESENTER;

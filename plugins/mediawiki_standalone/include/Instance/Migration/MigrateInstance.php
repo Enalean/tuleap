@@ -111,20 +111,20 @@ final class MigrateInstance
      */
     public function process(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
-        $logger->info(sprintf("Processing %s: ", self::TOPIC));
+        $logger->info(sprintf('Processing %s: ', self::TOPIC));
         if (! $this->mediawiki_flavor_usage->wasLegacyMediawikiUsed($this->project)) {
             return Result::err(
                 new InitializationIssue(
-                    Fault::fromMessage("Project does not have a MediaWiki 1.23 to migrate"),
+                    Fault::fromMessage('Project does not have a MediaWiki 1.23 to migrate'),
                     $this->project,
                 )
             );
         }
 
-        $logger->info("Create missing users in Legacy MediaWiki base prior migration");
+        $logger->info('Create missing users in Legacy MediaWiki base prior migration');
         $this->legacy_create_missing_users->create($logger, $this->project, $this->getDBPrefix());
 
-        $logger->info("Switching to MediaWiki Standalone service");
+        $logger->info('Switching to MediaWiki Standalone service');
         $this->switch_mediawiki_service->switchToStandalone($this->project);
 
         $instance_name = $this->project->getUnixNameLowerCase();

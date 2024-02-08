@@ -32,9 +32,9 @@ class b201608091610_add_index_for_frs_permissions extends \Tuleap\ForgeUpgrade\B
 
     public function up()
     {
-        $sql = "ALTER TABLE frs_global_permissions
+        $sql = 'ALTER TABLE frs_global_permissions
                     ADD INDEX project_id (project_id),
-                    ADD INDEX permission_type (permission_type(10))";
+                    ADD INDEX permission_type (permission_type(10))';
 
         $result = $this->db->dbh->exec($sql);
 

@@ -166,18 +166,18 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
     public function ping(Git_RemoteServer_GerritServer $server)
     {
-        $this->logger->info("Gerrit REST driver: Check if server is up");
+        $this->logger->info('Gerrit REST driver: Check if server is up');
         $response = $this->sendRequest(
             $server,
             $this->request_factory->createRequest('GET', $this->getGerritURL($server, '/config/server/version'))
         );
 
         if ($response->getStatusCode() === 200) {
-            $this->logger->info("Gerrit REST driver: server is up!");
+            $this->logger->info('Gerrit REST driver: server is up!');
             return true;
         }
 
-        $this->logger->info("Gerrit REST driver: server is down");
+        $this->logger->info('Gerrit REST driver: server is down');
         return false;
     }
 
@@ -254,7 +254,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
     public function getAllGroups(Git_RemoteServer_GerritServer $server)
     {
-        $this->logger->info("Gerrit REST driver: Get all groups");
+        $this->logger->info('Gerrit REST driver: Get all groups');
         $response = $this->sendRequest(
             $server,
             $this->request_factory->createRequest('GET', $this->getGerritURL($server, '/groups/'))
@@ -280,7 +280,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
     public function addUserToGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name)
     {
-        $this->logger->info("Gerrit REST driver: Add user " . $user->getSSHUserName() . " in group $group_name");
+        $this->logger->info('Gerrit REST driver: Add user ' . $user->getSSHUserName() . " in group $group_name");
         $response = $this->sendRequest(
             $server,
             $this->request_factory->createRequest(
@@ -291,10 +291,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
         $status_code = $response->getStatusCode();
         if ($status_code !== 200 && $status_code !== 201) {
-            $this->throwGerritException("Gerrit REST driver: Cannot add user", $response);
+            $this->throwGerritException('Gerrit REST driver: Cannot add user', $response);
         }
 
-        $this->logger->info("Gerrit REST driver: User successfully added");
+        $this->logger->info('Gerrit REST driver: User successfully added');
     }
 
     public function removeUserFromGroup(
@@ -302,7 +302,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         Git_Driver_Gerrit_User $user,
         $group_name,
     ) {
-        $this->logger->info("Gerrit REST driver: Remove user " . $user->getSSHUserName() . " from group $group_name");
+        $this->logger->info('Gerrit REST driver: Remove user ' . $user->getSSHUserName() . " from group $group_name");
         $response = $this->sendRequest(
             $server,
             $this->request_factory->createRequest(
@@ -312,10 +312,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         );
 
         if ($response->getStatusCode() !== 204) {
-            $this->throwGerritException("Gerrit REST driver: Cannot remove user", $response);
+            $this->throwGerritException('Gerrit REST driver: Cannot remove user', $response);
         }
 
-        $this->logger->info("Gerrit REST driver: User successfully removed");
+        $this->logger->info('Gerrit REST driver: User successfully removed');
     }
 
     public function removeAllGroupMembers(Git_RemoteServer_GerritServer $server, $group_name)
@@ -357,10 +357,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
         $status_code = $response->getStatusCode();
         if ($status_code !== 200 && $status_code !== 201) {
-            $this->throwGerritException("Gerrit REST driver: Cannot include group", $response);
+            $this->throwGerritException('Gerrit REST driver: Cannot include group', $response);
         }
 
-        $this->logger->info("Gerrit REST driver: Group successfully included");
+        $this->logger->info('Gerrit REST driver: Group successfully included');
     }
 
     public function removeAllIncludedGroups(Git_RemoteServer_GerritServer $server, $group_name)
@@ -383,10 +383,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $response = $this->sendRequest($server, $request);
 
         if ($response->getStatusCode() !== 204) {
-            $this->throwGerritException("Gerrit REST driver: Cannot remove included group", $response);
+            $this->throwGerritException('Gerrit REST driver: Cannot remove included group', $response);
         }
 
-        $this->logger->info("Gerrit REST driver: included groups successfully removed");
+        $this->logger->info('Gerrit REST driver: included groups successfully removed');
     }
 
     public function flushGerritCacheAccounts($server)
@@ -399,7 +399,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         Git_Driver_Gerrit_User $user,
         string $ssh_key,
     ): void {
-        $this->logger->info("Gerrit REST driver: Add ssh key for user " . $user->getSSHUserName());
+        $this->logger->info('Gerrit REST driver: Add ssh key for user ' . $user->getSSHUserName());
         $response             = $this->sendRequest(
             $server,
             $this->request_factory->createRequest(
@@ -410,9 +410,9 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         );
         $response_status_code = $response->getStatusCode();
         if ($response_status_code !== 200 && $response_status_code !== 201) {
-            $this->throwGerritException("Gerrit REST driver: Cannot add ssh key", $response);
+            $this->throwGerritException('Gerrit REST driver: Cannot add ssh key', $response);
         }
-        $this->logger->info("Gerrit REST driver: ssh key successfully added");
+        $this->logger->info('Gerrit REST driver: ssh key successfully added');
     }
 
     public function removeSSHKeyFromAccount(
@@ -420,12 +420,12 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         Git_Driver_Gerrit_User $user,
         $ssh_key,
     ) {
-        $this->logger->info("Gerrit REST driver: Remove ssh key for user " . $user->getSSHUserName());
+        $this->logger->info('Gerrit REST driver: Remove ssh key for user ' . $user->getSSHUserName());
 
         $ssh_keys           = $this->getAllSSHKeysForUser($server, $user);
         $gerrit_ssh_key_ids = $this->getUserSSHKeyId($ssh_keys, $ssh_key);
 
-        $this->logger->info("Gerrit REST driver: Found this ssh key " . count($gerrit_ssh_key_ids) . " time(s)");
+        $this->logger->info('Gerrit REST driver: Found this ssh key ' . count($gerrit_ssh_key_ids) . ' time(s)');
 
         foreach ($gerrit_ssh_key_ids as $gerrit_key_id) {
             $this->actionRemoveSSHKey($server, $user, $gerrit_key_id);
@@ -441,7 +441,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
     ) {
-        $this->logger->info("Gerrit REST driver: Get all ssh keys for user " . $user->getSSHUserName());
+        $this->logger->info('Gerrit REST driver: Get all ssh keys for user ' . $user->getSSHUserName());
         $response = $this->sendRequest(
             $server,
             $this->request_factory->createRequest(
@@ -455,11 +455,11 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         }
 
         if ($response->getStatusCode() === 200) {
-            $this->logger->info("Gerrit REST driver: Successfully got all ssh keys for user");
+            $this->logger->info('Gerrit REST driver: Successfully got all ssh keys for user');
             return $this->decodeGerritResponse($response->getBody()->getContents());
         }
 
-        $this->throwGerritException("Gerrit REST driver: Cannot get ssh keys for user", $response);
+        $this->throwGerritException('Gerrit REST driver: Cannot get ssh keys for user', $response);
     }
 
     public function setProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name, $parent_project_name)
@@ -474,10 +474,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $response = $this->sendRequest($server, $request);
 
         if ($response->getStatusCode() !== 200) {
-            $this->throwGerritException("Gerrit REST driver: Cannot set parent project", $response);
+            $this->throwGerritException('Gerrit REST driver: Cannot set parent project', $response);
         }
 
-        $this->logger->info("Gerrit REST driver: parent project successfully added");
+        $this->logger->info('Gerrit REST driver: parent project successfully added');
     }
 
     public function resetProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name)
@@ -487,7 +487,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
     public function isDeletePluginEnabled(Git_RemoteServer_GerritServer $server)
     {
-        $this->logger->info("Gerrit REST driver: Check if delete plugin is activated");
+        $this->logger->info('Gerrit REST driver: Check if delete plugin is activated');
 
         try {
             $response = $this->sendRequest(
@@ -536,7 +536,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         }
 
         if ($response_status_code === 204) {
-            $this->logger->info("Gerrit REST driver: Project successfully deleted");
+            $this->logger->info('Gerrit REST driver: Project successfully deleted');
             return;
         }
 
@@ -559,7 +559,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
             $this->throwGerritException('Gerrit REST driver: An error occurred while setting project read-only', $response);
         }
 
-        $this->logger->info("Gerrit REST driver: Project successfully set Read-Only");
+        $this->logger->info('Gerrit REST driver: Project successfully set Read-Only');
     }
 
     private function getAllMembers(

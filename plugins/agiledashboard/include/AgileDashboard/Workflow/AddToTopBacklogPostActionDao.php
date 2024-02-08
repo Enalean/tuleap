@@ -44,9 +44,9 @@ class AddToTopBacklogPostActionDao extends DataAccessObject
 
     public function searchByTransitionId(int $transition_id): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog
-                WHERE transition_id = ?";
+                WHERE transition_id = ?';
 
         return $this->getDB()->row($sql, $transition_id);
     }
@@ -70,11 +70,11 @@ class AddToTopBacklogPostActionDao extends DataAccessObject
 
     public function deleteWorkflowPostActions(int $workflow_id)
     {
-        $sql = "DELETE plugin_agiledashboard_tracker_workflow_action_add_top_backlog.*
+        $sql = 'DELETE plugin_agiledashboard_tracker_workflow_action_add_top_backlog.*
                 FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog
                     INNER JOIN tracker_workflow_transition ON (plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
                     INNER JOIN tracker_workflow ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
-                WHERE tracker_workflow.workflow_id = ?";
+                WHERE tracker_workflow.workflow_id = ?';
 
         return $this->getDB()->run(
             $sql,
@@ -84,9 +84,9 @@ class AddToTopBacklogPostActionDao extends DataAccessObject
 
     public function deleteTransitionPostActions(int $transition_id): void
     {
-        $sql = "DELETE
+        $sql = 'DELETE
                 FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog
-                WHERE plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = ?";
+                WHERE plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = ?';
 
         $this->getDB()->run(
             $sql,
@@ -97,19 +97,19 @@ class AddToTopBacklogPostActionDao extends DataAccessObject
     public function createPostActionForTransitionId(int $transition_id): void
     {
         $this->getDB()->insert(
-            "plugin_agiledashboard_tracker_workflow_action_add_top_backlog",
-            ["transition_id" => $transition_id]
+            'plugin_agiledashboard_tracker_workflow_action_add_top_backlog',
+            ['transition_id' => $transition_id]
         );
     }
 
     public function isAtLeastOnePostActionDefinedInProject(int $project_id): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog
                     INNER JOIN tracker_workflow_transition ON (plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
                     INNER JOIN tracker_workflow ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
                     INNER JOIN tracker ON (tracker_workflow.tracker_id = tracker.id)
-                WHERE tracker.group_id = ?";
+                WHERE tracker.group_id = ?';
 
         $rows = $this->getDB()->run($sql, $project_id);
 
@@ -118,12 +118,12 @@ class AddToTopBacklogPostActionDao extends DataAccessObject
 
     public function deleteAllPostActionsInProject(int $project_id): void
     {
-        $sql = "DELETE plugin_agiledashboard_tracker_workflow_action_add_top_backlog.*
+        $sql = 'DELETE plugin_agiledashboard_tracker_workflow_action_add_top_backlog.*
                 FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog
                     INNER JOIN tracker_workflow_transition ON (plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
                     INNER JOIN tracker_workflow ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
                     INNER JOIN tracker ON (tracker_workflow.tracker_id = tracker.id)
-                WHERE tracker.group_id = ?";
+                WHERE tracker.group_id = ?';
 
         $this->getDB()->run(
             $sql,

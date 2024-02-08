@@ -38,8 +38,8 @@ final class IterationRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsRepresentationFromIteration(): void
     {
         $iteration = Iteration::build(
-            RetrieveStatusValueUserCanSeeStub::withValue("On going"),
-            RetrieveTitleValueUserCanSeeStub::withValue("An iteration"),
+            RetrieveStatusValueUserCanSeeStub::withValue('On going'),
+            RetrieveTitleValueUserCanSeeStub::withValue('An iteration'),
             RetrieveTimeframeValueUserCanSeeStub::withValues(1633189968, 1635868368),
             RetrieveUriStub::withDefault(),
             RetrieveCrossRefStub::withDefault(),

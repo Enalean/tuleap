@@ -64,7 +64,7 @@ class ReferenceAdministrationActions extends Actions
 
         $reference_manager = ReferenceManager::instance();
         if ($request->get('service_short_name') == 100) { // none
-            $service_short_name = "";
+            $service_short_name = '';
         } else {
             $service_short_name = $request->get('service_short_name');
         }
@@ -154,10 +154,10 @@ class ReferenceAdministrationActions extends Actions
         } else {
             if (! $su) {
                 // Only a server admin may define a service_id
-                $service_short_name = "";
+                $service_short_name = '';
             } else {
                 if ($request->get('service_short_name') == 100) { // none
-                    $service_short_name = "";
+                    $service_short_name = '';
                 } else {
                     $service_short_name = $request->get('service_short_name');
                 }

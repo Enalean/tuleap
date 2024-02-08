@@ -258,11 +258,11 @@ class SimpleModeTest extends TrackerBase
         );
 
         $body = json_encode([
-            "post_actions" => [
+            'post_actions' => [
                 [
-                    "id" => null,
-                    "type" => "frozen_fields",
-                    "field_ids" => [$used_field_id],
+                    'id' => null,
+                    'type' => 'frozen_fields',
+                    'field_ids' => [$used_field_id],
                 ],
             ],
         ]);
@@ -306,11 +306,11 @@ class SimpleModeTest extends TrackerBase
         );
 
         $body = json_encode([
-            "post_actions" => [
+            'post_actions' => [
                 [
-                    "id" => null,
-                    "type" => "frozen_fields",
-                    "field_ids" => [$workflow_field_id],
+                    'id' => null,
+                    'type' => 'frozen_fields',
+                    'field_ids' => [$workflow_field_id],
                 ],
             ],
         ]);
@@ -335,11 +335,11 @@ class SimpleModeTest extends TrackerBase
         );
 
         $body = json_encode([
-            "post_actions" => [
+            'post_actions' => [
                 [
-                    "id" => null,
-                    "type" => "frozen_fields",
-                    "field_ids" => [$workflow_field_id],
+                    'id' => null,
+                    'type' => 'frozen_fields',
+                    'field_ids' => [$workflow_field_id],
                 ],
             ],
         ]);
@@ -363,11 +363,11 @@ class SimpleModeTest extends TrackerBase
         );
 
         $body = json_encode([
-            "post_actions" => [
+            'post_actions' => [
                 [
-                    "id" => null,
-                    "type" => "hidden_fieldsets",
-                    "fieldset_ids" => [$used_field_id],
+                    'id' => null,
+                    'type' => 'hidden_fieldsets',
+                    'fieldset_ids' => [$used_field_id],
                 ],
             ],
         ]);
@@ -405,7 +405,7 @@ class SimpleModeTest extends TrackerBase
         $tracker = $this->tracker_representations[$this->simple_mode_from_xml_tracker_id];
 
         $this->assertEquals($tracker['workflow']['is_advanced'], false);
-        $this->assertEquals($tracker['workflow']['is_used'], "1");
+        $this->assertEquals($tracker['workflow']['is_used'], '1');
         $this->assertCount(3, $tracker['workflow']['transitions']);
 
         $transition    = $this->getSpecificTransition(

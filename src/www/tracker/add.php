@@ -22,7 +22,7 @@ if (! $ath->userCanSubmit()) {
 }
 
 // Display the menus
-$ath->header(['title' => $Language->getText('tracker_add', 'add_a') . " " . $ath->getCapsItemName(),'titlevals' => [$ath->getName()],'pagename' => 'tracker_browse',
+$ath->header(['title' => $Language->getText('tracker_add', 'add_a') . ' ' . $ath->getCapsItemName(),'titlevals' => [$ath->getName()],'pagename' => 'tracker_browse',
     'atid' => $ath->getID(),
 ]);
 echo '<div id="tracker_toolbar_clear"></div>';
@@ -36,7 +36,7 @@ $armh->displayRulesAsJavascript();
 echo "new UserAutoCompleter('tracker_cc',
                           '" . util_get_dir_image_theme() . "',
                           true);\n";
-echo "</script>";
+echo '</script>';
 
 // Display footer page
 $ath->footer([]);

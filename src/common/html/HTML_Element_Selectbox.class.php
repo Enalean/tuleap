@@ -32,14 +32,14 @@ class HTML_Element_Selectbox extends HTML_Element
      */
     protected $options;
     protected $onchange;
-    public function __construct($label, $name, $value, $with_none = false, $onchange = "", $desc = "")
+    public function __construct($label, $name, $value, $with_none = false, $onchange = '', $desc = '')
     {
         parent::__construct($label, $name, $value, $desc);
         $this->options = [];
 
         $this->onchange = $onchange;
         if ($with_none) {
-            $this->addOption(new HTML_Element_Option(dgettext('tuleap-core', '-- None --'), "", ($this->value === "" || $this->value === null)));
+            $this->addOption(new HTML_Element_Option(dgettext('tuleap-core', '-- None --'), '', ($this->value === '' || $this->value === null)));
         }
     }
 

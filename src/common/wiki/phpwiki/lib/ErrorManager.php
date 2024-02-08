@@ -57,7 +57,7 @@ assert_options(ASSERT_CALLBACK, 'wiki_assert_handler');
 
 function wiki_assert_handler($file, $line, $code)
 {
-    ErrorManager_errorHandler($code, sprintf("<br />%s:%s: %s: Assertion failed <br />", $file, $line, $code), $file, $line);
+    ErrorManager_errorHandler($code, sprintf('<br />%s:%s: %s: Assertion failed <br />', $file, $line, $code), $file, $line);
 }
 
 /**
@@ -161,7 +161,7 @@ class ErrorManager
             ['style' => 'border: none', 'class' => $class],
             HTML::h4(
                 ['class' => 'errors'],
-                "PHP " . $worst_err->getDescription()
+                'PHP ' . $worst_err->getDescription()
             )
         );
         $html->pushContent($flushed);
@@ -253,8 +253,8 @@ class ErrorManager
         if (! empty($in_handler)) {
             $msg = $error->_getDetail();
             $msg->unshiftContent(HTML::h2(fmt(
-                "%s: error while handling error:",
-                "ErrorManager"
+                '%s: error while handling error:',
+                'ErrorManager'
             )));
             $msg->printXML();
             return;
@@ -373,8 +373,8 @@ class ErrorManager
 
         // FIXME: Howto announce that to Request->cacheControl()?
         if (! headers_sent()) {
-            header("Cache-control: no-cache");
-            header("Pragma: nocache");
+            header('Cache-control: no-cache');
+            header('Pragma: nocache');
         }
         $already = true;
     }
@@ -501,7 +501,7 @@ class PhpError
         if (substr(PHP_OS, 0, 3) == 'WIN') {
             $dir           = str_replace('/', '\\', $dir);
             $this->errfile = str_replace('/', '\\', $this->errfile);
-            $dir          .= "\\";
+            $dir          .= '\\';
         } else {
             $dir .= '/';
         }
@@ -509,7 +509,7 @@ class PhpError
         $lines   = explode("\n", $this->errstr);
         if (DEBUG & _DEBUG_VERBOSE) {
             $msg = sprintf(
-                "%s:%d: %s[%d]: %s",
+                '%s:%d: %s[%d]: %s',
                 $errfile,
                 $this->errline,
                 $this->getDescription(),
@@ -518,7 +518,7 @@ class PhpError
             );
         } else {
             $msg = sprintf(
-                "%s:%d: %s: \"%s\"",
+                '%s:%d: %s: "%s"',
                 $errfile,
                 $this->errline,
                 $this->getDescription(),
@@ -567,13 +567,13 @@ class PhpError
 
     public function printSimpleTrace($bt)
     {
-        $nl = isset($_SERVER['REQUEST_METHOD']) ? "<br />" : "\n";
-        echo $nl . "Traceback:" . $nl;
+        $nl = isset($_SERVER['REQUEST_METHOD']) ? '<br />' : "\n";
+        echo $nl . 'Traceback:' . $nl;
         foreach ($bt as $i => $elem) {
             if (! array_key_exists('file', $elem)) {
                 continue;
             }
-            print "  " . $elem['file'] . ':' . $elem['line'] . $nl;
+            print '  ' . $elem['file'] . ':' . $elem['line'] . $nl;
         }
         flush();
     }
@@ -659,7 +659,7 @@ class PhpErrorOnce extends PhpError
         if (substr(PHP_OS, 0, 3) == 'WIN') {
             $dir           = str_replace('/', '\\', $dir);
             $this->errfile = str_replace('/', '\\', $this->errfile);
-            $dir          .= "\\";
+            $dir          .= '\\';
         } else {
             $dir .= '/';
         }
@@ -669,15 +669,15 @@ class PhpErrorOnce extends PhpError
         } elseif (is_object($this->errstr)) {
             $lines = [$this->errstr->asXML()];
         }
-        $errtype = (DEBUG & _DEBUG_VERBOSE) ? sprintf("%s[%d]", $this->getDescription(), $this->errno)
-                                            : sprintf("%s", $this->getDescription());
+        $errtype = (DEBUG & _DEBUG_VERBOSE) ? sprintf('%s[%d]', $this->getDescription(), $this->errno)
+                                            : sprintf('%s', $this->getDescription());
         $msg     = sprintf(
-            "%s:%d: %s: %s %s",
+            '%s:%d: %s: %s %s',
             $errfile,
             $this->errline,
             $errtype,
             array_shift($lines),
-            $count > 1 ? sprintf(" (...repeated %d times)", $count) : ""
+            $count > 1 ? sprintf(' (...repeated %d times)', $count) : ''
         );
         $html    = HTML::div(
             ['class' => $this->getHtmlClass()],

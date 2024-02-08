@@ -220,8 +220,8 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
         );
 
         $values = $bind->getAllValues();
-        $this->assertEquals($values["F1-V0"]->getLabel(), 'Integrators');
-        $this->assertEquals($values["F1-V1"]->getLabel(), 'Customers');
+        $this->assertEquals($values['F1-V0']->getLabel(), 'Integrators');
+        $this->assertEquals($values['F1-V1']->getLabel(), 'Customers');
     }
 
     public function testItImportsIgnoresStaticUgroupThatDoesntBelongToProject(): void
@@ -265,7 +265,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
         $bind = $this->getListBindFactory($ugroup_manager, $project, $xml);
 
         $values = $bind->getAllValues();
-        $this->assertEquals('Registered users', $values["F1-V0"]->getLabel());
+        $this->assertEquals('Registered users', $values['F1-V0']->getLabel());
     }
 
     public function testItImportsHiddenValues(): void
@@ -286,7 +286,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
         $bind = $this->getListBindFactory($ugroup_manager, $project, $xml);
 
         $values = $bind->getAllValues();
-        $this->assertTrue((bool) $values["F1-V0"]->isHidden());
+        $this->assertTrue((bool) $values['F1-V0']->isHidden());
     }
 
     protected function getListBindFactory($ugroup_manager, $project, SimpleXMLElement $xml): Tracker_FormElement_Field_List_Bind

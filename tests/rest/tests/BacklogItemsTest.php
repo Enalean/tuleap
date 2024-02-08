@@ -79,7 +79,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
     {
         $backlog_item = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals("build a new interface", $backlog_item['label']);
+        $this->assertEquals('build a new interface', $backlog_item['label']);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -134,7 +134,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $this->assertCount(2, $backlog_items);
 
         $first_task = $backlog_items[0];
-        $this->assertEquals("Implement the feature", $first_task['label']);
+        $this->assertEquals('Implement the feature', $first_task['label']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -150,7 +150,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $backlog_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $first_task    = $backlog_items[0];
 
-        $this->assertEquals("Implement the feature", $first_task['label']);
+        $this->assertEquals('Implement the feature', $first_task['label']);
 
         $first_id  = $backlog_items[0]['id'];
         $second_id = $backlog_items[1]['id'];
@@ -180,7 +180,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $backlog_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $first_task = $backlog_items[0];
-        $this->assertEquals($first_task['label'], "Implement the feature");
+        $this->assertEquals($first_task['label'], 'Implement the feature');
 
         $first_id  = $backlog_items[0]['id'];
         $second_id = $backlog_items[1]['id'];
@@ -205,7 +205,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $backlog_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $first_task = $backlog_items[0];
-        $this->assertEquals($first_task['label'], "Write tests");
+        $this->assertEquals($first_task['label'], 'Write tests');
 
         $first_id  = $backlog_items[0]['id'];
         $second_id = $backlog_items[1]['id'];
@@ -230,7 +230,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $backlog_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $first_task = $backlog_items[0];
-        $this->assertEquals($first_task['label'], "Implement the feature");
+        $this->assertEquals($first_task['label'], 'Implement the feature');
     }
 
     public function testPATCHChildrenDuplicateIds()
@@ -240,7 +240,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $backlog_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $first_task = $backlog_items[0];
-        $this->assertEquals($first_task['label'], "Implement the feature");
+        $this->assertEquals($first_task['label'], 'Implement the feature');
 
         $first_id  = $backlog_items[0]['id'];
         $second_id = $backlog_items[1]['id'];

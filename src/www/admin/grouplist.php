@@ -36,7 +36,7 @@ $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include
 //EXPORT-CSV
 if ($request->exist('export')) {
     //Validate group_name_search
-    $group_name_search       = "";
+    $group_name_search       = '';
     $valid_group_name_search = new Valid_String('group_name_search');
     if ($request->valid($valid_group_name_search)) {
         $group_name_search = $request->get('group_name_search');
@@ -69,7 +69,7 @@ if (! $offset || $offset < 0) {
 }
 $limit = 50;
 
-$group_name_search = "";
+$group_name_search = '';
 $vGroupNameSearch  = new Valid_String('group_name_search');
 if ($request->valid($vGroupNameSearch)) {
     if ($request->exist('group_name_search')) {

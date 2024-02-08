@@ -116,7 +116,7 @@ class PendingProjectBuilder
 
     private function getProjectAdminWhichIsFirstProjectMember(Project $project)
     {
-        $admin      = "";
+        $admin      = '';
         $members_id = $project->getMembersId();
         if (count($members_id) > 0) {
             $admin_id = $members_id[0];

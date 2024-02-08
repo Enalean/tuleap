@@ -31,6 +31,6 @@ final class ArtifactLinkFieldDoesNotExistFault extends Fault
 {
     public static function build(int $artifact_id): Fault
     {
-        return new self(sprintf("Artifact link field does not exist for the artifact #%d", $artifact_id));
+        return new self(sprintf('Artifact link field does not exist for the artifact #%d', $artifact_id));
     }
 }

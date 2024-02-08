@@ -32,7 +32,7 @@ use Tuleap\Layout\CssAsset;
 
 class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
 {
-    public const NAME = "project_admin_members_additional_modal";
+    public const NAME = 'project_admin_members_additional_modal';
 
     /**
      * @var Project
@@ -75,7 +75,7 @@ class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
      */
     public function addModalButton($purified_html_button)
     {
-        $this->modals_buttons["purified_html_button"] = $purified_html_button;
+        $this->modals_buttons['purified_html_button'] = $purified_html_button;
     }
 
     /**
@@ -83,7 +83,7 @@ class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
      */
     public function addModalContent($purified_html_modal_content)
     {
-        $this->modals_content["purified_html_modal"] = $purified_html_modal_content;
+        $this->modals_content['purified_html_modal'] = $purified_html_modal_content;
     }
 
     public function getCSRF()

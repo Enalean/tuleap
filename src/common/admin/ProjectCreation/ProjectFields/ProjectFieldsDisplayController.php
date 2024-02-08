@@ -56,7 +56,7 @@ class ProjectFieldsDisplayController implements DispatchableWithRequest
         $layout->addJavascriptAsset(
             new JavascriptAsset(
                 new IncludeAssets(__DIR__ . '/../../../../scripts/site-admin/frontend-assets', '/assets/core/site-admin'),
-                "site-admin-description-fields.js"
+                'site-admin-description-fields.js'
             )
         );
 

@@ -35,8 +35,8 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_agiledashboard_planning
-                ADD COLUMN group_id INT( 11 ) UNSIGNED NOT NULL AFTER name";
+        $sql = 'ALTER TABLE plugin_agiledashboard_planning
+                ADD COLUMN group_id INT( 11 ) UNSIGNED NOT NULL AFTER name';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column group_id to plugin_agiledashboard_planning: ' . implode(', ', $this->db->dbh->errorInfo()));

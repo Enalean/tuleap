@@ -25,15 +25,15 @@ $request = HTTPRequest::instance();
 $pm      = ProjectManager::instance();
 $project = $pm->getProject($request->get('group_id'));
 if ($project && $request->exist('id')) {
-    $db_res = db_query("SELECT *
+    $db_res = db_query('SELECT *
         FROM service
-        WHERE group_id   = " . db_ei((int) $request->get('group_id')) . "
-          AND service_id = " . db_ei((int) $request->get('id')) . "
-          AND is_used    = 1");
+        WHERE group_id   = ' . db_ei((int) $request->get('group_id')) . '
+          AND service_id = ' . db_ei((int) $request->get('id')) . '
+          AND is_used    = 1');
     if (db_numrows($db_res) && $service = db_fetch_array($db_res)) {
         if ($service['is_in_iframe']) {
             $label = $service['label'];
-            if ($label == "service_" . $service['short_name'] . "_lbl_key") {
+            if ($label == 'service_' . $service['short_name'] . '_lbl_key') {
                 $label = $Language->getOverridableText('project_admin_editservice', $label);
             } elseif (preg_match('/(.*):(.*)/', $label, $matches)) {
                 $label = $Language->getOverridableText($matches[1], $matches[2]);

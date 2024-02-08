@@ -82,8 +82,8 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit
             new NullLogger()
         );
 
-        $this->options    = new ExportOptions("", false, ['tracker_id' => 10]);
-        $this->export_dir = "__fixtures";
+        $this->options    = new ExportOptions('', false, ['tracker_id' => 10]);
+        $this->export_dir = '__fixtures';
 
         $this->archive = $this->createMock(\Tuleap\Project\XML\Export\ArchiveInterface::class);
         $this->user    = B\UserTestBuilder::buildWithDefaults();

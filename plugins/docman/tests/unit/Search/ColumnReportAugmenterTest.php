@@ -44,8 +44,8 @@ final class ColumnReportAugmenterTest extends TestCase
 
         $this->request = new \Codendi_Request(
             [
-                "aaaa"              => "bbb",
-                "ccc" => "1280",
+                'aaaa'              => 'bbb',
+                'ccc' => '1280',
             ],
             null
         );
@@ -54,12 +54,12 @@ final class ColumnReportAugmenterTest extends TestCase
     public function testItBuildsColumnFromRequest(): void
     {
         $metadata = new Docman_Metadata();
-        $metadata->setLabel("My column");
+        $metadata->setLabel('My column');
         $column_title = new Docman_ReportColumnTitle($metadata);
-        $this->column_factory->method("getColumnFromLabel")->with("title")->willReturn($column_title);
+        $this->column_factory->method('getColumnFromLabel')->with('title')->willReturn($column_title);
 
         $report = new \Docman_Report();
-        $this->builder->addColumnsFromRequest($this->request, ["title"], $report);
+        $this->builder->addColumnsFromRequest($this->request, ['title'], $report);
 
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertNull($report->columns[0]->getSort());
@@ -68,13 +68,13 @@ final class ColumnReportAugmenterTest extends TestCase
     public function testItKeepsColumnSort(): void
     {
         $metadata = new Docman_Metadata();
-        $metadata->setLabel("My column");
+        $metadata->setLabel('My column');
         $column_title = new Docman_ReportColumnTitle($metadata);
         $column_title->setSort('sort_' . $metadata->getLabel());
-        $this->column_factory->method("getColumnFromLabel")->with("title")->willReturn($column_title);
+        $this->column_factory->method('getColumnFromLabel')->with('title')->willReturn($column_title);
 
         $report = new \Docman_Report();
-        $this->builder->addColumnsFromRequest($this->request, ["title"], $report);
+        $this->builder->addColumnsFromRequest($this->request, ['title'], $report);
 
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertSame($column_title->getSort(), $report->columns[0]->getSort());
@@ -83,12 +83,12 @@ final class ColumnReportAugmenterTest extends TestCase
     public function testItHasASpecialSortWhenNoSortIsDefinedAndReportHasLastUpdateDate(): void
     {
         $metadata = new Docman_Metadata();
-        $metadata->setLabel("My column");
+        $metadata->setLabel('My column');
         $column_title = new Docman_ReportColumnTitle($metadata);
-        $this->column_factory->method("getColumnFromLabel")->with("update_date")->willReturn($column_title);
+        $this->column_factory->method('getColumnFromLabel')->with('update_date')->willReturn($column_title);
 
         $report = new \Docman_Report();
-        $this->builder->addColumnsFromRequest($this->request, ["update_date"], $report);
+        $this->builder->addColumnsFromRequest($this->request, ['update_date'], $report);
 
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertSame(0, $report->columns[0]->getSort());
@@ -97,13 +97,13 @@ final class ColumnReportAugmenterTest extends TestCase
     public function testItKeepsCustomSortWhenReportHasLastUpdateDate(): void
     {
         $metadata = new Docman_Metadata();
-        $metadata->setLabel("My column");
+        $metadata->setLabel('My column');
         $column_title = new Docman_ReportColumnTitle($metadata);
         $column_title->setSort('sort_' . $metadata->getLabel());
-        $this->column_factory->method("getColumnFromLabel")->with("update_date")->willReturn($column_title);
+        $this->column_factory->method('getColumnFromLabel')->with('update_date')->willReturn($column_title);
 
         $report = new \Docman_Report();
-        $this->builder->addColumnsFromRequest($this->request, ["update_date"], $report);
+        $this->builder->addColumnsFromRequest($this->request, ['update_date'], $report);
 
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertSame($column_title->getSort(), $report->columns[0]->getSort());
@@ -112,12 +112,12 @@ final class ColumnReportAugmenterTest extends TestCase
     public function testItBuildsColumnFromArray(): void
     {
         $metadata = new Docman_Metadata();
-        $metadata->setLabel("My column");
+        $metadata->setLabel('My column');
         $column_title = new Docman_ReportColumnTitle($metadata);
-        $this->column_factory->method("getColumnFromLabel")->with("title")->willReturn($column_title);
+        $this->column_factory->method('getColumnFromLabel')->with('title')->willReturn($column_title);
 
         $report = new \Docman_Report();
-        $this->builder->addColumnsFromArray(["title"], $report, []);
+        $this->builder->addColumnsFromArray(['title'], $report, []);
 
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertNull($report->columns[0]->getSort());
@@ -126,18 +126,18 @@ final class ColumnReportAugmenterTest extends TestCase
     public function testItKeepsColumnSortFromArray(): void
     {
         $metadata = new Docman_Metadata();
-        $metadata->setLabel("My column");
+        $metadata->setLabel('My column');
         $column_title = new Docman_ReportColumnTitle($metadata);
         $column_title->setSort('sort_' . $metadata->getLabel());
-        $this->column_factory->method("getColumnFromLabel")->with("title")->willReturn($column_title);
+        $this->column_factory->method('getColumnFromLabel')->with('title')->willReturn($column_title);
 
         $sort        = new SearchSortRepresentation();
-        $sort->name  = "GR";
-        $sort->order = "asc";
+        $sort->name  = 'GR';
+        $sort->order = 'asc';
         $sort_list   = [$sort];
 
         $report = new \Docman_Report();
-        $this->builder->addColumnsFromArray(["title"], $report, $sort_list);
+        $this->builder->addColumnsFromArray(['title'], $report, $sort_list);
 
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertSame($column_title->getSort(), $report->columns[0]->getSort());
@@ -146,12 +146,12 @@ final class ColumnReportAugmenterTest extends TestCase
     public function testItHasASpecialSortWhenNoSortIsDefinedAndReportHasLastUpdateDateFromArray(): void
     {
         $metadata = new Docman_Metadata();
-        $metadata->setLabel("My column");
+        $metadata->setLabel('My column');
         $column_title = new Docman_ReportColumnTitle($metadata);
-        $this->column_factory->method("getColumnFromLabel")->with("update_date")->willReturn($column_title);
+        $this->column_factory->method('getColumnFromLabel')->with('update_date')->willReturn($column_title);
 
         $report = new \Docman_Report();
-        $this->builder->addColumnsFromArray(["update_date"], $report, []);
+        $this->builder->addColumnsFromArray(['update_date'], $report, []);
 
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertSame(0, $report->columns[0]->getSort());

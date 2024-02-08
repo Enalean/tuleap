@@ -37,7 +37,7 @@ class b201905061047_add_widget_title extends ForgeUpgrade_Bucket // @codingStand
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_timetracking_overview_widget ADD widget_title VARCHAR(255) NOT NULL";
+        $sql = 'ALTER TABLE plugin_timetracking_overview_widget ADD widget_title VARCHAR(255) NOT NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Adding column did not work.');
@@ -51,7 +51,7 @@ class b201905061047_add_widget_title extends ForgeUpgrade_Bucket // @codingStand
         $result = $this->db->dbh->query($sql);
 
         if ($result === false) {
-            $this->rollBackOnError("An error occured while trying to select reports.");
+            $this->rollBackOnError('An error occured while trying to select reports.');
         }
 
         $this->updateExistingWidget($result);
@@ -67,9 +67,9 @@ class b201905061047_add_widget_title extends ForgeUpgrade_Bucket // @codingStand
         );
 
         foreach ($widgets as $widget) {
-            $response = $statement->execute(["Timetracking Overview", $widget["content_id"]]);
+            $response = $statement->execute(['Timetracking Overview', $widget['content_id']]);
             if ($response === false) {
-                $this->rollBackOnError("An error occured while trying to update widgets.");
+                $this->rollBackOnError('An error occured while trying to update widgets.');
             }
         }
     }

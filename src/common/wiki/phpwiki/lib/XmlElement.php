@@ -110,7 +110,7 @@ class XmlContent
                 } elseif (method_exists($item, 'asString')) {
                     echo self::_quote($item->asString());
                 } else {
-                    printf("==Object(%s)==", $item::class);
+                    printf('==Object(%s)==', $item::class);
                 }
             } else {
                 echo self::_quote((string) $item);
@@ -128,7 +128,7 @@ class XmlContent
                 } elseif (method_exists($item, 'asString')) {
                     $xml .= self::_quote($item->asString());
                 } else {
-                    $xml .= sprintf("==Object(%s)==", $item::class);
+                    $xml .= sprintf('==Object(%s)==', $item::class);
                 }
             } else {
                 $xml .= self::_quote((string) $item);
@@ -145,7 +145,7 @@ class XmlContent
                 if (method_exists($item, 'asString')) {
                     $val .= $item->asString();
                 } else {
-                    $val .= sprintf("==Object(%s)==", $item::class);
+                    $val .= sprintf('==Object(%s)==', $item::class);
                 }
             } else {
                 $val .= (string) $item;
@@ -363,7 +363,7 @@ class XmlElement extends XmlContent
 
     public function startTag()
     {
-        $start = "<" . $this->_tag;
+        $start = '<' . $this->_tag;
         $this->_setClasses();
         foreach ($this->_attr as $attr => $val) {
             if (is_bool($val)) {
@@ -372,16 +372,16 @@ class XmlElement extends XmlContent
                 }
                 $val = $attr;
             }
-            $qval   = str_replace("\"", '&quot;', self::_quote((string) $val));
+            $qval   = str_replace('"', '&quot;', self::_quote((string) $val));
             $start .= " $attr=\"$qval\"";
         }
-        $start .= ">";
+        $start .= '>';
         return $start;
     }
 
     public function emptyTag()
     {
-        return substr($this->startTag(), 0, -1) . "/>";
+        return substr($this->startTag(), 0, -1) . '/>';
     }
 
     public function endTag()
@@ -517,7 +517,7 @@ class FormattedText
             foreach ($m[1] as $argnum) {
                 if ($argnum < 1 || $argnum > count($args)) {
                     trigger_error(sprintf(
-                        "%s: argument index out of range",
+                        '%s: argument index out of range',
                         $argnum
                     ), E_USER_WARNING);
                 }
@@ -585,13 +585,13 @@ function PrintXML($val /* , ... */)
         } elseif (method_exists($val, 'asString')) {
             echo XmlContent_quote($val->asString());
         } else {
-            printf("==Object(%s)==", $val::class);
+            printf('==Object(%s)==', $val::class);
         }
     } elseif (is_array($val)) {
         // DEPRECATED:
         // Use XmlContent objects instead of arrays for collections of XmlElements.
         trigger_error(
-            "Passing arrays to PrintXML() is deprecated: (" . AsXML($val, true) . ")",
+            'Passing arrays to PrintXML() is deprecated: (' . AsXML($val, true) . ')',
             E_USER_NOTICE
         );
         foreach ($val as $x) {
@@ -618,7 +618,7 @@ function AsXML($val /* , ... */)
         } elseif (method_exists($val, 'asString')) {
             return XmlContent_quote($val->asString());
         } else {
-            return sprintf("==Object(%s)==", $val::class);
+            return sprintf('==Object(%s)==', $val::class);
         }
     } elseif (is_array($val)) {
         // DEPRECATED:
@@ -626,7 +626,7 @@ function AsXML($val /* , ... */)
         if (empty($nowarn)) {
             $nowarn = true;
             trigger_error(
-                "Passing arrays to AsXML() is deprecated: (" . AsXML($val) . ")",
+                'Passing arrays to AsXML() is deprecated: (' . AsXML($val) . ')',
                 E_USER_NOTICE
             );
             unset($nowarn);
@@ -653,12 +653,12 @@ function AsString($val)
         if (method_exists($val, 'asString')) {
             return $val->asString();
         } else {
-            return sprintf("==Object(%s)==", $val::class);
+            return sprintf('==Object(%s)==', $val::class);
         }
     } elseif (is_array($val)) {
         // DEPRECATED:
         // Use XmlContent objects instead of arrays for collections of XmlElements.
-        trigger_error("Passing arrays to AsString() is deprecated", E_USER_NOTICE);
+        trigger_error('Passing arrays to AsString() is deprecated', E_USER_NOTICE);
         $str = '';
         foreach ($val as $x) {
             $str .= AsString($x);

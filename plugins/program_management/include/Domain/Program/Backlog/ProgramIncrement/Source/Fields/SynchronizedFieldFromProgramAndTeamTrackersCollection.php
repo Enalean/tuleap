@@ -69,7 +69,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
                 if (! $errors_collector->shouldCollectAllIssues()) {
                     $this->logger->debug(
                         sprintf(
-                            "User can not submit the field #%d of tracker #%d",
+                            'User can not submit the field #%d of tracker #%d',
                             $synchronized_field->getId(),
                             $tracker_reference->getId()
                         )
@@ -91,7 +91,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
                 if (! $errors_collector->shouldCollectAllIssues()) {
                     $this->logger->debug(
                         sprintf(
-                            "User can not update the field #%d of tracker #%d",
+                            'User can not update the field #%d of tracker #%d',
                             $synchronized_field->getId(),
                             $tracker_reference->getId()
                         )

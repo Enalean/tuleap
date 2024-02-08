@@ -40,8 +40,8 @@ final class TableRendererForReportRetrieverTest extends TestCase
         $table_renderer   = new Tracker_Report_Renderer_Table(
             1,
             $report,
-            "Table",
-            "Table desc",
+            'Table',
+            'Table desc',
             0,
             1,
             false

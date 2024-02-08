@@ -32,10 +32,10 @@ final class CrossReferenceSectionPresenterTest extends TestCase
         $a_ref       = CrossReferencePresenterBuilder::get(1)->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->build();
 
-        $section     = new CrossReferenceSectionPresenter("my section", [$a_ref]);
+        $section     = new CrossReferenceSectionPresenter('my section', [$a_ref]);
         $new_section = $section->withAdditionalCrossReference($another_ref);
 
-        self::assertEquals("my section", $new_section->label);
+        self::assertEquals('my section', $new_section->label);
         self::assertEquals(
             [$a_ref, $another_ref],
             $new_section->cross_references

@@ -129,8 +129,8 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->sprint            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->sprint_tracker_id = 113;
         $this->sprint_tracker    = \Mockery::spy(\Tracker::class);
-        $this->sprint_tracker->shouldReceive("getId")->andReturn($this->sprint_tracker_id);
-        $this->sprint->shouldReceive("getTracker")->andReturn($this->sprint_tracker);
+        $this->sprint_tracker->shouldReceive('getId')->andReturn($this->sprint_tracker_id);
+        $this->sprint->shouldReceive('getTracker')->andReturn($this->sprint_tracker);
     }
 
     protected function tearDown(): void
@@ -212,8 +212,8 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItRendersAJPGraphBurndownErrorWhenUserCantReadBurndownField()
     {
-        $this->burndown_field->shouldReceive("getCurrentUser")->andReturn($this->user);
-        $this->burndown_field->shouldReceive("userCanRead")->andReturn(false);
+        $this->burndown_field->shouldReceive('getCurrentUser')->andReturn($this->user);
+        $this->burndown_field->shouldReceive('userCanRead')->andReturn(false);
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
         $this->expectExceptionMessage('You are not allowed to access this field.');

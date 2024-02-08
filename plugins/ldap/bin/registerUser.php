@@ -37,12 +37,12 @@ function extract_params($argv)
     for ($i = 1; $i < count($argv); ++$i) {
         $arg = $argv[$i];
         // If arg start by "--" this is the beginning of a new option
-        if (strpos($arg, "--") === 0) {
-            $eqpos               = strpos($arg, "=");
+        if (strpos($arg, '--') === 0) {
+            $eqpos               = strpos($arg, '=');
             $argname             = substr($arg, 2, $eqpos - 2);
             $arguments[$argname] = substr($arg, $eqpos + 1);
         } else {
-            $arguments[$argname] .= " " . $arg;
+            $arguments[$argname] .= ' ' . $arg;
         }
     }
     return $arguments;
@@ -81,7 +81,7 @@ if ($ldapPlugin instanceof LdapPlugin) {
                  * @psalm-taint-escape html
                  * @psalm-taint-escape has_quotes
                  */
-                $output = "ID=" . $user->getId() . ":STATUS=" . $user->getStatus() . "\n";
+                $output = 'ID=' . $user->getId() . ':STATUS=' . $user->getStatus() . "\n";
                 echo $output;
                 return 0;
             }

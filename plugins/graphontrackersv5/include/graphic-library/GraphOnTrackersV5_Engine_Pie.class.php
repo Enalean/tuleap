@@ -43,7 +43,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
         $this->graph->title->Set($this->title);
 
         if (is_null($this->description)) {
-            $this->description = "";
+            $this->description = '';
         }
         $this->graph->subtitle->Set($this->description);
 

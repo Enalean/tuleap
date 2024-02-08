@@ -31,11 +31,11 @@ class ForumDao extends DataAccessObject
      */
     public function searchActiveForum(int $forum_id, int $project_id)
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM forum_group_list
                 WHERE group_forum_id = ?
                   AND group_id = ?
-                  AND is_public IN (0, 1)";
+                  AND is_public IN (0, 1)';
 
         return $this->getDB()->row($sql, $forum_id, $project_id);
     }

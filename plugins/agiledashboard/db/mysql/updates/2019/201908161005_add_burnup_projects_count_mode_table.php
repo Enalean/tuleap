@@ -22,7 +22,7 @@ class b201908161005_add_burnup_projects_count_mode_table extends ForgeUpgrade_Bu
 {
     public function description()
     {
-        return "Add burnup projects in count mode table";
+        return 'Add burnup projects in count mode table';
     }
 
     public function preUp()
@@ -32,11 +32,11 @@ class b201908161005_add_burnup_projects_count_mode_table extends ForgeUpgrade_Bu
 
     public function up()
     {
-        $sql = "
+        $sql = '
             CREATE TABLE plugin_agiledashboard_burnup_projects_count_mode (
               project_id  INT(11) NOT NULL PRIMARY KEY
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_agiledashboard_burnup_projects_count_mode', $sql);
     }

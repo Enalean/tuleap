@@ -199,8 +199,8 @@ class ArtifactXMLExporterDao extends DataAccessObject
 
     public function getAllUsers()
     {
-        $sql = "SELECT DISTINCT(user_id), user_name
-                FROM user";
+        $sql = 'SELECT DISTINCT(user_id), user_name
+                FROM user';
         return $this->retrieve($sql);
     }
 }

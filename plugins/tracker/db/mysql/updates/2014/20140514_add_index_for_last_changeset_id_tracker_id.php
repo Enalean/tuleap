@@ -45,7 +45,7 @@ class b20140514_add_index_for_last_changeset_id_tracker_id extends \Tuleap\Forge
     public function postUp()
     {
         if (! $this->indexNameExists('tracker_artifact', 'idx_changeset_tracker')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException("tracker_artifact has no idx_changeset_tracker index");
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_artifact has no idx_changeset_tracker index');
         }
     }
 

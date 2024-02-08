@@ -26,7 +26,7 @@ use Project;
 
 class UnplannedCriterionOptionsProvider
 {
-    public const UNPLANNED_IDENTIFIER = "-1";
+    public const UNPLANNED_IDENTIFIER = '-1';
 
     /**
      * @var ExplicitBacklogDao

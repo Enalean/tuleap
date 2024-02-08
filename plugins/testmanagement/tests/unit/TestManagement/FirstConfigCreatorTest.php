@@ -207,16 +207,16 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($this->new_campaign_tracker);
 
         $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->withArgs(
-            ["campaign", 334]
+            ['campaign', 334]
         )->once();
         $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->withArgs(
-            ["test_def", 445]
+            ['test_def', 445]
         )->once();
         $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->withArgs(
-            ["test_exec", 556]
+            ['test_exec', 556]
         )->once();
         $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->withArgs(
-            ["bug", 667]
+            ['bug', 667]
         )->once();
 
         $this->tracker_checker->shouldReceive('checkTrackers')->once();
@@ -239,22 +239,22 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(true);
 
         $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, "campaign")
+            ->with($this->project, 'campaign')
             ->once()
             ->andReturn($this->new_campaign_tracker);
 
         $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, "test_def")
+            ->with($this->project, 'test_def')
             ->once()
             ->andReturn($this->new_definition_tracker);
 
         $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, "test_exec")
+            ->with($this->project, 'test_exec')
             ->once()
             ->andReturn($this->new_execution_tracker);
 
         $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, "bug")
+            ->with($this->project, 'bug')
             ->once()
             ->andReturn($this->new_issue_tracker);
 
@@ -293,21 +293,21 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(true);
 
         $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, "campaign")
+            ->with($this->project, 'campaign')
             ->never();
 
         $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, "test_def")
+            ->with($this->project, 'test_def')
             ->once()
             ->andReturn($this->new_definition_tracker);
 
         $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, "test_exec")
+            ->with($this->project, 'test_exec')
             ->once()
             ->andReturn($this->new_execution_tracker);
 
         $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, "bug")
+            ->with($this->project, 'bug')
             ->once()
             ->andReturn($this->new_issue_tracker);
 
@@ -377,7 +377,7 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(true);
 
         $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, "campaign")
+            ->with($this->project, 'campaign')
             ->once()
             ->andThrow(TrackerNotCreatedException::class);
 
@@ -421,23 +421,23 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             new TestmanagementConfigTracker(
-                "Validation Campaign",
-                "campaign",
+                'Validation Campaign',
+                'campaign',
                 $this->campaign_tracker_id
             ),
             new TestmanagementConfigTracker(
-                "Test Cases",
-                "test_def",
+                'Test Cases',
+                'test_def',
                 $this->definition_tracker_id
             ),
             new TestmanagementConfigTracker(
-                "Test Execution",
-                "test_exec",
+                'Test Execution',
+                'test_exec',
                 $this->execution_tracker_id
             ),
             new TestmanagementConfigTracker(
-                "bugs",
-                "bug",
+                'bugs',
+                'bug',
                 $this->issue_tracker_id
             ),
 
@@ -448,23 +448,23 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             new TestmanagementConfigTracker(
-                "Validation Campaign",
-                "campaign",
+                'Validation Campaign',
+                'campaign',
                 false
             ),
             new TestmanagementConfigTracker(
-                "Test Cases",
-                "test_def",
+                'Test Cases',
+                'test_def',
                 $this->definition_tracker_id
             ),
             new TestmanagementConfigTracker(
-                "Test Execution",
-                "test_exec",
+                'Test Execution',
+                'test_exec',
                 $this->execution_tracker_id
             ),
             new TestmanagementConfigTracker(
-                "bugs",
-                "bug",
+                'bugs',
+                'bug',
                 $this->issue_tracker_id
             ),
 
@@ -476,29 +476,29 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_configuration = new TestmanagementTrackersConfiguration();
         $tracker_configuration->setCampaign(
             new TestmanagementConfigTracker(
-                "Validation Campaign",
-                "campaign",
+                'Validation Campaign',
+                'campaign',
                 $this->new_campaign_tracker_id
             )
         );
         $tracker_configuration->setTestDefinition(
             new TestmanagementConfigTracker(
-                "Test Cases",
-                "test_def",
+                'Test Cases',
+                'test_def',
                 $this->new_definition_tracker_id
             )
         );
         $tracker_configuration->setTestExecution(
             new TestmanagementConfigTracker(
-                "Test Execution",
-                "test_exec",
+                'Test Execution',
+                'test_exec',
                 $this->new_execution_tracker_id
             )
         );
         $tracker_configuration->setIssue(
             new TestmanagementConfigTracker(
-                "bugs",
-                "bug",
+                'bugs',
+                'bug',
                 $this->new_issue_tracker_id
             )
         );

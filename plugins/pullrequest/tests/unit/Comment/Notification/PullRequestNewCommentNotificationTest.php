@@ -46,7 +46,7 @@ final class PullRequestNewCommentNotificationTest extends \Tuleap\Test\PHPUnit\T
     protected function setUp(): void
     {
         $this->user_103     = $this->buildUser(103);
-        $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(14)->withTitle("PR title")->build();
+        $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(14)->withTitle('PR title')->build();
     }
 
     public function testNewCommentNotificationCanBeBuiltFromTheOwnersOfThePullRequestAndTheAddedComment(): void
@@ -83,7 +83,7 @@ final class PullRequestNewCommentNotificationTest extends \Tuleap\Test\PHPUnit\T
     {
         $notification = $this->buildNotification(
             CommentTestBuilder::aMarkdownComment('**My comment**')->build(),
-            FormatNotificationContentStub::withFormattedContent("<em>My comment</em>"),
+            FormatNotificationContentStub::withFormattedContent('<em>My comment</em>'),
         );
 
         self::assertEqualsCanonicalizing([$this->user_103], $notification->getRecipients());

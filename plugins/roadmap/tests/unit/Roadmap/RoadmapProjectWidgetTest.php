@@ -77,7 +77,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->presenter_builder
             ->expects(self::once())
             ->method('getPresenter')
-            ->willReturn(new RoadmapWidgetPresenter(123, [], false, false, "month"));
+            ->willReturn(new RoadmapWidgetPresenter(123, [], false, false, 'month'));
 
         $this->widget->getContent();
     }
@@ -87,14 +87,14 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao
             ->expects(self::once())
             ->method('cloneContent')
-            ->with(42, 102, "g");
+            ->with(42, 102, 'g');
 
         $this->widget->cloneContent(
             ProjectTestBuilder::aProject()->build(),
             ProjectTestBuilder::aProject()->build(),
-            "42",
-            "102",
-            "g",
+            '42',
+            '102',
+            'g',
             new MappingRegistry([])
         );
     }
@@ -104,22 +104,22 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao
             ->expects(self::once())
             ->method('searchContent')
-            ->with(42, 101, "g")
+            ->with(42, 101, 'g')
             ->willReturn([]);
 
         $this->dao
             ->expects(self::once())
             ->method('cloneContent')
-            ->with(42, 102, "g");
+            ->with(42, 102, 'g');
 
         $mapping_registry = new MappingRegistry([]);
         $mapping_registry->setCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY, [111 => 222]);
         $this->widget->cloneContent(
             ProjectTestBuilder::aProject()->build(),
             ProjectTestBuilder::aProject()->build(),
-            "42",
-            "102",
-            "g",
+            '42',
+            '102',
+            'g',
             $mapping_registry
         );
     }
@@ -129,7 +129,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao
             ->expects(self::once())
             ->method('searchContent')
-            ->with(42, 101, "g")
+            ->with(42, 101, 'g')
             ->willReturn([
                 'title'                     => 'Roadmap',
                 'lvl1_iteration_tracker_id' => 120,
@@ -145,16 +145,16 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao
             ->expects(self::once())
             ->method('insertContent')
-            ->with(102, "g", 'Roadmap', [110], 0, 'week', 120, 130);
+            ->with(102, 'g', 'Roadmap', [110], 0, 'week', 120, 130);
 
         $mapping_registry = new MappingRegistry([]);
         $mapping_registry->setCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY, [111 => 222]);
         $this->widget->cloneContent(
             ProjectTestBuilder::aProject()->build(),
             ProjectTestBuilder::aProject()->build(),
-            "42",
-            "102",
-            "g",
+            '42',
+            '102',
+            'g',
             $mapping_registry
         );
     }
@@ -164,7 +164,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao
             ->expects(self::once())
             ->method('searchContent')
-            ->with(42, 101, "g")
+            ->with(42, 101, 'g')
             ->willReturn([
                 'title'                     => 'Roadmap',
                 'lvl1_iteration_tracker_id' => 121,
@@ -180,7 +180,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao
             ->expects(self::once())
             ->method('insertContent')
-            ->with(102, "g", 'Roadmap', [1110], 0, 'week', 1210, 1310);
+            ->with(102, 'g', 'Roadmap', [1110], 0, 'week', 1210, 1310);
 
         $mapping_registry = new MappingRegistry([]);
         $mapping_registry->setCustomMapping(
@@ -190,9 +190,9 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->widget->cloneContent(
             ProjectTestBuilder::aProject()->build(),
             ProjectTestBuilder::aProject()->build(),
-            "42",
-            "102",
-            "g",
+            '42',
+            '102',
+            'g',
             $mapping_registry
         );
     }
@@ -215,7 +215,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao
             ->expects(self::once())
             ->method('searchContent')
-            ->with(42, 101, "g")
+            ->with(42, 101, 'g')
             ->willReturn([
                 'title'                     => 'Roadmap',
                 'lvl1_iteration_tracker_id' => 121,
@@ -232,14 +232,14 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao
             ->expects(self::once())
             ->method('insertContent')
-            ->with(102, "g", 'Roadmap', [1110], $new_report_id, 'week', 1210, 1310);
+            ->with(102, 'g', 'Roadmap', [1110], $new_report_id, 'week', 1210, 1310);
 
         $this->widget->cloneContent(
             ProjectTestBuilder::aProject()->build(),
             ProjectTestBuilder::aProject()->build(),
-            "42",
-            "102",
-            "g",
+            '42',
+            '102',
+            'g',
             $mapping_registry
         );
     }

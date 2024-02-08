@@ -44,17 +44,17 @@ if ($sys_user !== 'root' && $sys_user !== ForgeConfig::get('sys_http_user')) {
 function usage()
 {
     $consoleLogger = new Log_ConsoleLogger();
-    $consoleLogger->error("Usage: export.php groupId targetname");
+    $consoleLogger->error('Usage: export.php groupId targetname');
 }
 
 if (! isset($argv[2])) {
-    $consoleLogger->error("No target directory specified");
+    $consoleLogger->error('No target directory specified');
     usage();
     return false;
 }
 
 if (is_file($argv[2])) {
-    $consoleLogger->error("Target directoy already exists");
+    $consoleLogger->error('Target directoy already exists');
     return false;
 }
 
@@ -68,9 +68,9 @@ try {
     $XMLExport->setArchiveName(basename($argv[2]));
     $XMLExport->dumpPackage();
 } catch (Exception $exception) {
-    $consoleLogger->error("Export failed : " . $exception->getMessage());
+    $consoleLogger->error('Export failed : ' . $exception->getMessage());
     return false;
 }
 
 $end = microtime(true);
-$consoleLogger->info("Elapsed time: " . ($end - $start));
+$consoleLogger->info('Elapsed time: ' . ($end - $start));

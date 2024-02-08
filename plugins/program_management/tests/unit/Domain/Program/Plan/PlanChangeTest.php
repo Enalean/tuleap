@@ -48,7 +48,7 @@ final class PlanChangeTest extends TestCase
             $this->user_identifier,
             101,
             $tracker_ids_that_can_be_planned,
-            ["1_101"],
+            ['1_101'],
             null
         );
     }
@@ -65,7 +65,7 @@ final class PlanChangeTest extends TestCase
             $this->user_identifier,
             101,
             $tracker_ids_that_can_be_planned,
-            ["1_101"],
+            ['1_101'],
             $iteration_representation
         );
     }
@@ -77,7 +77,7 @@ final class PlanChangeTest extends TestCase
         $project_id                      = 101;
         $tracker_ids_that_can_be_planned = [99, 67];
         $can_possibly_prioritize_ugroups = ['198', '101_3'];
-        $plan_iteration_change           = new PlanIterationChange(16, "Iterations", "iteration");
+        $plan_iteration_change           = new PlanIterationChange(16, 'Iterations', 'iteration');
 
         $this->expectException(ProgramIncrementAndIterationCanNotBeTheSameTrackerException::class);
         PlanChange::fromProgramIncrementAndRaw(
@@ -122,7 +122,7 @@ final class PlanChangeTest extends TestCase
         $project_id                      = 101;
         $tracker_ids_that_can_be_planned = [99, 67];
         $can_possibly_prioritize_ugroups = ['198', '101_3'];
-        $plan_iteration_change           = new PlanIterationChange(130, "Iterations", "iteration");
+        $plan_iteration_change           = new PlanIterationChange(130, 'Iterations', 'iteration');
 
         $plan_change = PlanChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,

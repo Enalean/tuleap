@@ -42,7 +42,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
                 ],
                 'values'  => [
                     $this->getSubmitStringValue($this->epic_tracker_id, $summary_field_label, $summary_field_value),
-                    $this->getSubmitTextValue($this->epic_tracker_id, "Required Text", "this is a description"),
+                    $this->getSubmitTextValue($this->epic_tracker_id, 'Required Text', 'this is a description'),
                     $this->getSubmitListValue($this->epic_tracker_id, 'Status', 103),
                 ],
             ]
@@ -59,7 +59,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
                 ],
                 'values'  => [
                     $this->getSubmitStringValue($this->epic_tracker_id, 'Summary', 'This is a new epic'),
-                    $this->getSubmitTextValue($this->epic_tracker_id, "Required Text", str_repeat('a', 70000)),
+                    $this->getSubmitTextValue($this->epic_tracker_id, 'Required Text', str_repeat('a', 70000)),
                     $this->getSubmitListValue($this->epic_tracker_id, 'Status', 103),
                 ],
             ]
@@ -80,7 +80,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
         $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
         return [
             'field_id' => $field_def['field_id'],
-            'value'    => ['format' => 'html', "content" => $field_value],
+            'value'    => ['format' => 'html', 'content' => $field_value],
         ];
     }
 
@@ -149,18 +149,18 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
         $links = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $expected_link = [
-            "natures" => [
+            'natures' => [
                 [
-                    "shortname" => $nature_is_child,
-                    "direction" => 'forward',
-                    "label"     => "Child",
-                    "uri"       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_is_child&direction=forward",
+                    'shortname' => $nature_is_child,
+                    'direction' => 'forward',
+                    'label'     => 'Child',
+                    'uri'       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_is_child&direction=forward",
                 ],
                 [
-                    "shortname" => $nature_empty,
-                    "direction" => 'forward',
-                    "label"     => '',
-                    "uri"       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_empty&direction=forward",
+                    'shortname' => $nature_empty,
+                    'direction' => 'forward',
+                    'label'     => '',
+                    'uri'       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_empty&direction=forward",
                 ],
             ],
         ];

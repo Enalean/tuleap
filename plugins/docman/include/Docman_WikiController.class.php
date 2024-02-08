@@ -248,11 +248,11 @@ class Docman_WikiController extends Docman_Controller
             }
             function toggle_image(id) {
                 var img_element = $(\'img_\' + id);
-                if (img_element.src.indexOf(\'' . util_get_image_theme("ic/toggle_plus.png") . '\') != -1) {
-                    img_element.src = \'' . util_get_image_theme("ic/toggle_minus.png") . '\';
+                if (img_element.src.indexOf(\'' . util_get_image_theme('ic/toggle_plus.png') . '\') != -1) {
+                    img_element.src = \'' . util_get_image_theme('ic/toggle_minus.png') . '\';
                     img_element.title = \'' . dgettext('tuleap-docman', 'Hide related documents') . '\';
                 } else {
-                    img_element.src = \'' . util_get_image_theme("ic/toggle_plus.png") . '\';
+                    img_element.src = \'' . util_get_image_theme('ic/toggle_plus.png') . '\';
                     img_element.title = \'' . dgettext('tuleap-docman', 'Open to see related documents') . '\';
                 }
             }
@@ -271,38 +271,38 @@ class Docman_WikiController extends Docman_Controller
                 $dpm     = Docman_PermissionsManager::instance($group_id);
                 // Wiki page could have many references in docman.
                 if (is_array($docman_item_id)) {
-                    $icon        = HTML::img(['id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => dgettext('tuleap-docman', 'Open to see related documents'), 'data-test' => 'wiki-document-location-toggle']);
-                    $linked_icon = HTML::a(['href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"], $icon);
+                    $icon        = HTML::img(['id' => 'img_documents', 'src' => util_get_image_theme('ic/toggle_minus.png'), 'title' => dgettext('tuleap-docman', 'Open to see related documents'), 'data-test' => 'wiki-document-location-toggle']);
+                    $linked_icon = HTML::a(['href' => '#', 'onclick' => "javascript:toggle_documents('documents'); return false;"], $icon);
 
                     // creating the title of the section regarding number of referencing documents and from where we arrived to this wiki page.
                     if (count($docman_item_id) > 1) {
-                        $title = "";
+                        $title = '';
                         if (isset($referrer_id) && $referrer_id) {
-                            $title = HTML::strong(dgettext('tuleap-docman', 'Location:') . " ");
+                            $title = HTML::strong(dgettext('tuleap-docman', 'Location:') . ' ');
                         } else {
-                            $title = HTML::strong(dgettext('tuleap-docman', 'Locations:') . " ");
+                            $title = HTML::strong(dgettext('tuleap-docman', 'Locations:') . ' ');
                         }
                     } elseif (count($docman_item_id) == 1) {
-                        $title = HTML::strong(dgettext('tuleap-docman', 'Location:') . " ");
+                        $title = HTML::strong(dgettext('tuleap-docman', 'Location:') . ' ');
                     } else {
-                        $title = "";
+                        $title = '';
                     }
 
                     //create Full legend of the section
                     $legend  = HTML::legend(
                         ['class' => 'docman_md_frame'],
-                        count($docman_item_id) > 1 ? $linked_icon : "",
+                        count($docman_item_id) > 1 ? $linked_icon : '',
                         $title,
-                        isset($referrer_id) && $referrer_id ? HTML($this->showReferrerPath($referrer_id, $group_id)) : ""
+                        isset($referrer_id) && $referrer_id ? HTML($this->showReferrerPath($referrer_id, $group_id)) : ''
                     );
                     $details = HTML();
 
                     // create section body.
                     if (isset($referrer_id) && $referrer_id) {
                         if (count($docman_item_id) > 2) {
-                            $details->pushContent(HTML::H3(dgettext('tuleap-docman', 'Other locations:') . " "));
+                            $details->pushContent(HTML::H3(dgettext('tuleap-docman', 'Other locations:') . ' '));
                         } elseif (count($docman_item_id) == 2) {
-                            $details->pushContent(HTML::H3(dgettext('tuleap-docman', 'Other location:') . " "));
+                            $details->pushContent(HTML::H3(dgettext('tuleap-docman', 'Other location:') . ' '));
                         }
                     }
                     // create Referencing documents linked paths.
@@ -313,7 +313,7 @@ class Docman_WikiController extends Docman_Controller
 
                     if (count($docman_item_id) == 1) {
                         $id = array_pop($docman_item_id);
-                        $docman_references->pushContent(HTML::strong(dgettext('tuleap-docman', 'Location:') . " "));
+                        $docman_references->pushContent(HTML::strong(dgettext('tuleap-docman', 'Location:') . ' '));
                         $docman_references->pushContent(HTML($this->getDocumentPath($id, $group_id)));
                         $docman_references->pushContent(HTML::br());
                     } else {
@@ -322,7 +322,7 @@ class Docman_WikiController extends Docman_Controller
                     }
                 } else {
                     if ($dpm->userCanAccess($user, $docman_item_id)) {
-                        $docman_references->pushContent(HTML::strong(dgettext('tuleap-docman', 'Location:') . " "));
+                        $docman_references->pushContent(HTML::strong(dgettext('tuleap-docman', 'Location:') . ' '));
                         $docman_references->pushContent(HTML($this->getDocumentPath($docman_item_id, $group_id)));
                         //$docman_references->pushContent(HTML::br());
                     }
@@ -340,7 +340,7 @@ class Docman_WikiController extends Docman_Controller
     {
         $ref = $this->getReferrer();
         if (isset($ref) && $ref) {
-            if (preg_match("/\/plugins\/docman\//", $ref)) {
+            if (preg_match('/\/plugins\/docman\//', $ref)) {
                 return true;
             } else {
                 return false;
@@ -362,10 +362,10 @@ class Docman_WikiController extends Docman_Controller
     public function getReferrerId($ref)
     {
         //Refferers are urls like this :  "plugins/docman/index.php?group_id=101&id=37&action=details"
-        if (preg_match("/\&action=details\&id\=([0-9]+)/", $ref, $match)) {
+        if (preg_match('/\&action=details\&id\=([0-9]+)/', $ref, $match)) {
             return $match[1];
         }
-        if (preg_match("/\&id=([0-9])\&action=details/", $ref, $match)) {
+        if (preg_match('/\&id=([0-9])\&action=details/', $ref, $match)) {
             return $match[1];
         } else {
             return null;
@@ -398,7 +398,7 @@ class Docman_WikiController extends Docman_Controller
 
         $md_uri = '/plugins/docman/?group_id=' . $group_id . '&action=details&id=' . $referrer_id;
 
-        $pen_icon = HTML::a(['href' => $md_uri], HTML::img(['src' => util_get_image_theme("ic/edit.png")]));
+        $pen_icon = HTML::a(['href' => $md_uri], HTML::img(['src' => util_get_image_theme('ic/edit.png')]));
 
         $html->pushContent(HTML::a(['href' => $item_url . $reference->getId()], HTML::strong($reference->getTitle())));
         $html->pushContent($pen_icon);
@@ -431,7 +431,7 @@ class Docman_WikiController extends Docman_Controller
             $md_uri = '/plugins/docman/?group_id=' . $group_id . '&action=details&id=' . $id;
 
             //Add a pen icon linked to document properties.
-            $pen_icon = HTML::a(['href' => $md_uri], HTML::img(['src' => util_get_image_theme("ic/edit.png")]));
+            $pen_icon = HTML::a(['href' => $md_uri], HTML::img(['src' => util_get_image_theme('ic/edit.png')]));
 
             $html->pushContent(HTML::a(['href' => $item_url . $reference->getId()], HTML::strong($reference->getTitle())));
             $html->pushContent($pen_icon);

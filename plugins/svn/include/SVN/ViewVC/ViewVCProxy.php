@@ -48,26 +48,26 @@ class ViewVCProxy
     {
         $request_uri = $request->getFromServer('REQUEST_URI');
 
-        if (strpos($request_uri, "annotate=") !== false) {
+        if (strpos($request_uri, 'annotate=') !== false) {
             return true;
         }
 
         if (
             $this->isViewingPatch($request) ||
             $this->isCheckoutingFile($request) ||
-            strpos($request_uri, "view=graphimg") !== false ||
-            strpos($request_uri, "view=redirect_path") !== false ||
+            strpos($request_uri, 'view=graphimg') !== false ||
+            strpos($request_uri, 'view=redirect_path') !== false ||
             // ViewVC will redirect URLs with "&rev=" to "&revision=". This is needed by Hudson.
-            strpos($request_uri, "&rev=") !== false
+            strpos($request_uri, '&rev=') !== false
         ) {
             return false;
         }
 
         if (
-            strpos($request_uri, "/?") === false &&
-            strpos($request_uri, "&r1=") === false &&
-            strpos($request_uri, "&r2=") === false &&
-            strpos($request_uri, "view=") === false
+            strpos($request_uri, '/?') === false &&
+            strpos($request_uri, '&r1=') === false &&
+            strpos($request_uri, '&r2=') === false &&
+            strpos($request_uri, 'view=') === false
         ) {
             return false;
         }
@@ -81,7 +81,7 @@ class ViewVCProxy
     private function isViewingPatch(HTTPRequest $request)
     {
         $request_uri = $request->getFromServer('REQUEST_URI');
-        return strpos($request_uri, "view=patch") !== false;
+        return strpos($request_uri, 'view=patch') !== false;
     }
 
     /**
@@ -90,7 +90,7 @@ class ViewVCProxy
     private function isCheckoutingFile(HTTPRequest $request)
     {
         $request_uri = $request->getFromServer('REQUEST_URI');
-        return strpos($request_uri, "view=co") !== false;
+        return strpos($request_uri, 'view=co') !== false;
     }
 
     private function buildQueryString(HTTPRequest $request)
@@ -109,9 +109,9 @@ class ViewVCProxy
 
     private function setLocaleOnFileName($path)
     {
-        $current_locales = setlocale(LC_ALL, "0");
+        $current_locales = setlocale(LC_ALL, '0');
         // to allow $path filenames with French characters
-        setlocale(LC_CTYPE, "en_US.UTF-8");
+        setlocale(LC_CTYPE, 'en_US.UTF-8');
 
         $encoded_path = escapeshellarg($path);
         setlocale(LC_ALL, $current_locales);
@@ -122,7 +122,7 @@ class ViewVCProxy
     private function setLocaleOnCommand($command, &$return_var)
     {
         ob_start();
-        putenv("LC_CTYPE=en_US.UTF-8");
+        putenv('LC_CTYPE=en_US.UTF-8');
         passthru($command, $return_var);
 
         return ob_get_clean();
@@ -235,10 +235,10 @@ class ViewVCProxy
             //parse the html doc that we get from viewvc.
             //remove the http header part as well as the html header and
             //html body tags
-            $cross_ref = "";
+            $cross_ref = '';
             if ($request->get('revision')) {
                 $crossref_fact = new CrossReferenceFactory(
-                    $repository->getName() . "/" . $request->get('revision'),
+                    $repository->getName() . '/' . $request->get('revision'),
                     ReferenceManager::REFERENCE_NATURE_SVNREVISION,
                     $repository->getProject()->getID()
                 );
@@ -251,8 +251,8 @@ class ViewVCProxy
                 }
 
                 $body = str_replace(
-                    "<h4>Modified files</h4>",
-                    $cross_ref . "<h4>Modified files</h4>",
+                    '<h4>Modified files</h4>',
+                    $cross_ref . '<h4>Modified files</h4>',
                     $body
                 );
             }
@@ -278,7 +278,7 @@ class ViewVCProxy
 
     private function getPermissionDeniedError(Project $project)
     {
-        $url = session_make_url("/project/memberlist.php?group_id=" . urlencode((string) $project->getID()));
+        $url = session_make_url('/project/memberlist.php?group_id=' . urlencode((string) $project->getID()));
 
         return '<link rel="stylesheet" href="/viewvc-theme-tuleap/style.css">
             <div class="tuleap-viewvc-header">

@@ -26,8 +26,8 @@
 function normalized_urlprefix()
 {
     $prefix = forge_get_config('url_prefix');
-    $prefix = preg_replace("/^\//", "", $prefix);
-    $prefix = preg_replace("/\/$/", "", $prefix);
+    $prefix = preg_replace('/^\//', '', $prefix);
+    $prefix = preg_replace('/\/$/', '', $prefix);
     $prefix = "/$prefix/";
     if ($prefix == '//') {
         $prefix = '/';
@@ -60,7 +60,7 @@ function util_make_base_url($prefix = '')
     $url  = util_url_prefix($prefix);
     $url .= forge_get_config('web_host');
     if (forge_get_config('https_port') && (forge_get_config('https_port') != 443)) {
-        $url .= ":" . forge_get_config('https_port');
+        $url .= ':' . forge_get_config('https_port');
     }
     return $url;
 }

@@ -33,7 +33,7 @@ class Rule_RealName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function containsBackslashCharacter($string)
     {
-        return \strpos($string, "\\") !== \false;
+        return \strpos($string, '\\') !== \false;
     }
 
     private function containsNonPrintingCharacter($string)

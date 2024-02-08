@@ -29,7 +29,7 @@ class CrossReferencesDao extends DataAccessObject
     public function searchTargetsOfEntity(string $entity_id, string $entity_type, int $entity_project_id): array
     {
         return $this->getDB()->run(
-            "SELECT * FROM cross_references WHERE source_gid = ? AND source_type = ? AND source_id = ?",
+            'SELECT * FROM cross_references WHERE source_gid = ? AND source_type = ? AND source_id = ?',
             $entity_project_id,
             $entity_type,
             $entity_id,
@@ -39,7 +39,7 @@ class CrossReferencesDao extends DataAccessObject
     public function searchSourcesOfEntity(string $entity_id, string $entity_type, int $entity_project_id): array
     {
         return $this->getDB()->run(
-            "SELECT * FROM cross_references WHERE target_gid = ? AND target_type = ? AND target_id = ?",
+            'SELECT * FROM cross_references WHERE target_gid = ? AND target_type = ? AND target_id = ?',
             $entity_project_id,
             $entity_type,
             $entity_id,
@@ -49,7 +49,7 @@ class CrossReferencesDao extends DataAccessObject
     public function updateReferencesWhenArtifactIsInTarget(int $source_id, int $destination_project_id): void
     {
         $this->getDB()->run(
-            "UPDATE cross_references SET target_gid = ? WHERE target_id = ?",
+            'UPDATE cross_references SET target_gid = ? WHERE target_id = ?',
             $destination_project_id,
             $source_id
         );
@@ -58,7 +58,7 @@ class CrossReferencesDao extends DataAccessObject
     public function deleteReferencesWhenArtifactIsSource(int $id, string $nature, int $project_id): void
     {
         $this->getDB()->run(
-            "DELETE FROM cross_references WHERE source_type = ? AND source_id = ? AND source_gid = ?",
+            'DELETE FROM cross_references WHERE source_type = ? AND source_id = ? AND source_gid = ?',
             $nature,
             $id,
             $project_id
@@ -68,7 +68,7 @@ class CrossReferencesDao extends DataAccessObject
     public function updateTargetKeyword(string $old_keyword, string $keyword, int $group_id): void
     {
         $this->getDB()->run(
-            "UPDATE cross_references SET target_keyword=? WHERE target_keyword=? and target_gid=?",
+            'UPDATE cross_references SET target_keyword=? WHERE target_keyword=? and target_gid=?',
             $keyword,
             $old_keyword,
             $group_id
@@ -78,7 +78,7 @@ class CrossReferencesDao extends DataAccessObject
     public function updateSourceKeyword(string $old_keyword, string $keyword, int $group_id): void
     {
         $this->getDB()->run(
-            "UPDATE cross_references SET source_keyword=? WHERE source_keyword=? and source_gid=?",
+            'UPDATE cross_references SET source_keyword=? WHERE source_keyword=? and source_gid=?',
             $keyword,
             $old_keyword,
             $group_id
@@ -88,9 +88,9 @@ class CrossReferencesDao extends DataAccessObject
     public function deleteEntity(string $id, string $nature, int $group_id): void
     {
         $this->getDB()->run(
-            "DELETE FROM cross_references
+            'DELETE FROM cross_references
                 WHERE (source_type = ? AND source_id = ? AND source_gid = ? )
-                   OR (target_type = ? AND target_id = ? AND target_gid = ? )",
+                   OR (target_type = ? AND target_id = ? AND target_gid = ? )',
             $nature,
             $id,
             $group_id,
@@ -123,13 +123,13 @@ class CrossReferencesDao extends DataAccessObject
     public function fullReferenceExistInDb(CrossReference $cross_ref): bool
     {
         return $this->getDB()->exists(
-            "SELECT * FROM cross_references WHERE source_id=? AND
+            'SELECT * FROM cross_references WHERE source_id=? AND
                           target_id=? AND
                           source_gid=? AND
                           target_gid=? AND
                           source_type=? AND
                           target_keyword=? AND
-                          target_type=?",
+                          target_type=?',
             $cross_ref->refSourceId,
             $cross_ref->refTargetId,
             $cross_ref->refSourceGid,
@@ -143,13 +143,13 @@ class CrossReferencesDao extends DataAccessObject
     public function existInDb(CrossReference $cross_ref): bool
     {
         return $this->getDB()->exists(
-            "SELECT * from cross_references WHERE
+            'SELECT * from cross_references WHERE
                         source_id=? AND
                         target_id=? AND
                         source_gid=? AND
                         target_gid=? AND
                         source_type=? AND
-                        target_type=?",
+                        target_type=?',
             $cross_ref->refSourceId,
             $cross_ref->refTargetId,
             $cross_ref->refSourceGid,
@@ -161,7 +161,7 @@ class CrossReferencesDao extends DataAccessObject
 
     public function deleteCrossReference(CrossReference $cross_ref): bool
     {
-        $sql = "DELETE FROM cross_references WHERE
+        $sql = 'DELETE FROM cross_references WHERE
                 ( ( target_gid  = ? AND
                     target_id   = ? AND
                     target_type = ?
@@ -182,7 +182,7 @@ class CrossReferencesDao extends DataAccessObject
                     source_id   = ? AND
                     source_type = ?
                   )
-                )";
+                )';
 
         $this->getDB()->run(
             $sql,
@@ -205,7 +205,7 @@ class CrossReferencesDao extends DataAccessObject
 
     public function deleteFullCrossReference(CrossReference $cross_ref): bool
     {
-        $sql = "DELETE FROM cross_references WHERE
+        $sql = 'DELETE FROM cross_references WHERE
                 ( ( target_gid     = ? AND
                     target_id      = ? AND
                     target_type    = ? AND
@@ -228,7 +228,7 @@ class CrossReferencesDao extends DataAccessObject
                     source_id   = ? AND
                     source_type = ?
                   )
-                )";
+                )';
         $this->getDB()->run(
             $sql,
             $cross_ref->refTargetGid,
@@ -252,9 +252,9 @@ class CrossReferencesDao extends DataAccessObject
 
     public function getReferenceByKeyword(string $keyword): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
             FROM cross_references
-            WHERE source_keyword = ?";
+            WHERE source_keyword = ?';
 
         return $this->getDB()->row($sql, $keyword);
     }

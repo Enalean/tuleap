@@ -29,31 +29,31 @@ final class UserEmailCollectionTest extends TestCase
 {
     public function testItRetrievesUserWithMatchingCase(): void
     {
-        $user_in_collection = UserTestBuilder::aUser()->withEmail("tuleap@example.com")->build();
+        $user_in_collection = UserTestBuilder::aUser()->withEmail('tuleap@example.com')->build();
         $collection         = new UserEmailCollection($user_in_collection);
 
         self::assertSame(
             $user_in_collection,
-            $collection->getUserByEmail("tuleap@example.com"),
+            $collection->getUserByEmail('tuleap@example.com'),
         );
     }
 
     public function testItRetrievesUserWithoutMatchingCase(): void
     {
-        $user_in_collection = UserTestBuilder::aUser()->withEmail("tuleap@example.com")->build();
+        $user_in_collection = UserTestBuilder::aUser()->withEmail('tuleap@example.com')->build();
         $collection         = new UserEmailCollection($user_in_collection);
 
         self::assertSame(
             $user_in_collection,
-            $collection->getUserByEmail("Tuleap@example.com"),
+            $collection->getUserByEmail('Tuleap@example.com'),
         );
     }
 
     public function testItDoesNotRetrievesUserIfEmailIsUnknown(): void
     {
-        $user_in_collection = UserTestBuilder::aUser()->withEmail("tuleap@example.com")->build();
+        $user_in_collection = UserTestBuilder::aUser()->withEmail('tuleap@example.com')->build();
         $collection         = new UserEmailCollection($user_in_collection);
 
-        self::assertNull($collection->getUserByEmail("nottuleap@example.com"));
+        self::assertNull($collection->getUserByEmail('nottuleap@example.com'));
     }
 }

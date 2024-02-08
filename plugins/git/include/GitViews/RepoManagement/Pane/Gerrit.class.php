@@ -135,7 +135,7 @@ class Gerrit extends Pane
 
         $parent                      = $this->project_manager->getParentProject($this->repository->getProjectId());
         $parent_is_suspended         = false;
-        $parent_is_suspended_message = "";
+        $parent_is_suspended_message = '';
         if ($parent !== null && ! $parent->isActive()) {
             $disabled                    = 'disabled=true';
             $parent_is_suspended_message = dgettext('tuleap-git', 'Parent project is not active, you are not allowed to migrate your repository on gerrit.');

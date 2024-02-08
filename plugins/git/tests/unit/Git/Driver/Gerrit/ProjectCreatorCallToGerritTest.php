@@ -318,7 +318,7 @@ final class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
         $cwd = getcwd();
         chdir("$this->tmpdir/$this->gitolite_project");
 
-        exec(Git_Exec::getGitCommand() . " show-ref --heads", $refs_cmd, $ret_val);
+        exec(Git_Exec::getGitCommand() . ' show-ref --heads', $refs_cmd, $ret_val);
 
         $expected_result = ["To $this->gerrit_git_url"];
 
@@ -327,7 +327,7 @@ final class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
             $expected_result[] = "=\t$ref:$ref\t[up to date]";
         }
 
-        $expected_result[] = "Done";
+        $expected_result[] = 'Done';
 
         exec(Git_Exec::getGitCommand() . " push $this->gerrit_git_url refs/heads/*:refs/heads/* --porcelain", $output, $ret_val);
         chdir($cwd);
@@ -341,7 +341,7 @@ final class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
         $cwd = getcwd();
         chdir("$this->tmpdir/$this->gitolite_project");
 
-        exec(Git_Exec::getGitCommand() . " show-ref --tags", $refs_cmd, $ret_val);
+        exec(Git_Exec::getGitCommand() . ' show-ref --tags', $refs_cmd, $ret_val);
         $expected_result = ["To $this->gerrit_git_url"];
 
         foreach ($refs_cmd as $ref) {
@@ -349,7 +349,7 @@ final class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
             $expected_result[] = "=\t$ref:$ref\t[up to date]";
         }
 
-        $expected_result[] = "Done";
+        $expected_result[] = 'Done';
 
         exec(Git_Exec::getGitCommand() . " push $this->gerrit_git_url refs/tags/*:refs/tags/* --porcelain", $output, $ret_val);
         chdir($cwd);

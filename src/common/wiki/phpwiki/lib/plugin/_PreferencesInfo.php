@@ -28,13 +28,13 @@ class WikiPlugin__PreferencesInfo extends WikiPlugin
 {
     public function getName()
     {
-        return _("PreferencesInfo");
+        return _('PreferencesInfo');
     }
 
     public function getDescription()
     {
         return sprintf(
-            _("Get preferences information for current user %s."),
+            _('Get preferences information for current user %s.'),
             '[userid]'
         );
     }
@@ -42,9 +42,9 @@ class WikiPlugin__PreferencesInfo extends WikiPlugin
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.3 $"
+            '$Revision: 1.3 $'
         );
     }
 

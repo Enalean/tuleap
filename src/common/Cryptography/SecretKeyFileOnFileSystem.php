@@ -98,12 +98,12 @@ final class SecretKeyFileOnFileSystem implements SecretKeyFile
 
     public function restoreOwnership(LoggerInterface $logger): void
     {
-        $logger->debug(sprintf("Restore ownership on %s", $this->getKeyPath()));
+        $logger->debug(sprintf('Restore ownership on %s', $this->getKeyPath()));
         if (! chown($this->getKeyPath(), \ForgeConfig::getApplicationUserLogin())) {
-            $logger->warning(sprintf("Impossible to chown %s to %s", $this->getKeyPath(), \ForgeConfig::getApplicationUserLogin()));
+            $logger->warning(sprintf('Impossible to chown %s to %s', $this->getKeyPath(), \ForgeConfig::getApplicationUserLogin()));
         }
         if (! chgrp($this->getKeyPath(), \ForgeConfig::getApplicationUserLogin())) {
-            $logger->warning(sprintf("Impossible to chgrp %s to %s", $this->getKeyPath(), \ForgeConfig::getApplicationUserLogin()));
+            $logger->warning(sprintf('Impossible to chgrp %s to %s', $this->getKeyPath(), \ForgeConfig::getApplicationUserLogin()));
         }
     }
 }

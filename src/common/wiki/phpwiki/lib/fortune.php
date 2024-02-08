@@ -18,10 +18,10 @@ class Fortune
 
         if ($handle = opendir($dir)) {
             while (false !== ($file = readdir($handle))) {
-                if (strpos($file, ".dat") != false) {
+                if (strpos($file, '.dat') != false) {
                     $len = strlen($file);
-                    if (substr($file, $len - 4) == ".dat") {
-                        $number         = $this->getNumberOfQuotes($dir . "/" . $file);
+                    if (substr($file, $len - 4) == '.dat') {
+                        $number         = $this->getNumberOfQuotes($dir . '/' . $file);
                         $amount        += $number;
                         $quotes[$index] = $amount;
                         $files[$index]  = $file;
@@ -37,7 +37,7 @@ class Fortune
                 $i++;
             }
 
-            return $this->getRandomQuote($dir . "/" . $files[$i]);
+            return $this->getRandomQuote($dir . '/' . $files[$i]);
         }
         return -1;
     }
@@ -47,7 +47,7 @@ class Fortune
     */
     public function getNumberOfQuotes($file)
     {
-        $fd = fopen($file, "rb");
+        $fd = fopen($file, 'rb');
         $this->readLong($fd); // Just move over the first long. Might as well be fseek.
         $len =  $this->readLong($fd);
         fclose($fd);
@@ -59,11 +59,11 @@ class Fortune
     public function getExactQuote($file, $index)
     {
         if (is_file($file) == false) {
-            echo "Input must be a file!<br/>";
+            echo 'Input must be a file!<br/>';
             return;
         }
 
-        if (($fd = fopen($file, "rb")) == false) {
+        if (($fd = fopen($file, 'rb')) == false) {
             echo "Cannot open $file<br/>";
             return;
         }
@@ -75,7 +75,7 @@ class Fortune
 
         $quotefile = substr($file, 0, strlen($file) - 4);
 
-        if (($fd = fopen($quotefile, "rb")) == false) {
+        if (($fd = fopen($quotefile, 'rb')) == false) {
             echo "Cannot find file $quotefile!<br/>";
         }
 
@@ -103,12 +103,12 @@ class Fortune
     public function getQuote($fd, $index)
     {
         fseek($fd, $index);
-        $line = "";
-        $res  = "";
+        $line = '';
+        $res  = '';
         do {
             $res  = $res . $line;
-            $line = fgets($fd, 1024) . "<br>";
-        } while (($line[0] != "%") && (! feof($fd)));
+            $line = fgets($fd, 1024) . '<br>';
+        } while (($line[0] != '%') && (! feof($fd)));
 
         return $res;
     }
@@ -140,9 +140,9 @@ class Fortune
 
     public function createIndexFile($file)
     {
-        $fd = @fopen($file, "r");
+        $fd = @fopen($file, 'r');
         if ($fd == false) {
-            echo "File error!";
+            echo 'File error!';
             exit;
         }
 
@@ -172,10 +172,10 @@ class Fortune
 
         fclose($fd);
 
-        $fd = @fopen($file . ".dat", "w");
+        $fd = @fopen($file . '.dat', 'w');
 
         if ($fd == false) {
-            echo "<!-- createIndexFile: Could not write to file....-->";
+            echo '<!-- createIndexFile: Could not write to file....-->';
             exit;
         }
 

@@ -35,10 +35,10 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_agiledashboard_planning
+        $sql = 'ALTER TABLE plugin_agiledashboard_planning
                     ADD backlog_title varchar(255) NOT NULL,
                     ADD plan_title varchar(255) NOT NULL
-                ";
+                ';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

@@ -36,8 +36,8 @@ rcs_id('$Id: RecentChangesCached.php,v 1.4 2004/03/08 18:17:10 rurban Exp $');
 */
 
 
-require_once "lib/WikiPluginCached.php";
-require_once "lib/plugin/RecentChanges.php";
+require_once 'lib/WikiPluginCached.php';
+require_once 'lib/plugin/RecentChanges.php';
 
 class WikiPlugin_RecentChangesCached extends WikiPluginCached
 {
@@ -49,7 +49,7 @@ class WikiPlugin_RecentChangesCached extends WikiPluginCached
 
     public function getName()
     {
-        return "RecentChangesCached";
+        return 'RecentChangesCached';
     }
 
     public function getDescription()
@@ -60,9 +60,9 @@ class WikiPlugin_RecentChangesCached extends WikiPluginCached
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.4 $"
+            '$Revision: 1.4 $'
         );
     }
 

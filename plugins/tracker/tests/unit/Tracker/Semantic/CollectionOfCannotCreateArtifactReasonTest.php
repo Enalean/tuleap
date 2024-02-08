@@ -29,7 +29,7 @@ final class CollectionOfCannotCreateArtifactReasonTest extends TestCase
     public function testItConvertsIntoStringArray(): void
     {
         $reasons = CollectionOfCannotCreateArtifactReason::fromEmptyReason();
-        $reason  = "No you cannot!";
+        $reason  = 'No you cannot!';
         $result  = $reasons->addReason(CannotCreateArtifactReason::fromString($reason));
         self::assertEqualsCanonicalizing([$reason], $result->toStringArray());
     }

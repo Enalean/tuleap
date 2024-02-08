@@ -76,7 +76,7 @@ class BindingController
     {
         $ugroup_id = $ugroup->getId();
         if ($this->ugroup_binding->removeBinding($ugroup_id)) {
-            $this->history_dao->groupAddHistory("ugroup_remove_binding", (string) $ugroup_id, $ugroup->getProjectId());
+            $this->history_dao->groupAddHistory('ugroup_remove_binding', (string) $ugroup_id, $ugroup->getProjectId());
             $this->edit_event_launcher->launch($ugroup);
         }
     }
@@ -100,8 +100,8 @@ class BindingController
         if ($is_valid && $project->userIsAdmin()) {
             if ($this->ugroup_binding->addBinding($ugroup->getId(), $ugroup_source_id)) {
                 $this->history_dao->groupAddHistory(
-                    "ugroup_add_binding",
-                    $ugroup->getId() . ":" . $ugroup_source_id,
+                    'ugroup_add_binding',
+                    $ugroup->getId() . ':' . $ugroup_source_id,
                     $ugroup->getProjectId()
                 );
                 $this->edit_event_launcher->launch($ugroup);

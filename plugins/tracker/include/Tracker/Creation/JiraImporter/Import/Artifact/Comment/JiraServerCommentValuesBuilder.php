@@ -42,7 +42,7 @@ final class JiraServerCommentValuesBuilder implements CommentValuesBuilder
      */
     public function buildCommentCollectionForIssue(string $jira_issue_key): array
     {
-        $this->logger->debug("Start build comment collection ...");
+        $this->logger->debug('Start build comment collection ...');
         $comment_collection = [];
 
         $results = $this->jira_client->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/' . urlencode($jira_issue_key) . '?expand=renderedFields');
@@ -53,7 +53,7 @@ final class JiraServerCommentValuesBuilder implements CommentValuesBuilder
             $comment_collection[] = JiraServerComment::buildFromAPIResponse($comment);
         }
 
-        $this->logger->debug("End build comment collection ...");
+        $this->logger->debug('End build comment collection ...');
 
         return $comment_collection;
     }

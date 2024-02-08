@@ -35,13 +35,13 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS rest_authentication_token (
+        $sql = 'CREATE TABLE IF NOT EXISTS rest_authentication_token (
                     token VARCHAR(255) NOT NULL,
                     user_id INT(11) NOT NULL,
                     created_on INT(11) NOT NULL,
                     INDEX idx_rest_authentication_token_token (token(10)),
                     INDEX idx_rest_authentication_token_userid (user_id)
-                )";
+                )';
 
         if (! $this->db->tableNameExists('rest_authentication_token')) {
             $res = $this->db->dbh->exec($sql);

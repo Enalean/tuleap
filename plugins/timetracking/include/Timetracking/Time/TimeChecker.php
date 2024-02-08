@@ -41,7 +41,7 @@ class TimeChecker
      */
     public function checkMandatoryTimeValue($time_value)
     {
-        $pattern = "/" . self::TIME_PATTERN . "/";
+        $pattern = '/' . self::TIME_PATTERN . '/';
         if (! $time_value) {
             throw new TimeTrackingMissingTimeException();
         } elseif (! preg_match($pattern, $time_value)) {

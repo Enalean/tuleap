@@ -62,14 +62,14 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
         $query = new ArrayObject(
             [
-                "my_field"       => new ArrayObject(
+                'my_field'       => new ArrayObject(
                     [
-                        Tracker_Report_REST::VALUE_PROPERTY_NAME    => "true",
+                        Tracker_Report_REST::VALUE_PROPERTY_NAME    => 'true',
                         Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR,
                     ]
                 ),
-                "my_other_field" => "bla",
-                "137"            => "my_value",
+                'my_other_field' => 'bla',
+                '137'            => 'my_value',
             ]
         );
 
@@ -157,9 +157,9 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $this->formelement_factory->shouldReceive('getFormElementById')->with(137)->andReturns($integer);
         $this->formelement_factory->shouldReceive('getFormElementByName')->with(
             $this->tracker_id,
-            "my_field"
+            'my_field'
         )->andReturns($label);
-        $this->formelement_factory->shouldReceive('getFormElementByName')->with($this->tracker_id, "my_other_field")->andReturns(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
+        $this->formelement_factory->shouldReceive('getFormElementByName')->with($this->tracker_id, 'my_other_field')->andReturns(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
 
         $integer->shouldReceive('setCriteriaValueFromREST')->once()->andReturns(true);
         $label->shouldReceive('setCriteriaValueFromREST')->once()->andReturns(false);

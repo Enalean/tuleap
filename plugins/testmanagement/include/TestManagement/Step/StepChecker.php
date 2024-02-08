@@ -33,11 +33,11 @@ final class StepChecker
      */
     public static function checkStepDataFromRESTPost(array $step): void
     {
-        if (! isset($step["description"]) || ! isset($step["expected_results"])) {
+        if (! isset($step['description']) || ! isset($step['expected_results'])) {
             throw new RestException(400, 'Description or Expected Result text field missing');
         }
 
-        if (! isset($step["description_format"]) || ! isset($step["expected_results_format"])) {
+        if (! isset($step['description_format']) || ! isset($step['expected_results_format'])) {
             throw new RestException(400, 'Description format or Expected Result format is missing');
         }
 

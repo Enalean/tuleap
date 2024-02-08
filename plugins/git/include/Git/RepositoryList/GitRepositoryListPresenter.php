@@ -76,27 +76,27 @@ class GitRepositoryListPresenter
         array $external_services_name_used,
         public readonly bool $is_old_pull_request_dashboard_view_enabled,
     ) {
-        $this->repositories_administration_url = GIT_BASE_URL . "/?" . http_build_query(
+        $this->repositories_administration_url = GIT_BASE_URL . '/?' . http_build_query(
             [
-                "group_id" => $project->getID(),
-                "action"   => "admin",
+                'group_id' => $project->getID(),
+                'action'   => 'admin',
             ]
         );
 
-        $this->repositories_fork_url = GIT_BASE_URL . "/?" . http_build_query(
+        $this->repositories_fork_url = GIT_BASE_URL . '/?' . http_build_query(
             [
-                "group_id" => $project->getID(),
-                "action"   => "fork_repositories",
+                'group_id' => $project->getID(),
+                'action'   => 'fork_repositories',
             ]
         );
 
-        $this->repositories_list_url = GIT_BASE_URL . "/" . urlencode($project->getUnixNameLowerCase()) . "/";
+        $this->repositories_list_url = GIT_BASE_URL . '/' . urlencode($project->getUnixNameLowerCase()) . '/';
         $this->project_id            = $project->getID();
         $this->is_admin              = $is_git_administrator;
 
         $this->json_encoded_repositories_owners = json_encode($repositories_owners);
 
-        $this->display_mode                = (string) $current_user->getPreference("are_git_repositories_sorted_by_path");
+        $this->display_mode                = (string) $current_user->getPreference('are_git_repositories_sorted_by_path');
         $this->external_plugins            = json_encode($external_plugins);
         $this->external_services_name_used = json_encode($external_services_name_used);
 

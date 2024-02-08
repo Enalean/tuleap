@@ -48,7 +48,7 @@ final class SupportedXmlCharEncodingTest extends \Tuleap\Test\PHPUnit\TestCase
             "\x0e" => ' ',
             "\x0f" => ' ',
             "\x11" => ' ',
-            "’"    => '?',
+            '’'    => '?',
         ];
 
         foreach ($bad_chars as $bad_char => $replace) {
@@ -90,7 +90,7 @@ final class SupportedXmlCharEncodingTest extends \Tuleap\Test\PHPUnit\TestCase
             "\x0e" => ' ',
             "\x0f" => ' ',
             "\x11" => ' ',
-            "’"    => '&rsquo;',
+            '’'    => '&rsquo;',
         ];
 
         foreach ($bad_chars as $bad_char => $replace) {

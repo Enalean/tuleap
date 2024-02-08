@@ -39,7 +39,7 @@ final class NewUserByAdminEmailSender
                 $this->base_url,
                 \ForgeConfig::get('sys_noreply'),
                 $to,
-                "admin"
+                'admin'
             )
             ->send();
     }

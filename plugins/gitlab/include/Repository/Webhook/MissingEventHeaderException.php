@@ -24,6 +24,6 @@ class MissingEventHeaderException extends \RuntimeException
 {
     public function __construct()
     {
-        parent::__construct("GitLab event type not provided in request header.");
+        parent::__construct('GitLab event type not provided in request header.');
     }
 }

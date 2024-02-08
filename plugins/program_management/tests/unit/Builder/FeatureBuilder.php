@@ -42,7 +42,7 @@ final class FeatureBuilder
         return Feature::fromFeatureIdentifier(
             RetrieveFeatureTitleStub::withTitle($title),
             new RetrieveFeatureURIStub(),
-            RetrieveFeatureCrossReferenceStub::withShortname("feature"),
+            RetrieveFeatureCrossReferenceStub::withShortname('feature'),
             VerifyFeatureIsOpenStub::withOpen(),
             VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
             FeatureHasUserStoriesVerifierBuilder::buildWithUserStories(),

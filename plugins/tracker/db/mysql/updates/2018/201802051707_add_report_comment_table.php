@@ -32,10 +32,10 @@ class b201802051707_add_report_comment_table extends ForgeUpgrade_Bucket // @cod
 
     public function up()
     {
-        $sql = "CREATE TABLE tracker_report_criteria_comment_value(
+        $sql = 'CREATE TABLE tracker_report_criteria_comment_value(
                     report_id INT(11) NOT NULL PRIMARY KEY,
                     comment VARCHAR(255)
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
 
         $this->db->createTable('tracker_report_criteria_comment_value', $sql);
     }

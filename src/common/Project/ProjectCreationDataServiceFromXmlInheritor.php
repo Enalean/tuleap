@@ -59,7 +59,7 @@ class ProjectCreationDataServiceFromXmlInheritor
             if (! ($service instanceof SimpleXMLElement)) {
                 continue;
             }
-            if ($service->getName() !== "service") {
+            if ($service->getName() !== 'service') {
                 continue;
             }
             $attrs = $service->attributes();

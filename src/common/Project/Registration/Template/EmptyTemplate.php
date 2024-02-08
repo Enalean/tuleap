@@ -69,7 +69,7 @@ class EmptyTemplate implements TuleapTemplate
             }
             $this->xml_path = \ForgeConfig::getCacheDir() . '/empty_template/project.xml';
             if (! copy(self::PROJECT_XML, $this->xml_path)) {
-                throw new \RuntimeException("Can not copy empty file for tuleap template import");
+                throw new \RuntimeException('Can not copy empty file for tuleap template import');
             }
         }
 
@@ -88,7 +88,7 @@ class EmptyTemplate implements TuleapTemplate
 
     public function getGlyph(): Glyph
     {
-        return $this->glyph_finder->get("default-and-company-template");
+        return $this->glyph_finder->get('default-and-company-template');
     }
 
     public function getId(): string

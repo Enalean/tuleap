@@ -12,7 +12,7 @@ function GleanKeywords($page)
     if (! defined('KEYWORDS')) {
         return '';
     }
-    include_once("lib/TextSearchQuery.php");
+    include_once('lib/TextSearchQuery.php');
     $search            = new TextSearchQuery(KEYWORDS, true);
     $KeywordLinkRegexp = $search->asRegexp();
     // iterate over the pagelinks (could be a large number) [15ms on PluginManager]
@@ -60,7 +60,7 @@ function actionPage(&$request, $action)
     $actionrev  = $actionpage->getCurrentRevision();
 
     $pagetitle = HTML(fmt(
-        "%s: %s",
+        '%s: %s',
         $actionpage->getName(),
         $WikiTheme->linkExistingWikiWord($pagename, false, $version)
     ));
@@ -138,13 +138,13 @@ function displayPage(&$request, $template = false)
             $backlink = HTML::a(
                 ['href' => WikiURL(
                     $pagename,
-                    ['action' => _("BackLinks")]
+                    ['action' => _('BackLinks')]
                 ),
                     'class' => 'backlinks',
                 ],
                 $WikiTheme->maybeSplitWikiWord($last_page)
             );
-            $backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
+            $backlink->addTooltip(sprintf(_('BackLinks for %s'), $pagename));
         } else {
             $backlink = HTML::h1($pagename);
         }
@@ -154,13 +154,13 @@ function displayPage(&$request, $template = false)
             $pageheader = HTML::a(
                 ['href' => WikiURL(
                     $pagename,
-                    ['action' => _("BackLinks")]
+                    ['action' => _('BackLinks')]
                 ),
                     'class' => 'backlinks',
                 ],
                 $WikiTheme->maybeSplitWikiWord($pagename)
             );
-            $pageheader->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
+            $pageheader->addTooltip(sprintf(_('BackLinks for %s'), $pagename));
         } else {
             $pageheader = HTML::h1($pagename); //Remove Backlinks
         }
@@ -203,7 +203,7 @@ function displayPage(&$request, $template = false)
         $redirect_message = HTML::span(
             ['class' => 'redirectfrom'],
             fmt(
-                "(Redirected from %s)",
+                '(Redirected from %s)',
                 RedirectorLink($redirect_from)
             )
         );
@@ -236,7 +236,7 @@ function displayPage(&$request, $template = false)
                 }
                 array_unshift(
                     $page_content->_content,
-                    HTML::div(_("You searched for: "), HTML::strong($result['query']))
+                    HTML::div(_('You searched for: '), HTML::strong($result['query']))
                 );
             }
 
@@ -244,7 +244,7 @@ function displayPage(&$request, $template = false)
             /* Parse the transformed (mixed HTML links + strings) lines?
                This looks like overkill.
              */
-                require_once("lib/TextSearchQuery.php");
+                require_once('lib/TextSearchQuery.php');
                 $query      = new TextSearchQuery($result['query']);
                 $hilight_re = $query->getHighlightRegexp();
             //$matches = preg_grep("/$hilight_re/i", $revision->getContent());

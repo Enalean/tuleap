@@ -151,9 +151,9 @@ if (! defined('TIMEOFFSET_DEFAULT_HOURS')) {
 
 // The last object in the row is the bad guy...
 if (! is_array($GLOBALS['USER_AUTH_ORDER'])) {
-    $GLOBALS['USER_AUTH_ORDER'] = ["Forbidden"];
+    $GLOBALS['USER_AUTH_ORDER'] = ['Forbidden'];
 } else {
-    $GLOBALS['USER_AUTH_ORDER'][] = "Forbidden";
+    $GLOBALS['USER_AUTH_ORDER'][] = 'Forbidden';
 }
 
 // Local convenience functions.
@@ -201,7 +201,7 @@ function _determineBogoUserOrPassUser($UserName)
     // Check for password and possibly upgrade user object.
     // $_BogoUser = new _BogoUser($UserName);
     if (_isBogoUserAllowed() and isWikiWord($UserName)) {
-        include_once("lib/WikiUser/BogoLogin.php");
+        include_once('lib/WikiUser/BogoLogin.php');
         $_BogoUser = new _BogoLoginPassUser($UserName);
         if ($_BogoUser->userExists() or $GLOBALS['request']->getArg('auth')) {
             return $_BogoUser;
@@ -396,16 +396,16 @@ class _WikiUser
 
     public function getPreferences()
     {
-        trigger_error("DEBUG: Note: undefined _WikiUser class trying to load prefs." . " "
-                      . "New subclasses of _WikiUser must override this function.");
+        trigger_error('DEBUG: Note: undefined _WikiUser class trying to load prefs.' . ' '
+                      . 'New subclasses of _WikiUser must override this function.');
         return false;
     }
 
     public function setPreferences($prefs, $id_only)
     {
-        trigger_error("DEBUG: Note: undefined _WikiUser class trying to save prefs."
-                      . " "
-                      . "New subclasses of _WikiUser must override this function.");
+        trigger_error('DEBUG: Note: undefined _WikiUser class trying to save prefs.'
+                      . ' '
+                      . 'New subclasses of _WikiUser must override this function.');
         return false;
     }
 
@@ -417,9 +417,9 @@ class _WikiUser
     public function checkPass($submitted_password)
     {
         // By definition, an undefined user class cannot sign in.
-        trigger_error("DEBUG: Warning: undefined _WikiUser class trying to sign in."
-                      . " "
-                      . "New subclasses of _WikiUser must override this function.");
+        trigger_error('DEBUG: Warning: undefined _WikiUser class trying to sign in.'
+                      . ' '
+                      . 'New subclasses of _WikiUser must override this function.');
         return false;
     }
 
@@ -489,7 +489,7 @@ class _WikiUser
     {
         $method = $this->AuthMethod($this->nextAuthMethodIndex());
         include_once("lib/WikiUser/$method.php");
-        return "_" . $method . "PassUser";
+        return '_' . $method . 'PassUser';
     }
 
     //Fixme: for _HttpAuthPassUser
@@ -529,7 +529,7 @@ class _WikiUser
         if ($seperate_page) {
             $page     = $request->getPage($pagename);
             $revision = $page->getCurrentRevision();
-            return GeneratePage($login, _("Sign In"), $revision);
+            return GeneratePage($login, _('Sign In'), $revision);
         } else {
             return $login->printExpansion();
         }
@@ -602,7 +602,7 @@ class _WikiUser
         if (! $userid) {
             $userid = $this->_userid;
         }
-        return preg_match("/^[\w\.@\-]+$/", $userid) and strlen($userid) < 32;
+        return preg_match('/^[\w\.@\-]+$/', $userid) and strlen($userid) < 32;
     }
 
     /**
@@ -622,7 +622,7 @@ class _WikiUser
         $require_level = max(0, min(WIKIAUTH_ADMIN, (int) $require_level));
 
         if ($logout) { // Log out
-            if (method_exists($GLOBALS['request']->_user, "logout")) { //_HttpAuthPassUser
+            if (method_exists($GLOBALS['request']->_user, 'logout')) { //_HttpAuthPassUser
                 $GLOBALS['request']->_user->logout();
             }
             $user          = new _AnonUser();
@@ -636,28 +636,28 @@ class _WikiUser
         }
 
         if (! $this->isValidName($userid)) {
-            return _("Invalid username.");
+            return _('Invalid username.');
         }
 
         $authlevel = $this->checkPass($passwd === false ? '' : $passwd);
         if ($authlevel <= 0) { // anon or forbidden
             if ($passwd) {
-                return _("Invalid password.");
+                return _('Invalid password.');
             } else {
-                return _("Invalid password or userid.");
+                return _('Invalid password or userid.');
             }
         } elseif ($authlevel < $require_level) { // auth ok, but not enough
             if (! empty($this->_current_method) and strtolower(static::class) == '_passuser') {
                 // upgrade class
-                $class = "_" . $this->_current_method . "PassUser";
-                include_once("lib/WikiUser/" . $this->_current_method . ".php");
+                $class = '_' . $this->_current_method . 'PassUser';
+                include_once('lib/WikiUser/' . $this->_current_method . '.php');
                 $user         = new $class($userid, $this->_prefs);
                 $this->_level = $authlevel;
                 return $user;
             }
             $this->_userid = $userid;
             $this->_level  = $authlevel;
-            return _("Insufficient permissions.");
+            return _('Insufficient permissions.');
         }
 
         // Successful login.
@@ -667,8 +667,8 @@ class _WikiUser
             strtolower(static::class) == '_passuser'
         ) {
             // upgrade class
-            $class = "_" . $this->_current_method . "PassUser";
-            include_once("lib/WikiUser/" . $this->_current_method . ".php");
+            $class = '_' . $this->_current_method . 'PassUser';
+            include_once('lib/WikiUser/' . $this->_current_method . '.php');
             $user         = new $class($userid, $this->_prefs);
             $user->_level = $authlevel;
             return $user;
@@ -751,9 +751,9 @@ class _AnonUser extends _WikiUser
 
         // By definition, the _AnonUser does not HAVE a password
         // (compared to _BogoUser, who has an EMPTY password).
-        trigger_error("DEBUG: Warning: _AnonUser unexpectedly asked to checkPass()." . " "
-                      . "Check isa(\$user, '_PassUser'), or: isa(\$user, '_AdminUser') etc. first." . " "
-                      . "New subclasses of _WikiUser must override this function.");
+        trigger_error('DEBUG: Warning: _AnonUser unexpectedly asked to checkPass().' . ' '
+                      . "Check isa(\$user, '_PassUser'), or: isa(\$user, '_AdminUser') etc. first." . ' '
+                      . 'New subclasses of _WikiUser must override this function.');
         return false;
     }
 }
@@ -857,12 +857,12 @@ class _PassUser extends _AnonUser
                 $need_pref    = true;
             }
             $this->_prefs->_method = $dbh->getParam('dbtype');
-            $this->_prefs->_select = $this->prepare($dbh->getAuthParam('pref_select'), "userid");
+            $this->_prefs->_select = $this->prepare($dbh->getAuthParam('pref_select'), 'userid');
             // read-only prefs?
             if (! isset($this->_prefs->_update) and $dbh->getAuthParam('pref_update')) {
                 $this->_prefs->_update = $this->prepare(
                     $dbh->getAuthParam('pref_update'),
-                    ["userid", "pref_blob"]
+                    ['userid', 'pref_blob']
                 );
             }
         } else {
@@ -901,7 +901,7 @@ class _PassUser extends _AnonUser
                     // On php5 we can directly return and upgrade the Object,
                     // before we have to upgrade it manually.
                     if (! empty($GLOBALS['PHP_AUTH_USER']) or ! empty($_SERVER['REMOTE_USER'])) {
-                        include_once("lib/WikiUser/HttpAuth.php");
+                        include_once('lib/WikiUser/HttpAuth.php');
                         return new _HttpAuthPassUser($UserName, $this->_prefs);
                     } elseif (
                         in_array('Db', $dbh->getAuthParam('USER_AUTH_ORDER')) and
@@ -914,22 +914,22 @@ class _PassUser extends _AnonUser
                               defined('LDAP_AUTH_HOST') and defined('LDAP_BASE_DN') and
                               function_exists('ldap_connect')
                     ) {
-                        include_once("lib/WikiUser/LDAP.php");
+                        include_once('lib/WikiUser/LDAP.php');
                         return new _LDAPPassUser($UserName, $this->_prefs);
                     } elseif (
                         in_array('IMAP', $dbh->getAuthParam('USER_AUTH_ORDER')) and
                               defined('IMAP_AUTH_HOST') and function_exists('imap_open')
                     ) {
-                        include_once("lib/WikiUser/IMAP.php");
+                        include_once('lib/WikiUser/IMAP.php');
                         return new _IMAPPassUser($UserName, $this->_prefs);
                     } elseif (
                         in_array('File', $dbh->getAuthParam('USER_AUTH_ORDER')) and
                               defined('AUTH_USER_FILE') and file_exists(AUTH_USER_FILE)
                     ) {
-                        include_once("lib/WikiUser/File.php");
+                        include_once('lib/WikiUser/File.php');
                         return new _FilePassUser($UserName, $this->_prefs);
                     } else {
-                        include_once("lib/WikiUser/PersonalPage.php");
+                        include_once('lib/WikiUser/PersonalPage.php');
                         return new _PersonalPagePassUser($UserName, $this->_prefs);
                     }
                 } else {                     // else use the page methods defined in _PassUser.
@@ -986,7 +986,7 @@ class _PassUser extends _AnonUser
         // new-style: '"\$userid"' or just "userid"
         $new = str_replace(["'", '"', '\$', '$'], '', $var);
         if (! in_array($new, $valid_variables)) {
-            trigger_error("Unknown DBAuthParam statement variable: " . $new, E_USER_ERROR);
+            trigger_error('Unknown DBAuthParam statement variable: ' . $new, E_USER_ERROR);
             return false;
         }
         return ! $oldstyle ? "'$" . $new . "'" : '\$' . $new;
@@ -1007,7 +1007,7 @@ class _PassUser extends _AnonUser
                 $var = $this->_normalize_stmt_var($variables[$i], $oldstyle);
                 if (! $var) {
                     trigger_error(sprintf(
-                        "DbAuthParams: Undefined or empty statement variable %s in %s",
+                        'DbAuthParams: Undefined or empty statement variable %s in %s',
                         $variables[$i],
                         $stmt
                     ), E_USER_WARNING);
@@ -1023,7 +1023,7 @@ class _PassUser extends _AnonUser
             $var = $this->_normalize_stmt_var($variables, $oldstyle);
             if (! $var) {
                 trigger_error(sprintf(
-                    "DbAuthParams: Undefined or empty statement variable %s in %s",
+                    'DbAuthParams: Undefined or empty statement variable %s in %s',
                     $variables,
                     $stmt
                 ), E_USER_WARNING);
@@ -1044,10 +1044,10 @@ class _PassUser extends _AnonUser
             if (! stristr($stmt, $prefix)) {
                 $oldstmt = $stmt;
                 $stmt    = str_replace(
-                    [" user ", " pref ", " member "],
-                    [" " . $prefix . "user ",
-                        " " . $prefix . "pref ",
-                        " " . $prefix . "member ",
+                    [' user ', ' pref ', ' member '],
+                    [' ' . $prefix . 'user ',
+                        ' ' . $prefix . 'pref ',
+                        ' ' . $prefix . 'member ',
                     ],
                     $stmt
                 );
@@ -1064,12 +1064,12 @@ class _PassUser extends _AnonUser
         if ($new_stmt == $stmt) {
             if ($oldstyle) {
                 trigger_error(sprintf(
-                    "DbAuthParams: Invalid statement in %s",
+                    'DbAuthParams: Invalid statement in %s',
                     $stmt
                 ), E_USER_WARNING);
             } else {
                 trigger_error(sprintf(
-                    "DbAuthParams: Old statement quoting style in %s",
+                    'DbAuthParams: Old statement quoting style in %s',
                     $stmt
                 ), E_USER_WARNING);
                 $new_stmt = $this->prepare($stmt, $variables, 'oldstyle');
@@ -1083,18 +1083,18 @@ class _PassUser extends _AnonUser
         if (! empty($this->_prefs->_method)) {
             if ($this->_prefs->_method == 'ADODB') {
                 // FIXME: strange why this should be needed...
-                include_once("lib/WikiUser/Db.php");
-                include_once("lib/WikiUser/AdoDb.php");
+                include_once('lib/WikiUser/Db.php');
+                include_once('lib/WikiUser/AdoDb.php');
                 _AdoDbPassUser::_AdoDbPassUser($this->_userid, $this->_prefs);
                 return _AdoDbPassUser::getPreferences();
             } elseif ($this->_prefs->_method == 'SQL') {
-                include_once("lib/WikiUser/Db.php");
-                include_once("lib/WikiUser/PearDb.php");
+                include_once('lib/WikiUser/Db.php');
+                include_once('lib/WikiUser/PearDb.php');
                 _PearDbPassUser::_PearDbPassUser($this->_userid, $this->_prefs);
                 return _PearDbPassUser::getPreferences();
             } elseif ($this->_prefs->_method == 'PDO') {
-                include_once("lib/WikiUser/Db.php");
-                include_once("lib/WikiUser/PdoDb.php");
+                include_once('lib/WikiUser/Db.php');
+                include_once('lib/WikiUser/PdoDb.php');
                 _PdoDbPassUser::_PdoDbPassUser($this->_userid, $this->_prefs);
                 return _PdoDbPassUser::getPreferences();
             }
@@ -1121,18 +1121,18 @@ class _PassUser extends _AnonUser
         if (! empty($this->_prefs->_method)) {
             if ($this->_prefs->_method == 'ADODB') {
                 // FIXME: strange why this should be needed...
-                include_once("lib/WikiUser/Db.php");
-                include_once("lib/WikiUser/AdoDb.php");
+                include_once('lib/WikiUser/Db.php');
+                include_once('lib/WikiUser/AdoDb.php');
                 _AdoDbPassUser::_AdoDbPassUser($this->_userid, $prefs);
                 return _AdoDbPassUser::setPreferences($prefs, $id_only);
             } elseif ($this->_prefs->_method == 'SQL') {
-                include_once("lib/WikiUser/Db.php");
-                include_once("lib/WikiUser/PearDb.php");
+                include_once('lib/WikiUser/Db.php');
+                include_once('lib/WikiUser/PearDb.php');
                 _PearDbPassUser::_PearDbPassUser($this->_userid, $prefs);
                 return _PearDbPassUser::setPreferences($prefs, $id_only);
             } elseif ($this->_prefs->_method == 'PDO') {
-                include_once("lib/WikiUser/Db.php");
-                include_once("lib/WikiUser/PdoDb.php");
+                include_once('lib/WikiUser/Db.php');
+                include_once('lib/WikiUser/PdoDb.php');
                 _PdoDbPassUser::_PdoDbPassUser($this->_userid, $prefs);
                 return _PdoDbPassUser::setPreferences($prefs, $id_only);
             }
@@ -1171,7 +1171,7 @@ class _PassUser extends _AnonUser
             // prevent endless loop. does this work on all PHP's?
             // it just has to set the classname, what it correctly does.
             $class = $user->nextClass();
-            if ($class == "_ForbiddenPassUser") {
+            if ($class == '_ForbiddenPassUser') {
                 return false;
             }
         }
@@ -1198,7 +1198,7 @@ class _PassUser extends _AnonUser
     public function _checkPassLength($submitted_password)
     {
         if (strlen($submitted_password) < PASSWORD_LENGTH_MINIMUM) {
-            trigger_error(_("The length of the password is shorter than the system policy allows."));
+            trigger_error(_('The length of the password is shorter than the system policy allows.'));
             return false;
         }
         return true;
@@ -1233,8 +1233,8 @@ class _PassUser extends _AnonUser
     {
         if (DEBUG & _DEBUG_LOGIN) {
             $class = strtolower(static::class);
-            if (substr($class, -10) == "dbpassuser") {
-                $class = "_dbpassuser";
+            if (substr($class, -10) == 'dbpassuser') {
+                $class = '_dbpassuser';
             }
             $GLOBALS['USER_AUTH_ERROR'][$class] = 'wrongpass';
         }
@@ -1259,8 +1259,8 @@ class _PassUser extends _AnonUser
     {
         if (DEBUG & _DEBUG_LOGIN) {
             $class = strtolower(static::class);
-            if (substr($class, -10) == "dbpassuser") {
-                $class = "_dbpassuser";
+            if (substr($class, -10) == 'dbpassuser') {
+                $class = '_dbpassuser';
             }
             $GLOBALS['USER_AUTH_ERROR'][$class] = 'nosuchuser';
         }
@@ -1314,7 +1314,7 @@ class _AdminUser extends _PassUser
         }
         if ($this->_checkPass($submitted_password, $stored_password)) {
             $this->_level = WIKIAUTH_ADMIN;
-            if (! empty($_SERVER['PHP_AUTH_USER']) and class_exists("_HttpAuthPassUser")) {
+            if (! empty($_SERVER['PHP_AUTH_USER']) and class_exists('_HttpAuthPassUser')) {
                 // fake http auth
                 _HttpAuthPassUser::_fake_auth($this->_userid, $submitted_password);
             }
@@ -1631,7 +1631,7 @@ class _UserPreference_email extends _UserPreference
         if ($ok) {
             return $value;
         } else {
-            trigger_error("E-Mail Validation Error: " . $msg, E_USER_WARNING);
+            trigger_error('E-Mail Validation Error: ' . $msg, E_USER_WARNING);
             return $this->default_value;
         }
     }
@@ -1655,7 +1655,7 @@ class _UserPreference_email extends _UserPreference
             if (
                 $ok and mail(
                     $value,
-                    "[" . WIKI_NAME . "] " . _("Email Verification"),
+                    '[' . WIKI_NAME . '] ' . _('Email Verification'),
                     sprintf(
                         _("Welcome to %s!\nYour email account is verified and\nwill be used to send page change notifications.\nSee %s"),
                         WIKI_NAME,
@@ -1679,7 +1679,7 @@ function ValidateMail($email, $noconnect = false)
 
     // if this check is too strict (like invalid mail addresses in a local network only)
     // uncomment the following line:
-    return [true, "not validated"];
+    return [true, 'not validated'];
     // see http://sourceforge.net/tracker/index.php?func=detail&aid=1053681&group_id=6121&atid=106121
 
     $result = [];
@@ -1723,7 +1723,7 @@ function ValidateMail($email, $noconnect = false)
         return [true, sprintf(_("E-Mail address '%s' is properly formatted"), $email)];
     }
 
-    list ( $Username, $Domain ) = preg_split("/@/D", $email);
+    list ( $Username, $Domain ) = preg_split('/@/D', $email);
     //Todo: getmxrr workaround on windows or manual input field to verify it manually
     if (! isWindows() and getmxrr($Domain, $MXHost)) { // avoid warning on Windows.
         $ConnectAddress = $MXHost[0];
@@ -1732,33 +1732,33 @@ function ValidateMail($email, $noconnect = false)
     }
     $Connect = @fsockopen($ConnectAddress, 25);
     if ($Connect) {
-        if (preg_match("/^220/D", $Out = fgets($Connect, 1024))) {
+        if (preg_match('/^220/D', $Out = fgets($Connect, 1024))) {
             fputs($Connect, "HELO $HTTP_HOST\r\n");
             $Out = fgets($Connect, 1024);
-            fputs($Connect, "MAIL FROM: <" . $email . ">\r\n");
+            fputs($Connect, 'MAIL FROM: <' . $email . ">\r\n");
             $From = fgets($Connect, 1024);
-            fputs($Connect, "RCPT TO: <" . $email . ">\r\n");
+            fputs($Connect, 'RCPT TO: <' . $email . ">\r\n");
             $To = fgets($Connect, 1024);
             fputs($Connect, "QUIT\r\n");
             fclose($Connect);
-            if (! preg_match("/^250/D", $From)) {
+            if (! preg_match('/^250/D', $From)) {
                 $result[0] = false;
-                $result[1] = "Server rejected address: " . $From;
+                $result[1] = 'Server rejected address: ' . $From;
                 return $result;
             }
-            if (! preg_match("/^250/D", $To)) {
+            if (! preg_match('/^250/D', $To)) {
                 $result[0] = false;
-                $result[1] = "Server rejected address: " . $To;
+                $result[1] = 'Server rejected address: ' . $To;
                 return $result;
             }
         } else {
             $result[0] = false;
-            $result[1] = "No response from server";
+            $result[1] = 'No response from server';
             return $result;
         }
     } else {
         $result[0] = false;
-        $result[1] = "Can not connect E-Mail server.";
+        $result[1] = 'Can not connect E-Mail server.';
         return $result;
     }
     $result[0] = true;
@@ -1968,10 +1968,10 @@ class UserPreferences
             foreach (array_keys($this->_prefs) as $type) {
                 $obj        = $this->_prefs[$type];
                 $obj->_init = $init;
-                if (! isset($prefs[$type]) and isa($obj, "_UserPreference_bool")) {
+                if (! isset($prefs[$type]) and isa($obj, '_UserPreference_bool')) {
                     $prefs[$type] = false;
                 }
-                if (isset($prefs[$type]) and isa($obj, "_UserPreference_int")) {
+                if (isset($prefs[$type]) and isa($obj, '_UserPreference_int')) {
                     $prefs[$type] = (int) $prefs[$type];
                 }
                 if (isset($prefs[$type]) and $obj->get($type) != $prefs[$type]) {
@@ -2014,7 +2014,7 @@ class UserPreferences
     // Todo: the specialized subobjects must override this.
     public function retrieve($packed)
     {
-        if (is_string($packed) and (substr($packed, 0, 2) == "a:")) {
+        if (is_string($packed) and (substr($packed, 0, 2) == 'a:')) {
             $packed = unserialize($packed);
         }
         if (! is_array($packed)) {
@@ -2022,7 +2022,7 @@ class UserPreferences
         }
         $prefs = [];
         foreach ($packed as $name => $packed_pref) {
-            if (is_string($packed_pref) and substr($packed_pref, 0, 2) == "O:") {
+            if (is_string($packed_pref) and substr($packed_pref, 0, 2) == 'O:') {
                 //legacy: check if it's an old array of objects
                 // Looks like a serialized object.
                 // This might fail if the object definition does not exist anymore.
@@ -2092,11 +2092,11 @@ class UserPreferences
             return false;
         }
         //$packed = base64_decode($packed);
-        if (substr($packed, 0, 2) == "O:") {
+        if (substr($packed, 0, 2) == 'O:') {
             // Looks like a serialized object
             return unserialize($packed);
         }
-        if (substr($packed, 0, 2) == "a:") {
+        if (substr($packed, 0, 2) == 'a:') {
             return unserialize($packed);
         }
         //trigger_error("DEBUG: Can't unpack bad UserPreferences",

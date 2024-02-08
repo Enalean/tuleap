@@ -39,7 +39,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
     {
         parent::__construct();
         if (! $this->project) {
-            throw new MessageException(dgettext("gitphp", 'Project is required'), true);
+            throw new MessageException(dgettext('gitphp', 'Project is required'), true);
         }
     }
 
@@ -68,7 +68,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
-            return dgettext("gitphp", 'tag');
+            return dgettext('gitphp', 'tag');
         }
         return 'tag';
     }
@@ -118,10 +118,10 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('tagger_name', $tagger_name);
         $this->tpl->assign('purifier', \Codendi_HTMLPurifier::instance());
 
-        $this->tpl->assign("tag", $tag);
+        $this->tpl->assign('tag', $tag);
         $html_purifier        = \Codendi_HTMLPurifier::instance();
         $project_id           = (int) $this->getTuleapGitRepository()->getProjectId();
         $tag_comment_purified = $html_purifier->purify(implode(PHP_EOL, $tag->GetComment()), CODENDI_PURIFIER_BASIC_NOBR, $project_id);
-        $this->tpl->assign("tag_comment_purified", $tag_comment_purified);
+        $this->tpl->assign('tag_comment_purified', $tag_comment_purified);
     }
 }

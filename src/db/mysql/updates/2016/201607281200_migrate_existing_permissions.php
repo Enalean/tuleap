@@ -87,7 +87,7 @@ class b201607281200_migrate_existing_permissions extends \Tuleap\ForgeUpgrade\Bu
 
     private function getLastUGroupId()
     {
-        $sql = "SELECT MAX(ugroup_id) AS last_ugroup_id FROM ugroup";
+        $sql = 'SELECT MAX(ugroup_id) AS last_ugroup_id FROM ugroup';
 
         $res = $this->db->dbh->query($sql)->fetch();
 

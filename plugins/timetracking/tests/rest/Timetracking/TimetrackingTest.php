@@ -32,13 +32,13 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query               = urlencode(
             json_encode([
-                "start_date" => "2018-04-01T00:00:00+01",
-                "end_date"   => "2018-04-10T00:00:00+01",
+                'start_date' => '2018-04-01T00:00:00+01',
+                'end_date'   => '2018-04-10T00:00:00+01',
             ])
         );
         $response            = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->request_factory->createRequest('GET', "users/" . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
         $times_by_artifact   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $current_artifact_id = key($times_by_artifact);
@@ -56,12 +56,12 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query    = urlencode(
             json_encode([
-                "start_date" => "2018-04-01T00:00:00+01",
-                "end_date"   => "2018-04-10T00:00:00+01",
+                'start_date' => '2018-04-01T00:00:00+01',
+                'end_date'   => '2018-04-10T00:00:00+01',
             ])
         );
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', "users/" . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query"),
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query"),
             \REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -72,14 +72,14 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "start_date" => "2018-04-01T00:00:00+01",
-                "end_date"   => "2018-04-01T00:00:00+01",
+                'start_date' => '2018-04-01T00:00:00+01',
+                'end_date'   => '2018-04-01T00:00:00+01',
             ])
         );
 
         $response            = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->request_factory->createRequest('GET', "users/" . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
         $times_by_artifact   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $current_artifact_id = key($times_by_artifact);
@@ -97,7 +97,7 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "end_date" => "2018-04-10T00:00:00+01",
+                'end_date' => '2018-04-10T00:00:00+01',
             ])
         );
 
@@ -118,7 +118,7 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "start_date" => "2018-04-01T00:00:00+01",
+                'start_date' => '2018-04-01T00:00:00+01',
             ])
         );
 
@@ -139,8 +139,8 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "start_date" => "2018-04-10T00:00:00+01",
-                "end_date"   => "2018-04-01T00:00:00+01",
+                'start_date' => '2018-04-10T00:00:00+01',
+                'end_date'   => '2018-04-01T00:00:00+01',
             ])
         );
 
@@ -161,8 +161,8 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "start_date" => "not a valid date",
-                "end_date"   => "",
+                'start_date' => 'not a valid date',
+                'end_date'   => '',
             ])
         );
 
@@ -184,8 +184,8 @@ class TimetrackingTest extends TimetrackingBase
         $query = urlencode(
             json_encode(
                 [
-                    "start_date" => "2018/01/01",
-                    "end_date"   => "2018/01/30",
+                    'start_date' => '2018/01/01',
+                    'end_date'   => '2018/01/30',
                 ]
             )
         );
@@ -207,8 +207,8 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "start_date" => "2010-04-01T00:00:00+01",
-                "end_date"   => "2018-05-31T00:00:00+01",
+                'start_date' => '2010-04-01T00:00:00+01',
+                'end_date'   => '2018-05-31T00:00:00+01',
             ])
         );
 
@@ -234,10 +234,10 @@ class TimetrackingTest extends TimetrackingBase
     public function testAddTimeSuccess()
     {
         $query    = json_encode([
-            "date_time"   => "2018-04-01",
-            "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
-            "time_value"  => "11:11",
-            "step"        => "etape",
+            'date_time'   => '2018-04-01',
+            'artifact_id' => $this->timetracking_artifact_ids[1]['id'],
+            'time_value'  => '11:11',
+            'step'        => 'etape',
         ]);
         $response = $this->getResponse($this->request_factory->createRequest('POST', '/api/v1/timetracking')->withBody($this->stream_factory->createStream($query)), TimetrackingDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($response->getStatusCode(), 201);
@@ -249,7 +249,7 @@ class TimetrackingTest extends TimetrackingBase
     public function testGetTimeOnArtifact()
     {
         $query    = urlencode(json_encode([
-            "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
+            'artifact_id' => $this->timetracking_artifact_ids[1]['id'],
         ], JSON_FORCE_OBJECT));
         $response = $this->getResponse($this->request_factory->createRequest('GET', '/api/v1/timetracking?query=' . $query), TimetrackingDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($response->getStatusCode(), 200);
@@ -263,10 +263,10 @@ class TimetrackingTest extends TimetrackingBase
     public function testAddTimeReturnBadTimeFormatExceptionWrongSeparator()
     {
         $query    = json_encode([
-            "date_time"   => "2018-04-01",
-            "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
-            "time_value"  => "11/11",
-            "step"        => "etape",
+            'date_time'   => '2018-04-01',
+            'artifact_id' => $this->timetracking_artifact_ids[1]['id'],
+            'time_value'  => '11/11',
+            'step'        => 'etape',
         ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'timetracking')->withBody($this->stream_factory->createStream($query)),
@@ -280,7 +280,7 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "with_time_tracking" => true,
+                'with_time_tracking' => true,
             ])
         );
 
@@ -291,7 +291,7 @@ class TimetrackingTest extends TimetrackingBase
         );
         $projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertTrue(count($projects) === 1);
-        $this->assertEquals($projects[0]["label"], "Timetracking");
+        $this->assertEquals($projects[0]['label'], 'Timetracking');
     }
 
     public function testGetTrackers()
@@ -309,14 +309,14 @@ class TimetrackingTest extends TimetrackingBase
         );
         $trackers =  json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertTrue(count($trackers) === 1);
-        $this->assertEquals($trackers[0]["id"], $this->tracker_timetracking);
+        $this->assertEquals($trackers[0]['id'], $this->tracker_timetracking);
     }
 
     public function testGetProjectsRaiseException()
     {
         $query = urlencode(
             json_encode([
-                "with_time_tracking" => false,
+                'with_time_tracking' => false,
             ])
         );
 
@@ -330,12 +330,12 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "with_time_tracking" => false,
+                'with_time_tracking' => false,
             ])
         );
 
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
-        $response = $this->getResponse($this->request_factory->createRequest('GET', "projects/" . $this->timetracking_project_id . "/trackers?query=$query"));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->timetracking_project_id . "/trackers?query=$query"));
 
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -343,10 +343,10 @@ class TimetrackingTest extends TimetrackingBase
     public function testAddTimeReturnBadDateFormatException()
     {
         $query    = json_encode([
-            "date_time"   => "oui",
-            "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
-            "time_value"  => "11:11",
-            "step"        => "etape",
+            'date_time'   => 'oui',
+            'artifact_id' => $this->timetracking_artifact_ids[1]['id'],
+            'time_value'  => '11:11',
+            'step'        => 'etape',
         ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'timetracking')->withBody($this->stream_factory->createStream($query)),
@@ -359,9 +359,9 @@ class TimetrackingTest extends TimetrackingBase
     public function testEditTimeSuccess()
     {
         $query    = json_encode([
-            "date_time"   => "2018-04-01",
-            "time_value"  => "11:11",
-            "step"        => "etape",
+            'date_time'   => '2018-04-01',
+            'time_value'  => '11:11',
+            'step'        => 'etape',
         ]);
         $response = $this->getResponse($this->request_factory->createRequest('PUT', '/api/v1/timetracking/1')->withBody($this->stream_factory->createStream($query)), TimetrackingDataBuilder::USER_TESTER_NAME);
 
@@ -371,9 +371,9 @@ class TimetrackingTest extends TimetrackingBase
     public function testEditTimeReturnBadTimeFormatException()
     {
         $query    = json_encode([
-            "date_time"   => "2018-04-01",
-            "time_value"  => "11/11",
-            "step"        => "etape",
+            'date_time'   => '2018-04-01',
+            'time_value'  => '11/11',
+            'step'        => 'etape',
         ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', '/api/v1/timetracking/1')->withBody($this->stream_factory->createStream($query)),
@@ -386,9 +386,9 @@ class TimetrackingTest extends TimetrackingBase
     public function testEditTimeReturnBadDateFormatException()
     {
         $query    = json_encode([
-            "date_time"   => "201804-01",
-            "time_value"  => "11:11",
-            "step"        => "etape",
+            'date_time'   => '201804-01',
+            'time_value'  => '11:11',
+            'step'        => 'etape',
         ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', '/api/v1/timetracking/1')->withBody($this->stream_factory->createStream($query)),
@@ -401,9 +401,9 @@ class TimetrackingTest extends TimetrackingBase
     public function testEditTimeReturnNoTimeException()
     {
         $query    = json_encode([
-            "date_time"   => "2018-04-01",
-            "time_value"  => "11:11",
-            "step"        => "etape",
+            'date_time'   => '2018-04-01',
+            'time_value'  => '11:11',
+            'step'        => 'etape',
         ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', '/api/v1/timetracking/8000')->withBody($this->stream_factory->createStream($query)),

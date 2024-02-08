@@ -29,11 +29,11 @@ class StatusChangedRedirectURLBuilder
 {
     public static function buildRedirectURL(HTTPRequest $request, Project $project, int $campaign_id): string
     {
-        $redirect_url = "/plugins/testmanagement/?group_id=" . (int) $project->getID();
+        $redirect_url = '/plugins/testmanagement/?group_id=' . (int) $project->getID();
         if ($request->get('milestone_id') !== false) {
-            $redirect_url .= "&milestone_id=" . (int) $request->get('milestone_id');
+            $redirect_url .= '&milestone_id=' . (int) $request->get('milestone_id');
         }
-        $redirect_url .= "#!/campaigns/" . $campaign_id;
+        $redirect_url .= '#!/campaigns/' . $campaign_id;
 
         return $redirect_url;
     }

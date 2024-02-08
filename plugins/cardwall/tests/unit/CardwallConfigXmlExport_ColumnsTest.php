@@ -90,9 +90,9 @@ final class CardwallConfigXmlExport_ColumnsTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItDumpsColumnsAsDefined(): void
     {
         $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection([
-            new Cardwall_Column(112, "Todo", "red"),
-            new Cardwall_Column(113, "On going", "fiesta-red"),
-            new Cardwall_Column(113, "On going", "rgb(255,255,255)"),
+            new Cardwall_Column(112, 'Todo', 'red'),
+            new Cardwall_Column(113, 'On going', 'fiesta-red'),
+            new Cardwall_Column(113, 'On going', 'rgb(255,255,255)'),
         ]));
 
         $this->cardwall_config->shouldReceive('getMappings')->andReturns([]);
@@ -106,9 +106,9 @@ final class CardwallConfigXmlExport_ColumnsTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItDumpsColumnsAsDefinedWithMappings(): void
     {
         $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection([
-            new Cardwall_Column(112, "Todo", "red"),
-            new Cardwall_Column(113, "On going", "fiesta-red"),
-            new Cardwall_Column(113, "On going", "rgb(255,255,255)"),
+            new Cardwall_Column(112, 'Todo', 'red'),
+            new Cardwall_Column(113, 'On going', 'fiesta-red'),
+            new Cardwall_Column(113, 'On going', 'rgb(255,255,255)'),
         ]));
 
         $tracker = Mockery::mock(Tracker::class);

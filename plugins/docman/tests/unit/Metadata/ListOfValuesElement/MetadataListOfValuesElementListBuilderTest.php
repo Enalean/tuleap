@@ -48,7 +48,7 @@ class MetadataListOfValuesElementListBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $value     = ['value_id' => 1, 'name' => 'value'];
         $value_two = ['value_id' => 2, 'name' => 'name value 2'];
 
-        $this->dao->shouldReceive("searchByFieldId")->withArgs([$id, $only_active])->andReturn([$value, $value_two]);
+        $this->dao->shouldReceive('searchByFieldId')->withArgs([$id, $only_active])->andReturn([$value, $value_two]);
 
         $element = new \Docman_MetadataListOfValuesElement();
         $element->initFromRow($value);

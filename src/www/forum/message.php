@@ -59,7 +59,7 @@ if ($request->valid($vMsg)) {
         ->withPrinterVersion((int) $pv)
         ->build());
 
-    echo "<P>";
+    echo '<P>';
 
     $title_arr   = [];
     $title_arr[] = 'Message: ' . $msg_id;
@@ -69,11 +69,11 @@ if ($request->valid($vMsg)) {
     $purifier = Codendi_HTMLPurifier::instance();
     $poster   = UserManager::instance()->getUserByUserName($message->getUserName());
     echo "<TR><TD class=\"threadmsg\">\n";
-    echo _('By') . ": " . UserHelper::instance()->getLinkOnUser($poster) . "<BR>";
-    echo _('Date') . ": " . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $message->getDate()) . "<BR>";
-    echo _('Subject') . ": " . $message->getSubject() . "<P>";
+    echo _('By') . ': ' . UserHelper::instance()->getLinkOnUser($poster) . '<BR>';
+    echo _('Date') . ': ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $message->getDate()) . '<BR>';
+    echo _('Subject') . ': ' . $message->getSubject() . '<P>';
     echo $purifier->purify($message->getBody(), CODENDI_PURIFIER_BASIC, $group_id);
-    echo "</TD></TR>";
+    echo '</TD></TR>';
 
     $crossref_fact = new CrossReferenceFactory($msg_id, ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $group_id);
     $crossref_fact->fetchDatas();
@@ -86,7 +86,7 @@ if ($request->valid($vMsg)) {
         echo '</tr>';
     }
 
-    echo "</TABLE>";
+    echo '</TABLE>';
 
     if ($pv == 0) {
     /*

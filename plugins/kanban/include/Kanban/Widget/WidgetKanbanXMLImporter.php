@@ -64,7 +64,7 @@ final class WidgetKanbanXMLImporter
             }
         }
         if (! isset($params['kanban']['id'])) {
-            throw new \RuntimeException("Kanban id is missing");
+            throw new \RuntimeException('Kanban id is missing');
         }
         return $params;
     }

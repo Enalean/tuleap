@@ -32,8 +32,8 @@ final class ReverseLinksRetrieverTest extends TestCase
 {
     public function testItReturnsTheRetrievedNonNullReverseLinksArtifact(): void
     {
-        $linked_artifact_1 = new StoredLinkRow(1, "is_child");
-        $linked_artifact_2 = new StoredLinkRow(40, "");
+        $linked_artifact_1 = new StoredLinkRow(1, 'is_child');
+        $linked_artifact_2 = new StoredLinkRow(40, '');
 
         $search_reverse_link = SearchReverseLinksStub::withRows(
             $linked_artifact_1,

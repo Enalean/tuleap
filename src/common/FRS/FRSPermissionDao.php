@@ -73,8 +73,8 @@ class FRSPermissionDao extends DataAccessObject
             $ugroups[] = "($project_id, $permission_type, $ugroup_id)";
         }
 
-        $sql = "INSERT INTO frs_global_permissions (project_id, permission_type, ugroup_id)
-            VALUES " . implode(",", $ugroups);
+        $sql = 'INSERT INTO frs_global_permissions (project_id, permission_type, ugroup_id)
+            VALUES ' . implode(',', $ugroups);
 
         if (! $this->update($sql)) {
             $this->da->rollback();

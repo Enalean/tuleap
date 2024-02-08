@@ -27,9 +27,9 @@ class ArtifactLinksUsageDao extends DataAccessObject
 {
     public function isProjectUsingArtifactLinkTypes(int $project_id): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_tracker_projects_use_artifactlink_types
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         $rows = $this->getDB()->run($sql, $project_id);
 
@@ -38,8 +38,8 @@ class ArtifactLinksUsageDao extends DataAccessObject
 
     public function activateForProject(int $project_id): bool
     {
-        $sql = "REPLACE INTO plugin_tracker_projects_use_artifactlink_types
-                VALUES (?)";
+        $sql = 'REPLACE INTO plugin_tracker_projects_use_artifactlink_types
+                VALUES (?)';
 
         try {
             $this->getDB()->run($sql, $project_id);
@@ -52,10 +52,10 @@ class ArtifactLinksUsageDao extends DataAccessObject
 
     public function isTypeDisabledInProject(int $project_id, string $type_shortname): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_tracker_projects_unused_artifactlink_types
                 WHERE project_id = ?
-                  AND type_shortname = ?";
+                  AND type_shortname = ?';
 
         $rows = $this->getDB()->run($sql, $project_id, $type_shortname);
 
@@ -64,17 +64,17 @@ class ArtifactLinksUsageDao extends DataAccessObject
 
     public function disableTypeInProject(int $project_id, string $type_shortname): void
     {
-        $sql = "REPLACE INTO plugin_tracker_projects_unused_artifactlink_types (project_id, type_shortname)
-                VALUES (?, ?)";
+        $sql = 'REPLACE INTO plugin_tracker_projects_unused_artifactlink_types (project_id, type_shortname)
+                VALUES (?, ?)';
 
         $this->getDB()->run($sql, $project_id, $type_shortname);
     }
 
     public function enableTypeInProject(int $project_id, string $type_shortname): void
     {
-        $sql = "DELETE FROM plugin_tracker_projects_unused_artifactlink_types
+        $sql = 'DELETE FROM plugin_tracker_projects_unused_artifactlink_types
                 WHERE project_id = ?
-                  AND type_shortname = ?";
+                  AND type_shortname = ?';
 
         $this->getDB()->run($sql, $project_id, $type_shortname);
     }
@@ -92,10 +92,10 @@ class ArtifactLinksUsageDao extends DataAccessObject
 
     private function duplicateTypesUsageInProject(int $template_id, int $project_id): bool
     {
-        $sql = "INSERT INTO plugin_tracker_projects_unused_artifactlink_types (project_id, type_shortname)
+        $sql = 'INSERT INTO plugin_tracker_projects_unused_artifactlink_types (project_id, type_shortname)
                 SELECT ?, type_shortname
                 FROM plugin_tracker_projects_unused_artifactlink_types
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         try {
             $this->getDB()->run($sql, $project_id, $template_id);

@@ -26,22 +26,22 @@ require_once __DIR__ . '/../../src/www/include/pre.php';
 $option = isset($argv[1]) ? $argv[1] : '';
 
 switch ($option) {
-    case "dump":
+    case 'dump':
         $attachments = get_all_attachment_ids();
         dump_attachments($attachments);
         break;
 
-    case "check":
+    case 'check':
         $attachments = get_all_attachment_ids();
         check_attachments($attachments);
         break;
 
-    case "purge":
+    case 'purge':
         $attachments = get_all_attachment_ids();
         delete_equal_attachments($attachments);
         break;
 
-    case "all":
+    case 'all':
         $attachments = get_all_attachment_ids();
         dump_attachments($attachments);
         check_attachments($attachments);

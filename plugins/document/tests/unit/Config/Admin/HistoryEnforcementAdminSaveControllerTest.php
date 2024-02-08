@@ -66,7 +66,7 @@ final class HistoryEnforcementAdminSaveControllerTest extends \Tuleap\Test\PHPUn
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
-            ->withParam('is-changelog-proposed-after-dnd', "1")
+            ->withParam('is-changelog-proposed-after-dnd', '1')
             ->build();
 
         $this->token->expects(self::once())->method('check');

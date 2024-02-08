@@ -48,7 +48,7 @@ class PackageMinimalRepresentation
     public function __construct(FRSPackage $package)
     {
         $this->id    = JsonCast::toInt($package->getPackageID());
-        $this->uri   = self::ROUTE . "/" . urlencode($this->id);
+        $this->uri   = self::ROUTE . '/' . urlencode($this->id);
         $this->label = $package->getName();
     }
 }

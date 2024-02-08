@@ -130,10 +130,10 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
             $html .= '</ul>';
         }
 
-        $html .= "</p><p>" . dgettext('tuleap-cardwall', 'Only static fields with values bound to new color picker can be chosen as background color');
+        $html .= '</p><p>' . dgettext('tuleap-cardwall', 'Only static fields with values bound to new color picker can be chosen as background color');
 
         try {
-            $html .= "</p><p>" . sprintf(
+            $html .= '</p><p>' . sprintf(
                 dgettext(
                     'tuleap-cardwall',
                     '<b>%s</b> field will determine background color.'
@@ -141,7 +141,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
                 $this->html_purifier->purify($this->getBackgroundColorField()->getLabel())
             );
         } catch (BackgroundColorSemanticFieldNotFoundException $exception) {
-            $html .= "</p><p>" . dgettext('tuleap-cardwall', 'No field is chosen to determine the background color');
+            $html .= '</p><p>' . dgettext('tuleap-cardwall', 'No field is chosen to determine the background color');
         }
 
         $html .= '</p>';

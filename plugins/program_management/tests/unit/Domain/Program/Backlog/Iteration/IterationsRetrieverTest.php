@@ -54,7 +54,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $verify_is_visible_artifact,
             $search_iterations,
             RetrieveStatusValueUserCanSeeStub::withValue('On going'),
-            RetrieveTitleValueUserCanSeeStub::withValue("My iteration"),
+            RetrieveTitleValueUserCanSeeStub::withValue('My iteration'),
             RetrieveTimeframeValueUserCanSeeStub::withValues(1633189968, 1635868368),
             RetrieveUriStub::withDefault(),
             RetrieveCrossRefStub::withDefault(),

@@ -188,7 +188,7 @@ class WikiUser
         if (! $userid) {
             $userid = $this->_userid;
         }
-        return preg_match("/^[\w\.@\-]+$/", $userid) and strlen($userid) < 32;
+        return preg_match('/^[\w\.@\-]+$/', $userid) and strlen($userid) < 32;
     }
 
     public function AuthCheck($postargs)
@@ -212,14 +212,14 @@ class WikiUser
         }
 
         if (! $this->isValidName($userid)) {
-            return _("Invalid username.");
+            return _('Invalid username.');
         }
 
         $authlevel = $this->_pwcheck($userid, $passwd);
         if (! $authlevel) {
-            return _("Invalid password or userid.");
+            return _('Invalid password or userid.');
         } elseif ($authlevel < $require_level) {
-            return _("Insufficient permissions.");
+            return _('Insufficient permissions.');
         }
 
         // Successful login.
@@ -259,7 +259,7 @@ class WikiUser
             $request->discardOutput();
             $page     = $request->getPage($pagename);
             $revision = $page->getCurrentRevision();
-            return GeneratePage($login, _("Sign In"), $revision);
+            return GeneratePage($login, _('Sign In'), $revision);
         } else {
             return $login;
         }
@@ -320,7 +320,7 @@ class WikiUser
                     // check for page revision 0
                     if (! $this->_dbi->isWikiPage($this->_userid)) {
                         trigger_error(
-                            _("Your home page has not been created yet so your preferences cannot not be saved."),
+                            _('Your home page has not been created yet so your preferences cannot not be saved.'),
                             E_USER_WARNING
                         );
                     } else {
@@ -337,15 +337,15 @@ class WikiUser
                             // once the new WikiUser code has been
                             // implemented.
                             trigger_error(
-                                _("Your home page is locked so your preferences cannot not be saved.")
-                                          . " " . _("Please contact your PhpWiki administrator for assistance."),
+                                _('Your home page is locked so your preferences cannot not be saved.')
+                                          . ' ' . _('Please contact your PhpWiki administrator for assistance.'),
                                 E_USER_WARNING
                             );
                         }
                     }
                 } else {
                     trigger_error(
-                        "No homepage for user found. Creating one...",
+                        'No homepage for user found. Creating one...',
                         E_USER_WARNING
                     );
                     $this->createHomepage($prefs);
@@ -353,7 +353,7 @@ class WikiUser
                     return sizeof($prefs->_prefs);
                 }
             } else {
-                trigger_error("you must be signed in", E_USER_WARNING);
+                trigger_error('you must be signed in', E_USER_WARNING);
             }
         }
         return 0;
@@ -397,7 +397,7 @@ class WikiUser
             $this->createHomepage($pref);
         } else {
             // empty page
-            include "lib/loadsave.php";
+            include 'lib/loadsave.php';
             $pageinfo = ['pagedata' => ['pref' => serialize($pref->_pref)],
                 'versiondata' => ['author' => $this->_userid],
                 'pagename' => $this->_userid,
@@ -412,7 +412,7 @@ class WikiUser
     public function createHomepage($pref)
     {
         $pagename = $this->_userid;
-        include "lib/loadsave.php";
+        include 'lib/loadsave.php';
 
         // create default homepage:
         //  properly expanded template and the pref metadata
@@ -466,7 +466,7 @@ class WikiUser
         }
         if (empty($stored_passwd)) {
             trigger_error(sprintf(
-                _("Old UserPage %s without stored password updated with empty password. Set a password in your UserPreferences."),
+                _('Old UserPage %s without stored password updated with empty password. Set a password in your UserPreferences.'),
                 $this->_userid
             ), E_USER_NOTICE);
             $prefs->set('passwd', '*');
@@ -737,7 +737,7 @@ class UserPreferences
         if (! $packed) {
             return false;
         }
-        if (substr($packed, 0, 2) == "O:") {
+        if (substr($packed, 0, 2) == 'O:') {
             // Looks like a serialized object
             return unserialize($packed);
         }

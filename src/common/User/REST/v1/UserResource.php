@@ -375,17 +375,17 @@ class UserResource extends AuthenticatedResource
         $watchee = $this->getUserById($user_id);
         $watcher = $this->user_manager->getCurrentUser();
         if ($this->checkUserCanSeeOtherUser($watcher, $watchee)) {
-            if ($scope === "project") {
-                if ($format === "id") {
+            if ($scope === 'project') {
+                if ($format === 'id') {
                     return $this->ugroup_literalizer->getProjectUserGroupsIdsForUser($watchee);
-                } elseif ($format === "full") {
+                } elseif ($format === 'full') {
                     return $this->getUserGroupsRepresentation($watchee);
                 }
                 return $this->ugroup_literalizer->getProjectUserGroupsForUser($watchee);
             }
 
-            if ($format === "id" || $format === 'full') {
-                throw new RestException(400, "format=id or format=full are only supported for project scope");
+            if ($format === 'id' || $format === 'full') {
+                throw new RestException(400, 'format=id or format=full are only supported for project scope');
             }
 
             return $this->ugroup_literalizer->getUserGroupsForUser($watchee);
@@ -623,16 +623,16 @@ class UserResource extends AuthenticatedResource
         if ($this->checkUserCanUpdate($current_user)) {
             foreach ($values as $key => $value) {
                 switch ($key) {
-                    case "status":
+                    case 'status':
                         $this->updateUserStatus($user_to_update, $value);
                         break;
-                    case "email":
+                    case 'email':
                         $user_to_update->setEmail($value);
                         break;
-                    case "real_name":
+                    case 'real_name':
                         $user_to_update->setRealName($value);
                         break;
-                    case "username":
+                    case 'username':
                         $this->userNameIsValid($value);
                         $user_to_update->setUserName($value);
                         break;
@@ -671,7 +671,7 @@ class UserResource extends AuthenticatedResource
         if ($value === PFUser::STATUS_RESTRICTED) {
             $user_status_checker = new UserStatusChecker();
             if (! $user_status_checker->doesPlatformAllowRestricted()) {
-                throw new RestException(400, "Restricted users are not authorized.");
+                throw new RestException(400, 'Restricted users are not authorized.');
             }
             if (! $user_status_checker->isRestrictedStatusAllowedForUser($user_to_update)) {
                 throw new RestException(400, "This user can't be restricted.");

@@ -42,7 +42,7 @@ try {
         exit(1);
     }
 
-    $sql = "SELECT COUNT(*) AS nb FROM plugin_tracker_cross_tracker_report";
+    $sql = 'SELECT COUNT(*) AS nb FROM plugin_tracker_cross_tracker_report';
     $row = $dao->retrieve($sql)->getRow();
     if (! $row || ! $row['nb']) {
         $logger->info("There isn't any widgets to migrate.");
@@ -50,20 +50,20 @@ try {
         exit(0);
     }
 
-    $logger->info("Nb of widgets to migrate: " . $row['nb']);
-    $sql = "INSERT INTO plugin_crosstracker_report (id)
-            SELECT id FROM plugin_tracker_cross_tracker_report";
+    $logger->info('Nb of widgets to migrate: ' . $row['nb']);
+    $sql = 'INSERT INTO plugin_crosstracker_report (id)
+            SELECT id FROM plugin_tracker_cross_tracker_report';
     $dao->update($sql);
 
-    $sql = "INSERT INTO plugin_crosstracker_report_tracker (report_id, tracker_id)
-            SELECT report_id, tracker_id FROM plugin_tracker_cross_tracker_report_tracker";
+    $sql = 'INSERT INTO plugin_crosstracker_report_tracker (report_id, tracker_id)
+            SELECT report_id, tracker_id FROM plugin_tracker_cross_tracker_report_tracker';
     $dao->update($sql);
 
     $dao->commit();
-    $logger->info("Migration successful. Enjoy!");
+    $logger->info('Migration successful. Enjoy!');
     exit(0);
 } catch (Exception $e) {
-    $logger->error("An error occurred during the migration of widgets :(");
+    $logger->error('An error occurred during the migration of widgets :(');
     $logger->error($e->getMessage());
     $dao->rollBack();
     exit(1);

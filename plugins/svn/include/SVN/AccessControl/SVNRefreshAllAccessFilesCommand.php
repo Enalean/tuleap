@@ -59,14 +59,14 @@ class SVNRefreshAllAccessFilesCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln("<comment>Start refresh access files:</comment>");
+        $output->writeln('<comment>Start refresh access files:</comment>');
 
         $collection              = $this->repository_manager->getRepositoriesOfNonDeletedProjects();
         $number_updated_projects = count($collection);
 
         if ($number_updated_projects === 0) {
-            $output->writeln("<comment>No SVN multi-repositories found.</comment>");
-            $output->writeln("<comment>End of refresh access files.</comment>");
+            $output->writeln('<comment>No SVN multi-repositories found.</comment>');
+            $output->writeln('<comment>End of refresh access files.</comment>');
 
             return 0;
         }
@@ -74,7 +74,7 @@ class SVNRefreshAllAccessFilesCommand extends Command
         $count_refreshed_repositories = 0;
 
         $table = new Table($output);
-        $table->setHeaders(["Project Id", "Project name", 'Repository']);
+        $table->setHeaders(['Project Id', 'Project name', 'Repository']);
         $table->setStyle('box');
 
         foreach ($collection as $repository_by_project_collection) {
@@ -87,7 +87,7 @@ class SVNRefreshAllAccessFilesCommand extends Command
 
         $table->render();
 
-        $output->writeln("<info>" . $count_refreshed_repositories . " SVN access files restored.</info>");
+        $output->writeln('<info>' . $count_refreshed_repositories . ' SVN access files restored.</info>');
         return 0;
     }
 

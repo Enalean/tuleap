@@ -76,7 +76,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_identifier = ProgramIncrementTrackerIdentifierBuilder::buildWithId(
             self::PROGRAM_INCREMENT_TRACKER_ID
         );
-        $project                  = new \Project(['group_id' => 101, 'group_name' => "My project"]);
+        $project                  = new \Project(['group_id' => 101, 'group_name' => 'My project']);
         $this->tracker            = TrackerTestBuilder::aTracker()
             ->withId(self::PROGRAM_INCREMENT_TRACKER_ID)
             ->withProject($project)

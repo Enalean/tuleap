@@ -25,7 +25,7 @@ final class b202302031615_remove_feature_flag_use_list_pickers_in_trackers_and_m
 {
     public function description(): string
     {
-        return "Remove feature_flag_use_list_pickers_in_trackers_and_modals from forgeconfig";
+        return 'Remove feature_flag_use_list_pickers_in_trackers_and_modals from forgeconfig';
     }
 
     public function up(): void

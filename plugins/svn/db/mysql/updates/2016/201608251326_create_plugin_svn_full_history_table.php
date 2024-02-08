@@ -30,7 +30,7 @@ class b201608251326_create_plugin_svn_full_history_table extends \Tuleap\ForgeUp
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_svn_full_history (
+        $sql = 'CREATE TABLE plugin_svn_full_history (
                 repository_id int(11) unsigned NOT NULL,
                 user_id int(11) NOT NULL,
                 day int(11) NOT NULL,
@@ -38,7 +38,7 @@ class b201608251326_create_plugin_svn_full_history_table extends \Tuleap\ForgeUp
                 svn_write_operations int(11) NOT NULL default 0,
                 svn_browse_operations int(11) NOT NULL default 0,
                 PRIMARY KEY (repository_id, user_id, day)
-              )";
+              )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

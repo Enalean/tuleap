@@ -56,7 +56,7 @@ class ProjectOwnerRemover
             );
 
             $this->logger->info(
-                "Project owner #" . $removed_user->getId() . " in project # " . $project->getID() . " removed by system event at project visibility switch."
+                'Project owner #' . $removed_user->getId() . ' in project # ' . $project->getID() . ' removed by system event at project visibility switch.'
             );
         }
     }

@@ -20,20 +20,20 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
 {
     public function getName()
     {
-        return _("BlogJournal");
+        return _('BlogJournal');
     }
 
     public function getDescription()
     {
-        return _("Include latest blog entries for the current or ADMIN user");
+        return _('Include latest blog entries for the current or ADMIN user');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.4 $"
+            '$Revision: 1.4 $'
         );
     }
 
@@ -79,7 +79,7 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
         if ($args['month']) {
             $prefix .= (SUBPAGE_SEPARATOR . $args['month']);
         }
-        $pages = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
+        $pages = $dbi->titleSearch(new TextSearchQuery('^' . $prefix, true, 'posix'));
         $html  = HTML();
         $i     = 0;
         while (($page = $pages->next()) and $i < $args['count']) {
@@ -93,14 +93,14 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
             $html->pushContent($rev->getTransformedContent('wikiblog'));
         }
         if ($args['user'] == $user->UserName()) {
-            $html->pushContent(WikiLink(_("WikiBlog"), 'known', "New entry"));
+            $html->pushContent(WikiLink(_('WikiBlog'), 'known', 'New entry'));
         }
         if (! $i) {
-            return HTML(HTML::h3(_("No Blog Entries")), $html);
+            return HTML(HTML::h3(_('No Blog Entries')), $html);
         }
         if (! $args['noheader']) {
             return HTML(
-                HTML::h3(sprintf(_("Blog Entries for %s:"), $this->_monthTitle($args['month']))),
+                HTML::h3(sprintf(_('Blog Entries for %s:'), $this->_monthTitle($args['month']))),
                 $html
             );
         } else {

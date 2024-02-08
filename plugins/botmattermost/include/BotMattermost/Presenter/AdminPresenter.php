@@ -43,7 +43,7 @@ class AdminPresenter
 
         $this->has_bots = count($this->bots) > 0;
 
-        $this->create_bot_url = "?action=add_bot";
+        $this->create_bot_url = '?action=add_bot';
     }
 
     /**

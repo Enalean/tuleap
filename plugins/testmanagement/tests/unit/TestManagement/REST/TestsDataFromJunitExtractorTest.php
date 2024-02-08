@@ -53,33 +53,33 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $extracted_test_1 = new ExtractedTestResultFromJunit();
         $extracted_test_1->addTime(5);
-        $extracted_test_1->setStatus("passed");
-        $extracted_test_1->addFeedbackOnResult("test case executed");
+        $extracted_test_1->setStatus('passed');
+        $extracted_test_1->addFeedbackOnResult('test case executed');
 
         $extracted_test_2 = new ExtractedTestResultFromJunit();
         $extracted_test_2->addTime(0);
-        $extracted_test_2->setStatus("failed");
-        $extracted_test_2->addFeedbackOnResult("test case executedfailure feedback");
+        $extracted_test_2->setStatus('failed');
+        $extracted_test_2->addFeedbackOnResult('test case executedfailure feedback');
 
         $extracted_test_3 = new ExtractedTestResultFromJunit();
         $extracted_test_3->addTime(5);
-        $extracted_test_3->setStatus("passed");
-        $extracted_test_3->addFeedbackOnResult("test case executed");
+        $extracted_test_3->setStatus('passed');
+        $extracted_test_3->addFeedbackOnResult('test case executed');
 
         $extracted_test_suite = new ExtractedTestResultFromJunit();
         $extracted_test_suite->addTime(6);
-        $extracted_test_suite->setStatus("failed");
-        $extracted_test_suite->addFeedbackOnResult("test suite executedfailure feedback");
+        $extracted_test_suite->setStatus('failed');
+        $extracted_test_suite->addFeedbackOnResult('test suite executedfailure feedback');
 
         $extracted_test_suite_2 = new ExtractedTestResultFromJunit();
         $extracted_test_suite_2->addTime(6);
-        $extracted_test_suite_2->setStatus("passed");
-        $extracted_test_suite_2->addFeedbackOnResult("test suite executed");
+        $extracted_test_suite_2->setStatus('passed');
+        $extracted_test_suite_2->addFeedbackOnResult('test suite executed');
 
         $extracted_test_suite_3 = new ExtractedTestResultFromJunit();
         $extracted_test_suite_3->addTime(6);
-        $extracted_test_suite_3->setStatus("passed");
-        $extracted_test_suite_3->addFeedbackOnResult("test suite executed");
+        $extracted_test_suite_3->setStatus('passed');
+        $extracted_test_suite_3->addFeedbackOnResult('test suite executed');
 
         $automated_tests_results_representation                 = new AutomatedTestsResultPATCHRepresentation();
         $automated_tests_results_representation->build_url      = 'http://exemple/of/url';
@@ -122,18 +122,18 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $extracted_test_1 = new ExtractedTestResultFromJunit();
         $extracted_test_1->addTime(5);
-        $extracted_test_1->setStatus("passed");
-        $extracted_test_1->addFeedbackOnResult("test case executed");
+        $extracted_test_1->setStatus('passed');
+        $extracted_test_1->addFeedbackOnResult('test case executed');
 
         $extracted_test_2 = new ExtractedTestResultFromJunit();
         $extracted_test_2->addTime(15);
-        $extracted_test_2->setStatus("failed");
-        $extracted_test_2->addFeedbackOnResult("test case executedfailure feedbackfailure feedbacktest case executed");
+        $extracted_test_2->setStatus('failed');
+        $extracted_test_2->addFeedbackOnResult('test case executedfailure feedbackfailure feedbacktest case executed');
 
         $extracted_test_suite = new ExtractedTestResultFromJunit();
         $extracted_test_suite->addTime(25);
-        $extracted_test_suite->setStatus("failed");
-        $extracted_test_suite->addFeedbackOnResult("test suite executedfailure feedbackfailure feedback");
+        $extracted_test_suite->setStatus('failed');
+        $extracted_test_suite->addFeedbackOnResult('test suite executedfailure feedbackfailure feedback');
 
         $automated_tests_results_representation                 = new AutomatedTestsResultPATCHRepresentation();
         $automated_tests_results_representation->build_url      = 'http://exemple/of/url';
@@ -176,13 +176,13 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $extracted_suite_1 = new ExtractedTestResultFromJunit();
         $extracted_suite_1->addTime(2);
-        $extracted_suite_1->setStatus("passed");
-        $extracted_suite_1->addFeedbackOnResult("test suite executed");
+        $extracted_suite_1->setStatus('passed');
+        $extracted_suite_1->addFeedbackOnResult('test suite executed');
 
         $extracted_suite_2 = new ExtractedTestResultFromJunit();
         $extracted_suite_2->addTime(4);
-        $extracted_suite_2->setStatus("failed");
-        $extracted_suite_2->addFeedbackOnResult("test suite executedfailure feedback");
+        $extracted_suite_2->setStatus('failed');
+        $extracted_suite_2->addFeedbackOnResult('test suite executedfailure feedback');
 
         $automated_tests_results_representation                 = new AutomatedTestsResultPATCHRepresentation();
         $automated_tests_results_representation->build_url      = 'http://exemple/of/url';

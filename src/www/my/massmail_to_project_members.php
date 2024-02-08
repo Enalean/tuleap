@@ -27,7 +27,7 @@ if ((bool) ForgeConfig::get(MyProjects::CONFIG_DISABLE_CONTACT) === true) {
         Feedback::ERROR,
         _('Massmail to project members is disabled.')
     );
-    $GLOBALS['Response']->redirect("/my");
+    $GLOBALS['Response']->redirect('/my');
     exit();
 }
 
@@ -54,4 +54,4 @@ if ($is_sent) {
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('my_index', 'mail_not_sent', [$project_name]));
 }
 
-$GLOBALS['Response']->redirect("/my");
+$GLOBALS['Response']->redirect('/my');

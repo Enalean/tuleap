@@ -61,7 +61,7 @@ class ChartConfigurationValueRetriever
         try {
             $field = $this->configuration_field_retriever->getCapacityField($artifact->getTracker());
         } catch (Tracker_FormElement_Chart_Field_Exception $e) {
-            $this->logger->info("Artifact " . $artifact->getId() . " no capacity retrieved");
+            $this->logger->info('Artifact ' . $artifact->getId() . ' no capacity retrieved');
 
             return null;
         }

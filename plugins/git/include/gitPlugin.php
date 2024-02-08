@@ -2065,7 +2065,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     private function pluginIsConcerned($params)
     {
-        return $params['queue_name'] == "git"
+        return $params['queue_name'] == 'git'
             && is_array($params['executed_events_ids'])
             && count($params['executed_events_ids']) > 0;
     }
@@ -2239,7 +2239,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
      */
     public function importXmlProject($params)
     {
-        $logger  = new WrapperLogger($params['logger'], "GitXmlImporter");
+        $logger  = new WrapperLogger($params['logger'], 'GitXmlImporter');
         $git_dao = new GitDao();
 
         $importer = new GitXmlImporter(
@@ -2402,7 +2402,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $is_editable           = empty($gerrit_server_factory->getServersForProject($event->getProject()));
         $event->setIsEditable($is_editable);
         if (! $is_editable) {
-            $event->setMessage(dgettext('tuleap-git', " At least a git repository is migrated to gerrit"));
+            $event->setMessage(dgettext('tuleap-git', ' At least a git repository is migrated to gerrit'));
         }
     }
 

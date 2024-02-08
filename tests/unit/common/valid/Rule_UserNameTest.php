@@ -28,52 +28,52 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReservedNames(): void
     {
         $r = new Rule_UserName();
-        $this->assertTrue($r->isReservedName("root"));
-        $this->assertTrue($r->isReservedName("bin"));
-        $this->assertTrue($r->isReservedName("daemon"));
-        $this->assertTrue($r->isReservedName("adm"));
-        $this->assertTrue($r->isReservedName("lp"));
-        $this->assertTrue($r->isReservedName("sync"));
-        $this->assertTrue($r->isReservedName("shutdown"));
-        $this->assertTrue($r->isReservedName("halt"));
-        $this->assertTrue($r->isReservedName("mail"));
-        $this->assertTrue($r->isReservedName("news"));
-        $this->assertTrue($r->isReservedName("uucp"));
-        $this->assertTrue($r->isReservedName("operator"));
-        $this->assertTrue($r->isReservedName("games"));
-        $this->assertTrue($r->isReservedName("mysql"));
-        $this->assertTrue($r->isReservedName("httpd"));
-        $this->assertTrue($r->isReservedName("nobody"));
-        $this->assertTrue($r->isReservedName("dummy"));
-        $this->assertTrue($r->isReservedName("www"));
-        $this->assertTrue($r->isReservedName("cvs"));
-        $this->assertTrue($r->isReservedName("shell"));
-        $this->assertTrue($r->isReservedName("ftp"));
-        $this->assertTrue($r->isReservedName("irc"));
-        $this->assertTrue($r->isReservedName("ns"));
-        $this->assertTrue($r->isReservedName("download"));
-        $this->assertTrue($r->isReservedName("munin"));
-        $this->assertTrue($r->isReservedName("mailman"));
-        $this->assertTrue($r->isReservedName("ftpadmin"));
-        $this->assertTrue($r->isReservedName("codendiadm"));
-        $this->assertTrue($r->isReservedName("imadmin-bot"));
-        $this->assertTrue($r->isReservedName("apache"));
-        $this->assertTrue($r->isReservedName("nscd"));
-        $this->assertTrue($r->isReservedName("git"));
-        $this->assertTrue($r->isReservedName("gitolite"));
+        $this->assertTrue($r->isReservedName('root'));
+        $this->assertTrue($r->isReservedName('bin'));
+        $this->assertTrue($r->isReservedName('daemon'));
+        $this->assertTrue($r->isReservedName('adm'));
+        $this->assertTrue($r->isReservedName('lp'));
+        $this->assertTrue($r->isReservedName('sync'));
+        $this->assertTrue($r->isReservedName('shutdown'));
+        $this->assertTrue($r->isReservedName('halt'));
+        $this->assertTrue($r->isReservedName('mail'));
+        $this->assertTrue($r->isReservedName('news'));
+        $this->assertTrue($r->isReservedName('uucp'));
+        $this->assertTrue($r->isReservedName('operator'));
+        $this->assertTrue($r->isReservedName('games'));
+        $this->assertTrue($r->isReservedName('mysql'));
+        $this->assertTrue($r->isReservedName('httpd'));
+        $this->assertTrue($r->isReservedName('nobody'));
+        $this->assertTrue($r->isReservedName('dummy'));
+        $this->assertTrue($r->isReservedName('www'));
+        $this->assertTrue($r->isReservedName('cvs'));
+        $this->assertTrue($r->isReservedName('shell'));
+        $this->assertTrue($r->isReservedName('ftp'));
+        $this->assertTrue($r->isReservedName('irc'));
+        $this->assertTrue($r->isReservedName('ns'));
+        $this->assertTrue($r->isReservedName('download'));
+        $this->assertTrue($r->isReservedName('munin'));
+        $this->assertTrue($r->isReservedName('mailman'));
+        $this->assertTrue($r->isReservedName('ftpadmin'));
+        $this->assertTrue($r->isReservedName('codendiadm'));
+        $this->assertTrue($r->isReservedName('imadmin-bot'));
+        $this->assertTrue($r->isReservedName('apache'));
+        $this->assertTrue($r->isReservedName('nscd'));
+        $this->assertTrue($r->isReservedName('git'));
+        $this->assertTrue($r->isReservedName('gitolite'));
 
-        $this->assertTrue($r->isReservedName("ROOT"));
-        $this->assertTrue($r->isReservedName("WWW"));
-        $this->assertTrue($r->isReservedName("DUMMY"));
+        $this->assertTrue($r->isReservedName('ROOT'));
+        $this->assertTrue($r->isReservedName('WWW'));
+        $this->assertTrue($r->isReservedName('DUMMY'));
     }
 
     public function testReservedPrefix(): void
     {
         $r = new Rule_UserName();
-        $this->assertTrue($r->isReservedName("forge__"));
-        $this->assertTrue($r->isReservedName("forge__tutu"));
-        $this->assertFalse($r->isReservedName("forge_loic"));
-        $this->assertFalse($r->isReservedName("forgeron"));
+        $this->assertTrue($r->isReservedName('forge__'));
+        $this->assertTrue($r->isReservedName('forge__tutu'));
+        $this->assertFalse($r->isReservedName('forge_loic'));
+        $this->assertFalse($r->isReservedName('forgeron'));
     }
 
     /**
@@ -88,20 +88,20 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testMinLen(): void
     {
         $r = new Rule_UserName();
-        $this->assertTrue($r->lessThanMin(""));
-        $this->assertTrue($r->lessThanMin("a"));
-        $this->assertTrue($r->lessThanMin("ab"));
+        $this->assertTrue($r->lessThanMin(''));
+        $this->assertTrue($r->lessThanMin('a'));
+        $this->assertTrue($r->lessThanMin('ab'));
 
-        $this->assertFalse($r->lessThanMin("abc"));
-        $this->assertFalse($r->lessThanMin("abcd"));
+        $this->assertFalse($r->lessThanMin('abc'));
+        $this->assertFalse($r->lessThanMin('abcd'));
     }
 
     public function testMaxLen(): void
     {
         $r = new Rule_UserName();
-        $this->assertFalse($r->greaterThanMax("abcdefghijklmnopkrstuvwxyzabc"));
-        $this->assertFalse($r->greaterThanMax("abcdefghijklmnopkrstuvwxyzabcd"));
-        $this->assertTrue($r->greaterThanMax("abcdefghijklmnopkrstuvwxyzabcde"));
+        $this->assertFalse($r->greaterThanMax('abcdefghijklmnopkrstuvwxyzabc'));
+        $this->assertFalse($r->greaterThanMax('abcdefghijklmnopkrstuvwxyzabcd'));
+        $this->assertTrue($r->greaterThanMax('abcdefghijklmnopkrstuvwxyzabcde'));
     }
 
     public function testIllegalChars(): void
@@ -117,67 +117,67 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($r->containsIllegalChars("user\0user"));
 
         // Punctuation
-        $this->assertTrue($r->containsIllegalChars("user a"));
-        $this->assertTrue($r->containsIllegalChars("user;a"));
+        $this->assertTrue($r->containsIllegalChars('user a'));
+        $this->assertTrue($r->containsIllegalChars('user;a'));
 
         // Since rev #12892, this char is allowed
-        $this->assertFalse($r->containsIllegalChars("user.a"));
+        $this->assertFalse($r->containsIllegalChars('user.a'));
 
-        $this->assertTrue($r->containsIllegalChars("user,a"));
-        $this->assertTrue($r->containsIllegalChars("user:a"));
+        $this->assertTrue($r->containsIllegalChars('user,a'));
+        $this->assertTrue($r->containsIllegalChars('user:a'));
         $this->assertTrue($r->containsIllegalChars("user'a"));
-        $this->assertTrue($r->containsIllegalChars("user`a"));
+        $this->assertTrue($r->containsIllegalChars('user`a'));
         $this->assertTrue($r->containsIllegalChars('user"a'));
-        $this->assertTrue($r->containsIllegalChars("user<a"));
-        $this->assertTrue($r->containsIllegalChars("user>a"));
-        $this->assertTrue($r->containsIllegalChars("user[a"));
-        $this->assertTrue($r->containsIllegalChars("user]a"));
-        $this->assertTrue($r->containsIllegalChars("user{a"));
-        $this->assertTrue($r->containsIllegalChars("user}a"));
-        $this->assertTrue($r->containsIllegalChars("user(a"));
-        $this->assertTrue($r->containsIllegalChars("user)a"));
-        $this->assertTrue($r->containsIllegalChars("user|a"));
+        $this->assertTrue($r->containsIllegalChars('user<a'));
+        $this->assertTrue($r->containsIllegalChars('user>a'));
+        $this->assertTrue($r->containsIllegalChars('user[a'));
+        $this->assertTrue($r->containsIllegalChars('user]a'));
+        $this->assertTrue($r->containsIllegalChars('user{a'));
+        $this->assertTrue($r->containsIllegalChars('user}a'));
+        $this->assertTrue($r->containsIllegalChars('user(a'));
+        $this->assertTrue($r->containsIllegalChars('user)a'));
+        $this->assertTrue($r->containsIllegalChars('user|a'));
 
         // Maths
-        $this->assertTrue($r->containsIllegalChars("user+a"));
-        $this->assertTrue($r->containsIllegalChars("user=a"));
-        $this->assertTrue($r->containsIllegalChars("user/a"));
+        $this->assertTrue($r->containsIllegalChars('user+a'));
+        $this->assertTrue($r->containsIllegalChars('user=a'));
+        $this->assertTrue($r->containsIllegalChars('user/a'));
 
         // Misc
-        $this->assertTrue($r->containsIllegalChars("user~a"));
-        $this->assertTrue($r->containsIllegalChars("user@a"));
-        $this->assertTrue($r->containsIllegalChars("user!a"));
+        $this->assertTrue($r->containsIllegalChars('user~a'));
+        $this->assertTrue($r->containsIllegalChars('user@a'));
+        $this->assertTrue($r->containsIllegalChars('user!a'));
         $this->assertTrue($r->containsIllegalChars('user#a'));
         $this->assertTrue($r->containsIllegalChars('user$a'));
-        $this->assertTrue($r->containsIllegalChars("user%a"));
-        $this->assertTrue($r->containsIllegalChars("user^a"));
-        $this->assertTrue($r->containsIllegalChars("user&a"));
-        $this->assertTrue($r->containsIllegalChars("user*a"));
+        $this->assertTrue($r->containsIllegalChars('user%a'));
+        $this->assertTrue($r->containsIllegalChars('user^a'));
+        $this->assertTrue($r->containsIllegalChars('user&a'));
+        $this->assertTrue($r->containsIllegalChars('user*a'));
 
         // Accent & language
-        $this->assertTrue($r->containsIllegalChars("useré"));
-        $this->assertTrue($r->containsIllegalChars("userç"));
+        $this->assertTrue($r->containsIllegalChars('useré'));
+        $this->assertTrue($r->containsIllegalChars('userç'));
     }
 
     public function testItContainAtLeastOneChar(): void
     {
         $r = new Rule_UserName();
 
-        $this->assertFalse($r->atLeastOneChar("1"));
-        $this->assertFalse($r->atLeastOneChar("1.123"));
-        $this->assertTrue($r->atLeastOneChar("1deux"));
-        $this->assertTrue($r->atLeastOneChar("a1b"));
+        $this->assertFalse($r->atLeastOneChar('1'));
+        $this->assertFalse($r->atLeastOneChar('1.123'));
+        $this->assertTrue($r->atLeastOneChar('1deux'));
+        $this->assertTrue($r->atLeastOneChar('a1b'));
     }
 
     public function testNoSpaces(): void
     {
         $r = new Rule_UserName();
 
-        $this->assertFalse($r->noSpaces("user test"));
-        $this->assertFalse($r->noSpaces(" usertest"));
-        $this->assertFalse($r->noSpaces("usertest "));
-        $this->assertFalse($r->noSpaces("user test 1"));
-        $this->assertTrue($r->noSpaces("user"));
+        $this->assertFalse($r->noSpaces('user test'));
+        $this->assertFalse($r->noSpaces(' usertest'));
+        $this->assertFalse($r->noSpaces('usertest '));
+        $this->assertFalse($r->noSpaces('user test 1'));
+        $this->assertTrue($r->noSpaces('user'));
     }
 
     public function testUserNameNotExists(): void
@@ -188,7 +188,7 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $r = $this->createPartialMock(\Rule_UserName::class, ['_getUserManager']);
         $r->method('_getUserManager')->willReturn($um);
 
-        $this->assertFalse($r->isAlreadyUserName("usertest"));
+        $this->assertFalse($r->isAlreadyUserName('usertest'));
     }
 
     public function testUserNameExists(): void
@@ -196,12 +196,12 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $u = \Tuleap\Test\Builders\UserTestBuilder::aUser()->build();
 
         $um = $this->createMock(\UserManager::class);
-        $um->method('getUserByUserName')->with("usertest")->willReturn($u);
+        $um->method('getUserByUserName')->with('usertest')->willReturn($u);
 
         $r = $this->createPartialMock(\Rule_UserName::class, ['_getUserManager']);
         $r->method('_getUserManager')->willReturn($um);
 
-        $this->assertTrue($r->isAlreadyUserName("usertest"));
+        $this->assertTrue($r->isAlreadyUserName('usertest'));
     }
 
     public function testProjectNameNotExists(): void
@@ -212,7 +212,7 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $r = $this->createPartialMock(\Rule_UserName::class, ['_getProjectManager']);
         $r->method('_getProjectManager')->willReturn($pm);
 
-        $this->assertFalse($r->isAlreadyProjectName("usertest"));
+        $this->assertFalse($r->isAlreadyProjectName('usertest'));
     }
 
     public function testProjectNameExists(): void
@@ -220,23 +220,23 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $p = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
         $pm = $this->createMock(\ProjectManager::class);
-        $pm->method('getProjectByUnixName')->with("usertest")->willReturn($p);
+        $pm->method('getProjectByUnixName')->with('usertest')->willReturn($p);
 
         $r = $this->createPartialMock(\Rule_UserName::class, ['_getProjectManager']);
         $r->method('_getProjectManager')->willReturn($pm);
 
-        $this->assertTrue($r->isAlreadyProjectName("usertest"));
+        $this->assertTrue($r->isAlreadyProjectName('usertest'));
     }
 
     public static function dataForUnixTestProvider(): array
     {
         return [
-            'valid username'                         => [true, "coincoin"],
-            'numeric login'                          => [true, "666"],
-            'login with space'                       => [false, "coin coin"],
-            'login without enough characters'        => [false, "co"],
-            'login with illegal characters'          => [false, "coin@coin"],
-            'login with to much characters'          => [false, "coincoincoincoincoincoincoincoin"],
+            'valid username'                         => [true, 'coincoin'],
+            'numeric login'                          => [true, '666'],
+            'login with space'                       => [false, 'coin coin'],
+            'login without enough characters'        => [false, 'co'],
+            'login with illegal characters'          => [false, 'coin@coin'],
+            'login with to much characters'          => [false, 'coincoincoincoincoincoincoincoin'],
         ];
     }
 }

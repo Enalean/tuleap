@@ -124,7 +124,7 @@ class Docman_Log
             $titles[] = dgettext('tuleap-docman', 'What');
             $titles[] = dgettext('tuleap-docman', 'Old Value');
             $titles[] = dgettext('tuleap-docman', 'New Value');
-            $html    .= html_build_list_table_top($titles, false, false, false, null, "table");
+            $html    .= html_build_list_table_top($titles, false, false, false, null, 'table');
 
             foreach ($log as $entry) {
                 $html   .= '<tr>';

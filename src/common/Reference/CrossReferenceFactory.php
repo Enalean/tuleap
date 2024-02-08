@@ -66,9 +66,9 @@ class CrossReferenceFactory
      */
     public function fetchDatas()
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM cross_references
-                WHERE  (target_gid=" . db_ei($this->entity_gid) . " AND target_id='" . db_es($this->entity_id) . "' AND target_type='" . db_es($this->entity_type) . "' )
+                WHERE  (target_gid=' . db_ei($this->entity_gid) . " AND target_id='" . db_es($this->entity_id) . "' AND target_type='" . db_es($this->entity_type) . "' )
                      OR (source_gid=" . db_ei($this->entity_gid) . " AND source_id='" . db_es($this->entity_id) . "' AND source_type='" . db_es($this->entity_type) . "' )";
 
         $res = db_query($sql);
@@ -146,10 +146,10 @@ class CrossReferenceFactory
                 if (array_key_exists($key, $refArraySourceTarget)) {
                     foreach ($refArraySourceTarget[$key] as $currRef) {
                         if ($key === 'source') {
-                            $ref = $currRef->getRefSourceKey() . " #" . $currRef->getRefSourceId();
+                            $ref = $currRef->getRefSourceKey() . ' #' . $currRef->getRefSourceId();
                             $url = $currRef->getRefSourceUrl();
                         } else {
-                            $ref = $currRef->getRefTargetKey() . " #" . $currRef->getRefTargetId();
+                            $ref = $currRef->getRefTargetKey() . ' #' . $currRef->getRefTargetId();
                             $url = $currRef->getRefTargetUrl();
                         }
                         $refs[$key][] = ['ref' => $ref, 'url' => $url];
@@ -207,10 +207,10 @@ class CrossReferenceFactory
             foreach ($references_by_destination as $key => $references) {
                 foreach ($references as $reference) {
                     if ($key === 'source') {
-                        $ref = $reference->getRefSourceKey() . " #" . $reference->getRefSourceId();
+                        $ref = $reference->getRefSourceKey() . ' #' . $reference->getRefSourceId();
                         $url = $reference->getRefSourceUrl();
                     } else {
-                        $ref = $reference->getRefTargetKey() . " #" . $reference->getRefTargetId();
+                        $ref = $reference->getRefTargetKey() . ' #' . $reference->getRefTargetId();
                         $url = $reference->getRefTargetUrl();
                     }
                     $available_nature = $available_nature_collection->getNatureFromIdentifier($nature);
@@ -239,9 +239,9 @@ class CrossReferenceFactory
             foreach ($references_by_destination as $key => $references) {
                 foreach ($references as $reference) {
                     if ($key === 'source') {
-                        $ref = $reference->getRefSourceKey() . " #" . $reference->getRefSourceId();
+                        $ref = $reference->getRefSourceKey() . ' #' . $reference->getRefSourceId();
                     } else {
-                        $ref = $reference->getRefTargetKey() . " #" . $reference->getRefTargetId();
+                        $ref = $reference->getRefTargetKey() . ' #' . $reference->getRefTargetId();
                     }
                     $refs[] =  $ref;
                 }

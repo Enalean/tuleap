@@ -134,7 +134,7 @@ final class ArtifactCloser
         } catch (
             SemanticDoneNotDefinedException | SemanticDoneValueNotFoundException $exception
         ) {
-            $this->logger->warning($exception->getMessage() . " Status semantic will be checked to close the artifact.");
+            $this->logger->warning($exception->getMessage() . ' Status semantic will be checked to close the artifact.');
         }
 
         return $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker_workflow_user, $artifact);

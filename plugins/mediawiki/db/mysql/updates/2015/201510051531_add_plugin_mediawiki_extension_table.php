@@ -47,10 +47,10 @@ EOT;
      */
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_mediawiki_extension (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_mediawiki_extension (
                     project_id INT(11) UNSIGNED PRIMARY KEY,
                     extension_mleb TINYINT(1) NOT NULL DEFAULT 0
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
         $this->execDB($sql, 'An error occured while adding plugin_mediawiki_extension table');
     }
 

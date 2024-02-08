@@ -53,7 +53,7 @@ WHERE tracker_id = $tracker_id
 
             if ($this->db->dbh->exec($sql_delete_other_entries_for_tracker) === false) {
                 throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
-                    "An error occured while deleting duplicated entries for tracker in plugin_velocity_semantic_field table."
+                    'An error occured while deleting duplicated entries for tracker in plugin_velocity_semantic_field table.'
                 );
             }
         }
@@ -61,11 +61,11 @@ WHERE tracker_id = $tracker_id
 
     private function updatePrimaryKey()
     {
-        $sql_alter_table = "ALTER TABLE plugin_velocity_semantic_field DROP PRIMARY KEY, ADD PRIMARY KEY(tracker_id)";
+        $sql_alter_table = 'ALTER TABLE plugin_velocity_semantic_field DROP PRIMARY KEY, ADD PRIMARY KEY(tracker_id)';
 
         if ($this->db->dbh->exec($sql_alter_table) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
-                "An error occured while updating the primary of plugin_velocity_semantic_field table."
+                'An error occured while updating the primary of plugin_velocity_semantic_field table.'
             );
         }
     }

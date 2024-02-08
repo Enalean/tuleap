@@ -102,7 +102,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
     public function testItFillsTheReasonCollectionWhenTheTrackerHasSeveralMandatoryFields(): void
     {
         $other_required_field        = StringFieldBuilder::aStringField(151)
-            ->withLabel("Other label")
+            ->withLabel('Other label')
             ->thatIsRequired()
             ->inTracker($this->tracker)
             ->build();
@@ -117,7 +117,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
     {
         $form_element = $this->createMock(Tracker_FormElement_Field_Text::class);
         $form_element->method('userCanSubmit')->willReturn(false);
-        $form_element->method('getLabel')->willReturn("Title");
+        $form_element->method('getLabel')->willReturn('Title');
         $form_element->method('getId')->willReturn(15);
         $form_element->method('getTrackerId')->willReturn($this->tracker->getId());
         $form_element->method('isRequired')->willReturn(false);
@@ -133,7 +133,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
     {
         $this->can_submit_artifact_verifier = VerifySubmissionPermissionStub::withoutSubmitPermission();
         $other_required_field               = StringFieldBuilder::aStringField(151)
-            ->withLabel("Other label")
+            ->withLabel('Other label')
             ->thatIsRequired()
             ->inTracker($this->tracker)
             ->build();

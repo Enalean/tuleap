@@ -32,12 +32,12 @@ class b201305101622_remove_orphan_decorators extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "
+        $sql = '
             DELETE td
             FROM tracker_field_list_bind_decorator AS td
             LEFT JOIN tracker_field_list_bind_static_value AS tv
             ON td.value_id = tv.id
-            WHERE tv.id is null;";
+            WHERE tv.id is null;';
 
         $result = $this->db->dbh->exec($sql);
 

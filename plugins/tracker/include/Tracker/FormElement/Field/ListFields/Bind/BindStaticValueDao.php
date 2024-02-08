@@ -178,7 +178,7 @@ class BindStaticValueDao extends DataAccessObject
 
     public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field $field, $value_id)
     {
-        return $this->isValueHiddenable($field->getId(), $value_id, "");
+        return $this->isValueHiddenable($field->getId(), $value_id, '');
     }
 
     public function canValueBeHidden(Tracker_FormElement_Field $field, $value_id): bool

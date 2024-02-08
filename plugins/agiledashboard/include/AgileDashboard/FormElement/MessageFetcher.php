@@ -63,7 +63,7 @@ class MessageFetcher
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
 
         if (! $planning) {
-            $warnings[] = "<li>" . dgettext('tuleap-agiledashboard', 'This tracker is not a planning tracker') . "</li>";
+            $warnings[] = '<li>' . dgettext('tuleap-agiledashboard', 'This tracker is not a planning tracker') . '</li>';
             return $warnings;
         }
 
@@ -72,7 +72,7 @@ class MessageFetcher
 
             $done_semantic = $this->semantic_done_factory->getInstanceByTracker($backlog_tracker);
             if (! $done_semantic->isSemanticDefined()) {
-                $warnings[] = "<li>" .
+                $warnings[] = '<li>' .
                     sprintf(
                         dgettext(
                             'tuleap-agiledashboard',
@@ -81,12 +81,12 @@ class MessageFetcher
                         $purifier->purify($done_semantic->getUrl()),
                         $purifier->purify($backlog_tracker_name)
                     ) .
-                    "</li>";
+                    '</li>';
             }
 
             $initial_effort_semantic = $this->initial_effort_factory->getByTracker($backlog_tracker);
             if (! $initial_effort_semantic->getField()) {
-                $warnings[] = "<li>" .
+                $warnings[] = '<li>' .
                     sprintf(
                         dgettext(
                             'tuleap-agiledashboard',
@@ -95,7 +95,7 @@ class MessageFetcher
                         $purifier->purify($initial_effort_semantic->getUrl()),
                         $purifier->purify($backlog_tracker_name)
                     ) .
-                    "</li>";
+                    '</li>';
             }
         }
 

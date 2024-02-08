@@ -70,7 +70,7 @@ final class PotentialTeamsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->teams_of_program_searcher,
                 $this->all_program_searcher,
                 SearchProjectsUserIsAdminStub::buildWithProjects(
-                    ProjectReferenceStub::withValues(self::TEAM, 'project', "project", '')
+                    ProjectReferenceStub::withValues(self::TEAM, 'project', 'project', '')
                 ),
                 $this->program,
                 $this->user_identifier
@@ -80,14 +80,14 @@ final class PotentialTeamsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildPotentialTeamWhenUserIsAdminOfPotentialTeamThatNotAggregatedTeamAndPotentialTeamIsNotProgram(): void
     {
-        $program_project = ProjectReferenceStub::withValues(self::PROGRAM, 'a_project', "a_project", "");
+        $program_project = ProjectReferenceStub::withValues(self::PROGRAM, 'a_project', 'a_project', '');
 
         $potential_teams = PotentialTeamsCollection::buildPotentialTeams(
             $this->teams_of_program_searcher,
             $this->all_program_searcher,
             SearchProjectsUserIsAdminStub::buildWithProjects(
-                ProjectReferenceStub::withValues(self::TEAM, 'is_team', "is_team", ""),
-                ProjectReferenceStub::withValues(124, 'potential_team', "potential_team", ""),
+                ProjectReferenceStub::withValues(self::TEAM, 'is_team', 'is_team', ''),
+                ProjectReferenceStub::withValues(124, 'potential_team', 'potential_team', ''),
                 $program_project,
             ),
             ProgramForAdministrationIdentifierBuilder::buildWithId(self::PROGRAM),

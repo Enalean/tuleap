@@ -115,7 +115,7 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
             return new ParametrizedListFromWhere(
                 self::OPENLIST_FROM,
                 self::LIST_FROM,
-                "IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)",
+                'IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)',
                 "$filter_alias.artifact_id IS NOT NULL",
                 [Tracker_FormElement_Field_List::NONE_VALUE],
             );
@@ -124,7 +124,7 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,
             self::LIST_FROM,
-            "user1.user_name = ? OR user2.user_name = ? OR tfov.label = ?",
+            'user1.user_name = ? OR user2.user_name = ? OR tfov.label = ?',
             "$filter_alias.artifact_id IS NOT NULL",
             [$value, $value, $value],
         );
@@ -140,7 +140,7 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
             return new ParametrizedListFromWhere(
                 self::OPENLIST_FROM,
                 self::LIST_FROM,
-                "IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)",
+                'IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)',
                 "$filter_alias.artifact_id IS NULL",
                 [Tracker_FormElement_Field_List::NONE_VALUE],
             );
@@ -149,7 +149,7 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,
             self::LIST_FROM,
-            "user1.user_name = ? OR user2.user_name = ? OR tfov.label = ?",
+            'user1.user_name = ? OR user2.user_name = ? OR tfov.label = ?',
             "$filter_alias.artifact_id IS NULL",
             [$value, $value, $value],
         );
@@ -190,9 +190,9 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
         InValueWrapper $wrapper,
     ): ParametrizedListFromWhere {
         $values          = $this->parseValueWrappersToValues($wrapper->getValueWrappers());
-        $user1_statement = EasyStatement::open()->in("user1.user_name IN (?*)", $values);
-        $user2_statement = EasyStatement::open()->in("user2.user_name IN (?*)", $values);
-        $tfov_statement  = EasyStatement::open()->in("tfov.label IN (?*)", $values);
+        $user1_statement = EasyStatement::open()->in('user1.user_name IN (?*)', $values);
+        $user2_statement = EasyStatement::open()->in('user2.user_name IN (?*)', $values);
+        $tfov_statement  = EasyStatement::open()->in('tfov.label IN (?*)', $values);
 
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,
@@ -208,9 +208,9 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
         InValueWrapper $wrapper,
     ): ParametrizedListFromWhere {
         $values          = $this->parseValueWrappersToValues($wrapper->getValueWrappers());
-        $user1_statement = EasyStatement::open()->in("user1.user_name IN (?*)", $values);
-        $user2_statement = EasyStatement::open()->in("user2.user_name IN (?*)", $values);
-        $tfov_statement  = EasyStatement::open()->in("tfov.label IN (?*)", $values);
+        $user1_statement = EasyStatement::open()->in('user1.user_name IN (?*)', $values);
+        $user2_statement = EasyStatement::open()->in('user2.user_name IN (?*)', $values);
+        $tfov_statement  = EasyStatement::open()->in('tfov.label IN (?*)', $values);
 
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,

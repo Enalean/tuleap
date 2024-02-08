@@ -117,10 +117,10 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends \Tuleap\Test\PHPUnit\Tes
             ])
         );
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
-        $e = new Exception("failure detail");
+        $e = new Exception('failure detail');
         $this->project_creator->shouldReceive('createGerritProject')->andThrows($e);
-        $this->event->shouldReceive('error')->with("failure detail")->once();
-        $this->logger->shouldReceive('error')->with("An error occured while processing event: " . $this->event->verbalizeParameters(null), ['exception' => $e])->once();
+        $this->event->shouldReceive('error')->with('failure detail')->once();
+        $this->logger->shouldReceive('error')->with('An error occured while processing event: ' . $this->event->verbalizeParameters(null), ['exception' => $e])->once();
         $this->event->process();
     }
 
@@ -133,10 +133,10 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends \Tuleap\Test\PHPUnit\Tes
             ])
         );
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
-        $e = new Git_Driver_Gerrit_Exception("failure detail");
+        $e = new Git_Driver_Gerrit_Exception('failure detail');
         $this->project_creator->shouldReceive('createGerritProject')->andThrows($e);
-        $this->event->shouldReceive('error')->with("gerrit: failure detail")->once();
-        $this->logger->shouldReceive('error')->with("Gerrit failure: " . $this->event->verbalizeParameters(null), ['exception' => $e])->once();
+        $this->event->shouldReceive('error')->with('gerrit: failure detail')->once();
+        $this->logger->shouldReceive('error')->with('Gerrit failure: ' . $this->event->verbalizeParameters(null), ['exception' => $e])->once();
         $this->event->process();
     }
 
@@ -148,10 +148,10 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends \Tuleap\Test\PHPUnit\Tes
                 'user_id' => 0,
             ])
         );
-        $e = new Exception("failure detail");
+        $e = new Exception('failure detail');
         $this->server_factory->shouldReceive('getServer')->andThrows($e);
-        $this->event->shouldReceive('error')->with("failure detail")->once();
-        $this->logger->shouldReceive('error')->with("An error occured while processing event: " . $this->event->verbalizeParameters(null), ['exception' => $e])->once();
+        $this->event->shouldReceive('error')->with('failure detail')->once();
+        $this->logger->shouldReceive('error')->with('An error occured while processing event: ' . $this->event->verbalizeParameters(null), ['exception' => $e])->once();
         $this->event->process();
     }
 
@@ -166,7 +166,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
-        $this->project_creator->shouldReceive('createGerritProject')->with($this->gerrit_server, $this->repository, "true")->once();
+        $this->project_creator->shouldReceive('createGerritProject')->with($this->gerrit_server, $this->repository, 'true')->once();
         $this->event->process();
     }
 }

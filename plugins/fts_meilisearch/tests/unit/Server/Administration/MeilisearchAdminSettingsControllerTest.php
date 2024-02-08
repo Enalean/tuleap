@@ -71,7 +71,7 @@ final class MeilisearchAdminSettingsControllerTest extends TestCase
 
     private static function buildController(AdminPageRenderer $admin_page_renderer, \PFUser $current_user, bool $is_local_server): MeilisearchAdminSettingsController
     {
-        $key = $is_local_server ? new ConcealedString("a") : null;
+        $key = $is_local_server ? new ConcealedString('a') : null;
 
         $csrf_store = [];
         return new MeilisearchAdminSettingsController(

@@ -71,8 +71,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotCheckTrackerLengthInProjectDuplicationContext(): void
     {
         $project_id  = 101;
-        $public_name = "Bugs";
-        $shortname   = "bugs_with_a_very_very_long_shortname";
+        $public_name = 'Bugs';
+        $shortname   = 'bugs_with_a_very_very_long_shortname';
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
@@ -91,8 +91,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowAnExceptionWhenNewTrackerLengthIsInvalidDuringTrackerDuplication(): void
     {
-        $shortname   = "bugs_with_a_very_very_long_shortname";
-        $template_id = "25";
+        $shortname   = 'bugs_with_a_very_very_long_shortname';
+        $template_id = '25';
         $user        = \Mockery::mock(\PFUser::class);
 
         $this->expectException(TrackerIsInvalidException::class);
@@ -106,8 +106,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowAnExceptionWhenOriginalTrackerIsNotFound(): void
     {
-        $shortname   = "bugs";
-        $template_id = "12";
+        $shortname   = 'bugs';
+        $template_id = '12';
         $user        = \Mockery::mock(\PFUser::class);
 
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
@@ -123,8 +123,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowAnExceptionWhenUserCanNotReadOriginalTrackerDuringTrackerDuplication(): void
     {
-        $shortname   = "bugs";
-        $template_id = "12";
+        $shortname   = 'bugs';
+        $template_id = '12';
         $user        = \Mockery::mock(\PFUser::class);
 
         $tracker = \Mockery::mock(\Tracker::class);
@@ -145,8 +145,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCheckUserPermissionsWhenTrackerComeFromAProjectTemplate(): void
     {
-        $shortname   = "bugs";
-        $template_id = "12";
+        $shortname   = 'bugs';
+        $template_id = '12';
         $user        = \Mockery::mock(\PFUser::class);
 
         $tracker = \Mockery::mock(\Tracker::class);
@@ -166,8 +166,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotThrowAnExceptionWhenOldTrackerLengthWasInvalid(): void
     {
         $project_id  = 101;
-        $public_name = "New bugs";
-        $shortname   = "new_bugs";
+        $public_name = 'New bugs';
+        $shortname   = 'new_bugs';
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
@@ -186,8 +186,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenPublicNameIsNotProvided(): void
     {
         $project_id  = 101;
-        $public_name = "";
-        $shortname   = "bugs";
+        $public_name = '';
+        $shortname   = 'bugs';
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Name, color, and short name are required.');
@@ -201,8 +201,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenShortNameIsNotProvided(): void
     {
         $project_id  = 101;
-        $public_name = "Bugs";
-        $shortname   = "";
+        $public_name = 'Bugs';
+        $shortname   = '';
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Name, color, and short name are required.');
         $this->checker->checkAtProjectCreation(
@@ -215,8 +215,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfPublicNameAlreadyExists(): void
     {
         $project_id  = 101;
-        $public_name = "New bugs";
-        $shortname   = "bugs";
+        $public_name = 'New bugs';
+        $shortname   = 'bugs';
 
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(true);
         $this->expectException(TrackerIsInvalidException::class);
@@ -232,8 +232,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenShortNameIsInvalid(): void
     {
         $project_id  = 101;
-        $public_name = "New bugs";
-        $shortname   = "+++bugs+++";
+        $public_name = 'New bugs';
+        $shortname   = '+++bugs+++';
 
         $this->tracker_dao->shouldReceive('isNameExists')->andReturn(false);
         $this->expectException(TrackerIsInvalidException::class);
@@ -251,8 +251,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfShortNameAlreadyExists(): void
     {
         $project_id  = 101;
-        $public_name = "New bugs";
-        $shortname   = "new_bugs";
+        $public_name = 'New bugs';
+        $shortname   = 'new_bugs';
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(true);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
@@ -271,8 +271,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfShortNameAlreadyExistsInPendingJiraImport(): void
     {
         $project_id  = 101;
-        $public_name = "New bugs";
-        $shortname   = "new_bugs";
+        $public_name = 'New bugs';
+        $shortname   = 'new_bugs';
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
@@ -291,8 +291,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfNameAlreadyExists(): void
     {
         $project_id  = 101;
-        $public_name = "New bugs";
-        $shortname   = "new_bugs";
+        $public_name = 'New bugs';
+        $shortname   = 'new_bugs';
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(true);
@@ -311,8 +311,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfNameAlreadyExistsInPendingJiraImport(): void
     {
         $project_id  = 101;
-        $public_name = "New bugs";
-        $shortname   = "new_bugs";
+        $public_name = 'New bugs';
+        $shortname   = 'new_bugs';
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
@@ -331,8 +331,8 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenReferenceKeywordAlreadyExists(): void
     {
         $project_id  = 101;
-        $public_name = "New bugs";
-        $shortname   = "new_bugs";
+        $public_name = 'New bugs';
+        $shortname   = 'new_bugs';
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);

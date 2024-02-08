@@ -169,7 +169,7 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     protected function getClassNameForPluginName($name): array
     {
         $name       = self::verifyPluginName($name);
-        $class_name = $name . "Plugin";
+        $class_name = $name . 'Plugin';
         $custom     = false;
         $class_path = '';
         $file_name  = '/' . $name . '/include/' . $class_name . '.php';

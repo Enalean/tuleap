@@ -29,7 +29,7 @@ class BurndownCacheDateRetriever
     {
         $date = new DateTime();
         $date->setTime(0, 0, 0);
-        $date->modify("-1 second");
+        $date->modify('-1 second');
         return $date->getTimestamp();
     }
 

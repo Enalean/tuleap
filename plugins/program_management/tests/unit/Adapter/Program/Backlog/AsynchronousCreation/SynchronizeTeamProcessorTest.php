@@ -50,7 +50,7 @@ final class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_manager = $this->createMock(\UserManager::class);
         $user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
         $project_manager = $this->createMock(\ProjectManager::class);
-        $project_manager->method('getProject')->willReturn(new \Project(['group_id' => self::PROGRAM_ID, 'group_name' => "project", "unix_group_name" => "project", "icon_codepoint" => ""]));
+        $project_manager->method('getProject')->willReturn(new \Project(['group_id' => self::PROGRAM_ID, 'group_name' => 'project', 'unix_group_name' => 'project', 'icon_codepoint' => '']));
         $clear_pending_synchronisation = ClearPendingTeamSynchronizationStub::withCount();
         (new SynchronizeTeamProcessor(
             MessageLog::buildFromLogger($logger),
@@ -74,7 +74,7 @@ final class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             StoreTeamSynchronizationErrorHasOccurredStub::withCount(),
         ))->processTeamSynchronization($event);
 
-        self::assertTrue($logger->hasDebugThatContains("Team 123 of Program 1 needs PI and Iterations synchronization"));
+        self::assertTrue($logger->hasDebugThatContains('Team 123 of Program 1 needs PI and Iterations synchronization'));
         self::assertSame(1, $clear_pending_synchronisation->getCallCount());
     }
 
@@ -85,7 +85,7 @@ final class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_manager = $this->createMock(\UserManager::class);
         $user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
         $project_manager = $this->createMock(\ProjectManager::class);
-        $project_manager->method('getProject')->willReturn(new \Project(['group_id' => self::PROGRAM_ID, 'group_name' => "project", "unix_group_name" => "project", "icon_codepoint" => ""]));
+        $project_manager->method('getProject')->willReturn(new \Project(['group_id' => self::PROGRAM_ID, 'group_name' => 'project', 'unix_group_name' => 'project', 'icon_codepoint' => '']));
         $clear_pending_synchronisation = ClearPendingTeamSynchronizationStub::withCount();
         $store_error_has_occurred      = StoreTeamSynchronizationErrorHasOccurredStub::withCount();
         (new SynchronizeTeamProcessor(

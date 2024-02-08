@@ -43,7 +43,7 @@ class TrackerIdSharingDao extends DataAccessObject
      */
     public function generateTrackerId()
     {
-        $sql = "INSERT INTO tracker_idsharing_tracker VALUES ()";
+        $sql = 'INSERT INTO tracker_idsharing_tracker VALUES ()';
         return $this->updateAndGetLastId($sql);
     }
 
@@ -54,7 +54,7 @@ class TrackerIdSharingDao extends DataAccessObject
      */
     public function generateArtifactId()
     {
-        $sql = "INSERT INTO tracker_idsharing_artifact VALUES ()";
+        $sql = 'INSERT INTO tracker_idsharing_artifact VALUES ()';
         return $this->updateAndGetLastId($sql);
     }
 }

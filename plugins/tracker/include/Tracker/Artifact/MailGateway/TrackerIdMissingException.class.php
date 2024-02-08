@@ -22,6 +22,6 @@ class Tracker_Artifact_MailGateway_TrackerIdMissingException extends Tracker_Exc
 {
     public function __construct()
     {
-        parent::__construct("Tracker ID seems to be missing");
+        parent::__construct('Tracker ID seems to be missing');
     }
 }

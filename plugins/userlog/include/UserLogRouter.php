@@ -65,7 +65,7 @@ class UserLogRouter
         $action = $request->get('action');
 
         switch ($action) {
-            case "export":
+            case 'export':
                 $this->user_log_exporter->exportLogs($day);
                 break;
             default:

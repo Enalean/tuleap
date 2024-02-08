@@ -153,9 +153,9 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->assertCount(2, $hierarchy);
 
         $sprint_child = $hierarchy[0];
-        $this->assertEquals("Sprints", $sprint_child->getData()['name']);
+        $this->assertEquals('Sprints', $sprint_child->getData()['name']);
         $sprint_child = $hierarchy[1];
-        $this->assertEquals("Stories", $sprint_child->getData()['name']);
+        $this->assertEquals('Stories', $sprint_child->getData()['name']);
     }
 
     private function buildPresenter(): Tracker_Hierarchy_Presenter
@@ -182,7 +182,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->once()
             ->andReturnFalse();
 
-        $this->event_manager->method("dispatch")->willReturn(
+        $this->event_manager->method('dispatch')->willReturn(
             new TrackerHierarchyUpdateEvent(
                 $this->hierarchical_tracker->getUnhierarchizedTracker(),
                 $children_ids,
@@ -211,7 +211,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->once()
             ->andReturnTrue();
 
-        $this->event_manager->method("dispatch")->willReturn(
+        $this->event_manager->method('dispatch')->willReturn(
             new TrackerHierarchyUpdateEvent(
                 $this->hierarchical_tracker->getUnhierarchizedTracker(),
                 $children_ids,
@@ -240,7 +240,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->once()
             ->andReturnFalse();
 
-        $this->event_manager->method("dispatch")->willReturn(
+        $this->event_manager->method('dispatch')->willReturn(
             new TrackerHierarchyUpdateEvent(
                 $this->hierarchical_tracker->getUnhierarchizedTracker(),
                 $children_ids,

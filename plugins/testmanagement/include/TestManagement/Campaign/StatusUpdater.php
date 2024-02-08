@@ -106,7 +106,7 @@ class StatusUpdater
 
         $artifact->createNewChangeset(
             $fields_data,
-            "",
+            '',
             $user
         );
     }

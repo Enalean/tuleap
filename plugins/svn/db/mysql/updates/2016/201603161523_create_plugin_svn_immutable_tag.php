@@ -30,11 +30,11 @@ class b201603161523_create_plugin_svn_immutable_tag extends \Tuleap\ForgeUpgrade
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_svn_immutable_tag (
+        $sql = 'CREATE TABLE plugin_svn_immutable_tag (
                   repository_id INT(11) PRIMARY KEY,
                   paths TEXT NOT NULL,
                   whitelist TEXT NOT NULL
-              )";
+              )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

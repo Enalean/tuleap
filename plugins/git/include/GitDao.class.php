@@ -126,7 +126,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         if ($repository_backend instanceof Git_Backend_Gitolite) {
             $backendType = self::BACKEND_GITOLITE;
         } else {
-            throw new \LogicException(sprintf("Unexpected Git backend (%s)", $repository_backend::class));
+            throw new \LogicException(sprintf('Unexpected Git backend (%s)', $repository_backend::class));
         }
 
         try {
@@ -716,12 +716,12 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         }
 
         $limit_parameters = [$limit, $offset];
-        $limit_statement  = "LIMIT ? OFFSET ?";
-        $order            = "push_date DESC";
+        $limit_statement  = 'LIMIT ? OFFSET ?';
+        $order            = 'push_date DESC';
         if ($order_by === self::ORDER_BY_PATH) {
-            $order            = "git.repository_name ASC";
+            $order            = 'git.repository_name ASC';
             $limit_parameters = [];
-            $limit_statement  = "";
+            $limit_statement  = '';
         }
         $query_parameters = array_merge($additional_where_statement->values(), $limit_parameters);
 
@@ -817,10 +817,10 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
 
     private function getDefaultPermissions($permission_type)
     {
-        $default_sql = "SELECT ugroup_id
+        $default_sql = 'SELECT ugroup_id
                         FROM permissions_values
                         WHERE permission_type = ?
-                            AND is_default = 1";
+                            AND is_default = 1';
 
         return $this->getDB()->run($default_sql, $permission_type);
     }

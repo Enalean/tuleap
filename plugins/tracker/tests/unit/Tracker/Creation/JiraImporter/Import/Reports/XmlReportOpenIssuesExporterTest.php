@@ -206,7 +206,7 @@ final class XmlReportOpenIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNull($report_node['is_default']);
 
         $report_node_name = $report_node->name;
-        self::assertEquals("Open issues", $report_node_name);
+        self::assertEquals('Open issues', $report_node_name);
 
         $reports_node_description = $report_node->description;
         self::assertEquals('All open issues in this tracker', $reports_node_description);
@@ -216,20 +216,20 @@ final class XmlReportOpenIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertCount(4, $criterias->children());
 
         $criterion_01 = $criterias->criteria[0];
-        self::assertSame("Fstatus", (string) $criterion_01->field['REF']);
-        self::assertSame("1", (string) $criterion_01['is_advanced']);
-        self::assertSame("list", (string) $criterion_01->criteria_value['type']);
-        self::assertSame("V303", (string) $criterion_01->criteria_value->selected_value[0]['REF']);
-        self::assertSame("V304", (string) $criterion_01->criteria_value->selected_value[1]['REF']);
+        self::assertSame('Fstatus', (string) $criterion_01->field['REF']);
+        self::assertSame('1', (string) $criterion_01['is_advanced']);
+        self::assertSame('list', (string) $criterion_01->criteria_value['type']);
+        self::assertSame('V303', (string) $criterion_01->criteria_value->selected_value[0]['REF']);
+        self::assertSame('V304', (string) $criterion_01->criteria_value->selected_value[1]['REF']);
 
         $criterion_02 = $criterias->criteria[1];
-        self::assertSame("Fsummary", (string) $criterion_02->field['REF']);
+        self::assertSame('Fsummary', (string) $criterion_02->field['REF']);
 
         $criterion_03 = $criterias->criteria[2];
-        self::assertSame("Fdescription", (string) $criterion_03->field['REF']);
+        self::assertSame('Fdescription', (string) $criterion_03->field['REF']);
 
         $criterion_04 = $criterias->criteria[3];
-        self::assertSame("Fpriority", (string) $criterion_04->field['REF']);
+        self::assertSame('Fpriority', (string) $criterion_04->field['REF']);
 
         $renderers_node = $report_node->renderers;
         self::assertNotNull($renderers_node);
@@ -237,9 +237,9 @@ final class XmlReportOpenIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
         $renderer_node = $renderers_node->renderer;
         self::assertNotNull($renderer_node);
 
-        self::assertEquals("table", $renderer_node['type']);
-        self::assertEquals("0", $renderer_node['rank']);
-        self::assertEquals("15", $renderer_node['chunksz']);
+        self::assertEquals('table', $renderer_node['type']);
+        self::assertEquals('0', $renderer_node['rank']);
+        self::assertEquals('15', $renderer_node['chunksz']);
 
         $renderer_name = $renderer_node->name;
         self::assertNotNull($renderer_name);
@@ -249,18 +249,18 @@ final class XmlReportOpenIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertCount(4, $columns_node->children());
 
         $field_01 = $columns_node->field[0];
-        self::assertEquals("Fsummary", (string) $field_01['REF']);
+        self::assertEquals('Fsummary', (string) $field_01['REF']);
 
         $field_02 = $columns_node->field[1];
-        self::assertEquals("Fstatus", (string) $field_02['REF']);
+        self::assertEquals('Fstatus', (string) $field_02['REF']);
 
         $field_03 = $columns_node->field[2];
-        self::assertEquals("Fjira_issue_url", (string) $field_03['REF']);
+        self::assertEquals('Fjira_issue_url', (string) $field_03['REF']);
 
         $field_04 = $columns_node->field[3];
-        self::assertEquals("Fpriority", (string) $field_04['REF']);
+        self::assertEquals('Fpriority', (string) $field_04['REF']);
 
-        self::assertEquals("Results", (string) $renderer_name);
+        self::assertEquals('Results', (string) $renderer_name);
     }
 
     private function getPreWiredIDGenerator(int $pre_wired_value): IDGenerator

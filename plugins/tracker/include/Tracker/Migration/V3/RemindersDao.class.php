@@ -90,18 +90,18 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
             $values = [];
             foreach ($roles as $role) {
                 $role     = (int) $this->da->escapeInt($role);
-                $values[] = " (
-                        " . $reminderId . ",
-                        " . $role . "
-                    )";
+                $values[] = ' (
+                        ' . $reminderId . ',
+                        ' . $role . '
+                    )';
             }
             $values = implode(', ', $values);
-            $sql    = "INSERT INTO tracker_reminder_notified_roles
+            $sql    = 'INSERT INTO tracker_reminder_notified_roles
                         (
                         reminder_id,
                         role_id
                         )
-                    VALUES " . $values;
+                    VALUES ' . $values;
             $this->update($sql);
         }
     }
@@ -139,9 +139,9 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
         $roles = [];
         foreach (explode(',', $notified_people) as $id) {
             $id   = trim($id);
-            $role = ["1", "2", "4"];
+            $role = ['1', '2', '4'];
             if (in_array($id, $role)) {
-                $roles[] = ($id == "4") ? "3" : $id;
+                $roles[] = ($id == '4') ? '3' : $id;
             }
         }
         return $roles;

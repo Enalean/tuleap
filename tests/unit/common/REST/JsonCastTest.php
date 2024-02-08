@@ -129,7 +129,7 @@ final class JsonCastTest extends \Tuleap\Test\PHPUnit\TestCase
             '2019-03-21 14:47:03',
             new DateTimeZone('+0400')
         );
-        $this->assertEquals("2019-03-21T14:47:03+04:00", JsonCast::fromDateTimeToDate($value));
+        $this->assertEquals('2019-03-21T14:47:03+04:00', JsonCast::fromDateTimeToDate($value));
     }
 
     public function testFromDateTimeToDateWithDateTimeImmutable(): void
@@ -139,7 +139,7 @@ final class JsonCastTest extends \Tuleap\Test\PHPUnit\TestCase
             '2019-03-21 14:47:03',
             new DateTimeZone('+0400')
         );
-        $this->assertEquals("2019-03-21T14:47:03+04:00", JsonCast::fromDateTimeToDate($value));
+        $this->assertEquals('2019-03-21T14:47:03+04:00', JsonCast::fromDateTimeToDate($value));
     }
 
     public function testFromDateTimeToDateReturnsNullWhenNullGiven(): void

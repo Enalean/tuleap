@@ -547,7 +547,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         );
 
         self::assertTrue(
-            $logger->hasError("Unable to add restricted user #201 to project #111.")
+            $logger->hasError('Unable to add restricted user #201 to project #111.')
         );
     }
 }

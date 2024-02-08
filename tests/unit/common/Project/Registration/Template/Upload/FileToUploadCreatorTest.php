@@ -38,7 +38,7 @@ final class FileToUploadCreatorTest extends TestCase
             SaveFileUploadStub::withASavedFile(self::SAVED_FILE_ID),
         ))->creatFileToUpload(
             new ProjectFilePOSTRepresentation(
-                "BRZ",
+                'BRZ',
                 1277
             ),
             UserTestBuilder::buildWithId(101),

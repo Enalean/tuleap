@@ -63,7 +63,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $status_field = $xml->xpath('//formElement[name="' . AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME . '"]//formElement[name="' . AlwaysThereFieldsExporter::JIRA_STATUS_NAME . '"]')[0];
         assertEquals(\Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $status_field['type'], 'There is a status field in the right column');
-        assertEquals("Status", $status_field->label);
+        assertEquals('Status', $status_field->label);
         assertEquals(\Tracker_FormElement_Field_List_Bind_Static::TYPE, $status_field->bind['type']);
         assertCount(3, $status_field->bind->items->item);
         assertEquals('V1', $status_field->bind->items->item[0]['ID']);

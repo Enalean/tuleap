@@ -863,7 +863,7 @@ class Git extends PluginController
                 $this->addAction('getProjectRepositoryList', [$this->groupId]);
                 $this->addView('forkRepositories');
                 break;
-            case "view_last_git_pushes":
+            case 'view_last_git_pushes':
                 $vGroupId = new Valid_GroupId();
                 $vGroupId->required();
                 if ($this->request->valid($vGroupId)) {
@@ -992,7 +992,7 @@ class Git extends PluginController
                 break;
             // LIST
             default:
-                $GLOBALS['Response']->permanentRedirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . "/");
+                $GLOBALS['Response']->permanentRedirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
 
                 break;
         }

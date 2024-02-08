@@ -9,7 +9,7 @@
  */
 
 if (! file_exists($argv[1])) {
-    fwrite(STDERR, "Usage: collect_xml_data.php archive.zip" . PHP_EOL);
+    fwrite(STDERR, 'Usage: collect_xml_data.php archive.zip' . PHP_EOL);
     exit(1);
 }
 

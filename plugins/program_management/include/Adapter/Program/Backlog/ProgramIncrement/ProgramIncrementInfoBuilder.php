@@ -45,11 +45,11 @@ final class ProgramIncrementInfoBuilder implements BuildProgramIncrementInfo
 
         $formatted_start_date = ($increment->start_date)
             ? date(dgettext('tuleap-program_management', 'M d'), $increment->start_date)
-            : "";
+            : '';
 
         $formatted_end_date = ($increment->end_date)
             ? date(dgettext('tuleap-program_management', 'M d'), $increment->end_date)
-            : "";
+            : '';
 
         return ProgramIncrementInfo::fromIncrementInfo(
             $increment->id,

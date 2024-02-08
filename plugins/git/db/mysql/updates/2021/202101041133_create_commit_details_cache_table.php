@@ -35,7 +35,7 @@ final class b202101041133_create_commit_details_cache_table extends \Tuleap\Forg
 
     public function up(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_git_commit_details_cache (
                 repository_id INT(10) UNSIGNED NOT NULL,
                 commit_sha1 BINARY(20) NOT NULL,
@@ -47,7 +47,7 @@ final class b202101041133_create_commit_details_cache_table extends \Tuleap\Forg
                 first_tag TEXT NOT NULL,
                 INDEX idx(repository_id, commit_sha1)
             ) ENGINE=InnoDB
-        ";
+        ';
 
         $this->db->createTable('plugin_git_commit_details_cache', $sql);
     }

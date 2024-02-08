@@ -87,9 +87,9 @@ class Tracker_DateReminderFactory
             $roles                   = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
             $notify_closed_artifacts = $this->date_reminder_renderer->validateNotifyClosedArtifacts($request);
             if (! empty($ugroups)) {
-                $ugroups = join(",", $ugroups);
+                $ugroups = join(',', $ugroups);
             } else {
-                $ugroups = "";
+                $ugroups = '';
             }
             $this->checkDuplicatedRemindersAtCreation($fieldId, $notificationType, $distance);
             $this->isReminderBeforeOpenDate($fieldId, $notificationType);
@@ -108,11 +108,11 @@ class Tracker_DateReminderFactory
             (bool) $notify_closed_artifacts
         );
         if ($reminder) {
-            $roles      = implode(",", $roles);
+            $roles      = implode(',', $roles);
             $historyDao = new ProjectHistoryDao();
             $historyDao->groupAddHistory(
-                "tracker_date_reminder_add",
-                $this->getTracker()->getName() . ":" . $fieldId,
+                'tracker_date_reminder_add',
+                $this->getTracker()->getName() . ':' . $fieldId,
                 $this->getTracker()->getGroupId(),
                 [$distance . ' Day(s), Type: ' . $notificationType . ' ProjectUGroup(s): ' . $ugroups . 'Tracker Role(s): ' . $roles . ', Notify closed artifacts: ' . $notify_closed_artifacts],
             );
@@ -209,9 +209,9 @@ class Tracker_DateReminderFactory
             $ugroups                 = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
             $roles                   = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
             if (! empty($ugroups)) {
-                $ugroups = join(",", $ugroups);
+                $ugroups = join(',', $ugroups);
             } else {
-                $ugroups = "";
+                $ugroups = '';
             }
             $fieldId = $this->date_reminder_renderer->validateFieldId($request);
             if ($status == 1) {
@@ -233,13 +233,13 @@ class Tracker_DateReminderFactory
             (bool) $notify_closed_artifacts,
         );
         if ($updateReminder) {
-            $roles      = implode(",", $roles);
+            $roles      = implode(',', $roles);
             $historyDao = new ProjectHistoryDao();
             $historyDao->groupAddHistory(
-                "tracker_date_reminder_edit",
-                $this->getTracker()->getName() . ":" . $reminder->getId(),
+                'tracker_date_reminder_edit',
+                $this->getTracker()->getName() . ':' . $reminder->getId(),
                 $this->getTracker()->getGroupId(),
-                ["Id: " . $reminder->getId() . ", Type: " . $notificationType . ", ProjectUGroup(s): " . $ugroups . ", Tracker Role(s): " . $roles . ", Day(s): " . $distance . ", Status: " . $status . ", Notify closed artifacts: " . $notify_closed_artifacts],
+                ['Id: ' . $reminder->getId() . ', Type: ' . $notificationType . ', ProjectUGroup(s): ' . $ugroups . ', Tracker Role(s): ' . $roles . ', Day(s): ' . $distance . ', Status: ' . $status . ', Notify closed artifacts: ' . $notify_closed_artifacts],
             );
             return $updateReminder;
         } else {

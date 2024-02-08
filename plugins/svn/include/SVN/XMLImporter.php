@@ -54,7 +54,7 @@ class XMLImporter
         }
 
         foreach ($xml->svn->children() as $xml_repo) {
-            if ($xml_repo->getName() != "repository") {
+            if ($xml_repo->getName() != 'repository') {
                 continue;
             }
             $this->repositories_data[] = new XMLRepositoryImporter(
@@ -80,7 +80,7 @@ class XMLImporter
         RuleName $rule_name,
         \PFUser $committer,
     ) {
-        $logger->info("[svn] Importing " . count($this->repositories_data) . " SVN repositories");
+        $logger->info('[svn] Importing ' . count($this->repositories_data) . ' SVN repositories');
         foreach ($this->repositories_data as $repo) {
             $repo->import(
                 $configuration,
@@ -92,6 +92,6 @@ class XMLImporter
                 $committer
             );
         }
-        $logger->info("[svn] Subversion Import Finished");
+        $logger->info('[svn] Subversion Import Finished');
     }
 }

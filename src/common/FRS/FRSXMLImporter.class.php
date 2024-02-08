@@ -75,7 +75,7 @@ class FRSXMLImporter
         ?FRSFileTypeDao $filetype_dao = null,
         ?PermissionsManager $permission_manager = null,
     ) {
-        $this->logger             = new WrapperLogger($logger, "FRSXMLImporter");
+        $this->logger             = new WrapperLogger($logger, 'FRSXMLImporter');
         $this->package_factory    = $package_factory;
         $this->release_factory    = $release_factory;
         $this->file_factory       = $file_factory;
@@ -122,7 +122,7 @@ class FRSXMLImporter
 
     public function import(ImportConfig $configuration, Project $project, SimpleXMLElement $xml, $extraction_path, array &$frs_release_mapping)
     {
-        $this->logger->debug("Start import");
+        $this->logger->debug('Start import');
 
         $xml_frs = $xml->frs;
         if (! $xml_frs) {
@@ -136,7 +136,7 @@ class FRSXMLImporter
             $this->importPackage($project, $xml_pkg, $extraction_path, $created_id_map, $frs_release_mapping);
         }
 
-        $this->logger->debug("Packages imported. Import references");
+        $this->logger->debug('Packages imported. Import references');
 
         EventManager::instance()->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
@@ -150,13 +150,13 @@ class FRSXMLImporter
             ]
         );
 
-        $this->logger->debug("Import completed");
+        $this->logger->debug('Import completed');
         return true;
     }
 
     private function importRights(Project $project, SimpleXMLElement $xml_frs)
     {
-        $this->logger->debug("Start import of service level rights");
+        $this->logger->debug('Start import of service level rights');
         if ($xml_frs->{'read-access'}) {
             $this->logger->info("Importing read access rights for {$project->getUnixName()}");
             $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_frs->{'read-access'});
@@ -172,7 +172,7 @@ class FRSXMLImporter
                 $this->permission_creator->savePermissions($project, $ugroups_ids, FRSPermission::FRS_ADMIN);
             }
         }
-        $this->logger->debug("Import of service level rights completed");
+        $this->logger->debug('Import of service level rights completed');
     }
 
     private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode)
@@ -220,7 +220,7 @@ class FRSXMLImporter
         $this->getPermissionsManager()->savePermissions($project, $package->getPackageID(), FRSPackage::PERM_READ, $read_perms);
 
         foreach ($xml_pkg->children() as $xml_rel) {
-            if ($xml_rel->getName() != "release") {
+            if ($xml_rel->getName() != 'release') {
                 continue;
             }
             $this->importRelease($project, $package, $xml_rel, $extraction_path, $frs_release_mapping, $created_id_map);
@@ -306,7 +306,7 @@ class FRSXMLImporter
         $md5   = strtolower(md5_file($src));
         $time  = strtotime((string) $attrs['release-time']);
         $date  = strtotime((string) $attrs['post-date']);
-        $desc  = "";
+        $desc  = '';
 
         $this->logger->debug('metadata gathered for file ' . $name);
 
@@ -327,7 +327,7 @@ class FRSXMLImporter
         }
 
         foreach ($xml_file->children() as $elem) {
-            if ($elem->getName() != "description") {
+            if ($elem->getName() != 'description') {
                 continue;
             }
             $desc .= (string) $elem;

@@ -26,20 +26,20 @@ final class TrackerPublicKeyDao extends DataAccessObject
 {
     public function retrieveKey(int $tracker_id): string
     {
-        $sql = "
+        $sql = '
             SELECT key_content
             FROM plugin_tracker_encryption_key
             WHERE tracker_id = ?
-        ";
+        ';
         return $this->getDB()->single($sql, [$tracker_id]);
     }
 
     public function insertKey(int $tracker_id, string $key_content): void
     {
-        $sql = "
+        $sql = '
             REPLACE INTO plugin_tracker_encryption_key(key_content, tracker_id)
             VALUES (?, ?)
-        ";
+        ';
         $this->getDB()->run($sql, $key_content, $tracker_id);
     }
 

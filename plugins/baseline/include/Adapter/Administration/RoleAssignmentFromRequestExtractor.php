@@ -68,7 +68,7 @@ final class RoleAssignmentFromRequestExtractor implements RoleAssignmentsToUpdat
     {
         $body = $request->getParsedBody();
         if (! is_array($body)) {
-            throw new \LogicException("Expected body to be an associative array");
+            throw new \LogicException('Expected body to be an associative array');
         }
 
         if (! isset($body[$role_key])) {

@@ -34,10 +34,10 @@ final class MethodNotConfiguredTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsNullProgressWhenTheSemanticIsNotDefined(): void
     {
         $method = new MethodNotConfigured();
-        self::assertEquals("", $method->getErrorMessage());
+        self::assertEquals('', $method->getErrorMessage());
 
         $result = $method->computeProgression(Mockery::spy(Artifact::class), Mockery::spy(PFUser::class));
-        self::assertEquals("", $result->getErrorMessage());
+        self::assertEquals('', $result->getErrorMessage());
         self::assertEquals(null, $result->getValue());
     }
 

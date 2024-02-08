@@ -34,8 +34,8 @@ EOT;
     public function up()
     {
         $this->log->warn('Following operations might take a while, please be patient...');
-        $sql = "ALTER TABLE system_event
-                ADD INDEX type_idx (type(20))";
+        $sql = 'ALTER TABLE system_event
+                ADD INDEX type_idx (type(20))';
         $this->db->addIndex('system_event', 'type_idx', $sql);
     }
 }

@@ -114,7 +114,7 @@ final class GroupLinkSynchronizerTest extends TestCase
         $this->project_builder = BuildGitlabProjectsStub::buildWithException(
             new GitlabRequestException(
                 500,
-                "What a fail !",
+                'What a fail !',
                 null
             )
         );
@@ -127,7 +127,7 @@ final class GroupLinkSynchronizerTest extends TestCase
     public function testItReturnAnErrorIfTheGitlabResponseIsNotOk(): void
     {
         $this->project_builder = BuildGitlabProjectsStub::buildWithException(
-            new GitlabResponseAPIException("fail")
+            new GitlabResponseAPIException('fail')
         );
 
         $result = $this->synchronizeGroupLink();

@@ -126,9 +126,9 @@ class PackagePermissionPerGroupRepresentationBuilder
         return new PackagePermissionPerGroupRepresentation(
             '/file/admin/package.php?' . http_build_query(
                 [
-                    "func"     => "edit",
-                    "group_id" => $project->getID(),
-                    "id"       => $package->getPackageID(),
+                    'func'     => 'edit',
+                    'group_id' => $project->getID(),
+                    'id'       => $package->getPackageID(),
                 ]
             ),
             $package->getName(),

@@ -43,7 +43,7 @@ class AddValidator
             throw new I18NRestException(
                 400,
                 sprintf(
-                    dgettext('tuleap-taskboard', "Artifact to add %d must be a child of swimlane %d."),
+                    dgettext('tuleap-taskboard', 'Artifact to add %d must be a child of swimlane %d.'),
                     $artifact_to_add->getId(),
                     $swimlane_artifact->getId()
                 )

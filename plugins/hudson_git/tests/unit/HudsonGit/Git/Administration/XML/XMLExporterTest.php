@@ -86,13 +86,13 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml_git
         );
 
-        self::assertTrue(isset($xml_git->{"jenkins-servers-admin"}));
-        self::assertCount(2, $xml_git->{"jenkins-servers-admin"}->children());
+        self::assertTrue(isset($xml_git->{'jenkins-servers-admin'}));
+        self::assertCount(2, $xml_git->{'jenkins-servers-admin'}->children());
 
-        $server_01 = $xml_git->{"jenkins-servers-admin"}->{"jenkins-server"}[0];
+        $server_01 = $xml_git->{'jenkins-servers-admin'}->{'jenkins-server'}[0];
         self::assertEquals('https://url', (string) $server_01['url']);
 
-        $server_02 = $xml_git->{"jenkins-servers-admin"}->{"jenkins-server"}[1];
+        $server_02 = $xml_git->{'jenkins-servers-admin'}->{'jenkins-server'}[1];
         self::assertEquals('https://url2', (string) $server_02['url']);
         self::assertEquals('my_token', (string) $server_02['jenkins_token']);
     }
@@ -112,6 +112,6 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml_git
         );
 
-        self::assertFalse(isset($xml_git->{"jenkins-servers-admin"}));
+        self::assertFalse(isset($xml_git->{'jenkins-servers-admin'}));
     }
 }

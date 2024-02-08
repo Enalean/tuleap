@@ -28,6 +28,6 @@ final class CannotSetANonExistingBranchAsDefaultException extends \RuntimeExcept
 {
     public function __construct(string $branch_name)
     {
-        parent::__construct(sprintf("Cannot set %s as the default branch, this does not seem to exist", $branch_name));
+        parent::__construct(sprintf('Cannot set %s as the default branch, this does not seem to exist', $branch_name));
     }
 }

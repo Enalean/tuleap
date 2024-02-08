@@ -35,11 +35,11 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_hierarchy (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_hierarchy (
                   parent_id int(11) NOT NULL,
                   child_id int(11) NOT NULL,
                   KEY idx(parent_id, child_id)
-                )";
+                )';
         $this->db->createTable('tracker_hierarchy', $sql);
     }
 

@@ -36,15 +36,15 @@ final class RepositoryTest extends TestBase
     {
         parent::setUp();
         $artifact_ids_by_title    = $this->getArtifactIdsIndexedByTitle(
-            "test-git",
-            "tracker_1",
+            'test-git',
+            'tracker_1',
         );
-        $this->artifact_reference = "tracker_1 #" . $artifact_ids_by_title["test_artifact_1"];
-        $this->artifact_url       = "https://localhost/goto?" . http_build_query(
+        $this->artifact_reference = 'tracker_1 #' . $artifact_ids_by_title['test_artifact_1'];
+        $this->artifact_url       = 'https://localhost/goto?' . http_build_query(
             [
-                "key" => "tracker_1",
-                "val" => $artifact_ids_by_title["test_artifact_1"],
-                "group_id" => $this->getProjectId("test-git"),
+                'key' => 'tracker_1',
+                'val' => $artifact_ids_by_title['test_artifact_1'],
+                'group_id' => $this->getProjectId('test-git'),
             ]
         );
     }
@@ -108,9 +108,9 @@ final class RepositoryTest extends TestBase
     {
         $patch_payload = json_encode(
             [
-                "migrate_to_gerrit" => [
-                    "server" => 1,
-                    "permissions" => "default",
+                'migrate_to_gerrit' => [
+                    'server' => 1,
+                    'permissions' => 'default',
                 ],
             ]
         );
@@ -291,15 +291,15 @@ final class RepositoryTest extends TestBase
                         ],
                         'commit_status' => null,
                         'verification'  => ['signature' => null],
-                        "cross_references" => [
+                        'cross_references' => [
                             [
-                                "ref" => $this->artifact_reference,
-                                "url" => $this->artifact_url,
-                                "direction" => "in",
+                                'ref' => $this->artifact_reference,
+                                'url' => $this->artifact_url,
+                                'direction' => 'in',
                             ],
                         ],
                     ],
-                    "html_url" => '/plugins/git/test-git/repo01?a=tree&hb=master',
+                    'html_url' => '/plugins/git/test-git/repo01?a=tree&hb=master',
                 ],
                 [
                     'name' => 'branch_file_02',
@@ -326,9 +326,9 @@ final class RepositoryTest extends TestBase
                         ],
                         'commit_status' => null,
                         'verification'  => ['signature' => null],
-                        "cross_references" => [],
+                        'cross_references' => [],
                     ],
-                    "html_url" => '/plugins/git/test-git/repo01?a=tree&hb=branch_file_02',
+                    'html_url' => '/plugins/git/test-git/repo01?a=tree&hb=branch_file_02',
                 ],
             ]
         );
@@ -338,8 +338,8 @@ final class RepositoryTest extends TestBase
     {
         $post_payload = json_encode(
             [
-                'branch_name' => "newbranch01",
-                'reference' => "branch_file_02",
+                'branch_name' => 'newbranch01',
+                'reference' => 'branch_file_02',
             ]
         );
 
@@ -355,8 +355,8 @@ final class RepositoryTest extends TestBase
         $this->assertEqualsCanonicalizing(
             $branche_json,
             [
-                "name" => "newbranch01",
-                "html_url" => "/plugins/git/test-git/repo01?a=tree&hb=newbranch01",
+                'name' => 'newbranch01',
+                'html_url' => '/plugins/git/test-git/repo01?a=tree&hb=newbranch01',
                 'commit' => [
                     'html_url'       => '/plugins/git/test-git/repo01?a=commit&h=bcbc8956071c646493d484c64a6034b663e073e0',
                     'id'             => 'bcbc8956071c646493d484c64a6034b663e073e0',
@@ -380,7 +380,7 @@ final class RepositoryTest extends TestBase
                     ],
                     'commit_status' => null,
                     'verification'  => ['signature' => null],
-                    "cross_references" => [],
+                    'cross_references' => [],
                 ],
             ],
         );
@@ -391,7 +391,7 @@ final class RepositoryTest extends TestBase
         $post_payload = json_encode(
             [
                 'branch_name' => 'newbran~01',
-                'reference' => "branch_file_02",
+                'reference' => 'branch_file_02',
             ]
         );
 
@@ -409,7 +409,7 @@ final class RepositoryTest extends TestBase
         $post_payload = json_encode(
             [
                 'branch_name' => 'newbranch02',
-                'reference' => "non_existing_branch",
+                'reference' => 'non_existing_branch',
             ]
         );
 
@@ -426,8 +426,8 @@ final class RepositoryTest extends TestBase
     {
         $post_payload = json_encode(
             [
-                'branch_name' => "newbranch02",
-                'reference' => "branch_file_02",
+                'branch_name' => 'newbranch02',
+                'reference' => 'branch_file_02',
             ]
         );
 
@@ -537,8 +537,8 @@ final class RepositoryTest extends TestBase
     {
         $post_payload = json_encode(
             [
-                "state" => "success",
-                "token" => "someToken",
+                'state' => 'success',
+                'token' => 'someToken',
             ]
         );
 
@@ -582,7 +582,7 @@ final class RepositoryTest extends TestBase
                         ],
                         'commit_status' => null,
                         'verification'  => ['signature' => null],
-                        "cross_references" => [],
+                        'cross_references' => [],
                     ],
                 ],
             ]
@@ -710,11 +710,11 @@ final class RepositoryTest extends TestBase
                 ],
                 'commit_status' => null,
                 'verification'  => ['signature' => null],
-                "cross_references" => [
+                'cross_references' => [
                     [
-                        "ref" => $this->artifact_reference,
-                        "url" => $this->artifact_url,
-                        "direction" => "in",
+                        'ref' => $this->artifact_reference,
+                        'url' => $this->artifact_url,
+                        'direction' => 'in',
                     ],
                 ],
             ]

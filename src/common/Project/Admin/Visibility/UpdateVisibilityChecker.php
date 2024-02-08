@@ -44,7 +44,7 @@ final class UpdateVisibilityChecker
 
         if (! $this->atLeastOneAdministratorIsActive($project)) {
             return UpdateVisibilityStatus::buildStatusSwitchIsNotAllowed(
-                _("Cannot switch the project visibility because it will remove every restricted users from the project, and after that no administrator will be left."),
+                _('Cannot switch the project visibility because it will remove every restricted users from the project, and after that no administrator will be left.'),
             );
         }
 

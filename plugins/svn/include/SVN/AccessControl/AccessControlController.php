@@ -61,7 +61,7 @@ class AccessControlController
             $versions[] = [
                 'file_id' => $historised_accessfile->getId(),
                 'version' => $historised_accessfile->getVersionNumber(),
-                'date' => format_date("Y-m-d", $historised_accessfile->getVersionDate()),
+                'date' => format_date('Y-m-d', $historised_accessfile->getVersionDate()),
             ];
         }
 

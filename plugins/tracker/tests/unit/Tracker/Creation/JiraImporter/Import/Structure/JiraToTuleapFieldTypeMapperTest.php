@@ -714,7 +714,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             FromJiraTrackerCreator::DEFAULT_IMPORT_MODE,
         );
 
-        self::assertEquals(" |_ Field votes_id (votes) ignored ", $this->logger->messages['debug'][0]);
+        self::assertEquals(' |_ Field votes_id (votes) ignored ', $this->logger->messages['debug'][0]);
     }
 
     public function testStoryPointsFieldIsNotAddedTwiceWhenConfiguredOnTheCreationScreen(): void

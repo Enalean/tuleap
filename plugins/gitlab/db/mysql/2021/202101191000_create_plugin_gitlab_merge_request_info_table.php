@@ -35,7 +35,7 @@ final class b202101191000_create_plugin_gitlab_merge_request_info_table extends 
 
     public function up(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_gitlab_merge_request_info (
                 id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 repository_id INT(11) NOT NULL,
@@ -43,12 +43,12 @@ final class b202101191000_create_plugin_gitlab_merge_request_info_table extends 
                 title TEXT NOT NULL,
                 UNIQUE KEY merge_request_id(repository_id, merge_request_id)
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_gitlab_merge_request_info', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_merge_request_info')) {
-            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException("Table plugin_gitlab_merge_request_info has not been created in database");
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Table plugin_gitlab_merge_request_info has not been created in database');
         }
     }
 }

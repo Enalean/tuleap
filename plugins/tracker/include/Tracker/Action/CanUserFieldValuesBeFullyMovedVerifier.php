@@ -42,7 +42,7 @@ final class CanUserFieldValuesBeFullyMovedVerifier implements VerifyUserFieldVal
     ): bool {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
         if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
-            $logger->error(sprintf("Last changeset value is not a list for field #%d", $source_field->getId()));
+            $logger->error(sprintf('Last changeset value is not a list for field #%d', $source_field->getId()));
             return false;
         }
 
@@ -52,11 +52,11 @@ final class CanUserFieldValuesBeFullyMovedVerifier implements VerifyUserFieldVal
             assert($value instanceof Tracker_FormElement_Field_List_Bind_UsersValue);
             $user = $this->retrieve_user->getUserById((int) $value->getId());
             if (! $user || $user->isAnonymous()) {
-                $logger->debug(sprintf("User %s not found ", $value->getId()));
+                $logger->debug(sprintf('User %s not found ', $value->getId()));
                 return false;
             }
             if (! $destination_field->checkValueExists((string) $user->getId())) {
-                $logger->debug(sprintf("User %s is not a possible value in field #%d (%s)", $value->getId(), $destination_field->getId(), $destination_field->getName()));
+                $logger->debug(sprintf('User %s is not a possible value in field #%d (%s)', $value->getId(), $destination_field->getId(), $destination_field->getName()));
 
                 return false;
             }

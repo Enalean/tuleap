@@ -40,7 +40,7 @@ class MediawikiMaintenanceWrapper
 
     private function getMaintenanceWrapperPath()
     {
-        return __DIR__ . "/../bin/mw-maintenance-wrapper.php";
+        return __DIR__ . '/../bin/mw-maintenance-wrapper.php';
     }
 
     public function dumpBackupFull(Project $project, $backup_path)
@@ -60,7 +60,7 @@ class MediawikiMaintenanceWrapper
         $temporary_dump_path_on_filesystem,
         $project_name_dir,
     ) {
-        $folder_picture = "files";
+        $folder_picture = 'files';
         $archive->addEmptyDir($folder_picture);
         $this->initTemporaryExtractPictureFolder($temporary_dump_path_on_filesystem, $folder_picture);
 
@@ -74,7 +74,7 @@ class MediawikiMaintenanceWrapper
 
     private function initTemporaryExtractPictureFolder($temporary_dump_path_on_filesystem, $folder_picture)
     {
-        $picture_system_path = escapeshellarg($temporary_dump_path_on_filesystem . "/" . $folder_picture);
+        $picture_system_path = escapeshellarg($temporary_dump_path_on_filesystem . '/' . $folder_picture);
         $command             = "mkdir -p $picture_system_path";
 
         $this->sys_command->exec($command);
@@ -86,8 +86,8 @@ class MediawikiMaintenanceWrapper
         $project_name_dir,
         $folder_picture,
     ) {
-        $picture_system_path = escapeshellarg($temporary_dump_path_on_filesystem . "/" . $folder_picture);
-        $export_folder       = escapeshellarg($project_name_dir . "/images");
+        $picture_system_path = escapeshellarg($temporary_dump_path_on_filesystem . '/' . $folder_picture);
+        $export_folder       = escapeshellarg($project_name_dir . '/images');
         $project_name        = escapeshellarg($project->getUnixName());
         $command             = ForgeConfig::get('codendi_dir') . '/src/utils/php-launcher.sh ' .
             $this->getMaintenanceWrapperPath() .

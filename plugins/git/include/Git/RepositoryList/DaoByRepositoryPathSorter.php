@@ -51,8 +51,8 @@ class DaoByRepositoryPathSorter
      */
     private function compareRepositoryName($repository_name_a, $repository_name_b)
     {
-        $a_pos = strpos($repository_name_a, "/");
-        $b_pos = strpos($repository_name_b, "/");
+        $a_pos = strpos($repository_name_a, '/');
+        $b_pos = strpos($repository_name_b, '/');
 
         if ($a_pos === false && $b_pos === false) {
             return strnatcasecmp($repository_name_a, $repository_name_b);

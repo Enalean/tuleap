@@ -47,7 +47,7 @@ class ProjectAdministrationPresenter
         $this->csrf_token   = $csrf_token;
         $this->project_id   = $project_id;
 
-        $this->create_bot_url = "/plugins/botmattermost/bot/create";
+        $this->create_bot_url = '/plugins/botmattermost/bot/create';
     }
 
     /**

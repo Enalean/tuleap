@@ -24,7 +24,7 @@ class b202011161327_add_is_commit_reference_needded_column extends ForgeUpgrade_
 {
     public function description(): string
     {
-        return "Add is_commit_reference_needed column";
+        return 'Add is_commit_reference_needed column';
     }
 
     public function preUp(): void
@@ -34,12 +34,12 @@ class b202011161327_add_is_commit_reference_needded_column extends ForgeUpgrade_
 
     public function up(): void
     {
-        $sql = "ALTER TABLE plugin_hudson_git_server
-                ADD COLUMN is_commit_reference_needed BOOL NOT NULL DEFAULT TRUE";
+        $sql = 'ALTER TABLE plugin_hudson_git_server
+                ADD COLUMN is_commit_reference_needed BOOL NOT NULL DEFAULT TRUE';
 
         if ($this->db->dbh->exec($sql) === false) {
             $this->rollBackOnError(
-                "An error occurred while adding is_commit_reference_needed to plugin_hudson_git_server table."
+                'An error occurred while adding is_commit_reference_needed to plugin_hudson_git_server table.'
             );
         }
     }

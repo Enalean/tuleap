@@ -82,7 +82,7 @@ class ReferencePresenter
 
     public function isApiKeySet()
     {
-        return $this->api_key !== "";
+        return $this->api_key !== '';
     }
 
     public function getRestUrl()

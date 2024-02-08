@@ -42,7 +42,7 @@ final class MissingMandatoryCategoriesException extends ProjectCategoriesExcepti
     public function getI18NMessage(): string
     {
         return sprintf(
-            dgettext("tuleap-core", 'Mandatory categories where missing: %s'),
+            dgettext('tuleap-core', 'Mandatory categories where missing: %s'),
             $this->category_list
         );
     }

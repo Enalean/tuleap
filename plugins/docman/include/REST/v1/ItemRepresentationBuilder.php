@@ -145,7 +145,7 @@ class ItemRepresentationBuilder
 
         $is_expanded = false;
         if ($type === ItemRepresentation::TYPE_FOLDER) {
-            $preference  = $current_user->getPreference("plugin_docman_hide_" . $item->getGroupId() . "_" . $item->getId());
+            $preference  = $current_user->getPreference('plugin_docman_hide_' . $item->getGroupId() . '_' . $item->getId());
             $is_expanded = $preference !== false;
         }
 

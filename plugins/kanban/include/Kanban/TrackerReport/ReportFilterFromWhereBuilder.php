@@ -50,8 +50,8 @@ final class ReportFilterFromWhereBuilder
             $where = "($changeset_value_field_alias.bindvalue_id IS NULL
                 OR $changeset_value_field_alias.bindvalue_id = 100)";
         } elseif ($column_identifier->isArchive()) {
-            $from .= " LEFT JOIN tracker_semantic_status SS2
-                ON (SS2.field_id = CV2.field_id AND SS2.open_value_id = CVL.bindvalue_id)";
+            $from .= ' LEFT JOIN tracker_semantic_status SS2
+                ON (SS2.field_id = CV2.field_id AND SS2.open_value_id = CVL.bindvalue_id)';
 
             $where = "SS2.open_value_id IS NULL
                   AND $changeset_value_field_alias.bindvalue_id IS NOT NULL

@@ -90,12 +90,12 @@ class TuleapConfig
 
     public function enableInviteBuddies(): void
     {
-        $this->setConfig('max_invitations_by_day', "10");
+        $this->setConfig('max_invitations_by_day', '10');
     }
 
     public function disableInviteBuddies(): void
     {
-        $this->setConfig('max_invitations_by_day', "0");
+        $this->setConfig('max_invitations_by_day', '0');
     }
 
     private function connect()

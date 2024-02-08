@@ -69,11 +69,11 @@ class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_path = (string) realpath(__DIR__ . '/../../../resources/templates/Tracker_campaign.xml');
 
-        $this->xml_import->shouldReceive("createFromXMLFile")
+        $this->xml_import->shouldReceive('createFromXMLFile')
             ->withArgs([$this->project, $expected_path])
             ->andReturn($this->created_tracker);
 
-        $result = $this->tracker_creator->createTrackerFromXML($this->project, "campaign");
+        $result = $this->tracker_creator->createTrackerFromXML($this->project, 'campaign');
         $this->assertEquals($this->created_tracker, $result);
     }
 
@@ -81,11 +81,11 @@ class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_path = (string) realpath(__DIR__ . '/../../../../tracker/resources/templates/Tracker_Bugs.xml');
 
-        $this->xml_import->shouldReceive("createFromXMLFile")
+        $this->xml_import->shouldReceive('createFromXMLFile')
             ->withArgs([$this->project, $expected_path])
             ->andReturn($this->created_tracker);
 
-        $result = $this->tracker_creator->createTrackerFromXML($this->project, "bug");
+        $result = $this->tracker_creator->createTrackerFromXML($this->project, 'bug');
 
         $this->assertEquals($this->created_tracker, $result);
     }
@@ -95,13 +95,13 @@ class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_path = (string) realpath(__DIR__ . '/../broken_path.xml');
         $this->project->shouldReceive('getId')->andReturn(111);
 
-        $this->xml_import->shouldReceive("createFromXMLFile")
+        $this->xml_import->shouldReceive('createFromXMLFile')
             ->withArgs([$this->project, $expected_path]);
 
         $this->logger->shouldReceive('error')->once();
         $this->expectException(TrackerNotCreatedException::class);
 
-        $this->tracker_creator->createTrackerFromXML($this->project, "campaign");
+        $this->tracker_creator->createTrackerFromXML($this->project, 'campaign');
     }
 
     // Bug tracker shouldn't raise exception because it's not mandatory for Testmanagement administration
@@ -110,11 +110,11 @@ class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_path = (string) realpath(__DIR__ . '/../broken_path.xml');
         $this->project->shouldReceive('getId')->andReturn(111);
 
-        $this->xml_import->shouldReceive("createFromXMLFile")
+        $this->xml_import->shouldReceive('createFromXMLFile')
             ->withArgs([$this->project, $expected_path]);
 
         $this->logger->shouldReceive('error')->once();
 
-        $this->assertNull($this->tracker_creator->createTrackerFromXML($this->project, "bug"));
+        $this->assertNull($this->tracker_creator->createTrackerFromXML($this->project, 'bug'));
     }
 }

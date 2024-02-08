@@ -30,26 +30,26 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsATagRepresentation(): void
     {
         $response = [
-            "name" => "v1.0.2",
-            "message" => "Message from tag",
-            "commit" => [
-                "id" => "commit_sha1",
+            'name' => 'v1.0.2',
+            'message' => 'Message from tag',
+            'commit' => [
+                'id' => 'commit_sha1',
             ],
         ];
 
         $gitlab_tap_api = GitlabTag::buildFromAPIResponse($response);
 
-        self::assertSame("v1.0.2", $gitlab_tap_api->getName());
-        self::assertSame("Message from tag", $gitlab_tap_api->getMessage());
-        self::assertSame("commit_sha1", $gitlab_tap_api->getCommitSha1());
+        self::assertSame('v1.0.2', $gitlab_tap_api->getName());
+        self::assertSame('Message from tag', $gitlab_tap_api->getMessage());
+        self::assertSame('commit_sha1', $gitlab_tap_api->getCommitSha1());
     }
 
     public function testItThrowsAnExceptionIfNameIsMissingRepresentation(): void
     {
         $response = [
-            "message" => "Message from tag",
-            "commit" => [
-                "id" => "commit_sha1",
+            'message' => 'Message from tag',
+            'commit' => [
+                'id' => 'commit_sha1',
             ],
         ];
 
@@ -61,9 +61,9 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfMessageIsMissingRepresentation(): void
     {
         $response = [
-            "name" => "v1.0.2",
-            "commit" => [
-                "id" => "commit_sha1",
+            'name' => 'v1.0.2',
+            'commit' => [
+                'id' => 'commit_sha1',
             ],
         ];
 
@@ -75,8 +75,8 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfCommitIsMissingRepresentation(): void
     {
         $response = [
-            "name" => "v1.0.2",
-            "message" => "Message from tag",
+            'name' => 'v1.0.2',
+            'message' => 'Message from tag',
         ];
 
         $this->expectException(GitlabResponseAPIException::class);
@@ -87,9 +87,9 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfCommitIdIsMissingRepresentation(): void
     {
         $response = [
-            "name" => "v1.0.2",
-            "message" => "Message from tag",
-            "commit" => [],
+            'name' => 'v1.0.2',
+            'message' => 'Message from tag',
+            'commit' => [],
         ];
 
         $this->expectException(GitlabResponseAPIException::class);

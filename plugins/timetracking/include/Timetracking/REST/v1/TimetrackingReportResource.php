@@ -298,7 +298,7 @@ class TimetrackingReportResource extends AuthenticatedResource
         $json_query   = $this->json_decoder->decodeAsAnArray('query', $query);
 
         $query = trim($query);
-        if (! isset($json_query["trackers_id"])) {
+        if (! isset($json_query['trackers_id'])) {
             return $report->getTrackers();
         }
 

@@ -40,7 +40,7 @@ class HardCodedMetadataException extends Exception
     public static function invalidDateComparison(): self
     {
         return new self(
-            "obsolescence date before today",
+            'obsolescence date before today',
             dgettext('tuleap-docman', 'The obsolescence date is before the current date')
         );
     }
@@ -48,7 +48,7 @@ class HardCodedMetadataException extends Exception
     public static function invalidDateFormat(): self
     {
         return new self(
-            "obsolescence date format is incorrect",
+            'obsolescence date format is incorrect',
             dgettext('tuleap-docman', 'The date format is incorrect. The format must be "YYYY-MM-DD"')
         );
     }
@@ -56,7 +56,7 @@ class HardCodedMetadataException extends Exception
     public static function obsolescenceDateMetadataIsDisabled(): self
     {
         return new self(
-            "obsolescence date is not enabled for project",
+            'obsolescence date is not enabled for project',
             dgettext('tuleap-docman', 'The project does not support obsolescence date, you should not provide it to create or update a new document.')
         );
     }
@@ -64,7 +64,7 @@ class HardCodedMetadataException extends Exception
     public static function itemStatusNotAvailable(): self
     {
         return new self(
-            "Status is not enabled for project",
+            'Status is not enabled for project',
             dgettext('tuleap-docman', 'The "Status" property is not activated for this item.')
         );
     }
@@ -72,7 +72,7 @@ class HardCodedMetadataException extends Exception
     public static function itemStatusIsInvalid(string $status): self
     {
         return new self(
-            sprintf("Status %s is invalid", $status),
+            sprintf('Status %s is invalid', $status),
             sprintf(dgettext('tuleap-docman', 'The status "%s" is invalid.'), $status)
         );
     }
@@ -80,7 +80,7 @@ class HardCodedMetadataException extends Exception
     public static function itemStatusNullIsInvalid(): self
     {
         return new self(
-            "Status null is invalid",
+            'Status null is invalid',
             dgettext('tuleap-docman', 'null is not a valid status.')
         );
     }

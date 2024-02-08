@@ -38,7 +38,7 @@ class b201602181030_add_column_last_used_user_mapping extends \Tuleap\ForgeUpgra
 
     private function addColumn()
     {
-        $sql = "ALTER TABLE plugin_openidconnectclient_user_mapping ADD COLUMN last_used INT(11) UNSIGNED NOT NULL DEFAULT 0";
+        $sql = 'ALTER TABLE plugin_openidconnectclient_user_mapping ADD COLUMN last_used INT(11) UNSIGNED NOT NULL DEFAULT 0';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding last used column in user mapping: ' . implode(', ', $this->db->dbh->errorInfo()));
@@ -47,7 +47,7 @@ class b201602181030_add_column_last_used_user_mapping extends \Tuleap\ForgeUpgra
 
     private function dropDefault()
     {
-        $sql = "ALTER TABLE plugin_openidconnectclient_user_mapping ALTER COLUMN last_used DROP DEFAULT";
+        $sql = 'ALTER TABLE plugin_openidconnectclient_user_mapping ALTER COLUMN last_used DROP DEFAULT';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while modifying last used column in user mapping: ' . implode(', ', $this->db->dbh->errorInfo()));

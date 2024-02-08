@@ -29,10 +29,10 @@ class BaselineArtifactFactory
     {
         return (new BaselineArtifactBuilder())
             ->id(88)
-            ->title("artifact title")
-            ->description("artifact comment")
+            ->title('artifact title')
+            ->description('artifact comment')
             ->initialEffort(2)
-            ->status("Done")
+            ->status('Done')
             ->project(ProjectFactory::one())
             ->trackerId(3)
             ->trackerName('Epic')

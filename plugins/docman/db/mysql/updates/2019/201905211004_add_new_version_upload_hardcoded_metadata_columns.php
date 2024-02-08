@@ -35,7 +35,7 @@ class b201905211004_add_new_version_upload_hardcoded_metadata_columns extends Fo
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_docman_new_version_upload ADD status TINYINT(4) DEFAULT 100 NOT NULL";
+        $sql = 'ALTER TABLE plugin_docman_new_version_upload ADD status TINYINT(4) DEFAULT 100 NOT NULL';
         $this->db->alterTable(
             'plugin_docman_new_version_upload',
             'tuleap',
@@ -43,7 +43,7 @@ class b201905211004_add_new_version_upload_hardcoded_metadata_columns extends Fo
             $sql
         );
 
-        $sql = "ALTER TABLE plugin_docman_new_version_upload ADD obsolescence_date int(11) DEFAULT 0 NOT NULL";
+        $sql = 'ALTER TABLE plugin_docman_new_version_upload ADD obsolescence_date int(11) DEFAULT 0 NOT NULL';
         $this->db->alterTable(
             'plugin_docman_new_version_upload',
             'tuleap',
@@ -51,7 +51,7 @@ class b201905211004_add_new_version_upload_hardcoded_metadata_columns extends Fo
             $sql
         );
 
-        $sql = "ALTER TABLE plugin_docman_new_version_upload ADD title varchar(255) NULL";
+        $sql = 'ALTER TABLE plugin_docman_new_version_upload ADD title varchar(255) NULL';
         $this->db->alterTable(
             'plugin_docman_new_version_upload',
             'tuleap',
@@ -59,7 +59,7 @@ class b201905211004_add_new_version_upload_hardcoded_metadata_columns extends Fo
             $sql
         );
 
-        $sql = "ALTER TABLE plugin_docman_new_version_upload ADD description text NULL";
+        $sql = 'ALTER TABLE plugin_docman_new_version_upload ADD description text NULL';
         $this->db->alterTable(
             'plugin_docman_new_version_upload',
             'tuleap',

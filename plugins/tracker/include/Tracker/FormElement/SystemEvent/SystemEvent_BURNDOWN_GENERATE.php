@@ -105,7 +105,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
         $artifact_id = $this->getArtifactIdFromParameters();
         $artifact    = $this->artifact_factory->getArtifactById($artifact_id);
         if ($artifact === null) {
-            $this->warning("Unable to find artifact " . $artifact_id);
+            $this->warning('Unable to find artifact ' . $artifact_id);
 
             return false;
         }
@@ -129,7 +129,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
             );
         }
 
-        $this->logger->debug("Calculating burndown for artifact #" . $artifact_id);
+        $this->logger->debug('Calculating burndown for artifact #' . $artifact_id);
         if ($burndown_informations) {
             if (! isset($burndown_informations['duration'])) {
                 $burndown = DatePeriodWithoutWeekEnd::buildFromEndDate(
@@ -156,7 +156,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
             $yesterday->setTime(0, 0, 0);
 
             foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burndown, $yesterday) as $worked_day) {
-                $this->logger->debug("Day " . date("Y-m-d H:i:s", $worked_day));
+                $this->logger->debug('Day ' . date('Y-m-d H:i:s', $worked_day));
 
                 $value = $this->field_calculator->calculate(
                     [$burndown_informations['id']],
@@ -175,10 +175,10 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
                 );
             }
         } else {
-            $this->logger->debug("Can't generate cache for artifact #" . $artifact_id . ". Please check your burndown configuration");
+            $this->logger->debug("Can't generate cache for artifact #" . $artifact_id . '. Please check your burndown configuration');
         }
 
-        $this->logger->debug("End calculs for artifact #" . $artifact_id);
+        $this->logger->debug('End calculs for artifact #' . $artifact_id);
         $this->done();
 
         return true;

@@ -48,19 +48,19 @@ use Tuleap\Webhook\Emitter;
 
 class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory, ActivateProject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    #[ConfigKey("Is project creation allowed to regular users (1) or not (0)")]
+    #[ConfigKey('Is project creation allowed to regular users (1) or not (0)')]
     public const CONFIG_PROJECTS_CAN_BE_CREATED = 'sys_use_project_registration';
 
-    #[ConfigKey("Should project be approved by site admin (1) or auto approved (0)")]
+    #[ConfigKey('Should project be approved by site admin (1) or auto approved (0)')]
     public const CONFIG_PROJECT_APPROVAL = 'sys_project_approval';
 
-    #[ConfigKey("Max number of projects in the site administration validation queue")]
+    #[ConfigKey('Max number of projects in the site administration validation queue')]
     public const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION = 'nb_projects_waiting_for_validation';
 
-    #[ConfigKey("Max number of projects a user can submit in validation queue")]
+    #[ConfigKey('Max number of projects a user can submit in validation queue')]
     public const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER = 'nb_projects_waiting_for_validation_per_user';
 
-    #[ConfigKey("Are restricted users allowed to create projects (1) or not (0)")]
+    #[ConfigKey('Are restricted users allowed to create projects (1) or not (0)')]
     public const CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS = 'restricted_users_can_create_projects';
 
     #[ConfigKey("Are project admin allowed to choose project's visibility (1) or not (0)")]
@@ -416,7 +416,7 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory, Ac
     {
         if ($this->activateWithoutNotifications($project)) {
             if (! send_new_project_email($project)) {
-                $GLOBALS['Response']->addFeedback('warning', $project->getPublicName() . " - " . $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')]));
+                $GLOBALS['Response']->addFeedback('warning', $project->getPublicName() . ' - ' . $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')]));
             }
             return true;
         }

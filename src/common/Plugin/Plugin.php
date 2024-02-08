@@ -311,7 +311,7 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
         if (ForgeConfig::get('sys_pluginspath')) {
             $path = ForgeConfig::get('sys_pluginspath');
         } else {
-            $path = "";
+            $path = '';
         }
         if ($pm->isACustomPlugin($this)) {
             $path = ForgeConfig::get('sys_custompluginspath');

@@ -297,7 +297,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $tracker = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $definition_artifact->shouldReceive('getTracker')->andReturn($tracker);
         $definition_artifact->shouldReceive('getTrackerId')->andReturn($tracker_id);
-        $definition_artifact->shouldReceive('getStatus')->andReturn("open");
+        $definition_artifact->shouldReceive('getStatus')->andReturn('open');
 
         $this->conformance_validator->shouldReceive('isArtifactADefinition')->with(
             $definition_artifact
@@ -326,13 +326,13 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     private function mockArtifactRepresentationBuilder(Artifact $definition_artifact): void
     {
         $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
-        $semantic_status->method("getColor");
+        $semantic_status->method('getColor');
         \Tracker_Semantic_Status::setInstance(
             $semantic_status,
             $definition_artifact->getTracker(),
         );
 
-        $this->artifact_representation_builder->method("getArtifactRepresentation")->willReturn(
+        $this->artifact_representation_builder->method('getArtifactRepresentation')->willReturn(
             $this->createMock(ArtifactRepresentation::class)
         );
     }

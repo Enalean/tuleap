@@ -59,7 +59,7 @@ class GitlabTagRetriever
 
         if (! $gitlab_tag_data) {
             throw new GitlabResponseAPIException(
-                "The query is not in error but the json content is empty. This is not expected."
+                'The query is not in error but the json content is empty. This is not expected.'
             );
         }
 

@@ -93,8 +93,8 @@ class WebhookDao extends DataAccessObject
         $this->getDB()->beginTransaction();
 
         try {
-            $delete_logs    = "DELETE FROM plugin_tracker_webhook_log WHERE webhook_id = ?";
-            $delete_webhook = "DELETE FROM plugin_tracker_webhook_url WHERE id = ?";
+            $delete_logs    = 'DELETE FROM plugin_tracker_webhook_log WHERE webhook_id = ?';
+            $delete_webhook = 'DELETE FROM plugin_tracker_webhook_url WHERE id = ?';
 
             $this->getDB()->run($delete_logs, $webhook_id);
             $this->getDB()->run($delete_webhook, $webhook_id);

@@ -158,7 +158,7 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             1,
             $this->workflow->getId(),
             null,
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
         );
 
         $this->workflow->shouldReceive('validate')->andThrows(

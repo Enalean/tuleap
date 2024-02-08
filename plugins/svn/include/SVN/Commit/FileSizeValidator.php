@@ -31,7 +31,7 @@ use Tuleap\SVNCore\Repository;
 
 final class FileSizeValidator implements PathValidator
 {
-    #[ConfigKey("Define the maximum file size for new files committed to Subversion plugin (in bytes)")]
+    #[ConfigKey('Define the maximum file size for new files committed to Subversion plugin (in bytes)')]
     public const CONFIG_KEY = 'plugin_svn_file_size_limit';
 
     private const SVNLOOK_ERROR_IS_NOT_FILE = 'svnlook: E160017:';

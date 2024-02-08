@@ -34,29 +34,29 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions (
                     id int(11) UNSIGNED PRIMARY KEY auto_increment,
                     project_id int(11) NOT NULL,
                     pattern VARCHAR(255) NOT NULL,
                     INDEX idx_default_fine_grained_permissions(project_id, pattern(15)),
                     UNIQUE default_unique_pattern (project_id, pattern)
-                )";
+                )';
 
         $this->db->createTable('plugin_git_default_fine_grained_permissions', $sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_writers (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_writers (
                     permission_id int(11) UNSIGNED,
                     ugroup_id int(11) NOT NULL,
                     PRIMARY KEY (permission_id, ugroup_id)
-                )";
+                )';
 
         $this->db->createTable('plugin_git_default_fine_grained_permissions_writers', $sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_rewinders (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_rewinders (
                     permission_id int(11) UNSIGNED,
                     ugroup_id int(11) NOT NULL,
                     PRIMARY KEY (permission_id, ugroup_id)
-                )";
+                )';
 
         $this->db->createTable('plugin_git_default_fine_grained_permissions_rewinders', $sql);
     }

@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class IsFieldUsedInASemanticEvent implements Dispatchable
 {
-    public const NAME = "isFieldUsedInASemanticEvent";
+    public const NAME = 'isFieldUsedInASemanticEvent';
 
     /**
      * @var Tracker_FormElement_Field

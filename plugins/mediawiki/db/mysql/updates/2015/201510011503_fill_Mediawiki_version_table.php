@@ -51,7 +51,7 @@ EOT;
     public function up()
     {
         $projects_table_mapping = [];
-        $sql                    = "SELECT * FROM plugin_mediawiki_database";
+        $sql                    = 'SELECT * FROM plugin_mediawiki_database';
         $res                    = $this->queryDB($sql, 'An error occured while looking for all mediawiki databases');
 
         foreach ($res->fetchAll() as $database_mapping) {

@@ -300,7 +300,7 @@ class FRSPackageDao extends DataAccessObject
     public function delete($package_id, $status_deleted)
     {
         $sql = sprintf(
-            "UPDATE frs_package SET status_id= " . $this->da->escapeInt($status_deleted) . " WHERE package_id=%d",
+            'UPDATE frs_package SET status_id= ' . $this->da->escapeInt($status_deleted) . ' WHERE package_id=%d',
             $this->da->escapeInt($package_id)
         );
 

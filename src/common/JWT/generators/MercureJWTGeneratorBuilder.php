@@ -39,7 +39,7 @@ class MercureJWTGeneratorBuilder
             return new NullMercureJWTGenerator();
         }
         $mercure_file_content =  @file_get_contents($path);
-        if ($mercure_file_content === false || ! str_starts_with($mercure_file_content, "MERCURE_KEY=")) {
+        if ($mercure_file_content === false || ! str_starts_with($mercure_file_content, 'MERCURE_KEY=')) {
             return new NullMercureJWTGenerator();
         }
         $mercure_key = new ConcealedString(trim(substr($mercure_file_content, 12)));

@@ -105,14 +105,14 @@ class QueryBuilder extends DataAccessObject
         $time_back = localtime((time() - ($span * self::ONE_DAY)), 1);
 
         // Adjust to midnight this day
-        $time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
+        $time_back['tm_sec'] = $time_back['tm_min'] = $time_back['tm_hour'] = 0;
         $begin_date          = mktime(
-            $time_back["tm_hour"],
-            $time_back["tm_min"],
-            $time_back["tm_sec"],
-            $time_back["tm_mon"] + 1,
-            $time_back["tm_mday"],
-            $time_back["tm_year"] + 1900
+            $time_back['tm_hour'],
+            $time_back['tm_min'],
+            $time_back['tm_sec'],
+            $time_back['tm_mon'] + 1,
+            $time_back['tm_mday'],
+            $time_back['tm_year'] + 1900
         );
 
         return date('Ymd', $begin_date);
@@ -120,11 +120,11 @@ class QueryBuilder extends DataAccessObject
 
     private function exportUserCondition(Project $project, $who)
     {
-        if ($who === "allusers") {
-            $condition = "";
+        if ($who === 'allusers') {
+            $condition = '';
         } else {
             $users = $this->da->escapeIntImplode($project->getMembersId());
-            if ($who === "members") {
+            if ($who === 'members') {
                 $condition = " AND user.user_id IN ($users) ";
             } else {
                 $condition = " AND user.user_id NOT IN ($users) ";

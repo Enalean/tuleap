@@ -54,7 +54,7 @@ final class DeletionContext
             return self::MOVE_TYPE;
         }
 
-        return "regular";
+        return 'regular';
     }
 
     public function getSourceProjectId(): int

@@ -50,7 +50,7 @@ class Admin_ProjectListExporter
      */
     private function buildCsvHeader()
     {
-        $csv_header      = "";
+        $csv_header      = '';
         $documents_title =  ['group_id'     => _('Id group'),
             'project_name' => _('Project Name'),
             'unix_name'    => _('Unix Group Name'),
@@ -72,7 +72,7 @@ class Admin_ProjectListExporter
      */
     private function buildCsvBody($projects)
     {
-        $csv_body = "";
+        $csv_body = '';
         $daoUsers = new UserGroupDao();
         foreach ($projects as $project) {
             $documents_body =  ['group_id'     => $project['group_id'],
@@ -111,7 +111,7 @@ class Admin_ProjectListExporter
      */
     private function getProjectStatus($status_code)
     {
-        $status = "";
+        $status = '';
         switch ($status_code) {
             case Project::STATUS_ACTIVE:
                 $status = _('Active');

@@ -45,7 +45,7 @@ class b201403281402_add_index_for_reverse_link extends \Tuleap\ForgeUpgrade\Buck
     public function postUp()
     {
         if (! $this->indexNameExists('tracker_changeset_value_artifactlink', 'idx_reverse')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException("tracker_changeset_value_artifactlink has no reverse link index");
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_changeset_value_artifactlink has no reverse link index');
         }
     }
 

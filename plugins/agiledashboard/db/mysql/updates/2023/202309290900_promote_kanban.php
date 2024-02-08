@@ -25,13 +25,13 @@ final class b202309290900_promote_kanban extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
-        return "Add column to know if a kanban is promoted";
+        return 'Add column to know if a kanban is promoted';
     }
 
     public function up(): void
     {
         $this->api->dbh->exec(
-            "ALTER TABLE plugin_agiledashboard_kanban_configuration ADD COLUMN is_promoted BOOL DEFAULT FALSE"
+            'ALTER TABLE plugin_agiledashboard_kanban_configuration ADD COLUMN is_promoted BOOL DEFAULT FALSE'
         );
     }
 }

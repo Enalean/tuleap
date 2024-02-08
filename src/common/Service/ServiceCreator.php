@@ -73,7 +73,7 @@ class ServiceCreator
         if ($result) {
             // activate corresponding references
             $reference_manager = ReferenceManager::instance();
-            if ($arr['short_name'] != "") {
+            if ($arr['short_name'] != '') {
                 $reference_manager->addSystemReferencesForService($template['id'], $group_id, $arr['short_name']);
             }
             return true;

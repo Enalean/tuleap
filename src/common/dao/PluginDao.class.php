@@ -33,7 +33,7 @@ class PluginDao extends DataAccessObject
     */
     public function searchAll()
     {
-        $sql = "SELECT * FROM plugin";
+        $sql = 'SELECT * FROM plugin';
         return $this->retrieve($sql);
     }
 
@@ -44,7 +44,7 @@ class PluginDao extends DataAccessObject
     public function searchById($id)
     {
         $sql = sprintf(
-            "SELECT * FROM plugin WHERE id = %s",
+            'SELECT * FROM plugin WHERE id = %s',
             $this->da->quoteSmart($id)
         );
         return $this->retrieve($sql);
@@ -57,7 +57,7 @@ class PluginDao extends DataAccessObject
     public function searchByName($name)
     {
         $sql = sprintf(
-            "SELECT * FROM plugin WHERE name = %s",
+            'SELECT * FROM plugin WHERE name = %s',
             $this->da->quoteSmart($name)
         );
         return $this->retrieve($sql);
@@ -68,10 +68,10 @@ class PluginDao extends DataAccessObject
     */
     public function searchEnabledPlugins(): mixed
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin
                 WHERE available = 1
-                ORDER BY id";
+                ORDER BY id';
 
         return $this->retrieve($sql);
     }
@@ -82,7 +82,7 @@ class PluginDao extends DataAccessObject
     public function create(string $name): mixed
     {
         $sql = sprintf(
-            "INSERT INTO plugin (name, available) VALUES (%s, 0);",
+            'INSERT INTO plugin (name, available) VALUES (%s, 0);',
             $this->da->quoteSmart($name)
         );
         return $this->updateAndGetLastId($sql);
@@ -91,9 +91,9 @@ class PluginDao extends DataAccessObject
     public function enablePlugin(int $id): void
     {
         $sql = sprintf(
-            "UPDATE plugin
+            'UPDATE plugin
                     SET available = 1
-                    WHERE id = %s",
+                    WHERE id = %s',
             $this->da->quoteSmart($id)
         );
         $this->update($sql);
@@ -102,9 +102,9 @@ class PluginDao extends DataAccessObject
     public function disablePlugin(int $id): void
     {
         $sql = sprintf(
-            "UPDATE plugin
+            'UPDATE plugin
                     SET available = 0
-                    WHERE id = %s",
+                    WHERE id = %s',
             $this->da->quoteSmart($id)
         );
         $this->update($sql);
@@ -113,7 +113,7 @@ class PluginDao extends DataAccessObject
     public function removeById($id)
     {
         $sql = sprintf(
-            "DELETE FROM plugin WHERE id = %s",
+            'DELETE FROM plugin WHERE id = %s',
             $this->da->quoteSmart($id)
         );
         return $this->update($sql);

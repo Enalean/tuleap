@@ -30,12 +30,12 @@ class DateHelper
 {
     public const SECONDS_IN_A_DAY = 86400;
 
-    public const PREFERENCE_NAME = "relative_dates_display";
+    public const PREFERENCE_NAME = 'relative_dates_display';
 
-    public const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN   = "relative_first-absolute_shown";
-    public const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN   = "absolute_first-relative_shown";
-    public const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP = "relative_first-absolute_tooltip";
-    public const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP = "absolute_first-relative_tooltip";
+    public const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN   = 'relative_first-absolute_shown';
+    public const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN   = 'absolute_first-relative_shown';
+    public const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP = 'relative_first-absolute_tooltip';
+    public const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP = 'absolute_first-relative_tooltip';
 
     /**
      * @deprecated Use DateHelper::relativeDate() instead

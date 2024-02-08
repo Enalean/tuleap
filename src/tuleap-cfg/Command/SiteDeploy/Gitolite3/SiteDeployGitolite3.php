@@ -41,7 +41,7 @@ final class SiteDeployGitolite3
         }
 
         if (! self::hasTuleapGitBin()) {
-            $logger->error("No Tuleap git detected whereas git plugin in installed, cannot proceed");
+            $logger->error('No Tuleap git detected whereas git plugin in installed, cannot proceed');
             return;
         }
 

@@ -20,7 +20,7 @@ class b201503061743_add_homepage extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Add table to store homepage configuration";
+        return 'Add table to store homepage configuration';
     }
 
     public function preUp()
@@ -36,9 +36,9 @@ class b201503061743_add_homepage extends \Tuleap\ForgeUpgrade\Bucket
 
     private function createTable()
     {
-        $sql = "CREATE TABLE homepage (
+        $sql = 'CREATE TABLE homepage (
             use_standard_homepage TINYINT(1) NOT NULL PRIMARY KEY
-        )";
+        )';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding homepage table.');
@@ -47,7 +47,7 @@ class b201503061743_add_homepage extends \Tuleap\ForgeUpgrade\Bucket
 
     private function populateTable()
     {
-        $sql = "INSERT INTO homepage (use_standard_homepage) VALUES (0)";
+        $sql = 'INSERT INTO homepage (use_standard_homepage) VALUES (0)';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while populating homepage table.');

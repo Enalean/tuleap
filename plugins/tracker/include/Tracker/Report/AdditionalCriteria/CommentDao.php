@@ -26,25 +26,25 @@ class CommentDao extends DataAccessObject
 {
     public function save($report_id, $comment)
     {
-        $sql = "REPLACE INTO tracker_report_criteria_comment_value (report_id, comment)
-                VALUES (?, ?)";
+        $sql = 'REPLACE INTO tracker_report_criteria_comment_value (report_id, comment)
+                VALUES (?, ?)';
 
         $this->getDB()->run($sql, $report_id, $comment);
     }
 
     public function delete($report_id)
     {
-        $sql = "DELETE FROM tracker_report_criteria_comment_value
-                WHERE report_id = ?";
+        $sql = 'DELETE FROM tracker_report_criteria_comment_value
+                WHERE report_id = ?';
 
         $this->getDB()->run($sql, $report_id);
     }
 
     public function searchByReportId($report_id)
     {
-        $sql = "SELECT comment
+        $sql = 'SELECT comment
                 FROM tracker_report_criteria_comment_value
-                WHERE report_id = ?";
+                WHERE report_id = ?';
 
         return $this->getDB()->row($sql, $report_id);
     }

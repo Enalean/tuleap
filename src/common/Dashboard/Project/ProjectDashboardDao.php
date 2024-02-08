@@ -32,9 +32,9 @@ class ProjectDashboardDao extends DataAccessObject
 
     public function searchAllProjectDashboards($project_id)
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM project_dashboards
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         return $this->getDB()->run($sql, $project_id);
     }
@@ -49,28 +49,28 @@ class ProjectDashboardDao extends DataAccessObject
 
     public function searchById($dashboard_id): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM project_dashboards
-                WHERE id = ?";
+                WHERE id = ?';
 
         return $this->getDB()->row($sql, $dashboard_id);
     }
 
     public function searchByProjectIdAndName($project_id, $name): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM project_dashboards
-                WHERE project_id = ? AND name = ?";
+                WHERE project_id = ? AND name = ?';
 
         return $this->getDB()->run($sql, $project_id, $name);
     }
 
     public function edit($id, $name): void
     {
-        $sql = "UPDATE
+        $sql = 'UPDATE
                 project_dashboards
                 SET name = ?
-                WHERE id = ?";
+                WHERE id = ?';
 
         $this->getDB()->run($sql, $name, $id);
     }
@@ -86,11 +86,11 @@ class ProjectDashboardDao extends DataAccessObject
 
     public function duplicateDashboard($template_id, $new_project_id, $template_dashboard_id): int
     {
-        $sql = "INSERT INTO project_dashboards (project_id, name)
+        $sql = 'INSERT INTO project_dashboards (project_id, name)
                 SELECT ?, name
                 FROM project_dashboards
                 WHERE project_id = ?
-                  AND id = ?";
+                  AND id = ?';
 
         $this->getDB()->run($sql, $new_project_id, $template_id, $template_dashboard_id);
 

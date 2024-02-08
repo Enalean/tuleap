@@ -28,6 +28,6 @@ final class MetadataGreaterThanOrEqualComparisonFromWhereBuilder implements Meta
 {
     public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
     {
-        throw new \RuntimeException("Metadata is not supported here");
+        throw new \RuntimeException('Metadata is not supported here');
     }
 }

@@ -162,9 +162,9 @@ class RepositoryFineGrainedRepresentationBuilder
             );
 
             $branch = $fine_grained->getPattern();
-            $tag    = "";
+            $tag    = '';
             if ($is_tag) {
-                $branch = "";
+                $branch = '';
                 $tag    = $fine_grained->getPattern();
             }
 

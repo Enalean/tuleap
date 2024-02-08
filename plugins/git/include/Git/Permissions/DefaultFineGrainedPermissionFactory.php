@@ -96,12 +96,12 @@ class DefaultFineGrainedPermissionFactory
 
     private function getAllWriters(Codendi_Request $request)
     {
-        $branches = $request->get(self::EDIT_BRANCH_PREFIX . "-write");
+        $branches = $request->get(self::EDIT_BRANCH_PREFIX . '-write');
         if (! is_array($branches)) {
             $branches = [];
         }
 
-        $tags = $request->get(self::EDIT_TAG_PREFIX . "-write");
+        $tags = $request->get(self::EDIT_TAG_PREFIX . '-write');
         if (! is_array($tags)) {
             $tags = [];
         }
@@ -179,12 +179,12 @@ class DefaultFineGrainedPermissionFactory
 
     private function getAllRewinders(Codendi_Request $request)
     {
-        $branches = $request->get(self::EDIT_BRANCH_PREFIX . "-rewind");
+        $branches = $request->get(self::EDIT_BRANCH_PREFIX . '-rewind');
         if (! is_array($branches)) {
             $branches = [];
         }
 
-        $tags = $request->get(self::EDIT_TAG_PREFIX . "-rewind");
+        $tags = $request->get(self::EDIT_TAG_PREFIX . '-rewind');
         if (! is_array($tags)) {
             $tags = [];
         }
@@ -300,7 +300,7 @@ class DefaultFineGrainedPermissionFactory
     {
         $permissions              = [];
         $patterns                 = $request->get("$prefix-name");
-        $are_we_activating_regexp = $request->get("use-regexp");
+        $are_we_activating_regexp = $request->get('use-regexp');
 
         if ($patterns) {
             foreach ($patterns as $index => $pattern) {

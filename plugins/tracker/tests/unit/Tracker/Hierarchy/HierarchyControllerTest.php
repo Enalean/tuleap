@@ -90,7 +90,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             })
         );
 
-        $event_manager->method("dispatch")->willReturn(
+        $event_manager->method('dispatch')->willReturn(
             new TrackerHierarchyUpdateEvent(
                 $hierarchical_tracker->getUnhierarchizedTracker(),
                 ['147'],
@@ -142,7 +142,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $hierarchy_dao->shouldReceive('changeTrackerHierarchy')->once();
         $hierarchy_dao->shouldNotReceive('updateChildren');
 
-        $event_manager->method("dispatch")->willReturn(
+        $event_manager->method('dispatch')->willReturn(
             new TrackerHierarchyUpdateEvent(
                 $hierarchical_tracker->getUnhierarchizedTracker(),
                 ['147'],
@@ -188,8 +188,8 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['147'],
         );
         $event->setHierarchyCannotBeUpdated();
-        $event->setErrorMessage("You cannot.");
-        $event_manager->method("dispatch")->willReturn($event);
+        $event->setErrorMessage('You cannot.');
+        $event_manager->method('dispatch')->willReturn($event);
 
         $controller->update();
     }

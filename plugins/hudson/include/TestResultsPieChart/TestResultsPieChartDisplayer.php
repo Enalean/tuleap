@@ -43,6 +43,6 @@ class TestResultsPieChartDisplayer
 
         $renderer = TemplateRendererFactory::build()->getRenderer(HUDSON_TEMPLATES_DIR);
 
-        $renderer->renderToPage("test-results-pie-mount-point", $presenter);
+        $renderer->renderToPage('test-results-pie-mount-point', $presenter);
     }
 }

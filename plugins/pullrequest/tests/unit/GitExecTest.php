@@ -41,9 +41,9 @@ final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->init();
         $this->git_exec->setLocalCommiter('John Doe', 'john.doe@example.com');
 
-        file_put_contents("$this->fixture_dir/toto", "stuff");
+        file_put_contents("$this->fixture_dir/toto", 'stuff');
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("add stuff");
+        $this->git_exec->commit('add stuff');
     }
 
     public function testItReturnsTheSha1OfAGivenBranch(): void
@@ -64,10 +64,10 @@ final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnArrayOfModifiedFiles(): void
     {
-        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet -b dev 2>&1 >/dev/null");
-        file_put_contents("$this->fixture_dir/toto", "jackassness");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . ' checkout --quiet -b dev 2>&1 >/dev/null');
+        file_put_contents("$this->fixture_dir/toto", 'jackassness');
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("modify toto");
+        $this->git_exec->commit('modify toto');
 
         $sha1_src  = $this->git_exec->getBranchSha1('refs/heads/dev');
         $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/main');
@@ -80,16 +80,16 @@ final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUsesTheCommonAncestorToDoTheDiff(): void
     {
-        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet -b dev 2>&1 >/dev/null");
-        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet main 2>&1 >/dev/null");
-        file_put_contents("$this->fixture_dir/added-file-in-master", "whatever");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . ' checkout --quiet -b dev 2>&1 >/dev/null');
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . ' checkout --quiet main 2>&1 >/dev/null');
+        file_put_contents("$this->fixture_dir/added-file-in-master", 'whatever');
         $this->git_exec->add("$this->fixture_dir/added-file-in-master");
-        $this->git_exec->commit("add file added-file-in-master");
+        $this->git_exec->commit('add file added-file-in-master');
 
-        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet dev 2>&1 >/dev/null");
-        file_put_contents("$this->fixture_dir/added-file-in-dev", "jackassness");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . ' checkout --quiet dev 2>&1 >/dev/null');
+        file_put_contents("$this->fixture_dir/added-file-in-dev", 'jackassness');
         $this->git_exec->add("$this->fixture_dir/added-file-in-dev");
-        $this->git_exec->commit("add file added-file-in-dev");
+        $this->git_exec->commit('add file added-file-in-dev');
 
         $sha1_src  = $this->git_exec->getBranchSha1('refs/heads/dev');
         $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/main');
@@ -120,7 +120,7 @@ final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add($file2_path);
         $this->git_exec->commit("add $file1_path & add $file2_path");
 
-        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet -b dev 2>&1 >/dev/null");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . ' checkout --quiet -b dev 2>&1 >/dev/null');
 
         $this->git_exec->rm($file2_path);
         file_put_contents($file1_path, "Contenu\nContenu2");
@@ -144,7 +144,7 @@ final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add($file2_path);
         $this->git_exec->commit("add $file1_path & add $file2_path");
 
-        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet -b dev 2>&1 >/dev/null");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . ' checkout --quiet -b dev 2>&1 >/dev/null');
 
         $this->git_exec->rm($file2_path);
         file_put_contents($file1_path, "Contenu\nContenu2");
@@ -170,9 +170,9 @@ final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenIsNotAncestor(): void
     {
-        file_put_contents("$this->fixture_dir/toto", "stuff2");
+        file_put_contents("$this->fixture_dir/toto", 'stuff2');
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("add stuff");
+        $this->git_exec->commit('add stuff');
 
         $res = $this->git_exec->isAncestor('HEAD^', 'HEAD');
         self::assertFalse($res);
@@ -180,9 +180,9 @@ final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueWhenIsAncestor(): void
     {
-        file_put_contents("$this->fixture_dir/toto", "stuff2");
+        file_put_contents("$this->fixture_dir/toto", 'stuff2');
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("add stuff");
+        $this->git_exec->commit('add stuff');
 
         $res = $this->git_exec->isAncestor('HEAD', 'HEAD^');
         self::assertTrue($res);

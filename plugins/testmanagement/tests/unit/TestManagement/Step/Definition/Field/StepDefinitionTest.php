@@ -169,23 +169,23 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTheConvertedRESTFormatInDBCompatibleFormatBeforeInsertion(): void
     {
         $steps = [
-            "value" => [
+            'value' => [
                 [
-                    "description"             => "some description",
-                    "description_format"      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                    "expected_results"        => "some results",
-                    "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                    'description'             => 'some description',
+                    'description_format'      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                    'expected_results'        => 'some results',
+                    'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                 ],
             ],
         ];
 
         $expected_converted_step = [
-            "description"             => ["some description"],
-            "description_format"      => [
+            'description'             => ['some description'],
+            'description_format'      => [
                 Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ],
-            "expected_results"        => ["some results"],
-            "expected_results_format" => [
+            'expected_results'        => ['some results'],
+            'expected_results_format' => [
                 Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ],
         ];
@@ -198,13 +198,13 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnsConvertedRESTFormatInDBCompatibleFormatBeforeInsertionOnUpdate(): void
     {
         $steps = [
-            "value" => [
+            'value' => [
                 [
-                    "description" => "some description",
-                    "description_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                    "expected_results" => "some results",
-                    "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                    "rank" => 1,
+                    'description' => 'some description',
+                    'description_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                    'expected_results' => 'some results',
+                    'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                    'rank' => 1,
                 ],
             ],
         ];
@@ -224,7 +224,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfTheRESTStepDefinitionValueIsNotSet(): void
     {
-        $steps = ["value" => null];
+        $steps = ['value' => null];
 
 
         self::assertNull($this->field->getFieldDataFromRESTValue($steps));
@@ -233,7 +233,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsNoStepsIfTheRESTStepDefinitionValueIsEmpty(): void
     {
-        $steps = ["value" => []];
+        $steps = ['value' => []];
 
         $expected_value = ['no_steps' => true];
 

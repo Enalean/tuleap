@@ -53,11 +53,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowAnExceptionWhenNewTrackerLengthIsInvalid(): void
     {
         $project_id              = 101;
-        $previous_shortname      = "bugs";
-        $previous_public_name    = "Bugs";
-        $validated_public_name   = "Bugs";
-        $validated_tracker_color = "inca-silver";
-        $validated_short_name    = "bugs-with-a-very-very-long-shortname";
+        $previous_shortname      = 'bugs';
+        $previous_public_name    = 'Bugs';
+        $validated_public_name   = 'Bugs';
+        $validated_tracker_color = 'inca-silver';
+        $validated_short_name    = 'bugs-with-a-very-very-long-shortname';
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Tracker shortname length must be inferior to 25 characters.');
@@ -74,11 +74,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotThrowAnExceptionWhenOldTrackerLengthWasInvalid(): void
     {
         $project_id              = 101;
-        $previous_shortname      = "bugs";
-        $previous_public_name    = "Bugs";
-        $validated_public_name   = "Bugs";
-        $validated_tracker_color = "inca-silver";
-        $validated_short_name    = "bugs_renamed";
+        $previous_shortname      = 'bugs';
+        $previous_public_name    = 'Bugs';
+        $validated_public_name   = 'Bugs';
+        $validated_tracker_color = 'inca-silver';
+        $validated_short_name    = 'bugs_renamed';
 
         $this->tracker_factory->shouldReceive('isNameExists')->andReturn(false);
         $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
@@ -101,11 +101,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenPublicNameIsNotProvided(): void
     {
         $project_id              = 101;
-        $previous_shortname      = "bugs";
-        $previous_public_name    = "Bugs";
-        $validated_public_name   = "";
-        $validated_tracker_color = "inca-silver";
-        $validated_short_name    = "bugs-renamed";
+        $previous_shortname      = 'bugs';
+        $previous_public_name    = 'Bugs';
+        $validated_public_name   = '';
+        $validated_tracker_color = 'inca-silver';
+        $validated_short_name    = 'bugs-renamed';
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Name, color, and short name are required.');
@@ -122,11 +122,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenShortNameIsNotProvided(): void
     {
         $project_id              = 101;
-        $previous_shortname      = "bugs";
-        $previous_public_name    = "Bugs";
-        $validated_public_name   = "Bugs";
-        $validated_tracker_color = "inca-silver";
-        $validated_short_name    = "";
+        $previous_shortname      = 'bugs';
+        $previous_public_name    = 'Bugs';
+        $validated_public_name   = 'Bugs';
+        $validated_tracker_color = 'inca-silver';
+        $validated_short_name    = '';
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Name, color, and short name are required.');
@@ -143,11 +143,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenColorIsNotProvided(): void
     {
         $project_id              = 101;
-        $previous_shortname      = "bugs";
-        $previous_public_name    = "Bugs";
-        $validated_public_name   = "Bugs";
-        $validated_tracker_color = "";
-        $validated_short_name    = "bugs";
+        $previous_shortname      = 'bugs';
+        $previous_public_name    = 'Bugs';
+        $validated_public_name   = 'Bugs';
+        $validated_tracker_color = '';
+        $validated_short_name    = 'bugs';
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Name, color, and short name are required.');
@@ -164,11 +164,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfPublicNameAlreadyExists(): void
     {
         $project_id              = 101;
-        $previous_shortname      = "bugs";
-        $previous_public_name    = "Bugs";
-        $validated_public_name   = "New bugs";
-        $validated_tracker_color = "inca-silver";
-        $validated_short_name    = "bugs";
+        $previous_shortname      = 'bugs';
+        $previous_public_name    = 'Bugs';
+        $validated_public_name   = 'New bugs';
+        $validated_tracker_color = 'inca-silver';
+        $validated_short_name    = 'bugs';
 
         $this->tracker_factory->shouldReceive('isNameExists')->andReturn(true);
         $this->expectException(TrackerIsInvalidException::class);
@@ -187,11 +187,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenShortNameIsInvalid(): void
     {
         $project_id              = 101;
-        $previous_shortname      = "bugs";
-        $previous_public_name    = "Bugs";
-        $validated_public_name   = "New bugs";
-        $validated_tracker_color = "inca-silver";
-        $validated_short_name    = "+++bugs+++";
+        $previous_shortname      = 'bugs';
+        $previous_public_name    = 'Bugs';
+        $validated_public_name   = 'New bugs';
+        $validated_tracker_color = 'inca-silver';
+        $validated_short_name    = '+++bugs+++';
 
         $this->tracker_factory->shouldReceive('isNameExists')->andReturn(false);
         $this->expectException(TrackerIsInvalidException::class);
@@ -212,11 +212,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfShortNameAlreadyExists(): void
     {
         $project_id              = 101;
-        $previous_shortname      = "bugs";
-        $previous_public_name    = "Bugs";
-        $validated_public_name   = "New bugs";
-        $validated_tracker_color = "inca-silver";
-        $validated_short_name    = "new_bugs";
+        $previous_shortname      = 'bugs';
+        $previous_public_name    = 'Bugs';
+        $validated_public_name   = 'New bugs';
+        $validated_tracker_color = 'inca-silver';
+        $validated_short_name    = 'new_bugs';
 
         $this->tracker_factory->shouldReceive('isNameExists')->andReturn(false);
         $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(true);
@@ -236,11 +236,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenReferenceKeywordIsInvalid(): void
     {
         $project_id              = 101;
-        $previous_shortname      = "bugs";
-        $previous_public_name    = "Bugs";
-        $validated_public_name   = "New bugs";
-        $validated_tracker_color = "inca-silver";
-        $validated_short_name    = "new-bugs";
+        $previous_shortname      = 'bugs';
+        $previous_public_name    = 'Bugs';
+        $validated_public_name   = 'New bugs';
+        $validated_tracker_color = 'inca-silver';
+        $validated_short_name    = 'new-bugs';
 
         $this->tracker_factory->shouldReceive('isNameExists')->andReturn(false);
         $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
@@ -264,11 +264,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenReferenceKeywordAlreadyExists(): void
     {
         $project_id              = 101;
-        $previous_shortname      = "bugs";
-        $previous_public_name    = "Bugs";
-        $validated_public_name   = "New bugs";
-        $validated_tracker_color = "inca-silver";
-        $validated_short_name    = "new_bugs";
+        $previous_shortname      = 'bugs';
+        $previous_public_name    = 'Bugs';
+        $validated_public_name   = 'New bugs';
+        $validated_tracker_color = 'inca-silver';
+        $validated_short_name    = 'new_bugs';
 
         $this->tracker_factory->shouldReceive('isNameExists')->andReturn(false);
         $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);

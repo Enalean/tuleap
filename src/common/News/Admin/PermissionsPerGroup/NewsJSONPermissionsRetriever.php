@@ -46,7 +46,7 @@ class NewsJSONPermissionsRetriever
                 [
                     'error' => [
                         'message' => _(
-                            "Service news is disabled for this project."
+                            'Service news is disabled for this project.'
                         ),
                     ],
                 ]

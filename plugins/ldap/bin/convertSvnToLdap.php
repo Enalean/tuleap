@@ -24,12 +24,12 @@ function extract_params($argv)
     for ($i = 1; $i < count($argv); ++$i) {
         $arg = $argv[$i];
         // If arg start by "--" this is the beginning of a new option
-        if (strpos($arg, "--") === 0) {
-            $eqpos               = strpos($arg, "=");
+        if (strpos($arg, '--') === 0) {
+            $eqpos               = strpos($arg, '=');
             $argname             = substr($arg, 2, $eqpos - 2);
             $arguments[$argname] = substr($arg, $eqpos + 1);
         } else {
-            $arguments[$argname] .= " " . $arg;
+            $arguments[$argname] .= ' ' . $arg;
         }
     }
     return $arguments;
@@ -63,7 +63,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
 {
     $newContent = '';
 
-    $f = fopen($srcFileName, "rb");
+    $f = fopen($srcFileName, 'rb');
     if ($f === false) {
         fwrite(STDERR, "** ERROR: $srcFileName: No such file or directory" . PHP_EOL);
     } else {
@@ -87,7 +87,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
                 $m = preg_match($path_pat, $line, $matches);
                 if ($m) {
                     $path = $matches[1];
-                    if ($path == "groups") {
+                    if ($path == 'groups') {
                         $state = $ST_GROUP;
                     } else {
                         $state = $ST_PATH;
@@ -100,7 +100,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
                         $group = $matches[1];
                         $users = $matches[2];
 
-                        $uarray     = array_map('trim', explode(",", strtolower($users)));
+                        $uarray     = array_map('trim', explode(',', strtolower($users)));
                         $ldapLogins = [];
                         foreach ($uarray as $user) {
                             if (strpos($user, '@') === 0) {
@@ -148,7 +148,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
         //fclose($f);
 
         // Write new file
-        $fd = fopen($dstFileName, "w");
+        $fd = fopen($dstFileName, 'w');
         if (! $fd) {
             fwrite(STDERR, "** ERROR: $dstFileName: Not writable" . PHP_EOL);
         } else {
@@ -174,7 +174,7 @@ if ($ldapPlugin instanceof LdapPlugin && $plugin_manager->isPluginEnabled($ldapP
             //if($dirInfo->isDot()) continue;
             $svnaccessfile = new SplFileInfo('/svnroot/' . $row['unix_group_name'] . '/.SVNAccessFile');
             if ($svnaccessfile->isFile()) {
-                fwrite(STDOUT, "Process " . $row['unix_group_name'] . PHP_EOL);
+                fwrite(STDOUT, 'Process ' . $row['unix_group_name'] . PHP_EOL);
                 if (copy($svnaccessfile->getPathname(), $svnaccessfile->getPathname() . '.beforeldap')) {
                     svn_utils_convert_access_file_to_ldap(
                         $ldapUm,
@@ -186,6 +186,6 @@ if ($ldapPlugin instanceof LdapPlugin && $plugin_manager->isPluginEnabled($ldapP
             }
         }
     } else {
-        fwrite(STDERR, "** ERROR: either --src or --dst are missing" . PHP_EOL);
+        fwrite(STDERR, '** ERROR: either --src or --dst are missing' . PHP_EOL);
     }
 }

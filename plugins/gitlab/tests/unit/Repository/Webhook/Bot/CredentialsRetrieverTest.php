@@ -51,17 +51,17 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $gitlab_repository
             ->expects(self::once())
             ->method('getGitlabServerUrl')
-            ->willReturn("https://www.example.com/");
+            ->willReturn('https://www.example.com/');
 
-        $integration_api_token = IntegrationApiToken::buildBrandNewToken(new ConcealedString("My_Token123"));
+        $integration_api_token = IntegrationApiToken::buildBrandNewToken(new ConcealedString('My_Token123'));
 
-        $this->token_retriever->method("getIntegrationAPIToken")->with($gitlab_repository)->willReturn($integration_api_token);
+        $this->token_retriever->method('getIntegrationAPIToken')->with($gitlab_repository)->willReturn($integration_api_token);
 
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 
         self::assertNotNull($credentials);
         self::assertEquals($integration_api_token, $credentials->getApiToken());
-        self::assertEquals("https://www.example.com/", $credentials->getGitlabServerUrl());
+        self::assertEquals('https://www.example.com/', $credentials->getGitlabServerUrl());
     }
 
     public function testReturnsNullIfNoSavedToken(): void
@@ -71,7 +71,7 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('getGitlabServerUrl');
 
-        $this->token_retriever->method("getIntegrationAPIToken")->with($gitlab_repository)->willReturn(null);
+        $this->token_retriever->method('getIntegrationAPIToken')->with($gitlab_repository)->willReturn(null);
 
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 

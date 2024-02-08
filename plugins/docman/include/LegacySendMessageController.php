@@ -52,7 +52,7 @@ final class LegacySendMessageController implements DispatchableWithRequest
             $dar        = $this->project_manager->getMessageToRequesterForAccessProject($request->get('groupId'));
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
-                if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
+                if ($row['msg_to_requester'] != 'member_request_delegation_msg_to_requester') {
                     $defaultMsg = $row['msg_to_requester'];
                 }
             }

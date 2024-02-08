@@ -59,20 +59,20 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
 
     public function getName()
     {
-        return _("PhpHighlight");
+        return _('PhpHighlight');
     }
 
     public function getDescription()
     {
-        return _("PHP syntax highlighting");
+        return _('PHP syntax highlighting');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.9 $"
+            '$Revision: 1.9 $'
         );
     }
 
@@ -82,11 +82,11 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
         // TODO: results of ini_get() should be static for multiple
         // invocations of plugin on one WikiPage
         return ['wrap'    => true,
-            'string'  => ini_get("highlight.string"),  //'#00CC00',
-            'comment' => ini_get("highlight.comment"), //'#FF9900',
-            'keyword' => ini_get("highlight.keyword"), //'#006600',
-            'default' => ini_get("highlight.default"), //'#0000CC',
-            'html'    => ini_get("highlight.html"),     //'#000000'
+            'string'  => ini_get('highlight.string'),  //'#00CC00',
+            'comment' => ini_get('highlight.comment'), //'#FF9900',
+            'keyword' => ini_get('highlight.keyword'), //'#006600',
+            'default' => ini_get('highlight.default'), //'#0000CC',
+            'html'    => ini_get('highlight.html'),     //'#000000'
         ];
     }
 
@@ -144,10 +144,10 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
      */
     public function sanify_colors($string, $comment, $keyword, $bg, $default, $html)
     {
-        static $html4colors = ["black", "silver", "gray", "white",
-            "maroon", "red", "purple", "fuchsia",
-            "green", "lime", "olive", "yellow",
-            "navy", "blue", "teal", "aqua",
+        static $html4colors = ['black', 'silver', 'gray', 'white',
+            'maroon', 'red', 'purple', 'fuchsia',
+            'green', 'lime', 'olive', 'yellow',
+            'navy', 'blue', 'teal', 'aqua',
         ];
         /* max(strlen("fuchsia"), strlen("#00FF00"), ... ) = 7 */
         static $MAXLEN = 7;
@@ -155,8 +155,8 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
             $length = strlen($color);
             //trigger_error(sprintf(_("DEBUG: color '%s' is length %d."), $color, $length), E_USER_NOTICE);
             if (
-                ($length == 7 || $length == 4) && substr($color, 0, 1) == "#"
-                && "#" == preg_replace("/[a-fA-F0-9]/", "", $color)
+                ($length == 7 || $length == 4) && substr($color, 0, 1) == '#'
+                && '#' == preg_replace('/[a-fA-F0-9]/', '', $color)
             ) {
                 //trigger_error(sprintf(_("DEBUG: color '%s' appears to be hex."), $color), E_USER_NOTICE);
                 // stop checking, ok to go
@@ -165,7 +165,7 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
                 // stop checking, ok to go
             } else {
                 trigger_error(sprintf(
-                    _("Invalid color: %s"),
+                    _('Invalid color: %s'),
                     $color
                 ), E_USER_NOTICE);
                 // FIXME: also change color to something valid like "black" or ini_get("highlight.xxx")

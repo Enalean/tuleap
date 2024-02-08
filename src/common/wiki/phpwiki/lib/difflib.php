@@ -18,7 +18,7 @@ class _DiffOp
 
     public function reverse()
     {
-        trigger_error("pure virtual", E_USER_ERROR);
+        trigger_error('pure virtual', E_USER_ERROR);
     }
 
     public function norig()
@@ -670,7 +670,7 @@ class Diff
         $prevtype = 'none';
         foreach ($this->edits as $edit) {
             if ($prevtype == $edit->type) {
-                trigger_error("Edit sequence is non-optimal", E_USER_ERROR);
+                trigger_error('Edit sequence is non-optimal', E_USER_ERROR);
             }
             $prevtype = $edit->type;
         }
@@ -852,7 +852,7 @@ class DiffFormatter
             } elseif ($edit->type == 'change') {
                 $this->_changed($edit->orig, $edit->final);
             } else {
-                trigger_error("Unknown edit type", E_USER_ERROR);
+                trigger_error('Unknown edit type', E_USER_ERROR);
             }
         }
         $this->_end_block();
@@ -873,10 +873,10 @@ class DiffFormatter
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
         if ($xlen > 1) {
-            $xbeg .= "," . ($xbeg + $xlen - 1);
+            $xbeg .= ',' . ($xbeg + $xlen - 1);
         }
         if ($ylen > 1) {
-            $ybeg .= "," . ($ybeg + $ylen - 1);
+            $ybeg .= ',' . ($ybeg + $ylen - 1);
         }
 
         return $xbeg . ($xlen ? ($ylen ? 'c' : 'd') : 'a') . $ybeg;
@@ -909,12 +909,12 @@ class DiffFormatter
 
     public function _added($lines)
     {
-        $this->_lines($lines, '', ">");
+        $this->_lines($lines, '', '>');
     }
 
     public function _deleted($lines)
     {
-        $this->_lines($lines, '', "<");
+        $this->_lines($lines, '', '<');
     }
 
     public function _changed($orig, $final)
@@ -941,22 +941,22 @@ class UnifiedDiffFormatter extends DiffFormatter
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
         if ($xlen != 1) {
-            $xbeg .= "," . $xlen;
+            $xbeg .= ',' . $xlen;
         }
         if ($ylen != 1) {
-            $ybeg .= "," . $ylen;
+            $ybeg .= ',' . $ylen;
         }
         return "@@ -$xbeg +$ybeg @@\n";
     }
 
     public function _added($lines)
     {
-        $this->_lines($lines, '', "+");
+        $this->_lines($lines, '', '+');
     }
 
     public function _deleted($lines)
     {
-        $this->_lines($lines, '', "-");
+        $this->_lines($lines, '', '-');
     }
 
     public function _changed($orig, $final)
@@ -1004,17 +1004,17 @@ class BlockDiffFormatter extends DiffFormatter
 
     public function _added($lines)
     {
-        $this->_lines($lines, '', ">>>>>>>");
+        $this->_lines($lines, '', '>>>>>>>');
     }
 
     public function _deleted($lines)
     {
-        $this->_lines($lines, '', "<<<<<<<");
+        $this->_lines($lines, '', '<<<<<<<');
     }
 
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
-        return "";
+        return '';
     }
 
     public function _changed($orig, $final)

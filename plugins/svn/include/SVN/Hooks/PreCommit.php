@@ -76,6 +76,6 @@ class PreCommit
                 $validator->assertPathIsValid($repository, $transaction, $path);
             }
         }
-        $this->logger->debug("Commit is allowed \o/");
+        $this->logger->debug('Commit is allowed \o/');
     }
 }

@@ -192,13 +192,13 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
         string $group_group,
         string $order_by,
     ): string {
-        $select = " SELECT count(a.id) AS nb, " . $source_field->getQuerySelectWithDecorator() . $has_group_by_field;
-        $from   = " FROM tracker_artifact AS a
-                         INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) " .
+        $select = ' SELECT count(a.id) AS nb, ' . $source_field->getQuerySelectWithDecorator() . $has_group_by_field;
+        $from   = ' FROM tracker_artifact AS a
+                         INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) ' .
             $source_field->getQueryFromWithDecorator() .
             $from_group;
-        $where  = " WHERE a.id IN (" . $this->getArtifactIds() . ")
-                      AND c.id IN (" . $this->getArtifactsLastChangesetIds() . ") ";
+        $where  = ' WHERE a.id IN (' . $this->getArtifactIds() . ')
+                      AND c.id IN (' . $this->getArtifactsLastChangesetIds() . ') ';
 
         $query = $select . $from . $where . ' GROUP BY ' . $source_field->getQueryGroupBy() . $group_group;
         if (trim($order_by) !== '') {

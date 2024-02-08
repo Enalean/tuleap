@@ -83,16 +83,16 @@ class FrozenFieldsDao extends DataAccessObject
     public function createPostActionForTransitionId(int $transition_id, array $field_ids): void
     {
         $frozen_fields_action_id = (int) $this->getDB()->insertReturnId(
-            "plugin_tracker_workflow_postactions_frozen_fields",
-            ["transition_id" => $transition_id]
+            'plugin_tracker_workflow_postactions_frozen_fields',
+            ['transition_id' => $transition_id]
         );
 
         foreach ($field_ids as $field_id) {
             $this->getDB()->insert(
-                "plugin_tracker_workflow_postactions_frozen_fields_value",
+                'plugin_tracker_workflow_postactions_frozen_fields_value',
                 [
-                    "postaction_id" => $frozen_fields_action_id,
-                    "field_id"      => $field_id,
+                    'postaction_id' => $frozen_fields_action_id,
+                    'field_id'      => $field_id,
                 ]
             );
         }
@@ -100,12 +100,12 @@ class FrozenFieldsDao extends DataAccessObject
 
     public function deletePostActionsByTransitionId(int $transition_id): void
     {
-        $sql = "
+        $sql = '
             DELETE plugin_tracker_workflow_postactions_frozen_fields, plugin_tracker_workflow_postactions_frozen_fields_value
             FROM plugin_tracker_workflow_postactions_frozen_fields
             LEFT JOIN plugin_tracker_workflow_postactions_frozen_fields_value
                 ON plugin_tracker_workflow_postactions_frozen_fields_value.postaction_id = plugin_tracker_workflow_postactions_frozen_fields.id
-            WHERE plugin_tracker_workflow_postactions_frozen_fields.transition_id = ?";
+            WHERE plugin_tracker_workflow_postactions_frozen_fields.transition_id = ?';
 
         $this->getDB()->run(
             $sql,
@@ -115,7 +115,7 @@ class FrozenFieldsDao extends DataAccessObject
 
     public function deleteAllPostActionsForWorkflow(int $workflow_id): void
     {
-        $sql = "
+        $sql = '
             DELETE plugin_tracker_workflow_postactions_frozen_fields, plugin_tracker_workflow_postactions_frozen_fields_value
             FROM tracker_workflow
                 INNER JOIN tracker_workflow_transition
@@ -124,7 +124,7 @@ class FrozenFieldsDao extends DataAccessObject
                     ON (tracker_workflow_transition.transition_id = plugin_tracker_workflow_postactions_frozen_fields.transition_id)
                 LEFT JOIN plugin_tracker_workflow_postactions_frozen_fields_value
                     ON plugin_tracker_workflow_postactions_frozen_fields_value.postaction_id = plugin_tracker_workflow_postactions_frozen_fields.id
-            WHERE tracker_workflow.workflow_id = ?";
+            WHERE tracker_workflow.workflow_id = ?';
 
         $this->getDB()->run(
             $sql,

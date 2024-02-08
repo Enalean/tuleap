@@ -51,9 +51,9 @@ class BannerDao extends DataAccessObject
 
     public function searchBannerByProjectId(int $project_id): ?string
     {
-        $sql = "SELECT message
+        $sql = 'SELECT message
             FROM project_banner
-            WHERE project_id=?";
+            WHERE project_id=?';
 
         return $this->getDB()->cell($sql, $project_id) ?: null;
     }

@@ -216,7 +216,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function getNoValueLabel()
     {
-        return "<span class='empty_value auto-computed-label'>" . $this->getFieldEmptyMessage() . "</span>";
+        return "<span class='empty_value auto-computed-label'>" . $this->getFieldEmptyMessage() . '</span>';
     }
 
     protected function getComputedValueWithNoLabel(Artifact $artifact, PFUser $user, $stop_on_manual_value)
@@ -482,7 +482,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $computed_value = $this->getComputedValue($user, $changeset->getArtifact(), $changeset->getSubmittedOn());
         }
 
-        return (string) ($computed_value ?? "-");
+        return (string) ($computed_value ?? '-');
     }
 
     /**
@@ -500,7 +500,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $computed_value = $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
         }
 
-        return (string) ($computed_value ?? "-");
+        return (string) ($computed_value ?? '-');
     }
 
     public function fetchChangesetValue(
@@ -592,7 +592,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html .= $this->fetchComputedInputs($default_value_in_input, true);
         $html .= $this->fetchBackToAutocomputedButton(true);
         $html .= $this->fetchComputedValueWithLabel($this->getFieldEmptyMessage());
-        $html .= "</div>";
+        $html .= '</div>';
 
         return $html;
     }
@@ -685,7 +685,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $default_value = $this->getDefaultValue();
         $extra_class   = '';
         if ($default_value !== null) {
-            $extra_class = "in-edition with-default-value";
+            $extra_class = 'in-edition with-default-value';
         }
 
         $purifier = Codendi_HTMLPurifier::instance();
@@ -809,7 +809,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         }
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
 
-        $html = "";
+        $html = '';
         if (! $this->userCanRead()) {
             return $html;
         }

@@ -60,7 +60,7 @@ class FRSPermissionCreator
 
         $this->project_history_dao->groupAddHistory('perm_granted_for_files', implode(',', $this->getUGroupNames($ugroup_ids)), $project->getId(), [$permission_type]);
 
-        $override_collection->emitFeedback("");
+        $override_collection->emitFeedback('');
     }
 
     public function duplicate(Project $project, $template_id)

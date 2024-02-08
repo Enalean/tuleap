@@ -113,7 +113,7 @@ class RepositoryDisplayController
 
     private function addTrailingSlash(string $path): string
     {
-        if (strrpos($path, "/") !== (strlen($path) - 1)) {
+        if (strrpos($path, '/') !== (strlen($path) - 1)) {
             return $path . '/';
         }
         return $path;

@@ -102,8 +102,8 @@ class TrackerForceNotificationsLevelCommand extends Command
             ->addArgument(
                 'notification_level',
                 InputArgument::REQUIRED,
-                "Notification level, authorized values: " .
-                 implode(", ", self::AUTHORIZED_CONFIGURATION_LEVEL)
+                'Notification level, authorized values: ' .
+                 implode(', ', self::AUTHORIZED_CONFIGURATION_LEVEL)
             )
             ->addArgument(
                 'project_id',
@@ -121,8 +121,8 @@ class TrackerForceNotificationsLevelCommand extends Command
         $notification_level = $input->getArgument('notification_level');
         if (! in_array($notification_level, self::AUTHORIZED_CONFIGURATION_LEVEL, true)) {
             throw new InvalidArgumentException(
-                "Notification level, only following values are authorized: " .
-                implode(", ", self::AUTHORIZED_CONFIGURATION_LEVEL)
+                'Notification level, only following values are authorized: ' .
+                implode(', ', self::AUTHORIZED_CONFIGURATION_LEVEL)
             );
         }
 
@@ -141,7 +141,7 @@ class TrackerForceNotificationsLevelCommand extends Command
         foreach ($project_ids as $project_id) {
             $project = $this->project_manager->getProject($project_id);
             if (! $project->getGroupId()) {
-                throw new InvalidArgumentException("Project not found for id " . $project_id);
+                throw new InvalidArgumentException('Project not found for id ' . $project_id);
             }
 
             $project_list[] = $project;

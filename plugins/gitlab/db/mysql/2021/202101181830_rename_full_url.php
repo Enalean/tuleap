@@ -35,7 +35,7 @@ final class b202101181830_rename_full_url extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up(): void
     {
-        $sql = "ALTER TABLE plugin_gitlab_repository CHANGE full_url gitlab_repository_url VARCHAR(255) NOT NULL;";
+        $sql = 'ALTER TABLE plugin_gitlab_repository CHANGE full_url gitlab_repository_url VARCHAR(255) NOT NULL;';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

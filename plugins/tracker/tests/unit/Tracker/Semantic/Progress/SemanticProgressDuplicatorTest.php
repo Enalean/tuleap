@@ -127,7 +127,7 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([
                 'total_effort_field_id' => null,
                 'remaining_effort_field_id' => null,
-                'artifact_link_type' => "_is_child",
+                'artifact_link_type' => '_is_child',
             ]);
 
         $this->dao

@@ -26,25 +26,25 @@ class PendingArtifactRemovalDao extends DataAccessObject
 {
     public function addArtifactToPendingRemoval($artifact_id)
     {
-        $sql = "INSERT INTO plugin_tracker_artifact_pending_removal
+        $sql = 'INSERT INTO plugin_tracker_artifact_pending_removal
                   SELECT * FROM tracker_artifact
-                  WHERE id = ?";
+                  WHERE id = ?';
 
         $this->getDB()->run($sql, $artifact_id);
     }
 
     public function getPendingArtifactById($artifact_id)
     {
-        $sql = "SELECT * FROM plugin_tracker_artifact_pending_removal
-                  WHERE id = ?";
+        $sql = 'SELECT * FROM plugin_tracker_artifact_pending_removal
+                  WHERE id = ?';
 
         return $this->getDB()->row($sql, $artifact_id);
     }
 
     public function removeArtifact($artifact_id)
     {
-        $sql = "DELETE FROM plugin_tracker_artifact_pending_removal
-                  WHERE id = ?";
+        $sql = 'DELETE FROM plugin_tracker_artifact_pending_removal
+                  WHERE id = ?';
 
         $this->getDB()->run($sql, $artifact_id);
     }

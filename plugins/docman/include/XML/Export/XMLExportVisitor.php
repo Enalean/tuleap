@@ -124,7 +124,7 @@ class XMLExportVisitor implements ItemVisitor
     {
         $this->logger->warning(
             sprintf(
-                "Cannot export wiki item #%d (%s). Export/import of wiki documents is not supported.",
+                'Cannot export wiki item #%d (%s). Export/import of wiki documents is not supported.',
                 $item->getId(),
                 $item->getTitle()
             )
@@ -213,7 +213,7 @@ class XMLExportVisitor implements ItemVisitor
     {
         $this->logger->debug(
             sprintf(
-                "Exporting %s item #%d: %s",
+                'Exporting %s item #%d: %s',
                 $type,
                 $item->getId(),
                 $item->getTitle()

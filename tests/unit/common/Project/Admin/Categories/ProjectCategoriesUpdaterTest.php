@@ -84,7 +84,7 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->history_dao
             ->expects(self::once())
             ->method('groupAddHistory')
-            ->with('changed_trove', "", 42);
+            ->with('changed_trove', '', 42);
 
         $this->factory->method('removeProjectTopCategoryValue');
         $this->set_node_facade->method('setNode');

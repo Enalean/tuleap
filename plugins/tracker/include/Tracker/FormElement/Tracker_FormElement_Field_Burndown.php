@@ -147,7 +147,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public function buildPresenter(Artifact $artifact, PFUser $user)
     {
-        $warning                      = "";
+        $warning                      = '';
         $burndown_rest_representation = null;
 
         try {
@@ -205,7 +205,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         $user = $this->getCurrentUser();
 
-        $html = "";
+        $html = '';
         if (
             $user->isAdmin($artifact->getTracker()->getGroupId())
             && $this->getBurndownCacheChecker()->isCacheBurndownAlreadyAsked($artifact) === false

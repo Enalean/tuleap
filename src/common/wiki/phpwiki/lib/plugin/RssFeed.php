@@ -23,36 +23,36 @@ rcs_id('$Id: RssFeed.php,v 1.10 2005/04/10 10:24:58 rurban Exp $');
 /**
  * @author: Arnaud Fontaine
  */
-include("lib/RssParser.php");
+include('lib/RssParser.php');
 
 class WikiPlugin_RssFeed extends WikiPlugin
 {
     // Five required functions in a WikiPlugin.
     public function getName()
     {
-        return _("RssFeed");
+        return _('RssFeed');
     }
 
     public function getDescription()
     {
-        return _("Simple RSS Feed aggregator Plugin");
+        return _('Simple RSS Feed aggregator Plugin');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.10 $"
+            '$Revision: 1.10 $'
         );
     }
 
     // Establish default values for each of this plugin's arguments.
     public function getDefaultArguments()
     {
-        return ['feed'         => "",
-            'description'     => "",
-            'url'         => "", //"http://phpwiki.org/RecentChanges?format=rss",
+        return ['feed'         => '',
+            'description'     => '',
+            'url'         => '', //"http://phpwiki.org/RecentChanges?format=rss",
             'maxitem'         => 0,
             'debug'         => false,
         ];
@@ -98,7 +98,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
         }
 
         if (! empty($rss_parser->channel['date'])) {
-            $th->pushContent(HTML::raw("<!--" . $rss_parser->channel['date'] . "-->"));
+            $th->pushContent(HTML::raw('<!--' . $rss_parser->channel['date'] . '-->'));
         }
         $html = HTML::div(['class' => 'rss'], $th);
         if ($rss_parser->items) {
@@ -128,7 +128,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
                 $html->pushContent($cell);
             }
         } else {
-            $html = HTML::div(['class' => 'rss'], HTML::em(_("no RSS items")));
+            $html = HTML::div(['class' => 'rss'], HTML::em(_('no RSS items')));
         }
         return $html;
     }
@@ -140,7 +140,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
         }
         extract($args);
         if (empty($title)) {
-            $title = _("RssFeed");
+            $title = _('RssFeed');
         }
         if (empty($url)) {
             $url = 'http://phpwiki.sourceforge.net/phpwiki/RecentChanges?format=rss';

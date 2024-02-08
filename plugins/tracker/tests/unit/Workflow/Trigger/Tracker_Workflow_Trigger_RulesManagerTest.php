@@ -731,7 +731,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                             1,
                             0,
                             'name',
-                            "select",
+                            'select',
                             'desc',
                             true,
                             'S',
@@ -743,7 +743,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 )
             ));
 
-        $this->dao->shouldReceive('searchTriggersByFieldId')->andReturns([["field_id" => "200"], ["field_id" => "300"]]);
+        $this->dao->shouldReceive('searchTriggersByFieldId')->andReturns([['field_id' => '200'], ['field_id' => '300']]);
 
         self::assertFalse($this->manager->isUsedInTrigger($field));
     }
@@ -765,7 +765,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                             1,
                             0,
                             'name',
-                            "select",
+                            'select',
                             'desc',
                             true,
                             'S',
@@ -777,7 +777,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 )
             ));
 
-        $this->dao->shouldReceive('searchTriggersByFieldId')->andReturns([["field_id" => "1"]]);
+        $this->dao->shouldReceive('searchTriggersByFieldId')->andReturns([['field_id' => '1']]);
 
         self::assertTrue($this->manager->isUsedInTrigger($field));
     }

@@ -123,7 +123,7 @@ class ProjectHistoryDao extends \Tuleap\DB\DataAccessObject
         array $args = [],
     ): void {
         if ($args) {
-            $field_name .= " %% " . implode("||", $args);
+            $field_name .= ' %% ' . implode('||', $args);
         }
 
         $mod_by = $project_admin->getId() ?: 100;

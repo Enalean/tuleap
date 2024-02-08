@@ -49,21 +49,21 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAcceptReturnsTrueWhenTypeMatches()
     {
         $this->assertTrue($this->parser->accept([
-            "type" => "set_field_value",
-            "field_type" => "int",
+            'type' => 'set_field_value',
+            'field_type' => 'int',
         ]));
     }
 
     public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
     {
-        $this->assertFalse($this->parser->accept(["type" => "run_job"]));
+        $this->assertFalse($this->parser->accept(['type' => 'run_job']));
     }
 
     public function testAcceptReturnsFalseWhenFieldTypeDoesNotMatch()
     {
         $this->assertFalse($this->parser->accept([
-            "type" => "set_field_value",
-            "field_type" => "date",
+            'type' => 'set_field_value',
+            'field_type' => 'date',
         ]));
     }
 
@@ -80,11 +80,11 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $set_date_value  = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "set_field_value",
-                "field_type" => "int",
-                "field_id" => 43,
-                "value" => 1,
+                'id' => 2,
+                'type' => 'set_field_value',
+                'field_type' => 'int',
+                'field_id' => 43,
+                'value' => 1,
             ]
         );
         $expected_action = new SetIntValue(43, 1);
@@ -99,10 +99,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $set_date_value  = $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => 1,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
+                'value' => 1,
             ]
         );
         $expected_action = new SetIntValue(43, 1);
@@ -117,11 +117,11 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $set_date_value  = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "set_field_value",
-                "field_type" => "int",
-                "field_id" => 43,
-                "value" => 1,
+                'id' => 2,
+                'type' => 'set_field_value',
+                'field_type' => 'int',
+                'field_id' => 43,
+                'value' => 1,
             ]
         );
         $expected_action = new SetIntValue(43, 1);
@@ -138,9 +138,9 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "value" => 1,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'value' => 1,
             ]
         );
     }
@@ -155,10 +155,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => null,
-                "value" => 1,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => null,
+                'value' => 1,
             ]
         );
     }
@@ -173,10 +173,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => "not int",
-                "value" => 1,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 'not int',
+                'value' => 1,
             ]
         );
     }
@@ -191,9 +191,9 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
             ]
         );
     }
@@ -208,10 +208,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => null,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
+                'value' => null,
             ]
         );
     }
@@ -226,10 +226,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => "not int",
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
+                'value' => 'not int',
             ]
         );
     }
@@ -244,10 +244,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => 1.23,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
+                'value' => 1.23,
             ]
         );
     }

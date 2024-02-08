@@ -56,7 +56,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator
         //addlastUpdateDate and submitted on if available
         foreach ($this->formelement_factory->getAllFormElementsForTracker($artifact->getTracker()) as $field) {
             if ($field instanceof Tracker_FormElement_Field_LastUpdateDate) {
-                 $tracker_data[$field->getId()] = date("Y-m-d");
+                 $tracker_data[$field->getId()] = date('Y-m-d');
             }
             if ($field instanceof Tracker_FormElement_Field_SubmittedOn) {
                  $tracker_data[$field->getId()] = $artifact->getSubmittedOn();

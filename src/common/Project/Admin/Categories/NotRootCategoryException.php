@@ -42,7 +42,7 @@ final class NotRootCategoryException extends ProjectCategoriesException
     public function getI18NMessage(): string
     {
         return sprintf(
-            dgettext("tuleap-core", 'The category id %d is not a valid root category'),
+            dgettext('tuleap-core', 'The category id %d is not a valid root category'),
             $this->submitted_category_id
         );
     }

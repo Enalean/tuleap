@@ -92,7 +92,7 @@ class PostPushCommitBotCommenter
         $reference_presenters = $this->bot_comment_reference_presenter_builder->build($references);
 
         $renderer = $this->template_renderer_factory->getRenderer(dirname(__FILE__) . '/../../../../templates');
-        $comment  = $renderer->renderToString("gitlab-bot-comment-commit", new BotCommentPresenter($reference_presenters));
+        $comment  = $renderer->renderToString('gitlab-bot-comment-commit', new BotCommentPresenter($reference_presenters));
 
         try {
             $url = "/projects/{$gitlab_repository_integration->getGitlabRepositoryId()}/repository/commits/{$commit->getSha1()}/comments";
@@ -100,7 +100,7 @@ class PostPushCommitBotCommenter
                 $gitlab_repository_integration,
                 $credentials,
                 $url,
-                ["note" => $comment]
+                ['note' => $comment]
             );
 
             $this->logger->debug("Comment was successfully added on commit #{$commit->getSha1()}");

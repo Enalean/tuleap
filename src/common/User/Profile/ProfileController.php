@@ -55,7 +55,7 @@ class ProfileController implements DispatchableWithRequest, DispatchableWithBurn
     {
         $user = UserManager::instance()->getUserByUserName($variables['name']);
         if ($user === null) {
-            throw new NotFoundException(_("That user does not exist."));
+            throw new NotFoundException(_('That user does not exist.'));
         }
 
         $current_user = $request->getCurrentUser();

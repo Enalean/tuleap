@@ -117,7 +117,7 @@ final class BarChartDataBuilder
     {
         $key = array_search($engine->xaxis[$source_key], $engine->xaxis);
         if ($key === false) {
-            throw new \LogicException("Try to access to an unknown key " . $source_key);
+            throw new \LogicException('Try to access to an unknown key ' . $source_key);
         }
         return (string) $key;
     }

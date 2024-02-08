@@ -22,7 +22,7 @@ class b201702151712_create_table_to_notify_user extends \Tuleap\ForgeUpgrade\Buc
 {
     public function description()
     {
-        return "Add table to store the user to notify after a post receive event";
+        return 'Add table to store the user to notify after a post receive event';
     }
 
     public function preUp()
@@ -32,11 +32,11 @@ class b201702151712_create_table_to_notify_user extends \Tuleap\ForgeUpgrade\Buc
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_post_receive_notification_user (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_post_receive_notification_user (
                     repository_id INT(10) UNSIGNED NOT NULL,
                     user_id INT(11) NOT NULL,
                     PRIMARY KEY (repository_id, user_id)
-                )";
+                )';
 
         $this->db->createTable('plugin_git_post_receive_notification_user', $sql);
     }

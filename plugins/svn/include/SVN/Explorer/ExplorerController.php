@@ -102,7 +102,7 @@ class ExplorerController
 
     private function generateTokenForCeateRepository(Project $project)
     {
-        return new CSRFSynchronizerToken(SVN_BASE_URL . "/?group_id=" . $project->getid() . '&action=createRepo');
+        return new CSRFSynchronizerToken(SVN_BASE_URL . '/?group_id=' . $project->getid() . '&action=createRepo');
     }
 
     public function createRepository(HTTPRequest $request, \PFUser $user)
@@ -110,7 +110,7 @@ class ExplorerController
         $token = $this->generateTokenForCeateRepository($request->getProject());
         $token->check();
 
-        $repo_name = $request->get("repo_name");
+        $repo_name = $request->get('repo_name');
 
         $repository_to_create = SvnRepository::buildToBeCreatedRepository($repo_name, $request->getProject());
         try {

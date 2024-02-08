@@ -70,12 +70,12 @@ class CrossReferenceDocmanOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'getCrossReferencePresenters' => [
                         new CrossReferencePresenter(
                             1,
-                            "git",
-                            "another_title",
-                            "url",
-                            "delete_url",
+                            'git',
+                            'another_title',
+                            'url',
+                            'delete_url',
                             1,
-                            "whatever",
+                            'whatever',
                             null,
                             [],
                             null,
@@ -99,10 +99,10 @@ class CrossReferenceDocmanOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->getMock();
         $a_ref = new CrossReferencePresenter(
             1,
-            "document",
-            "doc #123",
-            "url",
-            "delete_url",
+            'document',
+            'doc #123',
+            'url',
+            'delete_url',
             1,
             '123',
             null,
@@ -143,10 +143,10 @@ class CrossReferenceDocmanOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $a_ref = new CrossReferencePresenter(
             1,
-            "document",
-            "doc #123",
-            "url",
-            "delete_url",
+            'document',
+            'doc #123',
+            'url',
+            'delete_url',
             1,
             '123',
             null,

@@ -112,17 +112,17 @@ class SemanticVelocityAdminPresenter
         $this->has_semantic_done_defined = $has_semantic_done_defined;
         $this->has_velocity_field        = $selected_velocity_field_id !== null;
         $this->tracker_name              = $tracker->getName();
-        $this->back_url                  = TRACKER_BASE_URL . "/?" . http_build_query(
+        $this->back_url                  = TRACKER_BASE_URL . '/?' . http_build_query(
             [
-                "tracker" => $tracker->getId(),
-                "func"    => "admin-semantic",
+                'tracker' => $tracker->getId(),
+                'func'    => 'admin-semantic',
             ]
         );
         $this->url_done_semantic         = TRACKER_BASE_URL . '/?' . http_build_query(
             [
-                "tracker"  => $tracker->getId(),
-                "func"     => "admin-semantic",
-                "semantic" => SemanticDone::NAME,
+                'tracker'  => $tracker->getId(),
+                'func'     => 'admin-semantic',
+                'semantic' => SemanticDone::NAME,
             ]
         );
 
@@ -145,9 +145,9 @@ class SemanticVelocityAdminPresenter
         $built_field = [];
         foreach ($possible_velocity_field as $field) {
             $built_field[] = [
-                "id"          => $field->getId(),
-                "name"        => $field->getLabel(),
-                "is_selected" => (int) $field->getId() === (int) $selected_velocity_field_id,
+                'id'          => $field->getId(),
+                'name'        => $field->getLabel(),
+                'is_selected' => (int) $field->getId() === (int) $selected_velocity_field_id,
             ];
         }
 

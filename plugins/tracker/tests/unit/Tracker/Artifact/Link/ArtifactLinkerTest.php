@@ -82,7 +82,7 @@ final class ArtifactLinkerTest extends TestCase
     public function testItReturnsTrueAndCreateChangeset(): void
     {
         $this->changeset_creator = CreateNewChangesetStub::withReturnChangeset(
-            ChangesetTestBuilder::aChangeset("45")->build()
+            ChangesetTestBuilder::aChangeset('45')->build()
         );
 
         $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('error');

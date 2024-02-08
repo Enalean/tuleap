@@ -36,7 +36,7 @@ final class b202011261625_add_index_on_system_event extends \Tuleap\ForgeUpgrade
         $this->db->addIndex(
             'system_event',
             'idx_type_parameter',
-            "ALTER TABLE system_event ADD INDEX idx_type_parameter(type(20), parameters(20))"
+            'ALTER TABLE system_event ADD INDEX idx_type_parameter(type(20), parameters(20))'
         );
     }
 }

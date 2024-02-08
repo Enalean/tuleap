@@ -97,13 +97,13 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn($semantic_done);
 
         $this->semantic_timeframe_builder
-            ->method("getSemantic")
+            ->method('getSemantic')
             ->willReturn($timeframe_semantic);
 
         $semantic_velocity->method('getVelocityField')->willReturn($velocity_field);
         $semantic_done->method('isDone')->with($last_changeset)->willReturn(true);
         $timeframe_semantic
-            ->method("isDefined")
+            ->method('isDefined')
             ->willReturn(true);
 
         $sub_milestone = $this->createMock(Planning_Milestone::class);
@@ -153,13 +153,13 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn($semantic_done);
 
         $this->semantic_timeframe_builder
-            ->method("getSemantic")
+            ->method('getSemantic')
             ->willReturn($timeframe_semantic);
 
         $semantic_velocity->method('getVelocityField')->willReturn($velocity_field);
         $semantic_done->method('isDone')->with($last_changeset)->willReturn(false);
         $timeframe_semantic
-            ->method("isDefined")
+            ->method('isDefined')
             ->willReturn(true);
 
         $sub_milestone = $this->createMock(Planning_Milestone::class);
@@ -200,13 +200,13 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn($semantic_done);
 
         $this->semantic_timeframe_builder
-            ->method("getSemantic")
+            ->method('getSemantic')
             ->willReturn($timeframe_semantic);
 
         $semantic_velocity->method('getVelocityField')->willReturn(null);
         $semantic_done->expects(self::never())->method('isDone');
         $timeframe_semantic
-            ->method("isDefined")
+            ->method('isDefined')
             ->willReturn(true);
 
         $sub_milestone = $this->createMock(Planning_Milestone::class);
@@ -258,13 +258,13 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn($semantic_done);
 
         $this->semantic_timeframe_builder
-            ->method("getSemantic")
+            ->method('getSemantic')
             ->willReturn($timeframe_semantic);
 
         $semantic_velocity->method('getVelocityField')->willReturn($velocity_field);
         $semantic_done->method('isDone')->with($last_changeset)->willReturn(true);
         $timeframe_semantic
-            ->method("isDefined")
+            ->method('isDefined')
             ->willReturn(true);
 
         $sub_milestone = $this->createMock(Planning_Milestone::class);
@@ -377,13 +377,13 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn($semantic_done);
 
         $this->semantic_timeframe_builder
-            ->method("getSemantic")
+            ->method('getSemantic')
             ->willReturn($timeframe_semantic);
 
         $semantic_velocity->method('getVelocityField')->willReturn($velocity_field);
         $semantic_done->method('isDone')->with($last_changeset)->willReturn(true);
         $timeframe_semantic
-            ->method("isDefined")
+            ->method('isDefined')
             ->willReturn(true);
 
         $sub_milestone = $this->createMock(Planning_Milestone::class);

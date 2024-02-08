@@ -58,7 +58,7 @@ class WikiPageWrapper
     public function getRequest()
     {
         define('PHPWIKI_NOMAIN', true);
-        IniConfig(PHPWIKI_DIR . "/config/config.ini");
+        IniConfig(PHPWIKI_DIR . '/config/config.ini');
         ini_set('include_path', PHPWIKI_DIR . ':' . ini_get('include_path'));
 
         require_once(PHPWIKI_DIR . '/lib/WikiDB.php');
@@ -97,7 +97,7 @@ class WikiPageWrapper
         $request = $this->getRequest();
 
         $dbi = $request->getDbh();
-        require_once(PHPWIKI_DIR . "/lib/loadsave.php");
+        require_once(PHPWIKI_DIR . '/lib/loadsave.php');
         $pagehandle = $dbi->getPage($projectPageName);
         if ($pagehandle->exists()) {// don't replace default contents
             $current = $pagehandle->getCurrentRevision();
@@ -120,7 +120,7 @@ class WikiPageWrapper
             $user_manager  = UserManager::instance();
             $user          = $user_manager->getCurrentUser();
             $event_manager->processEvent(
-                "wiki_page_created",
+                'wiki_page_created',
                 [
                     'group_id'         => $this->gid,
                     'wiki_page'        => $pagename,
@@ -152,8 +152,8 @@ class WikiPageWrapper
         $request = $this->getRequest();
 
         $dbi = $request->getDbh();
-        require_once(PHPWIKI_DIR . "/lib/loadsave.php");
-        $pagehandle = $dbi->getPage("UpLoad");
+        require_once(PHPWIKI_DIR . '/lib/loadsave.php');
+        $pagehandle = $dbi->getPage('UpLoad');
         if ($pagehandle->exists()) {// don't replace default contents
             $current = $pagehandle->getCurrentRevision();
             $version = $current->getVersion();
@@ -174,7 +174,7 @@ Upload:num_rev/filename
             $meta['author'] = user_getname();
         }
 
-        $meta['summary'] = "Page created";
+        $meta['summary'] = 'Page created';
         $pagehandle->save($text, $version + 1, $meta);
     }
 
@@ -187,9 +187,9 @@ Upload:num_rev/filename
             define('THEME', 'Codendi-light-printer-version');
         }
 
-        IniConfig(PHPWIKI_DIR . "/config/config.ini");
+        IniConfig(PHPWIKI_DIR . '/config/config.ini');
         ini_set('include_path', PHPWIKI_DIR . ':' . ini_get('include_path'));
-        include(PHPWIKI_DIR . "/codendi.php");
+        include(PHPWIKI_DIR . '/codendi.php');
     }
 
   /**
@@ -214,11 +214,11 @@ Upload:num_rev/filename
         $we->setLanguage_id($_REQUEST['language_id']);
 
         $name_fr = "Page d'accueil";
-        $page_fr = "PageAccueil";
-        $desc_fr = "Document initial du Wiki";
-        $name_en = "Home Page";
-        $page_en = "HomePage";
-        $desc_en = "Initial wiki document";
+        $page_fr = 'PageAccueil';
+        $desc_fr = 'Document initial du Wiki';
+        $name_en = 'Home Page';
+        $page_en = 'HomePage';
+        $desc_en = 'Initial wiki document';
         switch ($we->getLanguage_id()) {
               // English
             case 'en_US':
@@ -287,11 +287,11 @@ Upload:num_rev/filename
         $request = $this->getRequest();
         $request->setArg('overwrite', 'true');
 
-        require_once(PHPWIKI_DIR . "/lib/upgrade.php");
+        require_once(PHPWIKI_DIR . '/lib/upgrade.php');
         // WikiTheme and those files are required because of the WikiLink
         // function used during upgrade process.
-        require_once(PHPWIKI_DIR . "/lib/Theme.php");
-        require_once(PHPWIKI_DIR . "/themes/Codendi/themeinfo.php");
+        require_once(PHPWIKI_DIR . '/lib/Theme.php');
+        require_once(PHPWIKI_DIR . '/themes/Codendi/themeinfo.php');
 
         $check = false;
         CheckActionPageUpdate($request, $check);

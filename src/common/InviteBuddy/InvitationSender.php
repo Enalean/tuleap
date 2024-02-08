@@ -119,8 +119,8 @@ class InvitationSender
         if (count($failures) === count($emails)) {
             throw new UnableToSendInvitationsException(
                 ngettext(
-                    "An error occurred while trying to send invitation",
-                    "An error occurred while trying to send invitations",
+                    'An error occurred while trying to send invitation',
+                    'An error occurred while trying to send invitations',
                     count($failures)
                 )
             );

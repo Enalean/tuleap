@@ -40,7 +40,7 @@ final class CachingTrackerPrivateCommentInformationRetrieverTest extends \Tuleap
             {
                 $this->nb_calls++;
                 if ($this->nb_calls > 1) {
-                    throw new \RuntimeException("Did not expect to retrieve information multiple times");
+                    throw new \RuntimeException('Did not expect to retrieve information multiple times');
                 }
                 return true;
             }

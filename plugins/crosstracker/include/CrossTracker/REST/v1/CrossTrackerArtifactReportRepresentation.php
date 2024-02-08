@@ -116,9 +116,9 @@ class CrossTrackerArtifactReportRepresentation
             $assigned_to,
             TrackerReference::build($tracker),
             [
-                "uri"       => $artifact->getUri(),
-                "color"     => $artifact->getTracker()->getColor()->getName(),
-                "cross_ref" => $artifact->getXRef(),
+                'uri'       => $artifact->getUri(),
+                'color'     => $artifact->getTracker()->getColor()->getName(),
+                'cross_ref' => $artifact->getXRef(),
             ],
             new ProjectReference($tracker->getProject()),
         );

@@ -61,11 +61,11 @@ class TestResultsPieChartPresenter
 
         if ($successful_tests > 0) {
             $results[] = [
-                "count" => $successful_tests,
-                "key"   => "success",
-                "value" => $this->getPercentage($successful_tests, $total_passed_tests),
-                "label" => sprintf(
-                    dgettext("tuleap-hudson", "Passed (%s)"),
+                'count' => $successful_tests,
+                'key'   => 'success',
+                'value' => $this->getPercentage($successful_tests, $total_passed_tests),
+                'label' => sprintf(
+                    dgettext('tuleap-hudson', 'Passed (%s)'),
                     $successful_tests
                 ),
             ];
@@ -73,11 +73,11 @@ class TestResultsPieChartPresenter
 
         if ($skipped_tests > 0) {
             $results[] = [
-                "count" => $skipped_tests,
-                "key"   => "skipped",
-                "value" => $this->getPercentage($skipped_tests, $total_passed_tests),
-                "label" => sprintf(
-                    dgettext("tuleap-hudson", "Skipped (%s)"),
+                'count' => $skipped_tests,
+                'key'   => 'skipped',
+                'value' => $this->getPercentage($skipped_tests, $total_passed_tests),
+                'label' => sprintf(
+                    dgettext('tuleap-hudson', 'Skipped (%s)'),
                     $skipped_tests
                 ),
             ];
@@ -85,11 +85,11 @@ class TestResultsPieChartPresenter
 
         if ($failed_tests > 0) {
             $results[] = [
-                "count" => $failed_tests,
-                "key"   => "failed",
-                "value" => $this->getPercentage($failed_tests, $total_passed_tests),
-                "label" => sprintf(
-                    dgettext("tuleap-hudson", "Failed (%s)"),
+                'count' => $failed_tests,
+                'key'   => 'failed',
+                'value' => $this->getPercentage($failed_tests, $total_passed_tests),
+                'label' => sprintf(
+                    dgettext('tuleap-hudson', 'Failed (%s)'),
                     $failed_tests
                 ),
             ];
@@ -98,9 +98,9 @@ class TestResultsPieChartPresenter
         $this->test_results = json_encode($results);
 
         $this->latest_results_url = HUDSON_BASE_URL . '?' . http_build_query([
-            "action"   => "view_last_test_result",
-            "group_id" => $group_id,
-            "job_id"   => $job_id,
+            'action'   => 'view_last_test_result',
+            'group_id' => $group_id,
+            'job_id'   => $job_id,
         ]);
 
         $this->pie_chart_id = 'test-results-pie-' . $widget_id;

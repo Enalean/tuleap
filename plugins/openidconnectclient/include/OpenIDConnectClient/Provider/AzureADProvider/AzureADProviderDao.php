@@ -46,8 +46,8 @@ class AzureADProviderDao extends DataAccessObject
                 $tenant_id,
                 $acceptable_tenant_auth_identifier
             ): int {
-                $sql = "INSERT INTO plugin_openidconnectclient_provider(name, client_id, client_secret, icon, color)
-                    VALUES (?, ?, ?, ?, ?)";
+                $sql = 'INSERT INTO plugin_openidconnectclient_provider(name, client_id, client_secret, icon, color)
+                    VALUES (?, ?, ?, ?, ?)';
 
                 $db->run($sql, $name, $client_id, $client_secret, $icon, $color);
 
@@ -64,7 +64,7 @@ class AzureADProviderDao extends DataAccessObject
 
     private function disableUniqueAuthenticationProvider(): void
     {
-        $sql = "UPDATE plugin_openidconnectclient_provider SET unique_authentication_endpoint = FALSE";
+        $sql = 'UPDATE plugin_openidconnectclient_provider SET unique_authentication_endpoint = FALSE';
         $this->getDB()->run($sql);
     }
 
@@ -95,21 +95,21 @@ class AzureADProviderDao extends DataAccessObject
                     $this->disableUniqueAuthenticationProvider();
                 }
 
-                $sql = "UPDATE plugin_openidconnectclient_provider SET
+                $sql = 'UPDATE plugin_openidconnectclient_provider SET
                         name = ?,
                         client_id = ?,
                         client_secret = ?,
                         unique_authentication_endpoint = ?,
                         icon = ?,
                         color = ?
-                    WHERE id = ?";
+                    WHERE id = ?';
 
                 $db->run($sql, $name, $client_id, $client_secret, $is_unique_authentication_endpoint, $icon, $color, $id);
 
-                $sql = "UPDATE plugin_openidconnectclient_provider_azure_ad SET
+                $sql = 'UPDATE plugin_openidconnectclient_provider_azure_ad SET
                         tenant_id = ?,
                         acceptable_tenant_auth_identifier = ?
-                    WHERE provider_id = ?";
+                    WHERE provider_id = ?';
 
                 $db->run($sql, $tenant_id, $acceptable_tenant_auth_identifier, $id);
             }

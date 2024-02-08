@@ -255,7 +255,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
     {
         $content_id = false;
         $vItem_id   = new Valid_String('item_id');
-        $vItem_id->setErrorMessage("Unable to add the widget. Please give an item id.");
+        $vItem_id->setErrorMessage('Unable to add the widget. Please give an item id.');
         $vItem_id->required();
         if ($request->validInArray('plugin_docman_widget_embedded', $vItem_id)) {
             $plugin_docman_widget_embedded = $request->get('plugin_docman_widget_embedded');
@@ -285,7 +285,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         if (($plugin_docman_widget_embedded = $request->get('plugin_docman_widget_embedded')) && $request->valid($vContentId)) {
             $vItem_id = new Valid_String('item_id');
             if ($request->validInArray('plugin_docman_widget_embedded', $vItem_id)) {
-                $item_id = " item_id   = " . db_ei($plugin_docman_widget_embedded['item_id']) . " ";
+                $item_id = ' item_id   = ' . db_ei($plugin_docman_widget_embedded['item_id']) . ' ';
             } else {
                 $item_id = ' item_id = item_id ';
             }
@@ -297,9 +297,9 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
                 $title = ' title = title ';
             }
 
-            $sql  = "UPDATE plugin_docman_widget_embedded
-                    SET " . $title . ", " . $item_id . "
-                    WHERE owner_id   = " . db_ei($this->owner_id) . "
+            $sql  = 'UPDATE plugin_docman_widget_embedded
+                    SET ' . $title . ', ' . $item_id . '
+                    WHERE owner_id   = ' . db_ei($this->owner_id) . "
                       AND owner_type = '" . db_es($this->owner_type) . "'
                       AND id         = " . db_ei((int) $request->get('content_id'));
             $res  = db_query($sql);

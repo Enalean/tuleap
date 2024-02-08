@@ -81,7 +81,7 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
                         $reset_token = $this->reset_token_creator->create($user);
                     } catch (RecentlyCreatedCodeException) {
                         return Result::err(
-                            Fault::fromMessage(_("You already asked a recovery link recently, please check your email for the link to recover your password."))
+                            Fault::fromMessage(_('You already asked a recovery link recently, please check your email for the link to recover your password.'))
                         );
                     }
 
@@ -98,7 +98,7 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
                         )
                     );
 
-                    $renderer = $this->renderer_factory->getRenderer(__DIR__ . "/../../../../templates/account/lostpw");
+                    $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/account/lostpw');
 
                     $presenter = [
                         'current_user_real_name' => $user->getRealName(),
@@ -111,7 +111,7 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
                     $mail->setBodyText($renderer->renderToString('lostpw-mail-text', $presenter));
 
                     if (! $mail->send()) {
-                        return Result::err(Fault::fromMessage("An error occurred while sending the email"));
+                        return Result::err(Fault::fromMessage('An error occurred while sending the email'));
                     }
 
                     return Result::ok(true);

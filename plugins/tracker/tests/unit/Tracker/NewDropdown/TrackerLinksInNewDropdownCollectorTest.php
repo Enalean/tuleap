@@ -85,7 +85,7 @@ final class TrackerLinksInNewDropdownCollectorTest extends \Tuleap\Test\PHPUnit\
             ->shouldReceive('addCurrentProjectLink')
             ->once();
 
-        $current_context_section = new NewDropdownLinkSectionPresenter("section label", [
+        $current_context_section = new NewDropdownLinkSectionPresenter('section label', [
             new \Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter(
                 '/path/to/submit/story',
                 'New story',

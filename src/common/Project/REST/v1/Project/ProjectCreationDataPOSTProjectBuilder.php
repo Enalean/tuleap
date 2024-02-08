@@ -134,7 +134,7 @@ readonly class ProjectCreationDataPOSTProjectBuilder
                     return $creation_data;
                 },
                 function () {
-                    throw new \LogicException("should no t end here");
+                    throw new \LogicException('should no t end here');
                 }
             );
     }

@@ -23,7 +23,7 @@ class b201910211053_create_plugin_agiledashboard_explicit_backlog_usage_table ex
 {
     public function description(): string
     {
-        return "Add explicit backlog usage table";
+        return 'Add explicit backlog usage table';
     }
 
     public function preUp(): void
@@ -33,19 +33,19 @@ class b201910211053_create_plugin_agiledashboard_explicit_backlog_usage_table ex
 
     public function up(): void
     {
-        $sql = " CREATE TABLE plugin_agiledashboard_planning_explicit_backlog_usage (
+        $sql = ' CREATE TABLE plugin_agiledashboard_planning_explicit_backlog_usage (
                project_id INT(11) NOT NULL PRIMARY KEY
             ) ENGINE=InnoDB
-        ";
+        ';
 
         $this->db->createTable('plugin_agiledashboard_planning_explicit_backlog_usage', $sql);
 
-        $sql = "CREATE TABLE plugin_agiledashboard_planning_artifacts_explicit_backlog (
+        $sql = 'CREATE TABLE plugin_agiledashboard_planning_artifacts_explicit_backlog (
                project_id INT(11) NOT NULL,
                artifact_id INT(11) NOT NULL,
                PRIMARY KEY(project_id, artifact_id)
             ) ENGINE=InnoDB
-        ";
+        ';
 
         $this->db->createTable('plugin_agiledashboard_planning_artifacts_explicit_backlog', $sql);
     }

@@ -50,7 +50,7 @@ final class PullRequestIsMergeableCheckerTest extends TestCase
 
     public function testItThrowsA403ExceptionWhenUserCanNotMergePullRequest(): void
     {
-        $this->permission_checker->method("checkPullRequestIsMergeableByUser")
+        $this->permission_checker->method('checkPullRequestIsMergeableByUser')
             ->willThrowException(new UserCannotMergePullRequestException($this->pullrequest, $this->user));
 
         $this->expectExceptionCode(403);
@@ -59,7 +59,7 @@ final class PullRequestIsMergeableCheckerTest extends TestCase
 
     public function testItThrowsA403ExceptionWhenGitRepositoryIsNotFound(): void
     {
-        $this->permission_checker->method("checkPullRequestIsMergeableByUser")
+        $this->permission_checker->method('checkPullRequestIsMergeableByUser')
             ->willThrowException(new GitRepoNotFoundException());
         $this->expectExceptionCode(404);
         $this->pull_request_is_mergeable_checker->checkUserCanMerge($this->pullrequest, $this->user);
@@ -67,7 +67,7 @@ final class PullRequestIsMergeableCheckerTest extends TestCase
 
     public function testItDoesNothingWHenUSerCanMergePullrequest(): void
     {
-        $this->permission_checker->expects(self::once())->method("checkPullRequestIsMergeableByUser");
+        $this->permission_checker->expects(self::once())->method('checkPullRequestIsMergeableByUser');
         $this->pull_request_is_mergeable_checker->checkUserCanMerge($this->pullrequest, $this->user);
     }
 }

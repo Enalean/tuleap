@@ -45,20 +45,20 @@ class WikiPlugin_RedirectTo extends WikiPlugin
 {
     public function getName()
     {
-        return _("RedirectTo");
+        return _('RedirectTo');
     }
 
     public function getDescription()
     {
-        return _("Redirects to another url or page.");
+        return _('Redirects to another url or page.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.13 $"
+            '$Revision: 1.13 $'
         );
     }
 
@@ -88,8 +88,8 @@ class WikiPlugin_RedirectTo extends WikiPlugin
             $thispage = $request->getPage();
             if (! $thispage->get('locked')) {
                 return $this->disabled(fmt(
-                    "%s is only allowed in locked pages.",
-                    _("Redirect to an external url")
+                    '%s is only allowed in locked pages.',
+                    _('Redirect to an external url')
                 ));
             }
         } elseif ($page) {
@@ -100,7 +100,7 @@ class WikiPlugin_RedirectTo extends WikiPlugin
             );
         } else {
             return $this->error(fmt(
-                "%s or %s parameter missing",
+                '%s or %s parameter missing',
                 "'href'",
                 "'page'"
             ));
@@ -117,11 +117,11 @@ class WikiPlugin_RedirectTo extends WikiPlugin
         $redirectfrom = $request->getArg('redirectfrom');
         if ($redirectfrom !== false) {
             if ($redirectfrom) {
-                return $this->disabled(_("Double redirect not allowed."));
+                return $this->disabled(_('Double redirect not allowed.'));
             } else {
                 // Got here by following the "Redirected from ..." link
                 // on a browse page.
-                return $this->disabled(_("Viewing redirecting page."));
+                return $this->disabled(_('Viewing redirecting page.'));
             }
         }
 

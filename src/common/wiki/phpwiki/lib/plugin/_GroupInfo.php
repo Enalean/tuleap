@@ -26,20 +26,20 @@ class WikiPlugin__GroupInfo extends WikiPlugin
 {
     public function getName()
     {
-        return _("DebugGroupInfo");
+        return _('DebugGroupInfo');
     }
 
     public function getDescription()
     {
-        return sprintf(_("Show Group Information"));
+        return sprintf(_('Show Group Information'));
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.1 $"
+            '$Revision: 1.1 $'
         );
     }
 
@@ -53,21 +53,21 @@ class WikiPlugin__GroupInfo extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         extract($args);
 
-        $output = HTML(HTML::h1("Group Info"));
+        $output = HTML(HTML::h1('Group Info'));
 
         $group     = WikiGroup::getGroup();
         $allGroups = $group->getAllGroupsIn();
 
         foreach ($allGroups as $g) {
             $members = $group->getMembersOf($g);
-            $output->pushContent(HTML::h3($g . " - members: " .
-            sizeof($members) . " - isMember: " . ($group->isMember($g) ? "yes" : "no")));
+            $output->pushContent(HTML::h3($g . ' - members: ' .
+            sizeof($members) . ' - isMember: ' . ($group->isMember($g) ? 'yes' : 'no')));
             foreach ($members as $m) {
                 $output->pushContent($m);
                 $output->pushContent(HTML::br());
             }
         }
-        $output->pushContent(HTML::p("--- the end ---"));
+        $output->pushContent(HTML::p('--- the end ---'));
 
         return $output;
     }

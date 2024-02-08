@@ -33,17 +33,17 @@ final class InvalidMethodTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullProgressWhenTheSemanticIsMisconfigured(): void
     {
-        $method = new InvalidMethod("This is broken");
-        self::assertEquals("This is broken", $method->getErrorMessage());
+        $method = new InvalidMethod('This is broken');
+        self::assertEquals('This is broken', $method->getErrorMessage());
 
         $result = $method->computeProgression(Mockery::spy(Artifact::class), Mockery::spy(PFUser::class));
-        self::assertEquals("This is broken", $result->getErrorMessage());
+        self::assertEquals('This is broken', $result->getErrorMessage());
         self::assertEquals(null, $result->getValue());
     }
 
     public function testItExportsNothingToREST(): void
     {
-        $method = new InvalidMethod("This is broken");
+        $method = new InvalidMethod('This is broken');
         self::assertNull($method->exportToREST(Mockery::spy(PFUser::class)));
     }
 
@@ -69,7 +69,7 @@ final class InvalidMethodTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotDelete(): void
     {
-        $method = new InvalidMethod("This is broken");
+        $method = new InvalidMethod('This is broken');
         $this->assertFalse(
             $method->deleteSemanticForTracker(\Mockery::mock(\Tracker::class))
         );

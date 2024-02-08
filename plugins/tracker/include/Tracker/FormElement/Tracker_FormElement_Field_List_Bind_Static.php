@@ -97,11 +97,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getBindtableSqlFragment()
     {
         return [
-            'select'     => "tracker_field_list_bind_static_value.id,
+            'select'     => 'tracker_field_list_bind_static_value.id,
                              tracker_field_list_bind_static_value.label,
                              tracker_field_list_bind_static_value.description,
                              tracker_field_list_bind_static_value.rank,
-                             tracker_field_list_bind_static_value.is_hidden",
+                             tracker_field_list_bind_static_value.is_hidden',
             'select_nb'  => 5,
             'from'       => 'tracker_field_list_bind_static_value',
             'join_on_id' => 'tracker_field_list_bind_static_value.id',
@@ -192,7 +192,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $values = $this->getAllValues();
         if ($is_multiple) {
             $return           = [];
-            $submitted_values = explode(",", $submitted_value);
+            $submitted_values = explode(',', $submitted_value);
             foreach ($values as $id => $value) {
                 if (in_array($value->getLabel(), $submitted_values)) {
                     $return[] = $id;
@@ -254,7 +254,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                 $values_array[] = $val->getLabel();
             }
         }
-        return implode(",", $values_array);
+        return implode(',', $values_array);
     }
 
     /**
@@ -291,7 +291,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     public function getQuerySelectWithDecorator()
     {
-        return $this->getQuerySelect() . ", color.red, color.green, color.blue, color.tlp_color_name";
+        return $this->getQuerySelect() . ', color.red, color.green, color.blue, color.tlp_color_name';
     }
 
     /**
@@ -313,8 +313,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     tracker_changeset_value AS $R1
                     INNER JOIN $changesetvalue_table AS $R3 ON ($R3.changeset_value_id = $R1.id)
                     LEFT JOIN tracker_field_list_bind_static_value AS $R2 ON ($R2.id = $R3.bindvalue_id AND $R2.field_id = " . $this->field->id . " )
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->field->id . " )
-               ";
+                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->field->id . ' )
+               ';
     }
 
     public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list'): string
@@ -711,7 +711,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                         }
                     }
                     break;
-                case "edit_custom":
+                case 'edit_custom':
                     $values = $this->getOpenValueDao()->searchByFieldId($this->field->getId());
                     foreach ($values as $row) {
                         $new_is_hidden = ! isset($value[$row['id']]['is_hidden']);
@@ -781,7 +781,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $project_export_context,
         UserXMLExporter $user_xml_exporter,
     ) {
-        $root->addAttribute('is_rank_alpha', $this->is_rank_alpha ? "1" : "0");
+        $root->addAttribute('is_rank_alpha', $this->is_rank_alpha ? '1' : '0');
         if (! $this->getAllValues()) {
             return;
         }

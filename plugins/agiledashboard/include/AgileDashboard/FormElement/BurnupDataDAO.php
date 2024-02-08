@@ -177,7 +177,7 @@ class BurnupDataDAO extends DataAccessObject
     public function searchLinkedArtifactsAtGivenTimestamp(int $artifact_id, int $timestamp, array $backlog_trackers_ids): array
     {
         $in_statement = EasyStatement::open()->in(
-            "linked_art.tracker_id IN ( ?* )",
+            'linked_art.tracker_id IN ( ?* )',
             $backlog_trackers_ids
         );
 

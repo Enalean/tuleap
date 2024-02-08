@@ -35,9 +35,9 @@ class b201912061448_add_table_for_disabled_project_widgets extends ForgeUpgrade_
 
     public function up(): void
     {
-        $sql = "CREATE TABLE project_dashboards_disabled_widgets (
+        $sql = 'CREATE TABLE project_dashboards_disabled_widgets (
                     name VARCHAR(255) PRIMARY KEY
-                ) ENGINE=InnoDB;";
+                ) ENGINE=InnoDB;';
 
         $this->db->createTable('project_dashboards_disabled_widgets', $sql);
     }

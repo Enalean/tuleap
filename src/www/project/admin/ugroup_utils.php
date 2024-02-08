@@ -89,8 +89,8 @@ function ugroup_db_get_members(
 ) {
     $data_access = CodendiDataAccess::instance();
 
-    $sqlname  = "user.user_name AS full_name";
-    $sqlorder = "user.user_name";
+    $sqlname  = 'user.user_name AS full_name';
+    $sqlorder = 'user.user_name';
     if ($with_display_preferences) {
         $uh       = UserHelper::instance();
         $sqlname  = $uh->getDisplayNameSQLQuery();
@@ -135,7 +135,7 @@ function ugroup_db_get_existing_ugroups($group_id, $predefined = null)
     if ($predefined !== null && is_array($predefined)) {
         $_extra = ' OR ugroup_id IN (' . db_ei_implode($predefined) . ')';
     }
-    $sql = "SELECT ugroup_id, name FROM ugroup WHERE group_id=" . db_ei($group_id) . " " . $_extra . " ORDER BY name";
+    $sql = 'SELECT ugroup_id, name FROM ugroup WHERE group_id=' . db_ei($group_id) . ' ' . $_extra . ' ORDER BY name';
     return db_query($sql);
 }
 
@@ -144,11 +144,11 @@ function ugroup_db_get_existing_ugroups($group_id, $predefined = null)
  */
 function ugroup_get_ugroups_with_members($group_id)
 {
-    $sql = "SELECT ugroup.ugroup_id, ugroup.name, user.user_id, user.user_name FROM ugroup " .
-    "NATURAL LEFT JOIN ugroup_user " .
-    "NATURAL LEFT JOIN user " .
-    "WHERE ugroup.group_id=" . db_ei($group_id) .
-    " ORDER BY ugroup.name";
+    $sql = 'SELECT ugroup.ugroup_id, ugroup.name, user.user_id, user.user_name FROM ugroup ' .
+    'NATURAL LEFT JOIN ugroup_user ' .
+    'NATURAL LEFT JOIN user ' .
+    'WHERE ugroup.group_id=' . db_ei($group_id) .
+    ' ORDER BY ugroup.name';
 
     $return = [];
 
@@ -163,15 +163,15 @@ function ugroup_get_ugroups_with_members($group_id)
 // Return DB ugroup from ugroup_id
 function ugroup_db_get_ugroup($ugroup_id)
 {
-    $sql = "SELECT * FROM ugroup WHERE ugroup_id=" . db_ei($ugroup_id);
+    $sql = 'SELECT * FROM ugroup WHERE ugroup_id=' . db_ei($ugroup_id);
     return db_query($sql);
 }
 
 
 function ugroup_db_list_all_ugroups_for_user($group_id, $user_id)
 {
-    $sql = "SELECT ugroup.ugroup_id AS ugroup_id,ugroup.name AS name FROM ugroup, ugroup_user
-          WHERE ugroup_user.user_id=" . db_ei($user_id) . " AND ugroup.group_id=" . db_ei($group_id) . " AND ugroup_user.ugroup_id=ugroup.ugroup_id";
+    $sql = 'SELECT ugroup.ugroup_id AS ugroup_id,ugroup.name AS name FROM ugroup, ugroup_user
+          WHERE ugroup_user.user_id=' . db_ei($user_id) . ' AND ugroup.group_id=' . db_ei($group_id) . ' AND ugroup_user.ugroup_id=ugroup.ugroup_id';
     return db_query($sql);
 }
 
@@ -182,11 +182,11 @@ function ugroup_db_list_tracker_ugroups_for_user($group_id, $group_artifact_id, 
 {
     $data_access       = CodendiDataAccess::instance();
     $group_artifact_id = $data_access->quoteLikeValueSuffix($group_artifact_id);
-    $sql               = "SELECT distinct ug.ugroup_id FROM ugroup ug, ugroup_user ugu, permissions p " .
-      "WHERE ugu.user_id=" . db_ei($user_id) .
-      " AND ug.group_id=" . db_ei($group_id) .
-      " AND ugu.ugroup_id=ug.ugroup_id " .
-      " AND p.ugroup_id = ugu.ugroup_id " .
+    $sql               = 'SELECT distinct ug.ugroup_id FROM ugroup ug, ugroup_user ugu, permissions p ' .
+      'WHERE ugu.user_id=' . db_ei($user_id) .
+      ' AND ug.group_id=' . db_ei($group_id) .
+      ' AND ugu.ugroup_id=ug.ugroup_id ' .
+      ' AND p.ugroup_id = ugu.ugroup_id ' .
       " AND p.object_id LIKE $group_artifact_id" .
       " AND p.permission_type LIKE 'TRACKER%'";
 
@@ -323,8 +323,8 @@ function ugroup_db_get_dynamic_members(
 ): ?string {
     $data_access = CodendiDataAccess::instance();
 
-    $sqlname  = "user.user_name AS full_name";
-    $sqlorder = "user.user_name";
+    $sqlname  = 'user.user_name AS full_name';
+    $sqlorder = 'user.user_name';
     if ($with_display_preferences) {
         $uh       = UserHelper::instance();
         $sqlname  = $uh->getDisplayNameSQLQuery();
@@ -338,7 +338,7 @@ function ugroup_db_get_dynamic_members(
     if ($show_deleted) {
         $user_status .= "OR status='D'";
     }
-    $user_status .= ")";
+    $user_status .= ')';
     if ($user_ids) {
         $user_status .= ' AND user.user_id IN (' . $data_access->escapeIntImplode($user_ids) . ')';
     }
@@ -353,19 +353,19 @@ function ugroup_db_get_dynamic_members(
         return null;
     } elseif ($ugroup_id == $GLOBALS['UGROUP_REGISTERED']) {
         // Registered user
-        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user WHERE " . $user_status . " ORDER BY " . $sqlorder . " )";
+        return '(SELECT user.user_id, ' . $sqlname . ', user.realname, user.user_name, user.email, user.status FROM user WHERE ' . $user_status . ' ORDER BY ' . $sqlorder . ' )';
     } elseif ($ugroup_id == $GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
-        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND " . $user_status . " ORDER BY " . $sqlorder . ")";
+        return '(SELECT user.user_id, ' . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND " . $user_status . ' ORDER BY ' . $sqlorder . ')';
     } elseif ($ugroup_id == $GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
-        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND " . $user_status . "  ORDER BY " . $sqlorder . ")";
+        return '(SELECT user.user_id, ' . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND " . $user_status . '  ORDER BY ' . $sqlorder . ')';
     } elseif ($ugroup_id == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
-        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND " . $user_status . "  ORDER BY " . $sqlorder . ")";
+        return '(SELECT user.user_id, ' . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND " . $user_status . '  ORDER BY ' . $sqlorder . ')';
     } elseif ($atid && $ugroup_id == $GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
-        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name,  user.email, user.status FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND " . $user_status . "  ORDER BY " . $sqlorder . ")";
+        return '(SELECT user.user_id, ' . $sqlname . ", user.realname, user.user_name,  user.email, user.status FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND " . $user_status . '  ORDER BY ' . $sqlorder . ')';
     } elseif ((int) $ugroup_id === ProjectUGroup::FORUM_ADMIN) {
         // Forum admins
         return "(SELECT user.user_id, $sqlname, user.realname, user.user_name, user.email, user.status
@@ -373,8 +373,8 @@ function ugroup_db_get_dynamic_members(
                     WHERE user.user_id = ug.user_id
                     AND ug.group_id = $group_id
                     AND forum_flags = '2'
-                    AND " . $user_status . "
-                    ORDER BY " . $sqlorder . " )";
+                    AND " . $user_status . '
+                    ORDER BY ' . $sqlorder . ' )';
     } elseif ((int) $ugroup_id === ProjectUGroup::NEWS_WRITER) {
         // News writer
         return "(SELECT user.user_id, $sqlname, user.realname, user.user_name,  user.email, user.status
@@ -382,8 +382,8 @@ function ugroup_db_get_dynamic_members(
                     WHERE user.user_id = ug.user_id
                     AND ug.group_id = $group_id
                     AND (ug.news_flags = '1' OR ug.news_flags = '2')
-                    AND " . $user_status . "
-                    ORDER BY " . $sqlorder . " )";
+                    AND " . $user_status . '
+                    ORDER BY ' . $sqlorder . ' )';
     } elseif ((int) $ugroup_id === ProjectUGroup::NEWS_ADMIN) {
         // News admin
         return "(SELECT user.user_id, $sqlname, user.realname, user.user_name, user.email, user.status
@@ -391,8 +391,8 @@ function ugroup_db_get_dynamic_members(
                     WHERE user.user_id = ug.user_id
                     AND ug.group_id = $group_id
                     AND ug.news_flags = '2'
-                    AND " . $user_status . "
-                    ORDER BY " . $sqlorder . " )";
+                    AND " . $user_status . '
+                    ORDER BY ' . $sqlorder . ' )';
     }
     return null;
 }
@@ -409,7 +409,7 @@ function ugroup_get_all_dynamic_members($group_id, $atid = 0)
     $sql     = [];
     $ugroups = [];
     //retrieve dynamic ugroups id and name
-    $rs = db_query("SELECT ugroup_id, name FROM ugroup WHERE ugroup_id IN (" . implode(',', $GLOBALS['UGROUPS']) . ") ");
+    $rs = db_query('SELECT ugroup_id, name FROM ugroup WHERE ugroup_id IN (' . implode(',', $GLOBALS['UGROUPS']) . ') ');
     while ($row = db_fetch_array($rs)) {
         $ugroups[$row['ugroup_id']] = $row['name'];
     }
@@ -447,7 +447,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     if (! $ugroup_name) {
         throw new CannotCreateUGroupException(_('The group name is missing'));
     }
-    if (! preg_match("/^[a-zA-Z0-9_\-]+$/i", $ugroup_name)) {
+    if (! preg_match('/^[a-zA-Z0-9_\-]+$/i', $ugroup_name)) {
         throw new CannotCreateUGroupException(sprintf(_('Invalid group name: %s. Please use only alphanumerical characters.'), $ugroup_name));
     }
     // Check that there is no ugroup with the same name in this project
@@ -458,7 +458,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     }
 
     // Create
-    $sql    = "INSERT INTO ugroup (name,description,group_id) VALUES ('" . db_es($ugroup_name) . "', '" . db_es($ugroup_description) . "'," . db_ei($group_id) . ")";
+    $sql    = "INSERT INTO ugroup (name,description,group_id) VALUES ('" . db_es($ugroup_name) . "', '" . db_es($ugroup_description) . "'," . db_ei($group_id) . ')';
     $result = db_query($sql);
 
     if (! $result) {
@@ -467,7 +467,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
         $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'ug_create_success'));
     }
     // Now get the corresponding ugroup_id
-    $sql    = "SELECT ugroup_id FROM ugroup WHERE group_id=" . db_ei($group_id) . " AND name='" . db_es($ugroup_name) . "'";
+    $sql    = 'SELECT ugroup_id FROM ugroup WHERE group_id=' . db_ei($group_id) . " AND name='" . db_es($ugroup_name) . "'";
     $result = db_query($sql);
     if (! $result) {
         throw new CannotCreateUGroupException(_('User group created but cannot get Id.'));
@@ -478,22 +478,22 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     }
 
     // Now populate new group if a 'template' was selected
-    if ($group_templates == "cx_empty") {
+    if ($group_templates == 'cx_empty') {
         // Do nothing, the group should be empty
         $query = '';
-    } elseif ($group_templates == "cx_empty2") {
+    } elseif ($group_templates == 'cx_empty2') {
         // The user selected '----'
         $query = '';
         $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'no_g_template'));
-    } elseif ($group_templates == "cx_members") {
+    } elseif ($group_templates == 'cx_members') {
         // Get members from predefined groups
-        $query = "SELECT user_id FROM user_group WHERE group_id=" . db_ei($group_id);
-    } elseif ($group_templates == "cx_admins") {
-        $query = "SELECT user_id FROM user_group WHERE group_id=" . db_ei($group_id) . " AND admin_flags='A'";
+        $query = 'SELECT user_id FROM user_group WHERE group_id=' . db_ei($group_id);
+    } elseif ($group_templates == 'cx_admins') {
+        $query = 'SELECT user_id FROM user_group WHERE group_id=' . db_ei($group_id) . " AND admin_flags='A'";
     } else {
         // $group_templates should contain the ID of an exiting group
         // Copy members from an existing group
-        $query = "SELECT user_id FROM ugroup_user WHERE ugroup_id=" . db_ei($group_templates);
+        $query = 'SELECT user_id FROM ugroup_user WHERE ugroup_id=' . db_ei($group_templates);
     }
 
     // Copy user IDs in new group
@@ -501,7 +501,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
         $res       = db_query($query);
         $countuser = 0;
         while ($row = db_fetch_array($res)) {
-            $sql = "INSERT INTO ugroup_user (ugroup_id,user_id) VALUES (" . db_ei($ugroup_id) . "," . db_ei($row['user_id']) . ")";
+            $sql = 'INSERT INTO ugroup_user (ugroup_id,user_id) VALUES (' . db_ei($ugroup_id) . ',' . db_ei($row['user_id']) . ')';
             if (! db_query($sql)) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_ugroup_utils', 'cant_insert_u_in_g', [$row['user_id'], $ugroup_id, db_error()]));
             }
@@ -534,7 +534,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     if (! $ugroup_name) {
         throw new CannotCreateUGroupException(_('The group name is missing'));
     }
-    if (! preg_match("/^[a-zA-Z0-9_\-]+$/i", $ugroup_name)) {
+    if (! preg_match('/^[a-zA-Z0-9_\-]+$/i', $ugroup_name)) {
         throw new CannotCreateUGroupException(sprintf(_('Invalid group name: %s. Please use only alphanumerical characters.'), $ugroup_name));
     }
     if (! $ugroup_id) {
@@ -565,7 +565,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
 
     // Search for all members of this ugroup
     $pickList = [];
-    $sql      = "SELECT user_id FROM ugroup_user WHERE ugroup_id = " . db_ei($ugroup_id);
+    $sql      = 'SELECT user_id FROM ugroup_user WHERE ugroup_id = ' . db_ei($ugroup_id);
     if ($res = db_query($sql)) {
         while ($row = db_fetch_array($res)) {
             $pickList[] = $row['user_id'];
@@ -591,9 +591,9 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
 
 function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
 {
-    $sql = "DELETE FROM ugroup_user
-    WHERE ugroup_id = " . db_ei($ugroup_id) . "
-      AND user_id = " . db_ei($user_id);
+    $sql = 'DELETE FROM ugroup_user
+    WHERE ugroup_id = ' . db_ei($ugroup_id) . '
+      AND user_id = ' . db_ei($user_id);
     $res = db_query($sql);
     if (! $res) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'cant_update_ug', db_error()));
@@ -603,11 +603,11 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
         $res = ugroup_db_get_ugroup($ugroup_id);
         (new ProjectHistoryDao())->groupAddHistory('upd_ug', '', $group_id, [db_result($res, 0, 'name')]);
         // Search for all members of this ugroup
-        $sql        = "SELECT count(user.user_id)" .
-             "FROM ugroup_user, user " .
-             "WHERE user.user_id = ugroup_user.user_id " .
+        $sql        = 'SELECT count(user.user_id)' .
+             'FROM ugroup_user, user ' .
+             'WHERE user.user_id = ugroup_user.user_id ' .
              "AND user.status IN ('A', 'R') " .
-             "AND ugroup_user.ugroup_id=" . db_ei($ugroup_id);
+             'AND ugroup_user.ugroup_id=' . db_ei($ugroup_id);
         $result     = db_query($sql);
         $usersCount = db_result($result, 0, 0);
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'ug_upd_success', [db_result($res, 0, 'name'), $usersCount]));
@@ -625,7 +625,7 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
 function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id)
 {
     if (! ugroup_user_is_member($user_id, $ugroup_id, $group_id)) {
-        $sql = "INSERT INTO ugroup_user (ugroup_id, user_id) VALUES(" . db_ei($ugroup_id) . ", " . db_ei($user_id) . ")";
+        $sql = 'INSERT INTO ugroup_user (ugroup_id, user_id) VALUES(' . db_ei($ugroup_id) . ', ' . db_ei($user_id) . ')';
         $res = db_query($sql);
         if (! $res) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'cant_update_ug', db_error()));
@@ -673,7 +673,7 @@ function ugroup_delete($group_id, $ugroup_id)
         );
     }
 
-    $sql    = "DELETE FROM ugroup WHERE group_id=" . db_ei($group_id) . " AND ugroup_id=" . db_ei($ugroup_id);
+    $sql    = 'DELETE FROM ugroup WHERE group_id=' . db_ei($group_id) . ' AND ugroup_id=' . db_ei($ugroup_id);
     $result = db_query($sql);
     if (! $result || db_affected_rows($result) < 1) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo', 'upd_fail', (db_error() ? db_error() : ' ' )));
@@ -681,7 +681,7 @@ function ugroup_delete($group_id, $ugroup_id)
     }
     $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'g_del'));
     // Now remove users
-    $sql = "DELETE FROM ugroup_user WHERE ugroup_id=" . db_ei($ugroup_id);
+    $sql = 'DELETE FROM ugroup_user WHERE ugroup_id=' . db_ei($ugroup_id);
 
     $result = db_query($sql);
     if (! $result) {

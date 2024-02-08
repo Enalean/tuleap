@@ -79,7 +79,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
 
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
-        $expected_res = ["new_values" => '2,1', 'removed_values' => [], 'types' => ['1' => '', '2' => '']];
+        $expected_res = ['new_values' => '2,1', 'removed_values' => [], 'types' => ['1' => '', '2' => '']];
         $this->assertEquals($expected_res, $res);
     }
 
@@ -104,7 +104,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
 
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
-        $expected_res = ["new_values" => '2,1', 'removed_values' => [], 'types' => ['1' => '_fixed_in', '2' => '_is_child']];
+        $expected_res = ['new_values' => '2,1', 'removed_values' => [], 'types' => ['1' => '_fixed_in', '2' => '_is_child']];
 
         $this->assertEquals($expected_res, $res);
     }
@@ -132,7 +132,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->nature_dao->method('getTypeByShortname')->willReturn([['titi']]);
 
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
-        $expected_res = ["new_values" => '2,1,3', 'removed_values' => [], 'types' => ['1' => 'titi', '2' => 'toto', '3' => '']];
+        $expected_res = ['new_values' => '2,1,3', 'removed_values' => [], 'types' => ['1' => 'titi', '2' => 'toto', '3' => '']];
         $this->assertEquals($expected_res, $res);
     }
 
@@ -181,7 +181,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
 
         $this->nature_dao->method('getTypeByShortname')->willReturn([['toto']]);
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
-        $expected_res = ["new_values" => '1', 'removed_values' => [2 => 2, 3 => 3], 'types' => ['1' => 'toto']];
+        $expected_res = ['new_values' => '1', 'removed_values' => [2 => 2, 3 => 3], 'types' => ['1' => 'toto']];
 
         $this->assertEquals($expected_res, $res);
     }

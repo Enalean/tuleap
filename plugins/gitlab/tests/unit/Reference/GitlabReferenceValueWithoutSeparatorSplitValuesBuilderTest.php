@@ -28,7 +28,7 @@ final class GitlabReferenceValueWithoutSeparatorSplitValuesBuilderTest extends T
     public function testItReturnsANullRepositoryNameAndANullSha1WhenTheStringDoesNotContainAPath(): void
     {
         $split_value = (new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder())->splitRepositoryNameAndReferencedItemId(
-            "a_string_with_no_path",
+            'a_string_with_no_path',
             101,
         );
         self::assertEquals(null, $split_value->getRepositoryName());

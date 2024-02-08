@@ -37,7 +37,7 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
     {
         parent::__construct();
         if (! $this->project) {
-            throw new MessageException(dgettext("gitphp", 'Project is required'), true);
+            throw new MessageException(dgettext('gitphp', 'Project is required'), true);
         }
     }
 
@@ -66,7 +66,7 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
-            return dgettext("gitphp", 'history');
+            return dgettext('gitphp', 'history');
         }
         return 'history';
     }

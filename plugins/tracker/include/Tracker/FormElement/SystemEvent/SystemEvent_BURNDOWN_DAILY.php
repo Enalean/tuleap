@@ -98,7 +98,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
 
             if ($burndown_period->getEndDate() >= $yesterday) {
                 $this->logger->debug(
-                    "Calculating burndown for artifact #" . $burndown['id'] . ' at ' . (date('Y-m-d H:i:s', $yesterday) ?: '')
+                    'Calculating burndown for artifact #' . $burndown['id'] . ' at ' . (date('Y-m-d H:i:s', $yesterday) ?: '')
                 );
 
                 $value = $this->field_calculator->calculate(
@@ -117,7 +117,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
                     $value
                 );
 
-                $this->logger->debug("End calculs for artifact #" . $burndown['id']);
+                $this->logger->debug('End calculs for artifact #' . $burndown['id']);
             }
         }
     }

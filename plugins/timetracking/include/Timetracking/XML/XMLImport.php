@@ -194,7 +194,7 @@ class XMLImport
             }
 
             if (count($reader_ids) > 0) {
-                $this->logger->info("Add timetracking reader permission.");
+                $this->logger->info('Add timetracking reader permission.');
                 $this->timetracking_ugroup_saver->saveReaders(
                     $tracker,
                     $reader_ids
@@ -216,7 +216,7 @@ class XMLImport
             }
 
             if (count($writer_ids) > 0) {
-                $this->logger->info("Add timetracking writer permission.");
+                $this->logger->info('Add timetracking writer permission.');
                 $this->timetracking_ugroup_saver->saveWriters(
                     $tracker,
                     $writer_ids

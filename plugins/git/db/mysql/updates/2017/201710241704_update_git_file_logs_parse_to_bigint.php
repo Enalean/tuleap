@@ -22,7 +22,7 @@ class b201710241704_update_git_file_logs_parse_to_bigint extends \Tuleap\ForgeUp
 {
     public function description()
     {
-        return "change end_line of plugin_git_file_logs_parse from int to bigint";
+        return 'change end_line of plugin_git_file_logs_parse from int to bigint';
     }
 
     public function preUp()
@@ -32,8 +32,8 @@ class b201710241704_update_git_file_logs_parse_to_bigint extends \Tuleap\ForgeUp
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git_file_logs_parse
-                  MODIFY end_line BIGINT UNSIGNED";
+        $sql = 'ALTER TABLE plugin_git_file_logs_parse
+                  MODIFY end_line BIGINT UNSIGNED';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

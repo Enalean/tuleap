@@ -23,7 +23,7 @@ class b201505051630_add_new_password_field extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Add new password field";
+        return 'Add new password field';
     }
 
     public function preUp()

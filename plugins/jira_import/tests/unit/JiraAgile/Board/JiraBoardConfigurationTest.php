@@ -31,20 +31,20 @@ final class JiraBoardConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsAConfigurationWithColumns(): void
     {
         $response = [
-            "columnConfig" => [
-                "columns" => [
+            'columnConfig' => [
+                'columns' => [
                     [
-                        "name"     => "To Do",
-                        "statuses" => [],
+                        'name'     => 'To Do',
+                        'statuses' => [],
                     ],
                     [
-                        "name"     => "Done",
-                        "statuses" => [],
+                        'name'     => 'Done',
+                        'statuses' => [],
                     ],
                 ],
             ],
-            "estimation"   => [
-                "type"  => "none",
+            'estimation'   => [
+                'type'  => 'none',
             ],
         ];
 
@@ -52,28 +52,28 @@ final class JiraBoardConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         assertCount(2, $board_configuration->columns);
 
-        assertSame("To Do", $board_configuration->columns[0]->name);
-        assertSame("Done", $board_configuration->columns[1]->name);
+        assertSame('To Do', $board_configuration->columns[0]->name);
+        assertSame('Done', $board_configuration->columns[1]->name);
     }
 
     public function testItHasEstimationField(): void
     {
         $response = [
-            "columnConfig" => [
-                "columns" => [
+            'columnConfig' => [
+                'columns' => [
                 ],
             ],
-            "estimation"   => [
-                "type"  => "field",
-                "field" => [
-                    "fieldId"     => "customfield_10014",
-                    "displayName" => "Story Points",
+            'estimation'   => [
+                'type'  => 'field',
+                'field' => [
+                    'fieldId'     => 'customfield_10014',
+                    'displayName' => 'Story Points',
                 ],
             ],
         ];
 
         $board_configuration = JiraBoardConfiguration::buildFromAPIResponse($response);
 
-        assertSame("customfield_10014", $board_configuration->estimation_field);
+        assertSame('customfield_10014', $board_configuration->estimation_field);
     }
 }

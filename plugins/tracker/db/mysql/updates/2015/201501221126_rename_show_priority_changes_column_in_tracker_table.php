@@ -30,7 +30,7 @@ class b201501221126_rename_show_priority_changes_column_in_tracker_table extends
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker CHANGE show_priority_changes log_priority_changes TINYINT(1) NULL";
+        $sql = 'ALTER TABLE tracker CHANGE show_priority_changes log_priority_changes TINYINT(1) NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while renaming column show_priority_changes in tracker table: ' . implode(', ', $this->db->dbh->errorInfo()));

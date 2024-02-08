@@ -25,13 +25,13 @@ final class b202311301525_add_milestones_in_sidebar_config extends \Tuleap\Forge
 {
     public function description(): string
     {
-        return "Add milestones in sidebar config table";
+        return 'Add milestones in sidebar config table';
     }
 
     public function up(): void
     {
         $this->api->createTable(
-            "plugin_agiledashboard_milestones_in_sidebar_config",
+            'plugin_agiledashboard_milestones_in_sidebar_config',
             <<<EOS
             CREATE TABLE plugin_agiledashboard_milestones_in_sidebar_config (
                 project_id INT(11) PRIMARY KEY,

@@ -101,7 +101,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         // Ensure second key was deleted
-        $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@1.pub'), "Second key should be deleted");
+        $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@1.pub'), 'Second key should be deleted');
 
         $this->assertEmptyGitStatus();
     }

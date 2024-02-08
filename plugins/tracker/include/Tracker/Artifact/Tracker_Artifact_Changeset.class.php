@@ -244,7 +244,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         if ($comment) {
             $follow_up = $comment->fetchFollowUp($current_user);
             if (! $follow_up && ! $diff_to_previous) {
-                return "";
+                return '';
             }
 
             $html .= '<div class="tracker_artifact_followup_comment" data-test="tracker_artifact_followup_comment_followup_' . $this->getId() . '">';
@@ -274,8 +274,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     public function fetchFollowUp($diff_to_previous, PFUser $current_user): string
     {
         $follow_up_content = $this->getFollowupContent($diff_to_previous, $current_user);
-        if ($follow_up_content === "") {
-            return "";
+        if ($follow_up_content === '') {
+            return '';
         }
 
         $html = $this->getAvatar();
@@ -909,7 +909,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      */
     protected function fetchImportedFromXmlData(): string
     {
-        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../../templates/artifact");
+        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/artifact');
         $displayer = new ChangesetFromXmlDisplayer(
             new ChangesetFromXmlDao(),
             UserManager::instance(),
@@ -924,7 +924,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $diff_to_previous = $this->diffToPreviousArtifactView($user, $previous_item);
         $comment_content  = $this->fetchFollowUp($diff_to_previous, $user);
 
-        if ($comment_content === "") {
+        if ($comment_content === '') {
             return null;
         }
         $project_id = $this->getTracker()->getGroupId();

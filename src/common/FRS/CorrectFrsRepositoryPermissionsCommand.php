@@ -87,7 +87,7 @@ class CorrectFrsRepositoryPermissionsCommand extends Command
             $output->writeln("<info>$count_changes permissions has been changed.</info>");
             return 0;
         }
-        $output->writeln("<info>No permissions has been changed.</info>");
+        $output->writeln('<info>No permissions has been changed.</info>');
 
         return 0;
     }

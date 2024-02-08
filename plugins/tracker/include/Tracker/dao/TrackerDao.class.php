@@ -50,7 +50,7 @@ class TrackerDao extends DataAccessObject
     public function searchByGroupIdWithExcludedIds($group_id, array $excluded_tracker_ids)
     {
         $group_id        = $this->da->escapeInt($group_id);
-        $excluded_clause = $this->restrict("AND id NOT IN", $excluded_tracker_ids);
+        $excluded_clause = $this->restrict('AND id NOT IN', $excluded_tracker_ids);
 
         $sql = "SELECT *
                 FROM tracker
@@ -158,7 +158,7 @@ class TrackerDao extends DataAccessObject
             return false;
         }
 
-        $insert = "INSERT INTO tracker
+        $insert = 'INSERT INTO tracker
                        (id,
                         group_id,
                         name,
@@ -173,7 +173,7 @@ class TrackerDao extends DataAccessObject
                         notifications_level,
                         color,
                         enable_emailgateway)
-                    ";
+                    ';
         if ($color) {
             $color_name  = $this->da->quoteSmart($color);
             $from_select = "SELECT
@@ -330,7 +330,7 @@ class TrackerDao extends DataAccessObject
 
     public function delete($id)
     {
-        $sql = "DELETE FROM tracker WHERE id = " . $this->da->escapeInt($id);
+        $sql = 'DELETE FROM tracker WHERE id = ' . $this->da->escapeInt($id);
         return $this->update($sql);
     }
 
@@ -348,7 +348,7 @@ class TrackerDao extends DataAccessObject
     private function restrict($restriction_clause, $excluded_tracker_ids)
     {
         if (! $excluded_tracker_ids) {
-            return "";
+            return '';
         }
         $id_enumeration = $this->da->escapeIntImplode($excluded_tracker_ids);
         return "$restriction_clause ($id_enumeration)";

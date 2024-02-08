@@ -60,7 +60,7 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             null,
             null,
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
         );
         $expected_post_action = new FrozenFields($transition, 0, []);
         $this->frozen_fields_retriever->shouldReceive('getFrozenFields')->with($transition)->andReturn(
@@ -79,7 +79,7 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             null,
             null,
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
         );
 
         $result = $this->frozen_fields_factory->loadPostActions($transition);

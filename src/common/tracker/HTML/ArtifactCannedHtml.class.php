@@ -62,7 +62,7 @@ class ArtifactCannedHtml extends ArtifactCanned
     public function displayUpdateForm()
     {
         global $Language;
-        echo "<P>";
+        echo '<P>';
         $atid     = $this->ArtifactType->getID();
         $id       =
         $g        = $this->ArtifactType->getGroup();
@@ -103,13 +103,13 @@ class ArtifactCannedHtml extends ArtifactCanned
         $Language->getText('tracker_admin_index', 'create_modify_cannedresponse') . '</a></H2>';
         $result = $this->ArtifactType->getCannedResponses();
         $rows   = db_numrows($result);
-        echo "<P>";
+        echo '<P>';
 
         if ($result && $rows > 0) {
          /*
            Links to update pages
            */
-            echo "\n<H3>" . $Language->getText('tracker_include_canned', 'existing_responses') . "</H3><P>";
+            echo "\n<H3>" . $Language->getText('tracker_include_canned', 'existing_responses') . '</H3><P>';
 
             $title_arr   = [];
             $title_arr[] = $Language->getText('tracker_include_canned', 'title');
@@ -130,11 +130,11 @@ class ArtifactCannedHtml extends ArtifactCanned
                   '<td align="center"><A HREF="/tracker/admin/?func=canned&delete_canned=1&artifact_canned_id=' .
                   (int) (db_result($result, $i, 'artifact_canned_id')) . '&atid=' . (int) $atid . '&group_id=' . (int) $group_id .
                 '" onClick="return confirm(\'' . addslashes($Language->getText('tracker_include_canned', 'delete_canned', db_result($result, $i, 'title'))) . '\')">' .
-                '<img src="' . util_get_image_theme("ic/trash.png") . '" border="0"></A></td></TR>';
+                '<img src="' . util_get_image_theme('ic/trash.png') . '" border="0"></A></td></TR>';
             }
             echo '</TABLE>';
         } else {
-            echo "\n<H3>" . $Language->getText('tracker_include_canned', 'no_canned_response') . "</H3>";
+            echo "\n<H3>" . $Language->getText('tracker_include_canned', 'no_canned_response') . '</H3>';
         }
     }
 }

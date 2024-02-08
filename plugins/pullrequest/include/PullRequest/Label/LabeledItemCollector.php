@@ -81,7 +81,7 @@ class LabeledItemCollector
                         $collection->thereAreItemsUserCannotSee();
                     }
                 },
-                static fn(Fault $fault) => throw new \LogicException(sprintf("A label cannot be used in a nonexistent pull request: %s", $fault))
+                static fn(Fault $fault) => throw new \LogicException(sprintf('A label cannot be used in a nonexistent pull request: %s', $fault))
             );
         }
     }
@@ -95,7 +95,7 @@ class LabeledItemCollector
         $user_link = $this->user_helper->getLinkOnUser($user);
 
         return $this->template_renderer->renderToString(
-            "labeled-pull-request",
+            'labeled-pull-request',
             new LabeledPullRequestPresenter(
                 $pull_request,
                 $repository_link,

@@ -25,10 +25,10 @@ use Tuleap\SVNCore\Repository;
 
 class BuildParams
 {
-    public const BUILD_PARAMETER_PROJECT    = "Project";
-    public const BUILD_PARAMETER_USER       = "User";
-    public const BUILD_PARAMETER_REPOSITORY = "Repository";
-    public const BUILD_PARAMETER_PATH       = "Path";
+    public const BUILD_PARAMETER_PROJECT    = 'Project';
+    public const BUILD_PARAMETER_USER       = 'User';
+    public const BUILD_PARAMETER_REPOSITORY = 'Repository';
+    public const BUILD_PARAMETER_PATH       = 'Path';
 
     public function getAdditionalSvnParameters(Repository $repository, CommitInfo $commit_info)
     {

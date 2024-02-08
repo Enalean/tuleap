@@ -51,10 +51,10 @@ $purifier = Codendi_HTMLPurifier::instance();
 
 $HTML->header(\Tuleap\Layout\HeaderConfiguration::fromTitle($Language->getText('bookmark_edit', 'title')));
 
-print "<H3>" . $Language->getText('bookmark_edit', 'title') . "</H3>\n";
+print '<H3>' . $Language->getText('bookmark_edit', 'title') . "</H3>\n";
 
-$result = db_query("SELECT * from user_bookmarks where "
-                   . "bookmark_id=" . db_ei($bookmark_id) . " and user_id=" . db_ei(UserManager::instance()->getCurrentUser()->getId()));
+$result = db_query('SELECT * from user_bookmarks where '
+                   . 'bookmark_id=' . db_ei($bookmark_id) . ' and user_id=' . db_ei(UserManager::instance()->getCurrentUser()->getId()));
 if ($result) {
     $bookmark_url   = db_result($result, 0, 'bookmark_url');
     $bookmark_title = db_result($result, 0, 'bookmark_title');
@@ -72,6 +72,6 @@ if ($result) {
 </form>
 <?php
 
-print "<P><A HREF=\"/my/\">[" . $Language->getText('global', 'back_home') . "]</A>";
+print '<P><A HREF="/my/">[' . $Language->getText('global', 'back_home') . ']</A>';
 
 $HTML->footer([]);

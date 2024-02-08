@@ -32,6 +32,6 @@ final class ConfigSetTestValueValidator implements ValueValidator
 
     public function checkIsValid(string $value): void
     {
-        throw new InvalidConfigKeyValueException("Invalid value");
+        throw new InvalidConfigKeyValueException('Invalid value');
     }
 }

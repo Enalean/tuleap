@@ -51,7 +51,7 @@ class SvnPermissionManager
     public function save(Project $project, array $ugroup_ids)
     {
         $override_collection = $this->permission_manager->savePermissions($project, $project->getId(), self::PERMISSION_ADMIN, $ugroup_ids);
-        $override_collection->emitFeedback("");
+        $override_collection->emitFeedback('');
     }
 
     /**

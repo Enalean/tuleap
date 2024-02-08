@@ -39,7 +39,7 @@ final class ConfirmationHashEmailSender
                 $this->base_url,
                 \ForgeConfig::get('sys_noreply'),
                 $to,
-                "user"
+                'user'
             )
             ->send();
     }

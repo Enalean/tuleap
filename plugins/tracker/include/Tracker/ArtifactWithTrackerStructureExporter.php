@@ -51,6 +51,6 @@ class ArtifactWithTrackerStructureExporter
             [$artifact]
         );
 
-        $archive->addFromString("artifact.xml", $this->convertor->convertToXml($xml_element));
+        $archive->addFromString('artifact.xml', $this->convertor->convertToXml($xml_element));
     }
 }

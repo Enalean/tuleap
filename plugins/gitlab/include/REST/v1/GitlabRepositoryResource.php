@@ -135,7 +135,7 @@ final class GitlabRepositoryResource
 
         $current_user = UserManager::instance()->getCurrentUser();
         if (! $this->getGitPermissionsManager()->userIsGitAdmin($current_user, $project)) {
-            throw new RestException(403, "User must be Git administrator.");
+            throw new RestException(403, 'User must be Git administrator.');
         }
 
         try {
@@ -290,7 +290,7 @@ final class GitlabRepositoryResource
                 $current_user
             );
         } catch (GitUserNotAdminException $exception) {
-            throw new RestException(403, "User is not Git administrator.");
+            throw new RestException(403, 'User is not Git administrator.');
         } catch (GitlabRepositoryNotInProjectException | GitlabRepositoryIntegrationNotFoundException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
@@ -461,7 +461,7 @@ final class GitlabRepositoryResource
 
                 return $this->buildUpdatedIntegrationRepresentation($id);
             } catch (GitUserNotAdminException $e) {
-                throw new RestException(403, "User must be Git administrator.");
+                throw new RestException(403, 'User must be Git administrator.');
             } catch (GitlabRepositoryIntegrationNotFoundException $e) {
                 throw new RestException(404, $e->getMessage());
             }
@@ -491,13 +491,13 @@ final class GitlabRepositoryResource
                     $exception->getMessage()
                 );
             } catch (GitUserNotAdminException $exception) {
-                throw new RestException(403, "User must be Git administrator.");
+                throw new RestException(403, 'User must be Git administrator.');
             } catch (GitlabRepositoryIntegrationNotFoundException $exception) {
                 throw new RestException(404, $exception->getMessage());
             }
         }
 
-        throw new RestException(400, "The JSON representation cannot be null");
+        throw new RestException(400, 'The JSON representation cannot be null');
     }
 
     /**
@@ -557,7 +557,7 @@ final class GitlabRepositoryResource
 
         $updated_gitlab_integration = $gitlab_repository_integration_factory->getIntegrationById($id);
         if ($updated_gitlab_integration === null) {
-            throw new RestException(500, "Updated repository not found, this must not happen");
+            throw new RestException(500, 'Updated repository not found, this must not happen');
         }
 
         $webhook_dao         = new WebhookDao();

@@ -50,13 +50,13 @@ class SoftwareMapPresenter
         $this->projects                 = $GLOBALS['Language']->getText('softwaremap_trove_list', 'projs');
         $this->browse_by                = $GLOBALS['Language']->getText('softwaremap_trove_list', 'browse_by');
         $this->title_date               = $GLOBALS['Language']->getText('softwaremap_trove_list', 'register_date');
-        $this->title_name               = _("Project name");
-        $this->title_desc               = _("Short description");
-        $this->title_cat                = _("Categories");
-        $this->empty_state_project_list = _("There are no projects in this category");
-        $this->projects_in_category     = _("Projects in category");
-        $this->not_categorized          = _("Not categorized");
-        $this->go_up                    = _("Go up");
+        $this->title_name               = _('Project name');
+        $this->title_desc               = _('Short description');
+        $this->title_cat                = _('Categories');
+        $this->empty_state_project_list = _('There are no projects in this category');
+        $this->projects_in_category     = _('Projects in category');
+        $this->not_categorized          = _('Not categorized');
+        $this->go_up                    = _('Go up');
 
         $this->current_category = $current_category_name;
         $this->parent_id        = $parent_id;

@@ -35,7 +35,7 @@ final class PermissionsByDuckTypingUpdaterTest extends TestCase
         $updater = new PermissionsByDuckTypingUpdater(
             MatchPermissionsByDuckTypingStub::withUserGroupsInDestinationField([
                 ProjectUGroup::PROJECT_ADMIN,
-                "semi-crusty",
+                'semi-crusty',
             ]),
             new MoveChangesetXMLUpdater()
         );
@@ -43,8 +43,8 @@ final class PermissionsByDuckTypingUpdaterTest extends TestCase
         $changeset_xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset/>');
         $field_change           = $changeset_xml->addChild('field_change');
         $field_change->value[0] = ProjectUGroup::PROJECT_MEMBERS;
-        $field_change->value[1] = "semi-crusty";
-        $field_change->value[2] = "crusty";
+        $field_change->value[1] = 'semi-crusty';
+        $field_change->value[2] = 'crusty';
 
         $updater->updatePermissionsForDuckTypingMove(
             $changeset_xml,
@@ -53,6 +53,6 @@ final class PermissionsByDuckTypingUpdaterTest extends TestCase
         );
 
         self::assertCount(1, $changeset_xml->field_change[0]->value);
-        self::assertSame("semi-crusty", (string) $changeset_xml->field_change[0]->value);
+        self::assertSame('semi-crusty', (string) $changeset_xml->field_change[0]->value);
     }
 }

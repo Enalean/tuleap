@@ -116,7 +116,7 @@ class CellPatcher
             throw new I18NRestException(
                 400,
                 sprintf(
-                    dgettext('tuleap-taskboard', "Could not find artifact to add with id %d."),
+                    dgettext('tuleap-taskboard', 'Could not find artifact to add with id %d.'),
                     $id
                 )
             );

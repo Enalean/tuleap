@@ -69,7 +69,7 @@ WHERE permission_type='PLUGIN_TRACKER_WORKFLOW_TRANSITION'
 
             $deleted = $this->db->dbh->exec($sql_delete_existing_permissions);
             if ($deleted === false) {
-                $this->rollBackOnError("An error occured while deleting existing authorized ugroups pre conditions.");
+                $this->rollBackOnError('An error occured while deleting existing authorized ugroups pre conditions.');
             }
 
             $sql_insert_matching_permission = "INSERT INTO permissions (permission_type, object_id, ugroup_id)
@@ -77,7 +77,7 @@ VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION', '$transition_id', 1)";
 
             $insert = $this->db->dbh->exec($sql_insert_matching_permission);
             if ($insert === false) {
-                $this->rollBackOnError("An error occured while adding all_users as the authorized ugroup pre conditions.");
+                $this->rollBackOnError('An error occured while adding all_users as the authorized ugroup pre conditions.');
             }
         }
     }

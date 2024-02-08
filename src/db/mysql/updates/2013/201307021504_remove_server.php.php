@@ -33,7 +33,7 @@ EOT;
     public function up()
     {
         if ($this->db->tableNameExists('server')) {
-            $sql = "DROP TABLE server";
+            $sql = 'DROP TABLE server';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
                 throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while removing table server');

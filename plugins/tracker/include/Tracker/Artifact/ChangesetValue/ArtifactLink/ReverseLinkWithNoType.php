@@ -33,7 +33,7 @@ final class ReverseLinkWithNoType implements ReverseLink
 
     public static function fromReverseLink(ReverseLink $reverse_link): self
     {
-        return new self($reverse_link->getSourceArtifactId(), "");
+        return new self($reverse_link->getSourceArtifactId(), '');
     }
 
     public function getSourceArtifactId(): int

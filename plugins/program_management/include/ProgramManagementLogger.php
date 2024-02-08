@@ -30,6 +30,6 @@ final class ProgramManagementLogger
 {
     public static function getLogger(): LoggerInterface
     {
-        return BackendLogger::getDefaultLogger("program_management_syslog");
+        return BackendLogger::getDefaultLogger('program_management_syslog');
     }
 }

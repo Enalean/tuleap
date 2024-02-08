@@ -126,7 +126,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
             ->withLanguage($language)
             ->withAddDate(940000000)
             ->withTimezone('UTC')
-            ->withAvatarUrl("/path/to/avatar.png")
+            ->withAvatarUrl('/path/to/avatar.png')
             ->build();
     }
 

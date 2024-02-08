@@ -10,7 +10,7 @@ $request = HTTPRequest::instance();
 
 $HTML->header(\Tuleap\Layout\HeaderConfiguration::fromTitle($Language->getText('bookmark_delete', 'title')));
 
-print "<H3>" . $Language->getText('bookmark_delete', 'title') . "</H3>\n";
+print '<H3>' . $Language->getText('bookmark_delete', 'title') . "</H3>\n";
 $vId = new Valid_UInt('bookmark_id');
 $vId->required();
 if ($request->valid($vId)) {
@@ -29,7 +29,7 @@ if ($request->valid($vId)) {
         print '<input type="submit" value="' . $Language->getText('global', 'btn_submit') . '">';
         print '</form>';
     }
-    print "<p><a href=\"/my/\">[" . $Language->getText('global', 'back_home') . "]</a></p>";
+    print '<p><a href="/my/">[' . $Language->getText('global', 'back_home') . ']</a></p>';
 } else {
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'missing_parameters'));
     $GLOBALS['Response']->redirect('/my');

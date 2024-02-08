@@ -350,7 +350,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->get(
-            "/plugins/graphontrackersv5/report/{report_id:\d+}/renderer/{renderer_id:-?\d+}/chart/{chart_id:-?\d+}",
+            '/plugins/graphontrackersv5/report/{report_id:\d+}/renderer/{renderer_id:-?\d+}/chart/{chart_id:-?\d+}',
             $this->getRouteHandler('routeGetChart')
         );
     }

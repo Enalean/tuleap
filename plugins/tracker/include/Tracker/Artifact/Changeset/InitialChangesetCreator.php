@@ -169,7 +169,7 @@ final class InitialChangesetCreator implements CreateInitialChangeset
         \Workflow $workflow,
     ): bool {
         try {
-            $workflow->validate($fields_data, $artifact, "", $submitter);
+            $workflow->validate($fields_data, $artifact, '', $submitter);
             $workflow->before($fields_data, $submitter, $artifact);
             $augmented_data = $this->field_initializator->process($artifact, $fields_data);
             $workflow->checkGlobalRules($augmented_data);

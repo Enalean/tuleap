@@ -24,8 +24,8 @@ class Workflow_Transition_Condition_CommentNotEmpty_Dao extends \Tuleap\DB\DataA
     {
         $is_comment_required = $is_comment_required ? 1 : 0;
 
-        $sql = "REPLACE INTO tracker_workflow_transition_condition_comment_notempty(transition_id, is_comment_required)
-                VALUES (?, ?)";
+        $sql = 'REPLACE INTO tracker_workflow_transition_condition_comment_notempty(transition_id, is_comment_required)
+                VALUES (?, ?)';
 
         $this->getDB()->run($sql, $transition_id, $is_comment_required);
     }
@@ -40,10 +40,10 @@ class Workflow_Transition_Condition_CommentNotEmpty_Dao extends \Tuleap\DB\DataA
 
     public function duplicate($from_transition_id, $to_transition_id)
     {
-        $sql = "INSERT INTO tracker_workflow_transition_condition_comment_notempty (transition_id, is_comment_required)
+        $sql = 'INSERT INTO tracker_workflow_transition_condition_comment_notempty (transition_id, is_comment_required)
                 SELECT ?, is_comment_required
                 FROM tracker_workflow_transition_condition_comment_notempty
-                WHERE transition_id = ?";
+                WHERE transition_id = ?';
 
         $this->getDB()->run($sql, $to_transition_id, $from_transition_id);
     }

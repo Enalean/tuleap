@@ -34,20 +34,20 @@ class WikiPlugin_CreateBib extends WikiPlugin
 {
     public function getName()
     {
-        return _("CreateBib");
+        return _('CreateBib');
     }
 
     public function getDescription()
     {
-        return _("Automatically create a Bibtex file from linked pages");
+        return _('Automatically create a Bibtex file from linked pages');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 0.01 $"
+            '$Revision: 0.01 $'
         );
     }
 
@@ -60,7 +60,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
     public function preg_quote($heading)
     {
         return str_replace(
-            ["/", ".", "?", "*"],
+            ['/', '.', '?', '*'],
             ['\/', '\.', '\?', '\*'],
             $heading
         );
@@ -108,12 +108,12 @@ class WikiPlugin_CreateBib extends WikiPlugin
 
     public function dumpFile(&$thispage, $filename)
     {
-        include_once("lib/loadsave.php");
+        include_once('lib/loadsave.php');
         $mailified = MailifyPage($thispage);
 
         $attrib = ['mtime' => $thispage->get('mtime'), 'is_ascii' => 1];
 
-        $zip = new ZipWriter("Created by PhpWiki " . PHPWIKI_VERSION, $filename);
+        $zip = new ZipWriter('Created by PhpWiki ' . PHPWIKI_VERSION, $filename);
         $zip->addRegularFile(
             FilenameForPage($thispage->getName()),
             $mailified,
@@ -131,7 +131,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
             $pagename = $page->name;
         }
         if (! $pagename) {
-            return $this->error(_("no page specified"));
+            return $this->error(_('no page specified'));
         }
 
         // Get the links page contents
@@ -140,10 +140,10 @@ class WikiPlugin_CreateBib extends WikiPlugin
         $content = $current->getContent();
 
     // Prepare the button to trigger dumping
-        $dump_url = $request->getURLtoSelf(["file" => "tube.bib"]);
+        $dump_url = $request->getURLtoSelf(['file' => 'tube.bib']);
         global $WikiTheme;
         $dump_button = $WikiTheme->makeButton(
-            "To File",
+            'To File',
             $dump_url,
             'foo'
         );
@@ -162,7 +162,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
                 $subversion = $subpage->getCurrentRevision();
                 $subcontent = $subversion->getContent();
 
-                $bib = $this->extractBibTeX($subcontent, "@", "}");
+                $bib = $this->extractBibTeX($subcontent, '@', '}');
 
                 // ...and finally just push the bibtex data to page
                 $foo = implode("\n", $bib);

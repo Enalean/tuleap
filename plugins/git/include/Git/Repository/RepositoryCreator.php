@@ -127,7 +127,7 @@ class RepositoryCreator
         $this->event_manager->processEvent($event);
 
         $this->history_dao->groupAddHistory(
-            "git_repo_create",
+            'git_repo_create',
             $repository->getName(),
             $project->getID()
         );

@@ -37,14 +37,14 @@ use Tuleap\Mail\Transport\SmtpOptions\SmtpOptionsBuilder;
 #[ConfigKeyCategory('Email')]
 class MailTransportBuilder
 {
-    #[ConfigKey("Option to define how Tuleap will send emails")]
+    #[ConfigKey('Option to define how Tuleap will send emails')]
     #[ConfigKeyString(self::EMAIL_TRANSPORT_SENDMAIL_VALUE)]
     public const TRANSPORT_CONFIG_KEY = 'email_transport';
 
     #[ConfigKey("Option to define the relay host used when email_transport is configured to 'smtp'. The used port must be provided here.")]
     #[ConfigKeyString('')]
     public const RELAYHOST_CONFIG_KEY     = 'email_relayhost';
-    #[ConfigKey("Activate the usage of TLS for the SMTP relay host")]
+    #[ConfigKey('Activate the usage of TLS for the SMTP relay host')]
     #[ConfigKeyInt(0)]
     public const RELAYHOST_SMTP_USE_TLS   = 'email_relayhost_smtp_use_tls';
     #[ConfigKey('Username to use to authenticate against the SMTP relay host')]

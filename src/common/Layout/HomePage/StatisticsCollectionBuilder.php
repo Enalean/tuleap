@@ -30,7 +30,7 @@ use UserManager;
 
 class StatisticsCollectionBuilder
 {
-    #[ConfigKey("Toggle display of site statistics on site home page")]
+    #[ConfigKey('Toggle display of site statistics on site home page')]
     public const CONFIG_DISPLAY_STATISTICS = 'display_homepage_statistics';
 
     /**

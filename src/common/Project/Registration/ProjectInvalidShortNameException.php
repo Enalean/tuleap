@@ -31,7 +31,7 @@ final class ProjectInvalidShortNameException extends \RuntimeException implement
 
         parent::__construct(
             sprintf(
-                "Project shortname is invalid. The reason is: %s",
+                'Project shortname is invalid. The reason is: %s',
                 $details
             )
         );
@@ -40,7 +40,7 @@ final class ProjectInvalidShortNameException extends \RuntimeException implement
     public function getI18NMessage(): string
     {
         return sprintf(
-            dgettext("tuleap-core", "Project shortname is invalid. The reason is: %s"),
+            dgettext('tuleap-core', 'Project shortname is invalid. The reason is: %s'),
             $this->details
         );
     }

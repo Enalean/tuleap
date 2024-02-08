@@ -32,9 +32,9 @@ class b201603171433_add_icon_color_columns extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_openidconnectclient_provider
+        $sql = 'ALTER TABLE plugin_openidconnectclient_provider
                 ADD COLUMN icon VARCHAR(50) NULL,
-                ADD COLUMN color VARCHAR(20) NULL";
+                ADD COLUMN color VARCHAR(20) NULL';
 
         $res = $this->db->dbh->exec($sql);
 

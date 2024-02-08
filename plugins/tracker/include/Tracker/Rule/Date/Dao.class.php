@@ -27,22 +27,22 @@ class Tracker_Rule_Date_Dao extends \Tuleap\DB\DataAccessObject
 {
     public function searchById($tracker_id, $id): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM tracker_rule_date
                 JOIN tracker_rule
                 ON (id = tracker_rule_id)
                 WHERE tracker_rule.id = ?
-                  AND tracker_rule.tracker_id = ?";
+                  AND tracker_rule.tracker_id = ?';
         return $this->getDB()->row($sql, $id, $tracker_id);
     }
 
     public function searchByTrackerId($tracker_id): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM tracker_rule
                 JOIN tracker_rule_date
                 ON (id = tracker_rule_id)
-                WHERE tracker_rule.tracker_id = ?";
+                WHERE tracker_rule.tracker_id = ?';
 
         return $this->getDB()->run($sql, $tracker_id);
     }

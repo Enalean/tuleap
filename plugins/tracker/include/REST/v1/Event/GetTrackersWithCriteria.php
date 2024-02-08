@@ -31,7 +31,7 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 class GetTrackersWithCriteria implements Dispatchable
 {
-    public const NAME = "getTrackersWithCriteria";
+    public const NAME = 'getTrackersWithCriteria';
 
     /**
      * @var Project
@@ -67,7 +67,7 @@ class GetTrackersWithCriteria implements Dispatchable
      */
     private $trackers_with_criteria = [];
 
-    public function __construct(array $query, $limit, $offset, Project $project, $representation = "full")
+    public function __construct(array $query, $limit, $offset, Project $project, $representation = 'full')
     {
         $this->query                  = $query;
         $this->limit                  = $limit;

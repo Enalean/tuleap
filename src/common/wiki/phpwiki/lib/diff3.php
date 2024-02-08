@@ -212,11 +212,11 @@ class Diff3
                 // FIXME: this should probably be moved somewhere else...
                 $lines = array_merge(
                     $lines,
-                    ["<<<<<<<" . ($label1 ? " $label1" : '')],
+                    ['<<<<<<<' . ($label1 ? " $label1" : '')],
                     $block->final1,
-                    ["======="],
+                    ['======='],
                     $block->final2,
-                    [">>>>>>>" . ($label2 ? " $label2" : '')]
+                    ['>>>>>>>' . ($label2 ? " $label2" : '')]
                 );
                 $this->ConflictingBlocks++;
             } else {

@@ -29,11 +29,11 @@ final class GenerateGitoliteAccessURLStub implements GenerateGitoliteAccessURL
 {
     public function getSSHURL(GitRepository $repository): string
     {
-        return "ssh://gitolit@example.com/my-project/" . $repository->getFullName() . ".git";
+        return 'ssh://gitolit@example.com/my-project/' . $repository->getFullName() . '.git';
     }
 
     public function getHTTPURL(GitRepository $repository): string
     {
-        return "https://example.com/plugins/git/my-project/" . $repository->getFullName() . ".git";
+        return 'https://example.com/plugins/git/my-project/' . $repository->getFullName() . '.git';
     }
 }

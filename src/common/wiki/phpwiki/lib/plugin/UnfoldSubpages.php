@@ -32,28 +32,28 @@ rcs_id('$Id: UnfoldSubpages.php,v 1.21 2005/09/11 13:20:07 rurban Exp $');
  * Todo: follow RedirectTo
  */
 
-require_once("lib/PageList.php");
-require_once("lib/TextSearchQuery.php");
-require_once("lib/plugin/IncludePage.php");
+require_once('lib/PageList.php');
+require_once('lib/TextSearchQuery.php');
+require_once('lib/plugin/IncludePage.php');
 
 class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
 {
     public function getName()
     {
-        return _("UnfoldSubpages");
+        return _('UnfoldSubpages');
     }
 
     public function getDescription()
     {
-        return _("Includes the content of all SubPages of the current page.");
+        return _('Includes the content of all SubPages of the current page.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.22 $"
+            '$Revision: 1.22 $'
         );
     }
 
@@ -117,7 +117,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
             // A page cannot include itself. Avoid doublettes.
             if (in_array($cpagename, $included_pages)) {
                 $content->pushContent(HTML::p(sprintf(
-                    _("recursive inclusion of page %s ignored"),
+                    _('recursive inclusion of page %s ignored'),
                     $cpagename
                 )));
                 continue;
@@ -139,7 +139,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                         if (! $quiet) {
                             $content->pushContent(
                                 HTML::p(sprintf(
-                                    _("recursive inclusion of page %s ignored"),
+                                    _('recursive inclusion of page %s ignored'),
                                     $cpagename . ' => ' . $m[1]
                                 ))
                             );
@@ -161,7 +161,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                     // Use _("%s: %s") instead of .": ". for French punctuation
                     $ct = TransformText(
                         sprintf(
-                            _("%s: %s"),
+                            _('%s: %s'),
                             "[$pname|$cpagename]",
                             $ct
                         ),
@@ -178,7 +178,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                                                         '' : 'transclusion-title',
                         ],
                         fmt(
-                            "Included from %s:",
+                            'Included from %s:',
                             WikiLink($cpagename)
                         )
                     ));
@@ -193,7 +193,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
             }
         }
         if (! $cpagename) {
-            return $this->error(sprintf(_("%s has no subpages defined."), $pagename));
+            return $this->error(sprintf(_('%s has no subpages defined.'), $pagename));
         }
         return $content;
     }

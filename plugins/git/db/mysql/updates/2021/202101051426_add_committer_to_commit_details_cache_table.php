@@ -35,14 +35,14 @@ final class b202101051426_add_committer_to_commit_details_cache_table extends \T
 
     public function up(): void
     {
-        if ($this->db->dbh->exec("TRUNCATE TABLE plugin_git_commit_details_cache") === false) {
+        if ($this->db->dbh->exec('TRUNCATE TABLE plugin_git_commit_details_cache') === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while emptying plugin_git_commit_details_cache');
         }
 
-        $sql = "ALTER TABLE plugin_git_commit_details_cache
+        $sql = 'ALTER TABLE plugin_git_commit_details_cache
                 ADD COLUMN committer_name TEXT NOT NULL,
                 ADD COLUMN committer_email TEXT NOT NULL,
-                ADD COLUMN committer_epoch INT(11) NOT NULL";
+                ADD COLUMN committer_epoch INT(11) NOT NULL';
 
         if ($this->db->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding committer info to the table plugin_git_commit_details_cache');

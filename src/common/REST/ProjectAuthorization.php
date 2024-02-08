@@ -35,7 +35,7 @@ final readonly class ProjectAuthorization
         try {
             $url_verification->userCanAccessProject($user, $project);
         } catch (Project_AccessProjectNotFoundException | AccessNotActiveException) {
-            throw new RestException(404, "Project does not exist");
+            throw new RestException(404, 'Project does not exist');
         } catch (Project_AccessException $exception) {
             throw new RestException(403, $exception->getMessage());
         }
@@ -47,7 +47,7 @@ final readonly class ProjectAuthorization
             $url_verification = new URLVerification();
             $url_verification->userCanAccessProjectAndIsProjectAdmin($user, $project);
         } catch (Project_AccessProjectNotFoundException | AccessNotActiveException) {
-            throw new RestException(404, "Project does not exist");
+            throw new RestException(404, 'Project does not exist');
         } catch (Project_AccessNotAdminException $exception) {
             throw new RestException(403, $exception->getMessage());
         } catch (Project_AccessException $exception) {
@@ -61,7 +61,7 @@ final readonly class ProjectAuthorization
             $url_verification = new URLVerification();
             $url_verification->userCanManageProjectMembership($user, $project);
         } catch (Project_AccessProjectNotFoundException | AccessNotActiveException) {
-            throw new RestException(404, "Project does not exist");
+            throw new RestException(404, 'Project does not exist');
         } catch (Project_AccessNotAdminException $exception) {
             throw new RestException(403, $exception->getMessage());
         } catch (Project_AccessException $exception) {

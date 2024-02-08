@@ -31,7 +31,7 @@ final class IterationTrackerNotFoundException extends RuntimeException
     {
         parent::__construct(
             sprintf(
-                "Could not find tracker of Iteration #%d",
+                'Could not find tracker of Iteration #%d',
                 $iteration->getId()
             )
         );

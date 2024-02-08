@@ -141,7 +141,7 @@ class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $submitted_id = 1;
 
-        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isArtifactLinksFieldUsed')->andReturn(true);
         $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
 
         $this->addToAssertionCount(1);
@@ -151,7 +151,7 @@ class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $submitted_id = 1;
 
-        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(false);
+        $this->ttm_field_usage_detector->shouldReceive('isArtifactLinksFieldUsed')->andReturn(false);
         $this->expectException(MissingArtifactLinkException::class);
 
         $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
@@ -161,9 +161,9 @@ class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $submitted_id = 1;
 
-        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isArtifactLinksFieldUsed')->andReturn(true);
 
-        $this->ttm_field_usage_detector->shouldReceive("isStepDefinitionFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(true);
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(false);
         $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->with(1)->andReturn(false);
 
@@ -176,9 +176,9 @@ class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $submitted_id = 1;
 
-        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isArtifactLinksFieldUsed')->andReturn(true);
 
-        $this->ttm_field_usage_detector->shouldReceive("isStepDefinitionFieldUsed")->andReturn(false);
+        $this->ttm_field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(false);
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
         $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->never();
 
@@ -191,9 +191,9 @@ class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $submitted_id = 1;
 
-        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isArtifactLinksFieldUsed')->andReturn(true);
 
-        $this->ttm_field_usage_detector->shouldReceive("isStepExecutionFieldUsed")->andReturn(false);
+        $this->ttm_field_usage_detector->shouldReceive('isStepExecutionFieldUsed')->andReturn(false);
 
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
         $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->never();
@@ -207,8 +207,8 @@ class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $submitted_id = 1;
 
-        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
-        $this->ttm_field_usage_detector->shouldReceive("isStepExecutionFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isArtifactLinksFieldUsed')->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isStepExecutionFieldUsed')->andReturn(true);
 
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(false);
         $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->with(1)->andReturn(false);
@@ -249,9 +249,9 @@ class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $submitted_id = 1;
 
-        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isArtifactLinksFieldUsed')->andReturn(true);
 
-        $this->ttm_field_usage_detector->shouldReceive("isStepDefinitionFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(true);
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(true);
 
         $this->expectException(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
@@ -263,9 +263,9 @@ class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $submitted_id = 1;
 
-        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isArtifactLinksFieldUsed')->andReturn(true);
 
-        $this->ttm_field_usage_detector->shouldReceive("isStepDefinitionFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(true);
 
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(false);
         $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->with(1)->andReturn(true);

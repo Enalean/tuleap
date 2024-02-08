@@ -26,7 +26,7 @@
  * This file belongs to WikiPluginCached.
  */
 
-require_once "lib/WikiPlugin.php";
+require_once 'lib/WikiPlugin.php';
 // require_once "lib/plugincache-config.php"; // replaced by config.ini settings!
 
 // types:
@@ -107,8 +107,8 @@ class WikiPluginCached extends WikiPlugin
             $url .= '/' . PLUGIN_CACHED_FILENAME_PREFIX . $id . '.img'
                 . ($plugincall_arg ? '?args=' . $plugincall_arg : '');
         }
-        if ($request->getArg("start_debug")) {
-            $url .= "&start_debug=1";
+        if ($request->getArg('start_debug')) {
+            $url .= '&start_debug=1';
         }
         return [$id, $url];
     }
@@ -393,12 +393,12 @@ class WikiPluginCached extends WikiPlugin
     public function tempnam($prefix = false)
     {
         $temp = tempnam(
-            isWindows() ? str_replace('/', "\\", PLUGIN_CACHED_CACHE_DIR)
+            isWindows() ? str_replace('/', '\\', PLUGIN_CACHED_CACHE_DIR)
                                     : PLUGIN_CACHED_CACHE_DIR,
             $prefix ? $prefix : PLUGIN_CACHED_FILENAME_PREFIX
         );
         if (isWindows()) {
-            $temp = preg_replace("/\.tmp$/", "_tmp", $temp);
+            $temp = preg_replace('/\.tmp$/', '_tmp', $temp);
         }
         return $temp;
     }

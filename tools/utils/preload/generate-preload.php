@@ -26,7 +26,7 @@ use Tuleap\Preload\PreloadGenerator;
 require __DIR__ . '/../../../src/common/Preload/PreloadGenerator.php';
 
 if (! isset($argv[1])) {
-    fwrite(STDERR, "A composer.json file is required as an argument");
+    fwrite(STDERR, 'A composer.json file is required as an argument');
     exit(1);
 }
 

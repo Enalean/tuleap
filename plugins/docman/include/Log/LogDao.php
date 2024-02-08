@@ -31,10 +31,10 @@ final class LogDao extends DataAccessObject implements IRetrieveStoredLog
      */
     public function searchByItemIdOrderByTimestamp(int $item_id): array
     {
-        $sql = "SELECT time, group_id, user_id, type, old_value, new_value, field
+        $sql = 'SELECT time, group_id, user_id, type, old_value, new_value, field
                 FROM plugin_docman_log
                 WHERE item_id = ?
-                ORDER BY time DESC";
+                ORDER BY time DESC';
 
         return $this->getDB()->run($sql, $item_id);
     }
@@ -44,18 +44,18 @@ final class LogDao extends DataAccessObject implements IRetrieveStoredLog
      */
     public function paginatedSearchByItemIdOrderByTimestamp(int $item_id, int $limit, int $offset): array
     {
-        $sql = "SELECT time, group_id, user_id, type, old_value, new_value, field
+        $sql = 'SELECT time, group_id, user_id, type, old_value, new_value, field
                 FROM plugin_docman_log
                 WHERE item_id = ?
                 ORDER BY time DESC
-                LIMIT ? OFFSET ?";
+                LIMIT ? OFFSET ?';
 
         return $this->getDB()->run($sql, $item_id, $limit, $offset);
     }
 
     public function countByItemId(int $item_id): int
     {
-        $sql = "SELECT count(*) as nb FROM plugin_docman_log WHERE item_id = ?";
+        $sql = 'SELECT count(*) as nb FROM plugin_docman_log WHERE item_id = ?';
 
         return (int) $this->getDB()->cell($sql, $item_id);
     }

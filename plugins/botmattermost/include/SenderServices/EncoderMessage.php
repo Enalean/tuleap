@@ -36,15 +36,15 @@ class EncoderMessage
             throw new HasNoMessageContentException();
         }
         $tab = [
-            "username" => $bot->getName(),
-            "channel"  => strtolower($channel),
-            "icon_url" => $bot->getAvatarUrl(),
+            'username' => $bot->getName(),
+            'channel'  => strtolower($channel),
+            'icon_url' => $bot->getAvatarUrl(),
         ];
         if ($message->hasText()) {
-            $tab["text"] = $message->getText();
+            $tab['text'] = $message->getText();
         }
         if ($message->hasAttachments()) {
-            $tab["attachments"] = $this->generateArrayAttachments($message->getAttachments());
+            $tab['attachments'] = $this->generateArrayAttachments($message->getAttachments());
         }
 
         return json_encode($tab);

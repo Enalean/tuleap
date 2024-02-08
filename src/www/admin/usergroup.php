@@ -214,7 +214,7 @@ if ($request->isPost()) {
                 if ($request->existAndNonEmpty('ldap_id') && $request->valid($vLdapId)) {
                     $user->setLdapId($request->get('ldap_id'));
                 } else {
-                    $user->setLdapId("");
+                    $user->setLdapId('');
                 }
             }
 

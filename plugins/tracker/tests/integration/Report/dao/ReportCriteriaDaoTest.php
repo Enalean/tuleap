@@ -109,21 +109,21 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
-        $this->insertAlphanumValue($criteria_id, "Stuff");
+        $this->insertAlphanumValue($criteria_id, 'Stuff');
         $other_criteria_id = $this->create($from_report_id, $from_other_field_id, $rank, 0);
-        $this->insertAlphanumValue($other_criteria_id, "Other stuff");
+        $this->insertAlphanumValue($other_criteria_id, 'Other stuff');
 
         $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
 
         $duplicated_data = $this->getNewReportCriteriaAlphanumValues($to_field_id);
         $expected        = [
-            ['value' => "Stuff"],
+            ['value' => 'Stuff'],
         ];
         $this->assertEquals($expected, $duplicated_data);
 
         $duplicated_data = $this->getNewReportCriteriaAlphanumValues($to_other_field_id);
         $expected        = [
-            ['value' => "Other stuff"],
+            ['value' => 'Other stuff'],
         ];
         $this->assertEquals($expected, $duplicated_data);
     }
@@ -144,13 +144,13 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
-        $this->insertFileValue($criteria_id, "file stuff");
+        $this->insertFileValue($criteria_id, 'file stuff');
 
         $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
 
         $duplicated_data = $this->getNewReportCriteriaFileValues($to_field_id);
         $expected        = [
-            ['value' => "file stuff"],
+            ['value' => 'file stuff'],
         ];
         $this->assertEquals($expected, $duplicated_data);
     }
@@ -173,13 +173,13 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
-        $this->insertOpenListValue($criteria_id, "!random value,b109");
+        $this->insertOpenListValue($criteria_id, '!random value,b109');
 
         $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
 
         $duplicated_data = $this->getNewReportCriteriaOpenListValues($to_field_id);
         $expected        = [
-            ['value' => "!random value,b901"],
+            ['value' => '!random value,b901'],
         ];
         $this->assertEquals($expected, $duplicated_data);
     }
@@ -227,7 +227,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
-        $this->insertDateValue($criteria_id, 0, 1624202493, ">");
+        $this->insertDateValue($criteria_id, 0, 1624202493, '>');
 
         $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
 
@@ -254,13 +254,13 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
-        $this->insertCommentValue($criteria_id, "My custom comment");
+        $this->insertCommentValue($criteria_id, 'My custom comment');
 
         $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
 
         $duplicated_data = $this->getNewReportCommentValues($criteria_id);
         $expected        = [
-            ['comment' => "My custom comment"],
+            ['comment' => 'My custom comment'],
         ];
         $this->assertEquals($expected, $duplicated_data);
     }

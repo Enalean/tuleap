@@ -52,15 +52,15 @@ echo "Event.observe(window, 'load', function() {
                 edit:    '" . addslashes($Language->getText('tracker_fieldeditor', 'edit')) . "',
                 preview: '" . addslashes($Language->getText('tracker_fieldeditor', 'preview')) . "',
                 warning: '" . addslashes($Language->getText('tracker_fieldeditor', 'warning')) . "',
-                group_id:" . (int) $ath->getGroupId() . "
+                group_id:" . (int) $ath->getGroupId() . '
             });
         }
-});";
+});';
 
 echo "new UserAutoCompleter('tracker_cc',
                           '" . util_get_dir_image_theme() . "',
                           true);\n";
-echo "</script>";
+echo '</script>';
 
 // Display footer page
 $ath->footer($params);

@@ -65,7 +65,7 @@ class MediaWikiXMLImporter
         UGroupManager $ugroup_manager,
         EventManager $event_manager,
     ) {
-        $this->logger            = new WrapperLogger($logger, "MediaWikiXMLImporter");
+        $this->logger            = new WrapperLogger($logger, 'MediaWikiXMLImporter');
         $this->mediawiki_manager = $mediawiki_manager;
         $this->language_manager  = $language_manager;
         $this->ugroup_manager    = $ugroup_manager;
@@ -104,7 +104,7 @@ class MediaWikiXMLImporter
 
         $this->importRights($project, $xml_mediawiki);
 
-        $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/" . (int) $project->getID();
+        $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . '/' . (int) $project->getID();
         $owner                  = ForgeConfig::get('sys_http_user');
         if ($owner) {
             $no_filter_file_extension = [];
@@ -167,7 +167,7 @@ class MediaWikiXMLImporter
 
     private function getMaintenanceWrapperPath()
     {
-        return __DIR__ . "/../bin/mw-maintenance-wrapper.php";
+        return __DIR__ . '/../bin/mw-maintenance-wrapper.php';
     }
 
     private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode)

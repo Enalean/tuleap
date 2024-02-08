@@ -250,7 +250,7 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         $this->tag_reference_dao->method('getAllTagsSplitValuesInProject')->willReturn(
-            ['repository_name' => 'root/project01', "tag_name" => 'v1.0.2'],
+            ['repository_name' => 'root/project01', 'tag_name' => 'v1.0.2'],
         );
 
         $this->repository_integration_factory
@@ -297,7 +297,7 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         $this->branch_reference_dao->method('getAllBranchesSplitValuesInProject')->willReturn(
-            ['repository_name' => 'root/project01', "branch_name" => 'dev'],
+            ['repository_name' => 'root/project01', 'branch_name' => 'dev'],
         );
 
         $this->repository_integration_factory

@@ -21,6 +21,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 final class DateFormat
 {
-    public const DATE     = "Y-m-d";
-    public const DATETIME = "Y-m-d H:i";
+    public const DATE     = 'Y-m-d';
+    public const DATETIME = 'Y-m-d H:i';
 }

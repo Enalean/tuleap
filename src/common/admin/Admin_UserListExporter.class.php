@@ -80,7 +80,7 @@ class Admin_UserListExporter
      */
     private function buildCsvBody($users)
     {
-        $csv_body = "";
+        $csv_body = '';
         $hp       = Codendi_HTMLPurifier::instance();
         foreach ($users as $user) {
             $documents_body = [

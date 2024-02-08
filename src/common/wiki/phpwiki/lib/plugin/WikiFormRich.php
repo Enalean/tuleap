@@ -87,20 +87,20 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
 {
     public function getName()
     {
-        return "WikiFormRich";
+        return 'WikiFormRich';
     }
 
     public function getDescription()
     {
-        return _("Provide generic WikiForm input buttons");
+        return _('Provide generic WikiForm input buttons');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.15 $"
+            '$Revision: 1.15 $'
         );
     }
 
@@ -119,8 +119,8 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
      */
     public function handle_plugin_args_cruft($argstr, $args)
     {
-        $allowed = ["editbox", "hidden", "checkbox", "radiobutton"/*deprecated*/,
-            "radio", "pulldown", "submit", "reset", "combobox",
+        $allowed = ['editbox', 'hidden', 'checkbox', 'radiobutton'/*deprecated*/,
+            'radio', 'pulldown', 'submit', 'reset', 'combobox',
         ];
         // no editbox[] = array(...) allowed (space)
         $arg_array = preg_split("/\n/", $argstr);
@@ -128,7 +128,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
         $arg = '';
         for ($i = 0; $i < count($arg_array); $i++) {
             //TODO: we require an name=value pair here, but submit may go without also.
-            if (preg_match("/^\s*(" . join("|", $allowed) . ")\[\](.*)$/", $arg_array[$i], $m)) {
+            if (preg_match('/^\s*(' . join('|', $allowed) . ')\[\](.*)$/', $arg_array[$i], $m)) {
                 $name                    = $m[1]; // one of the allowed input types
                 $this->inputbox[][$name] = [];
                 $j                       = count($this->inputbox) - 1;
@@ -136,7 +136,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                 // must match name=NAME and also value=<!plugin-list name !>
                 while (
                     preg_match(
-                        "/^(\w+)=((?:\".*\")|(?:\w+)|(?:\"?<!plugin-list.+!>\"?))\s*/",
+                        '/^(\w+)=((?:".*")|(?:\w+)|(?:"?<!plugin-list.+!>"?))\s*/',
                         $curargs,
                         $m
                     )
@@ -144,25 +144,25 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                        $attr    = $m[1];
                     $value      = $m[2];
                        $curargs = substr($curargs, strlen($m[0]));
-                    if (preg_match("/^\"(.*)\"$/", $value, $m)) {
+                    if (preg_match('/^"(.*)"$/', $value, $m)) {
                         $value = $m[1];
                     }
                     if (
-                        in_array($name, ["pulldown", "checkbox", "radio", "radiobutton", "combobox"])
+                        in_array($name, ['pulldown', 'checkbox', 'radio', 'radiobutton', 'combobox'])
                             and preg_match('/^<!plugin-list.+!>$/', $value, $m)
                     ) {
                     // like pulldown[] name=test value=<!plugin-list BackLinks page=HomePage!>
                         $loader     = new WikiPluginLoader();
                         $markup     = null;
                         $basepage   = null;
-                        $plugin_str = preg_replace(["/^<!/", "/!>$/"], ["<?", "?>"], $value);
+                        $plugin_str = preg_replace(['/^<!/', '/!>$/'], ['<?', '?>'], $value);
                  // will return a pagelist object! pulldown,checkbox,radiobutton
                         $value = $loader->expandPI($plugin_str, $GLOBALS['request'], $markup, $basepage);
                         if (isa($value, 'PageList')) {
                             $value = $value->_pages;
                         } elseif (! is_array($value)) {
                             trigger_error(
-                                sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])),
+                                sprintf('Invalid argument %s ignored', htmlentities($arg_array[$i])),
                                 E_USER_WARNING
                             );
                         }
@@ -175,7 +175,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                 //eval('$this->inputbox[]["'.$m[1].'"]='.$m[2].';');
             } else {
                 trigger_error(
-                    sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])),
+                    sprintf('Invalid argument %s ignored', htmlentities($arg_array[$i])),
                     E_USER_WARNING
                 );
             }
@@ -187,7 +187,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
     {
         extract($this->getArgs($argstr, $request));
         if (empty($action)) {
-            return $this->error(fmt("A required argument '%s' is missing.", "action"));
+            return $this->error(fmt("A required argument '%s' is missing.", 'action'));
         }
         $form           = HTML::form(
             ['action' => $request->getPostURL(),
@@ -210,7 +210,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                     if (empty($input['name'])) {
                         return $this->error(fmt(
                             "A required argument '%s' is missing.",
-                            $inputtype . "[][name]"
+                            $inputtype . '[][name]'
                         ));
                     }
                     if (! isset($input['text'])) {
@@ -229,7 +229,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                             $div           = HTML::div(['class' => $class]);
                             $values        = $input['value'];
                             $name          = $input['name'];
-                            $input['name'] = $inputtype == 'checkbox' ? $name . "[]" : $name;
+                            $input['name'] = $inputtype == 'checkbox' ? $name . '[]' : $name;
                             foreach ($values as $val) {
                                 $input['value'] = $val;
                                 if ($request->getArg($name)) {
@@ -277,7 +277,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                           unset($input['value']);
                           $input['type'] = 'text';
                         if (is_string($values)) {
-                            $values = explode(",", $values);
+                            $values = explode(',', $values);
                         }
                         if (empty($values)) {
                             if ($input['method']) {
@@ -312,7 +312,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                           unset($input['type']);
                           $select = HTML::select($input);
                         if (is_string($values)) {
-                            $values = explode(",", $values);
+                            $values = explode(',', $values);
                         }
                         if (empty($values) and ($s = $request->getArg($input['name']))) {
                             $select->pushContent(HTML::option(['value' => $s], $s));
@@ -376,7 +376,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                 $form->pushContent(HTML::span(
                     ['class' => $class],
                     $submit,
-                    Button('submit:cancel', _("Cancel"), $class)
+                    Button('submit:cancel', _('Cancel'), $class)
                 ));
             } else {
                 $form->pushContent(HTML::span(

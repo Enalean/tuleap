@@ -68,7 +68,7 @@ class ChartConfigurationFieldRetriever
         );
 
         if (! $field) {
-            $this->logger->info("Tracker " . $tracker->getName() . " doesn't have a capacity field (or field is not properly set)");
+            $this->logger->info('Tracker ' . $tracker->getName() . " doesn't have a capacity field (or field is not properly set)");
             throw new Tracker_FormElement_Chart_Field_Exception(
                 dgettext('tuleap-tracker', 'The tracker doesn\'t have a "capacity" Integer or Float or Computed field or you don\'t have the permission to access it.')
             );

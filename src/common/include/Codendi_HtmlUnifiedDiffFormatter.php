@@ -51,7 +51,7 @@ class Codendi_HtmlUnifiedDiffFormatter extends \Codendi_UnifiedDiffFormatter // 
         if ($xbeg > 1) {
             return '[...]';
         }
-        return "";
+        return '';
     }
 
     public function _start_diff()

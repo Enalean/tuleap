@@ -59,7 +59,7 @@ final class ProjectExportController implements DispatchableWithRequest, Dispatch
         }
         $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
 
-        $title = _("Project export");
+        $title = _('Project export');
         $this->displayHeader($title, $project, $layout);
         $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/project');
         $renderer->renderToPage('admin/export', [

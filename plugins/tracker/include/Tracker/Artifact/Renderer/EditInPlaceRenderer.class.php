@@ -101,7 +101,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
 
         $followups_content = array_merge($followups_content, $this->getPriorityHistory($artifact));
 
-        usort($followups_content, [$this, "compareFollowupsByDate"]);
+        usort($followups_content, [$this, 'compareFollowupsByDate']);
 
         return array_reverse($followups_content);
     }

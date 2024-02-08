@@ -24,7 +24,7 @@
 class Tracker_Artifact_XMLImport_XMLImportZipArchive
 {
     public const RESOURCE_NAME          = 'tv5';
-    public const ARTIFACTS_XML_FILENAME = "artifacts.xml";
+    public const ARTIFACTS_XML_FILENAME = 'artifacts.xml';
 
     /** @var ZipArchive */
     private $zip;

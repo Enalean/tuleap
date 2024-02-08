@@ -37,8 +37,8 @@ EOT;
     public function up()
     {
         if (! $this->db->columnNameExists('plugin_graphontrackersv5_chart', 'old_id')) {
-            $sql = "ALTER TABLE plugin_graphontrackersv5_chart 
-                    ADD old_id INT NULL AFTER id";
+            $sql = 'ALTER TABLE plugin_graphontrackersv5_chart
+                    ADD old_id INT NULL AFTER id';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
                 throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column old_id to plugin_graphontrackersv5_chart table: ' . implode(', ', $this->db->dbh->errorInfo()));

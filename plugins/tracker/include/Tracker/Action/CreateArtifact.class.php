@@ -88,7 +88,7 @@ class Tracker_Action_CreateArtifact
     {
         $link_artifact_id   = (int) $request->get('link-artifact-id');
         $is_immediate       = (bool) $request->get('immediate');
-        $artifact_link_type = $request->get('link-type') ?: "";
+        $artifact_link_type = $request->get('link-type') ?: '';
 
         if (! $link_artifact_id || ! $is_immediate) {
             return;

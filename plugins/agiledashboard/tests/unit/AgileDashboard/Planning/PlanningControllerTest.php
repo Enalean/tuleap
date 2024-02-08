@@ -261,7 +261,7 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andThrow(new TrackerHaveAtLeastOneAddToTopBacklogPostActionException([]));
 
         $this->planning_updater->shouldNotReceive('update');
-        $this->backlog_trackers_update_checker->method("checkProvidedBacklogTrackersAreValid");
+        $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid');
 
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
@@ -292,8 +292,8 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([]);
 
         $this->update_request_validator->shouldReceive('getValidatedPlanning')->andReturn(PlanningParameters::fromArray([]));
-        $this->backlog_trackers_update_checker->method("checkProvidedBacklogTrackersAreValid")->willThrowException(
-            new TrackersHaveAtLeastOneHierarchicalLinkException("tracker01", "tracker02")
+        $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid')->willThrowException(
+            new TrackersHaveAtLeastOneHierarchicalLinkException('tracker01', 'tracker02')
         );
         $this->root_planning_update_checker->shouldNotReceive('checkUpdateIsAllowed');
 
@@ -329,7 +329,7 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->update_request_validator->shouldReceive('getValidatedPlanning')->andReturn(PlanningParameters::fromArray([]));
         $this->root_planning_update_checker->shouldReceive('checkUpdateIsAllowed')->once();
-        $this->backlog_trackers_update_checker->method("checkProvidedBacklogTrackersAreValid");
+        $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid');
 
         $this->planning_updater->shouldReceive('update')->once();
 

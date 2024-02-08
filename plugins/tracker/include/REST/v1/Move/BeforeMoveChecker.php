@@ -56,7 +56,7 @@ final class BeforeMoveChecker implements CheckBeforeMove
             );
 
         if ($target_tracker->isDeleted()) {
-            throw new RestException(404, "Target tracker not found");
+            throw new RestException(404, 'Target tracker not found');
         }
 
         $this->status_verificator->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -64,11 +64,11 @@ final class BeforeMoveChecker implements CheckBeforeMove
         );
 
         if (! $source_tracker->userIsAdmin($user) || ! $target_tracker->userIsAdmin($user)) {
-            throw new RestException(400, "User must be admin of both trackers");
+            throw new RestException(400, 'User must be admin of both trackers');
         }
 
         if ($source_tracker->getId() === $target_tracker->getId()) {
-            throw new RestException(400, "An artifact cannot be moved in the same tracker");
+            throw new RestException(400, 'An artifact cannot be moved in the same tracker');
         }
 
         $this->event_manager->processEvent($event);

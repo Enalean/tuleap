@@ -165,7 +165,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
             $html .= '</tr>';
 
             // Title
-            $title = "";
+            $title = '';
             if ($r->getTitle() !== null) {
                 $title = $r->getTitle();
             }
@@ -177,7 +177,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
             $html .= '</tr>';
 
             // Image
-            $image = "";
+            $image = '';
             if ($r->getImage() !== null) {
                 $image = $r->getImage();
             }

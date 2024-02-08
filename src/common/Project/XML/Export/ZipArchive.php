@@ -43,7 +43,7 @@ class ZipArchive implements ArchiveInterface
     public function close()
     {
         if (! $this->archive->close()) {
-            throw new ArchiveException("Unable to close zip archive: " . $this->archive->getStatusString());
+            throw new ArchiveException('Unable to close zip archive: ' . $this->archive->getStatusString());
         }
     }
 

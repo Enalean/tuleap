@@ -68,7 +68,7 @@ final class ConfigResetCommand extends Command
 
         $this->config_dao->delete($key);
 
-        $output->writeln(sprintf("%s has been successfully reset to its default value", OutputFormatter::escape($key)));
+        $output->writeln(sprintf('%s has been successfully reset to its default value', OutputFormatter::escape($key)));
 
         return self::SUCCESS;
     }

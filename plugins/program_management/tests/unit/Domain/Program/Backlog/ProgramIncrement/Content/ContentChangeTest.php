@@ -42,7 +42,7 @@ final class ContentChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAValidPayloadWhenFeatureToAddIsNull(): void
     {
-        $feature_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([456], "after", 123);
+        $feature_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([456], 'after', 123);
 
         $feature_to_order = FeaturesToReorderProxy::buildFromRESTRepresentation($feature_to_order);
         $change           = ContentChange::fromFeatureAdditionAndReorder(null, $feature_to_order);

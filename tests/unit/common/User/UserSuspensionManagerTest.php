@@ -97,7 +97,7 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         // Disable mail to inactive accounts
         ForgeConfig::set('sys_suspend_send_account_suspension_email', 0);
 
-        $idle_user = new PFUser(["email" => "valid_mail@domain.com", "user_id" => 111, "user_name" => "idle_user", "language_id" => "fr_FR"]);
+        $idle_user = new PFUser(['email' => 'valid_mail@domain.com', 'user_id' => 111, 'user_name' => 'idle_user', 'language_id' => 'fr_FR']);
 
         $this->dao->method('getIdleAccounts')
             ->willReturn([['user_id' => 111, 'last_access_date' => $last_access_date->getTimestamp()]]);
@@ -124,8 +124,8 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $test_date = (new \DateTimeImmutable())->setTimestamp(1579699252);
 
-        $last_remove       = $test_date->sub(new DateInterval("P4D"));
-        $last_valid_access = $test_date->sub(new DateInterval("P10D"));
+        $last_remove       = $test_date->sub(new DateInterval('P4D'));
+        $last_valid_access = $test_date->sub(new DateInterval('P10D'));
 
         $non_project_members  = [['user_id' => 103], ['user_id' => 104]];
         $non_project_member_1 = 103;
@@ -167,7 +167,7 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         // Disable mailing to idle accounts
         ForgeConfig::set('sys_suspend_inactive_accounts_notification_delay', 0);
 
-        $inactive_user = new PFUser(["email" => "valid_mail@domain.com", "user_id" => 111, "user_name" => "inactive_user", "language_id" => "fr_FR"]);
+        $inactive_user = new PFUser(['email' => 'valid_mail@domain.com', 'user_id' => 111, 'user_name' => 'inactive_user', 'language_id' => 'fr_FR']);
 
         $this->dao->method('getUsersWithoutConnectionOrAccessBetweenDates')
             ->willReturn([['user_id' => 111, 'last_access_date' => 1578752699]]);

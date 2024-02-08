@@ -435,7 +435,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
                 {
                     return [
                         'func' => 'artifactlink-renderer-async',
-                        'renderer_data' => json_encode(["artifact_id" => 123]),
+                        'renderer_data' => json_encode(['artifact_id' => 123]),
                     ][$variable];
                 }
 

@@ -100,14 +100,14 @@ class GetProjectsQueryChecker
         }
 
         if (! $is_query_valid) {
-            $possible_criteria = implode(", ", $additional_criteria->getCriteria());
+            $possible_criteria = implode(', ', $additional_criteria->getCriteria());
             if (! empty($possible_criteria)) {
-                $possible_criteria = ", " . $possible_criteria;
+                $possible_criteria = ', ' . $possible_criteria;
             }
             throw new RestException(
                 400,
                 "You can only search on 'shortname', 'is_member_of': true, 'is_admin_of': true,  'is_tracker_admin': true, 'with_status'" . $possible_criteria .
-                ". If the query is valid, your plugin is maybe not installed."
+                '. If the query is valid, your plugin is maybe not installed.'
             );
         }
     }

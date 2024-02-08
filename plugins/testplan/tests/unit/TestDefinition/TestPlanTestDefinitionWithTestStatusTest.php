@@ -48,7 +48,7 @@ final class TestPlanTestDefinitionWithTestStatusTest extends \Tuleap\Test\PHPUni
         $test_def_with_status = TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_def, 'passed', 852, 10, $submitted_by, 14);
 
         self::assertEquals($test_def, $test_def_with_status->getTestDefinition());
-        self::assertEquals("passed", $test_def_with_status->getStatus());
+        self::assertEquals('passed', $test_def_with_status->getStatus());
         self::assertEquals(852, $test_def_with_status->getTestExecutionIdUsedToDefineStatus());
         self::assertEquals(10, $test_def_with_status->getTestExecutionDate());
         self::assertEquals($submitted_by, $test_def_with_status->getTestExecutionSubmittedBy());

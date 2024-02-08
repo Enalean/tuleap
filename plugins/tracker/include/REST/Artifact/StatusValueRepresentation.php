@@ -32,7 +32,7 @@ final class StatusValueRepresentation
     /**
      * @var string the semantic status value
      */
-    public string $value = "";
+    public string $value = '';
     /**
      * @var string | null the color of status value
      */

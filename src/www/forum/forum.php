@@ -44,7 +44,7 @@ function forum_show_a_nested_message($result, $row = 0)
 
     if ($g_id == ForgeConfig::get('sys_news_group')) {
         $f_id =  db_result($result, $row, 'group_forum_id');
-        $gr   = db_query("SELECT group_id FROM news_bytes WHERE forum_id=" . db_ei($f_id));
+        $gr   = db_query('SELECT group_id FROM news_bytes WHERE forum_id=' . db_ei($f_id));
         $g_id = db_result($gr, 0, 'group_id');
     }
 
@@ -56,7 +56,7 @@ function forum_show_a_nested_message($result, $row = 0)
               <TD class="thread" NOWRAP>' . _('By') . ': ' . UserHelper::instance()->getLinkOnUser($poster) .
                     '<BR><A HREF="/forum/message.php?msg_id=' .
                     db_result($result, $row, 'msg_id') . '">' .
-                    '<IMG SRC="' . util_get_image_theme("msg.png") . '" BORDER=0 HEIGHT=12 WIDTH=10> ' .
+                    '<IMG SRC="' . util_get_image_theme('msg.png') . '" BORDER=0 HEIGHT=12 WIDTH=10> ' .
                     db_result($result, $row, 'subject') . ' [ ' . _('reply') . ' ]</A> &nbsp; ' .
                     '<BR>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $row, 'date')) . '
                 </TD>
@@ -91,9 +91,9 @@ function forum_show_nested_messages($thread_id, $msg_id)
 {
     global $total_rows,$Language;
 
-    $sql = "SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id " .
-    "FROM forum,user,forum_group_list WHERE forum.thread_id=" . db_ei($thread_id) . " AND user.user_id=forum.posted_by AND forum.is_followup_to=" . db_ei($msg_id) . " AND forum_group_list.group_forum_id = forum.group_forum_id " .
-    "ORDER BY forum.date ASC;";
+    $sql = 'SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ' .
+    'FROM forum,user,forum_group_list WHERE forum.thread_id=' . db_ei($thread_id) . ' AND user.user_id=forum.posted_by AND forum.is_followup_to=' . db_ei($msg_id) . ' AND forum_group_list.group_forum_id = forum.group_forum_id ' .
+    'ORDER BY forum.date ASC;';
 
     $result = db_query($sql);
     $rows   = db_numrows($result);
@@ -130,7 +130,7 @@ function forum_show_nested_messages($thread_id, $msg_id)
     return $ret_val;
 }
 
-$ret_val = "";
+$ret_val = '';
 
 if ($request->valid(new Valid_UInt('forum_id'))) {
     $forum_id = $request->get('forum_id');
@@ -279,7 +279,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     /*
         Set up navigation vars
     */
-    $result = db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=" . db_ei($forum_id));
+    $result = db_query('SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id));
 
     $group_id   = db_result($result, 0, 'group_id');
     $forum_name = db_result($result, 0, 'forum_name');
@@ -318,9 +318,9 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         $threading_sql = 'AND forum.is_followup_to=0';
     }
 
-        $sql = "SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id " .
+        $sql = 'SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ' .
         "FROM forum,user,forum_group_list WHERE forum.group_forum_id='" . db_ei($forum_id) . "' AND user.user_id=forum.posted_by $threading_sql AND forum_group_list.group_forum_id = forum.group_forum_id " .
-        "ORDER BY forum.date DESC LIMIT " . db_ei($offset) . "," . db_ei($max_rows + 1);
+        'ORDER BY forum.date DESC LIMIT ' . db_ei($offset) . ',' . db_ei($max_rows + 1);
 
         $result = db_query($sql);
         $rows   = db_numrows($result);
@@ -353,8 +353,8 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         if ($is_a_news) {
             $forum_popup = '<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="' . $purifier->purify($forum_id) . '">';
         } else {
-            $res   = db_query("SELECT group_forum_id,forum_name " .
-                "FROM forum_group_list " .
+            $res   = db_query('SELECT group_forum_id,forum_name ' .
+                'FROM forum_group_list ' .
                 "WHERE group_id='" . db_ei($group_id) . "' AND is_public IN ($public_flag)");
             $vals  = util_result_column_to_array($res, 0);
             $texts = util_result_column_to_array($res, 1);
@@ -436,7 +436,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
                 $ret_val .= '
 					<TR class="' . util_get_alt_row_color($total_rows) . '"><TD><A HREF="/forum/message.php?msg_id=' .
                  db_result($result, $i, 'msg_id') . '">' .
-                 '<IMG SRC="' . util_get_image_theme("msg.png") . '" BORDER=0 HEIGHT=12 WIDTH=10> ';
+                 '<IMG SRC="' . util_get_image_theme('msg.png') . '" BORDER=0 HEIGHT=12 WIDTH=10> ';
                 /*
 
                  See if this message is new or not
@@ -485,7 +485,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
             if ($offset != 0) {
                  $ret_val .= '<B><span>
                         <A HREF="javascript:history.back()">
-                        <B><IMG SRC="' . util_get_image_theme("t2.png") . '" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center> '
+                        <B><IMG SRC="' . util_get_image_theme('t2.png') . '" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center> '
                 . _('Previous Messages') . '</A></B></span>';
             } else {
                 $ret_val .= '&nbsp;';
@@ -494,14 +494,14 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
             $ret_val .= '</TD><TD ALIGN="RIGHT" WIDTH="50%">';
             if (db_numrows($result) > $i) {
                 if (isset($pv)) {
-                    $pv_param = "&pv=" . $purifier->purify(urlencode((string) $pv));
+                    $pv_param = '&pv=' . $purifier->purify(urlencode((string) $pv));
                 } else {
-                    $pv_param = "";
+                    $pv_param = '';
                 }
                  $ret_val .= '<B><span>
                      <A HREF="/forum/forum.php?max_rows=' . $purifier->purify(urlencode((string) $max_rows)) . '&style=' . $purifier->purify(urlencode($style)) . '&offset=' . $purifier->purify(urlencode($offset + $i)) . '&forum_id=' . $purifier->purify(urlencode($forum_id)) . '' . $pv_param . '">
                      <B>' . _('Next Messages') .
-                 ' <IMG SRC="' . util_get_image_theme("t.png") . '" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
+                 ' <IMG SRC="' . util_get_image_theme('t.png') . '" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
             } else {
                 $ret_val .= '&nbsp;';
             }

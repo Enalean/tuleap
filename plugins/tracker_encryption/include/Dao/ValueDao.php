@@ -36,7 +36,7 @@ final class ValueDao extends DataAccessObject implements SearchFieldValue, Delet
     public function create(int $changeset_value_id, string $encrypted_value): bool
     {
         return $this->getDB()->run(
-            "REPLACE INTO tracker_changeset_value_encrypted(changeset_value_id, value) VALUES (?, ?)",
+            'REPLACE INTO tracker_changeset_value_encrypted(changeset_value_id, value) VALUES (?, ?)',
             $changeset_value_id,
             $encrypted_value
         ) !== null;
@@ -73,12 +73,12 @@ final class ValueDao extends DataAccessObject implements SearchFieldValue, Delet
 
     public function keep(int $previous_changeset_value_id, int $changeset_value_id): bool
     {
-        $sql = "
+        $sql = '
             INSERT INTO tracker_changeset_value_encrypted(changeset_value_id, value)
             SELECT ?, value
             FROM tracker_changeset_value_encrypted
             WHERE changeset_value_id = ?
-        ";
+        ';
         return $this->getDB()->run($sql, $changeset_value_id, $previous_changeset_value_id) !== null;
     }
 
@@ -87,11 +87,11 @@ final class ValueDao extends DataAccessObject implements SearchFieldValue, Delet
      */
     public function searchById(int $changeset_value_id): ?array
     {
-        $sql = "
+        $sql = '
             SELECT *
             FROM tracker_changeset_value_encrypted
             WHERE changeset_value_id = ?
-        ";
+        ';
         return $this->getDB()->row($sql, $changeset_value_id) ?: null;
     }
 

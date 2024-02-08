@@ -48,7 +48,7 @@ final class InvalidValueForRootCategoryException extends ProjectCategoriesExcept
     public function getI18NMessage(): string
     {
         return sprintf(
-            dgettext("tuleap-core", '%d does not belong to %s (%d) category hierarchy'),
+            dgettext('tuleap-core', '%d does not belong to %s (%d) category hierarchy'),
             $this->submitted_category_id,
             $this->tree_full_name,
             $this->tree_id,

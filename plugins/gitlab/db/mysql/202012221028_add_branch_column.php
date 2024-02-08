@@ -35,7 +35,7 @@ final class b202012221028_add_branch_column extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up(): void
     {
-        $sql = "ALTER TABLE plugin_gitlab_commit_info ADD COLUMN commit_branch VARCHAR(255) NOT NULL AFTER commit_title";
+        $sql = 'ALTER TABLE plugin_gitlab_commit_info ADD COLUMN commit_branch VARCHAR(255) NOT NULL AFTER commit_title';
 
         $this->db->alterTable('plugin_gitlab_repository', 'tuleap', 'commit_branch', $sql);
     }

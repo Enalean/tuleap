@@ -36,12 +36,12 @@ class b201502261627_add_plugin_agiledashboard_kanban_configuration_column_table 
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban_configuration_column (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban_configuration_column (
                     kanban_id INT(11) NOT NULL,
                     value_id INT(11) NOT NULL,
                     wip_limit INT(11) UNSIGNED,
                     PRIMARY KEY(kanban_id, value_id)
-                )";
+                )';
         $this->db->createTable('plugin_agiledashboard_kanban_configuration_column', $sql);
     }
 

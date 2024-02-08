@@ -38,11 +38,11 @@ class LockResponseLockRepresentation implements LockResponse
     public function jsonSerialize(): array
     {
         return [
-            "id" => (string) $this->lock->getId(),
-            "path" => $this->lock->getPath(),
-            "locked_at" => $this->lock->getCreationDate()->format(DateTimeInterface::ATOM),
-            "owner" => [
-                "name" => $this->lock->getOwner()->getRealName(),
+            'id' => (string) $this->lock->getId(),
+            'path' => $this->lock->getPath(),
+            'locked_at' => $this->lock->getCreationDate()->format(DateTimeInterface::ATOM),
+            'owner' => [
+                'name' => $this->lock->getOwner()->getRealName(),
             ],
         ];
     }

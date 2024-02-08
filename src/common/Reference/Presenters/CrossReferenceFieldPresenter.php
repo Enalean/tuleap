@@ -59,8 +59,8 @@ class CrossReferenceFieldPresenter
         array $cross_refs_by_nature_presenter_collection,
     ) {
         $this->condensed            = $condensed;
-        $this->classes              = "nature ";
-        $this->classes             .= $condensed ? "" : "not-condensed";
+        $this->classes              = 'nature ';
+        $this->classes             .= $condensed ? '' : 'not-condensed';
         $this->with_links           = $with_links;
         $this->display_params       = $display_params;
         $this->message_legend       = $GLOBALS['Language']->getText('cross_ref_fact_include', 'legend');

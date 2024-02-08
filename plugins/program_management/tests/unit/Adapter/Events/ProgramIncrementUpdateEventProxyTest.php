@@ -87,7 +87,7 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
         );
 
         if (! $event) {
-            throw new \LogicException("Event is not properly created");
+            throw new \LogicException('Event is not properly created');
         }
 
         self::assertSame(self::PROGRAM_INCREMENT_ID, $event->getProgramIncrement()->getId());

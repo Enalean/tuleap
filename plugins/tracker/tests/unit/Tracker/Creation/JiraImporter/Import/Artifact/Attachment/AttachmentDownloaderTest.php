@@ -38,7 +38,7 @@ class AttachmentDownloaderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesTheJiraImportFolder(): void
     {
         $tmp_folder = vfsStream::setup();
-        ForgeConfig::set("tmp_dir", $tmp_folder->url());
+        ForgeConfig::set('tmp_dir', $tmp_folder->url());
 
         $client = new class extends JiraCloudClientStub {
         };
@@ -51,9 +51,9 @@ class AttachmentDownloaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $attachment = new Attachment(
             10007,
-            "file01.png",
-            "image/png",
-            "URL1",
+            'file01.png',
+            'image/png',
+            'URL1',
             30
         );
 

@@ -588,7 +588,7 @@ final class KanbanPlugin extends Plugin implements PluginWithService
         $user            = UserManager::instance()->getCurrentUser();
 
         $kanban = new KanbanXmlImporter(
-            new WrapperLogger($logger, "kanban"),
+            new WrapperLogger($logger, 'kanban'),
             $this->getKanbanManager(),
             $this->getDashboardKanbanColumnManager(),
             $this->getKanbanFactory(),

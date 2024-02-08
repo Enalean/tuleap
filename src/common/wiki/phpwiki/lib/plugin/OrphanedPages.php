@@ -32,20 +32,20 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
 {
     public function getName()
     {
-        return _("OrphanedPages");
+        return _('OrphanedPages');
     }
 
     public function getDescription()
     {
-        return _("List pages which are not linked to by any other page.");
+        return _('List pages which are not linked to by any other page.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.10 $"
+            '$Revision: 1.10 $'
         );
     }
 
@@ -90,7 +90,7 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
         $args['count'] = count($pages);
         $pagelist      = new PageList($info, $exclude, $args);
         if (! $noheader) {
-            $pagelist->setCaption(_("Orphaned Pages in this wiki (%d total):"));
+            $pagelist->setCaption(_('Orphaned Pages in this wiki (%d total):'));
         }
         // deleted pages show up as version 0.
         if ($include_empty) {

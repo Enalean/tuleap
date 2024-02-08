@@ -88,7 +88,7 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
         );
 
-        $this->user_realname        = "J. Doe";
+        $this->user_realname        = 'J. Doe';
         $this->default_format_var   = 'realname';
         $this->default_format       = '%' . $this->default_format_var . ' from Tuleap';
         $this->default_format_value = $this->user_realname;

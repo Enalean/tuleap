@@ -215,7 +215,7 @@ class WikiAttachmentRevision
         $this->size         = $row['size'];
     }
 
-    public function setFilename($name = "")
+    public function setFilename($name = '')
     {
         $this->filename = $name;
         return true;

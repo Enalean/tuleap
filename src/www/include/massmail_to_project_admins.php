@@ -59,4 +59,4 @@ $event_manager->processEvent(
     []
 );
 
-$GLOBALS['Response']->redirect("/projects/" . $project->getUnixName());
+$GLOBALS['Response']->redirect('/projects/' . $project->getUnixName());

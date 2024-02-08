@@ -35,9 +35,9 @@ class Tracker_RuleDao extends DataAccessObject
     */
     public function searchAll()
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM tracker_rule JOIN tracker_rule_list
-                ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)";
+                ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)';
         return $this->retrieve($sql);
     }
 
@@ -48,10 +48,10 @@ class Tracker_RuleDao extends DataAccessObject
     public function searchByTrackerId($tracker_id)
     {
         $sql = sprintf(
-            "SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id
+            'SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id
                         FROM tracker_rule JOIN tracker_rule_list
                         ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule.tracker_id = %s",
+                        WHERE tracker_rule.tracker_id = %s',
             $this->da->quoteSmart($tracker_id)
         );
         return $this->retrieve($sql);
@@ -64,8 +64,8 @@ class Tracker_RuleDao extends DataAccessObject
     public function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id)
     {
         $sql_insert_rule = sprintf(
-            "INSERT INTO tracker_rule (tracker_id, rule_type)
-                            VALUES (%s, %s)",
+            'INSERT INTO tracker_rule (tracker_id, rule_type)
+                            VALUES (%s, %s)',
             $this->da->quoteSmart($tracker_id),
             $this->da->quoteSmart($rule_type)
         );
@@ -73,8 +73,8 @@ class Tracker_RuleDao extends DataAccessObject
         $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
 
         $sql = sprintf(
-            "INSERT INTO tracker_rule_list (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
-                        VALUES (%s, %s, %s, %s, %s)",
+            'INSERT INTO tracker_rule_list (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
+                        VALUES (%s, %s, %s, %s, %s)',
             $tracker_rule_id,
             $this->da->quoteSmart($source_field_id),
             $this->da->quoteSmart($source_value_id),
@@ -102,11 +102,11 @@ class Tracker_RuleDao extends DataAccessObject
        //               " ORDER BY afu1.place, afu2.place, afvls.order_id, afvlt.order_id, ar.id",
        //        $this->da->quoteSmart($tracker_id));
                $sql = sprintf(
-                   "SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id " .
-                              "FROM tracker_rule JOIN tracker_rule_list
-                               ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)" .
-                              " WHERE tracker_id = %s " .
-                              " ORDER BY id",
+                   'SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id ' .
+                              'FROM tracker_rule JOIN tracker_rule_list
+                               ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)' .
+                              ' WHERE tracker_id = %s ' .
+                              ' ORDER BY id',
                    $this->da->quoteSmart($tracker_id)
                );
         return $this->retrieve($sql);
@@ -115,13 +115,13 @@ class Tracker_RuleDao extends DataAccessObject
     public function deleteById($id)
     {
         $sql_delete_list = sprintf(
-            "DELETE FROM tracker_rule_list WHERE tracker_rule_id = %s",
+            'DELETE FROM tracker_rule_list WHERE tracker_rule_id = %s',
             $this->da->quoteSmart($id)
         );
         $this->update($sql_delete_list);
 
         $sql = sprintf(
-            "DELETE FROM tracker_rule WHERE id = %s",
+            'DELETE FROM tracker_rule WHERE id = %s',
             $this->da->quoteSmart($id)
         );
         return $this->update($sql);

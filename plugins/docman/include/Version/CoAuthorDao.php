@@ -30,7 +30,7 @@ class CoAuthorDao extends DataAccessObject
      */
     public function searchByVersionId(int $id): array
     {
-        $sql = "SELECT version_id, user_id FROM plugin_docman_version_coauthor WHERE version_id = ?";
+        $sql = 'SELECT version_id, user_id FROM plugin_docman_version_coauthor WHERE version_id = ?';
 
         return $this->getDB()->run($sql, $id);
     }

@@ -32,10 +32,10 @@ class b201704031421_create_autoincrement_key_in_notif extends \Tuleap\ForgeUpgra
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_svn_notification
+        $sql = 'ALTER TABLE plugin_svn_notification
                 DROP INDEX `PRIMARY`,
                 ADD id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST,
-                ADD INDEX repo_svn_idx (repository_id, svn_path)";
+                ADD INDEX repo_svn_idx (repository_id, svn_path)';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

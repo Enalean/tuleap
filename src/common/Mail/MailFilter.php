@@ -61,16 +61,16 @@ class MailFilter
         $mails = $this->deduplicateEmails($mails);
 
         foreach ($mails as $email) {
-            $this->logger->debug("Deduplicated email: " . $email);
+            $this->logger->debug('Deduplicated email: ' . $email);
         }
 
         if ((bool) ForgeConfig::get('sys_mail_secure_mode') === false) {
-            $this->logger->info("Platform is in insecure send mail mode. All notifications sent");
+            $this->logger->info('Platform is in insecure send mail mode. All notifications sent');
             return $mails;
         }
 
         if ($project->isPublic()) {
-            $this->logger->info("Project " . $project->getPublicName() . " is public. All notifications sent");
+            $this->logger->info('Project ' . $project->getPublicName() . ' is public. All notifications sent');
             return $mails;
         }
 
@@ -82,26 +82,26 @@ class MailFilter
                     $this->project_access_checker->checkUserCanAccessProject($user, $project);
                     if ($user->isAlive()) {
                         $filtered_mails[] = $email;
-                        $this->logger->info("Mail sent to " . $email);
+                        $this->logger->info('Mail sent to ' . $email);
                         break;
                     } else {
-                        $this->logger->warning("User is not alive - Mail not sent to " . $email);
+                        $this->logger->warning('User is not alive - Mail not sent to ' . $email);
                     }
                 } catch (Project_AccessPrivateException $e) {
-                    $this->logger->warning("Project is private - Mail not sent to " . $email);
+                    $this->logger->warning('Project is private - Mail not sent to ' . $email);
                 } catch (Project_AccessProjectNotFoundException $e) {
-                    $this->logger->warning("Project not found - Mail not sent to " . $email);
+                    $this->logger->warning('Project not found - Mail not sent to ' . $email);
                 } catch (Project_AccessDeletedException $e) {
-                    $this->logger->warning("Project is deleted - Mail not sent to " . $email);
+                    $this->logger->warning('Project is deleted - Mail not sent to ' . $email);
                 } catch (Project_AccessRestrictedException $e) {
-                    $this->logger->warning("Project is restricted - Mail not sent to " . $email);
+                    $this->logger->warning('Project is restricted - Mail not sent to ' . $email);
                 } catch (ProjectAccessSuspendedException $e) {
                     $this->logger->warning('Project is suspended - Mail not sent to ' . $email);
                 }
             }
 
             if (count($users) === 0) {
-                $this->logger->warning("User not found - Mail not sent to " . $email);
+                $this->logger->warning('User not found - Mail not sent to ' . $email);
             }
         }
         return $filtered_mails;

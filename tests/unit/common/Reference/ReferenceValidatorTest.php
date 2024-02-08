@@ -40,26 +40,26 @@ final class ReferenceValidatorTest extends TestCase
 
     public function testItTestKeywordCharacterValidation(): void
     {
-        self::assertFalse($this->reference_validator->isValidKeyword("UPPER"));
-        self::assertFalse($this->reference_validator->isValidKeyword("with space"));
+        self::assertFalse($this->reference_validator->isValidKeyword('UPPER'));
+        self::assertFalse($this->reference_validator->isValidKeyword('with space'));
         self::assertFalse($this->reference_validator->isValidKeyword('with$pecialchar'));
-        self::assertFalse($this->reference_validator->isValidKeyword("with/special/char"));
-        self::assertFalse($this->reference_validator->isValidKeyword("with-special"));
-        self::assertFalse($this->reference_validator->isValidKeyword("-begin"));
-        self::assertFalse($this->reference_validator->isValidKeyword("end-"));
-        self::assertFalse($this->reference_validator->isValidKeyword("end "));
+        self::assertFalse($this->reference_validator->isValidKeyword('with/special/char'));
+        self::assertFalse($this->reference_validator->isValidKeyword('with-special'));
+        self::assertFalse($this->reference_validator->isValidKeyword('-begin'));
+        self::assertFalse($this->reference_validator->isValidKeyword('end-'));
+        self::assertFalse($this->reference_validator->isValidKeyword('end '));
 
-        self::assertTrue($this->reference_validator->isValidKeyword("valid"));
-        self::assertTrue($this->reference_validator->isValidKeyword("valid123"));
-        self::assertTrue($this->reference_validator->isValidKeyword("123"));
-        self::assertTrue($this->reference_validator->isValidKeyword("with_underscore"));
+        self::assertTrue($this->reference_validator->isValidKeyword('valid'));
+        self::assertTrue($this->reference_validator->isValidKeyword('valid123'));
+        self::assertTrue($this->reference_validator->isValidKeyword('123'));
+        self::assertTrue($this->reference_validator->isValidKeyword('with_underscore'));
     }
 
     public function testItTestIfKeywordIsReserved(): void
     {
-        self::assertTrue($this->reference_validator->isReservedKeyword("art"));
-        self::assertTrue($this->reference_validator->isReservedKeyword("cvs"));
-        self::assertFalse($this->reference_validator->isReservedKeyword("artifacts"));
-        self::assertFalse($this->reference_validator->isReservedKeyword("john2"));
+        self::assertTrue($this->reference_validator->isReservedKeyword('art'));
+        self::assertTrue($this->reference_validator->isReservedKeyword('cvs'));
+        self::assertFalse($this->reference_validator->isReservedKeyword('artifacts'));
+        self::assertFalse($this->reference_validator->isReservedKeyword('john2'));
     }
 }

@@ -32,14 +32,14 @@ class b201403181036_add_tracker_fileinfo_temporary_table extends \Tuleap\ForgeUp
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_fileinfo_temporary (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_fileinfo_temporary (
                     fileinfo_id int(11) UNSIGNED NOT NULL,
                     last_modified int(11) NOT NULL,
                     created int(11) NOT NULL,
                     tempname varchar(255) default NULL,
                     INDEX idx_fileinfo_id ( fileinfo_id ),
                     INDEX idx_last_modified( last_modified )
-                );";
+                );';
         $this->db->createTable('tracker_fileinfo_temporary', $sql);
     }
 

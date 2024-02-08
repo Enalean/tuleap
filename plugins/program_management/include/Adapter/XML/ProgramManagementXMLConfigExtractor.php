@@ -71,7 +71,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
     {
         $trackers_ids = [];
         foreach ($xml_config->increments->plannable_trackers->children() as $plannable_tracker) {
-            $tracker_ref = $this->getTargetAttributeValueInXMLNode($plannable_tracker, "REF");
+            $tracker_ref = $this->getTargetAttributeValueInXMLNode($plannable_tracker, 'REF');
 
             if (! isset($created_trackers_mapping[$tracker_ref])) {
                 throw new CannotFindPlannableTrackerInMappingException($tracker_ref);
@@ -87,7 +87,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         $ugroups_that_can_prioritize = [];
 
         foreach ($xml_config->increments->can_prioritize->children() as $ugroup) {
-            $ugroup_name    = $this->getTargetAttributeValueInXMLNode($ugroup, "ugroup_name");
+            $ugroup_name    = $this->getTargetAttributeValueInXMLNode($ugroup, 'ugroup_name');
             $project_ugroup = UserGroup::fromName($this->ugroup_retriever, $program_identifier, $ugroup_name);
 
             if (! $project_ugroup) {

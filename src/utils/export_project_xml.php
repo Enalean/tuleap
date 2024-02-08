@@ -115,7 +115,7 @@ if (isset($arguments['t'])) {
 
 $bypass_threshold = isset($arguments['f']);
 $options          = new Export\ExportOptions(
-    isset($arguments['all']) ? Export\ExportOptions::MODE_ALL : "",
+    isset($arguments['all']) ? Export\ExportOptions::MODE_ALL : '',
     $bypass_threshold,
     $extra_options,
 );
@@ -188,16 +188,16 @@ try {
 
     exit(0);
 } catch (XML_ParseException $exception) {
-    fwrite(STDERR, "*** PARSE ERROR: " . $exception->getIndentedXml() . PHP_EOL);
+    fwrite(STDERR, '*** PARSE ERROR: ' . $exception->getIndentedXml() . PHP_EOL);
     foreach ($exception->getErrors() as $parse_error) {
-        fwrite(STDERR, "*** PARSE ERROR: " . $parse_error . PHP_EOL);
+        fwrite(STDERR, '*** PARSE ERROR: ' . $parse_error . PHP_EOL);
     }
-    fwrite(STDERR, "RNG path: " . $exception->getRngPath() . PHP_EOL);
+    fwrite(STDERR, 'RNG path: ' . $exception->getRngPath() . PHP_EOL);
     exit(1);
 } catch (Project_NotFoundException $exception) {
-    fwrite(STDERR, "*** ERROR: Invalid -p <project> parameter: project not found" . PHP_EOL);
+    fwrite(STDERR, '*** ERROR: Invalid -p <project> parameter: project not found' . PHP_EOL);
     exit(1);
 } catch (Exception $exception) {
-    fwrite(STDERR, "*** ERROR: " . $exception->getMessage() . PHP_EOL);
+    fwrite(STDERR, '*** ERROR: ' . $exception->getMessage() . PHP_EOL);
     exit(1);
 }

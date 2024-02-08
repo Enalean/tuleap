@@ -111,8 +111,8 @@ EOL
     {
         $tracker = $this->buildTracker(7);
         $field1  = Mockery::mock(FileUploadData::class);
-        $field1->shouldReceive('getUploadUrl')->andReturn("/api/v1/tracker_fields/1002/files");
-        $field1->shouldReceive('getUploadFileName')->andReturn("artifact[1002][][tus-uploaded-id]");
+        $field1->shouldReceive('getUploadUrl')->andReturn('/api/v1/tracker_fields/1002/files');
+        $field1->shouldReceive('getUploadFileName')->andReturn('artifact[1002][][tus-uploaded-id]');
         $field1->shouldReceive('getUploadMaxSize')->andReturn(1024);
 
         $this->first_usable_field_data_getter->shouldReceive('getFileUploadData')->andReturn($field1);

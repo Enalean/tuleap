@@ -686,7 +686,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         $request = new Codendi_Request(
             [
                 self::PARAMETER_UPDATE_RULES => [
-                    "%invalid_rule_id%" => [
+                    '%invalid_rule_id%' => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
                         self::PARAMETER_COMPARATOR => '>',

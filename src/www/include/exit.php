@@ -35,7 +35,7 @@ function exit_not_logged_in()
 {
     global $Language;
     //instead of a simple error page, now take them to the login page
-    $GLOBALS['Response']->redirect("/account/login.php?return_to=" . urlencode($_SERVER['REQUEST_URI']));
+    $GLOBALS['Response']->redirect('/account/login.php?return_to=' . urlencode($_SERVER['REQUEST_URI']));
     //exit_error($Language->getText('include_exit','not_logged_in'),$Language->getText('include_exit','need_to_login'));
 }
 
@@ -53,6 +53,6 @@ function exit_missing_param()
     global $feedback,$Language;
   // Display current $feedback normally, and replace feedback with error message
     $msg      = $feedback;
-    $feedback = "";
+    $feedback = '';
     exit_error($Language->getText('include_exit', 'missing_param_err'), '<p>' . $msg);
 }

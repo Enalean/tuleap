@@ -376,7 +376,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $report       = $this->getReport($id);
             $trackers     = $this->getTrackersFromRoute($query, $report);
             if (count($trackers) === 0) {
-                return ["artifacts" => []];
+                return ['artifacts' => []];
             }
             $expert_query    = $this->getExpertQueryFromRoute($query, $report);
             $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
@@ -391,7 +391,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             );
             $representations = $this->representation_factory->buildRepresentationsForReport($artifacts, $current_user);
         } catch (CrossTrackerReportNotFoundException $exception) {
-            throw new RestException(404, null, ['i18n_error_message' => "Report not found"]);
+            throw new RestException(404, null, ['i18n_error_message' => 'Report not found']);
         } catch (TrackerNotFoundException $exception) {
             throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
         } catch (TrackerDuplicateException $exception) {
@@ -400,15 +400,15 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             throw new RestException(
                 400,
                 null,
-                ['i18n_error_message' => dgettext("tuleap-crosstracker", "Error while parsing the query")]
+                ['i18n_error_message' => dgettext('tuleap-crosstracker', 'Error while parsing the query')]
             );
         } catch (LimitSizeIsExceededException $exception) {
             throw new RestException(
                 400,
                 null,
                 ['i18n_error_message' => dgettext(
-                    "tuleap-tracker",
-                    "The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue."
+                    'tuleap-tracker',
+                    'The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue.'
                 ),
                 ]
             );
@@ -420,7 +420,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         $this->sendPaginationHeaders($limit, $offset, $representations->getTotalSize());
 
-        return ["artifacts" => $representations->getArtifacts()];
+        return ['artifacts' => $representations->getArtifacts()];
     }
 
     /**
@@ -448,7 +448,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @throws RestException 400
      * @throws RestException 404
      */
-    protected function put($id, array $trackers_id, $expert_query = "")
+    protected function put($id, array $trackers_id, $expert_query = '')
     {
         $this->sendAllowHeaders();
 

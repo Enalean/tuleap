@@ -102,7 +102,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "text",
+                'format'       => 'text',
             ]
         );
     }
@@ -133,7 +133,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "text",
+                'format'       => 'text',
             ]
         );
     }
@@ -153,7 +153,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $changesets_for_diff = new ChangesetsForDiff($this->next_changeset, $this->field_text, $previous_changeset);
         $this->changesets_for_diff_retriever->shouldReceive('retrieveChangesets')->andReturn($changesets_for_diff);
 
-        $this->layout->shouldReceive('sendJSON')->once()->with("");
+        $this->layout->shouldReceive('sendJSON')->once()->with('');
 
         $this->text_diff_retriever->process(
             $request,
@@ -162,7 +162,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "text",
+                'format'       => 'text',
             ]
         );
     }
@@ -186,7 +186,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->changesets_for_diff_retriever->shouldReceive('retrieveChangesets')->andReturn($changesets_for_diff);
 
-        $this->layout->shouldReceive('sendJSON')->once()->with("");
+        $this->layout->shouldReceive('sendJSON')->once()->with('');
 
         $this->text_diff_retriever->process(
             $request,
@@ -195,7 +195,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "text",
+                'format'       => 'text',
             ]
         );
     }
@@ -209,11 +209,11 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $next_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $this->next_changeset->shouldReceive('getValue')->andReturn($next_changeset_value);
-        $next_changeset_value->shouldReceive('getText')->andReturn("this is a test");
+        $next_changeset_value->shouldReceive('getText')->andReturn('this is a test');
 
         $previous_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $this->previous_changeset->shouldReceive('getValue')->andReturn($previous_changeset_value);
-        $previous_changeset_value->shouldReceive('getText')->andReturn("this is not a test");
+        $previous_changeset_value->shouldReceive('getText')->andReturn('this is not a test');
 
         $changesets_for_diff = new ChangesetsForDiff(
             $this->next_changeset,
@@ -222,7 +222,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->changesets_for_diff_retriever->shouldReceive('retrieveChangesets')->andReturn($changesets_for_diff);
 
-        $diff      = new Codendi_Diff(["this is not a test"], ["this is a test"]);
+        $diff      = new Codendi_Diff(['this is not a test'], ['this is a test']);
         $formatter = new Codendi_UnifiedDiffFormatter();
 
         $this->layout->shouldReceive('sendJSON')->once()->with(PHP_EOL . $formatter->format($diff));
@@ -234,7 +234,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "text",
+                'format'       => 'text',
             ]
         );
     }
@@ -248,11 +248,11 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $next_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $this->next_changeset->shouldReceive('getValue')->andReturn($next_changeset_value);
-        $next_changeset_value->shouldReceive('getText')->andReturn("this is a test");
+        $next_changeset_value->shouldReceive('getText')->andReturn('this is a test');
 
         $previous_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $this->previous_changeset->shouldReceive('getValue')->andReturn($previous_changeset_value);
-        $previous_changeset_value->shouldReceive('getText')->andReturn("this is not a test");
+        $previous_changeset_value->shouldReceive('getText')->andReturn('this is not a test');
 
         $changesets_for_diff = new ChangesetsForDiff(
             $this->next_changeset,
@@ -261,9 +261,9 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->changesets_for_diff_retriever->shouldReceive('retrieveChangesets')->andReturn($changesets_for_diff);
 
-        $next_changeset_value->shouldReceive('getFormattedDiff')->once()->andReturn("this is a formatted diff");
+        $next_changeset_value->shouldReceive('getFormattedDiff')->once()->andReturn('this is a formatted diff');
 
-        $this->layout->shouldReceive('sendJSON')->once()->with("this is a formatted diff");
+        $this->layout->shouldReceive('sendJSON')->once()->with('this is a formatted diff');
 
         $this->text_diff_retriever->process(
             $request,
@@ -272,7 +272,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "html",
+                'format'       => 'html',
             ]
         );
     }

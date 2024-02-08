@@ -46,20 +46,20 @@ final class GitlabBranchReferenceSplitValuesBuilderTest extends TestCase
     public function testItRetrievesRepositoryNameAndBranchName(): void
     {
         $this->dao->method('getAllBranchesSplitValuesInProject')->willReturn(
-            ["repository_name" => "root/subgrp/repo01", "branch_name" => "my/branch"],
+            ['repository_name' => 'root/subgrp/repo01', 'branch_name' => 'my/branch'],
         );
 
-        $split_values = $this->builder->splitRepositoryNameAndReferencedItemId("root/subgrp/repo01/my/branch", 101);
+        $split_values = $this->builder->splitRepositoryNameAndReferencedItemId('root/subgrp/repo01/my/branch', 101);
 
-        self::assertSame("root/subgrp/repo01", $split_values->getRepositoryName());
-        self::assertSame("my/branch", $split_values->getValue());
+        self::assertSame('root/subgrp/repo01', $split_values->getRepositoryName());
+        self::assertSame('my/branch', $split_values->getValue());
     }
 
     public function testItReturnsANotFoundReferenceIfDataNotFoundInDatabase(): void
     {
         $this->dao->method('getAllBranchesSplitValuesInProject')->willReturn(null);
 
-        $split_values = $this->builder->splitRepositoryNameAndReferencedItemId("root/subgrp/repo01/branch01", 101);
+        $split_values = $this->builder->splitRepositoryNameAndReferencedItemId('root/subgrp/repo01/branch01', 101);
 
         self::assertNull($split_values->getRepositoryName());
         self::assertNull($split_values->getValue());

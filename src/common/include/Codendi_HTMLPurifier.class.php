@@ -357,7 +357,7 @@ class Codendi_HTMLPurifier
 
     public function purifyMap($array, $level = 0, $groupId = 0)
     {
-        return array_map([&$this, "purify"], $array, [$level], [$groupId]);
+        return array_map([&$this, 'purify'], $array, [$level], [$groupId]);
     }
 
     /**

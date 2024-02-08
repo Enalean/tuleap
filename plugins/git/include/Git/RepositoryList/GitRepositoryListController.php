@@ -73,7 +73,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $project || $project->isError()) {
-            throw new Request\NotFoundException(dgettext("tuleap-git", "Project not found."));
+            throw new Request\NotFoundException(dgettext('tuleap-git', 'Project not found.'));
         }
 
         $this->project = $project;
@@ -92,7 +92,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $this->project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            throw new Request\NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+            throw new Request\NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
 
         \Tuleap\Project\ServiceInstrumentation::increment('git');

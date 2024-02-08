@@ -27,7 +27,7 @@ final class ListToMySelfForAnonymousComparisonException extends InvalidFieldExce
     public function __construct(Tracker_FormElement_Field $field)
     {
         $message = sprintf(
-            dgettext("tuleap-tracker", "The list field '%s' cannot be compared to MYSELF() for anonymous users."),
+            dgettext('tuleap-tracker', "The list field '%s' cannot be compared to MYSELF() for anonymous users."),
             $field->getName()
         );
         parent::__construct($message);

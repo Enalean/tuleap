@@ -47,7 +47,7 @@ EOT;
      */
     public function up()
     {
-        $sql = "ALTER TABLE plugin_mediawiki_admin_options ADD language VARCHAR(7)";
+        $sql = 'ALTER TABLE plugin_mediawiki_admin_options ADD language VARCHAR(7)';
 
         $this->execDB($sql, 'An error occured while altering plugin_mediawiki_admin_options table: ');
     }

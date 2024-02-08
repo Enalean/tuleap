@@ -56,19 +56,19 @@ if ($request->exist('status')) {
     $status = $request->get('status');
 }
 if ($request->exist('list_of_users')) {
-    $users_array = array_filter(array_map('intval', explode(",", $request->get('list_of_users'))));
+    $users_array = array_filter(array_map('intval', explode(',', $request->get('list_of_users'))));
 }
 
 $valid_page  = new Valid_WhiteList('page', [ADMIN_APPROVE_PENDING_PAGE_PENDING, ADMIN_APPROVE_PENDING_PAGE_VALIDATED]);
 $page        = $request->getValidated('page', $valid_page, '');
 $csrf_token  = new CSRFSynchronizerToken('/admin/approve_pending_users.php?page=' . $page);
 $expiry_date = 0;
-if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
+if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! preg_match('/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/', $request->get('form_expiry'))) {
     $feedback .= ' ' . $Language->getText('admin_approve_pending_users', 'data_not_parsed');
 } else {
     $vDate = new Valid_String();
     if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && $vDate->validate($request->get('form_expiry'))) {
-        $date_list        = explode("-", $request->get('form_expiry'), 3);
+        $date_list        = explode('-', $request->get('form_expiry'), 3);
         $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
         $expiry_date      = $unix_expiry_time;
     }
@@ -76,7 +76,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
     if (($action_select == 'activate')) {
         $csrf_token->check();
 
-        $shell = "";
+        $shell = '';
         if ($status == 'restricted') {
             $newstatus = 'R';
         } else {
@@ -95,7 +95,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         }
 
         // Now send the user verification emails
-        $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
+        $res_user = db_query('SELECT email, confirm_hash, user_name FROM user '
                  . " WHERE user_id IN ($users_ids)");
 
          // Send a notification message to the user when account is activated by the Site Administrator
@@ -196,11 +196,11 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         // update the user status flag to active
         db_query("UPDATE user SET expiry_date='" . $expiry_date . "', status='" . $newstatus . "'" .
                  ", approved_by='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'" .
-                 " WHERE user_id IN (" . db_ei_implode($users_array) . ")");
+                 ' WHERE user_id IN (' . db_ei_implode($users_array) . ')');
 
         // Now send the user verification emails
-        $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
-                 . " WHERE user_id IN (" . db_ei_implode($users_array) . ")");
+        $res_user = db_query('SELECT email, confirm_hash, user_name FROM user '
+                 . ' WHERE user_id IN (' . db_ei_implode($users_array) . ')');
 
         $confirmation_hash_email_sender = new \Tuleap\User\Account\Register\ConfirmationHashEmailSender(
             new \TuleapRegisterMail(
@@ -209,7 +209,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                     ->getRenderer(\ForgeConfig::get('codendi_dir') . '/src/templates/mail/'),
                 $user_manager,
                 new LocaleSwitcher(),
-                "mail"
+                'mail'
             ),
             \Tuleap\ServerHostname::HTTPSUrl(),
         );
@@ -238,7 +238,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
     } elseif ($action_select == 'delete') {
         $csrf_token->check();
         db_query("UPDATE user SET status='D', approved_by='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'" .
-                 " WHERE user_id IN (" . db_ei_implode($users_array) . ")");
+                 ' WHERE user_id IN (' . db_ei_implode($users_array) . ')');
         $em = EventManager::instance();
         foreach ($users_array as $user_id) {
             $em->processEvent('project_admin_delete_user', ['user_id' => $user_id]);
@@ -286,7 +286,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                         ->getRenderer(\ForgeConfig::get('codendi_dir') . '/src/templates/mail/'),
                     $user_manager,
                     new LocaleSwitcher(),
-                    "mail"
+                    'mail'
                 ),
                 \Tuleap\ServerHostname::HTTPSUrl(),
             );

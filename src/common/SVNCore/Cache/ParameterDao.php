@@ -26,7 +26,7 @@ class ParameterDao extends DataAccessObject
 {
     public function search()
     {
-        $sql = "SELECT * FROM svn_cache_parameter";
+        $sql = 'SELECT * FROM svn_cache_parameter';
         return $this->retrieve($sql);
     }
 

@@ -204,7 +204,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
         $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
         $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andThrow(
-            ApprovalTableException::approvalTableActionIsMandatory("item title")
+            ApprovalTableException::approvalTableActionIsMandatory('item title')
         );
         $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
 
@@ -227,7 +227,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
         $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
         $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
         $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andThrow(
-            ApprovalTableException::approvalTableActionIsMandatory("item title")
+            ApprovalTableException::approvalTableActionIsMandatory('item title')
         );
         $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
 
@@ -250,7 +250,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
         $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
         $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(true);
         $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andThrow(
-            ApprovalTableException::approvalTableActionIsMandatory("item title")
+            ApprovalTableException::approvalTableActionIsMandatory('item title')
         );
         $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
 

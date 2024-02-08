@@ -30,7 +30,7 @@ class b201512171700_add_svn_token_table extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS svn_token (
+        $sql = 'CREATE TABLE IF NOT EXISTS svn_token (
                   id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                   user_id INT(11) NOT NULL,
                   token VARCHAR(255) NOT NULL,
@@ -39,7 +39,7 @@ class b201512171700_add_svn_token_table extends \Tuleap\ForgeUpgrade\Bucket
                   last_ip VARCHAR(45),
                   comment TEXT,
                   INDEX idx_user_id (user_id)
-                )";
+                )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

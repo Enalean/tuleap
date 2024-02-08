@@ -70,7 +70,7 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
             $this->fields_factory,
             VerifyProjectCreationFromArchiveIsAllowedStub::buildAllowed(),
         );
-        \ForgeConfig::set('sys_org_name', "My orga");
+        \ForgeConfig::set('sys_org_name', 'My orga');
     }
 
     public function testItShouldBuildPresenter(): void

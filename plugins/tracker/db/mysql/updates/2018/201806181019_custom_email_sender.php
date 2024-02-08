@@ -37,14 +37,14 @@ class b201806181019_custom_email_sender  extends ForgeUpgrade_Bucket // @codingS
 
     private function createFormatTable()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_tracker_notification_email_custom_sender_format(
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_tracker_notification_email_custom_sender_format(
                     tracker_id int(11) NOT NULL,
                     format text,
                     enabled bool,
                     PRIMARY KEY (tracker_id),
                     FOREIGN KEY (tracker_id)
                         REFERENCES tracker(id)
-                )";
+                )';
 
         $res = $this->db->createTable('plugin_tracker_notification_email_custom_sender_format', $sql);
     }

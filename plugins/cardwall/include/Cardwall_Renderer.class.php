@@ -85,7 +85,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         if ($this->field !== null) {
             $field_id = $this->field->getId();
         }
-        $this->report_session->changeSessionNamespace("renderers");
+        $this->report_session->changeSessionNamespace('renderers');
         $this->report_session->set("{$this->id}.field_id", $field_id);
     }
 
@@ -115,7 +115,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         if (! $total_rows) {
             if (! $form) {
                 $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../../../src/templates/dashboard');
-                return $renderer->renderToString("widget-empty-content-svg", null);
+                return $renderer->renderToString('widget-empty-content-svg', null);
             }
 
             return '<p>' . dgettext('tuleap-tracker', 'No artifact found.') . '</p>';

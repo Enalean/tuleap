@@ -41,7 +41,7 @@ final class GitlabGroupApiDataRepresentationTest extends TestCase
     public function testItThrowsExceptionIfMandatoryKeyIsMissing(array $group_data): void
     {
         self::expectException(GitlabResponseAPIException::class);
-        self::expectExceptionMessage("Some keys are missing in the group Json. This is not expected. Aborting.");
+        self::expectExceptionMessage('Some keys are missing in the group Json. This is not expected. Aborting.');
 
         GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi($group_data);
     }
@@ -65,17 +65,17 @@ final class GitlabGroupApiDataRepresentationTest extends TestCase
     {
         $group_data               = [];
         $group_data['id']         = 102;
-        $group_data['name']       = "nine-nine";
-        $group_data['avatar_url'] = "https://avatar.example.com";
-        $group_data['full_path']  = "brookyln/nine-nine";
-        $group_data['web_url']    = "https://gitlab.example.com/nine-nine";
+        $group_data['name']       = 'nine-nine';
+        $group_data['avatar_url'] = 'https://avatar.example.com';
+        $group_data['full_path']  = 'brookyln/nine-nine';
+        $group_data['web_url']    = 'https://gitlab.example.com/nine-nine';
 
         $result = GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi($group_data);
 
         self::assertSame(102, $result->getGitlabGroupId());
-        self::assertSame("nine-nine", $result->getName());
-        self::assertSame("https://avatar.example.com", $result->getAvatarUrl());
-        self::assertSame("brookyln/nine-nine", $result->getFullPath());
-        self::assertSame("https://gitlab.example.com/nine-nine", $result->getWebUrl());
+        self::assertSame('nine-nine', $result->getName());
+        self::assertSame('https://avatar.example.com', $result->getAvatarUrl());
+        self::assertSame('brookyln/nine-nine', $result->getFullPath());
+        self::assertSame('https://gitlab.example.com/nine-nine', $result->getWebUrl());
     }
 }

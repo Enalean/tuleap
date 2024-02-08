@@ -113,7 +113,7 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
 
         $criteria_field_node = $criteria_node->addChild('field');
 
-        $criteria_field_node->addAttribute("REF", $status_field->getXMLId());
+        $criteria_field_node->addAttribute('REF', $status_field->getXMLId());
 
         $criteria_value = $criteria_node->addChild('criteria_value');
 

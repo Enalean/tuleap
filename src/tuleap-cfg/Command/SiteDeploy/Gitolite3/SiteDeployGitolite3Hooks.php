@@ -30,7 +30,7 @@ final class SiteDeployGitolite3Hooks
 {
     private const GITOLITE_BIN       = '/usr/bin/gitolite';
     private const GITOLITE_BASE_DIR  = '/var/lib/gitolite';
-    private const TULEAP_SRC_PLUGINS = "/usr/share/tuleap/plugins";
+    private const TULEAP_SRC_PLUGINS = '/usr/share/tuleap/plugins';
 
     public function __construct(
         private readonly ProcessFactory $process_factory,

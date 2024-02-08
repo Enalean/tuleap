@@ -49,11 +49,11 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testShouldBeTrueIfPermissionsOnArtifactAreNowUsed(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn("0");
+        $this->old_value->shouldReceive('getUsed')->andReturn('0');
 
         $new_values = [
-            'use_artifact_permissions' => "1",
-            "u_groups" => [3],
+            'use_artifact_permissions' => '1',
+            'u_groups' => [3],
         ];
 
         $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
@@ -61,12 +61,12 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testShouldBeTrueIfUgroupsSelectedForPermissionsOnArtifactChanged(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn("1");
+        $this->old_value->shouldReceive('getUsed')->andReturn('1');
         $this->old_value->shouldReceive('getPerms')->andReturn([2]);
 
         $new_values = [
-            'use_artifact_permissions' => "1",
-            "u_groups" => [3],
+            'use_artifact_permissions' => '1',
+            'u_groups' => [3],
         ];
 
         $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
@@ -74,11 +74,11 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testShouldBeTrueIfNoUgroupsSelectedForPermissionsOnArtifactChanged(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn("1");
+        $this->old_value->shouldReceive('getUsed')->andReturn('1');
         $this->old_value->shouldReceive('getPerms')->andReturn([2]);
 
         $new_values = [
-            'use_artifact_permissions' => "1",
+            'use_artifact_permissions' => '1',
         ];
 
         $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
@@ -86,12 +86,12 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testShouldBeTrueIfUgroupsSelectedForPermissionsOnArtifactChangedButNoUgroupInLastChangeset(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn("1");
+        $this->old_value->shouldReceive('getUsed')->andReturn('1');
         $this->old_value->shouldReceive('getPerms')->andReturn([]);
 
         $new_values = [
-            'use_artifact_permissions' => "1",
-            "u_groups" => [3],
+            'use_artifact_permissions' => '1',
+            'u_groups' => [3],
         ];
 
         $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
@@ -99,12 +99,12 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testShouldBeFalseIfNothingChanged(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn("1");
+        $this->old_value->shouldReceive('getUsed')->andReturn('1');
         $this->old_value->shouldReceive('getPerms')->andReturn([3]);
 
         $new_values = [
-            'use_artifact_permissions' => "1",
-            "u_groups" => [3],
+            'use_artifact_permissions' => '1',
+            'u_groups' => [3],
         ];
 
         $this->assertFalse($this->checker->hasChanges($this->old_value, $new_values));
@@ -112,12 +112,12 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testShouldBeTrueWhenOldValuesAreOnNewValuesWithOtherNewValues(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn("1");
+        $this->old_value->shouldReceive('getUsed')->andReturn('1');
         $this->old_value->shouldReceive('getPerms')->andReturn([3]);
 
         $new_values = [
-            'use_artifact_permissions' => "1",
-            "u_groups" => [3, 4],
+            'use_artifact_permissions' => '1',
+            'u_groups' => [3, 4],
         ];
 
         $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
@@ -125,11 +125,11 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testShouldBeFalseIfStillNotUsed(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn("0");
+        $this->old_value->shouldReceive('getUsed')->andReturn('0');
         $this->old_value->shouldReceive('getPerms')->andReturn([]);
 
         $new_values = [
-            'use_artifact_permissions' => "0",
+            'use_artifact_permissions' => '0',
         ];
 
         $this->assertFalse($this->checker->hasChanges($this->old_value, $new_values));

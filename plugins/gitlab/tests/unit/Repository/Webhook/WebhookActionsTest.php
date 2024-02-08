@@ -101,14 +101,14 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             'push',
             123654,
             'https://example.com/root/repo01',
-            "3cffabe5",
-            "refs/heads/main",
+            '3cffabe5',
+            'refs/heads/main',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'commit TULEAP-123 01',
                     'commit TULEAP-123 01',
-                    "master",
+                    'master',
                     1608110510,
                     'john-snow@example.com',
                     'John Snow'

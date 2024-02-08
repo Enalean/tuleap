@@ -30,7 +30,7 @@ class b201602161822_add_accessfile_reference_in_svn_repository extends \Tuleap\F
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_svn_repositories ADD COLUMN accessfile_id INT(11) UNSIGNED NOT NULL";
+        $sql = 'ALTER TABLE plugin_svn_repositories ADD COLUMN accessfile_id INT(11) UNSIGNED NOT NULL';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

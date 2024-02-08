@@ -64,7 +64,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
     public function getFirstReviewerByStatus($tableId, $status)
     {
         if (is_array($status)) {
-            $_status = array_map("intval", $status);
+            $_status = array_map('intval', $status);
             $state   = 'state IN (' . implode(',', $status) . ')';
         } else {
             $state = 'state = ' . intval($status);

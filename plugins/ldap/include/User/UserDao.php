@@ -73,7 +73,7 @@ class UserDao extends DataAccessObject
         return count($result) !== 0;
     }
 
-    public function createLdapUser(int $user_id, int $date = 0, string $ldap_uid = ""): void
+    public function createLdapUser(int $user_id, int $date = 0, string $ldap_uid = ''): void
     {
         $sql = 'INSERT INTO plugin_ldap_user(user_id, login_confirmation_date, ldap_uid) VALUES (?, ?, ?)';
 
@@ -109,7 +109,7 @@ class UserDao extends DataAccessObject
 
     public function updateLdapUid(int $user_id, string $ldap_uid): void
     {
-        $sql = "INSERT INTO plugin_ldap_user(user_id, ldap_uid) VALUES (?, ?) ON DUPLICATE KEY UPDATE ldap_uid = ?";
+        $sql = 'INSERT INTO plugin_ldap_user(user_id, ldap_uid) VALUES (?, ?) ON DUPLICATE KEY UPDATE ldap_uid = ?';
         $this->getDB()->run($sql, $user_id, $ldap_uid, $ldap_uid);
     }
 

@@ -36,7 +36,7 @@ class WikiCallback
             list($object, $method) = $handler;
             return new WikiMethodCb($object, $method);
         }
-        trigger_error("WikiCallback::new: bad arg", E_USER_ERROR);
+        trigger_error('WikiCallback::new: bad arg', E_USER_ERROR);
     }
 
     /**

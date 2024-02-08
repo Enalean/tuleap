@@ -22,7 +22,7 @@ class b201710161346_add_table_to_store_fulltext_of_comment extends \Tuleap\Forge
 {
     public function description()
     {
-        return "Add table to store the follow-up comment of artifact in fulltext";
+        return 'Add table to store the follow-up comment of artifact in fulltext';
     }
 
     public function preUp()
@@ -32,11 +32,11 @@ class b201710161346_add_table_to_store_fulltext_of_comment extends \Tuleap\Forge
 
     public function up()
     {
-        $sql = "CREATE TABLE tracker_changeset_comment_fulltext(
+        $sql = 'CREATE TABLE tracker_changeset_comment_fulltext(
             comment_id INT(11) NOT NULL PRIMARY KEY,
             stripped_body TEXT DEFAULT NULL,
             FULLTEXT stripped_body_idx(stripped_body)
-        ) ENGINE=MyISAM";
+        ) ENGINE=MyISAM';
 
         $this->db->createTable('tracker_changeset_comment_fulltext', $sql);
     }

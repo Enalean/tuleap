@@ -57,14 +57,14 @@ class TagInfoDao extends DataAccessObject
      */
     public function searchTagInRepositoryWithTagName(int $integration_id, string $tag_name): ?array
     {
-        $sql = "
+        $sql = '
             SELECT LOWER(HEX(commit_sha1)) as commit_sha1,
                    tag_name,
                    tag_message
             FROM plugin_gitlab_repository_integration_tag_info
             WHERE integration_id = ?
                 AND tag_name = ?
-        ";
+        ';
 
         return $this->getDB()->row($sql, $integration_id, $tag_name);
     }

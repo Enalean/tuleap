@@ -43,19 +43,19 @@ class Widget_MyMonitoredFp extends Widget
         $purifier             = Codendi_HTMLPurifier::instance();
         $frsrf                = new FRSReleaseFactory();
         $html_my_monitored_fp = '';
-        $sql                  = "SELECT `groups`.group_name,`groups`.group_id " .
-            "FROM `groups`,filemodule_monitor,frs_package " .
-            "WHERE `groups`.group_id=frs_package.group_id " .
-            "AND frs_package.status_id !=" . db_ei($frsrf->STATUS_DELETED) . " " .
-            "AND frs_package.package_id=filemodule_monitor.filemodule_id " .
+        $sql                  = 'SELECT `groups`.group_name,`groups`.group_id ' .
+            'FROM `groups`,filemodule_monitor,frs_package ' .
+            'WHERE `groups`.group_id=frs_package.group_id ' .
+            'AND frs_package.status_id !=' . db_ei($frsrf->STATUS_DELETED) . ' ' .
+            'AND frs_package.package_id=filemodule_monitor.filemodule_id ' .
             "AND filemodule_monitor.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' ";
         $um                   = UserManager::instance();
         $current_user         = $um->getCurrentUser();
         if ($current_user->isRestricted()) {
             $projects = $current_user->getProjects();
-            $sql     .= "AND `groups`.group_id IN (" . db_ei_implode($projects) . ") ";
+            $sql     .= 'AND `groups`.group_id IN (' . db_ei_implode($projects) . ') ';
         }
-        $sql .= "GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
+        $sql .= 'GROUP BY group_id ORDER BY group_id ASC LIMIT 100';
 
         $result = db_query($sql);
         $rows   = db_numrows($result);
@@ -67,12 +67,12 @@ class Widget_MyMonitoredFp extends Widget
             for ($j = 0; $j < $rows; $j++) {
                 $group_id = db_result($result, $j, 'group_id');
 
-                $sql2    = "SELECT frs_package.name,filemodule_monitor.filemodule_id " .
-                    "FROM `groups`,filemodule_monitor,frs_package " .
-                    "WHERE `groups`.group_id=frs_package.group_id " .
-                    "AND `groups`.group_id=" . db_ei($group_id) . " " .
-                    "AND frs_package.status_id !=" . db_ei($frsrf->STATUS_DELETED) . " " .
-                    "AND frs_package.package_id=filemodule_monitor.filemodule_id " .
+                $sql2    = 'SELECT frs_package.name,filemodule_monitor.filemodule_id ' .
+                    'FROM `groups`,filemodule_monitor,frs_package ' .
+                    'WHERE `groups`.group_id=frs_package.group_id ' .
+                    'AND `groups`.group_id=' . db_ei($group_id) . ' ' .
+                    'AND frs_package.status_id !=' . db_ei($frsrf->STATUS_DELETED) . ' ' .
+                    'AND frs_package.package_id=filemodule_monitor.filemodule_id ' .
                     "AND filemodule_monitor.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'  LIMIT 100";
                 $result2 = db_query($sql2);
                 $rows2   = db_numrows($result2);

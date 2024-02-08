@@ -68,7 +68,7 @@ class LicenseManagerCountDueLicensesCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         if (! $this->licenses_dao->doesUserlogTableExists()) {
-            $output->writeln("<error>Plugin userlog must be installed and enabled.</error>");
+            $output->writeln('<error>Plugin userlog must be installed and enabled.</error>');
             return 1;
         }
 

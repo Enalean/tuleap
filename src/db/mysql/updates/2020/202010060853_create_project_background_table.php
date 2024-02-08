@@ -35,10 +35,10 @@ final class b202010060853_create_project_background_table extends \Tuleap\ForgeU
 
     public function up(): void
     {
-        $sql = "CREATE TABLE project_background(
+        $sql = 'CREATE TABLE project_background(
             project_id INT(11) NOT NULL PRIMARY KEY,
             background VARCHAR(255) NOT NULL
-        ) ENGINE=InnoDB";
+        ) ENGINE=InnoDB';
 
         $this->db->createTable('project_background', $sql);
     }

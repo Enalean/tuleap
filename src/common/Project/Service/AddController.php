@@ -115,7 +115,7 @@ class AddController implements DispatchableWithRequest
 
     private function checkScope(Project $project, BaseLayout $response, ServicePOSTData $service_data): void
     {
-        if ((int) $project->getID() !== 100 && $service_data->getScope() === "system") {
+        if ((int) $project->getID() !== 100 && $service_data->getScope() === 'system') {
             $this->redirectWithError(
                 $project,
                 $response,

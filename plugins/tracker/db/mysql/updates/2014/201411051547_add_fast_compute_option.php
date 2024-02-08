@@ -30,7 +30,7 @@ class b201411051547_add_fast_compute_option extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_field_computed ADD COLUMN fast_compute TINYINT DEFAULT 0";
+        $sql = 'ALTER TABLE tracker_field_computed ADD COLUMN fast_compute TINYINT DEFAULT 0';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column fast_compute to tracker_field_computed: ' . implode(', ', $this->db->dbh->errorInfo()));

@@ -52,9 +52,9 @@ class TestPlanPresenterBuilder
         $project            = $milestone->getProject();
 
         $parent_milestone       = $milestone->getParent();
-        $parent_milestone_title = "";
+        $parent_milestone_title = '';
         if ($parent_milestone) {
-            $parent_milestone_title = $parent_milestone->getArtifactTitle() ?? "";
+            $parent_milestone_title = $parent_milestone->getArtifactTitle() ?? '';
         }
 
         $details_pane = new DetailsPaneInfo($milestone);

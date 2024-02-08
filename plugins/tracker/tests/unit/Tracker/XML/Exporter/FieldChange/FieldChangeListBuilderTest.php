@@ -62,9 +62,9 @@ final class FieldChangeListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue(isset($changeset_node->field_change));
         $field_change_node = $changeset_node->field_change;
 
-        self::assertSame("list", (string) $field_change_node['type']);
-        self::assertSame("static", (string) $field_change_node['bind']);
-        self::assertSame("field_SB_01", (string) $field_change_node['field_name']);
+        self::assertSame('list', (string) $field_change_node['type']);
+        self::assertSame('static', (string) $field_change_node['bind']);
+        self::assertSame('field_SB_01', (string) $field_change_node['field_name']);
         self::assertCount(2, $field_change_node->value);
     }
 
@@ -81,9 +81,9 @@ final class FieldChangeListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue(isset($changeset_node->field_change));
         $field_change_node = $changeset_node->field_change;
 
-        self::assertSame("open_list", (string) $field_change_node['type']);
-        self::assertSame("static", (string) $field_change_node['bind']);
-        self::assertSame("field_SB_01", (string) $field_change_node['field_name']);
+        self::assertSame('open_list', (string) $field_change_node['type']);
+        self::assertSame('static', (string) $field_change_node['bind']);
+        self::assertSame('field_SB_01', (string) $field_change_node['field_name']);
         self::assertCount(2, $field_change_node->value);
         self::assertSame('b123', (string) $field_change_node->value[0]);
         self::assertSame('b456', (string) $field_change_node->value[1]);

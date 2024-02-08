@@ -139,7 +139,7 @@ class ProjectDashboardController
 
         $display_project_created_modal_presenter = $this->event_manager->dispatch(
             new DisplayCreatedProjectModalPresenter(
-                $request->get("should-display-created-project-modal"),
+                $request->get('should-display-created-project-modal'),
                 $project,
                 $request->get('xml-template-name')
             )

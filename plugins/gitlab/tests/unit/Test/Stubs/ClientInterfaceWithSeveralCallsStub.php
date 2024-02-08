@@ -46,16 +46,16 @@ final class ClientInterfaceWithSeveralCallsStub implements ClientInterface
         $stream_factory = HTTPFactoryBuilder::streamFactory();
         switch ($this->number_of_call) {
             case 1:
-                $body = $stream_factory->createStream(json_encode([["id" => 100]]));
+                $body = $stream_factory->createStream(json_encode([['id' => 100]]));
                 $link =  "<https://gitlab.example.com/api/v4/wololo?page=1>; rel='next'";
                 break;
             case 2:
-                $body = $stream_factory->createStream(json_encode([["id" => 200]]));
+                $body = $stream_factory->createStream(json_encode([['id' => 200]]));
                 $link = "<https://gitlab.example.com/api/v4/wololo?page=2; rel='last'>";
                 break;
             default:
-                throw new Exception("Too many calls");
+                throw new Exception('Too many calls');
         }
-        return HTTPFactoryBuilder::responseFactory()->createResponse()->withHeader("link", [$link])->withBody($body);
+        return HTTPFactoryBuilder::responseFactory()->createResponse()->withHeader('link', [$link])->withBody($body);
     }
 }

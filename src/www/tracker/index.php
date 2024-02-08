@@ -36,7 +36,7 @@ $hp        = Codendi_HTMLPurifier::instance();
 
 if ($aid && ! $atid) {
     // We have the artifact id, but not the tracker id
-    $sql    = "SELECT group_artifact_id FROM artifact WHERE artifact_id= " . db_ei($aid);
+    $sql    = 'SELECT group_artifact_id FROM artifact WHERE artifact_id= ' . db_ei($aid);
     $result = db_query($sql);
     if (db_numrows($result) > 0) {
         $row  = db_fetch_array($result);
@@ -46,7 +46,7 @@ if ($aid && ! $atid) {
 
 if ($atid && ! $group_id) {
     // We have the artifact group id, but not the group id
-    $sql    = "SELECT group_id FROM artifact_group_list WHERE group_artifact_id=" . db_ei($atid);
+    $sql    = 'SELECT group_id FROM artifact_group_list WHERE group_artifact_id=' . db_ei($atid);
     $result = db_query($sql);
     if (db_numrows($result) > 0) {
         $row      = db_fetch_array($result);
@@ -577,7 +577,7 @@ if ($func == 'gotoid') {
                 $from            = '';
                 $where           = '';
                 $art_report_html->getQueryElements($query, $advsrch, $from, $where);
-                $sql = "select distinct a.artifact_id " . $from . " " . $where;
+                $sql = 'select distinct a.artifact_id ' . $from . ' ' . $where;
 
                 $result     = db_query($sql);
                 $number_aid = db_numrows($result);
@@ -607,12 +607,12 @@ if ($func == 'gotoid') {
                     $changed = $ah->handleUpdate($request->get('artifact_id_dependent'), $canned_response, $changes, true);
                     if ($changed) {
                         if ($i > 0) {
-                            $feedback .= ",";
+                            $feedback .= ',';
                         }
                         if ($i == 0) {
                             $feedback .= $Language->getText('tracker_index', 'updated_aid');
                         }
-                        $feedback .= " " . (int) $aid;
+                        $feedback .= ' ' . (int) $aid;
                     }
             //  Attach file to this Artifact.
                     if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
@@ -782,16 +782,16 @@ if ($func == 'gotoid') {
                 $import          = new ArtifactImportHtml($ath, $art_field_fact, $group);
                  $mode           = $request->get('mode');
                  $artifacts_data = [];
-                if ($mode == "parse") {
+                if ($mode == 'parse') {
                     $import->displayParse($_FILES['csv_filename']['tmp_name']);
-                } elseif ($mode == "import") {
+                } elseif ($mode == 'import') {
                     $count_artifacts = $request->getValidated('count_artifacts', 'uint', 0);
                     $parsed_labels   = $request->get('parsed_labels');
                     $aid_column      = $request->get('aid_column');
                     for ($i = 0; $i < $count_artifacts; $i++) {
                         for ($c = 0; $c < count($parsed_labels); $c++) {
                             $label           = $parsed_labels[$c];
-                               $var_name     = "artifacts_data_" . $i . "_" . $c;
+                               $var_name     = 'artifacts_data_' . $i . '_' . $c;
                                $data[$label] = $request->get($var_name);
                                //echo "insert $label,".$$var_name." into data<br>";
                         }
@@ -799,7 +799,7 @@ if ($func == 'gotoid') {
                     }
                     $import->displayImport($parsed_labels, $artifacts_data, $aid_column, $count_artifacts);
                     require('./browse.php');
-                } elseif ($mode == "showformat") {
+                } elseif ($mode == 'showformat') {
                     $import->displayShowFormat();
                 } else {
                     $import->displayCSVInput($atid, $user_id);
@@ -995,22 +995,22 @@ if ($func == 'gotoid') {
     if (user_ismember($group_id, 'A')) {
         echo '<a href="/tracker/admin/?group_id=' . (int) $group_id . '">' . $Language->getText('tracker_index', 'admin_all_trackers') . '</a>';
     }
-        echo "</strong><p>";
+        echo '</strong><p>';
 
     if (! $at_arr || count($at_arr) < 1) {
         echo '<h2>' . $Language->getText('tracker_index', 'no_accessible_trackers_hdr') . '</h2>';
 
-        echo "<p><div class='alert alert-danger'> " . $Language->getText('tracker_index', 'feature_is_deprecated')  .  "</div></p>";
+        echo "<p><div class='alert alert-danger'> " . $Language->getText('tracker_index', 'feature_is_deprecated')  .  '</div></p>';
 
         echo '<p>' . $Language->getText('tracker_index', 'no_accessible_trackers_msg') . '</p>';
     } else {
-        echo "<p><div class='alert alert-danger'> " . $Language->getText('tracker_index', 'feature_is_deprecated')  .  "</div></p>";
+        echo "<p><div class='alert alert-danger'> " . $Language->getText('tracker_index', 'feature_is_deprecated')  .  '</div></p>';
 
-        echo "<p>" . $Language->getText('tracker_index', 'choose_tracker');
+        echo '<p>' . $Language->getText('tracker_index', 'choose_tracker');
         if (! $pv) {
-            echo " ( <A HREF='?group_id=" . (int) $group_id . "&pv=1'><img src='" . util_get_image_theme("ic/printer.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> )";
+            echo " ( <A HREF='?group_id=" . (int) $group_id . "&pv=1'><img src='" . util_get_image_theme('ic/printer.png') . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . '</A> )';
         }
-        echo "<p>";
+        echo '<p>';
 
         // Put the result set (list of trackers for this group) into a column with folders
         for ($j = 0; $j < count($at_arr); $j++) {
@@ -1018,7 +1018,7 @@ if ($func == 'gotoid') {
                 echo '
                         <a href="/tracker/?atid=' . (int) ($at_arr[$j]->getID()) .
                     '&group_id=' . (int) $group_id . '&func=browse">' .
-                    html_image("ic/tracker20w.png", ["border" => "0", "width" => "20", "height" => "20"], 0) .
+                    html_image('ic/tracker20w.png', ['border' => '0', 'width' => '20', 'height' => '20'], 0) .
                     '&nbsp;' .
                      $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getName()), CODENDI_PURIFIER_CONVERT_HTML)  . '</a> ';
                 // Only show number of artifacts if the user has full access on the tracker.

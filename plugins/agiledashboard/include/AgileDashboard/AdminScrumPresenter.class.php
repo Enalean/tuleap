@@ -112,8 +112,8 @@ class AdminScrumPresenter
         $this->is_planning_administration_delegated           = $is_planning_administration_delegated;
         $this->has_side_panes                                 = ! $is_planning_administration_delegated || $additional_content !== '';
 
-        $this->explicit_backlog_checkbox_title = dgettext("tuleap-agiledashboard", "Explicit backlog");
-        $this->explicit_backlog_checkbox_info  = dgettext("tuleap-agiledashboard", "Explicit backlog allows to select, item per item, what goes in Scrum backlog.");
+        $this->explicit_backlog_checkbox_title = dgettext('tuleap-agiledashboard', 'Explicit backlog');
+        $this->explicit_backlog_checkbox_info  = dgettext('tuleap-agiledashboard', 'Explicit backlog allows to select, item per item, what goes in Scrum backlog.');
     }
 
     public function has_plannings()

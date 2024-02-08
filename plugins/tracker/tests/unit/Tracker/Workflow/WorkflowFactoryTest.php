@@ -110,7 +110,7 @@ final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $transition_factory->shouldReceive('getInstanceFromXML')
             ->with(
                 Mockery::on(function (SimpleXMLElement $val) {
-                    return (string) $val->from_id['REF'] === "null";
+                    return (string) $val->from_id['REF'] === 'null';
                 }),
                 $mapping,
                 $this->project
@@ -120,7 +120,7 @@ final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $transition_factory->shouldReceive('getInstanceFromXML')
             ->with(
                 Mockery::on(function (SimpleXMLElement $val) {
-                    return (string) $val->from_id['REF'] === "F32-V0";
+                    return (string) $val->from_id['REF'] === 'F32-V0';
                 }),
                 $mapping,
                 $this->project
@@ -130,7 +130,7 @@ final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $transition_factory->shouldReceive('getInstanceFromXML')
             ->with(
                 Mockery::on(function (SimpleXMLElement $val) {
-                    return (string) $val->from_id['REF'] === "F32-V1";
+                    return (string) $val->from_id['REF'] === 'F32-V1';
                 }),
                 $mapping,
                 $this->project
@@ -201,7 +201,7 @@ final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $transition_factory->shouldReceive('getInstancesFromStateXML')
             ->with(
                 Mockery::on(function (SimpleXMLElement $state) {
-                    return (string) $state->to_id['REF'] === "F32-V0";
+                    return (string) $state->to_id['REF'] === 'F32-V0';
                 }),
                 $mapping,
                 $this->project,

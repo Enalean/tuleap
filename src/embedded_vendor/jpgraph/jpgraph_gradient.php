@@ -10,18 +10,18 @@
  */
 
 // Styles for gradient color fill
-define("GRAD_VER", 1);
-define("GRAD_VERT", 1);
-define("GRAD_HOR", 2);
-define("GRAD_MIDHOR", 3);
-define("GRAD_MIDVER", 4);
-define("GRAD_CENTER", 5);
-define("GRAD_WIDE_MIDVER", 6);
-define("GRAD_WIDE_MIDHOR", 7);
-define("GRAD_LEFT_REFLECTION", 8);
-define("GRAD_RIGHT_REFLECTION", 9);
-define("GRAD_RAISED_PANEL", 10);
-define("GRAD_DIAGONAL", 11);
+define('GRAD_VER', 1);
+define('GRAD_VERT', 1);
+define('GRAD_HOR', 2);
+define('GRAD_MIDHOR', 3);
+define('GRAD_MIDVER', 4);
+define('GRAD_CENTER', 5);
+define('GRAD_WIDE_MIDVER', 6);
+define('GRAD_WIDE_MIDHOR', 7);
+define('GRAD_LEFT_REFLECTION', 8);
+define('GRAD_RIGHT_REFLECTION', 9);
+define('GRAD_RAISED_PANEL', 10);
+define('GRAD_DIAGONAL', 11);
 
 //===================================================
 // CLASS Gradient
@@ -433,7 +433,7 @@ class Gradient
                 $g          = floor($from_color[1] + $colnum * $gdelta);
                 $b          = floor($from_color[2] + $colnum * $bdelta);
                 $alpha      = $from_alpha + $colnum * $adelta;
-                $colidx     = $this->img->rgb->Allocate(sprintf("#%02x%02x%02x", $r, $g, $b), $alpha);
+                $colidx     = $this->img->rgb->Allocate(sprintf('#%02x%02x%02x', $r, $g, $b), $alpha);
                 $colors[$i] = $colidx;
             }
             $prevcolnum = $colnum;

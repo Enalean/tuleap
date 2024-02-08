@@ -130,7 +130,7 @@ class FileResource extends AuthenticatedResource
         }
 
         if (! $this->file_factory->delete_file($project->getID(), $id)) {
-            throw new I18NRestException(500, dgettext("tuleap-frs", "An error occurred while deleting the file"));
+            throw new I18NRestException(500, dgettext('tuleap-frs', 'An error occurred while deleting the file'));
         }
     }
 

@@ -92,7 +92,7 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker = \Mockery::mock(\Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(101);
-        $this->tracker->shouldReceive('getName')->andReturn("Scrum");
+        $this->tracker->shouldReceive('getName')->andReturn('Scrum');
 
         $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
@@ -381,7 +381,7 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'remaining_effort'
         )->andReturn($this->field_remaining_effort);
 
-        $this->field_remaining_effort->shouldReceive("userCanRead")->andReturn(false);
+        $this->field_remaining_effort->shouldReceive('userCanRead')->andReturn(false);
 
         $this->assertNull($this->configuration_retriever->getBurndownRemainingEffortField($this->artifact, $this->user));
     }
@@ -403,7 +403,7 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'remaining_effort'
         )->andReturn($this->field_remaining_effort);
 
-        $this->field_remaining_effort->shouldReceive("userCanRead")->andReturn(true);
+        $this->field_remaining_effort->shouldReceive('userCanRead')->andReturn(true);
 
         $this->assertSame(
             $this->field_remaining_effort,

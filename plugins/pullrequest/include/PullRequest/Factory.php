@@ -84,7 +84,7 @@ class Factory
             $row['repo_dest_id'],
             $row['branch_dest'],
             $row['sha1_dest'],
-            $row["description_format"],
+            $row['description_format'],
             $row['status'],
             $row['merge_status'],
         );

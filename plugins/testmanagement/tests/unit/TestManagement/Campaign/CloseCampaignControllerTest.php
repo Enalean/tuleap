@@ -172,7 +172,7 @@ class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->status_updater->shouldReceive('closeCampaign')
             ->andThrow(NoPossibleValueException::class);
 
-        $layout->shouldReceive('addFeedback')->withArgs(["error", "The campaign cannot be closed : No possible value found regarding your configuration. Please check your transition and field dependencies."])->once();
+        $layout->shouldReceive('addFeedback')->withArgs(['error', 'The campaign cannot be closed : No possible value found regarding your configuration. Please check your transition and field dependencies.'])->once();
         $layout->shouldReceive('redirect')->once();
 
         $this->controller->process(

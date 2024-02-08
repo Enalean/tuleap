@@ -41,7 +41,7 @@ class LDAP_SyncReminderNotificationManager
         $suspendedUsers     = [];
         $suspendedUsersList = $this->getLDAPDirectoryCleanUpDao()->getUsersDeletedTomorrow();
         foreach ($suspendedUsersList as $suspendedUser) {
-            $user = $this->userManager->getUserById($suspendedUser["user_id"]);
+            $user = $this->userManager->getUserById($suspendedUser['user_id']);
             if (! $user->isDeleted()) {
                 $suspendedUsers[] = $user;
             }
@@ -64,7 +64,7 @@ class LDAP_SyncReminderNotificationManager
             foreach ($adminsEmails as $unixProjectName => $emailList) {
                 $subject = $this->getSubject($unixProjectName, $user);
                 $body    = $this->getBody($unixProjectName, $user);
-                $to      = implode(";", $emailList);
+                $to      = implode(';', $emailList);
                 $this->ldapSyncMail->notifyProjectsAdmins($to, $unixProjectName, $user, $subject, $body);
             }
         }

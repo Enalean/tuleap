@@ -114,17 +114,17 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'push',
             123654,
             'https://example.com/root/repo01',
-            "3cffabe5",
-            "refs/heads/main",
+            '3cffabe5',
+            'refs/heads/main',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'A commit with three references, two bad, one good',
                     'A commit with three references: TULEAP-666 TULEAP-777 TULEAP-123',
-                    "master",
+                    'master',
                     1608110510,
-                    "john-snow@example.com",
-                    "John Snow"
+                    'john-snow@example.com',
+                    'John Snow'
                 ),
             ]
         );
@@ -153,7 +153,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                         );
                     }
 
-                    throw new \RuntimeException("Unexpected reference ID #" . $id);
+                    throw new \RuntimeException('Unexpected reference ID #' . $id);
                 }
             );
 
@@ -164,7 +164,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                 'feff4ced04b237abb8b4a50b4160099313152c3c',
                 1608110510,
                 'A commit with three references, two bad, one good',
-                "master",
+                'master',
                 'John Snow',
                 'john-snow@example.com'
             );
@@ -207,17 +207,17 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'push',
             123654,
             'https://example.com/root/repo01',
-            "3cffabe5",
-            "refs/heads/main",
+            '3cffabe5',
+            'refs/heads/main',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'A commit with references containing close artifact keyword',
                     'A commit with reference: resolve TULEAP-123',
-                    "master",
+                    'master',
                     1608110510,
-                    "john-snow@example.com",
-                    "John Snow"
+                    'john-snow@example.com',
+                    'John Snow'
                 ),
             ]
         );
@@ -245,7 +245,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                 'feff4ced04b237abb8b4a50b4160099313152c3c',
                 1608110510,
                 'A commit with references containing close artifact keyword',
-                "master",
+                'master',
                 'John Snow',
                 'john-snow@example.com'
             );
@@ -283,17 +283,17 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'push',
             123654,
             'https://example.com/root/repo01',
-            "3cffabe5",
-            "refs/heads/main",
+            '3cffabe5',
+            'refs/heads/main',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'commit TULEAP-123 01',
                     'commit TULEAP-123 01',
-                    "master",
+                    'master',
                     1608110510,
-                    "john-snow@example.com",
-                    "John Snow"
+                    'john-snow@example.com',
+                    'John Snow'
                 ),
             ]
         );
@@ -338,17 +338,17 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'push',
             123654,
             'https://example.com/root/repo01',
-            "3cffabe5",
-            "refs/heads/main",
+            '3cffabe5',
+            'refs/heads/main',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'commit TULEAP-123 01',
                     'commit TULEAP-123 01',
-                    "master",
+                    'master',
                     1608110510,
-                    "john-snow@example.com",
-                    "John Snow"
+                    'john-snow@example.com',
+                    'John Snow'
                 ),
             ]
         );

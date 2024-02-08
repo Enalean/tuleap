@@ -62,7 +62,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager // phpcs:ignore PSR1
                         echo "codendi.trackerv3.fields.add('" . (int) $field->getID() . "', '" . $field->getName() . "', '" . $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_JS_QUOTE) . "')";
                         $default_value = $field->getDefaultValue();
                         while ($row = db_fetch_array($values)) {
-                            echo "\n\t.addOption('" .  $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODENDI_PURIFIER_JS_QUOTE)  . "'.escapeHTML(), '" . (int) $row[0] . "', " . ($row[0] == $default_value ? 'true' : 'false') . ")";
+                            echo "\n\t.addOption('" .  $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODENDI_PURIFIER_JS_QUOTE)  . "'.escapeHTML(), '" . (int) $row[0] . "', " . ($row[0] == $default_value ? 'true' : 'false') . ')';
                         }
                         echo ";\n";
                     }
@@ -304,10 +304,10 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager // phpcs:ignore PSR1
 
     public function badRequest()
     {
-        header("HTTP/1.1 400 Bad Request");
+        header('HTTP/1.1 400 Bad Request');
         $GLOBALS['Response']->addFeedback('info', 'Bad Request');
         $this->_header();
-        echo "The server is unable to process your request.";
+        echo 'The server is unable to process your request.';
         $this->_footer();
         exit();
     }

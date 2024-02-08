@@ -44,26 +44,26 @@ rcs_id('$Id: WikiForum.php,v 1.3 2004/06/14 11:31:39 rurban Exp $');
  * @author: Reini Urban
  */
 
-include_once("lib/plugin/WikiBlog.php");
+include_once('lib/plugin/WikiBlog.php');
 
 class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
 {
     public function getName()
     {
-        return _("WikiForum");
+        return _('WikiForum');
     }
 
     public function getDescription()
     {
-        return _("Handles threaded topics with comments/news and provide a input form");
+        return _('Handles threaded topics with comments/news and provide a input form');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.3 $"
+            '$Revision: 1.3 $'
         );
     }
 
@@ -81,7 +81,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
     {
         $args = $this->getArgs($argstr, $request);
         if (! $args['pagename']) {
-            return $this->error(_("No pagename specified"));
+            return $this->error(_('No pagename specified'));
         }
 
         // Get our form args.

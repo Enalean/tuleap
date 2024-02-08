@@ -50,7 +50,7 @@ final class OpenListUserGroupsByDuckTypingUpdater implements UpdateOpenListUserG
 
         $destination_values_ids = [];
         foreach ($list_value_ids as $value_id) {
-            $bind_value_id     = (int) str_replace(Tracker_FormElement_Field_OpenList::BIND_PREFIX, "", (string) $value_id);
+            $bind_value_id     = (int) str_replace(Tracker_FormElement_Field_OpenList::BIND_PREFIX, '', (string) $value_id);
             $source_ugroup_raw = $this->search_user_groups_values_by_id->searchById($bind_value_id);
             if (! $source_ugroup_raw) {
                 continue;
@@ -79,9 +79,9 @@ final class OpenListUserGroupsByDuckTypingUpdater implements UpdateOpenListUserG
         if (empty($destination_values_ids)) {
             $this->cdata_factory->insertWithAttributes(
                 $changeset_xml->field_change[$index],
-                "value",
+                'value',
                 $destination_field->getDefaultValue(),
-                ['format' => "id"]
+                ['format' => 'id']
             );
             return;
         }
@@ -89,9 +89,9 @@ final class OpenListUserGroupsByDuckTypingUpdater implements UpdateOpenListUserG
         foreach ($destination_values_ids as $value_id) {
             $this->cdata_factory->insertWithAttributes(
                 $changeset_xml->field_change[$index],
-                "value",
+                'value',
                 Tracker_FormElement_Field_OpenList::BIND_PREFIX . $value_id,
-                ['format' => "id"]
+                ['format' => 'id']
             );
         }
     }

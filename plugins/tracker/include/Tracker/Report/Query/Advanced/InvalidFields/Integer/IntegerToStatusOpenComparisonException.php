@@ -27,7 +27,7 @@ final class IntegerToStatusOpenComparisonException extends InvalidFieldException
     public function __construct(Tracker_FormElement_Field $field)
     {
         $message = sprintf(
-            dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to OPEN()."),
+            dgettext('tuleap-tracker', "The integer field '%s' cannot be compared to OPEN()."),
             $field->getName()
         );
         parent::__construct($message);

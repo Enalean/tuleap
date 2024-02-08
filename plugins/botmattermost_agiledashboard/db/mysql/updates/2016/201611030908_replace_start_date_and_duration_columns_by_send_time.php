@@ -38,10 +38,10 @@ EOT;
 
     public function up()
     {
-        $sql1 = "ALTER TABLE plugin_botmattermost_agiledashboard
-                CHANGE start_time send_time time;";
-        $sql2 = "ALTER TABLE plugin_botmattermost_agiledashboard
-                DROP COLUMN duration;";
+        $sql1 = 'ALTER TABLE plugin_botmattermost_agiledashboard
+                CHANGE start_time send_time time;';
+        $sql2 = 'ALTER TABLE plugin_botmattermost_agiledashboard
+                DROP COLUMN duration;';
 
         if (! $this->db->dbh->exec($sql1)) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while column start_date is replaced by send_time in table plugin_botmattermost_agiledashboard: ' . implode(', ', $this->db->dbh->errorInfo()));

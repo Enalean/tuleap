@@ -51,7 +51,7 @@ class StoredLogStub implements \Tuleap\Docman\Log\IRetrieveStoredLog
     public function searchByItemIdOrderByTimestamp(int $item_id): array
     {
         if (! isset($this->storage[$item_id])) {
-            throw new \LogicException("Unknown item id in storage");
+            throw new \LogicException('Unknown item id in storage');
         }
 
         return $this->storage[$item_id];
@@ -60,7 +60,7 @@ class StoredLogStub implements \Tuleap\Docman\Log\IRetrieveStoredLog
     public function paginatedSearchByItemIdOrderByTimestamp(int $item_id, int $limit, int $offset): array
     {
         if (! isset($this->storage[$item_id])) {
-            throw new \LogicException("Unknown item id in storage");
+            throw new \LogicException('Unknown item id in storage');
         }
 
         return array_slice($this->storage[$item_id], $offset, $limit);
@@ -69,7 +69,7 @@ class StoredLogStub implements \Tuleap\Docman\Log\IRetrieveStoredLog
     public function countByItemId(int $item_id): int
     {
         if (! isset($this->storage[$item_id])) {
-            throw new \LogicException("Unknown item id in storage");
+            throw new \LogicException('Unknown item id in storage');
         }
 
         return count($this->storage[$item_id]);

@@ -40,7 +40,7 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
 {
     public const MONO_TRACKER_NAME      = 'Issues';
     public const MONO_TRACKER_SHORTNAME = 'issue';
-    public const MONO_TRACKER_XML_ID    = Tracker::XML_ID_PREFIX . "1";
+    public const MONO_TRACKER_XML_ID    = Tracker::XML_ID_PREFIX . '1';
 
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -81,7 +81,7 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
         LinkedIssuesCollection $linked_issues_collection,
         string $import_mode,
     ): void {
-        $this->logger->info(sprintf("Import all issues in mono tracker %s", self::MONO_TRACKER_NAME));
+        $this->logger->info(sprintf('Import all issues in mono tracker %s', self::MONO_TRACKER_NAME));
 
         $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat(self::MONO_TRACKER_SHORTNAME);
         $tracker          = (new XMLTracker(self::MONO_TRACKER_XML_ID, $tracker_itemname))->withName(self::MONO_TRACKER_NAME);

@@ -32,10 +32,10 @@ final class XMLPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
         $plannings_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><plannings />');
 
         $xml_planning = (new XMLPlanning(
-            "Sprint plan",
-            "Sprint plan",
-            "T411",
-            "Backlog",
+            'Sprint plan',
+            'Sprint plan',
+            'T411',
+            'Backlog',
             [
                 10000,
                 'T412',
@@ -44,17 +44,17 @@ final class XMLPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
         ))
             ->export($plannings_xml);
 
-        $this->assertSame("planning", $xml_planning->getName());
-        $this->assertSame("Sprint plan", (string) $xml_planning['name']);
-        $this->assertSame("Sprint plan", (string) $xml_planning['plan_title']);
-        $this->assertSame("Backlog", (string) $xml_planning['backlog_title']);
-        $this->assertSame("T411", (string) $xml_planning['planning_tracker_id']);
+        $this->assertSame('planning', $xml_planning->getName());
+        $this->assertSame('Sprint plan', (string) $xml_planning['name']);
+        $this->assertSame('Sprint plan', (string) $xml_planning['plan_title']);
+        $this->assertSame('Backlog', (string) $xml_planning['backlog_title']);
+        $this->assertSame('T411', (string) $xml_planning['planning_tracker_id']);
 
         $this->assertTrue(isset($xml_planning->backlogs));
         $this->assertCount(3, $xml_planning->backlogs->children());
-        $this->assertSame("10000", (string) $xml_planning->backlogs->backlog[0]);
-        $this->assertSame("T412", (string) $xml_planning->backlogs->backlog[1]);
-        $this->assertSame("10506", (string) $xml_planning->backlogs->backlog[2]);
+        $this->assertSame('10000', (string) $xml_planning->backlogs->backlog[0]);
+        $this->assertSame('T412', (string) $xml_planning->backlogs->backlog[1]);
+        $this->assertSame('10506', (string) $xml_planning->backlogs->backlog[2]);
     }
 
     public function testItExportsPlanningWithPermissionsInXML(): void
@@ -62,41 +62,41 @@ final class XMLPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
         $plannings_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><plannings />');
 
         $xml_planning = (new XMLPlanning(
-            "Sprint plan",
-            "Sprint plan",
-            "T411",
-            "Backlog",
+            'Sprint plan',
+            'Sprint plan',
+            'T411',
+            'Backlog',
             [
                 10000,
                 'T412',
                 10506,
             ]
         ))
-            ->withPriorityChangePermission("ugroup1", "ugroup2")
+            ->withPriorityChangePermission('ugroup1', 'ugroup2')
             ->export($plannings_xml);
 
-        $this->assertSame("planning", $xml_planning->getName());
-        $this->assertSame("Sprint plan", (string) $xml_planning['name']);
-        $this->assertSame("Sprint plan", (string) $xml_planning['plan_title']);
-        $this->assertSame("Backlog", (string) $xml_planning['backlog_title']);
-        $this->assertSame("T411", (string) $xml_planning['planning_tracker_id']);
+        $this->assertSame('planning', $xml_planning->getName());
+        $this->assertSame('Sprint plan', (string) $xml_planning['name']);
+        $this->assertSame('Sprint plan', (string) $xml_planning['plan_title']);
+        $this->assertSame('Backlog', (string) $xml_planning['backlog_title']);
+        $this->assertSame('T411', (string) $xml_planning['planning_tracker_id']);
 
         $this->assertTrue(isset($xml_planning->backlogs));
         $this->assertCount(3, $xml_planning->backlogs->children());
-        $this->assertSame("10000", (string) $xml_planning->backlogs->backlog[0]);
-        $this->assertSame("T412", (string) $xml_planning->backlogs->backlog[1]);
-        $this->assertSame("10506", (string) $xml_planning->backlogs->backlog[2]);
+        $this->assertSame('10000', (string) $xml_planning->backlogs->backlog[0]);
+        $this->assertSame('T412', (string) $xml_planning->backlogs->backlog[1]);
+        $this->assertSame('10506', (string) $xml_planning->backlogs->backlog[2]);
 
         $this->assertTrue(isset($xml_planning->permissions));
         $this->assertCount(2, $xml_planning->permissions->children());
-        $this->assertSame("ugroup1", (string) $xml_planning->permissions->permission[0]['ugroup']);
-        $this->assertSame("ugroup2", (string) $xml_planning->permissions->permission[1]['ugroup']);
+        $this->assertSame('ugroup1', (string) $xml_planning->permissions->permission[0]['ugroup']);
+        $this->assertSame('ugroup2', (string) $xml_planning->permissions->permission[1]['ugroup']);
         $this->assertSame(
-            "PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE",
+            'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE',
             (string) $xml_planning->permissions->permission[0]['type']
         );
         $this->assertSame(
-            "PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE",
+            'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE',
             (string) $xml_planning->permissions->permission[1]['type']
         );
     }

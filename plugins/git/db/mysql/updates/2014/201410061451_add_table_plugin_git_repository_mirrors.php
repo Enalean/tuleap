@@ -54,13 +54,13 @@ EOT;
 
     private function removeIsMirroredColumn()
     {
-        $sql = "INSERT INTO plugin_git_repository_mirrors (repository_id, mirror_id) SELECT r.repository_id, m.id  FROM plugin_git r, plugin_git_mirrors m WHERE r.repository_is_mirrored=1";
+        $sql = 'INSERT INTO plugin_git_repository_mirrors (repository_id, mirror_id) SELECT r.repository_id, m.id  FROM plugin_git r, plugin_git_mirrors m WHERE r.repository_is_mirrored=1';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while populating plugin_git_repository_mirrors table.');
         }
 
-        $sql = "ALTER TABLE plugin_git DROP COLUMN repository_is_mirrored";
+        $sql = 'ALTER TABLE plugin_git DROP COLUMN repository_is_mirrored';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

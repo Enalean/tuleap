@@ -57,14 +57,14 @@ function tocsv($string, $csv_separator)
  */
 function get_csv_separator()
 {
-    if ($u_separator = user_get_preference("user_csv_separator")) {
+    if ($u_separator = user_get_preference('user_csv_separator')) {
     } else {
         $u_separator = PFUser::DEFAULT_CSV_SEPARATOR;
     }
     $separator = '';
     switch ($u_separator) {
         case 'semicolon':
-            $separator = ";";
+            $separator = ';';
             break;
         case 'tab':
             $separator = "\t";
@@ -149,7 +149,7 @@ function prepare_textarea($textarea)
 {
     // Turn all HTML entities in ASCII and remove all \r characters
     // because even MS Office apps don't like it in text cells (Excel)
-    return( str_replace(chr(13), "", util_unconvert_htmlspecialchars($textarea)) );
+    return( str_replace(chr(13), '', util_unconvert_htmlspecialchars($textarea)) );
 }
 
 /**
@@ -179,7 +179,7 @@ function prepare_artifact_record($at, $fields, $group_artifact_id, &$record, $ex
                 $values = $field->getValues($record['artifact_id']);
             }
             $label_values              = $field->getLabelValues($group_artifact_id, $values);
-            $record[$field->getName()] = SimpleSanitizer::unsanitize(join(",", $label_values));
+            $record[$field->getName()] = SimpleSanitizer::unsanitize(join(',', $label_values));
         } elseif ($field->isTextArea() || ($field->isTextField() && $field->getDataType() == $field->DATATYPE_TEXT)) {
             // all text fields converted from HTML to ASCII
             $record[$field->getName()] = prepare_textarea($record[$field->getName()]);
@@ -216,7 +216,7 @@ function prepare_artifact_record($at, $fields, $group_artifact_id, &$record, $ex
     $dependent = '';
     for ($i = 0; $i < $rows; $i++) {
         $dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
-        $dependent               .= $dependent_on_artifact_id . ",";
+        $dependent               .= $dependent_on_artifact_id . ',';
     }
     $record['is_dependent_on'] = (($dependent !== '') ? substr($dependent, 0, strlen($dependent) - 1) : $Language->getText('global', 'none'));
 
@@ -244,18 +244,18 @@ function prepare_access_logs_record($group_id, &$record)
     if (isset($record['time'])) {
         $time                 = $record['time'];
         $record['time']       = format_date('Y-m-d', $time);
-        $record['local_time'] = date("H:i", $time);
+        $record['local_time'] = date('H:i', $time);
     }
     $um   = UserManager::instance();
     $user = $um->getUserByUserName($record['user_name']);
     if ($user) {
-        $record['user'] = $user->getRealName() . "(" . $user->getUserName() . ")";
+        $record['user'] = $user->getRealName() . '(' . $user->getUserName() . ')';
     } else {
         $record['user'] = 'N/A';
     }
     //for svn access logs
     if (isset($record['day'])) {
         $day           = $record['day'];
-        $record['day'] = substr($day, 0, 4) . "-" . substr($day, 4, 2) . "-" . substr($day, 6, 2);
+        $record['day'] = substr($day, 0, 4) . '-' . substr($day, 4, 2) . '-' . substr($day, 6, 2);
     }
 }

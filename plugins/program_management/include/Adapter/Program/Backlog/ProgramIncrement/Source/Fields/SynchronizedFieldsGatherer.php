@@ -62,7 +62,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         }
         if (! $title_field instanceof \Tracker_FormElement_Field_String) {
             $errors_collector?->addTitleHasIncorrectType(
-                "/plugins/tracker/?tracker=" . urlencode((string) $full_tracker->getId()) . "&func=admin-semantic&semantic=title",
+                '/plugins/tracker/?tracker=' . urlencode((string) $full_tracker->getId()) . '&func=admin-semantic&semantic=title',
                 TrackerReferenceProxy::fromTracker($full_tracker),
                 $full_tracker->getProject()->getPublicName(),
                 $title_field->getLabel()
@@ -124,7 +124,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         $artifact_link_field = $this->artifact_link_retriever->getArtifactLinkField($tracker_identifier);
         if (! $artifact_link_field) {
             $errors_collector?->addMissingFieldArtifactLink(
-                "/plugins/tracker/?tracker=" . urlencode((string) $full_tracker->getId()) . "&func=admin-formElements",
+                '/plugins/tracker/?tracker=' . urlencode((string) $full_tracker->getId()) . '&func=admin-formElements',
                 TrackerReferenceProxy::fromTracker($full_tracker),
                 $full_tracker->getProject()->getPublicName(),
             );

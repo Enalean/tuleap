@@ -194,7 +194,7 @@ final class CreateProjectFromJira
 
         $jira_issue_types = $this->jira_tracker_builder->buildFromProjectKey($jira_client, $jira_project);
         if (count($jira_issue_types) === 0) {
-            throw new \RuntimeException("There are no Jira issue types to import");
+            throw new \RuntimeException('There are no Jira issue types to import');
         }
 
         $this->artifact_link_type_importer->import($jira_client, $logger);
@@ -223,7 +223,7 @@ final class CreateProjectFromJira
                 $board = $board_retriever->getFirstScrumBoardForProject($jira_project);
             } catch (JiraConnectionException $exception) {
                 if ($exception->getCode() === 404) {
-                    $logger->info("Jira software agile content does not seem to be available on your instance. Skipping the Scrum agile export.");
+                    $logger->info('Jira software agile content does not seem to be available on your instance. Skipping the Scrum agile export.');
                     $platform_configuration_collection->setAgileFeaturesAreNotAvailable();
                 }
             }
@@ -269,8 +269,8 @@ final class CreateProjectFromJira
 
                 $linked_issues_collection = $issues_linked_to_epics_retriever->getLinkedIssuesFromBoard($board);
             } else {
-                $logger->info("No scrum board found. We will try to get linked Epic issues with provided Epic issueType name");
-                $logger->debug("Provided Epic issueType name: " . $jira_epic_issue_type);
+                $logger->info('No scrum board found. We will try to get linked Epic issues with provided Epic issueType name');
+                $logger->debug('Provided Epic issueType name: ' . $jira_epic_issue_type);
                 foreach ($jira_issue_types as $jira_issue_type) {
                     if ($jira_issue_type->getName() === $jira_epic_issue_type) {
                         $linked_issues_collection = $issues_linked_to_epics_retriever->getLinkedIssuesFromIssueTypeInProject(
@@ -433,17 +433,17 @@ final class CreateProjectFromJira
         LoggerInterface $logger,
     ): \SimpleXMLElement {
         $xml_dashboards = $xml_element->addChild('dashboards');
-        $xml_dashboard  = $xml_dashboards->addChild("dashboard");
+        $xml_dashboard  = $xml_dashboards->addChild('dashboard');
         $xml_dashboard->addAttribute('name', 'Dashboard');
 
-        $xml_dashboard_line     = $xml_dashboard->addChild("line");
-        $xml_dashboard_column01 = $xml_dashboard_line->addChild("column");
+        $xml_dashboard_line     = $xml_dashboard->addChild('line');
+        $xml_dashboard_column01 = $xml_dashboard_line->addChild('column');
         if ($board !== null) {
-            $xml_dashboard_column01->addChild("widget")->addAttribute("name", DashboardProjectMilestones::NAME);
+            $xml_dashboard_column01->addChild('widget')->addAttribute('name', DashboardProjectMilestones::NAME);
         }
-        $xml_dashboard_column01->addChild("widget")->addAttribute("name", ProjectMembers::NAME);
-        $xml_dashboard_column02 = $xml_dashboard_line->addChild("column");
-        $xml_dashboard_column02->addChild("widget")->addAttribute("name", ProjectHeartbeat::NAME);
+        $xml_dashboard_column01->addChild('widget')->addAttribute('name', ProjectMembers::NAME);
+        $xml_dashboard_column02 = $xml_dashboard_line->addChild('column');
+        $xml_dashboard_column02->addChild('widget')->addAttribute('name', ProjectHeartbeat::NAME);
 
         $this->roadmap_dashboard_creator->createRoadmapDashboard(
             $xml_element,

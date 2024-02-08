@@ -52,42 +52,42 @@ class ImportProjectXMLCommand extends Command
     {
         $this
             ->setDescription('Import project from XML')
-            ->addOption("project", "p", InputOption::VALUE_OPTIONAL, "The id or shortname of the project to import the archive")
-            ->addOption("name", "s", InputOption::VALUE_OPTIONAL, "Override project name (when -p is not specified)")
-            ->addOption("user-name", "u", InputOption::VALUE_REQUIRED, "The user used to import")
-            ->addOption("archive-path", "i", InputOption::VALUE_REQUIRED, "The path of the archive of the exported XML + data")
-            ->addOption("mapping-path", "m", InputOption::VALUE_OPTIONAL, "The path of the user mapping file")
-            ->addOption("automap", "", InputOption::VALUE_OPTIONAL, "automap strategy")
-            ->addOption("force")
-            ->addOption("type", "", InputOption::VALUE_OPTIONAL)
-            ->addOption("use-lame-password");
+            ->addOption('project', 'p', InputOption::VALUE_OPTIONAL, 'The id or shortname of the project to import the archive')
+            ->addOption('name', 's', InputOption::VALUE_OPTIONAL, 'Override project name (when -p is not specified)')
+            ->addOption('user-name', 'u', InputOption::VALUE_REQUIRED, 'The user used to import')
+            ->addOption('archive-path', 'i', InputOption::VALUE_REQUIRED, 'The path of the archive of the exported XML + data')
+            ->addOption('mapping-path', 'm', InputOption::VALUE_OPTIONAL, 'The path of the user mapping file')
+            ->addOption('automap', '', InputOption::VALUE_OPTIONAL, 'automap strategy')
+            ->addOption('force')
+            ->addOption('type', '', InputOption::VALUE_OPTIONAL)
+            ->addOption('use-lame-password');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('mapping-path') === null && $input->getOption('automap') === null) {
-            throw new InvalidArgumentException("Need mapping-path (--mapping-path / -m) or automap (--automap)");
+            throw new InvalidArgumentException('Need mapping-path (--mapping-path / -m) or automap (--automap)');
         }
 
         $configuration = new ImportConfig();
 
-        $project_id            = $input->getOption("project");
-        $project_name_override = (string) $input->getOption("name");
+        $project_id            = $input->getOption('project');
+        $project_name_override = (string) $input->getOption('name');
 
-        $username = $input->getOption("user-name");
+        $username = $input->getOption('user-name');
         if ($username === null) {
-            throw new InvalidArgumentException("Username missing (option --user-name / -u)");
+            throw new InvalidArgumentException('Username missing (option --user-name / -u)');
         }
 
-        $archive_path = $input->getOption("archive-path");
+        $archive_path = $input->getOption('archive-path');
         if ($archive_path === null) {
-            throw new InvalidArgumentException("Archive path missing (option --archive-path / -i)");
+            throw new InvalidArgumentException('Archive path missing (option --archive-path / -i)');
         }
 
         $automap = false;
-        if ($input->getOption("automap") !== null) {
+        if ($input->getOption('automap') !== null) {
             $automap     = true;
-            $automap_arg = trim($input->getOption("automap"));
+            $automap_arg = trim($input->getOption('automap'));
             $exception   =
                 "Automatically map users without taking email into account\n" .
                 "the second argument is the default action for accounts to\n" .
@@ -101,33 +101,33 @@ class ImportProjectXMLCommand extends Command
             if (strpos($automap_arg, ',') !== false) {
                 [$automap_strategy, $default_action] = explode(',', $automap_arg);
                 if (! in_array($automap_strategy, self::AUTHORIZED_CONFIGURATION_AUTOMAP, true)) {
-                    throw new \RuntimeException($exception . "Unsupported automap strategy, eg : --automap no-email,create:A");
+                    throw new \RuntimeException($exception . 'Unsupported automap strategy, eg : --automap no-email,create:A');
                 }
             } else {
-                throw new \RuntimeException($exception . "When using automap, you need to specify a default action, eg: --automap no-email,create:A");
+                throw new \RuntimeException($exception . 'When using automap, you need to specify a default action, eg: --automap no-email,create:A');
             }
         }
 
         $is_template = false;
-        if ($input->getOption("type") !== null) {
-            if (trim($input->getOption("type")) === 'template') {
+        if ($input->getOption('type') !== null) {
+            if (trim($input->getOption('type')) === 'template') {
                 $is_template = true;
             } else {
                 $exception =
                     "If the project is created, then it can be defined as a template\n" .
-                    "Unsupported type argument, eg --type template";
+                    'Unsupported type argument, eg --type template';
                 throw new \InvalidArgumentException($exception);
             }
         }
 
-        $mapping_path = $input->getOption("mapping-path");
+        $mapping_path = $input->getOption('mapping-path');
 
-        if ($input->getOption("force") !== null) {
-            $configuration->setForce($input->getOption("force"));
+        if ($input->getOption('force') !== null) {
+            $configuration->setForce($input->getOption('force'));
         }
 
         $use_lame_password = false;
-        if ($input->getOption("use-lame-password") !== null) {
+        if ($input->getOption('use-lame-password') !== null) {
             $use_lame_password = true;
         }
 
@@ -211,7 +211,7 @@ class ImportProjectXMLCommand extends Command
             if ($exception->getMessage() !== '') {
                 $broker_log->error($exception->getMessage());
             } else {
-                $broker_log->error("There are some errors in the XML content that prevent the project to be created.");
+                $broker_log->error('There are some errors in the XML content that prevent the project to be created.');
             }
         } catch (\Exception $exception) {
             $broker_log->error($exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());

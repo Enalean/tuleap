@@ -25,7 +25,7 @@ final class b202309110933_remove_abbr_in_split_modal_preference extends \Tuleap\
 {
     public function description(): string
     {
-        return "Remove abbreviation in split modal preference";
+        return 'Remove abbreviation in split modal preference';
     }
 
     public function up(): void

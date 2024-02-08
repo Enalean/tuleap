@@ -78,14 +78,14 @@ class BranchInfoDao extends DataAccessObject
      */
     public function searchBranchInRepositoryWithBranchName(int $integration_id, string $branch_name): ?array
     {
-        $sql = "
+        $sql = '
             SELECT LOWER(HEX(commit_sha1)) as commit_sha1,
                    branch_name,
                    last_push_date
             FROM plugin_gitlab_repository_integration_branch_info
             WHERE integration_id = ?
                 AND branch_name = ?
-        ";
+        ';
 
         return $this->getDB()->row($sql, $integration_id, $branch_name);
     }

@@ -145,14 +145,14 @@ class ArtifactFieldHtml extends ArtifactField
             }
             $output = '';
             if ($display) {
-                $output .= html_build_multiple_select_box($result, $box_name, $checked, ($this->getDisplaySize() != "" ? $this->getDisplaySize() : "6"), $show_none, $text_none, $show_any, $text_any, $show_unchanged, $text_unchanged, $show_value);
+                $output .= html_build_multiple_select_box($result, $box_name, $checked, ($this->getDisplaySize() != '' ? $this->getDisplaySize() : '6'), $show_none, $text_none, $show_any, $text_any, $show_unchanged, $text_unchanged, $show_value);
             }
             if ($this->isJavascriptEnabled) {
                 $output .= '<script type="text/javascript">';
                 $output .= "\ncodendi.trackerv3.fields.add('" . (int) $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE) . "')";
                 $output .= $this->_getValuesAsJavascript($array_values, $checked);
                 $output .= ";\n";
-                $output .= "</script>";
+                $output .= '</script>';
             }
             return $output;
         }
@@ -179,13 +179,13 @@ class ArtifactFieldHtml extends ArtifactField
     {
         global $Language;
         $hp                        = Codendi_HTMLPurifier::instance();
-            $output                = "";
+            $output                = '';
             $isDefaultValuePresent = false;
         foreach ($values as $row) {
             if ($row['0'] === $text_unchanged) {
-                $output .= "\n\t.addOption('" .  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . $row['0'] . "', " . ($this->_isValueDefaultValue($row['0'], $default_value) ? 'true' : 'false') . ")";
+                $output .= "\n\t.addOption('" .  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . $row['0'] . "', " . ($this->_isValueDefaultValue($row['0'], $default_value) ? 'true' : 'false') . ')';
             } else {
-                $output .= "\n\t.addOption('" .  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $row['0'] . "', " . ($this->_isValueDefaultValue($row['0'], $default_value) ? 'true' : 'false') . ")";
+                $output .= "\n\t.addOption('" .  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $row['0'] . "', " . ($this->_isValueDefaultValue($row['0'], $default_value) ? 'true' : 'false') . ')';
             }
             if ($row['0'] == $default_value) {
                 $isDefaultValuePresent = true;
@@ -311,10 +311,10 @@ class ArtifactFieldHtml extends ArtifactField
             }
 
               $html  = $Language->getText('tracker_include_field', 'start');
-              $html .= $GLOBALS['HTML']->getDatePicker("field_" . $this->field_id, $this->getName(), $date_begin, $size, $maxlength);
-              $html .= "<br />";
+              $html .= $GLOBALS['HTML']->getDatePicker('field_' . $this->field_id, $this->getName(), $date_begin, $size, $maxlength);
+              $html .= '<br />';
               $html .= $Language->getText('tracker_include_field', 'end');
-              $html .= $GLOBALS['HTML']->getDatePicker("field_" . $this->field_id . "_end", $this->getName() . "_end", $date_end, $size, $maxlength);
+              $html .= $GLOBALS['HTML']->getDatePicker('field_' . $this->field_id . '_end', $this->getName() . '_end', $date_end, $size, $maxlength);
         }
 
             return($html);
@@ -363,7 +363,7 @@ class ArtifactFieldHtml extends ArtifactField
         if ($ro) {
             $html = $value;
         } else {
-            $html = $GLOBALS['HTML']->getDatePicker("field_" . $this->field_id, $this->field_name, $value, $size, $maxlength);
+            $html = $GLOBALS['HTML']->getDatePicker('field_' . $this->field_id, $this->field_name, $value, $size, $maxlength);
         }
         return($html);
     }
@@ -386,13 +386,13 @@ class ArtifactFieldHtml extends ArtifactField
         }
 
         $maxlengtharg = ' maxlength="' . (int) $maxlength . '"';
-        if ($maxlength == "") {
-            $maxlengtharg = "";
+        if ($maxlength == '') {
+            $maxlengtharg = '';
         }
 
         $sizearg = ' size="' . (int) $size . '"';
-        if ($size == "") {
-            $sizearg = "";
+        if ($size == '') {
+            $sizearg = '';
         }
 
         $html = '<input type="text"'
@@ -487,7 +487,7 @@ class ArtifactFieldHtml extends ArtifactField
             $text_unchanged = $Language->getText('global', 'unchanged');
         }
 
-        $output = "";
+        $output = '';
 
         if ($label) {
             $output = $this->labelDisplay($break, $ascii, ! $ro);
@@ -585,7 +585,7 @@ class ArtifactFieldHtml extends ArtifactField
                             }
                         }
                     }
-                      $output .= join(",", $arr);
+                      $output .= join(',', $arr);
                     if (! $ascii) {
                         if ($htmlEmail) {
                             //The span is used to pass values id that would be processed in JS as dependency sources' values
@@ -609,7 +609,7 @@ class ArtifactFieldHtml extends ArtifactField
                     // Only show the 'None" label if empty value is allowed or
                     // if value is already none (it can happen if the field was not used in
                     // the artifact submission form)
-                    if ($this->isEmptyOk() || (implode(",", $arr) == "100")) {
+                    if ($this->isEmptyOk() || (implode(',', $arr) == '100')) {
                         $show_none = true;
                         $text_none = $Language->getText('global', 'none');
                     }
@@ -640,18 +640,18 @@ class ArtifactFieldHtml extends ArtifactField
                          $output .= $this->fieldDate($value, false, (strlen($value) + 1), (strlen($value) + 1), 'masschange_form', true);
                 } else {
                       // Default value
-                    if ($value == "") {
+                    if ($value == '') {
                         $value = time();
                     }
                     if ($ascii) {
                 // most date fields (except open_date) are real dates (without time), so do not use $sys_datefmt
                 // any more which can include an hour:min (than set on 00:00 for most dates). Especially in mail_follow_ups
                 // after changing an Artifact
-                        $output .= ( ($value == 0) ? '' : format_date("Y-m-j", $value));
+                        $output .= ( ($value == 0) ? '' : format_date('Y-m-j', $value));
                     } elseif ($ro) {
                         $output .= format_date($GLOBALS['Language']->getText('system', 'datefmt'), $value);
                     } else {
-                        $output .= $this->fieldDate((($value == 0) ? '' : format_date("Y-m-j", $value, '')));
+                        $output .= $this->fieldDate((($value == 0) ? '' : format_date('Y-m-j', $value, '')));
                     }
                 }
                 break;

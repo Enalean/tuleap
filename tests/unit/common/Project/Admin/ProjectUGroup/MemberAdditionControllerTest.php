@@ -126,7 +126,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('isBound')->willReturn(true);
         $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
 
-        $exception_stop_exec_redirect = new \Exception("Redirect");
+        $exception_stop_exec_redirect = new \Exception('Redirect');
         $this->layout->expects(self::once())->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))
             ->willThrowException($exception_stop_exec_redirect);
 
@@ -155,7 +155,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->method('findUser')->with('danton')->willReturn(null);
 
         $this->layout->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR, self::anything());
-        $exception_stop_exec_redirect = new \Exception("Redirect");
+        $exception_stop_exec_redirect = new \Exception('Redirect');
         $this->layout->expects(self::once())->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))
             ->willThrowException($exception_stop_exec_redirect);
 

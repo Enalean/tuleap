@@ -64,7 +64,7 @@ class InviteBuddyAdminController implements DispatchableWithRequest, Dispatchabl
         }
 
         $this->admin_page_renderer->renderANoFramedPresenter(
-            _("Invitations"),
+            _('Invitations'),
             realpath(__DIR__ . '/../../../templates/admin/invitations'),
             'invitations',
             [

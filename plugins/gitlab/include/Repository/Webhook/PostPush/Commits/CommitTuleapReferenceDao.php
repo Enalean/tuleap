@@ -66,7 +66,7 @@ class CommitTuleapReferenceDao extends DataAccessObject
      */
     public function searchCommitInRepositoryWithSha1(int $integration, string $commit_sha1): ?array
     {
-        $sql = "
+        $sql = '
             SELECT LOWER(HEX(commit_sha1)) as commit_sha1,
                    commit_date,
                    commit_title,
@@ -76,7 +76,7 @@ class CommitTuleapReferenceDao extends DataAccessObject
             FROM plugin_gitlab_repository_integration_commit_info
             WHERE integration_id = ?
                 AND commit_sha1 = UNHEX(?)
-        ";
+        ';
 
         return $this->getDB()->row($sql, $integration, $commit_sha1);
     }

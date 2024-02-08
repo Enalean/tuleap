@@ -47,8 +47,8 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
 
         $homepage_service = $project->getService(Service::HOMEPAGE);
         if ($homepage_service !== null) {
-            $html .= "<p><a ";
-            if (substr($homepage_service->getUrl(), 0, 1) != "/") {
+            $html .= '<p><a ';
+            if (substr($homepage_service->getUrl(), 0, 1) != '/') {
                 // Absolute link -> open new window on click
                 $html .= 'target="_blank" rel="noreferrer" ';
             }
@@ -65,15 +65,15 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
             $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($service_forum->getIcon()) . '"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'public_forums') . '</A>';
 
-            $res_count = db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
-                . "forum_group_list.group_id=" . db_ei($group_id) . " AND forum.group_forum_id=forum_group_list.group_forum_id "
-                . "AND forum_group_list.is_public=1");
+            $res_count = db_query('SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE '
+                . 'forum_group_list.group_id=' . db_ei($group_id) . ' AND forum.group_forum_id=forum_group_list.group_forum_id '
+                . 'AND forum_group_list.is_public=1');
             $row_count = db_fetch_array($res_count);
             $pos       = strpos($project->getForumPage(), '/forum/');
             if ($pos === 0) {
                 $html     .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'msg', $row_count['count']) . ' ';
-                $res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=" . db_ei($group_id) . " "
-                . "AND is_public=1");
+                $res_count = db_query('SELECT count(*) AS count FROM forum_group_list WHERE group_id=' . db_ei($group_id) . ' '
+                . 'AND is_public=1');
                 $row_count = db_fetch_array($res_count);
                 $html     .= $GLOBALS['Language']->getText('include_project_home', 'forums', $row_count['count']) . " )\n";
             }
@@ -167,11 +167,11 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
 
             $host = \Tuleap\ServerHostname::rawHostname();
             if (ForgeConfig::get('sys_disable_subdomains')) {
-                $ftp_subdomain = "";
+                $ftp_subdomain = '';
             } else {
-                $ftp_subdomain = $project->getUnixName() . ".";
+                $ftp_subdomain = $project->getUnixName() . '.';
             }
-            $html .= "<a href=\"ftp://" . $ftp_subdomain . $host . "/pub/" . urlencode($project->getUnixName(false)) . "/\">";    // keep the first occurence in lower case
+            $html .= '<a href="ftp://' . $ftp_subdomain . $host . '/pub/' . urlencode($project->getUnixName(false)) . '/">';    // keep the first occurence in lower case
             $html .= '<i class="dashboard-widget-content-projectpublicareas fa fa-tlp-folder-globe"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'anon_ftp_space') . '</a>';
             $html .= '</p>';

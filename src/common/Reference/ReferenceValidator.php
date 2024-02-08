@@ -24,7 +24,7 @@ use ReferenceDao;
 
 class ReferenceValidator
 {
-    public const REFERENCE_PATTERN = "^[a-z0-9_]+$";
+    public const REFERENCE_PATTERN = '^[a-z0-9_]+$';
     /**
      * @var ReferenceDao
      */

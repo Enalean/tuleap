@@ -35,7 +35,7 @@ class b201903121003_add_upload_version_table_approval_column extends ForgeUpgrad
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_docman_new_version_upload ADD COLUMN approval_table_action VARCHAR(6) NULL";
+        $sql = 'ALTER TABLE plugin_docman_new_version_upload ADD COLUMN approval_table_action VARCHAR(6) NULL';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

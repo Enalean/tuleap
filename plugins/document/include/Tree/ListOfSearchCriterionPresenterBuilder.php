@@ -175,16 +175,16 @@ final class ListOfSearchCriterionPresenterBuilder
     private function getTypeOptions(\Project $project): array
     {
         $type_options = [
-            new SearchCriterionListOptionPresenter("folder", dgettext("tuleap-document", "Folder")),
-            new SearchCriterionListOptionPresenter("file", dgettext("tuleap-document", "File")),
-            new SearchCriterionListOptionPresenter("embedded", dgettext("tuleap-document", "Embedded file")),
+            new SearchCriterionListOptionPresenter('folder', dgettext('tuleap-document', 'Folder')),
+            new SearchCriterionListOptionPresenter('file', dgettext('tuleap-document', 'File')),
+            new SearchCriterionListOptionPresenter('embedded', dgettext('tuleap-document', 'Embedded file')),
         ];
 
         if ($project->usesWiki()) {
-            $type_options[] = new SearchCriterionListOptionPresenter("wiki", "Wiki page");
+            $type_options[] = new SearchCriterionListOptionPresenter('wiki', 'Wiki page');
         }
 
-        $type_options[] = new SearchCriterionListOptionPresenter("empty", "Empty document");
+        $type_options[] = new SearchCriterionListOptionPresenter('empty', 'Empty document');
 
         return $type_options;
     }

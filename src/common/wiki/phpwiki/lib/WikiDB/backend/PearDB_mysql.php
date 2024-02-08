@@ -33,7 +33,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
         // VALUES supported since mysql-3.22.5
         $dbh->query(sprintf(
             "REPLACE INTO $version_tbl"
-                            . " (id,version,mtime,minor_edit,content,versiondata)"
+                            . ' (id,version,mtime,minor_edit,content,versiondata)'
                             . " VALUES(%d,%d,%d,%d,'%s','%s')",
             $id,
             $version,
@@ -62,14 +62,14 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
         if ($pageid) {
             $stmt = " WHERE id=$pageid";
         } else {
-            $stmt = " JOIN wiki_page USING (id) WHERE group_id = " . GROUP_ID;
+            $stmt = ' JOIN wiki_page USING (id) WHERE group_id = ' . GROUP_ID;
         }
         $dbh->query("REPLACE INTO $recent_tbl"
-                    . " (id, latestversion, latestmajor, latestminor)"
+                    . ' (id, latestversion, latestmajor, latestminor)'
                     . " SELECT id, $maxversion, $maxmajor, $maxminor"
                     . " FROM $version_tbl"
                     . $stmt
-                    . " GROUP BY id");
+                    . ' GROUP BY id');
     }
 
     /* ISNULL is mysql specific */
@@ -82,7 +82,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
         }
 
         if ($exclude_from) { // array of pagenames
-            $exclude_from = " AND linked.pagename NOT IN " . $this->_sql_set($exclude_from);
+            $exclude_from = ' AND linked.pagename NOT IN ' . $this->_sql_set($exclude_from);
         }
         if ($exclude) { // array of pagenames
             $exclude = " AND $page_tbl.pagename NOT IN " . $this->_sql_set($exclude);
@@ -130,11 +130,11 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
      */
     public function _lock_tables($write_lock = true)
     {
-        $lock_type = $write_lock ? "WRITE" : "READ";
+        $lock_type = $write_lock ? 'WRITE' : 'READ';
         foreach ($this->_table_names as $table) {
             $tables[] = "$table $lock_type";
         }
-        $this->_dbh->query("LOCK TABLES " . join(",", $tables));
+        $this->_dbh->query('LOCK TABLES ' . join(',', $tables));
     }
 
     /**
@@ -142,7 +142,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
      */
     public function _unlock_tables()
     {
-        $this->_dbh->query("UNLOCK TABLES");
+        $this->_dbh->query('UNLOCK TABLES');
     }
 
     public function increaseHitCount($pagename)
@@ -158,7 +158,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
             $this->_table_names['page_tbl'],
             $dbh->escapeSimple($pagename),
             GROUP_ID,
-            ($this->_serverinfo['version'] >= 323.0) ? "LIMIT 1" : ""
+            ($this->_serverinfo['version'] >= 323.0) ? 'LIMIT 1' : ''
         ));
         return;
     }

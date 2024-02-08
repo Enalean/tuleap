@@ -79,7 +79,7 @@ class WikiDB_SQL extends WikiDB
         }
         if (DB::isError($result)) {
             $msg = $result->getMessage();
-            trigger_error("SQL Error: " . DB::errorMessage($result), E_USER_WARNING);
+            trigger_error('SQL Error: ' . DB::errorMessage($result), E_USER_WARNING);
             return false;
         } else {
             return $result;

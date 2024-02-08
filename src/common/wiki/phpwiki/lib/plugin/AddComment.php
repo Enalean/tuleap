@@ -31,26 +31,26 @@ rcs_id('$Id: AddComment.php,v 1.8 2004/06/13 09:45:23 rurban Exp $');
  * @author: ReiniUrban
  */
 
-include_once("lib/plugin/WikiBlog.php");
+include_once('lib/plugin/WikiBlog.php');
 
 class WikiPlugin_AddComment extends WikiPlugin_WikiBlog
 {
     public function getName()
     {
-        return _("AddComment");
+        return _('AddComment');
     }
 
     public function getDescription()
     {
-        return sprintf(_("Show and add comments for %s"), '[pagename]');
+        return sprintf(_('Show and add comments for %s'), '[pagename]');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.8 $"
+            '$Revision: 1.8 $'
         );
     }
 
@@ -83,17 +83,17 @@ class WikiPlugin_AddComment extends WikiPlugin_WikiBlog
     {
         $args = $this->getArgs($argstr, $request);
         if (! $args['pagename']) {
-            return $this->error(_("No pagename specified"));
+            return $this->error(_('No pagename specified'));
         }
 
         // Get our form args.
-        $comment = $request->getArg("comment");
+        $comment = $request->getArg('comment');
         $request->setArg('comment', false);
 
         if ($request->isPost() and ! empty($comment['addcomment'])) {
             $this->add($request, $comment, 'comment'); // noreturn
         }
-        if ($args['jshide'] and isBrowserIE() and browserDetect("Mac")) {
+        if ($args['jshide'] and isBrowserIE() and browserDetect('Mac')) {
             //trigger_error(_("jshide set to 0 on Mac IE"), E_USER_NOTICE);
             $args['jshide'] = 0;
         }
@@ -109,19 +109,19 @@ function togglecomments(a) {
   comments=document.getElementById('comments');
   if (comments.style.display=='none') {
     comments.style.display='block';
-    a.title='" . _("Click to hide the comments") . "';
+    a.title='" . _('Click to hide the comments') . "';
   } else {
     comments.style.display='none';
-    a.title='" . _("Click to display all comments") . "';
+    a.title='" . _('Click to display all comments') . "';
   }
 }"));
             $html->pushContent(HTML::h4(HTML::a(
                 ['name' => 'comment-header',
                     'class' => 'wikiaction',
-                    'title' => _("Click to display"),
-                    'onclick' => "togglecomments(this)",
+                    'title' => _('Click to display'),
+                    'onclick' => 'togglecomments(this)',
                 ],
-                _("Comments")
+                _('Comments')
             )));
         } else {
             $div = HTML::div(['id' => 'comments']);

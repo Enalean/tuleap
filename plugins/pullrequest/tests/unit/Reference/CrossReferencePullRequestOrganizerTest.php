@@ -109,7 +109,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
-            ->withValue("42")
+            ->withValue('42')
             ->build();
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
@@ -136,7 +136,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
-            ->withValue("42")
+            ->withValue('42')
             ->build();
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
@@ -170,7 +170,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
-            ->withValue("42")
+            ->withValue('42')
             ->build();
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
@@ -204,7 +204,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
-            ->withValue("42")
+            ->withValue('42')
             ->build();
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
@@ -245,7 +245,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
-            ->withValue("42")
+            ->withValue('42')
             ->build();
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
@@ -276,7 +276,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
             ->method('getProject')
             ->willReturn(ProjectTestBuilder::aProject()->withUnixName('peculiar')->build());
 
-        $user_1001 = UserTestBuilder::aUser()->withId(1001)->withAvatarUrl("https://example.com")->build();
+        $user_1001 = UserTestBuilder::aUser()->withId(1001)->withAvatarUrl('https://example.com')->build();
 
         $this->user_manager = RetrieveUserByIdStub::withUser($user_1001);
 
@@ -307,8 +307,8 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
 
     public function getPullRequest(): iterable
     {
-        yield 'With an abandoned pull request' => [PullRequestTestBuilder::anAbandonedPullRequest()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), "Abandonned"];
-        yield 'With a merged pull request' => [PullRequestTestBuilder::aMergedPullRequest()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), "Merged"];
-        yield 'With a pull request in review ' => [PullRequestTestBuilder::aPullRequestInReview()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), "Review"];
+        yield 'With an abandoned pull request' => [PullRequestTestBuilder::anAbandonedPullRequest()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), 'Abandonned'];
+        yield 'With a merged pull request' => [PullRequestTestBuilder::aMergedPullRequest()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), 'Merged'];
+        yield 'With a pull request in review ' => [PullRequestTestBuilder::aPullRequestInReview()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), 'Review'];
     }
 }

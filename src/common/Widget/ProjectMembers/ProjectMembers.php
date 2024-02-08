@@ -44,7 +44,7 @@ class ProjectMembers extends Widget
 
     public function getIcon()
     {
-        return "fa-users";
+        return 'fa-users';
     }
 
     public function getContent()

@@ -45,7 +45,7 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
         $this->dao     = $this->createMock(\ArtifactXMLExporterDao::class);
-        $this->dom     = new DOMDocument("1.0", "UTF8");
+        $this->dom     = new DOMDocument('1.0', 'UTF8');
         $this->archive = new ZipArchive();
         $this->archive->open($this->getTmpDir() . '/a', ZipArchive::CREATE);
         $node_helper              = new ArtifactXMLNodeHelper($this->dom);
@@ -748,17 +748,17 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('string', (string) $this->xml->artifact->changeset[1]->field_change['type']);
         self::assertEquals($this->toExpectedDate(3234567100), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        self::assertEquals("some text", (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('some text', (string) $this->xml->artifact->changeset[2]->field_change->value);
         self::assertEquals('field_15', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
         self::assertEquals('text', (string) $this->xml->artifact->changeset[2]->field_change['type']);
         self::assertEquals($this->toExpectedDate(3234567200), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        self::assertEquals("9001", (string) $this->xml->artifact->changeset[3]->field_change->value);
+        self::assertEquals('9001', (string) $this->xml->artifact->changeset[3]->field_change->value);
         self::assertEquals('field_16', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
         self::assertEquals('int', (string) $this->xml->artifact->changeset[3]->field_change['type']);
         self::assertEquals($this->toExpectedDate(3234567300), (string) $this->xml->artifact->changeset[3]->submitted_on);
 
-        self::assertEquals("66.98", (string) $this->xml->artifact->changeset[4]->field_change->value);
+        self::assertEquals('66.98', (string) $this->xml->artifact->changeset[4]->field_change->value);
         self::assertEquals('field_17', (string) $this->xml->artifact->changeset[4]->field_change['field_name']);
         self::assertEquals('float', (string) $this->xml->artifact->changeset[4]->field_change['type']);
         self::assertEquals($this->toExpectedDate(3234567400), (string) $this->xml->artifact->changeset[4]->submitted_on);

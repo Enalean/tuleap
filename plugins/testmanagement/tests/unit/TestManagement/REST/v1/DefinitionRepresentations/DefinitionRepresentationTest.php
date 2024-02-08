@@ -59,7 +59,7 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
 
         $value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $value->shouldReceive('getText')->andReturn("description");
+        $value->shouldReceive('getText')->andReturn('description');
         $artifact->shouldReceive('getValue')->once()->withArgs([$field, null])->andReturn($value);
 
         $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_STEPS, null);
@@ -68,7 +68,7 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_DESCRIPTION, $field);
 
         $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
-        $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn("description")->once();
+        $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn('description')->once();
         $commonmark_interpreter = \Mockery::mock(ContentInterpretor::class);
         $priority_manager       = $this->createStub(\Tracker_Artifact_PriorityManager::class);
         $priority_manager->method('getGlobalRank')->willReturn(1);
@@ -86,9 +86,9 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        self::assertEquals("description", $representation->description);
+        self::assertEquals('description', $representation->description);
         self::assertEquals([], $representation->steps);
-        self::assertEquals("", $representation->requirement);
+        self::assertEquals('', $representation->requirement);
         self::assertInstanceOf(ArtifactRepresentation::class, $representation->artifact);
     }
 

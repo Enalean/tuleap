@@ -62,7 +62,7 @@ class ArchiveAndDeleteArtifactTask
             $this->event_manager->processEvent(new ArchiveDeletedItemEvent($archive_file_provider));
         } catch (\Exception $exception) {
             $this->logger->error(
-                "Unable to archive the artifact " . $artifact->getId() . ":" . $exception->getMessage(),
+                'Unable to archive the artifact ' . $artifact->getId() . ':' . $exception->getMessage(),
                 ['exception' => $exception]
             );
         } finally {

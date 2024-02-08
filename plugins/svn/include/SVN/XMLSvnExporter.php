@@ -86,14 +86,14 @@ class XMLSvnExporter
 
     public function exportToXml(SimpleXMLElement $xml_content, ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
     {
-        $root_node = $xml_content->addChild("svn");
+        $root_node = $xml_content->addChild('svn');
 
         $repositories = $this->repository_manager->getRepositoriesInProject($this->project);
         foreach ($repositories as $repository) {
             $this->logger->info('dumping ' . $repository->getName());
             $node_repository = $this->dumpRepository($root_node, $repository, $temporary_dump_path_on_filesystem);
 
-            $export_dump_file_name = $repository->getName() . ".svn";
+            $export_dump_file_name = $repository->getName() . '.svn';
             if ($archive->isADirectory() === true) {
                 $archive->addEmptyDir('svn');
             }
@@ -107,9 +107,9 @@ class XMLSvnExporter
     private function dumpNotifications(SimpleXMLElement $node, Repository $repository)
     {
         foreach ($this->mail_notification_manager->getByRepository($repository) as $notification) {
-            $node_notification = $node->addChild("notification");
-            $node_notification->addAttribute("path", $notification->getPath());
-            $node_notification->addAttribute("emails", $notification->getNotifiedMailsAsString());
+            $node_notification = $node->addChild('notification');
+            $node_notification->addAttribute('path', $notification->getPath());
+            $node_notification->addAttribute('emails', $notification->getNotifiedMailsAsString());
         }
     }
 
@@ -117,18 +117,18 @@ class XMLSvnExporter
     {
         $custom_access_file = $this->access_file_reader->readContentBlock($repository);
 
-        $this->cdata_section_factory->insert($node, "access-file", $custom_access_file);
+        $this->cdata_section_factory->insert($node, 'access-file', $custom_access_file);
     }
 
     private function dumpRepository(SimpleXMLElement $node, Repository $repository, $temporary_dump_path_on_filesystem)
     {
-        $node_repository = $node->addChild("repository");
-        $node_repository->addAttribute("name", $repository->getName());
+        $node_repository = $node->addChild('repository');
+        $node_repository->addAttribute('name', $repository->getName());
 
         $this->svn_admin->dumpRepository($repository, $temporary_dump_path_on_filesystem);
         $node_repository->addAttribute(
-            "dump-file",
-            "svn/" . $this->getExportDumpFile($repository)
+            'dump-file',
+            'svn/' . $this->getExportDumpFile($repository)
         );
 
         return $node_repository;
@@ -136,6 +136,6 @@ class XMLSvnExporter
 
     private function getExportDumpFile(Repository $repository)
     {
-        return $repository->getName() . ".svn";
+        return $repository->getName() . '.svn';
     }
 }

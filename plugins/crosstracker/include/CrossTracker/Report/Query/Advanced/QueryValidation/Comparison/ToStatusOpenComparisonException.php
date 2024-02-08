@@ -28,7 +28,7 @@ final class ToStatusOpenComparisonException extends InvalidQueryException
     public function __construct(Metadata $metadata)
     {
         $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s cannot be compared to OPEN()."),
+            dgettext('tuleap-crosstracker', '%s cannot be compared to OPEN().'),
             $metadata->getName()
         );
         parent::__construct($message);

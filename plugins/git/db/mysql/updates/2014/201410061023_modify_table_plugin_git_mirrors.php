@@ -34,8 +34,8 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git_mirrors
-            DROP COLUMN ssh_key";
+        $sql = 'ALTER TABLE plugin_git_mirrors
+            DROP COLUMN ssh_key';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

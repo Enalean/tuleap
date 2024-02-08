@@ -38,11 +38,11 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_agiledashboard_configuration (
+        $sql = 'CREATE TABLE plugin_agiledashboard_configuration (
                     project_id INT(11) PRIMARY KEY,
                     scrum TINYINT NOT NULL DEFAULT 1,
                     kanban TINYINT NOT NULL
-                )";
+                )';
 
         $this->db->createTable('plugin_agiledashboard_configuration', $sql);
 
@@ -59,7 +59,7 @@ EOT;
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding values in table plugin_agiledashboard_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
-        $sql = "DROP TABLE plugin_agiledashboard_kanban";
+        $sql = 'DROP TABLE plugin_agiledashboard_kanban';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

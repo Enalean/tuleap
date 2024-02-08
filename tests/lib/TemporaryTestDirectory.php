@@ -79,8 +79,8 @@ trait TemporaryTestDirectory
             return;
         }
         while (($file = readdir($d)) !== false) {
-            if ($file !== "." && $file !== "..") {
-                $typepath = $mypath . "/" . $file;
+            if ($file !== '.' && $file !== '..') {
+                $typepath = $mypath . '/' . $file;
 
                 if (is_file($typepath) || is_link($typepath)) {
                     unlink($typepath);

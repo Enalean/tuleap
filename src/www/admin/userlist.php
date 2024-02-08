@@ -62,25 +62,25 @@ function get_sort_values($previous_sort_header, $current_sort_header, $sort_orde
         'status_icon'    => '',
         'order'          => 'DESC',
     ];
-    $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-down";
+    $sort_order_hash[$current_sort_header . '_icon'] = 'fa fa-caret-down';
 
     if ($offset === 0) {
         if ($previous_sort_header === $current_sort_header) {
-            if ($sort_order === "ASC") {
-                $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-down";
-                $sort_order_hash["order"]                        = "DESC";
+            if ($sort_order === 'ASC') {
+                $sort_order_hash[$current_sort_header . '_icon'] = 'fa fa-caret-down';
+                $sort_order_hash['order']                        = 'DESC';
             } else {
-                $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-up";
-                $sort_order_hash["order"]                        = "ASC";
+                $sort_order_hash[$current_sort_header . '_icon'] = 'fa fa-caret-up';
+                $sort_order_hash['order']                        = 'ASC';
             }
         }
     } else {
-        if ($sort_order === "ASC") {
-            $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-down";
-            $sort_order_hash["order"]                        = "DESC";
+        if ($sort_order === 'ASC') {
+            $sort_order_hash[$current_sort_header . '_icon'] = 'fa fa-caret-down';
+            $sort_order_hash['order']                        = 'DESC';
         } else {
-            $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-up";
-            $sort_order_hash["order"]                        = "ASC";
+            $sort_order_hash[$current_sort_header . '_icon'] = 'fa fa-caret-up';
+            $sort_order_hash['order']                        = 'ASC';
         }
     }
     return $sort_order_hash;
@@ -107,7 +107,7 @@ if ($request->exist('export')) {
     if ($request->exist('status_values')) {
         $status_submitted = $request->get('status_values');
         foreach ($status_submitted as $status) {
-            if ($status != "ANY") {
+            if ($status != 'ANY') {
                 $status_values[] = $status;
             }
         }
@@ -166,16 +166,16 @@ if ($request->valid($vGroupId)) {
 
 $sort_params   = get_sort_values($previous_sort_header, $current_sort_header, $sort_order, $offset);
 $status_values = [];
-$anySelect     = "selected";
+$anySelect     = 'selected';
 if ($request->exist('status_values')) {
     $status_values = $request->get('status_values');
     if (! is_array($status_values)) {
-        $status_values = explode(",", $status_values);
+        $status_values = explode(',', $status_values);
     }
     if (in_array('ANY', $status_values)) {
         $status_values = [];
     } else {
-        $anySelect = "";
+        $anySelect = '';
     }
 }
 

@@ -99,7 +99,7 @@ class AdminController
 
     private function generateToken(Project $project, Repository $repository)
     {
-        return new CSRFSynchronizerToken(SVN_BASE_URL . "/?group_id=" . $project->getid() . '&repo_id=' . $repository->getId() . "&action=display-mail-notification");
+        return new CSRFSynchronizerToken(SVN_BASE_URL . '/?group_id=' . $project->getid() . '&repo_id=' . $repository->getId() . '&action=display-mail-notification');
     }
 
     public function displayMailNotification(ServiceSvn $service, HTTPRequest $request): void
@@ -137,7 +137,7 @@ class AdminController
         $token = $this->generateToken($request->getProject(), $repository);
         $token->check();
 
-        $repo_name = $request->get("form_mailing_header");
+        $repo_name = $request->get('form_mailing_header');
         $vHeader   = new Valid_String('form_mailing_header');
         if ($request->valid($vHeader)) {
             $mail_header = new MailHeader($repository, $repo_name);
@@ -369,8 +369,8 @@ class AdminController
     {
         $repository  = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
         $hook_config = [
-            HookConfig::MANDATORY_REFERENCE => (bool) $request->get("pre_commit_must_contain_reference"),
-            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => (bool) $request->get("allow_commit_message_changes"),
+            HookConfig::MANDATORY_REFERENCE => (bool) $request->get('pre_commit_must_contain_reference'),
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => (bool) $request->get('allow_commit_message_changes'),
         ];
         $this->hook_config_updator->updateHookConfig($repository, $hook_config);
 

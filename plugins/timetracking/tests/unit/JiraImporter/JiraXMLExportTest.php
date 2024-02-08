@@ -88,12 +88,12 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
                     18000,
                     new ActiveJiraCloudUser(
                         [
-                            "accountId"    => "whatever123",
-                            "emailAddress" => "whatever@example.com",
-                            "displayName"  => "What Ever",
+                            'accountId'    => 'whatever123',
+                            'emailAddress' => 'whatever@example.com',
+                            'displayName'  => 'What Ever',
                         ]
                     ),
-                    "content 01 content 02"
+                    'content 01 content 02'
                 ),
             ]);
 
@@ -115,11 +115,11 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTimetrackingConfiguration($xml_tracker);
 
         self::assertTrue(isset($xml_tracker->timetracking->time));
-        self::assertSame("2021-02-08T19:06:41+01:00", (string) $xml_tracker->timetracking->time->day);
-        self::assertSame("300", (string) $xml_tracker->timetracking->time->minutes);
-        self::assertSame("user_time", (string) $xml_tracker->timetracking->time->user);
-        self::assertSame("username", (string) $xml_tracker->timetracking->time->user['format']);
-        self::assertSame("content 01 content 02", (string) $xml_tracker->timetracking->time->step);
+        self::assertSame('2021-02-08T19:06:41+01:00', (string) $xml_tracker->timetracking->time->day);
+        self::assertSame('300', (string) $xml_tracker->timetracking->time->minutes);
+        self::assertSame('user_time', (string) $xml_tracker->timetracking->time->user);
+        self::assertSame('username', (string) $xml_tracker->timetracking->time->user['format']);
+        self::assertSame('content 01 content 02', (string) $xml_tracker->timetracking->time->step);
     }
 
     public function testItOnlyEnablesTimetrackingConfigurationIfProviderIsNotKnown(): void
@@ -144,12 +144,12 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
     private function assertTimetrackingConfiguration(SimpleXMLElement $xml_tracker): void
     {
         self::assertTrue(isset($xml_tracker->timetracking));
-        self::assertSame("1", (string) $xml_tracker->timetracking['is_enabled']);
+        self::assertSame('1', (string) $xml_tracker->timetracking['is_enabled']);
 
         self::assertTrue(isset($xml_tracker->timetracking->permissions));
         self::assertTrue(isset($xml_tracker->timetracking->permissions->write));
         self::assertCount(1, $xml_tracker->timetracking->permissions->write->children());
-        self::assertSame("project_members", (string) $xml_tracker->timetracking->permissions->write->ugroup);
+        self::assertSame('project_members', (string) $xml_tracker->timetracking->permissions->write->ugroup);
 
         self::assertFalse(isset($xml_tracker->timetracking->permissions->read));
     }

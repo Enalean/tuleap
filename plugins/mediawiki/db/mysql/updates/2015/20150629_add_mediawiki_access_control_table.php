@@ -47,13 +47,13 @@ EOT;
      */
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_mediawiki_access_control (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_mediawiki_access_control (
                 id INT(11) AUTO_INCREMENT PRIMARY KEY,
                 project_id INT(11) NOT NULL,
                 access VARCHAR(30),
                 ugroup_id INT(11) NOT NULL,
                 INDEX plugin_mediawiki_access_control_idx(project_id, access)
-            ) ENGINE=InnoDB";
+            ) ENGINE=InnoDB';
 
         $this->execDB($sql, 'An error occured while adding plugin_mediawiki_access_control table: ');
     }

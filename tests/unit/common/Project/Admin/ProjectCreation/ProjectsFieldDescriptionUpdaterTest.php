@@ -60,7 +60,7 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $layout->expects(self::once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
         $layout->expects(self::once())->method('redirect');
 
-        $this->updater->updateDescription("1", null, $layout);
+        $this->updater->updateDescription('1', null, $layout);
     }
 
     public function testItMakesCustomFieldDescriptionRequired(): void
@@ -71,7 +71,7 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $layout->expects(self::once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
         $layout->expects(self::once())->method('redirect');
 
-        $this->updater->updateDescription(null, "1", $layout);
+        $this->updater->updateDescription(null, '1', $layout);
     }
 
     public function testItProjectDescriptionFieldOptional(): void

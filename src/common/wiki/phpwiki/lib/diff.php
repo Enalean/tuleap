@@ -58,7 +58,7 @@ class _HWLDF_WordAccumulator
                 continue;
             }
             if ($word[0] == "\n") {
-                $this->_group .= " ";
+                $this->_group .= ' ';
                 $this->_flushLine($tag);
                 $word = substr($word, 1);
             }
@@ -277,7 +277,7 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
             $prefix = HTML::raw('&nbsp;');
         }
         $prefix = HTML::td(['class' => 'prefix',
-            'width' => "1%",
+            'width' => '1%',
         ], $prefix);
         foreach ($lines as $line) {
             if (! trim($line)) {
@@ -323,7 +323,7 @@ function PageInfoRow($label, $rev, &$request, $is_current = false)
             );
         }
         $row->pushContent(
-            HTML::td(fmt("version %s", $linked_version)),
+            HTML::td(fmt('version %s', $linked_version)),
             HTML::td($WikiTheme->getLastModifiedMessage(
                 $rev,
                 false
@@ -332,7 +332,7 @@ function PageInfoRow($label, $rev, &$request, $is_current = false)
             HTML::td($revertbutton)
         );
     } else {
-        $row->pushContent(HTML::td(['colspan' => '4'], _("None")));
+        $row->pushContent(HTML::td(['colspan' => '4'], _('None')));
     }
     return $row;
 }
@@ -362,7 +362,7 @@ function showDiff(&$request)
             ))
         );
         include_once('lib/Template.php');
-        GeneratePage($html, sprintf(_("Diff: %s"), $pagename), false);
+        GeneratePage($html, sprintf(_('Diff: %s'), $pagename), false);
         return; //early return
     }
 
@@ -370,17 +370,17 @@ function showDiff(&$request)
         if (! ($new = $page->getRevision($version))) {
             NoSuchRevision($request, $page, $version);
         }
-        $new_version = fmt("version %d", $version);
+        $new_version = fmt('version %d', $version);
     } else {
         $new         = $current;
-        $new_version = _("current version");
+        $new_version = _('current version');
     }
 
     if (preg_match('/^\d+$/', $previous)) {
         if (! ($old = $page->getRevision($previous))) {
             NoSuchRevision($request, $page, $previous);
         }
-        $old_version = fmt("version %d", $previous);
+        $old_version = fmt('version %d', $previous);
         $others      = ['major', 'minor', 'author'];
     } else {
         switch ($previous) {
@@ -391,13 +391,13 @@ function showDiff(&$request)
                         break;
                     }
                 }
-                $old_version = _("revision by previous author");
+                $old_version = _('revision by previous author');
                 $others      = ['major', 'minor'];
                 break;
             case 'minor':
                 $previous    = 'minor';
                 $old         = $page->getRevisionBefore($new);
-                $old_version = _("previous revision");
+                $old_version = _('previous revision');
                 $others      = ['major', 'author'];
                 break;
             case 'major':
@@ -409,7 +409,7 @@ function showDiff(&$request)
                 if ($old) {
                     $old = $page->getRevisionBefore($old);
                 }
-                $old_version = _("predecessor to the previous major change");
+                $old_version = _('predecessor to the previous major change');
                 $others      = ['minor', 'author'];
                 break;
         }
@@ -422,17 +422,17 @@ function showDiff(&$request)
     $html = HTML::div(
         ['id' => 'content'],
         HTML::p(fmt(
-            "Differences between %s and %s of %s.",
+            'Differences between %s and %s of %s.',
             $new_link,
             $old_link,
             $page_link
         ))
     );
 
-    $otherdiffs = HTML::p(_("Other diffs:"));
-    $label      = ['major' => _("Previous Major Revision"),
-        'minor' => _("Previous Revision"),
-        'author' => _("Previous Author"),
+    $otherdiffs = HTML::p(_('Other diffs:'));
+    $label      = ['major' => _('Previous Major Revision'),
+        'minor' => _('Previous Revision'),
+        'author' => _('Previous Author'),
     ];
     foreach ($others as $other) {
         $args = ['action' => 'diff', 'previous' => $other];
@@ -440,9 +440,9 @@ function showDiff(&$request)
             $args['version'] = $version;
         }
         if (count($otherdiffs->getContent()) > 1) {
-            $otherdiffs->pushContent(", ");
+            $otherdiffs->pushContent(', ');
         } else {
-            $otherdiffs->pushContent(" ");
+            $otherdiffs->pushContent(' ');
         }
         $otherdiffs->pushContent(Button($args, $label[$other]));
     }
@@ -454,13 +454,13 @@ function showDiff(&$request)
 
     $html->pushContent(HTML::Table(
         PageInfoRow(
-            _("Newer page:"),
+            _('Newer page:'),
             $new,
             $request,
             empty($version)
         ),
         PageInfoRow(
-            _("Older page:"),
+            _('Older page:'),
             $old,
             $request,
             false
@@ -475,7 +475,7 @@ function showDiff(&$request)
                 HTML::hr(),
                 HTML::p(
                     '[',
-                    _("Versions are identical"),
+                    _('Versions are identical'),
                     ']'
                 )
             );
@@ -490,7 +490,7 @@ function showDiff(&$request)
     }
 
     include_once('lib/Template.php');
-    GeneratePage($html, sprintf(_("Diff: %s"), $pagename), $new);
+    GeneratePage($html, sprintf(_('Diff: %s'), $pagename), $new);
 }
 
 // $Log: diff.php,v $

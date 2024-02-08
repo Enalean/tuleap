@@ -35,7 +35,7 @@ class ArtifactMoveButtonPresenter
      */
     public function __construct(public string $label, private readonly array $errors)
     {
-        $this->errors_content = implode(" ", $errors);
+        $this->errors_content = implode(' ', $errors);
     }
 
     public function hasError(): bool

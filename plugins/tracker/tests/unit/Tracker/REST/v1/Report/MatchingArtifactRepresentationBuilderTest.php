@@ -67,7 +67,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $this->table_renderer_retriever = $this->createMock(TableRendererForReportRetriever::class);
         $this->used_fields_retriever    = $this->createMock(UsedFieldsRetriever::class);
         $color_provider                 = $this->createMock(StatusColorForChangesetProvider::class);
-        $color_provider->method('provideColor')->willReturn("flamingo-pink");
+        $color_provider->method('provideColor')->willReturn('flamingo-pink');
 
         $this->representation_builder = new MatchingArtifactRepresentationBuilder(
             $this->report_artifact_factory,
@@ -87,11 +87,11 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
             'group_id' => 101,
             'group_name' => 'Project 1',
             'unix_group_name' => 'project_1',
-            'icon_codepoint' => "",
+            'icon_codepoint' => '',
         ]);
 
         $tracker->method('getId')->willReturn(52);
-        $tracker->method('getName')->willReturn("Tracker01");
+        $tracker->method('getName')->willReturn('Tracker01');
         $tracker->method('getColor')->willReturn(TrackerColor::default());
         $tracker->method('getProject')->willReturn($project);
 
@@ -100,8 +100,8 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $renderer_table = new Tracker_Report_Renderer_Table(
             1,
             $report,
-            "Table",
-            "Table desc",
+            'Table',
+            'Table desc',
             0,
             1,
             false
@@ -172,7 +172,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
 
         $submitter_user = UserTestBuilder::aUser()
             ->withId(245)
-            ->withUserName("user_02")
+            ->withUserName('user_02')
             ->withRealName('User 02')
             ->build();
         $artifact->method('getSubmittedBy')->willReturn(245);
@@ -180,9 +180,9 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $artifact->method('getSubmittedOn')->willReturn(1646007489);
         $artifact->method('getUri')->willReturn('uri');
         $artifact->method('getLastUpdateDate')->willReturn(1647007489);
-        $artifact->method('getStatus')->willReturn("");
+        $artifact->method('getStatus')->willReturn('');
         $artifact->method('isOpen')->willReturn(false);
-        $artifact->method('getTitle')->willReturn("Artifact 01");
+        $artifact->method('getTitle')->willReturn('Artifact 01');
 
         $artifact_representations = $this->representation_builder->buildMatchingArtifactRepresentationCollection(
             $user,
@@ -230,8 +230,8 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $renderer_table_01 = new Tracker_Report_Renderer_Table(
             1,
             $report,
-            "Table 01",
-            "Table 01 desc",
+            'Table 01',
+            'Table 01 desc',
             0,
             1,
             false
@@ -240,8 +240,8 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $renderer_table_02 = new Tracker_Report_Renderer_Table(
             2,
             $report,
-            "Table 02",
-            "Table 02 desc",
+            'Table 02',
+            'Table 02 desc',
             1,
             1,
             false

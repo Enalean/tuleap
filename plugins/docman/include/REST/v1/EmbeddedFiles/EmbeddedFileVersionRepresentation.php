@@ -76,7 +76,7 @@ final class EmbeddedFileVersionRepresentation
     ) {
         $this->id            = $id;
         $this->number        = $number;
-        $this->name          = ($label) ?: "";
+        $this->name          = ($label) ?: '';
         $this->author        = $author;
         $this->date          = $date;
         $this->changelog     = $changelog;

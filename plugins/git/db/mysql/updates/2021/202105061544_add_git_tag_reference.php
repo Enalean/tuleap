@@ -51,8 +51,8 @@ VALUES (33, 'git_tag', 'plugin_git:reference_tag_desc_key', '/plugins/git/index.
 
     private function addReferenceInProjects(): void
     {
-        $sql = "INSERT INTO reference_group (reference_id, group_id, is_active)
-                SELECT 33, group_id, 1 FROM `groups` WHERE group_id";
+        $sql = 'INSERT INTO reference_group (reference_id, group_id, is_active)
+                SELECT 33, group_id, 1 FROM `groups` WHERE group_id';
 
         $this->executeSql($sql);
     }

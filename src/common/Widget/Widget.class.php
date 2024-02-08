@@ -226,7 +226,7 @@ use Tuleap\Project\MappingRegistry;
      */
     public function getIcon()
     {
-        return "";
+        return '';
     }
 
     public function canBeAddedFromWidgetList()

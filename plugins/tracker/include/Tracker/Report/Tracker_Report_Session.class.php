@@ -60,7 +60,7 @@ class Tracker_Report_Session extends Codendi_Session
     {
         $previous_session_namespace_path = $this->getSessionNamespacePath();
         //going up to session root
-        $this->changeSessionNamespace(".");
+        $this->changeSessionNamespace('.');
         $report = $this->get("trackers.reports.$id");
         //copy
         $report_copy = $report;

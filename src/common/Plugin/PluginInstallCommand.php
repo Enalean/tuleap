@@ -45,7 +45,7 @@ final class PluginInstallCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription("Install and activate plugins with their dependencies")
+        $this->setDescription('Install and activate plugins with their dependencies')
             ->addOption('all', '', InputOption::VALUE_NONE, 'Install all plugins')
             ->addArgument('plugins', InputArgument::IS_ARRAY, 'List of plugins (space separated)');
     }
@@ -80,6 +80,6 @@ final class PluginInstallCommand extends Command
     {
         $output->write("Install $plugin_name...");
         $this->plugin_manager->installAndEnable($plugin_name);
-        $output->writeln("[OK]");
+        $output->writeln('[OK]');
     }
 }

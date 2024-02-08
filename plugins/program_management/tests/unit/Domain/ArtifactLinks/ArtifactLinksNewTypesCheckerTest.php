@@ -73,7 +73,7 @@ final class ArtifactLinksNewTypesCheckerTest extends TestCase
         );
 
         $provided_links = [
-            [self::LINKED_ARTIFACT_ID => "whatever"],
+            [self::LINKED_ARTIFACT_ID => 'whatever'],
         ];
         $event          = ProvidedArtifactLinksTypesEventStub::withData(
             self::ARTIFACT_ID,
@@ -91,7 +91,7 @@ final class ArtifactLinksNewTypesCheckerTest extends TestCase
         );
 
         $provided_links = [
-            [self::LINKED_ARTIFACT_ID => "whatever"],
+            [self::LINKED_ARTIFACT_ID => 'whatever'],
         ];
         $event          = ProvidedArtifactLinksTypesEventStub::withData(
             self::ARTIFACT_ID,

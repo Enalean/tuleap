@@ -115,7 +115,7 @@ class ProjectMilestonesWidgetRetriever
     public function getJavascriptDependencies(): array
     {
         return [
-            new JavascriptViteAsset($this->getAssets(), "src/index.ts"),
+            new JavascriptViteAsset($this->getAssets(), 'src/index.ts'),
         ];
     }
 

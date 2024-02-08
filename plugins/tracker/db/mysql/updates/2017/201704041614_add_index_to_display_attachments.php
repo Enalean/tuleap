@@ -20,7 +20,7 @@ class b201704041614_add_index_to_display_attachments extends \Tuleap\ForgeUpgrad
 {
     public function description()
     {
-        return "Add index to display attachment information in changesets";
+        return 'Add index to display attachment information in changesets';
     }
 
     public function preUp()
@@ -35,10 +35,10 @@ class b201704041614_add_index_to_display_attachments extends \Tuleap\ForgeUpgrad
 
     private function updateTable()
     {
-        $sql = "
+        $sql = '
             ALTER TABLE tracker_changeset_value_file
             ADD INDEX reverse_idx (fileinfo_id, changeset_value_id)
-        ";
+        ';
 
         $this->addIndex('tracker_changeset_value_file', 'reverse_idx', $sql);
     }

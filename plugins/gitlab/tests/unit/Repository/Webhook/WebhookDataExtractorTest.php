@@ -82,8 +82,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '{}'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Whatever Hook"
+            'X-Gitlab-Event',
+            'Whatever Hook'
         );
 
         $this->expectException(EventNotAllowedException::class);
@@ -100,8 +100,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '{}'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Push Hook"
+            'X-Gitlab-Event',
+            'Push Hook'
         );
 
         $this->expectException(MissingKeyException::class);
@@ -118,8 +118,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '{"project":{}}'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Push Hook"
+            'X-Gitlab-Event',
+            'Push Hook'
         );
 
         $this->expectException(MissingKeyException::class);
@@ -136,8 +136,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '{"project":{}}'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Merge Request Hook"
+            'X-Gitlab-Event',
+            'Merge Request Hook'
         );
 
         $this->expectException(MissingKeyException::class);
@@ -154,8 +154,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '{"project":{}}'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Tag Push Hook"
+            'X-Gitlab-Event',
+            'Tag Push Hook'
         );
 
         $this->expectException(MissingKeyException::class);
@@ -172,8 +172,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '{"project":{"id": 123456}, "commits": []}'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Push Hook"
+            'X-Gitlab-Event',
+            'Push Hook'
         );
 
         $this->expectException(MissingKeyException::class);
@@ -190,8 +190,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '{"project":{"id": 123456}, "commits": []}'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Merge Request Hook"
+            'X-Gitlab-Event',
+            'Merge Request Hook'
         );
 
         $this->expectException(MissingKeyException::class);
@@ -208,8 +208,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '{"project":{"id": 123456}, "commits": []}'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Tag Push Hook"
+            'X-Gitlab-Event',
+            'Tag Push Hook'
         );
 
         $this->expectException(MissingKeyException::class);
@@ -223,8 +223,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->logger
             ->expects(self::once())
-            ->method("info")
-            ->with("|_ Webhook of type Push Hook received.");
+            ->method('info')
+            ->with('|_ Webhook of type Push Hook received.');
 
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
@@ -257,17 +257,17 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 }'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Push Hook"
+            'X-Gitlab-Event',
+            'Push Hook'
         );
 
         $webhook_data = $this->extractor->retrieveWebhookData(
             $request
         );
 
-        self::assertSame("Push Hook", $webhook_data->getEventName());
+        self::assertSame('Push Hook', $webhook_data->getEventName());
         self::assertSame(123456, $webhook_data->getGitlabProjectId());
-        self::assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
+        self::assertSame('https://example.com/path/repo01', $webhook_data->getGitlabWebUrl());
         self::assertInstanceOf(PostPushWebhookData::class, $webhook_data);
         self::assertCount(2, $webhook_data->getCommits());
     }
@@ -276,8 +276,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->logger
             ->expects(self::once())
-            ->method("info")
-            ->with("|_ Webhook of type Merge Request Hook received.");
+            ->method('info')
+            ->with('|_ Webhook of type Merge Request Hook received.');
 
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
@@ -294,29 +294,29 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 }'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Merge Request Hook"
+            'X-Gitlab-Event',
+            'Merge Request Hook'
         );
 
         $webhook_data = $this->extractor->retrieveWebhookData(
             $request
         );
 
-        self::assertSame("Merge Request Hook", $webhook_data->getEventName());
+        self::assertSame('Merge Request Hook', $webhook_data->getEventName());
         self::assertSame(123456, $webhook_data->getGitlabProjectId());
-        self::assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
+        self::assertSame('https://example.com/path/repo01', $webhook_data->getGitlabWebUrl());
         self::assertInstanceOf(PostMergeRequestWebhookData::class, $webhook_data);
         self::assertSame(2, $webhook_data->getMergeRequestId());
-        self::assertSame("My Title", $webhook_data->getTitle());
-        self::assertSame("My Description", $webhook_data->getDescription());
+        self::assertSame('My Title', $webhook_data->getTitle());
+        self::assertSame('My Description', $webhook_data->getDescription());
     }
 
     public function testItRetrievesTagPushRequestWebhookData(): void
     {
         $this->logger
             ->expects(self::once())
-            ->method("info")
-            ->with("|_ Webhook of type Tag Push Hook received.");
+            ->method('info')
+            ->with('|_ Webhook of type Tag Push Hook received.');
 
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
@@ -327,18 +327,18 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 }'
             )
         )->withHeader(
-            "X-Gitlab-Event",
-            "Tag Push Hook"
+            'X-Gitlab-Event',
+            'Tag Push Hook'
         );
 
         $webhook_data = $this->extractor->retrieveWebhookData(
             $request
         );
 
-        self::assertSame("Tag Push Hook", $webhook_data->getEventName());
+        self::assertSame('Tag Push Hook', $webhook_data->getEventName());
         self::assertSame(123456, $webhook_data->getGitlabProjectId());
-        self::assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
+        self::assertSame('https://example.com/path/repo01', $webhook_data->getGitlabWebUrl());
         self::assertInstanceOf(TagPushWebhookData::class, $webhook_data);
-        self::assertSame("refs/tags/v1.0", $webhook_data->getRef());
+        self::assertSame('refs/tags/v1.0', $webhook_data->getRef());
     }
 }

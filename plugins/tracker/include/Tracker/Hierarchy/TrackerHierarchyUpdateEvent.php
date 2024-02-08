@@ -30,7 +30,7 @@ class TrackerHierarchyUpdateEvent implements Dispatchable
     public const NAME = 'trackerHierarchyUpdateEvent';
 
     private bool $hierarchy_can_be_updated = true;
-    private string $error_message          = "";
+    private string $error_message          = '';
 
     /**
      * @param int[] $children_trackers_ids

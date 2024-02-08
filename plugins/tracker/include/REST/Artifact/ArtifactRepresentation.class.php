@@ -182,7 +182,7 @@ class ArtifactRepresentation
         }
 
         $status_representation = $status_value_representation;
-        if ($status_value_representation->value === "") {
+        if ($status_value_representation->value === '') {
             $status_representation = null;
         }
 

@@ -41,7 +41,7 @@ final class ModalDisplayerTest extends TestCase
     public function testItReturnsTrueWhenAFilenamePatternExists(): void
     {
         $changelog_modal_displayer = new ModalDisplayer(
-            FilenamePatternRetrieverStub::buildWithPattern("\${TITLE}-Andale"),
+            FilenamePatternRetrieverStub::buildWithPattern('${TITLE}-Andale'),
             new HistoryEnforcementSettings(false)
         );
 

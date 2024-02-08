@@ -22,8 +22,8 @@
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 
-header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
-header("Cache-Control: no-cache, no-store, must-revalidate");
+header('Expires: Wed, 11 Nov 1998 11:11:11 GMT');
+header('Cache-Control: no-cache, no-store, must-revalidate');
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';

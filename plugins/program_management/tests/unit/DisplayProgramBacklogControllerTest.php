@@ -187,7 +187,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
             $verify_is_team,
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             VerifyUserCanSubmitStub::userCanSubmit(),
-            RetrieveIterationLabelsStub::buildLabels("iteration", "iteration"),
+            RetrieveIterationLabelsStub::buildLabels('iteration', 'iteration'),
             RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withDefaults())
         );
     }

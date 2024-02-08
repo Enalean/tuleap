@@ -52,13 +52,13 @@ final class CrossTrackerReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotThrowsAnExceptionWhenTrackerIsNotFound(): void
     {
         $this->report_dao->method('searchReportById')->willReturn(
-            ["id" => 1, "expert_query" => ""]
+            ['id' => 1, 'expert_query' => '']
         );
 
         $this->report_dao->method('searchReportTrackersById')->willReturn(
             [
-                ["tracker_id" => 1],
-                ["tracker_id" => 2],
+                ['tracker_id' => 1],
+                ['tracker_id' => 2],
             ]
         );
 

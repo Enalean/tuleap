@@ -43,7 +43,7 @@ class ExecutionDao extends DataAccessObject
      */
     public function searchDefinitionChangesetIdForExecution(int $executions_id)
     {
-        $sql = "SELECT definition_changeset_id FROM plugin_testmanagement_execution WHERE execution_artifact_id = ?";
+        $sql = 'SELECT definition_changeset_id FROM plugin_testmanagement_execution WHERE execution_artifact_id = ?';
         return $this->getDB()->single(
             $sql,
             [$executions_id]

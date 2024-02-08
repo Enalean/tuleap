@@ -73,7 +73,7 @@ class ExecutionWithAutomatedTestDataProvider
             return null;
         }
 
-        $automated_test = "";
+        $automated_test = '';
         $value          = $definition->getValue($field, $changeset);
 
         if ($value instanceof Tracker_Artifact_ChangesetValue_Text) {

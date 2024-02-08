@@ -119,7 +119,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
         $i = 1;
         foreach (new DirectoryIterator($this->directory) as $file) {
-            if ($file->isDot() || $file->getFilename() === "DELETED") {
+            if ($file->isDot() || $file->getFilename() === 'DELETED') {
                 continue;
             }
 
@@ -129,10 +129,10 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
         $text_table = $command_tester->getDisplay();
 
-        self::assertStringContainsString("Project permissions of leprojet has been changed.", $text_table);
-        self::assertStringContainsString("Project permissions of leprojet2 has been changed.", $text_table);
-        self::assertStringContainsString("Project permissions of leprojet3 has been changed.", $text_table);
-        self::assertStringContainsString("3 permissions has been changed.", $text_table);
+        self::assertStringContainsString('Project permissions of leprojet has been changed.', $text_table);
+        self::assertStringContainsString('Project permissions of leprojet2 has been changed.', $text_table);
+        self::assertStringContainsString('Project permissions of leprojet3 has been changed.', $text_table);
+        self::assertStringContainsString('3 permissions has been changed.', $text_table);
     }
 
     public function testNoChangeGroupWhenTheirAreCorrectlySet()
@@ -150,7 +150,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
         $i = 1;
         foreach (new DirectoryIterator($this->directory) as $file) {
-            if ($file->isDot() || $file->getFilename() === "DELETED") {
+            if ($file->isDot() || $file->getFilename() === 'DELETED') {
                 continue;
             }
 
@@ -160,7 +160,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
         $text_table = $command_tester->getDisplay();
 
-        self::assertStringContainsString("No permissions has been changed.", $text_table);
+        self::assertStringContainsString('No permissions has been changed.', $text_table);
     }
 
     public function testChangeGroupWithOneWrongGroup()
@@ -174,10 +174,10 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
         $text_table = $command_tester->getDisplay();
 
-        self::assertStringContainsString("Project permissions of leprojet has been changed.", $text_table);
-        self::assertStringContainsString("Project permissions of leprojet2 has been changed.", $text_table);
-        self::assertStringContainsString("Wrong permissions of leprojet3 has not been changed.", $text_table);
-        self::assertStringContainsString("2 permissions has been changed.", $text_table);
+        self::assertStringContainsString('Project permissions of leprojet has been changed.', $text_table);
+        self::assertStringContainsString('Project permissions of leprojet2 has been changed.', $text_table);
+        self::assertStringContainsString('Wrong permissions of leprojet3 has not been changed.', $text_table);
+        self::assertStringContainsString('2 permissions has been changed.', $text_table);
     }
 
     public function testChangeGroupWithDeleted()
@@ -196,7 +196,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
         $text_table = $command_tester->getDisplay();
 
-        self::assertStringContainsString("Project permissions of DELETED has been changed.", $text_table);
-        self::assertStringContainsString("1 permissions has been changed.", $text_table);
+        self::assertStringContainsString('Project permissions of DELETED has been changed.', $text_table);
+        self::assertStringContainsString('1 permissions has been changed.', $text_table);
     }
 }

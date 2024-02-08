@@ -43,7 +43,7 @@
     {
         $this->_controller = $controller;
         $this->hp          = Codendi_HTMLPurifier::instance();
-        $this->javascript  = "";
+        $this->javascript  = '';
     }
 
     public function display($params = [])
@@ -96,7 +96,7 @@
 
     /* protected */ public function _javascript($params)
     {
-        if ($this->javascript != "") {
+        if ($this->javascript != '') {
             echo "<script type=\"text/javascript\">\n" .
             "//<!--\n" .
             $this->javascript .

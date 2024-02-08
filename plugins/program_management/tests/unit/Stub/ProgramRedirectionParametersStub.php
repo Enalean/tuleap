@@ -46,7 +46,7 @@ final class ProgramRedirectionParametersStub implements ProgramRedirectionParame
 
     public static function withOtherValue(): self
     {
-        return new self("other");
+        return new self('other');
     }
 
     public function getValue(): string

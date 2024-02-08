@@ -47,7 +47,7 @@ final class ListStaticBindBuilder
             $bind_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(
                 $id,
                 $label,
-                "A static bind value",
+                'A static bind value',
                 $id,
                 false,
             );

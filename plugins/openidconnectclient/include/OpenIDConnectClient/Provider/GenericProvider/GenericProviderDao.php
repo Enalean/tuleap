@@ -50,15 +50,15 @@ class GenericProviderDao extends DataAccessObject
                 $icon,
                 $color
             ): int {
-                $sql = "INSERT INTO plugin_openidconnectclient_provider(name, client_id, client_secret, icon, color)
-                    VALUES (?, ?, ?, ?, ?)";
+                $sql = 'INSERT INTO plugin_openidconnectclient_provider(name, client_id, client_secret, icon, color)
+                    VALUES (?, ?, ?, ?, ?)';
 
                 $db->run($sql, $name, $client_id, $client_secret, $icon, $color);
 
                 $id = $db->lastInsertId();
 
-                $sql = "INSERT INTO plugin_openidconnectclient_provider_generic(provider_id, authorization_endpoint, token_endpoint, jwks_endpoint, user_info_endpoint)
-                    VALUES (?, ?, ?, ?, ?)";
+                $sql = 'INSERT INTO plugin_openidconnectclient_provider_generic(provider_id, authorization_endpoint, token_endpoint, jwks_endpoint, user_info_endpoint)
+                    VALUES (?, ?, ?, ?, ?)';
 
                 $db->run($sql, $id, $authorization_endpoint, $token_endpoint, $jwks_endpoint, $user_info_endpoint);
 
@@ -69,7 +69,7 @@ class GenericProviderDao extends DataAccessObject
 
     private function disableUniqueAuthenticationProvider(): void
     {
-        $sql = "UPDATE plugin_openidconnectclient_provider SET unique_authentication_endpoint = FALSE";
+        $sql = 'UPDATE plugin_openidconnectclient_provider SET unique_authentication_endpoint = FALSE';
         $this->getDB()->run($sql);
     }
 
@@ -104,22 +104,22 @@ class GenericProviderDao extends DataAccessObject
                     $this->disableUniqueAuthenticationProvider();
                 }
 
-                $sql = "UPDATE plugin_openidconnectclient_provider SET
+                $sql = 'UPDATE plugin_openidconnectclient_provider SET
                         name = ?,
                         client_id = ?,
                         client_secret = ?,
                         unique_authentication_endpoint = ?,
                         icon = ?,
                         color = ?
-                    WHERE id = ?";
+                    WHERE id = ?';
                 $db->run($sql, $name, $client_id, $client_secret, $is_unique_authentication_endpoint, $icon, $color, $id);
 
-                $sql = "UPDATE plugin_openidconnectclient_provider_generic SET
+                $sql = 'UPDATE plugin_openidconnectclient_provider_generic SET
                         authorization_endpoint = ?,
                         token_endpoint = ?,
                         jwks_endpoint = ?,
                         user_info_endpoint = ?
-                    WHERE provider_id = ?";
+                    WHERE provider_id = ?';
 
                 $db->run($sql, $authorization_endpoint, $token_endpoint, $jwks_endpoint, $user_info_endpoint, $id);
             }

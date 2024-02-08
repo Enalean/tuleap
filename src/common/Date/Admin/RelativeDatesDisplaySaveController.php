@@ -91,7 +91,7 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
             $new_relative_dates_display
         );
 
-        $layout->addFeedback(Feedback::INFO, _("Default relative dates display preference saved successfully."));
+        $layout->addFeedback(Feedback::INFO, _('Default relative dates display preference saved successfully.'));
 
         if ((bool) $request->get('relative-dates-force-preference') === true) {
             $this->preferences_dao->deletePreferenceForAllUsers(DateHelper::PREFERENCE_NAME);

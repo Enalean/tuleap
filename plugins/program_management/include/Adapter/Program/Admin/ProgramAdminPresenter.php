@@ -101,9 +101,9 @@ final class ProgramAdminPresenter
         $this->has_iteration_increment_error = $program_admin->has_iteration_error;
         $this->has_plannable_error           = $program_admin->has_plannable_error;
         if ($program_admin->program_increment_sub_label) {
-            $this->synchronize_button_label = sprintf(dgettext('tuleap-program_management', "Sync open %s"), $program_admin->program_increment_sub_label);
+            $this->synchronize_button_label = sprintf(dgettext('tuleap-program_management', 'Sync open %s'), $program_admin->program_increment_sub_label);
         } else {
-            $this->synchronize_button_label = dgettext('tuleap-program_management', "Sync open Program Increments");
+            $this->synchronize_button_label = dgettext('tuleap-program_management', 'Sync open Program Increments');
         }
 
         $this->project_team_access_errors = $program_admin->project_team_access_errors;

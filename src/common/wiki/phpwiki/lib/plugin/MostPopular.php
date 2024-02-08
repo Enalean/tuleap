@@ -28,20 +28,20 @@ class WikiPlugin_MostPopular extends WikiPlugin
 {
     public function getName()
     {
-        return _("MostPopular");
+        return _('MostPopular');
     }
 
     public function getDescription()
     {
-        return _("List the most popular pages.");
+        return _('List the most popular pages.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.32 $"
+            '$Revision: 1.32 $'
         );
     }
 
@@ -71,12 +71,12 @@ class WikiPlugin_MostPopular extends WikiPlugin
         extract($args);
         if (strstr($sortby, 'mtime')) {
             trigger_error(
-                _("sortby=mtime not supported with MostPopular"),
+                _('sortby=mtime not supported with MostPopular'),
                 E_USER_WARNING
             );
             $sortby = '';
         }
-        $columns = $info ? explode(",", $info) : [];
+        $columns = $info ? explode(',', $info) : [];
         array_unshift($columns, 'hits');
 
         if (! $request->getArg('count')) {
@@ -102,12 +102,12 @@ class WikiPlugin_MostPopular extends WikiPlugin
 
         if (! $noheader) {
             if ($limit > 0) {
-                $pagelist->setCaption(_("The %d most popular pages of this wiki:"));
+                $pagelist->setCaption(_('The %d most popular pages of this wiki:'));
             } else {
                 if ($limit < 0) {
-                    $pagelist->setCaption(_("The %d least popular pages of this wiki:"));
+                    $pagelist->setCaption(_('The %d least popular pages of this wiki:'));
                 } else {
-                    $pagelist->setCaption(_("Visited pages on this wiki, ordered by popularity:"));
+                    $pagelist->setCaption(_('Visited pages on this wiki, ordered by popularity:'));
                 }
             }
         }

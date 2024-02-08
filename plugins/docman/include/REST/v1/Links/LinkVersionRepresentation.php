@@ -70,11 +70,11 @@ final class LinkVersionRepresentation
     ) {
         $this->id        = $id;
         $this->number    = $number;
-        $this->name      = ($label) ?: "";
+        $this->name      = ($label) ?: '';
         $this->author    = $author;
         $this->date      = $date;
         $this->changelog = $changelog;
-        $this->link_href = "/plugins/docman/?"
+        $this->link_href = '/plugins/docman/?'
             . http_build_query(
                 [
                     'group_id'       => $group_id,

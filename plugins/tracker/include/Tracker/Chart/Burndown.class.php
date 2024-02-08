@@ -98,7 +98,7 @@ class Tracker_Chart_Burndown
         $last_remaining_effort = null;
 
         foreach ($remaining_effort as $day => $effort) {
-            if ($day < $date->format("Ymd")) {
+            if ($day < $date->format('Ymd')) {
                 if ($last_remaining_effort !== null) {
                     $last_remaining_effort = array_merge($effort, $last_remaining_effort);
                 } else {
@@ -183,7 +183,7 @@ class Tracker_Chart_Burndown
         $this->prepareDataForGraph($this->getComputedData());
 
         $graph = new Chart($this->width, $this->height);
-        $graph->SetScale("datlin");
+        $graph->SetScale('datlin');
 
         $graph->title->Set($this->title);
         $graph->subtitle->Set($this->description);
@@ -220,7 +220,7 @@ class Tracker_Chart_Burndown
 
     protected function setLastValueWhenRemainingEffortIsBeforeStartDate(DateTime $date, array $remaining_effort)
     {
-        if (key($remaining_effort) < $date->format("Ymd") && isset($remaining_effort[key($remaining_effort)])) {
+        if (key($remaining_effort) < $date->format('Ymd') && isset($remaining_effort[key($remaining_effort)])) {
             return $remaining_effort[key($remaining_effort)];
         }
 

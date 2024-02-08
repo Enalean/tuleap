@@ -86,7 +86,7 @@ class RepositoryDeleter
             $repository->setDeletionDate($deletion_date);
             $this->dao->markAsDeleted(
                 $repository->getId(),
-                $repository->getSystemBackupPath() . "/" . $repository->getBackupFileName(),
+                $repository->getSystemBackupPath() . '/' . $repository->getBackupFileName(),
                 $deletion_date
             );
         } else {
@@ -111,7 +111,7 @@ class RepositoryDeleter
     {
         $this->history_dao->groupAddHistory(
             'svn_multi_repository_deletion',
-            "Repository: " . $repository->getName(),
+            'Repository: ' . $repository->getName(),
             $repository->getProject()->getID()
         );
 

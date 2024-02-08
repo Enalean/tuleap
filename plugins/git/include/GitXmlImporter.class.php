@@ -92,7 +92,7 @@ class GitXmlImporter
             $this->importRepository($configuration, $project, $creator, $repository, $extraction_path);
         }
 
-        $this->importAdmins($project, $xml_git->{"ugroups-admin"});
+        $this->importAdmins($project, $xml_git->{'ugroups-admin'});
         $this->importExternalContent($project, $xml_git);
 
         return true;
@@ -339,11 +339,11 @@ class GitXmlImporter
 
     private function importLastPushDate(SimpleXMLElement $repository_xmlnode, GitRepository $repository)
     {
-        if (! $repository_xmlnode->{"last-push-date"}) {
+        if (! $repository_xmlnode->{'last-push-date'}) {
             return;
         }
 
-        $push_informations = $repository_xmlnode->{"last-push-date"};
+        $push_informations = $repository_xmlnode->{'last-push-date'};
 
         $this->git_dao->logGitPush(
             $repository->getId(),

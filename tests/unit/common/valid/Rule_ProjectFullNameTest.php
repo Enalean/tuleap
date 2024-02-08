@@ -43,25 +43,25 @@ class Rule_ProjectFullNameTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $rule = new Rule_ProjectFullName();
-        $this->assertTrue($rule->isValid("prj"));
+        $this->assertTrue($rule->isValid('prj'));
         $this->assertNull($rule->getErrorMessage());
-        $this->assertTrue($rule->isValid("       project name long by spaces       "));
+        $this->assertTrue($rule->isValid('       project name long by spaces       '));
         $this->assertNull($rule->getErrorMessage());
 
-        $this->assertFalse($rule->isValid(""));
+        $this->assertFalse($rule->isValid(''));
         $this->assertEquals('name_too_short', $rule->getErrorMessage());
-        $this->assertFalse($rule->isValid(" "));
+        $this->assertFalse($rule->isValid(' '));
         $this->assertEquals('name_too_short', $rule->getErrorMessage());
-        $this->assertFalse($rule->isValid("   "));
+        $this->assertFalse($rule->isValid('   '));
         $this->assertEquals('name_too_short', $rule->getErrorMessage());
-        $this->assertFalse($rule->isValid("p"));
+        $this->assertFalse($rule->isValid('p'));
         $this->assertEquals('name_too_short', $rule->getErrorMessage());
-        $this->assertFalse($rule->isValid("p   "));
+        $this->assertFalse($rule->isValid('p   '));
         $this->assertEquals('name_too_short', $rule->getErrorMessage());
-        $this->assertFalse($rule->isValid("pr"));
+        $this->assertFalse($rule->isValid('pr'));
         $this->assertEquals('name_too_short', $rule->getErrorMessage());
 
-        $this->assertFalse($rule->isValid("This a very very long project name longer than 40 characters :)"));
+        $this->assertFalse($rule->isValid('This a very very long project name longer than 40 characters :)'));
         $this->assertEquals('name_too_long', $rule->getErrorMessage());
     }
 }

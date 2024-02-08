@@ -101,7 +101,7 @@ class ArtifactImportHtml extends ArtifactImport // phpcs:ignore PSR1.Classes.Cla
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();
         $this->getImportUser($sub_user_id, $sub_user_name);
-        $sub_on = format_date("Y-m-d", time());
+        $sub_on = format_date('Y-m-d', time());
 
       //add submitted_by and submitted_on columns only when
       //artifact_id is not given otherwise the artifacts should
@@ -143,8 +143,8 @@ class ArtifactImportHtml extends ArtifactImport // phpcs:ignore PSR1.Classes.Cla
          //SUBMITTED_ON
                 if ($parsed_labels[$c] == $open_date_field->getLabel()) {
                        //if insert show default value
-                    if ($this->aid_column == -1 || $aid == "") {
-                        if ($value == "") {
+                    if ($this->aid_column == -1 || $aid == '') {
+                        if ($value == '') {
                                  echo '<TD ' . $width . ' valign="top"><I>' .  $hp->purify($sub_on, CODENDI_PURIFIER_CONVERT_HTML) . '</I></TD>';
                         } else {
                              echo '<TD ' . $width . ' valign="top">' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '</TD>';
@@ -156,8 +156,8 @@ class ArtifactImportHtml extends ArtifactImport // phpcs:ignore PSR1.Classes.Cla
 
                      //SUBMITTED_BY
                 } elseif ($parsed_labels[$c] == $submitted_by_field->getLabel()) {
-                    if ($this->aid_column == -1 || $aid == "") {
-                        if ($value == "") {
+                    if ($this->aid_column == -1 || $aid == '') {
+                        if ($value == '') {
                              echo '<TD ' . $width . ' valign="top"><I>' . $sub_user_name . "</I></TD>\n";
                         } else {
                             echo '<TD ' . $width . ' valign="top">' . $value . "</TD>\n";
@@ -168,12 +168,12 @@ class ArtifactImportHtml extends ArtifactImport // phpcs:ignore PSR1.Classes.Cla
                     continue;
                 }
 
-                if ($value != "") {
+                if ($value != '') {
                       //FOLLOW_UP COMMENTS
                     if ($parsed_labels[$c] == $this->lbl_list['follow_ups']) {
                         unset($parsed_comments);
                         $this->clearError();
-                        $art_id = (($this->aid_column != -1 && $aid != "") ? $aid : "0");
+                        $art_id = (($this->aid_column != -1 && $aid != '') ? $aid : '0');
                         if ($this->parseFollowUpComments($data[$c], $parsed_comments, $art_id, true)) {
                             if (count($parsed_comments) > 0) {
                                 echo '<TD ' . $width . ' valign="top"><TABLE>';
@@ -181,18 +181,18 @@ class ArtifactImportHtml extends ArtifactImport // phpcs:ignore PSR1.Classes.Cla
                                 for ($d = 0; $d < count($parsed_comments); $d++) {
                                       $arr = $parsed_comments[$d];
                                       echo '<TR class="' . util_get_alt_row_color($d) . '">';
-                                      echo "<TD $width>" . $hp->purify($arr['date'], CODENDI_PURIFIER_CONVERT_HTML) . "</TD>";
-                                      echo "<TD $width>" . $hp->purify($arr['by'], CODENDI_PURIFIER_CONVERT_HTML) . "</TD>";
-                                      echo "<TD $width>" . $hp->purify($arr['type'], CODENDI_PURIFIER_CONVERT_HTML) . "</TD>";
-                                      echo "<TD $width>" . $hp->purify($arr['comment'], CODENDI_PURIFIER_CONVERT_HTML) . "</TD>";
+                                      echo "<TD $width>" . $hp->purify($arr['date'], CODENDI_PURIFIER_CONVERT_HTML) . '</TD>';
+                                      echo "<TD $width>" . $hp->purify($arr['by'], CODENDI_PURIFIER_CONVERT_HTML) . '</TD>';
+                                      echo "<TD $width>" . $hp->purify($arr['type'], CODENDI_PURIFIER_CONVERT_HTML) . '</TD>';
+                                      echo "<TD $width>" . $hp->purify($arr['comment'], CODENDI_PURIFIER_CONVERT_HTML) . '</TD>';
                                       echo "</TR>\n";
                                 }
-                                echo "</TABLE></TD>";
+                                echo '</TABLE></TD>';
                             } else {
                                 echo '<TD ' . $width . ' align="center">-</TD>';
                             }
                         } else {
-                            echo '<TD ' . $width . "><I>" . $Language->getText('tracker_import_utils', 'comment_parse_error', $this->getErrorMessage()) . "</I></TD>\n";
+                            echo '<TD ' . $width . '><I>' . $Language->getText('tracker_import_utils', 'comment_parse_error', $this->getErrorMessage()) . "</I></TD>\n";
                         }
 
                 //DEFAULT
@@ -253,7 +253,7 @@ class ArtifactImportHtml extends ArtifactImport // phpcs:ignore PSR1.Classes.Cla
             $notify = true;
         }
 
-        $errors = "";
+        $errors = '';
         $ok     = $this->updateDB($parsed_labels, $artifacts_data, $aid_column, $errors, $notify);
 
         if ($ok) {
@@ -287,7 +287,7 @@ class ArtifactImportHtml extends ArtifactImport // phpcs:ignore PSR1.Classes.Cla
         $sql    = $this->ath->buildExportQuery($fields, $col_list, $this->lbl_list, $this->dsc_list, $select, $from, $where, $multiple_queries, $all_queries);
 
       //we need only one single record
-        $sql .= " LIMIT 1";
+        $sql .= ' LIMIT 1';
 
       //get all mandatory fields
         $mand_list = $this->mandatoryFields();

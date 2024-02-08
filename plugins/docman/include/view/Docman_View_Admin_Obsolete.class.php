@@ -137,7 +137,7 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
                 $table      .= '<img src="' . $icon_src . '" width="16" />';
                 $table      .= '</td>';
 
-                $table .= "<td>";
+                $table .= '<td>';
                 $table .= '<span style="white-space: nowrap;">';
                 $url    = DocumentItemPreviewUrlBuilder::buildSelf()->getUrl($item);
                 $table .= '<a data-help-window href="' . $url . '">';
@@ -147,8 +147,8 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
                 $table .= "</td>\n";
 
                 // Obsolete date
-                $table .= "<td>";
-                $table .= format_date("Y-m-j", $item->getObsolescenceDate());
+                $table .= '<td>';
+                $table .= format_date('Y-m-j', $item->getObsolescenceDate());
                 $table .= "</td>\n";
 
                 $table .= "</tr>\n";

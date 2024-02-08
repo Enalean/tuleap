@@ -111,7 +111,7 @@ class create_test_envPlugin extends Plugin
         }
         $artifact = $event->getArtifact();
         $project  = $artifact->getTracker()->getProject();
-        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Created artifact #" . $artifact->getId());
+        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', 'Created artifact #' . $artifact->getId());
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
@@ -124,7 +124,7 @@ class create_test_envPlugin extends Plugin
         }
         $artifact = $event->getArtifact();
         $project  = $artifact->getTracker()->getProject();
-        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Updated artifact #" . $artifact->getId());
+        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', 'Updated artifact #' . $artifact->getId());
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
@@ -173,7 +173,7 @@ class create_test_envPlugin extends Plugin
         if ($project && ! $project->isError()) {
             $project_id = $project->getID();
         }
-        (new ActivityLoggerDao())->insert($current_user->getId(), $project_id, $event->getServiceName(), "Access");
+        (new ActivityLoggerDao())->insert($current_user->getId(), $project_id, $event->getServiceName(), 'Access');
     }
 
     #[\Tuleap\Plugin\ListeningToEventName('codendi_daily_start')]

@@ -22,6 +22,6 @@ class Tracker_Artifact_MailGateway_TrackerMissingSemanticException extends Track
 {
     public function __construct()
     {
-        parent::__construct("A semantic is missing for this tracker");
+        parent::__construct('A semantic is missing for this tracker');
     }
 }

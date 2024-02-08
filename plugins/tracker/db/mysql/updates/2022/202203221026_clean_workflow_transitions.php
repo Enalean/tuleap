@@ -36,13 +36,13 @@ final class b202203221026_clean_workflow_transitions extends \Tuleap\ForgeUpgrad
     public function up(): void
     {
         // Delete transition when `to` is an unknown value
-        $sql = "
+        $sql = '
             DELETE transition
                 FROM tracker_workflow_transition AS transition
             LEFT JOIN tracker_field_list_bind_static_value AS list_value ON transition.to_id = list_value.id
             WHERE list_value.id IS NULL;
         ;
-        ";
+        ';
 
         if ($this->db->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
@@ -51,13 +51,13 @@ final class b202203221026_clean_workflow_transitions extends \Tuleap\ForgeUpgrad
         }
 
         // Delete transition when `from` is an unknown value but keep `0` as its the value used form `New artifact` transitions
-        $sql = "
+        $sql = '
             DELETE transition
                 FROM tracker_workflow_transition AS transition
             LEFT JOIN tracker_field_list_bind_static_value AS list_value ON transition.from_id = list_value.id
             WHERE list_value.id IS NULL AND transition.from_id != 0;;
         ;
-        ";
+        ';
 
         if ($this->db->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(

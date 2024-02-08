@@ -72,7 +72,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 $titles[] = dgettext('tuleap-docman', 'Change Log');
                 $titles[] = dgettext('tuleap-docman', 'Approval');
                 $titles[] = dgettext('tuleap-docman', 'Delete');
-                $content .= html_build_list_table_top($titles, false, false, false, null, "table");
+                $content .= html_build_list_table_top($titles, false, false, false, null, 'table');
                 $odd_even = ['boxitem', 'boxitemalt'];
                 $i        = 0;
                 foreach ($versions as $key => $nop) {
@@ -86,7 +86,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         ['default_url' => $this->url],
                         ['action' => 'confirmDelete', 'id' => $this->item->getId(), 'version' => $versions[$key]->getNumber()]
                     );
-                    $delete_version = "delete-" . $versions[$key]->getNumber();
+                    $delete_version = 'delete-' . $versions[$key]->getNumber();
 
                     $user     = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                     $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
@@ -112,7 +112,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     } else {
                         $content .= '<td></td>';
                     }
-                    $content .= '<td align="center"><a href="' . $delete . '" data-test="' . $delete_version . '"><img src="' . util_get_image_theme("ic/trash.png") . '" height="16" width="16" border="0"></a></td>';
+                    $content .= '<td align="center"><a href="' . $delete . '" data-test="' . $delete_version . '"><img src="' . util_get_image_theme('ic/trash.png') . '" height="16" width="16" border="0"></a></td>';
                     $content .= '</tr>';
                 }
                 $content .= '</table>';
@@ -142,7 +142,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 dgettext('tuleap-docman', 'Label'),
                 dgettext('tuleap-docman', 'Change Log'),
             ];
-            $content .= html_build_list_table_top($titles, false, false, false, null, "table");
+            $content .= html_build_list_table_top($titles, false, false, false, null, 'table');
 
             $odd_even = ['boxitem', 'boxitemalt'];
             $i        = 0;

@@ -34,8 +34,8 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git
-            ADD COLUMN `repository_backup_path` text NULL";
+        $sql = 'ALTER TABLE plugin_git
+            ADD COLUMN `repository_backup_path` text NULL';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

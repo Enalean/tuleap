@@ -47,7 +47,7 @@ final readonly class PostProjectCreated
     public function getProjectRepresentation(): ProjectRepresentation
     {
         if ($this->project === null) {
-            throw new \LogicException("Can not renderer ProjectRepresentation when project is not defined");
+            throw new \LogicException('Can not renderer ProjectRepresentation when project is not defined');
         }
         return $this->builder->build($this->project, $this->user);
     }

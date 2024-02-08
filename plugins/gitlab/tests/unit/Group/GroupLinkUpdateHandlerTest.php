@@ -65,7 +65,7 @@ final class GroupLinkUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             self::GROUP_LINK_ID,
             'dev/',
             false,
-            GroupLinkApiToken::buildNewGroupToken(new ConcealedString("")),
+            GroupLinkApiToken::buildNewGroupToken(new ConcealedString('')),
             UserTestBuilder::buildWithDefaults()
         );
 

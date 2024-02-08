@@ -32,7 +32,7 @@ class b201908071006_add_api_key_expiration_date extends ForgeUpgrade_Bucket // p
 
     public function up()
     {
-        $sql = "ALTER TABLE user_access_key ADD COLUMN expiration_date INT(11) UNSIGNED DEFAULT NULL AFTER creation_date";
+        $sql = 'ALTER TABLE user_access_key ADD COLUMN expiration_date INT(11) UNSIGNED DEFAULT NULL AFTER creation_date';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

@@ -32,13 +32,13 @@ class b201604071042_create_hudson_git_job extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_hudson_git_job (
+        $sql = 'CREATE TABLE plugin_hudson_git_job (
                     id  int(11) unsigned NOT NULL auto_increment,
                     repository_id int(10) NOT NULL,
                     push_date int(11) NOT NULL,
                     job_url varchar(255) NOT NULL,
                     PRIMARY KEY  (`id`)
-                )";
+                )';
 
         $res = $this->db->dbh->exec($sql);
 

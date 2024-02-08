@@ -118,7 +118,7 @@ class AccessKeyResource extends AuthenticatedResource
             $expiration_date = DateTimeImmutable::createFromFormat(DateTime::ATOM, $provided_expiration_date);
 
             if (! $expiration_date) {
-                throw new RestException(400, "Please provide a valid ISO-8601 date for expiration_date");
+                throw new RestException(400, 'Please provide a valid ISO-8601 date for expiration_date');
             }
         }
 

@@ -49,7 +49,7 @@ class Git_Driver_Gerrit_Template_TemplateProcessorTest extends \Tuleap\Test\PHPU
 
     public function testItDoesntChangeAnythingIfTemplateHasNoVariable(): void
     {
-        $template_content = "this is some template content without variables";
+        $template_content = 'this is some template content without variables';
 
         $this->template->setContent($template_content);
 
@@ -60,9 +60,9 @@ class Git_Driver_Gerrit_Template_TemplateProcessorTest extends \Tuleap\Test\PHPU
 
     public function testItReplacesTheProjectNameByTheAppropriateVariable(): void
     {
-        $template_content = "this %projectname% should be replaced by the project name.
+        $template_content = 'this %projectname% should be replaced by the project name.
 
-            this one %projectname% too!";
+            this one %projectname% too!';
 
         $expected = "this $this->project_name should be replaced by the project name.
 
@@ -77,9 +77,9 @@ class Git_Driver_Gerrit_Template_TemplateProcessorTest extends \Tuleap\Test\PHPU
 
     public function testItDoesntReplaceIrrevelantVariables(): void
     {
-        $template_content = "this %projectid% should be replaced by the project name.
+        $template_content = 'this %projectid% should be replaced by the project name.
 
-            this one %projectid% too!";
+            this one %projectid% too!';
 
         $this->template->setContent($template_content);
 

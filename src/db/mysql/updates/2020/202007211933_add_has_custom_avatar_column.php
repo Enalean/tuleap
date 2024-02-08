@@ -35,7 +35,7 @@ class b202007211933_add_has_custom_avatar_column extends \Tuleap\ForgeUpgrade\Bu
 
     public function up(): void
     {
-        $sql = "ALTER TABLE user ADD COLUMN has_custom_avatar TINYINT(1) NOT NULL DEFAULT 0";
+        $sql = 'ALTER TABLE user ADD COLUMN has_custom_avatar TINYINT(1) NOT NULL DEFAULT 0';
 
         $res = $this->db->dbh->exec($sql);
 
@@ -45,7 +45,7 @@ class b202007211933_add_has_custom_avatar_column extends \Tuleap\ForgeUpgrade\Bu
             );
         }
 
-        $sql = "UPDATE user SET has_custom_avatar = has_avatar";
+        $sql = 'UPDATE user SET has_custom_avatar = has_avatar';
 
         $res = $this->db->dbh->exec($sql);
 

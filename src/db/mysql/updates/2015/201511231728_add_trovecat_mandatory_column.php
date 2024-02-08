@@ -20,7 +20,7 @@ class b201511231728_add_trovecat_mandatory_column extends \Tuleap\ForgeUpgrade\B
 {
     public function description()
     {
-        return "Add mandatory attribute for trovecat";
+        return 'Add mandatory attribute for trovecat';
     }
 
     public function preUp()
@@ -30,8 +30,8 @@ class b201511231728_add_trovecat_mandatory_column extends \Tuleap\ForgeUpgrade\B
 
     public function up()
     {
-        $sql = "ALTER TABLE trove_cat
-                ADD COLUMN mandatory TINYINT(1) NOT NULL DEFAULT 0";
+        $sql = 'ALTER TABLE trove_cat
+                ADD COLUMN mandatory TINYINT(1) NOT NULL DEFAULT 0';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

@@ -508,9 +508,9 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 Mockery::any(),
                 Mockery::on(
                     function (\SimpleXMLElement $comment): bool {
-                        return (string) $comment->body === "Some text" &&
-                               (string) $comment->private_ugroups->ugroup[0] === "my_group" &&
-                               (string) $comment->private_ugroups->ugroup[1] === "my_other_group";
+                        return (string) $comment->body === 'Some text' &&
+                               (string) $comment->private_ugroups->ugroup[0] === 'my_group' &&
+                               (string) $comment->private_ugroups->ugroup[1] === 'my_other_group';
                     }
                 )
             )
@@ -523,9 +523,9 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 Mockery::any(),
                 Mockery::on(
                     function (\SimpleXMLElement $comment): bool {
-                        return (string) $comment->body === "New comment update" &&
-                               (string) $comment->private_ugroups->ugroup[0] === "my_group" &&
-                               (string) $comment->private_ugroups->ugroup[1] === "the_best_group";
+                        return (string) $comment->body === 'New comment update' &&
+                               (string) $comment->private_ugroups->ugroup[0] === 'my_group' &&
+                               (string) $comment->private_ugroups->ugroup[1] === 'the_best_group';
                     }
                 )
             )

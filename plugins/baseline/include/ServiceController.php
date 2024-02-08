@@ -122,7 +122,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
         $this->includeJavascriptFiles($layout);
 
         $layout->header(
-            HeaderConfigurationBuilder::get(dgettext('tuleap-baseline', "Baselines"))
+            HeaderConfigurationBuilder::get(dgettext('tuleap-baseline', 'Baselines'))
                 ->inProjectNotInBreadcrumbs($project, \baselinePlugin::SERVICE_SHORTNAME)
                 ->build()
         );

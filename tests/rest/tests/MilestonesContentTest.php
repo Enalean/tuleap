@@ -66,32 +66,32 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
 
         $first_content_item = $content_items[0];
         $this->assertArrayHasKey('id', $first_content_item);
-        $this->assertEquals($first_content_item['label'], "First epic");
-        $this->assertEquals($first_content_item['status'], "Open");
+        $this->assertEquals($first_content_item['label'], 'First epic');
+        $this->assertEquals($first_content_item['status'], 'Open');
         $this->assertEquals($first_content_item['artifact']['id'], $this->epic_artifact_ids[1]);
         $this->assertEquals($first_content_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[1]);
         $this->assertEquals($first_content_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $second_content_item = $content_items[1];
         $this->assertArrayHasKey('id', $second_content_item);
-        $this->assertEquals($second_content_item['label'], "Second epic");
-        $this->assertEquals($second_content_item['status'], "Closed");
+        $this->assertEquals($second_content_item['label'], 'Second epic');
+        $this->assertEquals($second_content_item['status'], 'Closed');
         $this->assertEquals($second_content_item['artifact']['id'], $this->epic_artifact_ids[2]);
         $this->assertEquals($second_content_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[2]);
         $this->assertEquals($second_content_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $third_content_item = $content_items[2];
         $this->assertArrayHasKey('id', $third_content_item);
-        $this->assertEquals($third_content_item['label'], "Third epic");
-        $this->assertEquals($third_content_item['status'], "Closed");
+        $this->assertEquals($third_content_item['label'], 'Third epic');
+        $this->assertEquals($third_content_item['status'], 'Closed');
         $this->assertEquals($third_content_item['artifact']['id'], $this->epic_artifact_ids[3]);
         $this->assertEquals($third_content_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[3]);
         $this->assertEquals($third_content_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $fourth_content_item = $content_items[3];
         $this->assertArrayHasKey('id', $fourth_content_item);
-        $this->assertEquals($fourth_content_item['label'], "Fourth epic");
-        $this->assertEquals($fourth_content_item['status'], "Open");
+        $this->assertEquals($fourth_content_item['label'], 'Fourth epic');
+        $this->assertEquals($fourth_content_item['status'], 'Open');
         $this->assertEquals($fourth_content_item['artifact']['id'], $this->epic_artifact_ids[4]);
         $this->assertEquals($fourth_content_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[4]);
         $this->assertEquals($fourth_content_item['artifact']['tracker']['id'], $this->epic_tracker_id);
@@ -123,16 +123,16 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
 
         $first_backlog_item = $backlog_items[0];
         $this->assertArrayHasKey('id', $first_backlog_item);
-        $this->assertEquals($first_backlog_item['label'], "First epic");
-        $this->assertEquals($first_backlog_item['status'], "Open");
+        $this->assertEquals($first_backlog_item['label'], 'First epic');
+        $this->assertEquals($first_backlog_item['status'], 'Open');
         $this->assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[1]);
         $this->assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[1]);
         $this->assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
-        $this->assertEquals($second_backlog_item['label'], "Fourth epic");
-        $this->assertEquals($second_backlog_item['status'], "Open");
+        $this->assertEquals($second_backlog_item['label'], 'Fourth epic');
+        $this->assertEquals($second_backlog_item['status'], 'Open');
         $this->assertEquals($second_backlog_item['artifact']['id'], $this->epic_artifact_ids[4]);
         $this->assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[4]);
         $this->assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
@@ -218,8 +218,8 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
 
         $first_backlog_item = $backlog_items[0];
         $this->assertArrayHasKey('id', $first_backlog_item);
-        $this->assertEquals($first_backlog_item['label'], "Fourth epic");
-        $this->assertEquals($first_backlog_item['status'], "Open");
+        $this->assertEquals($first_backlog_item['label'], 'Fourth epic');
+        $this->assertEquals($first_backlog_item['status'], 'Open');
         $this->assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[4]);
         $this->assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[4]);
         $this->assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);

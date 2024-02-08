@@ -33,26 +33,26 @@ class MailPresenterFactory
      */
     public function createMailAccountPresenter(PFUser $user, $login, $confirm_hash, $presenter_role, string $logo_url)
     {
-        $color_logo   = "#000";
-        $color_button = "#347DBA";
+        $color_logo   = '#000';
+        $color_button = '#347DBA';
 
         $base_url = \Tuleap\ServerHostname::HTTPSUrl();
         $this->setColorTheme($color_logo, $color_button);
 
         $attributes_presenter = [
-            "login"         => $login,
-            "color_logo"    => $color_logo,
-            "color_button"  => $color_button,
-            "confirm_hash"  => $confirm_hash,
-            "base_url"      => $base_url,
-            "logo_url"      => $logo_url,
+            'login'         => $login,
+            'color_logo'    => $color_logo,
+            'color_button'  => $color_button,
+            'confirm_hash'  => $confirm_hash,
+            'base_url'      => $base_url,
+            'logo_url'      => $logo_url,
         ];
 
-        if ($presenter_role === "user") {
+        if ($presenter_role === 'user') {
             $presenter = $this->createUserEmailPresenter($user, $attributes_presenter);
-        } elseif ($presenter_role === "admin") {
+        } elseif ($presenter_role === 'admin') {
             $presenter = $this->createAdminEmailPresenter($user, $attributes_presenter);
-        } elseif ($presenter_role === "admin-notification") {
+        } elseif ($presenter_role === 'admin-notification') {
             $presenter = $this->createAdminNotificationPresenter($attributes_presenter);
         } else {
             $presenter = $this->createApprovalEmailPresenter($user, $attributes_presenter);
@@ -66,7 +66,7 @@ class MailPresenterFactory
      */
     public function createMailProjectPresenter(Project $project, $logo_url)
     {
-        $color_logo = "#000";
+        $color_logo = '#000';
 
         $this->setColorTheme($color_logo);
         $presenter = $this->createMailProjectRegisterPresenter($project, $color_logo, $logo_url);
@@ -80,8 +80,8 @@ class MailPresenterFactory
      */
     public function createMailProjectNotificationPresenter(Project $project, $logo_url)
     {
-        $color_logo   = "#000";
-        $color_button = "#347DBA";
+        $color_logo   = '#000';
+        $color_button = '#347DBA';
 
         $this->setColorTheme($color_logo, $color_button);
         if ($project->projectsMustBeApprovedByAdmin()) {
@@ -101,11 +101,11 @@ class MailPresenterFactory
      */
     private function createAdminEmailPresenter(PFUser $user, array $attributes_presenter)
     {
-        $login = $attributes_presenter["login"];
+        $login = $attributes_presenter['login'];
 
         include($user->getLanguage()->getContent('account/new_account_email'));
         $presenter = new MailRegisterByAdminPresenter(
-            $attributes_presenter["logo_url"],
+            $attributes_presenter['logo_url'],
             $title,
             $section_one,
             $section_two,
@@ -113,7 +113,7 @@ class MailPresenterFactory
             $thanks,
             $signature,
             $help,
-            $attributes_presenter["color_logo"],
+            $attributes_presenter['color_logo'],
             $login,
             $section_three
         );
@@ -128,15 +128,15 @@ class MailPresenterFactory
      */
     private function createUserEmailPresenter(PFUser $user, array $attributes_presenter)
     {
-        $base_url     = $attributes_presenter["base_url"];
-        $login        = $attributes_presenter["login"];
-        $confirm_hash = $attributes_presenter["confirm_hash"];
+        $base_url     = $attributes_presenter['base_url'];
+        $login        = $attributes_presenter['login'];
+        $confirm_hash = $attributes_presenter['confirm_hash'];
 
         include($user->getLanguage()->getContent('include/new_user_email'));
         $redirect_url = $base_url . "/account/login.php?confirm_hash=$confirm_hash";
 
         $presenter = new MailRegisterByUserPresenter(
-            $attributes_presenter["logo_url"],
+            $attributes_presenter['logo_url'],
             $title,
             $section_one,
             $section_two,
@@ -144,11 +144,11 @@ class MailPresenterFactory
             $thanks,
             $signature,
             $help,
-            $attributes_presenter["color_logo"],
+            $attributes_presenter['color_logo'],
             $login,
             $redirect_url,
             $redirect_button,
-            $attributes_presenter["color_button"]
+            $attributes_presenter['color_button']
         );
         return $presenter;
     }
@@ -158,24 +158,24 @@ class MailPresenterFactory
      */
     private function createAdminNotificationPresenter(array $attributes_presenter): MailRegisterByAdminNotificationPresenter
     {
-        $base_url     = $attributes_presenter["base_url"];
-        $redirect_url = $base_url . "/admin/approve_pending_users.php?page=pending";
+        $base_url     = $attributes_presenter['base_url'];
+        $redirect_url = $base_url . '/admin/approve_pending_users.php?page=pending';
 
         $presenter = new MailRegisterByAdminNotificationPresenter(
-            $attributes_presenter["logo_url"],
+            $attributes_presenter['logo_url'],
             _('Account creation!'),
             sprintf(_('A new user has just registered on %1$s.
 
-User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $attributes_presenter["login"]),
+User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $attributes_presenter['login']),
             _('Please click on the following URL to approve the registration:'),
             _('Thanks!'),
             sprintf(_('- The team at %1$s.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)),
-            $attributes_presenter["color_logo"],
+            $attributes_presenter['color_logo'],
             $redirect_url,
             _('Confirm the account creation'),
-            $attributes_presenter["color_button"],
-            $attributes_presenter["login"],
-            "."
+            $attributes_presenter['color_button'],
+            $attributes_presenter['login'],
+            '.'
         );
         return $presenter;
     }
@@ -185,13 +185,13 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $at
      */
     private function createApprovalEmailPresenter(PFUser $user, array $attributes_presenter): MailRegisterByAdminApprovalPresenter
     {
-        $base_url = $attributes_presenter["base_url"];
-        $login    = $attributes_presenter["login"];
+        $base_url = $attributes_presenter['base_url'];
+        $login    = $attributes_presenter['login'];
 
         include($user->getLanguage()->getContent('admin/new_account_email'));
 
         $presenter = new MailRegisterByAdminApprovalPresenter(
-            $attributes_presenter["logo_url"],
+            $attributes_presenter['logo_url'],
             $title,
             $section_one,
             $section_two,
@@ -199,7 +199,7 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $at
             $thanks,
             $signature,
             $help,
-            $attributes_presenter["color_logo"],
+            $attributes_presenter['color_logo'],
             $login,
             $section_three
         );
@@ -267,7 +267,7 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $at
      */
     public function createMailAccountSuspensionAlertPresenter(DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language): MailAccountSuspensionAlertPresenter
     {
-        $color_logo = "#000";
+        $color_logo = '#000';
         $this->setColorTheme($color_logo);
         $logo_retriever = new LogoRetriever();
         $logo_url       = $logo_retriever->getLegacyUrl();
@@ -280,7 +280,7 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $at
      */
     public function createMailAccountSuspensionPresenter(DateTimeImmutable $last_access_date, BaseLanguage $language): MailAccountSuspensionPresenter
     {
-        $color_logo = "#000";
+        $color_logo = '#000';
         $this->setColorTheme($color_logo);
         $logo_retriever = new LogoRetriever();
         $logo_url       = $logo_retriever->getLegacyUrl();

@@ -42,7 +42,7 @@ class GlobalAdministratorsUpdater
 
     public static function generateToken(Project $project): CSRFSynchronizerToken
     {
-        return new CSRFSynchronizerToken(SVN_BASE_URL . "/?group_id=" . $project->getid() . "&action=save-admin-groups");
+        return new CSRFSynchronizerToken(SVN_BASE_URL . '/?group_id=' . $project->getid() . '&action=save-admin-groups');
     }
 
     public function saveAdminGroups(
@@ -53,7 +53,7 @@ class GlobalAdministratorsUpdater
 
         $token = self::generateToken($project);
         $token->check();
-        $ugroups          = $request->get("admin_groups") ?: [];
+        $ugroups          = $request->get('admin_groups') ?: [];
         $selected_ugroups = $this->getSelectedUGroups($project, $ugroups);
 
         $this->permissions_manager->save($project, $selected_ugroups);

@@ -122,7 +122,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             123,
             'https://example.com',
             2,
-            "My Title TULEAP-58",
+            'My Title TULEAP-58',
             'TULEAP-666 TULEAP-45',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
@@ -173,7 +173,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
                         );
                     }
 
-                    throw new \RuntimeException("Unexpected reference ID #" . $id);
+                    throw new \RuntimeException('Unexpected reference ID #' . $id);
                 }
             );
 
@@ -231,7 +231,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             123,
             'https://example.com',
             2,
-            "My Title TULEAP-58",
+            'My Title TULEAP-58',
             'TULEAP-666 TULEAP-45',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
@@ -306,7 +306,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
                         );
                     }
 
-                    throw new \RuntimeException("Unexpected reference ID #" . $id);
+                    throw new \RuntimeException('Unexpected reference ID #' . $id);
                 }
             );
 
@@ -359,7 +359,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             123,
             'https://example.com',
             2,
-            "My Title TULEAP-58",
+            'My Title TULEAP-58',
             'TULEAP-666',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
@@ -434,7 +434,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
                         );
                     }
 
-                    throw new \RuntimeException("Unexpected reference ID #" . $id);
+                    throw new \RuntimeException('Unexpected reference ID #' . $id);
                 }
             );
 
@@ -479,7 +479,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             123,
             'https://example.com',
             2,
-            "My Title TULEAP-58",
+            'My Title TULEAP-58',
             '',
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
@@ -569,7 +569,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             123,
             'https://example.com',
             2,
-            "My Title TULEAP-58",
+            'My Title TULEAP-58',
             '',
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
@@ -614,7 +614,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
                 )
             );
 
-        $exception = new GitlabRequestException(404, "Unauthorized");
+        $exception = new GitlabRequestException(404, 'Unauthorized');
 
         $this->author_retriever
             ->expects(self::once())
@@ -659,7 +659,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             123,
             'https://example.com',
             2,
-            "My Title",
+            'My Title',
             '',
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
@@ -708,7 +708,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             123,
             'https://example.com',
             2,
-            "My Title",
+            'My Title',
             '',
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),

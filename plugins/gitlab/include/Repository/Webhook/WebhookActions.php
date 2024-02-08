@@ -107,7 +107,7 @@ class WebhookActions
             $webhook_reception_date->getTimestamp()
         );
         $this->logger->info(
-            "Last update date successfully updated for GitLab repository #" . $gitlab_repository_integration->getId()
+            'Last update date successfully updated for GitLab repository #' . $gitlab_repository_integration->getId()
         );
     }
 
@@ -125,7 +125,7 @@ class WebhookActions
             return;
         }
 
-        $message = "The provided webhook type " . $webhook_data->getEventName() . " is unknown";
+        $message = 'The provided webhook type ' . $webhook_data->getEventName() . ' is unknown';
         $this->logger->error($message);
 
         throw new LogicException($message);

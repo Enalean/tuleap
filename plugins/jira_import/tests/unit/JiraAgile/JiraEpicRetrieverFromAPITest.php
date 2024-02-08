@@ -58,15 +58,15 @@ final class JiraEpicRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
                     'isLast' => true,
                     'values' => [
                         [
-                            "id"      => 10143,
-                            "key"     => "SP-36",
-                            "self"    => "https://example.com/rest/agile/1.0/epic/10143",
-                            "name"    => "Big Epic",
-                            "summary" => "Some Epic",
-                            "color"   => [
-                                "key" => "color_11",
+                            'id'      => 10143,
+                            'key'     => 'SP-36',
+                            'self'    => 'https://example.com/rest/agile/1.0/epic/10143',
+                            'name'    => 'Big Epic',
+                            'summary' => 'Some Epic',
+                            'color'   => [
+                                'key' => 'color_11',
                             ],
-                            "done"    => false,
+                            'done'    => false,
                         ],
                     ],
                 ];
@@ -78,7 +78,7 @@ final class JiraEpicRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertCount(1, $epics);
         self::assertEquals(10143, $epics[0]->id);
-        self::assertEquals("https://example.com/rest/agile/1.0/epic/10143", $epics[0]->url);
-        self::assertEquals("SP-36", $epics[0]->key);
+        self::assertEquals('https://example.com/rest/agile/1.0/epic/10143', $epics[0]->url);
+        self::assertEquals('SP-36', $epics[0]->key);
     }
 }

@@ -94,12 +94,12 @@ class GitBundle
         $dump_path_on_filesystem,
         ArchiveInterface $archive,
     ) {
-        $command = "umask 77 && " . \Git_Exec::getGitCommand() . " --git-dir=" . escapeshellarg($repository_path) . " bundle create " . escapeshellarg(PathJoinUtil::unixPathJoin([$dump_path_on_filesystem, $file_name])) . " --all";
+        $command = 'umask 77 && ' . \Git_Exec::getGitCommand() . ' --git-dir=' . escapeshellarg($repository_path) . ' bundle create ' . escapeshellarg(PathJoinUtil::unixPathJoin([$dump_path_on_filesystem, $file_name])) . ' --all';
 
         $this->system_command->exec($command);
 
         if (is_dir($archive->getArchivePath())) {
-            $command = "chmod -R 755 " . escapeshellarg($archive->getArchivePath()) . "/export";
+            $command = 'chmod -R 755 ' . escapeshellarg($archive->getArchivePath()) . '/export';
 
             $this->system_command->exec($command);
         }
@@ -114,7 +114,7 @@ class GitBundle
         $command = "umask 77 && mkdir -p $dump_path_on_filesystem";
         $this->system_command->exec($command);
 
-        $command = "chown " . escapeshellarg(ForgeConfig::get('sys_http_user')) . ":" . escapeshellarg(ForgeConfig::get('sys_http_user')) .
+        $command = 'chown ' . escapeshellarg(ForgeConfig::get('sys_http_user')) . ':' . escapeshellarg(ForgeConfig::get('sys_http_user')) .
             " $dump_path_on_filesystem && chmod 750 $dump_path_on_filesystem";
         $this->system_command->exec($command);
     }
@@ -130,6 +130,6 @@ class GitBundle
         $command         = 'find ' . $repository_path . '/objects -type f | wc -l';
         $output          = $this->system_command->exec($command);
 
-        return isset($output[0]) && $output[0] !== "0";
+        return isset($output[0]) && $output[0] !== '0';
     }
 }

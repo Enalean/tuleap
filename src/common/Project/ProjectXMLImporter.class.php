@@ -297,7 +297,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
         );
 
         if ($is_template) {
-            $this->logger->info("The project will be a template");
+            $this->logger->info('The project will be a template');
             $project_creation_data->setIsTemplate();
         }
 
@@ -310,7 +310,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
             );
         }
 
-        $this->logger->debug("ProjectMetadata extracted from XML, now create in DB");
+        $this->logger->debug('ProjectMetadata extracted from XML, now create in DB');
 
         return $project_creation_data;
     }
@@ -327,7 +327,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
 
         $this->logger->info("Execute system events to finish creation of project {$project->getID()}, this can take a while...");
         $event_runner->runSystemEvents();
-        $this->logger->info("System events success");
+        $this->logger->info('System events success');
 
         return $project;
     }
@@ -411,7 +411,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
 
     private function importContent(ImportConfig $configuration, Project $project, SimpleXMLElement $xml_element, $extraction_path)
     {
-        $this->logger->info("Importing project in project " . $project->getUnixName());
+        $this->logger->info('Importing project in project ' . $project->getUnixName());
 
         $user_creator = $this->user_manager->getCurrentUser();
 
@@ -434,7 +434,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
         $mappings_registery = new MappingsRegistry();
         $mappings_registery->add($frs_release_mapping, FRSXMLImporter::MAPPING_KEY);
 
-        $this->logger->info("Ask to plugin to import data from XML");
+        $this->logger->info('Ask to plugin to import data from XML');
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT,
             [
@@ -450,7 +450,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
 
         $this->importDashboards($xml_element, $user_creator, $project, $mappings_registery);
 
-        $this->logger->info("Finish importing project in project " . $project->getUnixName() . " id " . $project->getID());
+        $this->logger->info('Finish importing project in project ' . $project->getUnixName() . ' id ' . $project->getID());
     }
 
     /**
@@ -460,7 +460,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
     {
         $errors = '';
 
-        $this->logger->info("Ask plugins to check if errors might be raised from importing the XML");
+        $this->logger->info('Ask plugins to check if errors might be raised from importing the XML');
         $this->event_manager->processEvent(
             Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT,
             [
@@ -476,10 +476,10 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
 
     private function importUgroups(Project $project, SimpleXMLElement $xml_element, PFUser $user_creator)
     {
-        $this->logger->info("Check if there are ugroups to add");
+        $this->logger->info('Check if there are ugroups to add');
 
         if ($xml_element->ugroups) {
-            $this->logger->info("Some ugroups are defined in the XML");
+            $this->logger->info('Some ugroups are defined in the XML');
 
             if ((string) $xml_element->ugroups['mode'] === ProjectXMLExporter::UGROUPS_MODE_SYNCHRONIZED) {
                 $this->synchronized_project_membership_dao->enable($project);
@@ -495,7 +495,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
                 $ugroup = $this->ugroup_manager->getDynamicUGoupByName($project, $ugroup_def['name']);
 
                 if (empty($ugroup)) {
-                    $this->logger->debug("Creating empty ugroup " . $ugroup_def['name']);
+                    $this->logger->debug('Creating empty ugroup ' . $ugroup_def['name']);
                     try {
                         $new_ugroup_id = $this->ugroup_manager->createEmptyUgroup(
                             $project->getID(),
@@ -510,13 +510,13 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
                 }
 
                 if (empty($ugroup_def['users'])) {
-                    $this->logger->debug("No user to add in ugroup " . $ugroup_def['name']);
+                    $this->logger->debug('No user to add in ugroup ' . $ugroup_def['name']);
                 } else {
-                    $this->logger->debug("Adding users to ugroup " . $ugroup_def['name']);
+                    $this->logger->debug('Adding users to ugroup ' . $ugroup_def['name']);
                 }
 
                 foreach ($ugroup_def['users'] as $user) {
-                    $this->logger->debug("Adding user " . $user->getUserName() . " to " . $ugroup_def['name']);
+                    $this->logger->debug('Adding user ' . $user->getUserName() . ' to ' . $ugroup_def['name']);
                     $ugroup->addUser($user, $user_creator);
                 }
 
@@ -526,7 +526,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
             }
 
             $this->cleanProjectMembersFromUserCreator($project, $project_members, $user_creator);
-            $this->logger->debug("Import of ugroups completed");
+            $this->logger->debug('Import of ugroups completed');
         }
     }
 
@@ -565,7 +565,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
 
         $rng_path = realpath(dirname(__FILE__) . '/../xml/resources/ugroups.rng');
         $this->xml_validator->validate($xml_element_ugroups, $rng_path);
-        $this->logger->debug("XML Ugroups is valid");
+        $this->logger->debug('XML Ugroups is valid');
 
         foreach ($xml_element_ugroups->ugroup as $ugroup) {
             $ugroup_name        = (string) $ugroup['name'];

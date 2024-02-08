@@ -44,9 +44,9 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                 assertEquals('/rest/agile/1.0/sprint/14/issue?fields=id&startAt=0', $url);
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "issues"     => [],
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'issues'     => [],
                 ];
             }
         };
@@ -73,10 +73,10 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                 assertEquals('/rest/agile/1.0/sprint/14/issue?fields=id&startAt=0', $url);
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "total"      => 0,
-                    "issues"     => [],
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'total'      => 0,
+                    'issues'     => [],
                 ];
             }
         };
@@ -99,10 +99,10 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                 $this->called++;
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "total"      => 0,
-                    "issues"     => [],
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'total'      => 0,
+                    'issues'     => [],
                 ];
             }
         };
@@ -126,15 +126,15 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                 $this->called++;
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "total"      => 1,
-                    "issues"     => [
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'total'      => 1,
+                    'issues'     => [
                         [
-                            "expand" => "operations,versionedRepresentations,editmeta,changelog,renderedFields",
-                            "id"     => "10000",
-                            "self"   => "https://jira.example.com/rest/agile/1.0/issue/10000",
-                            "key"    => "SP-1",
+                            'expand' => 'operations,versionedRepresentations,editmeta,changelog,renderedFields',
+                            'id'     => '10000',
+                            'self'   => 'https://jira.example.com/rest/agile/1.0/issue/10000',
+                            'key'    => 'SP-1',
                         ],
                     ],
                 ];
@@ -160,15 +160,15 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                 if ($this->called === 0) {
                     $this->called++;
                     return [
-                        "maxResults" => 50,
-                        "startAt"    => 0,
-                        "total"      => 2,
-                        "issues"     => [
+                        'maxResults' => 50,
+                        'startAt'    => 0,
+                        'total'      => 2,
+                        'issues'     => [
                             [
-                                "expand" => "operations,versionedRepresentations,editmeta,changelog,renderedFields",
-                                "id"     => "10000",
-                                "self"   => "https://jira.example.com/rest/agile/1.0/issue/10000",
-                                "key"    => "SP-1",
+                                'expand' => 'operations,versionedRepresentations,editmeta,changelog,renderedFields',
+                                'id'     => '10000',
+                                'self'   => 'https://jira.example.com/rest/agile/1.0/issue/10000',
+                                'key'    => 'SP-1',
                             ],
                         ],
                     ];
@@ -176,20 +176,20 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                     assertEquals('/rest/agile/1.0/sprint/14/issue?fields=id&startAt=1', $url);
                     $this->called++;
                     return [
-                        "maxResults" => 50,
-                        "startAt"    => 1,
-                        "total"      => 2,
-                        "issues"     => [
+                        'maxResults' => 50,
+                        'startAt'    => 1,
+                        'total'      => 2,
+                        'issues'     => [
                             [
-                                "expand" => "operations,versionedRepresentations,editmeta,changelog,renderedFields",
-                                "id"     => "10001",
-                                "self"   => "https://jira.example.com/rest/agile/1.0/issue/10001",
-                                "key"    => "SP-2",
+                                'expand' => 'operations,versionedRepresentations,editmeta,changelog,renderedFields',
+                                'id'     => '10001',
+                                'self'   => 'https://jira.example.com/rest/agile/1.0/issue/10001',
+                                'key'    => 'SP-2',
                             ],
                         ],
                     ];
                 } else {
-                    throw new RuntimeException("Must not happen");
+                    throw new RuntimeException('Must not happen');
                 }
             }
         };
@@ -213,15 +213,15 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                 $this->called++;
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "total"      => 1,
-                    "issues"     => [
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'total'      => 1,
+                    'issues'     => [
                         [
-                            "expand" => "operations,versionedRepresentations,editmeta,changelog,renderedFields",
-                            "id"     => "10000ABC",
-                            "self"   => "https://jira.example.com/rest/agile/1.0/issue/10000",
-                            "key"    => "SP-1",
+                            'expand' => 'operations,versionedRepresentations,editmeta,changelog,renderedFields',
+                            'id'     => '10000ABC',
+                            'self'   => 'https://jira.example.com/rest/agile/1.0/issue/10000',
+                            'key'    => 'SP-1',
                         ],
                     ],
                 ];

@@ -39,10 +39,10 @@ class PaginatedArtifactDaoTest extends TestIntegrationTestCase
         $this->tasks_id   = (int) $db->insertReturnId('tracker', []);
         $this->bugs_id    = (int) $db->insertReturnId('tracker', []);
 
-        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (1, ?)", $this->stories_id);
-        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (2, ?)", $this->tasks_id);
-        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (3, ?)", $this->bugs_id);
-        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (4, ?)", $this->stories_id);
+        $db->run('INSERT INTO tracker_artifact(id, tracker_id) VALUES (1, ?)', $this->stories_id);
+        $db->run('INSERT INTO tracker_artifact(id, tracker_id) VALUES (2, ?)', $this->tasks_id);
+        $db->run('INSERT INTO tracker_artifact(id, tracker_id) VALUES (3, ?)', $this->bugs_id);
+        $db->run('INSERT INTO tracker_artifact(id, tracker_id) VALUES (4, ?)', $this->stories_id);
     }
 
     public function testSearchPaginatedByListOfTrackerIds(): void

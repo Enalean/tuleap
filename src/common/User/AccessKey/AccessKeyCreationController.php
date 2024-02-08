@@ -104,7 +104,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
         } catch (AccessKeyAlreadyExpiredException $exception) {
             $layout->addFeedback(
                 \Feedback::ERROR,
-                _("You cannot create an already expired access key.")
+                _('You cannot create an already expired access key.')
             );
 
             $layout->redirect(DisplayKeysTokensController::URL);
@@ -172,7 +172,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
             if (! $expiration_date) {
                 $layout->addFeedback(
                     \Feedback::ERROR,
-                    _("Expiration date is not well formed.")
+                    _('Expiration date is not well formed.')
                 );
 
                 $layout->redirect(DisplayKeysTokensController::URL);

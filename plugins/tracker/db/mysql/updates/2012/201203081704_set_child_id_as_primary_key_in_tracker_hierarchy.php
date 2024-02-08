@@ -35,9 +35,9 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_hierarchy 
+        $sql = 'ALTER TABLE tracker_hierarchy
                     DROP KEY idx,
-                    ADD PRIMARY KEY (child_id)";
+                    ADD PRIMARY KEY (child_id)';
 
         $res = $this->db->dbh->exec($sql);
 

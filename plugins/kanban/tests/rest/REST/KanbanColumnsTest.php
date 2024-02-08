@@ -51,8 +51,8 @@ class KanbanColumnsTest extends TestBase
             'PATCH',
             $url
         )->withBody($this->stream_factory->createStream(json_encode([
-            "wip_limit" => 200,
-            "label"     => "yummy",
+            'wip_limit' => 200,
+            'label'     => 'yummy',
         ]))));
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -64,7 +64,7 @@ class KanbanColumnsTest extends TestBase
         $kanban   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($kanban['columns'][1]['limit'], 200);
-        $this->assertEquals($kanban['columns'][1]['label'], "yummy");
+        $this->assertEquals($kanban['columns'][1]['label'], 'yummy');
     }
 
     public function testPATCHKanbanColumnsDeniedForRESTReadOnlyUserNotInvolvedInProject()
@@ -76,8 +76,8 @@ class KanbanColumnsTest extends TestBase
                 'PATCH',
                 $url
             )->withBody($this->stream_factory->createStream(json_encode([
-                "wip_limit" => 200,
-                "label"     => "yummy",
+                'wip_limit' => 200,
+                'label'     => 'yummy',
             ]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME,
         );

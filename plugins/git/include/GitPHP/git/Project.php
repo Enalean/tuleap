@@ -58,7 +58,7 @@ class Project
      *
      * @access protected
      */
-    protected $owner = "";
+    protected $owner = '';
 
     /**
      * ownerRead
@@ -320,21 +320,21 @@ class Project
         $fullPath        = realpath($path);
 
         if (! is_dir($fullPath)) {
-            throw new RepositoryNotExistingException(sprintf(dgettext("gitphp", '%1$s is not a directory'), $project));
+            throw new RepositoryNotExistingException(sprintf(dgettext('gitphp', '%1$s is not a directory'), $project));
         }
 
         if (! is_file($fullPath . '/HEAD')) {
-            throw new RepositoryAccessException(sprintf(dgettext("gitphp", '%1$s is not a git repository'), $project));
+            throw new RepositoryAccessException(sprintf(dgettext('gitphp', '%1$s is not a git repository'), $project));
         }
 
         if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project)) {
-            throw new RepositoryAccessException(sprintf(dgettext("gitphp", '%1$s is attempting directory traversal'), $project));
+            throw new RepositoryAccessException(sprintf(dgettext('gitphp', '%1$s is attempting directory traversal'), $project));
         }
 
         $pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
 
         if ((! is_link($path)) && (strcmp($pathPiece, $realProjectRoot) !== 0)) {
-            throw new RepositoryAccessException(sprintf(dgettext("gitphp", '%1$s is outside of the projectroot'), $project));
+            throw new RepositoryAccessException(sprintf(dgettext('gitphp', '%1$s is outside of the projectroot'), $project));
         }
 
         $this->project = $project;
@@ -836,7 +836,7 @@ class Project
         // read loose heads
         $heads = $this->ListDir($this->GetPath() . '/refs/heads');
         for ($i = 0; $i < count($heads); $i++) {
-            $key = trim(substr($heads[$i], $pathlen), "/\\");
+            $key = trim(substr($heads[$i], $pathlen), '/\\');
 
             if (isset($this->heads[$key])) {
                 continue;
@@ -852,7 +852,7 @@ class Project
         // read loose tags
         $tags = $this->ListDir($this->GetPath() . '/refs/tags');
         for ($i = 0; $i < count($tags); $i++) {
-            $key = trim(substr($tags[$i], $pathlen), "/\\");
+            $key = trim(substr($tags[$i], $pathlen), '/\\');
 
             if (isset($this->tags[$key])) {
                 continue;
@@ -1273,7 +1273,7 @@ class Project
         $path = $this->GetPath() . '/objects/' . substr($hash, 0, 2) . '/' . substr($hash, 2);
         if (file_exists($path)) {
             list($header, $data) = explode("\0", gzuncompress(file_get_contents($path)), 2);
-            sscanf($header, "%s %d", $typestr, $size);
+            sscanf($header, '%s %d', $typestr, $size);
             switch ($typestr) {
                 case 'commit':
                     $type = Pack::OBJ_COMMIT;

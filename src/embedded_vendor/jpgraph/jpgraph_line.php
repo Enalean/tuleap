@@ -12,10 +12,10 @@
 require_once('jpgraph_plotmark.inc.php');
 
 // constants for the (filled) area
-DEFINE("LP_AREA_FILLED", true);
-DEFINE("LP_AREA_NOT_FILLED", false);
-DEFINE("LP_AREA_BORDER", false);
-DEFINE("LP_AREA_NO_BORDER", true);
+DEFINE('LP_AREA_FILLED', true);
+DEFINE('LP_AREA_NOT_FILLED', false);
+DEFINE('LP_AREA_BORDER', false);
+DEFINE('LP_AREA_NO_BORDER', true);
 
 //===================================================
 // CLASS LinePlot
@@ -104,7 +104,7 @@ class LinePlot extends Plot
 
     public function Legend($graph)
     {
-        if ($this->legend != "") {
+        if ($this->legend != '') {
             if ($this->filled && ! $this->fillgrad) {
                 $graph->legend->Add(
                     $this->legend,
@@ -121,7 +121,7 @@ class LinePlot extends Plot
                 $graph->legend->Add(
                     $this->legend,
                     $color,
-                    "",
+                    '',
                     -2 /* -GRAD_HOR */,
                     $this->legendcsimtarget,
                     $this->legendcsimalt,
@@ -141,7 +141,7 @@ class LinePlot extends Plot
         }
     }
 
-    public function AddArea($aMin = 0, $aMax = 0, $aFilled = LP_AREA_NOT_FILLED, $aColor = "gray9", $aBorder = LP_AREA_BORDER)
+    public function AddArea($aMin = 0, $aMax = 0, $aFilled = LP_AREA_NOT_FILLED, $aColor = 'gray9', $aBorder = LP_AREA_BORDER)
     {
         if ($aMin > $aMax) {
             // swap

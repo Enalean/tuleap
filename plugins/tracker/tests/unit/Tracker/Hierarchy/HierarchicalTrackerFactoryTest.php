@@ -86,7 +86,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_factory = \Mockery::spy(\TrackerFactory::class);
         $tracker_factory->shouldReceive('getTrackersByGroupId')->with($project_id)->andReturns($project_trackers);
 
-        $dao->shouldReceive("searchAncestorIds")->with(4)->andReturn([5]);
+        $dao->shouldReceive('searchAncestorIds')->with(4)->andReturn([5]);
 
         $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
 

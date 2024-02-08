@@ -62,19 +62,19 @@ class ProjectJobDao extends DataAccessObject
 
     public function deleteLogsOfServer(int $jenkins_server_id): void
     {
-        $sql = "DELETE plugin_hudson_git_project_server_job.*, plugin_hudson_git_project_server_job_polling_url.*
+        $sql = 'DELETE plugin_hudson_git_project_server_job.*, plugin_hudson_git_project_server_job_polling_url.*
                 FROM plugin_hudson_git_project_server_job
                     INNER JOIN plugin_hudson_git_project_server_job_polling_url
                     ON plugin_hudson_git_project_server_job.id = plugin_hudson_git_project_server_job_polling_url.job_id
                 WHERE plugin_hudson_git_project_server_job.project_server_id=?
-                ";
+                ';
 
         $this->getDB()->run($sql, $jenkins_server_id);
     }
 
     public function searchJobsByJenkinsServer(int $jenkins_server_id): array
     {
-        $sql = "SELECT plugin_hudson_git_project_server_job.*,
+        $sql = 'SELECT plugin_hudson_git_project_server_job.*,
                        plugin_hudson_git_project_server_job_polling_url.job_url,
                        plugin_hudson_git_project_server_job_branch_source.status_code
                 FROM plugin_hudson_git_project_server_job
@@ -85,7 +85,7 @@ class ProjectJobDao extends DataAccessObject
                 WHERE plugin_hudson_git_project_server_job.project_server_id=?
                 ORDER BY plugin_hudson_git_project_server_job.push_date
                     DESC
-                LIMIT 30";
+                LIMIT 30';
 
         return $this->getDB()->run($sql, $jenkins_server_id);
     }

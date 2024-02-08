@@ -106,7 +106,7 @@ class DocmanFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             (int) $item->getObsolescenceDate()
         );
 
-        $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);
+        $this->assertEquals('/uploads/docman/version/1', $created_version_representation->upload_href);
     }
 
     public function testItShouldStoreANewFileVersionWhenAnEmptyItemBecomesAFile(): void
@@ -122,7 +122,7 @@ class DocmanFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->shouldReceive('getId')->andReturn(101);
 
         $representation            = new FilePropertiesPOSTPATCHRepresentation();
-        $representation->file_name = "Coco";
+        $representation->file_name = 'Coco';
         $representation->file_size = 5;
         $date                      = new \DateTimeImmutable();
 
@@ -141,6 +141,6 @@ class DocmanFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             (int) $item->getObsolescenceDate()
         );
 
-        $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);
+        $this->assertEquals('/uploads/docman/version/1', $created_version_representation->upload_href);
     }
 }

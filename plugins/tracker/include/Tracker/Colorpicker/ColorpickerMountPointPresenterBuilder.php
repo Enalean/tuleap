@@ -27,7 +27,7 @@ use Tuleap\Config\FeatureFlagConfigKey;
  */
 final class ColorpickerMountPointPresenterBuilder
 {
-    #[FeatureFlagConfigKey("Feature flag to enable usage of legacy color palette. Please warn us if you activate this flag.")]
+    #[FeatureFlagConfigKey('Feature flag to enable usage of legacy color palette. Please warn us if you activate this flag.')]
     public const FEATURE_FLAG = 'enable_usage_of_legacy_color_palette';
 
     public static function buildPresenter(

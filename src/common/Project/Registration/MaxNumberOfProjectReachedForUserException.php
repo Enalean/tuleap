@@ -27,11 +27,11 @@ class MaxNumberOfProjectReachedForUserException extends RegistrationForbiddenExc
 {
     public function __construct()
     {
-        parent::__construct("Too many projects for the user are waiting to be approved.");
+        parent::__construct('Too many projects for the user are waiting to be approved.');
     }
 
     public function getI18NMessage(): string
     {
-        return dgettext("tuleap-core", "Too many projects for the user are waiting to be approved.");
+        return dgettext('tuleap-core', 'Too many projects for the user are waiting to be approved.');
     }
 }

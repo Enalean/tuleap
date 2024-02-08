@@ -56,7 +56,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
      */
     public const SPECIAL_USERS_LIMIT = 100;
 
-    #[ConfigKey("Should user be approved by site admin (1) or auto approved (0)")]
+    #[ConfigKey('Should user be approved by site admin (1) or auto approved (0)')]
     public const CONFIG_USER_APPROVAL = 'sys_user_approval';
 
     /**
@@ -272,7 +272,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         ];
         $this->_getEventManager()->processEvent('user_manager_find_user', $eParams);
 
-        if (! $user && preg_match("/^\d+$/", $ident)) {
+        if (! $user && preg_match('/^\d+$/', $ident)) {
             $user = $this->getUserById((int) $ident);
         }
 

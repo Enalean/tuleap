@@ -28,7 +28,7 @@ class WikiPlugin_LikePages extends WikiPlugin
 {
     public function getName()
     {
-        return _("LikePages");
+        return _('LikePages');
     }
 
     public function getDescription()
@@ -42,9 +42,9 @@ class WikiPlugin_LikePages extends WikiPlugin
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.22 $"
+            '$Revision: 1.22 $'
         );
     }
 

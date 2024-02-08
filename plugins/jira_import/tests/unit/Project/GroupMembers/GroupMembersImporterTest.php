@@ -83,20 +83,20 @@ final class GroupMembersImporterTest extends TestCase
     {
         $payload_only_administrators = [
             '/rest/api/2/project/SP/role' => [
-                "Administrators" => "https://jira.example.com/rest/api/2/project/11102/role/10002",
+                'Administrators' => 'https://jira.example.com/rest/api/2/project/11102/role/10002',
             ],
             '/rest/api/2/project/11102/role/10002' => [
-                "self"        => "https://jira.example.com/rest/api/2/project/11102/role/10002",
-                "name"        => "Administrators",
-                "id"          => 10002,
-                "description" => "foo",
-                "actors"      => [
+                'self'        => 'https://jira.example.com/rest/api/2/project/11102/role/10002',
+                'name'        => 'Administrators',
+                'id'          => 10002,
+                'description' => 'foo',
+                'actors'      => [
                     [
-                        "id"          => 11339,
-                        "displayName" => "John Doe",
-                        "type"        => "atlassian-user-role-actor",
-                        "name"        => "john_doe",
-                        "avatarUrl"   => "https://jira.example.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER10125&avatarId=10605",
+                        'id'          => 11339,
+                        'displayName' => 'John Doe',
+                        'type'        => 'atlassian-user-role-actor',
+                        'name'        => 'john_doe',
+                        'avatarUrl'   => 'https://jira.example.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER10125&avatarId=10605',
                     ],
 
                 ],
@@ -105,54 +105,54 @@ final class GroupMembersImporterTest extends TestCase
 
         $payload_with_multiple_groups = [
             '/rest/api/2/project/SP/role' => [
-                'Développeur / Exploitant'     => "https://jira.example.com/rest/api/2/project/11102/role/10101",
-                "Administrators" => "https://jira.example.com/rest/api/2/project/11102/role/10002",
-                'Testers'        => "https://jira.example.com/rest/api/2/project/11102/role/10102",
+                'Développeur / Exploitant'     => 'https://jira.example.com/rest/api/2/project/11102/role/10101',
+                'Administrators' => 'https://jira.example.com/rest/api/2/project/11102/role/10002',
+                'Testers'        => 'https://jira.example.com/rest/api/2/project/11102/role/10102',
             ],
             '/rest/api/2/project/11102/role/10002' => [
-                "self"        => "https://jira.example.com/rest/api/2/project/11102/role/10002",
-                "name"        => "Administrators",
-                "id"          => 10002,
-                "description" => "foo",
-                "actors"      => [
+                'self'        => 'https://jira.example.com/rest/api/2/project/11102/role/10002',
+                'name'        => 'Administrators',
+                'id'          => 10002,
+                'description' => 'foo',
+                'actors'      => [
                     [
-                        "id"          => 11339,
-                        "displayName" => "John Doe",
-                        "type"        => "atlassian-user-role-actor",
-                        "name"        => "john_doe",
-                        "avatarUrl"   => "https://jira.example.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER10125&avatarId=10605",
+                        'id'          => 11339,
+                        'displayName' => 'John Doe',
+                        'type'        => 'atlassian-user-role-actor',
+                        'name'        => 'john_doe',
+                        'avatarUrl'   => 'https://jira.example.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER10125&avatarId=10605',
                     ],
 
                 ],
             ],
             '/rest/api/2/project/11102/role/10101' => [
-                "self"        => "https://jira.example.com/rest/api/2/project/11102/role/10101",
-                "name"        => "Développeur / Exploitant",
-                "id"          => 10101,
-                "description" => "foo",
-                "actors"      => [
+                'self'        => 'https://jira.example.com/rest/api/2/project/11102/role/10101',
+                'name'        => 'Développeur / Exploitant',
+                'id'          => 10101,
+                'description' => 'foo',
+                'actors'      => [
                     [
-                        "id"          => 11340,
-                        "displayName" => "Foo Bar",
-                        "type"        => "atlassian-user-role-actor",
-                        "name"        => "foo_bar",
-                        "avatarUrl"   => "https://jira.example.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER10125&avatarId=10605",
+                        'id'          => 11340,
+                        'displayName' => 'Foo Bar',
+                        'type'        => 'atlassian-user-role-actor',
+                        'name'        => 'foo_bar',
+                        'avatarUrl'   => 'https://jira.example.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER10125&avatarId=10605',
                     ],
 
                 ],
             ],
             '/rest/api/2/project/11102/role/10102' => [
-                "self"        => "https://jira.example.com/rest/api/2/project/11102/role/10102",
-                "name"        => "Testers",
-                "id"          => 10102,
-                "description" => "foo",
-                "actors"      => [
+                'self'        => 'https://jira.example.com/rest/api/2/project/11102/role/10102',
+                'name'        => 'Testers',
+                'id'          => 10102,
+                'description' => 'foo',
+                'actors'      => [
                     [
-                        "id"          => 11341,
-                        "displayName" => "Jane Biz",
-                        "type"        => "atlassian-user-role-actor",
-                        "name"        => "jane_biz",
-                        "avatarUrl"   => "https://jira.example.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER10125&avatarId=10605",
+                        'id'          => 11341,
+                        'displayName' => 'Jane Biz',
+                        'type'        => 'atlassian-user-role-actor',
+                        'name'        => 'jane_biz',
+                        'avatarUrl'   => 'https://jira.example.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER10125&avatarId=10605',
                     ],
 
                 ],
@@ -269,20 +269,20 @@ final class GroupMembersImporterTest extends TestCase
             'it import jira administrators as project_admins' => [
                 'jira_payloads' => [
                     '/rest/api/2/project/SP/role' => [
-                        "Administrators" => "https://jira.example.com/rest/api/2/project/11102/role/10002",
+                        'Administrators' => 'https://jira.example.com/rest/api/2/project/11102/role/10002',
                     ],
                     '/rest/api/2/project/11102/role/10002' => [
-                        "self"        => "https://jira.example.com/rest/api/2/project/11102/role/10002",
-                        "name"        => "Administrators",
-                        "id"          => 10002,
-                        "description" => "foo",
-                        "actors"      => [
+                        'self'        => 'https://jira.example.com/rest/api/2/project/11102/role/10002',
+                        'name'        => 'Administrators',
+                        'id'          => 10002,
+                        'description' => 'foo',
+                        'actors'      => [
                             [
-                                "id"          => 10254,
-                                "displayName" => "John Doe",
-                                "type"        => "atlassian-user-role-actor",
-                                "actorUser"   => [
-                                    "accountId" => "5d2ece042d76f30c36bf7e96",
+                                'id'          => 10254,
+                                'displayName' => 'John Doe',
+                                'type'        => 'atlassian-user-role-actor',
+                                'actorUser'   => [
+                                    'accountId' => '5d2ece042d76f30c36bf7e96',
                                 ],
                             ],
                         ],
@@ -300,31 +300,31 @@ final class GroupMembersImporterTest extends TestCase
             'it excludes groups of groups' => [
                 'jira_payloads' => [
                     '/rest/api/2/project/SP/role' => [
-                        "Administrators" => "https://jira.example.com/rest/api/2/project/11102/role/10002",
+                        'Administrators' => 'https://jira.example.com/rest/api/2/project/11102/role/10002',
                     ],
                     '/rest/api/2/project/11102/role/10002' => [
-                        "self"        => "https://jira.example.com/rest/api/2/project/11102/role/10002",
-                        "name"        => "Administrators",
-                        "id"          => 10002,
-                        "description" => "foo",
-                        "actors" => [
+                        'self'        => 'https://jira.example.com/rest/api/2/project/11102/role/10002',
+                        'name'        => 'Administrators',
+                        'id'          => 10002,
+                        'description' => 'foo',
+                        'actors' => [
                             [
-                                "id"          => 10100,
-                                "displayName" => "jira-administrators",
-                                "type"        => "atlassian-group-role-actor",
-                                "name"        => "jira-administrators",
-                                "actorGroup"  => [
-                                    "name"        => "jira-administrators",
-                                    "displayName" => "jira-administrators",
-                                    "groupId"     => "bf146b3f-7f6a-46e7-8cb1-1c8bbe8b2406",
+                                'id'          => 10100,
+                                'displayName' => 'jira-administrators',
+                                'type'        => 'atlassian-group-role-actor',
+                                'name'        => 'jira-administrators',
+                                'actorGroup'  => [
+                                    'name'        => 'jira-administrators',
+                                    'displayName' => 'jira-administrators',
+                                    'groupId'     => 'bf146b3f-7f6a-46e7-8cb1-1c8bbe8b2406',
                                 ],
                             ],
                             [
-                                "id"          => 10254,
-                                "displayName" => "John Doe",
-                                "type"        => "atlassian-user-role-actor",
-                                "actorUser"   => [
-                                    "accountId" => "5d2ece042d76f30c36bf7e96",
+                                'id'          => 10254,
+                                'displayName' => 'John Doe',
+                                'type'        => 'atlassian-user-role-actor',
+                                'actorUser'   => [
+                                    'accountId' => '5d2ece042d76f30c36bf7e96',
                                 ],
                             ],
                         ],

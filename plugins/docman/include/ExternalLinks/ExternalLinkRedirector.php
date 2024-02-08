@@ -69,15 +69,15 @@ final class ExternalLinkRedirector
     public function getUrlRedirection(): string
     {
         if ($this->document_id && $this->root_folder_id !== $this->document_id) {
-            return "/plugins/document/" . urlencode($this->project->getUnixNameLowerCase()) .
-                "/preview/" . urlencode((string) $this->document_id);
+            return '/plugins/document/' . urlencode($this->project->getUnixNameLowerCase()) .
+                '/preview/' . urlencode((string) $this->document_id);
         }
 
         if ($this->folder_id === 0) {
-            return "/plugins/document/" . urlencode($this->project->getUnixNameLowerCase()) . "/";
+            return '/plugins/document/' . urlencode($this->project->getUnixNameLowerCase()) . '/';
         }
 
-        return "/plugins/document/" . urlencode($this->project->getUnixNameLowerCase()) . "/" . $this->folder_id;
+        return '/plugins/document/' . urlencode($this->project->getUnixNameLowerCase()) . '/' . $this->folder_id;
     }
 
     public function shouldRedirectUserOnNewUI(): bool
@@ -91,7 +91,7 @@ final class ExternalLinkRedirector
             return;
         }
 
-        $is_request_for_legacy_docman = $this->request->exist("action");
+        $is_request_for_legacy_docman = $this->request->exist('action');
         if ($is_request_for_legacy_docman) {
             $this->should_redirect_user = false;
 
@@ -108,8 +108,8 @@ final class ExternalLinkRedirector
 
     private function checkAndStoreDocumentIdIfUserCanAccessToLegacyLinkToDocumentUrl(): void
     {
-        if ($this->request->exist("group_id") && $this->request->exist("id")) {
-            $this->document_id          = (int) $this->request->get("id");
+        if ($this->request->exist('group_id') && $this->request->exist('id')) {
+            $this->document_id          = (int) $this->request->get('id');
             $this->should_redirect_user = true;
         }
     }

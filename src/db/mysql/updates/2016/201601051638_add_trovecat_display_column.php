@@ -20,7 +20,7 @@ class b201601051638_add_trovecat_display_column extends \Tuleap\ForgeUpgrade\Buc
 {
     public function description()
     {
-        return "Add display_during_project_creation attribute for trovecat";
+        return 'Add display_during_project_creation attribute for trovecat';
     }
 
     public function preUp()
@@ -38,8 +38,8 @@ class b201601051638_add_trovecat_display_column extends \Tuleap\ForgeUpgrade\Buc
 
     public function alterTable()
     {
-        $sql = "ALTER TABLE trove_cat
-                ADD COLUMN display_during_project_creation TINYINT(1) NOT NULL DEFAULT 0";
+        $sql = 'ALTER TABLE trove_cat
+                ADD COLUMN display_during_project_creation TINYINT(1) NOT NULL DEFAULT 0';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -49,8 +49,8 @@ class b201601051638_add_trovecat_display_column extends \Tuleap\ForgeUpgrade\Buc
 
     public function convertExistingCategories()
     {
-        $sql = "UPDATE trove_cat parent LEFT JOIN  trove_cat children ON parent.trove_cat_id=children.root_parent
-            AND parent.mandatory=1 SET children.display_during_project_creation=1 WHERE parent.mandatory=1";
+        $sql = 'UPDATE trove_cat parent LEFT JOIN  trove_cat children ON parent.trove_cat_id=children.root_parent
+            AND parent.mandatory=1 SET children.display_during_project_creation=1 WHERE parent.mandatory=1';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

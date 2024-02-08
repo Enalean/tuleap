@@ -64,7 +64,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                             (string) $artifact->getTitle(),
                             $artifact->getTracker()->getColor()->getName(),
                             null,
-                            "",
+                            '',
                             new \DateTimeImmutable('@1234567890'),
                             new \DateTimeImmutable('@1234567891'),
                             false,

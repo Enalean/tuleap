@@ -176,9 +176,9 @@ class PermissionPerGroupServicePaneBuilder
     private function getPresenter(\Project $project, string $name, array $ugroups): array
     {
         return [
-            "name" => $name,
-            "groups" => $ugroups,
-            "url" => AdminPermissionsController::getAdminUrl($project),
+            'name' => $name,
+            'groups' => $ugroups,
+            'url' => AdminPermissionsController::getAdminUrl($project),
         ];
     }
 }

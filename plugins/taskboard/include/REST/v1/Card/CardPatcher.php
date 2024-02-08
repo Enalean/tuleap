@@ -204,7 +204,7 @@ class CardPatcher
         if (! $remaining_effort_field instanceof Tracker_FormElement_Field_Numeric) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-taskboard', "The artifact does not have a remaining effort numeric field")
+                dgettext('tuleap-taskboard', 'The artifact does not have a remaining effort numeric field')
             );
         }
         if (! $remaining_effort_field->userCanUpdate($user)) {

@@ -28,7 +28,7 @@ function gif_loadFile($lpszFileName, $iIndex = 0)
 
 function gif_outputAsBmp($gif, $lpszFileName, $bgColor = -1)
 {
-    if (! isset($gif) || (@$gif::class <> "cgif") || ! $gif->loaded() || ($lpszFileName == "")) {
+    if (! isset($gif) || (@$gif::class <> 'cgif') || ! $gif->loaded() || ($lpszFileName == '')) {
         return false;
     }
 
@@ -37,7 +37,7 @@ function gif_outputAsBmp($gif, $lpszFileName, $bgColor = -1)
         return false;
     }
 
-    if (! ($fh = @fOpen($lpszFileName, "wb"))) {
+    if (! ($fh = @fOpen($lpszFileName, 'wb'))) {
         return false;
     }
     @fWrite($fh, $fd, strlen($fd));
@@ -50,7 +50,7 @@ function gif_outputAsBmp($gif, $lpszFileName, $bgColor = -1)
 
 function gif_outputAsPng($gif, $lpszFileName, $bgColor = -1)
 {
-    if (! isset($gif) || (@$gif::class <> "cgif") || ! $gif->loaded() || ($lpszFileName == "")) {
+    if (! isset($gif) || (@$gif::class <> 'cgif') || ! $gif->loaded() || ($lpszFileName == '')) {
         return false;
     }
 
@@ -59,7 +59,7 @@ function gif_outputAsPng($gif, $lpszFileName, $bgColor = -1)
         return false;
     }
 
-    if (! ($fh = @fOpen($lpszFileName, "wb"))) {
+    if (! ($fh = @fOpen($lpszFileName, 'wb'))) {
         return false;
     }
     @fWrite($fh, $fd, strlen($fd));
@@ -92,7 +92,7 @@ function gif_outputAsJpeg($gif, $lpszFileName, $bgColor = -1)
 
 function gif_getSize($gif, &$width, &$height)
 {
-    if (isset($gif) && (@$gif::class == "cgif") && $gif->loaded()) {
+    if (isset($gif) && (@$gif::class == 'cgif') && $gif->loaded()) {
         $width  = $gif->width();
         $height = $gif->height();
     } elseif (@file_exists($gif)) {
@@ -150,7 +150,7 @@ class CGIFLZW
     {
         $stLen  = strlen($data);
         $datLen = 0;
-        $ret    = "";
+        $ret    = '';
 
         // INITIALIZATION
         $this->LZWCommand($data, true);
@@ -362,7 +362,7 @@ class CGIFCOLORTABLE
 
     public function toString()
     {
-        $ret = "";
+        $ret = '';
 
         for ($i = 0; $i < $this->m_nColors; $i++) {
             $ret .=
@@ -376,7 +376,7 @@ class CGIFCOLORTABLE
 
     public function toRGBQuad()
     {
-        $ret = "";
+        $ret = '';
 
         for ($i = 0; $i < $this->m_nColors; $i++) {
             $ret .=
@@ -446,7 +446,7 @@ class CGIFFILEHEADER
         $hdrLen = 0;
 
         $this->m_lpVer = substr($lpData, 0, 6);
-        if (($this->m_lpVer <> "GIF87a") && ($this->m_lpVer <> "GIF89a")) {
+        if (($this->m_lpVer <> 'GIF87a') && ($this->m_lpVer <> 'GIF89a')) {
             return false;
         }
 
@@ -717,7 +717,7 @@ class CGIF
     {
         $this->m_gfh     = new CGIFFILEHEADER();
         $this->m_img     = new CGIFIMAGE();
-        $this->m_lpData  = "";
+        $this->m_lpData  = '';
         $this->m_bLoaded = false;
     }
 
@@ -728,7 +728,7 @@ class CGIF
         }
 
         // READ FILE
-        if (! ($fh = @fOpen($lpszFileName, "rb"))) {
+        if (! ($fh = @fOpen($lpszFileName, 'rb'))) {
             return false;
         }
         $data = @fRead($fh, @fileSize($lpszFileName));
@@ -759,7 +759,7 @@ class CGIF
 
         function getSize($lpszFileName, &$width, &$height)
         {
-            if (! ($fh = @fOpen($lpszFileName, "rb"))) {
+            if (! ($fh = @fOpen($lpszFileName, 'rb'))) {
                 return false;
             }
             $data = @fRead($fh, @fileSize($lpszFileName));
@@ -777,7 +777,7 @@ class CGIF
 
     public function getBmp($bgColor)
     {
-        $out = "";
+        $out = '';
 
         if (! $this->m_bLoaded) {
             return false;
@@ -804,7 +804,7 @@ class CGIF
         // PREPARE BITMAP BITS
         $data = $this->m_img->m_data;
         $nPxl = ($this->m_gfh->m_nHeight - 1) * $this->m_gfh->m_nWidth;
-        $bmp  = "";
+        $bmp  = '';
 
         $nPad = ($this->m_gfh->m_nWidth % 4) ? 4 - ($this->m_gfh->m_nWidth % 4) : 0;
         for ($y = 0; $y < $this->m_gfh->m_nHeight; $y++) {
@@ -844,7 +844,7 @@ class CGIF
         }
 
         // BITMAPFILEHEADER
-        $out .= "BM";
+        $out .= 'BM';
         $out .= $this->dword(14 + 40 + ($nColors << 2) + strlen($bmp));
         $out .= "\x00\x00";
         $out .= "\x00\x00";
@@ -876,7 +876,7 @@ class CGIF
 
     public function getPng($bgColor)
     {
-        $out = "";
+        $out = '';
 
         if (! $this->m_bLoaded) {
             return false;
@@ -903,7 +903,7 @@ class CGIF
         // PREPARE BITMAP BITS
         $data = $this->m_img->m_data;
         $nPxl = 0;
-        $bmp  = "";
+        $bmp  = '';
         for ($y = 0; $y < $this->m_gfh->m_nHeight; $y++) {
             $bmp .= "\x00";
             for ($x = 0; $x < $this->m_gfh->m_nWidth; $x++, $nPxl++) {
@@ -932,7 +932,7 @@ class CGIF
 
         // HEADER
         $out .= "\x00\x00\x00\x0D";
-        $tmp  = "IHDR";
+        $tmp  = 'IHDR';
         $tmp .= $this->ndword($this->m_gfh->m_nWidth);
         $tmp .= $this->ndword($this->m_gfh->m_nHeight);
         $tmp .= "\x08\x03\x00\x00\x00";
@@ -942,7 +942,7 @@ class CGIF
         // PALETTE
         if ($nColors > 0) {
             $out .= $this->ndword($nColors * 3);
-            $tmp  = "PLTE";
+            $tmp  = 'PLTE';
             $tmp .= $pal;
             $out .= $tmp;
             $out .= $this->ndword(crc32($tmp));
@@ -951,7 +951,7 @@ class CGIF
         // TRANSPARENCY
         if ($this->m_img->m_bTrans && ($nColors > 0)) {
             $out .= $this->ndword($nColors);
-            $tmp  = "tRNS";
+            $tmp  = 'tRNS';
             for ($i = 0; $i < $nColors; $i++) {
                 $tmp .= ($i == $this->m_img->m_nTrans) ? "\x00" : "\xFF";
             }
@@ -961,7 +961,7 @@ class CGIF
 
         // DATA BITS
         $out .= $this->ndword(strlen($bmp));
-        $tmp  = "IDAT";
+        $tmp  = 'IDAT';
         $tmp .= $bmp;
         $out .= $tmp;
         $out .= $this->ndword(crc32($tmp));

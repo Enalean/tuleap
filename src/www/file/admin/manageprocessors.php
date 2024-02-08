@@ -91,10 +91,10 @@ if ($request->isPost() && $request->existAndNonEmpty('add')) {
     ) {
         $procname = $request->get('procname');
         $procrank = $request->get('procrank');
-        if ($procrank == "") {
-            $feedback .= " " . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_rank'));
-        } elseif ($procname == "") {
-            $feedback .= " " . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_name'));
+        if ($procrank == '') {
+            $feedback .= ' ' . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_rank'));
+        } elseif ($procname == '') {
+            $feedback .= ' ' . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_name'));
         } else {
             file_utils_add_proc($procname, $procrank);
         }
@@ -122,10 +122,10 @@ if ($request->isPost() && $request->existAndNonEmpty('update')) {
         $proc_id     = $request->get('proc_id');
         $processname = $request->get('processname');
         $processrank = $request->get('processrank');
-        if ($processrank == "") {
-            $feedback .= " " . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_rank'));
-        } elseif ($processname == "") {
-            $feedback .= " " . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_name'));
+        if ($processrank == '') {
+            $feedback .= ' ' . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_rank'));
+        } elseif ($processname == '') {
+            $feedback .= ' ' . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_name'));
         } else {
             file_utils_update_proc($proc_id, $processname, $processrank);
         }
@@ -134,7 +134,7 @@ if ($request->isPost() && $request->existAndNonEmpty('update')) {
     }
 }
 
-$sql    = "SELECT * FROM frs_processor WHERE group_id=" . db_ei($group_id) . " OR group_id=100 ORDER BY `rank`";
+$sql    = 'SELECT * FROM frs_processor WHERE group_id=' . db_ei($group_id) . ' OR group_id=100 ORDER BY `rank`';
 $result = db_query($sql);
 
 ?>

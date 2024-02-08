@@ -33,15 +33,15 @@ class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUni
     public function testItBuildsARepresentationFromAPIResponse(): void
     {
         $response = [
-            "id"      => "10057",
-            "created" => "2020-03-25T14:10:10.823+0100",
-            "items"   => [
+            'id'      => '10057',
+            'created' => '2020-03-25T14:10:10.823+0100',
+            'items'   => [
                 [
-                    "fieldId"    => "field01",
-                    "from"       => null,
-                    "fromString" => "string01",
-                    "to"         => null,
-                    "toString"   => "string02",
+                    'fieldId'    => 'field01',
+                    'from'       => null,
+                    'fromString' => 'string01',
+                    'to'         => null,
+                    'toString'   => 'string02',
                 ],
             ],
             'author' => [
@@ -62,11 +62,11 @@ class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUni
     public function testItThrowsAnExcpetionIfAPIResponseIsNotWellFormed(): void
     {
         $response = [
-            "items" => [
+            'items' => [
                 [
-                    "fieldId"    => "field01",
-                    "from"       => null,
-                    "fromString" => "string01",
+                    'fieldId'    => 'field01',
+                    'from'       => null,
+                    'fromString' => 'string01',
                 ],
             ],
         ];
@@ -76,7 +76,7 @@ class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUni
         JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($response);
 
         $response = [
-            "id" => "10057",
+            'id' => '10057',
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
@@ -84,12 +84,12 @@ class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUni
         JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($response);
 
         $response = [
-            "id" => "10057",
-            "items" => [
+            'id' => '10057',
+            'items' => [
                 [
-                    "fieldId"    => "field01",
-                    "from"       => null,
-                    "fromString" => "string01",
+                    'fieldId'    => 'field01',
+                    'from'       => null,
+                    'fromString' => 'string01',
                 ],
             ],
             'author' => [
@@ -107,15 +107,15 @@ class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUni
     public function testItBuildsARepresentationFromAPIResponseWithChangeMadeByAnonymous(): void
     {
         $response = [
-            "id"      => "10057",
-            "created" => "2020-03-25T14:10:10.823+0100",
-            "items"   => [
+            'id'      => '10057',
+            'created' => '2020-03-25T14:10:10.823+0100',
+            'items'   => [
                 [
-                    "fieldId"    => "field01",
-                    "from"       => null,
-                    "fromString" => "string01",
-                    "to"         => null,
-                    "toString"   => "string02",
+                    'fieldId'    => 'field01',
+                    'from'       => null,
+                    'fromString' => 'string01',
+                    'to'         => null,
+                    'toString'   => 'string02',
                 ],
             ],
         ];

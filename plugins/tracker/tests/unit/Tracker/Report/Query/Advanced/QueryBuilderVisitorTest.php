@@ -170,7 +170,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesInAndExpressionTheExpertFromAndWhereClausesOfTheSubexpression(): void
     {
-        $from_where = new ParametrizedFromWhere("le_from", "le_where", [], []);
+        $from_where = new ParametrizedFromWhere('le_from', 'le_where', [], []);
         $comparison = \Mockery::mock(EqualComparison::class);
         $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
@@ -184,8 +184,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesInAndExpressionTheExpertFromAndWhereClausesOfTheSubexpressionConcatenatedToTheTailOnes(): void
     {
-        $from_where_expression = new ParametrizedFromWhere("le_from", "le_where", [], []);
-        $from_where_tail       = new ParametrizedFromWhere("le_from_tail", "le_where_tail", [], []);
+        $from_where_expression = new ParametrizedFromWhere('le_from', 'le_where', [], []);
+        $from_where_tail       = new ParametrizedFromWhere('le_from_tail', 'le_where_tail', [], []);
         $comparison            = \Mockery::mock(EqualComparison::class);
         $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_expression);
@@ -197,13 +197,13 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitAndExpression($and_expression, $this->parameters);
 
-        $this->assertEquals("le_from le_from_tail", $result->getFrom());
-        $this->assertEquals("(le_where) AND (le_where_tail)", $result->getWhere());
+        $this->assertEquals('le_from le_from_tail', $result->getFrom());
+        $this->assertEquals('(le_where) AND (le_where_tail)', $result->getWhere());
     }
 
     public function testItRetrievesInAndOperandTheExpertFromAndWhereClausesOfTheSubexpression(): void
     {
-        $from_where = new ParametrizedFromWhere("le_from", "le_where", [], []);
+        $from_where = new ParametrizedFromWhere('le_from', 'le_where', [], []);
         $comparison = \Mockery::mock(EqualComparison::class);
         $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
@@ -217,8 +217,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesInAndOperandTheExpertFromAndWhereClausesOfTheSubexpressionConcatenatedToTheTailOnes(): void
     {
-        $from_where_operand = new ParametrizedFromWhere("le_from", "le_where", [], []);
-        $from_where_tail    = new ParametrizedFromWhere("le_from_tail", "le_where_tail", [], []);
+        $from_where_operand = new ParametrizedFromWhere('le_from', 'le_where', [], []);
+        $from_where_tail    = new ParametrizedFromWhere('le_from_tail', 'le_where_tail', [], []);
         $comparison         = \Mockery::mock(EqualComparison::class);
         $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_operand);
@@ -230,13 +230,13 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitAndOperand($and_operand, $this->parameters);
 
-        $this->assertEquals("le_from le_from_tail", $result->getFrom());
-        $this->assertEquals("(le_where) AND (le_where_tail)", $result->getWhere());
+        $this->assertEquals('le_from le_from_tail', $result->getFrom());
+        $this->assertEquals('(le_where) AND (le_where_tail)', $result->getWhere());
     }
 
     public function testItRetrievesInOrOperandTheExpertFromAndWhereClausesOfTheOperand(): void
     {
-        $from_where = new ParametrizedFromWhere("le_from", "le_where", [], []);
+        $from_where = new ParametrizedFromWhere('le_from', 'le_where', [], []);
         $expression = \Mockery::mock(AndExpression::class);
         $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
@@ -250,8 +250,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesInOrOperandTheExpertFromAndWhereClausesOfTheOperandConcatenatedToTheTailOnes(): void
     {
-        $from_where_operand = new ParametrizedFromWhere("le_from", "le_where", [], []);
-        $from_where_tail    = new ParametrizedFromWhere("le_from_tail", "le_where_tail", [], []);
+        $from_where_operand = new ParametrizedFromWhere('le_from', 'le_where', [], []);
+        $from_where_tail    = new ParametrizedFromWhere('le_from_tail', 'le_where_tail', [], []);
         $expression         = \Mockery::mock(AndExpression::class);
         $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_operand);
@@ -263,13 +263,13 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitOrOperand($or_operand, $this->parameters);
 
-        $this->assertEquals("le_from le_from_tail", $result->getFrom());
-        $this->assertEquals("((le_where) OR (le_where_tail))", $result->getWhere());
+        $this->assertEquals('le_from le_from_tail', $result->getFrom());
+        $this->assertEquals('((le_where) OR (le_where_tail))', $result->getWhere());
     }
 
     public function testItRetrievesInOrExpressionTheExpertFromAndWhereClausesOfTheOperand(): void
     {
-        $from_where = new ParametrizedFromWhere("le_from", "le_where", [], []);
+        $from_where = new ParametrizedFromWhere('le_from', 'le_where', [], []);
         $expression = \Mockery::mock(AndExpression::class);
         $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
@@ -283,8 +283,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesInOrExpressionTheExpertFromAndWhereClausesOfTheOperandConcatenatedToTheTailOnes(): void
     {
-        $from_where_operand = new ParametrizedFromWhere("le_from", "le_where", [], []);
-        $from_where_tail    = new ParametrizedFromWhere("le_from_tail", "le_where_tail", [], []);
+        $from_where_operand = new ParametrizedFromWhere('le_from', 'le_where', [], []);
+        $from_where_tail    = new ParametrizedFromWhere('le_from_tail', 'le_where_tail', [], []);
         $expression         = \Mockery::mock(AndExpression::class);
         $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_operand);
@@ -296,8 +296,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitOrExpression($or_expression, $this->parameters);
 
-        $this->assertEquals("le_from le_from_tail", $result->getFrom());
-        $this->assertEquals("((le_where) OR (le_where_tail))", $result->getWhere());
+        $this->assertEquals('le_from le_from_tail', $result->getFrom());
+        $this->assertEquals('((le_where) OR (le_where_tail))', $result->getWhere());
     }
 
     public function testItRetrievesForTextInEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void

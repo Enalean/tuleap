@@ -48,7 +48,7 @@ class Rule_StringTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($r->isValid("\rabcdfg"));
         $this->assertFalse($r->isValid("abcdfg\r"));
 
-        $array = ["abcdfg"];
+        $array = ['abcdfg'];
         $this->assertFalse($r->isValid($array));
     }
 

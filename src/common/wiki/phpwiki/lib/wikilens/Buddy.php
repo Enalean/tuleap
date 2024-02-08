@@ -17,7 +17,7 @@ rcs_id('$Id: Buddy.php,v 1.3 2004/11/21 11:59:26 rurban Exp $');
 //       If no homepage, fallback to prefs in cookie as in 1.3.3.
 
 
-require_once(dirname(__FILE__) . "/Utils.php");
+require_once(dirname(__FILE__) . '/Utils.php');
 
 /*
 class Buddy extends WikiUserNew {}
@@ -25,21 +25,21 @@ class Buddy extends WikiUserNew {}
 
 function addBuddy($user, $buddy, $dbi)
 {
-    $START_DELIM = _("Buddies:");
+    $START_DELIM = _('Buddies:');
     // the delimiter is really a comma, but include a space to make it look
     // nicer (getBuddies strips out extra spaces when extracting buddies)
-    $DELIM = ", ";
+    $DELIM = ', ';
 
     addPageTextData($user, $dbi, $buddy, $START_DELIM, $DELIM);
 }
 
-function getBuddies($fromUser, $dbi, $thePage = "")
+function getBuddies($fromUser, $dbi, $thePage = '')
 {
-    $START_DELIM = $thePage . _("Buddies:");
+    $START_DELIM = $thePage . _('Buddies:');
 
     $buddies_array = getPageTextData($fromUser, $dbi, $START_DELIM);
-    if (count($buddies_array) == 0 and $thePage !== "") {
-        $buddies_array = getPageTextData($fromUser, $dbi, _("Buddies:"));
+    if (count($buddies_array) == 0 and $thePage !== '') {
+        $buddies_array = getPageTextData($fromUser, $dbi, _('Buddies:'));
     }
     return $buddies_array;
 }
@@ -65,7 +65,7 @@ function CoAgreement($dbi, $page, $users, $active_userid)
         $buddy_rating_iter  = $dbi->get_rating(0, $buddy, $cur_page);
         $buddy_rating_array = $buddy_rating_iter->next();
         $buddy_rating       = $buddy_rating_array['ratingvalue'];
-        if ($buddy_rating == "") {
+        if ($buddy_rating == '') {
             $agree = 1;
         } elseif ($agreePos && $buddy_rating >= $MIDDLE_RATING) {
             $agree = 1;
@@ -101,7 +101,7 @@ function MinMisery($dbi, $page, $users, $active_userid)
         $buddy_rating_iter  = $dbi->get_rating(0, $buddy, $cur_page);
         $buddy_rating_array = $buddy_rating_iter->next();
         $buddy_rating       = $buddy_rating_array['ratingvalue'];
-        if ($buddy_rating != "" && $buddy_rating < $min) {
+        if ($buddy_rating != '' && $buddy_rating < $min) {
             $min = $buddy_rating;
         }
     }
@@ -118,7 +118,7 @@ function AverageRating($dbi, $page, $users, $active_userid)
     $my_ratings_iter   = $dbi->get_rating(0, $active_userid, $page);
     $my_ratings_single = $my_ratings_iter->next();
     $cur_rating        = $my_ratings_single['ratingvalue'];
-    if ($cur_rating != "") {
+    if ($cur_rating != '') {
         $total = $cur_rating;
         $count = 1;
     } else {
@@ -129,7 +129,7 @@ function AverageRating($dbi, $page, $users, $active_userid)
         $buddy_rating_iter  = $dbi->get_rating(0, $buddy, $cur_page);
         $buddy_rating_array = $buddy_rating_iter->next();
         $buddy_rating       = $buddy_rating_array['ratingvalue'];
-        if ($buddy_rating != "") {
+        if ($buddy_rating != '') {
             $total = $total + $buddy_rating;
             $count++;
         }

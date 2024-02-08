@@ -118,7 +118,7 @@ class FieldUsedInSupportedSemanticsVisitor implements \Tracker_FormElement_Field
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        throw new RuntimeException("Checkbox field is not supported for similar fields matching.");
+        throw new RuntimeException('Checkbox field is not supported for similar fields matching.');
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)

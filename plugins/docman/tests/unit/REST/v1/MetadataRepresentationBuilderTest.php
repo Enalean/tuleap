@@ -44,21 +44,21 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $builder       = new MetadataRepresentationBuilder($factory, $html_purifier, Mockery::mock(UserHelper::class));
 
         $simple_metadata = Mockery::mock(Docman_Metadata::class);
-        $simple_metadata->shouldReceive('getValue')->andReturn("my simple value");
+        $simple_metadata->shouldReceive('getValue')->andReturn('my simple value');
         $simple_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
-        $simple_metadata->shouldReceive('getName')->andReturn("simple metadata label");
+        $simple_metadata->shouldReceive('getName')->andReturn('simple metadata label');
         $simple_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
         $simple_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
-        $simple_metadata->shouldReceive('getLabel')->andReturn("simple_metadata_label");
+        $simple_metadata->shouldReceive('getLabel')->andReturn('simple_metadata_label');
         $simple_metadata->shouldReceive('getGroupId')->andReturn(102);
         $simple_metadata->shouldReceive('isSpecial')->andReturn(false);
 
         $value1 = Mockery::mock(\Docman_MetadataListOfValuesElement::class);
         $value1->shouldReceive('getId')->andReturn(1);
-        $value1->shouldReceive('getMetadataValue')->andReturn("My value 1");
+        $value1->shouldReceive('getMetadataValue')->andReturn('My value 1');
         $value2 = Mockery::mock(\Docman_MetadataListOfValuesElement::class);
         $value2->shouldReceive('getId')->andReturn(100);
-        $value2->shouldReceive('getMetadataValue')->andReturn("None");
+        $value2->shouldReceive('getMetadataValue')->andReturn('None');
         $list_metadata = Mockery::mock(Docman_ListMetadata::class);
         $list_metadata->shouldReceive('getValue')->andReturn(
             new \ArrayIterator([
@@ -67,10 +67,10 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ])
         );
         $list_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(true);
-        $list_metadata->shouldReceive('getName')->andReturn("list metadata label");
+        $list_metadata->shouldReceive('getName')->andReturn('list metadata label');
         $list_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $list_metadata->shouldReceive('isEmptyAllowed')->andReturn(false);
-        $list_metadata->shouldReceive('getLabel')->andReturn("list_metadata_label");
+        $list_metadata->shouldReceive('getLabel')->andReturn('list_metadata_label');
         $list_metadata->shouldReceive('isSpecial')->andReturn(false);
 
         $factory->shouldReceive('appendItemMetadataList');
@@ -86,27 +86,27 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_representation = [
             new ItemMetadataRepresentation(
-                "list metadata label",
+                'list metadata label',
                 'list',
                 true,
                 null,
                 null,
                 [
-                    new MetadataListValueRepresentation(1, "My value 1"),
-                    new MetadataListValueRepresentation(100, "None"),
+                    new MetadataListValueRepresentation(1, 'My value 1'),
+                    new MetadataListValueRepresentation(100, 'None'),
                 ],
                 false,
-                "list_metadata_label"
+                'list_metadata_label'
             ),
             new ItemMetadataRepresentation(
-                "simple metadata label",
+                'simple metadata label',
                 'text',
                 false,
-                "my simple value",
+                'my simple value',
                 'value with references',
                 null,
                 true,
-                "simple_metadata_label"
+                'simple_metadata_label'
             ),
         ];
 

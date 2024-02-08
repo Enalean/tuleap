@@ -58,8 +58,8 @@
  *   pcre_fix_posix_classes (probably with redefines()).
  */
 
-include_once(dirname(__FILE__) . "/config.php");
-include_once(dirname(__FILE__) . "/FileFinder.php");
+include_once(dirname(__FILE__) . '/config.php');
+include_once(dirname(__FILE__) . '/FileFinder.php');
 
 function IniConfig($file)
 {
@@ -121,7 +121,7 @@ function IniConfig($file)
         ];
 
     $rs    = @parse_ini_file($file);
-    $rsdef = @parse_ini_file(dirname(__FILE__) . "/../config/config-default.ini");
+    $rsdef = @parse_ini_file(dirname(__FILE__) . '/../config/config-default.ini');
     foreach ($rsdef as $k => $v) {
         if (defined($k)) {
             $rs[$k] = constant($k);
@@ -153,8 +153,8 @@ function IniConfig($file)
                 ]
             )
         ) {
-        } elseif (! defined("_PHPWIKI_INSTALL_RUNNING")) {
-            trigger_error(sprintf("missing config setting for %s", $item));
+        } elseif (! defined('_PHPWIKI_INSTALL_RUNNING')) {
+            trigger_error(sprintf('missing config setting for %s', $item));
         }
     }
     unset($item);
@@ -237,7 +237,7 @@ function IniConfig($file)
                 $rs['USER_AUTH_ORDER']
             );
         } else {
-            $GLOBALS['USER_AUTH_ORDER'] = ["PersonalPage"];
+            $GLOBALS['USER_AUTH_ORDER'] = ['PersonalPage'];
         }
     }
 
@@ -293,10 +293,10 @@ function IniConfig($file)
         $rs['KEYWORDS'] = @$rsdef['KEYWORDS'];
     }
     if (! isset($rs['KEYWORDS'])) {
-        $rs['KEYWORDS'] = "Category* OR Topic*";
+        $rs['KEYWORDS'] = 'Category* OR Topic*';
     }
     if ($rs['KEYWORDS'] == 'Category:Topic') {
-        $rs['KEYWORDS'] = "Category* OR Topic*";
+        $rs['KEYWORDS'] = 'Category* OR Topic*';
     }
     if (! defined('KEYWORDS')) {
         define('KEYWORDS', $rs['KEYWORDS']);
@@ -327,9 +327,9 @@ function IniConfig($file)
             @ini_set('include_path', $rs['INCLUDE_PATH']);
         }
         if (empty($rs['TEMP_DIR'])) {
-            $rs['TEMP_DIR'] = "/tmp";
-            if (getenv("TEMP")) {
-                $rs['TEMP_DIR'] = getenv("TEMP");
+            $rs['TEMP_DIR'] = '/tmp';
+            if (getenv('TEMP')) {
+                $rs['TEMP_DIR'] = getenv('TEMP');
             }
         }
         $rs['PLUGIN_CACHED_CACHE_DIR'] = $rs['TEMP_DIR'] . '/cache';
@@ -372,7 +372,7 @@ function fixup_static_configs($file)
     global $FieldSeparator, $charset, $WikiNameRegexp, $AllActionPages;
     global $DBParams, $LANG;
     // init FileFinder to add proper include paths
-    FindFile("lib/interwiki.map", true);
+    FindFile('lib/interwiki.map', true);
 
     // "\x80"-"\x9f" (and "\x00" - "\x1f") are non-printing control
     // chars in iso-8859-*
@@ -402,8 +402,8 @@ function fixup_static_configs($file)
     );
 
     // If user has not defined PHPWIKI_DIR, and we need it
-    if (! defined('PHPWIKI_DIR') and ! file_exists("themes/default")) {
-        $themes_dir = FindFile("themes");
+    if (! defined('PHPWIKI_DIR') and ! file_exists('themes/default')) {
+        $themes_dir = FindFile('themes');
         define('PHPWIKI_DIR', dirname($themes_dir));
     }
 
@@ -438,38 +438,38 @@ function fixup_static_configs($file)
     // Basic configurator validation
     if (! defined('ADMIN_USER') or ADMIN_USER == '') {
         $error = sprintf(
-            "%s may not be empty. Please update your configuration.",
-            "ADMIN_USER"
+            '%s may not be empty. Please update your configuration.',
+            'ADMIN_USER'
         );
         // protect against recursion
         if (
-            ! preg_match("/config\-(dist|default)\.ini$/", $file)
-            and ! defined("_PHPWIKI_INSTALL_RUNNING")
+            ! preg_match('/config\-(dist|default)\.ini$/', $file)
+            and ! defined('_PHPWIKI_INSTALL_RUNNING')
         ) {
-            include_once(dirname(__FILE__) . "/install.php");
-            run_install("_part1");
+            include_once(dirname(__FILE__) . '/install.php');
+            run_install('_part1');
             trigger_error($error, E_USER_ERROR);
             exit();
-        } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
+        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_GET['show'] = '_part1';
             trigger_error($error, E_USER_WARNING);
         }
     }
     if (! defined('ADMIN_PASSWD') or ADMIN_PASSWD == '') {
         $error = sprintf(
-            "%s may not be empty. Please update your configuration.",
-            "ADMIN_PASSWD"
+            '%s may not be empty. Please update your configuration.',
+            'ADMIN_PASSWD'
         );
         // protect against recursion
         if (
-            ! preg_match("/config\-(dist|default)\.ini$/", $file)
-            and ! defined("_PHPWIKI_INSTALL_RUNNING")
+            ! preg_match('/config\-(dist|default)\.ini$/', $file)
+            and ! defined('_PHPWIKI_INSTALL_RUNNING')
         ) {
-            include_once(dirname(__FILE__) . "/install.php");
-            run_install("_part1");
+            include_once(dirname(__FILE__) . '/install.php');
+            run_install('_part1');
             trigger_error($error, E_USER_ERROR);
             exit();
-        } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
+        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_GET['show'] = '_part1';
             trigger_error($error, E_USER_WARNING);
         }
@@ -535,7 +535,7 @@ function fixup_dynamic_configs($file)
 
     update_locale(isset($LANG) ? $LANG : DEFAULT_LANGUAGE);
     if (empty($LANG)) {
-        if (! defined("DEFAULT_LANGUAGE") or ! DEFAULT_LANGUAGE) {
+        if (! defined('DEFAULT_LANGUAGE') or ! DEFAULT_LANGUAGE) {
             // TODO: defer this to WikiRequest::initializeLang()
             $LANG = guessing_lang();
             guessing_setlocale(LC_ALL, $LANG);
@@ -550,34 +550,34 @@ function fixup_dynamic_configs($file)
     // 1. If the script is not index.php but something like "de", on a different path
     //    then bindtextdomain() fails, but after chdir to the correct path it will work okay.
     // 2. But the weird error "Undefined variable: bindtextdomain" is generated then.
-    $bindtextdomain_path = FindFile("locale", false, true);
+    $bindtextdomain_path = FindFile('locale', false, true);
     $chback              = 0;
     if (isWindows()) {
-        $bindtextdomain_path = str_replace("/", "\\", $bindtextdomain_path);
+        $bindtextdomain_path = str_replace('/', '\\', $bindtextdomain_path);
     }
-    $bindtextdomain_real = @bindtextdomain("phpwiki", $bindtextdomain_path);
+    $bindtextdomain_real = @bindtextdomain('phpwiki', $bindtextdomain_path);
     if (realpath($bindtextdomain_real) != realpath($bindtextdomain_path)) {
         // this will happen with virtual_paths. chdir and try again.
         chdir($bindtextdomain_path);
         $chback              = 1;
-        $bindtextdomain_real = @bindtextdomain("phpwiki", $bindtextdomain_path);
+        $bindtextdomain_real = @bindtextdomain('phpwiki', $bindtextdomain_path);
     }
-    textdomain("phpwiki");
-    bind_textdomain_codeset("phpwiki", "UTF-8");
+    textdomain('phpwiki');
+    bind_textdomain_codeset('phpwiki', 'UTF-8');
     if ($chback) { // change back
-        chdir($bindtextdomain_real . (isWindows() ? "\\.." : "/.."));
+        chdir($bindtextdomain_real . (isWindows() ? '\\..' : '/..'));
     }
 
     // language dependent updates:
     //if ($KeywordLinkRegexp) $KeywordLinkRegexp = pcre_fix_posix_classes($KeywordLinkRegexp);
     if (! defined('CATEGORY_GROUP_PAGE')) {
-        define('CATEGORY_GROUP_PAGE', _("CategoryGroup"));
+        define('CATEGORY_GROUP_PAGE', _('CategoryGroup'));
     }
     if (! defined('WIKI_NAME')) {
-        define('WIKI_NAME', _("An unnamed PhpWiki"));
+        define('WIKI_NAME', _('An unnamed PhpWiki'));
     }
     if (! defined('HOME_PAGE')) {
-        define('HOME_PAGE', _("HomePage"));
+        define('HOME_PAGE', _('HomePage'));
     }
 
     //////////////////////////////////////////////////////////////////
@@ -660,7 +660,7 @@ function fixup_dynamic_configs($file)
         ) {
             // FIXME: This is a hack, and won't work if the requested
             // pagename has a slash in it.
-            $temp = strtr(dirname($REDIRECT_URL . 'x'), "\\", '/');
+            $temp = strtr(dirname($REDIRECT_URL . 'x'), '\\', '/');
             if (($temp == '/') || ($temp == '\\')) {
                 $temp = '';
             }

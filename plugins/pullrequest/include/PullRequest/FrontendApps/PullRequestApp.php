@@ -24,15 +24,15 @@ namespace Tuleap\PullRequest\FrontendApps;
 
 enum PullRequestApp: string
 {
-    case LEGACY_ANGULAR_APP = "";
-    case OVERVIEW_APP       = "overview";
-    case HOMEPAGE_APP       = "homepage";
+    case LEGACY_ANGULAR_APP = '';
+    case OVERVIEW_APP       = 'overview';
+    case HOMEPAGE_APP       = 'homepage';
 
     public static function fromRequest(\HTTPRequest $request): self
     {
-        return match ($request->get("tab")) {
-            "overview" => self::OVERVIEW_APP,
-            "homepage" => self::HOMEPAGE_APP,
+        return match ($request->get('tab')) {
+            'overview' => self::OVERVIEW_APP,
+            'homepage' => self::HOMEPAGE_APP,
             default    => self::LEGACY_ANGULAR_APP,
         };
     }

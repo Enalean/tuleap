@@ -79,8 +79,8 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         $v3_migration = new Tracker_Migration_V3(TrackerFactory::instance());
         $project      = ProjectManager::instance()->getProject(100);
         $name         = 'Tasks';
-        $description  = "tasks tracker";
-        $itemname     = "tsk";
+        $description  = 'tasks tracker';
+        $itemname     = 'tsk';
         $tv3          = new ArtifactType($project, $trackerv3_id);
 
         $task_tracker          = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
@@ -147,8 +147,8 @@ final class TaskTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->task_tracker->getTitleField();
         self::assertInstanceOf(Tracker_FormElement_Field_String::class, $field);
-        self::assertSame("summary", $field->getName());
-        self::assertSame("Summary", $field->getLabel());
+        self::assertSame('summary', $field->getName());
+        self::assertSame('Summary', $field->getLabel());
         self::assertTrue($field->isRequired());
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
@@ -166,8 +166,8 @@ final class TaskTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->task_tracker->getStatusField();
         self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        self::assertSame("status_id", $field->getName());
-        self::assertSame("Status", $field->getLabel());
+        self::assertSame('status_id', $field->getName());
+        self::assertSame('Status', $field->getLabel());
         self::assertTrue($field->isRequired());
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
@@ -193,8 +193,8 @@ final class TaskTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->task_tracker->getContributorField();
         self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        self::assertSame("multi_assigned_to", $field->getName());
-        self::assertSame("Assigned to (multiple)", $field->getLabel());
+        self::assertSame('multi_assigned_to', $field->getName());
+        self::assertSame('Assigned to (multiple)', $field->getLabel());
         self::assertFalse($field->isRequired());
         self::assertTrue($field->isUsed());
         self::assertTrue($field->isMultiple());
@@ -213,8 +213,8 @@ final class TaskTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'submitted_by');
         self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        self::assertSame("submitted_by", $field->getName());
-        self::assertSame("Submitted by", $field->getLabel());
+        self::assertSame('submitted_by', $field->getName());
+        self::assertSame('Submitted by', $field->getLabel());
         self::assertFalse($field->isRequired());
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
@@ -228,8 +228,8 @@ final class TaskTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'details');
         self::assertInstanceOf(Tracker_FormElement_Field_Text::class, $field);
-        self::assertSame("details", $field->getName());
-        self::assertSame("Original Submission", $field->getLabel());
+        self::assertSame('details', $field->getName());
+        self::assertSame('Original Submission', $field->getLabel());
         self::assertFalse($field->isRequired());
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
@@ -247,8 +247,8 @@ final class TaskTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
         self::assertInstanceOf(Tracker_FormElement_Field_Date::class, $field);
-        self::assertSame("start_date", $field->getName());
-        self::assertSame("Start Date", $field->getLabel());
+        self::assertSame('start_date', $field->getName());
+        self::assertSame('Start Date', $field->getLabel());
         self::assertFalse($field->isRequired());
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
@@ -266,8 +266,8 @@ final class TaskTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'stage');
         self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        self::assertSame("stage", $field->getName());
-        self::assertSame("Stage", $field->getLabel());
+        self::assertSame('stage', $field->getName());
+        self::assertSame('Stage', $field->getLabel());
         self::assertFalse($field->isUsed());
     }
 
@@ -275,8 +275,8 @@ final class TaskTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'severity');
         self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        self::assertSame("severity", $field->getName());
-        self::assertSame("Priority", $field->getLabel());
+        self::assertSame('severity', $field->getName());
+        self::assertSame('Priority', $field->getLabel());
         self::assertTrue($field->isRequired());
         self::assertTrue($field->isUsed());
 
@@ -463,7 +463,7 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertSame(Tracker_DateReminder::AFTER, $reminders[0]->getNotificationType());
         self::assertEquals($due_date_field, $reminders[0]->getField());
         self::assertSame(Tracker_DateReminder::ENABLED, $reminders[0]->getStatus());
-        self::assertEquals([""], $reminders[0]->getUgroups(true));
+        self::assertEquals([''], $reminders[0]->getUgroups(true));
         self::assertEquals($notified_roles, $reminders[0]->getRoles());
     }
 
@@ -479,7 +479,7 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertSame(Tracker_DateReminder::AFTER, $reminders[0]->getNotificationType());
         self::assertEquals($due_date_field, $reminders[0]->getField());
         self::assertSame(Tracker_DateReminder::ENABLED, $reminders[0]->getStatus());
-        self::assertEquals([""], $reminders[0]->getUgroups(true));
+        self::assertEquals([''], $reminders[0]->getUgroups(true));
         self::assertEquals($notified_roles, $reminders[0]->getRoles());
     }
 

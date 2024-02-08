@@ -46,10 +46,10 @@ $view = $request->getValidated('view', $view_whitelist, 'daily');
 
 if (isset($_REQUEST['SUBMIT'])) {
     switch ($view) {
-        case "monthly":
+        case 'monthly':
             $period = $span * 30.5;
             break;
-        case "weekly":
+        case 'weekly':
             $period = $span * 7;
             break;
         case 'daily':
@@ -93,24 +93,24 @@ print '
 <tr><td><b>' . $Language->getText('project_stats_source_code_access', 'access_log_from') . '</b></td><td><b>' . $Language->getText('project_stats_source_code_access', 'for_last') . '</b></td><td> </td></tr>
 <tr><td>
 <SELECT NAME="who">
-<OPTION VALUE="nonmembers" ' . (($who == "nonmembers") ? "SELECTED" : "") . '>' . $Language->getText('project_stats_source_code_access', 'non_proj_members') . '</OPTION>
-<OPTION VALUE="members" ' . (($who == "members") ? "SELECTED" : "") . '>' . $Language->getText('project_admin_editugroup', 'proj_members') . '</OPTION>
-<OPTION VALUE="allusers" ' . (($who == "allusers") ? "SELECTED" : "") . '>' . $Language->getText('project_stats_source_code_access', 'all_users') . '</OPTION>
+<OPTION VALUE="nonmembers" ' . (($who == 'nonmembers') ? 'SELECTED' : '') . '>' . $Language->getText('project_stats_source_code_access', 'non_proj_members') . '</OPTION>
+<OPTION VALUE="members" ' . (($who == 'members') ? 'SELECTED' : '') . '>' . $Language->getText('project_admin_editugroup', 'proj_members') . '</OPTION>
+<OPTION VALUE="allusers" ' . (($who == 'allusers') ? 'SELECTED' : '') . '>' . $Language->getText('project_stats_source_code_access', 'all_users') . '</OPTION>
 </SELECT></td>
 <td>
 <SELECT NAME="span">
-<OPTION VALUE="4" ' . (($span == 4) ? "SELECTED" : "") . '>4</OPTION>
-<OPTION VALUE="7" ' . (($span == 7 || ! isset($span) ) ? "SELECTED" : "") . '>7</OPTION>
-<OPTION VALUE="12" ' . (($span == 12) ? "SELECTED" : "") . '>12</OPTION>
-<OPTION VALUE="14" ' . (($span == 14) ? "SELECTED" : "") . '>14</OPTION>
-<OPTION VALUE="30" ' . (($span == 30) ? "SELECTED" : "") . '>30</OPTION>
-<OPTION VALUE="52" ' . (($span == 52) ? "SELECTED" : "") . '>52</OPTION>
+<OPTION VALUE="4" ' . (($span == 4) ? 'SELECTED' : '') . '>4</OPTION>
+<OPTION VALUE="7" ' . (($span == 7 || ! isset($span) ) ? 'SELECTED' : '') . '>7</OPTION>
+<OPTION VALUE="12" ' . (($span == 12) ? 'SELECTED' : '') . '>12</OPTION>
+<OPTION VALUE="14" ' . (($span == 14) ? 'SELECTED' : '') . '>14</OPTION>
+<OPTION VALUE="30" ' . (($span == 30) ? 'SELECTED' : '') . '>30</OPTION>
+<OPTION VALUE="52" ' . (($span == 52) ? 'SELECTED' : '') . '>52</OPTION>
 </SELECT>
 
 <SELECT NAME="view">
-<OPTION VALUE="monthly" ' . (($view == "monthly") ? "SELECTED" : "") . '>' . $Language->getText('project_stats_index', 'months') . '</OPTION>
-<OPTION VALUE="weekly" ' . (($view == "weekly") ? "SELECTED" : "") . '>' . $Language->getText('project_stats_index', 'weeks') . '</OPTION>
-<OPTION VALUE="daily" ' . (($view == "daily" || ! isset($view)) ? "SELECTED" : "") . '>' . $Language->getText('project_stats_index', 'days') . '</OPTION>
+<OPTION VALUE="monthly" ' . (($view == 'monthly') ? 'SELECTED' : '') . '>' . $Language->getText('project_stats_index', 'months') . '</OPTION>
+<OPTION VALUE="weekly" ' . (($view == 'weekly') ? 'SELECTED' : '') . '>' . $Language->getText('project_stats_index', 'weeks') . '</OPTION>
+<OPTION VALUE="daily" ' . (($view == 'daily' || ! isset($view)) ? 'SELECTED' : '') . '>' . $Language->getText('project_stats_index', 'days') . '</OPTION>
 </SELECT>
 </td>
 <td>
@@ -120,7 +120,7 @@ print '
 </td></tr></table></FORM>';
 
 switch ($view) {
-    case "monthly":
+    case 'monthly':
         print '<P>';
         $span_days = (int) ($span * 30.5);
         filedownload_logs_daily($project, $span_days, $who);
@@ -130,7 +130,7 @@ switch ($view) {
         plugins_logs_daily($project, $span_days, $who);
         break;
 
-    case "weekly":
+    case 'weekly':
         print '<P>';
         filedownload_logs_daily($project, $span * 7, $who);
         svnaccess_logs_daily($project, $span * 7, $who);

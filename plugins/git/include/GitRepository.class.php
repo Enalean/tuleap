@@ -31,7 +31,7 @@ class GitRepository
     public const DEFAULT_MAIL_PREFIX   = '[SCM]';
     public const REPO_SCOPE_PROJECT    = 'P';
     public const REPO_SCOPE_INDIVIDUAL = 'I';
-    public const DEFAULT_DESCRIPTION   = "-- Default description --";
+    public const DEFAULT_DESCRIPTION   = '-- Default description --';
 
     private $id;
     private $parentId;
@@ -628,11 +628,11 @@ class GitRepository
 
         $format = 'format:URL:    ' . $url . '%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
 
-        $showrev = "t=%s; " .
-            "git show " .
-            "--name-status " .
+        $showrev = 't=%s; ' .
+            'git show ' .
+            '--name-status ' .
             "--pretty='" . $format . "' " .
-            "\$t";
+            '$t';
         return $showrev;
     }
 
@@ -956,11 +956,11 @@ class GitRepository
      */
     public function getPathWithoutProject()
     {
-        $split_path = explode("/", $this->path);
+        $split_path = explode('/', $this->path);
         array_shift($split_path);
         array_pop($split_path);
 
-        return implode("/", $split_path);
+        return implode('/', $split_path);
     }
 
     /**

@@ -5,8 +5,8 @@
 require_once __DIR__ . '/../include/pre.php';  // Initial db and session library, opens session
 
 $HTML->header(
-    \Tuleap\Layout\HeaderConfigurationBuilder::get("Terms of Service Agreement")
-        ->withMainClass(["tlp-framed", "tlp-centered"])
+    \Tuleap\Layout\HeaderConfigurationBuilder::get('Terms of Service Agreement')
+        ->withMainClass(['tlp-framed', 'tlp-centered'])
         ->build()
 );
 

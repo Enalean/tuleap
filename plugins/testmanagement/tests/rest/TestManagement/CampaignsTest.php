@@ -216,10 +216,10 @@ final class CampaignsTest extends TestManagementRESTTestCase
     public function testPatchCampaignExecutions(): void
     {
         $campaign = $this->valid_73_campaign;
-        $def_id   = $this->getFirstExecution($campaign['id'], REST_TestDataBuilder::TEST_BOT_USER_NAME)['definition']["id"];
+        $def_id   = $this->getFirstExecution($campaign['id'], REST_TestDataBuilder::TEST_BOT_USER_NAME)['definition']['id'];
 
         $all_executions_response = $this->getResponse(
-            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions')->withBody($this->stream_factory->createStream(json_encode(["definition_ids_to_add" => [$def_id], "execution_ids_to_remove" => []])))
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions')->withBody($this->stream_factory->createStream(json_encode(['definition_ids_to_add' => [$def_id], 'execution_ids_to_remove' => []])))
         );
 
         $executions = json_decode($all_executions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -236,7 +236,7 @@ final class CampaignsTest extends TestManagementRESTTestCase
         $this->assertFalse($campaign['is_open']);
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions')->withBody($this->stream_factory->createStream(json_encode(["definition_ids_to_add" => [], "execution_ids_to_remove" => []])))
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions')->withBody($this->stream_factory->createStream(json_encode(['definition_ids_to_add' => [], 'execution_ids_to_remove' => []])))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -248,7 +248,7 @@ final class CampaignsTest extends TestManagementRESTTestCase
         $this->assertFalse($campaign['is_open']);
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(["change_status" => "open"])))
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(['change_status' => 'open'])))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -266,7 +266,7 @@ final class CampaignsTest extends TestManagementRESTTestCase
         $this->assertFalse($campaign['is_open']);
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(["change_status" => "closed"])))
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(['change_status' => 'closed'])))
         );
 
         $this->assertEquals(200, $response->getStatusCode());

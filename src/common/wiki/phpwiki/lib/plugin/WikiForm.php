@@ -32,15 +32,15 @@ class WikiPlugin_WikiForm extends WikiPlugin
 {
     public function getName()
     {
-        return _("WikiForm");
+        return _('WikiForm');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.16 $"
+            '$Revision: 1.16 $'
         );
     }
 
@@ -80,14 +80,14 @@ class WikiPlugin_WikiForm extends WikiPlugin
                     $input['value'] = DEFAULT_DUMP_DIR;
                 }
                 if (! $buttontext) {
-                    $buttontext = _("Load File");
+                    $buttontext = _('Load File');
                 }
                 $class = false;
                 break;
             case 'login':
                 $input['name'] = 'source';
                 if (! $buttontext) {
-                    $buttontext = _("Login");
+                    $buttontext = _('Login');
                 }
                 $class = 'wikiadmin';
                 break;
@@ -100,12 +100,12 @@ class WikiPlugin_WikiForm extends WikiPlugin
                 $input['name'] = 'file';
                 $input['type'] = 'file';
                 if (! $buttontext) {
-                    $buttontext = _("Upload");
+                    $buttontext = _('Upload');
                 }
                 $class = false; // local OS function, so use native OS button
                 break;
             default:
-                return HTML::p(fmt("WikiForm: %s: unknown action", $action));
+                return HTML::p(fmt('WikiForm: %s: unknown action', $action));
         }
 
         $input = HTML::input($input);

@@ -98,7 +98,7 @@ class IssueSnapshotCollectionBuilder
         LinkedIssuesCollection $linked_issues_collection,
         string $jira_base_url,
     ): array {
-        $this->logger->debug("Start build collection of snapshot ...");
+        $this->logger->debug('Start build collection of snapshot ...');
 
         $jira_issue_key   = $issue_api_representation->getKey();
         $artifact_creator = $this->jira_user_retriever->retrieveUserFromAPIData(
@@ -169,7 +169,7 @@ class IssueSnapshotCollectionBuilder
 
         ksort($snapshots_collection);
 
-        $this->logger->debug("End build collection of snapshot");
+        $this->logger->debug('End build collection of snapshot');
 
         return $snapshots_collection;
     }

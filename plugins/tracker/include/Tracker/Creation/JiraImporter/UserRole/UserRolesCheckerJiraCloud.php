@@ -46,25 +46,25 @@ final class UserRolesCheckerJiraCloud implements UserRolesCheckerInterface
         LoggerInterface $logger,
         string $jira_project,
     ): void {
-        $user_role_url = ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . urlencode($jira_project) . "/roledetails?currentMember=true";
-        $logger->debug("  GET " . $user_role_url);
+        $user_role_url = ClientWrapper::JIRA_CORE_BASE_URL . '/project/' . urlencode($jira_project) . '/roledetails?currentMember=true';
+        $logger->debug('  GET ' . $user_role_url);
 
         $user_roles_data = $jira_client->getUrl($user_role_url);
         if ($user_roles_data === null) {
-            throw new UserRolesResponseNotWellFormedException("User roles data is null");
+            throw new UserRolesResponseNotWellFormedException('User roles data is null');
         }
 
         assert(is_array($user_roles_data));
         foreach ($user_roles_data as $user_role) {
             if (! isset($user_role[self::NAME_KEY])) {
-                throw new UserRolesResponseNotWellFormedException("User roles key `" . self::NAME_KEY . "` not found");
+                throw new UserRolesResponseNotWellFormedException('User roles key `' . self::NAME_KEY . '` not found');
             }
 
             if (in_array($user_role[self::NAME_KEY], self::ADMINISTRATOR_ROLE_NAMES, true)) {
-                $logger->info("User is project administrator.");
+                $logger->info('User is project administrator.');
                 return;
             }
         }
-        throw new UserIsNotProjectAdminException("User is not project administrator.");
+        throw new UserIsNotProjectAdminException('User is not project administrator.');
     }
 }

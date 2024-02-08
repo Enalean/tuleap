@@ -32,7 +32,7 @@ class DatabaseForge extends DataBase
     ) {
         global $wgDBtype;
 
-        $wgDBtype = "mysql";
+        $wgDBtype = 'mysql';
         return Database::__construct(
             $server,
             $user,

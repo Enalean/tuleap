@@ -35,8 +35,8 @@ final class SearchColumnCollectionBuilderTest extends TestCase
 
         $collection = (new SearchColumnCollectionBuilder())->getCollection($metadata_factory);
 
-        self::assertEquals("id", $collection->getColumnNames()[0]);
-        self::assertEquals("title", $collection->getColumnNames()[1]);
+        self::assertEquals('id', $collection->getColumnNames()[0]);
+        self::assertEquals('title', $collection->getColumnNames()[1]);
     }
 
     public function testItReturnsIdThenHardcodedPropertiesThenLocationThenCustomProperties(): void
@@ -60,18 +60,18 @@ final class SearchColumnCollectionBuilderTest extends TestCase
 
         self::assertEquals(
             [
-                "id",
-                "title",
-                "description",
-                "owner",
-                "update_date",
-                "create_date",
-                "status",
-                "obsolescence_date",
-                "location",
-                "filename",
-                "field_1",
-                "field_2",
+                'id',
+                'title',
+                'description',
+                'owner',
+                'update_date',
+                'create_date',
+                'status',
+                'obsolescence_date',
+                'location',
+                'filename',
+                'field_1',
+                'field_2',
             ],
             $collection->getColumnNames(),
         );
@@ -98,18 +98,18 @@ final class SearchColumnCollectionBuilderTest extends TestCase
 
         self::assertEquals(
             [
-                "id",
-                "title",
-                "description",
-                "owner",
-                "update_date",
-                "create_date",
-                "status",
-                "obsolescence_date",
-                "location",
-                "filename",
-                "field_2",
-                "field_1",
+                'id',
+                'title',
+                'description',
+                'owner',
+                'update_date',
+                'create_date',
+                'status',
+                'obsolescence_date',
+                'location',
+                'filename',
+                'field_2',
+                'field_1',
             ],
             $collection->getColumnNames(),
         );

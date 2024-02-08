@@ -62,12 +62,12 @@ final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
         $this->factory
             ->expects(self::once())
             ->method('getSourcesOfEntity')
-            ->with("PageName", "wiki", 102)
+            ->with('PageName', 'wiki', 102)
             ->willReturn([]);
         $this->factory
             ->expects(self::once())
             ->method('getTargetsOfEntity')
-            ->with("PageName", "wiki", 102)
+            ->with('PageName', 'wiki', 102)
             ->willReturn([]);
 
         $available_natures = new NatureCollection();
@@ -91,7 +91,7 @@ final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
         $by_nature_organizer->expects(self::exactly(2))->method('getNatures')->willReturn([]);
 
 
-        $presenter = $this->builder->build("PageName", "wiki", 102, $user);
+        $presenter = $this->builder->build('PageName', 'wiki', 102, $user);
 
         self::assertEquals([], $presenter->sources_by_nature);
         self::assertEquals([], $presenter->targets_by_nature);

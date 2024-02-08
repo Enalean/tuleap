@@ -17,7 +17,7 @@
 class PiePlot3D extends PiePlot
 {
     private $angle      = 50;
-    private $edgecolor  = "";
+    private $edgecolor  = '';
     private $edgeweight = 1;
     private $iThickness = false;
 
@@ -27,7 +27,7 @@ class PiePlot3D extends PiePlot
     {
         $this->radius = 0.5;
         $this->data   = $data;
-        $this->title  = new Text("");
+        $this->title  = new Text('');
         $this->title->SetFont(FF_FONT1, FS_BOLD);
         $this->value = new DisplayValue();
         $this->value->Show();
@@ -126,10 +126,10 @@ class PiePlot3D extends PiePlot
         $alt     = '';
 
         if (! empty($this->csimtargets[$i])) {
-            $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . $this->csimtargets[$i] . "\"";
+            $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . $this->csimtargets[$i] . '"';
 
             if (! empty($this->csimwintargets[$i])) {
-                $this->csimareas .= " target=\"" . $this->csimwintargets[$i] . "\" ";
+                $this->csimareas .= ' target="' . $this->csimwintargets[$i] . '" ';
             }
 
             if (! empty($this->csimalts[$i])) {
@@ -140,7 +140,7 @@ class PiePlot3D extends PiePlot
         }
     }
 
-    public function SetLabels($aLabels, $aLblPosAdj = "auto")
+    public function SetLabels($aLabels, $aLblPosAdj = 'auto')
     {
         $this->labels       = $aLabels;
         $this->ilabelposadj = $aLblPosAdj;
@@ -379,7 +379,7 @@ class PiePlot3D extends PiePlot
             $pt[] = $yc;
         }
 
-        $img->PushColor($fillcolor . ":" . $shadow);
+        $img->PushColor($fillcolor . ':' . $shadow);
         $img->FilledPolygon($p);
         $img->PopColor();
 
@@ -409,7 +409,7 @@ class PiePlot3D extends PiePlot
         $z,
         $shadow = 0.65,
         $startangle = 0,
-        $edgecolor = "",
+        $edgecolor = '',
         $edgeweight = 1,
     ) {
         //---------------------------------------------------------------------------
@@ -737,7 +737,7 @@ class PiePlot3D extends PiePlot
         }
 
         // Finally add potential lines in pie
-        if ($edgecolor == "" || $aaoption !== 0) {
+        if ($edgecolor == '' || $aaoption !== 0) {
             return;
         }
 
@@ -945,7 +945,7 @@ class PiePlot3D extends PiePlot
 
         // Adjust title position
         if ($aaoption != 1) {
-            $this->title->SetPos($xc, $yc - $this->title->GetFontHeight($img) - $width / 2 - $this->title->margin, "center", "bottom");
+            $this->title->SetPos($xc, $yc - $this->title->GetFontHeight($img) - $width / 2 - $this->title->margin, 'center', 'bottom');
             $this->title->Stroke($img);
         }
     }
@@ -956,8 +956,8 @@ class PiePlot3D extends PiePlot
     // Position the labels of each slice
     public function StrokeLabels($label, $img, $a, $xp, $yp, $z)
     {
-        $this->value->halign = "left";
-        $this->value->valign = "top";
+        $this->value->halign = 'left';
+        $this->value->valign = 'top';
 
         // Position the axis title.
         // dx, dy is the offset from the top left corner of the bounding box that sorrounds the text

@@ -92,6 +92,6 @@ class TrackerGeneralSettingsChecker
      */
     private function itemNameIsValid(string $item_name): bool
     {
-        return (bool) preg_match("/^[a-zA-Z0-9_]+$/i", $item_name);
+        return (bool) preg_match('/^[a-zA-Z0-9_]+$/i', $item_name);
     }
 }

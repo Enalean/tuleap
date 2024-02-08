@@ -36,7 +36,7 @@ use Tuleap\Tracker\REST\TrackerReference;
  */
 class TimetrackingReportRepresentation
 {
-    public const NAME = "timetracking_reports";
+    public const NAME = 'timetracking_reports';
     /**
      * @var int
      */

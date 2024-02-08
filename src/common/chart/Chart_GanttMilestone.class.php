@@ -42,7 +42,7 @@ class Chart_GanttMileStone
     *
     * @return void
     */
-    public function __construct($aVPos, $aLabel, $aDate, $aCaption = "")
+    public function __construct($aVPos, $aLabel, $aDate, $aCaption = '')
     {
         $this->jpgraph_instance = new MileStone($aVPos, $aLabel, $aDate, $aCaption);
 

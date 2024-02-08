@@ -250,7 +250,7 @@ class GitActions extends PluginActions
         $this->git_system_event_manager->queueRepositoryDeletion($repository);
 
         $this->history_dao->groupAddHistory(
-            "git_repo_delete",
+            'git_repo_delete',
             $repository->getName(),
             $repository->getProjectId()
         );
@@ -352,7 +352,7 @@ class GitActions extends PluginActions
                 $this->template_factory->deleteTemplate($template_id);
 
                 $this->history_dao->groupAddHistory(
-                    "git_delete_template",
+                    'git_delete_template',
                     $template->getName(),
                     (int) $project->getID()
                 );
@@ -498,7 +498,7 @@ class GitActions extends PluginActions
 
         if ($this->template_factory->createTemplate((int) $project->getID(), $template_content, $template_name)) {
             $this->history_dao->groupAddHistory(
-                "git_create_template",
+                'git_create_template',
                 $template_name,
                 (int) $project->getID()
             );
@@ -585,7 +585,7 @@ class GitActions extends PluginActions
             $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
             $this->history_dao->groupAddHistory(
-                "git_repo_update",
+                'git_repo_update',
                 $repository->getName() . ': update notification prefix',
                 $repository->getProjectId()
             );
@@ -617,7 +617,7 @@ class GitActions extends PluginActions
         }
 
         $this->history_dao->groupAddHistory(
-            "git_repo_update",
+            'git_repo_update',
             $repository->getName() . ': add notification email',
             $repository->getProjectId()
         );
@@ -650,7 +650,7 @@ class GitActions extends PluginActions
                     )
                 );
                 $this->history_dao->groupAddHistory(
-                    "git_repo_update",
+                    'git_repo_update',
                     $repository->getName() . ': add notification user ' . $user->getUserName(),
                     $repository->getProjectId()
                 );
@@ -688,7 +688,7 @@ class GitActions extends PluginActions
                     )
                 );
                 $this->history_dao->groupAddHistory(
-                    "git_repo_update",
+                    'git_repo_update',
                     $repository->getName() . ': add notification user group ' . $ugroup->getNormalizedName(),
                     $repository->getProjectId()
                 );
@@ -725,7 +725,7 @@ class GitActions extends PluginActions
         }
 
         $this->history_dao->groupAddHistory(
-            "git_repo_update",
+            'git_repo_update',
             $repository->getName() . ': remove notification email',
             $repository->getProjectId()
         );
@@ -757,7 +757,7 @@ class GitActions extends PluginActions
                 );
                 $controller->addInfo($feedback);
                 $this->history_dao->groupAddHistory(
-                    "git_repo_update",
+                    'git_repo_update',
                     $repository->getName() . ': remove user ' . $user->getUserName() . ' from notifications',
                     $repository->getProjectId()
                 );
@@ -797,7 +797,7 @@ class GitActions extends PluginActions
                 );
                 $controller->addInfo($feedback);
                 $this->history_dao->groupAddHistory(
-                    "git_repo_update",
+                    'git_repo_update',
                     $repository->getName() . ': remove user group ' . $ugroup->getNormalizedName() . ' from notifications',
                     $repository->getProjectId()
                 );
@@ -1080,7 +1080,7 @@ class GitActions extends PluginActions
         try {
             if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope, $forkPermissions)) {
                 $this->history_dao->groupAddHistory(
-                    "git_fork_repositories",
+                    'git_fork_repositories',
                     (string) $to_project->getID(),
                     (int) $to_project->getID()
                 );
@@ -1162,7 +1162,7 @@ class GitActions extends PluginActions
         $GLOBALS['Response']->addFeedback(Feedback::INFO, sprintf(dgettext('tuleap-git', '%1$s'), $feedback));
 
         $this->history_dao->groupAddHistory(
-            "git_admin_groups",
+            'git_admin_groups',
             '',
             (int) $project->getID()
         );

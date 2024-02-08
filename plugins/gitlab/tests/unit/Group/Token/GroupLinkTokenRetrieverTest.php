@@ -32,7 +32,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class GroupLinkTokenRetrieverTest extends TestCase
 {
-    private const STORED_TOKEN = "L4l4";
+    private const STORED_TOKEN = 'L4l4';
 
     /**
      * @var KeyFactory&MockObject

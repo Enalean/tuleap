@@ -147,14 +147,14 @@ class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->html_purifier->shouldReceive('purifyTextWithReferences')->andReturn('description with processed ref');
 
         $metadata_representation = new ItemMetadataRepresentation(
-            "metadata name",
+            'metadata name',
             'date',
             false,
             '2019-02-06T15:00:00+01:00',
             '2019-02-06T15:00:00+01:00',
             [],
             false,
-            "metadata"
+            'metadata'
         );
         $this->metadata_representation_builder->shouldReceive('build')->andReturn([$metadata_representation]);
 
@@ -196,7 +196,7 @@ class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->lock_factory->shouldReceive('getLockInfoForItem')
             ->withArgs([$docman_item])
-            ->andReturns(["user_id" => $owner_id, "lock_date" => 1549461600]);
+            ->andReturns(['user_id' => $owner_id, 'lock_date' => 1549461600]);
 
         $permissions_for_groups_representation = new DocmanItemPermissionsForGroupsRepresentation();
         $this->item_permissions_for_groups_builder->shouldReceive('getRepresentation')

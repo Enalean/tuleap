@@ -28,7 +28,7 @@ final class ToStringComparisonException extends InvalidQueryException
     public function __construct(Metadata $metadata, $value)
     {
         $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s cannot be compared to the string value '%s'."),
+            dgettext('tuleap-crosstracker', "%s cannot be compared to the string value '%s'."),
             $metadata->getName(),
             $value
         );

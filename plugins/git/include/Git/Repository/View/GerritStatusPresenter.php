@@ -72,10 +72,10 @@ class GerritStatusPresenter
             $this->settings_gerrit_url         = $url = GIT_BASE_URL . '/?'
                 . http_build_query(
                     [
-                        "action"   => "repo_management",
-                        "group_id" => $repository->getProjectId(),
-                        "repo_id"  => $repository->getId(),
-                        "pane"     => "gerrit",
+                        'action'   => 'repo_management',
+                        'group_id' => $repository->getProjectId(),
+                        'repo_id'  => $repository->getId(),
+                        'pane'     => 'gerrit',
                     ]
                 );
         }

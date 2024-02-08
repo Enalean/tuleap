@@ -32,7 +32,7 @@ class b201809241410_add_pending_artifact_removal_table extends ForgeUpgrade_Buck
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_tracker_artifact_pending_removal LIKE tracker_artifact";
+        $sql = 'CREATE TABLE plugin_tracker_artifact_pending_removal LIKE tracker_artifact';
 
         $this->db->createTable('plugin_tracker_artifact_pending_removal', $sql);
     }

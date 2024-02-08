@@ -36,11 +36,11 @@ final class b202311021100_add_last_edition_date_to_comments_tables extends \Tule
 
     private function addColumnToCommentsTable(): void
     {
-        if ($this->api->columnNameExists("plugin_pullrequest_comments", "last_edition_date")) {
+        if ($this->api->columnNameExists('plugin_pullrequest_comments', 'last_edition_date')) {
             return;
         }
 
-        $ok = $this->api->dbh->exec("ALTER TABLE plugin_pullrequest_comments ADD COLUMN last_edition_date INT(11) DEFAULT NULL");
+        $ok = $this->api->dbh->exec('ALTER TABLE plugin_pullrequest_comments ADD COLUMN last_edition_date INT(11) DEFAULT NULL');
         if ($ok === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding last_edition_date column to the table plugin_pullrequest_comments'
@@ -50,11 +50,11 @@ final class b202311021100_add_last_edition_date_to_comments_tables extends \Tule
 
     private function addColumnToInlineCommentsTable(): void
     {
-        if ($this->api->columnNameExists("plugin_pullrequest_inline_comments", "last_edition_date")) {
+        if ($this->api->columnNameExists('plugin_pullrequest_inline_comments', 'last_edition_date')) {
             return;
         }
 
-        $ok = $this->api->dbh->exec("ALTER TABLE plugin_pullrequest_inline_comments ADD COLUMN last_edition_date INT(11) DEFAULT NULL");
+        $ok = $this->api->dbh->exec('ALTER TABLE plugin_pullrequest_inline_comments ADD COLUMN last_edition_date INT(11) DEFAULT NULL');
         if ($ok === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding last_edition_date column to the table plugin_pullrequest_inline_comments'

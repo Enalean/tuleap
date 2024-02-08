@@ -25,6 +25,6 @@ class SecretHeaderNotMatchingException extends \RuntimeException
 {
     public function __construct()
     {
-        parent::__construct("The secret provided by the GitLab webhook does not match the expected secret.");
+        parent::__construct('The secret provided by the GitLab webhook does not match the expected secret.');
     }
 }

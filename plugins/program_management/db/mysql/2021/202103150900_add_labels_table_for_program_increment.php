@@ -35,11 +35,11 @@ final class b202103150900_add_labels_table_for_program_increment extends \Tuleap
 
     public function up(): void
     {
-        $sql = "CREATE TABLE plugin_program_management_label_program_increment(
+        $sql = 'CREATE TABLE plugin_program_management_label_program_increment(
                     program_increment_tracker_id INT(11) NOT NULL PRIMARY KEY,
                     label VARCHAR(255) DEFAULT NULL,
                     sub_label VARCHAR(255) DEFAULT NULL
-                ) ENGINE = InnoDb;";
+                ) ENGINE = InnoDb;';
 
         $this->db->createTable('plugin_program_management_label_program_increment', $sql);
     }

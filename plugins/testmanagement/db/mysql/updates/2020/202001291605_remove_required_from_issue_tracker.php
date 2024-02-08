@@ -24,7 +24,7 @@ class b202001291605_remove_required_from_issue_tracker extends \Tuleap\ForgeUpgr
 {
     public function description(): string
     {
-        return "Remove required from issue tracker";
+        return 'Remove required from issue tracker';
     }
 
     public function preUp(): void
@@ -38,9 +38,9 @@ class b202001291605_remove_required_from_issue_tracker extends \Tuleap\ForgeUpgr
             'plugin_testmanagement',
             'tuleap',
             'issue_tracker_id',
-            "ALTER TABLE plugin_testmanagement
+            'ALTER TABLE plugin_testmanagement
                 MODIFY
-                issue_tracker_id INT(11)"
+                issue_tracker_id INT(11)'
         );
     }
 }

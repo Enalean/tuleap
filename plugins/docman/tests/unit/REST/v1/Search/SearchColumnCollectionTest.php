@@ -35,15 +35,15 @@ final class SearchColumnCollectionTest extends TestCase
     public function testItReturnsOnlyColumnNames(): void
     {
         $collection = new SearchColumnCollection();
-        $collection->add(SearchColumn::buildForHardcodedProperty("id", "Id"));
-        $collection->add(SearchColumn::buildForHardcodedProperty("title", "Title"));
-        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_1", "Priority"));
-        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_2", "Comments"));
-        $collection->add(SearchColumn::buildForHardcodedProperty("status", "Status"));
-        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_3", "Audit date"));
+        $collection->add(SearchColumn::buildForHardcodedProperty('id', 'Id'));
+        $collection->add(SearchColumn::buildForHardcodedProperty('title', 'Title'));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty('field_1', 'Priority'));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty('field_2', 'Comments'));
+        $collection->add(SearchColumn::buildForHardcodedProperty('status', 'Status'));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty('field_3', 'Audit date'));
 
         self::assertEquals(
-            ["id", "title", "field_1", "field_2", "status", "field_3"],
+            ['id', 'title', 'field_1', 'field_2', 'status', 'field_3'],
             $collection->getColumnNames(),
         );
     }
@@ -51,16 +51,16 @@ final class SearchColumnCollectionTest extends TestCase
     public function testItExtractsANewCollectionWithOnlyCustomProperties(): void
     {
         $collection = new SearchColumnCollection();
-        $collection->add(SearchColumn::buildForHardcodedProperty("id", "Id"));
-        $collection->add(SearchColumn::buildForHardcodedProperty("title", "Title"));
-        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_1", "Priority"));
-        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_2", "Comments"));
-        $collection->add(SearchColumn::buildForHardcodedProperty("status", "Status"));
-        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_3", "Audit date"));
+        $collection->add(SearchColumn::buildForHardcodedProperty('id', 'Id'));
+        $collection->add(SearchColumn::buildForHardcodedProperty('title', 'Title'));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty('field_1', 'Priority'));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty('field_2', 'Comments'));
+        $collection->add(SearchColumn::buildForHardcodedProperty('status', 'Status'));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty('field_3', 'Audit date'));
 
         $only_custom_collection = $collection->extractColumnsOnCustomProperties();
         self::assertEquals(
-            ["field_1", "field_2", "field_3"],
+            ['field_1', 'field_2', 'field_3'],
             $only_custom_collection->getColumnNames(),
         );
     }

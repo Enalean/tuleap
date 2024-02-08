@@ -209,7 +209,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
             $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirection_url, false);
             $backlog_item->setStatus(
                 $artifact->getStatus(),
-                $semantics[$artifact_id][Tracker_Semantic_Status::NAME] === "1" ? Tracker_Semantic_Status::OPEN : Tracker_Semantic_Status::CLOSED
+                $semantics[$artifact_id][Tracker_Semantic_Status::NAME] === '1' ? Tracker_Semantic_Status::OPEN : Tracker_Semantic_Status::CLOSED
             );
             if (isset($parents[$artifact_id]) && $parents[$artifact_id]->userCanView($user)) {
                 $backlog_item->setParent($parents[$artifact_id]);
@@ -351,7 +351,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
                 $this->artifact_factory->setTitles($parents);
             } else {
                 foreach ($parents as $artifact) {
-                    $artifact->setTitle("");
+                    $artifact->setTitle('');
                 }
             }
         }

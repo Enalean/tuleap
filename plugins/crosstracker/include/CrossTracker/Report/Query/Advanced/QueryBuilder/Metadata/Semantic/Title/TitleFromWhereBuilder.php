@@ -67,7 +67,7 @@ final readonly class TitleFromWhereBuilder implements ValueWrapperVisitor
             $match_value      = "= ''";
             $where_parameters = [];
         } else {
-            $match_value      = "LIKE ?";
+            $match_value      = 'LIKE ?';
             $where_parameters = [$this->quoteLikeValueSurround($value)];
         }
 
@@ -90,7 +90,7 @@ final readonly class TitleFromWhereBuilder implements ValueWrapperVisitor
             );
         } else {
             return new ParametrizedWhere(
-                "(tracker_changeset_value_title.value IS NULL OR tracker_changeset_value_title.value NOT LIKE ?)",
+                '(tracker_changeset_value_title.value IS NULL OR tracker_changeset_value_title.value NOT LIKE ?)',
                 [$this->quoteLikeValueSurround($value)],
             );
         }

@@ -32,10 +32,10 @@ class b2016050341101_create_plugin_frs_release_artifact extends \Tuleap\ForgeUpg
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_frs_release_artifact(
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_frs_release_artifact(
                     release_id int(11) PRIMARY KEY,
                     artifact_id int(11)
-                )";
+                )';
 
         $res = $this->db->dbh->exec($sql);
 

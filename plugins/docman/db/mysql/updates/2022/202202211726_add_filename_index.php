@@ -34,7 +34,7 @@ final class b202202211726_add_filename_index extends \Tuleap\ForgeUpgrade\Bucket
             return;
         }
 
-        $sql = "ALTER TABLE plugin_docman_version ADD FULLTEXT fltxt_filename(filename)";
+        $sql = 'ALTER TABLE plugin_docman_version ADD FULLTEXT fltxt_filename(filename)';
 
         if ($this->api->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(

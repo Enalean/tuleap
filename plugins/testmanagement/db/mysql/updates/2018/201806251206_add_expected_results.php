@@ -22,7 +22,7 @@ class b201806251206_add_expected_results extends ForgeUpgrade_Bucket // @codingS
 {
     public function description()
     {
-        return "Add expected results";
+        return 'Add expected results';
     }
 
     public function preUp()

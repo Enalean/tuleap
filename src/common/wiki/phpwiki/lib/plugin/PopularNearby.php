@@ -42,20 +42,20 @@ class WikiPlugin_PopularNearby extends WikiPlugin
 {
     public function getName()
     {
-        return _("PopularNearby");
+        return _('PopularNearby');
     }
 
     public function getDescription()
     {
-        return _("List the most popular pages nearby.");
+        return _('List the most popular pages nearby.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.5 $"
+            '$Revision: 1.5 $'
         );
     }
 
@@ -78,19 +78,19 @@ class WikiPlugin_PopularNearby extends WikiPlugin
         switch ($mode) {
             case 'incoming': // not the hits, but the number of links
                 if (! $noheader) {
-                    $header = sprintf(_("%d best incoming links: "), $limit);
+                    $header = sprintf(_('%d best incoming links: '), $limit);
                 }
-                $links = $this->sortedLinks($page->getLinks("reversed"), "reversed", $limit);
+                $links = $this->sortedLinks($page->getLinks('reversed'), 'reversed', $limit);
                 break;
             case 'outgoing': // not the hits, but the number of links
                 if (! $noheader) {
-                    $header = sprintf(_("%d best outgoing links: "), $limit);
+                    $header = sprintf(_('%d best outgoing links: '), $limit);
                 }
                 $links = $this->sortedLinks($page->getLinks(), false, $limit);
                 break;
             case 'nearby':  // all linksfrom and linksto, sorted by hits
                 if (! $noheader) {
-                    $header = sprintf(_("%d most popular nearby: "), $limit);
+                    $header = sprintf(_('%d most popular nearby: '), $limit);
                 }
                 $inlinks  = $page->getLinks();
                 $outlinks = $page->getLinks('reversed');

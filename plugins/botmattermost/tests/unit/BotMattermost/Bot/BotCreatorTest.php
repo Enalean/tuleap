@@ -51,9 +51,9 @@ final class BotCreatorTest extends TestCase
             ->method('save');
 
         $this->bot_creator->createSystemBot(
-            "Bot name",
-            "https://example.com",
-            "https://example.com",
+            'Bot name',
+            'https://example.com',
+            'https://example.com',
         );
     }
 
@@ -66,9 +66,9 @@ final class BotCreatorTest extends TestCase
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
 
         $this->bot_creator->createSystemBot(
-            "",
-            "https://example.com",
-            "https://example.com",
+            '',
+            'https://example.com',
+            'https://example.com',
         );
     }
 
@@ -81,9 +81,9 @@ final class BotCreatorTest extends TestCase
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
 
         $this->bot_creator->createSystemBot(
-            "Name",
-            "",
-            "https://example.com",
+            'Name',
+            '',
+            'https://example.com',
         );
     }
 
@@ -96,9 +96,9 @@ final class BotCreatorTest extends TestCase
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
 
         $this->bot_creator->createSystemBot(
-            "Name",
-            "http://example.com",
-            "https://example.com",
+            'Name',
+            'http://example.com',
+            'https://example.com',
         );
     }
 
@@ -109,9 +109,9 @@ final class BotCreatorTest extends TestCase
             ->method('save');
 
         $this->bot_creator->createSystemBot(
-            "Name",
-            "https://example.com",
-            "",
+            'Name',
+            'https://example.com',
+            '',
         );
     }
 
@@ -124,9 +124,9 @@ final class BotCreatorTest extends TestCase
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
 
         $this->bot_creator->createSystemBot(
-            "Name",
-            "https://example.com",
-            "http://example.com",
+            'Name',
+            'https://example.com',
+            'http://example.com',
         );
     }
 }

@@ -240,7 +240,7 @@ class MediaWikiInstantiater
             return false;
         }
 
-        $cmd         = "";
+        $cmd         = '';
         $done        = false;
         $dollarquote = false;
 
@@ -276,9 +276,9 @@ class MediaWikiInstantiater
             $cmd .= "$line\n";
 
             if ($done) {
-                $cmd = str_replace(';;', ";", $cmd);
+                $cmd = str_replace(';;', ';', $cmd);
                 // next 2 lines are for mediawiki subst
-                $cmd = preg_replace(":/\*_\*/:", $table_prefix, $cmd);
+                $cmd = preg_replace(':/\*_\*/:', $table_prefix, $cmd);
                 // TOCHECK WITH CHRISTIAN: Do not change indexes for mediawiki (doesn't seems well supported)
                 //$cmd = preg_replace(":/\*i\*/:","mw",$cmd );
                 try {
@@ -325,9 +325,9 @@ class MediaWikiInstantiater
 
     private function seedProjectUGroupMappings($group_id, array $mappings)
     {
-        $query = "INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name) VALUES ";
+        $query = 'INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name) VALUES ';
 
-        return $query . implode(",", $this->getFormattedDefaultValues($group_id, $mappings));
+        return $query . implode(',', $this->getFormattedDefaultValues($group_id, $mappings));
     }
 
     private function getFormattedDefaultValues($group_id, array $mappings)
@@ -336,7 +336,7 @@ class MediaWikiInstantiater
 
         foreach ($mappings as $group_name => $mapping) {
             foreach ($mapping as $ugroup_id) {
-                $values[] = "(" . db_ei($group_id)  . ", " . db_ei($ugroup_id) . ", '" . db_es($group_name) . "')";
+                $values[] = '(' . db_ei($group_id)  . ', ' . db_ei($ugroup_id) . ", '" . db_es($group_name) . "')";
             }
         }
 

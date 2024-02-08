@@ -212,8 +212,8 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
     private function redirectToModal(\Tracker $tracker): void
     {
         $GLOBALS['Response']->redirect(
-            "/plugins/tracker/?tracker=" . urlencode((string) $tracker->getId()) .
-            "&should-display-created-tracker-modal=true"
+            '/plugins/tracker/?tracker=' . urlencode((string) $tracker->getId()) .
+            '&should-display-created-tracker-modal=true'
         );
     }
 

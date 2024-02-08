@@ -21,7 +21,7 @@ along with PhpWiki; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-require_once("lib/ASCIIMathPHP/ASCIIMathPHP.class.php");
+require_once('lib/ASCIIMathPHP/ASCIIMathPHP.class.php');
 
 /**
  * Render ASCII math as MathML
@@ -42,20 +42,20 @@ class WikiPlugin_AsciiMath extends WikiPlugin
 {
     public function getName()
     {
-        return _("AsciiMath");
+        return _('AsciiMath');
     }
 
     public function getDescription()
     {
-        return _("Render ASCII Math as MathML");
+        return _('Render ASCII Math as MathML');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.1 $"
+            '$Revision: 1.1 $'
         );
     }
 
@@ -76,7 +76,7 @@ class WikiPlugin_AsciiMath extends WikiPlugin
             return '';
         }
 
-        include_once("lib/ASCIIMathPHP/ASCIIMathPHP.cfg.php");
+        include_once('lib/ASCIIMathPHP/ASCIIMathPHP.cfg.php');
         $ascii_math = new ASCIIMathPHP($symbol_arr, $this->source);
         $ascii_math->genMathML();
         return HTML::Raw($ascii_math->getMathML());

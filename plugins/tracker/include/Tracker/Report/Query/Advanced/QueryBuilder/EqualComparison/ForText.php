@@ -48,7 +48,7 @@ final class ForText implements FieldFromWhereBuilder
         if ($value === '') {
             $matches_value = " = ''";
         } else {
-            $matches_value = " LIKE ?";
+            $matches_value = ' LIKE ?';
             $parameters[]  = $this->quoteLikeValueSurround($value);
         }
 

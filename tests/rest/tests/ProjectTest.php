@@ -79,7 +79,7 @@ class ProjectTest extends ProjectBase
         self::assertArrayHasKey('error', $errors_response);
         self::assertArrayHasKey('i18n_error_messages', $errors_response['error']);
         self::assertCount(1, $errors_response['error']['i18n_error_messages']);
-        self::assertSame("Only site administrators can create projects.", $errors_response['error']['i18n_error_messages'][0]);
+        self::assertSame('Only site administrators can create projects.', $errors_response['error']['i18n_error_messages'][0]);
     }
 
     public function testPOSTDryRunForRegularUserWithErrors(): void
@@ -99,7 +99,7 @@ class ProjectTest extends ProjectBase
             'fields' => [
                 [
                     'field_id' => 100002,
-                    'value'    => "field value",
+                    'value'    => 'field value',
                 ],
             ],
         ]);
@@ -183,7 +183,7 @@ class ProjectTest extends ProjectBase
         self::assertArrayHasKey('i18n_error_messages', $errors_response['error']);
         self::assertCount(1, $errors_response['error']['i18n_error_messages']);
         self::assertSame(
-            "Project shortname is invalid. The reason is: Short name must start with an alphanumeric character.",
+            'Project shortname is invalid. The reason is: Short name must start with an alphanumeric character.',
             $errors_response['error']['i18n_error_messages'][0],
         );
     }
@@ -309,7 +309,7 @@ class ProjectTest extends ProjectBase
 
         $file_representation = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals("/uploads/project/file/1", $file_representation['upload_href']);
+        $this->assertEquals('/uploads/project/file/1', $file_representation['upload_href']);
     }
 
     /**
@@ -442,7 +442,7 @@ class ProjectTest extends ProjectBase
 
         $project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertEquals(201, $response->getStatusCode());
-        self::assertArrayHasKey("id", $project);
+        self::assertArrayHasKey('id', $project);
 
         $this->removeAdminFromProjectMembers(
             $project['id'],
@@ -474,7 +474,7 @@ class ProjectTest extends ProjectBase
 
         $project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertEquals(201, $response->getStatusCode());
-        self::assertArrayHasKey("id", $project);
+        self::assertArrayHasKey('id', $project);
     }
 
     public function testProjectCreationWithAnIncorrectProjectIDFails(): void
@@ -728,7 +728,7 @@ class ProjectTest extends ProjectBase
 
             self::assertFalse($project['is_member_of']);
 
-            $project_members_uri = "user_groups/$this->project_private_id" . "_3/users";
+            $project_members_uri = "user_groups/$this->project_private_id" . '_3/users';
             $project_members     = json_decode(
                 $this->getResponseByName(
                     REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -812,7 +812,7 @@ class ProjectTest extends ProjectBase
         self::assertEquals('Private member', $json_project['label']);
 
         self::assertArrayHasKey('description', $json_project);
-        self::assertEquals("For test", $json_project['description']);
+        self::assertEquals('For test', $json_project['description']);
 
         self::assertEquals(200, $response->getStatusCode());
     }
@@ -824,7 +824,7 @@ class ProjectTest extends ProjectBase
         $json_project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertArrayHasKey('additional_fields', $json_project);
-        self::assertEquals([["name" => "Test Rest", "value" => "Admin test"]], $json_project['additional_fields']);
+        self::assertEquals([['name' => 'Test Rest', 'value' => 'Admin test']], $json_project['additional_fields']);
     }
 
     public function testGETbyIdForDelegatedRestProjectManager()
@@ -907,7 +907,7 @@ class ProjectTest extends ProjectBase
 
         $release_milestone = $milestones[0];
         self::assertArrayHasKey('id', $release_milestone);
-        self::assertEquals($release_milestone['label'], "Release 1.0");
+        self::assertEquals($release_milestone['label'], 'Release 1.0');
         self::assertEquals($release_milestone['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
@@ -935,7 +935,7 @@ class ProjectTest extends ProjectBase
         self::assertCount(1, $milestones);
 
         $release_milestone = $milestones[0];
-        self::assertEquals($release_milestone['label'], "Release 1.0");
+        self::assertEquals($release_milestone['label'], 'Release 1.0');
         self::assertEquals($release_milestone['status_count'], null);
 
         self::assertEquals(200, $response->getStatusCode());
@@ -966,7 +966,7 @@ class ProjectTest extends ProjectBase
 
         $epics_tracker = $trackers[0];
         self::assertArrayHasKey('id', $epics_tracker);
-        self::assertEquals($epics_tracker['label'], "Epics");
+        self::assertEquals($epics_tracker['label'], 'Epics');
         self::assertEquals($epics_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
@@ -976,7 +976,7 @@ class ProjectTest extends ProjectBase
 
         $kanban_tracker = $trackers[1];
         self::assertArrayHasKey('id', $kanban_tracker);
-        self::assertEquals($kanban_tracker['label'], "Kanban Tasks");
+        self::assertEquals($kanban_tracker['label'], 'Kanban Tasks');
         self::assertEquals($kanban_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
@@ -986,7 +986,7 @@ class ProjectTest extends ProjectBase
 
         $releases_tracker = $trackers[2];
         self::assertArrayHasKey('id', $releases_tracker);
-        self::assertEquals($releases_tracker['label'], "Releases");
+        self::assertEquals($releases_tracker['label'], 'Releases');
         self::assertEquals($releases_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
@@ -996,7 +996,7 @@ class ProjectTest extends ProjectBase
 
         $sprints_tracker = $trackers[3];
         self::assertArrayHasKey('id', $sprints_tracker);
-        self::assertEquals($sprints_tracker['label'], "Sprints");
+        self::assertEquals($sprints_tracker['label'], 'Sprints');
         self::assertEquals($sprints_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
@@ -1006,7 +1006,7 @@ class ProjectTest extends ProjectBase
 
         $tasks_tracker = $trackers[4];
         self::assertArrayHasKey('id', $tasks_tracker);
-        self::assertEquals($tasks_tracker['label'], "Tasks");
+        self::assertEquals($tasks_tracker['label'], 'Tasks');
         self::assertEquals($tasks_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
@@ -1016,7 +1016,7 @@ class ProjectTest extends ProjectBase
 
         $userstories_tracker = $trackers[5];
         self::assertArrayHasKey('id', $userstories_tracker);
-        self::assertEquals($userstories_tracker['label'], "User Stories");
+        self::assertEquals($userstories_tracker['label'], 'User Stories');
         self::assertEquals($userstories_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
@@ -1047,8 +1047,8 @@ class ProjectTest extends ProjectBase
 
         $first_backlog_item = $backlog_items[0];
         self::assertArrayHasKey('id', $first_backlog_item);
-        self::assertEquals($first_backlog_item['label'], "Epic pic");
-        self::assertEquals($first_backlog_item['status'], "Open");
+        self::assertEquals($first_backlog_item['label'], 'Epic pic');
+        self::assertEquals($first_backlog_item['status'], 'Open');
         self::assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[5]);
         self::assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[5]);
         self::assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
@@ -1056,15 +1056,15 @@ class ProjectTest extends ProjectBase
         $second_backlog_item = $backlog_items[1];
         self::assertArrayHasKey('id', $second_backlog_item);
         self::assertEquals($second_backlog_item['label'], "Epic c'est tout");
-        self::assertEquals($second_backlog_item['status'], "Open");
+        self::assertEquals($second_backlog_item['status'], 'Open');
         self::assertEquals($second_backlog_item['artifact']['id'], $this->epic_artifact_ids[6]);
         self::assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[6]);
         self::assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $third_backlog_item = $backlog_items[2];
         self::assertArrayHasKey('id', $third_backlog_item);
-        self::assertEquals($third_backlog_item['label'], "Epic epoc");
-        self::assertEquals($third_backlog_item['status'], "Open");
+        self::assertEquals($third_backlog_item['label'], 'Epic epoc');
+        self::assertEquals($third_backlog_item['status'], 'Open');
         self::assertEquals($third_backlog_item['artifact']['id'], $this->epic_artifact_ids[7]);
         self::assertEquals($third_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[7]);
         self::assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
@@ -1111,16 +1111,16 @@ class ProjectTest extends ProjectBase
 
         $first_backlog_item = $backlog_items[0];
         self::assertArrayHasKey('id', $first_backlog_item);
-        self::assertEquals($first_backlog_item['label'], "Epic epoc");
-        self::assertEquals($first_backlog_item['status'], "Open");
+        self::assertEquals($first_backlog_item['label'], 'Epic epoc');
+        self::assertEquals($first_backlog_item['status'], 'Open');
         self::assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[7]);
         self::assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[7]);
         self::assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $second_backlog_item = $backlog_items[1];
         self::assertArrayHasKey('id', $second_backlog_item);
-        self::assertEquals($second_backlog_item['label'], "Epic pic");
-        self::assertEquals($second_backlog_item['status'], "Open");
+        self::assertEquals($second_backlog_item['label'], 'Epic pic');
+        self::assertEquals($second_backlog_item['status'], 'Open');
         self::assertEquals($second_backlog_item['artifact']['id'], $this->epic_artifact_ids[5]);
         self::assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[5]);
         self::assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
@@ -1128,7 +1128,7 @@ class ProjectTest extends ProjectBase
         $third_backlog_item = $backlog_items[2];
         self::assertArrayHasKey('id', $third_backlog_item);
         self::assertEquals($third_backlog_item['label'], "Epic c'est tout");
-        self::assertEquals($third_backlog_item['status'], "Open");
+        self::assertEquals($third_backlog_item['status'], 'Open');
         self::assertEquals($third_backlog_item['artifact']['id'], $this->epic_artifact_ids[6]);
         self::assertEquals($third_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[6]);
         self::assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
@@ -1158,8 +1158,8 @@ class ProjectTest extends ProjectBase
 
         $first_backlog_item = $backlog_items[0];
         self::assertArrayHasKey('id', $first_backlog_item);
-        self::assertEquals($first_backlog_item['label'], "Epic pic");
-        self::assertEquals($first_backlog_item['status'], "Open");
+        self::assertEquals($first_backlog_item['label'], 'Epic pic');
+        self::assertEquals($first_backlog_item['status'], 'Open');
         self::assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[5]);
         self::assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[5]);
         self::assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
@@ -1167,15 +1167,15 @@ class ProjectTest extends ProjectBase
         $second_backlog_item = $backlog_items[1];
         self::assertArrayHasKey('id', $second_backlog_item);
         self::assertEquals($second_backlog_item['label'], "Epic c'est tout");
-        self::assertEquals($second_backlog_item['status'], "Open");
+        self::assertEquals($second_backlog_item['status'], 'Open');
         self::assertEquals($second_backlog_item['artifact']['id'], $this->epic_artifact_ids[6]);
         self::assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[6]);
         self::assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $third_backlog_item = $backlog_items[2];
         self::assertArrayHasKey('id', $third_backlog_item);
-        self::assertEquals($third_backlog_item['label'], "Epic epoc");
-        self::assertEquals($third_backlog_item['status'], "Open");
+        self::assertEquals($third_backlog_item['label'], 'Epic epoc');
+        self::assertEquals($third_backlog_item['status'], 'Open');
         self::assertEquals($third_backlog_item['artifact']['id'], $this->epic_artifact_ids[7]);
         self::assertEquals($third_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[7]);
         self::assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
@@ -1351,9 +1351,9 @@ class ProjectTest extends ProjectBase
         $first_item  = $backlog_items[0];
         $second_item = $backlog_items[1];
         $third_item  = $backlog_items[2];
-        self::assertEquals($first_item['label'], "Epic pic");
+        self::assertEquals($first_item['label'], 'Epic pic');
         self::assertEquals($second_item['label'], "Epic c'est tout");
-        self::assertEquals($third_item['label'], "Epic epoc");
+        self::assertEquals($third_item['label'], 'Epic epoc');
 
         $request_body = json_encode([
             'order' => [
@@ -1398,8 +1398,8 @@ class ProjectTest extends ProjectBase
         $second_modified = $modified_backlog_items[1];
         $third_modified  = $modified_backlog_items[2];
         self::assertEquals($first_modified['label'], "Epic c'est tout");
-        self::assertEquals($second_modified['label'], "Epic pic");
-        self::assertEquals($third_modified['label'], "Epic epoc");
+        self::assertEquals($second_modified['label'], 'Epic pic');
+        self::assertEquals($third_modified['label'], 'Epic epoc');
 
         // re-invert order of the two tasks
         $reinvert_patch = $this->getResponse(
@@ -1430,9 +1430,9 @@ class ProjectTest extends ProjectBase
         $first_item  = $reverted_backlog_items[0];
         $second_item = $reverted_backlog_items[1];
         $third_item  = $backlog_items[2];
-        self::assertEquals($first_item['label'], "Epic pic");
+        self::assertEquals($first_item['label'], 'Epic pic');
         self::assertEquals($second_item['label'], "Epic c'est tout");
-        self::assertEquals($third_item['label'], "Epic epoc");
+        self::assertEquals($third_item['label'], 'Epic epoc');
     }
 
     public function testPATCHbacklogMoveBackAndForthInTopBacklog()

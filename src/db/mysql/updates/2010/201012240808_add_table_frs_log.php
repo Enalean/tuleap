@@ -34,7 +34,7 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE frs_log (
+        $sql = 'CREATE TABLE frs_log (
                   log_id int(11) NOT NULL auto_increment,
                   time int(11) NOT NULL default 0,
                   user_id int(11) NOT NULL default 0,
@@ -43,7 +43,7 @@ EOT;
                   action_id int(11) NOT NULL,
                   PRIMARY KEY (log_id),
                   KEY idx_frs_log_group_item (group_id, item_id)
-                );";
+                );';
         $this->db->createTable('frs_log', $sql);
     }
 

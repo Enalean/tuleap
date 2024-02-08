@@ -25,6 +25,6 @@ class TuleapReferencedArtifactNotFoundException extends \Exception
 {
     public function __construct(int $tuleap_reference_id)
     {
-        parent::__construct("Tuleap artifact #" . $tuleap_reference_id . " not found, no cross-reference will be added.");
+        parent::__construct('Tuleap artifact #' . $tuleap_reference_id . ' not found, no cross-reference will be added.');
     }
 }

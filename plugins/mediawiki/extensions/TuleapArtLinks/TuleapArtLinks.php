@@ -19,7 +19,7 @@
  */
 
 if (! defined('MEDIAWIKI')) {
-    die("Not an entry point.");
+    die('Not an entry point.');
 }
 
 $wgExtensionCredits['validextensionclass'][] = [

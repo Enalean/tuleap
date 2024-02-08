@@ -35,7 +35,7 @@ final class b202009301445_add_index_for_email_on_invitations_table extends \Tule
 
     public function up(): void
     {
-        $sql = "ALTER TABLE invitations ADD INDEX idx_email(to_email(20))";
+        $sql = 'ALTER TABLE invitations ADD INDEX idx_email(to_email(20))';
         $this->db->addIndex('invitations', 'idx_email', $sql);
     }
 }

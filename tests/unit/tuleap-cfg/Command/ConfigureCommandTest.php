@@ -110,7 +110,7 @@ class ConfigureCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $etc = vfsStream::newDirectory('/etc/httpd/conf', 0755);
         $this->root->addChild($etc);
 
-        $file = vfsStream::newFile('httpd.conf', 0444)->setContent("foo");
+        $file = vfsStream::newFile('httpd.conf', 0444)->setContent('foo');
         $file->chown(vfsStream::OWNER_ROOT);
         $file->chgrp(vfsStream::GROUP_ROOT);
 
@@ -138,7 +138,7 @@ class ConfigureCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $etc = vfsStream::newDirectory('/etc/httpd/conf.d', 0755);
         $this->root->addChild($etc);
 
-        $file = vfsStream::newFile('ssl.conf', 0444)->setContent("foo");
+        $file = vfsStream::newFile('ssl.conf', 0444)->setContent('foo');
         $file->chown(vfsStream::OWNER_ROOT);
         $file->chgrp(vfsStream::GROUP_ROOT);
 

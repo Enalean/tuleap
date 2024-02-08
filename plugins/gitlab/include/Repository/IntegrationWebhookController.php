@@ -97,7 +97,7 @@ class IntegrationWebhookController extends DispatchablePSR15Compatible implement
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->logger->info("GitLab webhook received.");
+        $this->logger->info('GitLab webhook received.');
         $current_time   = new DateTimeImmutable();
         $integration_id = (int) $request->getAttribute('integration_id');
 

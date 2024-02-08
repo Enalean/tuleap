@@ -366,15 +366,15 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
 
         $GLOBALS['UGROUPS'] = [
-            "UGROUP_NONE"               => 100,
-            "UGROUP_ANONYMOUS"          => 1,
-            "UGROUP_REGISTERED"         => 2,
-            "UGROUP_AUTHENTICATED"      => 5,
-            "UGROUP_PROJECT_MEMBERS"    => 3,
-            "UGROUP_PROJECT_ADMIN"      => 4,
-            "UGROUP_FILE_MANAGER_ADMIN" => 11,
-            "UGROUP_WIKI_ADMIN"         => 14,
-            "UGROUP_TRACKER_ADMIN"      => 15,
+            'UGROUP_NONE'               => 100,
+            'UGROUP_ANONYMOUS'          => 1,
+            'UGROUP_REGISTERED'         => 2,
+            'UGROUP_AUTHENTICATED'      => 5,
+            'UGROUP_PROJECT_MEMBERS'    => 3,
+            'UGROUP_PROJECT_ADMIN'      => 4,
+            'UGROUP_FILE_MANAGER_ADMIN' => 11,
+            'UGROUP_WIKI_ADMIN'         => 14,
+            'UGROUP_TRACKER_ADMIN'      => 15,
         ];
     }
 

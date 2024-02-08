@@ -27,7 +27,7 @@ class CannotAddUsersNotificationException extends Exception
 {
     private $users_not_added;
 
-    public function __construct($users_not_added, $message = "", $code = 0, ?Throwable $previous = null)
+    public function __construct($users_not_added, $message = '', $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->users_not_added = $users_not_added;

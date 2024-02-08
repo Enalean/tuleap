@@ -82,15 +82,15 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
         switch ($message_type) {
             case self::MESSAGE_MOVED:
                 $msg = sprintf(
-                    dgettext('tuleap-docman', "%s has been modified by %s."),
+                    dgettext('tuleap-docman', '%s has been modified by %s.'),
                     $params['item']->getTitle(),
                     $user->getRealName()
                 );
 
                 $msg .= "\n" . $this->getUrlProvider()->getShowLinkUrl($params['parent']) . "\n\n";
-                $msg .= dgettext('tuleap-docman', "Moved");
+                $msg .= dgettext('tuleap-docman', 'Moved');
 
-                $msg .= " ";
+                $msg .= ' ';
                 $msg .= $this->getFromToInformation($params, true);
 
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
@@ -98,15 +98,15 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
                 break;
             case self::MESSAGE_MOVED_FROM:
                 $msg .= sprintf(
-                    dgettext('tuleap-docman', "%s has been modified by %s."),
+                    dgettext('tuleap-docman', '%s has been modified by %s.'),
                     $params['path']->get($params['old_parent']),
                     $user->getRealName()
                 );
 
                 $msg .= "\n" . $this->getUrlProvider()->getShowLinkUrl($params['parent']) . "\n\n";
-                $msg .= dgettext('tuleap-docman', "Moved");
+                $msg .= dgettext('tuleap-docman', 'Moved');
 
-                $msg .= " ";
+                $msg .= ' ';
                 $msg .= $this->getFromToInformation($params, false);
 
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
@@ -114,14 +114,14 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
                 break;
             case self::MESSAGE_MOVED_TO:
                 $msg .= sprintf(
-                    dgettext('tuleap-docman', "%s has been modified by %s."),
+                    dgettext('tuleap-docman', '%s has been modified by %s.'),
                     $params['path']->get($params['parent']),
                     $user->getRealName()
                 );
                 $msg .= "\n" . $this->getUrlProvider()->getShowLinkUrl($params['parent']) . "\n\n";
-                $msg .= dgettext('tuleap-docman', "Moved");
+                $msg .= dgettext('tuleap-docman', 'Moved');
 
-                $msg          .= " ";
+                $msg          .= ' ';
                 $msg          .= $this->getFromToInformation($params, false);
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
                 $msg          .= $this->getMonitoringInformation($monitoredItem);
@@ -164,7 +164,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
             if ($need_sep) {
                 $msg .= "\n        ";
             } else {
-                $msg .= " ";
+                $msg .= ' ';
             }
             $msg .= sprintf(
                 dgettext('tuleap-docman', "to:\n %s"),

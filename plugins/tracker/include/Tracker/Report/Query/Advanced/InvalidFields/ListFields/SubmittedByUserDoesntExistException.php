@@ -29,7 +29,7 @@ final class SubmittedByUserDoesntExistException extends InvalidFieldException
     public function __construct(Tracker_FormElement_Field $field, string $value)
     {
         $message = sprintf(
-            dgettext("tuleap-tracker", "Error with the field '%s'. The user '%s' does not exist."),
+            dgettext('tuleap-tracker', "Error with the field '%s'. The user '%s' does not exist."),
             $field->getName(),
             $value
         );

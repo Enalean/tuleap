@@ -375,7 +375,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getter->shouldReceive('getAllMembersOfStaticGroup')->withArgs(
             [
                 $bindvalue_ids,
-                ["ugroup_109", 109],
+                ['ugroup_109', 109],
             ]
         )->once()->andReturn('sql fragement');
 

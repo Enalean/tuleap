@@ -36,7 +36,7 @@ class WikiPlugin
     public function run($dbi, $argstr, &$request, $basepage)
     {
         trigger_error(
-            "WikiPlugin::run: pure virtual function",
+            'WikiPlugin::run: pure virtual function',
             E_USER_ERROR
         );
     }
@@ -95,7 +95,7 @@ class WikiPlugin
     // plugins should override this with the commented-out code
     public function getVersion()
     {
-        return _("n/a");
+        return _('n/a');
         //return preg_replace("/[Revision: $]/", '',
         //                    "\$Revision: 1.61 $");
     }
@@ -120,7 +120,7 @@ class WikiPlugin
                     $args[$arg] = $default_val;
                 }
                 // expand [arg]
-                if ($request and is_string($args[$arg]) and strstr($args[$arg], "[")) {
+                if ($request and is_string($args[$arg]) and strstr($args[$arg], '[')) {
                     $args[$arg] = $this->expandArg($args[$arg], $request);
                 }
 
@@ -131,7 +131,7 @@ class WikiPlugin
 
         foreach (array_merge($argstr_args, $argstr_defaults) as $arg => $val) {
             if (
-                $request and $request->getArg('pagename') == _("PhpWikiAdministration")
+                $request and $request->getArg('pagename') == _('PhpWikiAdministration')
                 and $arg == 'overwrite'
             ) { // silence this warning
             } else {
@@ -208,7 +208,7 @@ class WikiPlugin
             $loader                         = new WikiPluginLoader();
             $markup                         = null;
             $basepage                       = null;
-            $plugin_val                     = preg_replace(["/^<!/", "/!>$/"], ["<?", "?>"], $plugin_val);
+            $plugin_val                     = preg_replace(['/^<!/', '/!>$/'], ['<?', '?>'], $plugin_val);
             $val                            = $loader->expandPI($plugin_val, $GLOBALS['request'], $markup, $basepage);
             if ($op == '=') {
                 $args[$arg] = $val; // comma delimited pagenames or array()?
@@ -435,7 +435,7 @@ class WikiPlugin
     {
         return HTML::div(
             ['class' => 'errors'],
-            HTML::strong(fmt("Plugin %s failed.", $this->getName())),
+            HTML::strong(fmt('Plugin %s failed.', $this->getName())),
             ' ',
             $message
         );
@@ -445,7 +445,7 @@ class WikiPlugin
     {
         $html[] = HTML::div(
             ['class' => 'title'],
-            fmt("Plugin %s disabled.", $this->getName()),
+            fmt('Plugin %s disabled.', $this->getName()),
             ' ',
             $message
         );
@@ -475,7 +475,7 @@ class WikiPlugin
         $string = '<' . '?plugin ' . $this->getName() . ' ';
         if ($args) {
             foreach ($args as $key => $value) {
-                $string .= ($key . "||=" . (string) $value . " ");
+                $string .= ($key . '||=' . (string) $value . ' ');
             }
         }
         return $string . '?' . '>';
@@ -573,7 +573,7 @@ class WikiPluginLoader
     public function parsePI($pi)
     {
         if (! preg_match('/^\s*<\?(plugin(?:-form|-link|-list)?)\s+(\w+)\s*(.*?)\s*\?>\s*$/s', $pi, $m)) {
-            return $this->_error(sprintf("Bad %s", 'PI'));
+            return $this->_error(sprintf('Bad %s', 'PI'));
         }
 
         list(, $pi_name, $plugin_name, $plugin_args) = $m;
@@ -590,7 +590,7 @@ class WikiPluginLoader
     //Some plugins were removed since we don't use them any more
     //the following array contains the removed plugins names. References
     //to these plugins will never be processed.
-        $removed_plugins = ["RawHtml", "RateIt", "PhpWeather", "AnalyseAccessLogSql", "FoafViewer", "ModeratePage", "Ploticus", "AllUsers"];
+        $removed_plugins = ['RawHtml', 'RateIt', 'PhpWeather', 'AnalyseAccessLogSql', 'FoafViewer', 'ModeratePage', 'Ploticus', 'AllUsers'];
         if (in_array($plugin_name, $removed_plugins)) {
               return $this->_error(sprintf(_("The '%s' plugin is blocked by administrator. Sorry for the inconvenience"), _($plugin_name)));
         }
@@ -612,14 +612,14 @@ class WikiPluginLoader
                         $plugin_source
                     ));
                 }
-                return $this->_error(sprintf(_("%s: no such class"), $plugin_class));
+                return $this->_error(sprintf(_('%s: no such class'), $plugin_class));
             }
         }
         $ErrorManager->popErrorHandler();
         $plugin = new $plugin_class();
-        if (! is_subclass_of($plugin, "WikiPlugin")) {
+        if (! is_subclass_of($plugin, 'WikiPlugin')) {
             return $this->_error(sprintf(
-                _("%s: not a subclass of WikiPlugin."),
+                _('%s: not a subclass of WikiPlugin.'),
                 $plugin_class
             ));
         }

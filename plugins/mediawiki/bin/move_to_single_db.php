@@ -38,4 +38,4 @@ if (is_numeric($argv[1]) || $argv[1] == Tuleap\Mediawiki\Events\SystemEvent_MEDI
     exit(0);
 }
 
-die("Invalid argument");
+die('Invalid argument');

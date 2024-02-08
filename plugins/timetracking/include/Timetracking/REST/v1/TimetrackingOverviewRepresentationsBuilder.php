@@ -83,12 +83,12 @@ class TimetrackingOverviewRepresentationsBuilder
         $total_rows              = (int) $this->admin_dao->foundRows();
 
         foreach ($trackers_row as $tracker_row) {
-            $tracker = $this->tracker_factory->getTrackerById($tracker_row["tracker_id"]);
+            $tracker = $this->tracker_factory->getTrackerById($tracker_row['tracker_id']);
             if ($tracker === null) {
                 throw new \RuntimeException('Tracker does not exist');
             }
             if ($this->checkTrackerAndPermissions($tracker, $user)) {
-                $tracker_representations["trackers"][] = MinimalTrackerRepresentation::build($tracker);
+                $tracker_representations['trackers'][] = MinimalTrackerRepresentation::build($tracker);
             }
         }
         $tracker_representations['total_trackers'] = $total_rows;
@@ -112,12 +112,12 @@ class TimetrackingOverviewRepresentationsBuilder
         $total_rows              = (int) $this->admin_dao->foundRows();
 
         foreach ($trackers_row as $tracker_row) {
-            $tracker = $this->tracker_factory->getTrackerById($tracker_row["tracker_id"]);
+            $tracker = $this->tracker_factory->getTrackerById($tracker_row['tracker_id']);
             if ($tracker === null) {
                 throw new \RuntimeException('Tracker does not exist');
             }
             if ($this->checkTrackerAndPermissions($tracker, $user)) {
-                $tracker_representations["trackers"][] = $this->tracker_rest_builder->getTrackerRepresentationInTrackerContext(
+                $tracker_representations['trackers'][] = $this->tracker_rest_builder->getTrackerRepresentationInTrackerContext(
                     $user,
                     $tracker
                 );

@@ -23,15 +23,15 @@ function GenImgName()
     // Determine what format we should use when we save the images
     $supported = imagetypes();
     if ($supported & IMG_PNG) {
-        $img_format = "png";
+        $img_format = 'png';
     } elseif ($supported & IMG_GIF) {
-        $img_format = "gif";
+        $img_format = 'gif';
     } elseif ($supported & IMG_JPG) {
-        $img_format = "jpeg";
+        $img_format = 'jpeg';
     } elseif ($supported & IMG_WBMP) {
-        $img_format = "wbmp";
+        $img_format = 'wbmp';
     } elseif ($supported & IMG_XPM) {
-        $img_format = "xpm";
+        $img_format = 'xpm';
     }
 
     if (! isset($_SERVER['PHP_SELF'])) {
@@ -41,7 +41,7 @@ function GenImgName()
     $fname = basename($_SERVER['PHP_SELF']);
     if (! empty($_SERVER['QUERY_STRING'])) {
         $q      = @$_SERVER['QUERY_STRING'];
-        $fname .= '_' . preg_replace("/\W/", "_", $q) . '.' . $img_format;
+        $fname .= '_' . preg_replace('/\W/', '_', $q) . '.' . $img_format;
     } else {
         $fname = substr($fname, 0, strlen($fname) - 4) . '.' . $img_format;
     }

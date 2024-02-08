@@ -68,11 +68,11 @@ final class FFIWASMCaller implements WASMCaller
     public function call(string $wasm_path, string $module_input, array $mount_points): Option
     {
         $config = [
-            "wasm_module_path" => $wasm_path,
-            "mount_points"     => $mount_points,
-            "limits"           => [
-                "max_exec_time_in_ms"      => self::MAX_EXEC_TIME_IN_MS,
-                "max_memory_size_in_bytes" => self::MAX_MEMORY_SIZE_IN_BYTES,
+            'wasm_module_path' => $wasm_path,
+            'mount_points'     => $mount_points,
+            'limits'           => [
+                'max_exec_time_in_ms'      => self::MAX_EXEC_TIME_IN_MS,
+                'max_memory_size_in_bytes' => self::MAX_MEMORY_SIZE_IN_BYTES,
             ],
         ];
 

@@ -119,7 +119,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
 
         $layout->addCssAsset(CssViteAsset::fromFileName($this->taskboard_assets, 'themes/taskboard.scss'));
 
-        $title = $milestone->getArtifactTitle() . ' - ' . dgettext('tuleap-taskboard', "Taskboard");
+        $title = $milestone->getArtifactTitle() . ' - ' . dgettext('tuleap-taskboard', 'Taskboard');
         $service->displayHeader(
             $title,
             $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),

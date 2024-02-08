@@ -35,19 +35,19 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_helper->method('_getCurrentUserUsernameDisplayPreference')->willReturnOnConsecutiveCalls(1, 2, 3, 4, 666);
 
         $user_helper->__construct();
-        self::assertEquals("user_name (realname)", $user_helper->getDisplayName("user_name", "realname"));
+        self::assertEquals('user_name (realname)', $user_helper->getDisplayName('user_name', 'realname'));
 
         $user_helper->__construct();
-        self::assertEquals("user_name", $user_helper->getDisplayName("user_name", "realname"));
+        self::assertEquals('user_name', $user_helper->getDisplayName('user_name', 'realname'));
 
         $user_helper->__construct();
-        self::assertEquals("realname", $user_helper->getDisplayName("user_name", "realname"));
+        self::assertEquals('realname', $user_helper->getDisplayName('user_name', 'realname'));
 
         $user_helper->__construct();
-        self::assertEquals("realname (user_name)", $user_helper->getDisplayName("user_name", "realname"));
+        self::assertEquals('realname (user_name)', $user_helper->getDisplayName('user_name', 'realname'));
 
         $user_helper->__construct();
-        self::assertEquals("realname (user_name)", $user_helper->getDisplayName("user_name", "realname"));
+        self::assertEquals('realname (user_name)', $user_helper->getDisplayName('user_name', 'realname'));
     }
 
     public function testGetDisplayNameFromUser(): void
@@ -61,7 +61,7 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_helper->method('_getCurrentUserUsernameDisplayPreference')->willReturn(1);
 
         $user_helper->__construct();
-        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUser($user));
+        self::assertEquals('user_name (realname)', $user_helper->getDisplayNameFromUser($user));
         self::assertNull($user_helper->getDisplayNameFromUser(null));
     }
 
@@ -81,7 +81,7 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_helper->method('_getUserManager')->willReturn($user_manager);
 
         $user_helper->__construct();
-        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserId(123));
+        self::assertEquals('user_name (realname)', $user_helper->getDisplayNameFromUserId(123));
     }
 
     public function testGetDisplayNameFromUserName(): void
@@ -101,7 +101,7 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_helper->method('_isUserNameNone')->willReturn(false);
 
         $user_helper->__construct();
-        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserName('user_name'));
+        self::assertEquals('user_name (realname)', $user_helper->getDisplayNameFromUserName('user_name'));
     }
 
     public function testGetDisplayNameForNone(): void
@@ -125,19 +125,19 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $user_helper->__construct();
-        self::assertEquals("None", $user_helper->getDisplayNameFromUser($user));
+        self::assertEquals('None', $user_helper->getDisplayNameFromUser($user));
 
         $user_helper->__construct();
-        self::assertEquals("None", $user_helper->getDisplayNameFromUser($user));
+        self::assertEquals('None', $user_helper->getDisplayNameFromUser($user));
 
         $user_helper->__construct();
-        self::assertEquals("None", $user_helper->getDisplayNameFromUser($user));
+        self::assertEquals('None', $user_helper->getDisplayNameFromUser($user));
 
         $user_helper->__construct();
-        self::assertEquals("None", $user_helper->getDisplayNameFromUser($user));
-        self::assertEquals("None", $user_helper->getDisplayNameFromUserId(100));
-        self::assertEquals("None", $user_helper->getDisplayNameFromUserName("None"));
-        self::assertEquals("Aucun", $user_helper->getDisplayNameFromUserName("Aucun"));
+        self::assertEquals('None', $user_helper->getDisplayNameFromUser($user));
+        self::assertEquals('None', $user_helper->getDisplayNameFromUserId(100));
+        self::assertEquals('None', $user_helper->getDisplayNameFromUserName('None'));
+        self::assertEquals('Aucun', $user_helper->getDisplayNameFromUserName('Aucun'));
     }
 
     public function testInternalCachingById(): void
@@ -162,8 +162,8 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_helper->method('_getUserDao')->willReturn($dao);
 
         $user_helper->__construct();
-        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserId(123));
-        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserName('user_name'));
+        self::assertEquals('user_name (realname)', $user_helper->getDisplayNameFromUserId(123));
+        self::assertEquals('user_name (realname)', $user_helper->getDisplayNameFromUserName('user_name'));
     }
 
     public function testInternalCachingByUserName(): void
@@ -188,8 +188,8 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_helper->method('_getUserDao')->willReturn($dao);
 
         $user_helper->__construct();
-        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserName('user_name'));
-        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserId(123));
+        self::assertEquals('user_name (realname)', $user_helper->getDisplayNameFromUserName('user_name'));
+        self::assertEquals('user_name (realname)', $user_helper->getDisplayNameFromUserId(123));
     }
 
     public function testItCachesUnknownNames(): void

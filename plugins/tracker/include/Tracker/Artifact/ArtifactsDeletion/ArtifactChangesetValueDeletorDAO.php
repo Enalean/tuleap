@@ -45,10 +45,10 @@ class ArtifactChangesetValueDeletorDAO extends DataAccessObject
             $this->getDB()->delete('tracker_changeset_value_permissionsonartifact', ['changeset_value_id' => $row['changeset_id']]);
             $this->getDB()->delete('tracker_changeset_value_text', ['changeset_value_id' => $row['changeset_id']]);
 
-            $sql = "DELETE tracker_changeset_comment, tracker_changeset_comment_fulltext
+            $sql = 'DELETE tracker_changeset_comment, tracker_changeset_comment_fulltext
                     FROM tracker_changeset_comment
                     INNER JOIN tracker_changeset_comment_fulltext ON tracker_changeset_comment.id = tracker_changeset_comment_fulltext.comment_id
-                    WHERE changeset_id = ?";
+                    WHERE changeset_id = ?';
             $this->getDB()->run($sql, $row['changeset_id']);
 
             $this->getDB()->delete('tracker_changeset_incomingmail', ['changeset_id' => $row['id']]);

@@ -30,13 +30,13 @@ class b201412041555_add_tracker_field_computed_cache_table extends \Tuleap\Forge
 
     public function up()
     {
-        $sql = "CREATE TABLE tracker_field_computed_cache (
+        $sql = 'CREATE TABLE tracker_field_computed_cache (
                 artifact_id INT(11) NOT NULL,
                 field_id    INT(11) NOT NULL,
                 timestamp   INT(11) NOT NULL,
                 value       FLOAT(10,4) NULL,
                 UNIQUE KEY time_at_field (artifact_id, field_id, timestamp)
-            ) ENGINE=InnoDB";
+            ) ENGINE=InnoDB';
         $this->db->createTable('tracker_field_computed_cache', $sql);
     }
 

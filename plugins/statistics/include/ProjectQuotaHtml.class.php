@@ -110,7 +110,7 @@ class ProjectQuotaHtml
             $validRequest['sort'] = $sortBy;
             $validOrderBy         = new Valid_String('order');
             if ($request->valid($validOrderBy)) {
-                if ($request->get('order') == "ASC" || $request->get('order') == "DESC") {
+                if ($request->get('order') == 'ASC' || $request->get('order') == 'DESC') {
                     $orderBy = $request->get('order');
                 } else {
                     $orderBy = null;

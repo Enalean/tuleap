@@ -25,7 +25,7 @@ final class b202309011811_split_modal_for_existing_users extends \Tuleap\ForgeUp
 {
     public function description(): string
     {
-        return "Existing users should have a split modal";
+        return 'Existing users should have a split modal';
     }
 
     public function up(): void

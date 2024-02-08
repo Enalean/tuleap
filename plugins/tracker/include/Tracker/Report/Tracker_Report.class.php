@@ -1014,7 +1014,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             }
             $html .= '</div>';
 
-            if ($request->get("should-display-created-tracker-modal")) {
+            if ($request->get('should-display-created-tracker-modal')) {
                 $javascript_assets = new IncludeAssets(
                     __DIR__ . '/../../../frontend-assets',
                     '/assets/trackers'
@@ -1775,7 +1775,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $root->addAttribute('is_query_displayed', $this->is_query_displayed);
         }
         if ($this->is_in_expert_mode) {
-            $root->addAttribute('is_in_expert_mode', "1");
+            $root->addAttribute('is_in_expert_mode', '1');
         }
         if ($this->expert_query) {
             $root->addAttribute('expert_query', $this->expert_query);

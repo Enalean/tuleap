@@ -194,12 +194,12 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('pushGitNotifications')
             ->willReturnCallback(
                 function (string $server_url, string $repository_url) use ($polling_response): PollingResponse {
-                    if ($repository_url === "https://example.com/repo01") {
+                    if ($repository_url === 'https://example.com/repo01') {
                         throw new UnableToLaunchBuildException();
-                    } elseif ($repository_url === "example.com/repo01") {
+                    } elseif ($repository_url === 'example.com/repo01') {
                         return $polling_response;
                     } else {
-                        self::fail("Not expected");
+                        self::fail('Not expected');
                     }
                 }
             );
@@ -283,12 +283,12 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('pushGitNotifications')
             ->willReturnCallback(
                 function (string $server_url, string $repository_url, ?string $encrypted_token, ?string $commit_reference) use ($polling_response): PollingResponse {
-                    if ($repository_url === "https://example.com/repo01") {
+                    if ($repository_url === 'https://example.com/repo01') {
                         throw new UnableToLaunchBuildException();
-                    } elseif ($repository_url === "example.com/repo01") {
+                    } elseif ($repository_url === 'example.com/repo01') {
                         return $polling_response;
                     } else {
-                        self::fail("Not expected");
+                        self::fail('Not expected');
                     }
                 }
             );

@@ -98,17 +98,17 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
 
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, (int) $variables['id']);
         if (! $milestone instanceof \Planning_ArtifactMilestone) {
-            throw new NotFoundException(dgettext('tuleap-testplan', "Milestone not found."));
+            throw new NotFoundException(dgettext('tuleap-testplan', 'Milestone not found.'));
         }
 
         $project = $milestone->getProject();
         if ((string) $project->getUnixNameMixedCase() !== (string) $variables['project_name']) {
-            throw new NotFoundException(dgettext('tuleap-testplan', "Milestone not found."));
+            throw new NotFoundException(dgettext('tuleap-testplan', 'Milestone not found.'));
         }
 
         $service = $project->getService(AgileDashboardPlugin::PLUGIN_SHORTNAME);
         if (! $service) {
-            throw new NotFoundException(dgettext('tuleap-testplan', "Project does not use agile dashboard."));
+            throw new NotFoundException(dgettext('tuleap-testplan', 'Project does not use agile dashboard.'));
         }
 
         if (! $this->testplan_pane_displayable->isTestPlanPaneDisplayable($project, $user)) {
@@ -124,7 +124,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->testplan_assets, 'testplan-style'));
 
-        $title = dgettext('tuleap-testmanagement', "Tests") . ' - ' . $milestone->getArtifactTitle();
+        $title = dgettext('tuleap-testmanagement', 'Tests') . ' - ' . $milestone->getArtifactTitle();
         $service->displayHeader(
             $title,
             $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),

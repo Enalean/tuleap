@@ -50,12 +50,12 @@ class XMLImporter
 
     public function import(Project $project, SimpleXMLElement $xml_git): void
     {
-        if (! isset($xml_git->{"jenkins-servers-admin"})) {
+        if (! isset($xml_git->{'jenkins-servers-admin'})) {
             return;
         }
 
-        $this->logger->info("Importing project jenkins servers.");
-        foreach ($xml_git->{"jenkins-servers-admin"}->{"jenkins-server"} as $xml_jenkins_server) {
+        $this->logger->info('Importing project jenkins servers.');
+        foreach ($xml_git->{'jenkins-servers-admin'}->{'jenkins-server'} as $xml_jenkins_server) {
             $jenkins_server_url      = (string) $xml_jenkins_server['url'];
             $jenkins_cleartext_token = (string) ($xml_jenkins_server['jenkins_token'] ?? '');
             $jenkins_token           = null;
@@ -64,16 +64,16 @@ class XMLImporter
                 sodium_memzero($jenkins_cleartext_token);
             }
             try {
-                $this->logger->info("Importing project jenkins server: " . $jenkins_server_url);
+                $this->logger->info('Importing project jenkins server: ' . $jenkins_server_url);
                 $this->jenkins_server_adder->addServerInProject(
                     $project,
                     $jenkins_server_url,
                     $jenkins_token
                 );
             } catch (JenkinsServerAlreadyDefinedException $exception) {
-                $this->logger->error("Jenkins server " . $jenkins_server_url . " already exists in project.");
+                $this->logger->error('Jenkins server ' . $jenkins_server_url . ' already exists in project.');
             } catch (JenkinsServerURLNotValidException $exception) {
-                $this->logger->error("Jenkins server URL " . $jenkins_server_url . " is not an URL.");
+                $this->logger->error('Jenkins server URL ' . $jenkins_server_url . ' is not an URL.');
             }
         }
     }

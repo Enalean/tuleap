@@ -63,17 +63,17 @@ class CacheableMarkup extends XmlContent
                 return unserialize($data);
             } else {
                 // user our php lib. TESTME
-                include_once("ziplib.php");
+                include_once('ziplib.php');
                 $zip                 = new ZipReader($packed);
                 list(,$data,$attrib) = $zip->readFile();
                 return unserialize($data);
             }
         }
-        if (substr($packed, 0, 2) == "O:") {
+        if (substr($packed, 0, 2) == 'O:') {
             // Looks like a serialized object
             return unserialize($packed);
         }
-        if (preg_match("/^\w+$/", $packed)) {
+        if (preg_match('/^\w+$/', $packed)) {
             return $packed;
         }
         // happened with _BackendInfo problem also.
@@ -154,7 +154,7 @@ class CacheableMarkup extends XmlContent
         } elseif (method_exists($item, 'asString')) {
             $this->_buf .= self::_quote($item->asString());
         } else {
-            $this->_buf .= sprintf("==Object(%s)==", $item::class);
+            $this->_buf .= sprintf('==Object(%s)==', $item::class);
         }
     }
 
@@ -162,13 +162,13 @@ class CacheableMarkup extends XmlContent
     {
         static $two_sentences;
         if (! $two_sentences) {
-            $two_sentences = "[.?!][\")]*\s+[\"(]*[[:upper:])]"
-                             . ".*"
-                             . "[.?!][\")]*\s*[\"(]*([[:upper:])]|$)";
+            $two_sentences = '[.?!][")]*\s+["(]*[[:upper:])]'
+                             . '.*'
+                             . '[.?!][")]*\s*["(]*([[:upper:])]|$)';
         }
 
         if (! isset($this->_description) and preg_match("/$two_sentences/sx", $text)) {
-            $this->_description = preg_replace("/\s*\n\s*/", " ", trim($text));
+            $this->_description = preg_replace("/\s*\n\s*/", ' ', trim($text));
         }
     }
 
@@ -244,7 +244,7 @@ class Cached_DynamicContent
 
     public function expand($basepage, &$obj)
     {
-        trigger_error("Pure virtual", E_USER_ERROR);
+        trigger_error('Pure virtual', E_USER_ERROR);
     }
 
     public function getWikiPageLinks($basepage)

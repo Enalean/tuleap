@@ -101,7 +101,7 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
         if (! \is_file($this->filepath)) {
             $sys_http_user = ForgeConfig::get('sys_http_user');
             if (! touch($this->filepath) || ! chown($this->filepath, $sys_http_user) || ! chgrp($this->filepath, $sys_http_user)) {
-                throw new \RuntimeException(sprintf("Could not create or set the appropriate owner to the log file %s", $this->filepath));
+                throw new \RuntimeException(sprintf('Could not create or set the appropriate owner to the log file %s', $this->filepath));
             }
         }
 

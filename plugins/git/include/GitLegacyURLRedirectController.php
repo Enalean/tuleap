@@ -60,7 +60,7 @@ class GitLegacyURLRedirectController implements DispatchableWithRequest
             throw new NotFoundException();
         }
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
 
         $repository = $this->repository_factory->getRepositoryById($variables['repository_id']);

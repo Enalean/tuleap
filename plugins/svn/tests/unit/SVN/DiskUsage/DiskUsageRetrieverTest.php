@@ -104,7 +104,7 @@ final class DiskUsageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->logger->method('info')->withConsecutive(
             ['Collecting statistics for project projet'],
-            ["No new commit made on this project since yesterday, duplicate value from DB."],
+            ['No new commit made on this project since yesterday, duplicate value from DB.'],
         );
 
         $this->disk_usage_dao->method('hasRepositoriesUpdatedAfterGivenDate')->willReturn(false);

@@ -83,11 +83,11 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->options    = new ExportOptions(
-            "",
+            '',
             false,
             ['tracker_id' => 10]
         );
-        $this->export_dir = "__fixtures";
+        $this->export_dir = '__fixtures';
 
         $this->archive = $this->createMock(ArchiveInterface::class);
         $this->user    = B\UserTestBuilder::buildWithDefaults();
@@ -213,7 +213,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull($xml_objet->ugroups->ugroup[4]->members->member[0]);
 
         $attrs = $xml_objet->attributes();
-        self::assertEquals("😬", (string) $attrs['icon-codepoint']);
+        self::assertEquals('😬', (string) $attrs['icon-codepoint']);
     }
 
     public function testItExportsDynamicUgroupsForTheGivenProject(): void

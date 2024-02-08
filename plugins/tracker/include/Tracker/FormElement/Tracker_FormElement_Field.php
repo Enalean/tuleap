@@ -136,7 +136,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $operator = $rest_criteria_value[Tracker_Report_REST::OPERATOR_PROPERTY_NAME];
 
         if ($operator !== Tracker_Report_REST::OPERATOR_CONTAINS) {
-            throw new Tracker_Report_InvalidRESTCriterionException("Unallowed operator for criterion field '$this->name' ($this->id). Allowed operators: [" . Tracker_Report_REST::OPERATOR_CONTAINS . "]");
+            throw new Tracker_Report_InvalidRESTCriterionException("Unallowed operator for criterion field '$this->name' ($this->id). Allowed operators: [" . Tracker_Report_REST::OPERATOR_CONTAINS . ']');
         }
 
         if (! is_string($value) && ! is_numeric($value)) {
@@ -702,7 +702,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     protected function getNoValueLabel()
     {
-        return "<span class='empty_value'>" . dgettext('tuleap-tracker', 'Empty') . "</span>";
+        return "<span class='empty_value'>" . dgettext('tuleap-tracker', 'Empty') . '</span>';
     }
 
     protected function getHiddenArtifactValueForEdition(

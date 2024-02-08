@@ -124,11 +124,11 @@ class Tracker_Artifact_MailGateway_RecipientFactory
         Artifact $artifact,
         Tracker_Artifact_Changeset $changeset,
     ) {
-        return $artifact->getId() . "-" .
-            $this->getHash($user, $artifact) . "-" .
-            $user->getId() . "-" .
+        return $artifact->getId() . '-' .
+            $this->getHash($user, $artifact) . '-' .
+            $user->getId() . '-' .
             $changeset->getId() .
-            "@" . $this->host;
+            '@' . $this->host;
     }
 
     private function getArtifact($artifact_id)
@@ -165,6 +165,6 @@ class Tracker_Artifact_MailGateway_RecipientFactory
         PFUser $user,
         Artifact $artifact,
     ) {
-        return md5($user->getId() . "-" . $artifact->getId() . "-" . $this->salt);
+        return md5($user->getId() . '-' . $artifact->getId() . '-' . $this->salt);
     }
 }

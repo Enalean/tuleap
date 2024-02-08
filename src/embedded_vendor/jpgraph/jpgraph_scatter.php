@@ -105,21 +105,21 @@ class FieldPlot extends Plot
 
         for ($i = 0; $i < $this->numpoints; ++$i) {
             // Skip null values
-            if ($this->coords[0][$i] === "") {
+            if ($this->coords[0][$i] === '') {
                 continue;
             }
 
             $f = $this->iCallback;
-            if ($f != "") {
+            if ($f != '') {
                 list($cc,$cs,$cas) = call_user_func($f, $this->coords[1][$i], $this->coords[0][$i], $this->iAngles[$i]);
                 // Fall back on global data if the callback isn't set
-                if ($cc  == "") {
+                if ($cc  == '') {
                     $cc = $bc;
                 }
-                if ($cs  == "") {
+                if ($cs  == '') {
                     $cs = $bs;
                 }
-                if ($cas == "") {
+                if ($cas == '') {
                     $cas = $bas;
                 }
                 $this->arrow->SetColor($cc);
@@ -137,7 +137,7 @@ class FieldPlot extends Plot
     // Framework function
     public function Legend($aGraph)
     {
-        if ($this->legend != "") {
+        if ($this->legend != '') {
             $aGraph->legend->Add(
                 $this->legend,
                 $this->mark->fill_color,
@@ -190,7 +190,7 @@ class ScatterPlot extends Plot
     }
 
     // Combine the scatter plot points with a line
-    public function SetLinkPoints($aFlag = true, $aColor = "black", $aWeight = 1, $aStyle = 'solid')
+    public function SetLinkPoints($aFlag = true, $aColor = 'black', $aWeight = 1, $aStyle = 'solid')
     {
         $this->link->iShow   = $aFlag;
         $this->link->iColor  = $aColor;
@@ -263,7 +263,7 @@ class ScatterPlot extends Plot
     // Framework function
     public function Legend($aGraph)
     {
-        if ($this->legend != "") {
+        if ($this->legend != '') {
             $aGraph->legend->Add(
                 $this->legend,
                 $this->mark->fill_color,

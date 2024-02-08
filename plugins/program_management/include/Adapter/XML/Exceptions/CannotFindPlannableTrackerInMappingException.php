@@ -27,7 +27,7 @@ final class CannotFindPlannableTrackerInMappingException extends \Exception impl
     public function __construct(string $tracker_ref)
     {
         parent::__construct(
-            sprintf("Plannable tracker not found in created trackers mapping using reference %s", $tracker_ref)
+            sprintf('Plannable tracker not found in created trackers mapping using reference %s', $tracker_ref)
         );
     }
 }

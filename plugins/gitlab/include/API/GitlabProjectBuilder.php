@@ -41,7 +41,7 @@ class GitlabProjectBuilder implements BuildGitlabProjects
 
         if (! $gitlab_project_data) {
             throw new GitlabResponseAPIException(
-                "The query is not in error but the json content is empty. This is not expected."
+                'The query is not in error but the json content is empty. This is not expected.'
             );
         }
 
@@ -55,11 +55,11 @@ class GitlabProjectBuilder implements BuildGitlabProjects
      */
     public function getGroupProjectsFromGitlabAPI(Credentials $credentials, int $gitlab_group_id): array
     {
-        $group_projects_data = $this->gitlab_api_client->getPaginatedUrl($credentials, "/groups/" . $gitlab_group_id . "/projects");
+        $group_projects_data = $this->gitlab_api_client->getPaginatedUrl($credentials, '/groups/' . $gitlab_group_id . '/projects');
 
         if (! isset($group_projects_data)) {
             throw new GitlabResponseAPIException(
-                "The query is not in error but the json content is empty. This is not expected."
+                'The query is not in error but the json content is empty. This is not expected.'
             );
         }
 
@@ -83,7 +83,7 @@ class GitlabProjectBuilder implements BuildGitlabProjects
             ! array_key_exists('last_activity_at', $gitlab_project_data) ||
             ! array_key_exists('default_branch', $gitlab_project_data)
         ) {
-            throw new GitlabResponseAPIException("Some keys are missing in the project Json. This is not expected. Aborting.");
+            throw new GitlabResponseAPIException('Some keys are missing in the project Json. This is not expected. Aborting.');
         }
 
         if (

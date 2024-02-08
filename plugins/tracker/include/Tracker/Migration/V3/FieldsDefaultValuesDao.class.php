@@ -221,11 +221,11 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject
 
         if ($res) {
             while ($row = $res->getRow()) {
-                $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
-                             SELECT " . $row['id'] . ", new.id
+                $sql = 'INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
+                             SELECT ' . $row['id'] . ', new.id
                              FROM tracker_field_list_bind_static_value AS new
-                             WHERE new.field_id = " . $row['id'] . " AND
-                                   new.old_id IN (" . $row['default_value'] . ")";
+                             WHERE new.field_id = ' . $row['id'] . ' AND
+                                   new.old_id IN (' . $row['default_value'] . ')';
                 $this->update($sql);
             }
         }
@@ -245,11 +245,11 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject
 
         if ($res) {
             while ($row = $res->getRow()) {
-                $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
-                     SELECT " . $row['id'] . ", user_id
+                $sql = 'INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
+                     SELECT ' . $row['id'] . ', user_id
                      FROM user
-                     WHERE user_id IN (" . $row['default_value'] . ") AND
-                           user_id <> 100";
+                     WHERE user_id IN (' . $row['default_value'] . ') AND
+                           user_id <> 100';
                 $this->update($sql);
             }
         }

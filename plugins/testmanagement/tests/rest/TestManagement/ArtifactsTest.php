@@ -29,41 +29,41 @@ final class ArtifactsTest extends TestManagementRESTTestCase
     public function testItPostAnArtifactWithStepDefinitionFieldId(): int
     {
         $test_def_tracker_id = $this->tracker_ids[$this->project_id][TestManagementDataBuilder::TEST_DEF_TRACKER_SHORTNAME];
-        $summary_field_id    = $this->getUsedFieldId($test_def_tracker_id, "summary");
-        $details_field_id    = $this->getUsedFieldId($test_def_tracker_id, "details");
-        $steps_field_id      = $this->getUsedFieldId($test_def_tracker_id, "steps");
+        $summary_field_id    = $this->getUsedFieldId($test_def_tracker_id, 'summary');
+        $details_field_id    = $this->getUsedFieldId($test_def_tracker_id, 'details');
+        $steps_field_id      = $this->getUsedFieldId($test_def_tracker_id, 'steps');
 
         $payload = [
-            "tracker" => ["id" => $test_def_tracker_id],
-            "values"  => [
+            'tracker' => ['id' => $test_def_tracker_id],
+            'values'  => [
                 [
-                    "field_id" => $summary_field_id,
-                    "value"    => "Test if the car is usable or not",
+                    'field_id' => $summary_field_id,
+                    'value'    => 'Test if the car is usable or not',
                 ],
                 [
-                    "field_id" => $details_field_id,
-                    "value"    => "Cars go brrrrr",
+                    'field_id' => $details_field_id,
+                    'value'    => 'Cars go brrrrr',
                 ],
                 [
-                    "field_id" => $steps_field_id,
-                    "value"    => [
+                    'field_id' => $steps_field_id,
+                    'value'    => [
                         [
-                            "description"             => "You can turn the steering wheel",
-                            "description_format"      => "commonmark",
-                            "expected_results"        => "The car should also turn ",
-                            "expected_results_format" => "commonmark",
+                            'description'             => 'You can turn the steering wheel',
+                            'description_format'      => 'commonmark',
+                            'expected_results'        => 'The car should also turn ',
+                            'expected_results_format' => 'commonmark',
                         ],
                         [
-                            "description"             => "The car does not have tyre",
-                            "description_format"      => "html",
-                            "expected_results"        => "It should be difficult to move",
-                            "expected_results_format" => "html",
+                            'description'             => 'The car does not have tyre',
+                            'description_format'      => 'html',
+                            'expected_results'        => 'It should be difficult to move',
+                            'expected_results_format' => 'html',
                         ],
                         [
-                            "description"             => "The car does not have tyre",
-                            "description_format"      => "text",
-                            "expected_results"        => "It should be difficult to move",
-                            "expected_results_format" => "text",
+                            'description'             => 'The car does not have tyre',
+                            'description_format'      => 'text',
+                            'expected_results'        => 'It should be difficult to move',
+                            'expected_results_format' => 'text',
                         ],
                     ],
                 ],
@@ -76,7 +76,7 @@ final class ArtifactsTest extends TestManagementRESTTestCase
 
         self::assertEquals(201, $response->getStatusCode());
 
-        $artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["id"];
+        $artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
         $this->assertArtifactHasStepDefField($artifact_id);
 
         return $artifact_id;
@@ -87,23 +87,23 @@ final class ArtifactsTest extends TestManagementRESTTestCase
         $test_def_tracker_id = $this->tracker_ids[$this->project_id][TestManagementDataBuilder::TEST_DEF_TRACKER_SHORTNAME];
 
         $payload = [
-            "tracker"         => ["id" => $test_def_tracker_id],
-            "values_by_field" => [
-                "summary" => ["value" => "Test if the car is usable or not"],
-                "details" => ["value" => "Cars go brrrrr"],
-                "steps"   => [
-                    "value" => [
+            'tracker'         => ['id' => $test_def_tracker_id],
+            'values_by_field' => [
+                'summary' => ['value' => 'Test if the car is usable or not'],
+                'details' => ['value' => 'Cars go brrrrr'],
+                'steps'   => [
+                    'value' => [
                         [
-                            "description"             => "You can turn the steering wheel",
-                            "description_format"      => "commonmark",
-                            "expected_results"        => "The car should also turn ",
-                            "expected_results_format" => "commonmark",
+                            'description'             => 'You can turn the steering wheel',
+                            'description_format'      => 'commonmark',
+                            'expected_results'        => 'The car should also turn ',
+                            'expected_results_format' => 'commonmark',
                         ],
                         [
-                            "description"             => "The car does not have tyre",
-                            "description_format"      => "html",
-                            "expected_results"        => "It should be difficult to move",
-                            "expected_results_format" => "html",
+                            'description'             => 'The car does not have tyre',
+                            'description_format'      => 'html',
+                            'expected_results'        => 'It should be difficult to move',
+                            'expected_results_format' => 'html',
                         ],
                     ],
                 ],
@@ -116,7 +116,7 @@ final class ArtifactsTest extends TestManagementRESTTestCase
 
         self::assertEquals(201, $response->getStatusCode());
 
-        $artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["id"];
+        $artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
         $this->assertArtifactHasStepDefField($artifact_id);
     }
 
@@ -202,7 +202,7 @@ final class ArtifactsTest extends TestManagementRESTTestCase
         $tracker = $this->tracker_representations[$tracker_id];
         foreach ($tracker['fields'] as $tracker_field) {
             if ($tracker_field['name'] === $field_shortname) {
-                return $tracker_field["field_id"];
+                return $tracker_field['field_id'];
             }
         }
         throw new UsedFieldIdNotFoundException();

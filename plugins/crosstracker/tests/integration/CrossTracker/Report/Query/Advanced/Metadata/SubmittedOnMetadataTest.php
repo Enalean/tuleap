@@ -226,7 +226,7 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@submitted_on < NOW()",
+                '@submitted_on < NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -286,7 +286,7 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@submitted_on <= NOW()",
+                '@submitted_on <= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -352,7 +352,7 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@submitted_on > NOW() - 1d",
+                '@submitted_on > NOW() - 1d',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -418,7 +418,7 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@submitted_on >= NOW()",
+                '@submitted_on >= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -481,7 +481,7 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@submitted_on BETWEEN(NOW() - 1d, NOW() + 1d)",
+                '@submitted_on BETWEEN(NOW() - 1d, NOW() + 1d)',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member

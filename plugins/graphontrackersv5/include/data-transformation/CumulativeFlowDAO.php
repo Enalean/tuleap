@@ -28,20 +28,20 @@ class CumulativeFlowDAO extends DataAccessObject
 {
     public function getChartColors(int $field_id): array
     {
-        $sql = "SELECT val.id, val.label, deco.red, deco.green, deco.blue, deco.tlp_color_name
+        $sql = 'SELECT val.id, val.label, deco.red, deco.green, deco.blue, deco.tlp_color_name
                 FROM  tracker_field_list_bind_static_value AS val
                 LEFT JOIN tracker_field_list_bind_decorator AS deco ON (val.id = deco.value_id)
                 WHERE val.field_id = ?
-                ORDER BY val.rank";
+                ORDER BY val.rank';
 
         return $this->getDB()->run($sql, $field_id);
     }
 
     public function getColorOfNone(int $field_id): ?array
     {
-        $sql = "SELECT deco.red, deco.green, deco.blue, deco.tlp_color_name
+        $sql = 'SELECT deco.red, deco.green, deco.blue, deco.tlp_color_name
                 FROM  tracker_field_list_bind_decorator AS deco
-                WHERE deco.field_id = ? AND deco.value_id = ?";
+                WHERE deco.field_id = ? AND deco.value_id = ?';
 
         return $this->getDB()->row($sql, $field_id, \Tracker_FormElement_Field_List::NONE_VALUE);
     }

@@ -68,7 +68,7 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->matchings_ids = [
-            "last_changeset_id" => "98,99,100",
+            'last_changeset_id' => '98,99,100',
         ];
 
         $this->form_elements_1 = Mockery::mock(Tracker_FormElement_Field_ArtifactId::class);
@@ -87,29 +87,29 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_elements_2->shouldReceive('isMultiple')->andReturn(false);
         $this->form_elements_3->shouldReceive('isMultiple')->andReturn(false);
 
-        $this->form_elements_1->shouldReceive('getQuerySelect')->andReturn("a.id AS `artifact_id`");
-        $this->form_elements_1->shouldReceive('getQueryFrom')->andReturn("");
+        $this->form_elements_1->shouldReceive('getQuerySelect')->andReturn('a.id AS `artifact_id`');
+        $this->form_elements_1->shouldReceive('getQueryFrom')->andReturn('');
 
-        $this->form_elements_2->shouldReceive('getQuerySelect')->andReturn("a.id AS `artifact_id`");
-        $this->form_elements_2->shouldReceive('getQueryFrom')->andReturn("");
+        $this->form_elements_2->shouldReceive('getQuerySelect')->andReturn('a.id AS `artifact_id`');
+        $this->form_elements_2->shouldReceive('getQueryFrom')->andReturn('');
 
-        $this->form_elements_3->shouldReceive('getQuerySelect')->andReturn("a.id AS `artifact_id`");
-        $this->form_elements_3->shouldReceive('getQueryFrom')->andReturn("");
+        $this->form_elements_3->shouldReceive('getQuerySelect')->andReturn('a.id AS `artifact_id`');
+        $this->form_elements_3->shouldReceive('getQueryFrom')->andReturn('');
 
-        $this->form_elements_1->shouldReceive('getQueryOrderby')->andReturn("artifact_id");
+        $this->form_elements_1->shouldReceive('getQueryOrderby')->andReturn('artifact_id');
 
         $this->columns = [
-            "101" => [
+            '101' => [
                 'field' => $this->form_elements_1,
-                'field_id' => "101",
+                'field_id' => '101',
             ],
-            "102" => [
+            '102' => [
                 'field' => $this->form_elements_2,
-                'field_id' => "102",
+                'field_id' => '102',
             ],
-            "103" => [
+            '103' => [
                 'field' => $this->form_elements_3,
-                'field_id' => "103",
+                'field_id' => '103',
             ],
         ];
 
@@ -217,8 +217,8 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
         }
 
         return [
-            "field" => [$field_mapping],
-            "xml"   => $xml_mapping,
+            'field' => [$field_mapping],
+            'xml'   => $xml_mapping,
         ];
     }
 }

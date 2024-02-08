@@ -33,7 +33,7 @@ final class ResponseFeedbackWrapperStub extends ResponseFeedbackWrapper
 
     public static function buildWithNoPredefinedLevel(): self
     {
-        return new self("");
+        return new self('');
     }
 
     public function log($level, $msg, $purify = CODENDI_PURIFIER_CONVERT_HTML): void

@@ -103,7 +103,7 @@ final class SVNCheckRepositoriesWithDuplicatedAccessFileSections extends Command
         $repositories = $this->getRepositoriesWithDuplicatedSectionInAccessFile($output);
 
         if (count($repositories) <= 0) {
-            $output->writeln("<info>No duplicated sections in platform access files found.</info>");
+            $output->writeln('<info>No duplicated sections in platform access files found.</info>');
             return;
         }
 
@@ -123,7 +123,7 @@ final class SVNCheckRepositoriesWithDuplicatedAccessFileSections extends Command
 
         $table->render();
 
-        $output->writeln("<info>" . count($repositories) . " SVN access files with duplicated sections found.</info>");
+        $output->writeln('<info>' . count($repositories) . ' SVN access files with duplicated sections found.</info>');
     }
 
     private function displayAsJSON(OutputInterface $output): void

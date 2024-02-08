@@ -140,7 +140,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockSemanticStatusDefinedWithClosedValue();
 
-        $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")
+        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')
             ->withArgs([$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user])
             ->andReturn(45);
 
@@ -157,7 +157,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockSemanticStatusDefinedWithClosedValue();
 
-        $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")
+        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')
             ->withArgs([$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user])
             ->andThrow(NoPossibleValueException::class);
 
@@ -173,7 +173,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockSemanticStatusDefinedWithOpenValue();
 
-        $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")
+        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')
             ->withArgs([$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user])
             ->andThrow(NoPossibleValueException::class);
 
@@ -213,7 +213,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockSemanticStatusDefinedWithOpenValue();
 
-        $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")
+        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')
             ->withArgs([$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user])
             ->andReturn(44);
 

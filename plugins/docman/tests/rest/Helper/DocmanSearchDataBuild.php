@@ -70,7 +70,7 @@ final class DocmanSearchDataBuild
             (int) $docman_root->getId(),
             'foo.txt',
             PLUGIN_DOCMAN_ITEM_TYPE_LINK,
-            "https://example.test"
+            'https://example.test'
         );
 
         $this->common_builder->createItemWithVersion(
@@ -85,7 +85,7 @@ final class DocmanSearchDataBuild
             $folder_id,
             'foo.txt',
             PLUGIN_DOCMAN_ITEM_TYPE_LINK,
-            "https://example.test"
+            'https://example.test'
         );
 
         $this->common_builder->createItemWithVersion(

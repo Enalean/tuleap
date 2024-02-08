@@ -720,7 +720,7 @@ class MilestoneResource extends AuthenticatedResource
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
         if (! $milestone) {
-            throw new RestException(404, "Milestone not found");
+            throw new RestException(404, 'Milestone not found');
         }
 
         $project = $milestone->getProject();
@@ -938,7 +938,7 @@ class MilestoneResource extends AuthenticatedResource
         $project   = $milestone->getProject();
 
         if (! $milestone) {
-            throw new RestException(404, "Milestone not found");
+            throw new RestException(404, 'Milestone not found');
         }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);

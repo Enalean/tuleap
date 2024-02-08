@@ -56,7 +56,7 @@ class ExportOptionsTest extends TestCase
      */
     public function testGetExtraOption(array $extra_options, ?int $expected): void
     {
-        $options = new ExportOptions("", false, $extra_options);
+        $options = new ExportOptions('', false, $extra_options);
         self::assertEquals($expected, $options->getExtraOption('tracker_id'));
     }
 }

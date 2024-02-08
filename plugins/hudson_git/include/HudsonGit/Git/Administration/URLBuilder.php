@@ -33,11 +33,11 @@ class URLBuilder
 
     public static function buildAddUrl(): string
     {
-        return "/jenkins_server/";
+        return '/jenkins_server/';
     }
 
     public static function buildDeleteUrl(): string
     {
-        return "/jenkins_server/delete";
+        return '/jenkins_server/delete';
     }
 }

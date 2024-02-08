@@ -123,7 +123,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBuildsPresenterWithParentMilestoneTitleIfAny(): void
     {
         $parent_artifact = $this->createMock(Planning_Milestone::class);
-        $parent_artifact->method('getArtifactTitle')->willReturn("Parent 01");
+        $parent_artifact->method('getArtifactTitle')->willReturn('Parent 01');
 
         $this->milestone->method('getParent')->willReturn($parent_artifact);
 
@@ -139,7 +139,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             101,
         );
 
-        $this->assertSame("Parent 01", $presenter->parent_milestone_title);
+        $this->assertSame('Parent 01', $presenter->parent_milestone_title);
     }
 
     public function testBuildsPresenterWithAUserThatDoesNotHaveEnoughPermissionsToCreateACampaign(): void

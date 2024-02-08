@@ -23,7 +23,7 @@ class b201405061202_modify_svn_accessfile_history_table extends \Tuleap\ForgeUpg
 {
     public function description()
     {
-        return "svn accessfile history table";
+        return 'svn accessfile history table';
     }
 
     public function preUp()
@@ -39,8 +39,8 @@ class b201405061202_modify_svn_accessfile_history_table extends \Tuleap\ForgeUpg
 
     private function addIndexonGroupId()
     {
-        $sql = "ALTER TABLE svn_accessfile_history
-                ADD INDEX idx_svn_accessfile_group_id(group_id)";
+        $sql = 'ALTER TABLE svn_accessfile_history
+                ADD INDEX idx_svn_accessfile_group_id(group_id)';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -50,8 +50,8 @@ class b201405061202_modify_svn_accessfile_history_table extends \Tuleap\ForgeUpg
 
     private function removeUnusedSha1ContentColumn()
     {
-        $sql = "ALTER TABLE svn_accessfile_history
-                DROP COLUMN sha1_content";
+        $sql = 'ALTER TABLE svn_accessfile_history
+                DROP COLUMN sha1_content';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

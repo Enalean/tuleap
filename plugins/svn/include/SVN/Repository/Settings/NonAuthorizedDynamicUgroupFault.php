@@ -31,6 +31,6 @@ final class NonAuthorizedDynamicUgroupFault extends Fault
 {
     public static function build(): Fault
     {
-        return new self("Notifications cannot be sent to user groups Anonymous Authenticated and Registered");
+        return new self('Notifications cannot be sent to user groups Anonymous Authenticated and Registered');
     }
 }

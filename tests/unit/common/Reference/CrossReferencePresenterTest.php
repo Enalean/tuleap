@@ -71,8 +71,8 @@ final class CrossReferencePresenterTest extends TestCase
         $a_ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $new_ref = $a_ref->withCreationMetadata(
-            new CreatedByPresenter("John Doe", false, ''),
-            new TlpRelativeDatePresenter("la date", "absolute", "right", "absolute", "en_US"),
+            new CreatedByPresenter('John Doe', false, ''),
+            new TlpRelativeDatePresenter('la date', 'absolute', 'right', 'absolute', 'en_US'),
         );
 
         self::assertEquals(1, $new_ref->id);
@@ -86,7 +86,7 @@ final class CrossReferencePresenterTest extends TestCase
 
         $new_ref = $a_ref->withCreationMetadata(
             CreationMetadataPresenter::NO_CREATED_BY_PRESENTER,
-            new TlpRelativeDatePresenter("la date", "absolute", "right", "absolute", "en_US"),
+            new TlpRelativeDatePresenter('la date', 'absolute', 'right', 'absolute', 'en_US'),
         );
 
         self::assertEquals(1, $new_ref->id);

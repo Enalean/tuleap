@@ -65,14 +65,14 @@ class SemanticsXMLExporter
             return;
         }
 
-        $semantic_node = $semantics_node->addChild("semantic");
-        $semantic_node->addAttribute("type", Tracker_Semantic_Title::NAME);
+        $semantic_node = $semantics_node->addChild('semantic');
+        $semantic_node->addAttribute('type', Tracker_Semantic_Title::NAME);
 
-        $semantic_node->addChild("shortname", Tracker_Semantic_Title::NAME);
-        $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Title'));
-        $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the title of an artifact'));
-        $field_node = $semantic_node->addChild("field");
-        $field_node->addAttribute("REF", $summary_field->getXMLId());
+        $semantic_node->addChild('shortname', Tracker_Semantic_Title::NAME);
+        $semantic_node->addChild('label', dgettext('tuleap-tracker', 'Title'));
+        $semantic_node->addChild('description', dgettext('tuleap-tracker', 'Define the title of an artifact'));
+        $field_node = $semantic_node->addChild('field');
+        $field_node->addAttribute('REF', $summary_field->getXMLId());
     }
 
     private function exportDescriptionSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
@@ -82,14 +82,14 @@ class SemanticsXMLExporter
             return;
         }
 
-        $semantic_node = $semantics_node->addChild("semantic");
-        $semantic_node->addAttribute("type", Tracker_Semantic_Description::NAME);
+        $semantic_node = $semantics_node->addChild('semantic');
+        $semantic_node->addAttribute('type', Tracker_Semantic_Description::NAME);
 
-        $semantic_node->addChild("shortname", Tracker_Semantic_Description::NAME);
-        $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Description'));
-        $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the description of an artifact'));
-        $field_node = $semantic_node->addChild("field");
-        $field_node->addAttribute("REF", $description_field->getXMLId());
+        $semantic_node->addChild('shortname', Tracker_Semantic_Description::NAME);
+        $semantic_node->addChild('label', dgettext('tuleap-tracker', 'Description'));
+        $semantic_node->addChild('description', dgettext('tuleap-tracker', 'Define the description of an artifact'));
+        $field_node = $semantic_node->addChild('field');
+        $field_node->addAttribute('REF', $description_field->getXMLId());
     }
 
     private function exportStatusSemantic(
@@ -102,19 +102,19 @@ class SemanticsXMLExporter
             return;
         }
 
-        $semantic_node = $semantics_node->addChild("semantic");
-        $semantic_node->addAttribute("type", Tracker_Semantic_Status::NAME);
+        $semantic_node = $semantics_node->addChild('semantic');
+        $semantic_node->addAttribute('type', Tracker_Semantic_Status::NAME);
 
-        $semantic_node->addChild("shortname", Tracker_Semantic_Status::NAME);
-        $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Status'));
-        $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the status of an artifact'));
-        $field_node = $semantic_node->addChild("field");
-        $field_node->addAttribute("REF", (string) $status_field->getXMLId());
-        $open_values_node = $semantic_node->addChild("open_values");
+        $semantic_node->addChild('shortname', Tracker_Semantic_Status::NAME);
+        $semantic_node->addChild('label', dgettext('tuleap-tracker', 'Status'));
+        $semantic_node->addChild('description', dgettext('tuleap-tracker', 'Define the status of an artifact'));
+        $field_node = $semantic_node->addChild('field');
+        $field_node->addAttribute('REF', (string) $status_field->getXMLId());
+        $open_values_node = $semantic_node->addChild('open_values');
 
         foreach ($status_values_collection->getOpenValues() as $allowed_value_representation) {
             $open_value_node = $open_values_node->addChild('open_value');
-            $open_value_node->addAttribute("REF", $allowed_value_representation->getXMLId());
+            $open_value_node->addAttribute('REF', $allowed_value_representation->getXMLId());
         }
     }
 
@@ -144,21 +144,21 @@ class SemanticsXMLExporter
             return;
         }
 
-        $semantic_node = $semantics_node->addChild("semantic");
-        $semantic_node->addAttribute("type", Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
+        $semantic_node = $semantics_node->addChild('semantic');
+        $semantic_node->addAttribute('type', Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
 
-        $semantic_node->addChild("shortname", Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
-        $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Contributor/assignee'));
-        $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the contributor/assignee of an artifact'));
-        $field_node = $semantic_node->addChild("field");
-        $field_node->addAttribute("REF", $assignee_field->getXMLId());
+        $semantic_node->addChild('shortname', Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
+        $semantic_node->addChild('label', dgettext('tuleap-tracker', 'Contributor/assignee'));
+        $semantic_node->addChild('description', dgettext('tuleap-tracker', 'Define the contributor/assignee of an artifact'));
+        $field_node = $semantic_node->addChild('field');
+        $field_node->addAttribute('REF', $assignee_field->getXMLId());
     }
 
     private function exportTimeframeSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
     {
         $start_date_field = null;
         foreach ($field_mapping_collection->getAllMappings() as $mapping) {
-            if ($mapping->getJiraFieldLabel() === "Start date" && $mapping->getType() === "date") {
+            if ($mapping->getJiraFieldLabel() === 'Start date' && $mapping->getType() === 'date') {
                 $start_date_field = $mapping;
                 break;
             }
@@ -168,16 +168,16 @@ class SemanticsXMLExporter
             return;
         }
 
-        $due_date_field = $field_mapping_collection->getMappingFromJiraField("duedate");
+        $due_date_field = $field_mapping_collection->getMappingFromJiraField('duedate');
         if ($due_date_field === null) {
             return;
         }
 
-        $semantic_node = $semantics_node->addChild("semantic");
-        $semantic_node->addAttribute("type", SemanticTimeframe::NAME);
+        $semantic_node = $semantics_node->addChild('semantic');
+        $semantic_node->addAttribute('type', SemanticTimeframe::NAME);
 
-        $semantic_node->addChild("start_date_field")->addAttribute("REF", $start_date_field->getXMLId());
-        $semantic_node->addChild("end_date_field")->addAttribute("REF", $due_date_field->getXMLId());
+        $semantic_node->addChild('start_date_field')->addAttribute('REF', $start_date_field->getXMLId());
+        $semantic_node->addChild('end_date_field')->addAttribute('REF', $due_date_field->getXMLId());
     }
 
     private function exportExternalSemantics(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void

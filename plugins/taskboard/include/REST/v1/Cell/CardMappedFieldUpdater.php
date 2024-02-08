@@ -275,7 +275,7 @@ class CardMappedFieldUpdater
                 sprintf(
                     dgettext(
                         'tuleap-taskboard',
-                        "Tracker %s has no list field mapped to column %s, please check its configuration."
+                        'Tracker %s has no list field mapped to column %s, please check its configuration.'
                     ),
                     $taskboard_tracker->getTracker()->getName(),
                     $column->getLabel()
@@ -316,7 +316,7 @@ class CardMappedFieldUpdater
                 sprintf(
                     dgettext(
                         'tuleap-taskboard',
-                        "Tracker %s has no value mapped to column %s, please check its configuration."
+                        'Tracker %s has no value mapped to column %s, please check its configuration.'
                     ),
                     $taskboard_tracker->getTracker()->getName(),
                     $column->getLabel()

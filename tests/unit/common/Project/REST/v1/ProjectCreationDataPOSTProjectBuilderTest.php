@@ -231,7 +231,7 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
         $post_representation->label        = 'Project 01';
         $post_representation->description  = 'desc';
         $post_representation->is_public    = true;
-        $post_representation->from_archive = new ProjectFilePOSTRepresentation("test.zip", 123);
+        $post_representation->from_archive = new ProjectFilePOSTRepresentation('test.zip', 123);
 
         $user = UserTestBuilder::anActiveUser()->build();
 

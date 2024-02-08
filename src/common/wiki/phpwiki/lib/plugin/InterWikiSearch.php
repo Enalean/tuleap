@@ -29,20 +29,20 @@ class WikiPlugin_InterWikiSearch extends WikiPlugin
 {
     public function getName()
     {
-        return _("InterWikiSearch");
+        return _('InterWikiSearch');
     }
 
     public function getDescription()
     {
-        return _("Perform searches on InterWiki sites listed in InterWikiMap.");
+        return _('Perform searches on InterWiki sites listed in InterWikiMap.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.8 $"
+            '$Revision: 1.8 $'
         );
     }
 
@@ -57,7 +57,7 @@ class WikiPlugin_InterWikiSearch extends WikiPlugin
         extract($args);
 
         if (defined('DEBUG') && ! DEBUG) {
-            return $this->disabled("Sorry, this plugin is currently out of order.");
+            return $this->disabled('Sorry, this plugin is currently out of order.');
         }
 
         $page = $dbi->getPage($request->getArg('pagename'));
@@ -105,8 +105,8 @@ if (defined('DEBUG') && DEBUG) {
         public function _arrayToTable($array, &$request)
         {
             $thead    = HTML::thead();
-            $label[0] = _("Wiki Name");
-            $label[1] = _("Search");
+            $label[0] = _('Wiki Name');
+            $label[1] = _('Search');
             $thead->pushContent(HTML::tr(
                 HTML::th($label[0]),
                 HTML::th($label[1])

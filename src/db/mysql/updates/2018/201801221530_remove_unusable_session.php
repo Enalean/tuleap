@@ -22,7 +22,7 @@ class b201801221530_remove_unusable_session extends ForgeUpgrade_Bucket // @codi
 {
     public function description()
     {
-        return "Remove not usable users sessions";
+        return 'Remove not usable users sessions';
     }
 
     public function preUp()

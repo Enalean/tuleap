@@ -100,8 +100,8 @@ final class ThreadCommentDaoTest extends TestIntegrationTestCase
                 'parent_id' => self::SECOND_COMMENT_ID,
             ]
         );
-        $db->update('plugin_pullrequest_comments', ['color' => "graffity-yellow"], ["id" => self::FIRST_COMMENT_ID]);
-        $db->update('plugin_pullrequest_inline_comments', ['color' => "flamingo-pink"], ["id" => self::SECOND_COMMENT_ID]);
+        $db->update('plugin_pullrequest_comments', ['color' => 'graffity-yellow'], ['id' => self::FIRST_COMMENT_ID]);
+        $db->update('plugin_pullrequest_inline_comments', ['color' => 'flamingo-pink'], ['id' => self::SECOND_COMMENT_ID]);
 
         $dao               = new ThreadCommentDao();
         $number_of_threads = $dao->countAllThreadsOfPullRequest(self::PULL_REQUEST_1_ID);

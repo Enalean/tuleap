@@ -56,7 +56,7 @@ class GerritServerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected = 'ext::ssh -p le_ssh_port -i le_identity_file le_login@le_host %S le_project';
-        $this->assertEquals($expected, $server->getCloneSSHUrl("le_project"));
+        $this->assertEquals($expected, $server->getCloneSSHUrl('le_project'));
     }
 
     public function testItPrunesDefaultHTTPPortForAdminUrl(): void

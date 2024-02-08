@@ -45,7 +45,7 @@ class LDAP_SyncNotificationManager
         foreach ($adminsEmails as $unixProjectName => $emailList) {
             $subject    = $this->getSubject($unixProjectName, $user);
             $body       = $this->getBody($unixProjectName, $user);
-            $recipients = implode(";", $emailList);
+            $recipients = implode(';', $emailList);
             $this->ldapSyncMail->notifyProjectsAdmins($recipients, $unixProjectName, $user, $subject, $body);
         }
     }

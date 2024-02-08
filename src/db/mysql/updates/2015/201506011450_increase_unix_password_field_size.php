@@ -23,7 +23,7 @@ class b201506011450_increase_unix_password_field_size extends \Tuleap\ForgeUpgra
 {
     public function description()
     {
-        return "Increase UNIX password field size";
+        return 'Increase UNIX password field size';
     }
 
     public function preUp()

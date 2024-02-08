@@ -38,7 +38,7 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine
         if ($this->duration && $this->duration > 1) {
             return true;
         } else {
-            echo " <p class='feedback_info'>" . sprintf(dgettext('tuleap-graphontrackersv5', 'No datas to display for graph %1$s'), $this->title) . "</p>";
+            echo " <p class='feedback_info'>" . sprintf(dgettext('tuleap-graphontrackersv5', 'No datas to display for graph %1$s'), $this->title) . '</p>';
             return false;
         }
     }

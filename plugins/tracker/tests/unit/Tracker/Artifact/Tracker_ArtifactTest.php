@@ -144,7 +144,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $user->shouldReceive('getId')->andReturns(1234);
         $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $tracker = TrackerTestBuilder::aTracker()->withProject(new \Project(["group_id" => 101]))->build();
+        $tracker = TrackerTestBuilder::aTracker()->withProject(new \Project(['group_id' => 101]))->build();
 
         $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
@@ -366,7 +366,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $user->shouldReceive('getId')->andReturns(1234);
         $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $tracker = TrackerTestBuilder::aTracker()->withProject(new \Project(["group_id" => 101]))->build();
+        $tracker = TrackerTestBuilder::aTracker()->withProject(new \Project(['group_id' => 101]))->build();
 
         $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
@@ -615,7 +615,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $user->shouldReceive('getId')->andReturns(1234);
         $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $tracker = TrackerTestBuilder::aTracker()->withProject(new \Project(["group_id" => 101]))->build();
+        $tracker = TrackerTestBuilder::aTracker()->withProject(new \Project(['group_id' => 101]))->build();
 
         $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
@@ -762,7 +762,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $user              = Mockery::mock(\PFUser::class);
 
         $sprint = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $sprint->shouldReceive("getHierarchyFactory")->andReturn($hierarchy_factory);
+        $sprint->shouldReceive('getHierarchyFactory')->andReturn($hierarchy_factory);
 
         $hierarchy_factory->shouldReceive('getParentArtifact')->with($user, $sprint)->andReturn($release);
 
@@ -775,7 +775,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $user              = Mockery::mock(\PFUser::class);
 
         $sprint = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $sprint->shouldReceive("getHierarchyFactory")->andReturn($hierarchy_factory);
+        $sprint->shouldReceive('getHierarchyFactory')->andReturn($hierarchy_factory);
         $hierarchy_factory->shouldReceive('getParentArtifact')->with($user, $sprint)->andReturn(null);
 
         $this->assertEquals(null, $sprint->getParent($user));

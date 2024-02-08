@@ -144,8 +144,8 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getUGroupByName')
             ->with()
             ->willReturnMap([
-                [$this->project, "project_admins", $ugroup_project_admins],
-                [$this->project, "project_members", $ugroup_project_members],
+                [$this->project, 'project_admins', $ugroup_project_admins],
+                [$this->project, 'project_members', $ugroup_project_members],
             ]);
 
         $this->timetracking_ugroup_saver
@@ -169,9 +169,9 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(
                 123,
                 9999,
-                "2021-02-01",
-                "60",
-                "Step 01"
+                '2021-02-01',
+                '60',
+                'Step 01'
             );
 
         $this->mockLogInfo();
@@ -233,8 +233,8 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getUGroupByName')
             ->with()
             ->willReturnMap([
-                [$this->project, "project_admins", $ugroup_project_admins],
-                [$this->project, "project_members", $ugroup_project_members],
+                [$this->project, 'project_admins', $ugroup_project_admins],
+                [$this->project, 'project_members', $ugroup_project_members],
             ]);
 
         $this->timetracking_ugroup_saver
@@ -258,9 +258,9 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(
                 123,
                 9999,
-                "2021-02-01",
-                "60",
-                ""
+                '2021-02-01',
+                '60',
+                ''
             );
 
         $this->mockLogInfo();
@@ -316,8 +316,8 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getUGroupByName')
             ->with()
             ->willReturnMap([
-                [$this->project, "project_admins", $ugroup_project_admins],
-                [$this->project, "project_members", $ugroup_project_members],
+                [$this->project, 'project_admins', $ugroup_project_admins],
+                [$this->project, 'project_members', $ugroup_project_members],
             ]);
 
         $this->timetracking_ugroup_saver
@@ -384,7 +384,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup_project_members = new ProjectUGroup(['ugroup_id' => 4]);
         $this->ugroup_manager
             ->expects(self::once())->method('getUGroupByName')
-            ->with($this->project, "project_members")
+            ->with($this->project, 'project_members')
             ->willReturn($ugroup_project_members);
 
         $this->timetracking_ugroup_saver->expects(self::never())->method('saveReaders');
@@ -463,9 +463,9 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager
             ->method('getUGroupByName')
             ->willReturnMap([
-                [$this->project, "project_members", $ugroup_project_members],
-                [$this->project, "project_admins", $ugroup_project_admins],
-                [$this->project, "unkown_ugroup", null],
+                [$this->project, 'project_members', $ugroup_project_members],
+                [$this->project, 'project_admins', $ugroup_project_admins],
+                [$this->project, 'unkown_ugroup', null],
             ]);
 
         $this->timetracking_ugroup_saver

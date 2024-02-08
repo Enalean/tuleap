@@ -89,11 +89,11 @@ class FileFinder
         } else {
             if (isWindows() or $this->_isOtherPathsep()) {
                 if (isMac()) {
-                    $from = ":";
+                    $from = ':';
                 } elseif (isWindows()) {
-                    $from = "\\";
+                    $from = '\\';
                 } else {
-                    $from = "\\";
+                    $from = '\\';
                 }
                 // PHP is stupid enough to use \\ instead of \
                 if (isWindows()) {
@@ -154,9 +154,9 @@ class FileFinder
         if (! empty($this->_pathsep)) {
             return $this->_pathsep;
         } elseif (isWindowsNT()) {
-            return "/"; // we can safely use '/'
+            return '/'; // we can safely use '/'
         } elseif (isWindows()) {
-            return "\\";  // FAT might use '\'
+            return '\\';  // FAT might use '\'
         } elseif (isMac()) {
             return ':';    // MacOsX is /
         } else { // VMS or LispM is really weird, we ignore it.
@@ -180,15 +180,15 @@ class FileFinder
     {
         if (isWindows95()) {
             if (empty($path)) {
-                return "\\";
+                return '\\';
             } else {
-                return (strchr($path, "\\")) ? "\\" : '/';
+                return (strchr($path, '\\')) ? '\\' : '/';
             }
         } elseif (isMac()) {
             if (empty($path)) {
-                return ":";
+                return ':';
             } else {
-                return (strchr($path, ":")) ? ":" : '/';
+                return (strchr($path, ':')) ? ':' : '/';
             }
         } else {
             return $this->_get_syspath_separator();
@@ -223,11 +223,11 @@ class FileFinder
     public function _strip_last_pathchar(&$path)
     {
         if (isMac()) {
-            if (substr($path, -1) == ':' or substr($path, -1) == "/") {
+            if (substr($path, -1) == ':' or substr($path, -1) == '/') {
                 $path = substr($path, 0, -1);
             }
         } else {
-            if (substr($path, -1) == '/' or substr($path, -1) == "\\") {
+            if (substr($path, -1) == '/' or substr($path, -1) == '\\') {
                 $path = substr($path, 0, -1);
             }
         }
@@ -243,7 +243,7 @@ class FileFinder
      */
     public function _not_found($file)
     {
-        trigger_error(sprintf(_("%s: file not found"), $file), E_USER_ERROR);
+        trigger_error(sprintf(_('%s: file not found'), $file), E_USER_ERROR);
         return false;
     }
 
@@ -295,7 +295,7 @@ class FileFinder
      */
     public function _get_include_path()
     {
-        if (defined("INCLUDE_PATH")) {
+        if (defined('INCLUDE_PATH')) {
             $path = INCLUDE_PATH;
         } else {
             // Tuleap: never trust /etc/php.ini, always rely on environment.
@@ -398,7 +398,7 @@ class FileFinder
             }
         }
 
-        return "C";
+        return 'C';
     }
 }
 
@@ -533,11 +533,11 @@ function FindFile($file, $missing_okay = false, $slashify = false)
         // remove "/lib" from dirname(__FILE__)
         $wikidir = preg_replace('/.lib$/', '', dirname(__FILE__));
         // let the system favor its local pear?
-        $finder->_append_to_include_path(dirname(__FILE__) . "/pear");
+        $finder->_append_to_include_path(dirname(__FILE__) . '/pear');
         $finder->_prepend_to_include_path($wikidir);
         // Don't override existing INCLUDE_PATH config.
-        if (! defined("INCLUDE_PATH")) {
-            define("INCLUDE_PATH", implode($finder->_get_ini_separator(), $finder->_path));
+        if (! defined('INCLUDE_PATH')) {
+            define('INCLUDE_PATH', implode($finder->_get_ini_separator(), $finder->_path));
         }
     }
     $s = $finder->findFile($file, $missing_okay);
@@ -586,7 +586,7 @@ function NormalizeLocalFileName($file)
     if ($finder->_is_abs($file)) {
         return $finder->slashifyPath($file);
     } else {
-        if (defined("PHPWIKI_DIR")) {
+        if (defined('PHPWIKI_DIR')) {
             $wikidir = PHPWIKI_DIR;
         } else {
             $wikidir = preg_replace('/.lib$/', '', dirname(__FILE__));
@@ -607,7 +607,7 @@ function NormalizeWebFileName($file)
     if (! isset($finder)) {
         $finder = new FileFinder();
     }
-    if (defined("DATA_PATH")) {
+    if (defined('DATA_PATH')) {
         $wikipath = DATA_PATH;
         $wikipath = $finder->_strip_last_pathchar($wikipath);
         if (! $file) {

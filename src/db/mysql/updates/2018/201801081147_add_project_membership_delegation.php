@@ -32,9 +32,9 @@ class b201801081147_add_project_membership_delegation extends \Tuleap\ForgeUpgra
 
     public function up()
     {
-        $sql = "CREATE TABLE project_membership_delegation (
+        $sql = 'CREATE TABLE project_membership_delegation (
             ugroup_id INT(11) NOT NULL PRIMARY KEY
-        )";
+        )';
 
         $this->db->dbh->exec($sql);
     }

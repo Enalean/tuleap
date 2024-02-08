@@ -99,7 +99,7 @@ class Presenter
         );
         $this->bugzilla_delete_confirmation  = dgettext(
             'tuleap-bugzilla_reference',
-            "Wow, wait a minute. You are about to delete the reference. Please confirm your action."
+            'Wow, wait a minute. You are about to delete the reference. Please confirm your action.'
         );
 
         $purifier = Codendi_HTMLPurifier::instance();

@@ -30,18 +30,18 @@ class b201610051400_use_timestamp_in_stats extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git_full_history
+        $sql = 'ALTER TABLE plugin_git_full_history
                 CHANGE day time int(11) unsigned NOT NULL FIRST,
                 DROP git_browse_operations,
                 DROP INDEX `PRIMARY`,
-                ADD INDEX time_idx(time)";
+                ADD INDEX time_idx(time)';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while altering the plugin_git_full_history table.');
         }
 
-        $sql = "UPDATE plugin_git_full_history SET time = UNIX_TIMESTAMP(time)";
+        $sql = 'UPDATE plugin_git_full_history SET time = UNIX_TIMESTAMP(time)';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

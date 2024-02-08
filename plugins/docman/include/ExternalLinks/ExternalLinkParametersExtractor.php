@@ -26,7 +26,7 @@ class ExternalLinkParametersExtractor
 {
     public function extractFolderIdFromParams(\HTTPRequest $request): int
     {
-        if (isset($request->params['action']) && $request->params['action'] === "show") {
+        if (isset($request->params['action']) && $request->params['action'] === 'show') {
             return (int) $request->params['id'];
         }
         return 0;

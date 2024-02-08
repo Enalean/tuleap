@@ -180,13 +180,13 @@ class FRSFileFactoryTest extends TestCase
             'restoreDeletedFiles',
         ]);
         $ff->setLogger($this->createMock(LoggerInterface::class));
-        $ff->method('purgeFiles')->willThrowException(new RuntimeException("Error while doing things"));
+        $ff->method('purgeFiles')->willThrowException(new RuntimeException('Error while doing things'));
         $ff->method('moveDeletedFilesToStagingArea')->willReturn(true);
         $ff->method('cleanStaging')->willReturn(true);
         $ff->method('restoreDeletedFiles')->willReturn(true);
 
         $backend = $this->createMock(BackendSystem::class);
-        $backend->expects(self::once())->method('log')->with("Error while doing things", Backend::LOG_ERROR);
+        $backend->expects(self::once())->method('log')->with('Error while doing things', Backend::LOG_ERROR);
 
         self::assertFalse($ff->moveFiles(1287504083, $backend));
     }
@@ -431,7 +431,7 @@ class FRSFileFactoryTest extends TestCase
 
         $ff->purgeFile($file, $backend);
 
-        self::assertFalse(is_file($filepath), "File should be deleted");
+        self::assertFalse(is_file($filepath), 'File should be deleted');
     }
 
     public function testPurgeFileDBUpdateFails()
@@ -461,7 +461,7 @@ class FRSFileFactoryTest extends TestCase
         $backend->expects(self::once())->method('log')->with('File ' . $filepath . ' not purged, Set purge date in DB fail', 'error');
         self::assertFalse($ff->purgeFile($file, $backend));
 
-        self::assertFalse(is_file($filepath), "File should be deleted");
+        self::assertFalse(is_file($filepath), 'File should be deleted');
     }
 
     public function testPurgeFileSystemCopyFails()

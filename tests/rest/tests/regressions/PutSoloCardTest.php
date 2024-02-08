@@ -37,9 +37,9 @@ class Regressions_PutSoloCardTest extends RestBase
 
         $put      = json_encode(
             [
-                "label"     => "Whatever",
-                "column_id" => null,
-                "values"    => [],
+                'label'     => 'Whatever',
+                'column_id' => null,
+                'values'    => [],
             ]
         );
         $response = $this->getResponse(

@@ -34,9 +34,9 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_fine_grained_regexp_enabled (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_fine_grained_regexp_enabled (
                     enabled tinyint(1) UNSIGNED
-                )";
+                )';
 
         $this->db->createTable('plugin_git_fine_grained_regexp_enabled', $sql);
     }

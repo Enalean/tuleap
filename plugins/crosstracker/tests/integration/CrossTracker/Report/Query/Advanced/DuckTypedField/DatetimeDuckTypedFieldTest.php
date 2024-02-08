@@ -220,7 +220,7 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "date_field = NOW()",
+                'date_field = NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -323,7 +323,7 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "date_field != NOW()",
+                'date_field != NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -401,7 +401,7 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "date_field < NOW()",
+                'date_field < NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -476,7 +476,7 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "date_field <= NOW()",
+                'date_field <= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -558,7 +558,7 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "date_field > NOW()",
+                'date_field > NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -643,7 +643,7 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "date_field >= NOW()",
+                'date_field >= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -718,7 +718,7 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "date_field BETWEEN(NOW() - 1d, NOW() + 1d)",
+                'date_field BETWEEN(NOW() - 1d, NOW() + 1d)',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member

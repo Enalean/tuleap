@@ -48,7 +48,7 @@ if ($request->exist('export')) {
 }
 
 $old_value = $value;
-if (stristr($old_value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
+if (stristr($old_value, $GLOBALS['Language']->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
     $old_value = 'ugroup_anonymous_users_name_key';
 }
 $start_date = null;

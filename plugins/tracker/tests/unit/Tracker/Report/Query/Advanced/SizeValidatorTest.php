@@ -53,7 +53,7 @@ final class SizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfDepthExceedLimit(): void
     {
-        $comparison    = new EqualComparison(new Field("field"), new SimpleValueWrapper('value'));
+        $comparison    = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
         $subexpression = new AndExpression($comparison, null);
         $expression    = new OrExpression($subexpression, null);
 

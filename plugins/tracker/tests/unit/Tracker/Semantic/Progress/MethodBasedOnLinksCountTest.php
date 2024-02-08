@@ -73,12 +73,12 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
         $last_artifact_changeset = \Mockery::mock(
             \Tracker_Artifact_ChangesetValue_ArtifactLink::class,
             ['getValue' => [
-                '141' => $this->buildArtifactLinkInfo(141, "_is_child", $tracker, false), // 1 out of 4 children is closed
-                '142' => $this->buildArtifactLinkInfo(142, "is_subtask", $tracker, true),
-                '143' => $this->buildArtifactLinkInfo(143, "covered_by", $tracker, true),
-                '144' => $this->buildArtifactLinkInfo(144, "_is_child", $tracker, true),
-                '145' => $this->buildArtifactLinkInfo(145, "_is_child", $tracker, true),
-                '146' => $this->buildArtifactLinkInfo(146, "_is_child", $tracker, true),
+                '141' => $this->buildArtifactLinkInfo(141, '_is_child', $tracker, false), // 1 out of 4 children is closed
+                '142' => $this->buildArtifactLinkInfo(142, 'is_subtask', $tracker, true),
+                '143' => $this->buildArtifactLinkInfo(143, 'covered_by', $tracker, true),
+                '144' => $this->buildArtifactLinkInfo(144, '_is_child', $tracker, true),
+                '145' => $this->buildArtifactLinkInfo(145, '_is_child', $tracker, true),
+                '146' => $this->buildArtifactLinkInfo(146, '_is_child', $tracker, true),
             ],
             ]
         );

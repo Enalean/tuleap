@@ -199,7 +199,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         $query_for_deleted_projects = [
             'limit'  => $limit,
             'offset' => $offset,
-            'query'  => json_encode(["with_status" => $deleted_status_label]),
+            'query'  => json_encode(['with_status' => $deleted_status_label]),
         ];
 
         $this->getProjectsIdsWithQuery($query_for_deleted_projects, $limit);
@@ -208,7 +208,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         $query_for_suspended_projects = [
             'limit'  => $limit,
             'offset' => $offset,
-            'query'  => json_encode(["with_status" => $suspended_status_label]),
+            'query'  => json_encode(['with_status' => $suspended_status_label]),
         ];
 
         $this->getProjectsIdsWithQuery($query_for_suspended_projects, $limit);
@@ -423,7 +423,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         $offset = 0;
 
         do {
-            $uri      = "projects/?" . http_build_query($query);
+            $uri      = 'projects/?' . http_build_query($query);
             $response = $this->getResponseByName(
                 REST_TestDataBuilder::ADMIN_USER_NAME,
                 $this->request_factory->createRequest('GET', $uri)
@@ -443,7 +443,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
     {
         $query = urlencode(
             json_encode([
-                "username" => $user_name,
+                'username' => $user_name,
             ])
         );
 
@@ -470,7 +470,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
 
     private function addUserIdFromRequestData($user)
     {
-        $this->user_ids[$user["username"]] = $user["id"];
+        $this->user_ids[$user['username']] = $user['id'];
         $this->cache->setUserId($user);
     }
 }

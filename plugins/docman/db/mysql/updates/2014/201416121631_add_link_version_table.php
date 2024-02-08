@@ -34,7 +34,7 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_docman_link_version (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_docman_link_version (
                     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                     item_id INT(11) UNSIGNED NOT NULL,
                     number INT(11) UNSIGNED NOT NULL,
@@ -45,14 +45,14 @@ EOT;
                     link_url TEXT NULL,
                     PRIMARY KEY(id),
                     KEY item_id (item_id)
-                )";
+                )';
         $this->db->createTable('plugin_docman_link_version', $sql);
 
-        $populate = "INSERT INTO plugin_docman_link_version
+        $populate = 'INSERT INTO plugin_docman_link_version
                         (item_id, number, user_id, label, date, link_url)
                     SELECT item_id, 1, user_id, title, update_date, link_url
                     FROM plugin_docman_item
-                    WHERE item_type = 3";
+                    WHERE item_type = 3';
         $this->db->dbh->exec($populate);
     }
 

@@ -110,10 +110,10 @@ class FormElementListValueAdminViewPresenterBuilder
     private function getImagePrefix(bool $value_can_be_hidden, bool $is_hidden): string
     {
         if (! $value_can_be_hidden) {
-            return "--exclamation-hidden";
+            return '--exclamation-hidden';
         }
         if ($is_hidden) {
-            return "-half";
+            return '-half';
         }
 
         return '';

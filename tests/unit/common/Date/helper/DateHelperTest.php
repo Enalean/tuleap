@@ -119,19 +119,19 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFormatDateFormatsTheDateAccordingToLanguage(): void
     {
         self::assertMatchesRegularExpression('/2011-\d+-\d+/', $this->formatDate(true, 'Y-m-d'));
-        self::assertMatchesRegularExpression('/2011\/\d+\/\d+/', $this->formatDate(true, "Y/d/m"));
+        self::assertMatchesRegularExpression('/2011\/\d+\/\d+/', $this->formatDate(true, 'Y/d/m'));
     }
 
     public function testFormatDateCanReturnTheTimeAsWell(): void
     {
-        self::assertMatchesRegularExpression('/2011-\d+-\d+ \d+:\d+/', $this->formatDate(false, "Y-m-d h:i"));
+        self::assertMatchesRegularExpression('/2011-\d+-\d+ \d+:\d+/', $this->formatDate(false, 'Y-m-d h:i'));
     }
 
     public function testFormatDateReturnsEmptyStringWhenDateIsZero(): void
     {
         $lang = $this->createMock(\BaseLanguage::class);
         $lang->method('getText')->willReturn('Y-m-d');
-        self::assertEquals("", DateHelper::formatForLanguage($lang, 0, false));
+        self::assertEquals('', DateHelper::formatForLanguage($lang, 0, false));
     }
 
     private function formatDate(bool $dayOnly, string $format): string

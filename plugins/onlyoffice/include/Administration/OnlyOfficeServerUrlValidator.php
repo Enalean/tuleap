@@ -42,11 +42,11 @@ final class OnlyOfficeServerUrlValidator implements ValueValidator
     public function checkIsValid(string $value): void
     {
         if ($value === '') {
-            throw new InvalidConfigKeyValueException("Server URL cannot be empty");
+            throw new InvalidConfigKeyValueException('Server URL cannot be empty');
         }
 
         if (! $this->valid_https_uri->validate($value)) {
-            throw new InvalidConfigKeyValueException("Server URL is not a valid HTTPS URL");
+            throw new InvalidConfigKeyValueException('Server URL is not a valid HTTPS URL');
         }
     }
 }

@@ -69,8 +69,8 @@ final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker = TrackerTestBuilder::aTracker()
             ->withId(10)
-            ->withName("Bug")
-            ->withShortName("bug")
+            ->withName('Bug')
+            ->withShortName('bug')
             ->withProject(ProjectTestBuilder::aProject()->build())
             ->build();
 

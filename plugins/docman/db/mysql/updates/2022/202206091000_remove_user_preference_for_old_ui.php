@@ -25,7 +25,7 @@ class b202206091000_remove_user_preference_for_old_ui extends \Tuleap\ForgeUpgra
 {
     public function description(): string
     {
-        return "Remove preference for old docman interface";
+        return 'Remove preference for old docman interface';
     }
 
     public function up(): void

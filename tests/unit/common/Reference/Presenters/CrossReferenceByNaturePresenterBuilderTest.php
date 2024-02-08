@@ -106,7 +106,7 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
 
         $presenter = $this->builder->build($this->cross_ref_collection, true);
 
-        self::assertEquals("Tracker", $presenter->nature_label);
+        self::assertEquals('Tracker', $presenter->nature_label);
         self::assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
     }
 
@@ -130,7 +130,7 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
 
         $presenter = $this->builder->build($this->cross_ref_collection, true);
 
-        self::assertEquals("Tracker", $presenter->nature_label);
+        self::assertEquals('Tracker', $presenter->nature_label);
         self::assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
     }
 
@@ -154,7 +154,7 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
 
         $presenter = $this->builder->build($this->cross_ref_collection, false);
 
-        self::assertEquals("Tracker", $presenter->nature_label);
+        self::assertEquals('Tracker', $presenter->nature_label);
         self::assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
     }
 
@@ -195,7 +195,7 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
 
         $presenter = $this->builder->build($this->cross_ref_collection, true);
 
-        self::assertEquals("Tracker", $presenter->nature_label);
+        self::assertEquals('Tracker', $presenter->nature_label);
         self::assertEquals([$this->cross_reference_link_list, $this->cross_reference_link_list_2, $this->cross_reference_link_list_3], $presenter->cross_reference_link_list);
     }
 }

@@ -30,14 +30,14 @@ class b201602021420_create_plugin_svn_accessfile_history_table extends \Tuleap\F
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_svn_accessfile_history(
+        $sql = 'CREATE TABLE plugin_svn_accessfile_history(
                     id INT(11) UNSIGNED NOT NULL auto_increment PRIMARY KEY,
                     version_number int(11) NOT NULL,
                     repository_id int(11) NOT NULL,
                     content text NOT NULL,
                     version_date int(11) NOT NULL,
                     INDEX repository_idx (repository_id)
-        )";
+        )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

@@ -32,20 +32,20 @@ class b201307311726_add_workflow_trigger_tables extends \Tuleap\ForgeUpgrade\Buc
 
     public function up()
     {
-        $sql = "CREATE TABLE tracker_workflow_trigger_rule_static_value (
+        $sql = 'CREATE TABLE tracker_workflow_trigger_rule_static_value (
                     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                     value_id INT(11) NOT NULL,
                     rule_condition VARCHAR(32) NOT NULL,
                     PRIMARY KEY (id),
                     UNIQUE KEY (value_id)
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
         $this->db->createTable('tracker_workflow_trigger_rule_static_value', $sql);
 
-        $sql = "CREATE TABLE tracker_workflow_trigger_rule_trg_field_static_value (
+        $sql = 'CREATE TABLE tracker_workflow_trigger_rule_trg_field_static_value (
                     rule_id INT(11) UNSIGNED NOT NULL,
                     value_id INT(11) NOT NULL,
                     INDEX idx_rule_value (rule_id, value_id)
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
         $this->db->createTable('tracker_workflow_trigger_rule_trg_field_static_value', $sql);
     }
 

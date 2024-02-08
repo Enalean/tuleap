@@ -44,8 +44,8 @@ final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\
             $this->verifier->canAllPermissionsBeFullyMoved(
                 $this->getSourceFieldWithLastChangesetValue(null),
                 $this->getDestinationFieldWithUserGroupsNames([
-                    ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName("semi-crusty")->build(),
-                    ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName("crusty")->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('semi-crusty')->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('crusty')->build(),
                 ]),
                 $this->artifact,
                 new NullLogger()
@@ -57,10 +57,10 @@ final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\
     {
         self::assertFalse(
             $this->verifier->canAllPermissionsBeFullyMoved(
-                $this->getSourceFieldWithLastChangesetValue([\ProjectUGroup::PROJECT_MEMBERS, "semi-crusty"]),
+                $this->getSourceFieldWithLastChangesetValue([\ProjectUGroup::PROJECT_MEMBERS, 'semi-crusty']),
                 $this->getDestinationFieldWithUserGroupsNames([
-                    ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName("semi-crusty")->build(),
-                    ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName("crusty")->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('semi-crusty')->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('crusty')->build(),
                 ]),
                 $this->artifact,
                 new NullLogger()
@@ -72,11 +72,11 @@ final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\
     {
         self::assertFalse(
             $this->verifier->canAllPermissionsBeFullyMoved(
-                $this->getSourceFieldWithLastChangesetValue([\ProjectUGroup::PROJECT_MEMBERS, "semi-crusty"]),
+                $this->getSourceFieldWithLastChangesetValue([\ProjectUGroup::PROJECT_MEMBERS, 'semi-crusty']),
                 $this->getDestinationFieldWithUserGroupsNames([
                     ProjectUGroupTestBuilder::buildProjectMembers(),
-                    ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName("semi-crusty")->build(),
-                    ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName("crusty")->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('semi-crusty')->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('crusty')->build(),
                 ]),
                 $this->artifact,
                 new NullLogger()
@@ -90,8 +90,8 @@ final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\
     private function getSourceFieldWithLastChangesetValue(?array $user_groups_names): Tracker_FormElement_Field_PermissionsOnArtifact
     {
         $source_field = $this->createStub(Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $source_field->method("getId")->willReturn("123");
-        $source_field->method("getName")->willReturn("Permissions");
+        $source_field->method('getId')->willReturn('123');
+        $source_field->method('getName')->willReturn('Permissions');
 
         if ($user_groups_names === null) {
             $source_field->method('getLastChangesetValue')->willReturn(null);
@@ -114,8 +114,8 @@ final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\
     {
         $destination_field = $this->createStub(Tracker_FormElement_Field_PermissionsOnArtifact::class);
         $destination_field->method('getAllUserGroups')->willReturn($user_groups);
-        $destination_field->method("getId")->willReturn("456");
-        $destination_field->method("getName")->willReturn("Permissions");
+        $destination_field->method('getId')->willReturn('456');
+        $destination_field->method('getName')->willReturn('Permissions');
 
         return $destination_field;
     }

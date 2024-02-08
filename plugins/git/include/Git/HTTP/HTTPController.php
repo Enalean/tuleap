@@ -90,7 +90,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $project || $project->isError()) {
-            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Project not found.'));
         }
 
         return $project;

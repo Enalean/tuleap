@@ -50,7 +50,7 @@ if (is_array($sparkline_urls)) {
             if ($key == 'wiki') {
                 $args[] = $val;
             } else {
-                $args = explode("/", $val);
+                $args = explode('/', $val);
             }
 
             //Get the reference

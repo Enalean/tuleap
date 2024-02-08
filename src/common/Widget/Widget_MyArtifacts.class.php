@@ -165,16 +165,16 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
         }
 
         $j                 = $print_box_begin;
-        $html_my_artifacts = "";
-        $html              = "";
-        $html_hdr          = "";
+        $html_my_artifacts = '';
+        $html              = '';
+        $html_hdr          = '';
 
         $aid_old      = 0;
         $atid_old     = 0;
         $group_id_old = 0;
         $count_aids   = 0;
-        $group_name   = "";
-        $tracker_name = "";
+        $group_name   = '';
+        $tracker_name = '';
 
         $artifact_types = [];
 
@@ -232,7 +232,7 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
                             my_hide_url('artifact', $atid_old, $hide_item_id, $count_aids, $hide_artifact, $request->get('dashboard_id'));
                         $html_hdr                           = ($j ? '<tr class="boxitem"><td colspan="3">' : '') .
                         $hide_url . '<A HREF="/tracker/?group_id=' . $group_id_old . '&atid=' . $atid_old . '">' .
-                        $group_name . " - " . $tracker_name . '</A>&nbsp;&nbsp;&nbsp;&nbsp;';
+                        $group_name . ' - ' . $tracker_name . '</A>&nbsp;&nbsp;&nbsp;&nbsp;';
                         $count_new                          = max(0, $count_diff);
 
                         $html_hdr          .= my_item_count($count_aids, $count_new) . '</td></tr>';
@@ -269,13 +269,13 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
                         $percent_complete = '';
                         if ($user_can_view_percent_complete) {
                             $sql =
-                                "SELECT afvl.value " .
-                                "FROM artifact_field_value afv,artifact_field af, artifact_field_value_list afvl, artifact_field_usage afu " .
+                                'SELECT afvl.value ' .
+                                'FROM artifact_field_value afv,artifact_field af, artifact_field_value_list afvl, artifact_field_usage afu ' .
                                 "WHERE af.field_id = afv.field_id AND af.field_name = 'percent_complete' " .
-                                "AND afv.artifact_id = " . db_ei($aid) . " " .
-                                "AND afvl.group_artifact_id = " . db_ei($atid) . " AND af.group_artifact_id = " . db_ei($atid) . " " .
-                                "AND afu.group_artifact_id = " . db_ei($atid) . " AND afu.field_id = af.field_id AND afu.use_it = 1 " .
-                                "AND afvl.field_id = af.field_id AND afvl.value_id = afv.valueInt";
+                                'AND afv.artifact_id = ' . db_ei($aid) . ' ' .
+                                'AND afvl.group_artifact_id = ' . db_ei($atid) . ' AND af.group_artifact_id = ' . db_ei($atid) . ' ' .
+                                'AND afu.group_artifact_id = ' . db_ei($atid) . ' AND afu.field_id = af.field_id AND afu.use_it = 1 ' .
+                                'AND afvl.field_id = af.field_id AND afvl.value_id = afv.valueInt';
                             $res = db_query($sql);
                             if (db_numrows($res) > 0) {
                                 $percent_complete = '<TD class="small">' . db_result($res, 0, 'value') . '</TD>';
@@ -302,7 +302,7 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
             [$hide_now, $count_diff, $hide_url] = my_hide_url('artifact', $atid_old, $hide_item_id, $count_aids, $hide_artifact, $request->get('dashboard_id'));
             $html_hdr                           = ($j ? '<tr class="boxitem"><td colspan="3">' : '') .
               $hide_url . '<A HREF="/tracker/?group_id=' . $group_id_old . '&atid=' . $atid_old . '">' .
-              $purifier->purify($group_name) . " - " . $tracker_name . '</A>&nbsp;&nbsp;&nbsp;&nbsp;';
+              $purifier->purify($group_name) . ' - ' . $tracker_name . '</A>&nbsp;&nbsp;&nbsp;&nbsp;';
             $count_new                          = max(0, $count_diff);
 
             $html_hdr          .= my_item_count($count_aids, $count_new) . '</td></tr>';

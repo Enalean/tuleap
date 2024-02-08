@@ -20,26 +20,26 @@ class RssWriter extends XmlElement
     {
         parent::__construct(
             'rdf:RDF',
-            ['xmlns' => "http://purl.org/rss/1.0/",
+            ['xmlns' => 'http://purl.org/rss/1.0/',
                 'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             ]
         );
 
         $this->_modules = [
             //Standards
-            'content'    => "http://purl.org/rss/1.0/modules/content/",
-            'dc'    => "http://purl.org/dc/elements/1.1/",
-            'sy'    => "http://purl.org/rss/1.0/modules/syndication/",
+            'content'    => 'http://purl.org/rss/1.0/modules/content/',
+            'dc'    => 'http://purl.org/dc/elements/1.1/',
+            'sy'    => 'http://purl.org/rss/1.0/modules/syndication/',
             //Proposed
-            'wiki'      => "http://purl.org/rss/1.0/modules/wiki/",
-            'ag'    => "http://purl.org/rss/1.0/modules/aggregation/",
-            'annotate'    => "http://purl.org/rss/1.0/modules/annotate/",
-            'audio'    => "http://media.tangent.org/rss/1.0/",
-            'cp'    => "http://my.theinfo.org/changed/1.0/rss/",
-            'rss091'    => "http://purl.org/rss/1.0/modules/rss091/",
-            'slash'    => "http://purl.org/rss/1.0/modules/slash/",
-            'taxo'    => "http://purl.org/rss/1.0/modules/taxonomy/",
-            'thr'    => "http://purl.org/rss/1.0/modules/threading/",
+            'wiki'      => 'http://purl.org/rss/1.0/modules/wiki/',
+            'ag'    => 'http://purl.org/rss/1.0/modules/aggregation/',
+            'annotate'    => 'http://purl.org/rss/1.0/modules/annotate/',
+            'audio'    => 'http://media.tangent.org/rss/1.0/',
+            'cp'    => 'http://my.theinfo.org/changed/1.0/rss/',
+            'rss091'    => 'http://purl.org/rss/1.0/modules/rss091/',
+            'slash'    => 'http://purl.org/rss/1.0/modules/slash/',
+            'taxo'    => 'http://purl.org/rss/1.0/modules/taxonomy/',
+            'thr'    => 'http://purl.org/rss/1.0/modules/threading/',
         ];
 
         $this->_uris_seen = [];
@@ -131,7 +131,7 @@ class RssWriter extends XmlElement
      */
     protected function spew()
     {
-        header("Content-Type: application/xml; charset=" . RSS_ENCODING);
+        header('Content-Type: application/xml; charset=' . RSS_ENCODING);
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", RSS_ENCODING);
         printf("<!-- generator=\"PhpWiki-%s\" -->\n", PHPWIKI_VERSION);
         $this->printXML();

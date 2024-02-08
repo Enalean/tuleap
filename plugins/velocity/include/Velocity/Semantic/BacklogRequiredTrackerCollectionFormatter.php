@@ -26,11 +26,11 @@ class BacklogRequiredTrackerCollectionFormatter
 {
     public function formatTrackerWithoutDoneSemantic(Tracker $tracker)
     {
-        $url = TRACKER_BASE_URL . "?" . http_build_query(
+        $url = TRACKER_BASE_URL . '?' . http_build_query(
             [
-                "tracker"  => $tracker->getId(),
-                "func"     => "admin-semantic",
-                "semantic" => "done",
+                'tracker'  => $tracker->getId(),
+                'func'     => 'admin-semantic',
+                'semantic' => 'done',
             ]
         );
 
@@ -42,11 +42,11 @@ class BacklogRequiredTrackerCollectionFormatter
 
     public function formatTrackerWithoutInitialEffortSemantic(Tracker $tracker)
     {
-        $url = TRACKER_BASE_URL . "?" . http_build_query(
+        $url = TRACKER_BASE_URL . '?' . http_build_query(
             [
-                "tracker"  => $tracker->getId(),
-                "func"     => "admin-semantic",
-                "semantic" => "initial_effort",
+                'tracker'  => $tracker->getId(),
+                'func'     => 'admin-semantic',
+                'semantic' => 'initial_effort',
             ]
         );
 

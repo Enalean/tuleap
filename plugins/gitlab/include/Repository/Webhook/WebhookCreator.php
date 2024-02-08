@@ -124,7 +124,7 @@ class WebhookCreator
             'enable_ssl_verification' => true,
         ];
 
-        $this->logger->info("Creating new hook for " . $gitlab_repository_integration->getGitlabRepositoryUrl());
+        $this->logger->info('Creating new hook for ' . $gitlab_repository_integration->getGitlabRepositoryUrl());
 
         $webhook = $this->gitlab_api_client->postUrl(
             $credentials,
@@ -134,7 +134,7 @@ class WebhookCreator
         \sodium_memzero($webhook_configuration['token']);
 
         if (! is_array($webhook) || ! isset($webhook['id'])) {
-            $this->logger->error("Received response payload seems invalid");
+            $this->logger->error('Received response payload seems invalid');
             throw new WebhookCreationException();
         }
 

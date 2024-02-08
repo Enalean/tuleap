@@ -80,13 +80,13 @@ class Router
 
         try {
             switch ($action) {
-                case "admin-timetracking":
+                case 'admin-timetracking':
                     $tracker = $this->getTrackerFromRequest($request, $user);
 
                     $this->admin_controller->displayAdminForm($tracker);
 
                     break;
-                case "edit-timetracking":
+                case 'edit-timetracking':
                     $tracker = $this->getTrackerFromRequest($request, $user);
 
                     $this->admin_controller->editTimetrackingAdminSettings($tracker, $request);
@@ -94,20 +94,20 @@ class Router
                     $this->redirectToTimetrackingAdminPage($tracker);
 
                     break;
-                case "add-time":
+                case 'add-time':
                     $artifact = $this->getArtifactFromRequest($request, $user);
 
                     $this->time_controller->addTimeForUser($request, $user, $artifact, $this->getCSRFForArtifact($artifact));
 
                     $GLOBALS['Response']->addFeedback(
                         Feedback::INFO,
-                        dgettext('tuleap-timetracking', "Time successfully added.")
+                        dgettext('tuleap-timetracking', 'Time successfully added.')
                     );
 
                     $this->redirectToArtifactViewInTimetrackingPane($artifact);
 
                     break;
-                case "delete-time":
+                case 'delete-time':
                     $artifact = $this->getArtifactFromRequest($request, $user);
 
                     $this->getCSRFForArtifact($artifact);
@@ -116,13 +116,13 @@ class Router
 
                     $GLOBALS['Response']->addFeedback(
                         Feedback::INFO,
-                        dgettext('tuleap-timetracking', "Time successfully deleted.")
+                        dgettext('tuleap-timetracking', 'Time successfully deleted.')
                     );
 
                     $this->redirectToArtifactViewInTimetrackingPane($artifact);
 
                     break;
-                case "edit-time":
+                case 'edit-time':
                     $artifact = $this->getArtifactFromRequest($request, $user);
 
                     $this->getCSRFForArtifact($artifact);
@@ -131,7 +131,7 @@ class Router
 
                     $GLOBALS['Response']->addFeedback(
                         Feedback::INFO,
-                        dgettext('tuleap-timetracking', "Time successfully updated.")
+                        dgettext('tuleap-timetracking', 'Time successfully updated.')
                     );
 
                     $this->redirectToArtifactViewInTimetrackingPane($artifact);

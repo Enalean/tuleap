@@ -37,7 +37,7 @@ class LostPasswordDAO extends DataAccessObject
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($user_id, $verifier, $current_time): ?int {
                 $recently_created_code = $db->cell(
-                    "SELECT COUNT(*) FROM user_lost_password WHERE user_id = ? AND ? < creation_date",
+                    'SELECT COUNT(*) FROM user_lost_password WHERE user_id = ? AND ? < creation_date',
                     $user_id,
                     $current_time - self::MIN_DELAY_BETWEEN_LOST_PASSWORD_TOKEN_CREATION_SECONDS
                 );
@@ -47,7 +47,7 @@ class LostPasswordDAO extends DataAccessObject
                 }
 
                 $db->run(
-                    "INSERT INTO user_lost_password(user_id, verifier, creation_date) VALUES (?,?,?)",
+                    'INSERT INTO user_lost_password(user_id, verifier, creation_date) VALUES (?,?,?)',
                     $user_id,
                     $verifier,
                     $current_time,
@@ -65,15 +65,15 @@ class LostPasswordDAO extends DataAccessObject
     public function getTokenInformationById(int $id): ?array
     {
         return $this->getDB()->row(
-            "SELECT user_id, verifier, creation_date
+            'SELECT user_id, verifier, creation_date
             FROM user_lost_password
-            WHERE id = ?",
+            WHERE id = ?',
             $id,
         );
     }
 
     public function deleteTokensByUserId(int $user_id): void
     {
-        $this->getDB()->run("DELETE FROM user_lost_password WHERE user_id = ?", $user_id);
+        $this->getDB()->run('DELETE FROM user_lost_password WHERE user_id = ?', $user_id);
     }
 }

@@ -53,7 +53,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
 
     private function createIntegrationTable(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration (
                 id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 gitlab_repository_id INT(11) NOT NULL,
@@ -65,58 +65,58 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
                 allow_artifact_closure TINYINT(1) NOT NULL DEFAULT 0,
                 UNIQUE (gitlab_repository_id, gitlab_repository_url, project_id)
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_gitlab_repository_integration', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_repository_integration')) {
             $this->rollBackOnError(
-                "Table plugin_gitlab_repository_integration has not been created in database"
+                'Table plugin_gitlab_repository_integration has not been created in database'
             );
         }
     }
 
     private function createIntegrationWebhookTable(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_webhook (
                 integration_id INT(11) NOT NULL PRIMARY KEY,
                 webhook_secret BLOB NOT NULL,
                 gitlab_webhook_id INT(11) NOT NULL DEFAULT 0
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_gitlab_repository_integration_webhook', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_repository_integration_webhook')) {
             $this->rollBackOnError(
-                "Table plugin_gitlab_repository_integration_webhook has not been created in database"
+                'Table plugin_gitlab_repository_integration_webhook has not been created in database'
             );
         }
     }
 
     private function createIntegrationAPITokenTable(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_token (
                 integration_id INT(11) NOT NULL PRIMARY KEY,
                 token BLOB NOT NULL,
                 is_email_already_send_for_invalid_token BOOL NOT NULL DEFAULT FALSE
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_gitlab_repository_integration_token', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_repository_integration_token')) {
             $this->rollBackOnError(
-                "Table plugin_gitlab_repository_integration_token has not been created in database"
+                'Table plugin_gitlab_repository_integration_token has not been created in database'
             );
         }
     }
 
     private function createIntegrationCommitInfoTable(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_commit_info (
                 id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 integration_id INT(11) NOT NULL,
@@ -128,20 +128,20 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
                 author_email TEXT NOT NULL,
                 INDEX commit_id(integration_id, commit_sha1(10))
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_gitlab_repository_integration_commit_info', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_repository_integration_commit_info')) {
             $this->rollBackOnError(
-                "Table plugin_gitlab_repository_integration_commit_info has not been created in database"
+                'Table plugin_gitlab_repository_integration_commit_info has not been created in database'
             );
         }
     }
 
     private function createIntegrationMergeRequestInfoTable(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_merge_request_info (
                 id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 integration_id INT(11) NOT NULL,
@@ -154,20 +154,20 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
                 author_email TEXT DEFAULT NULL,
                 UNIQUE KEY merge_request_id(integration_id, merge_request_id)
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_gitlab_repository_integration_merge_request_info', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_repository_integration_merge_request_info')) {
             $this->rollBackOnError(
-                "Table plugin_gitlab_repository_integration_merge_request_info has not been created in database"
+                'Table plugin_gitlab_repository_integration_merge_request_info has not been created in database'
             );
         }
     }
 
     private function createIntegrationTagInfoTable(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_tag_info (
                 id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 integration_id INT(11) NOT NULL,
@@ -176,20 +176,20 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
                 tag_message TEXT NOT NULL,
                 UNIQUE(integration_id, tag_name(255))
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_gitlab_repository_integration_tag_info', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_repository_integration_tag_info')) {
             $this->rollBackOnError(
-                "Table plugin_gitlab_repository_integration_tag_info has not been created in database"
+                'Table plugin_gitlab_repository_integration_tag_info has not been created in database'
             );
         }
     }
 
     private function insertRepositoryData(): void
     {
-        $sql = "
+        $sql = '
             INSERT INTO plugin_gitlab_repository_integration (gitlab_repository_id, gitlab_repository_url, name, description, last_push_date, project_id, allow_artifact_closure)
             SELECT plugin_gitlab_repository.gitlab_repository_id,
                    plugin_gitlab_repository.gitlab_repository_url,
@@ -200,7 +200,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
                    plugin_gitlab_repository_project.allow_artifact_closure
             FROM plugin_gitlab_repository
                      LEFT JOIN plugin_gitlab_repository_project ON (plugin_gitlab_repository.id = plugin_gitlab_repository_project.id);
-        ";
+        ';
 
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
@@ -210,7 +210,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
 
     private function insertWebhookData(): void
     {
-        $sql = "
+        $sql = '
             INSERT INTO plugin_gitlab_repository_integration_webhook (integration_id, webhook_secret, gitlab_webhook_id)
             SELECT plugin_gitlab_repository_integration.id, A.webhook_secret, A.gitlab_webhook_id
             FROM plugin_gitlab_repository_integration
@@ -227,7 +227,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
                 A.project_id = plugin_gitlab_repository_integration.project_id AND
                 A.gitlab_repository_url = plugin_gitlab_repository_integration.gitlab_repository_url
             );
-        ";
+        ';
 
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
@@ -237,7 +237,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
 
     private function insertAPITokenData(): void
     {
-        $sql = "
+        $sql = '
             INSERT INTO plugin_gitlab_repository_integration_token (integration_id, token, is_email_already_send_for_invalid_token)
             SELECT plugin_gitlab_repository_integration.id, A.token, A.is_email_already_send_for_invalid_token
             FROM plugin_gitlab_repository_integration
@@ -254,7 +254,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
                 A.project_id = plugin_gitlab_repository_integration.project_id AND
                 A.gitlab_repository_url = plugin_gitlab_repository_integration.gitlab_repository_url
             );
-        ";
+        ';
 
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
@@ -264,7 +264,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
 
     private function insertCommitData(): void
     {
-        $sql = "
+        $sql = '
             INSERT INTO plugin_gitlab_repository_integration_commit_info
                 (integration_id, commit_sha1, commit_date, commit_title, commit_branch, author_name, author_email)
             SELECT plugin_gitlab_repository_integration.id,
@@ -292,7 +292,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
                 A.project_id = plugin_gitlab_repository_integration.project_id AND
                 A.gitlab_repository_url = plugin_gitlab_repository_integration.gitlab_repository_url
             );
-        ";
+        ';
 
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
@@ -302,7 +302,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
 
     private function insertMergeRequestData(): void
     {
-        $sql = "
+        $sql = '
             INSERT INTO plugin_gitlab_repository_integration_merge_request_info
                 (integration_id, merge_request_id, title, description, state, created_at, author_name, author_email)
             SELECT plugin_gitlab_repository_integration.id,
@@ -332,7 +332,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
                 A.project_id = plugin_gitlab_repository_integration.project_id AND
                 A.gitlab_repository_url = plugin_gitlab_repository_integration.gitlab_repository_url
             );
-        ";
+        ';
 
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
@@ -342,7 +342,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
 
     private function insertTagData(): void
     {
-        $sql = "
+        $sql = '
             INSERT INTO plugin_gitlab_repository_integration_tag_info
                 (integration_id, commit_sha1, tag_name, tag_message)
             SELECT plugin_gitlab_repository_integration.id,
@@ -364,7 +364,7 @@ class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeU
                 A.project_id = plugin_gitlab_repository_integration.project_id AND
                 A.gitlab_repository_url = plugin_gitlab_repository_integration.gitlab_repository_url
             );
-        ";
+        ';
 
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {

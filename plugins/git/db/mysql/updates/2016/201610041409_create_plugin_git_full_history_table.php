@@ -30,13 +30,13 @@ class b201610041409_create_plugin_git_full_history_table extends \Tuleap\ForgeUp
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_git_full_history (
+        $sql = 'CREATE TABLE plugin_git_full_history (
                   repository_id int(10) unsigned NOT NULL,
                   user_id int(11) NOT NULL,
                   day int(11) NOT NULL,
                   git_browse_operations int(11) NOT NULL default 0,
                   PRIMARY KEY (repository_id, user_id, day)
-                )";
+                )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

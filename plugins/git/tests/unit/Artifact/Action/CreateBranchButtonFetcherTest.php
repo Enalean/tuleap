@@ -65,17 +65,17 @@ final class CreateBranchButtonFetcherTest extends TestCase
             ),
             new JavascriptAsset(
                 $this->include_asset,
-                ""
+                ''
             ),
             new PullRequestEndpointsAvailableChecker(EventDispatcherStub::withIdentityCallback()),
         );
 
-        $this->include_asset->method("getFileURL")->willReturn("");
+        $this->include_asset->method('getFileURL')->willReturn('');
     }
 
     public function testItReturnsNullIfThereIsNoRepositoryInProject(): void
     {
-        $this->git_repository_factory->method("getAllRepositories")->willReturn([]);
+        $this->git_repository_factory->method('getAllRepositories')->willReturn([]);
 
         self::assertNull(
             $this->getActionButton()
@@ -85,8 +85,8 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsNullIfThereIsNoReadableRepositoryForUser(): void
     {
         $git_repository = $this->createMock(GitRepository::class);
-        $git_repository->method("userCanRead")->willReturn(false);
-        $this->git_repository_factory->method("getAllRepositories")->willReturn([$git_repository]);
+        $git_repository->method('userCanRead')->willReturn(false);
+        $this->git_repository_factory->method('getAllRepositories')->willReturn([$git_repository]);
 
         self::assertNull(
             $this->getActionButton()
@@ -96,8 +96,8 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsPresenterWhenAllPreconditionsAreMet(): void
     {
         $git_repository = $this->createMock(GitRepository::class);
-        $git_repository->method("userCanRead")->willReturn(true);
-        $this->git_repository_factory->method("getAllRepositories")->willReturn([$git_repository]);
+        $git_repository->method('userCanRead')->willReturn(true);
+        $this->git_repository_factory->method('getAllRepositories')->willReturn([$git_repository]);
 
         self::assertInstanceOf(
             AdditionalButtonAction::class,

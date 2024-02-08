@@ -38,8 +38,8 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_agiledashboard_kanban_configuration
-                DROP COLUMN project_id";
+        $sql = 'ALTER TABLE plugin_agiledashboard_kanban_configuration
+                DROP COLUMN project_id';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

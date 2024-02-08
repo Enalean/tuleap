@@ -22,7 +22,7 @@ class b201805281435_add_description_format extends ForgeUpgrade_Bucket // @codin
 {
     public function description()
     {
-        return "Add description format";
+        return 'Add description format';
     }
 
     public function preUp()

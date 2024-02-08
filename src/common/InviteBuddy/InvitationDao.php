@@ -64,7 +64,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
 
     public function searchById(int $id): Invitation
     {
-        $row = $this->getDB()->row("SELECT * FROM invitations WHERE id = ?", $id);
+        $row = $this->getDB()->row('SELECT * FROM invitations WHERE id = ?', $id);
         if (! $row) {
             throw new InvitationNotFoundException();
         }
@@ -120,7 +120,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         return array_map(
             fn (array $row): Invitation => $this->instantiateFromRow($row),
             $this->getDB()->run(
-                "SELECT * FROM invitations WHERE created_user_id = ? AND status IN (?, ?)",
+                'SELECT * FROM invitations WHERE created_user_id = ? AND status IN (?, ?)',
                 $user_id,
                 Invitation::STATUS_COMPLETED,
                 Invitation::STATUS_USED,
@@ -153,9 +153,9 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
 
     public function getInvitationsSentByUserForToday(int $user_id): int
     {
-        $sql = "SELECT count(*)
+        $sql = 'SELECT count(*)
                 FROM invitations
-                WHERE from_user_id = ? AND DATE(FROM_UNIXTIME(created_on)) = CURDATE()";
+                WHERE from_user_id = ? AND DATE(FROM_UNIXTIME(created_on)) = CURDATE()';
 
         return (int) $this->getDB()->single($sql, [$user_id]);
     }
@@ -163,7 +163,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
     public function hasUsedAnInvitationToRegister(int $user_id): bool
     {
         return (bool) $this->getDB()->single(
-            "SELECT 1 FROM invitations WHERE created_user_id = ? AND status = ?",
+            'SELECT 1 FROM invitations WHERE created_user_id = ? AND status = ?',
             [$user_id, Invitation::STATUS_USED]
         );
     }

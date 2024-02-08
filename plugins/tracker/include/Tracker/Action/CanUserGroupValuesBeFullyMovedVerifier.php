@@ -32,7 +32,7 @@ final class CanUserGroupValuesBeFullyMovedVerifier implements VerifyUserGroupVal
     {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
         if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
-            $logger->error(sprintf("Last changeset value is not a list for field #%d", $source_field->getId()));
+            $logger->error(sprintf('Last changeset value is not a list for field #%d', $source_field->getId()));
             return false;
         }
 
@@ -44,7 +44,7 @@ final class CanUserGroupValuesBeFullyMovedVerifier implements VerifyUserGroupVal
             $user_group_name = NameTranslator::getUserGroupDisplayName($value->getUGroupName());
 
             if (! in_array($user_group_name, $destinations_values_labels, true)) {
-                $logger->debug(sprintf("User group %s not found in field #%d (%s)", $user_group_name, $destination_field->getId(), $destination_field->getName()));
+                $logger->debug(sprintf('User group %s not found in field #%d (%s)', $user_group_name, $destination_field->getId(), $destination_field->getName()));
                 return false;
             }
         }

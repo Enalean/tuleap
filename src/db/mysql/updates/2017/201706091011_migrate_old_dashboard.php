@@ -47,7 +47,7 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
 
     private function migrateDashboard()
     {
-        $sql        = "SELECT * FROM owner_layouts";
+        $sql        = 'SELECT * FROM owner_layouts';
         $dashboards = $this->db->dbh->query($sql)->fetchAll();
 
         foreach ($dashboards as $dashboard) {
@@ -77,31 +77,31 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
     private function getInsertStatement($type)
     {
         if ($type === self::OLD_USER_OWNER_TYPE) {
-            return "INSERT INTO user_dashboards (user_id, name)
-                    VALUES (:owner_id, :name)";
+            return 'INSERT INTO user_dashboards (user_id, name)
+                    VALUES (:owner_id, :name)';
         } elseif ($type === self::OLD_PROJECT_OWNER_TYPE) {
-            return "INSERT INTO project_dashboards (project_id, name)
-                    VALUES (:owner_id, :name)";
+            return 'INSERT INTO project_dashboards (project_id, name)
+                    VALUES (:owner_id, :name)';
         }
 
         $this->log->warn("Unkown dashboard type $type, skipping");
 
-        return "";
+        return '';
     }
 
     private function migrateLinesForDashboard(array $dashboard, $new_dashboard_id)
     {
         $type = $this->getNewOwnerType($dashboard);
 
-        $sql        = "SELECT * FROM layouts_rows WHERE layout_id = :old_layout_id";
+        $sql        = 'SELECT * FROM layouts_rows WHERE layout_id = :old_layout_id';
         $select_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $select_stm->execute(
             [':old_layout_id' => $dashboard['layout_id']]
         );
 
         foreach ($select_stm->fetchAll() as $line) {
-            $sql        = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, `rank`)
-                           VALUES (:new_dashboard_id, :type, :rank)";
+            $sql        = 'INSERT INTO dashboards_lines (dashboard_id, dashboard_type, `rank`)
+                           VALUES (:new_dashboard_id, :type, :rank)';
             $insert_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $result     = $insert_stm->execute(
                 [':new_dashboard_id' => $new_dashboard_id, ':type' => $type, ':rank' => $line['rank']]
@@ -128,7 +128,7 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
 
     private function migrateColumnsForLine(array $dashboard, array $line, $new_dashboard_id, $new_line_id)
     {
-        $sql        = "SELECT * FROM layouts_rows_columns WHERE layout_row_id = :old_line_id";
+        $sql        = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = :old_line_id';
         $select_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $select_stm->execute(
             [':old_line_id' => $line['id']]
@@ -143,8 +143,8 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
 
         $rank = 0;
         foreach ($columns as $column) {
-            $sql        = "INSERT INTO dashboards_lines_columns (line_id, `rank`)
-                           VALUES (:new_line_id, :rank)";
+            $sql        = 'INSERT INTO dashboards_lines_columns (line_id, `rank`)
+                           VALUES (:new_line_id, :rank)';
             $insert_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $result     = $insert_stm->execute(
                 [':new_line_id' => $new_line_id, ':rank' => $rank]
@@ -171,9 +171,9 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
     {
         $layout = $this->guessTheLayout($columns);
 
-        $sql        = "UPDATE dashboards_lines
+        $sql        = 'UPDATE dashboards_lines
                        SET layout = :layout
-                       WHERE id = :new_line_id";
+                       WHERE id = :new_line_id';
         $update_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $result     = $update_stm->execute(
             [':layout' => $layout, ':new_line_id' => $new_line_id]
@@ -192,12 +192,12 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
         $new_dashboard_id,
         $new_column_id,
     ) {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM layouts_contents
                 WHERE column_id = :old_column_id
                   AND owner_type = :owner_type
                   AND owner_id   = :owner_id
-                ORDER BY `rank`";
+                ORDER BY `rank`';
 
         $select_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $select_stm->execute(
@@ -209,8 +209,8 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
         );
 
         foreach ($select_stm->fetchAll() as $widget) {
-            $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, `rank`, name, content_id, is_minimized)
-                    VALUES (:new_column_id, :rank, :name, :content_id, :is_minimized)";
+            $sql = 'INSERT INTO dashboards_lines_columns_widgets (column_id, `rank`, name, content_id, is_minimized)
+                    VALUES (:new_column_id, :rank, :name, :content_id, :is_minimized)';
 
             $select_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $result     = $select_stm->execute(

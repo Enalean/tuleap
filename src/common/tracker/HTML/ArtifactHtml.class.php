@@ -68,16 +68,16 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         echo '<div id="tracker_toolbar_specific">';
         if ($this->ArtifactType->allowsCopy()) {
-            echo "<A HREF='?func=copy&aid=" . (int) $this->getID() . "&group_id=" . (int) $group_id . "&atid=" . (int) $group_artifact_id . "'><img src=\"" . util_get_image_theme("ic/copy.png") . "\" />&nbsp;" . $Language->getText('tracker_include_artifact', 'copy_art') . "</A>";
+            echo "<A HREF='?func=copy&aid=" . (int) $this->getID() . '&group_id=' . (int) $group_id . '&atid=' . (int) $group_artifact_id . "'><img src=\"" . util_get_image_theme('ic/copy.png') . '" />&nbsp;' . $Language->getText('tracker_include_artifact', 'copy_art') . '</A>';
         }
-        echo "&nbsp;&nbsp;<A HREF='?func=detail&aid=" . (int) $this->getID() . "&group_id=" . (int) $group_id . "&atid=" . (int) $group_artifact_id . "&pv=1' target='_blank' rel=\"noreferrer\"><img src='" . util_get_image_theme("ic/printer.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A>";
+        echo "&nbsp;&nbsp;<A HREF='?func=detail&aid=" . (int) $this->getID() . '&group_id=' . (int) $group_id . '&atid=' . (int) $group_artifact_id . "&pv=1' target='_blank' rel=\"noreferrer\"><img src='" . util_get_image_theme('ic/printer.png') . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . '</A>';
         echo '</div>' . PHP_EOL;
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
         $artTitle          = '[ ' . $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
         $field_artifact_id = $result_fields['artifact_id'];
         if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, $user_id)) {
-            $artTitle .= " #" . $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML);
+            $artTitle .= ' #' . $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML);
         }
         $artTitle .= ' ] ' . $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML);
 
@@ -120,7 +120,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                         // if the user can read at least one field, we can display the fieldset this field is within
                         $display_fieldset = true;
 
-                        list($sz,) = explode("/", $field->getDisplaySize());
+                        list($sz,) = explode('/', $field->getDisplaySize());
 
                         // Details field must be on one row
                         if ($sz > $max_size || $field->getName() == 'details') {
@@ -241,7 +241,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             $html .= $Language->getText('tracker_include_artifact', 'fill_cc_list_msg');
             $html .= $Language->getText('tracker_include_artifact', 'fill_cc_list_lbl');
             $html .= '<textarea name="add_cc" id="tracker_cc" rows="2" cols="60" wrap="soft"></textarea>';
-            $html .= '<B>&nbsp;&nbsp;&nbsp;' . $Language->getText('tracker_include_artifact', 'fill_cc_list_cmt') . ":&nbsp</b>";
+            $html .= '<B>&nbsp;&nbsp;&nbsp;' . $Language->getText('tracker_include_artifact', 'fill_cc_list_cmt') . ':&nbsp</b>';
             $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
         }
         $html .= $this->showCCList($group_id, $group_artifact_id, false, $pv);
@@ -505,8 +505,8 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $summary = $this->getValue('summary');
 
         echo "<TABLE width='100%'><TR><TD>";
-        echo "<H2>[ " . $hp->purify($Language->getText('tracker_include_artifact', 'copy_of', $this->ArtifactType->getItemName() . " #" . $this->getID()) . " ] " . $summary, CODENDI_PURIFIER_CONVERT_HTML) . "</H2>";
-        echo "</TD></TR></TABLE>";
+        echo '<H2>[ ' . $hp->purify($Language->getText('tracker_include_artifact', 'copy_of', $this->ArtifactType->getItemName() . ' #' . $this->getID()) . ' ] ' . $summary, CODENDI_PURIFIER_CONVERT_HTML) . '</H2>';
+        echo '</TD></TR></TABLE>';
 
         $html  = '';
         $pm    = ProjectManager::instance();
@@ -549,7 +549,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                         }
                     }
 
-                    list($sz,) = explode("/", $field->getDisplaySize());
+                    list($sz,) = explode('/', $field->getDisplaySize());
                     $label     = $field_html->labelDisplay(false, false, ! $ro);
                     $value     = $field_html->display($this->ArtifactType->getID(), $field_value, false, false, $ro);
 
@@ -622,7 +622,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             $html .= '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
         }
         $html .= '</div>';
-        $html .= "<br />";
+        $html .= '<br />';
 
         $title = $Language->getText('tracker_include_artifact', 'follow_ups') . ' ';
         echo $this->_getSection(
@@ -638,7 +638,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $html .= $Language->getText('tracker_include_artifact', 'fill_cc_list_msg');
         $html .= $Language->getText('tracker_include_artifact', 'fill_cc_list_lbl');
         $html .= '<textarea name="add_cc" id="tracker_cc" rows="2" cols="60" wrap="soft"></textarea>';
-        $html .= '<B>&nbsp;&nbsp;&nbsp;' . $Language->getText('tracker_include_artifact', 'fill_cc_list_cmt') . ":&nbsp</b>";
+        $html .= '<B>&nbsp;&nbsp;&nbsp;' . $Language->getText('tracker_include_artifact', 'fill_cc_list_cmt') . ':&nbsp</b>';
         $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
 
         echo $this->_getSection(
@@ -739,9 +739,9 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                                     $html .= $field->getValue($group_artifact_id, $value_id_new);
                         } elseif ($field->isDateField()) {
                                 // For date fields do some special processing
-                                $html .= format_date("Y-m-j", $value_id_old) . '</TD><TD>';
+                                $html .= format_date('Y-m-j', $value_id_old) . '</TD><TD>';
 
-                                $html .= format_date("Y-m-j", $value_id_new);
+                                $html .= format_date('Y-m-j', $value_id_new);
                         } elseif ($field->isFloat()) {
                             $html .= number_format($value_id_old, 2) . '</TD><TD>';
                             $html .= number_format($value_id_new, 2);
@@ -759,7 +759,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                 } else {
                         $user  = $um->getUserByUserName(db_result($result, $i, 'user_name'));
                         $html .= "\n" . '<TR class="' . util_get_alt_row_color($i) .
-                                            '"><TD>' . $hp->purify(((preg_match("/^(lbl_)/", $field_name) && preg_match("/(_comment)$/", $field_name)) ? "Comment #" . ((int) substr($field_name, 4, -8)) : $field_name), CODENDI_PURIFIER_CONVERT_HTML) . '</TD><TD>';
+                                            '"><TD>' . $hp->purify(((preg_match('/^(lbl_)/', $field_name) && preg_match('/(_comment)$/', $field_name)) ? 'Comment #' . ((int) substr($field_name, 4, -8)) : $field_name), CODENDI_PURIFIER_CONVERT_HTML) . '</TD><TD>';
                         $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_old), CODENDI_PURIFIER_CONVERT_HTML) . '</TD><TD>';
                         $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_new), CODENDI_PURIFIER_CONVERT_HTML);
                         $html .= '</TD>' .
@@ -806,7 +806,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         // Header first an determine what the print out format is
         // based on output type (Ascii, HTML)
         if ($ascii) {
-            $out         .= $Language->getText('tracker_include_artifact', 'dep_list') . $sys_lf . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'dep_list'))) . "$sys_lf$sys_lf";
+            $out         .= $Language->getText('tracker_include_artifact', 'dep_list') . $sys_lf . str_repeat('*', strlen($Language->getText('tracker_include_artifact', 'dep_list'))) . "$sys_lf$sys_lf";
                     $fmt  = "%-15s | %s (%s)$sys_lf";
                     $out .= sprintf(
                         $fmt,
@@ -852,7 +852,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
 
         // final touch...
-        $out .= ($ascii ? "$sys_lf" : "</TABLE>");
+        $out .= ($ascii ? "$sys_lf" : '</TABLE>');
 
         return($out);
     }
@@ -967,7 +967,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $html .= $Language->getText('tracker_include_artifact', 'fill_cc_list_msg');
         $html .= $Language->getText('tracker_include_artifact', 'fill_cc_list_lbl');
         $html .= '<textarea name="add_cc" id="tracker_cc" rows="2" cols="60" wrap="soft"></textarea>';
-        $html .= '<B>&nbsp;&nbsp;&nbsp;' . $Language->getText('tracker_include_artifact', 'fill_cc_list_cmt') . ":&nbsp</b>";
+        $html .= '<B>&nbsp;&nbsp;&nbsp;' . $Language->getText('tracker_include_artifact', 'fill_cc_list_cmt') . ':&nbsp</b>';
         $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
 
         echo $this->_getSection(
@@ -1057,7 +1057,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $artTitle          = '[ ' . $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
         $field_artifact_id = $result_fields['artifact_id'];
         if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, UserManager::instance()->getCurrentUser()->getId())) {
-            $artTitle .= " #" . $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML);
+            $artTitle .= ' #' . $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML);
         }
         $artTitle .= ' ] ' . $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML);
         $link      = '<a href="?func=detail&aid=' . $this->getID() . '&atid=' . $group_artifact_id . '&group_id=' . $group_id . '">' . $artTitle . '</a>';
@@ -1117,7 +1117,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             $orig_subm       = $this->getOriginalCommentSubmitter($comment_id);
             $orig_date       = $this->getOriginalCommentDate($comment_id);
 
-            if (($comment_type_id == 100) || ($comment_type == "")) {
+            if (($comment_type_id == 100) || ($comment_type == '')) {
                 $comment_type = '';
             } else {
                 $comment_type = '<strong>[' . $comment_type . ']</strong><br />';

@@ -56,11 +56,11 @@ class b201405060841_add_index_for_semantic_and_artifact extends \Tuleap\ForgeUpg
     public function postUp()
     {
         if (! $this->indexNameExists('tracker_semantic_status', 'idx_field_open')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException("tracker_semantic_status has no idx_field_open index");
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_semantic_status has no idx_field_open index');
         }
 
         if (! $this->indexNameExists('tracker_artifact', 'idx_id_changeset_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException("tracker_artifact has no idx_id_changeset_id index");
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_artifact has no idx_id_changeset_id index');
         }
     }
 

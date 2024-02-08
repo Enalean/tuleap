@@ -47,6 +47,6 @@ final class Git_PostReceiveMailManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo->shouldReceive('loadNotifiedMails')->once();
         $backend->shouldReceive('changeRepositoryMailingList')->once();
 
-        $prm->removeMailByRepository($repo, "codendiadm@codendi.org");
+        $prm->removeMailByRepository($repo, 'codendiadm@codendi.org');
     }
 }

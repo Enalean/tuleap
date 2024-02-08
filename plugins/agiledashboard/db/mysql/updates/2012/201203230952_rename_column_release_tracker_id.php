@@ -35,8 +35,8 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_agiledashboard_planning
-                CHANGE release_tracker_id planning_tracker_id INT(11) NOT NULL";
+        $sql = 'ALTER TABLE plugin_agiledashboard_planning
+                CHANGE release_tracker_id planning_tracker_id INT(11) NOT NULL';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

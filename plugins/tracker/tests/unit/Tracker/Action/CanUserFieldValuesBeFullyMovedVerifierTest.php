@@ -41,11 +41,11 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
     {
         $this->user         = UserTestBuilder::anActiveUser()->withId(101)->withUserName('Mildred Favorito')->build();
         $this->source_field = $this->createStub(Tracker_FormElement_Field_List::class);
-        $this->source_field->method('getId')->willReturn("123");
-        $this->source_field->method('getName')->willReturn("User");
+        $this->source_field->method('getId')->willReturn('123');
+        $this->source_field->method('getName')->willReturn('User');
         $this->destination_field = $this->createStub(Tracker_FormElement_Field_List::class);
-        $this->destination_field->method('getId')->willReturn("456");
-        $this->destination_field->method('getName')->willReturn("User");
+        $this->destination_field->method('getId')->willReturn('456');
+        $this->destination_field->method('getName')->willReturn('User');
 
         $this->changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
         $this->artifact        = $this->createStub(Artifact::class);
@@ -58,8 +58,8 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
             $this->createStub(\Tracker_Artifact_Changeset::class),
             $this->source_field,
             1,
-            "",
-            ""
+            '',
+            ''
         );
         $this->source_field->method('getLastChangesetValue')->willReturn($changeset_value);
         $retrieve_user = RetrieveUserByIdStub::withUser(UserTestBuilder::anActiveUser()->build());

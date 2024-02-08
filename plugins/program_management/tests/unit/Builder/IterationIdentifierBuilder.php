@@ -39,7 +39,7 @@ final class IterationIdentifierBuilder
         );
 
         if (! $iteration) {
-            throw new \LogicException("Iteration is not defined");
+            throw new \LogicException('Iteration is not defined');
         }
 
         return $iteration;

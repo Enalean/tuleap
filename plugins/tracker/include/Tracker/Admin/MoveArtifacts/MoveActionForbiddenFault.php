@@ -36,7 +36,7 @@ class MoveActionForbiddenFault extends Fault
             sprintf(
                 dgettext(
                     'tuleap-tracker',
-                    "Move action is not enabled for tracker %s",
+                    'Move action is not enabled for tracker %s',
                 ),
                 $tracker->getName(),
             )

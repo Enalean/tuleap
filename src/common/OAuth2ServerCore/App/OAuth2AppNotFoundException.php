@@ -28,6 +28,6 @@ final class OAuth2AppNotFoundException extends \RuntimeException implements OAut
 {
     public function __construct(ClientIdentifier $client_identifier)
     {
-        parent::__construct("OAuth2 App matching " . $client_identifier->toString() . " could not be found");
+        parent::__construct('OAuth2 App matching ' . $client_identifier->toString() . ' could not be found');
     }
 }

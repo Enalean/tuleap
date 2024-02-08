@@ -22,7 +22,7 @@ class FRSFileTypeDao extends DataAccessObject
 {
     public function listFileTypes($group_id)
     {
-        return $this->retrieve("SELECT * FROM frs_filetype ORDER BY type_id");
+        return $this->retrieve('SELECT * FROM frs_filetype ORDER BY type_id');
     }
 
     /**
@@ -31,7 +31,7 @@ class FRSFileTypeDao extends DataAccessObject
     public function searchTypeId($name)
     {
         $sql      = sprintf(
-            "SELECT type_id FROM frs_filetype WHERE name=%s ORDER BY type_id LIMIT 1",
+            'SELECT type_id FROM frs_filetype WHERE name=%s ORDER BY type_id LIMIT 1',
             $this->da->quoteSmart((string) $name)
         );
         $filetype = $this->retrieve($sql);

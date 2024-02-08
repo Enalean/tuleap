@@ -22,7 +22,7 @@ class b201703141152_add_table_notification_ugroups extends \Tuleap\ForgeUpgrade\
 {
     public function description()
     {
-        return "Add a table to store the ugroup to notify after a document update";
+        return 'Add a table to store the ugroup to notify after a document update';
     }
 
     public function preUp()

@@ -28,8 +28,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class BrokenGitReferenceCheckTest extends TestCase
 {
-    private const TITLE       = "A title";
-    private const DESCRIPTION = "A description";
+    private const TITLE       = 'A title';
+    private const DESCRIPTION = 'A description';
 
     public function testItWillCheckIfPATCHRepresentationContainsATitle(): void
     {

@@ -26,7 +26,7 @@ class b201805021100_add_kanban_widget_config_table extends ForgeUpgrade_Bucket /
 {
     public function description()
     {
-        return "Add kanban widget config table";
+        return 'Add kanban widget config table';
     }
 
     public function preUp()
@@ -36,13 +36,13 @@ class b201805021100_add_kanban_widget_config_table extends ForgeUpgrade_Bucket /
 
     public function up()
     {
-        $sql = "
+        $sql = '
             CREATE TABLE plugin_agiledashboard_kanban_widget_config(
                 widget_id int(11),
                 tracker_report_id int(11) NOT NULL,
                 PRIMARY KEY (widget_id)
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_agiledashboard_kanban_widget_config', $sql);
     }

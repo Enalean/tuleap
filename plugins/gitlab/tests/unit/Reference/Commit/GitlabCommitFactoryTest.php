@@ -51,7 +51,7 @@ class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 'gitlab_repository_id' => 2,
                 'commit_sha1' => '11645a413d7af2995cd92e40bf387e39d06d0e61',
                 'commit_date' => 1608555618,
-                'commit_branch' => "master",
+                'commit_branch' => 'master',
                 'commit_title' => 'TULEAP-1234 Improve the README',
                 'author_name' => 'John Snow',
                 'author_email' => 'john-snow@the-wall.com',

@@ -42,6 +42,6 @@ class BurndownFieldPresenter
         $this->data_burndown = json_encode($burndown_representation);
         $this->locale        = $current_user->getLocale();
         $this->warning       = $warning;
-        $this->has_warning   = $warning !== "";
+        $this->has_warning   = $warning !== '';
     }
 }

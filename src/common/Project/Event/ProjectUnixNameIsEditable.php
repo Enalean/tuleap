@@ -40,7 +40,7 @@ class ProjectUnixNameIsEditable implements Dispatchable
     /**
      * @var string
      */
-    private $message = "";
+    private $message = '';
 
     public function __construct(Project $project)
     {

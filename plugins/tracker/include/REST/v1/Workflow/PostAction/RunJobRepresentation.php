@@ -33,7 +33,7 @@ class RunJobRepresentation extends PostActionRepresentation
     private function __construct($id, $job_url)
     {
         $this->id      = $id;
-        $this->type    = "run_job";
+        $this->type    = 'run_job';
         $this->job_url = $job_url;
     }
 

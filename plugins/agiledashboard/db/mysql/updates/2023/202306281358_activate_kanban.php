@@ -25,7 +25,7 @@ final class b202306281358_activate_kanban extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
-        return "Activate kanban plugin";
+        return 'Activate kanban plugin';
     }
 
     public function up(): void

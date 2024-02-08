@@ -52,7 +52,7 @@ final class FromWhereSearchableVisitor implements SearchableVisitor
         $formelement = $this->form_element_factory->getUsedFieldByName($tracker->getId(), $name);
 
         if (! $formelement) {
-            throw new \Exception(sprintf("Field %s cannot be found", $name));
+            throw new \Exception(sprintf('Field %s cannot be found', $name));
         }
 
         return $formelement;

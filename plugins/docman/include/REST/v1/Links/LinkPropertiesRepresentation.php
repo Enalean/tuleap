@@ -39,6 +39,6 @@ class LinkPropertiesRepresentation
 
     public static function build(?Docman_LinkVersion $link): self
     {
-        return new self(($link) ? $link->getLink() : "");
+        return new self(($link) ? $link->getLink() : '');
     }
 }

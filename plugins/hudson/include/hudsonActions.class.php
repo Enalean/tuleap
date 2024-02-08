@@ -82,8 +82,8 @@ class hudsonActions extends Actions
         $new_job_url  = $request->get('hudson_job_url');
         $new_job_name = $request->get('hudson_job_name');
 
-        if (strpos($new_job_name, " ") !== false) {
-            $new_job_name = str_replace(" ", "_", $new_job_name);
+        if (strpos($new_job_name, ' ') !== false) {
+            $new_job_name = str_replace(' ', '_', $new_job_name);
             $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-hudson', 'Spaces are not allowed in job name. They were replaced by "_".'));
         }
 

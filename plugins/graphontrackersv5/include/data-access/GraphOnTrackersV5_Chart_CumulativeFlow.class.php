@@ -169,7 +169,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      */
     public function getChartType()
     {
-        return "cumulative_flow";
+        return 'cumulative_flow';
     }
 
     /**

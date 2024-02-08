@@ -40,8 +40,8 @@ final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
         $this->cross_ref_target_1 = $this->mockCrossReference(
             'git_commit',
             1,
-            "/plugins/git/1",
-            "git",
+            '/plugins/git/1',
+            'git',
             'tracker',
             789,
             '/plugins/tracker/789',
@@ -51,7 +51,7 @@ final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
         $this->cross_ref_target_2 = $this->mockCrossReference(
             'tracker',
             58,
-            "/plugins/tracker/58",
+            '/plugins/tracker/58',
             'tracker',
             'git_commit',
             1,
@@ -80,14 +80,14 @@ final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
         $GLOBALS['Language']->method('getText')->withConsecutive(
             ['cross_ref_fact_include', 'confirm_delete'],
             ['cross_ref_fact_include', 'delete'],
-        )->willReturn("Delete the item?");
+        )->willReturn('Delete the item?');
         $GLOBALS['HTML']->method('getImage');
 
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(
-            "git_commit_1",
-            "git_commit #1",
-            "/plugins/git/1",
-            "?target_id=1&target_gid=101&target_type=git&target_key=git_commit&source_id=789&source_gid=101&source_type=tracker&source_key=tracker",
+            'git_commit_1',
+            'git_commit #1',
+            '/plugins/git/1',
+            '?target_id=1&target_gid=101&target_type=git&target_key=git_commit&source_id=789&source_gid=101&source_type=tracker&source_key=tracker',
             false
         );
 
@@ -101,22 +101,22 @@ final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
         $GLOBALS['Language']->method('getText')->withConsecutive(
             ['cross_ref_fact_include', 'confirm_delete'],
             ['cross_ref_fact_include', 'delete'],
-        )->willReturn("Delete the item?");
+        )->willReturn('Delete the item?');
         $GLOBALS['HTML']->method('getImage');
 
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(
-            "git_commit_1",
-            "git_commit #1",
-            "/plugins/git/1",
-            "?target_id=1&target_gid=101&target_type=git&target_key=git_commit&source_id=789&source_gid=101&source_type=tracker&source_key=tracker",
+            'git_commit_1',
+            'git_commit #1',
+            '/plugins/git/1',
+            '?target_id=1&target_gid=101&target_type=git&target_key=git_commit&source_id=789&source_gid=101&source_type=tracker&source_key=tracker',
             true
         );
 
         $cross_ref_link_2 = new CrossReferenceLinkPresenter(
-            "tracker_58",
-            "tracker #58",
-            "/plugins/tracker/58",
-            "?target_id=58&target_gid=101&target_type=tracker&target_key=tracker&source_id=1&source_gid=101&source_type=git&source_key=git_commit",
+            'tracker_58',
+            'tracker #58',
+            '/plugins/tracker/58',
+            '?target_id=58&target_gid=101&target_type=tracker&target_key=tracker&source_id=1&source_gid=101&source_type=git&source_key=git_commit',
             false
         );
 
@@ -130,7 +130,7 @@ final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
         $GLOBALS['Language']->method('getText')->withConsecutive(
             ['cross_ref_fact_include', 'confirm_delete'],
             ['cross_ref_fact_include', 'delete'],
-        )->willReturn("Delete the item?");
+        )->willReturn('Delete the item?');
         $GLOBALS['HTML']->method('getImage');
 
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(

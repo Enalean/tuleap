@@ -34,8 +34,8 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_bugzilla_reference
-                ADD COLUMN rest_url VARCHAR(255)";
+        $sql = 'ALTER TABLE plugin_bugzilla_reference
+                ADD COLUMN rest_url VARCHAR(255)';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

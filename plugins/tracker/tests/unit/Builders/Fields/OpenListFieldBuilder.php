@@ -49,7 +49,7 @@ final class OpenListFieldBuilder
      */
     private array $user_groups                = [];
     private int $field_id                     = 123;
-    private string $name                      = "A field";
+    private string $name                      = 'A field';
     private ?Tracker $tracker                 = null;
     private array $user_with_read_permissions = [];
     /** @var array<int, bool> */
@@ -179,7 +179,7 @@ final class OpenListFieldBuilder
 
     private function buildField(): Tracker_FormElement_Field_OpenList
     {
-        $field = new Tracker_FormElement_Field_OpenList($this->field_id, 1, 1, $this->name, "open_list_field", "", true, "P", false, false, 1);
+        $field = new Tracker_FormElement_Field_OpenList($this->field_id, 1, 1, $this->name, 'open_list_field', '', true, 'P', false, false, 1);
 
         if ($this->tracker === null) {
             $this->tracker = TrackerTestBuilder::aTracker()->build();

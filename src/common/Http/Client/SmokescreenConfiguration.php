@@ -39,7 +39,7 @@ final class SmokescreenConfiguration
         public readonly array $allow_ranges,
         public readonly array $deny_ranges,
     ) {
-        $this->ip                 = "localhost";
+        $this->ip                 = 'localhost';
         $this->allow_missing_role = true;
     }
 

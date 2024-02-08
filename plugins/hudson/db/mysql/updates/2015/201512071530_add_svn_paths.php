@@ -40,8 +40,8 @@ EOT;
 
     private function addColumn()
     {
-        $sql = "ALTER TABLE plugin_hudson_job
-                ADD COLUMN svn_paths TEXT NOT NULL";
+        $sql = 'ALTER TABLE plugin_hudson_job
+                ADD COLUMN svn_paths TEXT NOT NULL';
 
         $res = $this->db->dbh->exec($sql);
 

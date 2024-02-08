@@ -25,12 +25,12 @@ final class b202312111445_remove_dev_mode extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
-        return "Remove dev mode";
+        return 'Remove dev mode';
     }
 
     public function up(): void
     {
-        $this->api->dbh->exec("TRUNCATE TABLE plugin_agiledashboard_milestones_in_sidebar_config");
+        $this->api->dbh->exec('TRUNCATE TABLE plugin_agiledashboard_milestones_in_sidebar_config');
         $this->api->dbh->exec("DELETE FROM forgeconfig WHERE name = 'feature_flag_allow_milestones_in_sidebar_dev_mode'");
     }
 }

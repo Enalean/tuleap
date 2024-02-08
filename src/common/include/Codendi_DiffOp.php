@@ -34,7 +34,7 @@ class Codendi_DiffOp // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public $fin;
     public function reverse()
     {
-        \trigger_error("pure virtual", \E_USER_ERROR);
+        \trigger_error('pure virtual', \E_USER_ERROR);
     }
 
     public function norig()

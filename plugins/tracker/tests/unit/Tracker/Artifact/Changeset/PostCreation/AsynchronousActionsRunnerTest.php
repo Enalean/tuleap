@@ -41,7 +41,7 @@ class AsynchronousActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
         $worker_event = \Mockery::mock(WorkerEvent::class);
-        $worker_event->shouldReceive('getPayload')->andReturns(['artifact_id' => 1, 'changeset_id' => 1, "send_notifications" => true]);
+        $worker_event->shouldReceive('getPayload')->andReturns(['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true]);
 
         $artifact  = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
@@ -75,7 +75,7 @@ class AsynchronousActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
         $worker_event = \Mockery::mock(WorkerEvent::class);
-        $worker_event->shouldReceive('getPayload')->andReturns(['artifact_id' => 1, 'changeset_id' => 1, "send_notifications" => true]);
+        $worker_event->shouldReceive('getPayload')->andReturns(['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true]);
         $worker_event->shouldReceive('getEventName')->andReturns('Event name');
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns(null);
@@ -94,7 +94,7 @@ class AsynchronousActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
         $worker_event = \Mockery::mock(WorkerEvent::class);
-        $worker_event->shouldReceive('getPayload')->andReturns(['artifact_id' => 1, 'changeset_id' => 1, "send_notifications" => true]);
+        $worker_event->shouldReceive('getPayload')->andReturns(['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true]);
         $worker_event->shouldReceive('getEventName')->andReturns('Event name');
 
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);

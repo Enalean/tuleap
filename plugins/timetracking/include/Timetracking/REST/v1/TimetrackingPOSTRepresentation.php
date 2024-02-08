@@ -47,5 +47,5 @@ class TimetrackingPOSTRepresentation
     /**
      * @var string {@type string} {@required false}
      */
-    public $step = "";
+    public $step = '';
 }

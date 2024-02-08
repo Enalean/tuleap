@@ -70,7 +70,7 @@ class BannerDao extends DataAccessObject
      */
     public function searchBanner(): ?array
     {
-        $sql = "SELECT message, importance, expiration_date FROM platform_banner";
+        $sql = 'SELECT message, importance, expiration_date FROM platform_banner';
 
         return $this->getDB()->row($sql) ?: null;
     }

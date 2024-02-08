@@ -120,7 +120,7 @@ class DynamicUGroupMembersUpdater
             $project_admin,
             new \DateTimeImmutable(),
             ProjectAdminHistoryEntry::Add->value,
-            $user->getUserName() . " (" . $user->getId() . ")",
+            $user->getUserName() . ' (' . $user->getId() . ')',
         );
         $this->event_manager->dispatch(new UserBecomesProjectAdmin($project, $user));
     }
@@ -142,7 +142,7 @@ class DynamicUGroupMembersUpdater
                     $project_admin,
                     new \DateTimeImmutable(),
                     ProjectAdminHistoryEntry::Remove->value,
-                    $user->getUserName() . " (" . $user->getId() . ")",
+                    $user->getUserName() . ' (' . $user->getId() . ')',
                 );
                 return new UserIsNoLongerProjectAdmin($project, $user);
             }

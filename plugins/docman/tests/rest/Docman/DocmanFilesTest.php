@@ -222,7 +222,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('allowed', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
@@ -242,7 +242,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $this->assertEquals(403, $response->getStatusCode());
 
-        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('allowed', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
@@ -326,14 +326,14 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $file_to_lock_id = $file_to_lock['id'];
 
         $post_response_with_rest_read_only_user = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_lock_id . "/lock"),
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_lock_id . '/lock'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $post_response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_lock_id . "/lock")
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_lock_id . '/lock')
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -344,7 +344,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
 
         $file = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals($file['lock_info']["locked_by"]["username"], \TestDataBuilder::ADMIN_USER_NAME);
+        $this->assertEquals($file['lock_info']['locked_by']['username'], \TestDataBuilder::ADMIN_USER_NAME);
     }
 
     /**
@@ -361,7 +361,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('allowed', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
     }
 
     /**
@@ -432,16 +432,16 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             [
                 'version_title'   => 'My new versionnn',
                 'description'     => 'whatever',
-                "file_properties" => [
-                    "file_name" => "string",
-                    "file_size" => $file_size,
+                'file_properties' => [
+                    'file_name' => 'string',
+                    'file_size' => $file_size,
                 ],
-                "should_lock_file"      => false,
+                'should_lock_file'      => false,
             ]
         );
 
         $new_version_response_with_rest_read_only_user = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource)),
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . '/version')->withBody($this->stream_factory->createStream($new_version_resource)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -474,16 +474,16 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             [
                 'version_title'   => 'My new versionnn',
                 'description'     => 'whatever',
-                "file_properties" => [
-                    "file_name" => "string",
-                    "file_size" => $file_size,
+                'file_properties' => [
+                    'file_name' => 'string',
+                    'file_size' => $file_size,
                 ],
-                "should_lock_file"      => false,
+                'should_lock_file'      => false,
             ]
         );
         $new_version_response         = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . '/version')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(201, $new_version_response->getStatusCode());
@@ -549,17 +549,17 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
-                "file_properties"       => [
-                    "file_name" => "string",
-                    "file_size" => $file_size,
+                'file_properties'       => [
+                    'file_name' => 'string',
+                    'file_size' => $file_size,
                 ],
-                "should_lock_file"      => false,
+                'should_lock_file'      => false,
                 'approval_table_action' => 'copy',
             ]
         );
         $new_version_response         = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . '/version')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(201, $new_version_response->getStatusCode());
@@ -627,17 +627,17 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
-                "file_properties"       => [
-                    "file_name" => "string",
-                    "file_size" => $file_size,
+                'file_properties'       => [
+                    'file_name' => 'string',
+                    'file_size' => $file_size,
                 ],
-                "should_lock_file"      => false,
+                'should_lock_file'      => false,
                 'approval_table_action' => 'reset',
             ]
         );
         $new_version_response         = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . '/version')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(201, $new_version_response->getStatusCode());
@@ -705,17 +705,17 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
-                "file_properties"       => [
-                    "file_name" => "string",
-                    "file_size" => $file_size,
+                'file_properties'       => [
+                    'file_name' => 'string',
+                    'file_size' => $file_size,
                 ],
-                "should_lock_file"      => false,
+                'should_lock_file'      => false,
                 'approval_table_action' => 'empty',
             ]
         );
         $new_version_response         = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . '/version')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(201, $new_version_response->getStatusCode());
@@ -768,23 +768,23 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
-                "file_properties"       => [
-                    "file_name" => "string",
-                    "file_size" => $file_size,
+                'file_properties'       => [
+                    'file_name' => 'string',
+                    'file_size' => $file_size,
                 ],
-                "should_lock_file"      => false,
+                'should_lock_file'      => false,
                 'approval_table_action' => 'reset',
             ]
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . '/version')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(400, $new_version_response->getStatusCode());
         $this->assertStringContainsString(
-            "does not have an approval table",
-            json_decode($new_version_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']
+            'does not have an approval table',
+            json_decode($new_version_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']
         );
     }
 
@@ -817,16 +817,16 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             [
                 'version_title'    => 'My new versionnn',
                 'description'      => 'whatever',
-                "file_properties"  => [
-                    "file_name" => "string",
-                    "file_size" => $file_size,
+                'file_properties'  => [
+                    'file_name' => 'string',
+                    'file_size' => $file_size,
                 ],
-                "should_lock_file" => false,
+                'should_lock_file' => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . '/version')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(201, $new_version_response->getStatusCode());
@@ -891,16 +891,16 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             [
                 'version_title'    => 'My new versionnn',
                 'description'      => 'whatever',
-                "file_properties"  => [
-                    "file_name" => "string",
-                    "file_size" => $file_size,
+                'file_properties'  => [
+                    'file_name' => 'string',
+                    'file_size' => $file_size,
                 ],
-                "should_lock_file" => false,
+                'should_lock_file' => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . '/version')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(201, $new_version_response->getStatusCode());
@@ -964,16 +964,16 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             [
                 'version_title'    => 'My new versionnn',
                 'description'      => 'whatever',
-                "file_properties"  => [
-                    "file_name" => "string",
-                    "file_size" => $file_size,
+                'file_properties'  => [
+                    'file_name' => 'string',
+                    'file_size' => $file_size,
                 ],
-                "should_lock_file" => false,
+                'should_lock_file' => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . '/version')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(403, $new_version_response->getStatusCode());
@@ -1258,7 +1258,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $json_history = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        self::assertEquals("", $json_history[1]["name"]);
-        self::assertEquals("My new versionnn", $json_history[0]['name']);
+        self::assertEquals('', $json_history[1]['name']);
+        self::assertEquals('My new versionnn', $json_history[0]['name']);
     }
 }

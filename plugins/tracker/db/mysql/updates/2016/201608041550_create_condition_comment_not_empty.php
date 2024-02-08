@@ -30,10 +30,10 @@ class b201608041550_create_condition_comment_not_empty extends \Tuleap\ForgeUpgr
 
     public function up()
     {
-        $sql = "CREATE TABLE  tracker_workflow_transition_condition_comment_notempty(
+        $sql = 'CREATE TABLE  tracker_workflow_transition_condition_comment_notempty(
                     transition_id INT(11) NOT NULL PRIMARY KEY,
                     is_comment_required TINYINT(1) NOT NULL
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while creating tracker_workflow_transition_condition_comment_notempty: ' . implode(', ', $this->db->dbh->errorInfo()));

@@ -42,11 +42,11 @@ class b201809171653_clean_up_broken_triggers extends ForgeUpgrade_Bucket // phpc
 
     private function removeNoMoreExistingSourceValue()
     {
-        $sql = "DELETE tracker_workflow_trigger_rule_static_value.*
+        $sql = 'DELETE tracker_workflow_trigger_rule_static_value.*
                 FROM tracker_workflow_trigger_rule_static_value
                   LEFT JOIN tracker_field_list_bind_static_value
                      ON (tracker_workflow_trigger_rule_static_value.value_id = tracker_field_list_bind_static_value.id)
-                WHERE tracker_field_list_bind_static_value.id IS NULL;";
+                WHERE tracker_field_list_bind_static_value.id IS NULL;';
 
         $result = $this->db->dbh->exec($sql);
 
@@ -57,11 +57,11 @@ class b201809171653_clean_up_broken_triggers extends ForgeUpgrade_Bucket // phpc
 
     private function removeNoMoreExistingTargetValue()
     {
-        $sql = "DELETE tracker_workflow_trigger_rule_trg_field_static_value.*
+        $sql = 'DELETE tracker_workflow_trigger_rule_trg_field_static_value.*
                 FROM tracker_workflow_trigger_rule_trg_field_static_value
                   LEFT JOIN tracker_field_list_bind_static_value
                      ON (tracker_workflow_trigger_rule_trg_field_static_value.value_id = tracker_field_list_bind_static_value.id)
-                WHERE tracker_field_list_bind_static_value.id IS NULL;";
+                WHERE tracker_field_list_bind_static_value.id IS NULL;';
 
         $result = $this->db->dbh->exec($sql);
 
@@ -72,11 +72,11 @@ class b201809171653_clean_up_broken_triggers extends ForgeUpgrade_Bucket // phpc
 
     private function cleanUpBrokenTriggers()
     {
-        $sql = "DELETE tracker_workflow_trigger_rule_trg_field_static_value.*
+        $sql = 'DELETE tracker_workflow_trigger_rule_trg_field_static_value.*
                 FROM tracker_workflow_trigger_rule_trg_field_static_value
                   LEFT JOIN tracker_workflow_trigger_rule_static_value
                     ON (tracker_workflow_trigger_rule_trg_field_static_value.rule_id = tracker_workflow_trigger_rule_static_value.id)
-                WHERE tracker_workflow_trigger_rule_static_value.id IS NULL;";
+                WHERE tracker_workflow_trigger_rule_static_value.id IS NULL;';
 
         $result = $this->db->dbh->exec($sql);
 
@@ -84,11 +84,11 @@ class b201809171653_clean_up_broken_triggers extends ForgeUpgrade_Bucket // phpc
             $this->rollBackOnError('Clean up of triggers without source value failed.');
         }
 
-        $sql = "DELETE tracker_workflow_trigger_rule_static_value.*
+        $sql = 'DELETE tracker_workflow_trigger_rule_static_value.*
                 FROM tracker_workflow_trigger_rule_static_value
                   LEFT JOIN tracker_workflow_trigger_rule_trg_field_static_value
                     ON (tracker_workflow_trigger_rule_trg_field_static_value.rule_id = tracker_workflow_trigger_rule_static_value.id)
-                WHERE tracker_workflow_trigger_rule_trg_field_static_value.rule_id IS NULL;";
+                WHERE tracker_workflow_trigger_rule_trg_field_static_value.rule_id IS NULL;';
 
         $result = $this->db->dbh->exec($sql);
 

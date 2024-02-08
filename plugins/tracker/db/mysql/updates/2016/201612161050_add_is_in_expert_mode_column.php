@@ -35,8 +35,8 @@ class b201612161050_add_is_in_expert_mode_column extends \Tuleap\ForgeUpgrade\Bu
 
     private function createColumn()
     {
-        $sql = "ALTER TABLE tracker_report
-                ADD COLUMN is_in_expert_mode TINYINT(1) NOT NULL DEFAULT 0";
+        $sql = 'ALTER TABLE tracker_report
+                ADD COLUMN is_in_expert_mode TINYINT(1) NOT NULL DEFAULT 0';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

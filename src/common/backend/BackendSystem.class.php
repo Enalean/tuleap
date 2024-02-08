@@ -35,7 +35,7 @@ class BackendSystem extends Backend
     public function createProjectFRSDirectory(Project $project): bool
     {
         $unix_group_name = $project->getUnixNameMixedCase();
-        $ftp_frs_dir     = ForgeConfig::get('ftp_frs_dir_prefix') . "/" . $unix_group_name;
+        $ftp_frs_dir     = ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $unix_group_name;
 
         if (is_dir(ForgeConfig::get('ftp_frs_dir_prefix'))) {
             if (! is_dir($ftp_frs_dir)) {
@@ -44,7 +44,7 @@ class BackendSystem extends Backend
                 // admins can work on it (upload, delete, etc...)
                 if (mkdir($ftp_frs_dir, 0771)) {
                     chmod($ftp_frs_dir, 0771);
-                    $this->chown($ftp_frs_dir, "dummy");
+                    $this->chown($ftp_frs_dir, 'dummy');
                     $this->chgrp($ftp_frs_dir, $this->getUnixGroupNameForProject($project));
                 } else {
                     $this->log("Can't create project file release dir: $ftp_frs_dir", Backend::LOG_ERROR);

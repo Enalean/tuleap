@@ -101,7 +101,7 @@ class InvalidCredentialsNotifier
 
         $this->mail_builder->buildAndSendEmail($project, $notification, new \MailEnhancer());
 
-        $this->logger->info("Notification has been sent to project administrators to warn them that the token appears to be invalid");
+        $this->logger->info('Notification has been sent to project administrators to warn them that the token appears to be invalid');
         $this->dao->storeTheFactWeAlreadySendEmailForInvalidToken($repository_integration->getId());
     }
 }

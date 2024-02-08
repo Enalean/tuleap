@@ -66,9 +66,9 @@ final class AddToTopBacklogPostActionDAO extends DataAccessObject implements Sea
 
     public function deleteTransitionPostActions(int $transition_id): void
     {
-        $sql = "DELETE
+        $sql = 'DELETE
                 FROM plugin_program_management_workflow_action_add_top_backlog
-                WHERE plugin_program_management_workflow_action_add_top_backlog.transition_id = ?";
+                WHERE plugin_program_management_workflow_action_add_top_backlog.transition_id = ?';
 
         $this->getDB()->run(
             $sql,
@@ -78,11 +78,11 @@ final class AddToTopBacklogPostActionDAO extends DataAccessObject implements Sea
 
     public function deleteWorkflowPostActions(int $workflow_id): void
     {
-        $sql = "DELETE plugin_program_management_workflow_action_add_top_backlog.*
+        $sql = 'DELETE plugin_program_management_workflow_action_add_top_backlog.*
                 FROM plugin_program_management_workflow_action_add_top_backlog
                 JOIN tracker_workflow_transition ON (plugin_program_management_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
                 JOIN tracker_workflow ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
-                WHERE tracker_workflow.workflow_id = ?";
+                WHERE tracker_workflow.workflow_id = ?';
 
         $this->getDB()->run(
             $sql,

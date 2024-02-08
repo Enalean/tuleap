@@ -48,6 +48,6 @@ final class CheckArtifactRestUpdateConditionsStub implements CheckArtifactRestUp
             return;
         }
 
-        throw new RestException(403, "Artifact update through the REST API is not allowed");
+        throw new RestException(403, 'Artifact update through the REST API is not allowed');
     }
 }

@@ -77,14 +77,14 @@ class URL
     public function getGroupIdFromUrl($url)
     {
         $request = HTTPRequest::instance();
-        $req_uri = '/' . trim($url, "/");
+        $req_uri = '/' . trim($url, '/');
         // /projects/ and /viewvc/
         if ((strpos($req_uri, '/projects/') === 0) || (strpos($req_uri, '/viewvc.php/') !== false)) {
             $this_proj_name = '';
             if (strpos($req_uri, '/viewvc.php/') !== false) {
                 $this_proj_name = $this->getGroupNameFromSVNUrl($req_uri);
             } elseif (strpos($req_uri, '/projects/') !== false) {
-                $pieces         = explode("/", $url);
+                $pieces         = explode('/', $url);
                 $this_proj_name = $pieces[2];
             }
             //Project short name validation

@@ -43,7 +43,7 @@ class TuleapReferencesFromMergeRequestDataExtractor
     {
         return WebhookTuleapReferenceCollection::aggregateCollections(
             $this->reference_parser->extractCollectionOfTuleapReferences(
-                $title . " " . $description
+                $title . ' ' . $description
             ),
             $this->extractFromBranchSource($branch_source),
         );

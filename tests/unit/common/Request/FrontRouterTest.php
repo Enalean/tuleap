@@ -459,7 +459,7 @@ final class FrontRouterTest extends TestCase
 
     public function testHttpStatusCodeIsEqualToExceptionCodeIfTheExceptionImplementsCodeIsAValidHTTPStatus(): void
     {
-        $exception = new class ("Conflict", 409) extends Exception implements CodeIsAValidHTTPStatus {
+        $exception = new class ('Conflict', 409) extends Exception implements CodeIsAValidHTTPStatus {
         };
 
         $handler = $this->createMock(DispatchableWithRequestNoAuthz::class);
@@ -504,7 +504,7 @@ final class FrontRouterTest extends TestCase
 
     public function testHttpStatusCodeIs500IfTheExceptionDoesNotImplementCodeIsAValidHTTPStatus(): void
     {
-        $exception = new class ("Conflict", 409) extends Exception {
+        $exception = new class ('Conflict', 409) extends Exception {
         };
 
         $handler = $this->createMock(DispatchableWithRequestNoAuthz::class);

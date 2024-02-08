@@ -40,10 +40,10 @@ final class StepDefinitionDataConverter
 
         foreach ($steps as $step) {
             StepChecker::checkStepDataFromRESTPost($step);
-            $converted_steps["description"][]             = $step["description"];
-            $converted_steps["description_format"][]      = $step["description_format"];
-            $converted_steps["expected_results"][]        = $step["expected_results"];
-            $converted_steps["expected_results_format"][] = $step["expected_results_format"];
+            $converted_steps['description'][]             = $step['description'];
+            $converted_steps['description_format'][]      = $step['description_format'];
+            $converted_steps['expected_results'][]        = $step['expected_results'];
+            $converted_steps['expected_results_format'][] = $step['expected_results_format'];
         }
 
         return $converted_steps;

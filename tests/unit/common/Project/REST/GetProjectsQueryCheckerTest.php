@@ -43,31 +43,31 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotRaiseAnExceptionForCriterionProvidedByPlugin()
     {
-        $this->event_manager->method("processEvent")->with(
+        $this->event_manager->method('processEvent')->with(
             self::callback(
                 function (GetAdditionalCriteria $event) {
-                    $event->addCriteria("with_whatever", "'with_whatever': true");
+                    $event->addCriteria('with_whatever', "'with_whatever': true");
                     return true;
                 }
             )
         );
 
-        $json_query = ["with_whatever" => true];
+        $json_query = ['with_whatever' => true];
         self::assertNull($this->checker->checkQuery($json_query, false));
     }
 
     public function testItRaiseAnExceptionForCriterionProvidedByPlugin()
     {
-        $this->event_manager->method("processEvent")->with(
+        $this->event_manager->method('processEvent')->with(
             self::callback(
                 function (GetAdditionalCriteria $event) {
-                    $event->addCriteria("with_whatever", "'with_whatever': true");
+                    $event->addCriteria('with_whatever', "'with_whatever': true");
                     return true;
                 }
             )
         );
 
-        $json_query = ["whatever" => true];
+        $json_query = ['whatever' => true];
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
@@ -77,8 +77,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaiseExeptionWhenNotSupportedQuery()
     {
-        $this->event_manager->method("processEvent");
-        $json_query = ["whatever" => true];
+        $this->event_manager->method('processEvent');
+        $json_query = ['whatever' => true];
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
@@ -88,8 +88,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProjectsYouAreNotMemberOfIsNotSupported()
     {
-        $this->event_manager->method("processEvent");
-        $json_query = ["is_member_of" => false];
+        $this->event_manager->method('processEvent');
+        $json_query = ['is_member_of' => false];
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
@@ -99,8 +99,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProjectsYouAreNotAdministratorOfAtLeastOneTrackerIsNotSupported()
     {
-        $this->event_manager->method("processEvent");
-        $json_query = ["is_tracker_admin" => false];
+        $this->event_manager->method('processEvent');
+        $json_query = ['is_tracker_admin' => false];
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
@@ -110,8 +110,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaiseExeptionWhenWithStatusAndUserIsNotProjectManager()
     {
-        $this->event_manager->method("processEvent");
-        $json_query = ["with_status" => true];
+        $this->event_manager->method('processEvent');
+        $json_query = ['with_status' => true];
 
         self::expectException(RestException::class);
         self::expectExceptionCode(403);
@@ -121,8 +121,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaiseExeptionWhenWithStatusIsNotValid()
     {
-        $this->event_manager->method("processEvent");
-        $json_query = ["with_status" => false];
+        $this->event_manager->method('processEvent');
+        $json_query = ['with_status' => false];
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
@@ -132,8 +132,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItPassesWhenWithStatusIsValid()
     {
-        $this->event_manager->method("processEvent");
-        $json_query = ["with_status" => "active"];
+        $this->event_manager->method('processEvent');
+        $json_query = ['with_status' => 'active'];
         self::assertNull($this->checker->checkQuery($json_query, true));
     }
 }

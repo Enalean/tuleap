@@ -174,17 +174,17 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $value_04 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(404)->getMock();
 
         $this->mapping = [
-            "T101" => 444,
-            "T102" => 555,
-            "T103" => 666,
+            'T101' => 444,
+            'T102' => 555,
+            'T103' => 666,
         ];
 
         $this->field_mapping = [
-            "F1" => $field,
-            "V1" => $value_01,
-            "V2" => $value_02,
-            "V3" => $value_03,
-            "V4" => $value_04,
+            'F1' => $field,
+            'V1' => $value_01,
+            'V2' => $value_02,
+            'V3' => $value_03,
+            'V4' => $value_04,
         ];
 
         $this->cardwall_ontop_dao      = \Mockery::spy(\Cardwall_OnTop_Dao::class);

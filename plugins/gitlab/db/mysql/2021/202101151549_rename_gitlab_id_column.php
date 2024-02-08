@@ -42,7 +42,7 @@ final class b202101151549_rename_gitlab_id_column extends \Tuleap\ForgeUpgrade\B
 
     private function updatePluginGitlabRepositoryTable(): void
     {
-        $sql = "ALTER TABLE plugin_gitlab_repository CHANGE gitlab_id gitlab_repository_id INT(11) NOT NULL;";
+        $sql = 'ALTER TABLE plugin_gitlab_repository CHANGE gitlab_id gitlab_repository_id INT(11) NOT NULL;';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -54,7 +54,7 @@ final class b202101151549_rename_gitlab_id_column extends \Tuleap\ForgeUpgrade\B
 
     private function updatePluginGitlabCommitInfo(): void
     {
-        $sql = "ALTER TABLE plugin_gitlab_commit_info CHANGE gitlab_repository_id repository_id INT(11) NOT NULL;";
+        $sql = 'ALTER TABLE plugin_gitlab_commit_info CHANGE gitlab_repository_id repository_id INT(11) NOT NULL;';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -66,7 +66,7 @@ final class b202101151549_rename_gitlab_id_column extends \Tuleap\ForgeUpgrade\B
 
     private function updatePluginGitlabBotApiToken(): void
     {
-        $sql = "ALTER TABLE plugin_gitlab_bot_api_token CHANGE gitlab_repository_id repository_id INT(11) NOT NULL;";
+        $sql = 'ALTER TABLE plugin_gitlab_bot_api_token CHANGE gitlab_repository_id repository_id INT(11) NOT NULL;';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

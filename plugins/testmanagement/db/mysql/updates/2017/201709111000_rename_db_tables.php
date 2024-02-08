@@ -22,7 +22,7 @@ class b201709111000_rename_db_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Replace trafficlights with testmanagement in DB table names.";
+        return 'Replace trafficlights with testmanagement in DB table names.';
     }
 
     public function preUp()
@@ -37,7 +37,7 @@ class b201709111000_rename_db_tables extends \Tuleap\ForgeUpgrade\Bucket
 
     private function renamePluginTable()
     {
-        $sql         = "RENAME TABLE plugin_trafficlights TO plugin_testmanagement";
+        $sql         = 'RENAME TABLE plugin_trafficlights TO plugin_testmanagement';
         $exec_result = $this->db->dbh->exec($sql);
 
         if ($exec_result === false) {

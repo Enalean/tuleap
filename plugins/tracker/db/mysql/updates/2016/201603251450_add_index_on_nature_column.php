@@ -32,7 +32,7 @@ class b201603251450_add_index_on_nature_column extends \Tuleap\ForgeUpgrade\Buck
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_changeset_value_artifactlink ADD INDEX idx_nature (nature(10))";
+        $sql = 'ALTER TABLE tracker_changeset_value_artifactlink ADD INDEX idx_nature (nature(10))';
 
         $res = $this->db->dbh->exec($sql);
 

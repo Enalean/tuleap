@@ -39,7 +39,7 @@ class SVNJSONPermissionsRetriever
                 [
                     'error' => dgettext(
                         'tuleap-svn',
-                        "SVN service is disabled."
+                        'SVN service is disabled.'
                     ),
                 ]
             );

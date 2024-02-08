@@ -196,12 +196,12 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
      */
     public function getArtifactsLinkedInChangeset(ChangesetIdentifier $changeset_identifier): array
     {
-        $sql = "
+        $sql = '
             SELECT tcva.artifact_id as artifact_id
             FROM tracker_changeset_value
                 INNER JOIN tracker_changeset_value_artifactlink AS tcva on tracker_changeset_value.id = tcva.changeset_value_id
             WHERE changeset_id = ?
-        ";
+        ';
 
         $rows = $this->getDB()->run($sql, $changeset_identifier->getId());
 

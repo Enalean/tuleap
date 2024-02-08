@@ -72,7 +72,7 @@ class InitialSnapshotBuilder
         $already_parsed_fields_keys = [];
         $field_snapshots            = [];
 
-        $this->logger->debug("Build initial snapshot ... ");
+        $this->logger->debug('Build initial snapshot ... ');
 
         $this->retrieveInitialAttachments(
             $changelog_entries,
@@ -82,7 +82,7 @@ class InitialSnapshotBuilder
             $already_parsed_fields_keys
         );
 
-        $this->logger->debug("Initial attachments built successfully ");
+        $this->logger->debug('Initial attachments built successfully ');
 
         foreach ($changelog_entries as $changelog_entry) {
             $this->retrieveInitialFieldsValueInChangelogEntry(
@@ -92,14 +92,14 @@ class InitialSnapshotBuilder
                 $already_parsed_fields_keys
             );
         }
-        $this->logger->debug("Initial fields values built successfully ");
+        $this->logger->debug('Initial fields values built successfully ');
 
         $this->retrieveFieldsNotModifiedSinceIssueCreation(
             $current_snapshot,
             $field_snapshots,
             $already_parsed_fields_keys
         );
-        $this->logger->debug("Fields not modified since creation built successfully ");
+        $this->logger->debug('Fields not modified since creation built successfully ');
 
         $this->addJiraLinkInformation(
             $field_snapshots,
@@ -107,7 +107,7 @@ class InitialSnapshotBuilder
             $issue_api_representation,
             $jira_base_url
         );
-        $this->logger->debug("Link to Jira built successfully ");
+        $this->logger->debug('Link to Jira built successfully ');
 
         $initial_snapshot = new Snapshot(
             $snapshot_owner,
@@ -133,7 +133,7 @@ class InitialSnapshotBuilder
 
         $jira_attachment_field_mapping = $jira_field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_ATTACHMENT_NAME);
         if ($jira_attachment_field_mapping === null) {
-            $this->logger->debug("No mapping found for attachment");
+            $this->logger->debug('No mapping found for attachment');
             return;
         }
 
@@ -217,7 +217,7 @@ class InitialSnapshotBuilder
             if ($this->mustFieldBeCheckedInChangelog($current_snapshot_field, $already_parsed_fields_keys)) {
                 if ($current_snapshot_field === null) {
                     $already_parsed_fields_keys[$changed_field_id] = true;
-                    $this->logger->debug(" |_ Current snapshot field is null for " . $changed_field_id);
+                    $this->logger->debug(' |_ Current snapshot field is null for ' . $changed_field_id);
                     continue;
                 }
 
@@ -233,7 +233,7 @@ class InitialSnapshotBuilder
                 $changed_field_from_string = $changed_field->getFromString();
 
                 if ($this->fieldHasNoInitialValue($changed_field)) {
-                    $this->logger->debug(" |_ Field " . $changed_field_id . " has no initial value");
+                    $this->logger->debug(' |_ Field ' . $changed_field_id . ' has no initial value');
                     continue;
                 }
 
@@ -245,7 +245,7 @@ class InitialSnapshotBuilder
                         $bound_value,
                         $current_snapshot_field->getRenderedValue()
                     );
-                    $this->logger->debug(" |_ List field " . $changed_field_id . " has an initial value");
+                    $this->logger->debug(' |_ List field ' . $changed_field_id . ' has an initial value');
                     continue;
                 }
                 if ($this->fieldDateHasInitialValue($field_mapping, $changed_field)) {
@@ -254,7 +254,7 @@ class InitialSnapshotBuilder
                         $changed_field_from,
                         null
                     );
-                    $this->logger->debug(" |_ Date field " . $changed_field_id . " has an initial value");
+                    $this->logger->debug(' |_ Date field ' . $changed_field_id . ' has an initial value');
                     continue;
                 }
                 if ($this->fieldTextHasInitialValue($changed_field)) {
@@ -263,7 +263,7 @@ class InitialSnapshotBuilder
                         $changed_field_from_string,
                         null
                     );
-                    $this->logger->debug(" |_ Text field " . $changed_field_id . " has an initial value");
+                    $this->logger->debug(' |_ Text field ' . $changed_field_id . ' has an initial value');
                     continue;
                 }
             }
@@ -278,11 +278,11 @@ class InitialSnapshotBuilder
     ): void {
         $jira_link_field_mapping = $jira_field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME);
         if ($jira_link_field_mapping === null) {
-            $this->logger->debug("No mapping found for artifact link");
+            $this->logger->debug('No mapping found for artifact link');
             return;
         }
 
-        $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($issue_api_representation->getKey());
+        $jira_link = rtrim($jira_base_url, '/') . '/browse/' . urlencode($issue_api_representation->getKey());
 
         $field_snapshots[] = new FieldSnapshot(
             $jira_link_field_mapping,

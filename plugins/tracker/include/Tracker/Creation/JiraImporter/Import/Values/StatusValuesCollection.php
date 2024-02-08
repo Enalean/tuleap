@@ -65,7 +65,7 @@ class StatusValuesCollection
 
     public function initCollectionForProject(string $jira_project_key, IDGenerator $id_generator): void
     {
-        $this->logger->debug("Build status collection for project ...");
+        $this->logger->debug('Build status collection for project ...');
 
         $statuses_content = $this->retrieverStatusesContent($jira_project_key);
         if ($statuses_content === null) {
@@ -78,12 +78,12 @@ class StatusValuesCollection
             }
         }
 
-        $this->logger->debug("Status collection successfully built.");
+        $this->logger->debug('Status collection successfully built.');
     }
 
     public function initCollectionForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): void
     {
-        $this->logger->debug("Build status collection ...");
+        $this->logger->debug('Build status collection ...');
 
         $statuses_content = $this->retrieverStatusesContent($jira_project_key);
         if ($statuses_content === null) {
@@ -100,18 +100,18 @@ class StatusValuesCollection
             }
         }
 
-        $this->logger->debug("Status collection successfully built.");
+        $this->logger->debug('Status collection successfully built.');
     }
 
     private function retrieverStatusesContent(string $jira_project_key): ?array
     {
-        $statuses_url = ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . urlencode($jira_project_key) . "/statuses";
+        $statuses_url = ClientWrapper::JIRA_CORE_BASE_URL . '/project/' . urlencode($jira_project_key) . '/statuses';
 
-        $this->logger->debug("  GET " . $statuses_url);
+        $this->logger->debug('  GET ' . $statuses_url);
         $statuses_content = $this->jira_client->getUrl($statuses_url);
 
         if ($statuses_content === null) {
-            $this->logger->debug("No statuses defined");
+            $this->logger->debug('No statuses defined');
             return null;
         }
 

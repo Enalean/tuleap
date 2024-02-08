@@ -80,7 +80,7 @@ class CrossReferenceFromMergeRequestCreator
         $nb_found_references = count($references_collection->getTuleapReferences());
 
         $this->logger->info(
-            $nb_found_references . " Tuleap references found in merge request " . $webhook_data->getMergeRequestId()
+            $nb_found_references . ' Tuleap references found in merge request ' . $webhook_data->getMergeRequestId()
         );
 
         foreach ($references_collection->getTuleapReferences() as $tuleap_reference) {
@@ -96,7 +96,7 @@ class CrossReferenceFromMergeRequestCreator
                 assert($external_reference instanceof \Reference);
 
                 $this->logger->info(
-                    "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " found"
+                    '|  |_ Tuleap artifact #' . $tuleap_reference->getId() . ' found'
                 );
 
                 $this->saveReferenceInIntegratedProject(

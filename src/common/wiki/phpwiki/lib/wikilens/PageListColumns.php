@@ -75,16 +75,16 @@ class _PageList_Column_coagreement extends _PageList_Column_custom
         $dbi           = $request->getDbh();
         $p             = CoAgreement($dbi, $pagename, $this->_selectedBuddies, $active_userId);
         if ($p == 1) {
-            $p = "yes";
+            $p = 'yes';
         } elseif ($p == 0) {
-            $p = "unsure";
+            $p = 'unsure';
         } elseif ($p == -1) {
-            $p = "no";
+            $p = 'no';
         } else {
-            $p = "error";
+            $p = 'error';
         }
         //FIXME: $WikiTheme->getImageURL()
-        return HTML::img(['src' => "../images/" . $p . ".gif"]);
+        return HTML::img(['src' => '../images/' . $p . '.gif']);
     }
 }
 
@@ -109,7 +109,7 @@ class _PageList_Column_minmisery extends _PageList_Column_custom
         $p             = MinMisery($dbi, $pagename, $this->_selectedBuddies, $active_userId);
            $imgFix     = floor($p * 2) / 2;
         //FIXME: $WikiTheme->getImageURL()
-        return HTML::img(['src' => "../images/" . $imgFix . ".png"]);
+        return HTML::img(['src' => '../images/' . $imgFix . '.png']);
     }
 }
 
@@ -118,11 +118,11 @@ global $WikiTheme;
 $WikiTheme->addPageListColumn(
     [
         'numbacklinks'
-    => ['_PageList_Column_numbacklinks','custom:numbacklinks', _("# things"), false],
+    => ['_PageList_Column_numbacklinks','custom:numbacklinks', _('# things'), false],
         'coagreement'
-    => ['_PageList_Column_coagreement','custom:coagreement', _("Go?"), 'center'],
+    => ['_PageList_Column_coagreement','custom:coagreement', _('Go?'), 'center'],
         'minmisery'
-    => ['_PageList_Column_minmisery','custom:minmisery', _("MinMisery"), 'center'],
+    => ['_PageList_Column_minmisery','custom:minmisery', _('MinMisery'), 'center'],
     ]
 );
 

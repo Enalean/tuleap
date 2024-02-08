@@ -58,7 +58,7 @@ class UserImport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
         foreach ($file_content as $line) {
             $line = trim($line);
-            if ($line === "") {
+            if ($line === '') {
                 continue;
             }
 

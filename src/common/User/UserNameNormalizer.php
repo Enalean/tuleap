@@ -34,7 +34,7 @@ class UserNameNormalizer
      */
     public function normalize(string $username): string
     {
-        $username = $this->slugify->slugify($username, "_");
+        $username = $this->slugify->slugify($username, '_');
 
         if (! $this->username_rule->isUnixValid($username)) {
             throw new DataIncompatibleWithUsernameGenerationException();

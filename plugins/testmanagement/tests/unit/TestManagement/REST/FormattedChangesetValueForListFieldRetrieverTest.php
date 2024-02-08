@@ -81,7 +81,7 @@ class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPU
 
 
         $result = $this->formatted_changeset_value_for_list_field_retriever
-            ->getFormattedChangesetValueForFieldList('status', "pass", $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldList('status', 'pass', $this->artifact, $this->user);
 
         $this->assertEquals([111], $result->bind_value_ids);
         $this->assertEquals(112, $result->field_id);
@@ -101,7 +101,7 @@ class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPU
         $this->expectExceptionCode(400);
 
         $this->formatted_changeset_value_for_list_field_retriever
-            ->getFormattedChangesetValueForFieldList('status', "pass", $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldList('status', 'pass', $this->artifact, $this->user);
     }
 
     public function testGetFormattedChangesetValueForFieldListReturnsNullIfFieldDoesntExist(): void
@@ -109,7 +109,7 @@ class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPU
         $this->tracker_formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn(null);
 
         $result = $this->formatted_changeset_value_for_list_field_retriever
-            ->getFormattedChangesetValueForFieldList('status', "pass", $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldList('status', 'pass', $this->artifact, $this->user);
 
         $this->assertNull($result);
     }

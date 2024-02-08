@@ -80,7 +80,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         $html .= '<div class="tracker_artifact">';
 
         if (! $this->artifact->getLastChangeset()) {
-            $html .= "<div class='feedback_error'>" . dgettext('tuleap-tracker', 'The artifact is not linked to any changeset.') . "</div>";
+            $html .= "<div class='feedback_error'>" . dgettext('tuleap-tracker', 'The artifact is not linked to any changeset.') . '</div>';
         }
         if ($this->artifact->userCanUpdate($this->user)) {
             self::fetchEditViewJSCode();
@@ -302,6 +302,6 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
             return $this->renderer->fetchSubmitButton($this->user);
         }
 
-        return "";
+        return '';
     }
 }

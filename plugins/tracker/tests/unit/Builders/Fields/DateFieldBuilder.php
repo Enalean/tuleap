@@ -27,7 +27,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class DateFieldBuilder
 {
-    private string $name = "date";
+    private string $name = 'date';
     /** @var list<\PFUser> */
     private array $user_with_read_permissions = [];
     /** @var array<int, bool> */
@@ -79,9 +79,9 @@ final class DateFieldBuilder
             15,
             $this->name,
             'label',
-            "",
+            '',
             true,
-            "",
+            '',
             false,
             false,
             10,

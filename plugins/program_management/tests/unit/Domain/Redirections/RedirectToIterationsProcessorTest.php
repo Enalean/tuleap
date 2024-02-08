@@ -36,7 +36,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 final class RedirectToIterationsProcessorTest extends TestCase
 {
     private const PROGRAM_INCREMENT_ID = 100;
-    private const PROJECT_SHORTNAME    = "my_project";
+    private const PROJECT_SHORTNAME    = 'my_project';
     private ProjectReference $project;
     private Tracker_Artifact_Redirect $redirect;
     private RedirectUserAfterArtifactCreationOrUpdateEvent $event;
@@ -44,9 +44,9 @@ final class RedirectToIterationsProcessorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->iteration_redirect_parameters = IterationRedirectionParametersStub::withValues("Nope", "100");
+        $this->iteration_redirect_parameters = IterationRedirectionParametersStub::withValues('Nope', '100');
         $this->redirect                      = new Tracker_Artifact_Redirect();
-        $this->project                       = ProjectReferenceStub::withValues(1, "Project", self::PROJECT_SHORTNAME, "");
+        $this->project                       = ProjectReferenceStub::withValues(1, 'Project', self::PROJECT_SHORTNAME, '');
         $this->event                         = RedirectUserAfterArtifactCreationOrUpdateEventProxy::fromEvent(
             new RedirectAfterArtifactCreationOrUpdateEvent(
                 new \Codendi_Request(

@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class UserWithStarBadgeCollector implements Dispatchable
 {
-    public const NAME = "userWithStarBadgeCollector";
+    public const NAME = 'userWithStarBadgeCollector';
 
     /** @var Project */
     private $project;

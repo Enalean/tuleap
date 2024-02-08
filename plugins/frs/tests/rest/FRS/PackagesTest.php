@@ -133,8 +133,8 @@ final class PackagesTest extends RestBase
     {
         $package = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(1, $package["collection"][0]['id']);
-        $this->assertEquals('release1', $package["collection"][0]['name']);
+        $this->assertEquals(1, $package['collection'][0]['id']);
+        $this->assertEquals('release1', $package['collection'][0]['name']);
     }
 
     public function testGETPackageWithoutFRSAdminPermissions(): void

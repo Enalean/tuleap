@@ -32,7 +32,7 @@ class b201603231358_add_nature_index_for_artifact_link_changeset extends \Tuleap
 
     public function up()
     {
-        $sql = "ALTER table tracker_changeset_value_artifactlink DROP INDEX idx_reverse";
+        $sql = 'ALTER table tracker_changeset_value_artifactlink DROP INDEX idx_reverse';
 
         $res = $this->db->dbh->exec($sql);
 
@@ -40,8 +40,8 @@ class b201603231358_add_nature_index_for_artifact_link_changeset extends \Tuleap
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding index nature');
         }
 
-        $sql = "ALTER table tracker_changeset_value_artifactlink ADD
-                INDEX idx_reverse (artifact_id, changeset_value_id, nature(10))";
+        $sql = 'ALTER table tracker_changeset_value_artifactlink ADD
+                INDEX idx_reverse (artifact_id, changeset_value_id, nature(10))';
 
         $res = $this->db->dbh->exec($sql);
 

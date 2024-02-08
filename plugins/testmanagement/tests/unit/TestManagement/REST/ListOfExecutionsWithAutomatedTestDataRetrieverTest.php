@@ -109,7 +109,7 @@ class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends \Tuleap\Test\PH
         $execution_1  = Mockery::mock(Artifact::class);
 
         $this->artifact_dao->shouldReceive('searchExecutionArtifactsForCampaign')->andReturn(
-            [["execution_1"]]
+            [['execution_1']]
         );
 
         $this->config->shouldReceive('getTestExecutionTrackerId')->andReturn(42);
@@ -118,7 +118,7 @@ class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends \Tuleap\Test\PH
 
         $this->artifact_factory
             ->shouldReceive('getInstanceFromRow')
-            ->with(["execution_1"])
+            ->with(['execution_1'])
             ->andReturn($execution_1);
 
         $this->execution_with_automated_data_provider
@@ -141,14 +141,14 @@ class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends \Tuleap\Test\PH
         $execution_1 = Mockery::mock(Artifact::class);
 
         $this->artifact_dao->shouldReceive('searchExecutionArtifactsForCampaign')->andReturn(
-            [["execution_1"]]
+            [['execution_1']]
         );
 
         $this->config->shouldReceive('getTestExecutionTrackerId')->andReturn(42);
 
         $this->artifact_factory
             ->shouldReceive('getInstanceFromRow')
-            ->with(["execution_1"])
+            ->with(['execution_1'])
             ->andReturn($execution_1);
 
         $this->execution_with_automated_data_provider

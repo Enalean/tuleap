@@ -44,10 +44,10 @@ final class b201910151454_create_modal_new_layout_table extends \Tuleap\ForgeUpg
 
     private function addAllExistingUserIds(): void
     {
-        $sql = "INSERT INTO plugin_tracker_new_layout_modal_user (user_id)
+        $sql = 'INSERT INTO plugin_tracker_new_layout_modal_user (user_id)
                 SELECT DISTINCT user_id
                 FROM user
-                WHERE user_id >= 100 AND user_id NOT IN (SELECT user_id FROM plugin_tracker_new_layout_modal_user)";
+                WHERE user_id >= 100 AND user_id NOT IN (SELECT user_id FROM plugin_tracker_new_layout_modal_user)';
 
         $this->api->dbh->exec($sql);
     }

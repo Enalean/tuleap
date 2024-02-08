@@ -72,14 +72,14 @@ class CustomMetadataRepresentationRetriever
             if ((int) $metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 if ($metadata->isMultipleValuesAllowed() === true) {
                     $this->checkMultipleMetadataListValues($metadata_representation, $metadata);
-                    $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation($metadata, $metadata_representation->list_value, "");
+                    $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation($metadata, $metadata_representation->list_value, '');
                 } else {
                     $this->checkSimpleMetadataListValues($metadata_representation, $metadata);
-                    $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation($metadata, $metadata_representation->value, "");
+                    $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation($metadata, $metadata_representation->value, '');
                 }
             } else {
                 $this->checkMetadataValue($metadata_representation);
-                $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation($metadata, $metadata_representation->value, "");
+                $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation($metadata, $metadata_representation->value, '');
             }
         }
 

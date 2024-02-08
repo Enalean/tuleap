@@ -33,20 +33,20 @@ class WikiPlugin__AuthInfo extends WikiPlugin
 {
     public function getName()
     {
-        return _("AuthInfo");
+        return _('AuthInfo');
     }
 
     public function getDescription()
     {
-        return _("Display general and user specific auth information.");
+        return _('Display general and user specific auth information.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.19 $"
+            '$Revision: 1.19 $'
         );
     }
 
@@ -67,53 +67,53 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         }
         if (! $user->isAdmin() and ! (DEBUG && _DEBUG_LOGIN)) {
             $request->_notAuthorized(WIKIAUTH_ADMIN);
-            $this->disabled("! user->isAdmin");
+            $this->disabled('! user->isAdmin');
         }
 
-        $html  = HTML(HTML::h3(fmt("General Auth Settings")));
+        $html  = HTML(HTML::h3(fmt('General Auth Settings')));
         $table = HTML::table(['border' => 1,
             'cellpadding' => 2,
             'cellspacing' => 0,
         ]);
         $table->pushContent($this->_showhash(
-            "AUTH DEFINES",
+            'AUTH DEFINES',
             $this->_buildConstHash(
-                ["ENABLE_USER_NEW","ALLOW_ANON_USER",
-                    "ALLOW_ANON_EDIT","ALLOW_BOGO_LOGIN",
-                    "REQUIRE_SIGNIN_BEFORE_EDIT","ALLOW_USER_PASSWORDS",
-                    "PASSWORD_LENGTH_MINIMUM",
+                ['ENABLE_USER_NEW','ALLOW_ANON_USER',
+                    'ALLOW_ANON_EDIT','ALLOW_BOGO_LOGIN',
+                    'REQUIRE_SIGNIN_BEFORE_EDIT','ALLOW_USER_PASSWORDS',
+                    'PASSWORD_LENGTH_MINIMUM',
                 ]
             )
         ));
-        if ((defined('ALLOW_LDAP_LOGIN') && ALLOW_LDAP_LOGIN) or in_array("LDAP", $GLOBALS['USER_AUTH_ORDER'])) {
+        if ((defined('ALLOW_LDAP_LOGIN') && ALLOW_LDAP_LOGIN) or in_array('LDAP', $GLOBALS['USER_AUTH_ORDER'])) {
             $table->pushContent($this->_showhash(
-                "LDAP DEFINES",
-                $this->_buildConstHash(["LDAP_AUTH_HOST", "LDAP_BASE_DN"])
+                'LDAP DEFINES',
+                $this->_buildConstHash(['LDAP_AUTH_HOST', 'LDAP_BASE_DN'])
             ));
         }
-        if ((defined('ALLOW_IMAP_LOGIN') && ALLOW_IMAP_LOGIN) or in_array("IMAP", $GLOBALS['USER_AUTH_ORDER'])) {
-            $table->pushContent($this->_showhash("IMAP DEFINES", ["IMAP_AUTH_HOST" => IMAP_AUTH_HOST]));
+        if ((defined('ALLOW_IMAP_LOGIN') && ALLOW_IMAP_LOGIN) or in_array('IMAP', $GLOBALS['USER_AUTH_ORDER'])) {
+            $table->pushContent($this->_showhash('IMAP DEFINES', ['IMAP_AUTH_HOST' => IMAP_AUTH_HOST]));
         }
-        if (defined('AUTH_USER_FILE') or in_array("File", $GLOBALS['USER_AUTH_ORDER'])) {
+        if (defined('AUTH_USER_FILE') or in_array('File', $GLOBALS['USER_AUTH_ORDER'])) {
             $table->pushContent($this->_showhash(
-                "AUTH_USER_FILE",
-                $this->_buildConstHash(["AUTH_USER_FILE",
-                    "AUTH_USER_FILE_STORABLE",
+                'AUTH_USER_FILE',
+                $this->_buildConstHash(['AUTH_USER_FILE',
+                    'AUTH_USER_FILE_STORABLE',
                 ])
             ));
         }
         if (defined('GROUP_METHOD')) {
             $table->pushContent($this->_showhash(
-                "GROUP_METHOD",
-                $this->_buildConstHash(["GROUP_METHOD", "AUTH_GROUP_FILE", "GROUP_LDAP_QUERY"])
+                'GROUP_METHOD',
+                $this->_buildConstHash(['GROUP_METHOD', 'AUTH_GROUP_FILE', 'GROUP_LDAP_QUERY'])
             ));
         }
-        $table->pushContent($this->_showhash("\$USER_AUTH_ORDER[]", $GLOBALS['USER_AUTH_ORDER']));
-        $table->pushContent($this->_showhash("USER_AUTH_POLICY", ["USER_AUTH_POLICY" => USER_AUTH_POLICY]));
+        $table->pushContent($this->_showhash('$USER_AUTH_ORDER[]', $GLOBALS['USER_AUTH_ORDER']));
+        $table->pushContent($this->_showhash('USER_AUTH_POLICY', ['USER_AUTH_POLICY' => USER_AUTH_POLICY]));
         $html->pushContent($table);
         $html->pushContent(HTML(HTML::h3(fmt("Personal Auth Settings for '%s'", $userid))));
         if (! $user) {
-            $html->pushContent(HTML::p(fmt("No userid")));
+            $html->pushContent(HTML::p(fmt('No userid')));
         } else {
             $table = HTML::table(['border' => 1,
                 'cellpadding' => 2,
@@ -121,20 +121,20 @@ class WikiPlugin__AuthInfo extends WikiPlugin
             ]);
             //$table->pushContent(HTML::tr(HTML::td(array('colspan' => 2))));
             $userdata = obj2hash($user, ['_dbi', '_request', 'password', 'passwd']);
-            $table->pushContent($this->_showhash("User: Object of " . $user::class, $userdata));
+            $table->pushContent($this->_showhash('User: Object of ' . $user::class, $userdata));
             if (ENABLE_USER_NEW) {
                 $group     = $request->getGroup();
                 $groups    = $group->getAllGroupsIn();
                 $groupdata = obj2hash($group, ['_dbi', '_request', 'password', 'passwd']);
                 unset($groupdata['request']);
-                $table->pushContent($this->_showhash("Group: Object of " . $group::class, $groupdata));
+                $table->pushContent($this->_showhash('Group: Object of ' . $group::class, $groupdata));
                 $groups    = $group->getAllGroupsIn();
                 $groupdata = ['getAllGroupsIn' => $groups];
                 foreach ($groups as $g) {
                     $groupdata["getMembersOf($g)"] = $group->getMembersOf($g);
                     $groupdata["isMember($g)"]     = $group->isMember($g);
                 }
-                $table->pushContent($this->_showhash("Group Methods: ", $groupdata));
+                $table->pushContent($this->_showhash('Group Methods: ', $groupdata));
             }
             $html->pushContent($table);
         }
@@ -171,12 +171,12 @@ class WikiPlugin__AuthInfo extends WikiPlugin
             ksort($hash);
             foreach ($hash as $key => $val) {
                 if (is_object($val)) {
-                    $heading = "Object of " . $val::class;
+                    $heading = 'Object of ' . $val::class;
                     if ($depth > 3) {
                         $val = $heading;
-                    } elseif ($heading == "Object of wikidb_sql") {
+                    } elseif ($heading == 'Object of wikidb_sql') {
                         $val = $heading;
-                    } elseif (substr($heading, 0, 13) == "Object of db_") {
+                    } elseif (substr($heading, 0, 13) == 'Object of db_') {
                         $val = $heading;
                     } elseif (! isset($seen[$heading])) {
                         //if (empty($seen[$heading])) $seen[$heading] = 1;
@@ -191,7 +191,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                         $val = $heading;
                     }
                 } elseif (is_array($val)) {
-                    $heading = $key . "[]";
+                    $heading = $key . '[]';
                     if ($depth > 3) {
                         $val = $heading;
                     } elseif (! isset($seen[$heading])) {

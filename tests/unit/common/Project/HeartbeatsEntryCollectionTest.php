@@ -28,7 +28,7 @@ final class HeartbeatsEntryCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsEntriesOrderedByDate(): void
     {
-        $collection = new HeartbeatsEntryCollection(new \Project(["group_id" => 101]), UserTestBuilder::aUser()->build());
+        $collection = new HeartbeatsEntryCollection(new \Project(['group_id' => 101]), UserTestBuilder::aUser()->build());
 
         $entry1 = new HeartbeatsEntry(100, 'message', 'fa-list');
         $entry2 = new HeartbeatsEntry(50, 'message', 'fa-list');

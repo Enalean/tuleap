@@ -73,51 +73,51 @@ class DataBuilderV5
         }
 
         if ($af_x->isUsed() && (! isset($af_y) || $af_y->isUsed())) {
-            $select   = "SELECT STRAIGHT_JOIN ";
-            $from     = "FROM ";
-            $where    = "WHERE ";
-            $group_by = "GROUP BY ";
-            $order_by = "ORDER BY ";
+            $select   = 'SELECT STRAIGHT_JOIN ';
+            $from     = 'FROM ';
+            $where    = 'WHERE ';
+            $group_by = 'GROUP BY ';
+            $order_by = 'ORDER BY ';
 
             // We always join on artifact: it helps to restrict the data set and
             // with the current table schema it helps joins and mysql optimiser to
             // find the right indexes without FORCE INDEX statement. This was crucial
             // on type 3 query because mysql was not able to use index on
             // (artifact_id, field_id, value_int) so perfs was horrible.
-            $from  .= "artifact a ";
-            $where .= "a.artifact_id IN (" . implode(',', $this->artifacts) . ") ";
+            $from  .= 'artifact a ';
+            $where .= 'a.artifact_id IN (' . implode(',', $this->artifacts) . ') ';
 
             if ($af_x->isStandardField() && (! $af_x->isUsername())) {
                 //echo "1";
-                $field   = "afvl.value";
-                $select .= "afvl.value AS field1 ";
-                $from   .= "INNER JOIN artifact_field_value_list afvl";
-                $from   .= " ON (afvl.group_artifact_id = a.group_artifact_id AND afvl.field_id=" . db_ei($af_x->getId()) . " AND afvl.value_id = a." . db_es($this->field_X) . ") ";
+                $field   = 'afvl.value';
+                $select .= 'afvl.value AS field1 ';
+                $from   .= 'INNER JOIN artifact_field_value_list afvl';
+                $from   .= ' ON (afvl.group_artifact_id = a.group_artifact_id AND afvl.field_id=' . db_ei($af_x->getId()) . ' AND afvl.value_id = a.' . db_es($this->field_X) . ') ';
             } elseif ($af_x->isStandardField() && ($af_x->isUsername())) {
                 //echo "2";
-                $field   = "u.user_id";
-                $select .= "u.realName AS field1, u.user_id AS id1 ";
-                $from   .= "INNER JOIN user u";
-                $from   .= " ON (u.user_id=a." . db_es($this->field_X) . ") ";
+                $field   = 'u.user_id';
+                $select .= 'u.realName AS field1, u.user_id AS id1 ';
+                $from   .= 'INNER JOIN user u';
+                $from   .= ' ON (u.user_id=a.' . db_es($this->field_X) . ') ';
             } elseif (! $af_x->isStandardField() && (! $af_x->isUsername())) {
                 //echo "3";
-                $field   = "afvl.value_id";
-                $select .= "afvl.value AS field1 ";
-                $from   .= "INNER JOIN artifact_field_value afv";
-                $from   .= " ON (afv.artifact_id = a.artifact_id AND afv.field_id = " . db_ei($af_x->getId()) . ") ";
-                $from   .= "INNER JOIN artifact_field_value_list afvl";
-                $from   .= " ON (afvl.group_artifact_id = a.group_artifact_id AND afvl.field_id = afv.field_id AND afvl.value_id = afv.valueInt) ";
+                $field   = 'afvl.value_id';
+                $select .= 'afvl.value AS field1 ';
+                $from   .= 'INNER JOIN artifact_field_value afv';
+                $from   .= ' ON (afv.artifact_id = a.artifact_id AND afv.field_id = ' . db_ei($af_x->getId()) . ') ';
+                $from   .= 'INNER JOIN artifact_field_value_list afvl';
+                $from   .= ' ON (afvl.group_artifact_id = a.group_artifact_id AND afvl.field_id = afv.field_id AND afvl.value_id = afv.valueInt) ';
             } else { //if (!$af_x->isStandardField() && ($af_x->isUsername()))
                 //echo "4";
-                $field   = "u.user_id";
-                $select .= "u.realName AS field1, u.user_id AS id1 ";
-                $from   .= "INNER JOIN artifact_field_value afv";
-                $from   .= " ON (afv.artifact_id = a.artifact_id AND afv.field_id=" . db_ei($af_x->getId()) . ") ";
-                $from   .= "INNER JOIN user u";
-                $from   .= " ON (u.user_id=afv.valueInt) ";
+                $field   = 'u.user_id';
+                $select .= 'u.realName AS field1, u.user_id AS id1 ';
+                $from   .= 'INNER JOIN artifact_field_value afv';
+                $from   .= ' ON (afv.artifact_id = a.artifact_id AND afv.field_id=' . db_ei($af_x->getId()) . ') ';
+                $from   .= 'INNER JOIN user u';
+                $from   .= ' ON (u.user_id=afv.valueInt) ';
             }
-            $group_by .= $field . " ";
-            $order_by .= $field . " ASC";
+            $group_by .= $field . ' ';
+            $order_by .= $field . ' ASC';
 
             // now if the second field exist
             if (! is_null($this->field_Y)) {
@@ -125,40 +125,40 @@ class DataBuilderV5
                 $af_y->fetchData($this->atid, $this->field_Y);
                 if ($af_y->isStandardField() && (! $af_y->isUsername())) {
                     //echo " : 1<br>";
-                    $field   = "afvl1.value_id";
-                    $select .= ",afvl1.value AS field2 ";
-                    $from   .= "INNER JOIN artifact_field_value_list afvl1";
-                    $from   .= " ON (afvl1.group_artifact_id = a.group_artifact_id AND afvl1.field_id = " . db_ei($af_y->getId()) . " AND afvl1.value_id = a." . db_es($af_y->getName()) . ") ";
+                    $field   = 'afvl1.value_id';
+                    $select .= ',afvl1.value AS field2 ';
+                    $from   .= 'INNER JOIN artifact_field_value_list afvl1';
+                    $from   .= ' ON (afvl1.group_artifact_id = a.group_artifact_id AND afvl1.field_id = ' . db_ei($af_y->getId()) . ' AND afvl1.value_id = a.' . db_es($af_y->getName()) . ') ';
                 } elseif ($af_y->isStandardField() && ($af_y->isUsername())) {
                     //echo " : 2<br>";
-                    $field   = "u1.user_id";
-                    $select .= ",u1.realName AS field2, u1.user_id AS id2 ";
-                    $from   .= "INNER JOIN user u1";
-                    $from   .= " ON (u1.user_id=a." . db_es($this->field_Y) . ") ";
+                    $field   = 'u1.user_id';
+                    $select .= ',u1.realName AS field2, u1.user_id AS id2 ';
+                    $from   .= 'INNER JOIN user u1';
+                    $from   .= ' ON (u1.user_id=a.' . db_es($this->field_Y) . ') ';
                 } elseif (! $af_y->isStandardField() && (! $af_y->isUsername())) {
                     //echo " : 3<br>";
-                    $field   = "afvl1.value_id";
-                    $select .= ",afvl1.value AS field2 ";
-                    $from   .= "INNER JOIN artifact_field_value afv1";
-                    $from   .= " ON (afv1.artifact_id = a.artifact_id AND afv1.field_id = " . db_ei($af_y->getId()) . ") ";
-                    $from   .= "INNER JOIN artifact_field_value_list afvl1";
-                    $from   .= " ON (afvl1.group_artifact_id = a.group_artifact_id AND afvl1.field_id = afv1.field_id AND afvl1.value_id = afv1.valueInt) ";
+                    $field   = 'afvl1.value_id';
+                    $select .= ',afvl1.value AS field2 ';
+                    $from   .= 'INNER JOIN artifact_field_value afv1';
+                    $from   .= ' ON (afv1.artifact_id = a.artifact_id AND afv1.field_id = ' . db_ei($af_y->getId()) . ') ';
+                    $from   .= 'INNER JOIN artifact_field_value_list afvl1';
+                    $from   .= ' ON (afvl1.group_artifact_id = a.group_artifact_id AND afvl1.field_id = afv1.field_id AND afvl1.value_id = afv1.valueInt) ';
                 } else { //if (!$af_y->isStandardField() && ($af_y->isUsername()))
                     //echo " : 4<br>";
-                    $field   = "u1.user_id";
-                    $select .= ",u1.realName AS field2, u1.user_id AS id2 ";
-                    $from   .= "INNER JOIN artifact_field_value afv1";
-                    $from   .= " ON (afv1.artifact_id = a.artifact_id AND afv1.field_id = " . db_ei($af_y->getId()) . ") ";
-                    $from   .= "INNER JOIN user u1";
-                    $from   .= " ON (u1.user_id=afv1.valueInt)";
+                    $field   = 'u1.user_id';
+                    $select .= ',u1.realName AS field2, u1.user_id AS id2 ';
+                    $from   .= 'INNER JOIN artifact_field_value afv1';
+                    $from   .= ' ON (afv1.artifact_id = a.artifact_id AND afv1.field_id = ' . db_ei($af_y->getId()) . ') ';
+                    $from   .= 'INNER JOIN user u1';
+                    $from   .= ' ON (u1.user_id=afv1.valueInt)';
                 }
-                $group_by .= "," . $field . " ";
-                $order_by .= "," . $field . " ASC";
+                $group_by .= ',' . $field . ' ';
+                $order_by .= ',' . $field . ' ASC';
             }
-            $select .= ",COUNT(0) AS c ";
+            $select .= ',COUNT(0) AS c ';
 
             //artifact permissions
-            $sql_group_id    = "SELECT group_id FROM artifact_group_list WHERE group_artifact_id=" . db_ei($this->atid);
+            $sql_group_id    = 'SELECT group_id FROM artifact_group_list WHERE group_artifact_id=' . db_ei($this->atid);
             $result_group_id = db_query($sql_group_id);
             $group_id        = null;
             if (db_numrows($result_group_id) > 0) {
@@ -176,10 +176,10 @@ class DataBuilderV5
                          ON (permissions.object_id = CONVERT(a.artifact_id USING utf8)
                              AND
                              permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
-            $where .= " AND (a.use_artifact_permissions = 0
+            $where .= ' AND (a.use_artifact_permissions = 0
                              OR
-                             permissions.ugroup_id IN (" . implode(',', $ugroups) . ")
-                            ) ";
+                             permissions.ugroup_id IN (' . implode(',', $ugroups) . ')
+                            ) ';
 
             $sql = "$select $from $where $group_by $order_by";
             //echo "$sql<br>\n";

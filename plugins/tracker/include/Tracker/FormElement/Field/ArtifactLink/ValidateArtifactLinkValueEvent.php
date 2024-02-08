@@ -27,10 +27,10 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ValidateArtifactLinkValueEvent implements Dispatchable
 {
-    public const NAME = "validateArtifactLinkValueEvent";
+    public const NAME = 'validateArtifactLinkValueEvent';
 
     private bool $is_valid        = true;
-    private string $error_message = "";
+    private string $error_message = '';
 
     /**
      * @param int[] $submitted_links_for_deletion
@@ -47,13 +47,13 @@ class ValidateArtifactLinkValueEvent implements Dispatchable
     public static function buildFromSubmittedValues(Artifact $artifact, array $submitted_values): self
     {
         $submitted_links_for_deletion = [];
-        if (array_key_exists("removed_values", $submitted_values) && ! empty($submitted_values["removed_values"])) {
-            $submitted_links_for_deletion = array_keys($submitted_values["removed_values"]);
+        if (array_key_exists('removed_values', $submitted_values) && ! empty($submitted_values['removed_values'])) {
+            $submitted_links_for_deletion = array_keys($submitted_values['removed_values']);
         }
 
         $submitted_links_with_types = [];
-        if (array_key_exists("types", $submitted_values) && ! empty($submitted_values["types"])) {
-            $submitted_links_with_types = $submitted_values["types"];
+        if (array_key_exists('types', $submitted_values) && ! empty($submitted_values['types'])) {
+            $submitted_links_with_types = $submitted_values['types'];
         }
 
         return new self(

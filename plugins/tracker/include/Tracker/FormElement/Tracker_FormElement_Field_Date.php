@@ -110,12 +110,12 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                 break;
             default:
                 throw new Tracker_Report_InvalidRESTCriterionException("Invalid operator for criterion field '$this->name' ($this->id). "
-                    . "Allowed operators: [" . implode(' | ', [
+                    . 'Allowed operators: [' . implode(' | ', [
                         Tracker_Report_REST::OPERATOR_EQUALS,
                         Tracker_Report_REST::OPERATOR_GREATER_THAN,
                         Tracker_Report_REST::OPERATOR_LESS_THAN,
                         Tracker_Report_REST::OPERATOR_BETWEEN,
-                    ]) . "]");
+                    ]) . ']');
         }
 
         $criteria_value           = [
@@ -436,7 +436,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
         return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN tracker_changeset_value_date AS $R2 ON ($R2.changeset_value_id = $R1.id)
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
+                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . ' )';
     }
 
     /**
@@ -481,8 +481,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $html          .= '<label>';
         $html          .= dgettext('tuleap-tracker', 'Start') . ' ';
         $html          .= $GLOBALS['HTML']->getBootstrapDatePicker(
-            "criteria_" . $this->id . "_from",
-            "criteria[" . $this->id . "][from_date]",
+            'criteria_' . $this->id . '_from',
+            'criteria[' . $this->id . '][from_date]',
             $value,
             [],
             [],
@@ -494,8 +494,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $html          .= '<label>';
         $html          .= dgettext('tuleap-tracker', 'End') . ' ';
         $html          .= $GLOBALS['HTML']->getBootstrapDatePicker(
-            "criteria_" . $this->id . "_to",
-            "criteria[" . $this->id . "][to_date]",
+            'criteria_' . $this->id . '_to',
+            'criteria[' . $this->id . '][to_date]',
             $value,
             [],
             [],
@@ -532,20 +532,20 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             $html .= '<div style="white-space:nowrap;">';
 
             $criteria_selector = [
-                "name"      => 'criteria[' . $this->id . '][op]',
-                "criterias" => [
-                    ">" => [
-                        "html_value" => dgettext('tuleap-tracker', 'After'),
-                        "selected"   => $gt_selected,
+                'name'      => 'criteria[' . $this->id . '][op]',
+                'criterias' => [
+                    '>' => [
+                        'html_value' => dgettext('tuleap-tracker', 'After'),
+                        'selected'   => $gt_selected,
 
                     ],
-                    "=" => [
-                        "html_value" => dgettext('tuleap-tracker', 'As of'),
-                        "selected"   => $eq_selected,
+                    '=' => [
+                        'html_value' => dgettext('tuleap-tracker', 'As of'),
+                        'selected'   => $eq_selected,
                     ],
-                    "<" => [
-                        "html_value" => dgettext('tuleap-tracker', 'Before'),
-                        "selected"   => $lt_selected,
+                    '<' => [
+                        'html_value' => dgettext('tuleap-tracker', 'Before'),
+                        'selected'   => $lt_selected,
                     ],
                 ],
             ];
@@ -553,8 +553,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             $value = $criteria_value ? $this->formatDateForReport($criteria_value['to_date']) : '';
 
             $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
-                "tracker_report_criteria_" . $this->id,
-                "criteria[" . $this->id . "][to_date]",
+                'tracker_report_criteria_' . $this->id,
+                'criteria[' . $this->id . '][to_date]',
                 $value,
                 $criteria_selector,
                 [],
@@ -600,10 +600,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     {
         $date_csv_export_pref = $this->_getUserCSVDateFormat();
         switch ($date_csv_export_pref) {
-            case "month_day_year":
+            case 'month_day_year':
                 $fmt = 'm/d/Y';
                 break;
-            case "day_month_year":
+            case 'day_month_year':
                 $fmt = 'd/m/Y';
                 break;
             default:
@@ -776,7 +776,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     protected function fetchAdminFormElement()
     {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
-            "tracker_admin_field_" . $this->id,
+            'tracker_admin_field_' . $this->id,
             '',
             $this->hasDefaultValue() ? $this->getDefaultValue() : '',
             [],
@@ -917,9 +917,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $user_preference = $this->_getUserCSVDateFormat();
         $match           = [];
 
-        if (preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)(?::(\d+))?/", $date, $match)) {
+        if (preg_match('/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)(?::(\d+))?/', $date, $match)) {
             return $this->getCSVDateComponantsWithHours($match, $user_preference);
-        } elseif (preg_match("/\s*(\d+)\/(\d+)\/(\d+)/", $date, $match)) {
+        } elseif (preg_match('/\s*(\d+)\/(\d+)\/(\d+)/', $date, $match)) {
             return $this->getCSVDateComponantsWithoutHours($match, $user_preference);
         }
 
@@ -944,7 +944,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $minute = '0';
         $second = '0';
 
-        if ($user_preference == "day_month_year") {
+        if ($user_preference == 'day_month_year') {
             [, $day, $month, $year] = $match;
         } else {
             [, $month, $day, $year] = $match;
@@ -955,7 +955,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
     private function getCSVDateComponantsWithHours(array $match, $user_preference)
     {
-        if ($user_preference == "day_month_year") {
+        if ($user_preference == 'day_month_year') {
             [, $day, $month, $year, $hour, $minute] = $match;
         } else {
             [, $month, $day, $year, $hour, $minute] = $match;
@@ -1017,7 +1017,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
         if (strpos($value, '-') !== false) {
             // Assume the format is YYYY-mm-dd
-            $first_space_position = strpos($value, " ");
+            $first_space_position = strpos($value, ' ');
             if ($first_space_position !== false) {
                 $value_without_time = substr(
                     $value,

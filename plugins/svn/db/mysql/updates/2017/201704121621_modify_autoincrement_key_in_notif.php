@@ -32,9 +32,9 @@ class b201704121621_modify_autoincrement_key_in_notif extends \Tuleap\ForgeUpgra
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_svn_notification
+        $sql = 'ALTER TABLE plugin_svn_notification
                 DROP PRIMARY KEY,
-                MODIFY COLUMN id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST";
+                MODIFY COLUMN id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

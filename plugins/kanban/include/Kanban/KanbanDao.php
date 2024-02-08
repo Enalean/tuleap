@@ -59,7 +59,7 @@ class KanbanDao extends DataAccessObject
             $when[]     = $when_fragment->sql;
             $parameters = [...$parameters, ...$when_fragment->parameters];
         }
-        $new_report_id = "CASE report_id " . implode(' ', $when) . " END";
+        $new_report_id = 'CASE report_id ' . implode(' ', $when) . ' END';
 
         $sql = "INSERT INTO plugin_agiledashboard_kanban_tracker_reports (kanban_id, report_id)
                 SELECT ?, $new_report_id
@@ -89,7 +89,7 @@ class KanbanDao extends DataAccessObject
             $when[]     = $when_fragment->sql;
             $parameters = [...$parameters, ...$when_fragment->parameters];
         }
-        $new_value_id = "CASE value_id " . implode(' ', $when) . " END";
+        $new_value_id = 'CASE value_id ' . implode(' ', $when) . ' END';
 
         $sql = "INSERT INTO plugin_agiledashboard_kanban_configuration_column (kanban_id, value_id, wip_limit)
                 SELECT ?, $new_value_id, wip_limit
@@ -102,7 +102,7 @@ class KanbanDao extends DataAccessObject
     private function convertValueIdToWhenThenStatement(int $new_value_id, int $old_value_id): ParametrizedSQLFragment
     {
         return new ParametrizedSQLFragment(
-            "WHEN ? THEN ?",
+            'WHEN ? THEN ?',
             [$old_value_id, $new_value_id],
         );
     }
@@ -141,25 +141,25 @@ class KanbanDao extends DataAccessObject
     {
         $this->getDB()->tryFlatTransaction(static function (EasyDB $db) use ($kanban_id) {
             $db->run(
-                "DELETE FROM plugin_agiledashboard_kanban_configuration_column
-                WHERE kanban_id = ?",
+                'DELETE FROM plugin_agiledashboard_kanban_configuration_column
+                WHERE kanban_id = ?',
                 $kanban_id
             );
             $db->run(
-                "DELETE FROM plugin_agiledashboard_kanban_configuration
-                WHERE id = ?",
+                'DELETE FROM plugin_agiledashboard_kanban_configuration
+                WHERE id = ?',
                 $kanban_id
             );
             $db->run(
-                "DELETE config.*
+                'DELETE config.*
                 FROM plugin_agiledashboard_kanban_widget_config AS config
                 INNER JOIN plugin_agiledashboard_kanban_widget  AS kanban_widget
                     ON config.widget_id = kanban_widget.id
-                WHERE kanban_widget.kanban_id = ?",
+                WHERE kanban_widget.kanban_id = ?',
                 $kanban_id
             );
             $db->run(
-                "DELETE FROM plugin_agiledashboard_kanban_widget WHERE kanban_id = ?",
+                'DELETE FROM plugin_agiledashboard_kanban_widget WHERE kanban_id = ?',
                 $kanban_id
             );
         });
@@ -170,11 +170,11 @@ class KanbanDao extends DataAccessObject
      */
     public function getKanbanByTrackerId(int $tracker_kanban): ?array
     {
-        $sql = "SELECT kanban_config.*, tracker.group_id
+        $sql = 'SELECT kanban_config.*, tracker.group_id
                 FROM plugin_agiledashboard_kanban_configuration AS kanban_config
                     INNER JOIN tracker
                     ON (tracker.id = kanban_config.tracker_id)
-                WHERE kanban_config.tracker_id = ?";
+                WHERE kanban_config.tracker_id = ?';
 
         return $this->getDB()->row($sql, $tracker_kanban);
     }
@@ -184,11 +184,11 @@ class KanbanDao extends DataAccessObject
      */
     public function getKanbanById(int $kanban_id): ?array
     {
-        $sql = "SELECT kanban_config.*, tracker.group_id
+        $sql = 'SELECT kanban_config.*, tracker.group_id
                 FROM plugin_agiledashboard_kanban_configuration AS kanban_config
                     INNER JOIN tracker
                     ON (tracker.id = kanban_config.tracker_id)
-                WHERE kanban_config.id = ?";
+                WHERE kanban_config.id = ?';
 
         return $this->getDB()->row($sql, $kanban_id);
     }
@@ -198,12 +198,12 @@ class KanbanDao extends DataAccessObject
      */
     public function getKanbansForProject(int $project_id): array
     {
-        $sql = "SELECT kanban_config.*, tracker.group_id
+        $sql = 'SELECT kanban_config.*, tracker.group_id
                 FROM plugin_agiledashboard_kanban_configuration AS kanban_config
                     INNER JOIN tracker
                     ON (tracker.id = kanban_config.tracker_id)
                 WHERE tracker.group_id = ?
-                ORDER BY kanban_config.name ASC";
+                ORDER BY kanban_config.name ASC';
 
         return $this->getDB()->run($sql, $project_id);
     }

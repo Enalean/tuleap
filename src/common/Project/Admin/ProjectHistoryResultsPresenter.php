@@ -49,18 +49,18 @@ class ProjectHistoryResultsPresenter
             // catalog then display the msg has is because this is very
             // likely a legacy message (pre-localization version)
             $arr_args = '';
-            if (strpos($field, " %% ") !== false) {
-                [$msg_key, $args] = explode(" %% ", $field);
+            if (strpos($field, ' %% ') !== false) {
+                [$msg_key, $args] = explode(' %% ', $field);
                 if ($args) {
                     $arr_args = explode('||', $args);
                 }
             } else {
                 $msg_key  = $field;
-                $arr_args = "";
+                $arr_args = '';
             }
             $event = $this->event_dispatcher->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($msg_key));
             $msg   = $event->getLabel() ?? $GLOBALS['Language']->getOverridableText('project_admin_utils', $msg_key, $arr_args);
-            if (strpos($msg, "*** Unkown msg") !== false) {
+            if (strpos($msg, '*** Unkown msg') !== false) {
                 $msg = $field;
             }
 
@@ -87,11 +87,11 @@ class ProjectHistoryResultsPresenter
         $val = $row['old_value'];
 
         if (
-            strstr($msg_key, "perm_granted_for_")
-            || strstr($msg_key, "perm_reset_for_")
-            || strstr($msg_key, "membership_request_updated")
+            strstr($msg_key, 'perm_granted_for_')
+            || strstr($msg_key, 'perm_reset_for_')
+            || strstr($msg_key, 'membership_request_updated')
         ) {
-            $ugroup_list = explode(",", $val);
+            $ugroup_list = explode(',', $val);
             $val         = '';
             foreach ($ugroup_list as $ugroup) {
                 if ($val) {
@@ -99,7 +99,7 @@ class ProjectHistoryResultsPresenter
                 }
                 $val .= \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroup);
             }
-        } elseif ($msg_key == "group_type") {
+        } elseif ($msg_key == 'group_type') {
             $val = TemplateSingleton::instance()->getLabel($val);
         }
 

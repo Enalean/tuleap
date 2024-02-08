@@ -40,7 +40,7 @@ class TypeTablePresenter
     public $artifact_links;
     public $mass_unlink_title;
 
-    public const TABLE_ID_PREFIX = "tracker_report_table_type_";
+    public const TABLE_ID_PREFIX = 'tracker_report_table_type_';
 
     public function __construct(
         \PFUser $current_user,

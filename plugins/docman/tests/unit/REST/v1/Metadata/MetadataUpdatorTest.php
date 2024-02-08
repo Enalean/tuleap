@@ -131,7 +131,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $old_user = \Mockery::mock(\PFUser::class);
@@ -143,8 +143,8 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($new_user);
 
         $representation                    = new PUTMetadataRepresentation();
-        $representation->title             = "title";
-        $representation->description       = "";
+        $representation->title             = 'title';
+        $representation->description       = '';
         $representation->owner_id          = 102;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
@@ -181,7 +181,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(0);
 
         $old_user = \Mockery::mock(\PFUser::class);
@@ -191,14 +191,14 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $old_user->shouldReceive('getUserName')->andReturn('user name');
 
         $representation                             = new PUTMetadataRepresentation();
-        $representation->title                      = "title";
-        $representation->description                = "";
+        $representation->title                      = 'title';
+        $representation->description                = '';
         $representation->owner_id                   = $old_user_id;
         $representation->status                     = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date          = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
         $custom_metadata_representation             = new POSTCustomMetadataRepresentation();
-        $custom_metadata_representation->short_name = "field_1";
-        $custom_metadata_representation->value      = "value";
+        $custom_metadata_representation->short_name = 'field_1';
+        $custom_metadata_representation->value      = 'value';
         $representation->metadata                   = [$custom_metadata_representation];
 
         $current_user = \Mockery::mock(\PFUser::class);
@@ -240,7 +240,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $old_user = \Mockery::mock(\PFUser::class);
@@ -250,14 +250,14 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $old_user->shouldReceive('getUserName')->andReturn('user name');
 
         $representation                             = new PUTMetadataRepresentation();
-        $representation->title                      = "title";
-        $representation->description                = "";
+        $representation->title                      = 'title';
+        $representation->description                = '';
         $representation->owner_id                   = $old_user_id;
         $representation->status                     = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date          = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
         $custom_metadata_representation             = new POSTCustomMetadataRepresentation();
-        $custom_metadata_representation->short_name = "field_1";
-        $custom_metadata_representation->value      = "value";
+        $custom_metadata_representation->short_name = 'field_1';
+        $custom_metadata_representation->value      = 'value';
         $representation->metadata                   = [$custom_metadata_representation];
 
         $current_user = \Mockery::mock(\PFUser::class);
@@ -295,7 +295,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $item = \Mockery::mock(\Docman_Item::class);
         $item->shouldReceive('getOwnerId')->andReturn(101);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $representation                    = new PUTMetadataRepresentation();
@@ -334,7 +334,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $this->user_manager->shouldReceive('getUserById')->andReturn(null);
@@ -344,8 +344,8 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($new_user);
 
         $representation                    = new PUTMetadataRepresentation();
-        $representation->title             = "title";
-        $representation->description       = "";
+        $representation->title             = 'title';
+        $representation->description       = '';
         $representation->owner_id          = 102;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
@@ -373,7 +373,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $old_user = \Mockery::mock(\PFUser::class);
@@ -383,8 +383,8 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $old_user->shouldReceive('getUserName')->andReturn('user name');
 
         $representation                    = new PUTMetadataRepresentation();
-        $representation->title             = "title";
-        $representation->description       = "";
+        $representation->title             = 'title';
+        $representation->description       = '';
         $representation->owner_id          = $old_user_id;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_DRAFT;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
@@ -420,7 +420,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $old_user = \Mockery::mock(\PFUser::class);
@@ -430,8 +430,8 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $old_user->shouldReceive('getUserName')->andReturn('user name');
 
         $representation                    = new PUTMetadataRepresentation();
-        $representation->title             = "title";
-        $representation->description       = "";
+        $representation->title             = 'title';
+        $representation->description       = '';
         $representation->owner_id          = $old_user_id;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_NONE;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
@@ -467,7 +467,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $old_user = \Mockery::mock(\PFUser::class);
@@ -477,11 +477,11 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $old_user->shouldReceive('getUserName')->andReturn('user name');
 
         $representation                    = new PUTMetadataRepresentation();
-        $representation->title             = "title";
-        $representation->description       = "";
+        $representation->title             = 'title';
+        $representation->description       = '';
         $representation->owner_id          = $old_user_id;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_NONE;
-        $representation->obsolescence_date = $date->format("Y-m-d");
+        $representation->obsolescence_date = $date->format('Y-m-d');
 
         $current_user = \Mockery::mock(\PFUser::class);
 
@@ -494,8 +494,8 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('update')
             ->with([
                 'id'                => 10,
-                'title'             => "title",
-                'description'       => "",
+                'title'             => 'title',
+                'description'       => '',
                 'user_id'           => $old_user_id,
             ])
             ->once();
@@ -522,7 +522,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $user = \Mockery::mock(\PFUser::class);
@@ -531,8 +531,8 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($user);
 
         $representation                    = new PUTMetadataRepresentation();
-        $representation->title             = "title";
-        $representation->description       = "";
+        $representation->title             = 'title';
+        $representation->description       = '';
         $representation->owner_id          = 102;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
@@ -556,7 +556,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $user = \Mockery::mock(\PFUser::class);
@@ -565,8 +565,8 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($user);
 
         $representation                    = new PUTMetadataRepresentation();
-        $representation->title             = "title";
-        $representation->description       = "";
+        $representation->title             = 'title';
+        $representation->description       = '';
         $representation->owner_id          = 102;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
@@ -593,7 +593,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $user = \Mockery::mock(\PFUser::class);
@@ -602,8 +602,8 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($user);
 
         $representation                    = new PUTMetadataRepresentation();
-        $representation->title             = "title";
-        $representation->description       = "";
+        $representation->title             = 'title';
+        $representation->description       = '';
         $representation->owner_id          = 102;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
@@ -621,7 +621,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFolderUpdateIsRejectedIfAnOtherItemHasTheSameTitle(): void
     {
         $item = \Mockery::mock(\Docman_Item::class);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
 
         $representation                    = new PUTMetadataFolderRepresentation();
@@ -640,7 +640,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFolderStatusUpdateIsDoneForEveryFolderAndItems(): void
     {
         $item = \Mockery::mock(\Docman_Item::class);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
         $item->shouldReceive('getId')->andReturn(100);
         $item->shouldReceive('getStatus')->andReturn(100);
@@ -652,7 +652,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation->description       = '';
         $representation->status            = new PUTRecursiveStatusRepresentation();
         $representation->status->value     = 'draft';
-        $representation->status->recursion = "all_items";
+        $representation->status->recursion = 'all_items';
 
         $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(102);
 
@@ -679,7 +679,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFolderStatusUpdateIsNotDoneForEveryFolderAndItemsIfStatusMetadataIsUnused(): void
     {
         $item = \Mockery::mock(\Docman_Item::class);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
         $item->shouldReceive('getId')->andReturn(100);
         $item->shouldReceive('getStatus')->andReturn(100);
@@ -691,7 +691,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation->description       = '';
         $representation->status            = new PUTRecursiveStatusRepresentation();
         $representation->status->value     = 'none';
-        $representation->status->recursion = "none";
+        $representation->status->recursion = 'none';
 
         $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(102);
 
@@ -718,7 +718,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFolderUpdateIsDoneForOtherFolder(): void
     {
         $item = \Mockery::mock(\Docman_Item::class);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
         $item->shouldReceive('getId')->andReturn(100);
         $item->shouldReceive('getStatus')->andReturn(100);
@@ -730,7 +730,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation->description       = '';
         $representation->status            = new PUTRecursiveStatusRepresentation();
         $representation->status->value     = 'draft';
-        $representation->status->recursion = "folders";
+        $representation->status->recursion = 'folders';
 
         $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(102);
 
@@ -757,7 +757,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFolderUpdateCanBeDoneWithoutRecusrivity(): void
     {
         $item = \Mockery::mock(\Docman_Item::class);
-        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getTitle')->andReturn('my title');
         $item->shouldReceive('getParentId')->andReturn(9);
         $item->shouldReceive('getId')->andReturn(100);
         $item->shouldReceive('getStatus')->andReturn(100);
@@ -795,16 +795,16 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockStatusAndObsolescenceDateMetadataAreUsed(): void
     {
         $this->docman_settings_bo->method('getMetadataUsage')->willReturnMap([
-            ["status", "1"],
-            ["obsolescence_date", "1"],
+            ['status', '1'],
+            ['obsolescence_date', '1'],
         ]);
     }
 
     private function mockStatusAndObsolescenceDateMetadataAreUnused(): void
     {
         $this->docman_settings_bo->method('getMetadataUsage')->willReturnMap([
-            ["status", false],
-            ["obsolescence_date", false],
+            ['status', false],
+            ['obsolescence_date', false],
         ]);
     }
 }

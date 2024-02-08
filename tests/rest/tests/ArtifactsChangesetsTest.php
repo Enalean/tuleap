@@ -91,7 +91,7 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
 
         $changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $changesets);
-        $this->assertEquals("Awesome changes", $changesets[0]['last_comment']['body']);
+        $this->assertEquals('Awesome changes', $changesets[0]['last_comment']['body']);
 
         $fields = $changesets[0]['values'];
         foreach ($fields as $field) {

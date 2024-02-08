@@ -22,7 +22,7 @@ class b201712180948_add_burnup_cache_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Add table to store cache value for burnup table";
+        return 'Add table to store cache value for burnup table';
     }
 
     public function preUp()
@@ -32,13 +32,13 @@ class b201712180948_add_burnup_cache_table extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_agiledashboard_tracker_field_burnup_cache (
+        $sql = 'CREATE TABLE plugin_agiledashboard_tracker_field_burnup_cache (
                 artifact_id  INT(11) NOT NULL,
                 timestamp    INT(11) NOT NULL,
                 total_effort FLOAT(10,4) NULL,
                 team_effort  FLOAT(10,4) NULL,
                 UNIQUE KEY time_at_field (artifact_id, timestamp)
-            ) ENGINE=InnoDB";
+            ) ENGINE=InnoDB';
         $this->db->createTable('agiledashboard_tracker_field_burnup_cache', $sql);
     }
 

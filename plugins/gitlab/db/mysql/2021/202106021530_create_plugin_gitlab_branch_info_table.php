@@ -35,7 +35,7 @@ final class b202106021530_create_plugin_gitlab_branch_info_table extends \Tuleap
 
     public function up(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_branch_info (
                  id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                  integration_id INT(11) NOT NULL,
@@ -43,7 +43,7 @@ final class b202106021530_create_plugin_gitlab_branch_info_table extends \Tuleap
                  branch_name TEXT NOT NULL,
                  UNIQUE(integration_id, branch_name(255))
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_gitlab_repository_integration_branch_info', $sql);
     }

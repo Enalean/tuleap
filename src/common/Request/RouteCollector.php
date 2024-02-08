@@ -714,7 +714,7 @@ class RouteCollector
     {
         return new PermissionDeniedPrivateProjectMailSender(
             new PlaceHolderBuilder(\ProjectManager::instance()),
-            new \CSRFSynchronizerToken("/join-private-project-mail/")
+            new \CSRFSynchronizerToken('/join-private-project-mail/')
         );
     }
 
@@ -722,7 +722,7 @@ class RouteCollector
     {
         return new PermissionDeniedRestrictedMemberMailSender(
             new PlaceHolderBuilder(\ProjectManager::instance()),
-            new \CSRFSynchronizerToken("/join-project-restricted-user-mail/")
+            new \CSRFSynchronizerToken('/join-project-restricted-user-mail/')
         );
     }
 
@@ -1309,11 +1309,11 @@ class RouteCollector
                     $include_core_assets,
                 ),
                 new ConfirmationHashEmailSender(
-                    new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail"),
+                    new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, 'mail'),
                     \Tuleap\ServerHostname::HTTPSUrl(),
                 ),
                 new NewUserByAdminEmailSender(
-                    new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail-admin"),
+                    new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, 'mail-admin'),
                     \Tuleap\ServerHostname::HTTPSUrl(),
                 ),
                 $event_manager,
@@ -1687,7 +1687,7 @@ class RouteCollector
         $r->addRoute(
             ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
             '/uploads/project/file/{id:\d+}',
-            [self::class, "routeProjectUpload"]
+            [self::class, 'routeProjectUpload']
         );
 
         SVNProjectAccessRouteDefinition::defineRoute($r, '/svnroot');

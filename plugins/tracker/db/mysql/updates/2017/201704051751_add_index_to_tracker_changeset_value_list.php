@@ -23,7 +23,7 @@ class b201704051751_add_index_to_tracker_changeset_value_list extends \Tuleap\Fo
 {
     public function description()
     {
-        return "Add index to display attachment information in changesets";
+        return 'Add index to display attachment information in changesets';
     }
 
     public function preUp()
@@ -38,7 +38,7 @@ class b201704051751_add_index_to_tracker_changeset_value_list extends \Tuleap\Fo
 
     private function updateTable()
     {
-        $sql = "ALTER TABLE tracker_changeset_value_list ADD INDEX idx_bind (bindvalue_id, changeset_value_id)";
+        $sql = 'ALTER TABLE tracker_changeset_value_list ADD INDEX idx_bind (bindvalue_id, changeset_value_id)';
 
         $this->addIndex('tracker_changeset_value_list', 'idx_bind', $sql);
     }

@@ -44,7 +44,7 @@ class MailHeaderManager
         if (! $row) {
             return new MailHeader(
                 $repository,
-                ""
+                ''
             );
         }
         return $this->instantiateFromRow($row, $repository);

@@ -360,7 +360,7 @@ XML;
         $package_array_with_id = [
             'package_id' => $package_id,
             'group_id' => 123,
-            'name' => "package",
+            'name' => 'package',
             'status_id' => FRSPackage::STATUS_ACTIVE,
             'rank' => 0,
             'approve_license' => true,
@@ -395,20 +395,20 @@ XML;
         $file_id             = 12569;
         $expected_file_array = [
             'file_id' => null,
-            'filename' => "p1337_r8665/lefichier",
-            'filepath' => "p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
+            'filename' => 'p1337_r8665/lefichier',
+            'filepath' => 'p1337_r8665/lefichier_' . $_SERVER['REQUEST_TIME'],
             'release_id' => $release_id,
             'type_id' => 667,
             'processor_id' => 69,
             'release_time' => strtotime('2015-12-03T16:46:00'),
-            'file_location' => ForgeConfig::get('ftp_frs_dir_prefix') . "/test_project/p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
+            'file_location' => ForgeConfig::get('ftp_frs_dir_prefix') . '/test_project/p1337_r8665/lefichier_' . $_SERVER['REQUEST_TIME'],
             'file_size' => 14,
             'post_date' => strtotime('2015-12-03T16:46:42'),
-            'status' => "A",
-            'computed_md5' => "c58ef9ab0b1fc7f6f90ffb607dee0073",
-            'reference_md5' => "c58ef9ab0b1fc7f6f90ffb607dee0073",
+            'status' => 'A',
+            'computed_md5' => 'c58ef9ab0b1fc7f6f90ffb607dee0073',
+            'reference_md5' => 'c58ef9ab0b1fc7f6f90ffb607dee0073',
             'user_id' => $user_id,
-            'comment' => "one file to rule them all",
+            'comment' => 'one file to rule them all',
         ];
 
         $this->file_dao->expects(self::once())->method('createFromArray')->with($expected_file_array)->willReturn($file_id);
@@ -466,7 +466,7 @@ XML;
         $package_array_with_id = [
             'package_id' => $package_id,
             'group_id' => 123,
-            'name' => "package",
+            'name' => 'package',
             'status_id' => FRSPackage::STATUS_ACTIVE,
             'rank' => 0,
             'approve_license' => true,

@@ -120,13 +120,13 @@ class Docman_MetadataComparator
 
             // Name
             $html .= "<td style=\"padding-left: 2em;\"></td>\n";
-            $html .= "<td>" . Docman_MetadataHtmlList::_getElementName($srcLove) . "</td>\n";
+            $html .= '<td>' . Docman_MetadataHtmlList::_getElementName($srcLove) . "</td>\n";
 
             // Presence in source project
             $html .= '<td align="center"><img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" /></td>';
 
             // Presence in destination project
-            $html .= "<td align=\"center\">";
+            $html .= '<td align="center">';
             switch ($rowStyle) {
                 case 'equals':
                     $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
@@ -135,7 +135,7 @@ class Docman_MetadataComparator
             $html .= "</td>\n";
 
             // Differences
-            $html .= "<td class=\"docman_md_" . $rowStyle . "\">";
+            $html .= '<td class="docman_md_' . $rowStyle . '">';
             switch ($rowStyle) {
                 case 'missing':
                     $html .= dgettext('tuleap-docman', 'Doesn\'t exist');
@@ -143,7 +143,7 @@ class Docman_MetadataComparator
             $html .= "</td>\n";
 
             // Action
-            $html .= "<td>";
+            $html .= '<td>';
             switch ($rowStyle) {
                 case 'missing':
                     $html .= sprintf(dgettext('tuleap-docman', 'Will create value <strong>%1$s</strong>'), $purifier->purify($srcLove->getName()));
@@ -162,7 +162,7 @@ class Docman_MetadataComparator
                 $html .= "<tr>\n";
                 // Name
                 $html .= "<td>&nbsp;</td>\n";
-                $html .= "<td>" . $purifier->purify($love->getName()) . "</td>\n";
+                $html .= '<td>' . $purifier->purify($love->getName()) . "</td>\n";
                 // Presence in source project
                 $html .= "<td></td>\n";
                 // Presence in destination project
@@ -205,11 +205,11 @@ class Docman_MetadataComparator
         $html .= "<table border=\"1\">\n";
 
         $html .= "<tr>\n";
-        $html .= "<th colspan=\"2\">" . dgettext('tuleap-docman', 'Property') . "</th>\n";
-        $html .= "<th>" . $purifier->purify($this->srcGo->getPublicName()) . "</th>\n";
-        $html .= "<th>" . $purifier->purify($this->dstGo->getPublicName()) . "</th>\n";
-        $html .= "<th>" . sprintf(dgettext('tuleap-docman', 'Differences<br />in %1$s vs. %2$s'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName())) . "</th>\n";
-        $html .= "<th>" . sprintf(dgettext('tuleap-docman', 'Import actions<br />in %1$s'), $purifier->purify($this->dstGo->getPublicName())) . "</th>\n";
+        $html .= '<th colspan="2">' . dgettext('tuleap-docman', 'Property') . "</th>\n";
+        $html .= '<th>' . $purifier->purify($this->srcGo->getPublicName()) . "</th>\n";
+        $html .= '<th>' . $purifier->purify($this->dstGo->getPublicName()) . "</th>\n";
+        $html .= '<th>' . sprintf(dgettext('tuleap-docman', 'Differences<br />in %1$s vs. %2$s'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName())) . "</th>\n";
+        $html .= '<th>' . sprintf(dgettext('tuleap-docman', 'Import actions<br />in %1$s'), $purifier->purify($this->dstGo->getPublicName())) . "</th>\n";
         $html .= "</tr>\n";
 
         $purifier = Codendi_HTMLPurifier::instance();
@@ -262,27 +262,27 @@ class Docman_MetadataComparator
             $html .= "<tr>\n";
 
             // Property
-            $html .= "<td colspan=\"2\" style=\"font-weight: bold;\">";
+            $html .= '<td colspan="2" style="font-weight: bold;">';
             $html .= $purified_property_name;
-            $html .= "</td>";
+            $html .= '</td>';
 
             // Presence in source project
-            $html .= "<td align=\"center\">";
+            $html .= '<td align="center">';
             $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
-            $html .= "</td>";
+            $html .= '</td>';
 
             // Presence in destination project
-            $html .= "<td align=\"center\">";
+            $html .= '<td align="center">';
             switch ($dstMdStatus) {
                 case 'equals':
                 case 'equivalent':
                     $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
                     break;
             }
-            $html .= "</td>";
+            $html .= '</td>';
 
             // Differences
-            $html .= "<td class=\"docman_md_" . $dstMdStatus . "\">";
+            $html .= '<td class="docman_md_' . $dstMdStatus . '">';
             switch ($dstMdStatus) {
                 case 'equivalent':
                     $html .= dgettext('tuleap-docman', 'Settings differ');
@@ -294,10 +294,10 @@ class Docman_MetadataComparator
                     $html .= dgettext('tuleap-docman', 'Name conflict');
                     break;
             }
-            $html .= "</td>";
+            $html .= '</td>';
 
             // Action
-            $html .= "<td>";
+            $html .= '<td>';
             switch ($dstMdStatus) {
                 case 'equals':
                     // Nothing to do
@@ -320,7 +320,7 @@ class Docman_MetadataComparator
                     $html .= dgettext('tuleap-docman', 'A property with the same name but a different type exists in destination project. Will be skiped.');
                     break;
             }
-            $html .= "</td>";
+            $html .= '</td>';
 
             $html .= "</tr>\n";
 
@@ -342,26 +342,26 @@ class Docman_MetadataComparator
                 $html .= "<tr>\n";
 
                 // Name
-                $html         .= "<td colspan=\"2\" style=\"font-weight: bold;\">";
+                $html         .= '<td colspan="2" style="font-weight: bold;">';
                 $purified_name = $purifier->purify($md->getName());
                 $html         .= $purified_name;
-                $html         .= "</td>";
+                $html         .= '</td>';
 
                 // Presence in source project
-                $html .= "<td></td>";
+                $html .= '<td></td>';
 
                 // Presence in destination project
-                $html .= "<td align=\"center\">";
+                $html .= '<td align="center">';
                 $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
-                $html .= "</td>";
+                $html .= '</td>';
 
                 // Differences
-                $html .= "<td></td>";
+                $html .= '<td></td>';
 
                 // Action
-                $html .= "<td></td>";
+                $html .= '<td></td>';
 
-                $html .= "</td>";
+                $html .= '</td>';
                 $html .= "</tr>\n";
             }
         }

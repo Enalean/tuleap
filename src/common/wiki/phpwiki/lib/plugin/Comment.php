@@ -20,20 +20,20 @@ class WikiPlugin_Comment extends WikiPlugin
 
     public function getName()
     {
-        return _("Comment");
+        return _('Comment');
     }
 
     public function getDescription()
     {
-        return _("Embed hidden comments in WikiPages.");
+        return _('Embed hidden comments in WikiPages.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.2 $"
+            '$Revision: 1.2 $'
         );
     }
 

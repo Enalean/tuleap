@@ -22,7 +22,7 @@ class b201708231717_add_table_cross_tracker_report extends \Tuleap\ForgeUpgrade\
 {
     public function description()
     {
-        return "Add tables to store cross tracker reports";
+        return 'Add tables to store cross tracker reports';
     }
 
     public function preUp()
@@ -32,22 +32,22 @@ class b201708231717_add_table_cross_tracker_report extends \Tuleap\ForgeUpgrade\
 
     public function up()
     {
-        $sql = "
+        $sql = '
             DROP TABLE IF EXISTS plugin_tracker_cross_tracker_report;
             CREATE TABLE plugin_tracker_cross_tracker_report (
                 id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY
-            ) ENGINE=InnoDB;";
+            ) ENGINE=InnoDB;';
 
         $this->db->createTable('plugin_tracker_cross_tracker_report', $sql);
 
-        $sql = "
+        $sql = '
             DROP TABLE IF EXISTS plugin_tracker_cross_tracker_report_tracker;
             CREATE TABLE plugin_tracker_cross_tracker_report_tracker (
                 report_id INT(11) NOT NULL,
                 tracker_id INT(11) NOT NULL,
                 PRIMARY KEY (report_id, tracker_id),
                 INDEX idx_cross_tracker_report_id(report_id)
-            ) ENGINE=InnoDB;";
+            ) ENGINE=InnoDB;';
 
         $this->db->createTable('plugin_tracker_cross_tracker_report_tracker', $sql);
     }

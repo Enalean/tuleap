@@ -52,7 +52,7 @@ final class PermissionsFromRequestExtractor
     {
         $body = $request->getParsedBody();
         if (! is_array($body)) {
-            throw new InvalidRequestException("Expected body to be an associative array");
+            throw new InvalidRequestException('Expected body to be an associative array');
         }
 
         if (! isset($body[$key])) {

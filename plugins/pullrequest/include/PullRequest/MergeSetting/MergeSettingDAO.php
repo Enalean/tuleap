@@ -42,48 +42,48 @@ class MergeSettingDAO extends DataAccessObject
 
     public function duplicateRepositoryMergeSettings($base_repository_id, $forked_repository_id)
     {
-        $sql = "INSERT INTO plugin_pullrequest_merge_setting (repository_id, merge_commit_allowed)
+        $sql = 'INSERT INTO plugin_pullrequest_merge_setting (repository_id, merge_commit_allowed)
                 SELECT  ?, merge_commit_allowed
                 FROM plugin_pullrequest_merge_setting
-                WHERE repository_id = ?";
+                WHERE repository_id = ?';
 
         return $this->getDB()->single($sql, [$forked_repository_id, $base_repository_id]);
     }
 
     public function inheritFromTemplate($repository_id, $project_id)
     {
-        $sql = "INSERT INTO plugin_pullrequest_merge_setting (repository_id, merge_commit_allowed)
+        $sql = 'INSERT INTO plugin_pullrequest_merge_setting (repository_id, merge_commit_allowed)
                 SELECT  ?, merge_commit_allowed
                 FROM plugin_pullrequest_template_merge_setting
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         $this->getDB()->single($sql, [$repository_id, $project_id]);
     }
 
     public function duplicateFromProjectTemplate($template_project_id, $project_id)
     {
-        $sql = "INSERT INTO plugin_pullrequest_template_merge_setting (project_id, merge_commit_allowed)
+        $sql = 'INSERT INTO plugin_pullrequest_template_merge_setting (project_id, merge_commit_allowed)
                 SELECT  ?, merge_commit_allowed
                 FROM plugin_pullrequest_template_merge_setting
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         $this->getDB()->single($sql, [$project_id, $template_project_id]);
     }
 
     public function save($repository_id, $merge_commit_allowed)
     {
-        $sql = "INSERT INTO plugin_pullrequest_merge_setting (repository_id, merge_commit_allowed)
+        $sql = 'INSERT INTO plugin_pullrequest_merge_setting (repository_id, merge_commit_allowed)
                 VALUES (?, ?)
-                ON DUPLICATE KEY UPDATE merge_commit_allowed = ?";
+                ON DUPLICATE KEY UPDATE merge_commit_allowed = ?';
 
         $this->getDB()->run($sql, $repository_id, $merge_commit_allowed, $merge_commit_allowed);
     }
 
     public function saveDefaultSettings($project_id, $merge_commit_allowed)
     {
-        $sql = "INSERT INTO plugin_pullrequest_template_merge_setting (project_id, merge_commit_allowed)
+        $sql = 'INSERT INTO plugin_pullrequest_template_merge_setting (project_id, merge_commit_allowed)
                 VALUES (?, ?)
-                ON DUPLICATE KEY UPDATE merge_commit_allowed = ?";
+                ON DUPLICATE KEY UPDATE merge_commit_allowed = ?';
 
         $this->getDB()->run($sql, $project_id, $merge_commit_allowed, $merge_commit_allowed);
     }

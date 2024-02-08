@@ -162,7 +162,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
             if (! $source_field) {
                 throw new Tracker_FormElement_InvalidFieldException();
             }
-            return ForgeConfig::get('sys_data_dir') . '/tracker/' . $source_field->getId() . "/" . $fileinfo['previous_fileinfo_id'];
+            return ForgeConfig::get('sys_data_dir') . '/tracker/' . $source_field->getId() . '/' . $fileinfo['previous_fileinfo_id'];
         }
         return $fileinfo['tmp_name'];
     }

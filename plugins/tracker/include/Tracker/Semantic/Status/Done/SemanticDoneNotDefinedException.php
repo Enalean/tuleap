@@ -28,7 +28,7 @@ class SemanticDoneNotDefinedException extends \RuntimeException
     public function __construct()
     {
         parent::__construct(
-            "No done semantic defined for the tracker."
+            'No done semantic defined for the tracker.'
         );
     }
 }

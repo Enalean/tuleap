@@ -107,10 +107,10 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->formelement_factory->shouldReceive('getFormElementListById')->withArgs([789])->andReturns($this->target_field);
         $this->formelement_factory->shouldReceive('getFormElementListById')->withArgs([666])->andReturns(null);
 
-        $this->bind->shouldReceive("formatArtifactValue")->andReturns('Champ1');
-        $this->bind_2->shouldReceive("formatArtifactValue")->andReturns('Champ2');
-        $this->bind_3->shouldReceive("formatArtifactValue")->andReturns('Champ3');
-        $this->bind_4->shouldReceive("formatArtifactValue")->andReturns('Champ4');
+        $this->bind->shouldReceive('formatArtifactValue')->andReturns('Champ1');
+        $this->bind_2->shouldReceive('formatArtifactValue')->andReturns('Champ2');
+        $this->bind_3->shouldReceive('formatArtifactValue')->andReturns('Champ3');
+        $this->bind_4->shouldReceive('formatArtifactValue')->andReturns('Champ4');
 
         $this->source_field->shouldReceive('setHasErrors')->withArgs([true]);
         $this->target_field->shouldReceive('setHasErrors')->withArgs([true]);
@@ -319,8 +319,8 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesReturnErrorIfAFieldIsEmpty(): void
     {
-        $this->bind->shouldReceive("formatArtifactValue")->andReturns('Champ1');
-        $this->bind_2->shouldReceive("formatArtifactValue")->andReturns('');
+        $this->bind->shouldReceive('formatArtifactValue')->andReturns('Champ1');
+        $this->bind_2->shouldReceive('formatArtifactValue')->andReturns('');
 
         $value_field_list  = [
             123 => 456,
@@ -340,8 +340,8 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesValidWithEmptyTargetsValue(): void
     {
-        $this->bind->shouldReceive("formatArtifactValue")->andReturns('Champ1');
-        $this->bind_2->shouldReceive("formatArtifactValue")->andReturns('');
+        $this->bind->shouldReceive('formatArtifactValue')->andReturns('Champ1');
+        $this->bind_2->shouldReceive('formatArtifactValue')->andReturns('');
 
         $value_field_list  = [
             123 => 456,
@@ -361,8 +361,8 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesReturnErrorIfAFieldIsNoneValue(): void
     {
-        $this->bind->shouldReceive("formatArtifactValue")->andReturns('Champ1');
-        $this->bind_2->shouldReceive("formatArtifactValue")->andReturns('');
+        $this->bind->shouldReceive('formatArtifactValue')->andReturns('Champ1');
+        $this->bind_2->shouldReceive('formatArtifactValue')->andReturns('');
 
         $value_field_list = [
             123 => 456,

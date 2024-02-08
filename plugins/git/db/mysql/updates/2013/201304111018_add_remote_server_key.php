@@ -76,7 +76,7 @@ EOT;
         foreach ($this->db->dbh->query($sql)->fetchAll() as $row) {
             $key_path = $key_prefix_path . $row['id'] . '@0.pub';
             if (is_file($key_path)) {
-                $this->log->info("Import key for server " . $row['id'] . "(" . $key_path . ")");
+                $this->log->info('Import key for server ' . $row['id'] . '(' . $key_path . ')');
                 $update_stm->execute([
                     ':ssh_key' => file_get_contents($key_path),
                     ':id' => $row['id'],

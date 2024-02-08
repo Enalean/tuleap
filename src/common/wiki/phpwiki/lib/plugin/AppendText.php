@@ -33,20 +33,20 @@ class WikiPlugin_AppendText extends WikiPlugin
 {
     public function getName()
     {
-        return _("AppendText");
+        return _('AppendText');
     }
 
     public function getDescription()
     {
-        return _("Append text to any page in this wiki.");
+        return _('Append text to any page in this wiki.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.7 $"
+            '$Revision: 1.7 $'
         );
     }
 
@@ -62,8 +62,8 @@ class WikiPlugin_AppendText extends WikiPlugin
 
     public function _fallback($addtext, $oldtext, $notfound, &$message)
     {
-        $message->pushContent(sprintf(_("%s not found"), $notfound) . ". " .
-                              _("Appending at the end.") . "\n");
+        $message->pushContent(sprintf(_('%s not found'), $notfound) . '. ' .
+                              _('Appending at the end.') . "\n");
         return $oldtext . "\n" . $addtext;
     }
 
@@ -74,7 +74,7 @@ class WikiPlugin_AppendText extends WikiPlugin
 
         if (empty($args['s'])) {
             if ($request->isPost()) {
-                if ($pagename != _("AppendText")) {
+                if ($pagename != _('AppendText')) {
                     return HTML($request->redirect(WikiURL($pagename, false, 'absurl'), false));
                 }
             }
@@ -98,22 +98,22 @@ class WikiPlugin_AppendText extends WikiPlugin
 
         // If a "before" or "after" is specified but not found, we simply append text to the end.
         if (! empty($args['before'])) {
-            $before = preg_quote($args['before'], "/");
+            $before = preg_quote($args['before'], '/');
             // Insert before
             $newtext = preg_match("/\n${before}/", $oldtext)
                 ? preg_replace(
                     "/(\n${before})/",
-                    "\n" .  preg_quote($text, "/") . "\\1",
+                    "\n" .  preg_quote($text, '/') . "\\1",
                     $oldtext
                 )
                 : $this->_fallback($text, $oldtext, $args['before'], $message);
         } elseif (! empty($args['after'])) {
             // Insert after
-            $after   = preg_quote($args['after'], "/");
+            $after   = preg_quote($args['after'], '/');
             $newtext = preg_match("/\n${after}/", $oldtext)
                 ? preg_replace(
                     "/(\n${after})/",
-                    "\\1\n" .  preg_quote($text, "/"),
+                    "\\1\n" .  preg_quote($text, '/'),
                     $oldtext
                 )
                 : $this->_fallback($text, $oldtext, $args['after'], $message);
@@ -123,11 +123,11 @@ class WikiPlugin_AppendText extends WikiPlugin
                 "\n" . $text;
         }
 
-        require_once("lib/loadsave.php");
+        require_once('lib/loadsave.php');
         $meta            = $current->_data;
-        $meta['summary'] = sprintf(_("AppendText to %s"), $pagename);
+        $meta['summary'] = sprintf(_('AppendText to %s'), $pagename);
         if ($page->save($newtext, $current->getVersion() + 1, $meta)) {
-            $message->pushContent(_("Page successfully updated."), HTML::br());
+            $message->pushContent(_('Page successfully updated.'), HTML::br());
         }
 
         // AppendText has been called from the same page that got modified
@@ -142,7 +142,7 @@ class WikiPlugin_AppendText extends WikiPlugin
             return $request->redirect(WikiURL($pagename, false, 'absurl'), false);
         } else {
             $link = HTML::em(WikiLink($pagename));
-            $message->pushContent(HTML::Raw(sprintf(_("Go to %s."), $link->asXml())));
+            $message->pushContent(HTML::Raw(sprintf(_('Go to %s.'), $link->asXml())));
         }
 
         return $message;

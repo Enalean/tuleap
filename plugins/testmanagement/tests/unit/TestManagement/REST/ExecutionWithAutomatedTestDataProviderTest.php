@@ -62,7 +62,7 @@ class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\Te
         $execution = Mockery::mock(Artifact::class);
         $execution->shouldReceive('getId')->andReturn(12);
         $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $automated_test->shouldReceive('getText')->andReturn("automated test");
+        $automated_test->shouldReceive('getText')->andReturn('automated test');
 
         $definition = Mockery::mock(Artifact::class);
         $definition->shouldReceive('getTrackerId')->andReturn(112);
@@ -75,7 +75,7 @@ class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\Te
         $this->execution_dao->shouldReceive('searchDefinitionChangesetIdForExecution')->andReturn(12);
         $this->form_element_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($field);
 
-        $expected_result = new ExecutionWithAutomatedTestData($execution, "automated test");
+        $expected_result = new ExecutionWithAutomatedTestData($execution, 'automated test');
 
         $result = $this->execution_with_automated_test_data_provider->getExecutionWithAutomatedTestData(
             $execution,
@@ -91,7 +91,7 @@ class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\Te
         $execution = Mockery::mock(Artifact::class);
         $execution->shouldReceive('getId')->andReturn(12);
         $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $automated_test->shouldReceive('getText')->andReturn("automated test");
+        $automated_test->shouldReceive('getText')->andReturn('automated test');
 
         $definition = Mockery::mock(Artifact::class);
         $definition->shouldReceive('getTrackerId')->andReturn(112);
@@ -118,7 +118,7 @@ class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\Te
         $execution = Mockery::mock(Artifact::class);
         $execution->shouldReceive('getId')->andReturn(12);
         $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $automated_test->shouldReceive('getText')->andReturn("automated test");
+        $automated_test->shouldReceive('getText')->andReturn('automated test');
 
         $definition = Mockery::mock(Artifact::class);
         $definition->shouldReceive('getTrackerId')->andReturn(112);
@@ -144,7 +144,7 @@ class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\Te
         $execution = Mockery::mock(Artifact::class);
         $execution->shouldReceive('getId')->andReturn(12);
         $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $automated_test->shouldReceive('getText')->andReturn("automated test");
+        $automated_test->shouldReceive('getText')->andReturn('automated test');
 
         $definition = Mockery::mock(Artifact::class);
         $definition->shouldReceive('getTrackerId')->andReturn(112);

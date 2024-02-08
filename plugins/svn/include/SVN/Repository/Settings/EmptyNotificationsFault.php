@@ -35,7 +35,7 @@ final class EmptyNotificationsFault extends Fault
     public static function build(array $empty_notifications): Fault
     {
         return new self(
-            "Notification should concern at least one email or one user or one user group for path: " .
+            'Notification should concern at least one email or one user or one user group for path: ' .
             implode(',', $empty_notifications)
         );
     }

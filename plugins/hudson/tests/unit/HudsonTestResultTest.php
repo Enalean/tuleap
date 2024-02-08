@@ -35,21 +35,21 @@ final class HudsonTestResultTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonTestResult("toto", new Client(), HTTPFactoryBuilder::requestFactory());
+        new HudsonTestResult('toto', new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
     public function testMissingSchemeURL(): void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonTestResult("code4:8080/hudson/jobs/tuleap", new Client(), HTTPFactoryBuilder::requestFactory());
+        new HudsonTestResult('code4:8080/hudson/jobs/tuleap', new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
     public function testMissingHostURL(): void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonTestResult("http://", new Client(), HTTPFactoryBuilder::requestFactory());
+        new HudsonTestResult('http://', new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
     public function testSimpleJobTestResult(): void
@@ -58,7 +58,7 @@ final class HudsonTestResultTest extends \Tuleap\Test\PHPUnit\TestCase
         $xmldom           = simplexml_load_string(file_get_contents($test_result_file), \SimpleXMLElement::class, LIBXML_NONET);
 
         $test_result = new HudsonTestResult(
-            "http://myCIserver/jobs/myCIjob/lastBuild/testReport/",
+            'http://myCIserver/jobs/myCIjob/lastBuild/testReport/',
             new Client(),
             HTTPFactoryBuilder::requestFactory(),
             $xmldom,

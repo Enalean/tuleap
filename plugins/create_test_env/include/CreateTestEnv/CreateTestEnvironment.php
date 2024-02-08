@@ -126,7 +126,7 @@ class CreateTestEnvironment
             throw new Exception\UnableToCreateTemporaryDirectoryException(sprintf('Directory "%s" was not created', $this->output_dir));
         }
         if ($xml->saveXML($this->output_dir . DIRECTORY_SEPARATOR . $filename) !== true) {
-            throw new Exception\UnableToWriteFileException("Unable to write file " . $this->output_dir . DIRECTORY_SEPARATOR . $filename);
+            throw new Exception\UnableToWriteFileException('Unable to write file ' . $this->output_dir . DIRECTORY_SEPARATOR . $filename);
         }
     }
 

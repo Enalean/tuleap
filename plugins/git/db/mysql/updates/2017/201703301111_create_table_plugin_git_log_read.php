@@ -23,7 +23,7 @@ class b201703301111_create_table_plugin_git_log_read extends \Tuleap\ForgeUpgrad
 {
     public function description()
     {
-        return "Create table plugin_git_log_read_daily";
+        return 'Create table plugin_git_log_read_daily';
     }
 
     public function preUp()
@@ -33,14 +33,14 @@ class b201703301111_create_table_plugin_git_log_read extends \Tuleap\ForgeUpgrad
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_git_log_read_daily (
+        $sql = 'CREATE TABLE plugin_git_log_read_daily (
                   repository_id int(10) unsigned NOT NULL,
                   user_id int(11) NOT NULL,
                   day int(11) UNSIGNED NOT NULL,
                   git_read int(11) UNSIGNED NOT NULL default 0,
                   PRIMARY KEY (repository_id, user_id, day),
                   INDEX time_idx(day, repository_id)
-                );";
+                );';
 
         $this->execDB($sql, 'An error occured while creating table plugin_git_log_read_daily');
     }

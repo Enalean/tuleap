@@ -113,7 +113,7 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
 
     private function buildController(ConfigUpdater $config_updater, bool $is_local_server): MeilisearchSaveAdminSettingsController
     {
-        $key = $is_local_server ? new ConcealedString("a") : null;
+        $key = $is_local_server ? new ConcealedString('a') : null;
 
         $csrf_token = $this->createStub(\CSRFSynchronizerToken::class);
         $csrf_token->method('check');

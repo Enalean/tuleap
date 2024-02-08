@@ -16,12 +16,12 @@ class WikiPlugin_GoTo extends WikiPlugin
 {
     public function getName()
     {
-        return _("GoTo");
+        return _('GoTo');
     }
 
     public function getDescription()
     {
-        return _("Go to or create page.");
+        return _('Go to or create page.');
     }
 
     public function getDefaultArguments()
@@ -62,7 +62,7 @@ class WikiPlugin_GoTo extends WikiPlugin
             'name' => 'goto[target]',
         ]);
 
-        $button = Button('submit:goto[go]', _("Go"), false);
+        $button = Button('submit:goto[go]', _('Go'), false);
 
         $form->pushContent($textfield, $button);
 

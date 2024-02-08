@@ -52,7 +52,7 @@ final class StatusIsAlignedVerifier implements VerifyStatusIsAligned
     ): bool {
         $full_tracker = $this->tracker_factory->getTrackerById($tracker->getId());
         if (! $full_tracker) {
-            throw new \RuntimeException("Tracker with id #" . $tracker->getId() . " is not found.");
+            throw new \RuntimeException('Tracker with id #' . $tracker->getId() . ' is not found.');
         }
         $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker($full_tracker);
 
@@ -75,7 +75,7 @@ final class StatusIsAlignedVerifier implements VerifyStatusIsAligned
         foreach ($source_tracker_collection->getSourceTrackers() as $source_tracker) {
             $source_full_tracker = $this->tracker_factory->getTrackerById($source_tracker->getId());
             if (! $source_full_tracker) {
-                throw new \RuntimeException("Tracker with id #" . $source_tracker->getId() . " is not found.");
+                throw new \RuntimeException('Tracker with id #' . $source_tracker->getId() . ' is not found.');
             }
             $status_semantic = $this->semantic_status_factory->getByTracker($source_full_tracker);
             $array_diff      = array_diff($program_open_values_labels, $status_semantic->getOpenLabels());

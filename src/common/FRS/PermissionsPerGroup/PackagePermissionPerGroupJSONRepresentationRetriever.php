@@ -46,7 +46,7 @@ class PackagePermissionPerGroupJSONRepresentationRetriever
             $GLOBALS['Response']->send400JSONErrors(
                 [
                     'error' => _(
-                        "Files service is disabled for this project."
+                        'Files service is disabled for this project.'
                     ),
                 ]
             );

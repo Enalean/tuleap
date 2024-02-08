@@ -39,7 +39,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
 {
     public function getName()
     {
-        return _("LinkDatabase");
+        return _('LinkDatabase');
     }
 
     public function getPluginType()
@@ -49,15 +49,15 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
 
     public function getDescription()
     {
-        return _("List all pages with all links in various formats for some Java Visualization tools");
+        return _('List all pages with all links in various formats for some Java Visualization tools');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.7 $"
+            '$Revision: 1.7 $'
         );
     }
 
@@ -89,7 +89,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
     {
         global $WikiTheme;
         $args    = $this->getArgs($argstr, $request);
-        $caption = _("All pages with all links in this wiki (%d total):");
+        $caption = _('All pages with all links in this wiki (%d total):');
 
         if (! empty($args['owner'])) {
             $pages = PageList::allPagesByOwner(
@@ -100,7 +100,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             );
             if ($args['owner']) {
                 $caption = fmt(
-                    "List of pages owned by [%s] (%d total):",
+                    'List of pages owned by [%s] (%d total):',
                     WikiLink($args['owner'], 'if_known'),
                     count($pages)
                 );
@@ -114,7 +114,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             );
             if ($args['author']) {
                 $caption = fmt(
-                    "List of pages last edited by [%s] (%d total):",
+                    'List of pages last edited by [%s] (%d total):',
                     WikiLink($args['author'], 'if_known'),
                     count($pages)
                 );
@@ -128,7 +128,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             );
             if ($args['creator']) {
                 $caption = fmt(
-                    "List of pages created by [%s] (%d total):",
+                    'List of pages created by [%s] (%d total):',
                     WikiLink($args['creator'], 'if_known'),
                     count($pages)
                 );
@@ -148,7 +148,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
         }
         if ($args['format'] == 'html') {
             $args['types']['links'] =
-                new _PageList_Column_LinkDatabase_links('links', _("Links"), 'left');
+                new _PageList_Column_LinkDatabase_links('links', _('Links'), 'left');
             $pagelist               = new PageList($args['info'], $args['exclude_from'], $args);
             if (! $args['noheader']) {
                 $pagelist->setCaption($caption);
@@ -158,7 +158,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             $request->discardOutput();
             $request->buffer_output(false);
             if (! headers_sent()) {
-                header("Content-Type: text/plain");
+                header('Content-Type: text/plain');
             }
             $request->checkValidators();
             while ($page = $pages->next()) {
@@ -170,7 +170,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
                     $args['exclude']
                 );
                 while ($link = $links->next()) {
-                    echo " ", $link->getName();
+                    echo ' ', $link->getName();
                 }
                 echo "\n";
             }
@@ -185,25 +185,25 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             $request->discardOutput();
             $request->buffer_output(false);
             if (! headers_sent()) {
-                header("Content-Type: text/xml");
+                header('Content-Type: text/xml');
             }
             $request->checkValidators();
             echo "<?xml version=\"1.0\" encoding=\"$charset\"?>";
             // As applet it prefers only "GraphXML.dtd", but then we must copy it to the webroot.
-            $dtd = $WikiTheme->_findData("GraphXML.dtd");
+            $dtd = $WikiTheme->_findData('GraphXML.dtd');
             echo "<!DOCTYPE GraphXML SYSTEM \"$dtd\">\n";
             echo "<GraphXML xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n";
-            echo "<graph id=\"",MangleXmlIdentifier(WIKI_NAME),"\">\n";
+            echo '<graph id="',MangleXmlIdentifier(WIKI_NAME),"\">\n";
             echo '<style><line tag="node" class="main" colour="#ffffff"/><line tag="node" class="child" colour="blue"/><line tag="node" class="relation" colour="green"/></style>',"\n\n";
             while ($page = $pages->next()) {
                 $pageid   = MangleXmlIdentifier($page->getName());
                 $pagename = $page->getName();
                 echo "<node name=\"$pageid\"";
                 if ($pagename == $currpage) {
-                    echo " class=\"main\"";
+                    echo ' class="main"';
                 }
                 echo "><label>$pagename</label>";
-                echo "<dataref><ref xlink:href=\"",WikiURL($pagename, '', true),"\"/></dataref></node>\n";
+                echo '<dataref><ref xlink:href="',WikiURL($pagename, '', true),"\"/></dataref></node>\n";
                 $links = $page->getPageLinks(false, $args['sortby'], $args['limit'], $args['exclude']);
                 while ($link = $links->next()) {
                     $edge = MangleXmlIdentifier($link->getName());
@@ -218,7 +218,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
                 $request->finish();
             }
         } else {
-            return $this->error(fmt("Unsupported format argument %s", $args['format']));
+            return $this->error(fmt('Unsupported format argument %s', $args['format']));
         }
     }
 }
@@ -230,7 +230,7 @@ class _PageList_Column_LinkDatabase_links extends _PageList_Column
         $out   = HTML();
         $links = $page->getPageLinks();
         while ($link = $links->next()) {
-            $out->pushContent(" ", WikiLink($link));
+            $out->pushContent(' ', WikiLink($link));
         }
         return $out;
     }

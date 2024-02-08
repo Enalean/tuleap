@@ -202,7 +202,7 @@ class ProjectTest extends ProjectBase
 
             $this->assertFalse($project['is_member_of']);
 
-            $project_members_uri = "user_groups/$this->project_private_id" . "_3/users";
+            $project_members_uri = "user_groups/$this->project_private_id" . '_3/users';
             $project_members     = json_decode(
                 $this->getResponse(
                     $this->request_factory->createRequest('GET', $project_members_uri)

@@ -104,7 +104,7 @@ class XMLRepositoryImporter
             $this->dump_file_path = $extraction_path . '/' . $attrs['dump-file'];
         }
 
-        $this->access_file_contents = (string) $xml_repo->{"access-file"};
+        $this->access_file_contents = (string) $xml_repo->{'access-file'};
 
         $this->subscriptions = [];
         foreach ($xml_repo->notification as $notif) {
@@ -146,13 +146,13 @@ class XMLRepositoryImporter
                 $committer,
             );
         } catch (CannotCreateRepositoryException $e) {
-            throw new XMLImporterException("Unable to create the repository");
+            throw new XMLImporterException('Unable to create the repository');
         } catch (RepositoryNameIsInvalidException $e) {
             throw new XMLImporterException($e->getMessage());
         }
 
         if (! $sysevent) {
-            throw new XMLImporterException("Could not create system event");
+            throw new XMLImporterException('Could not create system event');
         }
 
         $logger->info("[svn] Creating SVN repository {$this->name}");
@@ -165,7 +165,7 @@ class XMLRepositoryImporter
         $sysevent->process();
         if ($sysevent->getStatus() != \SystemEvent::STATUS_DONE) {
             $logger->error($sysevent->getLog());
-            throw new XMLImporterException("Event processing failed: status " . $sysevent->getStatus());
+            throw new XMLImporterException('Event processing failed: status ' . $sysevent->getStatus());
         } else {
             $logger->debug($sysevent->getLog());
         }

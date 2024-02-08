@@ -31,6 +31,6 @@ final class PullRequestNotFoundFault extends Fault
 {
     public static function withId(int $pull_request_id): Fault
     {
-        return new self(sprintf(dgettext('tuleap-pullrequest', "The pull request #%d does not exist"), $pull_request_id));
+        return new self(sprintf(dgettext('tuleap-pullrequest', 'The pull request #%d does not exist'), $pull_request_id));
     }
 }

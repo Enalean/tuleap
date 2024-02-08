@@ -54,23 +54,23 @@ class CrossTrackerTest extends RestBase
     private function assertGetIdReport(\Psr\Http\Message\ResponseInterface $response): void
     {
         $expected_cross_tracker = [
-            "id"               => 1,
-            "uri"              => "cross_tracker_reports/1",
-            "expert_query"     => "",
-            "trackers"         => [
+            'id'               => 1,
+            'uri'              => 'cross_tracker_reports/1',
+            'expert_query'     => '',
+            'trackers'         => [
                 [
-                    "id"      => $this->kanban_tracker_id,
-                    "uri"     => "trackers/" . $this->kanban_tracker_id,
-                    "label"   => REST_TestDataBuilder::KANBAN_TRACKER_LABEL,
-                    "project" => [
-                        "id"    => $this->project_private_member_id,
+                    'id'      => $this->kanban_tracker_id,
+                    'uri'     => 'trackers/' . $this->kanban_tracker_id,
+                    'label'   => REST_TestDataBuilder::KANBAN_TRACKER_LABEL,
+                    'project' => [
+                        'id'    => $this->project_private_member_id,
                         'uri'   => 'projects/' . $this->project_private_member_id,
                         'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
                         'icon' => '',
                     ],
                 ],
             ],
-            "invalid_trackers" => [],
+            'invalid_trackers' => [],
         ];
 
         $this->assertEquals(
@@ -82,31 +82,31 @@ class CrossTrackerTest extends RestBase
     public function testPut()
     {
         $params   = [
-            "trackers_id"  => [$this->epic_tracker_id],
-            "expert_query" => "",
+            'trackers_id'  => [$this->epic_tracker_id],
+            'expert_query' => '',
         ];
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 
         $this->assertEquals($response->getStatusCode(), 201);
 
         $expected_cross_tracker = [
-            "id"           => 1,
-            "uri"          => "cross_tracker_reports/1",
-            "expert_query" => "",
-            "trackers"     => [
+            'id'           => 1,
+            'uri'          => 'cross_tracker_reports/1',
+            'expert_query' => '',
+            'trackers'     => [
                 [
-                    "id"    => $this->epic_tracker_id,
-                    "uri"   => "trackers/" . $this->epic_tracker_id,
-                    "label" => REST_TestDataBuilder::EPICS_TRACKER_LABEL,
-                    "project" => [
-                        "id"    => $this->project_private_member_id,
+                    'id'    => $this->epic_tracker_id,
+                    'uri'   => 'trackers/' . $this->epic_tracker_id,
+                    'label' => REST_TestDataBuilder::EPICS_TRACKER_LABEL,
+                    'project' => [
+                        'id'    => $this->project_private_member_id,
                         'uri'   => 'projects/' . $this->project_private_member_id,
                         'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
                         'icon' => '',
                     ],
                 ],
             ],
-            "invalid_trackers" => [],
+            'invalid_trackers' => [],
         ];
 
         $this->assertEquals(
@@ -118,8 +118,8 @@ class CrossTrackerTest extends RestBase
     public function testPutForReadOnlyUser(): void
     {
         $params   = [
-            "trackers_id"  => [$this->epic_tracker_id],
-            "expert_query" => "",
+            'trackers_id'  => [$this->epic_tracker_id],
+            'expert_query' => '',
         ];
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))),
@@ -154,8 +154,8 @@ class CrossTrackerTest extends RestBase
     {
         $query    = json_encode(
             [
-                "trackers_id"  => [1],
-                "expert_query" => "",
+                'trackers_id'  => [1],
+                'expert_query' => '',
             ]
         );
         $response = $this->getResponse(

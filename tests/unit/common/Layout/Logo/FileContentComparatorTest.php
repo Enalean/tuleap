@@ -30,16 +30,16 @@ class FileContentComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertTrue($comparator->doesFilesHaveTheSameContent(
             [
-                hash_file('sha256', __DIR__ . "/../../../../../src/www/themes/common/images/organization_logo.png"),
-                hash_file('sha256', __DIR__ . "/../../../../../src/www/themes/BurningParrot/images/organization_logo_small.png"),
+                hash_file('sha256', __DIR__ . '/../../../../../src/www/themes/common/images/organization_logo.png'),
+                hash_file('sha256', __DIR__ . '/../../../../../src/www/themes/BurningParrot/images/organization_logo_small.png'),
             ],
-            __DIR__ . "/../../../../../src/www/themes/common/images/organization_logo.png",
+            __DIR__ . '/../../../../../src/www/themes/common/images/organization_logo.png',
         ));
         self::assertFalse($comparator->doesFilesHaveTheSameContent(
             [
-                hash_file('sha256', __DIR__ . "/../../../../../src/www/themes/common/images/organization_logo.png"),
+                hash_file('sha256', __DIR__ . '/../../../../../src/www/themes/common/images/organization_logo.png'),
             ],
-            __DIR__ . "/../../../../../src/www/themes/BurningParrot/images/organization_logo_small.png",
+            __DIR__ . '/../../../../../src/www/themes/BurningParrot/images/organization_logo_small.png',
         ));
     }
 
@@ -49,6 +49,6 @@ class FileContentComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(\RuntimeException::class);
 
-        $comparator->doesFilesHaveTheSameContent([], "does not exists");
+        $comparator->doesFilesHaveTheSameContent([], 'does not exists');
     }
 }

@@ -63,6 +63,10 @@
         </properties>
     </rule>
 
+    <!-- Strings -->
+    <!-- Forbid strings in `"` unless necessary -->
+    <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
+
     <!-- Force alignment of corresponding assignment statement tokens -->
     <rule ref="Generic.Formatting.MultipleStatementAlignment">
           <properties>

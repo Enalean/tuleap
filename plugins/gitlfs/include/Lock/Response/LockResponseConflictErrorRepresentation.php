@@ -35,8 +35,8 @@ class LockResponseConflictErrorRepresentation implements LockResponse
     public function jsonSerialize(): array
     {
         return [
-            "lock"    => $this->lock_representation,
-            "message" => "already created lock",
+            'lock'    => $this->lock_representation,
+            'message' => 'already created lock',
         ];
     }
 }

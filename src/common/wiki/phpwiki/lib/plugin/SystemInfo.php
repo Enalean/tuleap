@@ -41,7 +41,7 @@ rcs_id('$Id: SystemInfo.php,v 1.23 2005/10/03 16:48:09 rurban Exp $');
  *       the result. In the page or with WikiPluginCached?
  */
 
-require_once "lib/WikiPluginCached.php";
+require_once 'lib/WikiPluginCached.php';
 class WikiPlugin_SystemInfo extends WikiPluginCached
 {
     public function getPluginType()
@@ -51,7 +51,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
 
     public function getName()
     {
-        return _("SystemInfo");
+        return _('SystemInfo');
     }
 
     public function getDescription()
@@ -62,9 +62,9 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.23 $"
+            '$Revision: 1.23 $'
         );
     }
     /* From lib/WikiPlugin.php:
@@ -101,13 +101,13 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     {
         global $request;
         if (! defined('USECACHE') or ! USECACHE) {
-            return _("no cache used");
+            return _('no cache used');
         }
         $dbi   = $this->_dbi;
         $cache = $dbi->_cache;
-        $s     = _("cached pagedata:") . " " . count($cache->_pagedata_cache);
-        $s    .= ", " . _("cached versiondata:");
-        $s    .= " " . count($cache->_versiondata_cache);
+        $s     = _('cached pagedata:') . ' ' . count($cache->_pagedata_cache);
+        $s    .= ', ' . _('cached versiondata:');
+        $s    .= ' ' . count($cache->_versiondata_cache);
         //$s .= ", glv size: " . count($cache->_glv_cache);
         //$s .= ", cache hits: ?";
         //$s .= ", cache misses: ?";
@@ -118,22 +118,22 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     {
         global $ExpireParams;
         $s  = sprintf(
-            _("Keep up to %d major edits, but keep them no longer than %d days."),
+            _('Keep up to %d major edits, but keep them no longer than %d days.'),
             $ExpireParams['major']['keep'],
             $ExpireParams['major']['max_age']
         );
         $s .= sprintf(
-            _(" Keep up to %d minor edits, but keep them no longer than %d days."),
+            _(' Keep up to %d minor edits, but keep them no longer than %d days.'),
             $ExpireParams['minor']['keep'],
             $ExpireParams['minor']['max_age']
         );
         $s .= sprintf(
-            _(" Keep the latest contributions of the last %d authors up to %d days."),
+            _(' Keep the latest contributions of the last %d authors up to %d days.'),
             $ExpireParams['author']['keep'],
             $ExpireParams['author']['max_age']
         );
         $s .= sprintf(
-            _(" Additionally, try to keep the latest contributions of all authors in the last %d days (even if there are more than %d of them,) but in no case keep more than %d unique author revisions."),
+            _(' Additionally, try to keep the latest contributions of all authors in the last %d days (even if there are more than %d of them,) but in no case keep more than %d unique author revisions.'),
             $ExpireParams['author']['min_age'],
             $ExpireParams['author']['keep'],
             $ExpireParams['author']['max_keep']
@@ -145,8 +145,8 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     {
         global $request;
         $dbi = $request->getDbh();
-        $s   = sprintf(_("%d pages"), $dbi->numPages(true));
-        $s  .= ", " . sprintf(_("%d not-empty pages"), $dbi->numPages(false));
+        $s   = sprintf(_('%d pages'), $dbi->numPages(true));
+        $s  .= ', ' . sprintf(_('%d not-empty pages'), $dbi->numPages(false));
         // more bla....
         // $s  .= ", " . sprintf(_("earliest page from %s"), $earliestdate);
         // $s  .= ", " . sprintf(_("latest page from %s"), $latestdate);
@@ -158,7 +158,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     //  Any useful numbers similar to a VisualWiki interestmap?
     public function linkstats()
     {
-        $s = _("not yet");
+        $s = _('not yet');
         return $s;
     }
     // number of homepages: easy
@@ -176,7 +176,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
                 $h++;
             }
         }
-        $s = sprintf(_("%d homepages"), $h);
+        $s = sprintf(_('%d homepages'), $h);
         // $s  .= ", " . sprintf(_("%d anonymous users"), $au); // ??
         // $s  .= ", " . sprintf(_("%d anonymous edits"), $ae); // see recentchanges
         // $s  .= ", " . sprintf(_("%d authenticated users"), $auth); // users with password set
@@ -253,19 +253,19 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         $treshold = 10.0;
         $stats    = $this->_stats($hits, $treshold);
 
-        $s  = sprintf(_("total hits: %d"), $stats['sum']);
-        $s .= ", " . sprintf(_("max: %d"), $stats['max']);
-        $s .= ", " . sprintf(_("mean: %2.3f"), $stats['mean']);
-        $s .= ", " . sprintf(_("median: %d"), $stats['median']);
-        $s .= ", " . sprintf(_("stddev: %2.3f"), $stats['stddev']);
-        $s .= "; " . sprintf(
-            _("%d pages with less than %d hits (<%d%%)."),
+        $s  = sprintf(_('total hits: %d'), $stats['sum']);
+        $s .= ', ' . sprintf(_('max: %d'), $stats['max']);
+        $s .= ', ' . sprintf(_('mean: %2.3f'), $stats['mean']);
+        $s .= ', ' . sprintf(_('median: %d'), $stats['median']);
+        $s .= ', ' . sprintf(_('stddev: %2.3f'), $stats['stddev']);
+        $s .= '; ' . sprintf(
+            _('%d pages with less than %d hits (<%d%%).'),
             $stats['nmin'],
             $stats['mintreshold'],
             $treshold
         );
-        $s .= " " . sprintf(
-            _("%d page(s) with more than %d hits (>%d%%)."),
+        $s .= ' ' . sprintf(
+            _('%d page(s) with more than %d hits (>%d%%).'),
             $stats['nmax'],
             $stats['maxtreshold'],
             100 - $treshold
@@ -294,7 +294,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         $list    = $fileset->getFiles();
         natcasesort($list);
         reset($list);
-        return sprintf(_("Total %d plugins: "), count($list))
+        return sprintf(_('Total %d plugins: '), count($list))
             . implode(', ', array_map(function ($f) {
                 return substr($f, 0, -4);
             },
@@ -307,13 +307,13 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         natcasesort($available_languages);
 
         return sprintf(
-            _("Total of %d languages: "),
+            _('Total of %d languages: '),
             count($available_languages)
         )
-            . implode(', ', $available_languages) . ". "
+            . implode(', ', $available_languages) . '. '
             . sprintf(_("Current language: '%s'"), $GLOBALS['LANG'])
             . ((DEFAULT_LANGUAGE != $GLOBALS['LANG'])
-               ? ". " . sprintf(_("Default language: '%s'"), DEFAULT_LANGUAGE)
+               ? '. ' . sprintf(_("Default language: '%s'"), DEFAULT_LANGUAGE)
                : '');
     }
 
@@ -322,11 +322,11 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         global $WikiTheme;
         $available_themes = listAvailableThemes();
         natcasesort($available_themes);
-        return sprintf(_("Total of %d themes: "), count($available_themes))
-            . implode(', ', $available_themes) . ". "
+        return sprintf(_('Total of %d themes: '), count($available_themes))
+            . implode(', ', $available_themes) . '. '
             . sprintf(_("Current theme: '%s'"), $WikiTheme->_name)
             . ((THEME != $WikiTheme->_name)
-               ? ". " . sprintf(_("Default theme: '%s'"), THEME)
+               ? '. ' . sprintf(_("Default theme: '%s'"), THEME)
                : '');
     }
 
@@ -384,25 +384,25 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
              ];
         // split the argument string by any number of commas or space
         // characters, which include " ", \r, \t, \n and \f
-        $allargs = preg_split("/[\s,]+/", $argstr, -1, PREG_SPLIT_NO_EMPTY);
+        $allargs = preg_split('/[\s,]+/', $argstr, -1, PREG_SPLIT_NO_EMPTY);
         if (in_array('all', $allargs) || in_array('table', $allargs)) {
-            $allargs = ['appname'          => _("Application name"),
-                'version'          => _("PhpWiki engine version"),
-                'cachestats'       => _("Cache statistics"),
-                'pagestats'        => _("Page statistics"),
+            $allargs = ['appname'          => _('Application name'),
+                'version'          => _('PhpWiki engine version'),
+                'cachestats'       => _('Cache statistics'),
+                'pagestats'        => _('Page statistics'),
                              //'linkstats'        => _("Link statistics"),
-                'userstats'        => _("User statistics"),
+                'userstats'        => _('User statistics'),
                              //'accessstats'      => _("Access statistics"),
-                'hitstats'         => _("Hit statistics"),
-                'expireparams'     => _("Expiry parameters"),
-                'wikinameregexp'   => _("Wikiname regexp"),
-                'allowedprotocols' => _("Allowed protocols"),
-                'inlineimages'     => _("Inline images"),
-                'available_plugins'   => _("Available plugins"),
-                'supported_languages' => _("Supported languages"),
-                'supported_themes'    => _("Supported themes"),
+                'hitstats'         => _('Hit statistics'),
+                'expireparams'     => _('Expiry parameters'),
+                'wikinameregexp'   => _('Wikiname regexp'),
+                'allowedprotocols' => _('Allowed protocols'),
+                'inlineimages'     => _('Inline images'),
+                'available_plugins'   => _('Available plugins'),
+                'supported_languages' => _('Supported languages'),
+                'supported_themes'    => _('Supported themes'),
 //                           '' => _(""),
-                '' => "",
+                '' => '',
             ];
             $table   = HTML::table(['border' => 1,'cellspacing' => 3,
                 'cellpadding' => 3,
@@ -469,7 +469,7 @@ function mean(&$hits, $total = false)
     }
     return (float) $total / ($n * 1.0);
 }
-function gensym($prefix = "_gensym")
+function gensym($prefix = '_gensym')
 {
     $i = 0;
     while (isset($GLOBALS[$prefix . $i])) {

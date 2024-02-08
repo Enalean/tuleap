@@ -42,18 +42,18 @@ class JiraConnectionException extends \Exception
     public static function credentialsKeyIsMissing(): self
     {
         return new self(
-            "credentials key is mandatory",
-            "credentials key is mandatory"
+            'credentials key is mandatory',
+            'credentials key is mandatory'
         );
     }
 
     public static function credentialsValuesAreMissing(): self
     {
         return new self(
-            "server, email or token empty",
+            'server, email or token empty',
             dgettext(
                 'tuleap-tracker',
-                "You must provide a valid Jira server, user email and token"
+                'You must provide a valid Jira server, user email and token'
             )
         );
     }
@@ -61,10 +61,10 @@ class JiraConnectionException extends \Exception
     public static function credentialsValuesAreInvalid(): self
     {
         return new self(
-            "server, email or token is invalid",
+            'server, email or token is invalid',
             dgettext(
                 'tuleap-tracker',
-                "Can not connect to Jira server, please check your Jira credentials."
+                'Can not connect to Jira server, please check your Jira credentials.'
             )
         );
     }
@@ -76,11 +76,11 @@ class JiraConnectionException extends \Exception
         try {
             $text_body = (string) $response->getBody();
             if ($debug_file) {
-                file_put_contents($debug_file, "Headers: " . PHP_EOL, FILE_APPEND);
+                file_put_contents($debug_file, 'Headers: ' . PHP_EOL, FILE_APPEND);
                 foreach ($response->getHeaders() as $header_name => $header_values) {
                     file_put_contents($debug_file, "$header_name: " . implode(', ', $header_values) . PHP_EOL, FILE_APPEND);
                 }
-                file_put_contents($debug_file, PHP_EOL . "Body content: " . PHP_EOL, FILE_APPEND);
+                file_put_contents($debug_file, PHP_EOL . 'Body content: ' . PHP_EOL, FILE_APPEND);
                 file_put_contents($debug_file, $text_body, FILE_APPEND);
             }
             $body = \json_decode($text_body, true, 512, JSON_THROW_ON_ERROR);
@@ -122,11 +122,11 @@ class JiraConnectionException extends \Exception
     public static function connectionToServerFailed(int $error_code, string $message, RequestInterface $request): self
     {
         return new self(
-            "Error can't connect to server :" .  $error_code . " " . $message . "" . $request->getUri(),
+            "Error can't connect to server :" .  $error_code . ' ' . $message . '' . $request->getUri(),
             sprintf(
                 dgettext(
                     'tuleap-tracker',
-                    "Can not connect to Jira server, please check your Jira credentials."
+                    'Can not connect to Jira server, please check your Jira credentials.'
                 ),
                 $error_code,
                 $message
@@ -137,10 +137,10 @@ class JiraConnectionException extends \Exception
     public static function canNotRetrieveFullCollectionException(): self
     {
         return new self(
-            "can not retrieve full collection",
+            'can not retrieve full collection',
             dgettext(
                 'tuleap-tracker',
-                "Fail to retrieve the full collection of projects."
+                'Fail to retrieve the full collection of projects.'
             )
         );
     }
@@ -148,10 +148,10 @@ class JiraConnectionException extends \Exception
     public static function canNotRetrieveFullCollectionOfIssuesException(): self
     {
         return new self(
-            "can not retrieve full collection of issues",
+            'can not retrieve full collection of issues',
             dgettext(
                 'tuleap-tracker',
-                "Fail to retrieve the full collection of issues in selected tracker."
+                'Fail to retrieve the full collection of issues in selected tracker.'
             )
         );
     }
@@ -159,10 +159,10 @@ class JiraConnectionException extends \Exception
     public static function canNotRetrieveFullCollectionOfIssueChangelogsException(): self
     {
         return new self(
-            "can not retrieve full collection of issue changelogs",
+            'can not retrieve full collection of issue changelogs',
             dgettext(
                 'tuleap-tracker',
-                "Fail to retrieve the full collection of issue changelogs in selected tracker."
+                'Fail to retrieve the full collection of issue changelogs in selected tracker.'
             )
         );
     }
@@ -170,10 +170,10 @@ class JiraConnectionException extends \Exception
     public static function canNotRetrieveFullCollectionOfIssueCommentsException(): self
     {
         return new self(
-            "can not retrieve full collection of issue comments",
+            'can not retrieve full collection of issue comments',
             dgettext(
                 'tuleap-tracker',
-                "Fail to retrieve the full collection of issue comments in selected tracker."
+                'Fail to retrieve the full collection of issue comments in selected tracker.'
             )
         );
     }
@@ -181,10 +181,10 @@ class JiraConnectionException extends \Exception
     public static function urlIsInvalid(): self
     {
         return new self(
-            "server url is invalid",
+            'server url is invalid',
             dgettext(
                 'tuleap-tracker',
-                "Server url is invalid"
+                'Server url is invalid'
             )
         );
     }
@@ -192,11 +192,11 @@ class JiraConnectionException extends \Exception
     public static function canNotRetrieveUserInfoException(string $accountId): self
     {
         return new self(
-            "can not retrieve user information",
+            'can not retrieve user information',
             sprintf(
                 dgettext(
                     'tuleap-tracker',
-                    "Fail to retrieve information of user having the accountId %s."
+                    'Fail to retrieve information of user having the accountId %s.'
                 ),
                 $accountId
             )

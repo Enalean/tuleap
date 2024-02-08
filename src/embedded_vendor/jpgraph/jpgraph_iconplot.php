@@ -31,7 +31,7 @@ class IconPlot
     private $iImgString      = '';
 
 
-    public function __construct($aFile = "", $aX = 0, $aY = 0, $aScale = 1.0, $aMix = 100)
+    public function __construct($aFile = '', $aX = 0, $aY = 0, $aScale = 1.0, $aMix = 100)
     {
         $this->iFile  = $aFile;
         $this->iX     = $aX;

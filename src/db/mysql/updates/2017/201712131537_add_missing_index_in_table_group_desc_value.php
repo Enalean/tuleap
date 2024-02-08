@@ -32,7 +32,7 @@ class b201712131537_add_missing_index_in_table_group_desc_value extends \Tuleap\
 
     public function up()
     {
-        $sql = "ALTER TABLE group_desc_value ADD INDEX idx(group_id)";
+        $sql = 'ALTER TABLE group_desc_value ADD INDEX idx(group_id)';
 
         $this->db->addIndex('group_desc_value', 'idx', $sql);
     }

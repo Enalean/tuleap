@@ -37,10 +37,10 @@ class b201611031112_add_svn_cache_parameter_table extends \Tuleap\ForgeUpgrade\B
 
     private function createTable()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS svn_cache_parameter (
+        $sql = 'CREATE TABLE IF NOT EXISTS svn_cache_parameter (
                     name VARCHAR(255) PRIMARY KEY,
                     value VARCHAR(255)
-                )";
+                )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

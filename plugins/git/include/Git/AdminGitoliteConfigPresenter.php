@@ -73,17 +73,17 @@ class Git_AdminGitoliteConfigPresenter extends Git_AdminPresenter
 
     public function authorized_projects_section_title()
     {
-        return dgettext("tuleap-git", "Projects authorized to go over object's size limit");
+        return dgettext('tuleap-git', "Projects authorized to go over object's size limit");
     }
 
     public function allowed_projects_list_allow_project()
     {
-        return dgettext("tuleap-git", "Authorize");
+        return dgettext('tuleap-git', 'Authorize');
     }
 
     public function allowed_projects_list_revoke_projects()
     {
-        return dgettext("tuleap-git", "Revoke authorization");
+        return dgettext('tuleap-git', 'Revoke authorization');
     }
 
     public function there_are_no_projects()
@@ -93,27 +93,27 @@ class Git_AdminGitoliteConfigPresenter extends Git_AdminPresenter
 
     public function allowed_projects_list_filter_placeholder()
     {
-        return dgettext("tuleap-git", "Filter using project's id or name");
+        return dgettext('tuleap-git', "Filter using project's id or name");
     }
 
     public function allowed_projects_list_id()
     {
-        return dgettext("tuleap-git", "Id");
+        return dgettext('tuleap-git', 'Id');
     }
 
     public function allowed_projects_list_name()
     {
-        return dgettext("tuleap-git", "Name");
+        return dgettext('tuleap-git', 'Name');
     }
 
     public function allowed_projects_list_empty()
     {
-        return dgettext("tuleap-git", "Right now, there are no projects authorized to go over object's size limit");
+        return dgettext('tuleap-git', "Right now, there are no projects authorized to go over object's size limit");
     }
 
     public function allowed_projects_filter_empty()
     {
-        return dgettext("tuleap-git", "There are no projects matching the filter");
+        return dgettext('tuleap-git', 'There are no projects matching the filter');
     }
 
     public function allowed_projects()

@@ -52,34 +52,34 @@ final class SearchCriteriaFilterTest extends TestCase
         $project->method('getID')->willReturn(101);
 
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->willReturn('1');
 
         $metadata_factory
             ->method('getMetadataForGroup')
             ->willReturn([
                 $this->getHardcodedMetadata(Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL),
                 $this->getHardcodedMetadata(Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
-                $this->getCustomMetadata("field_1"),
-                $this->getCustomMetadata("filename"),
+                $this->getCustomMetadata('field_1'),
+                $this->getCustomMetadata('filename'),
             ]);
 
 
         $selected_criterion = $this->search_criteria_filter->getCriteria($project, $metadata_factory);
         $expected_criterion = [
             [
-                "name" => "id",
-                "label" => "Id",
-                "is_selected" => false,
+                'name' => 'id',
+                'label' => 'Id',
+                'is_selected' => false,
             ],
             [
-                "name" => "type",
-                "label" => "Type",
-                "is_selected" => false,
+                'name' => 'type',
+                'label' => 'Type',
+                'is_selected' => false,
             ],
             [
-                "name" => "filename",
-                "label" => "Filename",
-                "is_selected" => true,
+                'name' => 'filename',
+                'label' => 'Filename',
+                'is_selected' => true,
             ],
         ];
          self::assertEquals($expected_criterion, $selected_criterion);
@@ -91,10 +91,10 @@ final class SearchCriteriaFilterTest extends TestCase
             public function searchByProjectId(int $project_id): array
             {
                 return [
-                    "title",
-                    "description",
-                    "field_1",
-                    "filename",
+                    'title',
+                    'description',
+                    'field_1',
+                    'filename',
                 ];
             }
         };

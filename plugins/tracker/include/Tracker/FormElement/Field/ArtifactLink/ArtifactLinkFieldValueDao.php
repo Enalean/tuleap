@@ -115,9 +115,9 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
             $sql_values[] = "($changeset_value_id, $type, $id, $keyword, $group_id)";
         }
 
-        $sql = "INSERT INTO tracker_changeset_value_artifactlink
+        $sql = 'INSERT INTO tracker_changeset_value_artifactlink
                     (changeset_value_id, nature, artifact_id, keyword, group_id)
-                VALUES" . implode(',', $sql_values);
+                VALUES' . implode(',', $sql_values);
 
         return $this->update($sql);
     }

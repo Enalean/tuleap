@@ -207,7 +207,7 @@ class ArtifactDao extends DataAccessObject
      */
     public function searchAllRequirementsForDefinition(int $test_definition_id, $test_exec_tracker_id): array
     {
-        $sql = "SELECT DISTINCT a.id
+        $sql = 'SELECT DISTINCT a.id
                 FROM tracker_changeset_value_artifactlink AS artlink
                     JOIN tracker_changeset_value          AS cv ON (cv.id = artlink.changeset_value_id)
                     JOIN tracker_artifact                 AS a  ON (a.last_changeset_id = cv.changeset_id)
@@ -216,7 +216,7 @@ class ArtifactDao extends DataAccessObject
                   AND artlink.nature = ?
                   AND t.id != ?
                   AND t.deletion_date IS NULL
-                ORDER BY a.id ASC";
+                ORDER BY a.id ASC';
 
         return $this->getDB()->col($sql, 0, $test_definition_id, TypeCoveredByPresenter::TYPE_COVERED_BY, $test_exec_tracker_id);
     }

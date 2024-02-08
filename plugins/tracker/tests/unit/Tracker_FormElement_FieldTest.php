@@ -188,8 +188,8 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
             ->makePartial()->shouldAllowMockingProtectedMethods();
 
         $value = [
-            "field_id" => 587,
-            "value"    => 'some_value',
+            'field_id' => 587,
+            'value'    => 'some_value',
         ];
 
         $this->assertEquals('some_value', $field->getFieldDataFromRESTValueByField($value));

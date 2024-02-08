@@ -40,7 +40,7 @@ final class AuthorRetrieverTest extends TestCase
     private \Git_Exec $git_exec;
     private \UserManager|\PHPUnit\Framework\MockObject\Stub $user_manager;
 
-    private const COMMIT_MESSAGE = "Lorem ipsum dolor sit amet";
+    private const COMMIT_MESSAGE = 'Lorem ipsum dolor sit amet';
     private const AUTHOR_NAME    = 'test';
     private AuthorRetriever $author_retriever;
 
@@ -80,13 +80,13 @@ final class AuthorRetrieverTest extends TestCase
     public function testItReturnsTheCommitter(): void
     {
         $user = UserTestBuilder::buildWithDefaults();
-        $this->user_manager->method("getUserByEmail")->willReturn($user);
+        $this->user_manager->method('getUserByEmail')->willReturn($user);
         self::assertEquals(UserName::fromUser($user), $this->author_retriever->getAuthor($this->getSha1()));
     }
 
     public function testItFallsBackOnAuthorNameWhenItCannotMatchOnEmail(): void
     {
-        $this->user_manager->method("getUserByEmail")->willReturn(null);
+        $this->user_manager->method('getUserByEmail')->willReturn(null);
         self::assertEquals(UserName::fromUsername(self::AUTHOR_NAME), $this->author_retriever->getAuthor($this->getSha1()));
     }
 }

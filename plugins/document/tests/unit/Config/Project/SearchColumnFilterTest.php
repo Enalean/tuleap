@@ -42,11 +42,11 @@ final class SearchColumnFilterTest extends TestCase
                 public function searchByProjectId(int $project_id): array
                 {
                     return [
-                        "title",
-                        "description",
-                        "status",
-                        "obsolescence_date",
-                        "field_1",
+                        'title',
+                        'description',
+                        'status',
+                        'obsolescence_date',
+                        'field_1',
                     ];
                 }
             }
@@ -65,21 +65,21 @@ final class SearchColumnFilterTest extends TestCase
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
-                $this->getCustomMetadata("field_1"),
+                $this->getCustomMetadata('field_1'),
 
             ]);
 
         $selected_columns = $this->search_column_filter->getColumns($project, $this->metadata_factory);
         $expected_columns = [
             [
-                "name" => "description",
-                "label" => "Description",
-                "is_selected" => true,
+                'name' => 'description',
+                'label' => 'Description',
+                'is_selected' => true,
             ],
             [
-                "name" => "status",
-                "label" => "Status",
-                "is_selected" => true,
+                'name' => 'status',
+                'label' => 'Status',
+                'is_selected' => true,
             ],
             [
                 'name' => 'obsolescence_date',
@@ -87,19 +87,19 @@ final class SearchColumnFilterTest extends TestCase
                 'is_selected' => true,
             ],
             [
-                "name" => "location",
-                "label" => "Location",
-                "is_selected" => false,
+                'name' => 'location',
+                'label' => 'Location',
+                'is_selected' => false,
             ],
             [
-                "name" => "filename",
-                "label" => "Filename",
-                "is_selected" => false,
+                'name' => 'filename',
+                'label' => 'Filename',
+                'is_selected' => false,
             ],
             [
-                "name" => "field_1",
-                "label" => "Field_1",
-                "is_selected" => true,
+                'name' => 'field_1',
+                'label' => 'Field_1',
+                'is_selected' => true,
             ],
         ];
 

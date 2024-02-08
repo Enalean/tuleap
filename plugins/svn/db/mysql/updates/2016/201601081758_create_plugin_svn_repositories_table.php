@@ -30,13 +30,13 @@ class b201601081758_create_plugin_svn_repositories_table extends \Tuleap\ForgeUp
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_svn_repositories (
+        $sql = 'CREATE TABLE plugin_svn_repositories (
                     id  int(11) unsigned NOT NULL auto_increment,
                     name  varchar(255) NOT NULL,
                     project_id int(11) NOT NULL,
                     PRIMARY KEY  (`id`),
                     INDEX project_idx (project_id)
-            )";
+            )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

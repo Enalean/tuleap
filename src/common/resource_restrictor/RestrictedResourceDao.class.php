@@ -37,7 +37,7 @@ abstract class RestrictedResourceDao extends DataAccessObject
         $resource_id = $this->da->escapeInt($resource_id);
         $project_id  = $this->da->escapeInt($project_id);
 
-        $sql = "REPLACE INTO " . $this->getResourceAllowedProjectsTableName() . " (" . $this->getResourceFieldName() . ", project_id) VALUES ($resource_id, $project_id)";
+        $sql = 'REPLACE INTO ' . $this->getResourceAllowedProjectsTableName() . ' (' . $this->getResourceFieldName() . ", project_id) VALUES ($resource_id, $project_id)";
 
         return $this->update($sql);
     }
@@ -46,8 +46,8 @@ abstract class RestrictedResourceDao extends DataAccessObject
     {
         $resource_id = $this->da->escapeInt($resource_id);
 
-        $sql = "DELETE FROM " . $this->getResourceAllowedProjectsTableName() . "
-                WHERE " . $this->getResourceFieldName() . " = $resource_id";
+        $sql = 'DELETE FROM ' . $this->getResourceAllowedProjectsTableName() . '
+                WHERE ' . $this->getResourceFieldName() . " = $resource_id";
 
         return $this->update($sql);
     }
@@ -57,8 +57,8 @@ abstract class RestrictedResourceDao extends DataAccessObject
         $resource_id = $this->da->escapeInt($resource_id);
         $project_ids = $this->da->escapeIntImplode($project_ids);
 
-        $sql = "DELETE FROM " . $this->getResourceAllowedProjectsTableName() . "
-                WHERE " . $this->getResourceFieldName() . " = $resource_id
+        $sql = 'DELETE FROM ' . $this->getResourceAllowedProjectsTableName() . '
+                WHERE ' . $this->getResourceFieldName() . " = $resource_id
                 AND project_id IN ($project_ids)";
 
         return $this->update($sql);

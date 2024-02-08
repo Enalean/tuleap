@@ -42,7 +42,7 @@ final class FieldsDataFromRequestRetriever
     public function getAugmentedDataFromRequest(Artifact $artifact, Codendi_Request $request, \PFUser $user): array
     {
         $fields_data = $request->get('artifact');
-        if (isset($fields_data["possible_values"], $fields_data["field_id"])) {
+        if (isset($fields_data['possible_values'], $fields_data['field_id'])) {
             return $this->getFirstPossibleValueFromPossibleValues($artifact, $fields_data, $user);
         }
 
@@ -59,8 +59,8 @@ final class FieldsDataFromRequestRetriever
     private function getFirstPossibleValueFromPossibleValues(Artifact $artifact, array $field_values, \PFUser $user): array
     {
         $fields_data      = [];
-        $value_collection = new StatusValuesCollection(json_decode($field_values["possible_values"]));
-        $field            = $this->form_element_factory->getFieldById($field_values["field_id"]);
+        $value_collection = new StatusValuesCollection(json_decode($field_values['possible_values']));
+        $field            = $this->form_element_factory->getFieldById($field_values['field_id']);
 
         assert($field instanceof Tracker_FormElement_Field_List);
         $fields_data[$field->getId()] = $this->first_possible_value_retriever->getFirstPossibleValue(

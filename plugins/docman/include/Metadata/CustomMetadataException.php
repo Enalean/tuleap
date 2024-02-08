@@ -40,7 +40,7 @@ class CustomMetadataException extends Exception
     public static function metadataNotFound(string $metadata_name): self
     {
         return new self(
-            sprintf("metadata %s is not found", $metadata_name),
+            sprintf('metadata %s is not found', $metadata_name),
             sprintf(
                 dgettext(
                     'tuleap-docman',
@@ -54,7 +54,7 @@ class CustomMetadataException extends Exception
     public static function valueProvidedForListMetadata(string $metadata_name): self
     {
         return new self(
-            sprintf("metadata %s is a multiple list", $metadata_name),
+            sprintf('metadata %s is a multiple list', $metadata_name),
             dgettext(
                 'tuleap-docman',
                 sprintf('The property with short name %s is a multiple list, value should be empty and list_value should be provided.', $metadata_name)
@@ -65,7 +65,7 @@ class CustomMetadataException extends Exception
     public static function listValueProvidedForMetadata(string $metadata_name): self
     {
         return new self(
-            sprintf("metadata %s is not a list and a list_value is provided", $metadata_name),
+            sprintf('metadata %s is not a list and a list_value is provided', $metadata_name),
             sprintf(
                 dgettext(
                     'tuleap-docman',
@@ -79,7 +79,7 @@ class CustomMetadataException extends Exception
     public static function listOnlyAcceptSingleValues(string $metadata_name): self
     {
         return new self(
-            sprintf("list %s has too many values", $metadata_name),
+            sprintf('list %s has too many values', $metadata_name),
             sprintf(
                 dgettext(
                     'tuleap-docman',
@@ -94,7 +94,7 @@ class CustomMetadataException extends Exception
     {
         $errors_string = implode(',', $error_unknown);
         return new self(
-            sprintf("value: %s are unknown for metadata %s", $errors_string, $metadata_name),
+            sprintf('value: %s are unknown for metadata %s', $errors_string, $metadata_name),
             sprintf(
                 dngettext(
                     'tuleap-docman',
@@ -112,7 +112,7 @@ class CustomMetadataException extends Exception
     {
         $errors_string = implode(',', $errors);
         return new self(
-            sprintf("missing metadata keys: %s", $errors_string),
+            sprintf('missing metadata keys: %s', $errors_string),
             sprintf(
                 dngettext(
                     'tuleap-docman',
@@ -129,7 +129,7 @@ class CustomMetadataException extends Exception
     {
         $errors_string = implode(',', $errors);
         return new self(
-            sprintf("missing required values for: %s", $errors_string),
+            sprintf('missing required values for: %s', $errors_string),
             sprintf(
                 dngettext(
                     'tuleap-docman',

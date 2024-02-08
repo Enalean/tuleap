@@ -41,8 +41,8 @@ use function Psl\Str\Byte\after;
 final class PrepareStartMeilisearchServerCommand extends Command
 {
     public const NAME                           = 'full-text-search-meilisearch:prepare-start-meilisearch-server';
-    private const MEILISEARCH_DATA_PATH         = "/var/lib/tuleap/fts_meilisearch_server/data.ms";
-    private const MEILISEARCH_DATA_VERSION_FILE = self::MEILISEARCH_DATA_PATH . "/VERSION";
+    private const MEILISEARCH_DATA_PATH         = '/var/lib/tuleap/fts_meilisearch_server/data.ms';
+    private const MEILISEARCH_DATA_VERSION_FILE = self::MEILISEARCH_DATA_PATH . '/VERSION';
 
     public function __construct(
         private readonly EventDispatcherInterface $event_dispatcher,

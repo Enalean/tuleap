@@ -226,7 +226,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@last_update_date < NOW()",
+                '@last_update_date < NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -286,7 +286,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@last_update_date <= NOW()",
+                '@last_update_date <= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -352,7 +352,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@last_update_date > NOW() - 1d",
+                '@last_update_date > NOW() - 1d',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -418,7 +418,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@last_update_date >= NOW()",
+                '@last_update_date >= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -481,7 +481,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@last_update_date BETWEEN(NOW() - 1d, NOW() + 1d)",
+                '@last_update_date BETWEEN(NOW() - 1d, NOW() + 1d)',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member

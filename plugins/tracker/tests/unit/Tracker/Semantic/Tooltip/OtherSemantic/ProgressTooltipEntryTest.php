@@ -63,7 +63,7 @@ final class ProgressTooltipEntryTest extends TestCase
         $semantic_progress_builder = $this->createMock(SemanticProgressBuilder::class);
         $semantic_progress_builder->method('getSemantic')->willReturn(new SemanticProgress(
             TrackerTestBuilder::aTracker()->build(),
-            new InvalidMethod("Invalid configuration")
+            new InvalidMethod('Invalid configuration')
         ));
 
         $template_cache = $this->createMock(TemplateCache::class);

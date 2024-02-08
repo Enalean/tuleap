@@ -36,7 +36,7 @@ require_once __DIR__ . '/WikiPage.class.php';
 class Wiki
 {
     public $gid;
-    public string $language_id = "";
+    public string $language_id = '';
     public ?bool $exist;
 
   /**

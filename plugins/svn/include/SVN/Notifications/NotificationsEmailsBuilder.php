@@ -29,7 +29,7 @@ class NotificationsEmailsBuilder
         $emails = $this->transformNotificationEmailsStringAsArray($emails);
         $emails = array_diff($emails, [$user->getEmail(), $user->getUserName()]);
 
-        return implode(",", $emails);
+        return implode(',', $emails);
     }
 
     /**

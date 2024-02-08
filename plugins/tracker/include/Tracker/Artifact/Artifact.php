@@ -222,7 +222,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * @var String
      */
     private $title;
-    private string $description = "";
+    private string $description = '';
 
     /**
      * @var String
@@ -594,7 +594,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 '/assets/trackers/move-artifact-action'
             );
 
-            $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, "src/modal.ts"));
+            $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, 'src/modal.ts'));
         }
 
         foreach ($action_buttons_fetcher->getAdditionalActions() as $additional_action) {
@@ -991,7 +991,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                         $emitter->emit($json_response_builder->fromData($tooltip));
                     });
                 } else {
-                    header("Cache-Control: no-store, no-cache, must-revalidate");
+                    header('Cache-Control: no-store, no-cache, must-revalidate');
                     $renderer = new Tracker_Artifact_ReadOnlyRenderer(
                         $this->getEventManager(),
                         $this,

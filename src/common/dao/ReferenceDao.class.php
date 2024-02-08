@@ -29,7 +29,7 @@ class ReferenceDao extends DataAccessObject
     public function searchByGroupID($group_id)
     {
         $sql = sprintf(
-            "SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id ORDER BY reference.scope DESC, reference.service_short_name, reference.keyword",
+            'SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id ORDER BY reference.scope DESC, reference.service_short_name, reference.keyword',
             $this->da->quoteSmart($group_id)
         );
         return $this->retrieve($sql);
@@ -42,7 +42,7 @@ class ReferenceDao extends DataAccessObject
     public function searchByIdAndGroupID($ref_id, $group_id)
     {
         $sql = sprintf(
-            "SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference.id=%s AND reference_group.reference_id=reference.id",
+            'SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference.id=%s AND reference_group.reference_id=reference.id',
             $this->da->quoteSmart($group_id),
             $this->da->quoteSmart($ref_id)
         );
@@ -56,7 +56,7 @@ class ReferenceDao extends DataAccessObject
     public function searchActiveByGroupID($group_id)
     {
         $sql = sprintf(
-            "SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id AND reference_group.is_active=1",
+            'SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id AND reference_group.is_active=1',
             $this->da->quoteSmart($group_id)
         );
         return $this->retrieve($sql);
@@ -68,7 +68,7 @@ class ReferenceDao extends DataAccessObject
     */
     public function searchAll()
     {
-        $sql = "SELECT * FROM reference";
+        $sql = 'SELECT * FROM reference';
         return $this->retrieve($sql);
     }
 
@@ -79,7 +79,7 @@ class ReferenceDao extends DataAccessObject
     public function searchById($id)
     {
         $sql = sprintf(
-            "SELECT * FROM reference WHERE id = %s",
+            'SELECT * FROM reference WHERE id = %s',
             $this->da->quoteSmart($id)
         );
         return $this->retrieve($sql);
@@ -108,7 +108,7 @@ class ReferenceDao extends DataAccessObject
     public function searchByScope($scope)
     {
         $sql = sprintf(
-            "SELECT * FROM reference WHERE scope = %s",
+            'SELECT * FROM reference WHERE scope = %s',
             $this->da->quoteSmart($scope)
         );
         return $this->retrieve($sql);
@@ -171,11 +171,11 @@ class ReferenceDao extends DataAccessObject
     public function searchByServiceShortName(int $project_id, string $service)
     {
         $sql = sprintf(
-            "SELECT reference.*
+            'SELECT reference.*
              FROM reference
                 JOIN reference_group rg ON (reference.id = rg.reference_id)
              WHERE service_short_name = %s
-               AND rg.group_id = %d",
+               AND rg.group_id = %d',
             $this->da->quoteSmart($service),
             $this->da->escapeInt($project_id),
         );
@@ -190,7 +190,7 @@ class ReferenceDao extends DataAccessObject
     public function searchByScopeAndServiceShortName($scope, $service)
     {
         $sql = sprintf(
-            "SELECT * FROM reference WHERE scope = %s AND service_short_name = %s AND id != 100",
+            'SELECT * FROM reference WHERE scope = %s AND service_short_name = %s AND id != 100',
             $this->da->quoteSmart($scope),
             $this->da->quoteSmart($service)
         );
@@ -205,7 +205,7 @@ class ReferenceDao extends DataAccessObject
     public function searchByScopeAndServiceShortNameAndGroupId($scope, $service, $group_id)
     {
         $sql = sprintf(
-            "SELECT * FROM reference,reference_group WHERE scope = %s AND reference.id=reference_group.reference_id AND service_short_name = %s AND group_id = %s AND reference.id != 100",
+            'SELECT * FROM reference,reference_group WHERE scope = %s AND reference.id=reference_group.reference_id AND service_short_name = %s AND group_id = %s AND reference.id != 100',
             $this->da->quoteSmart($scope),
             $this->da->quoteSmart($service),
             $this->da->quoteSmart($group_id)
@@ -223,7 +223,7 @@ class ReferenceDao extends DataAccessObject
         // This may happen for old tracker created before Reference management.
         // Otherwise, there should not be both S and P reference with the same keyword...
         $sql = sprintf(
-            "SELECT * FROM reference,reference_group WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s ORDER BY reference.scope",
+            'SELECT * FROM reference,reference_group WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s ORDER BY reference.scope',
             $this->da->quoteSmart($keyword),
             $this->da->quoteSmart($group_id)
         );
@@ -240,14 +240,14 @@ class ReferenceDao extends DataAccessObject
         // This may happen for old tracker created before Reference management.
         // Otherwise, there should not be both S and P reference with the same keyword...
         $sql = sprintf(
-            "SELECT * FROM reference r,reference_group rg WHERE " .
+            'SELECT * FROM reference r,reference_group rg WHERE ' .
                "service_short_name != 'plugin_tracker' AND " .
-               "r.keyword = %s AND " .
-               "r.id=rg.reference_id AND " .
-               "rg.group_id=%s AND " .
-               "r.description = %s AND " .
-               "r.link = %s AND " .
-               "r.scope = %s",
+               'r.keyword = %s AND ' .
+               'r.id=rg.reference_id AND ' .
+               'rg.group_id=%s AND ' .
+               'r.description = %s AND ' .
+               'r.link = %s AND ' .
+               'r.scope = %s',
             $this->da->quoteSmart($keyword),
             $this->da->quoteSmart($group_id),
             $this->da->quoteSmart($description),
@@ -264,7 +264,7 @@ class ReferenceDao extends DataAccessObject
     public function create($keyword, $desc, $link, $scope, $service_short_name, $nature)
     {
         $sql = sprintf(
-            "INSERT INTO reference (keyword,description,link,scope,service_short_name, nature) VALUES (%s, %s, %s, %s, %s, %s);",
+            'INSERT INTO reference (keyword,description,link,scope,service_short_name, nature) VALUES (%s, %s, %s, %s, %s, %s);',
             $this->da->quoteSmart($keyword),
             $this->da->quoteSmart($desc),
             $this->da->quoteSmart($link),
@@ -278,7 +278,7 @@ class ReferenceDao extends DataAccessObject
     public function create_ref_group($refid, $is_active, $group_id)
     {
         $sql = sprintf(
-            "INSERT INTO reference_group (reference_id,is_active,group_id) VALUES (%s, %s, %s);",
+            'INSERT INTO reference_group (reference_id,is_active,group_id) VALUES (%s, %s, %s);',
             $this->da->quoteSmart($refid),
             $this->da->quoteSmart($is_active),
             $this->da->quoteSmart($group_id)
@@ -293,7 +293,7 @@ class ReferenceDao extends DataAccessObject
     public function update_ref($id, $keyword, $desc, $link, $scope, $service_short_name, $nature)
     {
         $sql = sprintf(
-            "UPDATE reference SET keyword=%s, description=%s, link=%s, scope=%s, service_short_name=%s, nature=%s WHERE id=%s;",
+            'UPDATE reference SET keyword=%s, description=%s, link=%s, scope=%s, service_short_name=%s, nature=%s WHERE id=%s;',
             $this->da->quoteSmart($keyword),
             $this->da->quoteSmart($desc),
             $this->da->quoteSmart($link),
@@ -308,7 +308,7 @@ class ReferenceDao extends DataAccessObject
     public function update_ref_group($refid, $is_active, $group_id)
     {
         $sql = sprintf(
-            "UPDATE reference_group SET is_active=%s WHERE reference_id=%s AND group_id=%s;",
+            'UPDATE reference_group SET is_active=%s WHERE reference_id=%s AND group_id=%s;',
             $this->da->quoteSmart($is_active),
             $this->da->quoteSmart($refid),
             $this->da->quoteSmart($group_id)
@@ -332,7 +332,7 @@ class ReferenceDao extends DataAccessObject
     public function update_keyword($old_keyword, $keyword, $group_id)
     {
         $sql = sprintf(
-            "UPDATE reference, reference_group SET keyword=%s WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s",
+            'UPDATE reference, reference_group SET keyword=%s WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s',
             $this->da->quoteSmart($keyword),
             $this->da->quoteSmart($old_keyword),
             $this->da->quoteSmart($group_id)
@@ -343,7 +343,7 @@ class ReferenceDao extends DataAccessObject
     public function removeById($id)
     {
         $sql = sprintf(
-            "DELETE FROM reference WHERE id = %s",
+            'DELETE FROM reference WHERE id = %s',
             $this->da->quoteSmart($id)
         );
         return $this->update($sql);
@@ -352,7 +352,7 @@ class ReferenceDao extends DataAccessObject
     public function removeRefGroup($id, $group_id)
     {
         $sql = sprintf(
-            "DELETE FROM reference_group WHERE reference_id = %s AND group_id = %s",
+            'DELETE FROM reference_group WHERE reference_id = %s AND group_id = %s',
             $this->da->quoteSmart($id),
             $this->da->quoteSmart($group_id)
         );
@@ -362,7 +362,7 @@ class ReferenceDao extends DataAccessObject
     public function removeAllById($id)
     {
         $sql = sprintf(
-            "DELETE reference, reference_group FROM reference, reference_group WHERE reference.id = %s AND reference_group.reference_id =%s",
+            'DELETE reference, reference_group FROM reference, reference_group WHERE reference.id = %s AND reference_group.reference_id =%s',
             $this->da->quoteSmart($id),
             $this->da->quoteSmart($id)
         );

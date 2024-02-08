@@ -65,7 +65,7 @@ class DocumentMetadataCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(LogicException::class);
 
-        $this->creator->storeItemCustomMetadata(1, [['id' => 5, 'value' => "abcde"]]);
+        $this->creator->storeItemCustomMetadata(1, [['id' => 5, 'value' => 'abcde']]);
     }
 
     public function testItDoesNotStoreWhenMetadataIsAnEmptyArray(): void

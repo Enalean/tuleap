@@ -104,8 +104,8 @@ class WebhookCreateController implements DispatchableWithRequest
     private function getAdminWebhooksURL(Tracker $tracker)
     {
         return '/plugins/tracker/?' . http_build_query([
-            "func"    => "admin-webhooks",
-            "tracker" => $tracker->getId(),
+            'func'    => 'admin-webhooks',
+            'tracker' => $tracker->getId(),
         ]);
     }
 }

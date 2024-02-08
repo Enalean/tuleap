@@ -26,6 +26,6 @@ final class CannotCreateAnAlreadyExpiredBannerException extends \RuntimeExceptio
 {
     public function __construct()
     {
-        parent::__construct("Cannot create an already expired banner");
+        parent::__construct('Cannot create an already expired banner');
     }
 }

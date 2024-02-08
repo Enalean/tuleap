@@ -26,6 +26,6 @@ class TimetrackingOverviewWidgetNoTitle extends Exception
 {
     public function __construct()
     {
-        parent::__construct("Please enter a title");
+        parent::__construct('Please enter a title');
     }
 }

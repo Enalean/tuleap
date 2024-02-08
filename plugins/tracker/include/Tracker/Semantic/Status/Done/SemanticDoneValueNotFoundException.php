@@ -28,7 +28,7 @@ class SemanticDoneValueNotFoundException extends \RuntimeException
     public function __construct()
     {
         parent::__construct(
-            "There is no done value defined in done semantic for the tracker."
+            'There is no done value defined in done semantic for the tracker.'
         );
     }
 }

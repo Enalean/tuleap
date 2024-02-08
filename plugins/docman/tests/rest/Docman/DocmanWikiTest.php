@@ -143,7 +143,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('allowed', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
@@ -163,7 +163,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $this->assertEquals(403, $response->getStatusCode());
 
-        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('allowed', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
@@ -231,7 +231,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $locked_document_id = $locked_document['id'];
 
         $response_with_rest_read_only_user = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_wikis/' . $locked_document_id . "/lock"),
+            $this->request_factory->createRequest('POST', 'docman_wikis/' . $locked_document_id . '/lock'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -239,7 +239,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_wikis/' . $locked_document_id . "/lock")
+            $this->request_factory->createRequest('POST', 'docman_wikis/' . $locked_document_id . '/lock')
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -250,7 +250,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
 
         $document = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals($document['lock_info']["locked_by"]["username"], \TestDataBuilder::ADMIN_USER_NAME);
+        $this->assertEquals($document['lock_info']['locked_by']['username'], \TestDataBuilder::ADMIN_USER_NAME);
     }
 
     /**
@@ -262,7 +262,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $locked_document_id = $locked_document['id'];
 
         $response_with_rest_read_only_user = $this->getResponse(
-            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $locked_document_id . "/lock"),
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $locked_document_id . '/lock'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -270,7 +270,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $locked_document_id . "/lock")
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $locked_document_id . '/lock')
         );
 
         $this->assertEquals(200, $response->getStatusCode());

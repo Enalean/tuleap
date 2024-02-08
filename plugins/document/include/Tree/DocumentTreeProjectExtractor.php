@@ -44,13 +44,13 @@ class DocumentTreeProjectExtractor implements IExtractProjectFromVariables
     {
         $project = $this->project_manager->getProjectByUnixName($variables['project_name']);
         if (! $project) {
-            throw new NotFoundException(dgettext('tuleap-document', "Project not found"));
+            throw new NotFoundException(dgettext('tuleap-document', 'Project not found'));
         }
 
         if (! $project->usesService(\docmanPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(
                 sprintf(
-                    dgettext("tuleap-document", "Documents service is not activated in project %s"),
+                    dgettext('tuleap-document', 'Documents service is not activated in project %s'),
                     $project->getPublicName()
                 )
             );

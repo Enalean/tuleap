@@ -188,7 +188,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         if ($this->widgetMustDisplayEmptyState($in_dashboard, $report_charts, $matching_ids)) {
             $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../src/templates/dashboard');
 
-            $html .= $renderer->renderToString("widget-empty-content-svg", null);
+            $html .= $renderer->renderToString('widget-empty-content-svg', null);
             return $html;
         }
 

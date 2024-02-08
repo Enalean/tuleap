@@ -181,8 +181,8 @@ class PHPWikiPermissionPerGroupPaneBuilder
     {
         return '/wiki/admin/index.php?' . http_build_query(
             [
-                "group_id" => $project->getID(),
-                "view"     => "wikiPerms",
+                'group_id' => $project->getID(),
+                'view'     => 'wikiPerms',
             ]
         );
     }

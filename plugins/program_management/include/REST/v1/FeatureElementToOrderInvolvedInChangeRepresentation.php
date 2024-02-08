@@ -27,8 +27,8 @@ namespace Tuleap\ProgramManagement\REST\v1;
  */
 final class FeatureElementToOrderInvolvedInChangeRepresentation
 {
-    public const AFTER  = "after";
-    public const BEFORE = "before";
+    public const AFTER  = 'after';
+    public const BEFORE = 'before';
     /**
      * @var int[] {@required true} {@min 1}{@max 1}
      */

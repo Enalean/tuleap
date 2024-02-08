@@ -91,9 +91,9 @@ final class BacklogTrackersUpdateCheckerTest extends TestCase
             'backlog_tracker_ids' => [4, 101, 59],
         ]);
 
-        $this->tracker_factory->method("getTrackerById")->willReturnMap([
-            [4, TrackerTestBuilder::aTracker()->withName("tracker01")->build()],
-            [101, TrackerTestBuilder::aTracker()->withName("tracker02")->build()],
+        $this->tracker_factory->method('getTrackerById')->willReturnMap([
+            [4, TrackerTestBuilder::aTracker()->withName('tracker01')->build()],
+            [101, TrackerTestBuilder::aTracker()->withName('tracker02')->build()],
         ]);
 
         $this->expectException(TrackersHaveAtLeastOneHierarchicalLinkException::class);
@@ -112,9 +112,9 @@ final class BacklogTrackersUpdateCheckerTest extends TestCase
             'backlog_tracker_ids' => [4, 101, 59],
         ]);
 
-        $this->tracker_factory->method("getTrackerById")->willReturnMap([
+        $this->tracker_factory->method('getTrackerById')->willReturnMap([
             [4, null],
-            [101, TrackerTestBuilder::aTracker()->withName("tracker02")->build()],
+            [101, TrackerTestBuilder::aTracker()->withName('tracker02')->build()],
         ]);
 
         $this->expectException(TrackersWithHierarchicalLinkDefinedNotFoundException::class);
@@ -133,8 +133,8 @@ final class BacklogTrackersUpdateCheckerTest extends TestCase
             'backlog_tracker_ids' => [4, 101, 59],
         ]);
 
-        $this->tracker_factory->method("getTrackerById")->willReturnMap([
-            [4, TrackerTestBuilder::aTracker()->withName("tracker01")->build()],
+        $this->tracker_factory->method('getTrackerById')->willReturnMap([
+            [4, TrackerTestBuilder::aTracker()->withName('tracker01')->build()],
             [101, null],
         ]);
 

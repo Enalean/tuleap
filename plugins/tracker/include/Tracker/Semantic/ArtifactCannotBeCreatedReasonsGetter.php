@@ -72,7 +72,7 @@ final class ArtifactCannotBeCreatedReasonsGetter
         $cannot_create_reasons = CollectionOfCannotCreateArtifactReason::fromEmptyReason();
 
         if (! $title_semantic->getField()) {
-            return $cannot_create_reasons->addReason(CannotCreateArtifactReason::fromString(dgettext('tuleap-tracker', "Title semantic is not defined")));
+            return $cannot_create_reasons->addReason(CannotCreateArtifactReason::fromString(dgettext('tuleap-tracker', 'Title semantic is not defined')));
         }
         $title_semantic_text_field = $title_semantic->getField();
         if (! $title_semantic_text_field->userCanSubmit($user)) {

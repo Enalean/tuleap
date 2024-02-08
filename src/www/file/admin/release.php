@@ -25,7 +25,7 @@ use Tuleap\FRS\FRSReleaseRouter;
 require_once __DIR__ . '/../../include/pre.php';
 
 $GLOBALS['HTML']->includeCalendarScripts();
-$GLOBALS['HTML']->includeFooterJavascriptFile("../scripts/frs.js");
+$GLOBALS['HTML']->includeFooterJavascriptFile('../scripts/frs.js');
 
 $request         = HTTPRequest::instance();
 $project_manager = ProjectManager::instance();

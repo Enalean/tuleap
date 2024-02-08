@@ -104,9 +104,9 @@ class PermissionPerGroupBaselineServicePaneBuilder
         }
 
         return [
-            "name"   => $name,
-            "groups" => $user_groups,
-            "url"    => ServiceAdministrationController::getAdminUrl($project),
+            'name'   => $name,
+            'groups' => $user_groups,
+            'url'    => ServiceAdministrationController::getAdminUrl($project),
         ];
     }
 
@@ -134,16 +134,16 @@ class PermissionPerGroupBaselineServicePaneBuilder
         $permissions      = [];
         if ($is_administrator) {
             $permissions[] = [
-                "name"   => dgettext('tuleap-baseline', 'Baseline administrators'),
-                "groups" => [$formatted_ugroup],
-                "url"    => ServiceAdministrationController::getAdminUrl($project),
+                'name'   => dgettext('tuleap-baseline', 'Baseline administrators'),
+                'groups' => [$formatted_ugroup],
+                'url'    => ServiceAdministrationController::getAdminUrl($project),
             ];
         }
         if ($is_reader) {
             $permissions[] = [
-                "name"   => dgettext('tuleap-baseline', 'Baseline readers'),
-                "groups" => [$formatted_ugroup],
-                "url"    => ServiceAdministrationController::getAdminUrl($project),
+                'name'   => dgettext('tuleap-baseline', 'Baseline readers'),
+                'groups' => [$formatted_ugroup],
+                'url'    => ServiceAdministrationController::getAdminUrl($project),
             ];
         }
         return $permissions;

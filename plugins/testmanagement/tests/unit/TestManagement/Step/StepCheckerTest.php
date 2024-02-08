@@ -32,13 +32,13 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $step =
             [
-                "expected_results"        => "some results",
-                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                'expected_results'        => 'some results',
+                'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ];
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
-        self::expectExceptionMessage("Description or Expected Result text field missing");
+        self::expectExceptionMessage('Description or Expected Result text field missing');
         StepChecker::checkStepDataFromRESTPost($step);
     }
 
@@ -46,13 +46,13 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $step =
             [
-                "description"        => "some description",
-                "description_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                'description'        => 'some description',
+                'description_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ];
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
-        self::expectExceptionMessage("Description or Expected Result text field missing");
+        self::expectExceptionMessage('Description or Expected Result text field missing');
 
         StepChecker::checkStepDataFromRESTPost($step);
     }
@@ -61,10 +61,10 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $step =
             [
-                "description"             => "some description",
-                "description_format"      => "vroom_format",
-                "expected_results"        => "some results",
-                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                'description'             => 'some description',
+                'description_format'      => 'vroom_format',
+                'expected_results'        => 'some results',
+                'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ];
 
         self::expectException(RestException::class);
@@ -78,10 +78,10 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $step =
             [
-                "description"             => "some description",
-                "description_format"      =>  Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                "expected_results"        => "some results",
-                "expected_results_format" => "honk_honk_format",
+                'description'             => 'some description',
+                'description_format'      =>  Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                'expected_results'        => 'some results',
+                'expected_results_format' => 'honk_honk_format',
             ];
 
         self::expectException(RestException::class);
@@ -95,14 +95,14 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $step =
             [
-                "description"             => "some description",
-                "expected_results"        => "some results",
-                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                'description'             => 'some description',
+                'expected_results'        => 'some results',
+                'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ];
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
-        self::expectExceptionMessage("Description format or Expected Result format is missing");
+        self::expectExceptionMessage('Description format or Expected Result format is missing');
 
         StepChecker::checkStepDataFromRESTPost($step);
     }
@@ -111,30 +111,30 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $step =
             [
-                "description"             => "some description",
-                "description_format"      =>  Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                "expected_results"        => "some results",
+                'description'             => 'some description',
+                'description_format'      =>  Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                'expected_results'        => 'some results',
             ];
 
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
-        self::expectExceptionMessage("Description format or Expected Result format is missing");
+        self::expectExceptionMessage('Description format or Expected Result format is missing');
 
         StepChecker::checkStepDataFromRESTPost($step);
     }
 
     public function testItReturnsTrueWhenTheProvidedFormatIsValid(): void
     {
-        self::assertTrue(StepChecker::isSubmittedFormatValid("text"));
-        self::assertTrue(StepChecker::isSubmittedFormatValid("html"));
-        self::assertTrue(StepChecker::isSubmittedFormatValid("commonmark"));
+        self::assertTrue(StepChecker::isSubmittedFormatValid('text'));
+        self::assertTrue(StepChecker::isSubmittedFormatValid('html'));
+        self::assertTrue(StepChecker::isSubmittedFormatValid('commonmark'));
     }
 
     public function testItReturnsFalseWhenTheProvidedFormatIsNotValid(): void
     {
-        self::assertFalse(StepChecker::isSubmittedFormatValid("wololo"));
-        self::assertFalse(StepChecker::isSubmittedFormatValid("format"));
-        self::assertFalse(StepChecker::isSubmittedFormatValid("oh!"));
+        self::assertFalse(StepChecker::isSubmittedFormatValid('wololo'));
+        self::assertFalse(StepChecker::isSubmittedFormatValid('format'));
+        self::assertFalse(StepChecker::isSubmittedFormatValid('oh!'));
     }
 }

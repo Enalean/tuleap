@@ -99,7 +99,7 @@ final class RoadmapProjectWidget extends \Widget
 
     public function getIcon(): string
     {
-        return "fa-stream";
+        return 'fa-stream';
     }
 
     public function isUnique(): bool
@@ -274,7 +274,7 @@ final class RoadmapProjectWidget extends \Widget
 
         $default_timescale = $this->getValidTimescale($roadmap_parameters['default_timescale'] ?? null);
 
-        $report_id = (int) ($roadmap_parameters['filter_report_id'] ?? "");
+        $report_id = (int) ($roadmap_parameters['filter_report_id'] ?? '');
 
         return $this->dao->insertContent(
             (int) $this->owner_id,
@@ -328,7 +328,7 @@ final class RoadmapProjectWidget extends \Widget
 
         $default_timescale = $this->getValidTimescale($roadmap_parameters['default_timescale'] ?? null);
 
-        $report_id = (int) ($roadmap_parameters['filter_report_id'] ?? "");
+        $report_id = (int) ($roadmap_parameters['filter_report_id'] ?? '');
 
         $this->dao->update(
             $id,

@@ -95,7 +95,7 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
     public function title()
     {
         return [fmt(
-            "PageHistory for %s",
+            'PageHistory for %s',
             WikiLink($this->_args['page'])
         ),
             "\n",
@@ -105,20 +105,20 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
 
     public function empty_message()
     {
-        return _("No revisions found");
+        return _('No revisions found');
     }
 
     public function description()
     {
         $button = HTML::input(['type'  => 'submit',
-            'value' => _("compare revisions"),
+            'value' => _('compare revisions'),
             'class' => 'wikiaction',
         ]);
 
         $js_desc = $no_js_desc = _RecentChanges_HtmlFormatter::description();
 
-        $js_desc->pushContent("\n", _("Check any two boxes to compare revisions."));
-        $no_js_desc->pushContent("\n", fmt("Check any two boxes then %s.", $button));
+        $js_desc->pushContent("\n", _('Check any two boxes to compare revisions.'));
+        $no_js_desc->pushContent("\n", fmt('Check any two boxes then %s.', $button));
 
         return IfJavaScript($js_desc, $no_js_desc);
     }
@@ -188,7 +188,7 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
 
     public function pageLink($rev, $text_link = false)
     {
-        $text = fmt("Version %d", $rev->getVersion());
+        $text = fmt('Version %d', $rev->getVersion());
         return _RecentChanges_HtmlFormatter::pageLink($rev, $text);
     }
 
@@ -199,10 +199,10 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
         $time = $this->time($rev);
         if ($rev->get('is_minor_edit')) {
             $minor_flag = HTML(
-                " ",
+                ' ',
                 HTML::span(
                     ['class' => 'pageinfo-minoredit'],
-                    "(" . _("minor edit") . ")"
+                    '(' . _('minor edit') . ')'
                 )
             );
         } else {
@@ -251,13 +251,13 @@ class _PageHistory_RssFormatter extends _RecentChanges_RssFormatter
         $rc_url = WikiURL($request->getArg('pagename'), false, 'absurl');
 
         $title = sprintf(
-            _("%s: %s"),
+            _('%s: %s'),
             WIKI_NAME,
             SplitPagename($this->_args['page'])
         );
 
         return ['title'          => $title,
-            'dc:description' => _("History of changes."),
+            'dc:description' => _('History of changes.'),
             'link'           => $rc_url,
             'dc:date'        => Iso8601DateTime(time()),
         ];
@@ -266,7 +266,7 @@ class _PageHistory_RssFormatter extends _RecentChanges_RssFormatter
     public function item_properties($rev)
     {
         if (! ($title = $this->summary($rev))) {
-            $title = sprintf(_("Version %d"), $rev->getVersion());
+            $title = sprintf(_('Version %d'), $rev->getVersion());
         }
 
         return [ 'title'           => $title,
@@ -285,20 +285,20 @@ class WikiPlugin_PageHistory extends WikiPlugin_RecentChanges
 {
     public function getName()
     {
-        return _("PageHistory");
+        return _('PageHistory');
     }
 
     public function getDescription()
     {
-        return sprintf(_("List PageHistory for %s"), '[pagename]');
+        return sprintf(_('List PageHistory for %s'), '[pagename]');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.30 $"
+            '$Revision: 1.30 $'
         );
     }
 
@@ -358,7 +358,7 @@ class WikiPlugin_PageHistory extends WikiPlugin_RecentChanges
         $args     = $this->getArgs($argstr, $request);
         $pagename = $args['page'];
         if (empty($pagename)) {
-            return $this->makeForm("", $request);
+            return $this->makeForm('', $request);
         }
 
         $page    = $dbi->getPage($pagename);
@@ -369,7 +369,7 @@ class WikiPlugin_PageHistory extends WikiPlugin_RecentChanges
                     "I'm sorry, there is no such page as %s.",
                     WikiLink($pagename, 'unknown')
                 )),
-                $this->makeForm("", $request)
+                $this->makeForm('', $request)
             );
         }
         // Hack alert: format() is a NORETURN for rss formatters.

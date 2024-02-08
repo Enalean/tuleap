@@ -100,7 +100,7 @@ class MilestoneElementMoverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user         = Mockery::mock(\PFUser::class);
         $milestone    = Mockery::mock(\Planning_Milestone::class);
-        $add          = ["id" => 112];
+        $add          = ['id' => 112];
         $valid_to_add = [112];
 
         $expected_result = $valid_to_add;
@@ -142,7 +142,7 @@ class MilestoneElementMoverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user      = Mockery::mock(\PFUser::class);
         $milestone = Mockery::mock(\Planning_Milestone::class);
-        $add       = ["id" => 112];
+        $add       = ['id' => 112];
 
         $this->resources_patcher->shouldReceive('removeArtifactFromSource')->once()->andReturn([$add]);
 

@@ -26,6 +26,6 @@ class PullRequestAnonymousUserException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("Anonymous users cannot create pull requests");
+        parent::__construct('Anonymous users cannot create pull requests');
     }
 }

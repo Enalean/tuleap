@@ -102,7 +102,7 @@ class GitCommitRepresentationBuilder
     protected function getCommitReferences(Commit $commit, GitRepository $repository): array
     {
         $cross_reference_factory = new CrossReferenceFactory(
-            $repository->getName() . "/" . $commit->GetHash(),
+            $repository->getName() . '/' . $commit->GetHash(),
             Git::REFERENCE_NATURE,
             $repository->getProjectId()
         );

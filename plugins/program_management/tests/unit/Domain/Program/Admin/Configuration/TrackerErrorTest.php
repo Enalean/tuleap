@@ -105,7 +105,7 @@ final class TrackerErrorTest extends TestCase
     public function testTrackerHasErrorWhenAFieldIsNotSubmittable(): void
     {
         $error_collector = new ConfigurationErrorsCollector($this->verify_is_team, false);
-        $error_collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
+        $error_collector->addSubmitFieldPermissionError(100, 'My custom field', TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
         $tracker_error = TrackerError::fromAlreadyCollectedErrors($error_collector);
         self::assertTrue($tracker_error->has_presenter_errors);
         self::assertFalse($tracker_error->has_status_field_not_defined);
@@ -116,7 +116,7 @@ final class TrackerErrorTest extends TestCase
     public function testTrackerHasErrorWhenAFieldIsNotUpdatable(): void
     {
         $error_collector = new ConfigurationErrorsCollector($this->verify_is_team, false);
-        $error_collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
+        $error_collector->addUpdateFieldPermissionError(100, 'My custom field', TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
         $tracker_error = TrackerError::fromAlreadyCollectedErrors($error_collector);
         self::assertTrue($tracker_error->has_presenter_errors);
         self::assertFalse($tracker_error->has_status_field_not_defined);
@@ -171,7 +171,7 @@ final class TrackerErrorTest extends TestCase
     public function testTrackerHasErrorWhenTitleIsATextField(): void
     {
         $error_collector = new ConfigurationErrorsCollector($this->verify_is_team, false);
-        $error_collector->addTitleHasIncorrectType("admin_url", TrackerReferenceStub::withDefaults(), "project_name", "text_field_name");
+        $error_collector->addTitleHasIncorrectType('admin_url', TrackerReferenceStub::withDefaults(), 'project_name', 'text_field_name');
         $tracker_error = TrackerError::fromAlreadyCollectedErrors($error_collector);
         self::assertTrue($tracker_error->has_presenter_errors);
         self::assertFalse($tracker_error->has_status_field_not_defined);
@@ -182,7 +182,7 @@ final class TrackerErrorTest extends TestCase
     public function testTrackerHasErrorWhenThereIsNoArtifactLinkField(): void
     {
         $error_collector = new ConfigurationErrorsCollector($this->verify_is_team, false);
-        $error_collector->addMissingFieldArtifactLink("admin_url", TrackerReferenceStub::withDefaults(), "project_name");
+        $error_collector->addMissingFieldArtifactLink('admin_url', TrackerReferenceStub::withDefaults(), 'project_name');
         $tracker_error = TrackerError::fromAlreadyCollectedErrors($error_collector);
         self::assertTrue($tracker_error->has_presenter_errors);
         self::assertFalse($tracker_error->has_status_field_not_defined);

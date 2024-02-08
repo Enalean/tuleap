@@ -34,12 +34,12 @@ class WikiPlugin_RichTable extends WikiPlugin
 {
     public function getName()
     {
-        return _("RichTable");
+        return _('RichTable');
     }
 
     public function getDescription()
     {
-        return _("Layout tables using a very rich markup style.");
+        return _('Layout tables using a very rich markup style.');
     }
 
     public function getDefaultArguments()
@@ -50,16 +50,16 @@ class WikiPlugin_RichTable extends WikiPlugin
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.7 $"
+            '$Revision: 1.7 $'
         );
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
         global $WikiTheme;
-        include_once("lib/BlockParser.php");
+        include_once('lib/BlockParser.php');
         // RichTablePlugin markup is new.
         $markup = 2.0;
 
@@ -71,10 +71,10 @@ class WikiPlugin_RichTable extends WikiPlugin
             $attrs = $this->_parse_attr($line);
             foreach ($attrs as $key => $value) {
                 if (
-                    in_array($key, ["id", "class", "title", "style",
-                        "bgcolor", "frame", "rules", "border",
-                        "cellspacing", "cellpadding",
-                        "summary", "align", "width",
+                    in_array($key, ['id', 'class', 'title', 'style',
+                        'bgcolor', 'frame', 'rules', 'border',
+                        'cellspacing', 'cellpadding',
+                        'summary', 'align', 'width',
                     ])
                 ) {
                     $table->setAttr($key, $value);
@@ -83,7 +83,7 @@ class WikiPlugin_RichTable extends WikiPlugin
         }
 
         foreach ($lines as $line) {
-            if (substr($line, 0, 1) == "-") {
+            if (substr($line, 0, 1) == '-') {
                 if (isset($row)) {
                     if (isset($cell)) {
                         if (isset($content)) {
@@ -99,8 +99,8 @@ class WikiPlugin_RichTable extends WikiPlugin
                 $attrs = $this->_parse_attr(substr($line, 1));
                 foreach ($attrs as $key => $value) {
                     if (
-                        in_array($key, ["id", "class", "title", "style",
-                            "bgcolor", "align", "valign",
+                        in_array($key, ['id', 'class', 'title', 'style',
+                            'bgcolor', 'align', 'valign',
                         ])
                     ) {
                         $row->setAttr($key, $value);
@@ -108,7 +108,7 @@ class WikiPlugin_RichTable extends WikiPlugin
                 }
                 continue;
             }
-            if (substr($line, 0, 1) == "|" and isset($row)) {
+            if (substr($line, 0, 1) == '|' and isset($row)) {
                 if (isset($cell)) {
                     if (isset($content)) {
                         $cell->pushContent(TransformText($content, $markup, $basepage));
@@ -118,13 +118,13 @@ class WikiPlugin_RichTable extends WikiPlugin
                 }
                 $cell = HTML::td();
                 $line = substr($line, 1);
-                if ($line[0] == "*") {
+                if ($line[0] == '*') {
                     $attrs = $this->_parse_attr(substr($line, 1));
                     foreach ($attrs as $key => $value) {
                         if (
-                            in_array($key, ["id", "class", "title", "style",
-                                "colspan", "rowspan", "width", "height",
-                                "bgcolor", "align", "valign",
+                            in_array($key, ['id', 'class', 'title', 'style',
+                                'colspan', 'rowspan', 'width', 'height',
+                                'bgcolor', 'align', 'valign',
                             ])
                         ) {
                             $cell->setAttr($key, $value);
@@ -134,8 +134,8 @@ class WikiPlugin_RichTable extends WikiPlugin
                 }
             }
             if (isset($row) and isset($cell)) {
-                $line = str_replace("?\>", "?>", $line);
-                $line = str_replace("\~", "~", $line);
+                $line = str_replace('?\>', '?>', $line);
+                $line = str_replace('\~', '~', $line);
                 if (empty($content)) {
                     $content = '';
                 }
@@ -156,13 +156,13 @@ class WikiPlugin_RichTable extends WikiPlugin
 
     public function _parse_attr($line)
     {
-        $attr_chunks = preg_split("/\s*,\s*/", strtolower($line));
+        $attr_chunks = preg_split('/\s*,\s*/', strtolower($line));
         $options     = [];
         foreach ($attr_chunks as $attr_pair) {
             if (empty($attr_pair)) {
                 continue;
             }
-            $key_val = preg_split("/\s*=\s*/", $attr_pair);
+            $key_val = preg_split('/\s*=\s*/', $attr_pair);
             if (! empty($key_val[1])) {
                 $options[trim($key_val[0])] = trim($key_val[1]);
             }

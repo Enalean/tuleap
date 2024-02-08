@@ -97,7 +97,7 @@ class ProjectHistorySearchPresenter
         $this->events         = [
             [
                 'key'        => 'any',
-                'label'      => $GLOBALS["Language"]->getText('global', 'any'),
+                'label'      => $GLOBALS['Language']->getText('global', 'any'),
                 'is_current' => 'any' === $selected_event,
             ],
         ];

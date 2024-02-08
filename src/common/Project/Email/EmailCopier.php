@@ -29,11 +29,11 @@ class EmailCopier extends DataAccessObject
 {
     public function copyEmailOptionsFromTemplate(int $group_id, int $template_id): array
     {
-        $sql = "UPDATE `groups` AS g1
+        $sql = 'UPDATE `groups` AS g1
                 JOIN `groups` AS g2
                   ON g2.group_id = ?
                 SET g1.truncated_emails = g2.truncated_emails
-                WHERE g1.group_id = ?";
+                WHERE g1.group_id = ?';
 
         return $this->getDB()->run($sql, $template_id, $group_id);
     }

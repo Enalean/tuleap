@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-header("Cache-Control: no-cache, no-store, must-revalidate");
+header('Cache-Control: no-cache, no-store, must-revalidate');
 
 require_once __DIR__ . '/pre.php';
 

@@ -82,7 +82,7 @@ class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
 
         $json_board = $this->client->getUrl($url);
         if ($json_board === null) {
-            $this->logger->warning('Jira board #' . $jira_board_id . " not found.");
+            $this->logger->warning('Jira board #' . $jira_board_id . ' not found.');
             return null;
         }
 

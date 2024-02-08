@@ -183,7 +183,7 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
     public function testItOnlyIncludeHOSTNAMERelatedConfFileIfHOSTNAMEVariableIsSetInGitoliteRcFile(): void
     {
-        $this->gitoliterc_reader->shouldReceive('getHostname')->andReturns("master");
+        $this->gitoliterc_reader->shouldReceive('getHostname')->andReturns('master');
 
         touch($this->gitolite_admin_dir . '/conf/projects/project1.conf');
 
@@ -197,7 +197,7 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
     public function testItWritesTheGitoliteConfFileInTheHOSTNAMEDotConfFileIfHostnameVariableIsSet(): void
     {
-        $hostname = "master";
+        $hostname = 'master';
         $this->gitoliterc_reader->shouldReceive('getHostname')->andReturns($hostname);
 
         touch($this->gitolite_admin_dir . '/conf/projects/project1.conf');
@@ -210,7 +210,7 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
     public function testItAddsAllTheRequiredFilesForPush(): void
     {
-        $hostname = "master";
+        $hostname = 'master';
 
         $this->gitoliterc_reader->shouldReceive('getHostname')->andReturns($hostname);
 

@@ -123,7 +123,7 @@ final class GitlabBranchCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/repository/branches?branch=tuleap-123-art_title&ref=main",
+                '/projects/23/repository/branches?branch=tuleap-123-art_title&ref=main',
                 []
             );
 
@@ -132,7 +132,7 @@ final class GitlabBranchCreatorTest extends TestCase
             $this->buildGitlabBranchPOSTRepresentation()
         );
 
-        self::assertSame("tuleap-123-art_title", $representation->branch_name);
+        self::assertSame('tuleap-123-art_title', $representation->branch_name);
     }
 
     public function testItThrowAnExceptionIfArtifactDoesNotExistOrUserCannotReadIt(): void
@@ -333,7 +333,7 @@ final class GitlabBranchCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/repository/branches?branch=tuleap-123-art_title&ref=main",
+                '/projects/23/repository/branches?branch=tuleap-123-art_title&ref=main',
                 []
             )
             ->willThrowException($exception);
@@ -357,29 +357,29 @@ final class GitlabBranchCreatorTest extends TestCase
             [
                 new GitlabRequestException(
                     400,
-                    "Bad request"
+                    'Bad request'
                 ),
             ],
             [
                 new GitlabRequestException(
                     400,
-                    "Branch already exists (Bad Request)"
+                    'Branch already exists (Bad Request)'
                 ),
             ],
             [
                 new GitlabRequestException(
                     400,
-                    "Invalid reference name"
+                    'Invalid reference name'
                 ),
             ],
             [
                 new GitlabRequestException(
                     400,
-                    "404 Repository Not Found (Not Found)"
+                    '404 Repository Not Found (Not Found)'
                 ),
             ],
             [
-                new GitlabResponseAPIException("Bad request"),
+                new GitlabResponseAPIException('Bad request'),
             ],
         ];
     }
@@ -389,7 +389,7 @@ final class GitlabBranchCreatorTest extends TestCase
         return GitlabBranchPOSTRepresentation::build(
             1,
             123,
-            "main"
+            'main'
         );
     }
 
@@ -413,9 +413,9 @@ final class GitlabBranchCreatorTest extends TestCase
         $integration = new GitlabRepositoryIntegration(
             1,
             23,
-            "root/project01",
-            "",
-            "https://example.com",
+            'root/project01',
+            '',
+            'https://example.com',
             new DateTimeImmutable(),
             $project_integration,
             false
@@ -433,9 +433,9 @@ final class GitlabBranchCreatorTest extends TestCase
         $integration = new GitlabRepositoryIntegration(
             1,
             23,
-            "root/project01",
-            "",
-            "https://example.com",
+            'root/project01',
+            '',
+            'https://example.com',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false

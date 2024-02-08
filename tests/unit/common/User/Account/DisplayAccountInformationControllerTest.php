@@ -86,7 +86,7 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             ->withEmail('alice@example.com')
             ->withAddDate((new \DateTimeImmutable())->getTimestamp())
             ->withLanguage($language)
-            ->withAvatarUrl("/path/to/avatar.png")
+            ->withAvatarUrl('/path/to/avatar.png')
             ->build();
     }
 

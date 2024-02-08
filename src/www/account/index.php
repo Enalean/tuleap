@@ -19,4 +19,4 @@
  *
  */
 
-header("Location: /account/information", true, 301);
+header('Location: /account/information', true, 301);

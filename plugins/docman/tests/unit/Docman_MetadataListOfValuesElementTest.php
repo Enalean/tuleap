@@ -62,11 +62,11 @@ class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandard
     public function testItReturnsTheNoneValueWhenTheIdIs100(): void
     {
         $this->metadata_list_values->setId(100);
-        $this->metadata_list_values->setName("Value Not Expected");
+        $this->metadata_list_values->setName('Value Not Expected');
 
         $metadata_list_value = $this->metadata_list_values->getMetadataValue();
 
-        $this->assertEquals("None", $metadata_list_value);
+        $this->assertEquals('None', $metadata_list_value);
     }
 
     public function testItReturnsTheMetadataNameWhenTheIdIsNot100(): void
@@ -76,6 +76,6 @@ class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandard
 
         $metadata_list_value = $this->metadata_list_values->getMetadataValue();
 
-        $this->assertEquals("Blanka", $metadata_list_value);
+        $this->assertEquals('Blanka', $metadata_list_value);
     }
 }

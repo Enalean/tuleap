@@ -195,7 +195,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame("list", (string) $field_change_node['type']);
+        $this->assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
         $this->assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
     }
@@ -286,7 +286,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame("list", (string) $field_change_node['type']);
+        $this->assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
         $this->assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
     }
@@ -349,7 +349,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame("list", (string) $field_change_node['type']);
+        $this->assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(2, $field_change_node->value);
         $this->assertSame((string) $generated_tuleap_id_1, (string) $field_change_node->value[0]);
         $this->assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
@@ -413,7 +413,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame("list", (string) $field_change_node['type']);
+        $this->assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(2, $field_change_node->value);
         $this->assertSame((string) $generated_tuleap_id_1, (string) $field_change_node->value[0]);
         $this->assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
@@ -473,7 +473,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame("list", (string) $field_change_node['type']);
+        $this->assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
         $this->assertSame((string) $generated_tuleap_id, (string) $field_change_node->value);
     }
@@ -834,11 +834,11 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
                     0,
-                    "label01"
+                    'label01'
                 ),
                 JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
                     0,
-                    "label02"
+                    'label02'
                 ),
             ],
         );
@@ -850,7 +850,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 new FieldSnapshot(
                     $mapping,
-                    ["label01"],
+                    ['label01'],
                     null
                 ),
             ],
@@ -882,11 +882,11 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
                     0,
-                    "label01"
+                    'label01'
                 ),
                 JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
                     0,
-                    "label02"
+                    'label02'
                 ),
             ],
         );
@@ -898,7 +898,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 new FieldSnapshot(
                     $mapping,
-                    "label01 label02",
+                    'label01 label02',
                     null
                 ),
             ],

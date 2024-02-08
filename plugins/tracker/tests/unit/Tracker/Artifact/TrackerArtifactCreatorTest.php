@@ -118,7 +118,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         AddReverseLinks $reverse_links,
     ): MockObject&TrackerArtifactCreator {
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
-        $changeset->method("executePostCreationActions");
+        $changeset->method('executePostCreationActions');
 
         $creator = $this->getMockBuilder(TrackerArtifactCreator::class)
             ->onlyMethods(['createNewChangeset'])
@@ -133,7 +133,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $reverse_links,
             ])->getMock();
 
-        $creator->method("createNewChangeset")->willReturn(
+        $creator->method('createNewChangeset')->willReturn(
             $changeset
         );
 

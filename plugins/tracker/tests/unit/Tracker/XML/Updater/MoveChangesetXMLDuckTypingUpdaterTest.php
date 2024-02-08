@@ -96,13 +96,13 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             $XML_updater
         );
         $this->source_tracker     = TrackerTestBuilder::aTracker()
-            ->withName("Bugs")
-            ->withProject(ProjectTestBuilder::aProject()->withPublicName("Guinea Pig")->build())
+            ->withName('Bugs')
+            ->withProject(ProjectTestBuilder::aProject()->withPublicName('Guinea Pig')->build())
             ->build();
 
         $this->destination_tracker = TrackerTestBuilder::aTracker()
-            ->withName("Bugs")
-            ->withProject(ProjectTestBuilder::aProject()->withPublicName("Hamsters")->build())
+            ->withName('Bugs')
+            ->withProject(ProjectTestBuilder::aProject()->withPublicName('Hamsters')->build())
             ->build();
 
         $user_groups_bind_values = [
@@ -155,8 +155,8 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 ->build()
         )->withUserGroups([
             ProjectUGroupTestBuilder::buildProjectMembers(),
-            ProjectUGroupTestBuilder::aCustomUserGroup(100)->withName("semi-crispy")->build(),
-            ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName("crispy")->build(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(100)->withName('semi-crispy')->build(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('crispy')->build(),
         ])->build();
 
         $destination_cc_field_bind = ListUserGroupBindBuilder::aUserGroupBind(
@@ -166,39 +166,39 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 ->build()
         )->withUserGroups([
             ProjectUGroupTestBuilder::buildProjectMembers(),
-            ProjectUGroupTestBuilder::aCustomUserGroup(200)->withName("semi-crispy")->build(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(200)->withName('semi-crispy')->build(),
         ])->build();
 
         $source_status_field_bind = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField($source_status_field_id)->withName('status')->build()
         )->withStaticValues([
-            105 => "New",
-            106 => "In Progress",
-            107 => "Fixed",
+            105 => 'New',
+            106 => 'In Progress',
+            107 => 'Fixed',
         ])->build();
 
         $destination_status_field_bind = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField($destination_status_field_id)->withName('status')->build()
         )->withStaticValues([
-            205 => "Todo",
-            206 => "In Progress",
-            207 => "Fixed",
+            205 => 'Todo',
+            206 => 'In Progress',
+            207 => 'Fixed',
         ])->build();
 
         $source_severity_field_bind = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField($source_severity_field_id)->withName('severity')->build()
         )->withStaticValues([
-            113 => "Low Impact",
-            114 => "Major Impact",
-            115 => "Critical Impact",
+            113 => 'Low Impact',
+            114 => 'Major Impact',
+            115 => 'Critical Impact',
         ])->build();
 
         $destination_severity_field_bind = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField($destination_severity_field_id)->withName('severity')->build()
         )->withStaticValues([
-            213 => "Low Impact",
-            214 => "Major Impact",
-            215 => "Critical Impact",
+            213 => 'Low Impact',
+            214 => 'Major Impact',
+            215 => 'Critical Impact',
         ])->build();
 
         $source_static_multiple_list_field_bind = ListStaticBindBuilder::aStaticBind(
@@ -207,9 +207,9 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 ->withName('multiple')
                 ->build()
         )->withStaticValues([
-            216 => "Value A",
-            217 => "Value B",
-            218 => "Value C",
+            216 => 'Value A',
+            217 => 'Value B',
+            218 => 'Value C',
         ])->build();
 
         $destination_static_multiple_list_field_bind = ListStaticBindBuilder::aStaticBind(
@@ -218,9 +218,9 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 ->withName('multiple')
                 ->build()
         )->withStaticValues([
-            316 => "Value B",
-            317 => "Value C",
-            318 => "Value D",
+            316 => 'Value B',
+            317 => 'Value C',
+            318 => 'Value D',
         ])->build();
 
         $jolasti                       = UserTestBuilder::anActiveUser()->withId(104)->withUserName("Joe l'asticot")->build();
@@ -231,7 +231,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 ->build()
         )->withUsers([
             $jolasti,
-            UserTestBuilder::anActiveUser()->withId(105)->withUserName("John Doe")->build(),
+            UserTestBuilder::anActiveUser()->withId(105)->withUserName('John Doe')->build(),
         ])->build();
 
         $destination_assigned_to_field_bind = ListUserBindBuilder::aUserBind(
@@ -241,59 +241,59 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 ->build()
         )->withUsers([
             $jolasti,
-            UserTestBuilder::anActiveUser()->withId(106)->withUserName("Jeanne Doe")->build(),
+            UserTestBuilder::anActiveUser()->withId(106)->withUserName('Jeanne Doe')->build(),
         ])->build();
 
-        $source_title_field                = StringFieldBuilder::aStringField(1)->withName("summary")->build();
+        $source_title_field                = StringFieldBuilder::aStringField(1)->withName('summary')->build();
         $source_severity_field             = $source_severity_field_bind->getField();
         $source_status_field               = $source_status_field_bind->getField();
         $source_static_multiple_list_field = $source_static_multiple_list_field_bind->getField();
         $source_assigned_to_field          = $source_assigned_to_field_bind->getField();
-        $source_details_field              = TextFieldBuilder::aTextField(5)->withName("details")->build();
-        $source_close_date_field           = DateFieldBuilder::aDateField(6)->withName("close_date")->build();
-        $source_initial_effort_field       = FloatFieldBuilder::aFloatField(7)->withName("initial_effort")->build();
-        $source_remaining_effort_field     = FloatFieldBuilder::aFloatField(8)->withName("remaining_effort")->build();
-        $source_not_existing_field         = StringFieldBuilder::aStringField(9)->withName("notexisting")->build();
+        $source_details_field              = TextFieldBuilder::aTextField(5)->withName('details')->build();
+        $source_close_date_field           = DateFieldBuilder::aDateField(6)->withName('close_date')->build();
+        $source_initial_effort_field       = FloatFieldBuilder::aFloatField(7)->withName('initial_effort')->build();
+        $source_remaining_effort_field     = FloatFieldBuilder::aFloatField(8)->withName('remaining_effort')->build();
+        $source_not_existing_field         = StringFieldBuilder::aStringField(9)->withName('notexisting')->build();
         $source_cc_field                   = $source_cc_field_bind->getField();
         $source_permissions_field          = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $source_permissions_field->method("getName")->willReturn("permissions");
+        $source_permissions_field->method('getName')->willReturn('permissions');
         $source_computed_field = $this->createStub(\Tracker_FormElement_Field_Computed::class);
-        $source_computed_field->method("getName")->willReturn("computed");
+        $source_computed_field->method('getName')->willReturn('computed');
 
-        $source_open_list_static_field     = OpenListFieldBuilder::aBind()->withId(10)->withName("open_static")->buildStaticBind()->getField();
-        $source_open_list_user_field       = OpenListFieldBuilder::aBind()->withId(11)->withName("open_users")->buildUserBind()->getField();
-        $source_open_list_user_group_field = OpenListFieldBuilder::aBind()->withId(12)->withTracker($this->source_tracker)->withName("open_ugroups")->buildUserGroupBind()->getField();
+        $source_open_list_static_field     = OpenListFieldBuilder::aBind()->withId(10)->withName('open_static')->buildStaticBind()->getField();
+        $source_open_list_user_field       = OpenListFieldBuilder::aBind()->withId(11)->withName('open_users')->buildUserBind()->getField();
+        $source_open_list_user_group_field = OpenListFieldBuilder::aBind()->withId(12)->withTracker($this->source_tracker)->withName('open_ugroups')->buildUserGroupBind()->getField();
 
-        $destination_open_list_static_field     = OpenListFieldBuilder::aBind()->withId(30)->withName("open_static")->buildStaticBind()->getField();
-        $destination_open_list_user_field       = OpenListFieldBuilder::aBind()->withId(31)->withName("open_users")->buildUserBind()->getField();
-        $destination_open_list_user_group_field = OpenListFieldBuilder::aBind()->withId(32)->withTracker($this->destination_tracker)->withName("open_ugroups")->buildUserGroupBind()->getField();
+        $destination_open_list_static_field     = OpenListFieldBuilder::aBind()->withId(30)->withName('open_static')->buildStaticBind()->getField();
+        $destination_open_list_user_field       = OpenListFieldBuilder::aBind()->withId(31)->withName('open_users')->buildUserBind()->getField();
+        $destination_open_list_user_group_field = OpenListFieldBuilder::aBind()->withId(32)->withTracker($this->destination_tracker)->withName('open_ugroups')->buildUserGroupBind()->getField();
 
-        $source_external_field      = ExternalFieldBuilder::anExternalField(13)->withName("external_field")->build();
-        $destination_external_field = ExternalFieldBuilder::anExternalField(23)->withName("external_field")->build();
+        $source_external_field      = ExternalFieldBuilder::anExternalField(13)->withName('external_field')->build();
+        $destination_external_field = ExternalFieldBuilder::anExternalField(23)->withName('external_field')->build();
 
-        $source_artifactlink_field      = ArtifactLinkFieldBuilder::anArtifactLinkField(34)->withLabel("artifact_link")->build();
-        $destination_artifactlink_field = ArtifactLinkFieldBuilder::anArtifactLinkField(35)->withLabel("artifact_link")->build();
+        $source_artifactlink_field      = ArtifactLinkFieldBuilder::anArtifactLinkField(34)->withLabel('artifact_link')->build();
+        $destination_artifactlink_field = ArtifactLinkFieldBuilder::anArtifactLinkField(35)->withLabel('artifact_link')->build();
 
-        $source_not_movable_external_field = ExternalFieldBuilder::anExternalField(14)->withName("external_field_not_movable")->build();
+        $source_not_movable_external_field = ExternalFieldBuilder::anExternalField(14)->withName('external_field_not_movable')->build();
 
-        $destination_title_field                = StringFieldBuilder::aStringField(21)->withName("summary")->build();
+        $destination_title_field                = StringFieldBuilder::aStringField(21)->withName('summary')->build();
         $destination_severity_field             = $destination_severity_field_bind->getField();
         $destination_status_field               = $destination_status_field_bind->getField();
         $destination_static_multiple_list_field = $destination_static_multiple_list_field_bind->getField();
-        $destination_details_field              = TextFieldBuilder::aTextField(25)->withName("details")->build();
-        $destination_close_date_field           = DateFieldBuilder::aDateField(26)->withName("close_date")->build();
-        $destination_initial_effort_field       = FloatFieldBuilder::aFloatField(27)->withName("initial_effort")->build();
-        $destination_remaining_effort_field     = FloatFieldBuilder::aFloatField(28)->withName("remaining_effort")->build();
+        $destination_details_field              = TextFieldBuilder::aTextField(25)->withName('details')->build();
+        $destination_close_date_field           = DateFieldBuilder::aDateField(26)->withName('close_date')->build();
+        $destination_initial_effort_field       = FloatFieldBuilder::aFloatField(27)->withName('initial_effort')->build();
+        $destination_remaining_effort_field     = FloatFieldBuilder::aFloatField(28)->withName('remaining_effort')->build();
         $destination_assigned_to_field          = $destination_assigned_to_field_bind->getField();
         $destination_cc_field                   = $destination_cc_field_bind->getField();
         $destination_permissions_field          = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $destination_permissions_field->method("getName")->willReturn("permissions");
-        $destination_permissions_field->method("getAllUserGroups")->willReturn([
+        $destination_permissions_field->method('getName')->willReturn('permissions');
+        $destination_permissions_field->method('getAllUserGroups')->willReturn([
             ProjectUGroupTestBuilder::buildProjectMembers(),
-            ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName("crusty")->build(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('crusty')->build(),
         ]);
         $destination_computed_field = $this->createStub(\Tracker_FormElement_Field_Computed::class);
-        $destination_computed_field->method("getName")->willReturn("computed");
+        $destination_computed_field->method('getName')->willReturn('computed');
 
         $fields = DuckTypedMoveFieldCollection::fromFields(
             [

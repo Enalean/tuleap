@@ -74,7 +74,7 @@ class MappingFileOptimusPrimeTransformer
                     $to_be_imported_user->getOriginalLdapId()
                 );
             } else {
-                throw new InvalidUserTypeException("$username: with --automap, user type `" . $to_be_imported_user::class . "` is not supported. User: " . $to_be_imported_user->getUserName());
+                throw new InvalidUserTypeException("$username: with --automap, user type `" . $to_be_imported_user::class . '` is not supported. User: ' . $to_be_imported_user->getUserName());
             }
         }
 
@@ -136,7 +136,7 @@ class MappingFileOptimusPrimeTransformer
         }
 
         if (! $to_be_imported_user->isActionAllowed($action)) {
-            throw new InvalidMappingFileException("Action $action is not allowed for user $username (" .  $to_be_imported_user::class . ")");
+            throw new InvalidMappingFileException("Action $action is not allowed for user $username (" .  $to_be_imported_user::class . ')');
         }
 
         if ($action === ToBeMappedUser::ACTION) {

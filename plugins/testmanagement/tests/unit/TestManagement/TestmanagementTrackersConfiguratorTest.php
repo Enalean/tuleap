@@ -43,11 +43,11 @@ class TestmanagementTrackersConfiguratorTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testConfigureTestmanagementTracker()
     {
-        $this->tracker_configurator->configureTestmanagementTracker("campaign", 1);
-        $this->tracker_configurator->configureTestmanagementTracker("test_def", 2);
-        $this->tracker_configurator->configureTestmanagementTracker("test_exec", 3);
-        $this->tracker_configurator->configureTestmanagementTracker("bug", 4);
-        $this->tracker_configurator->configureTestmanagementTracker("Banana", 5);
+        $this->tracker_configurator->configureTestmanagementTracker('campaign', 1);
+        $this->tracker_configurator->configureTestmanagementTracker('test_def', 2);
+        $this->tracker_configurator->configureTestmanagementTracker('test_exec', 3);
+        $this->tracker_configurator->configureTestmanagementTracker('bug', 4);
+        $this->tracker_configurator->configureTestmanagementTracker('Banana', 5);
 
         $this->assertEquals($this->getExpectedResult(), $this->tracker_configurator->getTrackersConfiguration());
     }
@@ -57,29 +57,29 @@ class TestmanagementTrackersConfiguratorTest extends \Tuleap\Test\PHPUnit\TestCa
         $tracker_configuraton = new TestmanagementTrackersConfiguration();
         $tracker_configuraton->setCampaign(
             new TestmanagementConfigTracker(
-                "Validation Campaign",
-                "campaign",
+                'Validation Campaign',
+                'campaign',
                 1
             )
         );
         $tracker_configuraton->setTestDefinition(
             new TestmanagementConfigTracker(
-                "Test Cases",
-                "test_def",
+                'Test Cases',
+                'test_def',
                 2
             )
         );
         $tracker_configuraton->setTestExecution(
             new TestmanagementConfigTracker(
-                "Test Execution",
-                "test_exec",
+                'Test Execution',
+                'test_exec',
                 3
             )
         );
         $tracker_configuraton->setIssue(
             new TestmanagementConfigTracker(
-                "bugs",
-                "bug",
+                'bugs',
+                'bug',
                 4
             )
         );

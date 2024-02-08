@@ -40,7 +40,7 @@ final class SetupSVNCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $httpd_vhost = "/etc/httpd/conf.d/tuleap-vhost.conf";
+        $httpd_vhost = '/etc/httpd/conf.d/tuleap-vhost.conf';
         if (! file_exists($httpd_vhost)) {
             $content = file_get_contents(__DIR__ . '/../../../../src/etc/tuleap-vhost.conf.dist');
             $content = str_replace(
@@ -56,9 +56,9 @@ final class SetupSVNCommand extends Command
             (new Process(['/usr/bin/tuleap-cfg', 'systemctl', 'restart', 'httpd.service']))->mustRun();
             (new Process(['/usr/bin/tuleap-cfg', 'systemctl', 'enable', 'httpd.service']))->mustRun();
 
-            $output->writeln("Plugin SVN is configured");
+            $output->writeln('Plugin SVN is configured');
         } else {
-            $output->writeln("Plugin SVN is already configured");
+            $output->writeln('Plugin SVN is already configured');
         }
 
         return self::SUCCESS;

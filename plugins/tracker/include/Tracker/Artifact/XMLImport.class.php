@@ -161,8 +161,8 @@ class Tracker_Artifact_XMLImport
                 $tracker_xml_config
             );
         } catch (Exception $exception) {
-            $this->logger->error("" . $exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
-            echo ("" . $exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
+            $this->logger->error('' . $exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
+            echo ('' . $exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
             return false;
         }
     }
@@ -333,7 +333,7 @@ class Tracker_Artifact_XMLImport
     ): void {
         $this->logger->push('art #' . (string) $xml_artifact['id']);
         $nb_changesets = count($xml_artifact->changeset);
-        $this->logger->debug("Changeset(s) to create: " . $nb_changesets);
+        $this->logger->debug('Changeset(s) to create: ' . $nb_changesets);
         if ($nb_changesets > 0) {
             $this->importAllChangesetsBySubmitionDate(
                 $artifact,
@@ -396,7 +396,7 @@ class Tracker_Artifact_XMLImport
         foreach ($xml_changesets as $xml_changeset) {
             try {
                 if ($count === 0) {
-                    $this->logger->debug("initial changeset");
+                    $this->logger->debug('initial changeset');
                     $res = $this->importFirstChangeset($artifact, $xml_changeset, $fields_data_builder, $url_mapping, $changeset_id_mapping, $tracker_import_config);
                     if (! $res) {
                         $this->importFakeFirstChangeset($artifact, $xml_changeset, $url_mapping, $changeset_id_mapping, $tracker_import_config);
@@ -461,7 +461,7 @@ class Tracker_Artifact_XMLImport
     ): ?Tracker_Artifact_Changeset {
         $submitted_by = $this->getSubmittedBy($xml_changeset);
 
-        $this->logger->warning("Failed to create artifact with first changeset, create a fake one instead: " . $GLOBALS['Response']->getAndClearRawFeedback());
+        $this->logger->warning('Failed to create artifact with first changeset, create a fake one instead: ' . $GLOBALS['Response']->getAndClearRawFeedback());
         $changeset = $this->artifact_creator->createFirstChangeset(
             $artifact,
             new InitialChangesetValuesContainer([], Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
@@ -527,7 +527,7 @@ class Tracker_Artifact_XMLImport
             }
             $this->updateComments($changeset, $xml_changeset);
         } else {
-            $this->logger->warning("Impossible to create changeset: " . $GLOBALS['Response']->getAndClearRawFeedback());
+            $this->logger->warning('Impossible to create changeset: ' . $GLOBALS['Response']->getAndClearRawFeedback());
         }
     }
 
@@ -571,7 +571,7 @@ class Tracker_Artifact_XMLImport
         if ($time !== false) {
             return $time;
         }
-        throw new Tracker_Artifact_Exception_XMLImportException("Invalid date format not ISO8601: " . (string) $xml_changeset->submitted_on);
+        throw new Tracker_Artifact_Exception_XMLImportException('Invalid date format not ISO8601: ' . (string) $xml_changeset->submitted_on);
     }
 
     /**
@@ -590,7 +590,7 @@ class Tracker_Artifact_XMLImport
             $changesets      = array_values($this->getSortedBySubmittedOn($xml_artifact->changeset));
             $first_changeset = count($changesets) ? $changesets[0] : null;
             if ($first_changeset === null) {
-                $logger->debug("First changeset not found");
+                $logger->debug('First changeset not found');
                 return null;
             }
             $artifact = $this->artifact_creator->createBareWithAllData(
@@ -623,7 +623,7 @@ class Tracker_Artifact_XMLImport
                 return $artifact;
             }
 
-            $logger->debug("Artifact has not been created");
+            $logger->debug('Artifact has not been created');
         }
 
         return null;

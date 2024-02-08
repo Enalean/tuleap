@@ -334,7 +334,7 @@ class UserGroupResource extends AuthenticatedResource
         }
 
         if ($user_group->getSourceGroup() !== null) {
-            throw new RestException(400, "Ugroup is bound to a source group");
+            throw new RestException(400, 'Ugroup is bound to a source group');
         }
 
         $this->checkGroupIsViewable($user_group->getId());

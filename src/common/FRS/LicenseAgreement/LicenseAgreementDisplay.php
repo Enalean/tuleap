@@ -72,7 +72,7 @@ class LicenseAgreementDisplay
     {
         $display_filename = $this->purifier->purify($fname);
         if (! $package->getApproveLicense() && ! ForgeConfig::get('sys_frs_license_mandatory')) {
-            return '<a href="/file/download/' . urlencode((string) $file_id) . '" title="' . $this->purifier->purify($file_id) . " - " . $display_filename . '">' . $display_filename . '</a>';
+            return '<a href="/file/download/' . urlencode((string) $file_id) . '" title="' . $this->purifier->purify($file_id) . ' - ' . $display_filename . '">' . $display_filename . '</a>';
         }
         $license_agreement = $this->factory->getLicenseAgreementForPackage($package);
         return sprintf('<a href="#" class="frs-license-agreement-modal-link" data-file-id="%d" data-agreement-id="%d">%s</a>', $file_id, $license_agreement->getId(), $this->purifier->purify($fname));

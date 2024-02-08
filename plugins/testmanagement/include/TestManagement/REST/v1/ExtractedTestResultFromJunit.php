@@ -31,12 +31,12 @@ class ExtractedTestResultFromJunit
     /**
      * @var string
      */
-    private $status = "";
+    private $status = '';
 
     /**
      * @var string
      */
-    private $result = "";
+    private $result = '';
 
     public function setStatus(string $status): void
     {

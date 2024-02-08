@@ -66,7 +66,7 @@ class PullRequestPane extends Pane
      */
     public function getContent()
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(PULLREQUEST_BASE_DIR . "/templates");
+        $renderer = TemplateRendererFactory::build()->getRenderer(PULLREQUEST_BASE_DIR . '/templates');
 
         $merge_setting = $this->merge_setting_retriever->getMergeSettingForRepository($this->repository);
 

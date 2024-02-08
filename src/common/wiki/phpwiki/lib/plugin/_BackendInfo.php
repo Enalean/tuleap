@@ -26,20 +26,20 @@ class WikiPlugin__BackendInfo extends WikiPlugin
 {
     public function getName()
     {
-        return _("DebugInfo");
+        return _('DebugInfo');
     }
 
     public function getDescription()
     {
-        return sprintf(_("Get debugging information for %s."), '[pagename]');
+        return sprintf(_('Get debugging information for %s.'), '[pagename]');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.24 $"
+            '$Revision: 1.24 $'
         );
     }
 
@@ -70,7 +70,7 @@ class WikiPlugin__BackendInfo extends WikiPlugin
         $pagedata = $backend->get_pagedata($page);
         if (! $pagedata) {
             // FIXME: invalid HTML
-            $html->pushContent(HTML::p(fmt("No pagedata for %s", $page)));
+            $html->pushContent(HTML::p(fmt('No pagedata for %s', $page)));
         } else {
             $this->_fixupData($pagedata);
             $table->pushContent($this->_showhash("get_pagedata('$page')", $pagedata));
@@ -101,7 +101,7 @@ class WikiPlugin__BackendInfo extends WikiPlugin
         foreach ($data as $key => $val) {
             if (is_integer($key)) {
             } elseif ($key == 'passwd' and ! $user->isAdmin()) {
-                $data[$key] = $val ? _("<not displayed>") : _("<empty>");
+                $data[$key] = $val ? _('<not displayed>') : _('<empty>');
             } elseif ($key and $key == '_cached_html') {
                 $val = TransformedText::unpack($val);
                 ob_start();
@@ -109,7 +109,7 @@ class WikiPlugin__BackendInfo extends WikiPlugin
                 $data[$key] = HTML::pre(ob_get_contents());
                 ob_end_clean();
             } elseif (is_bool($val)) {
-                $data[$key] = $val ? "<true>" : "<false>";
+                $data[$key] = $val ? '<true>' : '<false>';
             } elseif (is_string($val) && (substr($val, 0, 2) == 'a:')) {
                 // how to indent this table?
                 $val = unserialize($val);
@@ -135,7 +135,7 @@ class WikiPlugin__BackendInfo extends WikiPlugin
                 if ($val === true) {
                     $val = '<true>';
                 } elseif (strlen($val) > 40) {
-                    $val = substr($val, 0, 40) . " ...";
+                    $val = substr($val, 0, 40) . ' ...';
                 }
                 $data[$key] = $val;
             }

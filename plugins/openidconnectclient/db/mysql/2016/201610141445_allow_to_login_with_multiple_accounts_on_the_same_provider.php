@@ -32,10 +32,10 @@ class b201610141445_allow_to_login_with_multiple_accounts_on_the_same_provider e
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_openidconnectclient_user_mapping
+        $sql = 'ALTER TABLE plugin_openidconnectclient_user_mapping
                 DROP PRIMARY KEY,
                 ADD COLUMN id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                ADD INDEX idx_mapping_provider_user(provider_id, user_id)";
+                ADD INDEX idx_mapping_provider_user(provider_id, user_id)';
 
         $res = $this->db->dbh->exec($sql);
 

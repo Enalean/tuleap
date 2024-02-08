@@ -41,28 +41,28 @@ class DocmanLinksValidityCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLinkIsValidInHTTPFormat(): void
     {
-        $link_url = "http://example.com";
+        $link_url = 'http://example.com';
         $this->checker->checkLinkValidity($link_url);
         $this->addToAssertionCount(1);
     }
 
     public function testLinkIsValidInHTTPSFormat(): void
     {
-        $link_url = "https://example.com";
+        $link_url = 'https://example.com';
         $this->checker->checkLinkValidity($link_url);
         $this->addToAssertionCount(1);
     }
 
     public function testLinkIsValidInFTPFormat(): void
     {
-        $link_url = "ftp://example.com";
+        $link_url = 'ftp://example.com';
         $this->checker->checkLinkValidity($link_url);
         $this->addToAssertionCount(1);
     }
 
     public function testLinkIsValidInFTPsFormat(): void
     {
-        $link_url = "ftps://example.com";
+        $link_url = 'ftps://example.com';
         $this->checker->checkLinkValidity($link_url);
         $this->addToAssertionCount(1);
     }
@@ -70,7 +70,7 @@ class DocmanLinksValidityCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testLinkIsNotValid(): void
     {
         $this->expectException(RestException::class);
-        $link_url = "example.com";
+        $link_url = 'example.com';
         $this->checker->checkLinkValidity($link_url);
     }
 }

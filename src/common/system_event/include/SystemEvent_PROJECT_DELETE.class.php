@@ -70,36 +70,36 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
 
         if ($project = $this->getProject($groupId)) {
             if (! $this->removeProjectMembers($project)) {
-                $this->error("Could not remove project users");
+                $this->error('Could not remove project users');
                 $deleteState = false;
             }
 
             if (! $this->deleteMembershipRequestNotificationEntries($groupId)) {
-                $this->error("Could not remove membership request notification ugroups or message");
+                $this->error('Could not remove membership request notification ugroups or message');
                 $deleteState = false;
             }
 
             if (! $this->cleanupProjectUgroupsBinding($groupId)) {
-                $this->error("Could not remove ugroups binding");
+                $this->error('Could not remove ugroups binding');
                 $deleteState = false;
             }
 
             if (! $this->cleanupProjectFRS($groupId)) {
-                $this->error("Could not remove FRS items");
+                $this->error('Could not remove FRS items');
                 $deleteState = false;
             }
 
             // Mark all project trackers as deleted
             $atf = $this->getArtifactTypeFactory($project);
             if (! $atf->preDeleteAllProjectArtifactTypes()) {
-                $this->error("Could not mark all trackers as deleted");
+                $this->error('Could not mark all trackers as deleted');
                     $deleteState = false;
             }
 
             // Mark Wiki attachments as deleted
             $wa = $this->getWikiAttachment($groupId);
             if (! $wa->deleteProjectAttachments()) {
-                $this->error("Could not mark all wiki attachments as deleted");
+                $this->error('Could not mark all wiki attachments as deleted');
                 $deleteState = false;
             }
 

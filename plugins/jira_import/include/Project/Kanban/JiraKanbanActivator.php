@@ -29,7 +29,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\JiraAllIssuesMonoTrackersInXmlEx
 
 final class JiraKanbanActivator
 {
-    private const DEFAULT_XML_KANBAN_ID = "K01";
+    private const DEFAULT_XML_KANBAN_ID = 'K01';
 
     public function __construct(private readonly LoggerInterface $logger)
     {
@@ -44,20 +44,20 @@ final class JiraKanbanActivator
             throw new LogicException();
         }
 
-        $xml_kanban_list = $xml_agiledashboard->addChild("kanban_list");
+        $xml_kanban_list = $xml_agiledashboard->addChild('kanban_list');
         if ($xml_kanban_list === null) {
             throw new LogicException();
         }
 
         $xml_kanban_list->addAttribute('title', 'Kanban');
-        $xml_kanban = $xml_kanban_list->addChild("kanban");
+        $xml_kanban = $xml_kanban_list->addChild('kanban');
         if ($xml_kanban === null) {
             throw new LogicException();
         }
 
-        $xml_kanban->addAttribute("tracker_id", JiraAllIssuesMonoTrackersInXmlExporter::MONO_TRACKER_XML_ID);
-        $xml_kanban->addAttribute("name", JiraAllIssuesMonoTrackersInXmlExporter::MONO_TRACKER_NAME);
-        $xml_kanban->addAttribute("ID", self::DEFAULT_XML_KANBAN_ID);
-        $xml_kanban->addAttribute("is_promoted", "1");
+        $xml_kanban->addAttribute('tracker_id', JiraAllIssuesMonoTrackersInXmlExporter::MONO_TRACKER_XML_ID);
+        $xml_kanban->addAttribute('name', JiraAllIssuesMonoTrackersInXmlExporter::MONO_TRACKER_NAME);
+        $xml_kanban->addAttribute('ID', self::DEFAULT_XML_KANBAN_ID);
+        $xml_kanban->addAttribute('is_promoted', '1');
     }
 }

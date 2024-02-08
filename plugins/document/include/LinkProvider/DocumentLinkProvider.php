@@ -60,13 +60,13 @@ class DocumentLinkProvider implements ILinkUrlProvider
 
     public function getNotificationLinkUrl(\Docman_Item $item): string
     {
-        return $this->base_url . "/plugins/docman/?group_id=" . urlencode((string) $this->project->getID()) .
-            "&action=details&section=notifications&id=" . urlencode((string) $item->getId());
+        return $this->base_url . '/plugins/docman/?group_id=' . urlencode((string) $this->project->getID()) .
+            '&action=details&section=notifications&id=' . urlencode((string) $item->getId());
     }
 
     public function getHistoryUrl(\Docman_Item $item): string
     {
-        return $this->base_url . "/plugins/docman/?group_id=" . urlencode((string) $this->project->getID()) .
-            "&action=details&section=history&id=" . urlencode((string) $item->getId());
+        return $this->base_url . '/plugins/docman/?group_id=' . urlencode((string) $this->project->getID()) .
+            '&action=details&section=history&id=' . urlencode((string) $item->getId());
     }
 }

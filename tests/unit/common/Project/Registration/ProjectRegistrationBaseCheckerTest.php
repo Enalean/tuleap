@@ -66,7 +66,7 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
      */
     public function testItCollectsAllDataErrors(bool $project_is_public, bool $project_allow_restricted): void
     {
-        ForgeConfig::set("enable_not_mandatory_description", 0);
+        ForgeConfig::set('enable_not_mandatory_description', 0);
         ForgeConfig::set(\ForgeAccess::CONFIG, \ForgeAccess::REGULAR);
 
         $user = UserTestBuilder::aUser()->build();
@@ -76,8 +76,8 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
             new NullLogger()
         );
 
-        $data->setUnixName("not:val_id");
-        $data->setFullName("Not vaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaalid");
+        $data->setUnixName('not:val_id');
+        $data->setFullName('Not vaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaalid');
         $data->setAccessFromProjectData(['is_public' => $project_is_public, 'allow_restricted' => $project_allow_restricted]);
 
         $this->rule_project_name
@@ -122,9 +122,9 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
             new NullLogger()
         );
 
-        $data->setUnixName("shortnale");
-        $data->setFullName("Long Name");
-        $data->setShortDescription("Description");
+        $data->setUnixName('shortnale');
+        $data->setFullName('Long Name');
+        $data->setShortDescription('Description');
 
         $this->rule_project_name
             ->expects(self::once())

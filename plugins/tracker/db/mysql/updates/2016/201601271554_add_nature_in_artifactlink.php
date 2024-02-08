@@ -30,7 +30,7 @@ class b201601271554_add_nature_in_artifactlink extends \Tuleap\ForgeUpgrade\Buck
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_changeset_value_artifactlink ADD COLUMN nature VARCHAR(255) NULL";
+        $sql = 'ALTER TABLE tracker_changeset_value_artifactlink ADD COLUMN nature VARCHAR(255) NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding nature column in artifact link: ' . implode(', ', $this->db->dbh->errorInfo()));

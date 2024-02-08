@@ -77,8 +77,8 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $this->assertArrayHasKey('trackers', $fourth_backlog_item['accept']);
         $this->assertEquals($fourth_backlog_item['accept']['trackers'][0]['id'], $this->tasks_tracker_id);
         $this->assertEquals($fourth_backlog_item['accept']['trackers'][0]['uri'], 'trackers/' . $this->tasks_tracker_id);
-        $this->assertEquals($fourth_backlog_item['label'], "Closed Story");
-        $this->assertEquals($fourth_backlog_item['status'], "Closed");
+        $this->assertEquals($fourth_backlog_item['label'], 'Closed Story');
+        $this->assertEquals($fourth_backlog_item['status'], 'Closed');
         $this->assertEquals($fourth_backlog_item['artifact']['id'], $this->story_artifact_ids[12]);
         $this->assertEquals($fourth_backlog_item['artifact']['uri'], 'artifacts/' . $this->story_artifact_ids[12]);
         $this->assertEquals($fourth_backlog_item['artifact']['tracker']['id'], $this->user_stories_tracker_id);
@@ -92,8 +92,8 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $this->assertArrayHasKey('trackers', $first_backlog_item['accept']);
         $this->assertEquals($first_backlog_item['accept']['trackers'][0]['id'], $this->tasks_tracker_id);
         $this->assertEquals($first_backlog_item['accept']['trackers'][0]['uri'], 'trackers/' . $this->tasks_tracker_id);
-        $this->assertEquals($first_backlog_item['label'], "Hughhhhhhh");
-        $this->assertEquals($first_backlog_item['status'], "Open");
+        $this->assertEquals($first_backlog_item['label'], 'Hughhhhhhh');
+        $this->assertEquals($first_backlog_item['status'], 'Open');
         $this->assertEquals($first_backlog_item['artifact']['id'], $this->story_artifact_ids[3]);
         $this->assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->story_artifact_ids[3]);
         $this->assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->user_stories_tracker_id);
@@ -107,8 +107,8 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
             $second_backlog_item['accept']['trackers'][0]['uri'],
             'trackers/' . $this->tasks_tracker_id
         );
-        $this->assertEquals($second_backlog_item['label'], "Kill you");
-        $this->assertEquals($second_backlog_item['status'], "Open");
+        $this->assertEquals($second_backlog_item['label'], 'Kill you');
+        $this->assertEquals($second_backlog_item['status'], 'Open');
         $this->assertEquals($second_backlog_item['artifact']['id'], $this->story_artifact_ids[4]);
         $this->assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->story_artifact_ids[4]);
         $this->assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->user_stories_tracker_id);
@@ -119,8 +119,8 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $this->assertArrayHasKey('trackers', $third_backlog_item['accept']);
         $this->assertEquals($third_backlog_item['accept']['trackers'][0]['id'], $this->tasks_tracker_id);
         $this->assertEquals($third_backlog_item['accept']['trackers'][0]['uri'], 'trackers/' . $this->tasks_tracker_id);
-        $this->assertEquals($third_backlog_item['label'], "Back");
-        $this->assertEquals($third_backlog_item['status'], "Open");
+        $this->assertEquals($third_backlog_item['label'], 'Back');
+        $this->assertEquals($third_backlog_item['status'], 'Open');
         $this->assertEquals($third_backlog_item['artifact']['id'], $this->story_artifact_ids[5]);
         $this->assertEquals($third_backlog_item['artifact']['uri'], 'artifacts/' . $this->story_artifact_ids[5]);
         $this->assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->user_stories_tracker_id);

@@ -46,7 +46,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
             $this->transition_id,
             $workflow_id,
             null,
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
         );
         $this->transition->setWorkflow($this->workflow);
 
@@ -88,9 +88,9 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
                     'transition_id' => (string) $this->transition_id,
                 ],
                 [
-                    'id'         => "132",
-                    'job_url'    => "https://example.com/jenkins/job",
-                    'transition_id' => "999",
+                    'id'         => '132',
+                    'job_url'    => 'https://example.com/jenkins/job',
+                    'transition_id' => '999',
                 ],
             ));
 
@@ -123,7 +123,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
         $post_action = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
 
         $this->assertInstanceOf(Transition_PostAction_CIBuild::class, $post_action);
-        $this->assertEquals("http://www", $post_action->getJobUrl());
+        $this->assertEquals('http://www', $post_action->getJobUrl());
         $this->assertTrue($post_action->isDefined());
     }
 

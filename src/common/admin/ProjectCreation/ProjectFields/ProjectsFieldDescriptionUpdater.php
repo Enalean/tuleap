@@ -67,7 +67,7 @@ class ProjectsFieldDescriptionUpdater
     private function updateRequiredDescription(string $id, bool $required, BaseLayout $layout): void
     {
         if ($id === DescriptionFieldAdminPresenterBuilder::SHORT_DESCRIPTION_FIELD_ID) {
-            $this->config_dao->saveBool("enable_not_mandatory_description", ! $required);
+            $this->config_dao->saveBool('enable_not_mandatory_description', ! $required);
         } else {
             $this->custom_description_dao->updateRequiredCustomDescription($required, (int) $id);
         }

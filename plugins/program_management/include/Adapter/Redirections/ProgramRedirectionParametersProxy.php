@@ -36,7 +36,7 @@ final class ProgramRedirectionParametersProxy implements ProgramRedirectionParam
 
     public static function buildFromCodendiRequest(\Codendi_Request $request): self
     {
-        $redirect_value = $request->get(ProgramRedirectionParameters::FLAG) ?: "";
+        $redirect_value = $request->get(ProgramRedirectionParameters::FLAG) ?: '';
 
         return new self($redirect_value);
     }

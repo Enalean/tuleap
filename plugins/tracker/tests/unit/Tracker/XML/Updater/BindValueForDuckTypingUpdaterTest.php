@@ -44,28 +44,28 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
     {
         $xml                 = '<?xml version="1.0" encoding="UTF-8"?><artifacts />';
         $changeset_xml       = new SimpleXMLElement($xml);
-        $field_change        = $changeset_xml->addChild("field_change");
+        $field_change        = $changeset_xml->addChild('field_change');
         $field_change->value = 0;
 
         $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([0 => 0]);
         $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame("0", (string) $changeset_xml->field_change[0]->value);
+        $this->assertSame('0', (string) $changeset_xml->field_change[0]->value);
     }
 
     public function testItSetBindValueForSingleValueSelect(): void
     {
         $xml                 = '<?xml version="1.0" encoding="UTF-8"?><artifacts />';
         $changeset_xml       = new SimpleXMLElement($xml);
-        $field_change        = $changeset_xml->addChild("field_change");
+        $field_change        = $changeset_xml->addChild('field_change');
         $field_change->value = 101;
 
         $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([101 => 309]);
         $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame("309", (string) $changeset_xml->field_change[0]->value);
+        $this->assertSame('309', (string) $changeset_xml->field_change[0]->value);
     }
 
     public function testItSetBindValueForMultipleValuesSelect(): void
@@ -83,7 +83,7 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
         $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame("190", (string) $changeset_xml->field_change[0]->value);
+        $this->assertSame('190', (string) $changeset_xml->field_change[0]->value);
     }
 
     public function testItIgnoresDuplicates(): void

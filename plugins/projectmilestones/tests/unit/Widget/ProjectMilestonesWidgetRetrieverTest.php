@@ -109,7 +109,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     public function testGetRendererContentWhenThereIsProject(): void
     {
         $this->presenter_builder->method('getProjectMilestonePresenter')->willReturn($this->createMock(ProjectMilestonesPresenter::class));
-        $this->template_rendered->expects(self::once())->method('renderToString')->willReturn("");
+        $this->template_rendered->expects(self::once())->method('renderToString')->willReturn('');
         $this->retriever->getContent($this->project, $this->root_planning);
     }
 
@@ -117,7 +117,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->presenter_builder->method('getProjectMilestonePresenter')->willThrowException(ProjectMilestonesException::buildProjectDontExist());
         $content = $this->retriever->getContent(null, null);
-        self::assertStringContainsString("Project does not exist.", $content);
+        self::assertStringContainsString('Project does not exist.', $content);
     }
 
     public function testGetExceptionContentWhenThereIsNoProject(): void
@@ -126,13 +126,13 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $tracker->method('getId')->willReturn(110);
         $this->presenter_builder->method('getProjectMilestonePresenter')->willThrowException(new TimeframeBrokenConfigurationException($tracker));
         $content = $this->retriever->getContent(null, null);
-        self::assertStringContainsString("Invalid Timeframe Semantic configuration.", $content);
+        self::assertStringContainsString('Invalid Timeframe Semantic configuration.', $content);
     }
 
     public function testGetProjectMilestonesPreferencesWhenUserCanSeeProject(): void
     {
         $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
-        $this->template_rendered->expects(self::once())->method('renderToString')->with('projectmilestones-preferences', self::isInstanceOf(ProjectMilestonesPreferencesPresenter::class))->willReturn("");
+        $this->template_rendered->expects(self::once())->method('renderToString')->with('projectmilestones-preferences', self::isInstanceOf(ProjectMilestonesPreferencesPresenter::class))->willReturn('');
 
         $this->retriever->getPreferences(10, $this->project, $this->user, $this->csrf_token);
     }
@@ -140,7 +140,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     public function testGetProjectMilestonesPreferencesWithoutProjectWhenUserCanSeeProject(): void
     {
         $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject')->willThrowException(new Project_AccessProjectNotFoundException());
-        $this->template_rendered->expects(self::once())->method('renderToString')->with('projectmilestones-preferences', self::isInstanceOf(ProjectMilestonesPreferencesPresenter::class))->willReturn("");
+        $this->template_rendered->expects(self::once())->method('renderToString')->with('projectmilestones-preferences', self::isInstanceOf(ProjectMilestonesPreferencesPresenter::class))->willReturn('');
 
         $this->retriever->getPreferences(10, $this->project, $this->user, $this->csrf_token);
     }
@@ -162,7 +162,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
             'project' => ProjectTestBuilder::aProject()->build(),
         ]);
 
-        $this->project_milestones_dao->method('create')->with(101)->willReturn("455");
+        $this->project_milestones_dao->method('create')->with(101)->willReturn('455');
 
         self::assertEquals(455, $this->retriever->create($request));
     }

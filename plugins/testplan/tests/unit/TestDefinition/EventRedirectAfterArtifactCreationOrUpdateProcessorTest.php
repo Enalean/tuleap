@@ -81,7 +81,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
     {
         $request  = $this->aRequest(
             [
-                'ttm_backlog_item_id' => "123",
+                'ttm_backlog_item_id' => '123',
             ]
         );
         $redirect = new Tracker_Artifact_Redirect();
@@ -97,8 +97,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
     {
         $request        = $this->aRequest(
             [
-                'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42",
+                'ttm_backlog_item_id' => '123',
+                'ttm_milestone_id'    => '42',
             ]
         );
         $redirect       = new Tracker_Artifact_Redirect();
@@ -108,7 +108,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactById')
-            ->with("123")
+            ->with('123')
             ->willReturn(null);
 
         $this->processor->process($request, $redirect, $artifact);
@@ -121,8 +121,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
     {
         $request        = $this->aRequest(
             [
-                'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42",
+                'ttm_backlog_item_id' => '123',
+                'ttm_milestone_id'    => '42',
             ]
         );
         $redirect       = new Tracker_Artifact_Redirect();
@@ -135,7 +135,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactById')
-            ->with("123")
+            ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater
@@ -160,8 +160,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
     {
         $request        = $this->aRequest(
             [
-                'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42",
+                'ttm_backlog_item_id' => '123',
+                'ttm_milestone_id'    => '42',
             ]
         );
         $redirect       = new Tracker_Artifact_Redirect();
@@ -174,7 +174,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactById')
-            ->with("123")
+            ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater
@@ -203,8 +203,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
     {
         $request        = $this->aRequest(
             [
-                'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42",
+                'ttm_backlog_item_id' => '123',
+                'ttm_milestone_id'    => '42',
             ]
         );
         $redirect       = new Tracker_Artifact_Redirect();
@@ -224,7 +224,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactById')
-            ->with("123")
+            ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater
@@ -248,8 +248,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
     {
         $request        = $this->aRequest(
             [
-                'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42",
+                'ttm_backlog_item_id' => '123',
+                'ttm_milestone_id'    => '42',
             ]
         );
         $redirect       = new Tracker_Artifact_Redirect();
@@ -269,7 +269,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactById')
-            ->with("123")
+            ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater->expects(self::never())->method('updateArtifactLinks');
@@ -284,8 +284,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
     {
         $request        = $this->aRequest(
             [
-                'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42",
+                'ttm_backlog_item_id' => '123',
+                'ttm_milestone_id'    => '42',
             ]
         );
         $redirect       = new Tracker_Artifact_Redirect();
@@ -305,7 +305,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactById')
-            ->with("123")
+            ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater
@@ -319,7 +319,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
                 '_covered_by'
             );
 
-        $this->redirect_parameter_injector->method('injectParameters')->with($redirect, "123", "42");
+        $this->redirect_parameter_injector->method('injectParameters')->with($redirect, '123', '42');
 
         $this->processor->process($request, $redirect, $artifact);
     }
@@ -328,8 +328,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
     {
         $request        = $this->aRequest(
             [
-                'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42",
+                'ttm_backlog_item_id' => '123',
+                'ttm_milestone_id'    => '42',
             ]
         );
         $redirect       = new Tracker_Artifact_Redirect();
@@ -349,7 +349,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactById')
-            ->with("123")
+            ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater

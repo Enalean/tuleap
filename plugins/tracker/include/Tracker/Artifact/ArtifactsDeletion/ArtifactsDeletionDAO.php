@@ -32,11 +32,11 @@ class ArtifactsDeletionDAO extends DataAccessObject
         $user_id,
         $timestamp,
     ) {
-        $sql = "SELECT COALESCE(sum(nb_artifacts_deleted), 0)
+        $sql = 'SELECT COALESCE(sum(nb_artifacts_deleted), 0)
                 FROM plugin_tracker_deleted_artifacts
                 WHERE timestamp >= ?
                     AND user_id = ?
-        ";
+        ';
 
         return $this->getDB()->single($sql, [$timestamp, $user_id]);
     }
@@ -45,20 +45,20 @@ class ArtifactsDeletionDAO extends DataAccessObject
         $user_id,
         $timestamp,
     ) {
-        $sql = "INSERT INTO plugin_tracker_deleted_artifacts(timestamp, user_id, nb_artifacts_deleted)
+        $sql = 'INSERT INTO plugin_tracker_deleted_artifacts(timestamp, user_id, nb_artifacts_deleted)
                 VALUES(?, ?, 1)
                 ON DUPLICATE KEY UPDATE
                     nb_artifacts_deleted = nb_artifacts_deleted + 1;
-        ";
+        ';
 
         $this->getDB()->run($sql, $timestamp, $user_id);
     }
 
     public function deleteOutdatedArtifactsDeletions($limit_timestamp)
     {
-        $sql = "DELETE FROM plugin_tracker_deleted_artifacts
+        $sql = 'DELETE FROM plugin_tracker_deleted_artifacts
                 WHERE timestamp <= ?
-        ";
+        ';
 
         $this->getDB()->run($sql, $limit_timestamp);
     }

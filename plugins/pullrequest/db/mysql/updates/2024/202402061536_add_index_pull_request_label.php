@@ -25,7 +25,7 @@ final class b202402061536_add_index_pull_request_label extends \Tuleap\ForgeUpgr
 {
     public function description()
     {
-        return "Add an index to the plugin_pullrequest_label table.";
+        return 'Add an index to the plugin_pullrequest_label table.';
     }
 
     public function up()

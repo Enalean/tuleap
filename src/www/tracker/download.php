@@ -15,7 +15,7 @@ $id          = $request->get('id');
 $artifact_id = $request->get('artifact_id');
 
 // We have the artifact id, but not the tracker id
-$sql    = "SELECT group_artifact_id, group_id FROM artifact INNER JOIN artifact_group_list USING (group_artifact_id) WHERE artifact_id= " . db_ei($artifact_id);
+$sql    = 'SELECT group_artifact_id, group_id FROM artifact INNER JOIN artifact_group_list USING (group_artifact_id) WHERE artifact_id= ' . db_ei($artifact_id);
 $result = db_query($sql);
 if (db_numrows($result) > 0) {
     $row   = db_fetch_array($result);

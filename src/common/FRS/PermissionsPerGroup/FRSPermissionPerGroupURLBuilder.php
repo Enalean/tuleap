@@ -29,8 +29,8 @@ class FRSPermissionPerGroupURLBuilder
     {
         return '/file/admin/?' . http_build_query(
             [
-                "group_id" => $project->getID(),
-                "action"   => "edit-permissions",
+                'group_id' => $project->getID(),
+                'action'   => 'edit-permissions',
             ]
         );
     }

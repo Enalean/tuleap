@@ -36,7 +36,7 @@ final class XMLLine
 
     public static function withDefaultLayout(): self
     {
-        return new self("");
+        return new self('');
     }
 
     public static function withLayout(string $layout): self

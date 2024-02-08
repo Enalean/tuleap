@@ -32,13 +32,13 @@ class b201301021153_add_postaction_cibuild_table extends \Tuleap\ForgeUpgrade\Bu
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_cibuild (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_cibuild (
                     id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
                     transition_id int(11) NOT NULL,
                     job_url varchar(255) default NULL,
                     
                     INDEX idx_wf_transition_id( transition_id )
-                );";
+                );';
         $this->db->createTable('tracker_workflow_transition_postactions_cibuild', $sql);
     }
 

@@ -26,7 +26,7 @@ class ProviderDao extends DataAccessObject
 {
     public function searchById($provider_id): ?array
     {
-        $sql = "SELECT generic_provider.*, azure_provider.*,
+        $sql = 'SELECT generic_provider.*, azure_provider.*,
                        provider.id,
                        provider.name,
                        provider.client_id,
@@ -39,27 +39,27 @@ class ProviderDao extends DataAccessObject
                    ON generic_provider.provider_id = provider.id
                 LEFT JOIN plugin_openidconnectclient_provider_azure_ad AS azure_provider
                    ON azure_provider.provider_id = provider.id
-                WHERE provider.id = ?";
+                WHERE provider.id = ?';
 
         return $this->getDB()->row($sql, $provider_id);
     }
 
     public function deleteById($id)
     {
-        $sql = "DELETE generic_provider, plugin_openidconnectclient_provider, azure_provider
+        $sql = 'DELETE generic_provider, plugin_openidconnectclient_provider, azure_provider
                 FROM plugin_openidconnectclient_provider
                 LEFT JOIN plugin_openidconnectclient_provider_generic AS generic_provider
                     ON plugin_openidconnectclient_provider.id =  generic_provider.provider_id
                 LEFT JOIN plugin_openidconnectclient_provider_azure_ad AS azure_provider
                     ON plugin_openidconnectclient_provider.id =  azure_provider.provider_id
-                WHERE plugin_openidconnectclient_provider.id = ?";
+                WHERE plugin_openidconnectclient_provider.id = ?';
 
         return $this->getDB()->run($sql, $id);
     }
 
     public function isAProviderConfiguredAsUniqueEndPointProvider()
     {
-        $sql = "SELECT * FROM plugin_openidconnectclient_provider WHERE unique_authentication_endpoint = TRUE LIMIT 1";
+        $sql = 'SELECT * FROM plugin_openidconnectclient_provider WHERE unique_authentication_endpoint = TRUE LIMIT 1';
         $this->getDB()->run($sql);
 
         return $this->foundRows() > 0;
@@ -108,7 +108,7 @@ class ProviderDao extends DataAccessObject
 
     public function searchProviders()
     {
-        $sql = "SELECT generic_provider.*, azure_provider.*,
+        $sql = 'SELECT generic_provider.*, azure_provider.*,
                            provider.id,
                            provider.name,
                            provider.client_id,
@@ -121,7 +121,7 @@ class ProviderDao extends DataAccessObject
                     ON generic_provider.provider_id = provider.id
                 LEFT JOIN plugin_openidconnectclient_provider_azure_ad AS azure_provider
                     ON azure_provider.provider_id = provider.id
-                ORDER BY unique_authentication_endpoint DESC, name ASC";
+                ORDER BY unique_authentication_endpoint DESC, name ASC';
 
         return $this->getDB()->run($sql);
     }

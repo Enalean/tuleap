@@ -98,7 +98,7 @@ class GerritSetupCommand extends Command
                 'Error (' . $response->getStatusCode() . ') on first login: ' . $response->getBody()->getContents()
             );
         }
-        $output->writeln("First Login successful");
+        $output->writeln('First Login successful');
     }
 
     private function generateSSHKey(InputInterface $input, OutputInterface $output): void
@@ -135,7 +135,7 @@ class GerritSetupCommand extends Command
                 'Error (' . $response->getStatusCode() . ') on pushing sshkey: ' . $response->getBody()->getContents()
             );
         }
-        $output->writeln("SSH key successfully pushed");
+        $output->writeln('SSH key successfully pushed');
     }
 
     private function pushReplicationGroup(
@@ -158,7 +158,7 @@ class GerritSetupCommand extends Command
                 'Error (' . $response->getStatusCode() . ') on creating replication group: ' . $response->getBody()->getContents()
             );
         }
-        $output->writeln("Replication group created");
+        $output->writeln('Replication group created');
 
         $this->forceReplicationReload($output, $message_factory, $gerrit_server, $plugin_client);
     }
@@ -224,7 +224,7 @@ class GerritSetupCommand extends Command
                 'Error (' . $response->getStatusCode() . ') on creating replication group: ' . $response->getBody()->getContents()
             );
         }
-        $output->writeln("Permissions on All-Projects updated");
+        $output->writeln('Permissions on All-Projects updated');
     }
 
     private function getAdministratorGroupUUID(MessageFactory $message_factory, string $gerrit_server, ClientInterface $plugin_client): string
@@ -265,7 +265,7 @@ class GerritSetupCommand extends Command
                 'Error (' . $response->getStatusCode() . ') on creating replication group: ' . $response->getBody()->getContents()
             );
         }
-        $output->writeln("Replication reloaded");
+        $output->writeln('Replication reloaded');
     }
 
     private function pairWithGerritServer(InputInterface $input, OutputInterface $output, string $gerrit_server): void

@@ -42,10 +42,10 @@ final class BindDecoratorExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->decorator_exporter->exportToXml($root, 'val', true, '255', '255', '255', null);
 
         $attr = $root->decorator->attributes();
-        $this->assertEquals("255", (string) $attr->r);
-        $this->assertEquals("255", (string) $attr->g);
-        $this->assertEquals("255", (string) $attr->b);
-        $this->assertEquals("val", (string) $attr->REF);
+        $this->assertEquals('255', (string) $attr->r);
+        $this->assertEquals('255', (string) $attr->g);
+        $this->assertEquals('255', (string) $attr->b);
+        $this->assertEquals('val', (string) $attr->REF);
     }
 
     public function testItExportOldPaletteColorIfAColorIsEqualToZero(): void
@@ -54,10 +54,10 @@ final class BindDecoratorExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->decorator_exporter->exportToXml($root, 'val', true, '0', '255', '255', null);
 
         $attr = $root->decorator->attributes();
-        $this->assertEquals("0", (string) $attr->r);
-        $this->assertEquals("255", (string) $attr->g);
-        $this->assertEquals("255", (string) $attr->b);
-        $this->assertEquals("val", (string) $attr->REF);
+        $this->assertEquals('0', (string) $attr->r);
+        $this->assertEquals('255', (string) $attr->g);
+        $this->assertEquals('255', (string) $attr->b);
+        $this->assertEquals('val', (string) $attr->REF);
     }
 
     public function testItDoesNotExportOldPaletteColorIfAColorIsNull(): void
@@ -75,7 +75,7 @@ final class BindDecoratorExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $attr = $root->decorator->attributes();
         $this->assertEquals('inca-silver', (string) $attr->tlp_color_name);
-        $this->assertEquals("val", (string) $attr->REF);
+        $this->assertEquals('val', (string) $attr->REF);
     }
 
     public function testItExportNoneOldPaletteColor(): void
@@ -84,9 +84,9 @@ final class BindDecoratorExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->decorator_exporter->exportNoneToXml($root, true, '255', '255', '255', null);
 
         $attr = $root->decorator->attributes();
-        $this->assertEquals("255", (string) $attr->r);
-        $this->assertEquals("255", (string) $attr->g);
-        $this->assertEquals("255", (string) $attr->b);
+        $this->assertEquals('255', (string) $attr->r);
+        $this->assertEquals('255', (string) $attr->g);
+        $this->assertEquals('255', (string) $attr->b);
         $this->assertNull($attr->REF);
     }
 

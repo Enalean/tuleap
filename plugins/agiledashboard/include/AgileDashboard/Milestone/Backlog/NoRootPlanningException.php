@@ -29,6 +29,6 @@ class NoRootPlanningException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("No root planning found in project.");
+        parent::__construct('No root planning found in project.');
     }
 }

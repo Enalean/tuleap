@@ -34,7 +34,7 @@ class ClassicCriterionValueJson implements CriterionValueJson
     public function __construct(string $criterion_name, string $criterion_value)
     {
         $this->criterion_name  = $criterion_name;
-        $this->criterion_type  = "classic";
+        $this->criterion_type  = 'classic';
         $this->criterion_value = $criterion_value;
     }
 }

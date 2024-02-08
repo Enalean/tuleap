@@ -56,10 +56,10 @@ class PermissionDeniedPrivateProjectController
     {
         $layout = $this->theme_manager->getBurningParrot($user);
         if ($layout === null) {
-            throw new \Exception("Could not load BurningParrot theme");
+            throw new \Exception('Could not load BurningParrot theme');
         }
 
-        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_("Project access error")));
+        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_('Project access error')));
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('codendi_dir') . '/src/templates/error/'
@@ -71,7 +71,7 @@ class PermissionDeniedPrivateProjectController
 
         $renderer->renderToPage(
             'permission-denied-private-project',
-            new ProjectPermissionDeniedPresenter($project, $this->getToken(), $placeholder, "/join-private-project-mail/")
+            new ProjectPermissionDeniedPresenter($project, $this->getToken(), $placeholder, '/join-private-project-mail/')
         );
 
         $layout->footer([]);
@@ -82,6 +82,6 @@ class PermissionDeniedPrivateProjectController
      */
     private function getToken()
     {
-        return new \CSRFSynchronizerToken("/join-private-project-mail/");
+        return new \CSRFSynchronizerToken('/join-private-project-mail/');
     }
 }

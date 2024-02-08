@@ -55,7 +55,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
                 __DIR__ . '/../scripts/projectmilestones-preferences/frontend-assets',
                 '/assets/projectmilestones/projectmilestones-preferences'
             ),
-            "src/index.ts"
+            'src/index.ts'
         );
 
         if ($this->isInDashboard()) {

@@ -332,7 +332,7 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
         $docmanItemFactory->method('getChildrenFromParent')->willReturn([new \Docman_Wiki(['title' => 'leWiki', 'wiki_page' => 'HomePage'])]);
         $utils->method('getDocmanItemFactory')->willReturn($docmanItemFactory);
 
-        $utils->method("retrieveName")->willReturn('leWiki');
+        $utils->method('retrieveName')->willReturn('leWiki');
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder(
             UserTestBuilder::aUser()->build(),

@@ -274,7 +274,7 @@ final class XMLTracker
     {
         $parent = $tracker->getParent();
         return self::fromTracker($tracker)
-            ->withParentId($parent !== null ? $parent->getXMLId() : "0");
+            ->withParentId($parent !== null ? $parent->getXMLId() : '0');
     }
 
     public function export(SimpleXMLElement $trackers_xml): SimpleXMLElement

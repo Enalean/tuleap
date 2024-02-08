@@ -87,19 +87,19 @@ class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
         $wiki_page                          = \Mockery::mock(WikiPage::class);
 
-        $wiki_to_delete->shouldReceive("getId")->andReturns(169);
-        $wiki_to_delete->shouldReceive("getTitle")->andReturns("My kinky wiki");
+        $wiki_to_delete->shouldReceive('getId')->andReturns(169);
+        $wiki_to_delete->shouldReceive('getTitle')->andReturns('My kinky wiki');
 
         $this->wiki_page_retriever
-            ->shouldReceive("retrieveAssociatedWikiPage")
+            ->shouldReceive('retrieveAssociatedWikiPage')
             ->with($wiki_to_delete)
             ->andReturns($wiki_page);
 
-        $wiki_page->shouldReceive("isReferenced")->andReturns(true);
-        $wiki_page->shouldReceive("getId")->andReturns(69);
+        $wiki_page->shouldReceive('isReferenced')->andReturns(true);
+        $wiki_page->shouldReceive('getId')->andReturns(69);
 
-        $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(false);
-        $this->item_factory->shouldReceive("delete")->never();
+        $this->permissions_manager->shouldReceive('userCanDelete')->andReturns(false);
+        $this->item_factory->shouldReceive('delete')->never();
 
         $this->expectException(DeleteFailedException::class);
 
@@ -116,27 +116,27 @@ class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
         $wiki_page                          = \Mockery::mock(WikiPage::class);
 
-        $wiki_to_delete->shouldReceive("getId")->andReturns(169);
-        $wiki_to_delete->shouldReceive("getGroupId")->andReturns(104);
-        $wiki_to_delete->shouldReceive("getPagename")->andReturns("My kinky wiki");
+        $wiki_to_delete->shouldReceive('getId')->andReturns(169);
+        $wiki_to_delete->shouldReceive('getGroupId')->andReturns(104);
+        $wiki_to_delete->shouldReceive('getPagename')->andReturns('My kinky wiki');
 
         $this->wiki_page_retriever
-            ->shouldReceive("retrieveAssociatedWikiPage")
+            ->shouldReceive('retrieveAssociatedWikiPage')
             ->with($wiki_to_delete)
             ->andReturns($wiki_page);
 
-        $wiki_page->shouldReceive("isReferenced")->andReturns(true);
-        $wiki_page->shouldReceive("getId")->andReturns(69);
+        $wiki_page->shouldReceive('isReferenced')->andReturns(true);
+        $wiki_page->shouldReceive('getId')->andReturns(69);
 
-        $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(true);
+        $this->permissions_manager->shouldReceive('userCanDelete')->andReturns(true);
 
-        $this->item_factory->shouldReceive("delete")->with($wiki_to_delete)->atLeast()->once();
-        $this->item_factory->shouldReceive("getIdInWikiOfWikiPageItem");
+        $this->item_factory->shouldReceive('delete')->with($wiki_to_delete)->atLeast()->once();
+        $this->item_factory->shouldReceive('getIdInWikiOfWikiPageItem');
 
-        $this->item_dao->shouldReceive("isWikiPageReferenced");
+        $this->item_dao->shouldReceive('isWikiPageReferenced');
 
-        $this->event_manager->shouldReceive("processEvent")->with(
-            "wiki_page_updated",
+        $this->event_manager->shouldReceive('processEvent')->with(
+            'wiki_page_updated',
             \Mockery::any()
         )->atLeast()->once();
 
@@ -153,22 +153,22 @@ class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
         $wiki_page                          = \Mockery::mock(WikiPage::class);
 
-        $wiki_to_delete->shouldReceive("getId")->andReturns(169);
-        $wiki_to_delete->shouldReceive("getGroupId")->andReturns(104);
-        $wiki_to_delete->shouldReceive("getPagename")->andReturns("My kinky wiki");
+        $wiki_to_delete->shouldReceive('getId')->andReturns(169);
+        $wiki_to_delete->shouldReceive('getGroupId')->andReturns(104);
+        $wiki_to_delete->shouldReceive('getPagename')->andReturns('My kinky wiki');
 
         $this->wiki_page_retriever
-            ->shouldReceive("retrieveAssociatedWikiPage")
+            ->shouldReceive('retrieveAssociatedWikiPage')
             ->with($wiki_to_delete)
             ->andReturns($wiki_page);
 
-        $wiki_page->shouldReceive("isReferenced")->andReturns(true);
-        $wiki_page->shouldReceive("getId")->andReturns(69);
+        $wiki_page->shouldReceive('isReferenced')->andReturns(true);
+        $wiki_page->shouldReceive('getId')->andReturns(69);
 
-        $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(true);
+        $this->permissions_manager->shouldReceive('userCanDelete')->andReturns(true);
 
-        $this->item_factory->shouldReceive("delete")->with($wiki_to_delete)->atLeast()->once();
-        $this->item_factory->shouldReceive("deleteWikiPage")->with("My kinky wiki", 104)->andReturns(true)->atLeast()->once();
+        $this->item_factory->shouldReceive('delete')->with($wiki_to_delete)->atLeast()->once();
+        $this->item_factory->shouldReceive('deleteWikiPage')->with('My kinky wiki', 104)->andReturns(true)->atLeast()->once();
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,
@@ -183,22 +183,22 @@ class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
         $wiki_page                          = \Mockery::mock(WikiPage::class);
 
-        $wiki_to_delete->shouldReceive("getId")->andReturns(169);
-        $wiki_to_delete->shouldReceive("getGroupId")->andReturns(104);
-        $wiki_to_delete->shouldReceive("getPagename")->andReturns("My kinky wiki");
+        $wiki_to_delete->shouldReceive('getId')->andReturns(169);
+        $wiki_to_delete->shouldReceive('getGroupId')->andReturns(104);
+        $wiki_to_delete->shouldReceive('getPagename')->andReturns('My kinky wiki');
 
         $this->wiki_page_retriever
-            ->shouldReceive("retrieveAssociatedWikiPage")
+            ->shouldReceive('retrieveAssociatedWikiPage')
             ->with($wiki_to_delete)
             ->andReturns($wiki_page);
 
-        $wiki_page->shouldReceive("isReferenced")->andReturns(true);
-        $wiki_page->shouldReceive("getId")->andReturns(69);
+        $wiki_page->shouldReceive('isReferenced')->andReturns(true);
+        $wiki_page->shouldReceive('getId')->andReturns(69);
 
-        $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(true);
+        $this->permissions_manager->shouldReceive('userCanDelete')->andReturns(true);
 
-        $this->item_factory->shouldReceive("delete")->with($wiki_to_delete);
-        $this->item_factory->shouldReceive("deleteWikiPage")->with("My kinky wiki", 104)->andReturns(false);
+        $this->item_factory->shouldReceive('delete')->with($wiki_to_delete);
+        $this->item_factory->shouldReceive('deleteWikiPage')->with('My kinky wiki', 104)->andReturns(false);
 
         $this->expectException(DeleteFailedException::class);
 
@@ -214,19 +214,19 @@ class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $propagate_deletion_to_wiki_service = true;
         $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
 
-        $wiki_to_delete->shouldReceive("getId")->andReturns(169);
-        $wiki_to_delete->shouldReceive("getGroupId")->andReturns(104);
-        $wiki_to_delete->shouldReceive("getPagename")->andReturns("My kinky wiki");
+        $wiki_to_delete->shouldReceive('getId')->andReturns(169);
+        $wiki_to_delete->shouldReceive('getGroupId')->andReturns(104);
+        $wiki_to_delete->shouldReceive('getPagename')->andReturns('My kinky wiki');
 
         $this->wiki_page_retriever
-            ->shouldReceive("retrieveAssociatedWikiPage")
+            ->shouldReceive('retrieveAssociatedWikiPage')
             ->with($wiki_to_delete)
             ->andReturns(null);
 
-        $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(true);
+        $this->permissions_manager->shouldReceive('userCanDelete')->andReturns(true);
 
-        $this->item_factory->shouldReceive("delete")->with($wiki_to_delete);
-        $this->item_factory->shouldReceive("deleteWikiPage")->never();
+        $this->item_factory->shouldReceive('delete')->with($wiki_to_delete);
+        $this->item_factory->shouldReceive('deleteWikiPage')->never();
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,

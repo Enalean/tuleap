@@ -30,14 +30,14 @@ class DbaDatabase
         $this->_handler = $handler;
         $this->_timeout = DBA_DATABASE_DEFAULT_TIMEOUT;
         $this->_dbh     = false;
-        if (function_exists("dba_handlers")) { // since 4.3.0
+        if (function_exists('dba_handlers')) { // since 4.3.0
             if (! in_array($handler, dba_handlers())) {
                 $this->_error(
                     sprintf(
-                        _("The DBA handler %s is unsupported!") . "\n" .
-                            _("Supported handlers are: %s"),
+                        _('The DBA handler %s is unsupported!') . "\n" .
+                            _('Supported handlers are: %s'),
                         $handler,
-                        join(",", dba_handlers())
+                        join(',', dba_handlers())
                     )
                 );
             }
@@ -65,16 +65,16 @@ class DbaDatabase
         $ErrorManager->pushErrorHandler(new WikiMethodCb($this, '_dba_open_error_handler'));
 
         // oops, you don't have DBA support.
-        if (! function_exists("dba_open")) {
+        if (! function_exists('dba_open')) {
             echo "You don't seem to have DBA support compiled into PHP.";
         }
 
         if (strlen($mode) == 1) {
             // PHP 4.3.x Windows lock bug workaround: http://bugs.php.net/bug.php?id=23975
             if (isWindows()) {
-                $mode .= "-";             // suppress locking, or
+                $mode .= '-';             // suppress locking, or
             } elseif ($this->_handler != 'gdbm') {     // gdbm does it internally
-                $mode .= "d";             // else use internal locking
+                $mode .= 'd';             // else use internal locking
             }
         }
         while (($dbh = dba_open($this->_file, $mode, $this->_handler)) < 1) {
@@ -83,8 +83,8 @@ class DbaDatabase
             }
             flush();
             // "c" failed, try "w" instead.
-            if (substr($mode, 0, 1) == "c" and file_exists($this->_file)) {
-                $mode = "w";
+            if (substr($mode, 0, 1) == 'c' and file_exists($this->_file)) {
+                $mode = 'w';
             }
             // conflict: wait some random time to unlock (see ethernet)
             $secs = 0.5 + ((double) random_int(1, 32767) / 32767);
@@ -104,7 +104,7 @@ class DbaDatabase
                                .  "\nhandler: " . $this->_handler;
                 $ErrorManager->handleError($error);
             } else {
-                trigger_error("dba_open failed", E_USER_ERROR);
+                trigger_error('dba_open failed', E_USER_ERROR);
             }
         }
         $this->_dbh = $dbh;
@@ -192,14 +192,14 @@ class DbaDatabase
     public function sync()
     {
         if (! dba_sync($this->_dbh)) {
-            return $this->_error("sync()");
+            return $this->_error('sync()');
         }
     }
 
     public function optimize()
     {
         if (! dba_optimize($this->_dbh)) {
-            return $this->_error("optimize()");
+            return $this->_error('optimize()');
         }
         return 1;
     }

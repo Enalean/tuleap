@@ -34,7 +34,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER IGNORE TABLE plugin_git_repository_fine_grained_permissions ADD UNIQUE unique_pattern (repository_id, pattern)";
+        $sql = 'ALTER IGNORE TABLE plugin_git_repository_fine_grained_permissions ADD UNIQUE unique_pattern (repository_id, pattern)';
 
         $this->execDB($sql, 'An error occured while adding unique constraint');
     }

@@ -42,10 +42,10 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
                 assertEquals('/rest/agile/latest/board/1/sprint?startAt=0', $url);
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "isLast"     => true,
-                    "values"     => [],
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'isLast'     => true,
+                    'values'     => [],
                 ];
             }
         };
@@ -63,18 +63,18 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
                 assertEquals('/rest/agile/latest/board/1/sprint?startAt=0', $url);
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "isLast"     => true,
-                    "values"     => [
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'isLast'     => true,
+                    'values'     => [
                         [
-                            "id"            => 1,
-                            "self"          => "https://example.com/rest/agile/1.0/sprint/1",
-                            "state"         => "active",
-                            "name"          => "Sample Sprint 2",
-                            "startDate"     => "2018-01-25T04:04:09.514Z",
-                            "endDate"       => "2018-02-08T04:24:09.514Z",
-                            "originBoardId" => 1,
+                            'id'            => 1,
+                            'self'          => 'https://example.com/rest/agile/1.0/sprint/1',
+                            'state'         => 'active',
+                            'name'          => 'Sample Sprint 2',
+                            'startDate'     => '2018-01-25T04:04:09.514Z',
+                            'endDate'       => '2018-02-08T04:24:09.514Z',
+                            'originBoardId' => 1,
                         ],
 
                     ],
@@ -109,18 +109,18 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
                     $this->call_count++;
                     assertEquals('/rest/agile/latest/board/1/sprint?startAt=0', $url);
                     return [
-                        "maxResults" => 1,
-                        "startAt"    => 0,
-                        "isLast"     => false,
-                        "values"     => [
+                        'maxResults' => 1,
+                        'startAt'    => 0,
+                        'isLast'     => false,
+                        'values'     => [
                             [
-                                "id"            => 1,
-                                "self"          => "https://example.com/rest/agile/1.0/sprint/1",
-                                "state"         => "active",
-                                "name"          => "Sample Sprint 2",
-                                "startDate"     => "2018-01-25T04:04:09.514Z",
-                                "endDate"       => "2018-02-08T04:24:09.514Z",
-                                "originBoardId" => 1,
+                                'id'            => 1,
+                                'self'          => 'https://example.com/rest/agile/1.0/sprint/1',
+                                'state'         => 'active',
+                                'name'          => 'Sample Sprint 2',
+                                'startDate'     => '2018-01-25T04:04:09.514Z',
+                                'endDate'       => '2018-02-08T04:24:09.514Z',
+                                'originBoardId' => 1,
                             ],
 
                         ],
@@ -130,22 +130,22 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
                     assertEquals('/rest/agile/latest/board/1/sprint?startAt=1', $url);
 
                     return [
-                        "maxResults" => 1,
-                        "startAt"    => 1,
-                        "isLast"     => true,
-                        "values"     => [
+                        'maxResults' => 1,
+                        'startAt'    => 1,
+                        'isLast'     => true,
+                        'values'     => [
                             [
-                                "id"            => 2,
-                                "self"          => "https://example.com/rest/agile/1.0/sprint/2",
-                                "state"         => "future",
-                                "name"          => "Sample Sprint 3",
-                                "originBoardId" => 1,
+                                'id'            => 2,
+                                'self'          => 'https://example.com/rest/agile/1.0/sprint/2',
+                                'state'         => 'future',
+                                'name'          => 'Sample Sprint 3',
+                                'originBoardId' => 1,
                             ],
 
                         ],
                     ];
                 } else {
-                    throw new \RuntimeException("Should not happen");
+                    throw new \RuntimeException('Should not happen');
                 }
             }
         };
@@ -167,18 +167,18 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
                 assertEquals('/rest/agile/latest/board/1/sprint?startAt=0', $url);
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "isLast"     => true,
-                    "values"     => [
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'isLast'     => true,
+                    'values'     => [
                         [
-                            "id"            => 1,
-                            "self"          => "https://example.com/rest/agile/1.0/sprint/1",
-                            "state"         => "fugu",
-                            "name"          => "Sample Sprint 2",
-                            "startDate"     => "2018-01-25T04:04:09.514Z",
-                            "endDate"       => "2018-02-08T04:24:09.514Z",
-                            "originBoardId" => 1,
+                            'id'            => 1,
+                            'self'          => 'https://example.com/rest/agile/1.0/sprint/1',
+                            'state'         => 'fugu',
+                            'name'          => 'Sample Sprint 2',
+                            'startDate'     => '2018-01-25T04:04:09.514Z',
+                            'endDate'       => '2018-02-08T04:24:09.514Z',
+                            'originBoardId' => 1,
                         ],
 
                     ],

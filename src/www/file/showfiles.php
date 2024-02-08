@@ -22,8 +22,8 @@
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/file_utils.php';
 
-define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
-define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
+define('FRS_EXPANDED_ICON', util_get_image_theme('ic/toggle_minus.png'));
+define('FRS_COLLAPSED_ICON', util_get_image_theme('ic/toggle_plus.png'));
 
 use Tuleap\FRS\Events\GetReleaseNotesLink;
 use Tuleap\FRS\FRSPermissionManager;
@@ -95,7 +95,7 @@ function buildReleaseNotesLink(FRSRelease $release): string
     $event = new GetReleaseNotesLink($release);
     EventManager::instance()->dispatch($event);
     $link_url   = $event->getUrl();
-    $img_src    = util_get_image_theme("ic/text.png");
+    $img_src    = util_get_image_theme('ic/text.png');
     $alt_text   = $GLOBALS['Language']->getText('file_showfiles', 'read_notes');
     $title_text = $GLOBALS['Language']->getText('file_showfiles', 'read_notes');
     return '<a href="' . $link_url . '" data-test="release-note-access"><img src="' . $img_src . '" alt="' . $alt_text . '" title="' . $title_text . '" ></a>';
@@ -160,9 +160,9 @@ if ($pv) {
 } else {
     $html .= "<TABLE width='100%'><TR><TD>";
     $html .= '<h3>' . $Language->getText('file_showfiles', 'p_releases') . ' ' . help_button('documents-and-files/frs.html#delivery-manager-jargon') . '</h3>';
-    $html .= "</TD>";
-    $html .= "<TD align='left'> ( <A HREF='showfiles.php?group_id=" . $hp->purify(urlencode($group_id)) . "&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
-    $html .= "</TR></TABLE>";
+    $html .= '</TD>';
+    $html .= "<TD align='left'> ( <A HREF='showfiles.php?group_id=" . $hp->purify(urlencode($group_id)) . "&pv=1'><img src='" . util_get_image_theme('msg.png') . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . '</A> ) </TD>';
+    $html .= '</TR></TABLE>';
 
     $html .= '<p>' . $Language->getText('file_showfiles', 'select_release') . '</p>';
 }
@@ -226,9 +226,9 @@ foreach ($packages as $package_id => $package_for_display) {
             $html .= ' &nbsp; ';
             $html .= '  <a href="filemodule_monitor.php?filemodule_id=' . $hp->purify(urlencode($package_id)) . '&group_id=' . $hp->purify(urlencode($group_id)) . '">';
             if ($fmmf->isMonitoring($package_id, $user, false)) {
-                $html .= '<img src="' . util_get_image_theme("ic/notification_stop.png") . '" alt="' . $Language->getText('file_showfiles', 'stop_monitoring') . '" title="' . $Language->getText('file_showfiles', 'stop_monitoring') . '" />';
+                $html .= '<img src="' . util_get_image_theme('ic/notification_stop.png') . '" alt="' . $Language->getText('file_showfiles', 'stop_monitoring') . '" title="' . $Language->getText('file_showfiles', 'stop_monitoring') . '" />';
             } else {
-                $html .= '<img src="' . util_get_image_theme("ic/notification_start.png") . '" alt="' . $Language->getText('file_showfiles', 'start_monitoring') . '" title="' . $Language->getText('file_showfiles', 'start_monitoring') . '" />';
+                $html .= '<img src="' . util_get_image_theme('ic/notification_start.png') . '" alt="' . $Language->getText('file_showfiles', 'start_monitoring') . '" title="' . $Language->getText('file_showfiles', 'start_monitoring') . '" />';
             }
             $html .= '</a>';
             if ($permission_manager->isAdmin($project, $user)) {
@@ -323,7 +323,7 @@ foreach ($packages as $package_id => $package_for_display) {
                         $html .= '<em>' . $Language->getText('file_showfiles', 'hidden_release') . '</em>';
                     }
                     $html .= '</td> ';
-                    $html .= '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';
+                    $html .= '  <TD class="release_date">' . format_date('Y-m-d', $package_release->getReleaseDate()) . '';
                     if (! $pv && $permission_manager->isAdmin($project, $user)) {
                         $html .= ' <a
                         href="admin/release.php?func=delete&amp;group_id=' . $hp->purify(urlencode($group_id)) . '&amp;package_id=' . $hp->purify(urlencode($package_id)) . '&amp;id=' . $hp->purify(urlencode((string) $package_release->getReleaseID())) . '"
@@ -357,13 +357,13 @@ foreach ($packages as $package_id => $package_for_display) {
                     } else {
                         $javascript_files_array[] = "'f_0'";
                         //get the file_type and processor type
-                        $q            = "select * from frs_filetype";
+                        $q            = 'select * from frs_filetype';
                         $res_filetype = db_query($q);
                         while ($resrow = db_fetch_array($res_filetype)) {
                             $file_type[$resrow['type_id']] = $resrow['name'];
                         }
 
-                        $q             = "select * from frs_processor";
+                        $q             = 'select * from frs_processor';
                         $res_processor = db_query($q);
                         while ($resrow = db_fetch_array($res_processor)) {
                             $processor[$resrow['processor_id']] = $resrow['name'];
@@ -387,7 +387,7 @@ foreach ($packages as $package_id => $package_for_display) {
                                 false,
                                 true,
                                 null,
-                                "files_table"
+                                'files_table'
                             ) . "\n";
 
                             // colgroup is used here in order to avoid table resizing when expand or collapse files, with CSS properties.
@@ -427,19 +427,19 @@ foreach ($packages as $package_id => $package_for_display) {
                                 $html .= '<TD>' . (isset($processor[$file_release['processor']]) ? $hp->purify(
                                     $processor[$file_release['processor']],
                                     CODENDI_PURIFIER_CONVERT_HTML
-                                ) : "") . '</TD>';
+                                ) : '') . '</TD>';
                                 $html .= '<TD>' . (isset($file_type[$file_release['type']]) ? $hp->purify(
                                     $file_type[$file_release['type']]
-                                ) : "") . '</TD>' . '<TD>' . format_date(
-                                    "Y-m-d",
+                                ) : '') . '</TD>' . '<TD>' . format_date(
+                                    'Y-m-d',
                                     $file_release['release_time']
                                 ) . '</TD>' .
                                     '<TD>' . (isset($file_release['computed_md5']) ? $hp->purify(
                                         $file_release['computed_md5']
-                                    ) : "") . '</TD>' .
+                                    ) : '') . '</TD>' .
                                     '<TD>' . (isset($file_release['user_id']) ? $hp->purify(
                                         $owner->getRealName()
-                                    ) : "") . '</TD>'
+                                    ) : '') . '</TD>'
                                     . '</TR>
                              <TR>
                                 <TD class="frs_comment">
@@ -469,7 +469,7 @@ foreach ($packages as $package_id => $package_for_display) {
                         $html .= '</table>';
                         $html .= '</span>';
                     }
-                    $javascript_releases_array[] = "'r_" . $package_release->getReleaseID() . "': [" . implode(",", $javascript_files_array) . "]";
+                    $javascript_releases_array[] = "'r_" . $package_release->getReleaseID() . "': [" . implode(',', $javascript_files_array) . ']';
                     $cpt_release                 = $cpt_release + 1;
                 }
             }
@@ -479,7 +479,7 @@ foreach ($packages as $package_id => $package_for_display) {
         }
         $html                       .= '</div>';
         $html                       .= '</fieldset>';
-        $javascript_packages_array[] = "'p_" . $package_id . "': {" . implode(",", $javascript_releases_array) . "}";
+        $javascript_packages_array[] = "'p_" . $package_id . "': {" . implode(',', $javascript_releases_array) . '}';
     }
 }
 
@@ -487,7 +487,7 @@ echo $html;
 
 if (! $pv) {
     $javascript_array  = 'var packages = {';
-    $javascript_array .= implode(",", $javascript_packages_array);
+    $javascript_array .= implode(',', $javascript_packages_array);
     $javascript_array .= '}';
     $GLOBALS['Response']->includeFooterJavascriptSnippet($javascript_array);
 }

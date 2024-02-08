@@ -62,8 +62,8 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItEnhancesTheReferenceAndRetrievesTheCommitterAccountOnTuleap(): void
     {
         $user = $this->createMock(\PFUser::class);
-        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
-        $user->method('getLocale')->willReturn("en_US");
+        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $user->method('getLocale')->willReturn('en_US');
 
         $committer = $this->createMock(\PFUser::class);
         $committer->method('hasAvatar')->willReturn(true);
@@ -78,7 +78,7 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->user_manager->method('getUserByEmail')->willReturn($committer);
         $this->user_helper->method('getDisplayNameFromUser')
             ->with($committer)
-            ->willReturn("John Snow (jsnow)");
+            ->willReturn('John Snow (jsnow)');
 
         $reference = $this->getCrossReferencePresenter();
 
@@ -112,8 +112,8 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItDisplaysCommitterNameAndDefaultTuleapAvatarWhenUserEmailMatchNoAccountOnTuleap(): void
     {
         $user = $this->createMock(\PFUser::class);
-        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
-        $user->method('getLocale')->willReturn("en_US");
+        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $user->method('getLocale')->willReturn('en_US');
 
         $commit = $this->buildGitlabCommit('The Night King', 'knight-king@is-comming.com', 'dev/feature');
 
@@ -152,8 +152,8 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItDoesNotDisplayTheBranchNameBadgeIfCommitBranchIsUnknown(): void
     {
         $user = $this->createMock(\PFUser::class);
-        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
-        $user->method('getLocale')->willReturn("en_US");
+        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $user->method('getLocale')->willReturn('en_US');
 
         $committer = $this->createMock(\PFUser::class);
         $committer->method('hasAvatar')->willReturn(true);
@@ -168,7 +168,7 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->user_manager->method('getUserByEmail')->willReturn($committer);
         $this->user_helper->method('getDisplayNameFromUser')
             ->with($committer)
-            ->willReturn("John Snow (jsnow)");
+            ->willReturn('John Snow (jsnow)');
 
         $reference = $this->getCrossReferencePresenter();
 

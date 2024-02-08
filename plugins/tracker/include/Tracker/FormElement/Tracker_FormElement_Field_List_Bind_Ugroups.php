@@ -163,7 +163,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
             return new Tracker_FormElement_Field_List_Bind_UgroupsValue($row['id'], $ugroup, $is_hidden);
         }
-        return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new ProjectUGroup(['ugroup_id' => 0, 'name' => ""]), true);
+        return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
     }
 
     /**
@@ -180,8 +180,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getBindtableSqlFragment()
     {
         return [
-            'select'     => "tracker_field_list_bind_ugroups_value.id,
-                             tracker_field_list_bind_ugroups_value.ugroup_id",
+            'select'     => 'tracker_field_list_bind_ugroups_value.id,
+                             tracker_field_list_bind_ugroups_value.ugroup_id',
             'select_nb'  => 2,
             'from'       => 'tracker_field_list_bind_ugroups_value',
             'join_on_id' => 'tracker_field_list_bind_ugroups_value.id',
@@ -257,7 +257,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
                         OR
                         ($R4.ugroup_id <= 100 AND $R4.group_id = 100))
                     )
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->field->id . " )";
+                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->field->id . ' )';
     }
 
     /**
@@ -372,7 +372,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
                 $values_array[] = $val->getLabel();
             }
         }
-        return implode(",", $values_array);
+        return implode(',', $values_array);
     }
 
     public function getDao()
@@ -440,7 +440,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             $values
         );
         foreach ($ugroups as $ugroup) {
-            $selected = "";
+            $selected = '';
             if (in_array($ugroup->getId(), $selected_ugroup_ids)) {
                 $selected = 'selected="selected"';
             }
@@ -769,7 +769,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $project        = $this->getField()->getTracker()->getProject();
         $user_group     = $ugroup_manager->getUGroupByName($project, $value->getLabel());
         if (! $user_group) {
-            throw new \Exception("Unable to find the user group " . $value->getLabel());
+            throw new \Exception('Unable to find the user group ' . $value->getLabel());
         }
 
         return new MinimalUserGroupRepresentation($project->getID(), $user_group);
@@ -802,7 +802,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $row = $this->value_dao->searchById($bindvalue_id);
 
         if (! $row) {
-            return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new ProjectUGroup(['ugroup_id' => 0, 'name' => ""]), true);
+            return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
         }
 
         return $this->getValueFromRow($row);

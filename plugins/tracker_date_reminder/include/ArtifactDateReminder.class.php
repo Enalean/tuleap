@@ -37,7 +37,7 @@ class ArtifactDateReminder
     {
         $this->logger->info('Start');
 
-        $sql = "SELECT notification_id FROM artifact_date_reminder_processing ORDER BY notification_id";
+        $sql = 'SELECT notification_id FROM artifact_date_reminder_processing ORDER BY notification_id';
         $res = db_query($sql);
         if (db_numrows($res) > 0) {
             while ($rows = db_fetch_array($res)) {

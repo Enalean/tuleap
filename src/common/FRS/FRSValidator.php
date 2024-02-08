@@ -59,7 +59,7 @@ class FRSValidator
                     $release_exists = $frsrf->getReleaseIdByName($release['name'], $release['package_id']);
                     if (! $release_exists) {
                         //now check the date
-                        if (! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $release['date'])) {
+                        if (! preg_match('/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/', $release['date'])) {
                             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'data_not_parsed'));
                         }
                     } else {
@@ -101,7 +101,7 @@ class FRSValidator
                     }
                     if (! isset($release_exists)) {
                         //now check the date
-                        if (! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $release['date'])) {
+                        if (! preg_match('/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/', $release['date'])) {
                             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'data_not_parsed'));
                         }
                     } else {

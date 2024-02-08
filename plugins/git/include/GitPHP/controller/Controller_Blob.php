@@ -44,7 +44,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
     {
         parent::__construct();
         if (! $this->project) {
-            throw new MessageException(dgettext("gitphp", 'Project is required'), true);
+            throw new MessageException(dgettext('gitphp', 'Project is required'), true);
         }
     }
 
@@ -76,7 +76,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
-            return dgettext("gitphp", 'blob');
+            return dgettext('gitphp', 'blob');
         }
         return 'blob';
     }
@@ -117,7 +117,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
             if (isset($this->params['file'])) {
                 $saveas = $this->params['file'];
             } else {
-                $saveas = $this->params['hash'] . ".txt";
+                $saveas = $this->params['hash'] . '.txt';
             }
 
             $headers = [];
@@ -136,13 +136,13 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
             }
 
             if ($mime) {
-                $headers[] = "Content-type: " . $mime;
+                $headers[] = 'Content-type: ' . $mime;
             } else {
-                $headers[] = "Content-type: text/plain; charset=UTF-8";
+                $headers[] = 'Content-type: text/plain; charset=UTF-8';
             }
 
-            $headers[] = "Content-disposition: attachment; filename=\"" . self::removeNonASCIICharFromFilenameToBeUsedAsAttachmentHeaderFilename($saveas) . "\"";
-            $headers[] = "X-Content-Type-Options: nosniff";
+            $headers[] = 'Content-disposition: attachment; filename="' . self::removeNonASCIICharFromFilenameToBeUsedAsAttachmentHeaderFilename($saveas) . '"';
+            $headers[] = 'X-Content-Type-Options: nosniff';
 
             $this->headers = $headers;
         }

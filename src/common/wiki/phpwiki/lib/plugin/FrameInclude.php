@@ -50,20 +50,20 @@ class WikiPlugin_FrameInclude extends WikiPlugin
 {
     public function getName()
     {
-        return _("FrameInclude");
+        return _('FrameInclude');
     }
 
     public function getDescription()
     {
-        return _("Displays a url in a seperate frame inside our body. Only one frame allowed.");
+        return _('Displays a url in a seperate frame inside our body. Only one frame allowed.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.10 $"
+            '$Revision: 1.10 $'
         );
     }
 
@@ -101,7 +101,7 @@ class WikiPlugin_FrameInclude extends WikiPlugin
         if (! $src and $page) {
             if ($page == $request->get('pagename')) {
                 return $this->error(sprintf(
-                    _("recursive inclusion of page %s"),
+                    _('recursive inclusion of page %s'),
                     $page
                 ));
             }
@@ -109,7 +109,7 @@ class WikiPlugin_FrameInclude extends WikiPlugin
         }
         if (! $src) {
             return $this->error(sprintf(
-                _("%s or %s parameter missing"),
+                _('%s or %s parameter missing'),
                 'src',
                 'page'
             ));
@@ -118,7 +118,7 @@ class WikiPlugin_FrameInclude extends WikiPlugin
         // FIXME: How to normalize url's to compare against recursion?
         if ($src == $request->getURLtoSelf()) {
             return $this->error(sprintf(
-                _("recursive inclusion of url %s"),
+                _('recursive inclusion of url %s'),
                 $src
             ));
         }

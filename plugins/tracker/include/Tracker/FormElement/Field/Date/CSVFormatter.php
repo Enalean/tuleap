@@ -32,7 +32,7 @@ class CSVFormatter
      */
     public function formatDateForCSVForUser(\PFUser $user, $date, $is_time_shown)
     {
-        $date_format = $user->getPreference("user_csv_dateformat");
+        $date_format = $user->getPreference('user_csv_dateformat');
         $format      = $this->getCSVDateFormat($date_format, $is_time_shown);
 
         return format_date($format, (float) $date, '');

@@ -48,9 +48,9 @@ final class ServiceUpdateCheckerTest extends TestCase
 
     public function testItThrowsAnExceptionIfTheServiceCannotBeUpdated(): void
     {
-        $service_manager = ServiceCanBeUpdatedStub::serviceCannotBeUpdated(new ServiceCannotBeUpdatedException("Service cannot be updated"));
+        $service_manager = ServiceCanBeUpdatedStub::serviceCannotBeUpdated(new ServiceCannotBeUpdatedException('Service cannot be updated'));
 
-        $service = ServiceBuilder::aSystemService(ProjectTestBuilder::aProject()->build())->withShortName("plugin_git")->isActive(true)->build();
+        $service = ServiceBuilder::aSystemService(ProjectTestBuilder::aProject()->build())->withShortName('plugin_git')->isActive(true)->build();
         $body    = new ServicePUTRepresentation(true);
 
         self::expectException(RestException::class);
@@ -62,7 +62,7 @@ final class ServiceUpdateCheckerTest extends TestCase
         $service_manager = ServiceCanBeUpdatedStub::serviceCanBeUpdated();
 
         $body    = new ServicePUTRepresentation(true);
-        $service = ServiceBuilder::aSystemService(ProjectTestBuilder::aProject()->build())->withShortName("plugin_git")->isActive(false)->build();
+        $service = ServiceBuilder::aSystemService(ProjectTestBuilder::aProject()->build())->withShortName('plugin_git')->isActive(false)->build();
 
         self::expectException(I18NRestException::class);
         $this->buildServiceUpdateChecker($service_manager)->checkServiceCanBeUpdated($body, $service, $this->user);
@@ -73,7 +73,7 @@ final class ServiceUpdateCheckerTest extends TestCase
         $service_manager = ServiceCanBeUpdatedStub::serviceCanBeUpdated();
 
         $body    = new ServicePUTRepresentation(true);
-        $service = ServiceBuilder::aSystemService(ProjectTestBuilder::aProject()->build())->withShortName("plugin_git")->isActive(true)->build();
+        $service = ServiceBuilder::aSystemService(ProjectTestBuilder::aProject()->build())->withShortName('plugin_git')->isActive(true)->build();
 
         $this->buildServiceUpdateChecker($service_manager)->checkServiceCanBeUpdated($body, $service, $this->user);
         self::expectNotToPerformAssertions();

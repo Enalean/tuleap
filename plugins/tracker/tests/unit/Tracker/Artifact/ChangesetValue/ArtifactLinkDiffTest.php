@@ -125,7 +125,7 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         $next               = [];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertEquals(" cleared", $artifact_link_diff->fetchFormatted($this->user, '*', false));
+        $this->assertEquals(' cleared', $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
 
     public function testGetFormattedWithRemovedOneArtifactWithoutType()

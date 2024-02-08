@@ -113,7 +113,7 @@ final class InvitationCleaner
                     )
                 );
 
-                $renderer = $this->renderer_factory->getRenderer(__DIR__ . "/../../templates/invite_buddy");
+                $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../templates/invite_buddy');
 
                 $presenter = [
                     'instance_name'           => \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),

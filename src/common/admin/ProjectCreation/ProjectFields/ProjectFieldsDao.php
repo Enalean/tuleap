@@ -33,13 +33,13 @@ class ProjectFieldsDao extends DataAccessObject
         bool $desc_required,
     ): void {
         $this->getDB()->insert(
-            "group_desc",
+            'group_desc',
             [
-                "desc_name"        => $desc_name,
-                "desc_description" => $desc_description,
-                "desc_rank"        => $desc_rank,
-                "desc_type"        => $desc_type,
-                "desc_required"    => $desc_required,
+                'desc_name'        => $desc_name,
+                'desc_description' => $desc_description,
+                'desc_rank'        => $desc_rank,
+                'desc_type'        => $desc_type,
+                'desc_required'    => $desc_required,
             ]
         );
     }
@@ -53,23 +53,23 @@ class ProjectFieldsDao extends DataAccessObject
         bool $desc_required,
     ): void {
         $this->getDB()->update(
-            "group_desc",
+            'group_desc',
             [
-                "desc_name"       => $desc_name,
-                "desc_description" => $desc_description,
-                "desc_rank"        => $desc_rank,
-                "desc_type"        => $desc_type,
-                "desc_required"    => $desc_required,
+                'desc_name'       => $desc_name,
+                'desc_description' => $desc_description,
+                'desc_rank'        => $desc_rank,
+                'desc_type'        => $desc_type,
+                'desc_required'    => $desc_required,
             ],
-            ["group_desc_id" => $group_desc_id]
+            ['group_desc_id' => $group_desc_id]
         );
     }
 
     public function deleteProjectField(int $group_desc_id): void
     {
         $this->getDB()->beginTransaction();
-        $this->getDB()->delete("group_desc", ["group_desc_id" => $group_desc_id]);
-        $this->getDB()->delete("group_desc_value", ["group_desc_id" => $group_desc_id]);
+        $this->getDB()->delete('group_desc', ['group_desc_id' => $group_desc_id]);
+        $this->getDB()->delete('group_desc_value', ['group_desc_id' => $group_desc_id]);
         $this->getDB()->commit();
     }
 }

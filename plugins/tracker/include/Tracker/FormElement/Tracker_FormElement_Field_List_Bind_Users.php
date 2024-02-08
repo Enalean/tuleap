@@ -440,7 +440,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN $changesetvalue_table AS $R3 ON ($R3.changeset_value_id = $R1.id)
                     LEFT JOIN user AS $R2 ON ($R2.user_id = $R3.bindvalue_id )
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->field->id . " )";
+                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->field->id . ' )';
     }
 
     /**
@@ -453,7 +453,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         }
         $uh = UserHelper::instance();
         $R2 = 'R2_' . $this->field->id;
-        return $R2 . "." . str_replace('user.', '', $uh->getDisplayNameSQLOrder());
+        return $R2 . '.' . str_replace('user.', '', $uh->getDisplayNameSQLOrder());
     }
 
     /**
@@ -554,7 +554,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                 $values_array[] = $val->getLabel();
             }
         }
-        return implode(",", $values_array);
+        return implode(',', $values_array);
     }
 
     public function getDao()
@@ -611,24 +611,24 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $html    .= '<input type="hidden" name="' . $select_name . '" value="" />';
         $html    .= '<select multiple="multiple" name="' . $select_name . '">
                   <option value="">' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
-        $selected = "";
-        if (in_array("artifact_submitters", $value_function)) {
+        $selected = '';
+        if (in_array('artifact_submitters', $value_function)) {
             $selected = 'selected="selected"';
         }
         $html .= '<option value="artifact_submitters" ' . $selected . '>' . dgettext('tuleap-tracker', 'Artifact submitters') . '</option>';
 
-        $selected   = "";
+        $selected   = '';
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);
         $name       = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
-        if (in_array("group_members", $value_function)) {
+        if (in_array('group_members', $value_function)) {
             $selected = 'selected="selected"';
         }
         $html .= '<option value="group_members" ' . $selected . '>' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
 
-        $selected   = "";
+        $selected   = '';
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_ADMIN']);
         $name       = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
-        if (in_array("group_admins", $value_function)) {
+        if (in_array('group_admins', $value_function)) {
             $selected = 'selected="selected"';
         }
         $html .= '<option value="group_admins" ' . $selected . '>' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
@@ -638,7 +638,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $rows       = db_numrows($ugroup_res);
         for ($i = 0; $i < $rows; $i++) {
             $ug       = db_result($ugroup_res, $i, 'ugroup_id');
-            $selected = "";
+            $selected = '';
             if (
                 ($ug == $GLOBALS['UGROUP_NONE']) ||
                 ($ug == $GLOBALS['UGROUP_ANONYMOUS']) ||
@@ -649,7 +649,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                    continue;
             }
 
-            $ugr = "ugroup_" . $ug;
+            $ugr = 'ugroup_' . $ug;
             if (in_array($ugr, $value_function)) {
                 $selected = 'selected="selected"';
             }
@@ -662,9 +662,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             $ugroup_res = ugroup_db_get_existing_ugroups($group_id);
             $rows       = db_numrows($ugroup_res);
             for ($i = 0; $i < $rows; $i++) {
-                $selected = "";
+                $selected = '';
                 $ug       = db_result($ugroup_res, $i, 'ugroup_id');
-                $ugr      = "ugroup_" . $ug;
+                $ugr      = 'ugroup_' . $ug;
                 if (in_array($ugr, $value_function)) {
                     $selected = 'selected="selected"';
                 }

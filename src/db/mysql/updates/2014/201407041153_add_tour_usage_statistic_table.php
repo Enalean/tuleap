@@ -20,7 +20,7 @@ class b201407041153_add_tour_usage_statistic_table extends \Tuleap\ForgeUpgrade\
 {
     public function description()
     {
-        return "Add table to store usage statistics of tours";
+        return 'Add table to store usage statistics of tours';
     }
 
     public function preUp()
@@ -30,14 +30,14 @@ class b201407041153_add_tour_usage_statistic_table extends \Tuleap\ForgeUpgrade\
 
     public function up()
     {
-        $sql = "CREATE TABLE tour_usage_statistics (
+        $sql = 'CREATE TABLE tour_usage_statistics (
             id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             user_id INT(11) NOT NULL,
             executed_on INT(11) UNSIGNED NOT NULL,
             tour_name VARCHAR(255) NOT NULL,
             nb_steps TINYINT(4) UNSIGNED NOT NULL,
             current_step TINYINT(4) UNSIGNED NOT NULL
-        );";
+        );';
 
         $res = $this->db->dbh->exec($sql);
 

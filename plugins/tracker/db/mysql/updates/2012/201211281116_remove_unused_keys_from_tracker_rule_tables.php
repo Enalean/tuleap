@@ -32,8 +32,8 @@ class b201211281116_remove_unused_keys_from_tracker_rule_tables extends \Tuleap\
 
     public function up()
     {
-        $sql = "ALTER TABLE `tracker_rule_list`
-                    DROP KEY `tracker_rule_id`;";
+        $sql = 'ALTER TABLE `tracker_rule_list`
+                    DROP KEY `tracker_rule_id`;';
 
         $result = $this->db->dbh->exec($sql);
 
@@ -42,8 +42,8 @@ class b201211281116_remove_unused_keys_from_tracker_rule_tables extends \Tuleap\
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
 
-        $sql2 = "ALTER TABLE `tracker_rule_date`
-                    DROP KEY `tracker_rule_id`;";
+        $sql2 = 'ALTER TABLE `tracker_rule_date`
+                    DROP KEY `tracker_rule_id`;';
 
         $result2 = $this->db->dbh->exec($sql2);
 

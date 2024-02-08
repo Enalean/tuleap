@@ -107,18 +107,18 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $required_title = $this->createMock(\Tracker_FormElement_Field_String::class);
         $required_title->method('isRequired')->willReturn(true);
         $required_title->method('getId')->willReturn(self::TITLE_FIELD_ID);
-        $required_title->method('getLabel')->willReturn("Title");
+        $required_title->method('getLabel')->willReturn('Title');
         $non_required_artifact_link = ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)->withLabel('artlink')->build();
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('getFormElementFields')->willReturn([$required_title, $non_required_artifact_link]);
         $tracker->method('getId')->willReturn(1);
-        $tracker->method('getName')->willReturn("Tracker 1");
+        $tracker->method('getName')->willReturn('Tracker 1');
         $tracker->method('getGroupId')->willReturn(101);
 
         $other_tracker_with_no_required_field = $this->createMock(\Tracker::class);
         $other_tracker_with_no_required_field->method('getId')->willReturn(2);
-        $other_tracker_with_no_required_field->method('getName')->willReturn("Tracker 2");
+        $other_tracker_with_no_required_field->method('getName')->willReturn('Tracker 2');
         $other_tracker_with_no_required_field->method('getGroupId')->willReturn(101);
         $other_non_required_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $other_non_required_field->method('isRequired')->willReturn(false);
@@ -154,7 +154,7 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $required_title = $this->createMock(\Tracker_FormElement_Field_String::class);
         $required_title->method('isRequired')->willReturn(true);
         $required_title->method('getId')->willReturn(self::TITLE_FIELD_ID);
-        $required_title->method('getLabel')->willReturn("Title");
+        $required_title->method('getLabel')->willReturn('Title');
         $required_title->method('getTrackerId')->willReturn(412);
         $required_artifact_link = ArtifactLinkFieldBuilder::anArtifactLinkField(790)
             ->withTrackerId(412)

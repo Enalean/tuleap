@@ -24,7 +24,7 @@ class b202003021632_add_branch_source_tables extends ForgeUpgrade_Bucket // @cod
 {
     public function description()
     {
-        return "Add branch sources tables";
+        return 'Add branch sources tables';
     }
 
     public function preUp()
@@ -40,24 +40,24 @@ class b202003021632_add_branch_source_tables extends ForgeUpgrade_Bucket // @cod
 
     private function createRepositoryTable(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE plugin_hudson_git_job_branch_source (
                job_id  int(11) UNSIGNED NOT NULL PRIMARY KEY,
                status_code INT(4) UNSIGNED NOT NULL
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_hudson_git_job_branch_source', $sql);
     }
 
     private function createProjectTable(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE plugin_hudson_git_project_server_job_branch_source (
                 job_id  int(11) UNSIGNED NOT NULL PRIMARY KEY,
                 status_code INT(4) UNSIGNED NOT NULL
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_hudson_git_project_server_job_branch_source', $sql);
     }

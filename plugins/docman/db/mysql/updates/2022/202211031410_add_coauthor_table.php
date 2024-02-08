@@ -25,7 +25,7 @@ final class b202211031410_add_coauthor_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
-        return "Add plugin_docman_version_coauthor table";
+        return 'Add plugin_docman_version_coauthor table';
     }
 
     public function up(): void

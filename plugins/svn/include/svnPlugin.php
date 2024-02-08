@@ -994,7 +994,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     {
         $event->setPluginActivated();
 
-        $class = "Tuleap\\SVN\\REST\\" . $event->getVersion() . "\\ProjectResource";
+        $class = 'Tuleap\\SVN\\REST\\' . $event->getVersion() . '\\ProjectResource';
         if (! class_exists($class)) {
             throw new LogicException("$class does not exist");
         }

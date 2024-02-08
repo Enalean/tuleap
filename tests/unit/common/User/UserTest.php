@@ -301,7 +301,7 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItStringifiesTheUser(): void
     {
         $user = new PFUser(['user_id' => 123, 'language_id' => 'en_US']);
-        self::assertEquals("User #123", (string) $user);
+        self::assertEquals('User #123', (string) $user);
     }
 
     public function testItReturnsTrueWhenUserIsAdminOfProjectAdministration(): void

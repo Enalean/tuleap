@@ -65,11 +65,11 @@ final class OAuth2AccessTokenDAOTest extends \Tuleap\Test\PHPUnit\TestCase
         $db                                 = DBFactory::getMainTuleapDBConnection()->getDB();
         self::$active_project_id            = (int) $db->insertReturnId(
             'groups',
-            ['group_name' => 'access_token_dao_active_test', 'status' => Project::STATUS_ACTIVE, 'unix_group_name' => "access_token_dao_active_test"]
+            ['group_name' => 'access_token_dao_active_test', 'status' => Project::STATUS_ACTIVE, 'unix_group_name' => 'access_token_dao_active_test']
         );
         self::$deleted_project_id           = (int) $db->insertReturnId(
             'groups',
-            ['group_name' => 'access_token_dao_deleted_test', 'status' => Project::STATUS_DELETED, 'unix_group_name' => "access_token_dao_deleted_test"]
+            ['group_name' => 'access_token_dao_deleted_test', 'status' => Project::STATUS_DELETED, 'unix_group_name' => 'access_token_dao_deleted_test']
         );
         $app_dao                            = new AppDao();
         self::$active_project_app_id        = $app_dao->create(

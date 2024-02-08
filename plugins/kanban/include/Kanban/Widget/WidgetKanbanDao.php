@@ -63,8 +63,8 @@ final class WidgetKanbanDao extends DataAccessObject
 
     private function create(int $owner_id, string $owner_type, int $kanban_id, string $kanban_title): int
     {
-        $sql = "INSERT INTO plugin_agiledashboard_kanban_widget(owner_id, owner_type, title, kanban_id)
-                VALUES (?, ?, ?, ?)";
+        $sql = 'INSERT INTO plugin_agiledashboard_kanban_widget(owner_id, owner_type, title, kanban_id)
+                VALUES (?, ?, ?, ?)';
 
         $this->getDB()->run($sql, $owner_id, $owner_type, $kanban_title, $kanban_id);
 
@@ -73,10 +73,10 @@ final class WidgetKanbanDao extends DataAccessObject
 
     private function createConfigForWidgetId(int $widget_id, int $tracker_report_id): void
     {
-        $sql = "
+        $sql = '
             REPLACE INTO plugin_agiledashboard_kanban_widget_config(widget_id, tracker_report_id)
             VALUES (?, ?)
-        ";
+        ';
 
         $this->getDB()->run($sql, $widget_id, $tracker_report_id);
     }
@@ -86,11 +86,11 @@ final class WidgetKanbanDao extends DataAccessObject
      */
     public function searchWidgetById(int $id, int $owner_id, string $owner_type): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_agiledashboard_kanban_widget
                 WHERE owner_id = ?
                   AND owner_type = ?
-                  AND id = ?";
+                  AND id = ?';
 
         return $this->getDB()->row($sql, $owner_id, $owner_type, $id);
     }

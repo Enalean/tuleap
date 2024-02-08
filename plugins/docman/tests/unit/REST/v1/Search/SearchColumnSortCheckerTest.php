@@ -34,8 +34,8 @@ final class SearchColumnSortCheckerTest extends TestCase
     public function testItThrowsAnExceptionWhenTheSortedColumnIsLocation(): void
     {
         $sort_representation        = new SearchSortRepresentation();
-        $sort_representation->name  = "location";
-        $sort_representation->order = "asc";
+        $sort_representation->name  = 'location';
+        $sort_representation->order = 'asc';
 
         $column_report = new Docman_ReportColumn(new Docman_Metadata());
 
@@ -50,12 +50,12 @@ final class SearchColumnSortCheckerTest extends TestCase
     public function testItThrowsAnExceptionWhenTheSortedColumnIsAMetadataWhichAllowMultiValueList(): void
     {
         $sort_representation        = new SearchSortRepresentation();
-        $sort_representation->name  = "field_484";
-        $sort_representation->order = "asc";
+        $sort_representation->name  = 'field_484';
+        $sort_representation->order = 'asc';
 
         $property                          = new Docman_Metadata();
-        $property->name                    = "Multi List Value";
-        $property->label                   = "field_484";
+        $property->name                    = 'Multi List Value';
+        $property->label                   = 'field_484';
         $property->isMultipleValuesAllowed = true;
 
         $column_report = new Docman_ReportColumn($property);
@@ -71,8 +71,8 @@ final class SearchColumnSortCheckerTest extends TestCase
     public function testItThrowsAnExceptionWhenTheSortedColumnHasNoMetadata(): void
     {
         $sort_representation        = new SearchSortRepresentation();
-        $sort_representation->name  = "field_484";
-        $sort_representation->order = "asc";
+        $sort_representation->name  = 'field_484';
+        $sort_representation->order = 'asc';
 
         $column_report = new Docman_ReportColumn(null);
 
@@ -87,12 +87,12 @@ final class SearchColumnSortCheckerTest extends TestCase
     public function testTheProvidedColumnCanBeSorted(): void
     {
         $sort_representation        = new SearchSortRepresentation();
-        $sort_representation->name  = "title";
-        $sort_representation->order = "asc";
+        $sort_representation->name  = 'title';
+        $sort_representation->order = 'asc';
 
         $property        = new Docman_Metadata();
-        $property->name  = "Title";
-        $property->label = "title";
+        $property->name  = 'Title';
+        $property->label = 'title';
 
         $column_report = new Docman_ReportColumn($property);
         SearchColumnSortChecker::checkColumnCanBeSorted($sort_representation, $column_report);

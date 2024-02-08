@@ -70,7 +70,7 @@ class ChangelogSnapshotBuilder
         AttachmentCollection $attachment_collection,
         FieldMappingCollection $jira_field_mapping_collection,
     ): Snapshot {
-        $this->logger->debug("Start build snapshot from changelog...");
+        $this->logger->debug('Start build snapshot from changelog...');
         $fields_snapshot = [];
         foreach ($changelog_entry->getItemRepresentations() as $item_representation) {
             $field_id = $item_representation->getFieldId();
@@ -81,7 +81,7 @@ class ChangelogSnapshotBuilder
             $field_mapping = $jira_field_mapping_collection->getMappingFromJiraField($field_id);
 
             if ($field_mapping === null) {
-                $this->logger->debug("  |_ Field mapping not found for field " . $field_id);
+                $this->logger->debug('  |_ Field mapping not found for field ' . $field_id);
                 continue;
             }
 
@@ -110,7 +110,7 @@ class ChangelogSnapshotBuilder
                     );
                 }
 
-                $this->logger->debug("  |_ Generate file value for " . $field_id);
+                $this->logger->debug('  |_ Generate file value for ' . $field_id);
                 continue;
             }
 
@@ -124,7 +124,7 @@ class ChangelogSnapshotBuilder
                     null
                 );
 
-                $this->logger->debug("  |_ Generate date value for " . $field_id);
+                $this->logger->debug('  |_ Generate date value for ' . $field_id);
                 continue;
             }
 
@@ -142,7 +142,7 @@ class ChangelogSnapshotBuilder
                     null
                 );
 
-                $this->logger->debug("  |_ Generate user list value for " . $field_id);
+                $this->logger->debug('  |_ Generate user list value for ' . $field_id);
                 continue;
             }
 
@@ -178,7 +178,7 @@ class ChangelogSnapshotBuilder
                     null
                 );
 
-                $this->logger->debug("  |_ Generate multi user list value for " . $field_id);
+                $this->logger->debug('  |_ Generate multi user list value for ' . $field_id);
 
                 continue;
             }
@@ -201,7 +201,7 @@ class ChangelogSnapshotBuilder
                     ),
                     null
                 );
-                $this->logger->debug("  |_ Generate list value for " . $field_id);
+                $this->logger->debug('  |_ Generate list value for ' . $field_id);
                 continue;
             }
 
@@ -246,7 +246,7 @@ class ChangelogSnapshotBuilder
             $rendered_value
         );
 
-        $this->logger->debug("  |_ Generate string value for " . $field_id);
+        $this->logger->debug('  |_ Generate string value for ' . $field_id);
         return $field_snapshot;
     }
 }

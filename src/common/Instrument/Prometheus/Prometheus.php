@@ -37,10 +37,10 @@ use Tuleap\Redis\ClientFactory;
 
 class Prometheus
 {
-    #[ConfigKey("Platform name to be reported to Prometheus")]
+    #[ConfigKey('Platform name to be reported to Prometheus')]
     public const CONFIG_PROMETHEUS_PLATFORM = 'prometheus_platform';
 
-    #[ConfigKey("URL of `node_exporter` Prometheus exporter to be scrapped and included in Tuleap metrics")]
+    #[ConfigKey('URL of `node_exporter` Prometheus exporter to be scrapped and included in Tuleap metrics')]
     public const CONFIG_PROMETHEUS_NODE_EXPORTER = 'prometheus_node_exporter';
 
     /**

@@ -124,8 +124,8 @@ class UserGroupDao extends DataAccessObject
     public function removeProjectMembers($groupId)
     {
         $groupId = $this->da->escapeInt($groupId);
-        $sql     = "DELETE FROM user_group" .
-                   " WHERE group_id = " . $groupId;
+        $sql     = 'DELETE FROM user_group' .
+                   ' WHERE group_id = ' . $groupId;
         return $this->update($sql);
     }
 
@@ -162,18 +162,18 @@ class UserGroupDao extends DataAccessObject
             $predefined = implode(',', $predefined);
             $extra      = ' OR ugroup_id IN (' . $this->da->quoteSmart($predefined) . ')';
         }
-        $sql = "SELECT *
+        $sql = 'SELECT *
               FROM ugroup
-              WHERE group_id=" . $this->da->escapeInt($groupId) . "
-                " . $extra . "
-              ORDER BY name";
+              WHERE group_id=' . $this->da->escapeInt($groupId) . '
+                ' . $extra . '
+              ORDER BY name';
         return $this->retrieve($sql);
     }
 
     public function getAllForgeUGroups()
     {
-        $sql = "SELECT ugroup.* FROM ugroup
-                WHERE ugroup.group_id IS NULL";
+        $sql = 'SELECT ugroup.* FROM ugroup
+                WHERE ugroup.group_id IS NULL';
 
         return $this->retrieve($sql);
     }

@@ -123,7 +123,7 @@ class hudson_gitPlugin extends Plugin
     {
         return new IncludeAssets(
             __DIR__ . '/../frontend-assets',
-            "/assets/hudson_git"
+            '/assets/hudson_git'
         );
     }
 
@@ -452,7 +452,7 @@ class hudson_gitPlugin extends Plugin
         $factory = self::getJenkinsServerFactory();
         $servers = $factory->getJenkinsServerOfProject($event->getProject());
 
-        $plugin_infos = new ExternalGitHomepagePluginInfos("hudson_git", $servers);
+        $plugin_infos = new ExternalGitHomepagePluginInfos('hudson_git', $servers);
         $event->addExternalPluginInfos($plugin_infos);
     }
 }

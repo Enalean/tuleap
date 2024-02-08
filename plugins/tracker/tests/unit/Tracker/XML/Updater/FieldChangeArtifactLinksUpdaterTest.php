@@ -36,9 +36,9 @@ use Tuleap\Tracker\Test\Stub\RetrieveAllUsableTypesInProjectStub;
 
 final class FieldChangeArtifactLinksUpdaterTest extends TestCase
 {
-    private const ARTIFACT_ID  = "101";
+    private const ARTIFACT_ID  = '101';
     private const USER_ID      = 201;
-    private const SUBMITTED_ON = "123456789";
+    private const SUBMITTED_ON = '123456789';
 
     private \Tracker_FormElement_Field_ArtifactLink $destination_link_field;
     private FieldChangeArtifactLinksUpdater $updater;
@@ -69,7 +69,7 @@ final class FieldChangeArtifactLinksUpdaterTest extends TestCase
                 $this->custom_type_1
             ),
             \Codendi_HTMLPurifier::instance(),
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(self::USER_ID)->withUserName("user")->build())
+            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(self::USER_ID)->withUserName('user')->build())
         );
     }
 

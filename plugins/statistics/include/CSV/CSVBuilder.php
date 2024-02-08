@@ -103,19 +103,19 @@ class CSVBuilder
     public function buildServiceUsageCSVContent($start_date, $end_date)
     {
         //Project admin
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getIdsOfActiveProjectsBeforeEndDate(), "Project ID");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNameOfActiveProjectsBeforeEndDate(), "Project Name");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getShortNameOfActiveProjectsBeforeEndDate(), "Project Short Name");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getPrivacyOfActiveProjectsBeforeEndDate(), "Public Project");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getDescriptionOfActiveProjectsBeforeEndDate(), "Description");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getRegisterTimeOfActiveProjectsBeforeEndDate(), "Creation date");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getInfosFromTroveGroupLink(), "Organization");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getAdministrators(), "Created by");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getAdministratorsRealNames(), "Created by (Real name)");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getAdministratorsEMails(), "Created by (Email)");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getBuiltFromTemplateIdBeforeEndDate(), "Template ID used for creation");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getBuiltFromTemplateNameBeforeEndDate(), "Template name used for creation");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfUserAddedBetweenStartDateAndEndDate(), "Users added");
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getIdsOfActiveProjectsBeforeEndDate(), 'Project ID');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNameOfActiveProjectsBeforeEndDate(), 'Project Name');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getShortNameOfActiveProjectsBeforeEndDate(), 'Project Short Name');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getPrivacyOfActiveProjectsBeforeEndDate(), 'Public Project');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getDescriptionOfActiveProjectsBeforeEndDate(), 'Description');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getRegisterTimeOfActiveProjectsBeforeEndDate(), 'Creation date');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getInfosFromTroveGroupLink(), 'Organization');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getAdministrators(), 'Created by');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getAdministratorsRealNames(), 'Created by (Real name)');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getAdministratorsEMails(), 'Created by (Email)');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getBuiltFromTemplateIdBeforeEndDate(), 'Template ID used for creation');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getBuiltFromTemplateNameBeforeEndDate(), 'Template name used for creation');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfUserAddedBetweenStartDateAndEndDate(), 'Users added');
 
         foreach ($this->custom_description_factory->getCustomDescriptions() as $custom_description) {
             $this->services_usage_formatter->buildDatas(
@@ -134,52 +134,52 @@ class CSVBuilder
         }
 
         //SVN
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getSVNActivities(), "SVN activities");
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getSVNActivities(), 'SVN activities');
 
         //GIT
         $git_plugin = $this->plugin_manager->getPluginByName('git');
         if ($git_plugin && $this->plugin_manager->isPluginEnabled($git_plugin)) {
-            $this->services_usage_formatter->buildDatas($this->services_usage_dao->getGitWrite(), "GIT write");
-            $this->services_usage_formatter->buildDatas($this->services_usage_dao->getGitRead(), "GIT read");
+            $this->services_usage_formatter->buildDatas($this->services_usage_dao->getGitWrite(), 'GIT write');
+            $this->services_usage_formatter->buildDatas($this->services_usage_dao->getGitRead(), 'GIT read');
         }
 
         //FRS
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getFilesPublished(), "Files published");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getDistinctFilesPublished(), "Distinct files published");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDownloadedFilesBeforeEndDate(), "Downloaded files (before end date)");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate(), "Downloaded files (between start date and end date)");
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getFilesPublished(), 'Files published');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getDistinctFilesPublished(), 'Distinct files published');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDownloadedFilesBeforeEndDate(), 'Downloaded files (before end date)');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate(), 'Downloaded files (between start date and end date)');
 
         //Forums
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfActiveForums(), "Active forums");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfInactiveForums(), "Inactive forums");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getForumsActivitiesBetweenStartDateAndEndDate(), "Forums activities");
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfActiveForums(), 'Active forums');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfInactiveForums(), 'Inactive forums');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getForumsActivitiesBetweenStartDateAndEndDate(), 'Forums activities');
 
         //PHPWiki
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfWikiDocuments(), "Wiki documents");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate(), "Modified wiki pages");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDistinctWikiPages(), "Distinct wiki pages");
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfWikiDocuments(), 'Wiki documents');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate(), 'Modified wiki pages');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDistinctWikiPages(), 'Distinct wiki pages');
 
         //Trackers v3
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate(), "Open artifacts");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate(), "Closed artifacts");
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate(), 'Open artifacts');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate(), 'Closed artifacts');
 
         //Docman
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getAddedDocumentBetweenStartDateAndEndDate(), "Added documents");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getDeletedDocumentBetweenStartDateAndEndDate(), "Deleted documents");
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getAddedDocumentBetweenStartDateAndEndDate(), 'Added documents');
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getDeletedDocumentBetweenStartDateAndEndDate(), 'Deleted documents');
 
         //News
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfNewsBetweenStartDateAndEndDate(), "News");
+        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfNewsBetweenStartDateAndEndDate(), 'News');
 
         //CI
         $ci_plugin = $this->plugin_manager->getPluginByName('hudson');
         if ($ci_plugin && $this->plugin_manager->isPluginEnabled($ci_plugin)) {
-            $this->services_usage_formatter->buildDatas($this->services_usage_dao->getProjectWithCIActivated(), "Continuous integration activated");
-            $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfCIJobs(), "Continuous integration jobs");
+            $this->services_usage_formatter->buildDatas($this->services_usage_dao->getProjectWithCIActivated(), 'Continuous integration activated');
+            $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfCIJobs(), 'Continuous integration jobs');
         }
 
         //Disk usage
-        $this->exportDiskUsageForDate($start_date, "Disk usage at start date (MB)");
-        $this->exportDiskUsageForDate($end_date, "Disk usage at end date (MB)");
+        $this->exportDiskUsageForDate($start_date, 'Disk usage at start date (MB)');
+        $this->exportDiskUsageForDate($end_date, 'Disk usage at end date (MB)');
 
         $this->event_manager->dispatch(
             new StatisticsServiceUsage($this->services_usage_formatter, $start_date, $end_date)

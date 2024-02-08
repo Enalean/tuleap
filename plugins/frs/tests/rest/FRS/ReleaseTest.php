@@ -30,7 +30,7 @@ final class ReleaseTest extends RestBase
     public function testReleaseIsInPackagesResourcesWithUserRESTReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', "frs_packages/1"),
+            $this->request_factory->createRequest('GET', 'frs_packages/1'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -103,8 +103,8 @@ final class ReleaseTest extends RestBase
 
         $this->assertEquals($release['id'], 1);
         $this->assertEquals($release['name'], 'release1');
-        $this->assertEquals($release['links'][0]["link"], 'http://example.fr');
-        $this->assertEquals($release['links'][0]["release_time"], '2015-12-08T16:55:00+01:00');
+        $this->assertEquals($release['links'][0]['link'], 'http://example.fr');
+        $this->assertEquals($release['links'][0]['release_time'], '2015-12-08T16:55:00+01:00');
 
         $this->assertCount(1, $release['permissions_for_groups']['can_read']);
         $this->assertEquals('project_members', $release['permissions_for_groups']['can_read'][0]['short_name']);

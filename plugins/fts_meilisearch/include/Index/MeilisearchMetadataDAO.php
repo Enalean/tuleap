@@ -42,7 +42,7 @@ class MeilisearchMetadataDAO extends DataAccessObject
                 if ($nb_existing_entries > 1) {
                     throw new \LogicException(
                         sprintf(
-                            "Do not expect to find more than one indexed item (%s, [%s])",
+                            'Do not expect to find more than one indexed item (%s, [%s])',
                             $item->type,
                             print_r($item->metadata, true)
                         )
@@ -77,7 +77,7 @@ class MeilisearchMetadataDAO extends DataAccessObject
     public function searchMatchingEntriesByProjectID(int $project_id): array
     {
         return $this->getDB()->column(
-            "SELECT id FROM plugin_fts_meilisearch_item WHERE project_id = ? FOR SHARE",
+            'SELECT id FROM plugin_fts_meilisearch_item WHERE project_id = ? FOR SHARE',
             [$project_id]
         );
     }

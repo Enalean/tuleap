@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 require_once('lib/TextSearchQuery.php');
-require_once("lib/PageList.php");
+require_once('lib/PageList.php');
 
 /**
  * Simple case insensitive fulltext search
@@ -37,20 +37,20 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
 {
     public function getName()
     {
-        return _("FullTextSearch");
+        return _('FullTextSearch');
     }
 
     public function getDescription()
     {
-        return _("Search the content of all pages in this wiki.");
+        return _('Search the content of all pages in this wiki.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.26 $"
+            '$Revision: 1.26 $'
         );
     }
 
@@ -117,10 +117,10 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
             unset($page);
         }
         if ($limit and $count >= $limit) { //todo: pager link to list of next matches
-            $list->pushContent(HTML::dd(fmt("only %d pages displayed", $limit)));
+            $list->pushContent(HTML::dd(fmt('only %d pages displayed', $limit)));
         }
         if (! $list->getContent()) {
-            $list->pushContent(HTML::dd(_("<no matches>")));
+            $list->pushContent(HTML::dd(_('<no matches>')));
         }
 
         if (! empty($pages->stoplisted)) {

@@ -32,7 +32,7 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->markTestSkipped("SVN 1.10+ need fix");
+        $this->markTestSkipped('SVN 1.10+ need fix');
         $this->init_pwd = getcwd();
         system('/bin/rm -rf /tmp/sample');
     }
@@ -90,7 +90,7 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
                 $got_exception = true;
             }
         }
-        $this->assertTrue($got_exception, "Message: " . $message);
+        $this->assertTrue($got_exception, 'Message: ' . $message);
     }
 
     public function testWriteAccessGrantedToAlice()
@@ -124,9 +124,9 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
         $total_stdout   = '';
         $total_stderr   = '';
         $descriptorspec = [
-            0 => ["pipe", "r"],   // stdin is a pipe that the child will read from
-            1 => ["pipe", "w"],   // stdout is a pipe that the child will write to
-            2 => ["pipe", "w"],    // stderr is a pipe that the child will write to
+            0 => ['pipe', 'r'],   // stdin is a pipe that the child will read from
+            1 => ['pipe', 'w'],   // stdout is a pipe that the child will write to
+            2 => ['pipe', 'w'],    // stderr is a pipe that the child will write to
         ];
         flush();
         $process = proc_open($command, $descriptorspec, $pipes);
@@ -141,7 +141,7 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
             fclose($pipes[2]);
             $return_value = proc_close($process);
             if ($return_value !== 0) {
-                throw new \Exception("$command return code: " . $return_value . " " . $total_stderr);
+                throw new \Exception("$command return code: " . $return_value . ' ' . $total_stderr);
             }
         }
         return $total_stdout;

@@ -45,7 +45,7 @@ class BindDecoratorRetriever
         $list_bind = $field->getBind();
 
         if (! $list_bind) {
-            throw new \LogicException("Field "  . $field->getId() . " has no associate bind");
+            throw new \LogicException('Field '  . $field->getId() . ' has no associate bind');
         }
 
         $values = $list_bind->getChangesetValues($changeset->getId());

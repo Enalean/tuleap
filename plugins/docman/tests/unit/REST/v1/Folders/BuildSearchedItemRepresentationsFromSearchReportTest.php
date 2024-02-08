@@ -57,7 +57,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
     protected function setUp(): void
     {
         $docman_settings = $this->createMock(\Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->with('status')->willReturn("1");
+        $docman_settings->method('getMetadataUsage')->with('status')->willReturn('1');
         $item_dao            = $this->createMock(\Docman_ItemDao::class);
         $this->status_mapper = new ItemStatusMapper($docman_settings);
         $this->user_manager  = $this->createMock(\UserManager::class);
@@ -100,23 +100,23 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
         );
 
         $item_one_array = [
-            "item_id"     => 1,
-            "title"       => "folder",
-            "description" => "",
-            "update_date" => "123456789",
-            "status"      => PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
-            "user_id"     => 101,
-            "parent_id"   => 0,
+            'item_id'     => 1,
+            'title'       => 'folder',
+            'description' => '',
+            'update_date' => '123456789',
+            'status'      => PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
+            'user_id'     => 101,
+            'parent_id'   => 0,
         ];
         $item_one       = new \Docman_Folder($item_one_array);
         $item_two_array = [
-            "item_id"     => 2,
-            "title"       => "file",
-            "description" => "",
-            "update_date" => "987654321",
-            "status"      => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
-            "user_id"     => 101,
-            "parent_id"   => 0,
+            'item_id'     => 2,
+            'title'       => 'file',
+            'description' => '',
+            'update_date' => '987654321',
+            'status'      => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
+            'user_id'     => 101,
+            'parent_id'   => 0,
         ];
         $item_two       = new \Docman_File($item_two_array);
 
@@ -136,7 +136,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
 
         $current_user = UserTestBuilder::aUser()->build();
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);
-        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::aUser()->withUserName("John")->withRealName("jsmith")->withId(101)->build());
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::aUser()->withUserName('John')->withRealName('jsmith')->withId(101)->build());
 
         $this->item_factory
             ->method('getItemList')
@@ -169,9 +169,9 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
 
         $this->assertItemEqualsRepresentation($item_one_array, $collection->search_representations[0]);
         $this->assertItemEqualsRepresentation($item_two_array, $collection->search_representations[1]);
-        $this->assertEquals("folder", $collection->search_representations[0]->type);
+        $this->assertEquals('folder', $collection->search_representations[0]->type);
 
-        $this->assertEquals("file", $collection->search_representations[1]->type);
+        $this->assertEquals('file', $collection->search_representations[1]->type);
         $this->assertEquals('text/html', $collection->search_representations[1]->file_properties->file_type);
         $this->assertEquals('Lorem ipsum', $collection->search_representations[1]->custom_properties['field_23']->value);
 

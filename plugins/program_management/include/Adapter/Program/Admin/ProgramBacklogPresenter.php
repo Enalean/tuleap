@@ -75,8 +75,8 @@ final class ProgramBacklogPresenter
         $this->can_create_program_increment = $backlog_configuration->can_create_program;
         $this->has_plan_permissions         = $backlog_configuration->has_plan_permissions;
         $this->program_increment_tracker_id = $backlog_configuration->program_increment_tracker_id;
-        $this->program_increment_label      = dgettext('tuleap-program_management', "Program Increments");
-        $this->program_increment_sub_label  = dgettext('tuleap-program_management', "program increment");
+        $this->program_increment_label      = dgettext('tuleap-program_management', 'Program Increments');
+        $this->program_increment_sub_label  = dgettext('tuleap-program_management', 'program increment');
 
         if ($backlog_configuration->program_increment_label) {
             $this->program_increment_label = $backlog_configuration->program_increment_label;
@@ -87,7 +87,7 @@ final class ProgramBacklogPresenter
         }
 
         $this->is_iteration_tracker_defined = $backlog_configuration->is_iteration_tracker_defined;
-        $this->iteration_label              = dgettext('tuleap-program_management', "Iterations");
+        $this->iteration_label              = dgettext('tuleap-program_management', 'Iterations');
 
         if ($backlog_configuration->iteration_label) {
             $this->iteration_label = $backlog_configuration->iteration_label;

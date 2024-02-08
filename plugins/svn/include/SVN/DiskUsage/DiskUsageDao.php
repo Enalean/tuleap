@@ -26,23 +26,23 @@ class DiskUsageDao extends DataAccessObject
 {
     public function hasRepositoriesUpdatedAfterGivenDate(int $project_id, int $date)
     {
-        $sql = "SELECT COUNT(*)
+        $sql = 'SELECT COUNT(*)
                 FROM plugin_svn_repositories
                 LEFT JOIN plugin_svn_last_access
                   ON plugin_svn_repositories.id = plugin_svn_last_access.repository_id
                 WHERE project_id = ?
                 AND repository_deletion_date IS NULL
-                AND plugin_svn_last_access.commit_date  > ?";
+                AND plugin_svn_last_access.commit_date  > ?';
 
         return $this->getDB()->single($sql, [$project_id, $date]) > 0;
     }
 
     public function hasRepositories(int $project_id)
     {
-        $sql = "SELECT COUNT(*)
+        $sql = 'SELECT COUNT(*)
                 FROM plugin_svn_repositories
                 WHERE project_id = ?
-                AND repository_deletion_date IS NULL";
+                AND repository_deletion_date IS NULL';
 
         return $this->getDB()->single($sql, [$project_id]) > 0;
     }

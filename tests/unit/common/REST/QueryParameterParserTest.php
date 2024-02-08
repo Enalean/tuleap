@@ -145,6 +145,6 @@ class QueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetObject(): void
     {
         $result = $this->query_parser->getObject('{"identifier": {"key": "value"}}', 'identifier');
-        self::assertEquals(["key" => "value"], $result);
+        self::assertEquals(['key' => 'value'], $result);
     }
 }

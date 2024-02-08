@@ -119,7 +119,7 @@ final class ApprovalTableNotificationCycleTest extends \Tuleap\Test\PHPUnit\Test
         $cycle->shouldReceive('notifyNextReviewer')->never();
         $reviewer       = \Mockery::spy(Docman_ApprovalReviewer::class);
         $isLastReviewer = true;
-        $withComments   = "";
+        $withComments   = '';
         $cycle->reviewerApprove($reviewer, $isLastReviewer, $withComments);
     }
 }

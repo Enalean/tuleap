@@ -30,10 +30,10 @@ class Valid_Widget_OwnerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $v = new Valid_Widget_Owner();
 
-        $this->assertTrue($v->validate("u102"));
-        $this->assertTrue($v->validate("g1023"));
-        $this->assertTrue($v->validate("u1"));
-        $this->assertTrue($v->validate("g1"));
+        $this->assertTrue($v->validate('u102'));
+        $this->assertTrue($v->validate('g1023'));
+        $this->assertTrue($v->validate('u1'));
+        $this->assertTrue($v->validate('g1'));
     }
 
     public function testSpecialChars(): void
@@ -53,18 +53,18 @@ class Valid_Widget_OwnerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $v = new Valid_Widget_Owner();
 
-        $this->assertFalse($v->validate("u102--"));
-        $this->assertFalse($v->validate("--u102"));
-        $this->assertFalse($v->validate("--"));
+        $this->assertFalse($v->validate('u102--'));
+        $this->assertFalse($v->validate('--u102'));
+        $this->assertFalse($v->validate('--'));
     }
 
     public function testHTMLInjections(): void
     {
         $v = new Valid_Widget_Owner();
 
-        $this->assertFalse($v->validate("<script>alert(1);</script>"));
-        $this->assertFalse($v->validate("\"<script>alert(1);</script>"));
-        $this->assertFalse($v->validate("\"><script>alert(1);</script>"));
-        $this->assertFalse($v->validate("</textarea><script>alert(1);</script>"));
+        $this->assertFalse($v->validate('<script>alert(1);</script>'));
+        $this->assertFalse($v->validate('"<script>alert(1);</script>'));
+        $this->assertFalse($v->validate('"><script>alert(1);</script>'));
+        $this->assertFalse($v->validate('</textarea><script>alert(1);</script>'));
     }
 }

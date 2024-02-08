@@ -114,7 +114,7 @@ class Sample
         $this->day       = null;
         $this->startdate = null;
         $this->enddate   = null;
-        $this->filter    = "month";
+        $this->filter    = 'month';
     }
 
     /**
@@ -153,7 +153,7 @@ class Sample
         } elseif ($year != 0) {
             $this->start = mktime(0, 0, 0, 1, 1, $year);
         } elseif ($year == 0) {
-            $year        = date("Y");
+            $year        = date('Y');
             $this->start = mktime(0, 0, 0, 1, 1, $year);
         }
 
@@ -298,7 +298,7 @@ class Sample
         if ($this->getFilter() == 'month') {
             $nbr = 11;
         } elseif ($this->getFilter() == 'day') {
-            $nbr = date("t", mktime(0, 0, 0, date('m', $this->start), 1, date('Y', $this->start))) - 1;
+            $nbr = date('t', mktime(0, 0, 0, date('m', $this->start), 1, date('Y', $this->start))) - 1;
         } elseif ($this->getFilter() == 'hour') {
             $nbr = 23;
         }

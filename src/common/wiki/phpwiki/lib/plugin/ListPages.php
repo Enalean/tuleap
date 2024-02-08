@@ -36,20 +36,20 @@ class WikiPlugin_ListPages extends WikiPlugin
 {
     public function getName()
     {
-        return _("ListPages");
+        return _('ListPages');
     }
 
     public function getDescription()
     {
-        return _("List pages that are explicitly given as the pages argument.");
+        return _('List pages that are explicitly given as the pages argument.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.10 $"
+            '$Revision: 1.10 $'
         );
     }
 
@@ -79,7 +79,7 @@ class WikiPlugin_ListPages extends WikiPlugin
         // If the ratings table does not exist, or on dba it will break otherwise.
         // Check if Theme isa 'wikilens'
         if ($info == 'pagename' and isa($GLOBALS['WikiTheme'], 'wikilens')) {
-            $info .= ",top3recs";
+            $info .= ',top3recs';
         }
         if ($info) {
             $info = preg_split('/,/D', $info);
@@ -107,7 +107,7 @@ class WikiPlugin_ListPages extends WikiPlugin
                 } else {
                     $userids = [];
                     // XXX: this wipes out the category caption...
-                    $caption = _("You must be logged in to view ratings.");
+                    $caption = _('You must be logged in to view ratings.');
                 }
             }
 
@@ -122,10 +122,10 @@ class WikiPlugin_ListPages extends WikiPlugin
         }
 
         if (in_array('numbacklinks', $info)) {
-            $args['types']['numbacklinks'] = new _PageList_Column_ListPages_count('numbacklinks', _("#"), true);
+            $args['types']['numbacklinks'] = new _PageList_Column_ListPages_count('numbacklinks', _('#'), true);
         }
         if (in_array('numpagelinks', $info)) {
-            $args['types']['numpagelinks'] = new _PageList_Column_ListPages_count('numpagelinks', _("#"));
+            $args['types']['numpagelinks'] = new _PageList_Column_ListPages_count('numpagelinks', _('#'));
         }
 
         $pagelist    = new PageList($info, $exclude, $args);

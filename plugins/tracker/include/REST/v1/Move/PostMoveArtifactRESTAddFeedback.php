@@ -37,16 +37,16 @@ final class PostMoveArtifactRESTAddFeedback implements AddPostMoveArtifactFeedba
         $tracker_destination_name = $target_tracker->getItemName();
 
         $message = sprintf(
-            dgettext('tuleap-tracker', "%s has been successfully moved to %s"),
-            $tracker_source_name . " #" . $artifact->getId(),
-            $tracker_destination_name . " #" . $artifact->getId()
+            dgettext('tuleap-tracker', '%s has been successfully moved to %s'),
+            $tracker_source_name . ' #' . $artifact->getId(),
+            $tracker_destination_name . ' #' . $artifact->getId()
         );
 
         if ($source_tracker->getProject()->getID() != $target_tracker->getProject()->getID()) {
             $message = sprintf(
-                dgettext('tuleap-tracker', "%s has been successfully moved to %s in %s"),
-                $tracker_source_name . " #" . $artifact->getId(),
-                $tracker_destination_name . " #" . $artifact->getId(),
+                dgettext('tuleap-tracker', '%s has been successfully moved to %s in %s'),
+                $tracker_source_name . ' #' . $artifact->getId(),
+                $tracker_destination_name . ' #' . $artifact->getId(),
                 $target_tracker->getProject()->getPublicName()
             );
         }

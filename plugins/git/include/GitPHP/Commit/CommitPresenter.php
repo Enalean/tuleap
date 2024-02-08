@@ -27,11 +27,11 @@ use Tuleap\Git\GitPHP\TreeDiff;
 
 class CommitPresenter
 {
-    public const ADDED_STATUS        = "A";
-    public const DELETED_STATUS      = "D";
-    public const MODIFIED_STATUS     = "M";
-    public const TYPE_CHANGED_STATUS = "T";
-    public const RENAMED_STATUS      = "R";
+    public const ADDED_STATUS        = 'A';
+    public const DELETED_STATUS      = 'D';
+    public const MODIFIED_STATUS     = 'M';
+    public const TYPE_CHANGED_STATUS = 'T';
+    public const RENAMED_STATUS      = 'R';
 
     public string $title_purified;
     public string $description_purified;
@@ -81,15 +81,15 @@ class CommitPresenter
     {
         switch ($diff_line->getStatus()) {
             case self::ADDED_STATUS:
-                return "git-repository-commit-file-added";
+                return 'git-repository-commit-file-added';
             case self::DELETED_STATUS:
-                return "git-repository-commit-file-deleted";
+                return 'git-repository-commit-file-deleted';
             case self::MODIFIED_STATUS:
             case self::TYPE_CHANGED_STATUS:
             case self::RENAMED_STATUS:
-                return "git-repository-commit-file-changed";
+                return 'git-repository-commit-file-changed';
             default:
-                return "";
+                return '';
         }
     }
 
@@ -140,7 +140,7 @@ class CommitPresenter
      */
     private function isDiffBetweenTwoCommits()
     {
-        if (! isset($_GET['a']) && $_GET['a'] !== "commitdiff") {
+        if (! isset($_GET['a']) && $_GET['a'] !== 'commitdiff') {
             return false;
         }
 

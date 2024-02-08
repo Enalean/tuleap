@@ -121,7 +121,7 @@ class PluginLoader
         try {
             FileWriter::writeFile($path, $content);
         } catch (\RuntimeException $exception) {
-            $this->logger->error("Unable to store tuleap hooks content:" . $exception->getMessage(), ['exception' => $exception]);
+            $this->logger->error('Unable to store tuleap hooks content:' . $exception->getMessage(), ['exception' => $exception]);
         }
     }
 

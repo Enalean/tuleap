@@ -39,12 +39,12 @@ class CrossReferenceLinkPresenterCollectionBuilder
 
         foreach ($cross_references as $index => $current_cross_ref) {
             if ($key === 'source') {
-                $id  = $current_cross_ref->getRefSourceKey() . "_" . $current_cross_ref->getRefSourceId();
-                $ref = $current_cross_ref->getRefSourceKey() . " #" . $current_cross_ref->getRefSourceId();
+                $id  = $current_cross_ref->getRefSourceKey() . '_' . $current_cross_ref->getRefSourceId();
+                $ref = $current_cross_ref->getRefSourceKey() . ' #' . $current_cross_ref->getRefSourceId();
                 $url = $current_cross_ref->getRefSourceUrl();
             } else {
-                $id  = $current_cross_ref->getRefTargetKey() . "_" . $current_cross_ref->getRefTargetId();
-                $ref = $current_cross_ref->getRefTargetKey() . " #" . $current_cross_ref->getRefTargetId();
+                $id  = $current_cross_ref->getRefTargetKey() . '_' . $current_cross_ref->getRefTargetId();
+                $ref = $current_cross_ref->getRefTargetKey() . ' #' . $current_cross_ref->getRefTargetId();
                 $url = $current_cross_ref->getRefTargetUrl();
             }
 
@@ -66,14 +66,14 @@ class CrossReferenceLinkPresenterCollectionBuilder
             return null;
         }
 
-        $params  = "?target_id=" . $currRef->getRefTargetId();
-        $params .= "&target_gid=" . $currRef->getRefTargetGid();
-        $params .= "&target_type=" . $currRef->getRefTargetType();
-        $params .= "&target_key=" . $currRef->getRefTargetKey();
-        $params .= "&source_id=" . $currRef->getRefSourceId();
-        $params .= "&source_gid=" . $currRef->getRefSourceGid();
-        $params .= "&source_type=" . $currRef->getRefSourceType();
-        $params .= "&source_key=" . $currRef->getRefSourceKey();
+        $params  = '?target_id=' . $currRef->getRefTargetId();
+        $params .= '&target_gid=' . $currRef->getRefTargetGid();
+        $params .= '&target_type=' . $currRef->getRefTargetType();
+        $params .= '&target_key=' . $currRef->getRefTargetKey();
+        $params .= '&source_id=' . $currRef->getRefSourceId();
+        $params .= '&source_gid=' . $currRef->getRefSourceGid();
+        $params .= '&source_type=' . $currRef->getRefSourceType();
+        $params .= '&source_key=' . $currRef->getRefSourceKey();
         return $params;
     }
 

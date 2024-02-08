@@ -178,7 +178,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
         return UserTestBuilder::anActiveUser()
             ->withId(self::USER_ID)
             ->withRealName("Joe l'Asticot")
-            ->withAvatarUrl("url/to/user_avatar.png")
+            ->withAvatarUrl('url/to/user_avatar.png')
             ->build();
     }
 }

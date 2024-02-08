@@ -22,7 +22,7 @@ class b201805171520_add_stepexec_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Create plugin_testmanagement_changeset_value_stepexec table";
+        return 'Create plugin_testmanagement_changeset_value_stepexec table';
     }
 
     public function preUp()
@@ -32,12 +32,12 @@ class b201805171520_add_stepexec_table extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql    = "CREATE TABLE IF NOT EXISTS plugin_testmanagement_changeset_value_stepexec(
+        $sql    = 'CREATE TABLE IF NOT EXISTS plugin_testmanagement_changeset_value_stepexec(
             changeset_value_id INT(11) NOT NULL,
             stepdef_id INT(11) UNSIGNED NOT NULL,
             status VARCHAR(20),
             PRIMARY KEY (changeset_value_id, stepdef_id)
-        )";
+        )';
         $result = $this->db->createTable('plugin_testmanagement_changeset_value_stepexec', $sql);
 
         if ($result === false) {

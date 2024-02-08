@@ -36,13 +36,13 @@ class b201804091400_add_plugin_tracker_artifacts_deleted_table  extends ForgeUpg
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_tracker_deleted_artifacts(
+        $sql = 'CREATE TABLE plugin_tracker_deleted_artifacts(
                     timestamp int(11) NOT NULL,
                     user_id INT(11) NOT NULL,
                     nb_artifacts_deleted int(2) NOT NULL,
                     PRIMARY KEY (timestamp, user_id)
                 ) ENGINE=InnoDB
-        ";
+        ';
 
         $this->db->createTable('plugin_tracker_deleted_artifacts', $sql);
     }

@@ -38,20 +38,20 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
 {
     public function getName()
     {
-        return _("WikiAdminSelect");
+        return _('WikiAdminSelect');
     }
 
     public function getDescription()
     {
-        return _("Allows selection of multiple pages which get passed to other WikiAdmin plugins.");
+        return _('Allows selection of multiple pages which get passed to other WikiAdmin plugins.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.23 $"
+            '$Revision: 1.23 $'
         );
     }
 
@@ -146,7 +146,7 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
         //$uri = $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI']; // without s would be better.
         //$uri = $request->getURLtoSelf();//false, array('verify'));
         $form = HTML::form(['action' => $request->getPostURL(), 'method' => 'POST']);
-        if ($request->getArg('WikiAdminSelect') == _("Go")) {
+        if ($request->getArg('WikiAdminSelect') == _('Go')) {
             $p = false;
         } else {
             $p = $request->getArg('p');
@@ -154,14 +154,14 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
 
         $form->pushContent(HTML::p(
             ['class' => 'wikitext'],
-            _("Select: "),
+            _('Select: '),
             HTML::input(['type' => 'text',
                 'name' => 's',
                 'value' => $args['s'],
             ]),
             HTML::input(['type' => 'submit',
                 'name' => 'WikiAdminSelect',
-                'value' => _("Go"),
+                'value' => _('Go'),
             ])
         ));
         if (
@@ -186,7 +186,7 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
             $loader             = new WikiPluginLoader();
             $a                  = array_keys($request->getArg('wikiadmin'));
             $plugin_action      = $a[0];
-            $single_arg_plugins = ["Remove"];
+            $single_arg_plugins = ['Remove'];
             if (in_array($plugin_action, $single_arg_plugins)) {
                 $plugin = $loader->getPlugin($plugin_action);
                 $ul     = HTML::ul();
@@ -207,13 +207,13 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
             } else {
                 // redirect to the plugin page.
                 // in which page is this plugin?
-                $plugin_action = preg_replace("/^WikiAdmin/", "", $plugin_action);
+                $plugin_action = preg_replace('/^WikiAdmin/', '', $plugin_action);
                 $args          = [];
                 foreach ($p as $page => $x) {
                     $args["p[$page]"] = 1;
                 }
-                header("Location: " .
-                  WikiURL(_("PhpWikiAdministration") . "/" . _($plugin_action), $args, 1));
+                header('Location: ' .
+                  WikiURL(_('PhpWikiAdministration') . '/' . _($plugin_action), $args, 1));
                 exit();
             }
         } elseif (empty($args['s'])) {
@@ -242,10 +242,10 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
             $form->pushContent(
                 Button(
                     'submit:verify',
-                    _("Select pages"),
+                    _('Select pages'),
                     'wikiadmin'
                 ),
-                Button('submit:cancel', _("Cancel"), 'button')
+                Button('submit:cancel', _('Cancel'), 'button')
             );
         } else {
             global $WikiTheme;
@@ -263,12 +263,12 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
             foreach ($actions as $f) {
                 $f = preg_replace('/.php$/', '', $f);
                 $s = preg_replace('/^WikiAdmin/', '', $f);
-                if (! in_array($s, ["Select", "Utils"])) { // disable Select and Utils
-                    $form->pushContent(Button("submit:wikiadmin[$f]", _($s), "wikiadmin"));
+                if (! in_array($s, ['Select', 'Utils'])) { // disable Select and Utils
+                    $form->pushContent(Button("submit:wikiadmin[$f]", _($s), 'wikiadmin'));
                     $form->pushContent($WikiTheme->getButtonSeparator());
                 }
             }
-            $form->pushContent(Button('submit:cancel', _("Cancel"), 'button'));
+            $form->pushContent(Button('submit:cancel', _('Cancel'), 'button'));
         }
         if (! $request->getArg('select')) {
             return $form;

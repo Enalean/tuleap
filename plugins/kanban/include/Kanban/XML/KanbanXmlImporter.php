@@ -49,19 +49,19 @@ final class KanbanXmlImporter
         MappingsRegistry $mappings_registry,
     ): void {
         if (! $xml->agiledashboard->kanban_list) {
-            $this->logger->info("0 Kanban found");
+            $this->logger->info('0 Kanban found');
 
             return;
         }
 
         foreach ($xml->agiledashboard->kanban_list->kanban as $xml_configuration) {
             $attrs = $xml_configuration->attributes();
-            $this->logger->info("Creating kanban " . $attrs['name']);
+            $this->logger->info('Creating kanban ' . $attrs['name']);
 
             $kanban_id = $this->kanban_manager->createKanban(
-                (string) $attrs["name"],
-                (bool) $attrs["is_promoted"],
-                $tracker_mapping[(string) $attrs["tracker_id"]],
+                (string) $attrs['name'],
+                (bool) $attrs['is_promoted'],
+                $tracker_mapping[(string) $attrs['tracker_id']],
             );
 
             $kanban = $this->dashboard_kanban_factory->getKanbanForXmlImport(
@@ -77,7 +77,7 @@ final class KanbanXmlImporter
                     $user
                 );
 
-                $this->logger->info("Updating WIP to " . $attrs['REF']);
+                $this->logger->info('Updating WIP to ' . $attrs['REF']);
                 $this->dashboard_kanban_column_manager->updateWipLimit(
                     $user,
                     $kanban,

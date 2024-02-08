@@ -20,7 +20,7 @@ class b201701251410_create_encrypted_field_tables extends \Tuleap\ForgeUpgrade\B
 {
     public function description()
     {
-        return "Create encrypted field tables";
+        return 'Create encrypted field tables';
     }
 
     public function preUp()
@@ -40,13 +40,13 @@ class b201701251410_create_encrypted_field_tables extends \Tuleap\ForgeUpgrade\B
 
     private function createTable()
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS tracker_changeset_value_encrypted (
                 changeset_value_id INT(11) NOT NULL,
                 value text,
                 PRIMARY KEY(changeset_value_id)
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->dbh->exec($sql);
         if (! $this->db->tableNameExists('tracker_changeset_value_encrypted')) {

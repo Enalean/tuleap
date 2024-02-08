@@ -36,9 +36,9 @@ class b201702211436_using_scrum_v2_table extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_agiledashboard_scrum_mono_milestones (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_agiledashboard_scrum_mono_milestones (
                     project_id INT(11) NOT NULL PRIMARY KEY
-                )";
+                )';
         $this->db->createTable('plugin_agiledashboard_scrum_mono_milestones', $sql);
     }
 

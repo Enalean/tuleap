@@ -98,7 +98,7 @@ class MailProjectNotificationPresenter extends MailOutlinePresenter
                . $this->get_section_one() . "\n\n"
                . $this->get_section_two() . "\n\n"
                . $this->get_section_three() . "\n\n"
-               . "<" . $this->get_url() . ">\n\n"
+               . '<' . $this->get_url() . ">\n\n"
                . $this->get_thanks() . "\n\n"
                . $this->get_signature() . "\n\n";
         return $message;

@@ -30,10 +30,10 @@ class XMLCardwallColumnTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $columns_xml =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><plannings />');
 
-        $xml_column = (new XMLCardwallColumn("Column"))->export($columns_xml);
+        $xml_column = (new XMLCardwallColumn('Column'))->export($columns_xml);
 
         self::assertSame('column', $xml_column->getName());
-        self::assertEquals("Column", $xml_column['label']);
+        self::assertEquals('Column', $xml_column['label']);
         self::assertFalse(isset($xml_column->attributes()['id']));
         self::assertFalse(isset($xml_column->attributes()['tlp_color_name']));
         self::assertFalse(isset($xml_column->attributes()['bg_red']));
@@ -45,13 +45,13 @@ class XMLCardwallColumnTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $columns_xml =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><plannings />');
 
-        $xml_column = (new XMLCardwallColumn("Column"))
-            ->withId("C154")
+        $xml_column = (new XMLCardwallColumn('Column'))
+            ->withId('C154')
             ->export($columns_xml);
 
         self::assertSame('column', $xml_column->getName());
-        self::assertEquals("Column", $xml_column['label']);
-        self::assertEquals("C154", $xml_column['id']);
+        self::assertEquals('Column', $xml_column['label']);
+        self::assertEquals('C154', $xml_column['id']);
         self::assertFalse(isset($xml_column->attributes()['tlp_color_name']));
         self::assertFalse(isset($xml_column->attributes()['bg_red']));
         self::assertFalse(isset($xml_column->attributes()['bg_green']));
@@ -62,15 +62,15 @@ class XMLCardwallColumnTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $columns_xml =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><plannings />');
 
-        $xml_column = (new XMLCardwallColumn("Column"))
-            ->withId("C154")
-            ->withTLPColorName("red")
+        $xml_column = (new XMLCardwallColumn('Column'))
+            ->withId('C154')
+            ->withTLPColorName('red')
             ->export($columns_xml);
 
         self::assertSame('column', $xml_column->getName());
-        self::assertEquals("Column", $xml_column['label']);
-        self::assertEquals("C154", $xml_column['id']);
-        self::assertEquals("red", $xml_column['tlp_color_name']);
+        self::assertEquals('Column', $xml_column['label']);
+        self::assertEquals('C154', $xml_column['id']);
+        self::assertEquals('red', $xml_column['tlp_color_name']);
         self::assertFalse(isset($xml_column->attributes()['bg_red']));
         self::assertFalse(isset($xml_column->attributes()['bg_green']));
         self::assertFalse(isset($xml_column->attributes()['bg_blue']));
@@ -80,34 +80,34 @@ class XMLCardwallColumnTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $columns_xml =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><plannings />');
 
-        $xml_column = (new XMLCardwallColumn("Column"))
-            ->withId("C154")
-            ->withLegacyColorsName("255", "255", "255")
+        $xml_column = (new XMLCardwallColumn('Column'))
+            ->withId('C154')
+            ->withLegacyColorsName('255', '255', '255')
             ->export($columns_xml);
 
         self::assertSame('column', $xml_column->getName());
-        self::assertEquals("Column", $xml_column['label']);
-        self::assertEquals("C154", $xml_column['id']);
+        self::assertEquals('Column', $xml_column['label']);
+        self::assertEquals('C154', $xml_column['id']);
         self::assertFalse(isset($xml_column->attributes()['tlp_color_name']));
-        self::assertEquals("255", $xml_column['bg_red']);
-        self::assertEquals("255", $xml_column['bg_green']);
-        self::assertEquals("255", $xml_column['bg_blue']);
+        self::assertEquals('255', $xml_column['bg_red']);
+        self::assertEquals('255', $xml_column['bg_green']);
+        self::assertEquals('255', $xml_column['bg_blue']);
     }
 
     public function testItExportsColumnWithITLPColourIfThereIsTLPAndLegacyColour(): void
     {
         $columns_xml =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><plannings />');
 
-        $xml_column = (new XMLCardwallColumn("Column"))
-            ->withId("C154")
-            ->withTLPColorName("blue")
-            ->withLegacyColorsName("255", "255", "255")
+        $xml_column = (new XMLCardwallColumn('Column'))
+            ->withId('C154')
+            ->withTLPColorName('blue')
+            ->withLegacyColorsName('255', '255', '255')
             ->export($columns_xml);
 
         self::assertSame('column', $xml_column->getName());
-        self::assertEquals("Column", $xml_column['label']);
-        self::assertEquals("C154", $xml_column['id']);
-        self::assertEquals("blue", $xml_column['tlp_color_name']);
+        self::assertEquals('Column', $xml_column['label']);
+        self::assertEquals('C154', $xml_column['id']);
+        self::assertEquals('blue', $xml_column['tlp_color_name']);
         self::assertFalse(isset($xml_column->attributes()['bg_red']));
         self::assertFalse(isset($xml_column->attributes()['bg_green']));
         self::assertFalse(isset($xml_column->attributes()['bg_blue']));

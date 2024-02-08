@@ -14,7 +14,7 @@ ini_set('max_execution_time', 1800);
 
 $group_id = $request->getValidated('group_id', 'GroupId');
 $mode     = $request->get('mode');
-if ($group_id && $mode == "admin") {
+if ($group_id && $mode == 'admin') {
     $hp = Codendi_HTMLPurifier::instance();
   //   the welcome screen when entering the import facility from admin page
 

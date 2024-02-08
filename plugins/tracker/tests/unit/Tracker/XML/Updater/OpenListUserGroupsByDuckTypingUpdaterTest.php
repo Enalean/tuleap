@@ -83,7 +83,7 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
         );
 
         $updater->updateUserGroupsForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame("", (string) $changeset_xml->field_change[0]->value);
+        $this->assertSame('', (string) $changeset_xml->field_change[0]->value);
     }
 
     public function testItDoesNotSetWhenUserGroupMappedToValueIsNotFoundInSource(): void
@@ -98,7 +98,7 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
 
         $ugroup_retriever                                        = UGroupRetrieverStub::buildWithUserGroups();
         $ugroup_name_retriever                                   = UGroupRetrieverStub::buildWithUserGroups();
-        $search_user_groups_values_by_id                         = SearchUserGroupsValuesByIdStub::withValues([["id" => 18, "ugroup_id" => 101]]);
+        $search_user_groups_values_by_id                         = SearchUserGroupsValuesByIdStub::withValues([['id' => 18, 'ugroup_id' => 101]]);
         $search_user_groups_values_by_field_id_and_user_group_id = SearchUserGroupsValuesByFieldIdAndUserGroupIdStub::withoutValues();
 
         $updater = new OpenListUserGroupsByDuckTypingUpdater(
@@ -111,7 +111,7 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
         );
 
         $updater->updateUserGroupsForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame("", (string) $changeset_xml->field_change[0]->value);
+        $this->assertSame('', (string) $changeset_xml->field_change[0]->value);
     }
 
     public function testItDoesNotSetWhenUserGroupIsNotFoundInDestination(): void
@@ -126,7 +126,7 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
 
         $ugroup_retriever                                        = UGroupRetrieverStub::buildWithUserGroups(ProjectUGroupTestBuilder::aCustomUserGroup(101)->build());
         $ugroup_name_retriever                                   = UGroupRetrieverStub::buildWithUserGroups();
-        $search_user_groups_values_by_id                         = SearchUserGroupsValuesByIdStub::withValues([["id" => 18, "ugroup_id" => 101]]);
+        $search_user_groups_values_by_id                         = SearchUserGroupsValuesByIdStub::withValues([['id' => 18, 'ugroup_id' => 101]]);
         $search_user_groups_values_by_field_id_and_user_group_id = SearchUserGroupsValuesByFieldIdAndUserGroupIdStub::withoutValues();
 
         $updater = new OpenListUserGroupsByDuckTypingUpdater(
@@ -139,7 +139,7 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
         );
 
         $updater->updateUserGroupsForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame("", (string) $changeset_xml->field_change[0]->value);
+        $this->assertSame('', (string) $changeset_xml->field_change[0]->value);
     }
 
     public function testItDoesNotSetWhenValueMappedToUserGroupIsNotFoundInDestination(): void
@@ -154,7 +154,7 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
 
         $ugroup_retriever                                        = UGroupRetrieverStub::buildWithUserGroups(ProjectUGroupTestBuilder::aCustomUserGroup(101)->build());
         $ugroup_name_retriever                                   = UGroupRetrieverStub::buildWithUserGroups(ProjectUGroupTestBuilder::aCustomUserGroup(101)->build());
-        $search_user_groups_values_by_id                         = SearchUserGroupsValuesByIdStub::withValues([["id" => 18, "ugroup_id" => 101]]);
+        $search_user_groups_values_by_id                         = SearchUserGroupsValuesByIdStub::withValues([['id' => 18, 'ugroup_id' => 101]]);
         $search_user_groups_values_by_field_id_and_user_group_id = SearchUserGroupsValuesByFieldIdAndUserGroupIdStub::withoutValues();
 
         $updater = new OpenListUserGroupsByDuckTypingUpdater(
@@ -167,7 +167,7 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
         );
 
         $updater->updateUserGroupsForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame("", (string) $changeset_xml->field_change[0]->value);
+        $this->assertSame('', (string) $changeset_xml->field_change[0]->value);
     }
 
     public function testItReplaceSourceValueByDestinationValue(): void
@@ -182,8 +182,8 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
 
         $ugroup_retriever                                        = UGroupRetrieverStub::buildWithUserGroups(ProjectUGroupTestBuilder::aCustomUserGroup(101)->build());
         $ugroup_name_retriever                                   = UGroupRetrieverStub::buildWithUserGroups(ProjectUGroupTestBuilder::aCustomUserGroup(109)->build());
-        $search_user_groups_values_by_id                         = SearchUserGroupsValuesByIdStub::withValues([["id" => 18, "ugroup_id" => 101]]);
-        $search_user_groups_values_by_field_id_and_user_group_id = SearchUserGroupsValuesByFieldIdAndUserGroupIdStub::withValues([["ugroup_id" => 109, "id" => 22, "field_id" => $this->target_field->getId()]]);
+        $search_user_groups_values_by_id                         = SearchUserGroupsValuesByIdStub::withValues([['id' => 18, 'ugroup_id' => 101]]);
+        $search_user_groups_values_by_field_id_and_user_group_id = SearchUserGroupsValuesByFieldIdAndUserGroupIdStub::withValues([['ugroup_id' => 109, 'id' => 22, 'field_id' => $this->target_field->getId()]]);
 
         $updater = new OpenListUserGroupsByDuckTypingUpdater(
             $search_user_groups_values_by_id,
@@ -195,6 +195,6 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
         );
 
         $updater->updateUserGroupsForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame("b22", (string) $changeset_xml->field_change[0]->value);
+        $this->assertSame('b22', (string) $changeset_xml->field_change[0]->value);
     }
 }

@@ -81,7 +81,7 @@ class BindMembersConfirmController implements DispatchableWithRequest
         $vGroupId->required();
 
         if (! $request->valid($vGroupId)) {
-            $layout->send400JSONErrors("Group ID is missing");
+            $layout->send400JSONErrors('Group ID is missing');
 
             return;
         }
@@ -104,7 +104,7 @@ class BindMembersConfirmController implements DispatchableWithRequest
         $vLdapGroup->required();
 
         if (! $request->valid($vLdapGroup)) {
-            $layout->send400JSONErrors("Group ID is missing");
+            $layout->send400JSONErrors('Group ID is missing');
             return;
         }
 

@@ -252,11 +252,11 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
         $artifact3->shouldReceive('getHierarchyFactory')->andReturn($hierarchy_factory);
         $artifact4->shouldReceive('getHierarchyFactory')->andReturn($hierarchy_factory);
 
-        $artifact0->shouldReceive("getId")->andReturn(0);
-        $artifact1->shouldReceive("getId")->andReturn(1);
-        $artifact2->shouldReceive("getId")->andReturn(2);
-        $artifact3->shouldReceive("getId")->andReturn(3);
-        $artifact4->shouldReceive("getId")->andReturn(4);
+        $artifact0->shouldReceive('getId')->andReturn(0);
+        $artifact1->shouldReceive('getId')->andReturn(1);
+        $artifact2->shouldReceive('getId')->andReturn(2);
+        $artifact3->shouldReceive('getId')->andReturn(3);
+        $artifact4->shouldReceive('getId')->andReturn(4);
 
         $artifact0->shouldReceive('getTracker')->andReturn($sprint_tracker);
         $artifact1->shouldReceive('getTracker')->andReturn($us_tracker);

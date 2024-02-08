@@ -74,7 +74,7 @@ class CurrentSnapshotBuilder
         FieldMappingCollection $jira_field_mapping_collection,
         LinkedIssuesCollection $linked_issues_collection,
     ): Snapshot {
-        $this->logger->debug("Build current snapshot...");
+        $this->logger->debug('Build current snapshot...');
 
         $field_snapshots = [];
         foreach ($issue_api_representation->getFields() as $key => $value) {
@@ -99,7 +99,7 @@ class CurrentSnapshotBuilder
             null
         );
 
-        $this->logger->debug("Current snapshot built successfully");
+        $this->logger->debug('Current snapshot built successfully');
 
         return $current_snapshot;
     }

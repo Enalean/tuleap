@@ -35,17 +35,17 @@ final class b202101071404_create_plugin_gitlab_bot_api_token_table extends \Tule
 
     public function up(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_gitlab_bot_api_token (
                 gitlab_repository_id INT(11) NOT NULL PRIMARY KEY,
                 token BLOB NOT NULL
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_gitlab_bot_api_token', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_bot_api_token')) {
-            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException("Table plugin_gitlab_bot_api_token has not been created in database");
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Table plugin_gitlab_bot_api_token has not been created in database');
         }
     }
 }

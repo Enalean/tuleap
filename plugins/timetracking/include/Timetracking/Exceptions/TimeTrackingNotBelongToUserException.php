@@ -26,6 +26,6 @@ class TimeTrackingNotBelongToUserException extends Exception
 {
     public function __construct()
     {
-        parent::__construct(dgettext('tuleap-timetracking', "This time does not belong to you."));
+        parent::__construct(dgettext('tuleap-timetracking', 'This time does not belong to you.'));
     }
 }

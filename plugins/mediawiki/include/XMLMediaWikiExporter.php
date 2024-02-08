@@ -37,7 +37,7 @@ use XML_SimpleXMLCDATAFactory;
 
 final class XMLMediaWikiExporter
 {
-    private const EXPORT_FILE_PREFIX = "export_mw_";
+    private const EXPORT_FILE_PREFIX = 'export_mw_';
 
     public function __construct(
         private readonly MediawikiManager $manager,
@@ -73,7 +73,7 @@ final class XMLMediaWikiExporter
         $this->logger->info('Export mediawiki');
         $root_node = $event->getIntoXml()->addChild('mediawiki');
         if ($root_node === null) {
-            $this->logger->debug("Failed to create a root node for mediawiki XML");
+            $this->logger->debug('Failed to create a root node for mediawiki XML');
             return;
         }
 
@@ -113,7 +113,7 @@ final class XMLMediaWikiExporter
 
     private function addPicturesIntoArchive(ArchiveInterface $archive, $temporary_dump_path_on_filesystem): void
     {
-        $files_folder = $temporary_dump_path_on_filesystem . "/files";
+        $files_folder = $temporary_dump_path_on_filesystem . '/files';
         if (! is_dir($files_folder)) {
             return;
         }
@@ -124,8 +124,8 @@ final class XMLMediaWikiExporter
 
             if ($picture->isFile()) {
                 $archive->addFile(
-                    "files/" . $picture,
-                    $files_folder . "/" . $picture
+                    'files/' . $picture,
+                    $files_folder . '/' . $picture
                 );
             }
         }

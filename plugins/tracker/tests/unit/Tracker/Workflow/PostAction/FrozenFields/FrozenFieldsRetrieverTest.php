@@ -78,7 +78,7 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $transition_id,
             $this->workflow_id,
             null,
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
         );
         $transition->setWorkflow($this->workflow);
         $expected_post_action = new FrozenFields($transition, $postaction_id, [$int_field, $float_field, $string_field]);
@@ -91,7 +91,7 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->frozen_dao->shouldReceive('searchByWorkflow')->andReturn([]);
 
-        $transition = new \Transition('97', $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
+        $transition = new \Transition('97', $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false));
         $transition->setWorkflow($this->workflow);
 
         $this->expectException(NoFrozenFieldsPostActionException::class);
@@ -113,7 +113,7 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->shouldReceive('getFieldById')->with(331)->andReturn($int_field);
 
-        $transition = new \Transition($transition_id, $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
+        $transition = new \Transition($transition_id, $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false));
         $transition->setWorkflow($this->workflow);
         $expected_post_action = new FrozenFields($transition, $postaction_id, [$int_field]);
 

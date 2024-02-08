@@ -61,7 +61,7 @@ class ReferenceOpenGraph
             }
             if ($embed_extractor->description) {
                 if ($embed_extractor->title) {
-                    $html .= "<br />";
+                    $html .= '<br />';
                 }
                 $html .= $this->purifier->purify($embed_extractor->description);
             }

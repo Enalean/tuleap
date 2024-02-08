@@ -47,11 +47,11 @@ EOT;
      */
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_mediawiki_site_restricted_features (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_mediawiki_site_restricted_features (
                 feature INT NOT NULL,
                 project_id int(11) NOT NULL,
                 PRIMARY KEY (feature, project_id)
-            ) ENGINE=InnoDB";
+            ) ENGINE=InnoDB';
 
         $this->execDB($sql, 'An error occured while adding plugin_mediawiki_site_restricted_features table: ');
     }

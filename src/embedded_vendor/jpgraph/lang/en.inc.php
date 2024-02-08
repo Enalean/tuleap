@@ -148,7 +148,7 @@ HTTP headers have already been sent.<br>Caused by output from file <b>%s</b> at 
 **  jpgraph_mgraph
 */
 
-    12001 => ["You are using GD 2.x and are trying to use a background images on a non truecolor image. To use background images with GD 2.x it is necessary to enable truecolor by setting the USE_TRUECOLOR constant to TRUE. Due to a bug in GD 2.0.1 using any truetype fonts with truecolor images will result in very poor quality fonts.",0],
+    12001 => ['You are using GD 2.x and are trying to use a background images on a non truecolor image. To use background images with GD 2.x it is necessary to enable truecolor by setting the USE_TRUECOLOR constant to TRUE. Due to a bug in GD 2.0.1 using any truetype fonts with truecolor images will result in very poor quality fonts.',0],
     12002 => ['Incorrect file name for MGraph::SetBackgroundImage() : %s Must have a valid image extension (jpg,gif,png) when using auto detection of image type',1],
     12003 => ['Unknown file extension (%s) in MGraph::SetBackgroundImage() for filename: %s',2],
     12004 => ['The image format of your background image (%s) is not supported in your system configuration. ',1],

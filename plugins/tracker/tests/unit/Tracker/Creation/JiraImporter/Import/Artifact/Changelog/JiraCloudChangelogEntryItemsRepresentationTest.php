@@ -29,45 +29,45 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
     public function testItBuildsARepresentationFromAPIResponse(): void
     {
         $response = [
-            "fieldId"    => "field01",
-            "from"       => null,
-            "fromString" => "string01",
-            "to"         => null,
-            "toString"   => "string02",
+            'fieldId'    => 'field01',
+            'from'       => null,
+            'fromString' => 'string01',
+            'to'         => null,
+            'toString'   => 'string02',
         ];
 
         $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
-        $this->assertSame("field01", $representation->getFieldId());
+        $this->assertSame('field01', $representation->getFieldId());
         $this->assertNull($representation->getFrom());
-        $this->assertSame("string01", $representation->getFromString());
+        $this->assertSame('string01', $representation->getFromString());
         $this->assertNull($representation->getTo());
-        $this->assertSame("string02", $representation->getToString());
+        $this->assertSame('string02', $representation->getToString());
 
         $response = [
-            "fieldId"    => "field02",
-            "from"       => "10001",
-            "fromString" => "string02",
-            "to"         => "10002",
-            "toString"   => "string03",
+            'fieldId'    => 'field02',
+            'from'       => '10001',
+            'fromString' => 'string02',
+            'to'         => '10002',
+            'toString'   => 'string03',
         ];
 
         $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
-        $this->assertSame("field02", $representation->getFieldId());
-        $this->assertSame("10001", $representation->getFrom());
-        $this->assertSame("string02", $representation->getFromString());
-        $this->assertSame("10002", $representation->getTo());
-        $this->assertSame("string03", $representation->getToString());
+        $this->assertSame('field02', $representation->getFieldId());
+        $this->assertSame('10001', $representation->getFrom());
+        $this->assertSame('string02', $representation->getFromString());
+        $this->assertSame('10002', $representation->getTo());
+        $this->assertSame('string03', $representation->getToString());
     }
 
     public function testItReturnsNullIfFieldIdNotProvidedInAPIResponse(): void
     {
         $response = [
-            "field"      => "WorklogId",
-            "fieldtype"  => "jira",
-            "from"       => null,
-            "fromString" => null,
+            'field'      => 'WorklogId',
+            'fieldtype'  => 'jira',
+            'from'       => null,
+            'fromString' => null,
         ];
 
         $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
@@ -78,10 +78,10 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
     public function testItThrowsAnExcpetionIfAPIResponseIsNotWellFormed(): void
     {
         $response = [
-            "fieldId"    => "field01",
-            "fromString" => "string01",
-            "to"         => null,
-            "toString"   => "string02",
+            'fieldId'    => 'field01',
+            'fromString' => 'string01',
+            'to'         => null,
+            'toString'   => 'string02',
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
@@ -89,10 +89,10 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
         JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
         $response = [
-            "fieldId" => "field01",
-            "from"    => "10001",
-            "to"         => null,
-            "toString"   => "string02",
+            'fieldId' => 'field01',
+            'from'    => '10001',
+            'to'         => null,
+            'toString'   => 'string02',
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
@@ -100,10 +100,10 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
         JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
         $response = [
-            "fieldId"    => "field01",
-            "from"       => "10001",
-            "fromString" => "string01",
-            "to"         => null,
+            'fieldId'    => 'field01',
+            'from'       => '10001',
+            'fromString' => 'string01',
+            'to'         => null,
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
@@ -111,10 +111,10 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
         JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
         $response = [
-            "fieldId"    => "field01",
-            "from"       => "10001",
-            "fromString" => "string01",
-            "toString"   => "string02",
+            'fieldId'    => 'field01',
+            'from'       => '10001',
+            'fromString' => 'string01',
+            'toString'   => 'string02',
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);

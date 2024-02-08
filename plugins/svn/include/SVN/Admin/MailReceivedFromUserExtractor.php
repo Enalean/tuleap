@@ -53,9 +53,9 @@ class MailReceivedFromUserExtractor
 
     private function splitEmails($addresses)
     {
-        $addresses = preg_replace("/\s+[,;]/", ",", $addresses);
-        $addresses = preg_replace("/[,;]\s+/", ",", $addresses);
-        $addresses = str_replace(";", ",", $addresses);
+        $addresses = preg_replace('/\s+[,;]/', ',', $addresses);
+        $addresses = preg_replace('/[,;]\s+/', ',', $addresses);
+        $addresses = str_replace(';', ',', $addresses);
 
         return preg_split('/[,]+/', strtolower(trim($addresses)));
     }

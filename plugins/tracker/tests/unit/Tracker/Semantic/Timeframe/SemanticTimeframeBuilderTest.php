@@ -239,9 +239,9 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($duration_field);
 
-        $implied_from_tracker->shouldReceive("getProject")->andReturn($implied_from_tracker_project);
-        $this->story_tracker->shouldReceive("getProject")->andReturn($story_project);
-        $implied_from_tracker_project->shouldReceive("getID")->andReturn($project_id);
+        $implied_from_tracker->shouldReceive('getProject')->andReturn($implied_from_tracker_project);
+        $this->story_tracker->shouldReceive('getProject')->andReturn($story_project);
+        $implied_from_tracker_project->shouldReceive('getID')->andReturn($project_id);
 
         $semantic_implied_from_tracker = new SemanticTimeframe(
             $implied_from_tracker,
@@ -269,7 +269,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $release_tracker = \Mockery::mock(\Tracker::class, ['getId' => $release_tracker_id]);
         $story_project   = Mockery::mock(Project::class, ['getID' => $project_id]);
-        $release_project = Mockery::mock(Project::class, ["getID" => $project_id]);
+        $release_project = Mockery::mock(Project::class, ['getID' => $project_id]);
 
 
         $this->dao->shouldReceive('searchByTrackerId')
@@ -292,9 +292,9 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($release_tracker);
 
-        $this->story_tracker->shouldReceive("getProject")->andReturn($story_project);
-        $release_tracker->shouldReceive("getproject")->andreturn($release_project);
-        $release_project->shouldReceive("getID")->andReturn($project_id);
+        $this->story_tracker->shouldReceive('getProject')->andReturn($story_project);
+        $release_tracker->shouldReceive('getproject')->andreturn($release_project);
+        $release_project->shouldReceive('getID')->andReturn($project_id);
 
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
@@ -372,12 +372,12 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($duration_field);
 
-        $release_tracker->shouldReceive("getProject")->andReturn($release_tracker_project);
-        $epic_tracker->shouldReceive("getProject")->andReturn($epic_tracker_project);
-        $this->story_tracker->shouldReceive("getProject")->andReturn($story_project);
+        $release_tracker->shouldReceive('getProject')->andReturn($release_tracker_project);
+        $epic_tracker->shouldReceive('getProject')->andReturn($epic_tracker_project);
+        $this->story_tracker->shouldReceive('getProject')->andReturn($story_project);
 
-        $release_tracker_project->shouldReceive("getID")->andReturn($project_id);
-        $epic_tracker_project->shouldReceive("getID")->andReturn($project_id);
+        $release_tracker_project->shouldReceive('getID')->andReturn($project_id);
+        $epic_tracker_project->shouldReceive('getID')->andReturn($project_id);
 
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(

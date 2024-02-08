@@ -57,7 +57,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $readDar              = $this->dao->totalRead($this->startDate, $this->endDate);
         if ($readDar && ! $readDar->isError()) {
             foreach ($readDar as $row) {
-                $readIndex[]          = $row['month'] . " " . $row['year'];
+                $readIndex[]          = $row['month'] . ' ' . $row['year'];
                 $readProjectsNumber[] = $row['projects'];
                 $readUsersNumber[]    = $row['users'];
                 $totalRead[]          = intval($row['count']);
@@ -89,7 +89,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $commitsDar             = $this->dao->totalCommits($this->startDate, $this->endDate);
         if ($commitsDar && ! $commitsDar->isError()) {
             foreach ($commitsDar as $row) {
-                $commitsIndex[]         = $row['month'] . " " . $row['year'];
+                $commitsIndex[]         = $row['month'] . ' ' . $row['year'];
                 $commitProjectsNumber[] = $row['projects'];
                 $commitUsersNumber[]    = $row['users'];
                 $totalCommits[]         = intval($row['count']);

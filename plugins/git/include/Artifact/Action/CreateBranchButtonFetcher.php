@@ -58,22 +58,22 @@ final class CreateBranchButtonFetcher
 
         $link = new AdditionalButtonLinkPresenter(
             $link_label,
-            "",
-            "",
+            '',
+            '',
             'fas fa-code-branch',
             'artifact-create-git-branches',
             [
                 [
-                    'name'  => "project-id",
+                    'name'  => 'project-id',
                     'value' => (string) $project->getID(),
                 ],
                 [
-                    "name"  => "git-branch-name-preview",
-                    "value" => $this->branch_name_creator_from_artifact->getBaseBranchName($artifact),
+                    'name'  => 'git-branch-name-preview',
+                    'value' => $this->branch_name_creator_from_artifact->getBaseBranchName($artifact),
                 ],
                 [
-                    "name"  => "are-pullrequest-endpoints-available",
-                    "value" => $are_pullrequest_endpoints_available,
+                    'name'  => 'are-pullrequest-endpoints-available',
+                    'value' => $are_pullrequest_endpoints_available,
                 ],
             ],
         );

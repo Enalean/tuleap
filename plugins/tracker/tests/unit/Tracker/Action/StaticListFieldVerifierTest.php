@@ -62,8 +62,8 @@ final class StaticListFieldVerifierTest extends TestCase
         $static_bind = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField(977)->build()
         )->withStaticValues([
-            1 => "Open",
-            2 => "Closed",
+            1 => 'Open',
+            2 => 'Closed',
         ])->build();
 
         self::assertTrue($this->verifier->isStaticListField($static_bind->getField()));

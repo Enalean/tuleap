@@ -34,7 +34,7 @@ class b202102171416_modify_step_to_text extends ForgeUpgrade_Bucket // @codingSt
 
     public function up(): void
     {
-        $sql = "ALTER TABLE plugin_timetracking_times MODIFY step TEXT NOT NULL";
+        $sql = 'ALTER TABLE plugin_timetracking_times MODIFY step TEXT NOT NULL';
         $this->db->alterTable(
             'plugin_timetracking_times',
             'tuleap',

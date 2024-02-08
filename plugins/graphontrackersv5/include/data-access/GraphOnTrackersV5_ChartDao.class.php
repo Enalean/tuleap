@@ -35,22 +35,22 @@ class GraphOnTrackersV5_ChartDao extends DataAccessObject
 
     public function searchByReportId($report_id)
     {
-        $sql  = "SELECT * FROM plugin_graphontrackersv5_chart WHERE report_graphic_id = ";
+        $sql  = 'SELECT * FROM plugin_graphontrackersv5_chart WHERE report_graphic_id = ';
         $sql .= $this->da->escapeInt($report_id);
-        $sql .= " ORDER BY `rank`";
+        $sql .= ' ORDER BY `rank`';
         return $this->retrieve($sql);
     }
 
     public function searchById($id)
     {
-        $sql  = "SELECT * FROM plugin_graphontrackersv5_chart WHERE id = ";
+        $sql  = 'SELECT * FROM plugin_graphontrackersv5_chart WHERE id = ';
         $sql .= $this->da->escapeInt($id);
         return $this->retrieve($sql);
     }
 
     public function delete($id)
     {
-        $sql  = "DELETE FROM plugin_graphontrackersv5_chart WHERE id = ";
+        $sql  = 'DELETE FROM plugin_graphontrackersv5_chart WHERE id = ';
         $sql .= $this->da->escapeInt($id);
         return $this->update($sql);
     }
@@ -58,7 +58,7 @@ class GraphOnTrackersV5_ChartDao extends DataAccessObject
     public function create($renderer_id, $chart_type, $rank, $title, $description, $width, $height)
     {
         $sql = sprintf(
-            "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, `rank`, chart_type, title, description, width, height) VALUES (%d, %d, %s, %s, %s, %d, %d)",
+            'INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, `rank`, chart_type, title, description, width, height) VALUES (%d, %d, %s, %s, %s, %d, %d)',
             (int) $renderer_id,
             (int) $rank,
             $this->da->quoteSmart($chart_type),
@@ -73,7 +73,7 @@ class GraphOnTrackersV5_ChartDao extends DataAccessObject
     public function updatebyId($renderer_id, $id, $rank, $title, $description, $width, $height)
     {
         $sql = sprintf(
-            "UPDATE plugin_graphontrackersv5_chart SET `rank` = %d, title = %s, description = %s, width = %d, height = %d WHERE id = %d",
+            'UPDATE plugin_graphontrackersv5_chart SET `rank` = %d, title = %s, description = %s, width = %d, height = %d WHERE id = %d',
             (int) $rank,
             $this->da->quoteSmart($title),
             $this->da->quoteSmart($description),
@@ -86,18 +86,18 @@ class GraphOnTrackersV5_ChartDao extends DataAccessObject
 
     public function getSiblings($id)
     {
-        $sql  = "SELECT c2.* 
-                    FROM plugin_graphontrackersv5_chart AS c1 INNER JOIN plugin_graphontrackersv5_chart AS c2 USING(report_graphic_id) 
-                    WHERE c1.id = ";
+        $sql  = 'SELECT c2.*
+                    FROM plugin_graphontrackersv5_chart AS c1 INNER JOIN plugin_graphontrackersv5_chart AS c2 USING(report_graphic_id)
+                    WHERE c1.id = ';
         $sql .= $this->da->escapeInt($id);
-        $sql .= " ORDER BY `rank`";
+        $sql .= ' ORDER BY `rank`';
         return $this->retrieve($sql);
     }
 
     public function getRank($id)
     {
         $rank = null;
-        $sql  = "SELECT `rank` FROM plugin_graphontrackersv5_chart WHERE id = ";
+        $sql  = 'SELECT `rank` FROM plugin_graphontrackersv5_chart WHERE id = ';
         $sql .= $this->da->escapeInt($id);
         if ($dar = $this->retrieve($sql)) {
             if ($row = $dar->getRow()) {

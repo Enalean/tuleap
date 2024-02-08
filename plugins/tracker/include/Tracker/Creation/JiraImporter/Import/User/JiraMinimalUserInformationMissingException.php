@@ -26,6 +26,6 @@ class JiraMinimalUserInformationMissingException extends \RuntimeException
 {
     public function __construct()
     {
-        parent::__construct("`displayName` or `accountId` key are missing in user data returned by the Jira REST API.");
+        parent::__construct('`displayName` or `accountId` key are missing in user data returned by the Jira REST API.');
     }
 }

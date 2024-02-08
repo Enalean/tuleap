@@ -49,7 +49,7 @@ class TrackerPermissionPerGroupJSONRetriever
                 [
                     'error' => dgettext(
                         'tuleap-tracker',
-                        "Tracker service is disabled."
+                        'Tracker service is disabled.'
                     ),
                 ]
             );

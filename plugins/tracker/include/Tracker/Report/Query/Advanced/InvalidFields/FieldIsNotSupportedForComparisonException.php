@@ -27,7 +27,7 @@ final class FieldIsNotSupportedForComparisonException extends InvalidFieldExcept
     {
         parent::__construct(
             sprintf(
-                dgettext("tuleap-tracker", "The field '%s' is not supported for the operator %s."),
+                dgettext('tuleap-tracker', "The field '%s' is not supported for the operator %s."),
                 $field->getName(),
                 $operator
             )

@@ -174,7 +174,7 @@ class WikiServiceAdminActions extends WikiActions
 
         $event_manager = EventManager::instance();
         $event_manager->processEvent(
-            "wiki_service_permissions_updated",
+            'wiki_service_permissions_updated',
             [
                 'group_id' => $this->gid,
             ]
@@ -206,7 +206,7 @@ class WikiServiceAdminActions extends WikiActions
 
         $event_manager = EventManager::instance();
         $event_manager->processEvent(
-            "wiki_page_permissions_updated",
+            'wiki_page_permissions_updated',
             [
                 'group_id'         => $wp->getGid(),
                 'wiki_page'        => $wp->getPagename(),

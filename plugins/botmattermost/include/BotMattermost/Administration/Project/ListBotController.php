@@ -50,7 +50,7 @@ class ListBotController implements DispatchableWithRequest, DispatchableWithBurn
 
         if (! $user->isAdmin($project_id)) {
             throw new ForbiddenException(
-                "User is not project administrator."
+                'User is not project administrator.'
             );
         }
 
@@ -74,7 +74,7 @@ class ListBotController implements DispatchableWithRequest, DispatchableWithBurn
         $this->layout_helper->renderInProjectAdministrationLayout(
             $request,
             $project_id,
-            dgettext('tuleap-botmattermost', "Bots Mattermost"),
+            dgettext('tuleap-botmattermost', 'Bots Mattermost'),
             NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
             $callback
         );

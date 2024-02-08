@@ -123,9 +123,9 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
     public function getMessageText()
     {
         $message = $this->get_title() . "\n\n"
-               . $this->get_project_full_name_title() . " " . $this->get_project_full_name() . "\n"
-               . $this->get_project_short_name_title() . " " . $this->get_project_short_name() . "\n"
-               . $this->get_project_summary_page_title() . " " . $this->get_project_summary_page() . "\n\n"
+               . $this->get_project_full_name_title() . ' ' . $this->get_project_full_name() . "\n"
+               . $this->get_project_short_name_title() . ' ' . $this->get_project_short_name() . "\n"
+               . $this->get_project_summary_page_title() . ' ' . $this->get_project_summary_page() . "\n\n"
                . $this->get_section_one() . "\n\n"
                . $this->get_section_two() . "\n\n"
                . $this->get_section_three() . "\n\n"

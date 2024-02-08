@@ -49,7 +49,7 @@ class ArtifactView extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::getIdentifier() */
     public function getIdentifier()
     {
-        return "milestone";
+        return 'milestone';
     }
 
     /** @see Tracker_Artifact_View_View::fetch() */

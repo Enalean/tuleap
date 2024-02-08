@@ -76,14 +76,14 @@ $presenter->displaySectionNavigation();
 $service->displayFRSHeader($project, _('Files Administration'));
 $renderer->renderToPage('toolbar-presenter', $presenter);
 
-$sql    = "SELECT name,rank FROM frs_processor WHERE group_id=" . db_ei($group_id) . " AND processor_id=" . db_ei($proc_id);
+$sql    = 'SELECT name,rank FROM frs_processor WHERE group_id=' . db_ei($group_id) . ' AND processor_id=' . db_ei($proc_id);
 $result = db_query($sql);
 $name   = db_result($result, 0, 'name');
 $rank   = db_result($result, 0, 'rank');
 
 if (db_numrows($result) < 1) {
     // invalid  processor  id
-    $feedback .= " " . $Language->getText('file_admin_manageprocessors', 'invalid_procid');
+    $feedback .= ' ' . $Language->getText('file_admin_manageprocessors', 'invalid_procid');
     file_utils_footer([]);
     exit;
 }

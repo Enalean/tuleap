@@ -70,14 +70,14 @@ class DeleteController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->exist('jenkins_server_id')) {
-            throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected Jenkins server ID not found"));
+            throw new RuntimeException(dgettext('tuleap-hudson_git', 'Expected Jenkins server ID not found'));
         }
 
-        $jenkins_server_id = (int) $request->get("jenkins_server_id");
+        $jenkins_server_id = (int) $request->get('jenkins_server_id');
         $jenkins_server    = $this->jenkins_server_factory->getJenkinsServerById($jenkins_server_id);
 
         if ($jenkins_server === null) {
-            throw new NotFoundException(dgettext("tuleap-git", "Jenkins server not found."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Jenkins server not found.'));
         }
 
         $project = $jenkins_server->getProject();
@@ -86,19 +86,19 @@ class DeleteController implements DispatchableWithRequest
         );
 
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
 
         $user = $request->getCurrentUser();
         if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
-            throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
+            throw new ForbiddenException(dgettext('tuleap-hudson_git', 'User is not Git administrator.'));
         }
 
         $this->jenkins_server_deleter->deleteServer($jenkins_server);
 
         $layout->addFeedback(
             Feedback::INFO,
-            dgettext("tuleap-hudson_git", "The Jenkins server has successfully been Removed.")
+            dgettext('tuleap-hudson_git', 'The Jenkins server has successfully been Removed.')
         );
 
         $layout->redirect(

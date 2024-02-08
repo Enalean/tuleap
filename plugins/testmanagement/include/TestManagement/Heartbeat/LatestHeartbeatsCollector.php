@@ -72,7 +72,7 @@ class LatestHeartbeatsCollector
                 new HeartbeatsEntry(
                     $row['last_update_date'],
                     $this->getHTMLMessage($artifact, $project),
-                    "fas fa-check-double",
+                    'fas fa-check-double',
                     $this->getUser((int) $row['last_updated_by_id'])
                 )
             );
@@ -94,8 +94,8 @@ class LatestHeartbeatsCollector
         $purifier = Codendi_HTMLPurifier::instance();
 
         $tlp_badge_color = $purifier->purify('tlp-swatch-' . $campaign->getTracker()->getColor()->getName());
-        $campaign_url    = "/plugins/testmanagement/?group_id=" .
-            urlencode((string) $project->getId()) . "#!/campaigns/" . $campaign->getId();
+        $campaign_url    = '/plugins/testmanagement/?group_id=' .
+            urlencode((string) $project->getId()) . '#!/campaigns/' . $campaign->getId();
         $title           = '
             <a class="direct-link-to-artifact" href="' . $purifier->purify($campaign_url) . '">
                 <span class="cross-ref-badge ' . $tlp_badge_color . '">

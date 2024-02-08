@@ -52,7 +52,7 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public const TEST_USER_RESTRICTED_2_DISPLAYNAME = ' (rest_api_restricted_2)';
     public const TEST_USER_RESTRICTED_2_EMAIL       = 'rest_api_restricted_2@example.com';
 
-    public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME = "rest_api_delegated_rest_project_manager";
+    public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME = 'rest_api_delegated_rest_project_manager';
     public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_PASS = 'welcome0';
 
     public const TEST_USER_CATCH_ALL_PROJECT_ADMIN = 'rest_api_catch_all_project_admin';

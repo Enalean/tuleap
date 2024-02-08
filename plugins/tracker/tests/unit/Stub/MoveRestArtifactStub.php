@@ -79,7 +79,7 @@ final class MoveRestArtifactStub implements MoveRestArtifact
         }
 
         if ($this->move_semantic_exception) {
-            throw new MoveArtifactSemanticsException("you can not");
+            throw new MoveArtifactSemanticsException('you can not');
         }
 
         if ($this->target_project_not_active) {

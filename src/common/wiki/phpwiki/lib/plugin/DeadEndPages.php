@@ -35,7 +35,7 @@ class WikiPlugin_DeadEndPages extends WikiPlugin_OrphanedPages
 {
     public function getName()
     {
-        return _("DeadEndPages");
+        return _('DeadEndPages');
     }
 }
 

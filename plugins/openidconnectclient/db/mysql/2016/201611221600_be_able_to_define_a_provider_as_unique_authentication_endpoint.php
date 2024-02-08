@@ -32,8 +32,8 @@ class b201611221600_be_able_to_define_a_provider_as_unique_authentication_endpoi
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_openidconnectclient_provider
-                ADD COLUMN unique_authentication_endpoint BOOLEAN DEFAULT FALSE";
+        $sql = 'ALTER TABLE plugin_openidconnectclient_provider
+                ADD COLUMN unique_authentication_endpoint BOOLEAN DEFAULT FALSE';
 
         $res = $this->db->dbh->exec($sql);
 

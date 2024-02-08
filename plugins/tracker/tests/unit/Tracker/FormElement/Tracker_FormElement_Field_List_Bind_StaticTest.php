@@ -233,7 +233,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
         $user_xml_exporter      = Mockery::mock(UserXMLExporter::class);
         $root                   = new SimpleXMLElement('<bind type="static"/>');
         $xml_mapping            = [1, 2, 3];
-        $project_export_context = "false";
+        $project_export_context = 'false';
         $this->bind_without_values->exportToXml(
             $root,
             $xml_mapping,
@@ -262,7 +262,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
         $user_xml_exporter      = Mockery::mock(UserXMLExporter::class);
         $root                   = new SimpleXMLElement('<bind type="static"/>');
         $xml_mapping            = [1, 2, 3];
-        $project_export_context = "false";
+        $project_export_context = 'false';
         $this->bind->exportToXml(
             $root,
             $xml_mapping,

@@ -34,10 +34,10 @@ class TimetrackingReportTest extends TimetrackingBase
     public function testGetId()
     {
         $report = [
-            "id"               => 1,
-            "uri"              => 'timetracking_reports/1',
-            "trackers"         => [],
-            "invalid_trackers" => [],
+            'id'               => 1,
+            'uri'              => 'timetracking_reports/1',
+            'trackers'         => [],
+            'invalid_trackers' => [],
         ];
 
         $response = $this->getResponseByName(
@@ -70,7 +70,7 @@ class TimetrackingReportTest extends TimetrackingBase
 
     public function testUserCanUpdateHisReport()
     {
-        $query = json_encode(["trackers_id" => [$this->tracker_timetracking]]);
+        $query = json_encode(['trackers_id' => [$this->tracker_timetracking]]);
 
         $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
@@ -82,12 +82,12 @@ class TimetrackingReportTest extends TimetrackingBase
             $this->request_factory->createRequest('GET', 'timetracking_reports/1')
         );
 
-        $this->assertEquals(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["trackers"][0]["id"], $this->tracker_timetracking);
+        $this->assertEquals(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['trackers'][0]['id'], $this->tracker_timetracking);
     }
 
     public function testUpdateReportRaiseExeptionIfUserTryToUpdateToSomebodyElseReport()
     {
-        $query = json_encode(["trackers_id" => [$this->tracker_timetracking]]);
+        $query = json_encode(['trackers_id' => [$this->tracker_timetracking]]);
 
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::TEST_USER_4_NAME,
@@ -101,9 +101,9 @@ class TimetrackingReportTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "trackers_id" => [$this->tracker_timetracking],
-                "start_date"  => "2010-03-01T00:00:00+01",
-                "end_date"    => "2019-03-21T00:00:00+01",
+                'trackers_id' => [$this->tracker_timetracking],
+                'start_date'  => '2010-03-01T00:00:00+01',
+                'end_date'    => '2019-03-21T00:00:00+01',
             ])
         );
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
@@ -115,7 +115,7 @@ class TimetrackingReportTest extends TimetrackingBase
         $total    = 0;
 
         foreach ($result as $tracker) {
-            $total += $this->getTotaltimeByTracker($tracker["time_per_user"]);
+            $total += $this->getTotaltimeByTracker($tracker['time_per_user']);
         }
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -126,8 +126,8 @@ class TimetrackingReportTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "start_date"  => "2010-03-01T00:00:00+01",
-                "end_date"    => "2019-03-21T00:00:00+01",
+                'start_date'  => '2010-03-01T00:00:00+01',
+                'end_date'    => '2019-03-21T00:00:00+01',
             ])
         );
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
@@ -139,7 +139,7 @@ class TimetrackingReportTest extends TimetrackingBase
         $total    = 0;
 
         foreach ($result as $tracker) {
-            $total += $this->getTotaltimeByTracker($tracker["time_per_user"]);
+            $total += $this->getTotaltimeByTracker($tracker['time_per_user']);
         }
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -151,13 +151,13 @@ class TimetrackingReportTest extends TimetrackingBase
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->request_factory->createRequest('GET', "/api/v1/timetracking_reports/1/times")
+            $this->request_factory->createRequest('GET', '/api/v1/timetracking_reports/1/times')
         );
         $result   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $total    = 0;
 
         foreach ($result as $tracker) {
-            $total += $this->getTotaltimeByTracker($tracker["time_per_user"]);
+            $total += $this->getTotaltimeByTracker($tracker['time_per_user']);
         }
 
         $this->assertEquals($response->getStatusCode(), 200);

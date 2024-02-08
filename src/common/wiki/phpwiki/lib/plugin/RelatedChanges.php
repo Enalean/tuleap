@@ -9,7 +9,7 @@ rcs_id('$Id: RelatedChanges.php,v 1.5 2005/01/25 03:50:54 uckelman Exp $');
  * DONE: days links requires action=RelatedChanges arg
  */
 
-require_once("lib/plugin/RecentChanges.php");
+require_once('lib/plugin/RecentChanges.php');
 
 class _RelatedChanges_HtmlFormatter extends _RecentChanges_HtmlFormatter
 {
@@ -18,7 +18,7 @@ class _RelatedChanges_HtmlFormatter extends _RecentChanges_HtmlFormatter
         return HTML::p(
             false,
             $this->pre_description(),
-            fmt(" (to pages linked from \"%s\")", $this->_args['page'])
+            fmt(' (to pages linked from "%s")', $this->_args['page'])
         );
     }
 }
@@ -28,15 +28,15 @@ class WikiPlugin_RelatedChanges extends WikiPlugin_RecentChanges
 {
     public function getName()
     {
-        return _("RecentEdits");
+        return _('RecentEdits');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.5 $"
+            '$Revision: 1.5 $'
         );
     }
 
@@ -46,7 +46,7 @@ class WikiPlugin_RelatedChanges extends WikiPlugin_RecentChanges
         $args['page']       = '[pagename]';
         $args['show_minor'] = true;
         $args['show_all']   = true;
-        $args['caption']    = _("Related Changes");
+        $args['caption']    = _('Related Changes');
         return $args;
     }
 
@@ -84,7 +84,7 @@ class WikiPlugin_RelatedChanges extends WikiPlugin_RecentChanges
         $args['show_all']     = false;
         $args['days']         = 90;
         return $this->makeBox(
-            WikiLink(_("RelatedChanges"), '', _("Related Changes")),
+            WikiLink(_('RelatedChanges'), '', _('Related Changes')),
             $this->format($this->getChanges($request->_dbi, $args), $args)
         );
     }
@@ -101,7 +101,7 @@ class WikiPlugin_RelatedChanges extends WikiPlugin_RecentChanges
             } elseif ($format == 'rss2') {
                 $fmt_class = '_RecentChanges_Rss2Formatter';
             } elseif ($format == 'rss091') {
-                include_once "lib/RSSWriter091.php";
+                include_once 'lib/RSSWriter091.php';
                 $fmt_class = '_RecentChanges_RssFormatter091';
             } elseif ($format == 'sidebar') {
                 $fmt_class = '_RecentChanges_SideBarFormatter';

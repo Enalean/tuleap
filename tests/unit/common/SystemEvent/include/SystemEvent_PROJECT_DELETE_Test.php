@@ -103,7 +103,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         ]);
 
         $evt->expects(self::never())->method('done');
-        $evt->expects(self::once())->method('error')->with("Could not remove project users");
+        $evt->expects(self::once())->method('error')->with('Could not remove project users');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
@@ -188,7 +188,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         ]);
 
         $evt->expects(self::never())->method('done');
-        $evt->expects(self::once())->method('error')->with("Could not remove membership request notification ugroups or message");
+        $evt->expects(self::once())->method('error')->with('Could not remove membership request notification ugroups or message');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
@@ -273,7 +273,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         ]);
 
         $evt->expects(self::never())->method('done');
-        $evt->expects(self::once())->method('error')->with("Could not remove FRS items");
+        $evt->expects(self::once())->method('error')->with('Could not remove FRS items');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
@@ -358,7 +358,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         ]);
 
         $evt->expects(self::never())->method('done');
-        $evt->expects(self::once())->method('error')->with("Could not mark all trackers as deleted");
+        $evt->expects(self::once())->method('error')->with('Could not mark all trackers as deleted');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
@@ -443,7 +443,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         ]);
 
         $evt->expects(self::never())->method('done');
-        $evt->expects(self::once())->method('error')->with("Could not mark all wiki attachments as deleted");
+        $evt->expects(self::once())->method('error')->with('Could not mark all wiki attachments as deleted');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
@@ -528,7 +528,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         ]);
 
         $evt->expects(self::never())->method('done');
-        $evt->expects(self::once())->method('error')->with("Could not remove ugroups binding");
+        $evt->expects(self::once())->method('error')->with('Could not remove ugroups binding');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 

@@ -105,7 +105,7 @@ class MoveToCentralDbDao extends DataAccessObject
     private function moveTables($project_id, $database_name)
     {
         $db  = DBFactory::getMainTuleapDBConnection()->getDB();
-        $dar = $this->retrieve("SHOW TABLES FROM " . $db->escapeIdentifier($database_name));
+        $dar = $this->retrieve('SHOW TABLES FROM ' . $db->escapeIdentifier($database_name));
         foreach ($dar as $row) {
             $table_name     = array_pop($row);
             $new_table_name = 'mw_' . $project_id . '_' . substr($table_name, 2);
@@ -123,9 +123,9 @@ class MoveToCentralDbDao extends DataAccessObject
     private function dropDatabase($database_name)
     {
         $db  = DBFactory::getMainTuleapDBConnection()->getDB();
-        $dar = $this->retrieve("SHOW TABLES FROM " . $db->escapeIdentifier($database_name));
+        $dar = $this->retrieve('SHOW TABLES FROM ' . $db->escapeIdentifier($database_name));
         if (count($dar) === 0) {
-            $this->update("DROP DATABASE " . $db->escapeIdentifier($database_name));
+            $this->update('DROP DATABASE ' . $db->escapeIdentifier($database_name));
         }
     }
 

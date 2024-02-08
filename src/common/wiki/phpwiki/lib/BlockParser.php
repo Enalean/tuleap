@@ -83,7 +83,7 @@ class AnchoredRegexpSet
     public function __construct($regexps)
     {
         $this->_regexps = $regexps;
-        $this->_re      = "/((" . join(")|(", $regexps) . "))/Ax";
+        $this->_re      = '/((' . join(')|(', $regexps) . '))/Ax';
     }
 
     /**
@@ -136,7 +136,7 @@ class AnchoredRegexpSet
             return false;
         }
 
-        $pat = "/ ( (" . join(')|(', $regexps) . ") ) /Axs";
+        $pat = '/ ( (' . join(')|(', $regexps) . ') ) /Axs';
 
         if (! preg_match($pat, $text, $m)) {
             return false;
@@ -238,7 +238,7 @@ class BlockParser_Input
         if ($this->_pos < count($this->_lines)) {
             return $this->_lines[$this->_pos];
         } else {
-            return "<EOF>";
+            return '<EOF>';
         }
     }
 
@@ -445,7 +445,7 @@ class ParsedBlock extends Block_HtmlElement
                 return $block;
             }
             if (DEBUG & _DEBUG_PARSER) {
-                $input->_debug('[', "_match failed");
+                $input->_debug('[', '_match failed');
             }
         }
         if ($line === false or $line === '') {// allow $line === '0'
@@ -545,7 +545,7 @@ class Block_blockquote extends BlockMarkup
     public function _match(&$input, $m)
     {
         $this->_depth   = strlen($m->match);
-        $indent         = sprintf("\\ {%d}", $this->_depth);
+        $indent         = sprintf('\\ {%d}', $this->_depth);
         $this->_element = new SubBlock($input, $indent, $m->match, 'blockquote');
         return true;
     }
@@ -586,7 +586,7 @@ class Block_list extends BlockMarkup
         }
 
         $prefix = $m->match;
-        $indent = sprintf("\\ {%d}", strlen($prefix));
+        $indent = sprintf('\\ {%d}', strlen($prefix));
 
         $bullet           = trim($m->match);
         $this->_tag       = $bullet == '#' ? 'ol' : 'ul';
@@ -604,7 +604,7 @@ class Block_list extends BlockMarkup
     {
         if (isa($nextBlock, 'Block_list') and $this->_tag == $nextBlock->_tag) {
             if ($nextBlock->_content === $this->_content) {
-                trigger_error("Internal Error: no block advance", E_USER_NOTICE);
+                trigger_error('Internal Error: no block advance', E_USER_NOTICE);
                 return false;
             }
             array_splice($this->_content, count($this->_content), 0, $nextBlock->_content);
@@ -668,7 +668,7 @@ class Block_dl extends Block_list
 
         $indent = strlen($mm[0]);
         $term   = TransformInline(rtrim(substr(trim($m->match), 0, -1)));
-        $defn   = new TightSubBlock($input, sprintf("\\ {%d}", $indent), false, 'dd');
+        $defn   = new TightSubBlock($input, sprintf('\\ {%d}', $indent), false, 'dd');
         return [$term, $defn, $loose];
     }
 }
@@ -717,7 +717,7 @@ class Block_table_dl_defn extends XmlContent
         if (! empty($last)) {
             $last->setInClass('bottom', $tight_bot);
         } else {
-            trigger_error(sprintf("no lastTR: %s", AsXML($this->_content[0])), E_USER_WARNING);
+            trigger_error(sprintf('no lastTR: %s', AsXML($this->_content[0])), E_USER_WARNING);
         }
     }
 
@@ -942,7 +942,7 @@ class Block_oldlists extends Block_list
             // wrong duplicated <li> contents
             if (DEBUG and DEBUG & _DEBUG_PARSER) {
                 if (count($this->_content) != 2) {
-                    echo "<pre>";
+                    echo '<pre>';
                     /*
                     $class = new Reflection_Class('XmlElement');
                     // Print out basic information
@@ -967,20 +967,20 @@ class Block_oldlists extends Block_list
                     printf("---> Properties: %s\n", var_export($class->getProperties(), 1));
                     */
                     echo 'count($this->_content): ', count($this->_content),"\n";
-                    echo "\$this->_content[0]: ";
+                    echo '$this->_content[0]: ';
                     var_dump($this->_content[0]);
 
                     for ($i = 1; $i < min(5, count($this->_content)); $i++) {
                         $c = $this->_content[$i];
                         echo '$this->_content[',$i,"]: \n";
-                        echo "_tag: ";
+                        echo '_tag: ';
                         var_dump($c->_tag);
-                        echo "_content: ";
+                        echo '_content: ';
                         var_dump($c->_content);
-                        echo "_properties: ";
+                        echo '_properties: ';
                         var_dump($c->_properties);
                     }
-                    echo "</pre>";
+                    echo '</pre>';
                 }
             }
             $dt = &$this->_content[0];
@@ -1091,7 +1091,7 @@ class Block_heading extends BlockMarkup
 
     public function _match(&$input, $m)
     {
-        $tag  = "h" . (5 - strlen($m->match));
+        $tag  = 'h' . (5 - strlen($m->match));
         $text = TransformInline(trim($m->postmatch));
         $input->advance();
 

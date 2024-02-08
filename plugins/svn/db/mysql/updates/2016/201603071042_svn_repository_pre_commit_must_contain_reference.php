@@ -30,7 +30,7 @@ class b201603071042_svn_repository_pre_commit_must_contain_reference extends \Tu
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_svn_hook_config( repository_id INT(11) UNSIGNED NOT NULL PRIMARY KEY, mandatory_reference BOOL DEFAULT false NOT NULL );";
+        $sql = 'CREATE TABLE plugin_svn_hook_config( repository_id INT(11) UNSIGNED NOT NULL PRIMARY KEY, mandatory_reference BOOL DEFAULT false NOT NULL );';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

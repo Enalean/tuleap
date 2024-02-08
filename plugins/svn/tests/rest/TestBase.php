@@ -79,47 +79,47 @@ class TestBase extends RestBase
         $this->user_group_2_id = $user_groups[self::UGROUP_NAME_2];
 
         $this->user_102 = [
-            "id"           => 102,
-            "uri"          => "users/102",
-            "user_url"     => "/users/rest_api_tester_1",
-            "real_name"    => "Test User 1",
-            "display_name" => "Test User 1 (rest_api_tester_1)",
-            "username"     => "rest_api_tester_1",
-            "ldap_id"      => "tester1",
-            "avatar_url"   => "https://localhost/users/rest_api_tester_1/avatar.png",
-            "is_anonymous" => false,
-            "has_avatar"   => true,
+            'id'           => 102,
+            'uri'          => 'users/102',
+            'user_url'     => '/users/rest_api_tester_1',
+            'real_name'    => 'Test User 1',
+            'display_name' => 'Test User 1 (rest_api_tester_1)',
+            'username'     => 'rest_api_tester_1',
+            'ldap_id'      => 'tester1',
+            'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
+            'is_anonymous' => false,
+            'has_avatar'   => true,
         ];
 
         $this->user_103 = [
-            "id"           => 103,
-            "uri"          => "users/103",
-            "user_url"     => "/users/rest_api_tester_2",
-            "real_name"    => "",
-            "display_name" => " (rest_api_tester_2)",
-            "username"     => "rest_api_tester_2",
-            "ldap_id"      => "",
-            "avatar_url"   => "https://localhost/themes/common/images/avatar_default.png",
-            "is_anonymous" => false,
-            "has_avatar"   => false,
+            'id'           => 103,
+            'uri'          => 'users/103',
+            'user_url'     => '/users/rest_api_tester_2',
+            'real_name'    => '',
+            'display_name' => ' (rest_api_tester_2)',
+            'username'     => 'rest_api_tester_2',
+            'ldap_id'      => '',
+            'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
+            'is_anonymous' => false,
+            'has_avatar'   => false,
         ];
 
         $this->user_group_101 = [
-            "id"         => $this->user_group_1_id,
-            "uri"        => "user_groups/" . $this->user_group_1_id,
-            "label"      => self::UGROUP_NAME_1,
-            "users_uri"  => "user_groups/" . $this->user_group_1_id . "/users",
-            "short_name" => self::UGROUP_NAME_1,
-            "key"        => self::UGROUP_NAME_1,
+            'id'         => $this->user_group_1_id,
+            'uri'        => 'user_groups/' . $this->user_group_1_id,
+            'label'      => self::UGROUP_NAME_1,
+            'users_uri'  => 'user_groups/' . $this->user_group_1_id . '/users',
+            'short_name' => self::UGROUP_NAME_1,
+            'key'        => self::UGROUP_NAME_1,
         ];
 
         $this->user_group_102 = [
-            "id"         => $this->user_group_2_id,
-            "uri"        => "user_groups/" . $this->user_group_2_id,
-            "label"      =>  self::UGROUP_NAME_2,
-            "users_uri"  => "user_groups/" . $this->user_group_2_id . "/users",
-            "short_name" => self::UGROUP_NAME_2,
-            "key"        =>  self::UGROUP_NAME_2,
+            'id'         => $this->user_group_2_id,
+            'uri'        => 'user_groups/' . $this->user_group_2_id,
+            'label'      =>  self::UGROUP_NAME_2,
+            'users_uri'  => 'user_groups/' . $this->user_group_2_id . '/users',
+            'short_name' => self::UGROUP_NAME_2,
+            'key'        =>  self::UGROUP_NAME_2,
         ];
 
         if (isset($_ENV['TULEAP_HOST'])) {

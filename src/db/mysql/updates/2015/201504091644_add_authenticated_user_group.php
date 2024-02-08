@@ -23,7 +23,7 @@ class b201504091644_add_authenticated_user_group extends \Tuleap\ForgeUpgrade\Bu
 {
     public function description()
     {
-        return "Add authenticated user group";
+        return 'Add authenticated user group';
     }
 
     public function preUp()

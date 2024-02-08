@@ -32,7 +32,7 @@ class b201902061527_add_project_flag_info extends ForgeUpgrade_Bucket // phpcs:i
 
     public function up()
     {
-        $sql = "ALTER TABLE trove_cat ADD COLUMN is_project_flag BOOL NOT NULL DEFAULT false";
+        $sql = 'ALTER TABLE trove_cat ADD COLUMN is_project_flag BOOL NOT NULL DEFAULT false';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

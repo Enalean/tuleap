@@ -32,9 +32,9 @@ class b201803201204_update_unique_index extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_cardwall_on_top_column_mapping_field_value
+        $sql = 'ALTER TABLE plugin_cardwall_on_top_column_mapping_field_value
                 DROP PRIMARY KEY, ADD CONSTRAINT idx UNIQUE
-                (cardwall_tracker_id, tracker_id, field_id, value_id)";
+                (cardwall_tracker_id, tracker_id, field_id, value_id)';
         $res = $this->db->primaryKeyExists('plugin_cardwall_on_top_column_mapping_field_value');
 
         if ($res === true) {

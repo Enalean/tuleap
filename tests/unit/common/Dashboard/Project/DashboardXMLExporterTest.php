@@ -70,8 +70,8 @@ class DashboardXMLExporterTest extends TestCase
                 public function getAllProjectDashboards(Project $project): array
                 {
                     return [
-                        new Dashboard(1, "Dashboard 1"),
-                        new Dashboard(2, "Dashboard 2"),
+                        new Dashboard(1, 'Dashboard 1'),
+                        new Dashboard(2, 'Dashboard 2'),
                     ];
                 }
             },
@@ -106,7 +106,7 @@ class DashboardXMLExporterTest extends TestCase
                 public function getAllProjectDashboards(Project $project): array
                 {
                     return [
-                        new Dashboard(1, "Dashboard 1"),
+                        new Dashboard(1, 'Dashboard 1'),
                     ];
                 }
             },

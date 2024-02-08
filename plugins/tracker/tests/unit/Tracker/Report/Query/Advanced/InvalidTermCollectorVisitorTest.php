@@ -200,7 +200,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItCollectsNonExistentFieldsIfFieldIsUnknown(): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
-            ->with(self::TRACKER_ID, "field", $this->user)
+            ->with(self::TRACKER_ID, 'field', $this->user)
             ->willReturn(null);
 
         $this->comparison = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));

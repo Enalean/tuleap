@@ -43,12 +43,12 @@ class WikiPlugin_UpLoad extends WikiPlugin
 
     public function getName()
     {
-        return "UpLoad";
+        return 'UpLoad';
     }
 
     public function getDescription()
     {
-        return _("Upload files to the local InterWiki Upload:<filename>");
+        return _('Upload files to the local InterWiki Upload:<filename>');
     }
 
     public function getDefaultArguments()
@@ -65,7 +65,7 @@ class WikiPlugin_UpLoad extends WikiPlugin
     {
         $this->disallowed_extensions = explode(
             "\n",
-            "ad[ep]
+            'ad[ep]
 asd
 ba[st]
 chm
@@ -100,7 +100,7 @@ swf
 url
 vb[esx]?
 vxd
-ws[cfh]"
+ws[cfh]'
         );
         //removed "\{[[:xdigit:]]{8}(?:-[[:xdigit:]]{4}){3}-[[:xdigit:]]{12}\}"
 
@@ -131,8 +131,8 @@ ws[cfh]"
             'type' => 'file',
             'size' => '50',
         ]));
-        $contents->pushContent(HTML::raw(" "));
-        $contents->pushContent(HTML::input(['value' => _("Upload"),
+        $contents->pushContent(HTML::raw(' '));
+        $contents->pushContent(HTML::input(['value' => _('Upload'),
             'type' => 'submit',
         ]));
         $form->pushContent($contents);
@@ -143,7 +143,7 @@ ws[cfh]"
             $user = $request->getUser();
             if (! $user->isAuthenticated()) {
                 $message->pushContent(
-                    HTML::h2(_("ACCESS DENIED: You must log in to upload files.")),
+                    HTML::h2(_('ACCESS DENIED: You must log in to upload files.')),
                     HTML::br(),
                     HTML::br()
                 );
@@ -174,7 +174,7 @@ ws[cfh]"
                 $prev      = $rev + 1;
                 $interwiki = new PageType_interwikimap();
                 $link      = $interwiki->link("Upload:$prev/$userfile_name");
-                $message->pushContent(HTML::h2(_("File successfully uploaded.")));
+                $message->pushContent(HTML::h2(_('File successfully uploaded.')));
                 $message->pushContent(HTML::ul(HTML::li($link)));
 
                 // the upload was a success and we need to mark this event in the "upload log"
@@ -183,7 +183,7 @@ ws[cfh]"
                     $this->log($userfile, $upload_log, $message);
                 }
                 if ($autolink) {
-                    require_once("lib/loadsave.php");
+                    require_once('lib/loadsave.php');
                     $pagehandle = $dbi->getPage($page);
                     if ($pagehandle->exists()) {// don't replace default contents
                         $current         = $pagehandle->getCurrentRevision();
@@ -191,13 +191,13 @@ ws[cfh]"
                         $text            = $current->getPackedContent();
                         $newtext         = $text . "\n* [Upload:$userfile_name]";
                         $meta            = $current->_data;
-                        $meta['summary'] = sprintf(_("uploaded %s"), $userfile_name);
+                        $meta['summary'] = sprintf(_('uploaded %s'), $userfile_name);
                         $pagehandle->save($newtext, $version + 1, $meta);
                     }
                 }
             } else {
                 $message->pushContent($err_header);
-                $message->pushContent(HTML::br(), _("Uploading failed."), HTML::br());
+                $message->pushContent(HTML::br(), _('Uploading failed.'), HTML::br());
             }
         } else {
             $message->pushContent(HTML::br(), HTML::br());
@@ -222,8 +222,8 @@ ws[cfh]"
             'width'  => '100%',
         ]);
         $attchTab->pushContent(HTML::tr(
-            HTML::th(_("Attachment")),
-            HTML::th(_("Number of revision"))
+            HTML::th(_('Attachment')),
+            HTML::th(_('Number of revision'))
         ));
         $wai = WikiAttachment::getListWithCounter(
             GROUP_ID,
@@ -242,7 +242,7 @@ ws[cfh]"
             $line = HTML::tr();
             $line->pushContent(HTML::td(HTML::a(
                 ['href' => $url],
-                "Attach:" . $filename
+                'Attach:' . $filename
             )));
             $line->pushContent(HTML::td($wa->count()));
             $attchTab->pushContent($line);
@@ -252,22 +252,22 @@ ws[cfh]"
         $attchList = HTML();
         $attchList->pushContent(
             HTML::hr(),
-            HTML::h2(_("Attached files"))
+            HTML::h2(_('Attached files'))
         );
         $attchList->pushContent($attchTab);
 
-        $url = WikiURL("UpLoad");
+        $url = WikiURL('UpLoad');
         if (! empty($_REQUEST['pv'])) {
             $url .= '&pv=' . $_REQUEST['pv'];
         }
         $attchList->pushContent(HTML::a(
             ['href' => $url . '&offset=' . ($offset - $limit)],
-            "<- Previous"
+            '<- Previous'
         ));
-        $attchList->pushContent(" - ");
+        $attchList->pushContent(' - ');
         $attchList->pushContent(HTML::a(
             ['href' => $url . '&offset=' . ($offset + $limit)],
-            "Next ->"
+            'Next ->'
         ));
         /// }}}
 
@@ -284,13 +284,13 @@ ws[cfh]"
         global $WikiTheme;
         $user = $GLOBALS['request']->_user;
         if (! is_writable($upload_log)) {
-            trigger_error(_("The upload logfile is not writable."), E_USER_WARNING);
-        } elseif (! $log_handle = fopen($upload_log, "a")) {
+            trigger_error(_('The upload logfile is not writable.'), E_USER_WARNING);
+        } elseif (! $log_handle = fopen($upload_log, 'a')) {
             trigger_error(_("Can't open the upload logfile."), E_USER_WARNING);
         } else {        // file size in KB; precision of 0.1
             $file_size = round(($userfile->getSize()) / 1024, 1);
             if ($file_size <= 0) {
-                $file_size = "&lt; 0.1";
+                $file_size = '&lt; 0.1';
             }
             $userfile_name = $userfile->getName();
             fwrite(
@@ -298,8 +298,8 @@ ws[cfh]"
                 "\n"
                    . "<tr><td><a href=\"$userfile_name\">$userfile_name</a></td>"
                    . "<td align=\"right\">$file_size kB</td>"
-                   . "<td>&nbsp;&nbsp;" . $WikiTheme->formatDate(time()) . "</td>"
-                . "<td>&nbsp;&nbsp;<em>" . $user->getId() . "</em></td></tr>"
+                   . '<td>&nbsp;&nbsp;' . $WikiTheme->formatDate(time()) . '</td>'
+                . '<td>&nbsp;&nbsp;<em>' . $user->getId() . '</em></td></tr>'
             );
             fclose($log_handle);
         }

@@ -94,8 +94,8 @@ class ArtifactNodeDao extends DataAccessObject
         $sql = "SELECT target_id as id
                 FROM cross_references
                 WHERE source_id = $artifact_id
-                    AND source_type = " . $this->da->quoteSmart(Artifact::REFERENCE_NATURE) . "
-                    AND target_type = source_type";
+                    AND source_type = " . $this->da->quoteSmart(Artifact::REFERENCE_NATURE) . '
+                    AND target_type = source_type';
 
         return $this->retrieve($sql);
     }
@@ -111,8 +111,8 @@ class ArtifactNodeDao extends DataAccessObject
         $sql = "SELECT source_id as id
                 FROM cross_references
                 WHERE target_id = $artifact_id
-                    AND target_type = " . $this->da->quoteSmart(Artifact::REFERENCE_NATURE) . "
-                    AND source_type = target_type";
+                    AND target_type = " . $this->da->quoteSmart(Artifact::REFERENCE_NATURE) . '
+                    AND source_type = target_type';
 
         return $this->retrieve($sql);
     }

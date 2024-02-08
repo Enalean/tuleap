@@ -39,10 +39,10 @@ class JiraTimetrackingConfigurationRetriever
 
     public function getJiraTimetrackingConfiguration(): ?string
     {
-        $this->logger->debug("Get Jira timetracking platform configuration.");
+        $this->logger->debug('Get Jira timetracking platform configuration.');
 
         $timetracking_configuration_url = ClientWrapper::JIRA_CORE_BASE_URL . '/configuration';
-        $this->logger->debug("  GET " . $timetracking_configuration_url);
+        $this->logger->debug('  GET ' . $timetracking_configuration_url);
 
         try {
             $configuration_data = $this->jira_client->getUrl($timetracking_configuration_url);

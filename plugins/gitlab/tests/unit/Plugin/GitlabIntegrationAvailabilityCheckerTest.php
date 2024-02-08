@@ -60,7 +60,7 @@ final class GitlabIntegrationAvailabilityCheckerTest extends TestCase
         $project
             ->expects(self::once())
             ->method('getID')
-            ->willReturn("101");
+            ->willReturn('101');
 
         $project
             ->expects(self::once())
@@ -104,7 +104,7 @@ final class GitlabIntegrationAvailabilityCheckerTest extends TestCase
         $project
             ->expects(self::once())
             ->method('getID')
-            ->willReturn("101");
+            ->willReturn('101');
 
         $project
             ->expects(self::once())

@@ -105,12 +105,12 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
         $artifact
             ->method('getId')
-            ->willReturn("89");
+            ->willReturn('89');
 
         $artifact
             ->expects(self::once())
             ->method('getTitle')
-            ->willReturn("This \is a :feature");
+            ->willReturn('This \is a :feature');
 
         $this->representation_factory
             ->expects(self::once())
@@ -127,7 +127,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
                     $project,
                     false,
                     true,
-                    "dev-"
+                    'dev-'
                 ),
             ]);
 
@@ -192,7 +192,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $artifact
             ->expects(self::exactly(2))
             ->method('getId')
-            ->willReturn("89");
+            ->willReturn('89');
 
         $artifact
             ->expects(self::once())
@@ -214,7 +214,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
                     $project,
                     false,
                     true,
-                    "dev-"
+                    'dev-'
                 ),
             ]);
 

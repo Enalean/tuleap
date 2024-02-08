@@ -64,7 +64,7 @@ final readonly class WorkerEventProcessorFinder implements FindWorkerEventProces
                                     ),
                                     $user_manager,
                                     $locale_switcher,
-                                    "mail-project-register-admin"
+                                    'mail-project-register-admin'
                                 ),
                                 $worker_event->getLogger(),
                             ),

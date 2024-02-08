@@ -32,7 +32,7 @@ class b201910071357_add_default_value_for_computed_fields extends ForgeUpgrade_B
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_field_computed ADD COLUMN default_value DOUBLE NULL AFTER field_id";
+        $sql = 'ALTER TABLE tracker_field_computed ADD COLUMN default_value DOUBLE NULL AFTER field_id';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

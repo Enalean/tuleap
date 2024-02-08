@@ -486,19 +486,19 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function setProjectAdmin($group_id, PFUser $user)
     {
-        $result = db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
-            . db_ei($user->getId()) . ","
-            . db_ei($group_id) . ","
+        $result = db_query('INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ('
+            . db_ei($user->getId()) . ','
+            . db_ei($group_id) . ','
             . "'A'," // admin flags
-            . "2," // bug flags
-            . "2," // forum flags
-            . "2," // project flags
-            . "2," // patch flags
-            . "2," // support flags
-            . "2," // file_flags
-            . "2," // wiki_flags
-            . "2," // svn_flags
-            . "2)"); // news_flags
+            . '2,' // bug flags
+            . '2,' // forum flags
+            . '2,' // project flags
+            . '2,' // patch flags
+            . '2,' // support flags
+            . '2,' // file_flags
+            . '2,' // wiki_flags
+            . '2,' // svn_flags
+            . '2)'); // news_flags
         if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'set_owner_fail', [ForgeConfig::get('sys_email_admin'), db_error()]));
         }
@@ -530,7 +530,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function initForumModuleFromTemplate($group_id, $template_id)
     {
-        $sql    = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=" . db_ei($template_id) . " ";
+        $sql    = 'SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=' . db_ei($template_id) . ' ';
         $result = db_query($sql);
         while ($arr = db_fetch_array($result)) {
             $fid               = forum_create_forum(
@@ -554,15 +554,15 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         $current_timestamp = db_escape_int($_SERVER['REQUEST_TIME']);
 
-        $sql = "INSERT INTO svn_accessfile_history (version_number, group_id, version_date)
-                VALUES (1, " . db_ei($group_id) . ", $current_timestamp)";
+        $sql = 'INSERT INTO svn_accessfile_history (version_number, group_id, version_date)
+                VALUES (1, ' . db_ei($group_id) . ", $current_timestamp)";
 
         $result = db_query($sql);
         if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_svn_infos'));
         }
 
-        $sql    = "SELECT svn_tracker, svn_preamble, svn_mandatory_ref, svn_commit_to_tag_denied FROM `groups` WHERE group_id=" . db_ei($template_id) . " ";
+        $sql    = 'SELECT svn_tracker, svn_preamble, svn_mandatory_ref, svn_commit_to_tag_denied FROM `groups` WHERE group_id=' . db_ei($template_id) . ' ';
         $result = db_query($sql);
         $arr    = db_fetch_array($result);
         $query  = "UPDATE `groups`, svn_accessfile_history
@@ -571,8 +571,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                       svn_preamble='" . db_escape_string($arr['svn_preamble']) . "',
                       svn_commit_to_tag_denied='" . db_ei($arr['svn_commit_to_tag_denied']) . "',
                       svn_accessfile_version_id = svn_accessfile_history.id
-                  WHERE `groups`.group_id = " . db_ei($group_id) . "
-                      AND `groups`.group_id = svn_accessfile_history.group_id";
+                  WHERE `groups`.group_id = " . db_ei($group_id) . '
+                      AND `groups`.group_id = svn_accessfile_history.group_id';
 
         $result = db_query($query);
         if (! $result) {
@@ -595,7 +595,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
         //Copy packages from template project
         $packages_mapping = [];
-        $sql              = "SELECT package_id, name, status_id, rank, approve_license FROM frs_package WHERE group_id = " . db_ei($template_project->getID());
+        $sql              = 'SELECT package_id, name, status_id, rank, approve_license FROM frs_package WHERE group_id = ' . db_ei($template_project->getID());
         if ($result = db_query($sql)) {
             while ($p_data = db_fetch_array($result)) {
                 $template_package_id = $p_data['package_id'];

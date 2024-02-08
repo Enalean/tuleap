@@ -65,7 +65,7 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
             UserTestBuilder::buildWithDefaults(),
             new InvitationRecipient(null, 'alice@example.com'),
             null,
-            "custom message",
+            'custom message',
             null,
         );
 
@@ -111,7 +111,7 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
             UserTestBuilder::buildWithDefaults(),
             new InvitationRecipient(null, 'alice@example.com'),
             null,
-            "custom message",
+            'custom message',
             null,
         );
 
@@ -168,7 +168,7 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
             $from_user,
             new InvitationRecipient(null, 'alice@example.com'),
             $project,
-            "custom message",
+            'custom message',
             null,
         );
 
@@ -225,7 +225,7 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
             $from_user,
             new InvitationRecipient(null, 'alice@example.com'),
             $project,
-            "custom message",
+            'custom message',
             $from_user,
         );
 
@@ -274,7 +274,7 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
             UserTestBuilder::buildWithDefaults(),
             new InvitationRecipient(null, 'alice@example.com'),
             $project,
-            "custom message",
+            'custom message',
             null,
         );
 

@@ -46,20 +46,20 @@ final class GitlabTagReferenceSplitValuesBuilderTest extends TestCase
     public function testItRetrievesRepositoryNameAndTagName(): void
     {
         $this->dao->method('getAllTagsSplitValuesInProject')->willReturn(
-            ["repository_name" => "root/subgrp/repo01", "tag_name" => "v1.0.2"],
+            ['repository_name' => 'root/subgrp/repo01', 'tag_name' => 'v1.0.2'],
         );
 
-        $split_values = $this->builder->splitRepositoryNameAndReferencedItemId("root/subgrp/repo01/v1.0.2", 101);
+        $split_values = $this->builder->splitRepositoryNameAndReferencedItemId('root/subgrp/repo01/v1.0.2', 101);
 
-        self::assertSame("root/subgrp/repo01", $split_values->getRepositoryName());
-        self::assertSame("v1.0.2", $split_values->getValue());
+        self::assertSame('root/subgrp/repo01', $split_values->getRepositoryName());
+        self::assertSame('v1.0.2', $split_values->getValue());
     }
 
     public function testItReturnsANotFoundReferenceIfDataNotFoundInDatabase(): void
     {
         $this->dao->method('getAllTagsSplitValuesInProject')->willReturn(null);
 
-        $split_values = $this->builder->splitRepositoryNameAndReferencedItemId("root/subgrp/repo01/v1.0.2", 101);
+        $split_values = $this->builder->splitRepositoryNameAndReferencedItemId('root/subgrp/repo01/v1.0.2', 101);
 
         self::assertNull($split_values->getRepositoryName());
         self::assertNull($split_values->getValue());

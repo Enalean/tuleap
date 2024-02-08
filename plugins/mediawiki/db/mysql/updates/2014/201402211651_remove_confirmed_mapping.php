@@ -48,7 +48,7 @@ EOT;
     public function up()
     {
         $sql = "DELETE FROM plugin_mediawiki_tuleap_mwgroups WHERE real_name IN ('autoconfirmed', 'emailconfirmed')";
-        $this->execDB($sql, "Cannot clean table");
+        $this->execDB($sql, 'Cannot clean table');
     }
 
     private function execDB($sql, $message)

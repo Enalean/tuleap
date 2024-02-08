@@ -163,7 +163,7 @@ final class GitForkCrossProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request = new Codendi_Request([
             'to_project'  => 666,
-            'repos'       => "1",
+            'repos'       => '1',
             'repo_access' => [],
         ]);
 

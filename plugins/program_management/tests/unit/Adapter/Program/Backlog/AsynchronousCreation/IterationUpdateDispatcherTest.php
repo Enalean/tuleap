@@ -85,7 +85,7 @@ final class IterationUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItProcessesSynchronousUpdateIfThereIsNoQueueSystemAvailable(): void
     {
-        $this->queue_factory->method("getPersistentQueue")->willThrowException(new NoQueueSystemAvailableException());
+        $this->queue_factory->method('getPersistentQueue')->willThrowException(new NoQueueSystemAvailableException());
 
         $this->getIterationUpdateDispatcher()->dispatchUpdate($this->iteration_update);
 

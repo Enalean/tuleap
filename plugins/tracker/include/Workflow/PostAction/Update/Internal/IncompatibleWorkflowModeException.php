@@ -28,7 +28,7 @@ class IncompatibleWorkflowModeException extends Exception
     {
         parent::__construct(
             sprintf(
-                dgettext("tuleap-tracker", "Workflow mode is incompatible with PostAction of type %s"),
+                dgettext('tuleap-tracker', 'Workflow mode is incompatible with PostAction of type %s'),
                 $postaction_type
             )
         );

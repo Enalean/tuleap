@@ -87,7 +87,7 @@ $evParams       = ['searchToken'     => $userName,
 ];
 
 $em = EventManager::instance();
-$em->processEvent("ajax_search_user", $evParams);
+$em->processEvent('ajax_search_user', $evParams);
 
 if (count($userList) < $limit) {
     // search user dao
@@ -101,7 +101,7 @@ if (count($userList) < $limit) {
         $is_user_restricted = $user->isRestricted();
         if (! $is_user_restricted || ($is_user_restricted && $display_restricted_user)) {
             $userList[] = [
-                'display_name' => $row['realname'] . " (" . $row['user_name'] . ")",
+                'display_name' => $row['realname'] . ' (' . $row['user_name'] . ')',
                 'login'        => $row['user_name'],
                 'has_avatar'   => true,
                 'avatar_url'   => $user->getAvatarUrl(),

@@ -48,7 +48,7 @@ final class DescriptionFieldAdminPresenterBuilderTest extends \Tuleap\Test\PHPUn
                     'What is the purpose of your project?',
                     true,
                     null,
-                    "",
+                    '',
                     '',
                     0,
                     true
@@ -59,7 +59,7 @@ final class DescriptionFieldAdminPresenterBuilderTest extends \Tuleap\Test\PHPUn
                     'field_description',
                     true,
                     null,
-                    "line",
+                    'line',
                     '',
                     1,
                     false

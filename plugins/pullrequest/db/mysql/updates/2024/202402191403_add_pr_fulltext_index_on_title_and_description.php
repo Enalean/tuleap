@@ -25,7 +25,7 @@ final class b202402191403_add_pr_fulltext_index_on_title_and_description extends
 {
     public function description()
     {
-        return "Add a fulltext index on title and description in the plugin_pullrequest_review table.";
+        return 'Add a fulltext index on title and description in the plugin_pullrequest_review table.';
     }
 
     public function up()

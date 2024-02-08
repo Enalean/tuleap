@@ -66,7 +66,7 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->status_value_retriever = Mockery::mock(StatusValueRetriever::class);
 
         $this->campaign = Mockery::mock(Campaign::class);
-        $this->campaign->shouldReceive('getLabel')->andReturn("new_label");
+        $this->campaign->shouldReceive('getLabel')->andReturn('new_label');
         $this->campaign->shouldReceive('getArtifact')->andReturn(ArtifactTestBuilder::anArtifact(112)->build());
 
         $this->builder = new CampaignArtifactUpdateFieldValuesBuilder(
@@ -109,7 +109,7 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\
         );
 
         assertCount(1, $field_values);
-        assertSame("new_label", $field_values[0]->value);
+        assertSame('new_label', $field_values[0]->value);
         assertSame(89, $field_values[0]->field_id);
     }
 
@@ -177,7 +177,7 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\
         );
 
         assertCount(2, $field_values);
-        assertSame("new_label", $field_values[0]->value);
+        assertSame('new_label', $field_values[0]->value);
         assertSame(89, $field_values[0]->field_id);
         assertSame([5], $field_values[1]->bind_value_ids);
         assertSame(98, $field_values[1]->field_id);
@@ -247,7 +247,7 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\
         );
 
         assertCount(2, $field_values);
-        assertSame("new_label", $field_values[0]->value);
+        assertSame('new_label', $field_values[0]->value);
         assertSame(89, $field_values[0]->field_id);
         assertSame([2], $field_values[1]->bind_value_ids);
         assertSame(98, $field_values[1]->field_id);

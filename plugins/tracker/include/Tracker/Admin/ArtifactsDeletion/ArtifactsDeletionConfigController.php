@@ -71,12 +71,12 @@ class ArtifactsDeletionConfigController
         if ($new_artifacts_limit >= 0) {
             try {
                 $this->dao->updateDeletableArtifactsLimit($new_artifacts_limit);
-                $response->addFeedback(Feedback::INFO, dgettext("tuleap-tracker", "Limit successfully updated."));
+                $response->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Limit successfully updated.'));
             } catch (Exception $e) {
-                $response->addFeedback(Feedback::ERROR, dgettext("tuleap-tracker", "Something went wrong."));
+                $response->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'Something went wrong.'));
             }
         } else {
-            $response->addFeedback(Feedback::ERROR, dgettext("tuleap-tracker", "Please provide a valid limit."));
+            $response->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'Please provide a valid limit.'));
         }
 
         $response->redirect($_SERVER['REQUEST_URI']);

@@ -37,7 +37,7 @@ final class CommitMessageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     . "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n"
     . "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\n"
     . "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n"
-    . "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+    . 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
     protected function setUp(): void
     {

@@ -72,7 +72,7 @@ class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->formelement_factory->shouldReceive("getUsedFields")->andReturns([$field1, $field2]);
+        $this->formelement_factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2]);
 
         $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
         $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
@@ -123,7 +123,7 @@ class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->formelement_factory->shouldReceive("getUsedFields")->andReturns([$field1, $field2]);
+        $this->formelement_factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2]);
 
         $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
         $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
@@ -174,7 +174,7 @@ class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->formelement_factory->shouldReceive("getUsedFields")->andReturns([$field1, $field2]);
+        $this->formelement_factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2]);
 
         $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
         $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);

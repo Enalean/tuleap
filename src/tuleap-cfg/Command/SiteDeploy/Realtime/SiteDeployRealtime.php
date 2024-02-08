@@ -37,7 +37,7 @@ final class SiteDeployRealtime
         $application_user_name = \ForgeConfig::getApplicationUserLogin();
         $application_user      = posix_getpwnam($application_user_name);
         if ($application_user === false) {
-            throw new \RuntimeException(sprintf("User %s does not exist", $application_user_name));
+            throw new \RuntimeException(sprintf('User %s does not exist', $application_user_name));
         }
 
         \Psl\Filesystem\create_file($file);

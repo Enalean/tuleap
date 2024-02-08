@@ -105,11 +105,11 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $velocity = SemanticVelocity::load($event->getTracker());
 
         if ($velocity->getVelocityField()) {
-            $semantic_url  = TRACKER_BASE_URL . "?" . http_build_query(
+            $semantic_url  = TRACKER_BASE_URL . '?' . http_build_query(
                 [
-                    "tracker"  => $event->getTracker()->getId(),
-                    "func"     => "admin-semantic",
-                    "semantic" => "velocity",
+                    'tracker'  => $event->getTracker()->getId(),
+                    'func'     => 'admin-semantic',
+                    'semantic' => 'velocity',
                 ]
             );
             $semantic_name = dgettext('tuleap-velocity', 'Velocity semantic');
@@ -240,7 +240,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
         $presenter             = new VelocityChartPresenter($representations_collection);
         $renderer              = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
-        $string_representation = $renderer->renderToString("chart-field", $presenter);
+        $string_representation = $renderer->renderToString('chart-field', $presenter);
 
         $event->addEscapedChart($string_representation);
     }

@@ -62,7 +62,7 @@ class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_
 
         $child = $root->addChild('condition');
         $child->addAttribute('type', $this->identifier);
-        $child->addAttribute('is_comment_required', "1");
+        $child->addAttribute('is_comment_required', '1');
     }
 
     /**

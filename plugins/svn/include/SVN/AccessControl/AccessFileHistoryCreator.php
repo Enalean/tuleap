@@ -185,8 +185,8 @@ class AccessFileHistoryCreator
         }
 
         $old_version =
-            "Repository: " . $repository->getName() . PHP_EOL .
-            "version #" . $version->getVersionNumber();
+            'Repository: ' . $repository->getName() . PHP_EOL .
+            'version #' . $version->getVersionNumber();
 
         $this->project_history_dao->groupAddHistory(
             'svn_multi_repository_access_file_use_version',

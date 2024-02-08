@@ -42,7 +42,7 @@ final class PendingIterationCreationBuilder
         );
 
         if (! $pending_iteration_creation) {
-            throw new \LogicException("Pending iteration have not been created");
+            throw new \LogicException('Pending iteration have not been created');
         }
 
         return $pending_iteration_creation;

@@ -40,11 +40,11 @@ final class GitlabGroupInformationRetriever implements RetrieveGitlabGroupInform
      */
     public function getGitlabGroupFromGitlabApi(Credentials $credential, GitlabGroupPOSTRepresentation $representation): GitlabGroupApiDataRepresentation
     {
-        $gitlab_group_data = $this->gitlab_client->getUrl($credential, "/groups/" . urlencode((string) $representation->gitlab_group_id));
+        $gitlab_group_data = $this->gitlab_client->getUrl($credential, '/groups/' . urlencode((string) $representation->gitlab_group_id));
 
         if (! $gitlab_group_data) {
             throw new GitlabResponseAPIException(
-                "The query is not in error but the json content is empty. This is not expected."
+                'The query is not in error but the json content is empty. This is not expected.'
             );
         }
 

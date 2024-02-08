@@ -37,7 +37,7 @@ class Docman_ValidateFilterDate extends \Docman_ValidateFilter
             } elseif (\preg_match('/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/', $this->filter->getValue())) {
                 $this->isValid = \true;
             } else {
-                $today         = \date("Y-n-j");
+                $today         = \date('Y-n-j');
                 $this->message = \sprintf(\dgettext('tuleap-docman', 'The date entered in field "%1$s" is not valid. Valid date format is YYYY-M-D (e.g. \'%2$s\' for today) or let the field blank.'), $this->filter->md->getName(), $today);
             }
         }

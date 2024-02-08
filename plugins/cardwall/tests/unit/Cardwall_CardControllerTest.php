@@ -65,7 +65,7 @@ final class Cardwall_CardControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $field2->shouldReceive('getJsonValue')->andReturns([101, 201]);
         $field3->shouldReceive('getJsonValue')->andReturns(236);
 
-        $field1->shouldReceive('fetchCardValue')->andReturns("5.1");
+        $field1->shouldReceive('fetchCardValue')->andReturns('5.1');
         $field2->shouldReceive('fetchCardValue')->andReturns('<a href');
         $field3->shouldReceive('fetchCardValue')->andReturns('<span>Decorator</span>');
 

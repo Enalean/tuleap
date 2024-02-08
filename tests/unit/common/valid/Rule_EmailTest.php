@@ -72,10 +72,10 @@ class Rule_EmailTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $r = new Rule_Email(',');
 
-        $this->assertTrue($r->isValid("user@codendi.domain.com"));
-        $this->assertTrue($r->isValid("user@codendi.domain.com, user2@codendi.domain.com"));
+        $this->assertTrue($r->isValid('user@codendi.domain.com'));
+        $this->assertTrue($r->isValid('user@codendi.domain.com, user2@codendi.domain.com'));
 
-        $this->assertFalse($r->isValid("user@codendi.domain.com; user2@codendi.domain.com"));
+        $this->assertFalse($r->isValid('user@codendi.domain.com; user2@codendi.domain.com'));
         $this->assertFalse($r->isValid("user@codendi.domain.com, toto l'asticot"));
         $this->assertFalse($r->isValid("toto l'asticot, user@codendi.domain.com"));
         $this->assertFalse($r->isValid("toto l'asticot"));
@@ -85,10 +85,10 @@ class Rule_EmailTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $r = new Rule_Email('[,;]');
 
-        $this->assertTrue($r->isValid("user@codendi.domain.com"));
-        $this->assertTrue($r->isValid("user@codendi.domain.com, user2@codendi.domain.com"));
-        $this->assertTrue($r->isValid("user@codendi.domain.com; user2@codendi.domain.com"));
-        $this->assertTrue($r->isValid("user@codendi.domain.com; user2@codendi.domain.com, user3@codendi.domain.com"));
+        $this->assertTrue($r->isValid('user@codendi.domain.com'));
+        $this->assertTrue($r->isValid('user@codendi.domain.com, user2@codendi.domain.com'));
+        $this->assertTrue($r->isValid('user@codendi.domain.com; user2@codendi.domain.com'));
+        $this->assertTrue($r->isValid('user@codendi.domain.com; user2@codendi.domain.com, user3@codendi.domain.com'));
 
         $this->assertFalse($r->isValid("user@codendi.domain.com; toto l'asticot, user3@codendi.domain.com"));
     }

@@ -62,7 +62,7 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
 
     public function delete($renderer_id)
     {
-        $sql = "DELETE FROM tracker_report_renderer_table_columns WHERE renderer_id = " . $this->da->escapeInt($renderer_id);
+        $sql = 'DELETE FROM tracker_report_renderer_table_columns WHERE renderer_id = ' . $this->da->escapeInt($renderer_id);
         return $this->update($sql);
     }
 

@@ -41,7 +41,7 @@ class InvitationEmailNotifier
 
     public function __construct(private LocaleSwitcher $locale_switcher)
     {
-        $this->template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates/invite_buddy");
+        $this->template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/invite_buddy');
     }
 
     public function send(
@@ -96,8 +96,8 @@ class InvitationEmailNotifier
                     $project->getPublicName(),
                     (string) ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
                 );
-                $body      = $this->template_renderer->renderToString("cannot-add-restricted", $presenter);
-                $body_text = $this->template_renderer->renderToString("cannot-add-restricted-text", $presenter);
+                $body      = $this->template_renderer->renderToString('cannot-add-restricted', $presenter);
+                $body_text = $this->template_renderer->renderToString('cannot-add-restricted-text', $presenter);
 
                 $mail->setBodyHtml($body);
                 $mail->setBodyText($body_text);
@@ -119,8 +119,8 @@ class InvitationEmailNotifier
         $login_url = ServerHostname::HTTPSUrl() . '/account/login.php';
 
         $presenter = new InvitationEmailLoginPresenter($from_user, $recipient_user, $login_url, $custom_message);
-        $body      = $this->template_renderer->renderToString("invite-login", $presenter);
-        $body_text = $this->template_renderer->renderToString("invite-login-text", $presenter);
+        $body      = $this->template_renderer->renderToString('invite-login', $presenter);
+        $body_text = $this->template_renderer->renderToString('invite-login-text', $presenter);
 
         $mail->setBodyHtml($body);
         $mail->setBodyText($body_text);
@@ -147,8 +147,8 @@ class InvitationEmailNotifier
             $project,
             $resent_from_user,
         );
-        $body      = $this->template_renderer->renderToString("invite-register", $presenter);
-        $body_text = $this->template_renderer->renderToString("invite-register-text", $presenter);
+        $body      = $this->template_renderer->renderToString('invite-register', $presenter);
+        $body_text = $this->template_renderer->renderToString('invite-register-text', $presenter);
 
         $mail->setBodyHtml($body);
         $mail->setBodyText($body_text);

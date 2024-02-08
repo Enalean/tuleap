@@ -45,7 +45,7 @@ class Docman_ApprovalTableNotificationCycle
     {
         // Parameters
         $withComments = false;
-        if (trim($review->getComment()) != "") {
+        if (trim($review->getComment()) != '') {
             $withComments = true;
         }
 

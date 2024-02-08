@@ -37,10 +37,10 @@ class DocumentItemPreviewUrlBuilder
     {
         $project = $this->project_manager->getProject((int) $item->getGroupId());
 
-        $base_url = "/plugins/document/" . urlencode($project->getUnixNameLowerCase());
+        $base_url = '/plugins/document/' . urlencode($project->getUnixNameLowerCase());
 
         return $item->getParentId() === 0
             ? $base_url
-            : $base_url . "/preview/" . urlencode((string) $item->getId());
+            : $base_url . '/preview/' . urlencode((string) $item->getId());
     }
 }

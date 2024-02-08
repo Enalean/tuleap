@@ -122,7 +122,7 @@ class MetadataUpdator
             $representation->title !== $item->getTitle() &&
             $this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, (int) $item->getParentId())
         ) {
-            throw new RestException(400, "A file with same title already exists in the given folder.");
+            throw new RestException(400, 'A file with same title already exists in the given folder.');
         }
 
         $this->checkThereIsNoOnGoingUploadWithSameDocumentName($item);
@@ -226,7 +226,7 @@ class MetadataUpdator
             $representation->title !== $item->getTitle() &&
             $this->item_factory->doesTitleCorrespondToExistingFolder($representation->title, (int) $item->getParentId())
         ) {
-            throw new RestException(400, "A file with same title already exists in the given folder.");
+            throw new RestException(400, 'A file with same title already exists in the given folder.');
         }
 
         $this->checkThereIsNoOnGoingUploadWithSameDocumentName($item);

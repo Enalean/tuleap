@@ -63,7 +63,7 @@ class FRSFileDao extends DataAccessObject
     public function searchByReleaseId($id, $only_active_files = 1)
     {
         $_id          = (int) $id;
-        $where_status = "";
+        $where_status = '';
         if ($only_active_files == 1) {
             $where_status = " AND status='A' ";
         }
@@ -76,13 +76,13 @@ class FRSFileDao extends DataAccessObject
         $_file_id  = (int) $file_id;
 
         $sql = sprintf(
-            "SELECT f.filename, f.file_id AS file_id, p.group_id AS group_id, " .
-                        "p.package_id, r.release_id "
-                        . "FROM frs_release AS r, frs_package AS p, frs_file AS f "
-                        . "WHERE p.group_id= %s "
-                        . "AND r.package_id = p.package_id "
-                        . "AND f.release_id = r.release_id "
-                      . "AND f.file_id=%s ",
+            'SELECT f.filename, f.file_id AS file_id, p.group_id AS group_id, ' .
+                        'p.package_id, r.release_id '
+                        . 'FROM frs_release AS r, frs_package AS p, frs_file AS f '
+                        . 'WHERE p.group_id= %s '
+                        . 'AND r.package_id = p.package_id '
+                        . 'AND f.release_id = r.release_id '
+                      . 'AND f.file_id=%s ',
             $this->da->quoteSmart($_group_id),
             $this->da->quoteSmart($_file_id)
         );
@@ -99,19 +99,19 @@ class FRSFileDao extends DataAccessObject
     {
         $_release_id = (int) $release_id;
 
-        $where_status = "";
+        $where_status = '';
         if ($only_active_files) {
             $where_status = " AND status='A' ";
         }
 
         $sql = sprintf(
-            "SELECT frs_file.file_id AS file_id, frs_file.filename AS filename, frs_file.file_size AS file_size,"
-                . "frs_file.release_time AS release_time, frs_file.type_id AS type, frs_file.processor_id AS processor,"
-                . "frs_dlstats_filetotal_agg.downloads AS downloads , frs_file.computed_md5 AS computed_md5, frs_file.user_id AS user_id,"
-                . "frs_file.comment AS comment "
-                . "FROM frs_file "
-                . "LEFT JOIN frs_dlstats_filetotal_agg ON frs_dlstats_filetotal_agg.file_id=frs_file.file_id "
-                . "WHERE release_id=%s" . $where_status,
+            'SELECT frs_file.file_id AS file_id, frs_file.filename AS filename, frs_file.file_size AS file_size,'
+                . 'frs_file.release_time AS release_time, frs_file.type_id AS type, frs_file.processor_id AS processor,'
+                . 'frs_dlstats_filetotal_agg.downloads AS downloads , frs_file.computed_md5 AS computed_md5, frs_file.user_id AS user_id,'
+                . 'frs_file.comment AS comment '
+                . 'FROM frs_file '
+                . 'LEFT JOIN frs_dlstats_filetotal_agg ON frs_dlstats_filetotal_agg.file_id=frs_file.file_id '
+                . 'WHERE release_id=%s' . $where_status,
             $this->da->quoteSmart($_release_id)
         );
         return $this->retrieve($sql);
@@ -356,7 +356,7 @@ class FRSFileDao extends DataAccessObject
      */
     public function logDownload($file, $user_id)
     {
-        $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
+        $sql = 'INSERT INTO filedownload_log(user_id,filerelease_id,time) '
              . "VALUES ('" . $this->da->escapeInt($user_id) . "','" . $this->da->escapeInt($file->getFileID()) . "','" . $this->da->escapeInt(time()) . "')";
         return $this->update($sql);
     }

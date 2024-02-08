@@ -42,7 +42,7 @@ final class JiraServerChangelogEntriesBuilder implements ChangelogEntriesBuilder
      */
     public function buildEntriesCollectionForIssue(string $jira_issue_key): array
     {
-        $this->logger->debug("  Start build changelog entries collection ...");
+        $this->logger->debug('  Start build changelog entries collection ...');
 
         $changelog_entries = [];
 
@@ -56,7 +56,7 @@ final class JiraServerChangelogEntriesBuilder implements ChangelogEntriesBuilder
             $changelog_entries[] = JiraServerChangelogEntryValueRepresentation::buildFromAPIResponse($history);
         }
 
-        $this->logger->debug("  Changelog entries built with success");
+        $this->logger->debug('  Changelog entries built with success');
 
         return $changelog_entries;
     }

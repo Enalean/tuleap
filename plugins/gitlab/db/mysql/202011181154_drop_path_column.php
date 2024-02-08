@@ -35,7 +35,7 @@ final class b202011181154_drop_path_column extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up(): void
     {
-        $sql = "ALTER TABLE plugin_gitlab_repository DROP COLUMN path";
+        $sql = 'ALTER TABLE plugin_gitlab_repository DROP COLUMN path';
 
         $this->db->alterTable('plugin_gitlab_repository', 'tuleap', 'path', $sql);
     }

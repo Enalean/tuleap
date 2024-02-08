@@ -80,7 +80,7 @@ final readonly class ProjectRepresentationBuilder
 
         $values = [];
         foreach ($description_fields_infos as $description_fields_info) {
-            $values[$description_fields_info["desc_name"]] = $this->getFieldValue(
+            $values[$description_fields_info['desc_name']] = $this->getFieldValue(
                 $fields_values,
                 $description_fields_info
             );

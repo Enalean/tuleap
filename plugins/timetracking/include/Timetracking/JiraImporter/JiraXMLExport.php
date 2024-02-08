@@ -75,7 +75,7 @@ class JiraXMLExport
         PlatformConfiguration $platform_configuration,
         IssueAPIRepresentationCollection $issue_representation_collection,
     ): void {
-        $this->logger->debug("Export timetracking");
+        $this->logger->debug('Export timetracking');
 
         $xml_timetracking = $this->exportDefaultTimetrackingConfiguration($xml_tracker);
 
@@ -88,10 +88,10 @@ class JiraXMLExport
 
     private function exportDefaultTimetrackingConfiguration(SimpleXMLElement $xml_tracker): SimpleXMLElement
     {
-        $this->logger->debug("Export default timetracking configuration");
+        $this->logger->debug('Export default timetracking configuration');
 
         $xml_timetracking = $xml_tracker->addChild('timetracking');
-        $xml_timetracking->addAttribute('is_enabled', "1");
+        $xml_timetracking->addAttribute('is_enabled', '1');
 
         $xml_timetracking_permissions      = $xml_timetracking->addChild('permissions');
         $xml_timetracking_permission_write = $xml_timetracking_permissions->addChild('write');
@@ -99,7 +99,7 @@ class JiraXMLExport
         $project_member_ugroup_name = ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS];
         $this->cdata_factory->insert(
             $xml_timetracking_permission_write,
-            "ugroup",
+            'ugroup',
             $project_member_ugroup_name
         );
 
@@ -112,11 +112,11 @@ class JiraXMLExport
         IssueAPIRepresentationCollection $issue_representation_collection,
     ): void {
         if (! $platform_configuration->isConfigurationAllowed(JiraTimetrackingConfigurationRetriever::CONFIGURATION_KEY)) {
-            $this->logger->debug("Jira platform does not have timetracking configured to be imported. Skipping.");
+            $this->logger->debug('Jira platform does not have timetracking configured to be imported. Skipping.');
             return;
         }
 
-        $this->logger->debug("Export saved times");
+        $this->logger->debug('Export saved times');
         foreach ($issue_representation_collection->getIssueRepresentationCollection() as $issue_representation) {
             $worklogs = $this->worklog_retriever->getIssueWorklogsFromAPI($issue_representation);
             foreach ($worklogs as $worklog) {
@@ -166,7 +166,7 @@ class JiraXMLExport
     ): string {
         $step_content = '';
         if ((int) $user_time->getId() === TrackerImporterUser::ID) {
-            $step_content = "Time added by " . $comment_author->getDisplayName() . " | ";
+            $step_content = 'Time added by ' . $comment_author->getDisplayName() . ' | ';
         }
 
         $step_content .= $worklog_comment;

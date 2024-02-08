@@ -34,7 +34,7 @@ final class InvalidXMLContentFault extends Fault
             implode(
                 PHP_EOL,
                 [
-                    _("XML content is not valid"),
+                    _('XML content is not valid'),
                     ...array_map(
                         static fn (\LibXMLError $xml_error) => "Line: $xml_error->line \t Column: $xml_error->column \t Message: " . trim($xml_error->message),
                         $errors,
@@ -46,6 +46,6 @@ final class InvalidXMLContentFault extends Fault
 
     public static function fromEmptyContent(): Fault
     {
-        return new self(_("XML content is empty"));
+        return new self(_('XML content is empty'));
     }
 }

@@ -27,7 +27,7 @@ final class ListValueDoNotExistComparisonException extends InvalidFieldException
     public function __construct(Tracker_FormElement_Field $field, $value)
     {
         $message = sprintf(
-            dgettext("tuleap-tracker", "The value '%s' doesn't exist for the list field '%s'."),
+            dgettext('tuleap-tracker', "The value '%s' doesn't exist for the list field '%s'."),
             $value,
             $field->getName()
         );

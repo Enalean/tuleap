@@ -64,14 +64,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class gitlfsPlugin extends \Plugin implements PluginWithConfigKeys
 {
-    public const SERVICE_SHORTNAME = "tuleap-gitlfs";
+    public const SERVICE_SHORTNAME = 'tuleap-gitlfs';
 
-    public const SERVICE_LABEL = "Git LFS";
+    public const SERVICE_LABEL = 'Git LFS';
 
-    #[ConfigKey("Toggle site admin ability to configure `git_lfs_max_file_size`")]
+    #[ConfigKey('Toggle site admin ability to configure `git_lfs_max_file_size`')]
     public const DISPLAY_CONFIG_KEY = 'git_lfs_display_config';
 
-    #[ConfigKey("Max size for individual git lfs files (in bytes). Default 536870912 (512MiB).")]
+    #[ConfigKey('Max size for individual git lfs files (in bytes). Default 536870912 (512MiB).')]
     public const MAX_FILE_SIZE_KEY = 'git_lfs_max_file_size';
 
     public function __construct($id)

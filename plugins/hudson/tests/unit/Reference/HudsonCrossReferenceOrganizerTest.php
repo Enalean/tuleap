@@ -57,75 +57,75 @@ final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItDontMoveCrossReferenceIfNotHudson(): void
     {
         $this->organizer_by_nature
-            ->method("getCrossReferencePresenters")
+            ->method('getCrossReferencePresenters')
             ->willReturn([CrossReferencePresenterBuilder::get(1)->withType('git')->build()]);
 
         $this->organizer_by_nature
             ->expects(self::never())
-            ->method("removeUnreadableCrossReference");
+            ->method('removeUnreadableCrossReference');
 
         $this->organizer_by_nature
             ->expects(self::never())
-            ->method("moveCrossReferenceToSection");
+            ->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeHudsonReferences($this->organizer_by_nature);
     }
 
     public function testItRemoveHudsonCrossReferenceIfUserIsNotMemberOfProject(): void
     {
-        $ref_build = CrossReferencePresenterBuilder::get(1)->withType("hudson_build")->withValue('23')->withProjectId(101)->build();
-        $ref_job   = CrossReferencePresenterBuilder::get(1)->withType("hudson_job")->withValue('MyJob')->withProjectId(101)->build();
+        $ref_build = CrossReferencePresenterBuilder::get(1)->withType('hudson_build')->withValue('23')->withProjectId(101)->build();
+        $ref_job   = CrossReferencePresenterBuilder::get(1)->withType('hudson_job')->withValue('MyJob')->withProjectId(101)->build();
 
         $this->organizer_by_nature
             ->expects(self::once())
-            ->method("getCrossReferencePresenters")
+            ->method('getCrossReferencePresenters')
             ->willReturn([$ref_build, $ref_job]);
 
         $this->user->expects(self::exactly(2))->method('isMember')->with(101)->willReturn(false);
 
         $this->organizer_by_nature
-            ->method("getCurrentUser")
+            ->method('getCurrentUser')
             ->willReturn($this->user);
 
-        $this->project_manager->expects(self::exactly(2))->method("getProject")->willReturn($this->project);
+        $this->project_manager->expects(self::exactly(2))->method('getProject')->willReturn($this->project);
 
         $this->organizer_by_nature
-            ->method("removeUnreadableCrossReference")
+            ->method('removeUnreadableCrossReference')
             ->withConsecutive([$ref_build], [$ref_job]);
 
         $this->organizer_by_nature
             ->expects(self::never())
-            ->method("moveCrossReferenceToSection");
+            ->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeHudsonReferences($this->organizer_by_nature);
     }
 
     public function testItMoveHudsonCrossReferenceInUnlabelledSection(): void
     {
-        $ref_build = CrossReferencePresenterBuilder::get(1)->withType("hudson_build")->withValue('23')->withProjectId(101)->build();
-        $ref_job   = CrossReferencePresenterBuilder::get(1)->withType("hudson_job")->withValue('MyJob')->withProjectId(101)->build();
+        $ref_build = CrossReferencePresenterBuilder::get(1)->withType('hudson_build')->withValue('23')->withProjectId(101)->build();
+        $ref_job   = CrossReferencePresenterBuilder::get(1)->withType('hudson_job')->withValue('MyJob')->withProjectId(101)->build();
 
         $this->organizer_by_nature
-            ->method("getCrossReferencePresenters")
+            ->method('getCrossReferencePresenters')
             ->willReturn([$ref_build, $ref_job]);
 
         $this->user->expects(self::exactly(2))->method('isMember')->with(101)->willReturn(true);
 
         $this->organizer_by_nature
-            ->method("getCurrentUser")
+            ->method('getCurrentUser')
             ->willReturn($this->user);
 
-        $this->project_manager->expects(self::exactly(2))->method("getProject")->willReturn($this->project);
+        $this->project_manager->expects(self::exactly(2))->method('getProject')->willReturn($this->project);
 
         $this->organizer_by_nature
             ->expects(self::never())
-            ->method("removeUnreadableCrossReference");
+            ->method('removeUnreadableCrossReference');
 
         $this->organizer_by_nature
-            ->method("moveCrossReferenceToSection")
+            ->method('moveCrossReferenceToSection')
             ->withConsecutive(
-                [$ref_build, ""],
-                [$ref_job, ""],
+                [$ref_build, ''],
+                [$ref_job, ''],
             );
 
         $this->organizer->organizeHudsonReferences($this->organizer_by_nature);

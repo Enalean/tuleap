@@ -163,9 +163,9 @@ class SearchReportBuilder
         $date_filter = new \Docman_FilterDate($metadata);
 
         $symbol_to_numeric = [
-            ">" => 1,
-            "=" => 0,
-            "<" => -1,
+            '>' => 1,
+            '=' => 0,
+            '<' => -1,
         ];
 
         $date_filter->setOperator($symbol_to_numeric[$search_date->operator]);

@@ -33,7 +33,7 @@ class DatabaseForge extends DatabasePostgres
     ) {
         global $wgDBtype;
 
-        $wgDBtype = "postgres";
+        $wgDBtype = 'postgres';
         return parent::__construct(
             $server,
             $user,
@@ -69,7 +69,7 @@ class DatabaseForge extends DatabasePostgres
 
         global $wgDBmwschema;
         if ($this->schemaExists($wgDBmwschema)) {
-            if (method_exists($this, "addIdentifierQuotes")) {
+            if (method_exists($this, 'addIdentifierQuotes')) {
                 $safeschema = $this->addIdentifierQuotes($wgDBmwschema);
             } else {
                 $safeschema = $wgDBmwschema;
@@ -83,10 +83,10 @@ class DatabaseForge extends DatabasePostgres
     public function query($sql, $fname = '', $tempIgnore = false)
     {
      /* ugh! */
-        $chk = "ALTER TABLE interwiki ";
+        $chk = 'ALTER TABLE interwiki ';
         $csz = strlen($chk);
         if (substr($sql, 0, $csz) == $chk) {
-            $sql = "ALTER TABLE public.plugin_mediawiki_interwiki " .
+            $sql = 'ALTER TABLE public.plugin_mediawiki_interwiki ' .
              substr($sql, $csz);
         }
         return DatabasePostgres::query($sql, $fname, $tempIgnore);

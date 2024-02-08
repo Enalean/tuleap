@@ -113,11 +113,11 @@ class FileRepresentation
 
     private static function retrieveOnlyFileName(FRSFile $file): string
     {
-        if (preg_match("/^.+\/(.+)$/", $file->getFileName(), $matches)) {
+        if (preg_match('/^.+\/(.+)$/', $file->getFileName(), $matches)) {
             return $matches[1];
         }
 
-        return "";
+        return '';
     }
 
     private static function getUser(FRSFile $file): ?UserRepresentation
@@ -149,7 +149,7 @@ class FileRepresentation
         $processor_dao = new FRSProcessorDao();
         $processor     = $processor_dao->searchById($file->getProcessorID());
 
-        return $processor["name"] ?? null;
+        return $processor['name'] ?? null;
     }
 
     private static function retrieveTypeLabel(FRSFile $file): ?string
@@ -157,6 +157,6 @@ class FileRepresentation
         $type_dao = new FRSFileTypeDao();
         $type     = $type_dao->searchById($file->getTypeID());
 
-        return $type["name"] ?? null;
+        return $type['name'] ?? null;
     }
 }

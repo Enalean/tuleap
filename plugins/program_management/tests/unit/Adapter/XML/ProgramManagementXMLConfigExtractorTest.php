@@ -160,7 +160,7 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
             ProgramForAdministrationIdentifierBuilder::build()
         );
 
-        self::assertSame(["101_3"], $ugroups);
+        self::assertSame(['101_3'], $ugroups);
     }
 
     public function testItDoesNothingWhenThereAreNoCustomisations(): void

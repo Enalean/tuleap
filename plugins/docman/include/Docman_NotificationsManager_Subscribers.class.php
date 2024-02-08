@@ -113,7 +113,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
             case self::MESSAGE_ADDED:
                 $msg .= dgettext(
                     'tuleap-docman',
-                    "You are receiving this message because you were added to the monitoring list of this item:"
+                    'You are receiving this message because you were added to the monitoring list of this item:'
                 ) . "\n";
                 $msg .= $itemUrl;
                 $msg .= $separator;
@@ -122,7 +122,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
             case self::MESSAGE_REMOVED:
                 $msg .= dgettext(
                     'tuleap-docman',
-                    "You are receiving this message because you were removed from the monitoring list of this item:"
+                    'You are receiving this message because you were removed from the monitoring list of this item:'
                 ) . "\n";
                 $msg .= $itemUrl;
                 $msg .= $separator;

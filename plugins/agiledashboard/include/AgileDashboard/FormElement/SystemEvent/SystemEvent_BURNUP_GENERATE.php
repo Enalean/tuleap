@@ -91,7 +91,7 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
         $artifact_id = $this->getArtifactIdFromParameters();
         $artifact    = $this->artifact_factory->getArtifactById($artifact_id);
         if ($artifact === null) {
-            $this->warning("Unable to find artifact " . $artifact_id);
+            $this->warning('Unable to find artifact ' . $artifact_id);
 
             return false;
         }
@@ -115,9 +115,9 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
             );
         }
 
-        $this->logger->debug("Calculating burnup for artifact #" . $artifact_id);
+        $this->logger->debug('Calculating burnup for artifact #' . $artifact_id);
         if (! $burnup_information) {
-            $warning = "Can't generate cache for artifact #" . $artifact_id . ". Please check your burnup configuration";
+            $warning = "Can't generate cache for artifact #" . $artifact_id . '. Please check your burnup configuration';
             $this->warning($warning);
             $this->logger->debug($warning);
 
@@ -139,7 +139,7 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
         }
 
         if ($burnup_period === null) {
-            $warning = "Skipped cache for artifact #" . $artifact_id . ". Not able to compute burnup period.";
+            $warning = 'Skipped cache for artifact #' . $artifact_id . '. Not able to compute burnup period.';
             $this->warning($warning);
             $this->logger->debug($warning);
             return false;
@@ -154,7 +154,7 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
 
         $planning_infos = $this->planning_dao->searchByMilestoneTrackerId($artifact->getTrackerId());
         if (! $planning_infos) {
-            $warning = "Artifact artifact #" . $artifact_id . " does not belong to a planning";
+            $warning = 'Artifact artifact #' . $artifact_id . ' does not belong to a planning';
             $this->warning($warning);
             $this->logger->debug($warning);
             return false;
@@ -162,7 +162,7 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
 
         $backlog_trackers_ids = $this->planning_factory->getBacklogTrackersIds($planning_infos['id']);
         foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burnup_period, $yesterday) as $worked_day) {
-            $this->logger->debug("Day " . date("Y-m-d H:i:s", $worked_day));
+            $this->logger->debug('Day ' . date('Y-m-d H:i:s', $worked_day));
 
             $effort       = $this->burnup_calculator->getValue($burnup_information['id'], $worked_day, $backlog_trackers_ids);
             $team_effort  = $effort->getTeamEffort();
@@ -195,7 +195,7 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
             );
         }
 
-        $this->logger->debug("End calculs for artifact #" . $artifact_id);
+        $this->logger->debug('End calculs for artifact #' . $artifact_id);
         $this->done();
 
         return true;

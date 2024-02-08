@@ -38,7 +38,7 @@ final class FilenamePatternFeedbackHandlerTest extends TestCase
             $feedback_wrapper
         );
 
-        $filename_pattern_feedback->getFilenamePatternUpdateFeedback(101, new FilenamePattern("Athena#\${ID}", false));
+        $filename_pattern_feedback->getFilenamePatternUpdateFeedback(101, new FilenamePattern('Athena#${ID}', false));
         self::assertEquals('info', $feedback_wrapper->getLevel());
     }
 

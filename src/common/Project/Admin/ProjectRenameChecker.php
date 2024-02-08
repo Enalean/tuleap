@@ -36,7 +36,7 @@ class ProjectRenameChecker
     /**
      * @var string
      */
-    private $message = "";
+    private $message = '';
 
     public function __construct(EventManager $event_manager)
     {

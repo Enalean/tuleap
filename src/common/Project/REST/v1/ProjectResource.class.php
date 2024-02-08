@@ -321,7 +321,7 @@ class ProjectResource extends AuthenticatedResource
         if ($creation_data === null) {
             throw new RestException(
                 400,
-                "Impossible to build Project data creation with the provided JSON content."
+                'Impossible to build Project data creation with the provided JSON content.'
             );
         }
 
@@ -381,7 +381,7 @@ class ProjectResource extends AuthenticatedResource
                             return $project_from_archive_representation;
                         }
 
-                        throw new RestException(500, "Failed to return a representation");
+                        throw new RestException(500, 'Failed to return a representation');
                     },
                     function (Fault $fault): void {
                         if ($fault instanceof InvalidXMLContentFault || $fault instanceof NoTemplateProvidedFault) {
@@ -410,7 +410,7 @@ class ProjectResource extends AuthenticatedResource
                 ),
                 UserManager::instance(),
                 new LocaleSwitcher(),
-                "mail-project-register-admin"
+                'mail-project-register-admin'
             ),
             $this->getBackendLogger()
         );
@@ -660,7 +660,7 @@ class ProjectResource extends AuthenticatedResource
         $project = $this->project_manager->getProject($project_id);
 
         if ($project->isError() || $project->getStatus() === Project::STATUS_CREATING_FROM_ARCHIVE) {
-            throw new RestException(404, "Project does not exist");
+            throw new RestException(404, 'Project does not exist');
         }
 
         return $project;

@@ -60,26 +60,26 @@ final class BoundDecoratorSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItHasSpecificSaveForLegacyColor(): void
     {
         $this->bind_decorator_dao->shouldReceive('save')->with(1024, 255, 255, 255)->once();
-        $this->bound_decorator_saver->save($this->field, 1024, "#FFFFFF");
+        $this->bound_decorator_saver->save($this->field, 1024, '#FFFFFF');
     }
 
     public function testItHasSpecificSaveForNoneLegacyColor(): void
     {
         $this->bind_decorator_dao->shouldReceive('saveNoneLegacyColor')
             ->with($this->field_id, 255, 255, 255)->once();
-        $this->bound_decorator_saver->save($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, "#FFFFFF");
+        $this->bound_decorator_saver->save($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, '#FFFFFF');
     }
 
     public function testItHasSpecificSaveForTlpColor(): void
     {
-        $this->bind_decorator_dao->shouldReceive('saveTlpColor')->with(1024, "peggy-pink")->once();
-        $this->bound_decorator_saver->save($this->field, 1024, "peggy-pink");
+        $this->bind_decorator_dao->shouldReceive('saveTlpColor')->with(1024, 'peggy-pink')->once();
+        $this->bound_decorator_saver->save($this->field, 1024, 'peggy-pink');
     }
 
     public function testItHasSpecificSaveForNoneTlpColor(): void
     {
         $this->bind_decorator_dao->shouldReceive('saveNoneTlpColor')
-            ->with($this->field_id, "peggy-pink")->once();
-        $this->bound_decorator_saver->save($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, "peggy-pink");
+            ->with($this->field_id, 'peggy-pink')->once();
+        $this->bound_decorator_saver->save($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, 'peggy-pink');
     }
 }

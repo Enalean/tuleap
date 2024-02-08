@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe\Events;
 
 class DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent
 {
-    public const NAME = "doesAPluginRenderAChartBasedOnSemanticTimeframeForTracker";
+    public const NAME = 'doesAPluginRenderAChartBasedOnSemanticTimeframeForTracker';
 
     /**
      * @var \Tracker

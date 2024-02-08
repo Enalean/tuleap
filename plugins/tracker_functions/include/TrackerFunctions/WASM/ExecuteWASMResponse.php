@@ -44,7 +44,7 @@ final class ExecuteWASMResponse implements WASMResponseExecutor
     {
         try {
             $this->handler->handle($response->values, $artifact, new TuleapFunctionsUser(), $response->comment);
-            $this->logger->debug("Artifact update successful");
+            $this->logger->debug('Artifact update successful');
         } catch (RestException $exception) {
             return Result::err(Fault::fromThrowable($exception));
         }

@@ -48,7 +48,7 @@ final class Planning_TrackerPresenterTest extends \Tuleap\Test\PHPUnit\TestCase 
         $this->planning = \Mockery::spy(\Planning::class);
         $this->tracker  = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(10);
-        $this->tracker->shouldReceive('getName')->andReturn("name");
+        $this->tracker->shouldReceive('getName')->andReturn('name');
         $this->tracker_id       = $this->tracker->getId();
         $this->other_tracker_id = $this->tracker->getId() + 1;
         $this->presenter        = new Planning_TrackerPresenter($this->planning, $this->tracker);

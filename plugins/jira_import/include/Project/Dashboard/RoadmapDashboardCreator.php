@@ -42,26 +42,26 @@ class RoadmapDashboardCreator
                 $logger->info("Epic tracker found. Its XML id is: $epic_xml_id");
 
                 $found_semantic = $project_xml->xpath('/project/trackers/tracker[@id="' . $epic_xml_id . '"]/semantics/semantic[@type="timeframe"]');
-                $logger->info("Timeframe semantic found for Epic tracker.");
+                $logger->info('Timeframe semantic found for Epic tracker.');
                 if (is_array($found_semantic) && count($found_semantic) > 0) {
-                    $xml_dashboard_roadmap = $xml_dashboards->addChild("dashboard");
+                    $xml_dashboard_roadmap = $xml_dashboards->addChild('dashboard');
                     $xml_dashboard_roadmap->addAttribute('name', 'Roadmap');
 
-                    $xml_dashboard_roadmap_column = $xml_dashboard_roadmap->addChild("line")->addChild("column");
+                    $xml_dashboard_roadmap_column = $xml_dashboard_roadmap->addChild('line')->addChild('column');
 
-                    $xml_roadmap_widget = $xml_dashboard_roadmap_column->addChild("widget");
-                    $xml_roadmap_widget->addAttribute("name", RoadmapProjectWidget::ID);
+                    $xml_roadmap_widget = $xml_dashboard_roadmap_column->addChild('widget');
+                    $xml_roadmap_widget->addAttribute('name', RoadmapProjectWidget::ID);
 
-                    $xml_roadmap_widget_preference = $xml_roadmap_widget->addChild("preference");
-                    $xml_roadmap_widget_preference->addAttribute("name", "roadmap");
-
-                    $xml_roadmap_widget_preference
-                        ->addChild("value", "Roadmap")
-                        ->addAttribute("name", "title");
+                    $xml_roadmap_widget_preference = $xml_roadmap_widget->addChild('preference');
+                    $xml_roadmap_widget_preference->addAttribute('name', 'roadmap');
 
                     $xml_roadmap_widget_preference
-                        ->addChild("value", $epic_xml_id)
-                        ->addAttribute("name", "tracker_id");
+                        ->addChild('value', 'Roadmap')
+                        ->addAttribute('name', 'title');
+
+                    $xml_roadmap_widget_preference
+                        ->addChild('value', $epic_xml_id)
+                        ->addAttribute('name', 'tracker_id');
                 }
             }
         }

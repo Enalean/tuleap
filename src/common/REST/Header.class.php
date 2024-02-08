@@ -47,8 +47,8 @@ class Header
     public const X_DISK_USAGE                = 'X-DISK-USAGE';
     public const X_UPLOAD_MAX_FILE_CHUNKSIZE = 'X-UPLOAD-MAX-FILE-CHUNKSIZE';
 
-    public const X_RATELIMIT_REMAINING = "X-RateLimit-Remaining";
-    public const X_RATELIMIT_LIMIT     = "X-RateLimit-Limit";
+    public const X_RATELIMIT_REMAINING = 'X-RateLimit-Remaining';
+    public const X_RATELIMIT_LIMIT     = 'X-RateLimit-Limit';
 
     public const RFC1123 = 'D, d M Y H:i:s \G\M\T';
 

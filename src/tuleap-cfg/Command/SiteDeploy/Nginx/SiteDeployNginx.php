@@ -67,12 +67,12 @@ class SiteDeployNginx
     {
         $should_tls_certificate_be_generated = false;
 
-        $this->logger->info("Start configuration");
+        $this->logger->info('Start configuration');
 
         $this->common->deployConfigurationChunks();
 
         if (! file_exists($this->nginx_base_dir . '/conf.d/tuleap.conf')) {
-            $this->logger->info("Generate tuleap.conf");
+            $this->logger->info('Generate tuleap.conf');
             $this->common->replacePlaceHolderInto(
                 $this->tuleap_base_dir . '/src/etc/nginx/tuleap.conf.dist',
                 $this->nginx_base_dir . '/conf.d/tuleap.conf',
@@ -109,6 +109,6 @@ class SiteDeployNginx
             );
         }
 
-        $this->logger->info("Configuration done!");
+        $this->logger->info('Configuration done!');
     }
 }

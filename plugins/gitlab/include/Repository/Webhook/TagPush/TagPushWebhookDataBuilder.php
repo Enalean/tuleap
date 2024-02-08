@@ -50,15 +50,15 @@ class TagPushWebhookDataBuilder
         }
 
         if (! is_string($tag_push_content[self::REF_KEY])) {
-            throw new InvalidValueFormatException(self::REF_KEY, "string");
+            throw new InvalidValueFormatException(self::REF_KEY, 'string');
         }
 
         if (! is_string($tag_push_content[self::BEFORE_KEY])) {
-            throw new InvalidValueFormatException(self::BEFORE_KEY, "string");
+            throw new InvalidValueFormatException(self::BEFORE_KEY, 'string');
         }
 
         if (! is_string($tag_push_content[self::AFTER_KEY])) {
-            throw new InvalidValueFormatException(self::AFTER_KEY, "string");
+            throw new InvalidValueFormatException(self::AFTER_KEY, 'string');
         }
 
         return new TagPushWebhookData(

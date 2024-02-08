@@ -30,7 +30,7 @@ class b201604140955_add_nature_format_in_table_columns extends \Tuleap\ForgeUpgr
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_report_renderer_table_columns ADD COLUMN artlink_nature_format VARCHAR(255) NULL";
+        $sql = 'ALTER TABLE tracker_report_renderer_table_columns ADD COLUMN artlink_nature_format VARCHAR(255) NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding artlink_nature_format column in table columns: ' . implode(', ', $this->db->dbh->errorInfo()));

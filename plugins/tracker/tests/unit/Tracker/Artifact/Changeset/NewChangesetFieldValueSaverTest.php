@@ -53,7 +53,7 @@ final class NewChangesetFieldValueSaverTest extends \Tuleap\Test\PHPUnit\TestCas
         $changeset_value_saver = SaveChangesetValueStub::buildStoreField();
         $saver                 = new NewChangesetFieldValueSaver($this->fields_retriever, $changeset_value_saver);
 
-        $this->fields_retriever->method("getFields")->willReturn(
+        $this->fields_retriever->method('getFields')->willReturn(
             [TextFieldBuilder::aTextField(123)->build()]
         );
 
@@ -73,7 +73,7 @@ final class NewChangesetFieldValueSaverTest extends \Tuleap\Test\PHPUnit\TestCas
         $changeset_value_saver = SaveChangesetValueStub::buildFail();
         $saver                 = new NewChangesetFieldValueSaver($this->fields_retriever, $changeset_value_saver);
 
-        $this->fields_retriever->method("getFields")->willReturn(
+        $this->fields_retriever->method('getFields')->willReturn(
             [TextFieldBuilder::aTextField(123)->build()]
         );
 

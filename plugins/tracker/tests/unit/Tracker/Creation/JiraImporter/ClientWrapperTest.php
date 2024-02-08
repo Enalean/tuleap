@@ -53,7 +53,7 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->client  = \Mockery::mock(ClientInterface::class);
         $this->factory = \Mockery::mock(RequestFactoryInterface::class);
-        $this->wrapper = new JiraCloudClient($this->client, $this->factory, "https://example.com");
+        $this->wrapper = new JiraCloudClient($this->client, $this->factory, 'https://example.com');
     }
 
     public function testItBuildsAnUrlFromLatestAPIAndReturnContent(): void
@@ -61,14 +61,14 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $response      = \Mockery::mock(ResponseInterface::class);
         $response_body = \Mockery::mock(StreamInterface::class);
 
-        $response_body->shouldReceive('getContents')->andReturn("")->once();
+        $response_body->shouldReceive('getContents')->andReturn('')->once();
 
         $response->shouldReceive('getBody')->andReturn($response_body)->once();
         $response->shouldReceive('getStatusCode')->andReturn(200)->once();
         $this->factory->shouldReceive('createRequest')
-            ->withArgs(['GET', "https://example.com/rest/api/3/project"])->once();
+            ->withArgs(['GET', 'https://example.com/rest/api/3/project'])->once();
         $this->client->shouldReceive('sendRequest')->andReturn($response)->once();
-        $this->wrapper->getUrl("/rest/api/3/project");
+        $this->wrapper->getUrl('/rest/api/3/project');
     }
 
     public function testItThrowsAnExceptionIfStatusCodeIsNot200(): void
@@ -77,13 +77,13 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $response->shouldReceive('getStatusCode')->andReturn(403);
         $response->shouldReceive('getBody')->andReturn('');
-        $response->shouldReceive('getReasonPhrase')->andReturn("Forbidden");
+        $response->shouldReceive('getReasonPhrase')->andReturn('Forbidden');
         $this->factory->shouldReceive('createRequest')
-            ->withArgs(['GET', "https://example.com/rest/api/3/project"])->once()->andReturn(\Mockery::spy(RequestInterface::class));
+            ->withArgs(['GET', 'https://example.com/rest/api/3/project'])->once()->andReturn(\Mockery::spy(RequestInterface::class));
         $this->client->shouldReceive('sendRequest')->andReturn($response)->once();
 
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionCode(403);
-        $this->wrapper->getUrl("/rest/api/3/project");
+        $this->wrapper->getUrl('/rest/api/3/project');
     }
 }

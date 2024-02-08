@@ -75,7 +75,7 @@ class DocmanMetadataInputValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $validated_input = $this->validator->validateInput($metadata, $value);
 
-        $expected_date = DateTime::createFromFormat("Y-m-d H:i:s", '2019-08-02 00:00:00');
+        $expected_date = DateTime::createFromFormat('Y-m-d H:i:s', '2019-08-02 00:00:00');
         $this->assertEquals($validated_input, $expected_date->getTimestamp());
     }
 

@@ -165,7 +165,7 @@ class Docman_MetadataDao extends DataAccessObject
     {
         $inserted = $this->update($sql);
         if ($inserted) {
-            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            $dar = $this->retrieve('SELECT LAST_INSERT_ID() AS id');
             if ($row = $dar->getRow()) {
                 $inserted = $row['id'];
             } else {

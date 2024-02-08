@@ -28,9 +28,9 @@ class MoveActionAllowedDAO extends DataAccessObject
 {
     public function isMoveActionAllowedInTracker(int $tracker_id): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_tracker_forbidden_move_action
-                WHERE tracker_id = ?";
+                WHERE tracker_id = ?';
 
         $rows = $this->getDB()->run($sql, $tracker_id);
 

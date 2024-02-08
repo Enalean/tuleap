@@ -26,7 +26,7 @@ class Statistics_ConfigurationDao extends DataAccessObject
 {
     public function isDailyPurgeActivated()
     {
-        $sql = "SELECT daily_purge_is_activated FROM plugin_statistics_configuration";
+        $sql = 'SELECT daily_purge_is_activated FROM plugin_statistics_configuration';
 
         $row = $this->retrieve($sql)->getRow();
 
@@ -37,14 +37,14 @@ class Statistics_ConfigurationDao extends DataAccessObject
     {
         $this->resetDailyPurgeConfiguration();
 
-        $sql = "REPLACE INTO plugin_statistics_configuration (daily_purge_is_activated) VALUES (1)";
+        $sql = 'REPLACE INTO plugin_statistics_configuration (daily_purge_is_activated) VALUES (1)';
 
         return $this->update($sql);
     }
 
     private function resetDailyPurgeConfiguration()
     {
-        $sql = "TRUNCATE TABLE plugin_statistics_configuration";
+        $sql = 'TRUNCATE TABLE plugin_statistics_configuration';
 
         return $this->update($sql);
     }

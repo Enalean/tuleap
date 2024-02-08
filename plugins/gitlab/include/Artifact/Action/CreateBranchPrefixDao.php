@@ -27,18 +27,18 @@ class CreateBranchPrefixDao extends DataAccessObject implements SaveIntegrationB
 {
     public function setCreateBranchPrefixForIntegration(int $integration_id, string $prefix): void
     {
-        $sql = "REPLACE INTO plugin_gitlab_repository_integration_create_branch_prefix
+        $sql = 'REPLACE INTO plugin_gitlab_repository_integration_create_branch_prefix
             (integration_id, create_branch_prefix)
-            VALUES (?, ?)";
+            VALUES (?, ?)';
 
         $this->getDB()->run($sql, $integration_id, $prefix);
     }
 
     public function searchCreateBranchPrefixForIntegration(int $integration_id): string
     {
-        $sql = "SELECT create_branch_prefix
+        $sql = 'SELECT create_branch_prefix
             FROM plugin_gitlab_repository_integration_create_branch_prefix
-            WHERE integration_id = ?";
+            WHERE integration_id = ?';
 
         return $this->getDB()->single($sql, [$integration_id]) ?: '';
     }

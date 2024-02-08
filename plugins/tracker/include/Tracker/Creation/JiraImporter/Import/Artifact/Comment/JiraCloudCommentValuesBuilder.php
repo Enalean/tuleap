@@ -43,7 +43,7 @@ final class JiraCloudCommentValuesBuilder implements CommentValuesBuilder
      */
     public function buildCommentCollectionForIssue(string $jira_issue_key): array
     {
-        $this->logger->debug("Start build comment collection ...");
+        $this->logger->debug('Start build comment collection ...');
         $comment_collection = [];
 
         $iterator = JiraCollectionBuilder::iterateUntilTotal(
@@ -56,7 +56,7 @@ final class JiraCloudCommentValuesBuilder implements CommentValuesBuilder
             $comment_collection[] = JiraCloudComment::buildFromAPIResponse($comment);
         }
 
-        $this->logger->debug("End build comment collection ...");
+        $this->logger->debug('End build comment collection ...');
 
         return $comment_collection;
     }

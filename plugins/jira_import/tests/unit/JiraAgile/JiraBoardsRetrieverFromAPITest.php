@@ -59,11 +59,11 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
                 assertSame('scrum', $url_query_parts['type']);
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "total"      => 0,
-                    "isLast"     => true,
-                    "values"     => [],
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'total'      => 0,
+                    'isLast'     => true,
+                    'values'     => [],
                 ];
             }
         };
@@ -79,16 +79,16 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
             public function getUrl(string $url): ?array
             {
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "total"      => 1,
-                    "isLast"     => true,
-                    "values"     => [
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'total'      => 1,
+                    'isLast'     => true,
+                    'values'     => [
                         [
-                            "id"       => 1,
-                            "self"     => "https://example.com/rest/agile/1.0/board/1",
-                            "name"     => "SP board",
-                            "type"     => "scrum",
+                            'id'       => 1,
+                            'self'     => 'https://example.com/rest/agile/1.0/board/1',
+                            'name'     => 'SP board',
+                            'type'     => 'scrum',
                         ],
                     ],
                 ];
@@ -110,15 +110,15 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
             public function getUrl(string $url): ?array
             {
                 return [
-                    "id"       => 3,
-                    "self"     => "https://example.com/rest/agile/1.0/board/3",
-                    "name"     => "scrum board",
-                    "type"     => "scrum",
-                    "location" => [
-                        "projectId"   => 10040,
-                        "userId"      => 10040,
-                        "projectName" => "Scrum Project",
-                        "projectKey"  => "SP",
+                    'id'       => 3,
+                    'self'     => 'https://example.com/rest/agile/1.0/board/3',
+                    'name'     => 'scrum board',
+                    'type'     => 'scrum',
+                    'location' => [
+                        'projectId'   => 10040,
+                        'userId'      => 10040,
+                        'projectName' => 'Scrum Project',
+                        'projectKey'  => 'SP',
                     ],
                 ];
             }
@@ -139,15 +139,15 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
             public function getUrl(string $url): ?array
             {
                 return [
-                    "id"       => 3,
-                    "self"     => "https://example.com/rest/agile/1.0/board/3",
-                    "name"     => "scrum board",
-                    "type"     => "scrum",
-                    "location" => [
-                        "projectId"   => 10040,
-                        "userId"      => 10040,
-                        "projectName" => "Scrum Project",
-                        "projectKey"  => "SP",
+                    'id'       => 3,
+                    'self'     => 'https://example.com/rest/agile/1.0/board/3',
+                    'name'     => 'scrum board',
+                    'type'     => 'scrum',
+                    'location' => [
+                        'projectId'   => 10040,
+                        'userId'      => 10040,
+                        'projectName' => 'Scrum Project',
+                        'projectKey'  => 'SP',
                     ],
                 ];
             }
@@ -166,10 +166,10 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
             public function getUrl(string $url): ?array
             {
                 return [
-                    "id"       => 3,
-                    "self"     => "https://example.com/rest/agile/1.0/board/3",
-                    "name"     => "scrum board",
-                    "type"     => "scrum",
+                    'id'       => 3,
+                    'self'     => 'https://example.com/rest/agile/1.0/board/3',
+                    'name'     => 'scrum board',
+                    'type'     => 'scrum',
                 ];
             }
         };
@@ -189,10 +189,10 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
             public function getUrl(string $url): ?array
             {
                 return [
-                    "id"       => 3,
-                    "self"     => "https://example.com/rest/agile/1.0/board/3",
-                    "name"     => "scrum board",
-                    "type"     => "scrum",
+                    'id'       => 3,
+                    'self'     => 'https://example.com/rest/agile/1.0/board/3',
+                    'name'     => 'scrum board',
+                    'type'     => 'scrum',
                 ];
             }
         };
@@ -210,15 +210,15 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
             public function getUrl(string $url): ?array
             {
                 return [
-                    "id"       => 3,
-                    "self"     => "https://example.com/rest/agile/1.0/board/3",
-                    "name"     => "Other type board",
-                    "type"     => "other_type",
-                    "location" => [
-                        "projectId"   => 10040,
-                        "userId"      => 10040,
-                        "projectName" => "Scrum Project",
-                        "projectKey"  => "SP",
+                    'id'       => 3,
+                    'self'     => 'https://example.com/rest/agile/1.0/board/3',
+                    'name'     => 'Other type board',
+                    'type'     => 'other_type',
+                    'location' => [
+                        'projectId'   => 10040,
+                        'userId'      => 10040,
+                        'projectName' => 'Scrum Project',
+                        'projectKey'  => 'SP',
                     ],
                 ];
             }

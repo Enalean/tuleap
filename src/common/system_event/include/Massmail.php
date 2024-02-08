@@ -33,7 +33,7 @@ use Tuleap\Massmail\RecipientUsersRetriever;
  */
 class Massmail extends SystemEvent
 {
-    #[FeatureFlagConfigKey("Feature flag to allow massmail feature to send each mails one by one.")]
+    #[FeatureFlagConfigKey('Feature flag to allow massmail feature to send each mails one by one.')]
     public const FEATURE_FLAG_KEY = 'send_massmail_one_by_one';
 
     /**
@@ -138,10 +138,10 @@ class Massmail extends SystemEvent
         string &$errors,
         bool &$has_success,
     ): void {
-        $mail_logger->info("Send Massmail one by one");
+        $mail_logger->info('Send Massmail one by one');
         foreach ($recipients as $recipient) {
             $to_mail = $recipient->email;
-            $mail_logger->debug("user email: " . $to_mail);
+            $mail_logger->debug('user email: ' . $to_mail);
             $mail = $this->buildMail($parameters);
             $mail->setTo($to_mail, true);
             if ($mail->send()) {
@@ -163,14 +163,14 @@ class Massmail extends SystemEvent
         string &$errors,
         bool &$has_success,
     ): void {
-        $mail_logger->info("Send Massmail in batch");
+        $mail_logger->info('Send Massmail in batch');
         $nb_rows = count($recipients);
         $tolist  = [];
 
         for ($i = 1; $i <= $nb_rows; $i++) {
             $tolist[] = $recipients[$i - 1]->email;
             if ($i % 25 == 0) {
-                $mail_logger->debug("batch of emails: " . implode(', ', $tolist));
+                $mail_logger->debug('batch of emails: ' . implode(', ', $tolist));
                 foreach ($tolist as $to) {
                     $mail->setBcc($to, true);
                 }
@@ -186,7 +186,7 @@ class Massmail extends SystemEvent
 
         //send the last of the messages.
         if (count($tolist) > 0) {
-            $mail_logger->debug("batch of emails: " . implode(', ', $tolist));
+            $mail_logger->debug('batch of emails: ' . implode(', ', $tolist));
             foreach ($tolist as $to) {
                 $mail->setBcc($to, true);
             }

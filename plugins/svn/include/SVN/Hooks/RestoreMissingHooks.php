@@ -57,11 +57,11 @@ final class RestoreMissingHooks
                         )
                     ) {
                         $this->logger->warning(
-                            "Hooks for SVN repository `" . $repository->getName() . "` in project `" . $repository->getProject()->getPublicName() . "` were missing and have been restored."
+                            'Hooks for SVN repository `' . $repository->getName() . '` in project `' . $repository->getProject()->getPublicName() . '` were missing and have been restored.'
                         );
                     } else {
                         $this->logger->warning(
-                            "Error while resetting hooks for SVN repository `" . $repository->getName() . "` in project " . $repository->getProject()->getPublicName()
+                            'Error while resetting hooks for SVN repository `' . $repository->getName() . '` in project ' . $repository->getProject()->getPublicName()
                         );
                     }
                 }

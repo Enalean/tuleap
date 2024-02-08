@@ -123,7 +123,7 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config_manager
             ->expects(self::once())
             ->method('updateConfiguration')
-            ->with(self::PROJECT_ID, "1", $existing_config);
+            ->with(self::PROJECT_ID, '1', $existing_config);
 
         $this->update(
             $request,
@@ -153,7 +153,7 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config_manager
             ->expects(self::once())
             ->method('updateConfiguration')
-            ->with(self::PROJECT_ID, "1", $expected);
+            ->with(self::PROJECT_ID, '1', $expected);
 
         $this->update(
             $request,

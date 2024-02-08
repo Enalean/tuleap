@@ -21,7 +21,7 @@ class b201708101140_add_issue_tracker_to_trafficlights extends \Tuleap\ForgeUpgr
 {
     public function description()
     {
-        return "Add column issue_tracker_id to plugin_trafficlights table";
+        return 'Add column issue_tracker_id to plugin_trafficlights table';
     }
 
     public function preUp()
@@ -31,7 +31,7 @@ class b201708101140_add_issue_tracker_to_trafficlights extends \Tuleap\ForgeUpgr
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_trafficlights ADD COLUMN issue_tracker_id INT(11) NOT NULL";
+        $sql = 'ALTER TABLE plugin_trafficlights ADD COLUMN issue_tracker_id INT(11) NOT NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding issue_tracker_id column in table columns: ' . implode(', ', $this->db->dbh->errorInfo()));

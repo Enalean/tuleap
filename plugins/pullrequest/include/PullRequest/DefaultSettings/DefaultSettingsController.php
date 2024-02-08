@@ -49,7 +49,7 @@ class DefaultSettingsController implements DispatchableWithRequest
     {
         $project = $request->getProject();
         if (! $project->usesService(\gitPlugin::SERVICE_SHORTNAME)) {
-            throw new \Tuleap\Request\NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+            throw new \Tuleap\Request\NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
 
         \Tuleap\Project\ServiceInstrumentation::increment('git');
@@ -65,7 +65,7 @@ class DefaultSettingsController implements DispatchableWithRequest
         $is_merge_commit_allowed = (int) $request->get('is_merge_commit_allowed');
 
         $this->merge_setting_dao->saveDefaultSettings($project->getId(), $is_merge_commit_allowed);
-        $layout->addFeedback(\Feedback::INFO, dgettext("tuleap-pullrequest", "Default pull requests settings updated"));
+        $layout->addFeedback(\Feedback::INFO, dgettext('tuleap-pullrequest', 'Default pull requests settings updated'));
 
         $this->project_history_dao->groupAddHistory(
             self::HISTORY_FIELD_NAME,

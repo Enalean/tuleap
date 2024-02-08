@@ -42,21 +42,21 @@ final class GitTreeRepresentationFactoryTest extends TestCase
 
     public function testItThrowsExceptionIfTheGivenReferenceDoesNotExists(): void
     {
-        $ref = "this_is_not_a_ref";
+        $ref = 'this_is_not_a_ref';
 
         $git_repository = $this->createMock(Project::class);
         $git_repository->method('GetCommit')->with($ref)->willReturn(null);
 
         $this->expectException(GitRepositoryException::class);
 
-        $this->git_tree_representation_factory->getGitTreeRepresentation("any_path", $ref, $git_repository);
+        $this->git_tree_representation_factory->getGitTreeRepresentation('any_path', $ref, $git_repository);
     }
 
     public function testItThrowsAnExceptionIfTheGivenPathPointsToAFile(): void
     {
-        $ref  = "whatever_ref";
-        $hash = "whatever_hash";
-        $path = "whatever_path";
+        $ref  = 'whatever_ref';
+        $hash = 'whatever_hash';
+        $path = 'whatever_path';
 
         $commit = $this->createMock(Commit::class);
         $commit->method('PathToHash')->with($path)->willReturn($hash);
@@ -88,9 +88,9 @@ final class GitTreeRepresentationFactoryTest extends TestCase
 
     public function testItThrowsAnExceptionIfTheGivenPathPointsToNoWhere(): void
     {
-        $ref  = "whatever_ref";
-        $hash = "whatever_hash";
-        $path = "whatever_path";
+        $ref  = 'whatever_ref';
+        $hash = 'whatever_hash';
+        $path = 'whatever_path';
 
         $commit = $this->createMock(Commit::class);
         $commit->method('PathToHash')->with($path)->willReturn($hash);
@@ -121,15 +121,15 @@ final class GitTreeRepresentationFactoryTest extends TestCase
 
     public function testItReturnsACollectionOfGitTreeRepresentations(): void
     {
-        $ref  = "whatever_ref";
-        $hash = "whatever_hash";
-        $path = "whatever_path";
+        $ref  = 'whatever_ref';
+        $hash = 'whatever_hash';
+        $path = 'whatever_path';
 
         $commit = $this->createMock(Commit::class);
         $commit->method('PathToHash')->with($path)->willReturn($hash);
 
-        $dir_hash  = "1509a777f2e76bcfa151947721c8989ec13747c0";
-        $file_hash = "7b9e33f88c8e79eeebc819e6ea3bc6e6663e734f";
+        $dir_hash  = '1509a777f2e76bcfa151947721c8989ec13747c0';
+        $file_hash = '7b9e33f88c8e79eeebc819e6ea3bc6e6663e734f';
 
         $main_tree = $this->createMock(Tree::class);
 
@@ -177,25 +177,25 @@ final class GitTreeRepresentationFactoryTest extends TestCase
 
 
         $file1 = new Blob($git_repository, $file_hash);
-        $file1->SetPath("file1");
-        $file1->SetMode("100644");
+        $file1->SetPath('file1');
+        $file1->SetMode('100644');
 
         $file2 = new Blob($git_repository, $file_hash);
-        $file2->SetPath("file2");
-        $file2->SetMode("120000");
+        $file2->SetPath('file2');
+        $file2->SetMode('120000');
 
         $directory1 = new Tree($git_repository, $dir_hash);
-        $directory1->SetPath("directory1");
-        $directory1->SetMode("040000");
+        $directory1->SetPath('directory1');
+        $directory1->SetMode('040000');
 
 
         $main_directory_contents = [$file1, $directory1, $file2];
-        $main_tree->method("GetContents")->willReturn($main_directory_contents);
+        $main_tree->method('GetContents')->willReturn($main_directory_contents);
 
         $expected_representation = [
-            new GitTreeRepresentation($file1->GetMode(), "blob", "file1", "whatever_path/file1", $file_hash),
-            new GitTreeRepresentation($directory1->GetMode(), "tree", "directory1", "whatever_path/directory1", $dir_hash),
-            new GitTreeRepresentation($file2->GetMode(), "blob", "file2", "whatever_path/file2", $file_hash),
+            new GitTreeRepresentation($file1->GetMode(), 'blob', 'file1', 'whatever_path/file1', $file_hash),
+            new GitTreeRepresentation($directory1->GetMode(), 'tree', 'directory1', 'whatever_path/directory1', $dir_hash),
+            new GitTreeRepresentation($file2->GetMode(), 'blob', 'file2', 'whatever_path/file2', $file_hash),
         ];
 
         $representation = $this->git_tree_representation_factory->getGitTreeRepresentation($path, $ref, $git_repository);

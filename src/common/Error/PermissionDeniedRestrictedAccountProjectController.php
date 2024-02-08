@@ -55,10 +55,10 @@ class PermissionDeniedRestrictedAccountProjectController
     {
         $layout = $this->theme_manager->getBurningParrot($user);
         if ($layout === null) {
-            throw new \Exception("Could not load BurningParrot theme");
+            throw new \Exception('Could not load BurningParrot theme');
         }
 
-        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_("Project access error")));
+        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_('Project access error')));
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('codendi_dir') . '/src/templates/error/'
@@ -70,7 +70,7 @@ class PermissionDeniedRestrictedAccountProjectController
 
         $renderer->renderToPage(
             'permission-denied-restricted-account-project',
-            new ProjectPermissionDeniedPresenter($project, $this->getToken(), $placeholder, "/join-project-restricted-user-mail/")
+            new ProjectPermissionDeniedPresenter($project, $this->getToken(), $placeholder, '/join-project-restricted-user-mail/')
         );
 
         $layout->footer([]);
@@ -81,6 +81,6 @@ class PermissionDeniedRestrictedAccountProjectController
      */
     private function getToken()
     {
-        return new \CSRFSynchronizerToken("/join-project-restricted-user-mail/");
+        return new \CSRFSynchronizerToken('/join-project-restricted-user-mail/');
     }
 }

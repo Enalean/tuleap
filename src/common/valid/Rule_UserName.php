@@ -98,7 +98,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function containsIllegalChars($val)
     {
-        if (\strspn($val, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.") != \strlen($val)) {
+        if (\strspn($val, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.') != \strlen($val)) {
             $this->error = $GLOBALS['Language']->getText('include_account', 'illegal_char');
             return \true;
         }

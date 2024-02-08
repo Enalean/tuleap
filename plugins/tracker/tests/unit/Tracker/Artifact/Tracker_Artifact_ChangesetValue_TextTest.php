@@ -121,7 +121,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $field   = Mockery::mock(Tracker_FormElement_Field_Text::class);
         $field->shouldReceive('getTracker')->andReturn($tracker);
         $field->shouldReceive('getId')->andReturn(1);
-        $field->shouldReceive('getLabel')->andReturn("my field");
+        $field->shouldReceive('getLabel')->andReturn('my field');
 
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getId')->andReturn(101);
@@ -208,7 +208,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
     public function testItBuildTheHtmlTextValueRepresentation(): void
     {
         $user                 = Mockery::mock(PFUser::class);
-        $text                 = "<p>Problems with my code: <strong>example</strong></p>";
+        $text                 = '<p>Problems with my code: <strong>example</strong></p>';
         $field                = $this->getTextFieldWithProject();
         $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
             111,
@@ -227,7 +227,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
     public function testItBuildTheTextTextValueRepresentation(): void
     {
         $user                 = Mockery::mock(PFUser::class);
-        $text                 = "Ca débite, Ca débite";
+        $text                 = 'Ca débite, Ca débite';
         $field                = $this->getTextFieldWithProject();
         $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
             111,

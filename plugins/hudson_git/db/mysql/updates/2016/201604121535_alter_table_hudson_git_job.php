@@ -32,7 +32,7 @@ class b201604121535_alter_table_hudson_git_job extends \Tuleap\ForgeUpgrade\Buck
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_hudson_git_job MODIFY COLUMN job_url text NOT NULL";
+        $sql = 'ALTER TABLE plugin_hudson_git_job MODIFY COLUMN job_url text NOT NULL';
 
         $res = $this->db->dbh->exec($sql);
 

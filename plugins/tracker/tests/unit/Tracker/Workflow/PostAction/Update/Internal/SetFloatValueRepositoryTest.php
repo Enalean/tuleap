@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-require_once(__DIR__ . "/../TransitionFactory.php");
+require_once(__DIR__ . '/../TransitionFactory.php');
 
 use DataAccessQueryException;
 use Mockery;

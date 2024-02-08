@@ -161,7 +161,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                     SourceTrackerCollection $source_tracker_collection,
                     ConfigurationErrorsCollector $configuration_errors,
                 ): bool {
-                    $configuration_errors->addSemanticError("Timeframe", "timeframe", []);
+                    $configuration_errors->addSemanticError('Timeframe', 'timeframe', []);
                     return false;
                 }
             },
@@ -177,9 +177,9 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $collected_errors = $configuration_errors->getSemanticErrors();
         self::assertCount(3, $collected_errors);
-        self::assertStringContainsString("Title", $collected_errors[0]->semantic_name);
-        self::assertStringContainsString("Description", $collected_errors[1]->semantic_name);
-        self::assertStringContainsString("Timeframe", $collected_errors[2]->semantic_name);
+        self::assertStringContainsString('Title', $collected_errors[0]->semantic_name);
+        self::assertStringContainsString('Description', $collected_errors[1]->semantic_name);
+        self::assertStringContainsString('Timeframe', $collected_errors[2]->semantic_name);
     }
 
     public function testItStopsAtFirstErrorFound(): void
@@ -211,7 +211,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                     SourceTrackerCollection $source_tracker_collection,
                     ConfigurationErrorsCollector $configuration_errors,
                 ): bool {
-                    $configuration_errors->addSemanticError("Timeframe", "timeframe", []);
+                    $configuration_errors->addSemanticError('Timeframe', 'timeframe', []);
                     return false;
                 }
             },
@@ -228,6 +228,6 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $collected_errors = $configuration_errors->getSemanticErrors();
         self::assertCount(1, $collected_errors);
-        self::assertStringContainsString("Title", $collected_errors[0]->semantic_name);
+        self::assertStringContainsString('Title', $collected_errors[0]->semantic_name);
     }
 }

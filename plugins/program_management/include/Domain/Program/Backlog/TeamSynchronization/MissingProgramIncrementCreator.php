@@ -82,7 +82,7 @@ final class MissingProgramIncrementCreator
             return;
         }
 
-        $log_message->debug("Missing Program Increments #" . implode(',', $missing_milestones->missing_program_increments_ids));
+        $log_message->debug('Missing Program Increments #' . implode(',', $missing_milestones->missing_program_increments_ids));
 
         $program = ProgramIdentifier::fromId(
             $this->build_program,
@@ -110,7 +110,7 @@ final class MissingProgramIncrementCreator
             if (! $creation) {
                 $log_message->error(
                     sprintf(
-                        "Unable to build ProgramIncrementCreation from milestone %d in team %d of program %d.",
+                        'Unable to build ProgramIncrementCreation from milestone %d in team %d of program %d.',
                         $missing_milestone_id,
                         $event->getTeamId(),
                         $event->getProgramId()

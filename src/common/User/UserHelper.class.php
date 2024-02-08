@@ -72,7 +72,7 @@ class UserHelper implements BuildDisplayName
 
     public function _getCurrentUserUsernameDisplayPreference() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        return $this->_getUserManager()->getCurrentUser()->getPreference("username_display");
+        return $this->_getUserManager()->getCurrentUser()->getPreference('username_display');
     }
 
     public function _getUserManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
@@ -175,7 +175,7 @@ class UserHelper implements BuildDisplayName
         $order = '';
         switch ($this->_username_display) {
             case self::PREFERENCES_LOGIN_AND_NAME:
-                $order = "user.user_name";
+                $order = 'user.user_name';
                 break;
             case self::PREFERENCES_LOGIN:
                 $order = 'user.user_name';
@@ -184,7 +184,7 @@ class UserHelper implements BuildDisplayName
                 $order = 'user.realname';
                 break;
             default:
-                $order = "user.realname";
+                $order = 'user.realname';
                 break;
         }
         return $order;
@@ -310,7 +310,7 @@ class UserHelper implements BuildDisplayName
 
     public function getUserUrl(PFUser $user)
     {
-        return "/users/" . urlencode($user->getUserName());
+        return '/users/' . urlencode($user->getUserName());
     }
 
     public function getAbsoluteUserURL(PFUser $user): string

@@ -120,11 +120,11 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             '/rest/api/2/issueLinkType' => [
                 'issueLinkTypes' => [
                     [
-                        "id"      => "10000",
-                        "name"    => "Blocks",
-                        "inward"  => "is blocked by",
-                        "outward" => "blocks",
-                        "self"    => "https://jira.example.com/rest/api/3/issueLinkType/10000",
+                        'id'      => '10000',
+                        'name'    => 'Blocks',
+                        'inward'  => 'is blocked by',
+                        'outward' => 'blocks',
+                        'self'    => 'https://jira.example.com/rest/api/3/issueLinkType/10000',
                     ],
                 ],
             ],

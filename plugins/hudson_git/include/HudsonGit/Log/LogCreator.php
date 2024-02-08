@@ -89,7 +89,7 @@ class LogCreator
     {
         if ((int) $jenkins_server->getProject()->getID() !== (int) $log->getRepository()->getProject()->getID()) {
             throw new CannotCreateLogException(
-                dgettext("tuleap-hudson_git", "Provided job does not belong to the Jenkins server's project.")
+                dgettext('tuleap-hudson_git', "Provided job does not belong to the Jenkins server's project.")
             );
         }
         $this->checkLogCanBeCreated($log);
@@ -121,7 +121,7 @@ class LogCreator
     {
         if ($log->getStatusCode() === null && count($log->getJobUrlList()) === 0) {
             throw new CannotCreateLogException(
-                dgettext("tuleap-hudson_git", "Nothing has been triggered for this push.")
+                dgettext('tuleap-hudson_git', 'Nothing has been triggered for this push.')
             );
         }
     }

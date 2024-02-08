@@ -35,7 +35,7 @@ class ServiceControl
     public const INITV       = 'initv';
     public const SUPERVISORD = 'supervisord';
 
-    #[ConfigKey("Init mode for the platform (systemd, initv, supervisord)")]
+    #[ConfigKey('Init mode for the platform (systemd, initv, supervisord)')]
     public const FORGECONFIG_INIT_MODE = 'init_mode';
 
     public function getInitMode()

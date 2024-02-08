@@ -178,21 +178,21 @@ final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertTrue(isset($xml->trackers->tracker->timetracking));
         $xml_timetracking = $xml->trackers->tracker->timetracking;
-        self::assertSame("1", (string) $xml_timetracking['is_enabled']);
+        self::assertSame('1', (string) $xml_timetracking['is_enabled']);
 
         self::assertTrue(isset($xml_timetracking->permissions));
         self::assertTrue(isset($xml_timetracking->permissions->read));
         self::assertTrue(isset($xml_timetracking->permissions->write));
 
-        self::assertSame("project_admins", (string) $xml_timetracking->permissions->read->ugroup);
-        self::assertSame("project_members", (string) $xml_timetracking->permissions->write->ugroup);
+        self::assertSame('project_admins', (string) $xml_timetracking->permissions->read->ugroup);
+        self::assertSame('project_members', (string) $xml_timetracking->permissions->write->ugroup);
 
         self::assertCount(1, $xml_timetracking->time);
-        self::assertSame("45", (string) $xml_timetracking->time['artifact_id']);
-        self::assertSame("600", (string) $xml_timetracking->time->minutes);
-        self::assertSame("Step 01", (string) $xml_timetracking->time->step);
-        self::assertSame("2020-02-06T00:00:00+01:00", (string) $xml_timetracking->time->day);
-        self::assertSame("20004", (string) $xml_timetracking->time->user);
+        self::assertSame('45', (string) $xml_timetracking->time['artifact_id']);
+        self::assertSame('600', (string) $xml_timetracking->time->minutes);
+        self::assertSame('Step 01', (string) $xml_timetracking->time->step);
+        self::assertSame('2020-02-06T00:00:00+01:00', (string) $xml_timetracking->time->day);
+        self::assertSame('20004', (string) $xml_timetracking->time->user);
     }
 
     public function testItExportsNothingIfTimetrackingIsNotEnabled(): void

@@ -23,7 +23,7 @@ class b201405141602_remove_fontsize_preference extends \Tuleap\ForgeUpgrade\Buck
 {
     public function description()
     {
-        return "Remove fontsize user preference";
+        return 'Remove fontsize user preference';
     }
 
     public function preUp()
@@ -33,7 +33,7 @@ class b201405141602_remove_fontsize_preference extends \Tuleap\ForgeUpgrade\Buck
 
     public function up()
     {
-        $sql = "ALTER TABLE user DROP COLUMN fontsize";
+        $sql = 'ALTER TABLE user DROP COLUMN fontsize';
 
         $res = $this->db->dbh->exec($sql);
 

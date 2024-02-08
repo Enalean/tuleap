@@ -42,20 +42,20 @@ class WikiPlugin_CategoryPage extends WikiPlugin
 {
     public function getName()
     {
-        return _("CategoryPage");
+        return _('CategoryPage');
     }
 
     public function getDescription()
     {
-        return _("Create a Wiki page.");
+        return _('Create a Wiki page.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.2 $"
+            '$Revision: 1.2 $'
         );
     }
 

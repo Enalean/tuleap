@@ -247,7 +247,7 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
      */
     public function getTransitionId($workflow_id, $transition)
     {
-        $values = explode("_", $transition);
+        $values = explode('_', $transition);
         $from   = $values[0];
         $to     = $values[1];
         return $this->getTransitionDao()->searchTransitionId($workflow_id, $from, $to);

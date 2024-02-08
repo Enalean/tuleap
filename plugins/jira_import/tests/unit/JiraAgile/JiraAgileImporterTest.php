@@ -529,10 +529,10 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new FieldAndValueIDGenerator(),
             UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
             [
-                new IssueType("10000", "Epic", false),
-                new IssueType("10001", "Bug", false),
-                new IssueType("10002", "Subtask", true),
-                new IssueType("10003", "Story", false),
+                new IssueType('10000', 'Epic', false),
+                new IssueType('10001', 'Bug', false),
+                new IssueType('10002', 'Subtask', true),
+                new IssueType('10003', 'Story', false),
             ],
             'Epic'
         );
@@ -540,15 +540,15 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         assertTrue(isset($xml->agiledashboard->plannings->planning));
         $xml_planning = $xml->agiledashboard->plannings->planning;
 
-        assertSame("Sprint plan", (string) $xml_planning['name']);
-        assertSame("Sprint plan", (string) $xml_planning['plan_title']);
-        assertSame("T1", (string) $xml_planning['planning_tracker_id']);
-        assertSame("Backlog", (string) $xml_planning['backlog_title']);
+        assertSame('Sprint plan', (string) $xml_planning['name']);
+        assertSame('Sprint plan', (string) $xml_planning['plan_title']);
+        assertSame('T1', (string) $xml_planning['planning_tracker_id']);
+        assertSame('Backlog', (string) $xml_planning['backlog_title']);
 
         assertTrue(isset($xml_planning->backlogs));
         assertCount(2, $xml_planning->backlogs->children());
-        assertSame("10001", (string) $xml_planning->backlogs->backlog[0]);
-        assertSame("10003", (string) $xml_planning->backlogs->backlog[1]);
+        assertSame('10001', (string) $xml_planning->backlogs->backlog[0]);
+        assertSame('10003', (string) $xml_planning->backlogs->backlog[1]);
     }
 
     public function testItExportsCardwall(): void
@@ -563,9 +563,9 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getJiraBoard(),
             JiraBoardConfiguration::buildWithoutEstimationField(
                 [
-                    new JiraBoardConfigurationColumn("To Do"),
-                    new JiraBoardConfigurationColumn("On Going"),
-                    new JiraBoardConfigurationColumn("Done"),
+                    new JiraBoardConfigurationColumn('To Do'),
+                    new JiraBoardConfigurationColumn('On Going'),
+                    new JiraBoardConfigurationColumn('Done'),
                 ],
             ),
             new FieldAndValueIDGenerator(),
@@ -579,13 +579,13 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         assertTrue(isset($xml->cardwall->trackers->tracker));
 
         $xml_cardwall_tracker = $xml->cardwall->trackers->tracker;
-        assertSame("T1", (string) $xml_cardwall_tracker['id']);
+        assertSame('T1', (string) $xml_cardwall_tracker['id']);
 
         assertCount(3, $xml_cardwall_tracker->columns->children());
 
-        assertSame("To Do", (string) $xml_cardwall_tracker->columns->column[0]['label']);
-        assertSame("On Going", (string) $xml_cardwall_tracker->columns->column[1]['label']);
-        assertSame("Done", (string) $xml_cardwall_tracker->columns->column[2]['label']);
+        assertSame('To Do', (string) $xml_cardwall_tracker->columns->column[0]['label']);
+        assertSame('On Going', (string) $xml_cardwall_tracker->columns->column[1]['label']);
+        assertSame('Done', (string) $xml_cardwall_tracker->columns->column[2]['label']);
     }
 
     public function testItExportsTopBacklog(): void
@@ -609,9 +609,9 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getJiraBoard(),
             JiraBoardConfiguration::buildWithoutEstimationField(
                 [
-                    new JiraBoardConfigurationColumn("To Do"),
-                    new JiraBoardConfigurationColumn("On Going"),
-                    new JiraBoardConfigurationColumn("Done"),
+                    new JiraBoardConfigurationColumn('To Do'),
+                    new JiraBoardConfigurationColumn('On Going'),
+                    new JiraBoardConfigurationColumn('Done'),
                 ],
             ),
             new FieldAndValueIDGenerator(),
@@ -621,14 +621,14 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         assertTrue(isset($xml->agiledashboard->admin->scrum->explicit_backlog));
-        assertSame("1", (string) $xml->agiledashboard->admin->scrum->explicit_backlog['is_used']);
+        assertSame('1', (string) $xml->agiledashboard->admin->scrum->explicit_backlog['is_used']);
 
         assertTrue(isset($xml->agiledashboard->top_backlog));
         assertCount(3, $xml->agiledashboard->top_backlog->children());
 
-        assertSame("10000", (string) $xml->agiledashboard->top_backlog->artifact[0]['artifact_id']);
-        assertSame("10001", (string) $xml->agiledashboard->top_backlog->artifact[1]['artifact_id']);
-        assertSame("10002", (string) $xml->agiledashboard->top_backlog->artifact[2]['artifact_id']);
+        assertSame('10000', (string) $xml->agiledashboard->top_backlog->artifact[0]['artifact_id']);
+        assertSame('10001', (string) $xml->agiledashboard->top_backlog->artifact[1]['artifact_id']);
+        assertSame('10002', (string) $xml->agiledashboard->top_backlog->artifact[2]['artifact_id']);
     }
 
     private function getJiraAgileImport(): JiraAgileImporter

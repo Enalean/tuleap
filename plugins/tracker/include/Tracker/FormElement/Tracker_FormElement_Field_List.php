@@ -326,7 +326,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $operator              = $rest_criteria_value[Tracker_Report_REST::OPERATOR_PROPERTY_NAME];
 
         if ($operator !== Tracker_Report_REST::OPERATOR_CONTAINS) {
-            throw new Tracker_Report_InvalidRESTCriterionException("Unallowed operator for criterion field '$this->name' ($this->id). Allowed operators: [" . Tracker_Report_REST::OPERATOR_CONTAINS . "]");
+            throw new Tracker_Report_InvalidRESTCriterionException("Unallowed operator for criterion field '$this->name' ($this->id). Allowed operators: [" . Tracker_Report_REST::OPERATOR_CONTAINS . ']');
         }
 
         if (is_numeric($searched_field_values)) {

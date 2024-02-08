@@ -28,15 +28,15 @@ use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 final class PullRequestTestBuilder
 {
     private int $id                         = 15;
-    private string $title                   = "This is a title";
-    private string $description             = "This is a description";
+    private string $title                   = 'This is a title';
+    private string $description             = 'This is a description';
     private int $repository_id              = 5;
     private int $user_id                    = 105;
     private int $creation_timestamp         = 1679910276;
-    private string $source_branch_name      = "pr-1";
-    private string $destination_branch_name = "master";
-    private string $source_sha1             = "1b8e9594dc204eb9907f78df8bb60f564c389832";
-    private string $destination_sha1        = "aba2416a22a0c5d985207fbed10de5d1c8c91397";
+    private string $source_branch_name      = 'pr-1';
+    private string $destination_branch_name = 'master';
+    private string $source_sha1             = '1b8e9594dc204eb9907f78df8bb60f564c389832';
+    private string $destination_sha1        = 'aba2416a22a0c5d985207fbed10de5d1c8c91397';
     private int $repo_dest_id               = 5;
     private int $merge_status               = PullRequest::FASTFORWARD_MERGE;
     private string $description_format      = TimelineComment::FORMAT_TEXT;

@@ -108,16 +108,16 @@ class PostPushWebhookCloseArtifactHandler
             if (! $action_enabled_for_repository_in_project) {
                 $this->logger->warning(
                     "Artifact #{$tuleap_reference->getId()} cannot be closed. " .
-                    "Either this artifact is not in a project where the GitLab repository is integrated in " .
-                    "or the artifact closure action is not enabled. " .
-                    "Skipping."
+                    'Either this artifact is not in a project where the GitLab repository is integrated in ' .
+                    'or the artifact closure action is not enabled. ' .
+                    'Skipping.'
                 );
                 return;
             }
 
             $tracker_workflow_user = $this->user_manager->getUserById(Tracker_Workflow_WorkflowUser::ID);
             if (! $tracker_workflow_user) {
-                throw new UserNotExistException("Tracker Workflow Manager does not exists, the comment cannot be added");
+                throw new UserNotExistException('Tracker Workflow Manager does not exists, the comment cannot be added');
             }
 
             $credentials = $this->credentials_retriever->getCredentials(

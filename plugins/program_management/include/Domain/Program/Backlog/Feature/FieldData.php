@@ -56,7 +56,7 @@ final class FieldData
     public function getFieldDataForChangesetCreationFormat(int $milestone_project_id): array
     {
         $fields_data                                               = [];
-        $fields_data[$this->artifact_link_field]['new_values']     = implode(",", $this->getFeatureChangeToAdd($this->user_stories_to_add, $milestone_project_id));
+        $fields_data[$this->artifact_link_field]['new_values']     = implode(',', $this->getFeatureChangeToAdd($this->user_stories_to_add, $milestone_project_id));
         $fields_data[$this->artifact_link_field]['removed_values'] =
             $this->getFeatureChangeToRemove($this->user_stories_to_remove);
 
@@ -87,7 +87,7 @@ final class FieldData
     ): array {
         $user_stories_to_remove = [];
         foreach ($feature_changes as $user_story_id) {
-            if (! in_array($user_story_id->id, array_column($this->user_stories_to_add, "id"), true)) {
+            if (! in_array($user_story_id->id, array_column($this->user_stories_to_add, 'id'), true)) {
                 $user_stories_to_remove[$user_story_id->id] = $user_story_id->id;
             }
         }

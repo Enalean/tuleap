@@ -52,11 +52,11 @@ class MilestoneExtractor
     {
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, (int) $variables['id']);
         if (! $milestone) {
-            throw new NotFoundException(dgettext('tuleap-taskboard', "Milestone not found."));
+            throw new NotFoundException(dgettext('tuleap-taskboard', 'Milestone not found.'));
         }
 
         if ((string) $milestone->getProject()->getUnixNameMixedCase() !== (string) $variables['project_name']) {
-            throw new NotFoundException(dgettext('tuleap-taskboard', "Milestone not found."));
+            throw new NotFoundException(dgettext('tuleap-taskboard', 'Milestone not found.'));
         }
 
         try {

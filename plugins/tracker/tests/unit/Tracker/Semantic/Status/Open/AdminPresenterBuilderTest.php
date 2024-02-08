@@ -103,7 +103,7 @@ final class AdminPresenterBuilderTest extends TestCase
     {
         $status_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
         $status_field->method('getId')->willReturn(2);
-        $status_field->method('getLabel')->willReturn("field B");
+        $status_field->method('getLabel')->willReturn('field B');
         $open_value = new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'open', '', 1, false);
         $status_field->method('getAllVisibleValues')->willReturn(
             [
@@ -127,7 +127,7 @@ final class AdminPresenterBuilderTest extends TestCase
                 true,
                 [new PossibleFieldsForStatusPresenter(1, 'field A', false), new PossibleFieldsForStatusPresenter(2, 'field B', true)],
                 true,
-                [new StatusValuePresenter(1, "open", true, false), new StatusValuePresenter(2, "closed", false, true)],
+                [new StatusValuePresenter(1, 'open', true, false), new StatusValuePresenter(2, 'closed', false, true)],
                 TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
                 true,
                 $field_B->getLabel()

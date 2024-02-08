@@ -50,7 +50,7 @@ final class ArtifactCreatedEventStub implements ArtifactCreatedEvent
     ): self {
         $changeset = DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), $changeset_id);
         if (! $changeset) {
-            throw new \LogicException("Changeset is not valid");
+            throw new \LogicException('Changeset is not valid');
         }
 
         return new self(

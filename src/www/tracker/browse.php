@@ -56,7 +56,7 @@ if (! $ath->isValid()) {
 if (user_isloggedin()) {
     if (! $request->exist('report_id')) {
         $report_id = user_get_preference('artifact_browse_report' . $atid);
-        if ($report_id == "") {
+        if ($report_id == '') {
             // Default value
             $arf       = new ArtifactReportFactory();
             $report_id = $arf->getDefaultReport($atid);
@@ -297,7 +297,7 @@ if ($set == 'my') {
     // Get the list of artifact fields used in the form (they are in the URL - GET method)
     // and then build the preferences array accordingly
     // Exclude the group_id parameter
-    $pref_stg = "";
+    $pref_stg = '';
     foreach ($prefs as $field => $arr_val) {
         while ($value_id = current($arr_val)) {
             next($arr_val);
@@ -385,5 +385,5 @@ $pref_params = ['group_id'   => $group_id,
 $em->processEvent('tracker_user_pref', $pref_params);
 
 // Display the artifact items according to all the parameters
-$art_report_html->displayReport($prefs, $group_id, $report_id, $set, $advsrch, $msort, $morder, (isset($order) ? $order : false), isset($pref_stg) ? $pref_stg : "", $offset, $chunksz, $pv, $masschange);
+$art_report_html->displayReport($prefs, $group_id, $report_id, $set, $advsrch, $msort, $morder, (isset($order) ? $order : false), isset($pref_stg) ? $pref_stg : '', $offset, $chunksz, $pv, $masschange);
 $ath->footer($params);
