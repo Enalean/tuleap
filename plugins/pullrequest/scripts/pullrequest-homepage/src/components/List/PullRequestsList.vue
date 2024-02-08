@@ -21,6 +21,7 @@
     <pull-requests-cards-skeletons v-if="is_loading_pull_requests" />
     <pull-requests-list-empty-state
         v-if="!is_loading_pull_requests && pull_requests.length === 0"
+        v-bind:are_some_filters_defined="filters_store.getFilters().value.length > 0"
         data-test="empty-state"
     />
     <section class="tlp-pane" v-if="!is_loading_pull_requests && pull_requests.length">
