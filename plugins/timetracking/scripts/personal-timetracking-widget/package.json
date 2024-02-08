@@ -8,11 +8,13 @@
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/core-rest-api-types": "workspace:*",
-    "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/fault": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/vue2-gettext-composition-helper": "workspace:^",
     "@tuleap/vue2-gettext-init": "workspace:^",
+    "neverthrow": "^6.0.0",
     "pinia": "^2.0.21",
     "vue": "^2.7.8"
   },

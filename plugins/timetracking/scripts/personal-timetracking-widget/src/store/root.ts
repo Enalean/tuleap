@@ -21,7 +21,6 @@ import { defineStore } from "pinia";
 import { formatMinutes } from "@tuleap/plugin-timetracking-time-formatters";
 import { postTime, delTime, getTrackedTimes, putTime } from "../api/rest-querier";
 import {
-    ERROR_OCCURRED,
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_DELETE,
     REST_FEEDBACK_EDIT,
@@ -29,7 +28,6 @@ import {
 } from "@tuleap/plugin-timetracking-constants";
 import { updateEvent } from "../TimetrackingEvents";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 const a_week_ago: Date = new Date();
 a_week_ago.setDate(a_week_ago.getDate() - 7);
@@ -94,99 +92,72 @@ export const usePersonalTimetrackingWidgetStore = defineStore("root", {
         can_load_more: (state): boolean => state.pagination_offset < state.total_times,
     },
     actions: {
-        setDatesAndReload(start_date: string, end_date: string): Promise<void> {
+        setDatesAndReload(start_date: string, end_date: string): void {
             this.setParametersForNewQuery(start_date, end_date);
-            return this.loadFirstBatchOfTimes();
+            this.loadFirstBatchOfTimes();
         },
-        async getTimes() {
-            try {
-                this.resetErrorMessage();
-                const totalTimes = await getTrackedTimes(
-                    this.user_id,
-                    this.start_date,
-                    this.end_date,
-                    this.pagination_limit,
-                    this.pagination_offset,
-                );
+        getTimes() {
+            this.resetErrorMessage();
 
-                return this.loadAChunkOfTimes(totalTimes.times, totalTimes.total);
-            } catch (error) {
-                return this.showErrorMessage(error);
-            }
+            getTrackedTimes(
+                this.user_id,
+                this.start_date,
+                this.end_date,
+                this.pagination_limit,
+                this.pagination_offset,
+            ).match(
+                (total_times) => this.loadAChunkOfTimes(total_times.times, total_times.total),
+                (fault) => {
+                    this.setErrorMessage(String(fault));
+                },
+            );
         },
-        async addTime(
-            date: string,
-            artifact: number,
-            time_value: string,
-            step: string,
-        ): Promise<void> {
-            try {
-                const response = await postTime(date, artifact, time_value, step);
-                this.pushCurrentTimes([response], REST_FEEDBACK_ADD);
-                updateEvent();
-                return this.loadFirstBatchOfTimes();
-            } catch (rest_error) {
-                return this.showRestError(rest_error);
-            }
+        addTime(date: string, artifact: number, time_value: string, step: string): void {
+            postTime(date, artifact, time_value, step).match(
+                (personal_time) => {
+                    this.pushCurrentTimes([personal_time], REST_FEEDBACK_ADD);
+                    updateEvent();
+
+                    this.loadFirstBatchOfTimes();
+                },
+                (fault) => {
+                    this.setRestFeedback(String(fault), "danger");
+                },
+            );
         },
-        async updateTime(
-            date: string,
-            time_id: number,
-            time_value: string,
-            step: string,
-        ): Promise<void> {
-            try {
-                const response = await putTime(date, time_id, time_value, step);
-                this.replaceInCurrentTimes(response, REST_FEEDBACK_EDIT);
-                updateEvent();
-                return this.loadFirstBatchOfTimes();
-            } catch (rest_error) {
-                return this.showRestError(rest_error);
-            }
+        updateTime(date: string, time_id: number, time_value: string, step: string): void {
+            putTime(date, time_id, time_value, step).match(
+                (personal_time) => {
+                    this.replaceInCurrentTimes(personal_time, REST_FEEDBACK_EDIT);
+                    updateEvent();
+                    this.loadFirstBatchOfTimes();
+                },
+                (fault) => {
+                    this.setRestFeedback(String(fault), "danger");
+                },
+            );
         },
-        async deleteTime(time_id: number): Promise<void> {
-            try {
-                await delTime(time_id);
-                this.deleteInCurrentTimes(time_id, REST_FEEDBACK_DELETE);
-                updateEvent();
-                return this.loadFirstBatchOfTimes();
-            } catch (rest_error) {
-                return this.showRestError(rest_error);
-            }
+        deleteTime(time_id: number): void {
+            delTime(time_id).match(
+                () => {
+                    this.deleteInCurrentTimes(time_id, REST_FEEDBACK_DELETE);
+                    updateEvent();
+                    this.loadFirstBatchOfTimes();
+                },
+                (fault) => {
+                    this.setRestFeedback(String(fault), "danger");
+                },
+            );
         },
-        async loadFirstBatchOfTimes(): Promise<void> {
+        loadFirstBatchOfTimes(): void {
             this.setIsLoading(true);
-            await this.getTimes();
+            this.getTimes();
             this.setIsLoading(false);
         },
-        async reloadTimes(): Promise<void> {
+        reloadTimes(): void {
             this.resetTimes();
-            await this.getTimes();
+            this.getTimes();
             this.setIsLoading(false);
-        },
-        async showErrorMessage(rest_error: unknown): Promise<void> {
-            if (!(rest_error instanceof FetchWrapperError) || rest_error.response === undefined) {
-                this.setErrorMessage("");
-                throw rest_error;
-            }
-            try {
-                const { error } = await rest_error.response.json();
-                this.setErrorMessage(error.code + " " + error.message);
-            } catch (error) {
-                this.setErrorMessage(ERROR_OCCURRED);
-            }
-        },
-        async showRestError(rest_error: unknown): Promise<void> {
-            if (!(rest_error instanceof FetchWrapperError) || rest_error.response === undefined) {
-                this.setRestFeedback("", "");
-                throw rest_error;
-            }
-            try {
-                const { error } = await rest_error.response.json();
-                return this.setRestFeedback(error.code + " " + error.message, "danger");
-            } catch (error) {
-                return this.setRestFeedback(ERROR_OCCURRED, "danger");
-            }
         },
         toggleReadingMode(): void {
             this.reading_mode = !this.reading_mode;

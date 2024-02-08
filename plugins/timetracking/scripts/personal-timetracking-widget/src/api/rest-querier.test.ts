@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { getTrackedTimes, postTime, delTime } from "./rest-querier";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
-import * as tlp_fetch from "@tuleap/tlp-fetch";
+import { okAsync } from "neverthrow";
+import { uri } from "@tuleap/fetch-result";
+import * as fetch_result from "@tuleap/fetch-result";
 
 describe("getTrackedTimes() -", (): void => {
     it("the REST API will be queried with ISO-8601 dates and the times returned", async (): Promise<void> => {
@@ -34,21 +35,25 @@ describe("getTrackedTimes() -", (): void => {
             },
         ] as PersonalTime[];
 
-        const tlpGet = jest.spyOn(tlp_fetch, "get");
-        mockFetchSuccess(tlpGet, {
-            headers: {
-                get: (header_name: string) => {
-                    if (header_name === "X-PAGINATION-SIZE") {
-                        return "1";
-                    }
-                    return null;
+        jest.spyOn(fetch_result, "head").mockReturnValue(
+            okAsync({
+                ok: true,
+                headers: {
+                    get: (header_name: string): string | null =>
+                        header_name !== "X-PAGINATION-SIZE" ? null : String(time.length),
                 },
-            },
-            return_json: time,
-        });
+            } as unknown as Response),
+        );
+
+        const getJSON = jest.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(time));
 
         const result = await getTrackedTimes(user_id, "2018-03-08", "2018-03-15", limit, offset);
-        expect(tlpGet).toHaveBeenCalledWith("/api/v1/users/" + user_id + "/timetracking", {
+
+        if (!result.isOk()) {
+            throw new Error("Expected an Ok");
+        }
+
+        expect(getJSON).toHaveBeenCalledWith(uri`/api/v1/users/${user_id}/timetracking`, {
             params: {
                 limit,
                 offset,
@@ -59,8 +64,8 @@ describe("getTrackedTimes() -", (): void => {
             },
         });
 
-        expect(result.times).toStrictEqual(time);
-        expect(result.total).toBe(1);
+        expect(result.value.times).toStrictEqual(time);
+        expect(result.value.total).toBe(1);
     });
 
     it("the REST API will add date and the new time should be returned", async (): Promise<void> => {
@@ -68,39 +73,30 @@ describe("getTrackedTimes() -", (): void => {
             minutes: 20,
         } as PersonalTime;
 
-        const tlpPost = jest.spyOn(tlp_fetch, "post");
-        mockFetchSuccess(tlpPost, {
-            return_json: time,
-        });
+        const postJSON = jest.spyOn(fetch_result, "postJSON").mockReturnValue(okAsync(time));
         const result = await postTime("2018-03-08", 2, "11:11", "oui");
-        const headers = {
-            "content-type": "application/json",
-        };
-        const body = JSON.stringify({
+
+        if (!result.isOk()) {
+            throw new Error("Expected an Ok");
+        }
+
+        expect(postJSON).toHaveBeenCalledWith(uri`/api/v1/timetracking`, {
             date_time: "2018-03-08",
             artifact_id: 2,
             time_value: "11:11",
             step: "oui",
         });
-        expect(tlpPost).toHaveBeenCalledWith("/api/v1/timetracking", {
-            headers,
-            body,
-        });
-        expect(result).toStrictEqual(time);
+
+        expect(result.value).toStrictEqual(time);
     });
 
     it("the REST API should delete the given time", async (): Promise<void> => {
-        const tlpDel = jest.spyOn(tlp_fetch, "del");
-        mockFetchSuccess(tlpDel, {
-            return_json: [],
-        });
+        const tlpDel = jest
+            .spyOn(fetch_result, "del")
+            .mockReturnValue(okAsync({ ok: true } as unknown as Response));
         const time_id = 2;
         await delTime(time_id);
-        const headers = {
-            "content-type": "application/json",
-        };
-        expect(tlpDel).toHaveBeenCalledWith("/api/v1/timetracking/" + time_id, {
-            headers,
-        });
+
+        expect(tlpDel).toHaveBeenCalledWith(uri`/api/v1/timetracking/${time_id}`);
     });
 });

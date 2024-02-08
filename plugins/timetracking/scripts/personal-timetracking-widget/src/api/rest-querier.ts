@@ -17,92 +17,88 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post, put, del } from "@tuleap/tlp-fetch";
+import type { ResultAsync } from "neverthrow";
+import type { EncodedURI } from "@tuleap/fetch-result";
+import { uri, head, getJSON, postJSON, putJSON, del } from "@tuleap/fetch-result";
 import { formatDatetimeToISO } from "@tuleap/plugin-timetracking-time-formatters";
+import type { Fault } from "@tuleap/fault";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
-
-const headers = {
-    "content-type": "application/json",
-};
 
 export type TotalTimes = {
     readonly times: PersonalTime[];
     readonly total: number;
 };
 
-export async function getTrackedTimes(
+const fetchTotalSize = (route: EncodedURI, query: string): ResultAsync<number, Fault> => {
+    return head(route, {
+        params: {
+            query,
+        },
+    }).map((response) => {
+        return response.headers.get("X-PAGINATION-SIZE") === null
+            ? 0
+            : Number(response.headers.get("X-PAGINATION-SIZE"));
+    });
+};
+
+export function getTrackedTimes(
     user_id: number,
     start_date: string,
     end_date: string,
     limit: number,
     offset: number,
-): Promise<TotalTimes> {
+): ResultAsync<TotalTimes, Fault> {
     const query = JSON.stringify({
         start_date: formatDatetimeToISO(start_date),
         end_date: formatDatetimeToISO(end_date),
     });
 
-    const response = await get(`/api/v1/users/${user_id}/timetracking`, {
+    const route = uri`/api/v1/users/${user_id}/timetracking`;
+
+    return getJSON<PersonalTime[]>(route, {
         params: {
             limit,
             offset,
             query,
         },
-    });
-    const total: number =
-        response.headers.get("X-PAGINATION-SIZE") === null
-            ? 0
-            : Number(response.headers.get("X-PAGINATION-SIZE"));
-    const times: PersonalTime[] = await response.json();
-
-    return {
-        times,
-        total,
-    };
+    }).andThen((times) =>
+        fetchTotalSize(route, query).map(
+            (total): TotalTimes => ({
+                times,
+                total,
+            }),
+        ),
+    );
 }
-export async function postTime(
+
+export function postTime(
     date: string,
     artifact_id: number,
     time_value: string,
     step: string,
-): Promise<PersonalTime> {
-    const body = JSON.stringify({
+): ResultAsync<PersonalTime, Fault> {
+    return postJSON(uri`/api/v1/timetracking`, {
         date_time: date,
         artifact_id: artifact_id,
         time_value: time_value,
         step: step,
     });
-
-    const response = await post("/api/v1/timetracking", {
-        headers,
-        body,
-    });
-
-    const time = await response.json();
-    return time;
 }
 
-export async function putTime(
+export function putTime(
     date_time: string,
     time_id: number,
     time_value: string,
     step: string,
-): Promise<PersonalTime> {
-    const body = JSON.stringify({
+): ResultAsync<PersonalTime, Fault> {
+    return putJSON<PersonalTime>(uri`/api/v1/timetracking/${time_id}`, {
         date_time: date_time,
+        time_id: time_id,
         time_value: time_value,
         step: step,
     });
-    const response = await put("/api/v1/timetracking/" + time_id, {
-        headers,
-        body,
-    });
-    const time = await response.json();
-    return time;
 }
 
-export async function delTime(time_id: number): Promise<void> {
-    await del("/api/v1/timetracking/" + time_id, {
-        headers,
-    });
+export function delTime(time_id: number): ResultAsync<unknown, Fault> {
+    return del(uri`/api/v1/timetracking/${time_id}`);
 }
