@@ -12,11 +12,11 @@
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
-    "@tuleap/vue2-gettext-composition-helper": "workspace:^",
-    "@tuleap/vue2-gettext-init": "workspace:^",
+    "@tuleap/vue3-gettext-init": "workspace:*",
     "neverthrow": "^6.0.0",
     "pinia": "^2.0.21",
-    "vue": "^2.7.8"
+    "vue": "^3.3.4",
+    "vue3-gettext": "^2.4.0"
   },
   "devDependencies": {
     "@pinia/testing": "^0.1.3",
@@ -24,11 +24,12 @@
     "@tuleap/plugin-timetracking-constants": "workspace:*",
     "@tuleap/plugin-timetracking-rest-api-types": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:*",
-    "@tuleap/po-gettext-plugin": "workspace:^",
-    "@vitejs/plugin-vue2": "^2.0.0",
-    "@vue/test-utils": "^1.3.6"
+    "@tuleap/po-gettext-plugin": "workspace:*",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/test-utils": "^2.2.10"
   },
   "scripts": {
+    "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
     "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
     "test": "vitest"

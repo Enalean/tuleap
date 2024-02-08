@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,19 +15,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import { createLocalVue } from "@vue/test-utils";
-import { PiniaVuePlugin } from "pinia";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
+import { vi } from "vitest";
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
+import { createTestingPinia } from "@pinia/testing";
+import type { StateTree } from "pinia";
 
-export const createLocalVueForTests = async () => {
-    const local_vue = createLocalVue();
-    local_vue.use(PiniaVuePlugin);
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-
-    return local_vue;
-};
+export function getGlobalTestOptions(
+    initial_state: StateTree = {},
+): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [
+            createGettext({ silent: true }),
+            createTestingPinia({
+                createSpy: vi.fn,
+                ...initial_state,
+            }),
+        ],
+    };
+}

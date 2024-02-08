@@ -46,3 +46,16 @@ const badge_color = computed((): string => {
 
 const artifact_title = props.artifact.title !== null ? props.artifact.title : "";
 </script>
+
+<style scoped lang="scss">
+.timetracking-widget-artifact-title {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.timetracking-badge-direct-link-to-artifact {
+    margin: 0 5px 0 0;
+}
+</style>

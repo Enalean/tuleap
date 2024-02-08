@@ -54,3 +54,9 @@ const personal_store = usePersonalTimetrackingWidgetStore();
 const artifact = ref(props.timeData[0].artifact);
 const project = ref(props.timeData[0].project);
 </script>
+
+<style scoped lang="scss">
+.timetracking-widget-artifact-cell {
+    max-width: 400px;
+}
+</style>

@@ -88,9 +88,9 @@ import { TIME_REGEX } from "@tuleap/plugin-timetracking-constants";
 import { datePicker } from "tlp";
 import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 import { computed, onMounted, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 const props = defineProps<{
     timeData: PersonalTime | undefined;
     artifact: Artifact;
@@ -147,12 +147,38 @@ const validateNewTime = (): void => {
         const id = props.timeData && props.timeData.id ? props.timeData.id : props.artifact.id;
         emit("validate-time", date.value, id, time.value, step.value);
     } else {
-        error_message.value = gettext_provider.$gettext("Please check time's format (hh:mm)");
+        error_message.value = $gettext("Please check time's format (hh:mm)");
         if (!time.value) {
-            error_message.value = gettext_provider.$gettext("Time is required");
+            error_message.value = $gettext("Time is required");
         }
     }
 };
 
 defineExpose({ date, error_message, is_loading });
 </script>
+
+<style scoped lang="scss">
+.timetracking-details-modal-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timetracking-details-form-element {
+    margin: 0;
+}
+
+.timetracking-tooltip {
+    &::before {
+        opacity: 1;
+    }
+
+    &::after {
+        opacity: 1;
+    }
+}
+
+.tlp-input.timetracking-details-modal-add-step-field {
+    width: 100%;
+}
+</style>

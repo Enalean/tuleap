@@ -57,7 +57,9 @@ import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 import { computed } from "vue";
 import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
 import type { ProjectResponse } from "@tuleap/core-rest-api-types";
+import { useGettext } from "vue3-gettext";
 
+const { $gettext } = useGettext();
 const props = defineProps<{
     artifact: Artifact;
     project: ProjectResponse;
@@ -76,3 +78,37 @@ const submission_date = computed((): string => {
     );
 });
 </script>
+
+<style scoped lang="scss">
+.timetracking-details-modal-artifact-infos-container {
+    display: flex;
+}
+
+.timetracking-details-modal-artifact-infos {
+    display: flex;
+    flex-direction: column;
+
+    &:first-child {
+        margin: 0 var(--tlp-x-large-spacing) 0 0;
+    }
+
+    > span:first-child {
+        color: var(--tlp-dimmed-color);
+        font-size: 18px;
+        font-weight: 400;
+    }
+
+    > span:last-child {
+        margin: 7px 0 0;
+    }
+}
+
+.timetracking-details-project-icon {
+    margin: 0 5px 0 0;
+    fill: var(--tlp-dimmed-color);
+}
+
+.timetracking-details-modal-artifact-infos-project-name {
+    color: var(--tlp-main-color);
+}
+</style>

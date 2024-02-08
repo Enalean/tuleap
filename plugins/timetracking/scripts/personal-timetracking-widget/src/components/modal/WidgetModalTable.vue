@@ -75,7 +75,9 @@ import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 import { computed } from "vue";
 import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import { useGettext } from "vue3-gettext";
 
+const { $gettext } = useGettext();
 defineProps<{
     artifact: Artifact;
     timeData: PersonalTime;
@@ -93,3 +95,9 @@ const addNewTime = (date: string, artifact_id: number, time: string, step: strin
     personal_store.addTime(date, artifact_id, time, step);
 };
 </script>
+
+<style scoped lang="scss">
+.timetracking-total-sum {
+    white-space: nowrap;
+}
+</style>

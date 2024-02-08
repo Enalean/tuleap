@@ -20,7 +20,7 @@
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import { viteExternalsPlugin } from "vite-plugin-externals";
 
 export default vite.defineAppConfig(
@@ -33,7 +33,7 @@ export default vite.defineAppConfig(
         build: {
             rollupOptions: {
                 input: {
-                    "widget-timetracking": path.resolve(__dirname, "src/index.js"),
+                    "widget-timetracking": path.resolve(__dirname, "src/index.ts"),
                 },
             },
         },
