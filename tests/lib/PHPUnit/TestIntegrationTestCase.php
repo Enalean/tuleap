@@ -28,6 +28,7 @@ use ProjectManager;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
 use TrackerFactory;
+use Tuleap\DB\DBConfig;
 use Tuleap\DB\DBFactory;
 use UserManager;
 
@@ -38,9 +39,19 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @before
      */
-    public function setUpData(): void
+    public function setUpSaveForgeConfigAndStartTransaction(): void
     {
         parent::setUp();
+        $stored_db_host     = \ForgeConfig::get(DBConfig::CONF_HOST);
+        $stored_db_user     = \ForgeConfig::get(DBConfig::CONF_DBUSER);
+        $stored_db_password = \ForgeConfig::get(DBConfig::CONF_DBPASSWORD);
+        $stored_db_name     = \ForgeConfig::get(DBConfig::CONF_DBNAME);
+        \ForgeConfig::store();
+        \ForgeConfig::set(DBConfig::CONF_HOST, $stored_db_host);
+        \ForgeConfig::set(DBConfig::CONF_DBUSER, $stored_db_user);
+        \ForgeConfig::set(DBConfig::CONF_DBPASSWORD, $stored_db_password);
+        \ForgeConfig::set(DBConfig::CONF_DBNAME, $stored_db_name);
+
         $this->savepoint_id = "save" . random_int(0, 99999999999);
         $db                 = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->beginTransaction();
@@ -50,7 +61,7 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @after
      */
-    public function tearDownData(): void
+    public function tearDownRollbackTransactionAndRestoreGlobals(): void
     {
         parent::tearDown();
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
