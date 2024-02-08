@@ -81,8 +81,14 @@ msgstr "Afficher fermées"
 msgid "Show details"
 msgstr "Voir les détails"
 
+msgid "There are no open pull-requests"
+msgstr "Il n'y a aucune pull-request ouverte"
+
 msgid "This label is already selected"
 msgstr "Ce label est déjà sélectionné"
+
+msgid "Try to toggle closed pull-requests display."
+msgstr "Essayez d'afficher les pull-requests fermées."
 
 msgid "You can only filter on one author"
 msgstr "Vous ne pouvez filtrer que sur un auteur"

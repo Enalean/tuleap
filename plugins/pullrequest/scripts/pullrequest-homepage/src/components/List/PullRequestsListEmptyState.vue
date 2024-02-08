@@ -18,7 +18,11 @@
   -->
 
 <template>
-    <div class="empty-state-page">
+    <div
+        class="empty-state-page"
+        v-if="have_too_many_filters"
+        data-test="empty-state-no-matching-pull-requests"
+    >
         <h1 class="empty-state-title">
             {{ $gettext("No result matched your search") }}
         </h1>
@@ -26,10 +30,39 @@
             {{ $gettext("You may have set too many filters. Try to modify them.") }}
         </p>
     </div>
+    <div
+        class="empty-state-page"
+        v-if="no_open_pull_requests"
+        data-test="empty-state-no-open-pull-requests"
+    >
+        <h1 class="empty-state-title">
+            {{ $gettext("There are no open pull-requests") }}
+        </h1>
+        <p class="empty-state-text">
+            {{ $gettext("Try to toggle closed pull-requests display.") }}
+        </p>
+    </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SHOW_CLOSED_PULL_REQUESTS } from "../../injection-symbols";
 
 const { $gettext } = useGettext();
+
+const are_closed_pull_requests_shown = strictInject(SHOW_CLOSED_PULL_REQUESTS);
+
+const props = defineProps<{
+    are_some_filters_defined: boolean;
+}>();
+
+const have_too_many_filters = computed(() => {
+    return props.are_some_filters_defined;
+});
+
+const no_open_pull_requests = computed(() => {
+    return !(props.are_some_filters_defined && are_closed_pull_requests_shown);
+});
 </script>
