@@ -25,17 +25,18 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
-use Tuleap\CrossTracker\Tests\Builders\DatabaseBuilder;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
 {
-    private DatabaseBuilder $database_builder;
+    private TrackerDatabaseBuilder $database_builder;
     private Tracker $release_tracker;
     private Tracker $sprint_tracker;
     private Tracker $task_tracker;
@@ -48,14 +49,16 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
     private int $sprint_with_5_id;
     private int $sprint_with_3_id;
     private int $release_with_3_id;
+    private CoreDatabaseBuilder $core_builder;
 
     protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         \ForgeConfig::setFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
-        $this->database_builder = new DatabaseBuilder($db);
+        $this->database_builder = new TrackerDatabaseBuilder($db);
+        $this->core_builder     = new CoreDatabaseBuilder($db);
 
-        $project    = $this->database_builder->buildProject();
+        $project    = $this->core_builder->buildProject();
         $project_id = (int) $project->getID();
 
         $this->release_tracker = $this->database_builder->buildTracker($project_id, "Release");
@@ -80,9 +83,9 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
             'initial_effort'
         );
 
-        $this->outsider_user  = $this->database_builder->buildUser('outsider', 'User OutsideProject', 'outsider@example.com');
-        $this->project_member = $this->database_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
-        $this->database_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
+        $this->outsider_user  = $this->core_builder->buildUser('outsider', 'User OutsideProject', 'outsider@example.com');
+        $this->project_member = $this->core_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
+        $this->core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
 
         $this->database_builder->setReadPermission(
             $release_initial_effort_field_id,
