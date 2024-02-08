@@ -51,16 +51,10 @@ class Tracker_Action_CreateArtifactFromModal
 
     private function createArtifact(PFUser $current_user)
     {
-        $email = null;
-        if ($current_user->isAnonymous()) {
-            $request_email = $this->request->get('email');
-            $email         = ($request_email !== false) ? $request_email : null;
-        }
-
         $fields_data = $this->request->get('artifact');
         $this->tracker->augmentDataFromRequest($fields_data);
 
-        return $this->tracker_artifact_factory->createArtifact($this->tracker, $fields_data, $current_user, $email, true);
+        return $this->tracker_artifact_factory->createArtifact($this->tracker, $fields_data, $current_user, true);
     }
 
     private function linkArtifact(PFUser $current_user, Artifact $new_artifact)

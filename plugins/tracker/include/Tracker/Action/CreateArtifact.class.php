@@ -69,12 +69,6 @@ class Tracker_Action_CreateArtifact
      */
     private function createArtifact(Tracker_IDisplayTrackerLayout $layout, $request, $user)
     {
-        $email = null;
-        if ($user->isAnonymous()) {
-            $request_email = $request->get('email');
-            $email         = ($request_email !== false) ? $request_email : null;
-        }
-
         $fields_data = $request->get('artifact');
         if (! isset($fields_data['request_method_called'])) {
             $fields_data['request_method_called'] = $request->get('func');
@@ -82,7 +76,7 @@ class Tracker_Action_CreateArtifact
 
         $this->tracker->augmentDataFromRequest($fields_data);
 
-        return $this->artifact_factory->createArtifact($this->tracker, $fields_data, $user, $email, true);
+        return $this->artifact_factory->createArtifact($this->tracker, $fields_data, $user, true);
     }
 
     protected function associateImmediatelyIfNeeded(Artifact $new_artifact, \Codendi_Request $request, PFUser $current_user): void
