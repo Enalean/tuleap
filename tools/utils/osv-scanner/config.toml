@@ -30,6 +30,19 @@ reason = "Angular and associated tools are EOL. Only used at build time. ReDoS."
 id = "GHSA-p6mc-m468-83gw" # CVE-2020-8203
 reason = "Angular and associated tools are EOL. Only used at build time. Prototype Pollution cannot be exploited in our context."
 
+# ckeditor4
+[[IgnoredVulns]]
+id = "GHSA-fq6h-4g8v-qqvm" # CVE-2024-24815
+reason = "Vuln cannot be triggered: fullpage editing is not enabled and CDATA elements have not been enabled in the Advanced Content Filtering configuration."
+
+[[IgnoredVulns]]
+id = "GHSA-wh5w-82f3-wrxh" # CVE-2023-4771
+reason = "ckeditor4 samples are not shipped."
+
+[[IgnoredVulns]]
+id = "GHSA-mw2c-vx6j-mg76" # CVE-2024-24816
+reason = "ckeditor4 samples are not shipped."
+
 # src/additional-packages/wasmtime-wrapper-lib/Cargo.lock
 ## atty
 [[IgnoredVulns]]
