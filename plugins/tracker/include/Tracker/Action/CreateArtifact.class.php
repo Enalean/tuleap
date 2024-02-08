@@ -76,7 +76,7 @@ class Tracker_Action_CreateArtifact
 
         $this->tracker->augmentDataFromRequest($fields_data);
 
-        return $this->artifact_factory->createArtifact($this->tracker, $fields_data, $user, true);
+        return $this->artifact_factory->createArtifact($this->tracker, $fields_data, $user, true, true);
     }
 
     protected function associateImmediatelyIfNeeded(Artifact $new_artifact, \Codendi_Request $request, PFUser $current_user): void

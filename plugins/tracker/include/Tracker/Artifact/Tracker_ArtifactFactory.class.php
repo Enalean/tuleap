@@ -373,16 +373,11 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
     }
 
     /**
-     * Add an artefact in the tracker
-     *
-     * @param Tracker $tracker           The tracker this artifact belongs to
      * @param array   $fields_data       The data of the artifact to create
-     * @param PFUser    $user              The user that want to create the artifact
-     * @param bool $send_notification true if a notification must be sent, false otherwise
      *
      * @return Artifact|false false if an error occurred
      */
-    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, bool $should_visit_be_recorded, $send_notification = true)
+    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, bool $should_visit_be_recorded, bool $send_notification)
     {
         $creator = $this->getArtifactCreator();
 
