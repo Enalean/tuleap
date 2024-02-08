@@ -21,7 +21,6 @@
 namespace Tuleap\Git\Gitolite;
 
 use DateTime;
-use DirectoryIterator;
 use Git;
 use GitRepositoryFactory;
 use GitRepositoryGitoliteAdmin;
@@ -41,39 +40,9 @@ class Gitolite3LogParser
     public const FILE_EXTENSION                        = '.log';
     public const EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE = 8;
 
+    private const ACCESS_COUNT_CACHE_KEY              = 'access_count';
+    private const DAY_LAST_ACCESS_TIMESTAMP_CACHE_KEY = 'day_last_access_timestamp';
 
-    /** @var LoggerInterface */
-    private $logger;
-
-    /**
-     * @var HttpUserValidator
-     */
-    private $user_validator;
-
-    /**
-     * @var Dao
-     */
-    private $history_dao;
-
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $repository_factory;
-
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    /**
-     * @var GitoliteFileLogsDao
-     */
-    private $file_logs_dao;
-
-    /**
-     * @var UserDao
-     */
-    private $user_dao;
 
     /**
      * @var array
@@ -86,32 +55,14 @@ class Gitolite3LogParser
     private $user_last_access_cache = [];
 
     public function __construct(
-        LoggerInterface $logger,
-        HttpUserValidator $user_validator,
-        Dao $history_dao,
-        GitRepositoryFactory $repository_factory,
-        UserManager $user_manager,
-        GitoliteFileLogsDao $file_logs_dao,
-        UserDao $user_dao,
+        private readonly LoggerInterface $logger,
+        private readonly HttpUserValidator $user_validator,
+        private readonly Dao $history_dao,
+        private readonly GitRepositoryFactory $repository_factory,
+        private readonly UserManager $user_manager,
+        private readonly GitoliteFileLogsDao $file_logs_dao,
+        private readonly UserDao $user_dao,
     ) {
-        $this->logger             = $logger;
-        $this->user_validator     = $user_validator;
-        $this->history_dao        = $history_dao;
-        $this->repository_factory = $repository_factory;
-        $this->user_manager       = $user_manager;
-        $this->file_logs_dao      = $file_logs_dao;
-        $this->user_dao           = $user_dao;
-    }
-
-    public function parseAllLogs($path)
-    {
-        $iterator = new DirectoryIterator($path);
-        $this->logger->info('Starting import logs from ' . $path);
-        foreach ($iterator as $file) {
-            if (! $file->isDot() && preg_match('/^gitolite-\d{4}-\d{2}.log$/', $file->getFilename())) {
-                $this->parseLogs($path . $file);
-            }
-        }
     }
 
     public function parseCurrentAndPreviousMonthLogs($path)
@@ -203,9 +154,10 @@ class Gitolite3LogParser
     {
         $day_key = $day->format('Ymd');
         if (! isset($this->access_cache[$day_key][$repository->getId()][$user_id])) {
-            $this->access_cache[$day_key][$repository->getId()][$user_id] = 0;
+            $this->access_cache[$day_key][$repository->getId()][$user_id] = [self::ACCESS_COUNT_CACHE_KEY => 0];
         }
-        $this->access_cache[$day_key][$repository->getId()][$user_id]++;
+        $this->access_cache[$day_key][$repository->getId()][$user_id][self::ACCESS_COUNT_CACHE_KEY]++;
+        $this->access_cache[$day_key][$repository->getId()][$user_id][self::DAY_LAST_ACCESS_TIMESTAMP_CACHE_KEY] = $day->getTimestamp();
     }
 
     private function storeCacheInDb()
@@ -213,8 +165,10 @@ class Gitolite3LogParser
         $this->history_dao->startTransaction();
         foreach ($this->access_cache as $day => $repositories) {
             foreach ($repositories as $repository_id => $users) {
-                foreach ($users as $user_id => $count) {
-                    $this->history_dao->addGitReadAccess($day, $repository_id, $user_id, $count);
+                foreach ($users as $user_id => $user_access) {
+                    $read_access_count = $user_access[self::ACCESS_COUNT_CACHE_KEY];
+                    $day_timestamp     = $user_access[self::DAY_LAST_ACCESS_TIMESTAMP_CACHE_KEY];
+                    $this->history_dao->addGitReadAccess($day, $repository_id, $user_id, $read_access_count, $day_timestamp);
                 }
             }
         }

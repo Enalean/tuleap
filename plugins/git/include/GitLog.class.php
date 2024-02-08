@@ -69,7 +69,7 @@ class GitLog
     {
         $project_id = $this->data_access->escapeInt($project_id);
 
-        return "SELECT UNIX_TIMESTAMP(day) AS time,
+        return "SELECT day_last_access_timestamp AS time,
                   'read' AS type,
                   user.user_name AS user_name,
                   user.realname AS realname, user.email AS email,

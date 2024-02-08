@@ -58,8 +58,8 @@ class GitoliteFullLogsToAggregatedLogs extends \DataAccessObject
 
         $this->da->startTransaction();
 
-        $sql = "INSERT INTO plugin_git_log_read_daily(repository_id, user_id, day, git_read)
-          SELECT repository_id, user_id, DATE_FORMAT(FROM_UNIXTIME(time), '%Y%m%d') as day, count(*)
+        $sql = "INSERT INTO plugin_git_log_read_daily(repository_id, user_id, day, git_read, day_last_access_timestamp)
+          SELECT repository_id, user_id, DATE_FORMAT(FROM_UNIXTIME(time), '%Y%m%d') as day, count(*), UNIX_TIMESTAMP(time) as day_last_access_timestamp
           FROM plugin_git_full_history
           WHERE time > $start_timestamp AND time <= $end_timestamp
           GROUP BY repository_id, user_id, day
