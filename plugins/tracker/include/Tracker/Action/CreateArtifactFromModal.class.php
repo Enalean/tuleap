@@ -19,23 +19,16 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 
 class Tracker_Action_CreateArtifactFromModal
 {
-    /** @var Codendi_Request */
-    private $request;
-
-    /** @var Tracker */
-    private $tracker;
-
-    /** @var Tracker_ArtifactFactory */
-    private $tracker_artifact_factory;
-
-    public function __construct(Codendi_Request $request, Tracker $tracker, Tracker_ArtifactFactory $tracker_artifact_factory)
-    {
-        $this->request                  = $request;
-        $this->tracker                  = $tracker;
-        $this->tracker_artifact_factory = $tracker_artifact_factory;
+    public function __construct(
+        private readonly Codendi_Request $request,
+        private readonly Tracker $tracker,
+        private readonly TrackerArtifactCreator $artifact_creator,
+        private readonly Tracker_ArtifactFactory $tracker_artifact_factory,
+    ) {
     }
 
     public function process(PFUser $current_user)
@@ -54,7 +47,15 @@ class Tracker_Action_CreateArtifactFromModal
         $fields_data = $this->request->get('artifact');
         $this->tracker->augmentDataFromRequest($fields_data);
 
-        return $this->tracker_artifact_factory->createArtifact($this->tracker, $fields_data, $current_user, true, true);
+        return $this->artifact_creator->create(
+            $this->tracker,
+            $fields_data,
+            $current_user,
+            $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+            true,
+            true,
+            new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+        );
     }
 
     private function linkArtifact(PFUser $current_user, Artifact $new_artifact)

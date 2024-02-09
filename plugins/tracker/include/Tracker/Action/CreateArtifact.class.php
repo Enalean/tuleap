@@ -20,21 +20,16 @@
 
 use Tuleap\JSONHeader;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 
 class Tracker_Action_CreateArtifact
 {
-    private $tracker;
-    private $artifact_factory;
-    private $formelement_factory;
-
     public function __construct(
-        Tracker $tracker,
-        Tracker_ArtifactFactory $artifact_factory,
-        Tracker_FormElementFactory $formelement_factory,
+        private readonly Tracker $tracker,
+        private readonly TrackerArtifactCreator $artifact_creator,
+        private readonly Tracker_ArtifactFactory $artifact_factory,
+        private readonly Tracker_FormElementFactory $formelement_factory,
     ) {
-        $this->tracker             = $tracker;
-        $this->artifact_factory    = $artifact_factory;
-        $this->formelement_factory = $formelement_factory;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
@@ -74,7 +69,15 @@ class Tracker_Action_CreateArtifact
 
         $this->tracker->augmentDataFromRequest($fields_data);
 
-        return $this->artifact_factory->createArtifact($this->tracker, $fields_data, $user, true, true);
+        return $this->artifact_creator->create(
+            $this->tracker,
+            $fields_data,
+            $user,
+            $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+            true,
+            true,
+            new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+        );
     }
 
     protected function associateImmediatelyIfNeeded(Artifact $new_artifact, \Codendi_Request $request, PFUser $current_user): void
