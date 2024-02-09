@@ -74,6 +74,7 @@ class GitRepositoryListPresenter
         array $external_plugins,
         array $project_flags,
         array $external_services_name_used,
+        public readonly bool $is_old_pull_request_dashboard_view_enabled,
     ) {
         $this->repositories_administration_url = GIT_BASE_URL . "/?" . http_build_query(
             [

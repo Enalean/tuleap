@@ -27,6 +27,7 @@ use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Events\AfterRepositoryForked;
+use Tuleap\Git\Events\GetPullRequestDashboardViewEvent;
 use Tuleap\Git\GitAdditionalActionEvent;
 use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Git\GitViews\RepoManagement\Pane\PanesCollection;
@@ -747,5 +748,11 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys
     public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
     {
         $event->addConfigClass(FeatureFlagSetOldHomepageViewByDefault::class);
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getPullRequestDashboardViewEvent(GetPullRequestDashboardViewEvent $event): void
+    {
+        $event->setIsOldViewEnabled(FeatureFlagSetOldHomepageViewByDefault::isActive());
     }
 }
