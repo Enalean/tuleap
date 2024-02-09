@@ -35,7 +35,6 @@ class MailGatewayTokenTest extends \Tuleap\Test\PHPUnit\TestCase
     protected $tracker_config;
     protected $tracker;
     protected $incoming_message;
-    protected $artifact_factory;
     /**
      * @var \Mockery\MockInterface
      */
@@ -60,6 +59,7 @@ class MailGatewayTokenTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\MockInterface&Tracker_Artifact_MailGateway_CitationStripper
      */
     private $citation_stripper;
+    private \Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator & \Mockery\MockInterface $artifact_creator;
 
     protected function setUp(): void
     {
@@ -68,7 +68,7 @@ class MailGatewayTokenTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user                     = \Mockery::spy(\PFUser::class);
         $this->tracker                  = \Mockery::spy(\Tracker::class);
         $this->incoming_message_factory = \Mockery::spy(\Tracker_Artifact_MailGateway_IncomingMessageFactory::class);
-        $this->artifact_factory         = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->artifact_creator         = \Mockery::spy(\Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator::class);
         $this->formelement_factory      = \Mockery::spy(\Tracker_FormElementFactory::class);
         $this->tracker_config           = \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);
         $this->logger                   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
@@ -97,7 +97,7 @@ class MailGatewayTokenTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->citation_stripper,
             $this->notifier,
             $this->incoming_mail_dao,
-            $this->artifact_factory,
+            $this->artifact_creator,
             $this->formelement_factory,
             new Tracker_ArtifactByEmailStatus($this->tracker_config),
             $this->logger,
@@ -112,7 +112,7 @@ class MailGatewayTokenTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
         $this->tracker_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
         $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(false);
-        $this->artifact_factory->shouldReceive('createArtifact')->never();
+        $this->artifact_creator->shouldReceive('create')->never();
 
         $this->mailgateway->process($this->incoming_mail);
     }
