@@ -23,6 +23,7 @@ import TimeAgo from "javascript-time-ago";
 import time_ago_english from "javascript-time-ago/locale/en";
 import time_ago_french from "javascript-time-ago/locale/fr";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import { getDatasetItemOrThrow } from "@tuleap/dom";
 import App from "./components/App.vue";
 import "../themes/main.scss";
 import { setBreadcrumbSettings } from "./breadcrumb-presenter";
@@ -30,7 +31,7 @@ import { build as buildRepositoryListPresenter } from "./repository-list-present
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./store";
 import { ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "./constants";
-import type { State, RepositoriesForOwner } from "./type";
+import type { State } from "./type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("git-repository-list");
@@ -38,10 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const locale = document.body.dataset.userLocale;
-    if (locale === undefined) {
-        throw new Error("Unable to load user locale");
-    }
+    const locale = getDatasetItemOrThrow(document.body, "userLocale");
 
     await initVueGettext(
         Vue,
@@ -54,97 +52,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     TimeAgo.locale(time_ago_english);
     TimeAgo.locale(time_ago_french);
 
-    const AppComponent = Vue.extend(App);
-
-    if (!vue_mount_point.dataset.repositoriesAdministrationUrl) {
-        throw new Error("Missing repositoriesAdministrationUrl dataset");
-    }
-    const repositoriesAdministrationUrl = vue_mount_point.dataset.repositoriesAdministrationUrl;
-
-    if (!vue_mount_point.dataset.repositoryListUrl) {
-        throw new Error("Missing repositoryListUrl dataset");
-    }
-    const repositoryListUrl = vue_mount_point.dataset.repositoryListUrl;
-
-    if (!vue_mount_point.dataset.repositoriesForkUrl) {
-        throw new Error("Missing repositoriesForkUrl dataset");
-    }
-    const repositoriesForkUrl = vue_mount_point.dataset.repositoriesForkUrl;
-
-    if (!vue_mount_point.dataset.projectId) {
-        throw new Error("Missing projectId dataset");
-    }
-    const projectId = vue_mount_point.dataset.projectId;
-
-    const isAdmin = Boolean(vue_mount_point.dataset.isAdmin);
-
-    if (!vue_mount_point.dataset.repositoriesOwners) {
-        throw new Error("Missing repositoriesOwners dataset");
-    }
-    const repositoriesOwners = vue_mount_point.dataset.repositoriesOwners;
-
-    let displayMode = "";
+    let display_mode = "";
     if (vue_mount_point.dataset.displayMode) {
-        displayMode = vue_mount_point.dataset.displayMode;
+        display_mode = vue_mount_point.dataset.displayMode;
     }
-
-    if (!vue_mount_point.dataset.externalPlugins) {
-        throw new Error("Missing externalPlugins dataset");
-    }
-    const externalPlugins = vue_mount_point.dataset.externalPlugins;
-
-    if (!vue_mount_point.dataset.externalServicesNameUsed) {
-        throw new Error("Missing externalServicesNameUsed dataset");
-    }
-    const externalServicesNameUsed = vue_mount_point.dataset.externalServicesNameUsed;
-
-    if (!vue_mount_point.dataset.projectPublicName) {
-        throw new Error("Missing projectPublicName dataset");
-    }
-    const projectPublicName = vue_mount_point.dataset.projectPublicName;
-
-    if (!vue_mount_point.dataset.projectUrl) {
-        throw new Error("Missing projectUrl dataset");
-    }
-    const projectUrl = vue_mount_point.dataset.projectUrl;
-
-    if (!vue_mount_point.dataset.privacy) {
-        throw new Error("Missing privacy dataset");
-    }
-    const privacy = vue_mount_point.dataset.privacy;
-
-    if (!vue_mount_point.dataset.projectFlags) {
-        throw new Error("Missing projectFlags dataset");
-    }
-    const projectFlags = vue_mount_point.dataset.projectFlags;
-
-    if (!document.body.dataset.userId) {
-        throw new Error("Missing userId dataset");
-    }
-    const userId = document.body.dataset.userId;
 
     setBreadcrumbSettings(
-        repositoriesAdministrationUrl,
-        repositoryListUrl,
-        repositoriesForkUrl,
-        projectPublicName,
-        projectUrl,
-        JSON.parse(privacy),
-        JSON.parse(projectFlags),
+        getDatasetItemOrThrow(vue_mount_point, "repositoriesAdministrationUrl"),
+        getDatasetItemOrThrow(vue_mount_point, "repositoryListUrl"),
+        getDatasetItemOrThrow(vue_mount_point, "repositoriesForkUrl"),
+        getDatasetItemOrThrow(vue_mount_point, "projectPublicName"),
+        getDatasetItemOrThrow(vue_mount_point, "projectUrl"),
+        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "privacy")),
+        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "projectFlags")),
         vue_mount_point.dataset.projectIcon || "",
     );
+
+    const repositories_owners = getDatasetItemOrThrow(vue_mount_point, "repositoriesOwners");
+
     buildRepositoryListPresenter(
-        parseInt(userId, 10),
-        parseInt(projectId, 10),
-        isAdmin,
+        Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10),
+        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "projectId"), 10),
+        Boolean(vue_mount_point.dataset.isAdmin),
         locale,
-        JSON.parse(repositoriesOwners),
-        JSON.parse(externalPlugins),
+        JSON.parse(repositories_owners),
+        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "externalPlugins")),
+        Boolean(getDatasetItemOrThrow(vue_mount_point, "isOldPullRequestDashboardViewEnabled")),
     );
 
-    const repositories_for_owner: RepositoriesForOwner = JSON.parse(repositoriesOwners);
     const state: State = {
-        repositories_for_owner,
+        repositories_for_owner: JSON.parse(repositories_owners),
         filter: "",
         selected_owner_id: PROJECT_KEY,
         error_message_type: ERROR_TYPE_NO_ERROR,
@@ -152,13 +89,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         is_loading_initial: true,
         is_loading_next: true,
         add_repository_modal: null,
-        display_mode: displayMode,
+        display_mode: display_mode,
         is_first_load_done: false,
-        services_name_used: JSON.parse(externalServicesNameUsed),
+        services_name_used: JSON.parse(
+            getDatasetItemOrThrow(vue_mount_point, "externalServicesNameUsed"),
+        ),
         add_gitlab_repository_modal: null,
         unlink_gitlab_repository_modal: null,
         unlink_gitlab_repository: null,
     };
+
+    const AppComponent = Vue.extend(App);
+
     new AppComponent({
         store: createStore(state),
     }).$mount(vue_mount_point);

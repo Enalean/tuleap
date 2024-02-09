@@ -7,6 +7,7 @@
   "type": "module",
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:*",
+    "@tuleap/dom": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/project-privacy-helper": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",

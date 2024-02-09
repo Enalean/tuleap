@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PullRequestBadge displays a badge with pull request 1`] = `
-<a href="/plugins/git/?action=pull-requests&amp;group_id=undefined&amp;repo_id=100#/dashboard" class="git-pullrequest-badge-link"><span class="tlp-badge-primary"><translate-stub tag="span" translaten="1" translateplural="%{ numberPullRequest } pull requests">
+<a href="http://localhost/plugins/git/?action=pull-requests&amp;group_id=undefined&amp;repo_id=100&amp;tab=homepage" class="git-pullrequest-badge-link"><span class="tlp-badge-primary"><translate-stub tag="span" translaten="1" translateplural="%{ numberPullRequest } pull requests">
             %{ numberPullRequest } pull request
         </translate-stub></span></a>
 `;
