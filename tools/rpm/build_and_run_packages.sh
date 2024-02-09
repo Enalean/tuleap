@@ -83,7 +83,7 @@ fi
 docker run -t -d --rm \
     --name rpm-installer \
     -v rpm-volume:/rpms \
-    -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+    -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
     --mount type=tmpfs,destination=/run \
     --cap-add=sys_nice \
     $INSTALL_IMAGE
