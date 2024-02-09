@@ -23,11 +23,13 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SetupMysql;
 
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Tuleap\Config\ConfigSerializer;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConfig;
+use Tuleap\Option\Option;
 
 final class DatabaseConfigurator
 {
@@ -36,11 +38,16 @@ final class DatabaseConfigurator
     private const DB_ALREADY_INIT                 = 1;
     private const DB_FRESH                        = 2;
 
+    private const MYSQL_COLUMN_NAME_GENERATED_PASSWORD = 'generated password';
+
     public function __construct(private \PasswordHandler $password_handler, private ConnectionManagerInterface $connection_manager)
     {
     }
 
-    public function setupDatabase(SymfonyStyle $output, DBSetupParameters $db_params, string $base_directory = '/'): void
+    /**
+     * @psalm-return Option<ConcealedString>
+     */
+    public function setupDatabase(SymfonyStyle $output, DBSetupParameters $db_params, string $base_directory = '/'): Option
     {
         $db = $this->connection_manager->getDBWithoutDBName(
             $output,
@@ -55,6 +62,8 @@ final class DatabaseConfigurator
 
         $this->connection_manager->checkSQLModes($db);
 
+        $admin_password = $this->updateDBAdminPasswordIfNeeded($output, $db, $db_params);
+
         $this->initializeDatabaseAndLoadValues(
             $output,
             $db,
@@ -64,6 +73,38 @@ final class DatabaseConfigurator
         $db->run('FLUSH PRIVILEGES');
 
         $this->writeDatabaseIncFile($db_params->azure_prefix, $base_directory);
+
+        return $admin_password;
+    }
+
+    /**
+     * @psalm-return Option<ConcealedString>
+     */
+    private function updateDBAdminPasswordIfNeeded(SymfonyStyle $output, DBWrapperInterface $db, DBSetupParameters $db_params): Option
+    {
+        $db_host = \ForgeConfig::get(DBConfig::CONF_HOST);
+        if ($db_host !== '127.0.0.1' && $db_host !== 'localhost') {
+            return Option::nothing(ConcealedString::class);
+        }
+
+        if ($db_params->admin_password !== '') {
+            return Option::nothing(ConcealedString::class);
+        }
+
+        $output->writeln(sprintf('<info>Assigning a random password to DB user %s</info>', OutputFormatter::escape($db_params->admin_user)));
+
+        $user_row = $db->row(sprintf(
+            'ALTER USER %s IDENTIFIED BY RANDOM PASSWORD',
+            $this->quoteDbUser($db_params->admin_user, $db_host),
+        ));
+
+        if (! isset($user_row[self::MYSQL_COLUMN_NAME_GENERATED_PASSWORD])) {
+            throw new \RuntimeException(sprintf('Generated password for DB user %s cannot be retrieved', $db_params->admin_user));
+        }
+
+        $password = new ConcealedString((string) $user_row[self::MYSQL_COLUMN_NAME_GENERATED_PASSWORD]);
+        sodium_memzero($user_row[self::MYSQL_COLUMN_NAME_GENERATED_PASSWORD]);
+        return Option::fromValue($password);
     }
 
     public function initializeDatabase(
