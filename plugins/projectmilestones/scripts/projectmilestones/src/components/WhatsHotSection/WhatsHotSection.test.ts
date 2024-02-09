@@ -29,7 +29,7 @@ const project_id = 102;
 
 async function getPersonalWidgetInstance(
     current_milestones: Array<MilestoneData>,
-): Promise<Wrapper<WhatsHotSection>> {
+): Promise<Wrapper<Vue, Element>> {
     const useStore = defineStore("root", {
         state: () => ({
             current_milestones,
@@ -43,6 +43,7 @@ async function getPersonalWidgetInstance(
             project_id,
         },
         localVue: await createReleaseWidgetLocalVue(),
+        pinia,
     };
 
     return shallowMount(WhatsHotSection, component_options);
