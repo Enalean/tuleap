@@ -62,7 +62,7 @@ final class LesserThanComparisonFromWhereBuilder implements FromWhereBuilder
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
         $value             = $this->extractor->getValue($comparison);
-        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
+        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $value);
         $where_parameters  = [$floored_timestamp];
         $where             = "{$this->alias_field} < ?";
 

@@ -35,8 +35,8 @@ final class ForSubmittedOn implements DateTimeReadOnlyConditionBuilder
             return new ParametrizedSQLFragment("0", []);
         }
 
-        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
-        $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $value);
+        $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $value);
         $condition         = "artifact.submitted_on BETWEEN ? AND ?";
 
         return new ParametrizedSQLFragment($condition, [$floored_timestamp, $ceiled_timestamp]);

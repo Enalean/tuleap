@@ -66,8 +66,8 @@ final class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
         $where_parameters = [];
 
         if ($value !== '') {
-            $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
-            $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+            $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $value);
+            $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $value);
             $where_parameters  = [$floored_timestamp, $ceiled_timestamp];
             $where             = "{$this->alias_field} NOT BETWEEN ? AND ?";
         }

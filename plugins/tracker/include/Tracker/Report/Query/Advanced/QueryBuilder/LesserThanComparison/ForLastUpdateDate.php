@@ -31,7 +31,7 @@ final class ForLastUpdateDate implements DateTimeReadOnlyConditionBuilder
 
     public function getCondition($value): ParametrizedSQLFragment
     {
-        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
+        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $value);
         $condition         = "c.submitted_on < ?";
 
         return new ParametrizedSQLFragment($condition, [$floored_timestamp]);

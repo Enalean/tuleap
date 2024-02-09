@@ -25,7 +25,7 @@ use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 
 final class DateTimeValueRounder
 {
-    public function getFlooredTimestampFromDateTime($value)
+    public function getFlooredTimestampFromDateTime(string $value): int
     {
         $date_value = $this->floorDateTime($value);
         if ($date_value === null) {
@@ -35,14 +35,14 @@ final class DateTimeValueRounder
         return $date_value->getTimestamp();
     }
 
-    public function getFlooredTimestampFromDate($value)
+    public function getFlooredTimestampFromDate(string $value): int
     {
         $date_value = $this->floorDate($value);
 
-        return $date_value->getTimestamp();
+        return $date_value ? $date_value->getTimestamp() : 0;
     }
 
-    public function getCeiledTimestampFromDateTime($value)
+    public function getCeiledTimestampFromDateTime(string $value): int
     {
         $date_value = $this->floorDateTime($value);
         if ($date_value === null) {
@@ -54,16 +54,16 @@ final class DateTimeValueRounder
         return ($timestamp_value + $seconds_in_a_minute - 1);
     }
 
-    public function getCeiledTimestampFromDate($value)
+    public function getCeiledTimestampFromDate(string $value): int
     {
         $date_value       = $this->floorDate($value);
         $seconds_in_a_day = DateHelper::SECONDS_IN_A_DAY;
-        $timestamp_value  = $date_value->getTimestamp();
+        $timestamp_value  = $date_value ? $date_value->getTimestamp() : 0;
 
         return ($timestamp_value + $seconds_in_a_day - 1);
     }
 
-    private function floorDateTime($value)
+    private function floorDateTime(string $value): ?DateTime
     {
         $date_value = DateTime::createFromFormat(DateFormat::DATETIME, $value);
 
@@ -75,7 +75,7 @@ final class DateTimeValueRounder
         return $date_value;
     }
 
-    private function floorDate($value)
+    private function floorDate(string $value): ?DateTime
     {
         $date_value = DateTime::createFromFormat(DateFormat::DATE, $value);
 

@@ -62,7 +62,7 @@ final class GreaterThanComparisonFromWhereBuilder implements FromWhereBuilder
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
         $value            = $this->extractor->getValue($comparison);
-        $ceiled_timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+        $ceiled_timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $value);
         $where_parameters = [$ceiled_timestamp];
         $where            = "{$this->alias_field} > ?";
 
