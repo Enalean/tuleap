@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import * as rest_querier from "../api/rest-querier";
 import {
     REST_FEEDBACK_DELETE,
@@ -37,9 +38,7 @@ describe("Store actions", () => {
 
     it("Given new dates, Then dates must equal to the new dates and queryHasChanged must be true", () => {
         const store = usePersonalTimetrackingWidgetStore();
-        jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
-            okAsync({ times: [], total: 0 }),
-        );
+        vi.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(okAsync({ times: [], total: 0 }));
 
         store.setDatesAndReload("2015-09-14", "2017-04-24");
         expect(store.start_date).toBe("2015-09-14");
@@ -56,9 +55,7 @@ describe("Store actions", () => {
                     minutes: 20,
                 },
             ] as PersonalTime[];
-            jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
-                okAsync({ times, total: 1 }),
-            );
+            vi.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(okAsync({ times, total: 1 }));
 
             await store.loadFirstBatchOfTimes();
             expect(store.times).toStrictEqual(times);
@@ -69,7 +66,7 @@ describe("Store actions", () => {
         describe("getTimes - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
                 const store = usePersonalTimetrackingWidgetStore();
-                jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
+                vi.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
                     errAsync(Fault.fromMessage("403 Forbidden")),
                 );
 
@@ -81,7 +78,7 @@ describe("Store actions", () => {
         describe("addTime - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's rest_feedback private property.", async () => {
                 const store = usePersonalTimetrackingWidgetStore();
-                jest.spyOn(rest_querier, "postTime").mockReturnValue(
+                vi.spyOn(rest_querier, "postTime").mockReturnValue(
                     errAsync(Fault.fromMessage("403 Forbidden")),
                 );
 
@@ -92,7 +89,7 @@ describe("Store actions", () => {
 
             it("Given a rest error, When a json error message is received, Then the message is extracted by addTime() into the rest_feedback private property.", async () => {
                 const store = usePersonalTimetrackingWidgetStore();
-                jest.spyOn(rest_querier, "postTime").mockReturnValue(
+                vi.spyOn(rest_querier, "postTime").mockReturnValue(
                     errAsync(Fault.fromMessage("404 Error")),
                 );
 
@@ -105,7 +102,7 @@ describe("Store actions", () => {
         describe("addTime - success", () => {
             it("Given no rest error, then a success message is displayed", async () => {
                 const store = usePersonalTimetrackingWidgetStore();
-                const restAddTime = jest.spyOn(rest_querier, "postTime");
+                const restAddTime = vi.spyOn(rest_querier, "postTime");
 
                 const time = {
                     artifact: {},
@@ -113,7 +110,7 @@ describe("Store actions", () => {
                     minutes: 20,
                 } as PersonalTime;
                 restAddTime.mockReturnValue(okAsync(time));
-                jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
+                vi.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
                     okAsync({ times: [time], total: 1 }),
                 );
 
@@ -128,7 +125,7 @@ describe("Store actions", () => {
         describe("updateTime - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then it should add the json error message on rest_feedback", async () => {
                 const store = usePersonalTimetrackingWidgetStore();
-                jest.spyOn(rest_querier, "putTime").mockReturnValue(
+                vi.spyOn(rest_querier, "putTime").mockReturnValue(
                     errAsync(Fault.fromMessage("403 Forbidden")),
                 );
 
@@ -139,7 +136,7 @@ describe("Store actions", () => {
 
             it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
                 const store = usePersonalTimetrackingWidgetStore();
-                jest.spyOn(rest_querier, "putTime").mockReturnValue(
+                vi.spyOn(rest_querier, "putTime").mockReturnValue(
                     errAsync(Fault.fromMessage("404 Error")),
                 );
 
@@ -152,7 +149,7 @@ describe("Store actions", () => {
         describe("updateTime - success", () => {
             it("Given no rest error, then a success message is displayed", async () => {
                 const store = usePersonalTimetrackingWidgetStore();
-                const getTrackedTimes = jest
+                const getTrackedTimes = vi
                     .spyOn(rest_querier, "getTrackedTimes")
                     .mockReturnValue(okAsync({ times: [], total: 0 }));
 
@@ -162,7 +159,7 @@ describe("Store actions", () => {
                     id: 1,
                     minutes: 20,
                 } as PersonalTime;
-                const rest_update_time = jest.spyOn(rest_querier, "putTime");
+                const rest_update_time = vi.spyOn(rest_querier, "putTime");
                 rest_update_time.mockReturnValue(okAsync(time));
 
                 await store.updateTime("2018-01-01", 1, "00:20", "oui");
@@ -175,7 +172,7 @@ describe("Store actions", () => {
         describe("deleteTime - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then it should add the json error message on rest_feedback", async () => {
                 const store = usePersonalTimetrackingWidgetStore();
-                jest.spyOn(rest_querier, "delTime").mockReturnValue(
+                vi.spyOn(rest_querier, "delTime").mockReturnValue(
                     errAsync(Fault.fromMessage("403 Forbidden")),
                 );
 
@@ -188,11 +185,11 @@ describe("Store actions", () => {
         describe("deleteTime - success", () => {
             it("Given no rest error, then a success message is displayed", async () => {
                 const store = usePersonalTimetrackingWidgetStore();
-                const getTrackedTimes = jest
+                const getTrackedTimes = vi
                     .spyOn(rest_querier, "getTrackedTimes")
                     .mockReturnValue(okAsync({ times: [], total: 0 }));
 
-                const rest_update_time = jest.spyOn(rest_querier, "delTime");
+                const rest_update_time = vi.spyOn(rest_querier, "delTime");
                 rest_update_time.mockReturnValue(okAsync({ ok: true } as unknown as Response));
 
                 const time_id = 1;
@@ -222,7 +219,7 @@ describe("Store actions", () => {
                     },
                 ] as PersonalTime[];
 
-                jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
+                vi.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
                     okAsync({ times, total: 1 }),
                 );
 

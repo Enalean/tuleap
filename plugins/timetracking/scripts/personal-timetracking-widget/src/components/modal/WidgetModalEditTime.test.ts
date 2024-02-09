@@ -18,11 +18,16 @@
  *
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import { createLocalVueForTests } from "../../helpers/local-vue.js";
 import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
+});
 
 describe("Given a personal timetracking widget modal", () => {
     const current_artifact = { id: 10 } as Artifact;
@@ -56,29 +61,26 @@ describe("Given a personal timetracking widget modal", () => {
 
     describe("Submit", () => {
         it("Given a new time is not filled, then the time is invalid", async () => {
-            const wrapper = await getWrapperInstance();
-            wrapper.setData({ time: null });
-
+            const wrapper = await getWrapperInstance({} as PersonalTime);
             wrapper.find("[data-test=timetracking-submit-time]").trigger("click");
 
             expect(wrapper.vm.error_message).toBe("Time is required");
         });
 
         it("Given a new time is submitted with an incorrect format, then the time is invalid", async () => {
-            const wrapper = await getWrapperInstance();
-            wrapper.setData({ time: "00" });
+            const wrapper = await getWrapperInstance({ minutes: "0a" } as PersonalTime);
             wrapper.find("[data-test=timetracking-submit-time]").trigger("click");
 
             expect(wrapper.vm.error_message).toBe("Please check time's format (hh:mm)");
         });
 
         it("Given a new time is submitted, then the submit button is disabled and a new event is sent", async () => {
-            const wrapper = await getWrapperInstance();
-
-            wrapper.setData({
+            const time = {
                 date: "2020-04-03",
-                time: "00:10",
-            });
+                minutes: 10,
+            } as PersonalTime;
+            const wrapper = await getWrapperInstance(time);
+
             wrapper.find("[data-test=timetracking-submit-time]").trigger("click");
 
             expect(wrapper.emitted("validate-time")).toStrictEqual([

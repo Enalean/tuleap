@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
@@ -51,7 +52,7 @@ describe("Given a personal timetracking widget", () => {
                 loadFirstBatchOfTimes() {},
             },
         });
-        const pinia = createTestingPinia();
+        const pinia = createTestingPinia({ createSpy: vi.fn });
         useStore(pinia);
 
         const component_options = {

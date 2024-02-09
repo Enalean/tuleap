@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import {
     ERROR_OCCURRED,
@@ -31,7 +32,6 @@ import {
 } from "@tuleap/plugin-timetracking-constants";
 import { usePersonalTimetrackingWidgetStore } from "./root";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
-import { beforeEach } from "@jest/globals";
 
 describe("Store mutations", () => {
     beforeEach(() => {
