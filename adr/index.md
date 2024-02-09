@@ -29,6 +29,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 * [ADR-0023](0023-outbound-http-requests.md) - Management of outbound HTTP requests (SSRF protection)
 * [ADR-0024](0024-remove-ldap-write.md) - Remove LDAP write
 * [ADR-0025](0025-disposable.md) - Disposable
+* [ADR-0026](0026-integration-tests-teardown.md) - Avoiding shared data for database integration tests
 
 <!-- adrlogstop -->
 
