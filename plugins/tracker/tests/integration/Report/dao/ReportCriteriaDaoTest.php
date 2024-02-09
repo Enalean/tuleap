@@ -46,6 +46,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         $to_field_id         = 200;
         $to_other_field_id   = 201;
         $rank                = 1;
+        $field_mapping       = [];
 
         $field_mapping[] = [
             'values' => [
@@ -94,6 +95,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         $to_field_id         = 400;
         $to_other_field_id   = 401;
         $rank                = 1;
+        $field_mapping       = [];
 
         $field_mapping[] = [
             'values' => [],
@@ -133,6 +135,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         $from_field_id  = 111;
         $to_field_id    = 222;
         $rank           = 1;
+        $field_mapping  = [];
 
         $field_mapping[] = [
             'values' => [],
@@ -159,6 +162,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         $from_field_id  = 333;
         $to_field_id    = 444;
         $rank           = 1;
+        $field_mapping  = [];
 
         $field_mapping[] = [
             'values' => [
@@ -187,6 +191,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         $from_field_id  = 555;
         $to_field_id    = 666;
         $rank           = 1;
+        $field_mapping  = [];
 
         $field_mapping[] = [
             'values' => [],
@@ -195,7 +200,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
-        $this->insertPermissionValue($criteria_id, 3);
+        $this->insertPermissionValue($criteria_id, '3');
 
         $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
 
@@ -213,6 +218,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         $from_field_id  = 777;
         $to_field_id    = 888;
         $rank           = 1;
+        $field_mapping  = [];
 
         $field_mapping[] = [
             'values' => [],
@@ -239,6 +245,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         $from_field_id  = 900;
         $to_field_id    = 999;
         $rank           = 1;
+        $field_mapping  = [];
 
         $field_mapping[] = [
             'values' => [],
@@ -260,7 +267,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
 
     private function create(int $report_id, int $field_id, int $rank, int $is_advanced): int
     {
-        return $this->db->insertReturnId('tracker_report_criteria', [
+        return (int) $this->db->insertReturnId('tracker_report_criteria', [
             'report_id' => $report_id,
             'field_id' => $field_id,
             'rank' => $rank,
