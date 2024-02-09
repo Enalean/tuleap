@@ -54,6 +54,7 @@ use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaverIgnoringPermissions;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
@@ -2683,7 +2684,16 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $nb_lines++;
                 if ($mode == 'creation') {
                     $fields_data = $this->getFormElementFactory()->getUsedFieldsWithDefaultValue($this, $fields_data, $current_user);
-                    if ($af->createArtifact($this, $fields_data, $current_user, true, $send_notifications)) {
+                    $artifact    = $this->getArtifactCreator()->create(
+                        $this,
+                        $fields_data,
+                        $current_user,
+                        $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+                        $send_notifications,
+                        true,
+                        new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+                    );
+                    if ($artifact) {
                         $nb_artifact_creation++;
                     } else {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Unable to create artifact'));
@@ -2730,6 +2740,27 @@ class Tracker implements Tracker_Dispatchable_Interface
             $is_error = true;
         }
         return ! $is_error;
+    }
+
+    private function getArtifactCreator(): TrackerArtifactCreator
+    {
+        $fields_validator     = Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build();
+        $logger               = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+
+        $changeset_creator = new InitialChangesetCreator(
+            Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+            $fields_retriever,
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+            $logger,
+            ArtifactChangesetSaver::build(),
+            new AfterNewChangesetHandler(Tracker_ArtifactFactory::instance(), $fields_retriever),
+            \WorkflowFactory::instance(),
+            new InitialChangesetValueSaver()
+        );
+
+        return TrackerArtifactCreator::build($changeset_creator, $fields_validator, $logger);
     }
 
     /**
