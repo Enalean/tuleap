@@ -19,6 +19,8 @@
 
 namespace Tuleap\Kanban\REST\v1;
 
+use BackendLogger;
+use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanDao;
@@ -51,6 +53,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
@@ -58,6 +61,8 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangeset
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -80,6 +85,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use UserManager;
+use WrapperLogger;
 
 final class KanbanItemsResource extends AuthenticatedResource
 {
@@ -238,7 +244,20 @@ final class KanbanItemsResource extends AuthenticatedResource
                 ),
                 $artifact_link_initial_builder
             ),
-            $this->artifact_factory,
+            TrackerArtifactCreator::build(
+                new InitialChangesetCreator(
+                    Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+                    $fields_retriever,
+                    new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->form_element_factory),
+                    new WrapperLogger(BackendLogger::getDefaultLogger(), self::class),
+                    ArtifactChangesetSaver::build(),
+                    new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
+                    \WorkflowFactory::instance(),
+                    new InitialChangesetValueSaver(),
+                ),
+                Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+                new WrapperLogger(BackendLogger::getDefaultLogger(), self::class),
+            ),
             $this->tracker_factory,
             new FieldsDataFromValuesByFieldBuilder($this->form_element_factory, $artifact_link_initial_builder),
             $this->form_element_factory,

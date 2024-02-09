@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
@@ -59,7 +60,7 @@ final class ArtifactCreatorTest extends TestCase
 
     private const ARTIFACT_LINK_FIELD_ID = 496;
 
-    private \Tracker_ArtifactFactory & Stub $artifact_factory;
+    private TrackerArtifactCreator & Stub $artifact_creator;
     private RetrieveUsedFieldsStub $all_fields_retriever;
     private RetrieveViewableArtifactStub $artifact_retriever;
     private RetrieveUsedArtifactLinkFieldsStub $link_field_retriever;
@@ -75,7 +76,7 @@ final class ArtifactCreatorTest extends TestCase
             ->withProject(ProjectTestBuilder::aProject()->build())
             ->build();
 
-        $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
+        $this->artifact_creator = $this->createStub(TrackerArtifactCreator::class);
 
         $this->all_fields_retriever = RetrieveUsedFieldsStub::withNoFields();
         $this->artifact_retriever   = RetrieveViewableArtifactStub::withNoArtifact();
@@ -100,7 +101,7 @@ final class ArtifactCreatorTest extends TestCase
                 ),
                 $artifact_link_initial_builder,
             ),
-            $this->artifact_factory,
+            $this->artifact_creator,
             RetrieveTrackerStub::withTracker($this->tracker),
             new FieldsDataFromValuesByFieldBuilder($this->all_fields_retriever, $artifact_link_initial_builder),
             $default_values_adder,
@@ -131,7 +132,7 @@ final class ArtifactCreatorTest extends TestCase
         );
 
         $newly_created_artifact = ArtifactTestBuilder::anArtifact(27)->inTracker($this->tracker)->build();
-        $this->artifact_factory->method('createArtifact')->willReturn($newly_created_artifact);
+        $this->artifact_creator->method('create')->willReturn($newly_created_artifact);
 
         $this->create();
         self::assertSame(0, $this->changeset_creator->getCallsCount());
@@ -157,7 +158,7 @@ final class ArtifactCreatorTest extends TestCase
         );
 
         $newly_created_artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
-        $this->artifact_factory->method('createArtifact')->willReturn($newly_created_artifact);
+        $this->artifact_creator->method('create')->willReturn($newly_created_artifact);
 
         $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
             ArtifactTestBuilder::anArtifact($first_artifact_id)->build(),
@@ -202,7 +203,7 @@ final class ArtifactCreatorTest extends TestCase
         );
 
         $newly_created_artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
-        $this->artifact_factory->method('createArtifact')->willReturn($newly_created_artifact);
+        $this->artifact_creator->method('create')->willReturn($newly_created_artifact);
 
         $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
             ArtifactTestBuilder::anArtifact($first_artifact_id)->build(),
@@ -249,7 +250,7 @@ final class ArtifactCreatorTest extends TestCase
         );
 
         $newly_created_artifact = ArtifactTestBuilder::anArtifact(42)->inTracker($this->tracker)->build();
-        $this->artifact_factory->method('createArtifact')->willReturn($newly_created_artifact);
+        $this->artifact_creator->method('create')->willReturn($newly_created_artifact);
 
         $this->createValuesByField();
         self::assertSame(0, $this->changeset_creator->getCallsCount());
@@ -279,7 +280,7 @@ final class ArtifactCreatorTest extends TestCase
         );
 
         $newly_created_artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
-        $this->artifact_factory->method('createArtifact')->willReturn($newly_created_artifact);
+        $this->artifact_creator->method('create')->willReturn($newly_created_artifact);
 
         $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
             ArtifactTestBuilder::anArtifact($first_artifact_id)->build(),
