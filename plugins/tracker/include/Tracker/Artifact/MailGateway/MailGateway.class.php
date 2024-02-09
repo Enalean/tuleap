@@ -184,15 +184,14 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         );
     }
 
-    /** @return Artifact|false */
-    private function createArtifact(PFUser $user, Tracker $tracker, $title, $body)
+    private function createArtifact(PFUser $user, Tracker $tracker, $title, $body): ?Artifact
     {
         $this->logger->debug("Receiving new artifact from " . $user->getUserName());
 
         if (! $tracker->userCanSubmitArtifact($user)) {
             $this->logger->info("User " . $user->getUserName() . " has no right to create an artifact in tracker #" . $tracker->getId());
             $this->notifier->sendErrorMailInsufficientPermissionCreation($user->getEmail(), $title);
-            return false;
+            return null;
         }
 
         $title_field       = $tracker->getTitleField();

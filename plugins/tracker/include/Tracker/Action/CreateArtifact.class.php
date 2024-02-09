@@ -64,10 +64,8 @@ class Tracker_Action_CreateArtifact
      *
      * @param Codendi_Request                $request
      * @param PFUser                         $user
-     *
-     * @return Artifact|false the new artifact
      */
-    private function createArtifact(Tracker_IDisplayTrackerLayout $layout, $request, $user)
+    private function createArtifact(Tracker_IDisplayTrackerLayout $layout, $request, $user): ?Artifact
     {
         $fields_data = $request->get('artifact');
         if (! isset($fields_data['request_method_called'])) {

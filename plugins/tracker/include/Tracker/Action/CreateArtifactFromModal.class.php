@@ -49,7 +49,7 @@ class Tracker_Action_CreateArtifactFromModal
         }
     }
 
-    private function createArtifact(PFUser $current_user)
+    private function createArtifact(PFUser $current_user): ?Artifact
     {
         $fields_data = $this->request->get('artifact');
         $this->tracker->augmentDataFromRequest($fields_data);

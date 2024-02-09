@@ -126,7 +126,7 @@ class ArtifactCreator
      * @throws \Luracast\Restler\RestException
      */
     private function returnReferenceOrError(
-        Artifact|false $artifact,
+        ?Artifact $artifact,
         string $format,
         PFUser $submitter,
         InitialChangesetValuesContainer $changeset_values,
