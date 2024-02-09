@@ -28,7 +28,11 @@
                 data-test="timetracking-overview-users-selector"
             >
                 <option v-bind:value="null">{{ $gettext("All users") }}</option>
-                <option v-for="user in users" v-bind:value="user.user_id" v-bind:key="user.user_id">
+                <option
+                    v-for="user in overview_store.users"
+                    v-bind:value="user.user_id"
+                    v-bind:key="user.user_id"
+                >
                     {{ user.user_name }}
                 </option>
             </select>
@@ -36,15 +40,18 @@
     </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { inject } from "vue";
+import { useOverviewWidgetStore } from "../store/index.js";
+
 export default {
     name: "TimeTrackingOverviewUserList",
-    computed: {
-        ...mapState(["users"]),
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
     },
     methods: {
         setSelected() {
-            this.$store.commit("setSelectedUser", this.$refs.select.value);
+            this.overview_store.setSelectedUser(this.$refs.select.value);
         },
     },
 };

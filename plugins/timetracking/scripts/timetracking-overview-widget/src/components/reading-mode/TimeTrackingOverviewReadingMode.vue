@@ -27,12 +27,16 @@
         <div
             class="timetracking-reading-mode"
             data-test="overview-toggle-reading-mode"
-            v-on:click="toggleReadingMode()"
+            v-on:click="overview_store.toggleReadingMode()"
         >
             <time-tracking-overview-reading-dates />
             <time-tracking-overview-tracker-list />
         </div>
-        <div class="reading-mode-actions" v-if="!is_report_saved" data-test="reading-mode-actions">
+        <div
+            class="reading-mode-actions"
+            v-if="!overview_store.is_report_saved"
+            data-test="reading-mode-actions"
+        >
             <button
                 class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
                 v-on:click="discardReport()"
@@ -45,7 +49,7 @@
                 data-test="save-overview-report"
             >
                 <i
-                    v-if="is_loading"
+                    v-if="overview_store.is_loading"
                     class="tlp-button-icon fa fa-spinner fa-spin"
                     data-test="icon-spinner"
                 ></i>
@@ -56,24 +60,25 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { inject } from "vue";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
 import TimeTrackingOverviewReadingDates from "./TimeTrackingOverviewReadingDates.vue";
+import { useOverviewWidgetStore } from "../../store/index.js";
 
 export default {
     name: "TimeTrackingOverviewReadingMode",
     components: { TimeTrackingOverviewTrackerList, TimeTrackingOverviewReadingDates },
-    computed: {
-        ...mapState(["is_report_saved", "is_loading"]),
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
     },
     methods: {
-        ...mapMutations(["toggleReadingMode"]),
         saveReport() {
-            this.$store.dispatch("saveReport", this.$gettext("Report has been successfully saved"));
+            this.overview_store.saveReport(this.$gettext("Report has been successfully saved"));
         },
         async discardReport() {
-            await this.$store.dispatch("initWidgetWithReport");
-            this.$store.commit("setIsReportSave", true);
+            await this.overview_store.initWidgetWithReport();
+            this.overview_store.setIsReportSave(true);
         },
     },
 };

@@ -21,22 +21,26 @@
     <div class="cross-timetracking-widget">
         <div
             class="tlp-alert-info cross-tracker-report-success"
-            v-if="has_success_message"
+            v-if="overview_store.has_success_message"
             data-test="report-success"
         >
-            {{ success_message }}
+            {{ overview_store.success_message }}
         </div>
-        <time-tracking-overview-reading-mode v-if="reading_mode" data-test="reading-mode" />
+        <time-tracking-overview-reading-mode
+            v-if="overview_store.reading_mode"
+            data-test="reading-mode"
+        />
         <time-tracking-overview-writing-mode v-else data-test="writing-mode" />
         <time-tracking-overview-table />
     </div>
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { provide } from "vue";
 import TimeTrackingOverviewReadingMode from "./reading-mode/TimeTrackingOverviewReadingMode.vue";
 import TimeTrackingOverviewWritingMode from "./writing-mode/TimeTrackingOverviewWritingMode.vue";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
+import { useOverviewWidgetStore } from "../store/index.js";
 
 export default {
     name: "TimeTrackingOverview",
@@ -46,20 +50,22 @@ export default {
         TimeTrackingOverviewWritingMode,
     },
     props: {
-        reportId: String,
+        reportId: Number,
         userId: Number,
         areVoidTrackersHidden: Boolean,
     },
-    computed: {
-        ...mapState(["reading_mode", "success_message"]),
-        ...mapGetters(["has_success_message"]),
+    setup: ({ reportId }) => {
+        provide("report_id", reportId);
+        const overview_store = useOverviewWidgetStore(reportId)();
+
+        return { overview_store };
     },
     mounted() {
-        this.$store.commit("setReportId", this.reportId);
-        this.$store.commit("initUserId", this.userId);
-        this.$store.commit("setDisplayVoidTrackers", this.areVoidTrackersHidden);
-        this.$store.dispatch("initWidgetWithReport");
-        this.$store.dispatch("getProjects");
+        this.overview_store.setReportId(this.reportId);
+        this.overview_store.initUserId(this.userId);
+        this.overview_store.setDisplayVoidTrackers(this.areVoidTrackersHidden);
+        this.overview_store.initWidgetWithReport();
+        this.overview_store.getProjects();
         document.addEventListener("timeUpdated", this.reloadTimes);
     },
     destroyed() {
@@ -67,7 +73,7 @@ export default {
     },
     methods: {
         reloadTimes() {
-            this.$store.dispatch("reloadTimetrackingOverviewTimes");
+            this.overview_store.reloadTimetrackingOverviewTimes();
         },
     },
 };

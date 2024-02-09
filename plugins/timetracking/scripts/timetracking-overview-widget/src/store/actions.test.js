@@ -17,19 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as actions from "./actions.js";
-import initial_state from "./state.js";
+import { describe, beforeEach, afterEach, it, expect, jest } from "@jest/globals";
+import { setActivePinia, createPinia } from "pinia";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { ERROR_OCCURRED } from "@tuleap/plugin-timetracking-constants";
 import * as rest_querier from "../api/rest-querier.js";
+import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store.js";
 
 describe("Store actions", () => {
-    let context;
+    let store;
+
     beforeEach(() => {
-        context = {
-            commit: jest.fn(),
-            state: { ...initial_state },
-        };
+        setActivePinia(createPinia());
+        store = useOverviewWidgetTestStore();
+    });
+
+    afterEach(() => {
+        store.$reset();
     });
 
     describe("initWidgetWithReport - success", () => {
@@ -42,13 +46,14 @@ describe("Store actions", () => {
                 },
             ];
 
+            jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(Promise.resolve([]));
             jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(
                 Promise.resolve(report),
             );
 
-            await actions.initWidgetWithReport(context);
-            expect(context.commit).toHaveBeenCalledWith("resetMessages");
-            expect(context.commit).toHaveBeenCalledWith("setSelectedTrackers", report.trackers);
+            await store.initWidgetWithReport();
+            expect(store.error_message).toBeNull();
+            expect(store.selected_trackers).toStrictEqual(report.trackers);
         });
     });
 
@@ -56,9 +61,8 @@ describe("Store actions", () => {
         it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
             jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(Promise.reject());
 
-            await actions.initWidgetWithReport(context);
-            expect(context.commit).toHaveBeenCalledWith("resetMessages");
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", ERROR_OCCURRED);
+            await store.initWidgetWithReport();
+            expect(store.error_message).toBe(ERROR_OCCURRED);
         });
     });
 
@@ -78,6 +82,7 @@ describe("Store actions", () => {
                     label: "tracker",
                     project: {},
                     uri: "",
+                    time_per_user: [],
                 },
                 {
                     artifacts: [
@@ -89,18 +94,20 @@ describe("Store actions", () => {
                     label: "tracker 2",
                     project: {},
                     uri: "",
+                    time_per_user: [],
                 },
             ];
-            context.state.trackers_times = trackers;
+
+            store.is_loading = true;
 
             jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(
                 Promise.resolve(trackers),
             );
 
-            await actions.loadTimes(context);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
-            expect(context.commit).toHaveBeenCalledWith("setTrackersTimes", trackers);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
+            await store.loadTimes();
+
+            expect(store.trackers_times).toStrictEqual(trackers);
+            expect(store.is_loading).toBe(false);
         });
     });
 
@@ -115,17 +122,19 @@ describe("Store actions", () => {
                 },
             });
 
-            await actions.initWidgetWithReport(context);
-            expect(context.commit).toHaveBeenCalledWith("resetMessages");
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "403 Forbidden");
+            await store.initWidgetWithReport();
+
+            expect(store.success_message).toBeNull();
+            expect(store.error_message).toBe("403 Forbidden");
         });
 
         it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
             jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(Promise.reject());
 
-            await actions.initWidgetWithReport(context);
-            expect(context.commit).toHaveBeenCalledWith("resetMessages");
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", ERROR_OCCURRED);
+            await store.initWidgetWithReport();
+
+            expect(store.success_message).toBeNull();
+            expect(store.error_message).toBe(ERROR_OCCURRED);
         });
     });
 
@@ -140,9 +149,11 @@ describe("Store actions", () => {
                 Promise.resolve(projects),
             );
 
-            await actions.getProjects(context);
-            expect(context.commit).toHaveBeenCalledWith("resetMessages");
-            expect(context.commit).toHaveBeenCalledWith("setProjects", projects);
+            await store.getProjects();
+
+            expect(store.success_message).toBeNull();
+            expect(store.error_message).toBeNull();
+            expect(store.projects).toBe(projects);
         });
     });
 
@@ -157,46 +168,48 @@ describe("Store actions", () => {
                 Promise.resolve(trackers),
             );
 
-            await actions.getTrackers(context);
-            expect(context.commit).toHaveBeenCalledWith("resetMessages");
-            expect(context.commit).toHaveBeenCalledWith("setTrackers", trackers);
+            store.selected_trackers = [];
+
+            await store.getTrackers();
+
+            expect(store.success_message).toBeNull();
+            expect(store.error_message).toBeNull();
+            expect(store.trackers).toBe(trackers);
         });
     });
 
     describe("SaveReport - success", () => {
         it("Given a success response, When report is received, Then no message error is received", async () => {
-            const report = [
-                {
-                    id: 1,
-                    uri: "timetracking_reports/1",
-                    trackers: [
-                        { id: 1, label: "timetracking_tracker" },
-                        { id: 2, label: "timetracking_tracker_2" },
-                    ],
-                },
-            ];
-
-            jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(Promise.resolve(report));
             const success_message = "Report has been successfully saved";
+            const report = {
+                id: 1,
+                uri: "timetracking_reports/1",
+                trackers: [
+                    { id: 1, label: "timetracking_tracker" },
+                    { id: 2, label: "timetracking_tracker_2" },
+                ],
+            };
 
-            await actions.saveReport(context, success_message);
-            expect(context.commit).toHaveBeenCalledWith("resetMessages");
-            expect(context.commit).toHaveBeenCalledWith("setTrackersIds");
-            expect(context.commit).toHaveBeenCalledWith("setSelectedTrackers", report.trackers);
-            expect(context.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
-            expect(context.commit).toHaveBeenCalledWith("setIsReportSave", true);
+            jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(Promise.resolve([]));
+            jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(Promise.resolve(report));
+
+            await store.saveReport(success_message);
+
+            expect(store.selected_trackers).toStrictEqual(report.trackers);
+            expect(store.is_report_saved).toBe(true);
+            expect(store.success_message).toBe(success_message);
+            expect(store.error_message).toBeNull();
         });
     });
 
     describe("SaveReport - error", () => {
         it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
             jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(Promise.reject());
-            const success_message = "Report has been successfully saved";
 
-            await actions.saveReport(context, success_message);
-            expect(context.commit).toHaveBeenCalledWith("resetMessages");
-            expect(context.commit).toHaveBeenCalledWith("setTrackersIds");
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", ERROR_OCCURRED);
+            await store.saveReport("Report has been successfully saved");
+
+            expect(store.success_message).toBeNull();
+            expect(store.error_message).toBe(ERROR_OCCURRED);
         });
     });
 });

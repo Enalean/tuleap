@@ -19,11 +19,11 @@
 
 <template>
     <div class="timetracking-overview-widget-table">
-        <div v-if="has_error" class="tlp-alert-danger" data-test="alert-danger">
-            {{ error_message }}
+        <div v-if="overview_store.has_error" class="tlp-alert-danger" data-test="alert-danger">
+            {{ overview_store.error_message }}
         </div>
         <div
-            v-if="has_trackers_times && !has_error"
+            v-if="has_trackers_times && !overview_store.has_error"
             class="tlp-table-actions"
             data-test="table-action"
         >
@@ -33,15 +33,25 @@
             >
                 <i
                     class="fas tlp-button-icon"
-                    v-bind:class="[are_void_trackers_hidden ? 'fa-eye' : 'fa-eye-slash']"
+                    v-bind:class="[
+                        overview_store.are_void_trackers_hidden ? 'fa-eye' : 'fa-eye-slash',
+                    ]"
                     aria-hidden="true"
                 ></i>
                 {{ display_button_text }}
             </button>
             <time-tracking-overview-user-list v-if="has_users" data-test="user-list-component" />
         </div>
-        <div v-if="is_loading" class="timetracking-loader" data-test="timetracking-loader"></div>
-        <table v-if="can_results_be_displayed" class="tlp-table" data-test="overview-table">
+        <div
+            v-if="overview_store.is_loading"
+            class="timetracking-loader"
+            data-test="timetracking-loader"
+        ></div>
+        <table
+            v-if="overview_store.can_results_be_displayed"
+            class="tlp-table"
+            data-test="overview-table"
+        >
             <thead>
                 <tr>
                     <th>{{ $gettext("Tracker") }}</th>
@@ -66,7 +76,7 @@
                 </tr>
                 <time-tracking-overview-table-row
                     v-else
-                    v-for="tracker_time in trackers_times"
+                    v-for="tracker_time in overview_store.trackers_times"
                     v-bind:key="tracker_time.id"
                     v-bind:time="tracker_time"
                     data-test="table-row"
@@ -77,7 +87,7 @@
                     <th></th>
                     <th></th>
                     <th class="tlp-table-cell-numeric timetracking-total-sum">
-                        ∑ {{ get_formatted_total_sum }}
+                        ∑ {{ overview_store.get_formatted_total_sum }}
                     </th>
                 </tr>
             </tfoot>
@@ -85,51 +95,46 @@
     </div>
 </template>
 <script>
+import { inject } from "vue";
 import TimeTrackingOverviewTableRow from "./TimeTrackingOverviewTableRow.vue";
 import TimeTrackingOverviewUserList from "./TimeTrackingOverviewUserList.vue";
-import { mapGetters, mapState } from "vuex";
+import { useOverviewWidgetStore } from "../store/index.js";
 
 export default {
     name: "TimeTrackingOverviewTable",
     components: { TimeTrackingOverviewTableRow, TimeTrackingOverviewUserList },
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
+    },
     computed: {
-        ...mapGetters([
-            "get_formatted_total_sum",
-            "has_error",
-            "can_results_be_displayed",
-            "is_sum_of_times_equals_zero",
-        ]),
-        ...mapState([
-            "trackers_times",
-            "error_message",
-            "is_loading",
-            "are_void_trackers_hidden",
-            "users",
-        ]),
         time_format_tooltip() {
             return this.$gettext("The time is displayed in hours:minutes");
         },
         has_data_to_display() {
             return (
                 this.has_trackers_times &&
-                !(this.are_void_trackers_hidden && this.is_sum_of_times_equals_zero)
+                !(
+                    this.overview_store.are_void_trackers_hidden &&
+                    this.overview_store.is_sum_of_times_equals_zero
+                )
             );
         },
         has_users() {
-            return this.users.length > 0;
+            return this.overview_store.users.length > 0;
         },
         has_trackers_times() {
-            return this.trackers_times.length > 0;
+            return this.overview_store.trackers_times.length > 0;
         },
         display_button_text() {
-            return this.are_void_trackers_hidden
+            return this.overview_store.are_void_trackers_hidden
                 ? this.$gettext("Show void trackers")
                 : this.$gettext("Hide void trackers");
         },
     },
     methods: {
         setAreVoidTrackersHidden() {
-            this.$store.dispatch("setPreference");
+            this.overview_store.setPreference();
         },
     },
 };

@@ -33,7 +33,7 @@
     >
         <option v-bind:value="null">{{ $gettext("Please choose...") }}</option>
         <option
-            v-for="tracker in trackers"
+            v-for="tracker in overview_store.trackers"
             v-bind:disabled="tracker.disabled"
             v-bind:value="tracker.id"
             v-bind:key="tracker.id"
@@ -43,13 +43,18 @@
     </select>
 </template>
 <script>
-import { mapState } from "vuex";
+import { inject } from "vue";
+import { useOverviewWidgetStore } from "../../store/index.js";
+
 export default {
     name: "TimeTrackingOverviewTrackersOptions",
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
+    },
     computed: {
-        ...mapState(["trackers", "is_added_tracker"]),
         is_tracker_select_disabled() {
-            return this.trackers.length === 0;
+            return this.overview_store.trackers.length === 0;
         },
     },
     watch: {

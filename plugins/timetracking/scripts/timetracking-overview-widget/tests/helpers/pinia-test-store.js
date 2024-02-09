@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,22 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import { config, createLocalVue } from "@vue/test-utils";
-import { PiniaVuePlugin } from "pinia";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
+import { useOverviewWidgetStore } from "../../src/store/index.js";
 
-export const createLocalVueForTests = async () => {
-    const local_vue = createLocalVue();
-    local_vue.use(PiniaVuePlugin);
-
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-
-    config.provide.report_id = 1;
-
-    return local_vue;
+export const useOverviewWidgetTestStore = () => {
+    return useOverviewWidgetStore(1)();
 };

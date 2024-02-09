@@ -28,22 +28,25 @@
             <a v-bind:href="link_to_project_homepage">{{ time.project.label }}</a>
         </td>
         <td class="tlp-table-cell-numeric">
-            {{ get_formatted_time(time) }}
+            {{ overview_store.get_formatted_time(time) }}
         </td>
     </tr>
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { inject } from "vue";
+import { useOverviewWidgetStore } from "../store/index.js";
 
 export default {
     name: "TimeTrackingOverviewTableRow",
     props: {
         time: Object,
     },
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
+    },
     computed: {
-        ...mapState(["are_void_trackers_hidden"]),
-        ...mapGetters(["get_formatted_time", "is_tracker_total_sum_equals_zero"]),
         html_url() {
             return "/plugins/tracker/?tracker=" + this.time.id;
         },
@@ -52,8 +55,8 @@ export default {
         },
         display_void_trackers() {
             return !(
-                this.are_void_trackers_hidden &&
-                this.is_tracker_total_sum_equals_zero(this.time.time_per_user)
+                this.overview_store.are_void_trackers_hidden &&
+                this.overview_store.is_tracker_total_sum_equals_zero(this.time.time_per_user)
             );
         },
     },

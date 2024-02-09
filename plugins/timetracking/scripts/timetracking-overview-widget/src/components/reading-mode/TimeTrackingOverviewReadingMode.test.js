@@ -17,50 +17,57 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, beforeEach, it, expect } from "@jest/globals";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
 import { createLocalVueForTests } from "../../../tests/helpers/local-vue.js";
 import TimeTrackingOverviewReadingMode from "./TimeTrackingOverviewReadingMode.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("Given a timetracking overview widget on reading mode", () => {
-    let component_options, store_options, store;
-    beforeEach(async () => {
-        store_options = {
-            state: {
-                is_loading: false,
-                is_report_saved: false,
-            },
-            getters: {
-                has_success_message: false,
-            },
-        };
-        store = createStoreMock(store_options);
+    let is_loading, is_report_saved;
 
-        component_options = {
+    beforeEach(() => {
+        is_loading = false;
+        is_report_saved = false;
+    });
+
+    const getWrapper = async () => {
+        const useStore = defineStore("overview/1", {
+            state: () => ({
+                is_loading,
+                is_report_saved,
+            }),
+        });
+
+        const pinia = createTestingPinia();
+        useStore(pinia);
+
+        return shallowMount(TimeTrackingOverviewReadingMode, {
             localVue: await createLocalVueForTests(),
-            mocks: { $store: store },
-        };
+        });
+    };
+
+    it("When the widget isn't loading, then the icon spinner is not displayed", async () => {
+        const wrapper = await getWrapper();
+        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=reading-mode-actions]").exists()).toBe(true);
     });
 
-    it("When the widget isn't loading, then the icon spinner is not displayed", () => {
-        const wrapper = shallowMount(TimeTrackingOverviewReadingMode, component_options);
-        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=reading-mode-actions]").exists()).toBeTruthy();
+    it("When the widget is loading, then the icon spinner is displayed", async () => {
+        is_loading = true;
+
+        const wrapper = await getWrapper();
+
+        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=reading-mode-actions]").exists()).toBe(true);
     });
 
-    it("When the widget is loading, then the icon spinner is displayed", () => {
-        store.state.is_loading = true;
+    it("When report is saved, then saves choice are not displayed", async () => {
+        is_report_saved = true;
 
-        const wrapper = shallowMount(TimeTrackingOverviewReadingMode, component_options);
-        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=reading-mode-actions]").exists()).toBeTruthy();
-    });
-
-    it("When report is saved, then saves choice are not displayed", () => {
-        store.state.is_report_saved = true;
-
-        const wrapper = shallowMount(TimeTrackingOverviewReadingMode, component_options);
-        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=reading-mode-actions]").exists()).toBeFalsy();
+        const wrapper = await getWrapper();
+        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=reading-mode-actions]").exists()).toBe(false);
     });
 });
