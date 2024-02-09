@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
+use Tuleap\Baseline\Domain\BaselineUserGroup;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
@@ -74,5 +75,10 @@ final class RoleAssignmentRepositoryStub implements RoleAssignmentRepository
     public function getLastAssignmentUpdate(): ?RoleAssignmentsUpdate
     {
         return $this->last_assignment_update;
+    }
+
+    public function deleteUgroupAssignments(ProjectIdentifier $project, BaselineUserGroup $baseline_user_group): int
+    {
+        return 0;
     }
 }

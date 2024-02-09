@@ -25,6 +25,8 @@ use Tuleap\Baseline\Domain\RoleBaselineAdmin;
 use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
+use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 
 class RoleAssignmentsHistoryEntryAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -46,7 +48,11 @@ class RoleAssignmentsHistoryEntryAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             $project_id
         );
 
-        (new RoleAssignmentsHistoryEntryAdder($dao))->addProjectHistoryEntryForRoleAndGroups(
+        (new RoleAssignmentsHistoryEntryAdder(
+            $dao,
+            ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->build()),
+            ProvideCurrentUserStub::buildCurrentUserByDefault(),
+        ))->addProjectHistoryEntryForRoleAndGroups(
             $project,
             $history_key,
             ...$assignments

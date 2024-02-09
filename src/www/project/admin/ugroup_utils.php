@@ -694,6 +694,7 @@ function ugroup_delete($group_id, $ugroup_id)
     $em = EventManager::instance();
     $em->processEvent('project_admin_ugroup_deletion', [
         'group_id'  => $group_id,
+        'project'   => $project,
         'ugroup_id' => $ugroup_id,
         'ugroup'    => $ugroup,
     ]);

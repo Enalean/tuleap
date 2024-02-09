@@ -27,4 +27,10 @@ interface AddRoleAssignmentsHistoryEntry
         string $history_key,
         RoleAssignment ...$assignments,
     ): void;
+
+    public function addProjectHistoryEntryForUgroupDeletion(
+        ProjectIdentifier $project,
+        string $history_key,
+        BaselineUserGroup $baseline_user_group,
+    ): void;
 }
