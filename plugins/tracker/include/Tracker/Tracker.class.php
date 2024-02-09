@@ -2683,7 +2683,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $nb_lines++;
                 if ($mode == 'creation') {
                     $fields_data = $this->getFormElementFactory()->getUsedFieldsWithDefaultValue($this, $fields_data, $current_user);
-                    if ($artifact = $af->createArtifact($this, $fields_data, $current_user, null, true, $send_notifications)) {
+                    if ($af->createArtifact($this, $fields_data, $current_user, true, $send_notifications)) {
                         $nb_artifact_creation++;
                     } else {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Unable to create artifact'));

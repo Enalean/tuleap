@@ -210,7 +210,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         UserManager::instance()->setCurrentUser(
             \Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($user)
         );
-        return $this->artifact_factory->createArtifact($tracker, $field_data, $user, '', true);
+        return $this->artifact_factory->createArtifact($tracker, $field_data, $user, true);
     }
 
     private function logNoSufficientRightsToCreateChangeset(

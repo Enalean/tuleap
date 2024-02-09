@@ -378,17 +378,13 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
      * @param Tracker $tracker           The tracker this artifact belongs to
      * @param array   $fields_data       The data of the artifact to create
      * @param PFUser    $user              The user that want to create the artifact
-     * @param string|null  $email             The email if the user is anonymous (null if anonymous)
      * @param bool $send_notification true if a notification must be sent, false otherwise
      *
      * @return Artifact|false false if an error occurred
      */
-    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, bool $should_visit_be_recorded, $send_notification = true)
+    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, bool $should_visit_be_recorded, $send_notification = true)
     {
         $creator = $this->getArtifactCreator();
-        if ($user->isAnonymous()) {
-            $user->setEmail($email);
-        }
 
         $submitted_on = $_SERVER['REQUEST_TIME'];
         $artifact     = $creator->create(

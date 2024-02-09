@@ -78,7 +78,7 @@ class ArtifactCreator
         $this->checkUserCanSubmit($submitter, $tracker);
 
         return $this->transaction_executor->execute(fn(): ArtifactReference => $this->returnReferenceOrError(
-            $this->artifact_factory->createArtifact($tracker, $fields_data, $submitter, '', $should_visit_be_recorded),
+            $this->artifact_factory->createArtifact($tracker, $fields_data, $submitter, $should_visit_be_recorded),
             '',
             $submitter,
             $changeset_values,
@@ -104,7 +104,7 @@ class ArtifactCreator
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->transaction_executor->execute(fn(): ArtifactReference => $this->returnReferenceOrError(
-            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, '', true),
+            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, true),
             'by_field',
             $user,
             $changeset_values,
