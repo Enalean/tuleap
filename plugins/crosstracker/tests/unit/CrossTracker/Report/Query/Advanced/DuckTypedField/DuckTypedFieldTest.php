@@ -30,6 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 
@@ -116,7 +117,7 @@ final class DuckTypedFieldTest extends TestCase
         self::assertInstanceOf(FieldTypeIsNotSupportedFault::class, $result->error);
     }
 
-    public function testItReturnsErrWhenFieldHasAnIncompatibleTypeInSecondTracker(): void
+    public function testItReturnsErrWhenSecondFieldTypeIsNotSupported(): void
     {
         $this->fields = [
             TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
@@ -124,6 +125,25 @@ final class DuckTypedFieldTest extends TestCase
                 ->inTracker($this->first_tracker)
                 ->build(),
             TrackerExternalFormElementBuilder::anExternalField(91)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->build(),
+        ];
+
+        $result = $this->build();
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(FieldTypesAreIncompatibleFault::class, $result->error);
+    }
+
+    public function testItReturnsErrWhenFieldHasAnIncompatibleTypeInSecondTracker(): void
+    {
+        $this->fields = [
+            TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
+            TrackerFormElementStringFieldBuilder::aStringField(92)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->build(),

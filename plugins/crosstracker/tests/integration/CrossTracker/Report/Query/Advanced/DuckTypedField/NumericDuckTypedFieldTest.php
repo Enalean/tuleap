@@ -49,17 +49,19 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
     private int $sprint_with_5_id;
     private int $sprint_with_3_id;
     private int $release_with_3_id;
-    private CoreDatabaseBuilder $core_builder;
 
     protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         \ForgeConfig::setFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
         $this->database_builder = new TrackerDatabaseBuilder($db);
-        $this->core_builder     = new CoreDatabaseBuilder($db);
+        $core_builder           = new CoreDatabaseBuilder($db);
 
-        $project    = $this->core_builder->buildProject();
-        $project_id = (int) $project->getID();
+        $project              = $core_builder->buildProject();
+        $project_id           = (int) $project->getID();
+        $this->project_member = $core_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
+        $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
+        $this->outsider_user = $core_builder->buildUser('outsider', 'User OutsideProject', 'outsider@example.com');
 
         $this->release_tracker = $this->database_builder->buildTracker($project_id, "Release");
         $this->sprint_tracker  = $this->database_builder->buildTracker($project_id, "Sprint");
@@ -82,10 +84,6 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
             $this->epic_tracker->getId(),
             'initial_effort'
         );
-
-        $this->outsider_user  = $this->core_builder->buildUser('outsider', 'User OutsideProject', 'outsider@example.com');
-        $this->project_member = $this->core_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
-        $this->core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
 
         $this->database_builder->setReadPermission(
             $release_initial_effort_field_id,

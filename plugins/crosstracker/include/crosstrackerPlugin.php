@@ -65,6 +65,7 @@ use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
 use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
+use Tuleap\DB\DBFactory;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -173,6 +174,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeGetCSVExportReport(): CSVExportController
     {
+        $db           = DBFactory::getMainTuleapDBConnection()->getDB();
         $user_manager = UserManager::instance();
 
         $report_config = new TrackerReportConfig(
@@ -396,7 +398,8 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
             new Field\FieldFromWhereBuilder(
                 $form_element_factory,
                 $form_element_factory,
-                new Field\Numeric\NumericFromWhereBuilder()
+                new Field\Numeric\NumericFromWhereBuilder(),
+                new Field\Text\TextFromWhereBuilder($db),
             ),
         );
 

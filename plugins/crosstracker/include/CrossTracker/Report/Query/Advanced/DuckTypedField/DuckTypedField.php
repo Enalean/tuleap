@@ -72,6 +72,9 @@ final class DuckTypedField
                     if (Result::isErr($other_result)) {
                         return Result::err(FieldTypesAreIncompatibleFault::build($field_name, $tracker_ids));
                     }
+                    if ($other_result->value->type !== $first_field->type) {
+                        return Result::err(FieldTypesAreIncompatibleFault::build($field_name, $tracker_ids));
+                    }
                     $field_ids[] = $other_result->value->id;
                 }
                 return Result::ok(new self($field_name, $field_ids, $first_field->type));
