@@ -18,5 +18,6 @@ if [ "${SETUP_ONLY:-0}" -eq 1 ]; then
     echo "Command to launch: sudo -E -u codendiadm $PHP_CLI /usr/share/tuleap/src/vendor/bin/phpunit --configuration /usr/share/tuleap/tests/integration/phpunit.xml --do-not-cache-result"
     exec bash
 else
-    sudo -E -u codendiadm $PHP_CLI /usr/share/tuleap/src/vendor/bin/phpunit --configuration /usr/share/tuleap/tests/integration/phpunit.xml --do-not-cache-result --log-junit /output/db_tests.xml
+    if [ "${SEED:-0}" -eq 0 ]; then random_seed=""; else random_seed="--random-order-seed ${SEED}"; fi
+    sudo -E -u codendiadm $PHP_CLI /usr/share/tuleap/src/vendor/bin/phpunit --configuration /usr/share/tuleap/tests/integration/phpunit.xml --do-not-cache-result --log-junit /output/db_tests.xml ${random_seed}
 fi
