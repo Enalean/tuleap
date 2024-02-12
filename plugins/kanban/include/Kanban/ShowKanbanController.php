@@ -75,7 +75,7 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
         try {
             $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
             if (! $user->isAnonymous()) {
-                $this->recently_visited_dao->save((int) $user->getId(), $kanban_id, $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp());
+                $this->recently_visited_dao->save((int) $user->getId(), $kanban_id, \Tuleap\Request\RequestTime::getTimestamp());
             }
 
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());

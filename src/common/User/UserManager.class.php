@@ -618,7 +618,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $user->setIsFirstTimer(
                 $this->getDao()->storeLoginSuccess(
                     $user->getId(),
-                    $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp()
+                    \Tuleap\Request\RequestTime::getTimestamp()
                 )
             );
 
@@ -627,7 +627,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             return $user;
         } catch (User_InvalidPasswordWithUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            $this->getDao()->storeLoginFailure($name, $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp());
+            $this->getDao()->storeLoginFailure($name, \Tuleap\Request\RequestTime::getTimestamp());
         } catch (User_InvalidPasswordException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (User_PasswordExpiredException $exception) {
@@ -678,7 +678,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         $expire = 0;
 
         if ($user->getStickyLogin()) {
-            $expire = ($_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp()) + $this->getSessionLifetime();
+            $expire = (\Tuleap\Request\RequestTime::getTimestamp()) + $this->getSessionLifetime();
         }
 
         return $expire;
@@ -944,7 +944,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     public function createAccount(PFUser $user): ?PFUser
     {
         $dao          = $this->getDao();
-        $request_time = $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp();
+        $request_time = \Tuleap\Request\RequestTime::getTimestamp();
         $user_id      = $dao->create(
             $user->getUserName(),
             $user->getEmail(),

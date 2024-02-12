@@ -89,7 +89,7 @@ class Git_LastPushesGraph
         $this->displayChart = false;
         $this->weeksNumber  = min($weeksNumber, self::MAX_WEEKSNUMBER);
         // Init some class properties according to 'weeks number' parameter
-        $today         = $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp();
+        $today         = \Tuleap\Request\RequestTime::getTimestamp();
         $startPeriod   = strtotime("-$this->weeksNumber weeks");
         $weekInSeconds = self::WEEKS_IN_SECONDS;
         for ($i = $startPeriod + $weekInSeconds; $i < $today + $weekInSeconds; $i += $weekInSeconds) {

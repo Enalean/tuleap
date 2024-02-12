@@ -51,7 +51,7 @@ class Tracker_Action_CreateArtifactFromModal
             $this->tracker,
             $fields_data,
             $current_user,
-            $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+            \Tuleap\Request\RequestTime::getTimestamp(),
             true,
             true,
             new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),

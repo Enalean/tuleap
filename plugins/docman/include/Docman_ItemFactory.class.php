@@ -1684,6 +1684,6 @@ class Docman_ItemFactory
     {
         $link_version_factory = new Docman_LinkVersionFactory();
 
-        return $link_version_factory->create($link, $version_data['label'], $version_data['changelog'], $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp());
+        return $link_version_factory->create($link, $version_data['label'], $version_data['changelog'], \Tuleap\Request\RequestTime::getTimestamp());
     }
 }

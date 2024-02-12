@@ -39,7 +39,6 @@ use Tuleap\Kanban\KanbanUserNotAdminException;
 use Tuleap\Kanban\KanbanStatisticsAggregator;
 use BackendLogger;
 use DateTime;
-use DateTimeImmutable;
 use EventManager;
 use Exception;
 use Tuleap\Kanban\KanbanSemanticStatusAllColumnIdsNotProvidedException;
@@ -1619,7 +1618,7 @@ final class KanbanResource extends AuthenticatedResource
         ];
 
         try {
-            $submission_timestamp = $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp();
+            $submission_timestamp = \Tuleap\Request\RequestTime::getTimestamp();
 
             $new_changeset = NewChangeset::fromFieldsDataArray(
                 $artifact,

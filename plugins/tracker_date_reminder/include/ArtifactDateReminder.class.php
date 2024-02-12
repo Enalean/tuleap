@@ -45,7 +45,7 @@ class ArtifactDateReminder
                 // For each event(represented by a row in artifact_date_reminder_processing table),
                 // instantiate a new ArtifactDateReminderFactory, then check its reminder status
                 $adrf = new ArtifactDateReminderFactory($notification_id, $this->logger);
-                $adrf->checkReminderStatus($_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp());
+                $adrf->checkReminderStatus(\Tuleap\Request\RequestTime::getTimestamp());
             }
         }
 

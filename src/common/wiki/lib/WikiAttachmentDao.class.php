@@ -70,7 +70,7 @@ class WikiAttachmentDao extends DataAccessObject
      */
     public function delete($id)
     {
-        $sql = 'UPDATE wiki_attachment SET delete_date=' . $this->da->escapeInt($_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp()) .
+        $sql = 'UPDATE wiki_attachment SET delete_date=' . $this->da->escapeInt(\Tuleap\Request\RequestTime::getTimestamp()) .
                ' WHERE id = ' . $this->da->escapeInt($id);
         if ($this->update($sql)) {
             $sql = 'INSERT INTO wiki_attachment_deleted(id, group_id, name, delete_date)' .

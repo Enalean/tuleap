@@ -612,7 +612,7 @@ class WikiAttachment /* implements UGroupPermission */
     public function listPendingAttachments($groupId, $offset, $limit)
     {
         $dao = $this->getDao();
-        return $dao->searchAttachmentToPurge($_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp(), $groupId, $offset, $limit);
+        return $dao->searchAttachmentToPurge(\Tuleap\Request\RequestTime::getTimestamp(), $groupId, $offset, $limit);
     }
 
     /**
@@ -662,7 +662,7 @@ class WikiAttachment /* implements UGroupPermission */
             }
         }
         $dao = $this->getDao();
-        if (! $dao->setPurgeDate($this->id, $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp())) {
+        if (! $dao->setPurgeDate($this->id, \Tuleap\Request\RequestTime::getTimestamp())) {
             return false;
         }
         return true;

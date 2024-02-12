@@ -163,7 +163,7 @@ class ProjectDashboardController
             $this->recently_visited_project_dashboard_dao->save(
                 (int) $user->getId(),
                 $dashboard_id ?: (int) $first_dashboard->getId(),
-                $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+                \Tuleap\Request\RequestTime::getTimestamp(),
             );
         }
 
