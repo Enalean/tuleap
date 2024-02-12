@@ -29,8 +29,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -63,6 +65,7 @@ final class FieldFromWhereBuilderTest extends TestCase
             RetrieveFieldTypeStub::withDetectionOfType(),
             new Numeric\NumericFromWhereBuilder(),
             new Text\TextFromWhereBuilder($db),
+            new Date\DateFromWhereBuilder(new DateTimeValueRounder()),
         );
         $field   = new Field(self::FIELD_NAME);
         return $builder->getFromWhere(
@@ -108,6 +111,25 @@ final class FieldFromWhereBuilderTest extends TestCase
         );
 
         $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('monocarpal'));
+        self::assertNotEmpty($from_where->getFrom());
+    }
+
+    public function testItReturnsSQLForDateField(): void
+    {
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementDateFieldBuilder::aDateField(125)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+            TrackerFormElementDateFieldBuilder::aDateField(334)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, true)
+                ->build()
+        );
+
+        $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('2024-02-12'));
         self::assertNotEmpty($from_where->getFrom());
     }
 

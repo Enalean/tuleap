@@ -632,10 +632,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
 
         $start_date_field = TrackerFormElementDateFieldBuilder::aDateField(1)
-            ->withUserCanRead($this->user)
+            ->withReadPermission($this->user, true)
             ->build();
         $end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(2)
-            ->withUserCanRead($this->user)
+            ->withReadPermission($this->user, true)
             ->build();
 
         $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
@@ -773,10 +773,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
 
         $start_date_field = TrackerFormElementDateFieldBuilder::aDateField(1)
-            ->withUserCanRead($this->user)
+            ->withReadPermission($this->user, true)
             ->build();
         $end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(2)
-            ->withUserCanRead($this->user)
+            ->withReadPermission($this->user, true)
             ->build();
 
         $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
@@ -920,10 +920,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
 
         $start_date_field   = TrackerFormElementDateFieldBuilder::aDateField(1)
-            ->withUserCanRead($this->user)
+            ->withReadPermission($this->user, true)
             ->build();
         $end_date_field     = TrackerFormElementDateFieldBuilder::aDateField(2)
-            ->withUserCanRead($this->user)
+            ->withReadPermission($this->user, true)
             ->build();
         $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
         $total_effort_field->method('userCanRead')->willReturn(true);
@@ -1043,17 +1043,17 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $another_tracker = $this->getTracker(self::ANOTHER_TRACKER_ID, $another_title_field, 'red-wine', 'bug');
 
         $start_date_field = TrackerFormElementDateFieldBuilder::aDateField(1)
-            ->withUserCanRead($this->user)
+            ->withReadPermission($this->user, true)
             ->build();
         $end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(2)
-            ->withUserCanRead($this->user)
+            ->withReadPermission($this->user, true)
             ->build();
 
         $another_start_date_field = TrackerFormElementDateFieldBuilder::aDateField(3)
-            ->withUserCanRead($this->user)
+            ->withReadPermission($this->user, true)
             ->build();
         $another_end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(4)
-            ->withUserCanRead($this->user)
+            ->withReadPermission($this->user, true)
             ->build();
 
         $semantic_timeframe_tracker         = new SemanticTimeframe(

@@ -389,6 +389,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 $form_element_factory,
                 new Field\Numeric\NumericFromWhereBuilder(),
                 new Field\Text\TextFromWhereBuilder($db),
+                new Field\Date\DateFromWhereBuilder(new DateTimeValueRounder()),
             ),
         );
 

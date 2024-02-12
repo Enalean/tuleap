@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedFieldType;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Date\DateFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Numeric\NumericFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Text\TextFromWhereBuilder;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -40,6 +41,7 @@ final class FieldFromWhereBuilder
         private readonly RetrieveFieldType $retrieve_field_type,
         private readonly NumericFromWhereBuilder $numeric_builder,
         private readonly TextFromWhereBuilder $text_builder,
+        private readonly DateFromWhereBuilder $date_builder,
     ) {
     }
 
@@ -80,6 +82,7 @@ final class FieldFromWhereBuilder
         return match ($field->type) {
             DuckTypedFieldType::NUMERIC => $this->numeric_builder->getFromWhere($field, $comparison),
             DuckTypedFieldType::TEXT => $this->text_builder->getFromWhere($field, $comparison),
+            DuckTypedFieldType::DATE => $this->date_builder->getFromWhere($field, $comparison),
         };
     }
 }
