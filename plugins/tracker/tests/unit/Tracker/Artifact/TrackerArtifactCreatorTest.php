@@ -31,9 +31,12 @@ use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Option\Option;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\CreateInitialChangeset;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\Test\Stub\CreateInitialChangesetStub;
@@ -154,7 +157,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
         $artifact_creator->create(
             $this->tracker,
-            $this->fields_data,
+            new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $this->user,
             $this->submitted_on,
             $this->send_notification,
@@ -172,7 +175,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withNoChangesetCreationExpected());
         $result           = $artifact_creator->create(
             $this->tracker,
-            $this->fields_data,
+            new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $this->user,
             $this->submitted_on,
             $this->send_notification,
@@ -192,7 +195,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
         $artifact_creator->create(
             $this->tracker,
-            $this->fields_data,
+            new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $this->user,
             $this->submitted_on,
             $this->send_notification,
@@ -209,7 +212,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withNoChangesetCreationExpected());
         $result           = $artifact_creator->create(
             $this->tracker,
-            $this->fields_data,
+            new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $this->user,
             $this->submitted_on,
             $this->send_notification,
@@ -234,7 +237,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $create_initial_changeset_stub = CreateInitialChangesetStub::withChangesetCreationExpected();
         $this->getCreator($create_initial_changeset_stub)->create(
             $this->tracker,
-            $this->fields_data,
+            new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $this->user,
             $this->submitted_on,
             $this->send_notification,
@@ -259,7 +262,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
         $artifact_creator->create(
             $this->tracker,
-            $this->fields_data,
+            new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $this->user,
             $this->submitted_on,
             $this->send_notification,
@@ -283,7 +286,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
         $artifact_creator->create(
             $this->tracker,
-            $this->fields_data,
+            new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $this->user,
             $this->submitted_on,
             $this->send_notification,

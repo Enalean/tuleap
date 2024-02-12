@@ -38,6 +38,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\CreateInitialChangeset;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -185,7 +186,7 @@ class TrackerArtifactCreator
 
     public function create(
         Tracker $tracker,
-        array $fields_data,
+        InitialChangesetValuesContainer $changeset_values,
         PFUser $user,
         int $submitted_on,
         bool $send_notification,
@@ -193,6 +194,8 @@ class TrackerArtifactCreator
         ChangesetValidationContext $context,
     ): ?Artifact {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, (int) $user->getId(), 0);
+
+        $fields_data = $changeset_values->getFieldsData();
 
         if (! $this->fields_validator->validate($artifact, $user, $fields_data, $context)) {
             $this->logger->debug(

@@ -24,6 +24,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
@@ -81,7 +82,7 @@ class ArtifactCreator
         return $this->transaction_executor->execute(fn(): ArtifactReference => $this->returnReferenceOrError(
             $this->artifact_creator->create(
                 $tracker,
-                $fields_data,
+                new InitialChangesetValuesContainer($fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
                 $submitter,
                 \Tuleap\Request\RequestTime::getTimestamp(),
                 true,
@@ -115,7 +116,7 @@ class ArtifactCreator
         return $this->transaction_executor->execute(fn(): ArtifactReference => $this->returnReferenceOrError(
             $this->artifact_creator->create(
                 $tracker,
-                $fields_data,
+                new InitialChangesetValuesContainer($fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
                 $user,
                 \Tuleap\Request\RequestTime::getTimestamp(),
                 true,
