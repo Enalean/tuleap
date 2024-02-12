@@ -4,14 +4,6 @@ set -euxo pipefail
 
 export DISPLAY_ERRORS=true
 
-MYSQL_DBNAME=tuleap
-MYSQL_COMMAND=/usr/bin/mysql
-if [ ! -f $MYSQL_COMMAND ]; then
-    MYSQL_COMMAND=/opt/rh/rh-mysql80/root/usr/bin/mysql
-fi
-MYSQLROOT="$MYSQL_COMMAND -h$TULEAP_SYS_DBHOST -uroot -pwelcome0"
-MYSQLROOT_LOAD="$MYSQLROOT $MYSQL_DBNAME"
-
 clean_up() {
     # Drop symlink to the file explaining we might to take a look at journalctl
     # It is a annoyance when we do a `docker compose cp ...:/var/log` at the end
@@ -23,9 +15,6 @@ setup_system_configuration() {
 
     sudo -u codendiadm /usr/bin/tuleap config-set sys_project_approval 0
     sudo -u codendiadm /usr/bin/tuleap config-set project_admin_can_choose_visibility 1
-
-    $MYSQLROOT -e "DELETE FROM tuleap.password_configuration"
-    $MYSQLROOT -e "INSERT INTO tuleap.password_configuration values (0)"
 }
 
 enable_plugins() {
@@ -84,7 +73,7 @@ load_project() {
 }
 
 seed_data() {
-    $MYSQLROOT $MYSQL_DBNAME < "$TULEAP_SRC/tests/e2e/full/tuleap/cypress_database_init_values.sql"
+    /usr/share/tuleap/tests/e2e/full/tuleap/init_data.php
 
     for project in $(find $TULEAP_SRC/tests/e2e/full/_fixtures/ -maxdepth 1 -mindepth 1 -type d) ; do
         load_project "$project"

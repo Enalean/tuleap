@@ -34,10 +34,7 @@ setup_database() {
     MYSQL_USER=tuleapadm
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
-    MYSQL_CLI="/opt/rh/rh-mysql80/root/usr/bin/mysql"
-    MYSQL="$MYSQL_CLI --local-infile=1 -h$DB_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
-    MYSQLROOT="$MYSQL_CLI -h$DB_HOST -uroot -pwelcome0"
     echo "Use remote db $DB_HOST"
 
     # runner should have access to Tuleap conf, esp. database.inc because some tests pre-cond changes values directly
@@ -56,20 +53,6 @@ setup_database() {
 
     TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost" --php-version=$PHP_VERSION
     echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
-
-    $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-group-list' INTO TABLE wiki_group_list CHARACTER SET ascii"
-    $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-page' INTO TABLE wiki_page CHARACTER SET ascii"
-    $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-nonempty' INTO TABLE wiki_nonempty CHARACTER SET ascii"
-    $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-version' INTO TABLE wiki_version CHARACTER SET ascii"
-    $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-recent' INTO TABLE wiki_recent CHARACTER SET ascii"
-
-    echo "Execute additional setup scripts"
-    for setup_script in $(find /usr/share/tuleap/plugins/*/tests/rest/setup_db.sh -maxdepth 1 -type f)
-    do
-        if [ -x "$setup_script" ]; then
-            $setup_script "$MYSQL" "$MYSQL_DBNAME"
-        fi
-    done
 }
 
 tuleap_db_config() {
