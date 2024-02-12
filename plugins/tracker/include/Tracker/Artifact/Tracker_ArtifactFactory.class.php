@@ -374,15 +374,12 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
 
     /**
      * @param array   $fields_data       The data of the artifact to create
-     *
-     * @return Artifact|false false if an error occurred
      */
-    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, bool $should_visit_be_recorded, bool $send_notification)
+    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, bool $should_visit_be_recorded, bool $send_notification): ?Artifact
     {
-        $creator = $this->getArtifactCreator();
-
         $submitted_on = $_SERVER['REQUEST_TIME'];
-        $artifact     = $creator->create(
+
+        return $this->getArtifactCreator()->create(
             $tracker,
             $fields_data,
             $user,
@@ -391,12 +388,6 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
             $should_visit_be_recorded,
             new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
         );
-
-        if ($artifact === null) {
-            return false;
-        }
-
-        return $artifact;
     }
 
     public function save(Artifact $artifact): bool
