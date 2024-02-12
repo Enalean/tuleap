@@ -163,7 +163,7 @@ tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION
 	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
 	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (81,82). DB to select the database to use (mysql80)
+tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (81,82). DB to select the database to use (mysql80). SEED to set the random seed order.
 	$(eval PHP_VERSION ?= 82)
 	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)

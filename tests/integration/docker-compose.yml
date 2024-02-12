@@ -6,6 +6,7 @@ services:
     environment:
       - DB_HOST=${DB_HOST}
       - PHP_VERSION=${PHP_VERSION}
+      - SEED
     volumes:
       - ${BASEDIR}:/usr/share/tuleap:ro,cached
     command: /usr/share/tuleap/tests/integration/bin/run.sh
