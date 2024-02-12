@@ -192,46 +192,66 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
     ): PullRequestsPage {
         return $this->getDB()->tryFlatTransaction(
             function () use ($repository_id, $criteria, $limit, $offset) {
-                $with_status_criteria_statements = $this->getSearchCriteriaStatements($criteria);
+                $search_criteria_statements = $this->getSearchCriteriaStatements($criteria);
 
-                $sql_count_pull_requests = "
-                    SELECT COUNT(*)
-                    FROM plugin_pullrequest_review AS review
-                    WHERE (repository_id = ? OR repo_dest_id = ?)
-                    AND $with_status_criteria_statements
+                $sql_select_count  = 'SELECT COUNT(*) OVER () ';
+                $columns_to_select = [
+                    'plugin_pullrequest_review.id',
+                    'plugin_pullrequest_review.title',
+                    'plugin_pullrequest_review.description',
+                    'plugin_pullrequest_review.repository_id',
+                    'plugin_pullrequest_review.user_id',
+                    'plugin_pullrequest_review.creation_date',
+                    'plugin_pullrequest_review.branch_src',
+                    'plugin_pullrequest_review.sha1_src',
+                    'plugin_pullrequest_review.repo_dest_id',
+                    'plugin_pullrequest_review.branch_dest',
+                    'plugin_pullrequest_review.sha1_dest',
+                    'plugin_pullrequest_review.status',
+                    'plugin_pullrequest_review.merge_status',
+                    'plugin_pullrequest_review.description_format',
+                ];
+                $sql_columns       = \Psl\Str\join($columns_to_select, ', ');
+                $sql_select_data   = "SELECT $sql_columns ";
+
+                $sql_tables = \Psl\Str\join(['plugin_pullrequest_review', ...$search_criteria_statements->tables], ', ');
+
+                $sql_query_body = "
+                    FROM $sql_tables
+                    WHERE (plugin_pullrequest_review.repository_id = ? OR plugin_pullrequest_review.repo_dest_id = ?)
+                        AND $search_criteria_statements->where_statement
+                    GROUP BY $sql_columns
+                    HAVING $search_criteria_statements->having_statement
                 ";
 
-                $sql_get_pull_requests = "
-                    SELECT review.*
-                    FROM plugin_pullrequest_review AS review
-                    WHERE (repository_id = ? OR repo_dest_id = ?)
-                    AND $with_status_criteria_statements
-                    ORDER BY creation_date DESC
-                    LIMIT ?
-                    OFFSET ?
-                ";
-
-                $parameters = [$repository_id, $repository_id, ...$with_status_criteria_statements->values()];
+                $parameters = [
+                    $repository_id,
+                    $repository_id,
+                    ...$search_criteria_statements->where_statement->values(),
+                    ...$search_criteria_statements->having_statement->values(),
+                ];
 
                 return new PullRequestsPage(
-                    $this->getDB()->single($sql_count_pull_requests, $parameters),
-                    $this->getDB()->safeQuery($sql_get_pull_requests, [...$parameters, $limit, $offset])
+                    $this->getDB()->single($sql_select_count . $sql_query_body . ' LIMIT 1', $parameters),
+                    $this->getDB()->safeQuery($sql_select_data . $sql_query_body . ' LIMIT ? OFFSET ?', [...$parameters, $limit, $offset])
                 );
             }
         );
     }
 
-    private function getSearchCriteriaStatements(SearchCriteria $search_criteria): EasyStatement
+    private function getSearchCriteriaStatements(SearchCriteria $search_criteria): PullRequestDAOSearchCriteria
     {
-        $statement = EasyStatement::open();
+        $where_statement  = EasyStatement::open();
+        $having_statement = EasyStatement::open();
+        $tables           = [];
 
-        $search_criteria->status->apply(function ($status_criterion) use ($statement) {
+        $search_criteria->status->apply(function ($status_criterion) use ($where_statement) {
             if ($status_criterion->shouldOnlyRetrieveOpenPullRequests()) {
-                $statement->andIn('status IN (?*)', [PullRequest::STATUS_REVIEW]);
+                $where_statement->andIn('status IN (?*)', [PullRequest::STATUS_REVIEW]);
             }
 
             if ($status_criterion->shouldOnlyRetrieveClosedPullRequests()) {
-                $statement->andIn('status IN (?*)', [PullRequest::STATUS_ABANDONED, PullRequest::STATUS_MERGED]);
+                $where_statement->andIn('status IN (?*)', [PullRequest::STATUS_ABANDONED, PullRequest::STATUS_MERGED]);
             }
         });
 
@@ -240,7 +260,7 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
             $authors_id[] = $author->id;
         }
         if (count($authors_id) > 0) {
-            $statement->andIn('user_id IN (?*)', $authors_id);
+            $where_statement->andIn('user_id IN (?*)', $authors_id);
         }
 
         if (count($search_criteria->labels) > 0) {
@@ -249,24 +269,16 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
                 $labels_ids[] = $label->id;
             }
 
-            $having_count_statement = EasyStatement::open();
-            $having_count_statement->with("HAVING COUNT(pr_label.label_id) = ?", count($labels_ids));
-
-            $with_labels_ids_statement = EasyStatement::open();
-            $with_labels_ids_statement->in("pr_label.label_id IN (?*)", $labels_ids);
-
-            $statement->andWith("
-                review.id IN (
-                    SELECT pr_label.pull_request_id
-                    FROM plugin_pullrequest_label AS pr_label
-                    WHERE $with_labels_ids_statement
-                    GROUP BY pr_label.pull_request_id
-                    $having_count_statement
-                )
-            ", ...$with_labels_ids_statement->values(), ...$having_count_statement->values());
+            $tables[] = 'plugin_pullrequest_label';
+            $having_statement->andWith('COUNT(plugin_pullrequest_label.label_id) = ?', count($labels_ids));
+            $where_statement->andIn('plugin_pullrequest_review.id = plugin_pullrequest_label.pull_request_id AND plugin_pullrequest_label.label_id IN (?*)', $labels_ids);
         }
 
-        return $statement;
+        return new PullRequestDAOSearchCriteria(
+            $where_statement,
+            $having_statement,
+            $tables
+        );
     }
 
     public function markAsAbandoned($pull_request_id)
