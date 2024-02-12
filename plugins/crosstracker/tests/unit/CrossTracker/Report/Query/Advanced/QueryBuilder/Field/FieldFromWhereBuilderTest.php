@@ -22,14 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -37,17 +40,42 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 final class FieldFromWhereBuilderTest extends TestCase
 {
     private const FIELD_NAME = 'my_field';
-    private RetrieveUsedFieldsStub $fields_retriever;
     private \PFUser $user;
     private \Tracker $first_tracker;
     private \Tracker $second_tracker;
 
     protected function setUp(): void
     {
-        $this->user             = UserTestBuilder::buildWithId(133);
-        $this->first_tracker    = TrackerTestBuilder::aTracker()->withId(38)->build();
-        $this->second_tracker   = TrackerTestBuilder::aTracker()->withId(4)->build();
-        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+        $this->user           = UserTestBuilder::buildWithId(133);
+        $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(38)->build();
+        $this->second_tracker = TrackerTestBuilder::aTracker()->withId(4)->build();
+    }
+
+    private function getFromWhere(
+        RetrieveUsedFieldsStub $fields_retriever,
+        ValueWrapper $value_wrapper,
+    ): IProvideParametrizedFromAndWhereSQLFragments {
+        $db = $this->createStub(EasyDB::class);
+        $db->method('escapeLikeValue')->willReturnArgument(0);
+
+        $builder = new FieldFromWhereBuilder(
+            $fields_retriever,
+            RetrieveFieldTypeStub::withDetectionOfType(),
+            new Numeric\NumericFromWhereBuilder(),
+            new Text\TextFromWhereBuilder($db),
+        );
+        $field   = new Field(self::FIELD_NAME);
+        return $builder->getFromWhere(
+            $field,
+            new EqualComparison($field, $value_wrapper),
+            $this->user,
+            [$this->first_tracker, $this->second_tracker]
+        );
+    }
+
+    public function testItReturnsSQLForNumericField(): void
+    {
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
             TrackerFormElementIntFieldBuilder::anIntField(134)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
@@ -59,40 +87,41 @@ final class FieldFromWhereBuilderTest extends TestCase
                 ->withReadPermission($this->user, true)
                 ->build()
         );
+
+        $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper(5));
+        self::assertNotEmpty($from_where->getFrom());
     }
 
-    private function getFromWhere(): IProvideParametrizedFromAndWhereSQLFragments
+    public function testItReturnsSQLForTextField(): void
     {
-        $builder = new FieldFromWhereBuilder(
-            $this->fields_retriever,
-            RetrieveFieldTypeStub::withDetectionOfType(),
-            new Numeric\NumericFromWhereBuilder()
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementStringFieldBuilder::aStringField(209)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+            TrackerFormElementStringFieldBuilder::aStringField(134)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, true)
+                ->build()
         );
-        $field   = new Field(self::FIELD_NAME);
-        return $builder->getFromWhere(
-            $field,
-            new EqualComparison($field, new SimpleValueWrapper(5)),
-            $this->user,
-            [$this->first_tracker, $this->second_tracker]
-        );
-    }
 
-    public function testItReturnsSQLForNumericField(): void
-    {
-        $from_where = $this->getFromWhere();
+        $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('monocarpal'));
         self::assertNotEmpty($from_where->getFrom());
     }
 
     public function testItReturnsEmptySQLForInvalidDuckTypedField(): void
     {
-        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
             TrackerExternalFormElementBuilder::anExternalField(231)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build()
         );
-        $from_where             = $this->getFromWhere();
+
+        $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper(5));
         self::assertEmpty($from_where->getFrom());
         self::assertEmpty($from_where->getWhere());
         self::assertEmpty($from_where->getFromParameters());

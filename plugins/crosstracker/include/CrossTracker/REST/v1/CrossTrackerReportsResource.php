@@ -70,6 +70,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\N
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
+use Tuleap\DB\DBFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -153,6 +154,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
     public function __construct()
     {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+
         $this->project_manager = ProjectManager::instance();
         $this->user_manager    = UserManager::instance();
         $this->report_factory  = new CrossTrackerReportFactory(
@@ -384,7 +387,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new Field\FieldFromWhereBuilder(
                 $form_element_factory,
                 $form_element_factory,
-                new Field\Numeric\NumericFromWhereBuilder()
+                new Field\Numeric\NumericFromWhereBuilder(),
+                new Field\Text\TextFromWhereBuilder($db),
             ),
         );
 

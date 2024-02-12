@@ -122,6 +122,54 @@ final class TrackerDatabaseBuilder
         return $tracker_field_id;
     }
 
+    public function buildTextField(int $tracker_id, string $name): int
+    {
+        $tracker_field_id = (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id' => $tracker_id,
+                'formElement_type' => "text",
+                'name' => $name,
+                'label' => $name,
+                'use_it' => true,
+                'scope' => "P",
+            ]
+        );
+
+        $this->db->insert(
+            'tracker_field_text',
+            [
+                'field_id' => $tracker_field_id,
+            ]
+        );
+
+        return $tracker_field_id;
+    }
+
+    public function buildStringField(int $tracker_id, string $name): int
+    {
+        $tracker_field_id = (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id' => $tracker_id,
+                'formElement_type' => "string",
+                'name' => $name,
+                'label' => $name,
+                'use_it' => true,
+                'scope' => "P",
+            ]
+        );
+
+        $this->db->insert(
+            'tracker_field_string',
+            [
+                'field_id' => $tracker_field_id,
+            ]
+        );
+
+        return $tracker_field_id;
+    }
+
     public function setReadPermission(int $field_id, int $user_group_id): void
     {
         $this->db->insert(
@@ -209,6 +257,27 @@ final class TrackerDatabaseBuilder
             [
                 'changeset_value_id' => $changeset_value_id,
                 'value' => $value,
+            ]
+        );
+    }
+
+    public function buildTextValue(int $parent_changeset_id, int $text_field_id, string $value, string $format): void
+    {
+        $changeset_value_id = (int) $this->db->insertReturnId(
+            'tracker_changeset_value',
+            [
+                'changeset_id' => $parent_changeset_id,
+                'field_id' => $text_field_id,
+                'has_changed' => true,
+            ]
+        );
+
+        $this->db->insert(
+            'tracker_changeset_value_text',
+            [
+                'changeset_value_id' => $changeset_value_id,
+                'value' => $value,
+                'body_format' => $format,
             ]
         );
     }

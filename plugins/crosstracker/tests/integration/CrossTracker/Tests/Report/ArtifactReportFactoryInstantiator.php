@@ -59,6 +59,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\N
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
+use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -89,6 +90,7 @@ final class ArtifactReportFactoryInstantiator
 {
     public function getFactory(): CrossTrackerArtifactReportFactory
     {
+        $db           = DBFactory::getMainTuleapDBConnection()->getDB();
         $user_manager = UserManager::instance();
 
         $report_config = new TrackerReportConfig(
@@ -312,7 +314,8 @@ final class ArtifactReportFactoryInstantiator
             new Field\FieldFromWhereBuilder(
                 $form_element_factory,
                 $form_element_factory,
-                new Field\Numeric\NumericFromWhereBuilder()
+                new Field\Numeric\NumericFromWhereBuilder(),
+                new Field\Text\TextFromWhereBuilder($db),
             ),
         );
 
