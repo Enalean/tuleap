@@ -34,8 +34,8 @@ final class ForSubmittedOn implements DateTimeReadOnlyConditionBuilder
         $min_value = $value['min_value'];
         $max_value = $value['max_value'];
 
-        $min_value_floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($min_value);
-        $max_value_ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($max_value);
+        $min_value_floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $min_value);
+        $max_value_ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $max_value);
 
         $condition = "artifact.submitted_on >= ?
             AND artifact.submitted_on <= ?";

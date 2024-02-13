@@ -35,8 +35,8 @@ final class ForDateTime implements DateTimeConditionBuilder
             return new ParametrizedSQLFragment("$changeset_value_date_alias.value IS NOT NULL", []);
         }
 
-        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
-        $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $value);
+        $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $value);
 
         return new ParametrizedSQLFragment(
             "($changeset_value_date_alias.value IS NULL

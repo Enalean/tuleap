@@ -35,8 +35,8 @@ final class ForLastUpdateDate implements DateTimeReadOnlyConditionBuilder
             return new ParametrizedSQLFragment("1", []);
         }
 
-        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
-        $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $value);
+        $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $value);
         $condition         = "c.submitted_on NOT BETWEEN ? AND ?";
 
         return new ParametrizedSQLFragment($condition, [$floored_timestamp, $ceiled_timestamp]);

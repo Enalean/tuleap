@@ -34,8 +34,8 @@ final class ForDateTime implements DateTimeConditionBuilder
         $min_value = $value['min_value'];
         $max_value = $value['max_value'];
 
-        $min_value_floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($min_value);
-        $max_value_ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($max_value);
+        $min_value_floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $min_value);
+        $max_value_ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $max_value);
 
         return new ParametrizedSQLFragment(
             "$changeset_value_date_alias.value >= ?
