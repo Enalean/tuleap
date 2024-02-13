@@ -106,6 +106,8 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @param int $id       Id of the repository
      * @param string $query JSON object of search criteria properties {@from path}
+     * @param string $order Sort order by pull request creation date {@from path}{@choice asc,desc}
+     * @psalm-param "asc"|"desc" $order
      * @param int $limit    Number of elements displayed per page {@from path} {@min 0} {@max 50}
      * @param int $offset   Position of the first element to display {@from path} {@min 0}
      *
@@ -113,15 +115,15 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getPullRequests(int $id, string $query = '', int $limit = self::MAX_LIMIT, int $offset = 0): RepositoryPullRequestRepresentation
+    public function getPullRequests(int $id, string $query = '', string $order = 'desc', int $limit = self::MAX_LIMIT, int $offset = 0): RepositoryPullRequestRepresentation
     {
         $this->checkAccess();
 
         $repository = $this->getRepositoryUserCanSee($id);
 
         return $this->getGETHandler()
-            ->andThen(function ($get_handler) use ($repository, $query, $limit, $offset) {
-                return $get_handler->handle($repository, $query, $limit, $offset);
+            ->andThen(function ($get_handler) use ($repository, $query, $order, $limit, $offset) {
+                return $get_handler->handle($repository, $query, $order, $limit, $offset);
             })
             ->match(
                 function (RepositoryPullRequestRepresentation $representation) use ($limit, $offset) {
