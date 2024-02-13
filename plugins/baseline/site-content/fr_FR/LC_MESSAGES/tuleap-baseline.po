@@ -14,6 +14,11 @@ msgstr ""
 msgid "Administration"
 msgstr "Administration"
 
+msgid "All baseline permissions removed for user group"
+msgstr ""
+"Toutes les permissions baseline ont été supprimées pour le groupe "
+"d'utilisateurs"
+
 msgid "All user groups are already administrators"
 msgstr "Tous les groupes d'utilisateurs sont administrateurs"
 

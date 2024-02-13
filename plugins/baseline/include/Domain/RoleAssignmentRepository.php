@@ -31,4 +31,6 @@ interface RoleAssignmentRepository
     public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array;
 
     public function saveAssignmentsForProject(RoleAssignmentsUpdate $role_assignments_update): void;
+
+    public function deleteUgroupAssignments(ProjectIdentifier $project, BaselineUserGroup $baseline_user_group): int;
 }

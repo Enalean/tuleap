@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 use Tuleap\Baseline\Adapter\ProjectProxy;
+use Tuleap\Baseline\Adapter\UserGroupProxy;
 use Tuleap\Baseline\Stub\AddRoleAssignmentsHistoryEntryStub;
 use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -177,6 +178,32 @@ class RoleAssignmentsHistorySaverTest extends TestCase
                 $admin_role_assignments,
             ],
             $added_entries[1]
+        );
+    }
+
+    public function testItSavesUgroupDeletionInHistory(): void
+    {
+        $ugroup_proxy = UserGroupProxy::fromProjectUGroup(
+            ProjectUGroupTestBuilder::aCustomUserGroup(963)->build(),
+        );
+
+        $add_role_assignments_history_entry = AddRoleAssignmentsHistoryEntryStub::build();
+        $this->buildAssignmentHistorySaver(
+            $add_role_assignments_history_entry
+        )->saveUgroupDeletionHistory(
+            $this->project_proxy,
+            $ugroup_proxy,
+        );
+
+        $added_entries = $add_role_assignments_history_entry->getAddedHistoryEntries();
+        self::assertCount(1, $added_entries);
+        self::assertEquals(
+            [
+                $this->project_proxy,
+                'all_baseline_perms_removed_for_ugroup',
+                $ugroup_proxy,
+            ],
+            $added_entries[0]
         );
     }
 

@@ -113,6 +113,44 @@ final class RoleAssignmentRepositoryAdapterTest extends TestIntegrationTestCase
         self::assertEmpty($readers);
     }
 
+    public function testCanRemoveAllRolesForASpecificUgroup(): void
+    {
+        $ugroup_deleted = ProjectUGroupTestBuilder::aCustomUserGroup(102)->build();
+
+        // set up some roles…
+        $this->repository->saveAssignmentsForProject(
+            RoleAssignmentsUpdate::build(
+                $this->project,
+                ...RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(
+                    $ugroup_deleted,
+                    ProjectUGroupTestBuilder::aCustomUserGroup(103)->build()
+                )->withProject($this->project)->build(),
+                ...RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineReader())->withUserGroups(
+                    $ugroup_deleted,
+                    ProjectUGroupTestBuilder::aCustomUserGroup(103)->build()
+                )->withProject($this->project)->build(),
+            )
+        );
+
+        //check before the deletion the two ugroups are there
+        $administrators = $this->repository->findByProjectAndRole($this->project, new RoleBaselineAdmin());
+        self::assertCount(2, $administrators);
+
+        $readers = $this->repository->findByProjectAndRole($this->project, new RoleBaselineReader());
+        self::assertCount(2, $readers);
+
+        // …and remove the ugroup roles
+        $this->repository->deleteUgroupAssignments($this->project, UserGroupProxy::fromProjectUGroup($ugroup_deleted));
+
+        $administrators = $this->repository->findByProjectAndRole($this->project, new RoleBaselineAdmin());
+        self::assertCount(1, $administrators);
+        self::assertSame(103, $administrators[0]->getUserGroupId());
+
+        $readers = $this->repository->findByProjectAndRole($this->project, new RoleBaselineReader());
+        self::assertCount(1, $readers);
+        self::assertSame(103, $readers[0]->getUserGroupId());
+    }
+
     /**
      * @param RoleAssignment[] $assignments
      *

@@ -24,13 +24,19 @@ namespace Tuleap\Baseline\Adapter\Administration;
 
 use ProjectHistoryDao;
 use Tuleap\Baseline\Domain\AddRoleAssignmentsHistoryEntry;
+use Tuleap\Baseline\Domain\BaselineUserGroup;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\RoleAssignment;
+use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\User\ProvideCurrentUser;
 
 final class RoleAssignmentsHistoryEntryAdder implements AddRoleAssignmentsHistoryEntry
 {
-    public function __construct(private ProjectHistoryDao $dao)
-    {
+    public function __construct(
+        private readonly ProjectHistoryDao $dao,
+        private readonly ProjectByIDFactory $project_manager,
+        private readonly ProvideCurrentUser $user_manager,
+    ) {
     }
 
     public function addProjectHistoryEntryForRoleAndGroups(
@@ -42,6 +48,20 @@ final class RoleAssignmentsHistoryEntryAdder implements AddRoleAssignmentsHistor
             $history_key,
             implode(',', array_map(static fn(RoleAssignment $assignment) => $assignment->getUserGroupName(), $assignments)),
             $project->getID()
+        );
+    }
+
+    public function addProjectHistoryEntryForUgroupDeletion(
+        ProjectIdentifier $project,
+        string $history_key,
+        BaselineUserGroup $baseline_user_group,
+    ): void {
+        $this->dao->addHistory(
+            $this->project_manager->getProjectById($project->getID()),
+            $this->user_manager->getCurrentUser(),
+            new \DateTimeImmutable(),
+            $history_key,
+            $baseline_user_group->getName(),
         );
     }
 }

@@ -24,10 +24,13 @@ declare(strict_types=1);
 use Tuleap\Baseline\Adapter\Administration\BaselineUserGroupRetriever;
 use Tuleap\Baseline\Adapter\Administration\PermissionPerGroupBaselineServicePaneBuilder;
 use Tuleap\Baseline\Adapter\Administration\RoleAssignmentsHistoryEntryAdder;
+use Tuleap\Baseline\Adapter\ProjectProxy;
 use Tuleap\Baseline\Adapter\Routing\RejectNonBaselineAdministratorMiddleware;
+use Tuleap\Baseline\Adapter\UserGroupProxy;
 use Tuleap\Baseline\BaselineTuleapService;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleAssignmentsDeleter;
 use Tuleap\Baseline\Domain\RoleAssignmentsHistorySaver;
 use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
@@ -180,7 +183,9 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
                 new BaselineUserGroupRetriever(ProjectManager::instance(), new UGroupManager()),
                 new RoleAssignmentsHistorySaver(
                     new RoleAssignmentsHistoryEntryAdder(
-                        new ProjectHistoryDao()
+                        new ProjectHistoryDao(),
+                        ProjectManager::instance(),
+                        UserManager::instance(),
                     )
                 ),
             ),
@@ -302,5 +307,29 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
 
     public function serviceEnableForXmlImportRetriever(\Tuleap\Project\XML\ServiceEnableForXmlImportRetriever $event): void
     {
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventName('project_admin_ugroup_deletion')]
+    public function projectAdminUgroupDeletion(array $params): void
+    {
+        $project = $params['project'];
+        $ugroup  = $params['ugroup'];
+
+        $user_group_proxy = UserGroupProxy::fromProjectUGroup($ugroup);
+        $project_proxy    = ProjectProxy::buildFromProject($project);
+
+        (new RoleAssignmentsDeleter(
+            ContainerBuilderFactory::create()->build()->get(RoleAssignmentRepository::class),
+            new RoleAssignmentsHistorySaver(
+                new RoleAssignmentsHistoryEntryAdder(
+                    new ProjectHistoryDao(),
+                    ProjectManager::instance(),
+                    UserManager::instance(),
+                )
+            ),
+        ))->deleteRoleAssignments(
+            $project_proxy,
+            $user_group_proxy,
+        );
     }
 }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use ParagonIE\EasyDB\EasyDB;
+use Tuleap\Baseline\Domain\BaselineUserGroup;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\RetrieveBaselineUserGroup;
 use Tuleap\Baseline\Domain\Role;
@@ -76,6 +77,19 @@ class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
                     $this->db->insertMany('plugin_baseline_role_assignment', $insertions);
                 }
             }
+        );
+    }
+
+    public function deleteUgroupAssignments(
+        ProjectIdentifier $project,
+        BaselineUserGroup $baseline_user_group,
+    ): int {
+        return $this->db->delete(
+            'plugin_baseline_role_assignment',
+            [
+                'project_id' => $project->getID(),
+                'user_group_id' => $baseline_user_group->getId(),
+            ]
         );
     }
 }

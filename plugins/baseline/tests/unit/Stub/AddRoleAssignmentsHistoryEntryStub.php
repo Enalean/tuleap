@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use Tuleap\Baseline\Domain\AddRoleAssignmentsHistoryEntry;
+use Tuleap\Baseline\Domain\BaselineUserGroup;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\RoleAssignment;
 
@@ -45,5 +46,10 @@ final class AddRoleAssignmentsHistoryEntryStub implements AddRoleAssignmentsHist
     public function getAddedHistoryEntries(): array
     {
         return $this->added_history_entries;
+    }
+
+    public function addProjectHistoryEntryForUgroupDeletion(ProjectIdentifier $project, string $history_key, BaselineUserGroup $baseline_user_group): void
+    {
+        $this->added_history_entries[] = [$project, $history_key, $baseline_user_group];
     }
 }

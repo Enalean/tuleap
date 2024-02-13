@@ -28,8 +28,9 @@ final class RoleAssignmentsHistorySaver
     private const PERM_RESET_FOR_BASELINE_ADMINISTRATORS   = 'perm_reset_for_baseline_administrators';
     private const PERM_GRANTED_FOR_BASELINE_READERS        = 'perm_granted_for_baseline_readers';
     private const PERM_GRANTED_FOR_BASELINE_ADMINISTRATORS = 'perm_granted_for_baseline_administrators';
+    private const ALL_BASELINE_PERMS_REMOVED_FOR_UGROUP    = 'all_baseline_perms_removed_for_ugroup';
 
-    public function __construct(private AddRoleAssignmentsHistoryEntry $history_entry_adder)
+    public function __construct(private readonly AddRoleAssignmentsHistoryEntry $history_entry_adder)
     {
     }
 
@@ -51,6 +52,10 @@ final class RoleAssignmentsHistorySaver
             self::PERM_GRANTED_FOR_BASELINE_ADMINISTRATORS => dgettext(
                 'tuleap-baseline',
                 'Permission granted for baseline administrators'
+            ),
+            self::ALL_BASELINE_PERMS_REMOVED_FOR_UGROUP => dgettext(
+                'tuleap-baseline',
+                'All baseline permissions removed for user group'
             ),
             default => null,
         };
@@ -102,5 +107,16 @@ final class RoleAssignmentsHistorySaver
                 ...$assignments_by_roles[RoleBaselineAdmin::NAME]
             );
         }
+    }
+
+    public function saveUgroupDeletionHistory(
+        ProjectIdentifier $project,
+        BaselineUserGroup $baseline_user_group,
+    ): void {
+        $this->history_entry_adder->addProjectHistoryEntryForUgroupDeletion(
+            $project,
+            self::ALL_BASELINE_PERMS_REMOVED_FOR_UGROUP,
+            $baseline_user_group,
+        );
     }
 }
