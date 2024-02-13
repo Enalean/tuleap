@@ -36,10 +36,11 @@ use Tuleap\User\UserGroup\NameTranslator;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field
 {
-    public const GRANTED_GROUPS     = 'granted_groups';
-    public const USE_IT             = 'use_artifact_permissions';
-    public const IS_USED_BY_DEFAULT = false;
-    public const PERMISSION_TYPE    = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
+    public const GRANTED_GROUPS      = 'granted_groups';
+    public const USE_IT              = 'use_artifact_permissions';
+    public const DO_MASS_UPDATE_FLAG = 'do_mass_update';
+    public const IS_USED_BY_DEFAULT  = false;
+    public const PERMISSION_TYPE     = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
 
     public $default_properties = [];
 
@@ -154,15 +155,18 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->getArtifactValueHTML($this->getId(), $is_checked, $is_disabled);
     }
 
-    /**
-     * @return string
-     */
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
+        $mass_change_input_html = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/form-element/')
+            ->renderToString(
+                'permissions_on_artifact_massupdate',
+                ['field_id' => $this->getId(), 'flag_mass_update' => self::DO_MASS_UPDATE_FLAG]
+            );
+
         $is_checked  = false;
         $is_disabled = false;
 
-        return $this->getArtifactValueHTML($this->getId(), $is_checked, $is_disabled);
+        return $mass_change_input_html . $this->getArtifactValueHTML($this->getId(), $is_checked, $is_disabled);
     }
 
     /**
@@ -262,7 +266,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $html;
     }
 
-    private function fetchUserGroupList($is_read_only, array $changeset_values)
+    private function fetchUserGroupList($is_read_only, array $changeset_values): string
     {
         $field_id     = $this->getId();
         $element_name = 'artifact[' . $field_id . '][u_groups][]';
@@ -270,7 +274,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $hp    = Codendi_HTMLPurifier::instance();
         $html  = '<select '
             . 'name="' . $hp->purify($element_name) . '" '
-            . 'id="' . $hp->purify(str_replace('[]', '', $element_name)) . '" '
+            . 'id="' . $hp->purify('artifact_' . $field_id . '_perms_ugroups' . ($is_read_only ? '_ro' : '')) . '" '
             . 'multiple '
             . 'size="8" '
             . (($this->isRequired()) ? 'required="required"' : '' )
@@ -852,32 +856,32 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     /**
      * @param bool $can_user_restrict_permissions_to_nobody
      * @param bool $disabled
-     *
-     * @return string
      */
-    private function fetchRestrictCheckbox($can_user_restrict_permissions_to_nobody, $disabled, $is_expecting_input)
+    private function fetchRestrictCheckbox($can_user_restrict_permissions_to_nobody, $disabled, $is_expecting_input): string
     {
         $empty_value_class = '';
         if ($is_expecting_input) {
             $empty_value_class = 'empty_value';
         }
 
-        $html = '<p class="tracker_field_permissionsonartifact ' . $empty_value_class . '">';
+        $field_id = Codendi_HTMLPurifier::instance()->purify($this->getId());
+
+        $html = '<p class="tracker_field_permissionsonartifact ' . $empty_value_class . '" data-field-id="' . $field_id . '">';
         if ($this->isRequired() == false) {
             if (! $disabled) {
-                $html .= '<input type="hidden" name="artifact[' . $this->getId() . '][use_artifact_permissions]" value="0" />';
+                $html .= '<input type="hidden" name="artifact[' . $field_id . '][use_artifact_permissions]" value="0" />';
             }
-            $html .= '<label class="checkbox" for="artifact_' . $this->getId() . '_use_artifact_permissions">';
-            $html .= '<input type="checkbox"
-                        name="artifact[' . $this->getId() . '][use_artifact_permissions]"
-                        id="artifact_' . $this->getId() . '_use_artifact_permissions"
+            $read_only_id = $disabled ? '_ro' : '';
+            $html        .= '<label class="checkbox" for="artifact_' . $field_id . '_use_artifact_permissions' . $read_only_id . '">';
+            $html        .= '<input type="checkbox"
+                        name="artifact[' . $field_id . '][use_artifact_permissions]"
+                        id="artifact_' . $field_id . '_use_artifact_permissions' . $read_only_id . '"
                         value="1" ' .
                 (($can_user_restrict_permissions_to_nobody == true) ? 'checked="checked"' : '') .
                 (($disabled == true) ? 'disabled="disabled"' : '') .
                 '/>';
         } else {
-            $html .= '<input type="hidden" name="artifact[' . $this->getId(
-            ) . '][use_artifact_permissions]" value="1" />';
+            $html .= '<input type="hidden" name="artifact[' . $field_id . '][use_artifact_permissions]" value="1" />';
         }
 
         $html .= dgettext('tuleap-tracker', 'Restrict access to this artifact for the following user groups:') . '</label>';

@@ -3786,6 +3786,9 @@ msgstr ""
 msgid "Update semantic"
 msgstr ""
 
+msgid "Update the permissions, by default nothing is changed"
+msgstr ""
+
 msgid "Update to overridable computed field"
 msgstr ""
 

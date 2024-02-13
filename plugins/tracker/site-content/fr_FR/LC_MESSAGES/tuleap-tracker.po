@@ -4294,6 +4294,9 @@ msgstr "Modifier le rappel"
 msgid "Update semantic"
 msgstr "Mettre à jour la sémantique"
 
+msgid "Update the permissions, by default nothing is changed"
+msgstr "Mettre à jour les permissions, par défaut rien ne change"
+
 msgid "Update to overridable computed field"
 msgstr "Mettre à jour vers champ calculé modifiable"
 
