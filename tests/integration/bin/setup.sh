@@ -28,8 +28,6 @@ setup_database() {
     MYSQL_USER=tuleapadm
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
-    MYSQL_CLI="/opt/rh/rh-mysql80/root/usr/bin/mysql"
-    MYSQL="$MYSQL_CLI -h$DB_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
     echo "Use remote db $DB_HOST"
 
@@ -46,15 +44,7 @@ setup_database() {
     TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost" --php-version=$PHP_VERSION
     echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
 
-    # Allow all privileges on DB starting with 'testdb_' so we can create and drop database during the tests
-    $MYSQL_CLI -h"$DB_HOST" -uroot -pwelcome0 -e 'GRANT ALL PRIVILEGES ON `testdb_%` . * TO "'$MYSQL_USER'"@"%";'
-
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3structure.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3values.sql"
-    # Need the raw import (instead of std activate of plugin) because we need to load
-    # example.sql for Tv3->Tv5 migration tests
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/plugins/tracker_date_reminder/db/install.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/plugins/tracker_date_reminder/db/examples.sql"
+    PHP="$PHP_CLI" /usr/share/tuleap/tests/integration/bin/setup-db.php
 }
 
 load_project() {
