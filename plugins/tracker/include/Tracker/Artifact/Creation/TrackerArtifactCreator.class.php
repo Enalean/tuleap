@@ -102,7 +102,7 @@ class TrackerArtifactCreator
      */
     public function createFirstChangeset(
         Artifact $artifact,
-        array $fields_data,
+        InitialChangesetValuesContainer $changeset_values,
         PFUser $user,
         int $submitted_on,
         bool $send_notification,
@@ -113,7 +113,7 @@ class TrackerArtifactCreator
         $are_fields_valid   = $this->fields_validator->validate(
             $artifact,
             $user,
-            $fields_data,
+            $changeset_values->getFieldsData(),
             $validation_context
         );
         if (! $are_fields_valid) {
@@ -122,7 +122,7 @@ class TrackerArtifactCreator
 
         return $this->createFirstChangesetNoValidation(
             $artifact,
-            $fields_data,
+            $changeset_values,
             $user,
             $submitted_on,
             $send_notification,
@@ -138,7 +138,7 @@ class TrackerArtifactCreator
      */
     private function createFirstChangesetNoValidation(
         Artifact $artifact,
-        array $fields_data,
+        InitialChangesetValuesContainer $changeset_values,
         PFUser $user,
         int $submitted_on,
         bool $send_notification,
@@ -149,7 +149,7 @@ class TrackerArtifactCreator
         $changeset_id = $this->db_transaction_executor->execute(
             function () use (
                 $artifact,
-                $fields_data,
+                $changeset_values,
                 $user,
                 $submitted_on,
                 $url_mapping,
@@ -158,7 +158,7 @@ class TrackerArtifactCreator
             ) {
                 return $this->changeset_creator->create(
                     $artifact,
-                    $fields_data,
+                    $changeset_values->getFieldsData(),
                     $user,
                     (int) $submitted_on,
                     $url_mapping,
@@ -212,7 +212,7 @@ class TrackerArtifactCreator
         if (
             ! $this->createFirstChangesetNoValidation(
                 $artifact,
-                $fields_data,
+                $changeset_values,
                 $user,
                 $submitted_on,
                 $send_notification,
@@ -228,7 +228,7 @@ class TrackerArtifactCreator
             return null;
         }
 
-        if ($artifact !== false && $should_visit_be_recorded) {
+        if ($should_visit_be_recorded) {
             $this->visit_recorder->record($user, $artifact);
         }
 

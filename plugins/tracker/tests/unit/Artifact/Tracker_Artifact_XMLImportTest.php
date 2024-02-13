@@ -24,8 +24,10 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -49,9 +51,7 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected Tracker_Artifact_XMLImport $importer;
 
-    /** @var TrackerArtifactCreator */
-    protected $artifact_creator;
-
+    private TrackerArtifactCreator & \PHPUnit\Framework\MockObject\MockObject $artifact_creator;
     /** @var NewChangesetCreator */
     protected $new_changeset_creator;
 
@@ -110,7 +110,7 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->artifact_creator      = \Mockery::spy(TrackerArtifactCreator::class);
+        $this->artifact_creator      = $this->createMock(TrackerArtifactCreator::class);
         $this->new_changeset_creator = \Mockery::spy(NewChangesetCreator::class);
 
         $this->summary_field_id    = 50;
@@ -211,10 +211,13 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $bare_artifact = Mockery::spy(Artifact::class);
         $bare_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), Mockery::any())
-            ->once()
-            ->andReturn($bare_artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                    match (true) {
+                $tracker === $this->tracker => $bare_artifact
+                    }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -234,23 +237,29 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $bare_artifact = Mockery::spy(Artifact::class);
         $bare_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), Mockery::any())
-            ->once()
-            ->andReturn($bare_artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                $tracker === $this->tracker => $bare_artifact
+                }
+            );
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->with(
-                Mockery::any(),
-                $data,
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->once()
-            ->andReturn(Mockery::spy(\Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $changeset_values->getFieldsData() === $data && $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -267,10 +276,13 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $bare_artifact = Mockery::spy(Artifact::class);
         $bare_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, $this->john_doe, Mockery::any())
-            ->once()
-            ->andReturn($bare_artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                $tracker === $this->tracker && $user === $this->john_doe => $bare_artifact
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -288,10 +300,13 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $bare_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
         $expected_time = strtotime('2014-01-15T10:38:06+01:00');
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), $expected_time)
-            ->once()
-            ->andReturn($bare_artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                $tracker === $this->tracker && $submitted_on === $expected_time => $bare_artifact
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -323,18 +338,21 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesTheComments(): void
     {
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->with(
-                Mockery::any(),
-                Mockery::any(),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->once()
-            ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->new_changeset_creator->shouldReceive('create')->times(2);
 
@@ -348,8 +366,8 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $this->artifact_creator->shouldReceive('create')->andReturns($this->artifact);
-        $this->artifact_creator->shouldReceive('createBare')->andReturns($this->artifact);
+        $this->artifact_creator->method('create')->willReturn($this->artifact);
+        $this->artifact_creator->method('createBare')->willReturn($this->artifact);
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
             <artifacts>
@@ -399,14 +417,25 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesTheCommentsWithUpdates(): void
     {
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->with(Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), false, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
-            ->once()
-            ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $this->artifact_creator->shouldReceive('create')->andReturns($this->artifact);
-        $this->artifact_creator->shouldReceive('createBare')->andReturns($this->artifact);
+        $this->artifact_creator->method('create')->willReturn($this->artifact);
+        $this->artifact_creator->method('createBare')->willReturn($this->artifact);
 
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
@@ -503,22 +532,25 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([$my_group, $my_best_group])
             ->once();
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->with(
-                Mockery::any(),
-                Mockery::any(),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->once()
-            ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $this->artifact_creator->shouldReceive('create')->andReturns($this->artifact);
-        $this->artifact_creator->shouldReceive('createBare')->andReturns($this->artifact);
+        $this->artifact_creator->method('create')->willReturn($this->artifact);
+        $this->artifact_creator->method('createBare')->willReturn($this->artifact);
 
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
@@ -600,39 +632,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItThrowAnExceptionWhenFieldDoesntExist(): void
-    {
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
-
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($artifact);
-
-        $this->logger->shouldReceive('log')->with(\Psr\Log\LogLevel::WARNING, Mockery::any(), Mockery::any())->once();
-
-        $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
-            <artifacts>
-              <artifact id="4918">
-                <changeset>
-                  <submitted_by format="username">john_doe</submitted_by>
-                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
-                  <field_change field_name="summaro" type="string">
-                    <value>Ça marche</value>
-                  </field_change>
-                </changeset>
-              </artifact>
-            </artifacts>');
-
-        $this->importer->importFromXML(
-            $this->tracker,
-            $xml_element,
-            $this->extraction_path,
-            new TrackerXmlFieldsMapping_InSamePlatform(),
-            $this->url_mapping,
-            $this->tracker_xml_config
-        );
-    }
-
     public function testItCreatesChangesetAsAnonymousWhenUserDoesntExists(): void
     {
         $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
@@ -652,16 +651,13 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with(
-                $this->tracker,
-                Mockery::on(function ($user) {
-                    return ($user instanceof PFUser && $user->isAnonymous() && $user->getEmail() == 'jmalko');
-                }),
-                Mockery::any()
-            )
-            ->once()
-            ->andReturn($artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                    match (true) {
+                $user->isAnonymous() && $user->getEmail() === 'jmalko' => $artifact
+                    }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -698,14 +694,13 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with(
-                $this->tracker,
-                $this->john_doe,
-                Mockery::any()
-            )
-            ->once()
-            ->andReturn($artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                $tracker === $this->tracker && $user === $this->john_doe => $artifact
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -742,14 +737,13 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with(
-                $this->tracker,
-                $this->john_doe,
-                Mockery::any()
-            )
-            ->once()
-            ->andReturn($artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                $tracker === $this->tracker && $user === $this->john_doe => $artifact
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -786,14 +780,13 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with(
-                $this->tracker,
-                $this->john_doe,
-                Mockery::any()
-            )
-            ->once()
-            ->andReturn($artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                $tracker === $this->tracker && $user === $this->john_doe => $artifact
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -830,16 +823,15 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesTwoChangesets(): void
     {
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
 
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('create')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->artifact_creator->method('create')->willReturn(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->new_changeset_creator->shouldReceive('create')->times(1);
 
@@ -859,17 +851,28 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->summary_field_id => '^Wit updates',
         ];
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), false, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('create')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->artifact_creator->method('create')->willReturn(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
@@ -893,17 +896,28 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesTheNewChangesetWithSubmitter(): void
     {
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), false, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('create')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->artifact_creator->method('create')->willReturn(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
@@ -927,17 +941,28 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesTheNewChangesetWithoutNotification(): void
     {
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), false, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('create')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->artifact_creator->method('create')->willReturn(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
@@ -955,20 +980,34 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesTheChangesetsAccordingToDates(): void
     {
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), strtotime('2014-01-15T10:38:06+01:00'))
-            ->once()
-            ->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                $tracker === $this->tracker && $submitted_on === strtotime('2014-01-15T10:38:06+01:00') => $this->artifact
+                }
+            );
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(Mockery::any(), Mockery::any(), Mockery::any(), strtotime('2014-01-15T10:38:06+01:00'), false, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $submitted_on === strtotime('2014-01-15T10:38:06+01:00') && $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('create')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->artifact_creator->method('create')->willReturn(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
@@ -1012,20 +1051,34 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), strtotime('2014-01-15T10:38:06+01:00'))
-            ->once()
-            ->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                $tracker === $this->tracker && $submitted_on === strtotime('2014-01-15T10:38:06+01:00') => $this->artifact
+                }
+            );
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(Mockery::any(), Mockery::any(), Mockery::any(), strtotime('2014-01-15T10:38:06+01:00'), false, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $submitted_on === strtotime('2014-01-15T10:38:06+01:00') && $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('create')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->artifact_creator->method('create')->willReturn(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
@@ -1083,29 +1136,35 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), strtotime('2014-01-15T10:38:06+01:00'))
-            ->once()
-            ->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                $tracker === $this->tracker && $submitted_on === strtotime('2014-01-15T10:38:06+01:00') => $this->artifact
+                }
+            );
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[$this->summary_field_id] === 'First';
-                }),
-                Mockery::any(),
-                strtotime('2014-01-15T10:38:06+01:00'),
-                Mockery::any(),
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $changeset_values->getFieldsData()[$this->summary_field_id] === 'First' && $submitted_on === strtotime('2014-01-15T10:38:06+01:00') => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
+
+
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('create')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->artifact_creator->method('create')->willReturn(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->new_changeset_creator->shouldReceive('create')->times(3);
 
@@ -1195,15 +1254,14 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), strtotime('2014-01-15T10:38:06+01:00'))
-            ->once()
-            ->andReturn($artifact);
-
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), strtotime('2014-01-16T11:38:06+01:00'))
-            ->once()
-            ->andReturn($artifact);
+        $this->artifact_creator->expects(self::exactly(2))->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                    $tracker === $this->tracker && $submitted_on === strtotime('2014-01-15T10:38:06+01:00') => $artifact,
+                    $tracker === $this->tracker && $submitted_on === strtotime('2014-01-16T11:38:06+01:00') => $artifact,
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -1239,13 +1297,14 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), strtotime('2014-01-15T10:38:06+01:00'))
-            ->andReturn(ArtifactTestBuilder::anArtifact(101)->inTracker($this->tracker)->build());
-
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), strtotime('2014-01-16T11:38:06+01:00'))
-            ->andReturn(ArtifactTestBuilder::anArtifact(102)->inTracker($this->tracker)->build());
+        $this->artifact_creator->expects(self::exactly(2))->method('createBare')
+            ->willReturnCallback(
+                fn (Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact =>
+                match (true) {
+                    $tracker === $this->tracker && $submitted_on === strtotime('2014-01-15T10:38:06+01:00') => ArtifactTestBuilder::anArtifact(101)->inTracker($this->tracker)->build(),
+                    $tracker === $this->tracker && $submitted_on === strtotime('2014-01-16T11:38:06+01:00') => ArtifactTestBuilder::anArtifact(102)->inTracker($this->tracker)->build(),
+                }
+            );
 
         $this->db_connection->expects(self::exactly(2))->method('reconnectAfterALongRunningProcess');
 
@@ -1292,15 +1351,24 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->summary_field_id => 'Newly submitted',
         ];
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), Mockery::any())
-            ->once()
-            ->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(Mockery::any(), $data, Mockery::any(), Mockery::any(), false, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $changeset_values->getFieldsData() === $data && $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
@@ -1321,17 +1389,15 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesAChangesetWithOneFileElement(): void
     {
-        $this->artifact_creator->shouldReceive('create')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->artifact_creator->method('create')->willReturn(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
         $file_field = Mockery::mock(Tracker_FormElement_Field_File::class);
         $file_field->shouldReceive('getId')->andReturn(51);
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with($this->tracker_id, 'attachment')->andReturns($file_field);
 
         touch($this->extraction_path . '/34_File33.png');
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), Mockery::any())
-            ->once()
-            ->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturn($this->artifact);
 
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
@@ -1339,21 +1405,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->new_changeset_creator->shouldReceive('create')->andReturns(
             \Mockery::spy(\Tracker_Artifact_Changeset::class)
         );
-
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[$this->summary_field_id] === 'Newly submitted' &&
-                        $data[51][0]['name'] === 'A.png' &&
-                        $data[51][0]['submitted_by']->getEmail() === 'manuel';
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any()
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -1399,15 +1450,24 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), Mockery::any())
-            ->once()
-            ->andReturn($artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturn($artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(Mockery::any(), $data, Mockery::any(), Mockery::any(), false, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $changeset_values->getFieldsData() === $data && $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -1464,28 +1524,8 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), Mockery::any())
-            ->once()
-            ->andReturn($artifact);
-
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[$this->summary_field_id] === 'Newly submitted' &&
-                           $data[51][0]['name'] === 'A.png' &&
-                           $data[51][0]['submitted_by']->getEmail() === 'manuel' &&
-                           $data[51][1]['name'] === 'B.pdf' &&
-                           $data[51][1]['submitted_by']->getEmail() === 'manuel';
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturn($artifact);
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -1549,26 +1589,8 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')
-            ->with($this->tracker, Mockery::any(), Mockery::any())
-            ->once()
-            ->andReturn($artifact);
-
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[$this->summary_field_id] === 'Newly submitted' &&
-                           $data[51][0]['name'] === 'A.png' &&
-                           $data[51][0]['submitted_by']->getEmail() === 'manuel';
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createBare')
+            ->willReturn($artifact);
 
         $this->new_changeset_creator->shouldReceive('create')
             ->with(
@@ -1616,8 +1638,8 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDelegatesOpenListComputationToField(): void
     {
-        $this->artifact_creator->shouldReceive('createBare')->andReturns($this->artifact);
-        $this->artifact_creator->shouldReceive('createFirstChangeset')->andReturns(Mockery::spy(\Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->method('createFirstChangeset')->willReturn(Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
@@ -1655,22 +1677,23 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with($this->tracker_id, 'cc')->andReturns($open_list_field);
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[369] === '!112,!113';
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                $changeset_values->getFieldsData()[369] === '!112,!113' && $send_notification === false => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -1707,23 +1730,26 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[369]['use_artifact_permissions'] === 1 &&
-                           $data[369]['u_groups'] === [15, 101];
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                    $changeset_values->getFieldsData()[369]['use_artifact_permissions'] === 1
+                    && $changeset_values->getFieldsData()[369]['u_groups'] === [15, 101]
+                    && $send_notification === false
+                        => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -1759,23 +1785,26 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[369]['format'] === 'html' &&
-                           $data[369]['content'] === 'test';
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                    $changeset_values->getFieldsData()[369]['format'] === 'html'
+                    && $changeset_values->getFieldsData()[369]['content'] === 'test'
+                    && $send_notification === false
+                    => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -1838,25 +1867,28 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[369] === 'Import artifact in tracker v5' &&
-                           $data[234] === '5' &&
-                           $data[347] === '4.5' &&
-                           $data[978] === '2014-03-20';
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                    $changeset_values->getFieldsData()[369] === 'Import artifact in tracker v5'
+                    && $changeset_values->getFieldsData()[234] === '5'
+                    && $changeset_values->getFieldsData()[347] === '4.5'
+                    && $changeset_values->getFieldsData()[978] === '2014-03-20'
+                    && $send_notification === false
+                    => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -1891,25 +1923,28 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[369] === 'Import artifact in tracker v5' &&
-                           $data[234] === '5' &&
-                           $data[347] === '4.5' &&
-                           $data[978] === '2014-03-20 10:13';
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                    $changeset_values->getFieldsData()[369] === 'Import artifact in tracker v5'
+                    && $changeset_values->getFieldsData()[234] === '5'
+                    && $changeset_values->getFieldsData()[347] === '4.5'
+                    && $changeset_values->getFieldsData()[978] === '2014-03-20 10:13'
+                    && $send_notification === false
+                    => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -1955,22 +1990,25 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[978] === '';
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                    $changeset_values->getFieldsData()[978] === ''
+                    && $send_notification === false
+                        => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -2018,23 +2056,26 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[234] === [104] &&
-                           $data[456] === [$this->john_doe->getId()];
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                    $changeset_values->getFieldsData()[234] === [104] &&
+                    $changeset_values->getFieldsData()[456] === [$this->john_doe->getId()] &&
+                    $send_notification === false
+                        => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -2079,22 +2120,26 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[456] === [101, 102];
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                    $changeset_values->getFieldsData()[456] === [101, 102] &&
+                    $send_notification === false
+                    => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
+
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -2146,22 +2191,25 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                Mockery::any(),
-                Mockery::on(function ($data) {
-                    return $data[456] === [101, 102];
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
-            )
-            ->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+            ->willReturnCallback(
+                fn (
+                    Artifact $artifact,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    CreatedFileURLMapping $url_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ): ?Tracker_Artifact_Changeset =>
+                match (true) {
+                    $changeset_values->getFieldsData()[456] === [101, 102] &&
+                    $send_notification === false
+                    => Mockery::spy(\Tracker_Artifact_Changeset::class)
+                }
+            );
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -2207,8 +2255,8 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
-        $this->artifact_creator->shouldReceive('createFirstChangeset')->once()->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')->willReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
 
         $this->new_changeset_creator->shouldReceive('create')->andReturn(null);
         $this->new_changeset_creator->shouldReceive('create')->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
@@ -2228,8 +2276,8 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
-        $this->artifact_creator->shouldReceive('createFirstChangeset')->once()->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
+        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')->willReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
 
         $this->new_changeset_creator->shouldReceive('create')->andThrow(new Exception('Bad luck'));
         $this->new_changeset_creator->shouldReceive('create')->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
@@ -2279,8 +2327,10 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $art2->shouldReceive('getId')->andReturns(2);
         $art2->shouldReceive('getTracker')->andReturns(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($art1);
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($art2);
+        $this->artifact_creator
+            ->expects(self::exactly(2))
+            ->method('createBare')
+            ->willReturnOnConsecutiveCalls($art1, $art2);
 
         $artlink_strategy = \Mockery::mock(\Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artlink_strategy->shouldReceive('getLastChangeset')->andReturns(false);
@@ -2333,8 +2383,10 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $art2->shouldReceive('getId')->andReturns(2);
         $art2->shouldReceive('getTracker')->andReturns(Mockery::spy(Tracker::class));
 
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($art1);
-        $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($art2);
+        $this->artifact_creator
+            ->expects(self::exactly(2))
+            ->method('createBare')
+            ->willReturnOnConsecutiveCalls($art1, $art2);
 
         $artlink_strategy = \Mockery::mock(\Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artlink_strategy->shouldReceive('getLastChangeset')->andReturns(false);
@@ -2365,11 +2417,11 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->shouldReceive('create')->never();
-        $this->artifact_creator->shouldReceive('createBare')->never();
+        $this->artifact_creator->expects(self::never())->method('create');
+        $this->artifact_creator->expects(self::never())->method('createBare');
         $this->logger->shouldReceive('log')->with(\Psr\Log\LogLevel::ERROR, Mockery::any(), Mockery::any())->once();
 
-        $this->artifact_creator->shouldReceive('create')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->artifact_creator->method('create')->willReturn(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->expectOutputRegex('/Invalid date format not ISO8601: 2011-11-24T15:51:48TCET/');
         $this->importer->importFromXML(
@@ -2463,11 +2515,14 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $bare_artifact = Mockery::spy(Artifact::class);
         $bare_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $this->artifact_creator->shouldNotReceive('createBare');
-        $this->artifact_creator->shouldReceive('createBareWithAllData')
-            ->with($this->tracker, 4918, Mockery::any(), Mockery::any())
-            ->once()
-            ->andReturn($bare_artifact);
+        $this->artifact_creator->expects(self::never())->method('createBare');
+        $this->artifact_creator->expects(self::once())->method('createBareWithAllData')
+            ->willReturnCallback(
+                fn (Tracker $tracker, int $artifact_id, int $submitted_on, int $submitted_by): ?Artifact =>
+                match (true) {
+                $tracker === $this->tracker && $artifact_id === 4918 => $bare_artifact
+                }
+            );
 
         $tracker_xml_config = new TrackerXmlImportConfig(
             \Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build(),
