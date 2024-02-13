@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\PullRequest\Criterion\PullRequestSortOrder;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 
@@ -187,11 +188,12 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
     public function getPaginatedPullRequests(
         int $repository_id,
         SearchCriteria $criteria,
+        PullRequestSortOrder $order,
         int $limit,
         int $offset,
     ): PullRequestsPage {
         return $this->getDB()->tryFlatTransaction(
-            function () use ($repository_id, $criteria, $limit, $offset) {
+            function () use ($repository_id, $criteria, $order, $limit, $offset) {
                 $search_criteria_statements = $this->getSearchCriteriaStatements($criteria);
 
                 $sql_select_count  = 'SELECT COUNT(*) OVER () ';
@@ -231,9 +233,20 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
                     ...$search_criteria_statements->having_statement->values(),
                 ];
 
+                $sql_order = match ($order) {
+                    PullRequestSortOrder::ASCENDING => 'ASC',
+                    PullRequestSortOrder::DESCENDING => 'DESC',
+                };
+
                 return new PullRequestsPage(
                     $this->getDB()->single($sql_select_count . $sql_query_body . ' LIMIT 1', $parameters),
-                    $this->getDB()->safeQuery($sql_select_data . $sql_query_body . ' LIMIT ? OFFSET ?', [...$parameters, $limit, $offset])
+                    $this->getDB()->safeQuery(
+                        $sql_select_data .
+                        $sql_query_body .
+                        ' ORDER BY plugin_pullrequest_review.creation_date ' . $sql_order .
+                        ' LIMIT ? OFFSET ?',
+                        [...$parameters, $limit, $offset]
+                    )
                 );
             }
         );

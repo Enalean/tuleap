@@ -30,6 +30,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\PullRequest\Criterion\PullRequestSortOrder;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNotFoundException;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNotFoundFault;
@@ -61,13 +62,14 @@ final class GETHandler
     }
 
     /**
+     * @param "asc"|"desc" $order
      * @return Ok<RepositoryPullRequestRepresentation> | Err<Fault>
      */
-    public function handle(GitRepository $repository, string $query, int $limit, int $offset): Ok | Err
+    public function handle(GitRepository $repository, string $query, string $order, int $limit, int $offset): Ok | Err
     {
         return $this->query_to_search_criteria_converter->convert($query)->andThen(
-            function (SearchCriteria $criteria) use ($repository, $limit, $offset) {
-                return $this->retrievePullRequests($repository, $criteria, $limit, $offset);
+            function (SearchCriteria $criteria) use ($order, $repository, $limit, $offset) {
+                return $this->retrievePullRequests($repository, $criteria, PullRequestSortOrder::from($order), $limit, $offset);
             }
         );
     }
@@ -75,9 +77,9 @@ final class GETHandler
     /**
      * @return Ok<RepositoryPullRequestRepresentation> | Err<Fault>
      */
-    private function retrievePullRequests(GitRepository $repository, SearchCriteria $criteria, int $limit, int $offset): Ok | Err
+    private function retrievePullRequests(GitRepository $repository, SearchCriteria $criteria, PullRequestSortOrder $order, int $limit, int $offset): Ok | Err
     {
-        $result = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criteria, $limit, $offset);
+        $result = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criteria, $order, $limit, $offset);
 
         $collection = [];
         foreach ($result->pull_requests as $row) {

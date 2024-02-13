@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Tests\Stub;
 
+use Tuleap\PullRequest\Criterion\PullRequestSortOrder;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestsPage;
@@ -65,7 +66,7 @@ final class SearchPaginatedPullRequestsStub implements SearchPaginatedPullReques
         ];
     }
 
-    public function getPaginatedPullRequests(int $repository_id, SearchCriteria $criteria, int $limit, int $offset): PullRequestsPage
+    public function getPaginatedPullRequests(int $repository_id, SearchCriteria $criteria, PullRequestSortOrder $order, int $limit, int $offset): PullRequestsPage
     {
         return new PullRequestsPage(
             count($this->all_rows),

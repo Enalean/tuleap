@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest;
+declare(strict_types=1);
 
-use Tuleap\PullRequest\Criterion\PullRequestSortOrder;
-use Tuleap\PullRequest\Criterion\SearchCriteria;
+namespace Tuleap\PullRequest\Criterion;
 
-interface SearchPaginatedPullRequests
+enum PullRequestSortOrder: string
 {
-    public function getPaginatedPullRequests(
-        int $repository_id,
-        SearchCriteria $criteria,
-        PullRequestSortOrder $order,
-        int $limit,
-        int $offset,
-    ): PullRequestsPage;
+    case ASCENDING  = "asc";
+    case DESCENDING = "desc";
 }

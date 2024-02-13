@@ -140,6 +140,7 @@ final class GETHandlerTest extends TestCase
         return $handler->handle(
             $this->repository,
             $query,
+            "asc",
             self::LIMIT,
             self::OFFSET
         );

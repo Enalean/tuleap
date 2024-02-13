@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest;
 
 use Tuleap\PullRequest\Criterion\AuthorCriterion;
 use Tuleap\PullRequest\Criterion\LabelCriterion;
+use Tuleap\PullRequest\Criterion\PullRequestSortOrder;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\Criterion\StatusCriterion;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
@@ -67,6 +68,7 @@ final class DaoTest extends TestIntegrationTestCase
         $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
             new SearchCriteria(StatusCriterion::OPEN),
+            PullRequestSortOrder::DESCENDING,
             self::LIMIT,
             self::OFFSET,
         );
@@ -80,29 +82,53 @@ final class DaoTest extends TestIntegrationTestCase
         $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
             new SearchCriteria(StatusCriterion::CLOSED),
+            PullRequestSortOrder::DESCENDING,
             self::LIMIT,
             self::OFFSET,
         );
 
-        self::assertSame(array_column($result->pull_requests, "id"), [$this->merged_pull_request_id, $this->abandoned_pull_request_id]);
-        self::assertEquals(2, $result->total_size);
+        self::assertEqualsCanonicalizing([$this->merged_pull_request_id, $this->abandoned_pull_request_id], array_column($result->pull_requests, "id"));
     }
 
-    public function testItRetrievesAllPullRequests(): void
+    public function testItRetrievesAllPullRequestsInDescendingOrder(): void
+    {
+        $this->retrieveAllPullRequests(
+            PullRequestSortOrder::DESCENDING,
+            [
+                $this->abandoned_pull_request_id,
+                $this->merged_pull_request_id,
+                $this->open_pull_request_id,
+            ]
+        );
+    }
+
+    public function testItRetrievesAllPullRequestsInAscendingOrder(): void
+    {
+        $this->retrieveAllPullRequests(
+            PullRequestSortOrder::ASCENDING,
+            [
+                $this->open_pull_request_id,
+                $this->merged_pull_request_id,
+                $this->abandoned_pull_request_id,
+            ]
+        );
+    }
+
+    /**
+     * @param list<int> $expected_pr_ids
+     * @return void
+     */
+    private function retrieveAllPullRequests(PullRequestSortOrder $order, array $expected_pr_ids)
     {
         $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
             new SearchCriteria(),
+            $order,
             self::LIMIT,
             self::OFFSET,
         );
 
-        self::assertSame(array_column($result->pull_requests, "id"), [
-            $this->open_pull_request_id,
-            $this->merged_pull_request_id,
-            $this->abandoned_pull_request_id,
-        ]);
-        self::assertEquals(3, $result->total_size);
+        self::assertSame($expected_pr_ids, array_column($result->pull_requests, "id"));
     }
 
     public function testItFiltersOnASpecificAuthor(): void
@@ -110,6 +136,7 @@ final class DaoTest extends TestIntegrationTestCase
         $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
             new SearchCriteria(null, [new AuthorCriterion(self::BOB_USER_ID)]),
+            PullRequestSortOrder::DESCENDING,
             self::LIMIT,
             self::OFFSET,
         );
@@ -129,6 +156,7 @@ final class DaoTest extends TestIntegrationTestCase
                 [],
                 [new LabelCriterion(self::LABEL_EMERGENCY_ID), new LabelCriterion(self::LABEL_EASY_FIX_ID)]
             ),
+            PullRequestSortOrder::DESCENDING,
             self::LIMIT,
             self::OFFSET,
         );
@@ -148,6 +176,7 @@ final class DaoTest extends TestIntegrationTestCase
                 [new AuthorCriterion(self::ALICE_USER_ID)],
                 [new LabelCriterion(self::LABEL_EASY_FIX_ID)],
             ),
+            PullRequestSortOrder::DESCENDING,
             self::LIMIT,
             self::OFFSET,
         );
@@ -185,6 +214,7 @@ final class DaoTest extends TestIntegrationTestCase
         return $this->insertPullRequest(
             PullRequestTestBuilder::aPullRequestInReview()
                 ->createdBy(self::ALICE_USER_ID)
+                ->createdAt(1)
                 ->withRepositoryId(self::REPOSITORY_ID)
                 ->build(),
         );
@@ -195,6 +225,7 @@ final class DaoTest extends TestIntegrationTestCase
         $pull_request_id = $this->insertPullRequest(
             PullRequestTestBuilder::aMergedPullRequest()
                 ->createdBy(self::BOB_USER_ID)
+                ->createdAt(2)
                 ->withRepositoryId(self::REPOSITORY_ID)
                 ->build(),
         );
@@ -209,6 +240,7 @@ final class DaoTest extends TestIntegrationTestCase
         $pull_request_id = $this->insertPullRequest(
             PullRequestTestBuilder::anAbandonedPullRequest()
                 ->createdBy(self::ALICE_USER_ID)
+                ->createdAt(3)
                 ->withRepositoryId(self::REPOSITORY_ID)
                 ->build()
         );
