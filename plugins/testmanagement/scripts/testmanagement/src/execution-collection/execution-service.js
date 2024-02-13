@@ -89,6 +89,7 @@ function ExecutionService(
         clearRemovedFiles,
         hasFileBeingUploaded,
         doesFileAlreadyExistInUploadedAttachments,
+        updateTestExecutionNoBy,
     });
 
     initialization();
@@ -254,6 +255,10 @@ function ExecutionService(
         delete self.executions[execution_to_remove_id];
     }
 
+    function updateTestExecutionNoBy(execution_updated) {
+        const execution = self.executions[execution_updated.id];
+        updateTestExecutionNow(execution, execution_updated);
+    }
     function updateTestExecution(execution_updated, updated_by) {
         const execution = self.executions[execution_updated.id];
         if (
@@ -382,15 +387,16 @@ function ExecutionService(
                 execution.viewed_by = [];
             }
 
-            var user_uuid_exists = execution.viewed_by.some(
-                (presence) => presence.uuid === user.uuid,
+            const user_exists = execution.viewed_by.some(
+                (presence) => presence.uuid === user.uuid && presence.id === user.id,
             );
 
-            if (!user_uuid_exists) {
+            if (!user_exists) {
                 execution.viewed_by.push(user);
             }
 
             waitForFieldBeforeLoadRTE(execution);
+            $rootScope.$applyAsync();
         }
     }
 
@@ -628,6 +634,8 @@ function ExecutionService(
         }
         const execution = self.executions[execution_id];
 
-        execution.linked_bugs.push(artifact_link);
+        if (!execution.linked_bugs.some((bug) => bug.id === artifact_link.id)) {
+            execution.linked_bugs.push(artifact_link);
+        }
     }
 }

@@ -1,7 +1,7 @@
 export default SharedPropertiesService;
 
 function SharedPropertiesService() {
-    var property = {
+    let property = {
         campaign_id: undefined,
         project_id: undefined,
         user: undefined,
@@ -19,6 +19,7 @@ function SharedPropertiesService() {
         user_locale: "",
         artifact_links_types: [],
         is_ordered_by_test_def_rank: false,
+        mercure_enabled: false,
     };
 
     return {
@@ -64,6 +65,8 @@ function SharedPropertiesService() {
         getArtifactLinksTypes,
         setIsOrderedByTestDefinitionRank,
         isOrderedByTestDefinitionRank,
+        getMercureEnabled,
+        setMercureEnabled,
     };
 
     function getPlatformLogoUrl() {
@@ -232,5 +235,12 @@ function SharedPropertiesService() {
 
     function isOrderedByTestDefinitionRank() {
         return this.is_ordered_by_test_def_rank;
+    }
+
+    function getMercureEnabled() {
+        return property.mercure_enabled;
+    }
+    function setMercureEnabled(isEnabled) {
+        property.mercure_enabled = isEnabled;
     }
 }
