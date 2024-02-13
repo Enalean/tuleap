@@ -32,7 +32,10 @@ class MercureJWTGeneratorBuilder
     public const  DEFAULTPATH = '/etc/tuleap/conf/mercure.env';
     public static function build(string $path): MercureJWTGenerator
     {
-        if (! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
+        if (
+            ! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY) &&
+            ! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY)
+        ) {
             return new NullMercureJWTGenerator();
         }
         $mercure_file_content =  @file_get_contents($path);
