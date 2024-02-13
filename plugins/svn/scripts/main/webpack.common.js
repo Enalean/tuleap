@@ -27,7 +27,6 @@ const config = {
         homepage: "./src/homepage.ts",
         "style-fp": "./themes/FlamingParrot/css/style.scss",
         "style-bp": "./themes/BurningParrot/css/style.scss",
-        "global-admin-migrate": "./src/global-admin-migrate.ts",
     },
     context: __dirname,
     output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets")),

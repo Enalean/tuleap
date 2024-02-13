@@ -83,7 +83,6 @@ use Tuleap\SVN\Admin\MailHeaderDao;
 use Tuleap\SVN\Admin\MailHeaderManager;
 use Tuleap\SVN\Admin\MailNotificationDao;
 use Tuleap\SVN\Admin\MailNotificationManager;
-use Tuleap\SVN\Admin\DisplayMigrateFromCoreController;
 use Tuleap\SVN\Admin\RestoreController;
 use Tuleap\SVN\Hooks\MissingHooksPathsFromFileSystemRetriever;
 use Tuleap\SVN\Setup\SetupSVNCommand;
@@ -106,9 +105,6 @@ use Tuleap\SVN\Explorer\RepositoryDisplayController;
 use Tuleap\SVNCore\GetAllRepositories;
 use Tuleap\SVN\Logs\DBWriter;
 use Tuleap\SVN\Logs\QueryBuilder;
-use Tuleap\SVN\Migration\BareRepositoryCreator;
-use Tuleap\SVN\Migration\RepositoryCopier;
-use Tuleap\SVN\Migration\SettingsRetriever;
 use Tuleap\SVN\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\SVN\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\SVN\Notifications\NotificationListBuilder;
@@ -144,7 +140,6 @@ use Tuleap\SVN\SvnAdmin;
 use Tuleap\SVNCore\SvnCoreAccess;
 use Tuleap\SVN\SvnPermissionManager;
 use Tuleap\SVN\SvnRouter;
-use Tuleap\SVN\Admin\UpdateMigrateFromCoreController;
 use Tuleap\SVN\ViewVC\AccessHistoryDao;
 use Tuleap\SVN\ViewVC\AccessHistorySaver;
 use Tuleap\SVN\ViewVC\ViewVCProxy;
@@ -349,7 +344,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     $this->getRepositoryManager(),
                     $this->getUserManager(),
                     $this->getBackendSVN(),
-                    $this->getCopier(),
                 ];
                 break;
             case 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME:
@@ -550,7 +544,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getRepositoryManager(),
             $user_manager,
             $this->getNotificationEmailsBuilder(),
-            $this->getCopier(),
             new \Tuleap\SVN\XMLUserChecker()
         );
         $svn->import(
@@ -667,32 +660,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    public function routeDisplayMigrateFromCore(): DispatchableWithRequest
-    {
-        return new DisplayMigrateFromCoreController(
-            ProjectManager::instance(),
-            $this->getPermissionsManager(),
-            $this->getRepositoryManager()
-        );
-    }
-
-    public function routeUpdateMigrateFromCore(): DispatchableWithRequest
-    {
-        return new UpdateMigrateFromCoreController(
-            ProjectManager::instance(),
-            $this->getPermissionsManager(),
-            $this->getRepositoryManager(),
-            new BareRepositoryCreator(
-                $this->getRepositoryCreator(),
-                new SettingsRetriever(
-                    new SVN_Immutable_Tags_DAO(),
-                    new SvnNotificationDao(),
-                    new SVN_AccessFile_DAO()
-                )
-            )
-        );
-    }
-
     public function routeDisplaySiteAdmin(): DispatchableWithRequest
     {
         return new DisplayTuleapPMParamsController(
@@ -743,8 +710,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $r->post('/max-file-size', $this->getRouteHandler('routeUpdateSiteAdminMaxFileSize'));
             });
             $r->get('/{project_name}/admin', $this->getRouteHandler('routeSvnAdmin'));
-            $r->get('/{project_name}/admin-migrate', $this->getRouteHandler('routeDisplayMigrateFromCore'));
-            $r->post('/{project_name}/admin-migrate', $this->getRouteHandler('routeUpdateMigrateFromCore'));
             $r->get('/index.php{path:.*}', $this->getRouteHandler('redirectOldViewVcRoutes'));
             $r->addRoute(['GET', 'POST'], '[/{path:.*}]', $this->getRouteHandler('routeSvnPlugin'));
         });
@@ -1154,16 +1119,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 GlobalAdministratorsController::getURL($project),
             )
         );
-    }
-
-    private function getSystemCommand(): System_Command
-    {
-        return new System_Command();
-    }
-
-    private function getCopier(): RepositoryCopier
-    {
-        return new RepositoryCopier($this->getSystemCommand());
     }
 
     #[ListeningToEventClass]

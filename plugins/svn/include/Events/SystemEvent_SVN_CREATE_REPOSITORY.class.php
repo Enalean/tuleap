@@ -24,7 +24,6 @@ use ForgeConfig;
 use SystemEvent;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\CannotCreateAccessFileHistoryException;
-use Tuleap\SVN\Migration\RepositoryCopier;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
@@ -35,10 +34,6 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
 {
     public const NAME = 'SystemEvent_SVN_CREATE_REPOSITORY';
 
-    /**
-     * @var RepositoryCopier
-     */
-    private $repository_copier;
     /**
      * @var \BackendSVN
      */
@@ -62,13 +57,11 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         RepositoryManager $repository_manager,
         \UserManager $user_manager,
         \BackendSVN $backend_svn,
-        RepositoryCopier $repository_copier,
     ) {
         $this->access_file_history_creator = $access_file_history_creator;
         $this->repository_manager          = $repository_manager;
         $this->user_manager                = $user_manager;
         $this->backend_svn                 = $backend_svn;
-        $this->repository_copier           = $repository_copier;
     }
 
     public function verbalizeParameters($with_link): string
@@ -95,11 +88,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
                 $parameters['initial_layout'],
             );
 
-            if ($parameters['copy_from_core']) {
-                $this->repository_copier->copy($repository);
-            } else {
-                $this->access_file_history_creator->useAVersion($repository, 1);
-            }
+            $this->access_file_history_creator->useAVersion($repository, 1);
 
             $this->done();
             return true;
@@ -113,7 +102,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
     }
 
     /**
-     * @return array{repository_id: int, initial_layout: array, user_id: int, copy_from_core: bool}
+     * @return array{repository_id: int, initial_layout: array, user_id: int}
      * @throws \JsonException
      */
     private function getUnserializedParameters(): array
@@ -124,13 +113,12 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
     /**
      * @throws \JsonException
      */
-    public static function serializeParameters(Repository $repository, \PFUser $committer, array $initial_repository_layout, bool $copy_from_core): string
+    public static function serializeParameters(Repository $repository, \PFUser $committer, array $initial_repository_layout): string
     {
         return json_encode([
             'repository_id'  => $repository->getId(),
             'user_id'        => (int) $committer->getId(),
             'initial_layout' => $initial_repository_layout,
-            'copy_from_core' => $copy_from_core,
         ], JSON_THROW_ON_ERROR);
     }
 

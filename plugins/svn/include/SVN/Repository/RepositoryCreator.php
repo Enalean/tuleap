@@ -107,33 +107,31 @@ class RepositoryCreator
     public function create(Repository $svn_repository, PFUser $user): ?SystemEvent_SVN_CREATE_REPOSITORY
     {
         $this->checkUserHasAdministrationPermissions($svn_repository, $user);
-        $copy_from_core = false;
 
-        return $this->createWithoutUserAdminCheck($svn_repository, $user, $copy_from_core);
+        return $this->createWithoutUserAdminCheck($svn_repository, $user);
     }
 
     /**
      * @throws CannotCreateRepositoryException
      */
-    public function createWithoutUserAdminCheck(Repository $svn_repository, PFUser $committer, $copy_from_core): ?SystemEvent_SVN_CREATE_REPOSITORY
+    public function createWithoutUserAdminCheck(Repository $svn_repository, PFUser $committer): ?SystemEvent_SVN_CREATE_REPOSITORY
     {
         $svn_repository = $this->createRepository($svn_repository);
         $this->logCreation($svn_repository);
 
         $initial_repository_layout = [];
 
-        return $this->sendEvent($svn_repository, $committer, $initial_repository_layout, $copy_from_core);
+        return $this->sendEvent($svn_repository, $committer, $initial_repository_layout);
     }
 
     private function sendEvent(
         Repository $svn_repository,
         PFUser $committer,
         array $initial_repository_layout,
-        $copy_from_core,
     ): ?SystemEvent_SVN_CREATE_REPOSITORY {
         $event = $this->system_event_manager->createEvent(
             SystemEvent_SVN_CREATE_REPOSITORY::class,
-            SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($svn_repository, $committer, $initial_repository_layout, (bool) $copy_from_core),
+            SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($svn_repository, $committer, $initial_repository_layout),
             SystemEvent::PRIORITY_HIGH
         );
         assert($event instanceof SystemEvent_SVN_CREATE_REPOSITORY || $event === null);
@@ -150,7 +148,6 @@ class RepositoryCreator
         PFUser $user,
         Settings $settings,
         array $initial_repository_layout,
-        $copy_from_core,
     ): ?SystemEvent_SVN_CREATE_REPOSITORY {
         $this->checkUserHasAdministrationPermissions($repository, $user);
         $repository->setDefaultPermissions($settings->has_default_permissions);
@@ -163,7 +160,7 @@ class RepositoryCreator
             $this->logCreation($repository);
         }
 
-        return $this->sendEvent($repository, $user, $initial_repository_layout, $copy_from_core);
+        return $this->sendEvent($repository, $user, $initial_repository_layout);
     }
 
     /**

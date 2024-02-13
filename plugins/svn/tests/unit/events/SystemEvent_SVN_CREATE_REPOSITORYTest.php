@@ -58,7 +58,7 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
     {
         $repository            = SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->withId(222)->build());
         $committer             = UserTestBuilder::anActiveUser()->withId(777)->build();
-        $serialized_parameters = SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($repository, $committer, [], false);
+        $serialized_parameters = SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($repository, $committer, []);
 
         $system_event = new SystemEvent_SVN_CREATE_REPOSITORY(
             1,
@@ -78,7 +78,6 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
                 15,
                 777,
                 [],
-                false,
             ],
             $system_event->getParametersAsArray()
         );
@@ -101,7 +100,6 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
             $this->repository_manager,
             $this->user_manager,
             $this->backend_svn,
-            $this->createMock(\Tuleap\SVN\Migration\RepositoryCopier::class)
         );
 
         $system_event->expects(self::once())->method('done');
@@ -111,7 +109,6 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
                 SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->build()),
                 UserTestBuilder::anActiveUser()->build(),
                 [],
-                false,
             )
         );
 
@@ -134,7 +131,6 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
             $this->repository_manager,
             $this->user_manager,
             $this->backend_svn,
-            $this->createMock(\Tuleap\SVN\Migration\RepositoryCopier::class)
         );
 
         $system_event->expects(self::once())->method('error');
@@ -144,7 +140,6 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
                 SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->build()),
                 UserTestBuilder::anActiveUser()->build(),
                 [],
-                false,
             )
         );
 
@@ -167,7 +162,6 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
             $this->repository_manager,
             $this->user_manager,
             $this->backend_svn,
-            $this->createMock(\Tuleap\SVN\Migration\RepositoryCopier::class)
         );
 
         $system_event->expects(self::once())->method('warning');
@@ -180,7 +174,6 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
                     '/trunk',
                     '/tags',
                 ],
-                false,
             )
         );
 

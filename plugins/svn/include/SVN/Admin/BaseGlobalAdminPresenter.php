@@ -23,7 +23,7 @@ namespace Tuleap\SVN\Admin;
 use Project;
 use CSRFSynchronizerToken;
 
-class BaseGlobalAdminPresenter
+abstract class BaseGlobalAdminPresenter
 {
     /**
      * @var bool
@@ -60,18 +60,8 @@ class BaseGlobalAdminPresenter
      * @psalm-readonly
      */
     public $title;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $has_migrate_from_core = false;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $migrate_from_core_url;
 
-    public function __construct(Project $project, CSRFSynchronizerToken $token, bool $has_migrate_from_core)
+    public function __construct(Project $project, CSRFSynchronizerToken $token)
     {
         $this->project_id = $project->getId();
 
@@ -82,8 +72,5 @@ class BaseGlobalAdminPresenter
         $this->csrf_input = $token->fetchHTMLInput();
         $this->title      = dgettext('tuleap-svn', 'SVN Administration');
         $this->submit     = dgettext('tuleap-svn', 'Save');
-
-        $this->has_migrate_from_core = $has_migrate_from_core;
-        $this->migrate_from_core_url = DisplayMigrateFromCoreController::getURL($project);
     }
 }

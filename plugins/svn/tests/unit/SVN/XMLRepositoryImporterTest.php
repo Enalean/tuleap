@@ -36,7 +36,6 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Events\SystemEvent_SVN_CREATE_REPOSITORY;
-use Tuleap\SVN\Migration\RepositoryCopier;
 use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\RepositoryCreator;
@@ -102,10 +101,6 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $notifications_emails_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryCopier
-     */
-    private $repository_copier;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&XMLUserChecker
      */
     private $xml_user_checker;
@@ -119,7 +114,6 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repository_manager           = $this->createMock(RepositoryManager::class);
         $this->user_manager                 = $this->createMock(UserManager::class);
         $this->notifications_emails_builder = $this->createMock(NotificationsEmailsBuilder::class);
-        $this->repository_copier            = $this->createMock(RepositoryCopier::class);
         $this->xml_user_checker             = $this->createMock(XMLUserChecker::class);
 
         $this->repository_importer = new XMLRepositoryImporter(
@@ -131,7 +125,6 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository_manager,
             $this->user_manager,
             $this->notifications_emails_builder,
-            $this->repository_copier,
             $this->xml_user_checker,
         );
 
