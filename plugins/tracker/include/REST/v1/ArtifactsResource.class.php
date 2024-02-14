@@ -143,6 +143,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\Artifact\PUTHandler;
+use Tuleap\Tracker\REST\Artifact\ReverseLinksAdder;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
@@ -1048,8 +1049,10 @@ class ArtifactsResource extends AuthenticatedResource
                 $this->formelement_factory,
                 SubmissionPermissionVerifier::instance(),
                 $transaction_executor,
-                new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
-                $changeset_creator
+                new ReverseLinksAdder(
+                    new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
+                    $changeset_creator,
+                ),
             );
 
             if (! empty($values)) {

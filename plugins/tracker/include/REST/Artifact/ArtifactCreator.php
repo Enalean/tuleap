@@ -20,26 +20,19 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
-use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AddReverseLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
-use Tuleap\Tracker\REST\FaultMapper;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
@@ -53,8 +46,7 @@ class ArtifactCreator
         private readonly AddDefaultValuesToFieldsData $default_values_adder,
         private readonly VerifySubmissionPermissions $submission_permission_verifier,
         private readonly DBTransactionExecutor $transaction_executor,
-        private readonly ReverseLinksToNewChangesetsConverter $changesets_converter,
-        private readonly CreateNewChangeset $changeset_creator,
+        private readonly AddReverseLinks $reverse_links_adder,
     ) {
     }
 
@@ -153,7 +145,7 @@ class ArtifactCreator
         if ($artifact) {
             $should_add_reverse_links = ! $this->isLinkKeyUsed($values);
             if ($should_add_reverse_links) {
-                $this->addReverseLinks($submitter, $changeset_values, $artifact);
+                $this->reverse_links_adder->addReverseLinks($submitter, $changeset_values, $artifact);
             }
             return ArtifactReference::build($artifact, $format);
         }
@@ -184,51 +176,5 @@ class ArtifactCreator
             }
         }
         return false;
-    }
-
-    /**
-     * @throws RestException
-     * @throws \Tracker_Exception
-     * @throws \Tuleap\Tracker\Artifact\Exception\FieldValidationException
-     */
-    private function addReverseLinks(
-        PFUser $submitter,
-        InitialChangesetValuesContainer $changeset_values,
-        Artifact $artifact,
-    ): void {
-        $changeset_values->getArtifactLinkValue()->apply(
-            function (NewArtifactLinkInitialChangesetValue $artifact_link_value) use (
-                $submitter,
-                $artifact
-            ): void {
-                if ($artifact_link_value->getParent()->isNothing()) {
-                    $submission_date = new \DateTimeImmutable();
-                    $this->changesets_converter->convertAddReverseLinks(
-                        AddReverseLinksCommand::fromParts($artifact, $artifact_link_value->getReverseLinks()),
-                        $submitter,
-                        $submission_date
-                    )->match(
-                        $this->saveChangesets(...),
-                        FaultMapper::mapToRestException(...)
-                    );
-                }
-            }
-        );
-    }
-
-    /**
-     * @param list<NewChangeset> $new_changesets
-     * @throws \Tracker_Exception
-     * @throws \Tuleap\Tracker\Artifact\Exception\FieldValidationException
-     */
-    private function saveChangesets(array $new_changesets): void
-    {
-        foreach ($new_changesets as $changeset) {
-            try {
-                $this->changeset_creator->create($changeset, PostCreationContext::withNoConfig(true));
-            } catch (\Tracker_NoChangeException) {
-                //Ignore, it should not stop the update
-            }
-        }
     }
 }
