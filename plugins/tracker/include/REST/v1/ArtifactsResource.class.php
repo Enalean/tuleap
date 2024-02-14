@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use BackendLogger;
 use Codendi_HTMLPurifier;
 use EventManager;
 use FeedbackDao;
@@ -31,6 +32,7 @@ use Psr\Log\NullLogger;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_Artifact_Changeset as Changeset;
+use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
@@ -101,6 +103,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
@@ -110,6 +113,8 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
@@ -172,6 +177,7 @@ use UGroupManager;
 use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
+use WrapperLogger;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
@@ -1023,7 +1029,20 @@ class ArtifactsResource extends AuthenticatedResource
                     ),
                     $artifact_link_initial_builder
                 ),
-                $this->artifact_factory,
+                TrackerArtifactCreator::build(
+                    new InitialChangesetCreator(
+                        Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+                        $fields_retriever,
+                        new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
+                        new WrapperLogger(BackendLogger::getDefaultLogger(), self::class),
+                        ArtifactChangesetSaver::build(),
+                        new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
+                        \WorkflowFactory::instance(),
+                        new InitialChangesetValueSaver(),
+                    ),
+                    Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+                    new WrapperLogger(BackendLogger::getDefaultLogger(), self::class),
+                ),
                 $this->tracker_factory,
                 new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
                 $this->formelement_factory,

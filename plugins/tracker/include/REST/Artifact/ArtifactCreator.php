@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AddReverseLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
@@ -45,7 +46,7 @@ class ArtifactCreator
 {
     public function __construct(
         private readonly FieldsDataBuilder $fields_data_builder,
-        private readonly \Tracker_ArtifactFactory $artifact_factory,
+        private readonly TrackerArtifactCreator $artifact_creator,
         private readonly RetrieveTracker $tracker_factory,
         private readonly FieldsDataFromValuesByFieldBuilder $values_by_field_builder,
         private readonly AddDefaultValuesToFieldsData $default_values_adder,
@@ -78,7 +79,15 @@ class ArtifactCreator
         $this->checkUserCanSubmit($submitter, $tracker);
 
         return $this->transaction_executor->execute(fn(): ArtifactReference => $this->returnReferenceOrError(
-            $this->artifact_factory->createArtifact($tracker, $fields_data, $submitter, $should_visit_be_recorded, true),
+            $this->artifact_creator->create(
+                $tracker,
+                $fields_data,
+                $submitter,
+                $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+                true,
+                $should_visit_be_recorded,
+                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+            ),
             '',
             $submitter,
             $changeset_values,
@@ -104,7 +113,15 @@ class ArtifactCreator
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->transaction_executor->execute(fn(): ArtifactReference => $this->returnReferenceOrError(
-            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, true, true),
+            $this->artifact_creator->create(
+                $tracker,
+                $fields_data,
+                $user,
+                $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+                true,
+                true,
+                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+            ),
             'by_field',
             $user,
             $changeset_values,
