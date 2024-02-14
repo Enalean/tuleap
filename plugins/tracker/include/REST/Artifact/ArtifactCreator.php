@@ -151,7 +151,10 @@ class ArtifactCreator
         array $values,
     ): ArtifactReference {
         if ($artifact) {
-            $this->addReverseLinks($submitter, $changeset_values, $artifact, $values);
+            $should_add_reverse_links = ! $this->isLinkKeyUsed($values);
+            if ($should_add_reverse_links) {
+                $this->addReverseLinks($submitter, $changeset_values, $artifact);
+            }
             return ArtifactReference::build($artifact, $format);
         }
         if ($GLOBALS['Response']->feedbackHasErrors()) {
@@ -176,7 +179,7 @@ class ArtifactCreator
     private function isLinkKeyUsed(array $values): bool
     {
         foreach ($values as $value) {
-            if (is_array($value->links)) {
+            if (isset($value->links) && is_array($value->links)) {
                 return true;
             }
         }
@@ -192,15 +195,13 @@ class ArtifactCreator
         PFUser $submitter,
         InitialChangesetValuesContainer $changeset_values,
         Artifact $artifact,
-        array $values,
     ): void {
         $changeset_values->getArtifactLinkValue()->apply(
             function (NewArtifactLinkInitialChangesetValue $artifact_link_value) use (
-                $values,
                 $submitter,
                 $artifact
             ): void {
-                if ($artifact_link_value->getParent()->isNothing() && ! $this->isLinkKeyUsed($values)) {
+                if ($artifact_link_value->getParent()->isNothing()) {
                     $submission_date = new \DateTimeImmutable();
                     $this->changesets_converter->convertAddReverseLinks(
                         AddReverseLinksCommand::fromParts($artifact, $artifact_link_value->getReverseLinks()),

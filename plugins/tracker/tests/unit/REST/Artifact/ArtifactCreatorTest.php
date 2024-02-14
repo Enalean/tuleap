@@ -174,6 +174,40 @@ final class ArtifactCreatorTest extends TestCase
         self::assertSame(2, $this->changeset_creator->getCallsCount());
     }
 
+    public function testItCreatesArtifactWithoutAddingReverseLinksWhenPayloadIsUsingLinksInsteadOfAllLinks(): void
+    {
+        $first_artifact_id  = 649;
+        $second_artifact_id = 860;
+        $this->payload      = [
+            ArtifactValuesRepresentationBuilder::aRepresentation(self::ARTIFACT_LINK_FIELD_ID)
+                ->withLinks(
+                    ['id' => $first_artifact_id],
+                    ['id' => $second_artifact_id, 'type' => 'custom'],
+                )
+                ->build(),
+        ];
+
+        $this->all_fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)->inTracker($this->tracker)->build(),
+        );
+
+        $newly_created_artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
+        $this->artifact_creator->method('create')->willReturn($newly_created_artifact);
+
+        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
+            ArtifactTestBuilder::anArtifact($first_artifact_id)->build(),
+            ArtifactTestBuilder::anArtifact($second_artifact_id)->build(),
+        );
+
+        $this->link_field_retriever = RetrieveUsedArtifactLinkFieldsStub::withSuccessiveFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(144)->build(),
+            ArtifactLinkFieldBuilder::anArtifactLinkField(975)->build(),
+        );
+
+        $this->create();
+        self::assertSame(0, $this->changeset_creator->getCallsCount());
+    }
+
     public function testItContinuesUpdatingReverseLinksWhenASourceArtifactIsNotModified(): void
     {
         $first_artifact_id       = 186;
