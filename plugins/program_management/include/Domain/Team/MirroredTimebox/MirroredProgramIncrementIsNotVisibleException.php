@@ -33,9 +33,9 @@ final class MirroredProgramIncrementIsNotVisibleException extends \Exception imp
         parent::__construct(
             sprintf(
                 'User #%d cannot see one of the mirrors of Program Increment #%d',
+                $user->getId(),
                 $program_increment->getId(),
-                $user->getId()
-            )
+            ),
         );
     }
 }
