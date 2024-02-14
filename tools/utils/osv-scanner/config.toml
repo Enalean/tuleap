@@ -19,6 +19,10 @@ reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
 id = "GHSA-qwqh-hm9m-p5hr" # CVE-2023-26118
 reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
 
+[[IgnoredVulns]]
+id = "GHSA-4w4v-5hc9-xrr2" # CVE-2024-21490
+reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
+
 # angular-gettext-cli / angular-gettext-loader
 ## nth-check
 [[IgnoredVulns]]
