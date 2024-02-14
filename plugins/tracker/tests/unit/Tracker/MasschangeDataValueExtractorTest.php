@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tracker_MasschangeDataValueExtractor;
@@ -32,48 +31,66 @@ use Tuleap\GlobalLanguageMock;
 
 final class MasschangeDataValueExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    public function testItReturnsFieldWithItNewValue(): void
+    /**
+     * @dataProvider dataProviderFields
+     * @param class-string $field_class
+     */
+    public function testReturnsFieldWithNewValue(string $field_class, mixed $value, bool $is_expected_to_set_value): void
     {
-        $form_element_factory           = Mockery::mock(Tracker_FormElementFactory::class);
-        $masschange_data_values_manager = new Tracker_MasschangeDataValueExtractor($form_element_factory);
+        $field = $this->createStub($field_class);
 
-        $text_field_1    = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $text_field_1_id = 1;
+        $form_element_factory = $this->createStub(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getFieldById')->willReturn($field);
 
-        $text_field_2    = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $text_field_2_id = 2;
+        $masschange_data = [12 => $value];
 
-        $list_field_1    = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $list_field_1_id = 3;
-
-        $list_field_2    = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $list_field_2_id = 4;
-
-        $form_element_factory->shouldReceive('getFieldById')->withArgs([$text_field_1_id])->andReturn($text_field_1);
-        $form_element_factory->shouldReceive('getFieldById')->withArgs([$text_field_2_id])->andReturn($text_field_2);
-        $form_element_factory->shouldReceive('getFieldById')->withArgs([$list_field_1_id])->andReturn($list_field_1);
-        $form_element_factory->shouldReceive('getFieldById')->withArgs([$list_field_2_id])->andReturn($list_field_2);
+        $expected_result = $is_expected_to_set_value ? $masschange_data : [];
 
         $GLOBALS['Language']->method('getText')->willReturn('Unchanged');
 
-        $masschange_data = [
-            $text_field_1_id => 'Unchanged',
-            $text_field_2_id => 'Value01',
-            $list_field_1_id => ['-1'],
-            $list_field_2_id => ['Value02'],
-        ];
-
-        $expected_result = [
-            $text_field_2_id => 'Value01',
-            $list_field_2_id => ['Value02'],
-        ];
+        $masschange_data_values_extractor = new Tracker_MasschangeDataValueExtractor($form_element_factory);
 
         $this->assertEquals(
             $expected_result,
-            $masschange_data_values_manager->getNewValues($masschange_data)
+            $masschange_data_values_extractor->getNewValues($masschange_data)
         );
+    }
+
+    public function dataProviderFields(): array
+    {
+        return [
+            'Field with an update' => [
+                Tracker_FormElement_Field_Text::class,
+                'Value01',
+                true,
+            ],
+            'Field without an update' => [
+                Tracker_FormElement_Field_Text::class,
+                'Unchanged',
+                false,
+            ],
+            'List field with an update' => [
+                Tracker_FormElement_Field_List::class,
+                ['Value02'],
+                true,
+            ],
+            'List field without an update' => [
+                Tracker_FormElement_Field_List::class,
+                ['-1'],
+                false,
+            ],
+            'Permissions on artifact field with an update' => [
+                Tracker_FormElement_Field_PermissionsOnArtifact::class,
+                ['do_mass_update' => '1', 'use_artifact_permissions' => '1'],
+                true,
+            ],
+            'Permissions on artifact field without an update' => [
+                Tracker_FormElement_Field_PermissionsOnArtifact::class,
+                ['use_artifact_permissions' => '1'],
+                false,
+            ],
+        ];
     }
 }

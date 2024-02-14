@@ -50,6 +50,9 @@ class Tracker_MasschangeDataValueExtractor
         $field = $this->form_element_factory->getFieldById($field_id);
         if ($field instanceof Tracker_FormElement_Field_List) {
             return $this->isValueInData($data, (string) BindStaticValueUnchanged::VALUE_ID);
+        } elseif ($field instanceof Tracker_FormElement_Field_PermissionsOnArtifact) {
+            return isset($data[Tracker_FormElement_Field_PermissionsOnArtifact::DO_MASS_UPDATE_FLAG]) &&
+                $data[Tracker_FormElement_Field_PermissionsOnArtifact::DO_MASS_UPDATE_FLAG] === '1';
         }
 
         return $this->isValueInData($data, $GLOBALS['Language']->getText('global', 'unchanged'));
