@@ -19,7 +19,10 @@
  */
 
 use Tuleap\JSONHeader;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 
 class Tracker_Action_CreateArtifact
@@ -71,7 +74,7 @@ class Tracker_Action_CreateArtifact
 
         return $this->artifact_creator->create(
             $this->tracker,
-            $fields_data,
+            new InitialChangesetValuesContainer($fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $user,
             \Tuleap\Request\RequestTime::getTimestamp(),
             true,

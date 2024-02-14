@@ -18,7 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
@@ -207,7 +210,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
 
         return $this->artifact_creator->create(
             $tracker,
-            $field_data,
+            new InitialChangesetValuesContainer($field_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $user,
             \Tuleap\Request\RequestTime::getTimestamp(),
             true,

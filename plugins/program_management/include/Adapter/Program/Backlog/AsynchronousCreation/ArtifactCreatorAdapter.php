@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxIdentifierProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
@@ -30,6 +31,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Artifac
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxFirstChangeset;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
@@ -52,7 +55,7 @@ final class ArtifactCreatorAdapter implements CreateArtifact
         $formatted_values = $this->formatter->formatForTrackerPlugin($first_changeset->values);
         $artifact         = $this->artifact_creator->create(
             $full_tracker,
-            $formatted_values,
+            new InitialChangesetValuesContainer($formatted_values, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $pfuser,
             $first_changeset->submission_date->getValue(),
             false,

@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DateValueFormatter;
@@ -37,8 +39,10 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
+use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -121,32 +125,36 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->creator->expects(self::once())
             ->method('create')
-            ->with(
-                self::isInstanceOf(\Tracker::class),
-                [
-                    self::ARTIFACT_LINK_ID => [
-                        'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
-                        'types'      => [self::SOURCE_PROGRAM_INCREMENT_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME],
-                    ],
-                    self::TITLE_ID         => self::TITLE_VALUE,
-                    self::DESCRIPTION_ID   => [
-                        'content' => self::DESCRIPTION_VALUE,
-                        'format'  => self::DESCRIPTION_FORMAT,
-                    ],
-                    self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
-                    self::START_DATE_ID    => '2020-11-02',
-                    self::END_DATE_ID      => '2020-11-06',
-                ],
-                self::isInstanceOf(\PFUser::class),
-                self::SUBMISSION_TIMESTAMP,
-                false,
-                false,
-                self::isInstanceOf(ChangesetWithFieldsValidationContext::class)
-            )
-            ->willReturn(
-                ArtifactTestBuilder::anArtifact(self::NEW_MIRRORED_TIMEBOX_ID)
-                    ->withSubmissionTimestamp(self::SUBMISSION_TIMESTAMP)
-                    ->build()
+            ->willReturnCallback(
+                static fn (
+                    Tracker $tracker,
+                    InitialChangesetValuesContainer $changeset_values,
+                    PFUser $user,
+                    int $submitted_on,
+                    bool $send_notification,
+                    bool $should_visit_be_recorded,
+                    ChangesetValidationContext $context,
+                ): ?Artifact => match (true) {
+                    $changeset_values->getFieldsData() === [
+                        self::ARTIFACT_LINK_ID => [
+                            'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
+                            'types'      => [self::SOURCE_PROGRAM_INCREMENT_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME],
+                        ],
+                        self::TITLE_ID         => self::TITLE_VALUE,
+                        self::DESCRIPTION_ID   => [
+                            'content' => self::DESCRIPTION_VALUE,
+                            'format'  => self::DESCRIPTION_FORMAT,
+                        ],
+                        self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
+                        self::START_DATE_ID    => '2020-11-02',
+                        self::END_DATE_ID      => '2020-11-06',
+                    ]
+                    && $submitted_on === self::SUBMISSION_TIMESTAMP
+                    && $send_notification === false
+                    && $should_visit_be_recorded === false => ArtifactTestBuilder::anArtifact(self::NEW_MIRRORED_TIMEBOX_ID)
+                            ->withSubmissionTimestamp(self::SUBMISSION_TIMESTAMP)
+                            ->build()
+                }
             );
 
         $new_artifact = $this->getCreator()->create($this->changeset);
