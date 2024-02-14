@@ -57,14 +57,14 @@ class GitlabTag
             ! array_key_exists('message', $tag_reponse) ||
             ! array_key_exists('commit', $tag_reponse)
         ) {
-            throw new GitlabResponseAPIException("Some keys are missing in the project Json. This is not expected. Aborting.");
+            throw new GitlabResponseAPIException("Some keys are missing in the tag Json. This is not expected. Aborting.");
         }
 
         $tag_commit_info = $tag_reponse['commit'];
         if (
             ! array_key_exists('id', $tag_commit_info)
         ) {
-            throw new GitlabResponseAPIException("Some keys are missing in the project Json. This is not expected. Aborting.");
+            throw new GitlabResponseAPIException("Some keys are missing in the commit Json. This is not expected. Aborting.");
         }
 
         if (

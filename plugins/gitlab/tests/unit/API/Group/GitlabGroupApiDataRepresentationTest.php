@@ -41,7 +41,7 @@ final class GitlabGroupApiDataRepresentationTest extends TestCase
     public function testItThrowsExceptionIfMandatoryKeyIsMissing(array $group_data): void
     {
         self::expectException(GitlabResponseAPIException::class);
-        self::expectExceptionMessage("Some keys are missing in the project Json. This is not expected. Aborting.");
+        self::expectExceptionMessage("Some keys are missing in the group Json. This is not expected. Aborting.");
 
         GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi($group_data);
     }
