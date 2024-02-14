@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
@@ -431,7 +434,7 @@ class Tracker_Artifact_XMLImport
 
         $changeset = $this->artifact_creator->createFirstChangeset(
             $artifact,
-            $fields_data,
+            new InitialChangesetValuesContainer($fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $submitted_by,
             $this->getSubmittedOn($xml_changeset),
             false,
@@ -461,7 +464,7 @@ class Tracker_Artifact_XMLImport
         $this->logger->warning("Failed to create artifact with first changeset, create a fake one instead: " . $GLOBALS['Response']->getAndClearRawFeedback());
         $changeset = $this->artifact_creator->createFirstChangeset(
             $artifact,
-            [],
+            new InitialChangesetValuesContainer([], Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $submitted_by,
             $this->getSubmittedOn($xml_changeset),
             false,
