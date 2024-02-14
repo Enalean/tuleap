@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 
@@ -38,11 +39,6 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
      * @var Tracker_Artifact_MailGateway_Notifier
      */
     private $notifier;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
 
     /**
      * @var Tracker_FormElementFactory
@@ -74,7 +70,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         Tracker_Artifact_MailGateway_CitationStripper $citation_stripper,
         Tracker_Artifact_MailGateway_Notifier $notifier,
         Tracker_Artifact_Changeset_IncomingMailDao $incoming_mail_dao,
-        Tracker_ArtifactFactory $artifact_factory,
+        private readonly TrackerArtifactCreator $artifact_creator,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_ArtifactByEmailStatus $tracker_artifactbyemail,
         \Psr\Log\LoggerInterface $logger,
@@ -84,7 +80,6 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         $this->incoming_message_factory = $incoming_message_factory;
         $this->citation_stripper        = $citation_stripper;
         $this->notifier                 = $notifier;
-        $this->artifact_factory         = $artifact_factory;
         $this->formelement_factory      = $formelement_factory;
         $this->tracker_artifactbyemail  = $tracker_artifactbyemail;
         $this->incoming_mail_dao        = $incoming_mail_dao;
@@ -209,7 +204,16 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         UserManager::instance()->setCurrentUser(
             \Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($user)
         );
-        return $this->artifact_factory->createArtifact($tracker, $field_data, $user, true, true);
+
+        return $this->artifact_creator->create(
+            $tracker,
+            $field_data,
+            $user,
+            $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+            true,
+            true,
+            new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+        );
     }
 
     private function logNoSufficientRightsToCreateChangeset(

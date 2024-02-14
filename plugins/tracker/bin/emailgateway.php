@@ -19,6 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
@@ -61,7 +67,20 @@ $mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
     $citation_stripper,
     $notifier,
     $incoming_mail_dao,
-    $artifact_factory,
+    TrackerArtifactCreator::build(
+        new InitialChangesetCreator(
+            Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+            new FieldsToBeSavedInSpecificOrderRetriever(\Tracker_FormElementFactory::instance()),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator(\Tracker_FormElementFactory::instance()),
+            $logger,
+            ArtifactChangesetSaver::build(),
+            new AfterNewChangesetHandler(Tracker_ArtifactFactory::instance(), new FieldsToBeSavedInSpecificOrderRetriever(\Tracker_FormElementFactory::instance())),
+            \WorkflowFactory::instance(),
+            new InitialChangesetValueSaver()
+        ),
+        Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+        $logger
+    ),
     Tracker_FormElementFactory::instance(),
     new Tracker_ArtifactByEmailStatus($tracker_config),
     $logger,

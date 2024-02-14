@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 
@@ -37,11 +38,6 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder
      * @var Tracker_Artifact_MailGateway_Notifier
      */
     private $notifier;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
 
     /**
      * @var Tracker_ArtifactByEmailStatus
@@ -71,7 +67,7 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder
         Tracker_Artifact_MailGateway_CitationStripper $citation_stripper,
         Tracker_Artifact_MailGateway_Notifier $notifier,
         Tracker_Artifact_Changeset_IncomingMailDao $incoming_mail_dao,
-        Tracker_ArtifactFactory $artifact_factory,
+        private readonly TrackerArtifactCreator $artifact_creator,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_ArtifactByEmailStatus $tracker_artifactbyemail,
         \Psr\Log\LoggerInterface $logger,
@@ -81,7 +77,6 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder
         $this->incoming_message_factory = $incoming_message_factory;
         $this->citation_stripper        = $citation_stripper;
         $this->notifier                 = $notifier;
-        $this->artifact_factory         = $artifact_factory;
         $this->formelement_factory      = $formelement_factory;
         $this->tracker_artifactbyemail  = $tracker_artifactbyemail;
         $this->incoming_mail_dao        = $incoming_mail_dao;
@@ -96,7 +91,7 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder
                 $this->citation_stripper,
                 $this->notifier,
                 $this->incoming_mail_dao,
-                $this->artifact_factory,
+                $this->artifact_creator,
                 $this->formelement_factory,
                 $this->tracker_artifactbyemail,
                 $this->logger,
@@ -109,7 +104,7 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder
             $this->citation_stripper,
             $this->notifier,
             $this->incoming_mail_dao,
-            $this->artifact_factory,
+            $this->artifact_creator,
             $this->formelement_factory,
             $this->tracker_artifactbyemail,
             $this->logger,

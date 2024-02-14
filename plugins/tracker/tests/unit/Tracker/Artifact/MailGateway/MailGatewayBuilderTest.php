@@ -19,11 +19,12 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class MailGatewayBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+class MailGatewayBuilderTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use MockeryPHPUnitIntegration;
 
@@ -41,7 +42,7 @@ class MailGatewayBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->token_mail    = new IncomingMail(file_get_contents(__DIR__ . '/_fixtures/reply-comment.plain.eml'));
 
         $incoming_message_factory = \Mockery::spy(\Tracker_Artifact_MailGateway_IncomingMessageFactory::class);
-        $artifact_factory         = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $artifact_creator         = \Mockery::spy(TrackerArtifactCreator::class);
         $tracker_artifactbyemail  = \Mockery::spy(\Tracker_ArtifactByEmailStatus::class);
         $logger                   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $notifier                 = \Mockery::spy(\Tracker_Artifact_MailGateway_Notifier::class);
@@ -53,7 +54,7 @@ class MailGatewayBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $citation_stripper,
             $notifier,
             $incoming_mail_dao,
-            $artifact_factory,
+            $artifact_creator,
             \Mockery::spy(\Tracker_FormElementFactory::class),
             $tracker_artifactbyemail,
             $logger,
