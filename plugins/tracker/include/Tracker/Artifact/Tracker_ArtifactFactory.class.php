@@ -20,12 +20,6 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
-use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
-use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
-use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
-use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\Artifact\PaginatedArtifactDao;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
@@ -372,24 +366,6 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
         $this->dao = $dao;
     }
 
-    /**
-     * @param array   $fields_data       The data of the artifact to create
-     */
-    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, bool $should_visit_be_recorded, bool $send_notification): ?Artifact
-    {
-        $submitted_on = $_SERVER['REQUEST_TIME'];
-
-        return $this->getArtifactCreator()->create(
-            $tracker,
-            $fields_data,
-            $user,
-            $submitted_on,
-            $send_notification,
-            $should_visit_be_recorded,
-            new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
-        );
-    }
-
     public function save(Artifact $artifact): bool
     {
         return $this->getDao()->save($artifact->getId(), $artifact->getTrackerId(), $artifact->useArtifactPermissions());
@@ -584,26 +560,5 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
         }
 
         return $row['title'];
-    }
-
-    private function getArtifactCreator(): TrackerArtifactCreator
-    {
-        $fields_validator     = Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build();
-        $logger               = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
-        $form_element_factory = \Tracker_FormElementFactory::instance();
-        $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
-
-        $changeset_creator = new InitialChangesetCreator(
-            Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
-            $fields_retriever,
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
-            $logger,
-            ArtifactChangesetSaver::build(),
-            new AfterNewChangesetHandler($this, $fields_retriever),
-            \WorkflowFactory::instance(),
-            new InitialChangesetValueSaver()
-        );
-
-        return TrackerArtifactCreator::build($changeset_creator, $fields_validator, $logger);
     }
 }

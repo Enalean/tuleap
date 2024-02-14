@@ -811,6 +811,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 header('X-Frame-Options: SAMEORIGIN');
                 $action = new Tracker_Action_CreateArtifact(
                     $this,
+                    $this->getArtifactCreator(),
                     $this->getTrackerArtifactFactory(),
                     $this->getFormElementFactory()
                 );
@@ -850,7 +851,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $action->process($layout, $request, $current_user);
                 break;
             case 'submit-artifact-in-place':
-                $action = new Tracker_Action_CreateArtifactFromModal($request, $this, $this->getTrackerArtifactFactory());
+                $action = new Tracker_Action_CreateArtifactFromModal($request, $this, $this->getArtifactCreator(), $this->getTrackerArtifactFactory());
                 $action->process($current_user);
                 break;
             case 'admin-hierarchy':

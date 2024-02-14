@@ -76,6 +76,7 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->action = new class (
             $this->tracker,
+            $this->createMock(\Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator::class),
             $artifact_factory,
             $this->formelement_factory
         ) extends Tracker_Action_CreateArtifact
@@ -224,6 +225,7 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
 
         $action = new class (
             TrackerTestBuilder::aTracker()->build(),
+            $this->createMock(\Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator::class),
             $artifact_factory,
             $this->createMock(\Tracker_FormElementFactory::class)
         ) extends Tracker_Action_CreateArtifact
