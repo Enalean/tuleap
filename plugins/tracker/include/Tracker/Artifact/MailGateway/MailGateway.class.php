@@ -209,7 +209,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
             $tracker,
             $field_data,
             $user,
-            $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+            \Tuleap\Request\RequestTime::getTimestamp(),
             true,
             true,
             new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),

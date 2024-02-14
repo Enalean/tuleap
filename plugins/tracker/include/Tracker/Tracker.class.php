@@ -2689,7 +2689,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         $this,
                         $fields_data,
                         $current_user,
-                        $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+                        \Tuleap\Request\RequestTime::getTimestamp(),
                         $send_notifications,
                         true,
                         new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),

@@ -73,7 +73,7 @@ class Tracker_Action_CreateArtifact
             $this->tracker,
             $fields_data,
             $user,
-            $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+            \Tuleap\Request\RequestTime::getTimestamp(),
             true,
             true,
             new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),

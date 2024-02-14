@@ -75,7 +75,7 @@ final class VirtualTopMilestoneController extends BaseController
             $this->recently_visited_top_backlog_dao->save(
                 (int) $current_user->getId(),
                 (int) $this->project->getID(),
-                $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+                \Tuleap\Request\RequestTime::getTimestamp(),
             );
         }
 
