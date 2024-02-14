@@ -20,6 +20,7 @@
 namespace Tuleap\REST;
 
 use Luracast\Restler\Restler;
+use Project;
 use Tuleap\BuildVersion\REST\v1\VersionResource;
 use Tuleap\InviteBuddy\REST\v1\InvitationsResource;
 use Tuleap\JWT\REST\JWTRepresentation;
@@ -27,23 +28,24 @@ use Tuleap\JWT\REST\v1\JWTResource;
 use Tuleap\Label\REST\LabelRepresentation;
 use Tuleap\PhpWiki\REST\v1\PhpWikiResource;
 use Tuleap\Platform\Banner\REST\v1\BannerResource;
+use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 use Tuleap\Project\REST\ProjectRepresentation;
+use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\v1\ProjectFileResource;
 use Tuleap\Project\REST\v1\ServiceRepresentation;
 use Tuleap\Project\REST\v1\ServiceResource;
 use Tuleap\Project\REST\v1\UserGroupResource;
+use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\REST\v1\ProjectFieldRepresentation;
 use Tuleap\REST\v1\ProjectFieldsResource;
+use Tuleap\SystemEvent\REST\v1\SystemEventRepresentation;
 use Tuleap\SystemEvent\REST\v1\SystemEventResource;
 use Tuleap\Token\REST\TokenRepresentation;
 use Tuleap\Token\REST\v1\TokenResource;
 use Tuleap\User\AccessKey\REST\AccessKeyResource;
 use Tuleap\User\REST\UserRepresentation;
-use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\User\REST\v1\UserMembershipRepresentation;
-use Tuleap\SystemEvent\REST\v1\SystemEventRepresentation;
-use Tuleap\Project\REST\ProjectResourceReference;
-use Project;
 use Tuleap\User\REST\v1\UserMembershipResource;
 use Tuleap\User\REST\v1\UserResource;
 
@@ -68,6 +70,9 @@ class ResourcesInjector
         $restler->addAPIClass(InvitationsResource::class, InvitationsResource::ROUTE);
         $restler->addAPIClass(BannerResource::class, BannerResource::ROUTE);
         $restler->addAPIClass(VersionResource::class, VersionResource::ROUTE);
+        if (CustomProjectArchiveFeatureFlag::canCreateFromCustomArchive()) {
+            $restler->addAPIClass(ProjectFileResource::class, ProjectFileResource::ROUTE);
+        }
     }
 
     public function declareProjectResources(array &$resources, Project $project)
