@@ -107,8 +107,10 @@ final class ArtifactCreatorTest extends TestCase
             $default_values_adder,
             VerifySubmissionPermissionStub::withSubmitPermission(),
             new DBTransactionExecutorPassthrough(),
-            new ReverseLinksToNewChangesetsConverter($this->link_field_retriever, $this->artifact_retriever),
-            $this->changeset_creator
+            new ReverseLinksAdder(
+                new ReverseLinksToNewChangesetsConverter($this->link_field_retriever, $this->artifact_retriever),
+                $this->changeset_creator,
+            ),
         );
     }
 

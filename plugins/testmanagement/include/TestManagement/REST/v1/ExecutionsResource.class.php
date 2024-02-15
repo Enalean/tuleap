@@ -110,6 +110,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChan
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
+use Tuleap\Tracker\REST\Artifact\ReverseLinksAdder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -502,8 +503,10 @@ class ExecutionsResource
             $this->formelement_factory,
             SubmissionPermissionVerifier::instance(),
             $transaction_executor,
-            new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
-            $changeset_creator
+            new ReverseLinksAdder(
+                new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
+                $changeset_creator,
+            ),
         );
 
         try {

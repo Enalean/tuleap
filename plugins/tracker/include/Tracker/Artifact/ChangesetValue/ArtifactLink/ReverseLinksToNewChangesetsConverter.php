@@ -35,7 +35,7 @@ use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 
-final class ReverseLinksToNewChangesetsConverter
+final class ReverseLinksToNewChangesetsConverter implements ConvertAddReverseLinks
 {
     public function __construct(
         private readonly RetrieveUsedArtifactLinkFields $field_retriever,
@@ -43,9 +43,6 @@ final class ReverseLinksToNewChangesetsConverter
     ) {
     }
 
-    /**
-     * @return Ok<list<NewChangeset>> | Err<Fault>
-     */
     public function convertAddReverseLinks(
         AddReverseLinksCommand $command,
         \PFUser $submitter,
