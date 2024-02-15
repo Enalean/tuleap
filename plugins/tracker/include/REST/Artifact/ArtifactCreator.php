@@ -25,16 +25,20 @@ use Tracker;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ArtifactDoesNotExistException;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
+use Tuleap\Tracker\Artifact\Creation\AddReverseLinks;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistException;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
 
 class ArtifactCreator
 {
@@ -145,7 +149,11 @@ class ArtifactCreator
         if ($artifact) {
             $should_add_reverse_links = ! $this->isLinkKeyUsed($values);
             if ($should_add_reverse_links) {
-                $this->reverse_links_adder->addReverseLinks($submitter, $changeset_values, $artifact);
+                try {
+                    $this->reverse_links_adder->addReverseLinks($submitter, $changeset_values, $artifact);
+                } catch (ArtifactDoesNotExistException | ArtifactLinkFieldDoesNotExistException | SemanticNotSupportedException $exception) {
+                    throw new \Luracast\Restler\RestException(400, $exception->getMessage(), [], $exception);
+                }
             }
             return ArtifactReference::build($artifact, $format);
         }

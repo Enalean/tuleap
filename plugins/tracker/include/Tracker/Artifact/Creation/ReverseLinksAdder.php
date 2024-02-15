@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\REST\Artifact;
+namespace Tuleap\Tracker\Artifact\Creation;
 
 use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -31,7 +31,6 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AddReverseLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ConvertAddReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
-use Tuleap\Tracker\REST\FaultMapper;
 
 final class ReverseLinksAdder implements AddReverseLinks
 {
@@ -59,7 +58,7 @@ final class ReverseLinksAdder implements AddReverseLinks
                         $submission_date
                     )->match(
                         $this->saveChangesets(...),
-                        FaultMapper::mapToRestException(...)
+                        FaultMapper::mapToException(...)
                     );
                 }
             }
