@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
+
 namespace Tuleap\JWT\generators;
 
 use Lcobucci\JWT\Configuration;
@@ -26,10 +28,11 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
 
-final class MercureJWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MercureJWTGeneratorImplTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
@@ -37,18 +40,11 @@ final class MercureJWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private int $app_ID = 1;
 
-    /** @var UserManager */
+    /** @var UserManager&MockObject */
     private $user_manager;
 
-    /** @var UGroupLiteralizer */
-
-    /** @var  MercureJWTGeneratorImpl */
-    private $mercure_jwt_generator;
-
-    /**
-     * @var Configuration
-     */
-    private $jwt_configuration;
+    private MercureJWTGeneratorImpl $mercure_jwt_generator;
+    private Configuration $jwt_configuration;
 
     protected function setUp(): void
     {
