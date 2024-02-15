@@ -86,10 +86,10 @@ final class TimeframeTooltipEntryTest extends TestCase
     {
         $user  = UserTestBuilder::buildWithDefaults();
         $start = TrackerFormElementDateFieldBuilder::aDateField(1)
-            ->withUserCanRead($user)
+            ->withReadPermission($user, true)
             ->build();
         $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
-            ->withUserCanRead($user)
+            ->withReadPermission($user, true)
             ->build();
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
@@ -215,10 +215,10 @@ final class TimeframeTooltipEntryTest extends TestCase
     {
         $user  = UserTestBuilder::buildWithDefaults();
         $start = TrackerFormElementDateFieldBuilder::aDateField(1)
-            ->withUserCanRead($user)
+            ->withReadPermission($user, true)
             ->build();
         $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
-            ->withUserCanRead($user)
+            ->withReadPermission($user, true)
             ->build();
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
@@ -254,10 +254,10 @@ final class TimeframeTooltipEntryTest extends TestCase
     {
         $user  = UserTestBuilder::buildWithDefaults();
         $start = TrackerFormElementDateFieldBuilder::aDateField(1)
-            ->withUserCanRead($user)
+            ->withReadPermission($user, true)
             ->build();
         $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
-            ->withUserCanRead($user)
+            ->withReadPermission($user, true)
             ->build();
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
@@ -293,10 +293,10 @@ final class TimeframeTooltipEntryTest extends TestCase
     {
         $user  = UserTestBuilder::buildWithDefaults();
         $start = TrackerFormElementDateFieldBuilder::aDateField(1)
-            ->withUserCanRead($user)
+            ->withReadPermission($user, true)
             ->build();
         $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
-            ->withUserCanRead($user)
+            ->withReadPermission($user, true)
             ->build();
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
@@ -328,10 +328,10 @@ final class TimeframeTooltipEntryTest extends TestCase
     {
         $user  = UserTestBuilder::buildWithDefaults();
         $start = TrackerFormElementDateFieldBuilder::aDateField(1)
-            ->withUserCanRead($user)
+            ->withReadPermission($user, true)
             ->build();
         $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
-            ->withUserCanRead($user)
+            ->withReadPermission($user, true)
             ->build();
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);

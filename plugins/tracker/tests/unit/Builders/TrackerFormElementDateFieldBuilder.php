@@ -28,11 +28,15 @@ final class TrackerFormElementDateFieldBuilder
 {
     private string $name = "date";
     /** @var list<\PFUser> */
-    private array $user_can_read    = [];
+    private array $user_with_read_permissions = [];
+    /** @var array<int, bool> */
+    private array $read_permissions = [];
     private bool $is_time_displayed = false;
+    private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
     }
 
     public static function aDateField(int $id): self
@@ -46,9 +50,10 @@ final class TrackerFormElementDateFieldBuilder
         return $this;
     }
 
-    public function withUserCanRead(\PFUser $user): self
+    public function withReadPermission(\PFUser $user, bool $user_can_read): self
     {
-        $this->user_can_read[] = $user;
+        $this->user_with_read_permissions[]     = $user;
+        $this->read_permissions[$user->getId()] = $user_can_read;
 
         return $this;
     }
@@ -59,11 +64,17 @@ final class TrackerFormElementDateFieldBuilder
         return $this;
     }
 
+    public function inTracker(\Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_Date
     {
         $tracker_element = new Tracker_FormElement_Field_Date(
             $this->id,
-            10,
+            $this->tracker->getId(),
             15,
             $this->name,
             'label',
@@ -75,13 +86,12 @@ final class TrackerFormElementDateFieldBuilder
             10,
             null
         );
-        if ($this->is_time_displayed) {
-            $properties = ['display_time' => ['value' => 1]];
-            $tracker_element->setCacheSpecificProperties($properties);
-        }
 
-        foreach ($this->user_can_read as $item) {
-            $tracker_element->setUserCanRead($item, true);
+        $properties = ['display_time' => ['value' => $this->is_time_displayed]];
+        $tracker_element->setCacheSpecificProperties($properties);
+
+        foreach ($this->user_with_read_permissions as $user) {
+            $tracker_element->setUserCanRead($user, $this->read_permissions[$user->getId()]);
         }
 
         return $tracker_element;

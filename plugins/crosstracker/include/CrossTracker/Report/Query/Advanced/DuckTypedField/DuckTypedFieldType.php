@@ -32,6 +32,7 @@ enum DuckTypedFieldType
 {
     case NUMERIC;
     case TEXT;
+    case DATE;
 
     /**
      * @return Ok<self>|Err<Fault>
@@ -43,6 +44,7 @@ enum DuckTypedFieldType
             Tracker_FormElementFactory::FIELD_FLOAT_TYPE  => Result::ok(self::NUMERIC),
             Tracker_FormElementFactory::FIELD_TEXT_TYPE,
             Tracker_FormElementFactory::FIELD_STRING_TYPE => Result::ok(self::TEXT),
+            Tracker_FormElementFactory::FIELD_DATE_TYPE   => Result::ok(self::DATE),
             default                                       => Result::err(FieldTypeIsNotSupportedFault::build())
         };
     }

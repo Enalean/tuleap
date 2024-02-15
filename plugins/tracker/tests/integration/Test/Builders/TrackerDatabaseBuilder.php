@@ -170,6 +170,31 @@ final class TrackerDatabaseBuilder
         return $tracker_field_id;
     }
 
+    public function buildDateField(int $tracker_id, string $name, bool $display_time): int
+    {
+        $tracker_field_id = (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id' => $tracker_id,
+                'formElement_type' => "date",
+                'name' => $name,
+                'label' => $name,
+                'use_it' => true,
+                'scope' => "P",
+            ]
+        );
+
+        $this->db->insert(
+            'tracker_field_date',
+            [
+                'field_id' => $tracker_field_id,
+                'display_time' => $display_time,
+            ]
+        );
+
+        return $tracker_field_id;
+    }
+
     public function setReadPermission(int $field_id, int $user_group_id): void
     {
         $this->db->insert(
@@ -221,16 +246,21 @@ final class TrackerDatabaseBuilder
         return $artifact_changeset_id;
     }
 
-    public function buildIntValue(int $parent_changeset_id, int $int_field_id, int $value): void
+    private function buildChangesetValue(int $parent_changeset_id, int $field_id): int
     {
-        $changeset_value_id = (int) $this->db->insertReturnId(
+        return (int) $this->db->insertReturnId(
             'tracker_changeset_value',
             [
                 'changeset_id' => $parent_changeset_id,
-                'field_id' => $int_field_id,
+                'field_id' => $field_id,
                 'has_changed' => true,
             ]
         );
+    }
+
+    public function buildIntValue(int $parent_changeset_id, int $int_field_id, int $value): void
+    {
+        $changeset_value_id = $this->buildChangesetValue($parent_changeset_id, $int_field_id);
 
         $this->db->insert(
             'tracker_changeset_value_int',
@@ -241,16 +271,9 @@ final class TrackerDatabaseBuilder
         );
     }
 
-    public function buildFloatValue(int $parent_changeset_id, int $int_field_id, float $value): void
+    public function buildFloatValue(int $parent_changeset_id, int $float_field_id, float $value): void
     {
-        $changeset_value_id = (int) $this->db->insertReturnId(
-            'tracker_changeset_value',
-            [
-                'changeset_id' => $parent_changeset_id,
-                'field_id' => $int_field_id,
-                'has_changed' => true,
-            ]
-        );
+        $changeset_value_id = $this->buildChangesetValue($parent_changeset_id, $float_field_id);
 
         $this->db->insert(
             'tracker_changeset_value_float',
@@ -263,14 +286,7 @@ final class TrackerDatabaseBuilder
 
     public function buildTextValue(int $parent_changeset_id, int $text_field_id, string $value, string $format): void
     {
-        $changeset_value_id = (int) $this->db->insertReturnId(
-            'tracker_changeset_value',
-            [
-                'changeset_id' => $parent_changeset_id,
-                'field_id' => $text_field_id,
-                'has_changed' => true,
-            ]
-        );
+        $changeset_value_id = $this->buildChangesetValue($parent_changeset_id, $text_field_id);
 
         $this->db->insert(
             'tracker_changeset_value_text',
@@ -278,6 +294,19 @@ final class TrackerDatabaseBuilder
                 'changeset_value_id' => $changeset_value_id,
                 'value' => $value,
                 'body_format' => $format,
+            ]
+        );
+    }
+
+    public function buildDateValue(int $parent_changeset_id, int $date_field_id, int $value): void
+    {
+        $changeset_value_id = $this->buildChangesetValue($parent_changeset_id, $date_field_id);
+
+        $this->db->insert(
+            'tracker_changeset_value_date',
+            [
+                'changeset_value_id' => $changeset_value_id,
+                'value' => $value,
             ]
         );
     }
@@ -376,14 +405,7 @@ final class TrackerDatabaseBuilder
 
     public function buildArtifactLinkValue(int $project_id, int $artifact_id, int $parent_changeset_id, int $artifact_link_field_id, string $type): void
     {
-        $changeset_value_id = (int) $this->db->insertReturnId(
-            'tracker_changeset_value',
-            [
-                'changeset_id' => $parent_changeset_id,
-                'field_id' => $artifact_link_field_id,
-                'has_changed' => true,
-            ]
-        );
+        $changeset_value_id = $this->buildChangesetValue($parent_changeset_id, $artifact_link_field_id);
 
         $this->db->insert(
             'tracker_changeset_value_artifactlink',
@@ -399,14 +421,7 @@ final class TrackerDatabaseBuilder
 
     public function addStatusValueForArtifact(int $field_id, int $changeset_id, int $bind_open_value_id): void
     {
-        $changeset_value_id = (int) $this->db->insertReturnId(
-            'tracker_changeset_value',
-            [
-                'changeset_id' => $changeset_id,
-                'field_id' => $field_id,
-                'has_changed' => true,
-            ]
-        );
+        $changeset_value_id = $this->buildChangesetValue($changeset_id, $field_id);
 
         $this->db->insert(
             'tracker_changeset_value_list',
