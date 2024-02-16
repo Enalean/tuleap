@@ -448,4 +448,49 @@ final class DateDuckTypedFieldTest extends TestIntegrationTestCase
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_with_now_id, $this->sprint_artifact_with_future_id], $artifacts);
     }
+
+    public function testBetweenValues(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field BETWEEN('2023-02-01', '2023-03-31')",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_date_id, $this->sprint_artifact_with_date_id], $artifacts);
+    }
+
+    public function testMultipleBetween(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field BETWEEN('2023-02-01', '2023-02-28') OR date_field BETWEEN(NOW() - 1w, NOW())",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_date_id, $this->release_artifact_with_now_id], $artifacts);
+    }
+
+    public function testBetweenYesterdayAndTomorrow(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field BETWEEN(NOW() - 1d, NOW() + 1d)",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_now_id, $this->sprint_artifact_with_future_id], $artifacts);
+    }
 }
