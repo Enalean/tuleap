@@ -56,7 +56,7 @@ final class GitlabGroupApiDataRepresentation
             ! array_key_exists('web_url', $group_data) ||
             ! array_key_exists('avatar_url', $group_data)
         ) {
-            throw new GitlabResponseAPIException("Some keys are missing in the project Json. This is not expected. Aborting.");
+            throw new GitlabResponseAPIException("Some keys are missing in the group Json. This is not expected. Aborting.");
         }
 
         if (
