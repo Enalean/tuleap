@@ -22,14 +22,10 @@ namespace Tuleap\Tracker\REST\Artifact;
 
 use PFUser;
 use Tracker;
-use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistException;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
-use Tuleap\Tracker\Artifact\Creation\AddReverseLinks;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistException;
@@ -49,8 +45,6 @@ class ArtifactCreator
         private readonly FieldsDataFromValuesByFieldBuilder $values_by_field_builder,
         private readonly AddDefaultValuesToFieldsData $default_values_adder,
         private readonly VerifySubmissionPermissions $submission_permission_verifier,
-        private readonly DBTransactionExecutor $transaction_executor,
-        private readonly AddReverseLinks $reverse_links_adder,
     ) {
     }
 
@@ -75,21 +69,23 @@ class ArtifactCreator
         );
         $this->checkUserCanSubmit($submitter, $tracker);
 
-        return $this->transaction_executor->execute(fn(): ArtifactReference => $this->returnReferenceOrError(
-            $this->artifact_creator->create(
-                $tracker,
-                new InitialChangesetValuesContainer($fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
-                $submitter,
-                \Tuleap\Request\RequestTime::getTimestamp(),
-                true,
-                $should_visit_be_recorded,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
-            ),
-            '',
-            $submitter,
-            $changeset_values,
-            $values
-        ));
+        try {
+            return $this->returnReferenceOrError(
+                $this->artifact_creator->create(
+                    $tracker,
+                    new InitialChangesetValuesContainer($fields_data, $changeset_values->getArtifactLinkValue()),
+                    $submitter,
+                    \Tuleap\Request\RequestTime::getTimestamp(),
+                    true,
+                    $should_visit_be_recorded,
+                    new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+                    $this->shouldAddReverseLinks($values),
+                ),
+                '',
+            );
+        } catch (ArtifactDoesNotExistException | ArtifactLinkFieldDoesNotExistException | SemanticNotSupportedException $exception) {
+            throw new \Luracast\Restler\RestException(400, $exception->getMessage(), [], $exception);
+        }
     }
 
     /**
@@ -109,21 +105,23 @@ class ArtifactCreator
         );
         $this->checkUserCanSubmit($user, $tracker);
 
-        return $this->transaction_executor->execute(fn(): ArtifactReference => $this->returnReferenceOrError(
-            $this->artifact_creator->create(
-                $tracker,
-                new InitialChangesetValuesContainer($fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
-                $user,
-                \Tuleap\Request\RequestTime::getTimestamp(),
-                true,
-                true,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
-            ),
-            'by_field',
-            $user,
-            $changeset_values,
-            $values
-        ));
+        try {
+            return $this->returnReferenceOrError(
+                $this->artifact_creator->create(
+                    $tracker,
+                    new InitialChangesetValuesContainer($fields_data, $changeset_values->getArtifactLinkValue()),
+                    $user,
+                    \Tuleap\Request\RequestTime::getTimestamp(),
+                    true,
+                    true,
+                    new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+                    $this->shouldAddReverseLinks($values),
+                ),
+                'by_field',
+            );
+        } catch (ArtifactDoesNotExistException | ArtifactLinkFieldDoesNotExistException | SemanticNotSupportedException $exception) {
+            throw new \Luracast\Restler\RestException(400, $exception->getMessage(), [], $exception);
+        }
     }
 
     private function getTracker(TrackerReference $tracker_reference): Tracker
@@ -142,19 +140,8 @@ class ArtifactCreator
     private function returnReferenceOrError(
         ?Artifact $artifact,
         string $format,
-        PFUser $submitter,
-        InitialChangesetValuesContainer $changeset_values,
-        array $values,
     ): ArtifactReference {
         if ($artifact) {
-            $should_add_reverse_links = ! $this->isLinkKeyUsed($values);
-            if ($should_add_reverse_links) {
-                try {
-                    $this->reverse_links_adder->addReverseLinks($submitter, $changeset_values, $artifact);
-                } catch (ArtifactDoesNotExistException | ArtifactLinkFieldDoesNotExistException | SemanticNotSupportedException $exception) {
-                    throw new \Luracast\Restler\RestException(400, $exception->getMessage(), [], $exception);
-                }
-            }
             return ArtifactReference::build($artifact, $format);
         }
         if ($GLOBALS['Response']->feedbackHasErrors()) {
@@ -184,5 +171,10 @@ class ArtifactCreator
             }
         }
         return false;
+    }
+
+    private function shouldAddReverseLinks(array $values): bool
+    {
+        return ! $this->isLinkKeyUsed($values);
     }
 }

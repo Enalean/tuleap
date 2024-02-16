@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact\Creation;
 
 use DataAccessException;
 use DataAccessQueryException;
+use EventManager;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -32,12 +33,27 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_FieldsValidator;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ArtifactDoesNotExistException;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\CreateInitialChangeset;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
@@ -46,7 +62,21 @@ use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
+use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistException;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 /**
  * I create artifact from the request in a Tracker
@@ -63,6 +93,7 @@ class TrackerArtifactCreator
         private readonly \Psr\Log\LoggerInterface $logger,
         private readonly DBTransactionExecutor $db_transaction_executor,
         private readonly EventDispatcherInterface $event_dispatcher,
+        private readonly AddReverseLinks $reverse_links_adder,
     ) {
         $this->artifact_dao = $artifact_factory->getDao();
     }
@@ -72,14 +103,67 @@ class TrackerArtifactCreator
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         LoggerInterface $logger,
     ): self {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $artifact_factory     = Tracker_ArtifactFactory::instance();
+        $usage_dao            = new ArtifactLinksUsageDao();
+        $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $event_dispatcher     = EventManager::instance();
+        $transaction_executor = new DBTransactionExecutorWithConnection(
+            DBFactory::getMainTuleapDBConnection()
+        );
+
         return new self(
-            Tracker_ArtifactFactory::instance(),
+            $artifact_factory,
             $fields_validator,
             $changeset_creator_base,
             new VisitRecorder(new RecentlyVisitedDao()),
             $logger,
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             \EventManager::instance(),
+            new ReverseLinksAdder(
+                new ReverseLinksToNewChangesetsConverter($form_element_factory, $artifact_factory),
+                new NewChangesetCreator(
+                    new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                        $form_element_factory,
+                        new ArtifactLinkValidator(
+                            $artifact_factory,
+                            new TypePresenterFactory(new TypeDao(), $usage_dao),
+                            $usage_dao,
+                            $event_dispatcher,
+                        ),
+                        new WorkflowUpdateChecker(
+                            new FrozenFieldDetector(
+                                new TransitionRetriever(
+                                    new StateFactory(\TransitionFactory::instance(), new SimpleWorkflowDao()),
+                                    new TransitionExtractor()
+                                ),
+                                FrozenFieldsRetriever::instance(),
+                            )
+                        )
+                    ),
+                    $fields_retriever,
+                    $event_dispatcher,
+                    new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+                    $transaction_executor,
+                    ArtifactChangesetSaver::build(),
+                    new ParentLinkAction($artifact_factory),
+                    new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+                    ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
+                    new ChangesetValueSaver(),
+                    \WorkflowFactory::instance(),
+                    new CommentCreator(
+                        new \Tracker_Artifact_Changeset_CommentDao(),
+                        \ReferenceManager::instance(),
+                        new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                        new ChangesetCommentIndexer(
+                            new ItemToIndexQueueEventBased($event_dispatcher),
+                            $event_dispatcher,
+                            new \Tracker_Artifact_Changeset_CommentDao(),
+                        ),
+                        new TextValueValidator(),
+                    )
+                ),
+            ),
         );
     }
 
@@ -128,13 +212,19 @@ class TrackerArtifactCreator
             $send_notification,
             $url_mapping,
             $tracker_import_config,
-            $validation_context
+            $validation_context,
+            false,
         );
     }
 
     /**
      * Creates the first changeset but do not check the fields because we
      * already have checked them.
+     * @throws ArtifactDoesNotExistException
+     * @throws ArtifactLinkFieldDoesNotExistException
+     * @throws SemanticNotSupportedException
+     * @throws \Tracker_Exception
+     * @throws \Tuleap\Tracker\Artifact\Exception\FieldValidationException
      */
     private function createFirstChangesetNoValidation(
         Artifact $artifact,
@@ -145,6 +235,7 @@ class TrackerArtifactCreator
         CreatedFileURLMapping $url_mapping,
         TrackerImportConfig $tracker_import_config,
         ChangesetValidationContext $context,
+        bool $should_add_reverse_links,
     ): ?Tracker_Artifact_Changeset {
         $changeset_id = $this->db_transaction_executor->execute(
             function () use (
@@ -154,9 +245,10 @@ class TrackerArtifactCreator
                 $submitted_on,
                 $url_mapping,
                 $tracker_import_config,
-                $context
+                $context,
+                $should_add_reverse_links,
             ) {
-                return $this->changeset_creator->create(
+                $changeset = $this->changeset_creator->create(
                     $artifact,
                     $changeset_values->getFieldsData(),
                     $user,
@@ -165,6 +257,11 @@ class TrackerArtifactCreator
                     $tracker_import_config,
                     $context
                 );
+                if ($should_add_reverse_links) {
+                    $this->reverse_links_adder->addReverseLinks($user, $changeset_values, $artifact);
+                }
+
+                return $changeset;
             }
         );
         if (! $changeset_id) {
@@ -184,6 +281,13 @@ class TrackerArtifactCreator
         return $changeset;
     }
 
+    /**
+     * @throws ArtifactDoesNotExistException
+     * @throws ArtifactLinkFieldDoesNotExistException
+     * @throws SemanticNotSupportedException
+     * @throws \Tracker_Exception
+     * @throws \Tuleap\Tracker\Artifact\Exception\FieldValidationException
+     */
     public function create(
         Tracker $tracker,
         InitialChangesetValuesContainer $changeset_values,
@@ -192,6 +296,7 @@ class TrackerArtifactCreator
         bool $send_notification,
         bool $should_visit_be_recorded,
         ChangesetValidationContext $context,
+        bool $should_add_reverse_links,
     ): ?Artifact {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, (int) $user->getId(), 0);
 
@@ -218,7 +323,8 @@ class TrackerArtifactCreator
                 $send_notification,
                 $url_mapping,
                 new TrackerNoXMLImportLoggedConfig(),
-                $context
+                $context,
+                $should_add_reverse_links,
             )
         ) {
             $this->logger->debug(

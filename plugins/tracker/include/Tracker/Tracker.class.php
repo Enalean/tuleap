@@ -2696,6 +2696,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         $send_notifications,
                         true,
                         new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+                        false,
                     );
                     if ($artifact) {
                         $nb_artifact_creation++;

@@ -58,6 +58,7 @@ class Tracker_Action_CreateArtifactFromModal
             true,
             true,
             new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+            false,
         );
     }
 
