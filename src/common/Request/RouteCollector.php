@@ -29,6 +29,7 @@ use Cose\Algorithm\Signature\EdDSA\Ed25519;
 use Cose\Algorithm\Signature\RSA\RS256;
 use EventManager;
 use FastRoute;
+use ForgeConfig;
 use FRSFileFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
@@ -161,6 +162,11 @@ use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\Upload\FileOngoingUploadDao;
+use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileBeingUploadedInformationProvider;
+use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileDataStore;
+use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileUploadCanceler;
+use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileUploadFinisher;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Routing\ProjectRetrieverMiddleware;
 use Tuleap\Project\Service\AddController;
@@ -176,6 +182,10 @@ use Tuleap\REST\UserManager;
 use Tuleap\ServerHostname;
 use Tuleap\SVNCore\AccessControl\SVNProjectAccessRouteDefinition;
 use Tuleap\Trove\TroveCatListController;
+use Tuleap\Upload\FileBeingUploadedLocker;
+use Tuleap\Upload\FileBeingUploadedWriter;
+use Tuleap\Upload\FileUploadController;
+use Tuleap\Upload\UploadPathAllocator;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
 use Tuleap\User\Account\AccessKeyPresenterBuilder;
@@ -1423,6 +1433,35 @@ class RouteCollector
         );
     }
 
+    public static function routeProjectUpload(): FileUploadController
+    {
+        $path_allocator          = new UploadPathAllocator(ForgeConfig::get('tmp_dir') . '/project/ongoing-upload');
+        $file_ongoing_upload_dao = new FileOngoingUploadDao();
+        $current_user            = new RESTCurrentUserMiddleware(
+            UserManager::build(),
+            new BasicAuthentication()
+        );
+
+        return FileUploadController::build(
+            new ProjectFileDataStore(
+                new ProjectFileBeingUploadedInformationProvider(
+                    $path_allocator,
+                    $file_ongoing_upload_dao,
+                    $current_user,
+                    new ProjectRegistrationUserPermissionChecker(new \ProjectDao())
+                ),
+                new FileBeingUploadedWriter($path_allocator, DBFactory::getMainTuleapDBConnection()),
+                new ProjectFileUploadFinisher($file_ongoing_upload_dao),
+                new ProjectFileUploadCanceler(
+                    $path_allocator,
+                    $file_ongoing_upload_dao
+                ),
+                new FileBeingUploadedLocker($path_allocator),
+            ),
+            $current_user
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r): void
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -1607,6 +1646,12 @@ class RouteCollector
 
             $r->post('/switch-passwordless', [self::class, 'postSwitchPasswordlessAuthentication']);
         });
+
+        $r->addRoute(
+            ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
+            '/uploads/project/file/{id:\d+}',
+            [self::class, "routeProjectUpload"]
+        );
 
         SVNProjectAccessRouteDefinition::defineRoute($r, '/svnroot');
 
