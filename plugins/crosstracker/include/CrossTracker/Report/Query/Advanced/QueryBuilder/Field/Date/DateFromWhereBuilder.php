@@ -95,9 +95,9 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         return match ($comparison->getType()) {
             ComparisonType::Equal              => $this->getWhereForEqual($changeset_value_date_alias, $value_wrapper),
             ComparisonType::NotEqual           => $this->getWhereForNotEqual($changeset_value_date_alias, $value_wrapper),
-            ComparisonType::LesserThan         => throw new LogicException('Not implemented yet'),
+            ComparisonType::LesserThan         => $this->getWhereForLesserThan($changeset_value_date_alias, $value_wrapper),
             ComparisonType::GreaterThan        => throw new LogicException('Not implemented yet'),
-            ComparisonType::LesserThanOrEqual  => throw new LogicException('Not implemented yet'),
+            ComparisonType::LesserThanOrEqual  => $this->getWhereForLesserThanOrEqual($changeset_value_date_alias, $value_wrapper),
             ComparisonType::GreaterThanOrEqual => throw new LogicException('Not implemented yet'),
             ComparisonType::Between            => throw new LogicException(
                 'Between comparison expected a BetweenValueWrapper, not a SimpleValueWrapper'
@@ -141,6 +141,32 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedWhere(
             "($changeset_value_date_alias.value IS NULL OR $changeset_value_date_alias.value NOT BETWEEN ? AND ?)",
             [$min_value, $max_value]
+        );
+    }
+
+    private function getWhereForLesserThan(
+        string $changeset_value_date_alias,
+        SimpleValueWrapper $wrapper,
+    ): ParametrizedWhere {
+        $value       = $wrapper->getValue();
+        $limit_value = $this->date_time_value_rounder->getFlooredTimestampFromDate((string) $value);
+
+        return new ParametrizedWhere(
+            "$changeset_value_date_alias.value < ?",
+            [$limit_value]
+        );
+    }
+
+    private function getWhereForLesserThanOrEqual(
+        string $changeset_value_date_alias,
+        SimpleValueWrapper $wrapper,
+    ): ParametrizedWhere {
+        $value       = $wrapper->getValue();
+        $limit_value = $this->date_time_value_rounder->getCeiledTimestampFromDate((string) $value);
+
+        return new ParametrizedWhere(
+            "$changeset_value_date_alias.value <= ?",
+            [$limit_value]
         );
     }
 
