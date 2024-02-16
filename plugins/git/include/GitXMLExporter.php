@@ -30,6 +30,7 @@ use Psr\Log\LoggerInterface;
 use Project;
 use ProjectUGroup;
 use SimpleXMLElement;
+use Tuleap\Git\DefaultBranch\RetrieveRepositoryDefaultBranch;
 use Tuleap\Git\Events\XMLExportExternalContentEvent;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\GitBundle;
@@ -45,17 +46,18 @@ class GitXmlExporter
     public const EXPORT_FOLDER = "export";
 
     public function __construct(
-        private Project $project,
-        private GitPermissionsManager $permission_manager,
-        private UGroupManager $ugroup_manager,
-        private GitRepositoryFactory $repository_factory,
-        private LoggerInterface $logger,
-        private GitBundle $git_bundle,
-        private Git_LogDao $git_log_dao,
-        private UserManager $user_manager,
-        private UserXMLExporter $user_exporter,
-        private EventManager $event_manager,
-        private VerifyArtifactClosureIsAllowed $closure_verifier,
+        private readonly Project $project,
+        private readonly GitPermissionsManager $permission_manager,
+        private readonly UGroupManager $ugroup_manager,
+        private readonly GitRepositoryFactory $repository_factory,
+        private readonly LoggerInterface $logger,
+        private readonly GitBundle $git_bundle,
+        private readonly Git_LogDao $git_log_dao,
+        private readonly UserManager $user_manager,
+        private readonly UserXMLExporter $user_exporter,
+        private readonly EventManager $event_manager,
+        private readonly VerifyArtifactClosureIsAllowed $closure_verifier,
+        private readonly RetrieveRepositoryDefaultBranch $retrieve_repository_default_branch,
     ) {
     }
 
@@ -130,6 +132,18 @@ class GitXmlExporter
                 'allow_artifact_closure',
                 $this->closure_verifier->isArtifactClosureAllowed((int) $repository->getId()) ? "1" : "0",
             );
+
+            $this->retrieve_repository_default_branch->getRepositoryDefaultBranch($repository)
+                ->match(
+                    function (string $default_branch_name) use ($root_node): void {
+                        $root_node->addAttribute(
+                            'default_branch',
+                            $default_branch_name,
+                        );
+                    },
+                    function (): void {
+                    },
+                );
 
             $row = $this->git_log_dao->getLastPushForRepository($repository->getId());
             if (! empty($row) && $row['user_id'] !== 0) {

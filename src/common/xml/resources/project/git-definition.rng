@@ -21,6 +21,11 @@
                 <data type="boolean"/>
               </attribute>
             </optional>
+            <optional>
+              <attribute name="default_branch">
+                <data type="string"/>
+              </attribute>
+            </optional>
             <choice>
               <interleave>
                 <optional>

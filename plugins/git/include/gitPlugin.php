@@ -50,6 +50,7 @@ use Tuleap\Git\CIBuilds\BuildStatusChangePermissionManager;
 use Tuleap\Git\CIBuilds\CITokenDao;
 use Tuleap\Git\CIBuilds\CITokenManager;
 use Tuleap\Git\CreateRepositoryController;
+use Tuleap\Git\DefaultBranch\DefaultBranchRetriever;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
 use Tuleap\Git\DefaultSettings\DefaultSettingsRouter;
@@ -57,6 +58,7 @@ use Tuleap\Git\DefaultSettings\IndexController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use Tuleap\Git\GitXMLImportDefaultBranchRetriever;
 use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\GitGodObjectWrapper;
@@ -428,6 +430,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             ),
             EventManager::instance(),
             $this->getGitDao(),
+            new DefaultBranchRetriever(),
         );
     }
 
@@ -2259,6 +2262,8 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $git_dao,
             new XMLImportHelper(UserManager::instance()),
             $git_dao,
+            new GitXMLImportDefaultBranchRetriever(),
+            new DefaultBranchUpdateExecutorAsGitoliteUser(),
         );
 
         $importer->import(

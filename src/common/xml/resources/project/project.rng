@@ -130,6 +130,11 @@
                 <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
               </attribute>
             </optional>
+            <optional>
+              <attribute name="default_branch">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+            </optional>
             <choice>
               <interleave>
                 <optional>
