@@ -75,7 +75,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChan
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
-use Tuleap\Tracker\REST\Artifact\ReverseLinksAdder;
+use Tuleap\Tracker\Artifact\Creation\ReverseLinksAdder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;

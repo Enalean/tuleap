@@ -143,7 +143,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\Artifact\PUTHandler;
-use Tuleap\Tracker\REST\Artifact\ReverseLinksAdder;
+use Tuleap\Tracker\Artifact\Creation\ReverseLinksAdder;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;

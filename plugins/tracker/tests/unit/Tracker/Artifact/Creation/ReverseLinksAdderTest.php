@@ -20,20 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\REST\Artifact;
+namespace Tuleap\Tracker\Artifact\Creation;
 
-use Luracast\Restler\RestException;
 use Tracker_NoChangeException;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\ArtifactDoesNotExistException;
+use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
+use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistException;
+use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
+use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
+use Tuleap\Tracker\Semantic\SemanticNotSupportedFault;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
@@ -158,7 +163,10 @@ final class ReverseLinksAdderTest extends TestCase
         self::assertSame(0, $changeset_creator->getCallsCount());
     }
 
-    public function testExceptionWhenChangesetConverterFaults(): void
+    /**
+     * @dataProvider provideFaults
+     */
+    public function testExceptionWhenChangesetConverterFaults(Fault $fault, \Exception $expected_exception): void
     {
         $submitter = UserTestBuilder::buildWithDefaults();
 
@@ -178,12 +186,11 @@ final class ReverseLinksAdderTest extends TestCase
 
         $changesets_converter = ConvertAddReverseLinksStub::willFault(
             $reverse_links,
-            Fault::fromMessage("Something gone wrong"),
+            $fault,
         );
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(500);
-        $this->expectExceptionMessage("Something gone wrong");
+        $this->expectException($expected_exception::class);
+        $this->expectExceptionMessage($expected_exception->getMessage());
 
         (new ReverseLinksAdder(
             $changesets_converter,
@@ -205,6 +212,28 @@ final class ReverseLinksAdderTest extends TestCase
         );
 
         self::assertSame(0, $changeset_creator->getCallsCount());
+    }
+
+    public function provideFaults(): array
+    {
+        return [
+            [
+                Fault::fromMessage("Something gone wrong"),
+                new \Exception("Something gone wrong"),
+            ],
+            [
+                ArtifactDoesNotExistFault::build(self::REQUEST_ID),
+                new ArtifactDoesNotExistException("Artifact #101 does not exist"),
+            ],
+            [
+                ArtifactLinkFieldDoesNotExistFault::build(self::REQUEST_ID),
+                new ArtifactLinkFieldDoesNotExistException("Artifact link field does not exist for the artifact #101"),
+            ],
+            [
+                SemanticNotSupportedFault::fromSemanticName("tooltip"),
+                new SemanticNotSupportedException('Semantic "tooltip" not supported'),
+            ],
+        ];
     }
 
     public function testNoChangeExceptionIsSilentlyIgnoreToNotStopTheCreationOfTheArtifact(): void

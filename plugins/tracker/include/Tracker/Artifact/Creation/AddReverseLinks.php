@@ -20,17 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\REST\Artifact;
+namespace Tuleap\Tracker\Artifact\Creation;
 
-use Luracast\Restler\RestException;
+use Exception;
 use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ArtifactDoesNotExistException;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
+use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistException;
+use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
 
 interface AddReverseLinks
 {
     /**
-     * @throws RestException
+     * @throws ArtifactDoesNotExistException
+     * @throws ArtifactLinkFieldDoesNotExistException
+     * @throws SemanticNotSupportedException
+     * @throws Exception
      * @throws \Tracker_Exception
      * @throws \Tuleap\Tracker\Artifact\Exception\FieldValidationException
      */
