@@ -1499,6 +1499,15 @@ CREATE TABLE filtered_outbound_http_requests (
     last_blocked INT UNSIGNED NOT NULL,
     seen_by_system_check BOOLEAN
 ) ENGINE=InnoDB;
+
+CREATE TABLE project_file_upload
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    file_name VARCHAR(255) NOT NULL DEFAULT '',
+    file_size BIGINT NOT NULL DEFAULT 0,
+    user_id INT NOT NULL,
+    expiration_date INT UNSIGNED NOT NULL
+) ENGINE = InnoDB;
 #
 # EOF
 #
