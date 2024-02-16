@@ -24,35 +24,15 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class PlanningDAOTest extends TestIntegrationTestCase
 {
     private PlanningDao $dao;
-    private static int $not_milestone_tracker_id;
-
-    public static function setUpBeforeClass(): void
-    {
-        $db                             = DBFactory::getMainTuleapDBConnection()->getDB();
-        self::$not_milestone_tracker_id = (int) $db->insertReturnId(
-            'tracker',
-            [
-                'group_id'    => 107,
-                'name'        => 'Not a milestone',
-                'description' => 'Not a milestone',
-                'item_name'   => 'not_milestone',
-            ]
-        );
-    }
 
     protected function setUp(): void
     {
         $this->dao = new PlanningDao();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->delete('tracker', ['id' => self::$not_milestone_tracker_id]);
     }
 
     public function testAPlanningCanBeCreatedAndRemoved(): void
@@ -145,8 +125,12 @@ final class PlanningDAOTest extends TestIntegrationTestCase
 
     public function testAPlanningCanBeFound(): void
     {
+        $db              = DBFactory::getMainTuleapDBConnection()->getDB();
+        $tracker_builder = new TrackerDatabaseBuilder($db);
+
         $project_id                = 107;
-        $milestone_tracker_id      = 25;
+        $milestone_tracker_id      = $tracker_builder->buildTracker($project_id, 'Milestone')->getId();
+        $not_milestone_tracker_id  = $tracker_builder->buildTracker($project_id, 'Not a milestone')->getId();
         $first_backlog_tracker_id  = 17;
         $second_backlog_tracker_id = 48;
         $planning                  = \PlanningParameters::fromArray(
@@ -183,7 +167,7 @@ final class PlanningDAOTest extends TestIntegrationTestCase
         foreach ($non_planning_rows as $row) {
             $not_milestone_tracker_rows[] = $row['id'];
         }
-        $this->assertContains((string) self::$not_milestone_tracker_id, $not_milestone_tracker_rows);
+        $this->assertContains((string) $not_milestone_tracker_id, $not_milestone_tracker_rows);
 
         $planning_rows_by_backlog_tracker = $this->dao->searchByBacklogTrackerId($first_backlog_tracker_id);
         self::assertCount(1, $planning_rows_by_backlog_tracker);
@@ -198,5 +182,8 @@ final class PlanningDAOTest extends TestIntegrationTestCase
         $this->assertContains($second_backlog_tracker_id, $backlog_tracker_rows_by_project);
 
         $this->dao->deletePlanning($planning_id);
+
+        $planning_rows_after_delete = $this->dao->searchByProjectId($project_id);
+        self::assertEmpty($planning_rows_after_delete);
     }
 }
