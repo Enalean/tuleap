@@ -26,7 +26,7 @@ import {
     deleteWiki,
 } from "../api/rest-querier";
 import { handleErrorsForDeletionModal } from "./actions-helpers/handle-errors";
-import type { ActionContext } from "vuex";
+import type { ActionContext, Store } from "vuex";
 import type { Item, RootState } from "../type";
 import {
     isEmbedded,
@@ -42,38 +42,41 @@ export interface RootActionsDelete {
     readonly deleteItem: typeof deleteItem;
 }
 
+export interface DeleteItemPayload {
+    item: Item;
+    clipboard: Store<"clipboard">;
+    additional_wiki_options?: {
+        delete_associated_wiki_page: boolean;
+    };
+}
+
 export const deleteItem = async (
     context: ActionContext<RootState, RootState>,
-    [item, additional_wiki_options]: [
-        Item,
-        {
-            delete_associated_wiki_page: boolean;
-        }?,
-    ],
+    payload: DeleteItemPayload,
 ): Promise<void> => {
     try {
-        if (isFile(item)) {
-            await deleteFile(item);
-        } else if (isLink(item)) {
-            await deleteLink(item);
-        } else if (isEmbedded(item)) {
-            await deleteEmbeddedFile(item);
-        } else if (isWiki(item) && additional_wiki_options) {
-            await deleteWiki(item, additional_wiki_options);
-        } else if (isEmpty(item)) {
-            await deleteEmptyDocument(item);
-        } else if (isFolder(item)) {
-            await deleteFolder(item);
+        if (isFile(payload.item)) {
+            await deleteFile(payload.item);
+        } else if (isLink(payload.item)) {
+            await deleteLink(payload.item);
+        } else if (isEmbedded(payload.item)) {
+            await deleteEmbeddedFile(payload.item);
+        } else if (isWiki(payload.item) && payload.additional_wiki_options) {
+            await deleteWiki(payload.item, payload.additional_wiki_options);
+        } else if (isEmpty(payload.item)) {
+            await deleteEmptyDocument(payload.item);
+        } else if (isFolder(payload.item)) {
+            await deleteFolder(payload.item);
         }
 
         emitter.emit("item-has-just-been-deleted");
 
-        context.commit("clipboard/emptyClipboardAfterItemDeletion", item);
-        context.commit("removeItemFromFolderContent", item);
+        payload.clipboard.emptyClipboardAfterItemDeletion(payload.item);
+        context.commit("removeItemFromFolderContent", payload.item);
         context.commit("showPostDeletionNotification");
 
         return Promise.resolve();
     } catch (exception) {
-        return handleErrorsForDeletionModal(context, exception, item);
+        return handleErrorsForDeletionModal(context, exception, payload.item);
     }
 };

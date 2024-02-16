@@ -29,6 +29,7 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 import { nextTick } from "vue";
 import * as router from "../../../../helpers/use-router";
 import type { Router } from "vue-router";
+import type { ConfigurationState } from "../../../../store/configuration";
 
 describe("ModalConfirmDeletion", () => {
     let get_wikis: jest.Mock;
@@ -69,6 +70,13 @@ describe("ModalConfirmDeletion", () => {
                     modules: {
                         error: {
                             state: { has_modal_error: false },
+                            namespaced: true,
+                        },
+                        configuration: {
+                            state: {
+                                user_id: "1",
+                                project_id: "1",
+                            } as ConfigurationState,
                             namespaced: true,
                         },
                     },
@@ -211,6 +219,10 @@ describe("ModalConfirmDeletion", () => {
             expect(show_notifications).toHaveBeenCalled();
             expect(update_preview).toHaveBeenCalledWith(
                 {
+                    configuration: {
+                        project_id: "1",
+                        user_id: "1",
+                    },
                     current_folder: { id: 42 },
                     currently_previewed_item: item,
                     error: { has_modal_error: false },

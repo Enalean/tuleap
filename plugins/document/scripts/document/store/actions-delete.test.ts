@@ -31,18 +31,45 @@ import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fe
 import type { Item, RootState } from "../type";
 import type { ActionContext } from "vuex";
 import emitter from "../helpers/emitter";
+import type { TestingPinia } from "@pinia/testing";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
+
+let pinia: TestingPinia;
 
 jest.mock("../helpers/emitter");
 
+const empty_clipboard = jest.fn();
 describe("actions-delete", () => {
+    const useStore = defineStore("root", {
+        state: () => ({
+            item_id: null,
+            item_type: null,
+            item_title: null,
+            operation_type: null,
+            pasting_in_progress: false,
+        }),
+        actions: {
+            emptyClipboardAfterItemDeletion: empty_clipboard,
+        },
+    });
+
     describe("deleteItem()", () => {
         let context: ActionContext<RootState, RootState>;
 
         beforeEach(() => {
+            const project_id = 101;
+            const user_id = 101;
             context = {
                 commit: jest.fn(),
+                state: {
+                    configuration: { project_id, user_id },
+                },
             } as unknown as ActionContext<RootState, RootState>;
             jest.clearAllMocks();
+
+            pinia = createTestingPinia({});
+            useStore(pinia);
         });
 
         it("when item is a file, then the delete file route is called", async () => {
@@ -55,13 +82,13 @@ describe("actions-delete", () => {
             const deleteFile = jest.spyOn(rest_querier, "deleteFile");
             mockFetchSuccess(deleteFile);
 
-            await deleteItem(context, [file_item]);
+            await deleteItem(context, {
+                item: file_item,
+                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+            });
             expect(deleteFile).toHaveBeenCalledWith(file_item);
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
-            expect(context.commit).toHaveBeenCalledWith(
-                "clipboard/emptyClipboardAfterItemDeletion",
-                file_item,
-            );
+            expect(empty_clipboard).toHaveBeenCalled();
         });
 
         it("when item is a link, then the delete link route is called", async () => {
@@ -73,12 +100,12 @@ describe("actions-delete", () => {
 
             mockFetchSuccess(jest.spyOn(rest_querier, "deleteLink"));
 
-            await deleteItem(context, [link_item]);
+            await deleteItem(context, {
+                item: link_item,
+                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+            });
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
-            expect(context.commit).toHaveBeenCalledWith(
-                "clipboard/emptyClipboardAfterItemDeletion",
-                link_item,
-            );
+            expect(empty_clipboard).toHaveBeenCalled();
         });
 
         it("when item is an embedded file, then the delete embedded file route is called", async () => {
@@ -91,13 +118,13 @@ describe("actions-delete", () => {
             const deleteEmbeddedFile = jest.spyOn(rest_querier, "deleteEmbeddedFile");
             mockFetchSuccess(deleteEmbeddedFile);
 
-            await deleteItem(context, [embedded_file_item]);
+            await deleteItem(context, {
+                item: embedded_file_item,
+                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+            });
             expect(deleteEmbeddedFile).toHaveBeenCalledWith(embedded_file_item);
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
-            expect(context.commit).toHaveBeenCalledWith(
-                "clipboard/emptyClipboardAfterItemDeletion",
-                embedded_file_item,
-            );
+            expect(empty_clipboard).toHaveBeenCalled();
         });
 
         it("when item is a wiki, then the delete wiki route is called", async () => {
@@ -112,13 +139,14 @@ describe("actions-delete", () => {
 
             const additional_options = { delete_associated_wiki_page: true };
 
-            await deleteItem(context, [wiki_item, additional_options]);
+            await deleteItem(context, {
+                item: wiki_item,
+                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                additional_wiki_options: additional_options,
+            });
             expect(deleteWiki).toHaveBeenCalledWith(wiki_item, additional_options);
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
-            expect(context.commit).toHaveBeenCalledWith(
-                "clipboard/emptyClipboardAfterItemDeletion",
-                wiki_item,
-            );
+            expect(empty_clipboard).toHaveBeenCalled();
         });
 
         it("when item is an empty document, then the delete empty document route is called", async () => {
@@ -131,13 +159,13 @@ describe("actions-delete", () => {
             const deleteEmptyDocument = jest.spyOn(rest_querier, "deleteEmptyDocument");
             mockFetchSuccess(deleteEmptyDocument);
 
-            await deleteItem(context, [empty_doc_item]);
+            await deleteItem(context, {
+                item: empty_doc_item,
+                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+            });
             expect(deleteEmptyDocument).toHaveBeenCalledWith(empty_doc_item);
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
-            expect(context.commit).toHaveBeenCalledWith(
-                "clipboard/emptyClipboardAfterItemDeletion",
-                empty_doc_item,
-            );
+            expect(empty_clipboard).toHaveBeenCalled();
         });
 
         it("when item is a folder, then the delete folder route is called", async () => {
@@ -150,13 +178,13 @@ describe("actions-delete", () => {
             const deleteFolder = jest.spyOn(rest_querier, "deleteFolder");
             mockFetchSuccess(deleteFolder);
 
-            await deleteItem(context, [folder_item]);
+            await deleteItem(context, {
+                item: folder_item,
+                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+            });
             expect(deleteFolder).toHaveBeenCalledWith(folder_item);
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
-            expect(context.commit).toHaveBeenCalledWith(
-                "clipboard/emptyClipboardAfterItemDeletion",
-                folder_item,
-            );
+            expect(empty_clipboard).toHaveBeenCalled();
         });
 
         it("deletes the given item and removes it from the tree view", async () => {
@@ -168,17 +196,17 @@ describe("actions-delete", () => {
 
             mockFetchSuccess(jest.spyOn(rest_querier, "deleteFile"));
 
-            await deleteItem(context, [item_to_delete]);
+            await deleteItem(context, {
+                item: item_to_delete,
+                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+            });
 
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
                 item_to_delete,
             );
-            expect(context.commit).toHaveBeenCalledWith(
-                "clipboard/emptyClipboardAfterItemDeletion",
-                item_to_delete,
-            );
+            expect(empty_clipboard).toHaveBeenCalled();
         });
 
         it("display error if something wrong happens", async () => {
@@ -192,7 +220,10 @@ describe("actions-delete", () => {
                 status: 400,
             });
 
-            await deleteItem(context, [folder_item]);
+            await deleteItem(context, {
+                item: folder_item,
+                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+            });
 
             expect(context.commit).toHaveBeenCalledWith(
                 "error/setModalError",
@@ -216,7 +247,10 @@ describe("actions-delete", () => {
                 },
             });
 
-            await deleteItem(context, [folder_item]);
+            await deleteItem(context, {
+                item: folder_item,
+                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+            });
 
             expect(context.commit).toHaveBeenCalledWith("error/setModalError", "not found");
             expect(context.commit).toHaveBeenCalledWith("removeItemFromFolderContent", folder_item);

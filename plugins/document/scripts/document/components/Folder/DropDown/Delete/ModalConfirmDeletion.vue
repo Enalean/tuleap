@@ -115,6 +115,9 @@ import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { useRouter } from "../../../../helpers/use-router";
+import { useClipboardStore } from "../../../../stores/clipboard";
+import { useStore } from "vuex";
+import type { ConfigurationState } from "../../../../store/configuration";
 
 const props = defineProps<{ item: Item }>();
 
@@ -136,6 +139,12 @@ const { showPostDeletionNotification, updateCurrentlyPreviewedItem } = useMutati
     "updateCurrentlyPreviewedItem",
 ]);
 const { resetModalError } = useNamespacedMutations("error", ["resetModalError"]);
+
+const { project_id, user_id } = useNamespacedState<
+    Pick<ConfigurationState, "project_id" | "user_id">
+>("configuration", ["project_id", "user_id"]);
+
+const clipboard = useClipboardStore(useStore(), project_id.value, user_id.value);
 
 const modal = ref<Modal | null>(null);
 
@@ -186,7 +195,11 @@ async function doDeleteItem(): Promise<void> {
     const deleted_item_parent_id = props.item.parent_id;
     is_item_being_deleted.value = true;
 
-    await deleteItem([props.item, additional_options.value]);
+    await deleteItem({
+        item: props.item,
+        clipboard,
+        additional_wiki_options: additional_options.value,
+    });
 
     if (!has_modal_error.value && modal.value && deleted_item_parent_id) {
         showPostDeletionNotification();
