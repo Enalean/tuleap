@@ -18,27 +18,66 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact;
 
-use Mockery;
+use Tracker_UserWithReadAllPermission;
+use Tracker_Workflow_WorkflowUser;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\User\TuleapFunctionsUser;
 
-class PermissionsCacheTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PermissionsCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItUsesCacheWhenPossible(): void
     {
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(102);
+        $artifact = ArtifactTestBuilder::anArtifact(102)->build();
+        $user     = UserTestBuilder::aUser()->withId(101)->build();
 
-        $user = Mockery::mock(\PFUser::class);
+        $permission_checker = $this->createMock(\Tracker_Permission_PermissionChecker::class);
 
-        $permission_checker = Mockery::mock(\Tracker_Permission_PermissionChecker::class);
-        $user->shouldReceive('getId')->andReturn(1);
-
-        $permission_checker->shouldReceive('userCanView')->withArgs([$user, $artifact])->once()->andReturn(true);
+        $permission_checker->expects(self::once())->method('userCanView')->with($user, $artifact)->willReturn(true);
 
         PermissionsCache::userCanView($artifact, $user, $permission_checker);
         PermissionsCache::userCanView($artifact, $user, $permission_checker);
+    }
+
+    public function testItAlwaysReturnsTrueForWorkflowUser(): void
+    {
+        $artifact = ArtifactTestBuilder::anArtifact(102)->build();
+        $user     = new Tracker_Workflow_WorkflowUser();
+
+        $permission_checker = $this->createMock(\Tracker_Permission_PermissionChecker::class);
+
+        self::assertTrue(
+            PermissionsCache::userCanView($artifact, $user, $permission_checker),
+        );
+    }
+
+    public function testItAlwaysReturnsTrueForFunctionsUser(): void
+    {
+        $artifact = ArtifactTestBuilder::anArtifact(102)->build();
+        $user     = new TuleapFunctionsUser();
+
+        $permission_checker = $this->createMock(\Tracker_Permission_PermissionChecker::class);
+
+        self::assertTrue(
+            PermissionsCache::userCanView($artifact, $user, $permission_checker),
+        );
+    }
+
+    public function testItAlwaysReturnsTrueForReadAllPermissionsUser(): void
+    {
+        $artifact = ArtifactTestBuilder::anArtifact(102)->build();
+        $user     = new Tracker_UserWithReadAllPermission(
+            UserTestBuilder::aUser()->build(),
+        );
+
+        $permission_checker = $this->createMock(\Tracker_Permission_PermissionChecker::class);
+
+        self::assertTrue(
+            PermissionsCache::userCanView($artifact, $user, $permission_checker),
+        );
     }
 }

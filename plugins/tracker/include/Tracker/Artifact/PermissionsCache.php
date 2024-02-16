@@ -18,14 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
 use Tracker_Permission_PermissionChecker;
 use Tracker_UserWithReadAllPermission;
+use Tracker_Workflow_WorkflowUser;
 use Tuleap\User\TuleapFunctionsUser;
 
-class PermissionsCache
+final class PermissionsCache
 {
     /**
      * @var bool[][]
@@ -42,6 +45,10 @@ class PermissionsCache
         }
 
         if ($user instanceof TuleapFunctionsUser) {
+            return true;
+        }
+
+        if ($user instanceof Tracker_Workflow_WorkflowUser) {
             return true;
         }
 
