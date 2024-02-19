@@ -24,9 +24,9 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\Test\\": ["../tests/lib/",  "../tests/integration/tests"],
+      "Tuleap\\Test\\": ["../tests/lib/"],
       "TuleapCodingStandard\\": ["../tests/phpcs/TuleapCodingStandard", "../tests/phpcs/tests/"],
-      "Tuleap\\": ["../tests/unit/common"],
+      "Tuleap\\": ["../tests/unit/common", "../tests/integration/tests"],
       "TuleapCfg\\": ["../tests/unit/tuleap-cfg"],
       "TuleapDev\\": ["../tools/utils"]
     },

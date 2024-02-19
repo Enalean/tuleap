@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace integration\tests\Project\Admin\History;
+namespace Tuleap\Project\Admin\History;
 
 use ProjectHistoryDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-class ProjectHistoryDaoTest extends TestIntegrationTestCase
+final class ProjectHistoryDaoTest extends TestIntegrationTestCase
 {
     private \Project $project;
     private \PFUser $project_admin;

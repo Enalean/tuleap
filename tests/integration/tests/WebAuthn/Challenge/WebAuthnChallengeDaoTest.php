@@ -20,14 +20,13 @@
 
 declare(strict_types=1);
 
-namespace integration\tests\WebAuthn\Challenge;
+namespace Tuleap\WebAuthn\Challenge;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\WebAuthn\Challenge\WebAuthnChallengeDao;
 
-final class WebAuthnOptionsDaoTest extends TestIntegrationTestCase
+final class WebAuthnChallengeDaoTest extends TestIntegrationTestCase
 {
     private WebAuthnChallengeDao $dao;
     private EasyDB $db;
