@@ -46,6 +46,7 @@ import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { fetchAllPullRequests } from "../../api/tuleap-rest-querier";
 import {
     DISPLAY_TULEAP_API_ERROR,
+    PULL_REQUEST_SORT_ORDER,
     REPOSITORY_ID,
     SHOW_CLOSED_PULL_REQUESTS,
 } from "../../injection-symbols";
@@ -57,6 +58,7 @@ import PullRequestsListEmptyState from "./PullRequestsListEmptyState.vue";
 const repository_id = strictInject(REPOSITORY_ID);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const are_closed_pull_requests_shown = strictInject(SHOW_CLOSED_PULL_REQUESTS);
+const sort_direction = strictInject(PULL_REQUEST_SORT_ORDER);
 
 const pull_requests: Ref<readonly PullRequest[]> = ref([]);
 const is_loading_pull_requests = ref(true);
@@ -72,6 +74,7 @@ const loadPullRequests = (): void => {
         repository_id,
         props.filters_store.getFilters().value,
         are_closed_pull_requests_shown.value,
+        sort_direction.value,
     ).match((all_pull_requests) => {
         pull_requests.value = all_pull_requests;
 
@@ -80,7 +83,11 @@ const loadPullRequests = (): void => {
 };
 
 watch(
-    () => [props.filters_store.getFilters().value.length, are_closed_pull_requests_shown.value],
+    () => [
+        props.filters_store.getFilters().value.length,
+        are_closed_pull_requests_shown.value,
+        sort_direction.value,
+    ],
     loadPullRequests,
     { immediate: true },
 );

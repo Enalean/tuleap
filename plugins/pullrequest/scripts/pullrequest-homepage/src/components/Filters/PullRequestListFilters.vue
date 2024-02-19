@@ -34,7 +34,10 @@
                     {{ $gettext("Clear filters") }}
                 </button>
             </div>
-            <closed-pull-requests-filter-switch />
+            <div class="pull-requests-homepage-display-buttons">
+                <closed-pull-requests-filter-switch />
+                <pull-requests-sort-order />
+            </div>
         </div>
         <div class="pull-requests-homepage-filters">
             <filter-badge
@@ -57,6 +60,7 @@ import { LabelsSelectorEntry } from "./Labels/LabelsSelectorEntry";
 import type { StoreListFilters } from "./ListFiltersStore";
 import ClosedPullRequestsFilterSwitch from "./Status/ClosedPullRequestsFilterSwitch.vue";
 import FilterBadge from "./FilterBadge.vue";
+import PullRequestsSortOrder from "./PullRequestsSortOrder.vue";
 
 const { $gettext } = useGettext();
 
@@ -77,7 +81,6 @@ const selectors_entries = [
 <style lang="scss">
 .pull-requests-homepage-filters-buttons {
     display: flex;
-    align-items: center;
     justify-content: space-between;
 }
 
@@ -123,5 +126,12 @@ const selectors_entries = [
 
 .pull-request-autocompleter-badge-disabled {
     opacity: 0.5;
+}
+
+.pull-requests-homepage-display-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--tlp-large-spacing);
 }
 </style>

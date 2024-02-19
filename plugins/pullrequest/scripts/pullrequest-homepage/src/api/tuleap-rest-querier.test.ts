@@ -32,6 +32,7 @@ import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { UserStub } from "../../tests/stubs/UserStub";
 import { AuthorFilterStub } from "../../tests/stubs/AuthorFilterStub";
 import { ProjectLabelStub } from "../../tests/stubs/ProjectLabelStub";
+import { SORT_DESCENDANT } from "../injection-symbols";
 
 const repository_id = 10;
 const pull_request_id = 2;
@@ -64,6 +65,7 @@ const users_collection: User[] = [
 ];
 
 const are_closed_pull_requests_shown = false;
+const sort_order = SORT_DESCENDANT;
 
 describe("tuleap-rest-querier", () => {
     describe("fetchAllPullRequests", () => {
@@ -75,6 +77,7 @@ describe("tuleap-rest-querier", () => {
                 repository_id,
                 [AuthorFilterStub.fromAuthor(john_doe)],
                 are_closed_pull_requests_shown,
+                sort_order,
             );
             if (!result.isOk()) {
                 throw new Error("Expected an OK");
@@ -85,6 +88,7 @@ describe("tuleap-rest-querier", () => {
                 {
                     params: {
                         limit: 50,
+                        order: sort_order,
                         query: JSON.stringify({
                             status: "open",
                             authors: [{ id: john_doe.id }],
