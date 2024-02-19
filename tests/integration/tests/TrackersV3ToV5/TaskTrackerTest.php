@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tests\Integration\TrackersV3ToV5;
+namespace Tuleap\TrackersV3ToV5;
 
 use ArtifactType;
 use ProjectManager;

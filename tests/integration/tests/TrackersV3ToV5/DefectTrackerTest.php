@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tests\Integration\TrackersV3ToV5;
+namespace Tuleap\TrackersV3ToV5;
 
 use ArtifactType;
 use ProjectManager;
@@ -43,7 +43,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-class DefectTrackerTest extends TestIntegrationTestCase
+final class DefectTrackerTest extends TestIntegrationTestCase
 {
     use GlobalLanguageMock;
 
