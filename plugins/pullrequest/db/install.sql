@@ -14,7 +14,9 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_review (
     status VARCHAR(1) NOT NULL DEFAULT 'R',
     merge_status INT(2) NOT NULL,
     INDEX idx_pr_user_id(user_id),
-    INDEX idx_pr_repository_id(repository_id)
+    INDEX idx_pr_repository_id(repository_id),
+    FULLTEXT INDEX idx_pr_title(title),
+    FULLTEXT INDEX idx_pr_description(description)
 );
 
 CREATE TABLE IF NOT EXISTS plugin_pullrequest_git_reference (
