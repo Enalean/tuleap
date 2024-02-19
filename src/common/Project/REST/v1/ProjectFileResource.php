@@ -25,6 +25,12 @@ namespace Tuleap\Project\REST\v1;
 use DateTimeImmutable;
 use LogicException;
 use Luracast\Restler\RestException;
+use Tuleap\Project\Registration\AnonymousNotAllowedException;
+use Tuleap\Project\Registration\LimitedToSiteAdministratorsException;
+use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
+use Tuleap\Project\Registration\MaxNumberOfProjectReachedForUserException;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\RestrictedUsersNotAllowedException;
 use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 use Tuleap\Project\Registration\Template\Upload\FileOngoingUploadDao;
 use Tuleap\Project\Registration\Template\Upload\ProjectFileToUploadCreator;
@@ -72,9 +78,20 @@ final class ProjectFileResource extends AuthenticatedResource
             throw new LogicException('This route not should be called because the feature flag is disabled');
         }
 
+        $user_registration_checker = new ProjectRegistrationUserPermissionChecker(new \ProjectDao());
+
         $this->checkAccess();
+        $current_user = UserManager::instance()->getCurrentUser();
+        try {
+            $user_registration_checker->checkUserCreateAProject(
+                $current_user
+            );
+        } catch (MaxNumberOfProjectReachedForPlatformException | MaxNumberOfProjectReachedForUserException | LimitedToSiteAdministratorsException | AnonymousNotAllowedException | RestrictedUsersNotAllowedException $e) {
+            throw new RestException(403, $e->getMessage());
+        }
+
+
         $this->optionsFiles();
-        $current_user            = UserManager::instance()->getCurrentUser();
         $file_ongoing_upload_dao = new FileOngoingUploadDao();
         $file_creator            =
             new ProjectFileToUploadCreator(
