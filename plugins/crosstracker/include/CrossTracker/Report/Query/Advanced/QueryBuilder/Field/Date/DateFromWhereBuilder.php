@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Date;
 
-use DateTime;
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
@@ -214,18 +213,18 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
             $min_wrapper = new SimpleValueWrapper($min_wrapper->getValue()->format(DateFormat::DATE));
         }
         assert($min_wrapper instanceof SimpleValueWrapper);
-        $min_value = DateTime::createFromFormat(DateFormat::DATE, (string) $min_wrapper->getValue());
+        $min_value = $this->date_time_value_rounder->getFlooredTimestampFromDate((string) $min_wrapper->getValue());
 
         $max_wrapper = $value_wrapper->getMaxValue();
         if ($max_wrapper instanceof CurrentDateTimeValueWrapper) {
             $max_wrapper = new SimpleValueWrapper($max_wrapper->getValue()->format(DateFormat::DATE));
         }
         assert($max_wrapper instanceof SimpleValueWrapper);
-        $max_value = DateTime::createFromFormat(DateFormat::DATE, (string) $max_wrapper->getValue());
+        $max_value = $this->date_time_value_rounder->getCeiledTimestampFromDate((string) $max_wrapper->getValue());
 
         return new ParametrizedWhere(
             "$changeset_value_date_alias.value BETWEEN ? AND ?",
-            [$min_value->getTimestamp(), $max_value->getTimestamp()]
+            [$min_value, $max_value]
         );
     }
 
