@@ -26,6 +26,7 @@ import { Fault } from "@tuleap/fault";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import {
+    injected_pull_requests_sort_order,
     injected_repository_id,
     injected_show_closed_pull_requests,
     StubInjectionSymbols,
@@ -36,6 +37,7 @@ import type { StoreListFilters } from "../Filters/ListFiltersStore";
 import { ListFiltersStore } from "../Filters/ListFiltersStore";
 import { AuthorFilterStub } from "../../../tests/stubs/AuthorFilterStub";
 import { UserStub } from "../../../tests/stubs/UserStub";
+import { SORT_ASCENDANT, SORT_DESCENDANT } from "../../injection-symbols";
 
 describe("PullRequestsList", () => {
     let filters_store: StoreListFilters;
@@ -83,6 +85,7 @@ describe("PullRequestsList", () => {
             injected_repository_id,
             [],
             injected_show_closed_pull_requests.value,
+            injected_pull_requests_sort_order.value,
         );
 
         const filter = AuthorFilterStub.fromAuthor(UserStub.withIdAndName(102, "John doe"));
@@ -94,6 +97,7 @@ describe("PullRequestsList", () => {
             injected_repository_id,
             [filter],
             injected_show_closed_pull_requests.value,
+            injected_pull_requests_sort_order.value,
         );
 
         filters_store.deleteFilter(filter);
@@ -104,6 +108,7 @@ describe("PullRequestsList", () => {
             injected_repository_id,
             [],
             injected_show_closed_pull_requests.value,
+            injected_pull_requests_sort_order.value,
         );
     });
 
@@ -118,6 +123,7 @@ describe("PullRequestsList", () => {
             injected_repository_id,
             [],
             false,
+            injected_pull_requests_sort_order.value,
         );
 
         injected_show_closed_pull_requests.value = true;
@@ -128,6 +134,33 @@ describe("PullRequestsList", () => {
             injected_repository_id,
             [],
             true,
+            injected_pull_requests_sort_order.value,
+        );
+    });
+
+    it("When PULL_REQUEST_SORT_ORDER value changes, then it should reload the list of pull-requests with the current sort order", async () => {
+        vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(okAsync([]));
+
+        const wrapper = getWrapper();
+        await wrapper.vm.$nextTick();
+
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
+            injected_repository_id,
+            [],
+            injected_show_closed_pull_requests.value,
+            SORT_DESCENDANT,
+        );
+
+        injected_pull_requests_sort_order.value = SORT_ASCENDANT;
+        await wrapper.vm.$nextTick();
+
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(2);
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
+            injected_repository_id,
+            [],
+            injected_show_closed_pull_requests.value,
+            SORT_ASCENDANT,
         );
     });
 

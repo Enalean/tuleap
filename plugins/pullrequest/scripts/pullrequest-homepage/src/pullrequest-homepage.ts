@@ -27,11 +27,13 @@ import HomePage from "./components/HomePage.vue";
 import {
     BASE_URL,
     PROJECT_ID,
+    PULL_REQUEST_SORT_ORDER,
     REPOSITORY_ID,
     SHOW_CLOSED_PULL_REQUESTS,
     USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+    SORT_DESCENDANT,
 } from "./injection-symbols";
 
 export const init = async (mount_point: HTMLElement): Promise<void> => {
@@ -50,6 +52,7 @@ export const init = async (mount_point: HTMLElement): Promise<void> => {
             getDatasetItemOrThrow(mount_point, "relativeDateDisplay"),
         )
         .provide(SHOW_CLOSED_PULL_REQUESTS, ref(false))
+        .provide(PULL_REQUEST_SORT_ORDER, ref(SORT_DESCENDANT))
         .use(VueDOMPurifyHTML)
         .use(
             await initVueGettext(createGettext, (locale: string) => {
