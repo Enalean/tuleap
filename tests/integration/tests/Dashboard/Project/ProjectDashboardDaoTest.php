@@ -91,6 +91,9 @@ final class ProjectDashboardDaoTest extends TestIntegrationTestCase
 
         $this->dao->delete($project_id, $dashboard_id);
 
+        $search_not_found_row = $this->dao->searchById($dashboard_id);
+        self::assertNull($search_not_found_row);
+
         $search_all_not_found_rows = $this->dao->searchAllProjectDashboards($project_id);
         $dashboard_ids_not_found   = $this->getDashboardIds($search_all_not_found_rows);
         self::assertCount(1, $dashboard_ids_not_found);

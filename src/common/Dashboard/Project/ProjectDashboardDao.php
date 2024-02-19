@@ -47,7 +47,7 @@ class ProjectDashboardDao extends DataAccessObject
         ]);
     }
 
-    public function searchById($dashboard_id): array
+    public function searchById($dashboard_id): ?array
     {
         $sql = "SELECT *
                 FROM project_dashboards
