@@ -94,7 +94,7 @@ final readonly class DatetimeFromWhereBuilder implements ValueWrapperVisitor
 
         return match ($comparison->getType()) {
             ComparisonType::Equal              => $this->getWhereForEqual($changeset_value_datetime_alias, $value_wrapper),
-            ComparisonType::NotEqual           => throw new LogicException('Not implemented yet'),
+            ComparisonType::NotEqual           => $this->getWhereForNotEqual($changeset_value_datetime_alias, $value_wrapper),
             ComparisonType::LesserThan         => throw new LogicException('Not implemented yet'),
             ComparisonType::GreaterThan        => throw new LogicException('Not implemented yet'),
             ComparisonType::LesserThanOrEqual  => throw new LogicException('Not implemented yet'),
@@ -121,6 +121,25 @@ final readonly class DatetimeFromWhereBuilder implements ValueWrapperVisitor
 
         return new ParametrizedWhere(
             "$changeset_value_datetime_alias.value BETWEEN ? AND ?",
+            [$min_value, $max_value]
+        );
+    }
+
+    public function getWhereForNotEqual(
+        string $changeset_value_datetime_alias,
+        SimpleValueWrapper $wrapper,
+    ): ParametrizedWhere {
+        $value = $wrapper->getValue();
+
+        if ($value === '') {
+            return new ParametrizedWhere("$changeset_value_datetime_alias.value IS NOT NULL", []);
+        }
+
+        $min_value = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $value);
+        $max_value = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $value);
+
+        return new ParametrizedWhere(
+            "($changeset_value_datetime_alias.value IS NULL OR $changeset_value_datetime_alias.value NOT BETWEEN ? AND ?)",
             [$min_value, $max_value]
         );
     }

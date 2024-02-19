@@ -201,4 +201,85 @@ final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_with_date_id, $this->sprint_artifact_with_date_id], $artifacts);
     }
+
+    public function testNotEqualEmpty(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field != ''",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_date_id, $this->release_artifact_with_now_id, $this->sprint_artifact_with_date_id], $artifacts);
+    }
+
+    public function testNotEqualValue(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field != '2023-02-12 10:25'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_empty_id, $this->release_artifact_with_now_id,
+            $this->sprint_artifact_empty_id, $this->sprint_artifact_with_date_id,
+        ], $artifacts);
+    }
+
+    public function testNotEqualDate(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field != '2023-02-12'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->release_artifact_with_now_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
+
+    public function testNotEqualNow(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field != NOW()",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_empty_id, $this->release_artifact_with_date_id,
+            $this->sprint_artifact_empty_id, $this->sprint_artifact_with_date_id,
+        ], $artifacts);
+    }
+
+    public function testMultipleNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field != '' AND date_field != '2023-02-12 14:53'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_date_id, $this->release_artifact_with_now_id], $artifacts);
+    }
 }
