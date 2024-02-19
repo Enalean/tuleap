@@ -59,6 +59,8 @@ final class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_Fi
     /**
      * @return InvalidFieldChecker
      * @throws FieldIsNotSupportedForComparisonException
+     * @throws FieldIsNotSupportedAtAllException
+     * @throws ExternalFieldNotSupportedException
      */
     public function getInvalidFieldChecker(Tracker_FormElement_Field $field)
     {
@@ -192,7 +194,7 @@ final class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_Fi
 
     public function visitExternalField(TrackerFormElementExternalField $element)
     {
-        throw new FieldIsNotSupportedAtAllException($element);
+        throw new ExternalFieldNotSupportedException();
     }
 
     public function visitPriority(Tracker_FormElement_Field_Priority $field)

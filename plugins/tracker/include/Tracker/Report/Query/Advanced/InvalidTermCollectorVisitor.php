@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
@@ -46,128 +48,37 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\InvalidArtifactLinkTypeException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FlatFloatFieldChecker;
 
 /**
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
  * @template-implements TermVisitor<InvalidComparisonCollectorParameters, void>
  * @template-implements LinkConditionVisitor<InvalidComparisonCollectorParameters, void>
  */
-final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, LinkConditionVisitor
+final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, LinkConditionVisitor
 {
-    /**
-     * @var InvalidFields\EqualComparisonVisitor
-     */
-    private $field_equal_comparison_visitor;
-    /**
-     * @var InvalidFields\NotEqualComparisonVisitor
-     */
-    private $field_not_equal_comparison_visitor;
-    /**
-     * @var InvalidFields\LesserThanComparisonVisitor
-     */
-    private $field_lesser_than_comparison_visitor;
-    /**
-     * @var InvalidFields\GreaterThanComparisonVisitor
-     */
-    private $field_greater_than_comparison_visitor;
-    /**
-     * @var InvalidFields\LesserThanOrEqualComparisonVisitor
-     */
-    private $field_lesser_than_or_equal_comparison_visitor;
-    /**
-     * @var InvalidFields\GreaterThanOrEqualComparisonVisitor
-     */
-    private $field_greater_than_or_equal_comparison_visitor;
-    /**
-     * @var InvalidFields\BetweenComparisonVisitor
-     */
-    private $field_between_comparison_visitor;
-
-    /**
-     * @var InvalidFields\InComparisonVisitor
-     */
-    private $field_in_comparison_visitor;
-
-    /**
-     * @var InvalidFields\NotInComparisonVisitor
-     */
-    private $field_not_in_comparison_visitor;
-    /**
-     * @var InvalidSearchableCollectorVisitor
-     */
-    private $invalid_searchable_collector_visitor;
-    /**
-     * @var InvalidMetadata\EqualComparisonChecker
-     */
-    private $metadata_equal_comparison_checker;
-    /**
-     * @var InvalidMetadata\NotEqualComparisonChecker
-     */
-    private $metadata_not_equal_comparison_checker;
-    /**
-     * @var InvalidMetadata\LesserThanComparisonChecker
-     */
-    private $metadata_lesser_than_comparison_checker;
-    /**
-     * @var InvalidMetadata\GreaterThanComparisonChecker
-     */
-    private $metadata_greater_than_comparison_checker;
-    /**
-     * @var InvalidMetadata\LesserThanOrEqualComparisonChecker
-     */
-    private $metadata_lesser_than_or_equal_comparison_checker;
-    /**
-     * @var InvalidMetadata\BetweenComparisonChecker
-     */
-    private $metadata_between_comparison_checker;
-    /**
-     * @var InvalidMetadata\InComparisonChecker
-     */
-    private $metadata_in_comparison_checker;
-    /**
-     * @var InvalidMetadata\NotInComparisonChecker
-     */
-    private $metadata_not_in_comparison_checker;
-
     public function __construct(
-        InvalidFields\EqualComparisonVisitor $field_equal_comparison_visitor,
-        InvalidFields\NotEqualComparisonVisitor $field_not_equal_comparison_visitor,
-        InvalidFields\LesserThanComparisonVisitor $field_lesser_than_comparison_visitor,
-        InvalidFields\GreaterThanComparisonVisitor $field_greater_than_comparison_visitor,
-        InvalidFields\LesserThanOrEqualComparisonVisitor $field_lesser_than_or_equal_comparison_visitor,
-        InvalidFields\GreaterThanOrEqualComparisonVisitor $field_greater_than_or_equal_comparison_visitor,
-        InvalidFields\BetweenComparisonVisitor $field_between_comparison_visitor,
-        InvalidFields\InComparisonVisitor $field_in_comparison_visitor,
-        InvalidFields\NotInComparisonVisitor $field_not_in_comparison_visitor,
-        private readonly InvalidFields\ArtifactLink\ArtifactLinkTypeChecker $artifact_link_type_checker,
-        InvalidMetadata\EqualComparisonChecker $metadata_equal_comparison_checker,
-        InvalidMetadata\NotEqualComparisonChecker $metadata_not_equal_comparison_checker,
-        InvalidMetadata\LesserThanComparisonChecker $metadata_lesser_than_comparison_checker,
-        InvalidMetadata\GreaterThanComparisonChecker $metadata_greater_than_comparison_checker,
-        InvalidMetadata\LesserThanOrEqualComparisonChecker $metadata_lesser_than_or_equal_comparison_checker,
-        InvalidMetadata\BetweenComparisonChecker $metadata_between_comparison_checker,
-        InvalidMetadata\InComparisonChecker $metadata_in_comparison_checker,
-        InvalidMetadata\NotInComparisonChecker $metadata_not_in_comparison_checker,
-        InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
+        private InvalidFields\EqualComparisonVisitor $field_equal_comparison_visitor,
+        private InvalidFields\NotEqualComparisonVisitor $field_not_equal_comparison_visitor,
+        private InvalidFields\LesserThanComparisonVisitor $field_lesser_than_comparison_visitor,
+        private InvalidFields\GreaterThanComparisonVisitor $field_greater_than_comparison_visitor,
+        private InvalidFields\LesserThanOrEqualComparisonVisitor $field_lesser_than_or_equal_comparison_visitor,
+        private InvalidFields\GreaterThanOrEqualComparisonVisitor $field_greater_than_or_equal_comparison_visitor,
+        private InvalidFields\BetweenComparisonVisitor $field_between_comparison_visitor,
+        private InvalidFields\InComparisonVisitor $field_in_comparison_visitor,
+        private InvalidFields\NotInComparisonVisitor $field_not_in_comparison_visitor,
+        private InvalidFields\ArtifactLink\ArtifactLinkTypeChecker $artifact_link_type_checker,
+        private InvalidMetadata\EqualComparisonChecker $metadata_equal_comparison_checker,
+        private InvalidMetadata\NotEqualComparisonChecker $metadata_not_equal_comparison_checker,
+        private InvalidMetadata\LesserThanComparisonChecker $metadata_lesser_than_comparison_checker,
+        private InvalidMetadata\GreaterThanComparisonChecker $metadata_greater_than_comparison_checker,
+        private InvalidMetadata\LesserThanOrEqualComparisonChecker $metadata_lesser_than_or_equal_comparison_checker,
+        private InvalidMetadata\BetweenComparisonChecker $metadata_between_comparison_checker,
+        private InvalidMetadata\InComparisonChecker $metadata_in_comparison_checker,
+        private InvalidMetadata\NotInComparisonChecker $metadata_not_in_comparison_checker,
+        private InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
     ) {
-        $this->field_equal_comparison_visitor                   = $field_equal_comparison_visitor;
-        $this->field_not_equal_comparison_visitor               = $field_not_equal_comparison_visitor;
-        $this->field_lesser_than_comparison_visitor             = $field_lesser_than_comparison_visitor;
-        $this->field_greater_than_comparison_visitor            = $field_greater_than_comparison_visitor;
-        $this->field_lesser_than_or_equal_comparison_visitor    = $field_lesser_than_or_equal_comparison_visitor;
-        $this->field_greater_than_or_equal_comparison_visitor   = $field_greater_than_or_equal_comparison_visitor;
-        $this->field_between_comparison_visitor                 = $field_between_comparison_visitor;
-        $this->field_in_comparison_visitor                      = $field_in_comparison_visitor;
-        $this->field_not_in_comparison_visitor                  = $field_not_in_comparison_visitor;
-        $this->invalid_searchable_collector_visitor             = $invalid_searchable_collector_visitor;
-        $this->metadata_equal_comparison_checker                = $metadata_equal_comparison_checker;
-        $this->metadata_not_equal_comparison_checker            = $metadata_not_equal_comparison_checker;
-        $this->metadata_lesser_than_comparison_checker          = $metadata_lesser_than_comparison_checker;
-        $this->metadata_greater_than_comparison_checker         = $metadata_greater_than_comparison_checker;
-        $this->metadata_lesser_than_or_equal_comparison_checker = $metadata_lesser_than_or_equal_comparison_checker;
-        $this->metadata_between_comparison_checker              = $metadata_between_comparison_checker;
-        $this->metadata_in_comparison_checker                   = $metadata_in_comparison_checker;
-        $this->metadata_not_in_comparison_checker               = $metadata_not_in_comparison_checker;
     }
 
     public function collectErrors(
@@ -181,7 +92,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->field_equal_comparison_visitor,
             $this->metadata_equal_comparison_checker,
             $parameters
         );
@@ -191,7 +101,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->field_not_equal_comparison_visitor,
             $this->metadata_not_equal_comparison_checker,
             $parameters
         );
@@ -201,7 +110,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->field_lesser_than_comparison_visitor,
             $this->metadata_lesser_than_comparison_checker,
             $parameters
         );
@@ -211,7 +119,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->field_greater_than_comparison_visitor,
             $this->metadata_greater_than_comparison_checker,
             $parameters
         );
@@ -221,7 +128,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->field_lesser_than_or_equal_comparison_visitor,
             $this->metadata_lesser_than_or_equal_comparison_checker,
             $parameters
         );
@@ -231,7 +137,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->field_greater_than_or_equal_comparison_visitor,
             $this->metadata_greater_than_comparison_checker,
             $parameters
         );
@@ -241,7 +146,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->field_between_comparison_visitor,
             $this->metadata_between_comparison_checker,
             $parameters
         );
@@ -251,7 +155,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->field_in_comparison_visitor,
             $this->metadata_in_comparison_checker,
             $parameters
         );
@@ -261,7 +164,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->field_not_in_comparison_visitor,
             $this->metadata_not_in_comparison_checker,
             $parameters
         );
@@ -307,7 +209,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
 
     private function visitComparison(
         Comparison $comparison,
-        InvalidFields\IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
         InvalidMetadata\ICheckMetadataForAComparison $metadata_checker,
         InvalidComparisonCollectorParameters $parameters,
     ): void {
@@ -315,7 +216,19 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
                 $parameters,
-                $checker_provider,
+                new FlatInvalidFieldChecker(
+                    $comparison,
+                    new FlatFloatFieldChecker(),
+                    $this->field_equal_comparison_visitor,
+                    $this->field_not_equal_comparison_visitor,
+                    $this->field_lesser_than_comparison_visitor,
+                    $this->field_lesser_than_or_equal_comparison_visitor,
+                    $this->field_greater_than_comparison_visitor,
+                    $this->field_greater_than_or_equal_comparison_visitor,
+                    $this->field_between_comparison_visitor,
+                    $this->field_in_comparison_visitor,
+                    $this->field_not_in_comparison_visitor
+                ),
                 $metadata_checker,
                 $comparison
             )

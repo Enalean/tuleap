@@ -1287,6 +1287,11 @@ msgstr ""
 msgid "Export all report columns"
 msgstr ""
 
+msgid ""
+"External field types are not supported. Please refer to the documentation "
+"for the allowed types."
+msgstr ""
+
 #, php-format
 msgid "Fail to retrieve information of user having the accountId %s."
 msgstr ""
