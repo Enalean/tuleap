@@ -60,14 +60,16 @@ final class FieldFromWhereBuilderTest extends TestCase
         $db = $this->createStub(EasyDB::class);
         $db->method('escapeLikeValue')->willReturnArgument(0);
 
-        $builder = new FieldFromWhereBuilder(
+        $date_time_value_rounder = new DateTimeValueRounder();
+        $builder                 = new FieldFromWhereBuilder(
             $fields_retriever,
             RetrieveFieldTypeStub::withDetectionOfType(),
             new Numeric\NumericFromWhereBuilder(),
             new Text\TextFromWhereBuilder($db),
-            new Date\DateFromWhereBuilder(new DateTimeValueRounder()),
+            new Date\DateFromWhereBuilder($date_time_value_rounder),
+            new Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
         );
-        $field   = new Field(self::FIELD_NAME);
+        $field                   = new Field(self::FIELD_NAME);
         return $builder->getFromWhere(
             $field,
             new EqualComparison($field, $value_wrapper),
@@ -130,6 +132,27 @@ final class FieldFromWhereBuilderTest extends TestCase
         );
 
         $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('2024-02-12'));
+        self::assertNotEmpty($from_where->getFrom());
+    }
+
+    public function testItReturnsSQLForDatetimeField(): void
+    {
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementDateFieldBuilder::aDateField(253)
+                ->withName(self::FIELD_NAME)
+                ->withTime()
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+            TrackerFormElementDateFieldBuilder::aDateField(751)
+                ->withName(self::FIELD_NAME)
+                ->withTime()
+                ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, true)
+                ->build()
+        );
+
+        $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('2024-02-12 10:25'));
         self::assertNotEmpty($from_where->getFrom());
     }
 

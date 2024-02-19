@@ -316,7 +316,8 @@ final class ArtifactReportFactoryInstantiator
                 $form_element_factory,
                 new Field\Numeric\NumericFromWhereBuilder(),
                 new Field\Text\TextFromWhereBuilder($db),
-                new Field\Date\DateFromWhereBuilder(new DateTimeValueRounder()),
+                new Field\Date\DateFromWhereBuilder($date_time_value_rounder),
+                new Field\Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
             ),
         );
 

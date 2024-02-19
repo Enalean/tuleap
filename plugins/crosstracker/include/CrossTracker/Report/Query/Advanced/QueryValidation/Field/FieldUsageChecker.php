@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -67,7 +68,7 @@ final class FieldUsageChecker
         }
 
         return DuckTypedField::build(
-            $this->retrieve_field_type,
+            new FieldTypeRetrieverWrapper($this->retrieve_field_type),
             $field->getName(),
             $fields_user_can_read,
             $tracker_ids,

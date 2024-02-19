@@ -58,6 +58,12 @@ final class DuckTypedFieldTypeTest extends TestCase
         self::assertSame(DuckTypedFieldType::DATE, $result->unwrapOr(null));
     }
 
+    public function testDatetimeBecomesDatetime(): void
+    {
+        $result = DuckTypedFieldType::fromString(FieldTypeRetrieverWrapper::FIELD_DATETIME_TYPE);
+        self::assertSame(DuckTypedFieldType::DATETIME, $result->unwrapOr(null));
+    }
+
     public static function generateTypes(): iterable
     {
         yield [Tracker_FormElementFactory::FIELD_COMPUTED];

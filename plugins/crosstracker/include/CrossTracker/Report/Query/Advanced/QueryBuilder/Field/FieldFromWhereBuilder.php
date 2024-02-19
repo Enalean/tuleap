@@ -24,7 +24,9 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedFieldType;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Date\DateFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Datetime\DatetimeFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Numeric\NumericFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Text\TextFromWhereBuilder;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -34,14 +36,15 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-final class FieldFromWhereBuilder
+final readonly class FieldFromWhereBuilder
 {
     public function __construct(
-        private readonly RetrieveUsedFields $retrieve_used_fields,
-        private readonly RetrieveFieldType $retrieve_field_type,
-        private readonly NumericFromWhereBuilder $numeric_builder,
-        private readonly TextFromWhereBuilder $text_builder,
-        private readonly DateFromWhereBuilder $date_builder,
+        private RetrieveUsedFields $retrieve_used_fields,
+        private RetrieveFieldType $retrieve_field_type,
+        private NumericFromWhereBuilder $numeric_builder,
+        private TextFromWhereBuilder $text_builder,
+        private DateFromWhereBuilder $date_builder,
+        private DatetimeFromWhereBuilder $datetime_builder,
     ) {
     }
 
@@ -65,7 +68,7 @@ final class FieldFromWhereBuilder
             }
         }
         return DuckTypedField::build(
-            $this->retrieve_field_type,
+            new FieldTypeRetrieverWrapper($this->retrieve_field_type),
             $field->getName(),
             $fields_user_can_read,
             $tracker_ids,
@@ -83,6 +86,7 @@ final class FieldFromWhereBuilder
             DuckTypedFieldType::NUMERIC => $this->numeric_builder->getFromWhere($field, $comparison),
             DuckTypedFieldType::TEXT => $this->text_builder->getFromWhere($field, $comparison),
             DuckTypedFieldType::DATE => $this->date_builder->getFromWhere($field, $comparison),
+            DuckTypedFieldType::DATETIME => $this->datetime_builder->getFromWhere($field, $comparison),
         };
     }
 }
