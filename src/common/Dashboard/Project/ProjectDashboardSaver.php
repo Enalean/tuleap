@@ -85,7 +85,7 @@ class ProjectDashboardSaver
             throw new UserCanNotUpdateProjectDashboardException();
         }
 
-        if (empty($this->dao->searchById($dashboard_id))) {
+        if ($this->dao->searchById($dashboard_id) === null) {
             throw new DashboardDoesNotExistException();
         }
     }
