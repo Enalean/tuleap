@@ -48,6 +48,7 @@ final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
     private int $release_artifact_with_now_id;
     private int $sprint_artifact_empty_id;
     private int $sprint_artifact_with_date_id;
+    private int $sprint_artifact_with_future_id;
 
     protected function setUp(): void
     {
@@ -84,17 +85,19 @@ final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
             ProjectUGroup::PROJECT_MEMBERS
         );
 
-        $this->release_artifact_empty_id     = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->release_artifact_with_date_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->release_artifact_with_now_id  = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->sprint_artifact_empty_id      = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->sprint_artifact_with_date_id  = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
+        $this->release_artifact_empty_id      = $tracker_builder->buildArtifact($this->release_tracker->getId());
+        $this->release_artifact_with_date_id  = $tracker_builder->buildArtifact($this->release_tracker->getId());
+        $this->release_artifact_with_now_id   = $tracker_builder->buildArtifact($this->release_tracker->getId());
+        $this->sprint_artifact_empty_id       = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
+        $this->sprint_artifact_with_date_id   = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
+        $this->sprint_artifact_with_future_id = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
 
         $tracker_builder->buildLastChangeset($this->release_artifact_empty_id);
         $release_artifact_with_date_changeset = $tracker_builder->buildLastChangeset($this->release_artifact_with_date_id);
         $release_artifact_with_now_changeset  = $tracker_builder->buildLastChangeset($this->release_artifact_with_now_id);
         $tracker_builder->buildLastChangeset($this->sprint_artifact_empty_id);
-        $sprint_artifact_with_date_changeset = $tracker_builder->buildLastChangeset($this->sprint_artifact_with_date_id);
+        $sprint_artifact_with_date_changeset   = $tracker_builder->buildLastChangeset($this->sprint_artifact_with_date_id);
+        $sprint_artifact_with_future_changeset = $tracker_builder->buildLastChangeset($this->sprint_artifact_with_future_id);
 
         $tracker_builder->buildDateValue(
             $release_artifact_with_date_changeset,
@@ -110,6 +113,11 @@ final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
             $sprint_artifact_with_date_changeset,
             $sprint_date_field_id,
             (new DateTime('2023-02-12 14:53'))->getTimestamp()
+        );
+        $tracker_builder->buildDateValue(
+            $sprint_artifact_with_future_changeset,
+            $sprint_date_field_id,
+            (new DateTime('tomorrow'))->getTimestamp()
         );
     }
 
@@ -213,8 +221,11 @@ final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
             $this->project_member
         );
 
-        self::assertCount(3, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_with_date_id, $this->release_artifact_with_now_id, $this->sprint_artifact_with_date_id], $artifacts);
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_with_date_id, $this->release_artifact_with_now_id,
+            $this->sprint_artifact_with_date_id, $this->sprint_artifact_with_future_id,
+        ], $artifacts);
     }
 
     public function testNotEqualValue(): void
@@ -228,10 +239,10 @@ final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
             $this->project_member
         );
 
-        self::assertCount(4, $artifacts);
+        self::assertCount(5, $artifacts);
         self::assertEqualsCanonicalizing([
             $this->release_artifact_empty_id, $this->release_artifact_with_now_id,
-            $this->sprint_artifact_empty_id, $this->sprint_artifact_with_date_id,
+            $this->sprint_artifact_empty_id, $this->sprint_artifact_with_date_id, $this->sprint_artifact_with_future_id,
         ], $artifacts);
     }
 
@@ -246,8 +257,11 @@ final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
             $this->project_member
         );
 
-        self::assertCount(3, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->release_artifact_with_now_id, $this->sprint_artifact_empty_id], $artifacts);
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_empty_id, $this->release_artifact_with_now_id,
+            $this->sprint_artifact_empty_id, $this->sprint_artifact_with_future_id,
+        ], $artifacts);
     }
 
     public function testNotEqualNow(): void
@@ -261,10 +275,10 @@ final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
             $this->project_member
         );
 
-        self::assertCount(4, $artifacts);
+        self::assertCount(5, $artifacts);
         self::assertEqualsCanonicalizing([
             $this->release_artifact_empty_id, $this->release_artifact_with_date_id,
-            $this->sprint_artifact_empty_id, $this->sprint_artifact_with_date_id,
+            $this->sprint_artifact_empty_id, $this->sprint_artifact_with_date_id, $this->sprint_artifact_with_future_id,
         ], $artifacts);
     }
 
@@ -279,8 +293,8 @@ final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
             $this->project_member
         );
 
-        self::assertCount(2, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_with_date_id, $this->release_artifact_with_now_id], $artifacts);
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_date_id, $this->release_artifact_with_now_id, $this->sprint_artifact_with_future_id], $artifacts);
     }
 
     public function testLesserThanValue(): void
@@ -401,5 +415,131 @@ final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_with_date_id, $this->sprint_artifact_with_date_id], $artifacts);
+    }
+
+    public function testGreaterThanValue(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field > '2023-02-12 10:25'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_now_id, $this->sprint_artifact_with_date_id, $this->sprint_artifact_with_future_id], $artifacts);
+    }
+
+    public function testGreaterThanDate(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field > '2023-02-12'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_now_id, $this->sprint_artifact_with_future_id], $artifacts);
+    }
+
+    public function testGreaterThanNow(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field > NOW()",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(1, $artifacts);
+        self::assertEqualsCanonicalizing([$this->sprint_artifact_with_future_id], $artifacts);
+    }
+
+    public function testMultipleGreaterThan(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field > '2023-02-12 14:53' OR date_field > NOW()",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_now_id, $this->sprint_artifact_with_future_id], $artifacts);
+    }
+
+    public function testGreaterThanOrEqualValue(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field >= '2023-02-12 10:25'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_with_date_id, $this->release_artifact_with_now_id,
+            $this->sprint_artifact_with_date_id, $this->sprint_artifact_with_future_id,
+        ], $artifacts);
+    }
+
+    public function testGreaterThanOrEqualDate(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field >= '2023-02-12'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_with_date_id, $this->release_artifact_with_now_id,
+            $this->sprint_artifact_with_date_id, $this->sprint_artifact_with_future_id,
+        ], $artifacts);
+    }
+
+    public function testGreaterThanOrEqualNow(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field >= NOW()",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_now_id, $this->sprint_artifact_with_future_id], $artifacts);
+    }
+
+    public function testMultipleGreaterThanOrEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "date_field >= '2023-02-12 14:53' AND date_field >= NOW()",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_now_id, $this->sprint_artifact_with_future_id], $artifacts);
     }
 }
