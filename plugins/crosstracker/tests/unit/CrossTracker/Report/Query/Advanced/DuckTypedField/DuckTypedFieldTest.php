@@ -28,7 +28,6 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
@@ -70,7 +69,7 @@ final class DuckTypedFieldTest extends TestCase
     private function build(): Ok|Err
     {
         return DuckTypedField::build(
-            RetrieveFieldTypeStub::withDetectionOfType(),
+            new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType()),
             self::FIELD_NAME,
             $this->fields,
             [self::FIRST_TRACKER_ID, self::SECOND_TRACKER_ID],
@@ -154,20 +153,5 @@ final class DuckTypedFieldTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(FieldTypesAreIncompatibleFault::class, $result->error);
-    }
-
-    public function testItReturnsErrWhenFieldIsDateTime(): void
-    {
-        $this->fields = [
-            TrackerFormElementDateFieldBuilder::aDateField(145)
-                ->withName(self::FIELD_NAME)
-                ->withTime()
-                ->inTracker($this->first_tracker)
-                ->build(),
-        ];
-
-        $result = $this->build();
-        self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(FieldTypeIsNotSupportedFault::class, $result->error);
     }
 }

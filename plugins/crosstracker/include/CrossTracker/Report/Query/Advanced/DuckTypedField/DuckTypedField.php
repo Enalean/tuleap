@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_Date;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -62,12 +61,6 @@ final readonly class DuckTypedField
         $field_identifiers = [];
         foreach ($fields as $field) {
             $field_identifiers[] = DuckTypedFieldType::fromString($retrieve_field_type->getType($field))
-                ->andThen(static function (DuckTypedFieldType $type) use ($field) {
-                    if ($field instanceof Tracker_FormElement_Field_Date && $field->isTimeDisplayed()) {
-                        return Result::err(FieldTypeIsNotSupportedFault::build());
-                    }
-                    return Result::ok($type);
-                })
                 ->map(static fn(DuckTypedFieldType $type) => new FieldIdentifierProperties($field->getId(), $type));
         }
 
