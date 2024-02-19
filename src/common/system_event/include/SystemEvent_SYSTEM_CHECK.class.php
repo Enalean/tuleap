@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerter;
 use Tuleap\Queue\NbBackendWorkersConfigValidator;
 use Tuleap\Queue\WorkerAvailability;
@@ -135,7 +136,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
 
     private function warnWhenThereIsTooMuchDelayInWorkerEventsProcessing(\Psr\Log\LoggerInterface $logger): void
     {
-        $queue = (new \Tuleap\Queue\QueueFactory($logger))->getPersistentQueue(Tuleap\Queue\Worker::EVENT_QUEUE_NAME);
+        $queue = (new \Tuleap\Queue\QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()))->getPersistentQueue(Tuleap\Queue\Worker::EVENT_QUEUE_NAME);
 
         $queue_supervisor = new \Tuleap\Queue\QueueSupervisor($queue, $logger);
         $queue_supervisor->warnWhenThereIsTooMuchDelayInWorkerEventsProcessing(new DateTimeImmutable());

@@ -26,12 +26,12 @@ interface PersistentQueue
     /**
      * @throws QueueServerConnectionException
      */
-    public function pushSinglePersistentMessage(string $topic, $content): void;
+    public function pushSinglePersistentMessage(string $topic, mixed $content): void;
 
     /**
      * @psalm-param callable(string): void $callback
      */
-    public function listen($queue_id, $topic, callable $callback);
+    public function listen(string $queue_id, string $topic, callable $callback): void;
 
     public function getStatistics(): PersistentQueueStatistics;
 }

@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\REST\Artifact;
 use Luracast\Restler\RestException;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
@@ -99,7 +98,6 @@ final class PUTHandlerTest extends TestCase
                 ),
                 $this->changeset_creator,
             ),
-            new DBTransactionExecutorPassthrough(),
             $this->check_artifact_rest_update_conditions,
         );
         $put_handler->handle($this->payload, $artifact, $user, null);

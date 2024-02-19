@@ -25,8 +25,6 @@ namespace Tuleap\ProgramManagement\REST\v1;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationContentDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
@@ -234,7 +232,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             \EventManager::instance()
         );
 
-        $modifier             = new ContentModifier(
+        $modifier = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
                 $project_manager_adapter,
                 $project_access_checker,
@@ -276,24 +274,19 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $program_dao,
             $program_adapter,
         );
-        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
         $user = $user_manager->getCurrentUser();
 
         try {
             $potential_feature_id_to_add = $patch_representation->add[0]->id ?? null;
 
-            $transaction_executor->execute(
-                function () use ($modifier, $potential_feature_id_to_add, $patch_representation, $user, $id) {
-                    $modifier->modifyContent(
-                        $id,
-                        ContentChange::fromFeatureAdditionAndReorder(
-                            $potential_feature_id_to_add,
-                            FeaturesToReorderProxy::buildFromRESTRepresentation($patch_representation->order)
-                        ),
-                        UserProxy::buildFromPFUser($user)
-                    );
-                }
+            $modifier->modifyContent(
+                $id,
+                ContentChange::fromFeatureAdditionAndReorder(
+                    $potential_feature_id_to_add,
+                    FeaturesToReorderProxy::buildFromRESTRepresentation($patch_representation->order)
+                ),
+                UserProxy::buildFromPFUser($user)
             );
         } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramIncrementHasNoProgramException | ProjectIsNotAProgramException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());

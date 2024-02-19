@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,25 +16,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Queue\Noop;
+declare(strict_types=1);
 
-use Tuleap\Queue\PersistentQueueStatistics;
+namespace Tuleap\Test\Stubs\DB;
 
-class PersistentQueue implements \Tuleap\Queue\PersistentQueue
+use Tuleap\DB\CheckThereIsAnOngoingTransaction;
+
+final class CheckThereIsAnOngoingTransactionStub implements CheckThereIsAnOngoingTransaction
 {
-    public function pushSinglePersistentMessage(string $topic, mixed $content): void
+    private function __construct(private readonly bool $in_transaction)
     {
     }
 
-    public function listen(string $queue_id, string $topic, callable $callback): void
+    public static function inTransaction(): self
     {
+        return new self(true);
     }
 
-    public function getStatistics(): PersistentQueueStatistics
+    public static function notInTransaction(): self
     {
-        return PersistentQueueStatistics::emptyQueue();
+        return new self(false);
+    }
+
+    public function checkNoOngoingTransaction(): void
+    {
+        if ($this->in_transaction) {
+            throw new \RuntimeException();
+        }
     }
 }

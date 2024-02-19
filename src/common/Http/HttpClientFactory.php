@@ -28,9 +28,11 @@ use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpAsyncClient;
 use Psr\Http\Client\ClientInterface;
+use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerter;
 use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerterDAO;
 use Tuleap\Http\Client\HTTPOutboundResponseMetricCollector;
+use Tuleap\Http\Client\OngoingTransactionCheckerPlugin;
 use Tuleap\Http\Client\OutboundHTTPRequestProxy;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
@@ -96,7 +98,15 @@ class HttpClientFactory
 
         return new PluginClient(
             $client,
-            array_merge([new RedirectPlugin()], $plugins)
+            array_merge(
+                [
+                    new OngoingTransactionCheckerPlugin(
+                        new ThereIsAnOngoingTransactionChecker(),
+                    ),
+                    new RedirectPlugin(),
+                ],
+                $plugins
+            )
         );
     }
 }

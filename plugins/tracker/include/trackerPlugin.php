@@ -33,6 +33,7 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Glyph\GlyphLocation;
@@ -1813,7 +1814,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new PendingArtifactRemovalDao(),
             $logger,
             $user_manager,
-            new QueueFactory($logger),
+            new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()),
             $worker_availability,
             new ArchiveAndDeleteArtifactTaskBuilder()
         );
@@ -2576,7 +2577,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         return new JiraRunner(
             $logger,
-            new QueueFactory($logger),
+            new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()),
             new \Tuleap\Queue\WorkerAvailability(),
             new KeyFactory(),
             FromJiraTrackerCreator::build($jira_user_on_tuleap_cache),

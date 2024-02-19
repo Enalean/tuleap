@@ -819,7 +819,6 @@ class ArtifactsResource extends AuthenticatedResource
                 ),
                 $changeset_creator
             ),
-            $transaction_executor,
             $update_conditions_checker,
         );
 

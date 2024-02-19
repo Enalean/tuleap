@@ -246,9 +246,8 @@ class TrackerArtifactCreator
                 $url_mapping,
                 $tracker_import_config,
                 $context,
-                $should_add_reverse_links,
             ) {
-                $changeset = $this->changeset_creator->create(
+                return $this->changeset_creator->create(
                     $artifact,
                     $changeset_values->getFieldsData(),
                     $user,
@@ -257,15 +256,14 @@ class TrackerArtifactCreator
                     $tracker_import_config,
                     $context
                 );
-                if ($should_add_reverse_links) {
-                    $this->reverse_links_adder->addReverseLinks($user, $changeset_values, $artifact);
-                }
-
-                return $changeset;
             }
         );
         if (! $changeset_id) {
             return null;
+        }
+
+        if ($should_add_reverse_links) {
+            $this->reverse_links_adder->addReverseLinks($user, $changeset_values, $artifact);
         }
 
         $changeset = $this->createNewChangeset($changeset_id, $artifact, $user);

@@ -427,7 +427,6 @@ final class tracker_functionsPlugin extends Plugin
                 ),
                 $changeset_creator
             ),
-            $transaction_executor,
             $update_conditions_checker,
         );
     }

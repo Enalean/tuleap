@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
 use Tuleap\Dashboard\Project\DisplayCreatedProjectModalPresenter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
@@ -407,7 +408,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $project_manager,
             new MirroredTimeboxesSynchronizationDispatcher(
                 $logger,
-                new QueueFactory($logger),
+                new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()),
             ),
             new VisibleTeamSearcher(
                 new ProgramDaoProject(),
@@ -890,7 +891,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new ProgramIncrementsDAO(),
             new ProgramIncrementCreationDispatcher(
                 $logger,
-                new QueueFactory($logger),
+                new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()),
                 new ProgramIncrementCreationProcessorBuilder()
             )
         );
@@ -911,7 +912,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $mirrored_timeboxes_dao         = new MirroredTimeboxesDao();
         $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
         $transaction_executor           = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
-        $queue_factory                  = new QueueFactory($logger);
+        $queue_factory                  = new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker());
         $form_element_factory           = \Tracker_FormElementFactory::instance();
         $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
         $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
@@ -1276,7 +1277,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 new UserIsProgramAdminVerifier($user_manager_adapter)
             ),
             new ArtifactsExplicitTopBacklogDAO(),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeaturesRankOrderer($priority_manager),
             new FeatureHasPlannedUserStoriesVerifier(
                 $artifacts_linked_to_parent_dao,
