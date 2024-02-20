@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template\Upload;
 
+use DateTimeImmutable;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tus\TusFileInformation;
 
-final class FileOngoingUploadDao extends DataAccessObject implements SaveFileUpload
+final class FileOngoingUploadDao extends DataAccessObject implements SaveFileUpload, SearchFileUpload, DeleteFileUpload
 {
     public function saveFileOnGoingUpload(InsertFileToUpload $file_to_upload): int
     {
@@ -37,5 +39,22 @@ final class FileOngoingUploadDao extends DataAccessObject implements SaveFileUpl
                 'expiration_date' => $file_to_upload->expiration_date,
             ]
         );
+    }
+
+    public function searchFileOngoingUploadedByIdAndUserIdAndExpirationDate(int $id, int $user_id, DateTimeImmutable $current_time): array
+    {
+        return $this->getDB()->row(
+            'SELECT id, file_size, file_name FROM project_file_upload WHERE id = ? AND user_id = ? AND expiration_date > ?',
+            $id,
+            $user_id,
+            $current_time->getTimestamp()
+        );
+    }
+
+    public function deleteById(TusFileInformation $file_information): void
+    {
+        $this->getDB()->delete('project_file_upload', [
+            'id' => $file_information->getID(),
+        ]);
     }
 }

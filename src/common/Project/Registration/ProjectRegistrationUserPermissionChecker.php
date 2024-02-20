@@ -29,20 +29,15 @@ use Project;
 use ProjectDao;
 use ProjectManager;
 
-class ProjectRegistrationUserPermissionChecker
+class ProjectRegistrationUserPermissionChecker implements CheckProjectRegistrationUserPermission
 {
-    /**
-     * @var ProjectDao
-     */
-    private $project_dao;
-
-    public function __construct(ProjectDao $project_dao)
+    public function __construct(private ProjectDao $project_dao)
     {
-        $this->project_dao = $project_dao;
     }
 
     /**
      * @throws MaxNumberOfProjectReachedForPlatformException
+     * @throws MaxNumberOfProjectReachedForUserException
      * @throws LimitedToSiteAdministratorsException
      * @throws AnonymousNotAllowedException
      * @throws RestrictedUsersNotAllowedException
