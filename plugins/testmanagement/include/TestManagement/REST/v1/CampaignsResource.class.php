@@ -118,7 +118,6 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -143,7 +142,6 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChan
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
-use Tuleap\Tracker\Artifact\Creation\ReverseLinksAdder;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
@@ -399,11 +397,6 @@ class CampaignsResource
             new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
             $this->formelement_factory,
             SubmissionPermissionVerifier::instance(),
-            $transaction_executor,
-            new ReverseLinksAdder(
-                new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
-                $changeset_creator,
-            ),
         );
 
         $this->execution_creator = new ExecutionCreator(

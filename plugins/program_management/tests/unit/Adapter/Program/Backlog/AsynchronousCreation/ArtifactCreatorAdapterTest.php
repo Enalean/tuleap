@@ -134,6 +134,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                     bool $send_notification,
                     bool $should_visit_be_recorded,
                     ChangesetValidationContext $context,
+                    bool $should_add_reverse_links,
                 ): ?Artifact => match (true) {
                     $changeset_values->getFieldsData() === [
                         self::ARTIFACT_LINK_ID => [

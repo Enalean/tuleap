@@ -80,6 +80,7 @@ class Tracker_Action_CreateArtifact
             true,
             true,
             new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+            false,
         );
     }
 

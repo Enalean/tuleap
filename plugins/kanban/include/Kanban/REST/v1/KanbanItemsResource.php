@@ -39,52 +39,27 @@ use Tracker_FormElementFactory;
 use Tracker_Semantic_Status;
 use TrackerFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\Search\ItemToIndexQueueEventBased;
-use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
-use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
-use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
-use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
-use Tuleap\Tracker\Artifact\Creation\ReverseLinksAdder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
-use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
-use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
-use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use UserManager;
 use WrapperLogger;
 
@@ -101,9 +76,6 @@ final class KanbanItemsResource extends AuthenticatedResource
 
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
-
-    /** @var TimeInfoFactory */
-    private $time_info_factory;
 
     /** @var KanbanStatisticsAggregator */
     private $statistics_aggregator;
@@ -125,12 +97,11 @@ final class KanbanItemsResource extends AuthenticatedResource
         );
 
         $kanban_item_dao                   = new KanbanItemDao();
-        $this->time_info_factory           = new TimeInfoFactory($kanban_item_dao);
         $this->statistics_aggregator       = new KanbanStatisticsAggregator(EventManager::instance());
         $color_builder                     = new BackgroundColorBuilder(new BindDecoratorRetriever());
         $this->item_representation_builder = new ItemRepresentationBuilder(
             new KanbanItemManager($kanban_item_dao),
-            $this->time_info_factory,
+            new TimeInfoFactory($kanban_item_dao),
             UserManager::instance(),
             $color_builder
         );
@@ -183,54 +154,7 @@ final class KanbanItemsResource extends AuthenticatedResource
             $tracker->getProject()
         );
 
-        $usage_dao            = new ArtifactLinksUsageDao();
-        $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($this->form_element_factory);
-        $event_dispatcher     = EventManager::instance();
-        $transaction_executor = new DBTransactionExecutorWithConnection(
-            DBFactory::getMainTuleapDBConnection()
-        );
-
-        $changeset_creator = new NewChangesetCreator(
-            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                $this->form_element_factory,
-                new ArtifactLinkValidator(
-                    $this->artifact_factory,
-                    new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao,
-                    $event_dispatcher,
-                ),
-                new WorkflowUpdateChecker(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(\TransitionFactory::instance(), new SimpleWorkflowDao()),
-                            new TransitionExtractor()
-                        ),
-                        FrozenFieldsRetriever::instance(),
-                    )
-                )
-            ),
-            $fields_retriever,
-            $event_dispatcher,
-            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->form_element_factory),
-            $transaction_executor,
-            ArtifactChangesetSaver::build(),
-            new ParentLinkAction($this->artifact_factory),
-            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
-            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
-            new ChangesetValueSaver(),
-            \WorkflowFactory::instance(),
-            new CommentCreator(
-                new \Tracker_Artifact_Changeset_CommentDao(),
-                \ReferenceManager::instance(),
-                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_dispatcher),
-                    $event_dispatcher,
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                ),
-                new TextValueValidator(),
-            )
-        );
+        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->form_element_factory);
 
         $artifact_link_initial_builder = new NewArtifactLinkInitialChangesetValueBuilder();
         $updater                       = new ArtifactCreator(
@@ -263,11 +187,6 @@ final class KanbanItemsResource extends AuthenticatedResource
             new FieldsDataFromValuesByFieldBuilder($this->form_element_factory, $artifact_link_initial_builder),
             $this->form_element_factory,
             SubmissionPermissionVerifier::instance(),
-            $transaction_executor,
-            new ReverseLinksAdder(
-                new ReverseLinksToNewChangesetsConverter($this->form_element_factory, $this->artifact_factory),
-                $changeset_creator,
-            ),
         );
 
         $tracker_reference = TrackerReference::build($tracker);

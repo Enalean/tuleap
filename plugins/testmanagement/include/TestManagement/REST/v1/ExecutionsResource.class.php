@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use BackendLogger;
 use Codendi_HTMLPurifier;
-use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
@@ -86,7 +85,6 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -110,7 +108,6 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChan
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
-use Tuleap\Tracker\Artifact\Creation\ReverseLinksAdder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -421,56 +418,10 @@ class ExecutionsResource
             $tracker->getProject()
         );
 
-        $user                 = $this->getCurrentUser();
-        $usage_dao            = new ArtifactLinksUsageDao();
-        $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
-        $event_dispatcher     = EventManager::instance();
-        $transaction_executor = new DBTransactionExecutorWithConnection(
-            DBFactory::getMainTuleapDBConnection()
-        );
+        $user             = $this->getCurrentUser();
+        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
 
         $artifact_link_initial_builder = new NewArtifactLinkInitialChangesetValueBuilder();
-        $changeset_creator             = new NewChangesetCreator(
-            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                $this->formelement_factory,
-                new ArtifactLinkValidator(
-                    $this->artifact_factory,
-                    new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao,
-                    $event_dispatcher,
-                ),
-                new WorkflowUpdateChecker(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(\TransitionFactory::instance(), new SimpleWorkflowDao()),
-                            new TransitionExtractor()
-                        ),
-                        FrozenFieldsRetriever::instance(),
-                    )
-                )
-            ),
-            $fields_retriever,
-            $event_dispatcher,
-            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
-            $transaction_executor,
-            ArtifactChangesetSaver::build(),
-            new ParentLinkAction($this->artifact_factory),
-            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
-            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
-            new ChangesetValueSaver(),
-            \WorkflowFactory::instance(),
-            new CommentCreator(
-                new \Tracker_Artifact_Changeset_CommentDao(),
-                \ReferenceManager::instance(),
-                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_dispatcher),
-                    $event_dispatcher,
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                ),
-                new TextValueValidator(),
-            )
-        );
 
         $creator = new ArtifactCreator(
             new FieldsDataBuilder(
@@ -502,11 +453,6 @@ class ExecutionsResource
             new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
             $this->formelement_factory,
             SubmissionPermissionVerifier::instance(),
-            $transaction_executor,
-            new ReverseLinksAdder(
-                new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
-                $changeset_creator,
-            ),
         );
 
         try {

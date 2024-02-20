@@ -40,6 +40,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\Test\Stub\CreateInitialChangesetStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Creation\AddReverseLinksStub;
 use Tuleap\Tracker\TrackerColor;
 
 final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -112,8 +113,10 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         Tracker_ArtifactFactory::clearInstance();
     }
 
-    private function getCreator(CreateInitialChangeset $create_initial_changeset_stub): MockObject&TrackerArtifactCreator
-    {
+    private function getCreator(
+        CreateInitialChangeset $create_initial_changeset_stub,
+        AddReverseLinks $reverse_links,
+    ): MockObject&TrackerArtifactCreator {
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $changeset->method("executePostCreationActions");
 
@@ -127,6 +130,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 new \Psr\Log\NullLogger(),
                 new DBTransactionExecutorPassthrough(),
                 $this->event_dispatcher,
+                $reverse_links,
             ])->getMock();
 
         $creator->method("createNewChangeset")->willReturn(
@@ -154,7 +158,10 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $context
             );
 
-        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
+        $artifact_creator = $this->getCreator(
+            CreateInitialChangesetStub::withChangesetCreationExpected(),
+            AddReverseLinksStub::build(),
+        );
         $artifact_creator->create(
             $this->tracker,
             new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
@@ -162,7 +169,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->submitted_on,
             $this->send_notification,
             true,
-            $context
+            $context,
+            false,
         );
     }
 
@@ -172,7 +180,10 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->expects(self::never())->method('create');
 
-        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withNoChangesetCreationExpected());
+        $artifact_creator = $this->getCreator(
+            CreateInitialChangesetStub::withNoChangesetCreationExpected(),
+            AddReverseLinksStub::build(),
+        );
         $result           = $artifact_creator->create(
             $this->tracker,
             new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
@@ -180,7 +191,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->submitted_on,
             $this->send_notification,
             true,
-            new NullChangesetValidationContext()
+            new NullChangesetValidationContext(),
+            false,
         );
 
         self::assertNull($result);
@@ -192,7 +204,10 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->expects(self::once())->method('create')->with(123, 101, 1234567890, 0);
 
-        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
+        $artifact_creator = $this->getCreator(
+            CreateInitialChangesetStub::withChangesetCreationExpected(),
+            AddReverseLinksStub::build(),
+        );
         $artifact_creator->create(
             $this->tracker,
             new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
@@ -200,8 +215,65 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->submitted_on,
             $this->send_notification,
             true,
-            new NullChangesetValidationContext()
+            new NullChangesetValidationContext(),
+            false,
         );
+    }
+
+    public function testItDoesNotAskToAddReverseLinks(): void
+    {
+        $this->fields_validator->method('validate')->willReturn(true);
+
+        $this->dao->method('create')->willReturn(101);
+        $this->event_dispatcher->method('dispatch');
+        $this->visit_recorder->method('record');
+
+        $reverse_links = AddReverseLinksStub::build();
+
+        $artifact_creator = $this->getCreator(
+            CreateInitialChangesetStub::withChangesetCreationExpected(),
+            $reverse_links,
+        );
+        $artifact_creator->create(
+            $this->tracker,
+            new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
+            $this->user,
+            $this->submitted_on,
+            $this->send_notification,
+            true,
+            new NullChangesetValidationContext(),
+            false,
+        );
+
+        self::assertFalse($reverse_links->hasBeenCalled());
+    }
+
+    public function testAsksToAddReverseLinks(): void
+    {
+        $this->fields_validator->method('validate')->willReturn(true);
+
+        $this->dao->method('create')->willReturn(101);
+        $this->event_dispatcher->method('dispatch');
+        $this->visit_recorder->method('record');
+
+        $reverse_links = AddReverseLinksStub::build();
+
+        $artifact_creator = $this->getCreator(
+            CreateInitialChangesetStub::withChangesetCreationExpected(),
+            $reverse_links,
+        );
+        $artifact_creator->create(
+            $this->tracker,
+            new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
+            $this->user,
+            $this->submitted_on,
+            $this->send_notification,
+            true,
+            new NullChangesetValidationContext(),
+            true,
+        );
+
+        self::assertTrue($reverse_links->hasBeenCalled());
     }
 
     public function testItReturnsNullIfCreateArtifactsInDbFails(): void
@@ -209,7 +281,10 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fields_validator->method('validate')->willReturn(true);
         $this->dao->method('create')->willReturn(false);
 
-        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withNoChangesetCreationExpected());
+        $artifact_creator = $this->getCreator(
+            CreateInitialChangesetStub::withNoChangesetCreationExpected(),
+            AddReverseLinksStub::build(),
+        );
         $result           = $artifact_creator->create(
             $this->tracker,
             new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
@@ -217,7 +292,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->submitted_on,
             $this->send_notification,
             true,
-            new NullChangesetValidationContext()
+            new NullChangesetValidationContext(),
+            false,
         );
 
         self::assertNull($result);
@@ -235,7 +311,10 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->visit_recorder->expects(self::once())->method('record');
 
         $create_initial_changeset_stub = CreateInitialChangesetStub::withChangesetCreationExpected();
-        $this->getCreator($create_initial_changeset_stub)->create(
+        $this->getCreator(
+            $create_initial_changeset_stub,
+            AddReverseLinksStub::build(),
+        )->create(
             $this->tracker,
             new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $this->user,
@@ -243,6 +322,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->send_notification,
             true,
             new NullChangesetValidationContext(),
+            false,
         );
 
         self::assertEquals(1, $create_initial_changeset_stub->getCallCount());
@@ -259,7 +339,10 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->visit_recorder->expects(self::once())->method('record');
         $this->event_dispatcher->expects(self::once())->method('dispatch');
 
-        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
+        $artifact_creator = $this->getCreator(
+            CreateInitialChangesetStub::withChangesetCreationExpected(),
+            AddReverseLinksStub::build(),
+        );
         $artifact_creator->create(
             $this->tracker,
             new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
@@ -267,7 +350,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->submitted_on,
             $this->send_notification,
             true,
-            new NullChangesetValidationContext()
+            new NullChangesetValidationContext(),
+            false,
         );
     }
 
@@ -283,7 +367,10 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->event_dispatcher->expects(self::once())->method('dispatch');
 
-        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
+        $artifact_creator = $this->getCreator(
+            CreateInitialChangesetStub::withChangesetCreationExpected(),
+            AddReverseLinksStub::build(),
+        );
         $artifact_creator->create(
             $this->tracker,
             new InitialChangesetValuesContainer($this->fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
@@ -291,7 +378,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->submitted_on,
             $this->send_notification,
             false,
-            new NullChangesetValidationContext()
+            new NullChangesetValidationContext(),
+            false,
         );
     }
 }

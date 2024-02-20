@@ -60,7 +60,8 @@ final class ArtifactCreatorAdapter implements CreateArtifact
             $first_changeset->submission_date->getValue(),
             false,
             false,
-            new ChangesetWithFieldsValidationContext(new SystemActionContext())
+            new ChangesetWithFieldsValidationContext(new SystemActionContext()),
+            false,
         );
         if (! $artifact) {
             throw new ArtifactCreationException();

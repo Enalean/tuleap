@@ -216,6 +216,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
             true,
             true,
             new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+            false,
         );
     }
 
