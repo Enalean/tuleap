@@ -42,6 +42,9 @@ msgstr "Erreur"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+msgid "Keyword"
+msgstr "Mot-clé"
+
 msgid "Label"
 msgstr "Label"
 
@@ -95,6 +98,9 @@ msgstr "Il n'y a aucune pull-request ouverte"
 
 msgid "This label is already selected"
 msgstr "Ce label est déjà sélectionné"
+
+msgid "Title, description"
+msgstr "Titre, description"
 
 msgid "Try to toggle closed pull-requests display."
 msgstr "Essayez d'afficher les pull-requests fermées."

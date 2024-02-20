@@ -20,6 +20,27 @@
 import type { PullRequestsListFilter } from "../components/Filters/PullRequestsListFilter";
 import { TYPE_FILTER_AUTHOR } from "../components/Filters/Author/AuthorFilter";
 import { TYPE_FILTER_LABEL } from "../components/Filters/Labels/LabelFilter";
+import { TYPE_FILTER_KEYWORD } from "../components/Filters/Keywords/KeywordFilter";
+
+const assignLabelsToQuery = (query: object, labels_ids: number[]): void => {
+    if (labels_ids.length === 0) {
+        return;
+    }
+
+    Object.assign(query, {
+        labels: labels_ids.map((id) => ({ id })),
+    });
+};
+
+const assignKeywordsToQuery = (query: object, keywords: string[]): void => {
+    if (keywords.length === 0) {
+        return;
+    }
+
+    Object.assign(query, {
+        search: keywords.map((keyword) => ({ keyword })),
+    });
+};
 
 export const buildQueryFromFilters = (
     filters: PullRequestsListFilter[],
@@ -27,6 +48,7 @@ export const buildQueryFromFilters = (
 ): string => {
     const query = {};
     const labels_ids: number[] = [];
+    const keywords: string[] = [];
 
     if (!are_closed_pull_requests_shown) {
         Object.assign(query, { status: "open" });
@@ -42,13 +64,14 @@ export const buildQueryFromFilters = (
         if (filter.type === TYPE_FILTER_LABEL) {
             labels_ids.push(filter.value.id);
         }
+
+        if (filter.type === TYPE_FILTER_KEYWORD) {
+            keywords.push(filter.value);
+        }
     });
 
-    if (labels_ids.length) {
-        Object.assign(query, {
-            labels: labels_ids.map((id) => ({ id })),
-        });
-    }
+    assignLabelsToQuery(query, labels_ids);
+    assignKeywordsToQuery(query, keywords);
 
     return JSON.stringify(query);
 };
