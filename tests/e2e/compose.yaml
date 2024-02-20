@@ -36,5 +36,5 @@ services:
 
 networks:
   tuleap:
-    internal: true
+    internal: ${TULEAP_NETWORK_INTERNAL:-true}
   external-connectivity:
