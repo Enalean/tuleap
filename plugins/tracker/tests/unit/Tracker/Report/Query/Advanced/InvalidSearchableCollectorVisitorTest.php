@@ -74,7 +74,7 @@ use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class InvalidSearchableCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const UNSUPPORTED_FIELD_NAME = 'openlist';
     private const STRING_FIELD_NAME      = 'string';

@@ -28,35 +28,23 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedExcep
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
 
-final class FloatFieldChecker implements InvalidFieldChecker
+final readonly class FloatFieldChecker implements InvalidFieldChecker
 {
-    /**
-     * @var EmptyStringChecker
-     */
-    private $empty_string_checker;
-
-    /**
-     * @var CollectionOfAlphaNumericValuesExtractor
-     */
-    private $values_extractor;
-
     public function __construct(
-        EmptyStringChecker $empty_string_checker,
-        CollectionOfAlphaNumericValuesExtractor $values_extractor,
+        private EmptyStringChecker $empty_string_checker,
+        private CollectionOfAlphaNumericValuesExtractor $values_extractor,
     ) {
-        $this->empty_string_checker = $empty_string_checker;
-        $this->values_extractor     = $values_extractor;
     }
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
     {
         try {
             $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
-        } catch (NowIsNotSupportedException $exception) {
+        } catch (NowIsNotSupportedException) {
             throw new FloatToNowComparisonException($field);
-        } catch (MySelfIsNotSupportedException $exception) {
+        } catch (MySelfIsNotSupportedException) {
             throw new FloatToMySelfComparisonException($field);
-        } catch (StatusOpenIsNotSupportedException $exception) {
+        } catch (StatusOpenIsNotSupportedException) {
             throw new FloatToStatusOpenComparisonException($field);
         }
 
