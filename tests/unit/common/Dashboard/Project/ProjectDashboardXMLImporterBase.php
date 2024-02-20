@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Widget\WidgetFactory;
 use Tuleap\XML\MappingsRegistry;
 
@@ -51,6 +52,7 @@ class ProjectDashboardXMLImporterBase extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_dashboard_saver  = new ProjectDashboardSaver(
             $this->dao,
             $this->createStub(DeleteVisitByDashboardId::class),
+            new DBTransactionExecutorPassthrough()
         );
         $this->widget_creator           = $this->createMock(WidgetCreator::class);
         $this->widget_factory           = $this->createMock(WidgetFactory::class);

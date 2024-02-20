@@ -25,12 +25,14 @@ use Project;
 use Tuleap\Dashboard\DashboardDoesNotExistException;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
+use Tuleap\DB\DBTransactionExecutor;
 
-class ProjectDashboardSaver
+final readonly class ProjectDashboardSaver
 {
     public function __construct(
-        private readonly ProjectDashboardDao $dao,
-        private readonly DeleteVisitByDashboardId $delete_visit_by_dashboard_id,
+        private ProjectDashboardDao $dao,
+        private DeleteVisitByDashboardId $delete_visit_by_dashboard_id,
+        private DBTransactionExecutor $transaction_executor,
     ) {
     }
 
@@ -55,13 +57,17 @@ class ProjectDashboardSaver
     }
 
     /**
-     * @param $dashboard_id
+     * @param int $dashboard_id
+     * @throws UserCanNotUpdateProjectDashboardException
+     * @throws DashboardDoesNotExistException
      */
-    public function delete(PFUser $user, Project $project, $dashboard_id)
+    public function delete(PFUser $user, Project $project, $dashboard_id): void
     {
-        $this->checkUserCanDeleteByDashboardId($user, $project, $dashboard_id);
-        $this->dao->delete($project->getId(), $dashboard_id);
-        $this->delete_visit_by_dashboard_id->deleteVisitByDashboardId($dashboard_id);
+        $this->transaction_executor->execute(function () use ($dashboard_id, $project, $user) {
+            $this->checkUserCanDeleteByDashboardId($user, $project, $dashboard_id);
+            $this->dao->delete($project->getId(), $dashboard_id);
+            $this->delete_visit_by_dashboard_id->deleteVisitByDashboardId($dashboard_id);
+        });
     }
 
     private function checkUserCanSaveByDashboardName(PFUser $user, Project $project, $name)
@@ -79,6 +85,10 @@ class ProjectDashboardSaver
         }
     }
 
+    /**
+     * @throws UserCanNotUpdateProjectDashboardException
+     * @throws DashboardDoesNotExistException
+     */
     private function checkUserCanDeleteByDashboardId(PFUser $user, Project $project, $dashboard_id)
     {
         if (! $user->isAdmin($project->getID())) {

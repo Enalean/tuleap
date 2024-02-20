@@ -50,6 +50,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
@@ -112,6 +114,7 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                     new ProjectDashboardSaver(
                         $project_dashboard_dao,
                         new RecentlyVisitedProjectDashboardDao(),
+                        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                     ),
                     new DashboardWidgetRetriever(
                         $dashboard_widget_dao
