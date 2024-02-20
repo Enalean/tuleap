@@ -209,7 +209,27 @@ final readonly class DatetimeFromWhereBuilder implements ValueWrapperVisitor
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
-        throw new LogicException('Not implemented yet');
+        $comparison                     = $parameters->comparison;
+        $changeset_value_datetime_alias = $this->getAliasForDatetime($comparison);
+
+        $min_wrapper = $value_wrapper->getMinValue();
+        if ($min_wrapper instanceof CurrentDateTimeValueWrapper) {
+            $min_wrapper = new SimpleValueWrapper($min_wrapper->getValue()->format(DateFormat::DATETIME));
+        }
+        assert($min_wrapper instanceof SimpleValueWrapper);
+        $min_value = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $min_wrapper->getValue());
+
+        $max_wrapper = $value_wrapper->getMaxValue();
+        if ($max_wrapper instanceof CurrentDateTimeValueWrapper) {
+            $max_wrapper = new SimpleValueWrapper($max_wrapper->getValue()->format(DateFormat::DATETIME));
+        }
+        assert($max_wrapper instanceof SimpleValueWrapper);
+        $max_value = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $max_wrapper->getValue());
+
+        return new ParametrizedWhere(
+            "$changeset_value_datetime_alias.value BETWEEN ? AND ?",
+            [$min_value, $max_value]
+        );
     }
 
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
