@@ -31,6 +31,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
@@ -45,6 +48,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanComparisonVisitor;
@@ -63,6 +67,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\LesserThanOrEqualCompar
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotEqualComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotInComparisonChecker;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementOpenListBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
@@ -73,6 +78,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
 {
     private const UNSUPPORTED_FIELD_NAME = 'openlist';
     private const STRING_FIELD_NAME      = 'string';
+    private const INVALID_FIELD_NAME     = 'invalid';
     private \Tracker_FormElement_Field_String $string_field;
     private \Tracker_FormElement_Field_List $open_list_field;
     private \Tracker_FormElement_Field_Text $field_text;
@@ -387,7 +393,9 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
             ->with(101, self::STRING_FIELD_NAME, $this->user)
             ->willReturn($this->string_field);
 
-        $expr = new AndExpression(new GreaterThanComparison(new Field(self::STRING_FIELD_NAME), new SimpleValueWrapper('value')));
+        $expr = new AndExpression(
+            new GreaterThanComparison(new Field(self::STRING_FIELD_NAME), new SimpleValueWrapper('value'))
+        );
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -406,7 +414,9 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
             ->with(101, self::STRING_FIELD_NAME, $this->user)
             ->willReturn($this->string_field);
 
-        $expr = new AndExpression(new LesserThanOrEqualComparison(new Field(self::STRING_FIELD_NAME), new SimpleValueWrapper('value')));
+        $expr = new AndExpression(
+            new LesserThanOrEqualComparison(new Field(self::STRING_FIELD_NAME), new SimpleValueWrapper('value'))
+        );
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -523,6 +533,70 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
             sprintf("The field '%s' is not supported for the operator not in().", self::STRING_FIELD_NAME),
             implode("\n", $errors)
         );
+    }
+
+    public static function generateInvalidFloatComparisons(): iterable
+    {
+        $field       = new Field(self::INVALID_FIELD_NAME);
+        $empty_value = new SimpleValueWrapper('');
+        $valid_value = new SimpleValueWrapper(10.5);
+        $now         = new CurrentDateTimeValueWrapper(null, null);
+
+        $open = new StatusOpenValueWrapper();
+        yield [new LesserThanComparison($field, $empty_value)];
+        yield [new LesserThanOrEqualComparison($field, $empty_value)];
+        yield [new GreaterThanComparison($field, $empty_value)];
+        yield [new GreaterThanOrEqualComparison($field, $empty_value)];
+        yield [new BetweenComparison($field, new BetweenValueWrapper($empty_value, $valid_value))];
+        yield [new BetweenComparison($field, new BetweenValueWrapper($valid_value, $empty_value))];
+        yield [new EqualComparison($field, new SimpleValueWrapper('string'))];
+        yield [new EqualComparison($field, $now)];
+        yield [new EqualComparison($field, $open)];
+        yield [new InComparison($field, new InValueWrapper([$valid_value]))];
+        yield [new NotInComparison($field, new InValueWrapper([$valid_value]))];
+    }
+
+    /**
+     * @dataProvider generateInvalidFloatComparisons
+     */
+    public function testItRejectsInvalidComparisons(Comparison $comparison): void
+    {
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->willReturn(
+                TrackerFormElementFloatFieldBuilder::aFloatField(186)
+                    ->withName(self::INVALID_FIELD_NAME)
+                    ->build()
+            );
+
+        $this->collector->collectErrors(new AndExpression($comparison), $this->invalid_searchables_collection);
+
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertNotEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
+    }
+
+    public function testItRejectsInvalidComparisonToMyself(): void
+    {
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->willReturn(
+                TrackerFormElementFloatFieldBuilder::aFloatField(186)
+                    ->withName(self::INVALID_FIELD_NAME)
+                    ->build()
+            );
+        $user_manager = $this->createStub(\UserManager::class);
+        $user_manager->method('getCurrentUser')->willReturn($this->user);
+
+        $this->collector->collectErrors(
+            new AndExpression(
+                new EqualComparison(
+                    new Field(self::INVALID_FIELD_NAME),
+                    new CurrentUserValueWrapper($user_manager)
+                )
+            ),
+            $this->invalid_searchables_collection
+        );
+
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertNotEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItDelegatesValidationToSubExpressionAndTailInAndExpression(): void
