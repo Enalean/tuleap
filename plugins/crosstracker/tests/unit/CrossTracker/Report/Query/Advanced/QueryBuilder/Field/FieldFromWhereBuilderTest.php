@@ -34,6 +34,8 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
@@ -68,6 +70,7 @@ final class FieldFromWhereBuilderTest extends TestCase
             new Text\TextFromWhereBuilder($db),
             new Date\DateFromWhereBuilder($date_time_value_rounder),
             new Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
+            new StaticList\StaticListFromWhereBuilder(),
         );
         $field                   = new Field(self::FIELD_NAME);
         return $builder->getFromWhere(
@@ -153,6 +156,27 @@ final class FieldFromWhereBuilderTest extends TestCase
         );
 
         $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('2024-02-12 10:25'));
+        self::assertNotEmpty($from_where->getFrom());
+    }
+
+    public function testItReturnsSQLForStaticListField(): void
+    {
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementListFieldBuilder::aListField(746)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withBind(TrackerFormElementListStaticBindBuilder::aBind()->build())
+                ->withReadPermission($this->user, true)
+                ->build(),
+            TrackerFormElementListFieldBuilder::aListField(466)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->withBind(TrackerFormElementListStaticBindBuilder::aBind()->build())
+                ->withReadPermission($this->user, true)
+                ->build(),
+        );
+
+        $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('my_value'));
         self::assertNotEmpty($from_where->getFrom());
     }
 

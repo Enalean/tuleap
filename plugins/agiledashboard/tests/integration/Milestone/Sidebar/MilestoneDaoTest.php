@@ -72,7 +72,7 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
         $this->release_tracker_id     = $this->tracker_builder->buildTracker($this->project_id, "Release")->getId();
         $this->sprint_tracker_id      = $this->tracker_builder->buildTracker($this->project_id, "Sprint")->getId();
         $this->other_tracker_id       = $this->tracker_builder->buildTracker($this->project_id, "Other")->getId();
-        $this->list_field_id          = $this->tracker_builder->buildListField($this->sprint_tracker_id);
+        $this->list_field_id          = $this->tracker_builder->buildStaticListField($this->sprint_tracker_id, 'list_field', 'sb');
         $this->artifact_link_field_id = $this->tracker_builder->buildArtifactLinkField($this->release_tracker_id);
         $this->release_status_values  = $this->tracker_builder->buildOpenAndClosedValuesForField($this->list_field_id, $this->release_tracker_id, ['Open'], ['Closed']);
         $this->sprint_status_values   = $this->tracker_builder->buildOpenAndClosedValuesForField($this->list_field_id, $this->sprint_tracker_id, ['Open'], ['Closed']);

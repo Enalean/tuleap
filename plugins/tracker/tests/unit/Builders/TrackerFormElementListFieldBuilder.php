@@ -32,6 +32,10 @@ final class TrackerFormElementListFieldBuilder
     private bool $is_multiple                          = false;
     private ?Tracker_FormElement_Field_List_Bind $bind = null;
     private \Tracker $tracker;
+    /** @var list<\PFUser>  */
+    private array $user_with_read_permissions = [];
+    /** @var array<int, bool> */
+    private array $read_permissions = [];
 
     private function __construct(private readonly int $id)
     {
@@ -67,6 +71,14 @@ final class TrackerFormElementListFieldBuilder
         return $this;
     }
 
+    public function withReadPermission(\PFUser $user, bool $user_can_read): self
+    {
+        $this->user_with_read_permissions[]     = $user;
+        $this->read_permissions[$user->getId()] = $user_can_read;
+
+        return $this;
+    }
+
     public function inTracker(\Tracker $tracker): self
     {
         $this->tracker = $tracker;
@@ -79,14 +91,19 @@ final class TrackerFormElementListFieldBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox
+    public function build(): \Tracker_FormElement_Field_Selectbox | \Tracker_FormElement_Field_MultiSelectbox
     {
         $selectbox = $this->buildSelectBox();
         $selectbox->setBind($this->bind);
+
+        foreach ($this->user_with_read_permissions as $user) {
+            $selectbox->setUserCanRead($user, $this->read_permissions[$user->getId()]);
+        }
+
         return $selectbox;
     }
 
-    private function buildSelectBox(): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox
+    private function buildSelectBox(): \Tracker_FormElement_Field_Selectbox | \Tracker_FormElement_Field_MultiSelectbox
     {
         if ($this->is_multiple) {
             $field = new \Tracker_FormElement_Field_MultiSelectbox(
