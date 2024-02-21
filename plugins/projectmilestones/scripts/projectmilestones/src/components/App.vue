@@ -57,7 +57,7 @@ import { computed } from "vue";
 import PastSection from "./PastSection/PastSection.vue";
 import RoadmapEmptyStateSection from "./ProjectMilestonesEmpty/RoadmapEmptyStateSection.vue";
 import { useStore } from "../stores/root";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 const root_store = useStore();

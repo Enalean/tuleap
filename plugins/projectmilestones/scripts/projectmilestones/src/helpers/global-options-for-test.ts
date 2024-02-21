@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Vue } from "vue/types/vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
-import { PiniaVuePlugin } from "pinia";
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
+import type { Pinia } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 
-export async function createReleaseWidgetLocalVue(): Promise<typeof Vue> {
-    const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-    local_vue.use(VueDOMPurifyHTML);
-    local_vue.use(PiniaVuePlugin);
-
-    return local_vue;
+export function getGlobalTestOptions(pinia?: Pinia): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [createGettext({ silent: true }), pinia || createTestingPinia()],
+    };
 }

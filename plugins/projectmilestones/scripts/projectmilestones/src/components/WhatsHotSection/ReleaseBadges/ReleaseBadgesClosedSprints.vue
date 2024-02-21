@@ -33,7 +33,7 @@ import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
 import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-helper";
 import { useStore } from "../../../stores/root";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const root_store = useStore();
 

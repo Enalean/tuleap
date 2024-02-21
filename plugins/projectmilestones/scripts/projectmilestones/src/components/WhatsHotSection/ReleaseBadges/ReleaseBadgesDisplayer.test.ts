@@ -17,33 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseBadgesDisplayer from "./ReleaseBadgesDisplayer.vue";
 import type { MilestoneData } from "../../../type";
-import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseBadgesDisplayerIfOpenSprints from "./ReleaseBadgesDisplayerIfOpenSprints.vue";
 import ReleaseBadgesDisplayerIfOnlyClosedSprints from "./ReleaseBadgesDisplayerIfOnlyClosedSprints.vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ReleaseBadgesDisplayer", () => {
-    async function getPersonalWidgetInstance(
+    function getPersonalWidgetInstance(
         release_data: MilestoneData,
-    ): Promise<Wrapper<Vue, Element>> {
+    ): VueWrapper<InstanceType<typeof ReleaseBadgesDisplayer>> {
         return shallowMount(ReleaseBadgesDisplayer, {
-            localVue: await createReleaseWidgetLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
             propsData: { release_data, isOpen: true, isPastRelease: false },
         });
     }
 
     describe("Display number of sprint", () => {
-        it("When there are not open sprints, Then ReleaseBadgesDisplayerIfOpenSprints is not rendered", async () => {
+        it("When there are not open sprints, Then ReleaseBadgesDisplayerIfOpenSprints is not rendered", () => {
             const release_data = {
                 id: 2,
                 total_sprint: 0,
                 open_sprints: [] as MilestoneData[],
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(false);
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(
@@ -51,13 +53,13 @@ describe("ReleaseBadgesDisplayer", () => {
             );
         });
 
-        it("When total_sprints is null, Then ReleaseBadgesDisplayerIfOpenSprints is not rendered", async () => {
+        it("When total_sprints is null, Then ReleaseBadgesDisplayerIfOpenSprints is not rendered", () => {
             const release_data = {
                 id: 2,
                 total_sprint: null,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(false);
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(
@@ -65,7 +67,7 @@ describe("ReleaseBadgesDisplayer", () => {
             );
         });
 
-        it("When there are some open sprints, Then ReleaseBadgesDisplayerIfOpenSprints is rendered", async () => {
+        it("When there are some open sprints, Then ReleaseBadgesDisplayerIfOpenSprints is rendered", () => {
             const release_data = {
                 id: 2,
                 total_sprint: 10,
@@ -76,7 +78,7 @@ describe("ReleaseBadgesDisplayer", () => {
                 ],
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(true);
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(

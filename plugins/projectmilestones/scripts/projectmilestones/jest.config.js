@@ -34,7 +34,7 @@ export default {
     displayName: "projectmilestones",
     transform: {
         ...configuration.transform,
-        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
+        "^.+\\.vue$": "@vue/vue3-jest",
     },
     moduleNameMapper: {
         ...configuration.moduleNameMapper,

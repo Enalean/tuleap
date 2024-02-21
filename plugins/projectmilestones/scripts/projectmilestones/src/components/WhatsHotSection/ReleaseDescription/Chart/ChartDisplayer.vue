@@ -58,7 +58,7 @@ import { getChartData } from "../../../../api/rest-querier";
 import { getBurndownDataFromType, getBurnupDataFromType } from "../../../../helpers/chart-helper";
 import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
 import BurnupDisplayer from "./Burnup/BurnupDisplayer.vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ release_data: MilestoneData }>();
 

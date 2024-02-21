@@ -9,19 +9,16 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
   >
     Roadmap
   </span>
-   
   <div
     class="empty-state-pane"
     data-test="project-milestone-empty-state"
   >
     <s-v-g-project-milestones-empty-state-stub />
-     
     <span
       class="empty-state-text"
     >
       There is no item nor milestone in the My project backlog yet.
     </span>
-     
     <a
       class="button-backlog-link empty-state-action"
       data-test="backlog-link"
@@ -32,9 +29,7 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
         data-test="start-planning-button"
         type="button"
       >
-        
-                Start planning
-                
+        Start planning 
         <i
           class="tlp-button-icon-right fas fa-long-arrow-alt-right"
           data-test="display-arrow"

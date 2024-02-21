@@ -9,7 +9,6 @@ exports[`RoadmapSection Given user display widget, Then a good link to top plann
   >
     Roadmap
   </span>
-   
   <div
     class="project-other-releases"
   >
@@ -20,16 +19,12 @@ exports[`RoadmapSection Given user display widget, Then a good link to top plann
         class="fa fa-angle-double-up"
       />
     </div>
-     
     <a
       class="releases-link"
       data-test="backlog-link"
       href="/plugins/agiledashboard/?action=show-top&group_id=102&pane=topplanning-v2"
     >
-      
-            2 items in the backlog.
-            1 upcoming sprint.
-        
+      2 items in the backlog. 1 upcoming sprint.
     </a>
   </div>
 </div>

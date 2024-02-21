@@ -17,33 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
 import type { MilestoneData } from "../../../type";
-import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-describe("ReleaseHeaderRemainingEffort", () => {
-    async function getPersonalWidgetInstance(
+describe("ReleaseHeaderRemainingPoints", () => {
+    function getPersonalWidgetInstance(
         release_data: MilestoneData,
-    ): Promise<Wrapper<Vue, Element>> {
+    ): VueWrapper<InstanceType<typeof ReleaseHeaderRemainingPoints>> {
         return shallowMount(ReleaseHeaderRemainingPoints, {
             propsData: {
                 release_data,
             },
-            localVue: await createReleaseWidgetLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
         });
     }
 
     describe("Display remaining points", () => {
-        it("When there is negative remaining points, Then it displays and percent in tooltip", async () => {
+        it("When there is negative remaining points, Then it displays and percent in tooltip", () => {
             const release_data = {
                 id: 2,
                 remaining_effort: -1,
                 initial_effort: 10,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -60,14 +62,14 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toBe("-1");
         });
 
-        it("When there is remaining effort point and is null, Then 0 is displayed and message in tooltip", async () => {
+        it("When there is remaining effort point and is null, Then 0 is displayed and message in tooltip", () => {
             const release_data = {
                 id: 2,
                 remaining_effort: null,
                 initial_effort: 10,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -80,14 +82,14 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toBe("0");
         });
 
-        it("When there is remaining effort point, not null and greater than 0, Then it's displayed and percent in tooltip", async () => {
+        it("When there is remaining effort point, not null and greater than 0, Then it's displayed and percent in tooltip", () => {
             const release_data = {
                 id: 2,
                 remaining_effort: 5,
                 initial_effort: 10,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -100,14 +102,14 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toBe("5");
         });
 
-        it("When there is remaining effort point, equal at 0, Then it's displayed and percent in tooltip", async () => {
+        it("When there is remaining effort point, equal at 0, Then it's displayed and percent in tooltip", () => {
             const release_data = {
                 id: 2,
                 remaining_effort: 0,
                 initial_effort: 5,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -123,14 +125,14 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toBe("0");
         });
 
-        it("When there is initial effort point but null, Then remaining effort is displayed and message in tooltip", async () => {
+        it("When there is initial effort point but null, Then remaining effort is displayed and message in tooltip", () => {
             const release_data = {
                 id: 2,
                 remaining_effort: 5,
                 initial_effort: null,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -143,14 +145,14 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toBe("5");
         });
 
-        it("When there is initial effort point but equal at 0, Then remaining effort is displayed and message in tooltip", async () => {
+        it("When there is initial effort point but equal at 0, Then remaining effort is displayed and message in tooltip", () => {
             const release_data = {
                 id: 2,
                 remaining_effort: 5,
                 initial_effort: 0,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -163,14 +165,14 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toBe("5");
         });
 
-        it("When remaining effort > initial effort, Then remaining effort is displayed and message in tooltip", async () => {
+        it("When remaining effort > initial effort, Then remaining effort is displayed and message in tooltip", () => {
             const release_data = {
                 id: 2,
                 remaining_effort: 100,
                 initial_effort: 10,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -185,14 +187,14 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toBe("100");
         });
 
-        it("When remaining effort == initial effort, Then remaining effort is displayed and marked as success", async () => {
+        it("When remaining effort == initial effort, Then remaining effort is displayed and marked as success", () => {
             const release_data = {
                 id: 2,
                 remaining_effort: 100,
                 initial_effort: 100,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
             const points_remaining_value = wrapper.get("[data-test=points-remaining-value]");
             const points_remaining_progress = wrapper.get("[data-test=points-progress-value]");
 

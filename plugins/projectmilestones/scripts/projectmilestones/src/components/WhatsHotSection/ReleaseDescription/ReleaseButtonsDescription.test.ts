@@ -17,19 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseButtonsDescription from "./ReleaseButtonsDescription.vue";
 import type { MilestoneData, Pane } from "../../../type";
-import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const project_id = 102;
 
 describe("ReleaseButtonsDescription", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
+    function getPersonalWidgetInstance(): VueWrapper<
+        InstanceType<typeof ReleaseButtonsDescription>
+    > {
         const useStore = defineStore("root", {
             state: () => ({
                 project_id,
@@ -39,11 +41,12 @@ describe("ReleaseButtonsDescription", () => {
         useStore(pinia);
 
         return shallowMount(ReleaseButtonsDescription, {
-            localVue: await createReleaseWidgetLocalVue(),
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
             propsData: {
                 release_data,
             },
-            pinia,
         });
     }
 
@@ -84,16 +87,16 @@ describe("ReleaseButtonsDescription", () => {
         } as MilestoneData;
     });
 
-    it("Given user display widget, Then a good link to TestPlan is renderer", async () => {
-        const wrapper = await getPersonalWidgetInstance();
+    it("Given user display widget, Then a good link to TestPlan is renderer", () => {
+        const wrapper = getPersonalWidgetInstance();
         const ttm_element = wrapper.get("[data-test=pane-link-testplan]");
         expect(ttm_element.attributes("href")).toBe("/testplan/project/6");
         expect(ttm_element.attributes("data-tlp-tooltip")).toBe("Tests");
         expect(wrapper.get("[data-test=pane-icon-testplan]").classes()).toContain("fa-check");
     });
 
-    it("Given user display widget, Then a good link to taskboard is renderer", async () => {
-        const wrapper = await getPersonalWidgetInstance();
+    it("Given user display widget, Then a good link to taskboard is renderer", () => {
+        const wrapper = getPersonalWidgetInstance();
         const taskboard_element = wrapper.get("[data-test=pane-link-taskboard]");
         expect(taskboard_element.attributes("href")).toBe("/taskboard/project/6");
         expect(taskboard_element.attributes("data-tlp-tooltip")).toBe("Taskboard");
@@ -102,8 +105,8 @@ describe("ReleaseButtonsDescription", () => {
         );
     });
 
-    it("Given user display widget, Then a good link to overview is renderer", async () => {
-        const wrapper = await getPersonalWidgetInstance();
+    it("Given user display widget, Then a good link to overview is renderer", () => {
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.get("[data-test=overview-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
@@ -115,8 +118,8 @@ describe("ReleaseButtonsDescription", () => {
         );
     });
 
-    it("Given user display widget, Then a good link to cardwall is renderer", async () => {
-        const wrapper = await getPersonalWidgetInstance();
+    it("Given user display widget, Then a good link to cardwall is renderer", () => {
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.get("[data-test=cardwall-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
@@ -128,7 +131,7 @@ describe("ReleaseButtonsDescription", () => {
         );
     });
 
-    it("When there isn't taskboard, Then there isn't any link to taskboard", async () => {
+    it("When there isn't taskboard, Then there isn't any link to taskboard", () => {
         release_data = {
             id: 2,
             planning: {
@@ -156,11 +159,11 @@ describe("ReleaseButtonsDescription", () => {
             },
         } as MilestoneData;
 
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=taskboard-link]").exists()).toBe(false);
     });
 
-    it("When there isn't cardwall in resources, Then there isn't any link to cardwall", async () => {
+    it("When there isn't cardwall in resources, Then there isn't any link to cardwall", () => {
         release_data = {
             id: 2,
             planning: {
@@ -181,7 +184,7 @@ describe("ReleaseButtonsDescription", () => {
             },
         } as MilestoneData;
 
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=cardwall-link]").exists()).toBe(false);
     });
 });

@@ -17,22 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TestManagementDisplayer from "./TestManagementDisplayer.vue";
 import type { MilestoneData } from "../../../../type";
-import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
 import TestManagement from "./TestManagement.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 let release_data: MilestoneData;
 const project_id = 100;
 
 describe("TestManagementDisplayer", () => {
-    async function getPersonalWidgetInstance(
+    function getPersonalWidgetInstance(
         getTestManagementCampaigns: jest.Mock,
-    ): Promise<Wrapper<Vue, Element>> {
+    ): VueWrapper<InstanceType<typeof TestManagementDisplayer>> {
         const useStore = defineStore("root", {
             state: () => ({
                 label_tracker_planning: "Releases",
@@ -46,11 +46,12 @@ describe("TestManagementDisplayer", () => {
         useStore(pinia);
 
         return shallowMount(TestManagementDisplayer, {
-            localVue: await createReleaseWidgetLocalVue(),
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
             propsData: {
                 release_data,
             },
-            pinia,
         });
     }
 
@@ -74,8 +75,8 @@ describe("TestManagementDisplayer", () => {
         } as MilestoneData;
     });
 
-    it("When the component is rendered, Then there is a loader", async () => {
-        const wrapper = await getPersonalWidgetInstance(jest.fn());
+    it("When the component is rendered, Then there is a loader", () => {
+        const wrapper = getPersonalWidgetInstance(jest.fn());
 
         expect(wrapper.find("[data-test=loading-data]").exists()).toBe(true);
     });
@@ -88,11 +89,12 @@ describe("TestManagementDisplayer", () => {
             nb_of_notrun: 4,
         };
 
-        const wrapper = await getPersonalWidgetInstance(jest.fn());
+        const wrapper = getPersonalWidgetInstance(jest.fn());
+        await wrapper.vm.$nextTick();
         expect(wrapper.findComponent(TestManagement).exists()).toBe(true);
     });
 
-    it("When there is no tests, Then TestManagement component is not rendered", async () => {
+    it("When there is no tests, Then TestManagement component is not rendered", () => {
         release_data.campaign = {
             nb_of_blocked: 0,
             nb_of_passed: 0,
@@ -100,7 +102,7 @@ describe("TestManagementDisplayer", () => {
             nb_of_notrun: 0,
         };
 
-        const wrapper = await getPersonalWidgetInstance(jest.fn());
+        const wrapper = getPersonalWidgetInstance(jest.fn());
         expect(wrapper.findComponent(TestManagement).exists()).toBe(false);
     });
 });

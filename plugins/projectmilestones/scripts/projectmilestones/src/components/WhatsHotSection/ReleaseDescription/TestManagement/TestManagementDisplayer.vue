@@ -41,7 +41,7 @@ import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 import TestManagement from "./TestManagement.vue";
 import { useStore } from "../../../../stores/root";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ release_data: MilestoneData }>();
 const root_store = useStore();

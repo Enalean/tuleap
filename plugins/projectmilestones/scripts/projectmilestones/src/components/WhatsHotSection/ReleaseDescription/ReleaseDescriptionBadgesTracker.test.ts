@@ -17,18 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
 import type { MilestoneData, TrackerNumberArtifacts } from "../../../type";
-import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ReleaseDescriptionBadgesTracker", () => {
-    async function getPersonalWidgetInstance(
+    function getPersonalWidgetInstance(
         release_data: MilestoneData,
-    ): Promise<Wrapper<Vue, Element>> {
+    ): VueWrapper<InstanceType<typeof ReleaseDescriptionBadgesTracker>> {
         const component_options = {
-            localVue: await createReleaseWidgetLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
             propsData: {
                 release_data,
             },
@@ -37,7 +39,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
         return shallowMount(ReleaseDescriptionBadgesTracker, component_options);
     }
 
-    it("Given user display widget, Then the good number of artifacts and good color of the tracker is rendered", async () => {
+    it("Given user display widget, Then the good number of artifacts and good color of the tracker is rendered", () => {
         const release_data = {
             id: 2,
             planning: {
@@ -52,7 +54,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
                 },
             ],
         } as MilestoneData;
-        const wrapper = await getPersonalWidgetInstance(release_data);
+        const wrapper = getPersonalWidgetInstance(release_data);
 
         expect(wrapper.get("[data-test=color-name-tracker-1]").classes()).toEqual([
             "release-number-artifacts-tracker",
@@ -64,7 +66,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
         expect(wrapper.get("[data-test=artifact-tracker-name]").text()).toBe("Bug");
     });
 
-    it("When there is a tracker but wihout artifact, Then it is not displayed", async () => {
+    it("When there is a tracker but wihout artifact, Then it is not displayed", () => {
         const release_data = {
             id: 2,
             number_of_artifact_by_trackers: [
@@ -83,24 +85,24 @@ describe("ReleaseDescriptionBadgesTracker", () => {
             ],
         } as MilestoneData;
 
-        const wrapper = await getPersonalWidgetInstance(release_data);
+        const wrapper = getPersonalWidgetInstance(release_data);
 
         expect(wrapper.find("[data-test=color-name-tracker-1]").exists()).toBe(false);
         expect(wrapper.find("[data-test=color-name-tracker-2]").exists()).toBe(true);
     });
 
-    it("When there are no artifacts, Then there is no title", async () => {
+    it("When there are no artifacts, Then there is no title", () => {
         const release_data = {
             id: 2,
             number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
         } as MilestoneData;
 
-        const wrapper = await getPersonalWidgetInstance(release_data);
+        const wrapper = getPersonalWidgetInstance(release_data);
 
         expect(wrapper.find("[data-test=subtitle-tracker]").exists()).toBe(false);
     });
 
-    it("When trackers are displayed, Then there is a tooltip on the labels", async () => {
+    it("When trackers are displayed, Then there is a tooltip on the labels", () => {
         const release_data = {
             id: 2,
             number_of_artifact_by_trackers: [
@@ -119,7 +121,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
             ],
         } as MilestoneData;
 
-        const wrapper = await getPersonalWidgetInstance(release_data);
+        const wrapper = getPersonalWidgetInstance(release_data);
 
         expect(wrapper.get("[data-test=badges-tracker-tooltip-2]").text()).toBe("Sprints");
     });

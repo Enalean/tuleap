@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseDescription from "./ReleaseDescription.vue";
 import type {
@@ -26,19 +26,24 @@ import type {
     TrackerNumberArtifacts,
     TrackerProjectLabel,
 } from "../../../type";
-import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ChartDisplayer from "./Chart/ChartDisplayer.vue";
 import TestManagementDisplayer from "./TestManagement/TestManagementDisplayer.vue";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 let release_data: MilestoneData;
 
 describe("ReleaseDescription", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
+    function getPersonalWidgetInstance(): VueWrapper<InstanceType<typeof ReleaseDescription>> {
         const component_options = {
-            localVue: await createReleaseWidgetLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
             propsData: {
                 release_data,
+            },
+            directives: {
+                "dompurify-html": jest.fn(),
             },
         };
 
@@ -83,7 +88,7 @@ describe("ReleaseDescription", () => {
         } as MilestoneData;
     });
 
-    it("When there is a burndown, Then the ChartDisplayer is rendered", async () => {
+    it("When there is a burndown, Then the ChartDisplayer is rendered", () => {
         release_data = {
             id: 2,
             resources: {
@@ -95,16 +100,16 @@ describe("ReleaseDescription", () => {
             number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
         } as MilestoneData;
 
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.findComponent(ChartDisplayer).exists()).toBe(true);
     });
 
-    it("When plugin testplan is activated, Then TestManagementDisplayer is rendered", async () => {
-        const wrapper = await getPersonalWidgetInstance();
+    it("When plugin testplan is activated, Then TestManagementDisplayer is rendered", () => {
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.findComponent(TestManagementDisplayer).exists()).toBe(true);
     });
 
-    it("When plugin testplan is disabled, Then TestManagementDisplayer is not rendered", async () => {
+    it("When plugin testplan is disabled, Then TestManagementDisplayer is not rendered", () => {
         release_data = {
             id: 2,
             planning: {
@@ -121,11 +126,11 @@ describe("ReleaseDescription", () => {
             number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
         } as MilestoneData;
 
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.findComponent(TestManagementDisplayer).exists()).toBe(false);
     });
 
-    it("When there are no artifacts, Then ReleaseDescriptionBadgesTracker is not rendered", async () => {
+    it("When there are no artifacts, Then ReleaseDescriptionBadgesTracker is not rendered", () => {
         release_data = {
             id: 2,
             planning: {
@@ -149,7 +154,7 @@ describe("ReleaseDescription", () => {
             ] as TrackerNumberArtifacts[],
         } as MilestoneData;
 
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.findComponent(ReleaseDescriptionBadgesTracker).exists()).toBe(false);
     });
 });

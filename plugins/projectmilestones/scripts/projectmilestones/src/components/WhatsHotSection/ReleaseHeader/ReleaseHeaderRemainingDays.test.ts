@@ -17,33 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
 import type { MilestoneData } from "../../../type";
-import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ReleaseHeaderRemainingDays", () => {
-    async function getPersonalWidgetInstance(
+    function getPersonalWidgetInstance(
         release_data: MilestoneData,
-    ): Promise<Wrapper<Vue, Element>> {
+    ): VueWrapper<InstanceType<typeof ReleaseHeaderRemainingDays>> {
         return shallowMount(ReleaseHeaderRemainingDays, {
             propsData: {
                 release_data,
             },
-            localVue: await createReleaseWidgetLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
         });
     }
 
     describe("Display remaining days", () => {
-        it("When there is number of start days but equal at 0, Then number days of end is displayed and percent in tooltip", async () => {
+        it("When there is number of start days but equal at 0, Then number days of end is displayed and percent in tooltip", () => {
             const release_data = {
                 id: 2,
                 number_days_until_end: 10,
                 number_days_since_start: 0,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -56,13 +58,13 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(remaining_day_text.text()).toBe("10");
         });
 
-        it("When there number of start days but null, Then 0 is displayed and a message in tooltip", async () => {
+        it("When there number of start days but null, Then 0 is displayed and a message in tooltip", () => {
             const release_data = {
                 id: 2,
                 number_days_since_start: null,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -75,14 +77,14 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(remaining_day_text.text()).toBe("0");
         });
 
-        it("When there is negative number of start days, Then 0 is displayed and 0.00% in tooltip", async () => {
+        it("When there is negative number of start days, Then 0 is displayed and 0.00% in tooltip", () => {
             const release_data = {
                 id: 2,
                 number_days_until_end: -10,
                 number_days_since_start: -10,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -96,14 +98,14 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(remaining_day_text.text()).toBe("0");
         });
 
-        it("When there is negative remaining days, Then 0 is displayed and 100% in tooltip", async () => {
+        it("When there is negative remaining days, Then 0 is displayed and 100% in tooltip", () => {
             const release_data = {
                 id: 2,
                 number_days_until_end: -10,
                 number_days_since_start: 10,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -117,14 +119,14 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(remaining_day_text.text()).toBe("0");
         });
 
-        it("When there is remaining days but equal at 0, Then remaining days is displayed and percent in tooltip", async () => {
+        it("When there is remaining days but equal at 0, Then remaining days is displayed and percent in tooltip", () => {
             const release_data = {
                 id: 2,
                 number_days_until_end: 0,
                 number_days_since_start: 10,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -141,14 +143,14 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(remaining_day_text.text()).toBe("0");
         });
 
-        it("When there is remaining days and is null, Then 0 is displayed and there is a message in tooltip", async () => {
+        it("When there is remaining days and is null, Then 0 is displayed and there is a message in tooltip", () => {
             const release_data = {
                 id: 2,
                 number_days_since_start: 10,
                 number_days_until_end: null,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -161,14 +163,14 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(remaining_day_text.text()).toBe("0");
         });
 
-        it("When there is remaining days, not null and greater than 0, Then remaining days is displayed and percent in tooltip", async () => {
+        it("When there is remaining days, not null and greater than 0, Then remaining days is displayed and percent in tooltip", () => {
             const release_data = {
                 id: 2,
                 number_days_until_end: 5,
                 number_days_since_start: 5,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -181,14 +183,14 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(remaining_day_text.text()).toBe("5");
         });
 
-        it("When the progress is at least 80%, Then remaining days is displayed in red and percent in tooltip", async () => {
+        it("When the progress is at least 80%, Then remaining days is displayed in red and percent in tooltip", () => {
             const release_data = {
                 id: 2,
                 number_days_until_end: 2,
                 number_days_since_start: 8,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -201,14 +203,14 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(remaining_day_text.text()).toBe("2");
         });
 
-        it("When the progress is between 80% and 100%, Then remaining days is displayed in red and percent in tooltip", async () => {
+        it("When the progress is between 80% and 100%, Then remaining days is displayed in red and percent in tooltip", () => {
             const release_data = {
                 id: 2,
                 number_days_until_end: 1,
                 number_days_since_start: 10,
             } as MilestoneData;
 
-            const wrapper = await getPersonalWidgetInstance(release_data);
+            const wrapper = getPersonalWidgetInstance(release_data);
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");

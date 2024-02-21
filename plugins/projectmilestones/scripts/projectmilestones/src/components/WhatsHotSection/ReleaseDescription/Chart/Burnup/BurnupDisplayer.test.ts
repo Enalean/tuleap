@@ -18,22 +18,22 @@
  */
 
 import type { BurnupData, MilestoneData, PointsWithDateForBurnup } from "../../../../../type";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import ChartError from "../ChartError.vue";
 import BurnupDisplayer from "./BurnupDisplayer.vue";
 import BurnupChart from "./BurnupChart.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 
 describe("BurnupDisplayer", () => {
-    async function getPersonalWidgetInstance(
+    function getPersonalWidgetInstance(
         start_date: string | null,
         end_date: string | null,
         burnup_data: BurnupData,
         is_timeframe_duration = true,
-    ): Promise<Wrapper<Vue, Element>> {
+    ): VueWrapper<InstanceType<typeof BurnupDisplayer>> {
         const useStore = defineStore("root", {
             state: () => ({
                 label_timeframe: "timeframe_field",
@@ -56,12 +56,13 @@ describe("BurnupDisplayer", () => {
                 release_data,
                 burnup_data,
             },
-            localVue: await createReleaseWidgetLocalVue(),
-            pinia,
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
         });
     }
 
-    it("When the burnup is under calculation, Then ChartError component is rendered", async () => {
+    it("When the burnup is under calculation, Then ChartError component is rendered", () => {
         const start_date = new Date("2017-01-22T13:42:08+02:00").toDateString();
         const end_date = null;
         const burnup_data = {
@@ -75,15 +76,15 @@ describe("BurnupDisplayer", () => {
             label: "burnup",
             points_with_date_count_elements: [],
         } as BurnupData;
-        const wrapper = await getPersonalWidgetInstance(start_date, end_date, burnup_data);
+        const wrapper = getPersonalWidgetInstance(start_date, end_date, burnup_data);
         const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeTruthy();
-        expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
-        expect(chart_error.attributes("has_error_duration")).toBeFalsy();
+        expect(chart_error.attributes("has_error_start_date")).toBe("false");
+        expect(chart_error.attributes("has_error_duration")).toBe("false");
     });
 
-    it("When there isn't start date, Then ChartError component is rendered", async () => {
+    it("When there isn't start date, Then ChartError component is rendered", () => {
         const start_date = null;
         const end_date = null;
         const burnup_data = {
@@ -98,15 +99,15 @@ describe("BurnupDisplayer", () => {
             points_with_date_count_elements: [],
         } as BurnupData;
 
-        const wrapper = await getPersonalWidgetInstance(start_date, end_date, burnup_data);
+        const wrapper = getPersonalWidgetInstance(start_date, end_date, burnup_data);
         const chart_error = wrapper.findComponent(ChartError);
 
-        expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
+        expect(chart_error.attributes("is_under_calculation")).toBe("false");
         expect(chart_error.attributes("has_error_start_date")).toBeTruthy();
-        expect(chart_error.attributes("has_error_duration")).toBeFalsy();
+        expect(chart_error.attributes("has_error_duration")).toBe("false");
     });
 
-    it("When there duration is equal to 0, Then ChartError component is rendered", async () => {
+    it("When there duration is equal to 0, Then ChartError component is rendered", () => {
         const start_date = new Date("2017-01-22T13:42:08+02:00").toDateString();
         const end_date = null;
         const burnup_data = {
@@ -121,15 +122,15 @@ describe("BurnupDisplayer", () => {
             points_with_date_count_elements: [],
         } as BurnupData;
 
-        const wrapper = await getPersonalWidgetInstance(start_date, end_date, burnup_data);
+        const wrapper = getPersonalWidgetInstance(start_date, end_date, burnup_data);
         const chart_error = wrapper.findComponent(ChartError);
 
-        expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
-        expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
+        expect(chart_error.attributes("is_under_calculation")).toBe("false");
+        expect(chart_error.attributes("has_error_start_date")).toBe("false");
         expect(chart_error.attributes("has_error_duration")).toBeTruthy();
     });
 
-    it("When duration is null, Then ChartError component is rendered", async () => {
+    it("When duration is null, Then ChartError component is rendered", () => {
         const start_date = new Date("2017-01-22T13:42:08+02:00").toDateString();
         const end_date = null;
         const burnup_data = {
@@ -144,15 +145,15 @@ describe("BurnupDisplayer", () => {
             points_with_date_count_elements: [],
         } as BurnupData;
 
-        const wrapper = await getPersonalWidgetInstance(start_date, end_date, burnup_data);
+        const wrapper = getPersonalWidgetInstance(start_date, end_date, burnup_data);
         const chart_error = wrapper.findComponent(ChartError);
 
-        expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
-        expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
+        expect(chart_error.attributes("is_under_calculation")).toBe("false");
+        expect(chart_error.attributes("has_error_start_date")).toBe("false");
         expect(chart_error.attributes("has_error_duration")).toBeTruthy();
     });
 
-    it("When duration is null and start date is null, Then ChartError component is rendered", async () => {
+    it("When duration is null and start date is null, Then ChartError component is rendered", () => {
         const start_date = null;
         const end_date = null;
         const burnup_data = {
@@ -167,15 +168,15 @@ describe("BurnupDisplayer", () => {
             points_with_date_count_elements: [],
         } as BurnupData;
 
-        const wrapper = await getPersonalWidgetInstance(start_date, end_date, burnup_data);
+        const wrapper = getPersonalWidgetInstance(start_date, end_date, burnup_data);
         const chart_error = wrapper.findComponent(ChartError);
 
-        expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
+        expect(chart_error.attributes("is_under_calculation")).toBe("false");
         expect(chart_error.attributes("has_error_start_date")).toBeTruthy();
         expect(chart_error.attributes("has_error_duration")).toBeTruthy();
     });
 
-    it("When duration is null and it is under calculation, Then ChartError component is rendered", async () => {
+    it("When duration is null and it is under calculation, Then ChartError component is rendered", () => {
         const start_date = new Date("2017-01-22T13:42:08+02:00").toDateString();
         const end_date = null;
         const burnup_data = {
@@ -190,15 +191,15 @@ describe("BurnupDisplayer", () => {
             points_with_date_count_elements: [],
         } as BurnupData;
 
-        const wrapper = await getPersonalWidgetInstance(start_date, end_date, burnup_data);
+        const wrapper = getPersonalWidgetInstance(start_date, end_date, burnup_data);
         const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeTruthy();
-        expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
+        expect(chart_error.attributes("has_error_start_date")).toBe("false");
         expect(chart_error.attributes("has_error_duration")).toBeTruthy();
     });
 
-    it("When the burnup can be created, Then a message is displayed", async () => {
+    it("When the burnup can be created, Then a message is displayed", () => {
         const start_date = new Date("2017-01-22T13:42:08+02:00").toDateString();
         const end_date = null;
         const burnup_data = {
@@ -213,12 +214,12 @@ describe("BurnupDisplayer", () => {
             points_with_date_count_elements: [],
         } as BurnupData;
 
-        const wrapper = await getPersonalWidgetInstance(start_date, end_date, burnup_data);
+        const wrapper = getPersonalWidgetInstance(start_date, end_date, burnup_data);
 
         expect(wrapper.findComponent(BurnupChart).exists()).toBe(true);
     });
 
-    it("When the timeframe is not on duration field and end date field is null, Then there is an error", async () => {
+    it("When the timeframe is not on duration field and end date field is null, Then there is an error", () => {
         const start_date = new Date("2017-01-22T13:42:08+02:00").toDateString();
         const end_date = null;
         const burnup_data = {
@@ -233,13 +234,13 @@ describe("BurnupDisplayer", () => {
             points_with_date_count_elements: [],
         } as BurnupData;
 
-        const wrapper = await getPersonalWidgetInstance(start_date, end_date, burnup_data, false);
+        const wrapper = getPersonalWidgetInstance(start_date, end_date, burnup_data, false);
         const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("has_error_duration")).toBeTruthy();
     });
 
-    it("When the timeframe is not on duration field and there is end date, Then there is no error", async () => {
+    it("When the timeframe is not on duration field and there is end date, Then there is no error", () => {
         const start_date = new Date("2017-01-22T13:42:08+02:00").toDateString();
         const end_date = new Date("2019-02-05T11:41:01+02:00").toDateString();
         const burnup_data = {
@@ -254,7 +255,7 @@ describe("BurnupDisplayer", () => {
             points_with_date_count_elements: [],
         } as BurnupData;
 
-        const wrapper = await getPersonalWidgetInstance(start_date, end_date, burnup_data, false);
+        const wrapper = getPersonalWidgetInstance(start_date, end_date, burnup_data, false);
 
         expect(wrapper.findComponent(ChartError).exists()).toBeFalsy();
     });

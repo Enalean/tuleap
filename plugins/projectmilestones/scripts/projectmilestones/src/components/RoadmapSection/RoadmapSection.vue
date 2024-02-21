@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useStore } from "../../stores/root";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const root_store = useStore();
 

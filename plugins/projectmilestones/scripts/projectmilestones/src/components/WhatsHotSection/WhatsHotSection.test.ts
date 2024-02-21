@@ -17,19 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WhatsHotSection from "./WhatsHotSection.vue";
 import type { MilestoneData } from "../../type";
-import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 const project_id = 102;
 
-async function getPersonalWidgetInstance(
+function getPersonalWidgetInstance(
     current_milestones: Array<MilestoneData>,
-): Promise<Wrapper<Vue, Element>> {
+): VueWrapper<InstanceType<typeof WhatsHotSection>> {
     const useStore = defineStore("root", {
         state: () => ({
             current_milestones,
@@ -42,21 +42,22 @@ async function getPersonalWidgetInstance(
         propsData: {
             project_id,
         },
-        localVue: await createReleaseWidgetLocalVue(),
-        pinia,
+        global: {
+            ...getGlobalTestOptions(pinia),
+        },
     };
 
     return shallowMount(WhatsHotSection, component_options);
 }
 
 describe("What'sHotSection", () => {
-    it("When there are no current milestones, then ReleaseDisplayer Component is not allowed", async () => {
-        const wrapper = await getPersonalWidgetInstance([]);
+    it("When there are no current milestones, then ReleaseDisplayer Component is not allowed", () => {
+        const wrapper = getPersonalWidgetInstance([]);
 
         expect(wrapper.find("[data-test=current-milestones-test]").exists()).toBe(false);
     });
 
-    it("When there are some current_milestones, then ReleaseDisplayer Component is displayed", async () => {
+    it("When there are some current_milestones, then ReleaseDisplayer Component is displayed", () => {
         const release1: MilestoneData = {
             label: "release_1",
             id: 1,
@@ -67,7 +68,7 @@ describe("What'sHotSection", () => {
             id: 2,
         } as MilestoneData;
 
-        const wrapper = await getPersonalWidgetInstance([release1, release2]);
+        const wrapper = getPersonalWidgetInstance([release1, release2]);
 
         expect(
             wrapper.find("[data-test=current-milestones-test-" + release1.label + "]").exists(),

@@ -18,13 +18,13 @@
  */
 
 import type { MilestoneData } from "../../../../../type";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import BurndownChart from "./BurndownChart.vue";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 
 describe("BurndownChart", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
+    function getPersonalWidgetInstance(): VueWrapper<InstanceType<typeof BurndownChart>> {
         return shallowMount(BurndownChart, {
             propsData: {
                 release_data: {
@@ -33,12 +33,14 @@ describe("BurndownChart", () => {
                 } as MilestoneData,
                 burndown_data: null,
             },
-            localVue: await createReleaseWidgetLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
         });
     }
 
-    it("When component is renderer, Then there is a svg element with id of release", async () => {
-        const wrapper = await getPersonalWidgetInstance();
+    it("When component is renderer, Then there is a svg element with id of release", () => {
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.element).toMatchSnapshot();
     });
 });

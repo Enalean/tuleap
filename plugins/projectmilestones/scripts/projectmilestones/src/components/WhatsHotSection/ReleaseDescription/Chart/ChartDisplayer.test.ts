@@ -24,23 +24,23 @@ import type {
     PointsWithDateForBurndown,
     ArtifactMilestoneChartBurnup,
 } from "../../../../type";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ChartDisplayer from "./ChartDisplayer.vue";
-import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
 import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
 import * as rest_querier from "../../../../api/rest-querier";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 const project_id = 102;
 
 describe("ChartDisplayer", () => {
-    async function getPersonalWidgetInstance(
+    function getPersonalWidgetInstance(
         burndown_data: BurndownData | null,
         burnup_data: BurnupData | null,
-    ): Promise<Wrapper<Vue, Element>> {
+    ): VueWrapper<InstanceType<typeof ChartDisplayer>> {
         const release_data = {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -62,7 +62,9 @@ describe("ChartDisplayer", () => {
             propsData: {
                 release_data,
             },
-            localVue: await createReleaseWidgetLocalVue(),
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
         });
     }
 
@@ -91,7 +93,7 @@ describe("ChartDisplayer", () => {
             }),
         );
 
-        const wrapper = await getPersonalWidgetInstance(burndown_data, {} as BurnupData);
+        const wrapper = getPersonalWidgetInstance(burndown_data, {} as BurnupData);
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
@@ -131,23 +133,26 @@ describe("ChartDisplayer", () => {
             }),
         );
 
-        const wrapper = await getPersonalWidgetInstance(null, null);
+        const wrapper = getPersonalWidgetInstance(null, null);
+        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
         expect(wrapper.find("[data-test=burnup-exists]").exists()).toBe(true);
     });
 
-    it("When the burnup doesn't exist, Then there is nothing", async () => {
-        const wrapper = await getPersonalWidgetInstance(null, null);
+    it("When the burnup doesn't exist, Then there is nothing", () => {
+        const wrapper = getPersonalWidgetInstance(null, null);
 
         expect(wrapper.find("[data-test=burnup-exists]").exists()).toBe(false);
     });
 
     it("When the burndown doesn't yet exist, Then there is a spinner", async () => {
-        const wrapper = await getPersonalWidgetInstance(null, null);
+        const wrapper = getPersonalWidgetInstance(null, null);
         expect(wrapper.find("[data-test=loading-data]").exists()).toBe(true);
 
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
         expect(wrapper.find("[data-test=loading-data]").exists()).toBe(false);
     });
@@ -162,7 +167,8 @@ describe("ChartDisplayer", () => {
             Promise.reject(new FetchWrapperError("404 Error", response)),
         );
 
-        const wrapper = await getPersonalWidgetInstance(null, null);
+        const wrapper = getPersonalWidgetInstance(null, null);
+        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
