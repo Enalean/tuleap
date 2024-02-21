@@ -27,6 +27,8 @@ use Tuleap\Dashboard\Project\ProjectDashboardSaver;
 use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
 use Tuleap\Dashboard\Project\RecentlyVisitedProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
@@ -205,6 +207,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
                 new ProjectDashboardSaver(
                     $project_dao,
                     new RecentlyVisitedProjectDashboardDao(),
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 ),
                 $widget_factory,
                 $widget_dao,

@@ -18,37 +18,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Dashboard\Project;
 
-class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
+use Tuleap\Dashboard\NameDashboardDoesNotExistException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+
+final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /** @var PFUser */
-    private $regular_user;
-
-    /** @var PFUser */
-    private $admin_user;
-
-    /** @var ProjectDashboardDao */
-    private $dao;
-
-    /** @var ProjectDashboardSaver */
-    private $project_saver;
-
-    /** @var Project */
-    private $project;
+    private const PROJECT_ID   = 145;
+    private const DASHBOARD_ID = 1;
+    private \PFUser $regular_user;
+    private \PFUser $admin_user;
+    private MockObject & ProjectDashboardDao $dao;
+    private \Project $project;
     private DeleteVisitByDashboardId $delete_visit_by_dashboard_id;
 
     protected function setUp(): void
     {
-        $this->dao     = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
-        $this->project = $this->createMock(\Project::class);
-        $this->project->method('getID')->willReturn(1);
+        $this->dao     = $this->createMock(ProjectDashboardDao::class);
+        $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
-        $this->admin_user = $this->createMock(\PFUser::class);
-        $this->admin_user->method('isAdmin')->willReturn(true);
-
-        $this->regular_user = $this->createMock(\PFUser::class);
-        $this->regular_user->method('isAdmin')->willReturn(false);
+        $this->admin_user   = UserTestBuilder::aUser()
+            ->withId(199)
+            ->withoutSiteAdministrator()
+            ->withAdministratorOf($this->project)
+            ->build();
+        $this->regular_user = UserTestBuilder::aUser()
+            ->withId(297)
+            ->withoutSiteAdministrator()
+            ->withMemberOf($this->project)
+            ->build();
 
         $this->delete_visit_by_dashboard_id = new class implements DeleteVisitByDashboardId {
             public bool $called = false;
@@ -60,58 +65,62 @@ class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         };
     }
 
+    private function getSaver(): ProjectDashboardSaver
+    {
+        return new ProjectDashboardSaver(
+            $this->dao,
+            $this->delete_visit_by_dashboard_id,
+            new DBTransactionExecutorPassthrough()
+        );
+    }
+
     public function testItSavesDashboard(): void
     {
-        $this->dao->method('searchByProjectIdAndName')->with(1, 'new_dashboard')->willReturn([]);
-        $this->dao->expects(self::once())->method('save')->with(1, 'new_dashboard');
+        $this->dao->method('searchByProjectIdAndName')->with(self::PROJECT_ID, 'new_dashboard')->willReturn([]);
+        $this->dao->expects(self::once())->method('save')->with(self::PROJECT_ID, 'new_dashboard');
 
-        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
-        $this->project_saver->save($this->admin_user, $this->project, 'new_dashboard');
+        $this->getSaver()->save($this->admin_user, $this->project, 'new_dashboard');
     }
 
     public function testItThrowsExceptionWhenDashboardAlreadyExists(): void
     {
-        $this->dao->method('searchByProjectIdAndName')->with(1, 'existing_dashboard')->willReturn([
-            'id' => 1,
-            'project_id' => 1,
-            'name' => 'existing_dashboard',
+        $this->dao->method('searchByProjectIdAndName')->with(self::PROJECT_ID, 'existing_dashboard')->willReturn([
+            'id'         => self::DASHBOARD_ID,
+            'project_id' => self::PROJECT_ID,
+            'name'       => 'existing_dashboard',
         ]);
         $this->dao->expects(self::never())->method('save');
-        self::expectException('Tuleap\Dashboard\NameDashboardAlreadyExistsException');
 
-        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
-        $this->project_saver->save($this->admin_user, $this->project, 'existing_dashboard');
+        $this->expectException(NameDashboardAlreadyExistsException::class);
+        $this->getSaver()->save($this->admin_user, $this->project, 'existing_dashboard');
     }
 
     public function testItThrowsExceptionWhenNameDoesNotExist(): void
     {
         $this->dao->expects(self::never())->method('save');
-        self::expectException('Tuleap\Dashboard\NameDashboardDoesNotExistException');
 
-        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
-        $this->project_saver->save($this->admin_user, $this->project, '');
+        $this->expectException(NameDashboardDoesNotExistException::class);
+        $this->getSaver()->save($this->admin_user, $this->project, '');
     }
 
     public function testItThrowsExceptionWhenUserCanNotCreateDashboard(): void
     {
         $this->dao->expects(self::never())->method('save');
-        self::expectException('Tuleap\Dashboard\Project\UserCanNotUpdateProjectDashboardException');
 
-        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
-        $this->project_saver->save($this->regular_user, $this->project, 'new_dashboard');
+        $this->expectException(UserCanNotUpdateProjectDashboardException::class);
+        $this->getSaver()->save($this->regular_user, $this->project, 'new_dashboard');
     }
 
     public function testDelete(): void
     {
-        $this->dao->method('searchById')->with(1)->willReturn([
-            'id' => 1,
-            'project_id' => 1,
-            'name' => 'existing_dashboard',
+        $this->dao->method('searchById')->with(self::DASHBOARD_ID)->willReturn([
+            'id'         => self::DASHBOARD_ID,
+            'project_id' => self::PROJECT_ID,
+            'name'       => 'existing_dashboard',
         ]);
         $this->dao->expects(self::once())->method('delete');
 
-        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
-        $this->project_saver->delete($this->admin_user, $this->project, 1);
+        $this->getSaver()->delete($this->admin_user, $this->project, self::DASHBOARD_ID);
 
         self::assertTrue($this->delete_visit_by_dashboard_id->called);
     }
@@ -119,11 +128,12 @@ class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDeleteByNonAdmin(): void
     {
         $this->dao->expects(self::never())->method('delete');
-        self::expectException('Tuleap\Dashboard\Project\UserCanNotUpdateProjectDashboardException');
 
-        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
-        $this->project_saver->delete($this->regular_user, $this->project, 1);
-
-        self::assertFalse($this->delete_visit_by_dashboard_id->called);
+        $this->expectException(UserCanNotUpdateProjectDashboardException::class);
+        try {
+            $this->getSaver()->delete($this->regular_user, $this->project, self::DASHBOARD_ID);
+        } finally {
+            self::assertFalse($this->delete_visit_by_dashboard_id->called);
+        }
     }
 }
