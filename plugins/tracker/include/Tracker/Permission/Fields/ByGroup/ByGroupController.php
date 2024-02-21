@@ -95,8 +95,8 @@ class ByGroupController implements DispatchableWithRequest
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../../../frontend-assets', '/assets/trackers'),
-                'tracker-admin-fields-permissions.js'
+                new IncludeAssets(__DIR__ . '/../../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+                'field-permissions.js'
             )
         );
         $this->renderer->renderToPage(

@@ -382,8 +382,10 @@ class Tracker_NotificationsManager
                 $this->notification_list_builder->getNotificationsPresenter($notifs, $this->addresses_builder)
             )
         );
-        $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../frontend-assets', '/assets/trackers');
-        $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('tracker-admin.js'));
+        $GLOBALS['Response']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset(
+            new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+            'notifications.js'
+        ));
     }
 
     private function displayAdminNotificationUnsubcribers()

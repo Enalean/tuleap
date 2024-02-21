@@ -21,8 +21,8 @@ import { createListPicker } from "@tuleap/list-picker";
 import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 
 export async function initStatusListPicker(mount_point: Document): Promise<void> {
-    const action_button = mount_point.getElementById("semantic-status-value");
-    if (action_button === null) {
+    const action_button = mount_point.getElementById("done_value");
+    if (!(action_button instanceof HTMLSelectElement)) {
         return;
     }
     const language = mount_point.body.dataset.userLocale;
@@ -32,14 +32,11 @@ export async function initStatusListPicker(mount_point: Document): Promise<void>
 
     const gettext_provider = await initGettext(
         language,
-        "status-picker",
-        (locale) =>
-            import(
-                /* webpackChunkName: "status-picker-po-" */ "../po/" + getPOFileFromLocale(locale)
-            ),
+        "status-done-picker",
+        (locale) => import(`../../../po/${getPOFileFromLocale(locale)}`),
     );
 
-    createListPicker(document.querySelector("#semantic-status-value"), {
+    createListPicker(action_button, {
         locale: language,
         placeholder: gettext_provider.gettext("Choose values"),
     });

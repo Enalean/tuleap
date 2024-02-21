@@ -21,5 +21,5 @@ const { defineJestConfiguration } = require("@tuleap/build-system-configurator")
 
 module.exports = {
     ...defineJestConfiguration(),
-    displayName: "tracker/semantic-progress",
+    displayName: "tracker-administration",
 };

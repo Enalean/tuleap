@@ -1,0 +1,70 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/gettext
+  '@tuleap/list-picker':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/list-picker
+  '@tuleap/plugin-tracker-color-picker':
+    specifier: workspace:*
+    version: link:../lib/colorpicker
+  '@tuleap/plugin-tracker-email-copy-paste':
+    specifier: workspace:*
+    version: link:../lib/email-copy-paste
+  '@tuleap/project-background':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/project-background
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-modal
+  '@tuleap/user-and-ugroup-autocompleter':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/user-and-ugroup-autocompleter
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@types/bootstrap':
+    specifier: ^4.5.1
+    version: 4.5.1
+  '@types/jquery':
+    specifier: ^3.5.5
+    version: 3.5.5
+  jquery:
+    specifier: ^3.6.0
+    version: 3.6.0
+
+packages:
+
+  /@types/bootstrap@4.5.1:
+    resolution: {integrity: sha512-5iAWnZnqHucloYQFlozKUTPw0+fLfKo8d4flGCiE1B1w91z/91UIqMDht/31RQJIwx0+u5SL4CJCbs79Z15M+A==}
+    dependencies:
+      '@types/jquery': 3.5.5
+      popper.js: 1.16.1
+    dev: true
+
+  /@types/jquery@3.5.5:
+    resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
+    dependencies:
+      '@types/sizzle': 2.3.2
+    dev: true
+
+  /@types/sizzle@2.3.2:
+    resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
+    dev: true
+
+  /jquery@3.6.0:
+    resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
+    dev: true
+
+  /popper.js@1.16.1:
+    resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
+    deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
+    dev: true
