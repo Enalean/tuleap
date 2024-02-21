@@ -5,8 +5,8 @@
 %define _tmpfilesdir /usr/lib/tmpfiles.d
 
 %define _buildhost tuleap-builder
-%define _source_payload w9.xzdio
-%define _binary_payload w9.xzdio
+%define _source_payload w9T8.xzdio
+%define _binary_payload w9T8.xzdio
 
 # Define variables
 %define PKG_NAME @@PKG_NAME@@
