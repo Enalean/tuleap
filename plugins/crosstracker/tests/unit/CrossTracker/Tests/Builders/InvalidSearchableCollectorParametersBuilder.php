@@ -43,6 +43,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChe
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
@@ -112,6 +113,7 @@ final class InvalidSearchableCollectorParametersBuilder
             new FlatInvalidFieldChecker(
                 $this->comparison,
                 new FloatFieldChecker(),
+                new IntegerFieldChecker(),
                 new EqualComparisonVisitor(),
                 new NotEqualComparisonVisitor(),
                 new LesserThanComparisonVisitor(),

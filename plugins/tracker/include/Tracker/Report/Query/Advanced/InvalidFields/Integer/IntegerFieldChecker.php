@@ -17,43 +17,73 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer;
 
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\CollectionOfAlphaNumericValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
 
-final class IntegerFieldChecker implements InvalidFieldChecker
+final readonly class IntegerFieldChecker implements InvalidFieldChecker
 {
-    public function __construct(
-        private readonly EmptyStringChecker $empty_string_checker,
-        private readonly CollectionOfAlphaNumericValuesExtractor $values_extractor,
-    ) {
+    /**
+     * @throws FieldIsNotSupportedForComparisonException
+     * @throws IntegerToEmptyStringTermException
+     * @throws IntegerToMySelfComparisonException
+     * @throws IntegerToNowComparisonException
+     * @throws IntegerToStatusOpenComparisonException
+     * @throws IntegerToStringComparisonException
+     */
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    {
+        match ($comparison->getType()) {
+            ComparisonType::Equal,
+            ComparisonType::NotEqual => $this->checkIntValueIsValid($comparison, $field, false),
+            ComparisonType::LesserThan,
+            ComparisonType::LesserThanOrEqual,
+            ComparisonType::GreaterThan,
+            ComparisonType::GreaterThanOrEqual,
+            ComparisonType::Between => $this->checkIntValueIsValid($comparison, $field, true),
+            ComparisonType::In => throw new FieldIsNotSupportedForComparisonException($field, 'in()'),
+            ComparisonType::NotIn => throw new FieldIsNotSupportedForComparisonException($field, 'not in()'),
+        };
     }
 
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
-    {
+    /**
+     * @throws IntegerToEmptyStringTermException
+     * @throws IntegerToMySelfComparisonException
+     * @throws IntegerToNowComparisonException
+     * @throws IntegerToStatusOpenComparisonException
+     * @throws IntegerToStringComparisonException
+     */
+    public function checkIntValueIsValid(
+        Comparison $comparison,
+        \Tracker_FormElement_Field $field,
+        bool $is_empty_string_a_problem,
+    ): void {
+        $values_extractor = new CollectionOfAlphaNumericValuesExtractor();
         try {
-            $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
-        } catch (NowIsNotSupportedException $exception) {
+            $values = $values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
+        } catch (NowIsNotSupportedException) {
             throw new IntegerToNowComparisonException($field);
-        } catch (MySelfIsNotSupportedException $exception) {
+        } catch (MySelfIsNotSupportedException) {
             throw new IntegerToMySelfComparisonException($field);
-        } catch (StatusOpenIsNotSupportedException $exception) {
+        } catch (StatusOpenIsNotSupportedException) {
             throw new IntegerToStatusOpenComparisonException($field);
         }
 
         foreach ($values as $value) {
-            if ($this->empty_string_checker->isEmptyStringAProblem((string) $value)) {
+            if ($is_empty_string_a_problem && $value === '') {
                 throw new IntegerToEmptyStringTermException($comparison, $field);
             }
 
-            if (! is_numeric($value) && $value !== "") {
+            if (! is_numeric($value) && $value !== '') {
                 throw new IntegerToStringComparisonException($field, $value);
             }
         }

@@ -524,7 +524,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    public static function generateInvalidFloatComparisons(): iterable
+    public static function generateInvalidNumericComparisons(): iterable
     {
         $field       = new Field(self::FIELD_NAME);
         $empty_value = new SimpleValueWrapper('');
@@ -554,9 +554,9 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     }
 
     /**
-     * @dataProvider generateInvalidFloatComparisons
+     * @dataProvider generateInvalidNumericComparisons
      */
-    public function testItRejectsInvalidComparisons(Comparison $comparison): void
+    public function testItRejectsInvalidFloatComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
@@ -567,18 +567,38 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->comparison = $comparison;
 
         $this->check();
-        self::assertEmpty($this->invalid_searchable_collection->getNonexistentSearchables());
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    public function testItRejectsInvalidComparisonToMyself(): void
+    /**
+     * @dataProvider generateInvalidNumericComparisons
+     */
+    public function testItRejectsInvalidIntComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
-                TrackerFormElementFloatFieldBuilder::aFloatField(186)
+                TrackerFormElementIntFieldBuilder::anIntField(479)
                     ->withName(self::FIELD_NAME)
                     ->build()
             );
+        $this->comparison = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    public static function generateFieldTypes(): iterable
+    {
+        yield ['int' => TrackerFormElementIntFieldBuilder::anIntField(132)->withName(self::FIELD_NAME)->build()];
+        yield ['float' => TrackerFormElementFloatFieldBuilder::aFloatField(202)->withName(self::FIELD_NAME)->build()];
+    }
+
+    /**
+     * @dataProvider generateFieldTypes
+     */
+    public function testItRejectsInvalidComparisonToMyself(\Tracker_FormElement_Field $field): void
+    {
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')->willReturn($field);
         $user_manager = $this->createStub(\UserManager::class);
         $user_manager->method('getCurrentUser')->willReturn($this->user);
 
@@ -588,7 +608,6 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->check();
-        self::assertEmpty($this->invalid_searchable_collection->getNonexistentSearchables());
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 

@@ -53,7 +53,6 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\ValueForFileExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
@@ -108,7 +107,7 @@ final class EqualComparisonVisitor implements
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new IntegerFieldChecker(new EmptyStringAllowed(), new CollectionOfAlphaNumericValuesExtractor());
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)
