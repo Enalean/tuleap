@@ -25,13 +25,13 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FlatFloatFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 
 final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
 {
     public function __construct(
         private Comparison $comparison,
-        private FlatFloatFieldChecker $float_field_checker,
+        private FloatFieldChecker $float_field_checker,
         private EqualComparisonVisitor $equal_checker,
         private NotEqualComparisonVisitor $not_equal_checker,
         private LesserThanComparisonVisitor $lesser_than_checker,

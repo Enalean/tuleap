@@ -2,6 +2,8 @@
 /**
  * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -13,16 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields;
 
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\CollectionOfAlphaNumericValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
@@ -30,16 +33,44 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedE
 
 final readonly class FloatFieldChecker implements InvalidFieldChecker
 {
-    public function __construct(
-        private EmptyStringChecker $empty_string_checker,
-        private CollectionOfAlphaNumericValuesExtractor $values_extractor,
-    ) {
+    /**
+     * @throws FloatToStringComparisonException
+     * @throws FloatToNowComparisonException
+     * @throws FloatToEmptyStringTermException
+     * @throws FloatToMySelfComparisonException
+     * @throws FloatToStatusOpenComparisonException
+     * @throws FieldIsNotSupportedForComparisonException
+     */
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    {
+        match ($comparison->getType()) {
+            ComparisonType::Equal,
+            ComparisonType::NotEqual => $this->checkFloatValueIsValid($comparison, $field, false),
+            ComparisonType::LesserThan,
+            ComparisonType::LesserThanOrEqual,
+            ComparisonType::GreaterThan,
+            ComparisonType::GreaterThanOrEqual,
+            ComparisonType::Between => $this->checkFloatValueIsValid($comparison, $field, true),
+            ComparisonType::In => throw new FieldIsNotSupportedForComparisonException($field, 'in()'),
+            ComparisonType::NotIn => throw new FieldIsNotSupportedForComparisonException($field, 'not in()'),
+        };
     }
 
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
-    {
+    /**
+     * @throws FloatToStringComparisonException
+     * @throws FloatToEmptyStringTermException
+     * @throws FloatToNowComparisonException
+     * @throws FloatToMySelfComparisonException
+     * @throws FloatToStatusOpenComparisonException
+     */
+    private function checkFloatValueIsValid(
+        Comparison $comparison,
+        \Tracker_FormElement_Field $field,
+        bool $is_empty_string_a_problem,
+    ): void {
+        $values_extractor = new CollectionOfAlphaNumericValuesExtractor();
         try {
-            $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
+            $values = $values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         } catch (NowIsNotSupportedException) {
             throw new FloatToNowComparisonException($field);
         } catch (MySelfIsNotSupportedException) {
@@ -49,11 +80,11 @@ final readonly class FloatFieldChecker implements InvalidFieldChecker
         }
 
         foreach ($values as $value) {
-            if ($this->empty_string_checker->isEmptyStringAProblem((string) $value)) {
+            if ($is_empty_string_a_problem && $value === '') {
                 throw new FloatToEmptyStringTermException($comparison, $field);
             }
 
-            if (! is_numeric($value) && $value !== "") {
+            if (! is_numeric($value) && $value !== '') {
                 throw new FloatToStringComparisonException($field, $value);
             }
         }

@@ -35,7 +35,12 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
  */
 final class CollectionOfAlphaNumericValuesExtractor implements ValueWrapperVisitor
 {
-    /** @return array<string | int | float> */
+    /**
+     * @return array<string | int | float>
+     * @throws NowIsNotSupportedException
+     * @throws MySelfIsNotSupportedException
+     * @throws StatusOpenIsNotSupportedException
+     */
     public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field): array
     {
         return (array) $value_wrapper->accept($this, new FieldValueWrapperParameters($field));
