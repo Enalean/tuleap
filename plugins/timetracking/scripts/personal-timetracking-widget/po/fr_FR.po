@@ -30,6 +30,9 @@ msgstr "Fermer"
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
+msgid "Current week"
+msgstr "Cette semaine"
+
 msgid "Date"
 msgstr "Date"
 
@@ -42,6 +45,15 @@ msgstr "Détails"
 msgid "From"
 msgstr "Du"
 
+msgid "Last 7 days"
+msgstr "7 derniers jours"
+
+msgid "Last month"
+msgstr "Mois dernier"
+
+msgid "Last week"
+msgstr "Semaine dernière"
+
 msgid "Load more"
 msgstr "Voir plus"
 
@@ -53,6 +65,9 @@ msgstr "Aucun temps suivi n'a été trouvé sur cette période et cet artéfact"
 
 msgid "Please check time's format (hh:mm)"
 msgstr "Vérifiez le format du temps (hh:mm)"
+
+msgid "Predefined periods"
+msgstr "Périodes prédéfinies"
 
 msgid "Project"
 msgstr "Projet"
@@ -90,8 +105,14 @@ msgstr "Temps"
 msgid "To"
 msgstr "Au"
 
+msgid "Today"
+msgstr "Aujourd'hui"
+
 msgid "Wait a minute..."
 msgstr "Attendez une minute..."
+
+msgid "Yesterday"
+msgstr "Hier"
 
 msgid "You're about to remove the time. Please confirm your action."
 msgstr "Vous êtes sur le point de supprimer le temps. Confirmez votre action."

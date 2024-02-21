@@ -53,7 +53,6 @@
     margin: 0 0 0 20px;
 }
 
-.timetracking-writing-mode-selected-dates,
 .timetracking-reading-mode-dates {
     display: flex;
     min-width: max-content;
@@ -88,7 +87,6 @@
     margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
-.timetracking-writing-mode-selected-date:last-of-type,
 .timetracking-overview-writing-mode-selected-date:last-of-type,
 .timetracking-reading-date:last-of-type {
     margin: 0 0 0 var(--tlp-medium-spacing);
