@@ -36,7 +36,30 @@
     </div>
 </template>
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
 
+const { $gettext } = useGettext();
 const personal_store = usePersonalTimetrackingWidgetStore();
 </script>
+
+<style scoped lang="scss">
+.timetracking-reading-mode {
+    display: flex;
+
+    &:hover {
+        background-color: var(--tlp-main-color-transparent-90);
+        cursor: pointer;
+    }
+}
+
+.timetracking-reading-mode-dates {
+    display: flex;
+    min-width: max-content;
+    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+}
+
+.timetracking-reading-date:last-of-type {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+</style>

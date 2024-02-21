@@ -59,9 +59,9 @@ import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 import { computed } from "vue";
 import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 import type { ProjectResponse } from "@tuleap/core-rest-api-types";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 defineProps<{
     artifact: Artifact;
@@ -77,15 +77,29 @@ const feedback_class = computed((): string => {
 const feedback_message = computed((): string => {
     switch (personal_store.rest_feedback.message) {
         case REST_FEEDBACK_ADD:
-            return gettext_provider.$gettext("Time successfully added");
+            return $gettext("Time successfully added");
         case REST_FEEDBACK_EDIT:
-            return gettext_provider.$gettext("Time successfully updated");
+            return $gettext("Time successfully updated");
         case REST_FEEDBACK_DELETE:
-            return gettext_provider.$gettext("Time successfully deleted");
+            return $gettext("Time successfully deleted");
         case ERROR_OCCURRED:
-            return gettext_provider.$gettext("An error occurred");
+            return $gettext("An error occurred");
         default:
             return personal_store.rest_feedback.message;
     }
 });
 </script>
+
+<style scoped lang="scss">
+.timetracking-details-modal-content {
+    padding: 0;
+}
+
+.timetracking-details-modal-artifact-details {
+    padding: var(--tlp-medium-spacing);
+}
+
+.timetracking-details-modal-artefact-link-top-bottom-spacer {
+    margin: 25px 0;
+}
+</style>

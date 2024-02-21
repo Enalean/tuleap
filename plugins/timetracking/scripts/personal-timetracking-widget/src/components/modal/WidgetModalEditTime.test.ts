@@ -20,10 +20,10 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
-import { createLocalVueForTests } from "../../helpers/local-vue.js";
 import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import { getGlobalTestOptions } from "../../../tests/global-options-for-tests";
 
 vi.mock("tlp", () => {
     return { datePicker: vi.fn() };
@@ -32,61 +32,64 @@ vi.mock("tlp", () => {
 describe("Given a personal timetracking widget modal", () => {
     const current_artifact = { id: 10 } as Artifact;
 
-    async function getWrapperInstance(
-        time_data?: PersonalTime,
-    ): Promise<Wrapper<WidgetModalEditTime>> {
-        const component_options = {
-            localVue: await createLocalVueForTests(),
-            propsData: {
+    function getWrapperInstance(time_data?: PersonalTime): VueWrapper {
+        return shallowMount(WidgetModalEditTime, {
+            props: {
                 timeData: time_data,
                 artifact: current_artifact,
             },
-        };
-        return shallowMount(WidgetModalEditTime, component_options);
+            global: {
+                ...getGlobalTestOptions(),
+            },
+        });
     }
 
     describe("Initialisation", () => {
-        it("When no date is given, then it should be initialized", async () => {
-            const wrapper = await getWrapperInstance();
-            expect(wrapper.vm.date).toBeDefined();
+        it("When no date is given, then it should be initialized", () => {
+            const wrapper = getWrapperInstance();
+            expect((wrapper.vm as unknown as { date: string }).date).toBeDefined();
         });
 
-        it("When a date is given, then it should use it", async () => {
+        it("When a date is given, then it should use it", () => {
             const date = "2023-10-30";
-            const wrapper = await getWrapperInstance({ date } as PersonalTime);
+            const wrapper = getWrapperInstance({ date } as PersonalTime);
 
-            expect(wrapper.vm.date).toBe(date);
+            expect((wrapper.vm as unknown as { date: string }).date).toBe(date);
         });
     });
 
     describe("Submit", () => {
-        it("Given a new time is not filled, then the time is invalid", async () => {
-            const wrapper = await getWrapperInstance({} as PersonalTime);
+        it("Given a new time is not filled, then the time is invalid", () => {
+            const wrapper = getWrapperInstance({} as PersonalTime);
             wrapper.find("[data-test=timetracking-submit-time]").trigger("click");
 
-            expect(wrapper.vm.error_message).toBe("Time is required");
+            expect((wrapper.vm as unknown as { error_message: string }).error_message).toBe(
+                "Time is required",
+            );
         });
 
-        it("Given a new time is submitted with an incorrect format, then the time is invalid", async () => {
-            const wrapper = await getWrapperInstance({ minutes: "0a" } as PersonalTime);
+        it("Given a new time is submitted with an incorrect format, then the time is invalid", () => {
+            const wrapper = getWrapperInstance({ minutes: 6000 } as PersonalTime);
             wrapper.find("[data-test=timetracking-submit-time]").trigger("click");
 
-            expect(wrapper.vm.error_message).toBe("Please check time's format (hh:mm)");
+            expect((wrapper.vm as unknown as { error_message: string }).error_message).toBe(
+                "Please check time's format (hh:mm)",
+            );
         });
 
-        it("Given a new time is submitted, then the submit button is disabled and a new event is sent", async () => {
+        it("Given a new time is submitted, then the submit button is disabled and a new event is sent", () => {
             const time = {
                 date: "2020-04-03",
                 minutes: 10,
             } as PersonalTime;
-            const wrapper = await getWrapperInstance(time);
+            const wrapper = getWrapperInstance(time);
 
             wrapper.find("[data-test=timetracking-submit-time]").trigger("click");
 
             expect(wrapper.emitted("validate-time")).toStrictEqual([
                 ["2020-04-03", 10, "00:10", ""],
             ]);
-            expect(wrapper.vm.is_loading).toBe(true);
+            expect((wrapper.vm as unknown as { is_loading: boolean }).is_loading).toBe(true);
         });
     });
 });

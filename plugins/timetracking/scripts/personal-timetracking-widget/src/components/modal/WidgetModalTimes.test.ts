@@ -17,42 +17,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, it, expect } from "vitest";
-import type { Wrapper } from "@vue/test-utils";
+import { describe, it, expect } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalTimes from "./WidgetModalTimes.vue";
-import { createLocalVueForTests } from "../../helpers/local-vue.js";
-import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
-import { createPinia, setActivePinia } from "pinia";
-import type Vue from "vue";
+import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import { getGlobalTestOptions } from "../../../tests/global-options-for-tests";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 
 describe("Given a personal timetracking widget modal", () => {
-    beforeEach(() => {
-        setActivePinia(createPinia());
-    });
     let current_artifact: Artifact | null;
 
-    async function getWidgetModalTimesInstance(): Promise<Wrapper<Vue>> {
-        const component_options = {
-            localVue: await createLocalVueForTests(),
-            propsData: {
-                artifact: current_artifact,
-                project: {},
-                times: [],
+    function getWidgetModalTimesInstance(): VueWrapper {
+        return shallowMount(WidgetModalTimes, {
+            global: {
+                ...getGlobalTestOptions({}),
             },
-        };
-        return shallowMount(WidgetModalTimes, component_options);
+            props: {
+                artifact: current_artifact,
+                project: {} as ProjectResponse,
+                times: [] as PersonalTime[],
+            },
+        });
     }
 
-    it("When current artifact is not empty, then modal content should be displayed", async () => {
+    it("When current artifact is not empty, then modal content should be displayed", () => {
         current_artifact = {} as Artifact;
-        const wrapper = await getWidgetModalTimesInstance();
+        const wrapper = getWidgetModalTimesInstance();
         expect(wrapper.find("[data-test=modal-content]").exists()).toBeTruthy();
     });
 
-    it("When current artifact is empty, then modal content should not be displayed", async () => {
+    it("When current artifact is empty, then modal content should not be displayed", () => {
         current_artifact = null;
-        const wrapper = await getWidgetModalTimesInstance();
+        const wrapper = getWidgetModalTimesInstance();
         expect(wrapper.find("[data-test=modal-content]").exists()).toBeFalsy();
     });
 });

@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function updateEvent() {
+export function updateEvent(): void {
     const event = new CustomEvent("timeUpdated");
     document.dispatchEvent(event);
 }

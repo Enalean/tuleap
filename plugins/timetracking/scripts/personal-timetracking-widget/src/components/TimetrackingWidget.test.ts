@@ -17,17 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
-import type { Wrapper } from "@vue/test-utils";
+import { describe, it, expect } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TimetrackingWidget from "./TimetrackingWidget.vue";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
-import { createTestingPinia } from "@pinia/testing";
-import { defineStore } from "pinia";
-import { createLocalVueForTests } from "../helpers/local-vue";
-import type Vue from "vue";
+import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 
 const userId = 102;
 const userLocale = "fr_FR";
@@ -35,41 +32,35 @@ const userLocale = "fr_FR";
 describe("Given a personal timetracking widget", () => {
     let reading_mode: boolean;
 
-    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue>> {
-        const useStore = defineStore("root", {
-            state: () => ({
-                reading_mode: reading_mode,
-            }),
-            actions: {
-                initUserId() {},
-                initUserLocale() {},
-            },
-        });
-        const pinia = createTestingPinia({ stubActions: false, createSpy: vi.fn });
-        useStore(pinia);
-
-        const component_options = {
-            propsData: {
+    function getPersonalWidgetInstance(): VueWrapper {
+        return shallowMount(TimetrackingWidget, {
+            props: {
                 userId,
                 userLocale,
             },
-            localVue: await createLocalVueForTests(),
-            pinia,
-        };
-        return shallowMount(TimetrackingWidget, component_options);
+            global: {
+                ...getGlobalTestOptions({
+                    initialState: {
+                        root: {
+                            reading_mode: reading_mode,
+                        },
+                    },
+                }),
+            },
+        });
     }
 
-    it("When reading mode is true, then reading should be displayed but not writing mode", async () => {
+    it("When reading mode is true, then reading should be displayed but not writing mode", () => {
         reading_mode = true;
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.findComponent(WidgetReadingMode).exists()).toBeTruthy();
         expect(wrapper.findComponent(WidgetWritingMode).exists()).toBeFalsy();
         expect(wrapper.findComponent(WidgetArtifactTable).exists()).toBeTruthy();
     });
 
-    it("When reading mode is false, then writing should be displayed but not reading mode", async () => {
+    it("When reading mode is false, then writing should be displayed but not reading mode", () => {
         reading_mode = false;
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.findComponent(WidgetReadingMode).exists()).toBeFalsy();
         expect(wrapper.findComponent(WidgetWritingMode).exists()).toBeTruthy();
     });

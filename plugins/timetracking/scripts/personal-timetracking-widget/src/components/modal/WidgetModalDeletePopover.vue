@@ -64,7 +64,9 @@ import { onMounted, ref } from "vue";
 import type { Ref } from "vue";
 import { createPopover } from "@tuleap/tlp-popovers";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
+import { useGettext } from "vue3-gettext";
 
+const { $gettext } = useGettext();
 const props = defineProps<{
     timeId: number;
 }>();

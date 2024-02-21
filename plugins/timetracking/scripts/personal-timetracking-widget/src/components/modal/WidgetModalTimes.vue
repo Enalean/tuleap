@@ -68,7 +68,9 @@ import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
 import { createModal, Modal } from "@tuleap/tlp-modal";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
+import { useGettext } from "vue3-gettext";
 
+const { $gettext } = useGettext();
 const props = defineProps<{
     artifact: Artifact | null;
     project: ProjectResponse;

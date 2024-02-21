@@ -91,9 +91,9 @@
 import ArtifactTableRow from "./WidgetArtifactTableRow.vue";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { computed, onMounted, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 const personal_store = usePersonalTimetrackingWidgetStore();
 
 const is_loading_more = ref(false);
@@ -102,11 +102,11 @@ const has_data_to_display = computed((): boolean => {
     return personal_store.times.length > 0;
 });
 const time_format_tooltip = computed((): string => {
-    return gettext_provider.$gettext("The time is displayed in hours:minutes");
+    return $gettext("The time is displayed in hours:minutes");
 });
 const error = computed((): string => {
     return personal_store.error_message === "error"
-        ? gettext_provider.$gettext("An error occurred")
+        ? $gettext("An error occurred")
         : personal_store.error_message;
 });
 
@@ -120,3 +120,23 @@ async function loadMore(): Promise<void> {
     is_loading_more.value = false;
 }
 </script>
+
+<style scoped lang="scss">
+.timetracking-artifacts-table {
+    margin: var(--tlp-medium-spacing);
+}
+
+.timetracking-loader {
+    height: 100px;
+    background: url("@tuleap/burningparrot-theme/images/spinner.gif") no-repeat center center;
+}
+
+.timetracking-total-sum {
+    white-space: nowrap;
+}
+
+.timetracking-time-tooltip {
+    margin: 0 0 0 5px;
+    vertical-align: middle;
+}
+</style>

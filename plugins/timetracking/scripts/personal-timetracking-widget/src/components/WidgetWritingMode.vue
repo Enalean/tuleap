@@ -82,7 +82,9 @@ import { datePicker } from "tlp";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { onMounted, ref } from "vue";
 import type { Ref } from "vue";
+import { useGettext } from "vue3-gettext";
 
+const { $gettext } = useGettext();
 const personal_store = usePersonalTimetrackingWidgetStore();
 
 let start_date_picker: Ref<HTMLInputElement | undefined> = ref();
@@ -113,3 +115,26 @@ const changeDates = (): void => {
     personal_store.setDatesAndReload(String(start_date_input.value), String(end_date_input.value));
 };
 </script>
+
+<style scoped lang="scss">
+.timetracking-writing-mode-selected-dates {
+    display: flex;
+    min-width: max-content;
+    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+}
+
+.timetracking-writing-mode-selected-date:last-of-type {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+
+.timetracking-writing-mode-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: var(--tlp-medium-spacing);
+}
+
+.timetracking-writing-search {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+</style>

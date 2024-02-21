@@ -82,3 +82,18 @@ const editTime = (date: string, time_id: number, time: string, step: string): vo
     swapEditMode();
 };
 </script>
+
+<style scoped lang="scss">
+.timetracking-detail-modal-step {
+    max-width: 125px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.timetracking-details-modal-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+</style>
