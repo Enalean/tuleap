@@ -146,6 +146,18 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         self::assertStringContainsString("labels", (string) $result->error);
     }
 
+    public function testItWillFilterOnKeywords(): void
+    {
+        $result = $this->converter->convert(json_encode(['search' => [['keyword' => 'security'], ['keyword' => 'bump']]], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isOk($result));
+
+        $criteria = $result->unwrapOr(null);
+
+        self::assertEquals("security", $criteria->search[0]->keyword);
+        self::assertEquals("bump", $criteria->search[1]->keyword);
+    }
+
     public function testItWillApplyAllFilters(): void
     {
         $result = $this->converter->convert(
@@ -153,6 +165,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
                 'status' => 'open',
                 'authors' => [['id' => 102]],
                 'labels' => [['id' => 1], ['id' => 2]],
+                'search' => [['keyword' => 'security'], ['keyword' => 'bump']],
             ], JSON_THROW_ON_ERROR)
         );
 
@@ -164,6 +177,8 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         self::assertEquals(102, $criteria->authors[0]->id);
         self::assertEquals(1, $criteria->labels[0]->id);
         self::assertEquals(2, $criteria->labels[1]->id);
+        self::assertEquals("security", $criteria->search[0]->keyword);
+        self::assertEquals("bump", $criteria->search[1]->keyword);
 
         self::assertTrue($status_criterion->shouldOnlyRetrieveOpenPullRequests());
         self::assertFalse($status_criterion->shouldOnlyRetrieveClosedPullRequests());

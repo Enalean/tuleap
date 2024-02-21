@@ -23,15 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest;
 
 use Tuleap\PullRequest\Criterion\AuthorCriterion;
+use Tuleap\PullRequest\Criterion\KeywordCriterion;
 use Tuleap\PullRequest\Criterion\LabelCriterion;
 use Tuleap\PullRequest\Criterion\PullRequestSortOrder;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\Criterion\StatusCriterion;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
-use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class DaoTest extends TestIntegrationTestCase
+final class DaoTest extends TestCase
 {
     private const REPOSITORY_ID = 5;
     private const LIMIT         = 10;
@@ -61,6 +63,13 @@ final class DaoTest extends TestIntegrationTestCase
         $this->addLabelsToPullRequest($this->open_pull_request_id, self::LABEL_EMERGENCY_ID);
         $this->addLabelsToPullRequest($this->merged_pull_request_id, self::LABEL_EMERGENCY_ID, self::LABEL_EASY_FIX_ID);
         $this->addLabelsToPullRequest($this->abandoned_pull_request_id, self::LABEL_EASY_FIX_ID);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->dao->deletePullRequestWithAllItsContent($this->open_pull_request_id);
+        $this->dao->deletePullRequestWithAllItsContent($this->merged_pull_request_id);
+        $this->dao->deletePullRequestWithAllItsContent($this->abandoned_pull_request_id);
     }
 
     public function testItRetrievesOnlyOpenPullRequests(): void
@@ -128,7 +137,7 @@ final class DaoTest extends TestIntegrationTestCase
             self::OFFSET,
         );
 
-        self::assertSame($expected_pr_ids, array_column($result->pull_requests, "id"));
+        self::assertEqualsCanonicalizing($expected_pr_ids, array_column($result->pull_requests, "id"));
     }
 
     public function testItFiltersOnASpecificAuthor(): void
@@ -141,9 +150,7 @@ final class DaoTest extends TestIntegrationTestCase
             self::OFFSET,
         );
 
-        self::assertSame(array_column($result->pull_requests, "id"), [
-            $this->merged_pull_request_id,
-        ]);
+        self::assertEqualsCanonicalizing([$this->merged_pull_request_id], array_column($result->pull_requests, "id"));
         self::assertEquals(1, $result->total_size);
     }
 
@@ -154,17 +161,37 @@ final class DaoTest extends TestIntegrationTestCase
             new SearchCriteria(
                 null,
                 [],
-                [new LabelCriterion(self::LABEL_EMERGENCY_ID), new LabelCriterion(self::LABEL_EASY_FIX_ID)]
+                [new LabelCriterion(self::LABEL_EMERGENCY_ID), new LabelCriterion(self::LABEL_EASY_FIX_ID)],
             ),
             PullRequestSortOrder::DESCENDING,
             self::LIMIT,
             self::OFFSET,
         );
 
-        self::assertSame(array_column($result->pull_requests, "id"), [
-            $this->merged_pull_request_id,
-        ]);
+        self::assertEqualsCanonicalizing([$this->merged_pull_request_id], array_column($result->pull_requests, "id"));
         self::assertEquals(1, $result->total_size);
+    }
+
+    public function testItFiltersOnTitleAndDescriptionWithKeywords(): void
+    {
+        $result = $this->dao->getPaginatedPullRequests(
+            self::REPOSITORY_ID,
+            new SearchCriteria(
+                null,
+                [],
+                [],
+                [new KeywordCriterion("nice")],
+            ),
+            PullRequestSortOrder::DESCENDING,
+            self::LIMIT,
+            self::OFFSET,
+        );
+
+        self::assertEqualsCanonicalizing([
+            $this->abandoned_pull_request_id,
+            $this->open_pull_request_id,
+        ], array_column($result->pull_requests, "id"));
+        self::assertEquals(2, $result->total_size);
     }
 
     public function testItAppliesAllTheFilters(): void
@@ -175,22 +202,21 @@ final class DaoTest extends TestIntegrationTestCase
                 StatusCriterion::CLOSED,
                 [new AuthorCriterion(self::ALICE_USER_ID)],
                 [new LabelCriterion(self::LABEL_EASY_FIX_ID)],
+                [new KeywordCriterion("external")],
             ),
             PullRequestSortOrder::DESCENDING,
             self::LIMIT,
             self::OFFSET,
         );
 
-        self::assertSame(array_column($result->pull_requests, "id"), [
-            $this->abandoned_pull_request_id,
-        ]);
+        self::assertEqualsCanonicalizing([$this->abandoned_pull_request_id], array_column($result->pull_requests, "id"));
     }
 
-    public function testItRetrievesAllPullRequestsAuthorsWhichAreNotAnonymous(): void
+    public function testItRetrievesAllPullRequestsAuthorsWhoAreNotAnonymous(): void
     {
         $han_onymous_user_id = 0;
 
-        $this->insertPullRequest(
+        $id = $this->insertPullRequest(
             PullRequestTestBuilder::aPullRequestInReview()
                 ->createdBy($han_onymous_user_id)
                 ->withRepositoryId(self::REPOSITORY_ID)
@@ -203,16 +229,20 @@ final class DaoTest extends TestIntegrationTestCase
             self::OFFSET
         );
 
-        self::assertSame(
+        self::assertEqualsCanonicalizing(
+            [self::BOB_USER_ID, self::ALICE_USER_ID],
             $result->authors_ids,
-            [self::BOB_USER_ID, self::ALICE_USER_ID]
         );
+
+        $this->dao->deletePullRequestWithAllItsContent($id);
     }
 
     private function insertOpenPullRequest(): int
     {
         return $this->insertPullRequest(
             PullRequestTestBuilder::aPullRequestInReview()
+                ->withTitle("A good pull-request")
+                ->withDescription(TimelineComment::FORMAT_TEXT, "A nice description")
                 ->createdBy(self::ALICE_USER_ID)
                 ->createdAt(1)
                 ->withRepositoryId(self::REPOSITORY_ID)
@@ -224,6 +254,8 @@ final class DaoTest extends TestIntegrationTestCase
     {
         $pull_request_id = $this->insertPullRequest(
             PullRequestTestBuilder::aMergedPullRequest()
+                ->withTitle("Emergency fix")
+                ->withDescription(TimelineComment::FORMAT_TEXT, "Everything is burning")
                 ->createdBy(self::BOB_USER_ID)
                 ->createdAt(2)
                 ->withRepositoryId(self::REPOSITORY_ID)
@@ -239,6 +271,8 @@ final class DaoTest extends TestIntegrationTestCase
     {
         $pull_request_id = $this->insertPullRequest(
             PullRequestTestBuilder::anAbandonedPullRequest()
+                ->withTitle("A (not so) nice external contribution")
+                ->withDescription(TimelineComment::FORMAT_MARKDOWN, "I've decided this software should make **coffee**")
                 ->createdBy(self::ALICE_USER_ID)
                 ->createdAt(3)
                 ->withRepositoryId(self::REPOSITORY_ID)

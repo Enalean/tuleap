@@ -89,6 +89,10 @@ class RepositoryResource extends AuthenticatedResource
      *         <b>Labels</b>: <code>query={"labels": [{"id": int}]}</code> where "id" is the id of the label.
      *         The search on labels is additive. It will retrieve only pull-requests having all the specified labels.
      *     </p>
+     *     <p>
+     *         <b>Search</b>: <code>query={"search": [{"keyword": string}]}</code> where "keyword" is the keyword to find in the pull-requests titles or descriptions.
+     *         The search on keywords is additive. It will retrieve only pull-requests whose titles AND/OR descriptions contain ALL the provided keywords.
+     *     </p>
      * </p>
      *
      * <p>

@@ -287,6 +287,15 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
             $where_statement->andIn('plugin_pullrequest_review.id = plugin_pullrequest_label.pull_request_id AND plugin_pullrequest_label.label_id IN (?*)', $labels_ids);
         }
 
+        foreach ($search_criteria->search as $search_part) {
+            $keyword = '"' . str_replace(['"'], ['\\"'], $search_part->keyword) . '"';
+            $where_statement->andWith(
+                "(MATCH(plugin_pullrequest_review.title) AGAINST(? IN BOOLEAN MODE) OR MATCH(plugin_pullrequest_review.description) AGAINST(? IN BOOLEAN MODE))",
+                $keyword,
+                $keyword,
+            );
+        }
+
         return new PullRequestDAOSearchCriteria(
             $where_statement,
             $having_statement,
@@ -360,6 +369,29 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
                 WHERE pr.repository_id = ?';
 
         $this->getDB()->run($sql, $repository_id);
+    }
+
+    public function deletePullRequestWithAllItsContent(int $pull_request_id): void
+    {
+        $sql = '
+            DELETE pr, label, comments, inline, event
+            FROM plugin_pullrequest_review AS pr
+                LEFT JOIN plugin_pullrequest_label AS label ON (
+                    pr.id = label.pull_request_id
+                )
+                LEFT JOIN plugin_pullrequest_comments AS comments ON (
+                    pr.id = comments.pull_request_id
+                )
+                LEFT JOIN plugin_pullrequest_inline_comments AS inline ON (
+                    pr.id = inline.pull_request_id
+                )
+                LEFT JOIN plugin_pullrequest_timeline_event AS event ON (
+                    pr.id = event.pull_request_id
+                )
+            WHERE pr.id = ?
+        ';
+
+        $this->getDB()->run($sql, $pull_request_id);
     }
 
     public function getPaginatedPullRequestsAuthorsIds(int $repository_id, int $limit, int $offset): PullRequestsAuthorsIdsPage
