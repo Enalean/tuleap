@@ -223,7 +223,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertFalse($this->invalid_searchable_collection->hasInvalidSearchable());
     }
 
-    public static function generateInvalidFloatComparisons(): iterable
+    public static function generateInvalidNumericComparisons(): iterable
     {
         $field       = new Field(self::FIELD_NAME);
         $empty_value = new SimpleValueWrapper('');
@@ -253,9 +253,9 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     }
 
     /**
-     * @dataProvider generateInvalidFloatComparisons
+     * @dataProvider generateInvalidNumericComparisons
      */
-    public function testItRejectsInvalidComparisons(Comparison $comparison): void
+    public function testItRejectsInvalidNumericComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             TrackerFormElementIntFieldBuilder::anIntField(975)

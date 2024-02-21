@@ -26,12 +26,14 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 
 final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
 {
     public function __construct(
         private Comparison $comparison,
         private FloatFieldChecker $float_field_checker,
+        private IntegerFieldChecker $int_field_checker,
         private EqualComparisonVisitor $equal_checker,
         private NotEqualComparisonVisitor $not_equal_checker,
         private LesserThanComparisonVisitor $lesser_than_checker,
@@ -59,6 +61,11 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
         return $this->float_field_checker;
     }
 
+    public function visitInteger(\Tracker_FormElement_Field_Integer $field): InvalidFieldChecker
+    {
+        return $this->int_field_checker;
+    }
+
     private function matchComparisonToFieldChecker(\Tracker_FormElement_Field $field): InvalidFieldChecker
     {
         return match ($this->comparison->getType()) {
@@ -72,11 +79,6 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
             ComparisonType::In => $this->in_checker->getInvalidFieldChecker($field),
             ComparisonType::NotIn => $this->not_in_checker->getInvalidFieldChecker($field)
         };
-    }
-
-    public function visitInteger(\Tracker_FormElement_Field_Integer $field): InvalidFieldChecker
-    {
-        return $this->matchComparisonToFieldChecker($field);
     }
 
     public function visitDate(\Tracker_FormElement_Field_Date $field): InvalidFieldChecker

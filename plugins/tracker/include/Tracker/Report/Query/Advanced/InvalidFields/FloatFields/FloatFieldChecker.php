@@ -34,12 +34,12 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedE
 final readonly class FloatFieldChecker implements InvalidFieldChecker
 {
     /**
-     * @throws FloatToStringComparisonException
-     * @throws FloatToNowComparisonException
+     * @throws FieldIsNotSupportedForComparisonException
      * @throws FloatToEmptyStringTermException
      * @throws FloatToMySelfComparisonException
+     * @throws FloatToNowComparisonException
      * @throws FloatToStatusOpenComparisonException
-     * @throws FieldIsNotSupportedForComparisonException
+     * @throws FloatToStringComparisonException
      */
     public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
     {
@@ -57,11 +57,11 @@ final readonly class FloatFieldChecker implements InvalidFieldChecker
     }
 
     /**
-     * @throws FloatToStringComparisonException
      * @throws FloatToEmptyStringTermException
-     * @throws FloatToNowComparisonException
      * @throws FloatToMySelfComparisonException
+     * @throws FloatToNowComparisonException
      * @throws FloatToStatusOpenComparisonException
+     * @throws FloatToStringComparisonException
      */
     private function checkFloatValueIsValid(
         Comparison $comparison,
