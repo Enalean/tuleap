@@ -20,44 +20,45 @@
 import type { TimePeriod } from "../type";
 import type { VueGettextProvider } from "./vue-gettext-provider";
 import { getBeginningOfPeriod, getEndOfPeriod } from "./begin-end-of-period";
+import type { DateTime } from "luxon";
 
 export class TimePeriodQuarter implements TimePeriod {
-    private readonly quarters: Date[];
+    private readonly quarters: DateTime[];
     private gettext_provider: VueGettextProvider;
 
     constructor(
-        readonly from: Date,
-        readonly to: Date,
+        readonly from: DateTime,
+        readonly to: DateTime,
         gettext_provider: VueGettextProvider,
     ) {
         this.gettext_provider = gettext_provider;
         this.quarters = getQuarters(from, to);
     }
 
-    get units(): Date[] {
+    get units(): DateTime[] {
         return this.quarters;
     }
 
-    formatShort(unit: Date): string {
+    formatShort(unit: DateTime): string {
         return this.gettext_provider.$gettextInterpolate(
             this.gettext_provider.$gettext("Q%{ quarter }"),
             {
-                quarter: getQuarterNumber(unit),
+                quarter: unit.quarter,
             },
         );
     }
 
-    formatLong(unit: Date): string {
+    formatLong(unit: DateTime): string {
         return this.gettext_provider.$gettextInterpolate(
             this.gettext_provider.$gettext("Quarter %{ quarter } of %{ year }"),
             {
-                quarter: getQuarterNumber(unit),
-                year: unit.getUTCFullYear(),
+                quarter: unit.quarter,
+                year: unit.year,
             },
         );
     }
 
-    additionalUnits(nb: number): Date[] {
+    additionalUnits(nb: number): DateTime[] {
         return getAdditionalQuarters(this.quarters[this.quarters.length - 1], nb);
     }
 
@@ -66,11 +67,7 @@ export class TimePeriodQuarter implements TimePeriod {
     }
 }
 
-function getQuarterNumber(unit: Date): number {
-    return Math.ceil((unit.getUTCMonth() + 1) / 3);
-}
-
-function getQuarters(start: Date, end: Date): Date[] {
+function getQuarters(start: DateTime, end: DateTime): DateTime[] {
     const beginning_of_period = getBeginningOfPeriod(start, end);
     const end_of_period = getEndOfPeriod(start, end);
 
@@ -85,8 +82,8 @@ function getQuarters(start: Date, end: Date): Date[] {
     return quarters;
 }
 
-function getAdditionalQuarters(base_quarter: Date, nb_missing_quarters: number): Date[] {
-    const additional_quarters: Date[] = [];
+function getAdditionalQuarters(base_quarter: DateTime, nb_missing_quarters: number): DateTime[] {
+    const additional_quarters: DateTime[] = [];
 
     if (nb_missing_quarters <= 0) {
         return additional_quarters;
@@ -99,11 +96,6 @@ function getAdditionalQuarters(base_quarter: Date, nb_missing_quarters: number):
     return additional_quarters;
 }
 
-function getBeginningOfNextNthQuarter(base_date: Date, nth: number): Date {
-    const quarter = new Date(base_date);
-    quarter.setUTCDate(1);
-    quarter.setUTCHours(0, 0, 0);
-    quarter.setUTCMonth(3 * (getQuarterNumber(base_date) + nth - 1));
-
-    return quarter;
+function getBeginningOfNextNthQuarter(base_date: DateTime, nth: number): DateTime {
+    return base_date.startOf("quarter").plus({ quarter: nth });
 }

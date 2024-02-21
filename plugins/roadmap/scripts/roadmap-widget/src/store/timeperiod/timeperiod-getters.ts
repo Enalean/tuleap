@@ -25,13 +25,14 @@ import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import type { RootState } from "../type";
 import type { TimeperiodState } from "./type";
+import type { DateTime } from "luxon";
 
 export const first_date = (
     state: unknown,
     getters: unknown,
     root_state: RootState,
     root_getters: { "tasks/tasks": Task[] },
-): Date => {
+): DateTime => {
     const first_task_date = getFirstDate(root_getters["tasks/tasks"], root_state.now);
 
     const iterations_containing_first_task_date = getIterationsAroundDate(
@@ -57,7 +58,7 @@ export const last_date = (
     getters: unknown,
     root_state: RootState,
     root_getters: { "tasks/tasks": Task[] },
-): Date => {
+): DateTime => {
     return getLastDate(
         [
             ...root_getters["tasks/tasks"],
@@ -70,7 +71,7 @@ export const last_date = (
 
 export const time_period = (
     state: TimeperiodState,
-    { first_date, last_date }: { first_date: Date; last_date: Date },
+    { first_date, last_date }: { first_date: DateTime; last_date: DateTime },
     root_state: RootState,
 ): TimePeriod => {
     if (state.timescale === "week") {
@@ -96,14 +97,11 @@ export const time_period = (
     );
 };
 
-function getFirstDateWithOffset(nb_days_to_substract: number, first_date: Date): Date {
-    const first_date_with_offset = new Date(first_date);
-    first_date_with_offset.setUTCDate(first_date_with_offset.getUTCDate() - nb_days_to_substract);
-
-    return first_date_with_offset;
+function getFirstDateWithOffset(nb_days_to_substract: number, first_date: DateTime): DateTime {
+    return first_date.minus({ day: nb_days_to_substract });
 }
 
-function getIterationsAroundDate(root_state: RootState, date: Date): Iteration[] {
+function getIterationsAroundDate(root_state: RootState, date: DateTime): Iteration[] {
     return [
         ...root_state.iterations.lvl1_iterations,
         ...root_state.iterations.lvl2_iterations,

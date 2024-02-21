@@ -58,7 +58,7 @@
                         <div
                             class="roadmap-gantt-timeperiod-unit"
                             v-for="unit in time_units"
-                            v-bind:key="unit.toISOString()"
+                            v-bind:key="String(unit.toISO())"
                         >
                             <span class="tlp-skeleton-text"></span>
                         </div>
@@ -69,7 +69,7 @@
                         <div
                             class="roadmap-gantt-task-background-grid-unit"
                             v-for="unit in time_units"
-                            v-bind:key="'grid-month-' + unit.toISOString()"
+                            v-bind:key="'grid-month-' + unit.toISO()"
                         />
                     </div>
                     <div class="roadmap-gantt-task-bar-container" v-bind:style="randomStyleLeft()">
@@ -91,6 +91,7 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { Styles } from "../helpers/styles";
 import { TimePeriodMonth } from "../helpers/time-period-month";
+import { DateTime } from "luxon";
 
 @Component
 export default class LoadingState extends Vue {
@@ -98,7 +99,7 @@ export default class LoadingState extends Vue {
         time_period: HTMLDivElement;
     };
 
-    time_units: Date[] = [];
+    time_units: DateTime[] = [];
 
     private observer: ResizeObserver | null = null;
 
@@ -121,7 +122,7 @@ export default class LoadingState extends Vue {
 
             const nb = Math.ceil(entry.contentRect.width / Styles.TIME_UNIT_WIDTH_IN_PX) - 1;
 
-            const time_period = TimePeriodMonth.getDummyTimePeriod(new Date());
+            const time_period = TimePeriodMonth.getDummyTimePeriod(DateTime.now());
             this.time_units = time_period.additionalUnits(nb);
         }
     }

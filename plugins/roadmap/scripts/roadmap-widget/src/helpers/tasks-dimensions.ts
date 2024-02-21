@@ -62,11 +62,8 @@ function getLeftForTask(task: Task, time_period: TimePeriod): number {
 }
 
 function getWidthForTask(task: Task, time_period: TimePeriod, left: number): number {
-    if (task.start && task.end && task.start.toISOString() !== task.end.toISOString()) {
-        const task_end_date = new Date(task.end);
-        const task_end_date_plus_one_day = new Date(
-            task_end_date.setUTCDate(task_end_date.getUTCDate() + 1),
-        );
+    if (task.start && task.end && task.start.toString() !== task.end.toString()) {
+        const task_end_date_plus_one_day = task.end.plus({ day: 1 });
 
         return Math.max(
             getLeftForDate(task_end_date_plus_one_day, time_period) - left,

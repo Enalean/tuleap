@@ -56,7 +56,7 @@ function compareRow(row_a: Row, row_b: Row): number {
 
 function compareTaskAtTheSameLevel(task_a: Task, task_b: Task): number {
     if (task_a.start !== null && task_b.start !== null) {
-        return task_a.start.getTime() - task_b.start.getTime();
+        return task_a.start.diff(task_b.start).milliseconds;
     }
 
     if (task_a.start === null && task_b.start === null) {

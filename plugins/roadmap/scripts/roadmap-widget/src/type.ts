@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { DateTime } from "luxon";
 
 type SubtaskLoadingStatus = "nope" | "loading" | "loaded" | "error" | "empty";
 export const SUBTASKS_WAITING_TO_BE_LOADED: SubtaskLoadingStatus = "nope";
@@ -40,8 +41,8 @@ export interface Task {
     readonly progress: number | null;
     readonly progress_error_message: string;
     readonly html_url: string;
-    readonly start: Date | null;
-    readonly end: Date | null;
+    readonly start: DateTime | null;
+    readonly end: DateTime | null;
     readonly dependencies: Record<string, number[]>;
     readonly is_milestone: boolean;
     readonly has_subtasks: boolean;
@@ -54,14 +55,19 @@ export interface Task {
     readonly is_open: boolean;
 }
 
+export interface RestTask extends Omit<Task, "start" | "end"> {
+    readonly start: string | null;
+    readonly end: string | null;
+}
+
 export type TimeScale = "month" | "quarter" | "week";
 
 export interface TimePeriod {
-    readonly units: Date[];
-    formatShort(unit: Date): string;
-    formatLong(unit: Date): string;
-    additionalUnits(nb: number): Date[];
-    getEvenOddClass(unit: Date): string;
+    readonly units: DateTime[];
+    formatShort(unit: DateTime): string;
+    formatLong(unit: DateTime): string;
+    additionalUnits(nb: number): DateTime[];
+    getEvenOddClass(unit: DateTime): string;
 }
 
 export interface TaskDimension {
@@ -113,8 +119,8 @@ export type Row = TaskRow | SkeletonRow | EmptySubtasksRow | ErrorRow | SubtaskR
 
 export interface Iteration {
     readonly id: number;
-    readonly start: Date;
-    readonly end: Date;
+    readonly start: DateTime;
+    readonly end: DateTime;
     readonly title: string;
     readonly html_url: string;
 }

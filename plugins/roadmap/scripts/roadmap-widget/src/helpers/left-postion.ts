@@ -18,8 +18,9 @@
  */
 import { Styles } from "./styles";
 import type { TimePeriod } from "../type";
+import type { DateTime } from "luxon";
 
-export function getLeftForDate(date: Date, time_period: TimePeriod): number {
+export function getLeftForDate(date: DateTime, time_period: TimePeriod): number {
     let left = 0;
     let i = 1;
     while (i < time_period.units.length && time_period.units[i] < date) {
@@ -30,8 +31,8 @@ export function getLeftForDate(date: Date, time_period: TimePeriod): number {
     if (i < time_period.units.length) {
         const current_unit = time_period.units[i - 1];
         const next_unit = time_period.units[i];
-        const ms_since_beginning_of_unit = date.getTime() - current_unit.getTime();
-        const ms_in_the_unit = next_unit.getTime() - current_unit.getTime();
+        const ms_since_beginning_of_unit = Number(date.diff(current_unit).toObject().milliseconds);
+        const ms_in_the_unit = Number(next_unit.diff(current_unit).toObject().milliseconds);
         left += (Styles.TIME_UNIT_WIDTH_IN_PX * ms_since_beginning_of_unit) / ms_in_the_unit;
     }
 

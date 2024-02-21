@@ -38,6 +38,9 @@ import type { IterationsState } from "../../store/iterations/type";
 import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
 import NoDataToShowEmptyState from "../NoDataToShowEmptyState.vue";
 import * as rows_sorter from "../../helpers/rows-sorter";
+import { DateTime, Settings } from "luxon";
+
+Settings.defaultZone = "UTC";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -49,7 +52,7 @@ window.ResizeObserver =
 
 function getRootState(): RootState {
     return {
-        now: new Date(2020, 3, 15),
+        now: DateTime.fromObject({ year: 2020, month: 4, day: 15 }),
         locale_bcp47: "en-US",
         should_load_lvl1_iterations: false,
         should_load_lvl2_iterations: false,
@@ -92,8 +95,8 @@ describe("GanttBoard", () => {
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                     },
@@ -127,8 +130,8 @@ describe("GanttBoard", () => {
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                     },
@@ -157,8 +160,8 @@ describe("GanttBoard", () => {
                         "iterations/lvl1_iterations_to_display": [{ id: 1 } as Iteration],
                         "iterations/lvl2_iterations_to_display": [],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                     },
@@ -186,8 +189,8 @@ describe("GanttBoard", () => {
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [{ id: 1 } as Iteration],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                     },
@@ -215,8 +218,8 @@ describe("GanttBoard", () => {
                         "iterations/lvl1_iterations_to_display": [{ id: 1 } as Iteration],
                         "iterations/lvl2_iterations_to_display": [{ id: 2 } as Iteration],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                     },
@@ -248,8 +251,8 @@ describe("GanttBoard", () => {
                             { id: 3, dependencies: {} } as Task,
                         ],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
@@ -286,8 +289,8 @@ describe("GanttBoard", () => {
                             { id: 3, dependencies: {} } as Task,
                         ],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
@@ -327,8 +330,8 @@ describe("GanttBoard", () => {
                             { id: 3, dependencies: {} } as Task,
                         ],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
@@ -373,8 +376,8 @@ describe("GanttBoard", () => {
                             { id: 11, dependencies: {} } as Task,
                         ],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
@@ -420,8 +423,8 @@ describe("GanttBoard", () => {
                             { id: 3, dependencies: {} } as Task,
                         ],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
@@ -460,8 +463,8 @@ describe("GanttBoard", () => {
                             { id: 3, dependencies: {} } as Task,
                         ],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
@@ -486,12 +489,12 @@ describe("GanttBoard", () => {
 
         const task_1 = {
             id: 1,
-            start: new Date(2020, 3, 15),
+            start: DateTime.fromObject({ year: 2020, month: 4, day: 15 }),
             dependencies: {},
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date(2020, 3, 20),
+            start: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
             dependencies: {},
         } as Task;
         const wrapper = shallowMount(GanttBoard, {
@@ -515,8 +518,8 @@ describe("GanttBoard", () => {
                         ],
                         "tasks/tasks": [task_1, task_2],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
@@ -559,8 +562,8 @@ describe("GanttBoard", () => {
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                     },
@@ -597,12 +600,12 @@ describe("GanttBoard", () => {
 
         const task_1 = {
             id: 1,
-            start: new Date(2020, 3, 15),
+            start: DateTime.fromObject({ year: 2020, month: 4, day: 15 }),
             dependencies: {},
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date(2020, 3, 20),
+            start: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
             dependencies: {},
         } as Task;
         const wrapper = shallowMount(GanttBoard, {
@@ -626,8 +629,8 @@ describe("GanttBoard", () => {
                         ],
                         "tasks/tasks": [task_1, task_2],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
@@ -649,7 +652,7 @@ describe("GanttBoard", () => {
             } as unknown as ResizeObserverEntry,
         ]);
 
-        expect(time_period_header.props("nb_additional_units")).toBe(1);
+        expect(time_period_header.props("nb_additional_units")).toBe(2);
     });
 
     it("Use a different time period if user chose a different timescale", async () => {
@@ -673,8 +676,8 @@ describe("GanttBoard", () => {
                             { id: 3, dependencies: {} } as Task,
                         ],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
@@ -709,8 +712,8 @@ describe("GanttBoard", () => {
                             { id: 3, dependencies: {} } as Task,
                         ],
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],

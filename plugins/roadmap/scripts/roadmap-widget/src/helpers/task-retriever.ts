@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Task } from "../type";
+import type { RestTask, Task } from "../type";
 import { recursiveGet } from "@tuleap/tlp-fetch";
 import { SUBTASKS_WAITING_TO_BE_LOADED } from "../type";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "./task-has-valid-dates";
+import { DateTime } from "luxon";
 
 export function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
     return retrieveAll(`/api/roadmaps/${roadmap_id}/tasks`, {});
@@ -38,10 +39,10 @@ export async function retrieveAll(
     url: string,
     additional_defaults: Partial<Task>,
 ): Promise<Task[]> {
-    const tasks = await recursiveGet<Array<unknown>, Task>(url);
+    const tasks = await recursiveGet<Array<unknown>, RestTask>(url);
 
     return tasks
-        .map((task: Task): Task => {
+        .map((task: RestTask): Task => {
             const has_subtasks =
                 task.dependencies &&
                 "_is_child" in task.dependencies &&
@@ -50,8 +51,8 @@ export async function retrieveAll(
 
             return {
                 ...task,
-                start: task.start ? new Date(task.start) : null,
-                end: task.end ? new Date(task.end) : null,
+                start: task.start ? DateTime.fromISO(task.start) : null,
+                end: task.end ? DateTime.fromISO(task.end) : null,
                 is_milestone: !task.start || !task.end || task.end === task.start,
                 has_subtasks,
                 subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
@@ -102,6 +103,6 @@ export async function retrieveAll(
                 return -1;
             }
 
-            return start_of_a.getTime() - start_of_b.getTime();
+            return start_of_a.diff(start_of_b).milliseconds;
         });
 }

@@ -21,6 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import TaskBar from "./TaskBar.vue";
 import MilestoneBar from "./MilestoneBar.vue";
 import type { Task } from "../../../type";
+import { DateTime } from "luxon";
 
 describe("TaskBar", () => {
     it("should adapt the width of the progress bar", async () => {
@@ -28,8 +29,8 @@ describe("TaskBar", () => {
             color_name: "acid-green",
             progress: 0.4,
             progress_error_message: "",
-            start: new Date(2020, 3, 15),
-            end: new Date(2020, 3, 20),
+            start: DateTime.fromObject({ year: 2020, month: 4, day: 15 }),
+            end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
             is_milestone: false,
         } as Task;
 
@@ -61,8 +62,8 @@ describe("TaskBar", () => {
                     color_name: "acid-green",
                     progress: null,
                     progress_error_message: "",
-                    start: new Date(2020, 3, 15),
-                    end: new Date(2020, 3, 20),
+                    start: DateTime.fromObject({ year: 2020, month: 4, day: 15 }),
+                    end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
                     is_milestone: false,
                 } as Task,
                 left: 42,
@@ -86,7 +87,7 @@ describe("TaskBar", () => {
                 task: {
                     color_name: "acid-green",
                     start: null,
-                    end: new Date(2020, 3, 20),
+                    end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
                     progress_error_message: "",
                     is_milestone: true,
                 } as Task,
@@ -110,8 +111,8 @@ describe("TaskBar", () => {
                 propsData: {
                     task: {
                         color_name: "acid-green",
-                        start: new Date(2020, 2, 20),
-                        end: new Date(2020, 3, 20),
+                        start: DateTime.fromObject({ year: 2020, month: 3, day: 20 }),
+                        end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
                         progress: 0.42,
                         progress_error_message: "",
                         is_milestone: false,
@@ -139,8 +140,8 @@ describe("TaskBar", () => {
                 propsData: {
                     task: {
                         color_name: "acid-green",
-                        start: new Date(2020, 2, 20),
-                        end: new Date(2020, 3, 20),
+                        start: DateTime.fromObject({ year: 2020, month: 3, day: 20 }),
+                        end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
                         progress: 0.98,
                         progress_error_message: "",
                         is_milestone: false,
@@ -170,8 +171,8 @@ describe("TaskBar", () => {
                 propsData: {
                     task: {
                         color_name: "acid-green",
-                        start: new Date(2020, 2, 20),
-                        end: new Date(2020, 3, 20),
+                        start: DateTime.fromObject({ year: 2020, month: 3, day: 20 }),
+                        end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
                         progress: 0.5,
                         progress_error_message: "",
                         is_milestone: false,
@@ -199,8 +200,8 @@ describe("TaskBar", () => {
                 propsData: {
                     task: {
                         color_name: "acid-green",
-                        start: new Date(2020, 2, 20),
-                        end: new Date(2020, 3, 20),
+                        start: DateTime.fromObject({ year: 2020, month: 3, day: 20 }),
+                        end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
                         progress: null,
                         progress_error_message: "You fucked up!",
                         is_milestone: false,
@@ -234,8 +235,8 @@ describe("TaskBar", () => {
                 propsData: {
                     task: {
                         color_name: "acid-green",
-                        start: new Date(2020, 2, 20),
-                        end: new Date(2020, 3, 20),
+                        start: DateTime.fromObject({ year: 2020, month: 3, day: 20 }),
+                        end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
                         progress: null,
                         progress_error_message: "You fucked up!",
                         is_milestone: false,

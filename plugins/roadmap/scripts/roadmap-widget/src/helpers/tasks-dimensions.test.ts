@@ -22,14 +22,15 @@ import { TimePeriodMonth } from "./time-period-month";
 import type { Task, TaskDimension } from "../type";
 import { Styles } from "./styles";
 import { TaskDimensionMap } from "../type";
+import { DateTime } from "luxon";
 
 describe("tasks-dimensions", () => {
     describe("getDimensionsMap", () => {
         it("Returns milestone dimensions, not positioned, for task without start nor end", () => {
             const task = { start: null, end: null } as Task;
             const time_period = new TimePeriodMonth(
-                new Date(2020, 3, 10),
-                new Date(2020, 3, 20),
+                DateTime.fromJSDate(new Date(2020, 3, 10)),
+                DateTime.fromJSDate(new Date(2020, 3, 20)),
                 "en-US",
             );
 
@@ -43,10 +44,10 @@ describe("tasks-dimensions", () => {
         });
 
         it("Returns milestone dimensions, positioned at start date", () => {
-            const task = { start: new Date(2020, 3, 20), end: null } as Task;
+            const task = { start: DateTime.fromJSDate(new Date(2020, 3, 20)), end: null } as Task;
             const time_period = new TimePeriodMonth(
-                new Date(2020, 3, 10),
-                new Date(2020, 3, 20),
+                DateTime.fromJSDate(new Date(2020, 3, 10)),
+                DateTime.fromJSDate(new Date(2020, 3, 20)),
                 "en-US",
             );
 
@@ -60,10 +61,10 @@ describe("tasks-dimensions", () => {
         });
 
         it("Returns milestone dimensions, positioned at end date", () => {
-            const task = { start: null, end: new Date(2020, 3, 20) } as Task;
+            const task = { start: null, end: DateTime.fromJSDate(new Date(2020, 3, 20)) } as Task;
             const time_period = new TimePeriodMonth(
-                new Date(2020, 3, 10),
-                new Date(2020, 3, 20),
+                DateTime.fromJSDate(new Date(2020, 3, 10)),
+                DateTime.fromJSDate(new Date(2020, 3, 20)),
                 "en-US",
             );
 
@@ -77,10 +78,13 @@ describe("tasks-dimensions", () => {
         });
 
         it("Returns milestone dimensions, positioned at start date, when start == end", () => {
-            const task = { start: new Date(2020, 3, 20), end: new Date(2020, 3, 20) } as Task;
+            const task = {
+                start: DateTime.fromJSDate(new Date(2020, 3, 20)),
+                end: DateTime.fromJSDate(new Date(2020, 3, 20)),
+            } as Task;
             const time_period = new TimePeriodMonth(
-                new Date(2020, 3, 10),
-                new Date(2020, 3, 20),
+                DateTime.fromJSDate(new Date(2020, 3, 10)),
+                DateTime.fromJSDate(new Date(2020, 3, 20)),
                 "en-US",
             );
 
@@ -95,12 +99,12 @@ describe("tasks-dimensions", () => {
 
         it("Returns task dimensions, positioned at start date and ending at end date + 1 so that the end date is included in the bar", () => {
             const task = {
-                start: new Date("2020-03-10T11:00:00.000Z"),
-                end: new Date("2020-03-20T11:00:00.000Z"),
+                start: DateTime.fromJSDate(new Date("2020-03-10T11:00:00.000Z")),
+                end: DateTime.fromJSDate(new Date("2020-03-20T11:00:00.000Z")),
             } as Task;
             const time_period = new TimePeriodMonth(
-                new Date("2020-03-10T00:00:00.000Z"),
-                new Date("2020-03-30T00:00:00.000Z"),
+                DateTime.fromJSDate(new Date("2020-03-10T00:00:00.000Z")),
+                DateTime.fromJSDate(new Date("2020-03-30T00:00:00.000Z")),
                 "en-US",
             );
 
@@ -114,10 +118,13 @@ describe("tasks-dimensions", () => {
         });
 
         it("Enusures that task width has a minimum width", () => {
-            const task = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
+            const task = {
+                start: DateTime.fromJSDate(new Date(2020, 3, 10)),
+                end: DateTime.fromJSDate(new Date(2020, 3, 11)),
+            } as Task;
             const time_period = new TimePeriodMonth(
-                new Date(2020, 3, 10),
-                new Date(2020, 3, 20),
+                DateTime.fromJSDate(new Date(2020, 3, 10)),
+                DateTime.fromJSDate(new Date(2020, 3, 20)),
                 "en-US",
             );
 
@@ -131,12 +138,21 @@ describe("tasks-dimensions", () => {
         });
 
         it("Returns the index of the task, so that we can know if a task is before or after another one", () => {
-            const task_1 = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
-            const task_2 = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
-            const subtask = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
+            const task_1 = {
+                start: DateTime.fromJSDate(new Date(2020, 3, 10)),
+                end: DateTime.fromJSDate(new Date(2020, 3, 11)),
+            } as Task;
+            const task_2 = {
+                start: DateTime.fromJSDate(new Date(2020, 3, 10)),
+                end: DateTime.fromJSDate(new Date(2020, 3, 11)),
+            } as Task;
+            const subtask = {
+                start: DateTime.fromJSDate(new Date(2020, 3, 10)),
+                end: DateTime.fromJSDate(new Date(2020, 3, 11)),
+            } as Task;
             const time_period = new TimePeriodMonth(
-                new Date(2020, 3, 10),
-                new Date(2020, 3, 20),
+                DateTime.fromJSDate(new Date(2020, 3, 10)),
+                DateTime.fromJSDate(new Date(2020, 3, 20)),
                 "en-US",
             );
 

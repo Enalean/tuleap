@@ -23,7 +23,7 @@
         <div
             class="roadmap-gantt-timeperiod-unit"
             v-for="unit in time_units"
-            v-bind:key="unit.toISOString()"
+            v-bind:key="String(unit.toISO())"
             v-bind:title="time_period.formatLong(unit)"
             v-bind:class="time_period.getEvenOddClass(unit)"
         >
@@ -36,6 +36,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { TimePeriod } from "../../../type";
+import type { DateTime } from "luxon";
 
 @Component
 export default class TimePeriodUnits extends Vue {
@@ -43,6 +44,6 @@ export default class TimePeriodUnits extends Vue {
     readonly time_period!: TimePeriod;
 
     @Prop({ required: true })
-    readonly time_units!: Date[];
+    readonly time_units!: DateTime[];
 }
 </script>

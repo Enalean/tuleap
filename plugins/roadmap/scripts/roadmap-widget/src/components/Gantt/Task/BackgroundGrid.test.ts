@@ -20,14 +20,17 @@
 import { shallowMount } from "@vue/test-utils";
 import BackgroundGrid from "./BackgroundGrid.vue";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
+import { DateTime, Settings } from "luxon";
+
+Settings.defaultZone = "UTC";
 
 describe("BackgroundGrid", () => {
     it("Display the grid to help user distinguish months", () => {
         const wrapper = shallowMount(BackgroundGrid, {
             propsData: {
                 time_period: new TimePeriodMonth(
-                    new Date("2020-03-31T22:00:00.000Z"),
-                    new Date("2020-04-30T22:00:00.000Z"),
+                    DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                    DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                     "en-US",
                 ),
                 nb_additional_units: 2,

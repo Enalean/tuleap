@@ -25,6 +25,7 @@ import { TimePeriodWeek } from "../../helpers/time-period-week";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
 import type { Iteration, Task } from "../../type";
+import { DateTime } from "luxon";
 
 describe("timeperiod-getters", () => {
     describe("first_date", () => {
@@ -36,36 +37,36 @@ describe("timeperiod-getters", () => {
                     iterations: {
                         lvl1_iterations: [
                             {
-                                start: new Date(2020, 3, 15),
-                                end: new Date(2020, 4, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 3, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 4, 15)),
                             } as Iteration,
                             {
-                                start: new Date(2020, 5, 15),
-                                end: new Date(2020, 6, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 5, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 6, 15)),
                             } as Iteration,
                         ],
                         lvl2_iterations: [
                             {
-                                start: new Date(2020, 4, 15),
-                                end: new Date(2020, 5, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 4, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 5, 15)),
                             } as Iteration,
                             {
-                                start: new Date(2020, 6, 15),
-                                end: new Date(2020, 7, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 6, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 7, 15)),
                             } as Iteration,
                         ],
                     },
-                    now: new Date(2020, 3, 20),
+                    now: DateTime.fromJSDate(new Date(2020, 3, 20)),
                 } as RootState,
                 {
                     "tasks/tasks": [
-                        { start: new Date(2020, 3, 15) } as Task,
-                        { start: new Date(2020, 4, 15) } as Task,
+                        { start: DateTime.fromJSDate(new Date(2020, 3, 15)) } as Task,
+                        { start: DateTime.fromJSDate(new Date(2020, 4, 15)) } as Task,
                     ],
                 },
             );
 
-            expect(first_date.getMonth()).toBe(3);
+            expect(first_date.month).toBe(4);
         });
 
         it("should return the start date of the older iteration having dates around first task date", () => {
@@ -76,36 +77,36 @@ describe("timeperiod-getters", () => {
                     iterations: {
                         lvl1_iterations: [
                             {
-                                start: new Date(2020, 1, 15),
-                                end: new Date(2020, 4, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 1, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 4, 15)),
                             } as Iteration,
                             {
-                                start: new Date(2020, 5, 15),
-                                end: new Date(2020, 6, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 5, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 6, 15)),
                             } as Iteration,
                         ],
                         lvl2_iterations: [
                             {
-                                start: new Date(2020, 2, 15),
-                                end: new Date(2020, 5, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 2, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 5, 15)),
                             } as Iteration,
                             {
-                                start: new Date(2020, 6, 15),
-                                end: new Date(2020, 7, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 6, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 7, 15)),
                             } as Iteration,
                         ],
                     },
-                    now: new Date(2020, 3, 20),
+                    now: DateTime.fromJSDate(new Date(2020, 3, 20)),
                 } as RootState,
                 {
                     "tasks/tasks": [
-                        { start: new Date(2020, 3, 15) } as Task,
-                        { start: new Date(2020, 4, 15) } as Task,
+                        { start: DateTime.fromJSDate(new Date(2020, 3, 15)) } as Task,
+                        { start: DateTime.fromJSDate(new Date(2020, 4, 15)) } as Task,
                     ],
                 },
             );
 
-            expect(first_date.getMonth()).toBe(1);
+            expect(first_date.month).toBe(2);
         });
 
         it("should ignore the iterations that  ends before the first task date", () => {
@@ -116,36 +117,36 @@ describe("timeperiod-getters", () => {
                     iterations: {
                         lvl1_iterations: [
                             {
-                                start: new Date(2020, 1, 15),
-                                end: new Date(2020, 2, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 1, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 2, 15)),
                             } as Iteration,
                             {
-                                start: new Date(2020, 5, 15),
-                                end: new Date(2020, 6, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 5, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 6, 15)),
                             } as Iteration,
                         ],
                         lvl2_iterations: [
                             {
-                                start: new Date(2020, 2, 15),
-                                end: new Date(2020, 5, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 2, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 5, 15)),
                             } as Iteration,
                             {
-                                start: new Date(2020, 6, 15),
-                                end: new Date(2020, 7, 15),
+                                start: DateTime.fromJSDate(new Date(2020, 6, 15)),
+                                end: DateTime.fromJSDate(new Date(2020, 7, 15)),
                             } as Iteration,
                         ],
                     },
-                    now: new Date(2020, 3, 20),
+                    now: DateTime.fromJSDate(new Date(2020, 3, 20)),
                 } as RootState,
                 {
                     "tasks/tasks": [
-                        { start: new Date(2020, 3, 15) } as Task,
-                        { start: new Date(2020, 4, 15) } as Task,
+                        { start: DateTime.fromJSDate(new Date(2020, 3, 15)) } as Task,
+                        { start: DateTime.fromJSDate(new Date(2020, 4, 15)) } as Task,
                     ],
                 },
             );
 
-            expect(first_date.getMonth()).toBe(2);
+            expect(first_date.month).toBe(3);
         });
     });
 
@@ -157,24 +158,24 @@ describe("timeperiod-getters", () => {
                 {
                     iterations: {
                         lvl1_iterations: [
-                            { start: new Date(2020, 2, 15) } as Iteration,
-                            { start: new Date(2020, 5, 15) } as Iteration,
+                            { start: DateTime.fromJSDate(new Date(2020, 2, 15)) } as Iteration,
+                            { start: DateTime.fromJSDate(new Date(2020, 5, 15)) } as Iteration,
                         ],
                         lvl2_iterations: [
-                            { start: new Date(2020, 3, 15) } as Iteration,
-                            { start: new Date(2020, 6, 15) } as Iteration,
+                            { start: DateTime.fromJSDate(new Date(2020, 3, 15)) } as Iteration,
+                            { start: DateTime.fromJSDate(new Date(2020, 6, 15)) } as Iteration,
                         ],
                     },
-                    now: new Date(2020, 3, 20),
+                    now: DateTime.fromJSDate(new Date(2020, 3, 20)),
                 } as RootState,
                 {
                     "tasks/tasks": [
-                        { start: new Date(2020, 3, 15) } as Task,
-                        { start: new Date(2020, 4, 15) } as Task,
+                        { start: DateTime.fromJSDate(new Date(2020, 3, 15)) } as Task,
+                        { start: DateTime.fromJSDate(new Date(2020, 4, 15)) } as Task,
                     ],
                 },
             );
-            expect(last_date.getMonth()).toBe(6);
+            expect(last_date.month).toBe(7);
         });
     });
 
@@ -184,8 +185,8 @@ describe("timeperiod-getters", () => {
                 timescale: "week",
             };
 
-            const first_date = new Date(2020, 3, 15);
-            const last_date = new Date(2020, 4, 20);
+            const first_date = DateTime.fromJSDate(new Date(2020, 3, 15));
+            const last_date = DateTime.fromJSDate(new Date(2020, 4, 20));
 
             const root_state: RootState = {
                 gettext_provider: {} as VueGettextProvider,
@@ -203,8 +204,8 @@ describe("timeperiod-getters", () => {
                 timescale: "month",
             };
 
-            const first_date = new Date(2020, 3, 15);
-            const last_date = new Date(2020, 4, 20);
+            const first_date = DateTime.fromJSDate(new Date(2020, 3, 15));
+            const last_date = DateTime.fromJSDate(new Date(2020, 4, 20));
 
             const root_state: RootState = {
                 gettext_provider: {} as VueGettextProvider,
@@ -222,8 +223,8 @@ describe("timeperiod-getters", () => {
                 timescale: "quarter",
             };
 
-            const first_date = new Date(2020, 3, 15);
-            const last_date = new Date(2020, 4, 20);
+            const first_date = DateTime.fromJSDate(new Date(2020, 3, 15));
+            const last_date = DateTime.fromJSDate(new Date(2020, 4, 20));
 
             const root_state: RootState = {
                 gettext_provider: {} as VueGettextProvider,

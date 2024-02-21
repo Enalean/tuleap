@@ -33,6 +33,7 @@ import type { TimePeriod } from "../../../type";
 import TimePeriodUnits from "./TimePeriodUnits.vue";
 import TimePeriodYears from "./TimePeriodYears.vue";
 import { namespace } from "vuex-class";
+import type { DateTime } from "luxon";
 
 const timeperiod = namespace("timeperiod");
 
@@ -46,7 +47,7 @@ export default class TimePeriodHeader extends Vue {
     @Prop({ required: true })
     readonly nb_additional_units!: number;
 
-    get time_units(): Date[] {
+    get time_units(): DateTime[] {
         return [
             ...this.time_period.units,
             ...this.time_period.additionalUnits(this.nb_additional_units),
@@ -55,7 +56,7 @@ export default class TimePeriodHeader extends Vue {
 
     get years(): NbUnitsPerYear {
         return this.time_units.reduce((nb_units_per_year, unit): NbUnitsPerYear => {
-            const year = unit.getUTCFullYear();
+            const year = unit.year;
             nb_units_per_year.set(year, (nb_units_per_year.get(year) || 0) + 1);
 
             return nb_units_per_year;

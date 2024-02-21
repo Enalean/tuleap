@@ -25,6 +25,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TimeperiodState } from "../../../store/timeperiod/type";
 import type { RootState } from "../../../store/type";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
+import { DateTime } from "luxon";
 
 describe("IterationsRibbon", () => {
     it("should display all iterations", () => {
@@ -45,8 +46,8 @@ describe("IterationsRibbon", () => {
                     } as RootState,
                     getters: {
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-01-01T13:42:08+02:00"),
-                            new Date("2020-01-30T13:42:08+02:00"),
+                            DateTime.fromISO("2020-01-01T13:42:08+02:00"),
+                            DateTime.fromISO("2020-01-30T13:42:08+02:00"),
                             "en-US",
                         ),
                     },

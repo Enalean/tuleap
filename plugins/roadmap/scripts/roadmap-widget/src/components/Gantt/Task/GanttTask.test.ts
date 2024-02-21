@@ -31,6 +31,9 @@ import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TimeperiodState } from "../../../store/timeperiod/type";
 import type { RootState } from "../../../store/type";
+import { DateTime, Settings } from "luxon";
+
+Settings.defaultZone = "UTC";
 
 describe("GanttTask", () => {
     function mountGanttTask(
@@ -55,8 +58,8 @@ describe("GanttTask", () => {
         };
 
         const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 3),
-            new Date(2020, 4, 3),
+            DateTime.fromObject({ year: 2020, month: 4, day: 3 }),
+            DateTime.fromObject({ year: 2020, month: 5, day: 3 }),
             "en-US",
         );
 
@@ -90,8 +93,8 @@ describe("GanttTask", () => {
 
     it("Displays the grid and the bar of the task", () => {
         const wrapper = mountGanttTask({
-            start: new Date(2020, 3, 5),
-            end: new Date(2020, 3, 25),
+            start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+            end: DateTime.fromObject({ year: 2020, month: 4, day: 25 }),
         } as Task);
 
         expect(wrapper.findComponent(BackgroundGrid).exists()).toBe(true);
@@ -104,8 +107,8 @@ describe("GanttTask", () => {
 
     it("Has a minimum width", () => {
         const wrapper = mountGanttTask({
-            start: new Date(2020, 3, 5),
-            end: new Date(2020, 3, 6),
+            start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+            end: DateTime.fromObject({ year: 2020, month: 4, day: 6 }),
         } as Task);
 
         const task_bar = wrapper.findComponent(TaskBar);
@@ -115,8 +118,8 @@ describe("GanttTask", () => {
 
     it("If start = end, it is a milestone", () => {
         const wrapper = mountGanttTask({
-            start: new Date(2020, 3, 5),
-            end: new Date(2020, 3, 5),
+            start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+            end: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
         } as Task);
 
         const task_bar = wrapper.findComponent(TaskBar);
@@ -126,8 +129,8 @@ describe("GanttTask", () => {
 
     it("If end < start, it does not display the bar", () => {
         const wrapper = mountGanttTask({
-            start: new Date(2020, 3, 5),
-            end: new Date(2020, 1, 5),
+            start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+            end: DateTime.fromObject({ year: 2020, month: 1, day: 5 }),
         } as Task);
 
         const task_bar = wrapper.findComponent(TaskBar);
@@ -136,8 +139,8 @@ describe("GanttTask", () => {
 
     it("Displays no arrows if no dependencies", () => {
         const wrapper = mountGanttTask({
-            start: new Date(2020, 3, 5),
-            end: new Date(2020, 3, 25),
+            start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+            end: DateTime.fromObject({ year: 2020, month: 4, day: 25 }),
         } as Task);
 
         expect(wrapper.findComponent(DependencyArrow).exists()).toBe(false);
@@ -153,7 +156,10 @@ describe("GanttTask", () => {
             ["", [dep_3]],
         ])("when nature is '%s'", (nature: string, expected_displayed_dependencies: Task[]) => {
             const wrapper = mountGanttTask(
-                { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
+                {
+                    start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                    end: DateTime.fromObject({ year: 2020, month: 4, day: 25 }),
+                } as Task,
                 new TasksByNature([
                     ["depends_on", [dep_1, dep_2]],
                     ["", [dep_3]],
@@ -174,7 +180,10 @@ describe("GanttTask", () => {
         const dep_3: Task = { id: 126, is_open: false } as Task;
 
         const wrapper = mountGanttTask(
-            { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
+            {
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 4, day: 25 }),
+            } as Task,
             new TasksByNature([["", [dep_3]]]),
             "",
         );
@@ -187,7 +196,10 @@ describe("GanttTask", () => {
         const dep_3: Task = { id: 126, is_open: false } as Task;
 
         const wrapper = mountGanttTask(
-            { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
+            {
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 4, day: 25 }),
+            } as Task,
             new TasksByNature([["", [dep_3]]]),
             "",
             true,
@@ -204,7 +216,10 @@ describe("GanttTask", () => {
         const dep_2: Task = { id: 124, parent: another_parent, is_open: true } as Task;
 
         const wrapper = mountGanttTask(
-            { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
+            {
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 4, day: 25 }),
+            } as Task,
             new TasksByNature([["depends_on", [dep_1, dep_2]]]),
             "depends_on",
         );
@@ -219,8 +234,8 @@ describe("GanttTask", () => {
     describe("percentage", () => {
         it("should round the percentage to be displayed", () => {
             const wrapper = mountGanttTask({
-                start: new Date(2020, 3, 5),
-                end: new Date(2020, 3, 6),
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 4, day: 6 }),
                 progress: 0.42,
                 is_milestone: false,
             } as Task);
@@ -231,8 +246,8 @@ describe("GanttTask", () => {
 
         it("should be displayed next to the progress bar if there are enough room", () => {
             const wrapper = mountGanttTask({
-                start: new Date(2020, 3, 5),
-                end: new Date(2020, 6, 6),
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 7, day: 6 }),
                 progress: 0.42,
                 is_milestone: false,
             } as Task);
@@ -245,8 +260,8 @@ describe("GanttTask", () => {
 
         it("should be displayed inside the progress bar if there are not anymore enough room", () => {
             const wrapper = mountGanttTask({
-                start: new Date(2020, 3, 5),
-                end: new Date(2020, 6, 6),
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 7, day: 6 }),
                 progress: 0.98,
                 is_milestone: false,
             } as Task);
@@ -259,8 +274,8 @@ describe("GanttTask", () => {
 
         it("should be displayed outside of the task bar if the latter is too small", () => {
             const wrapper = mountGanttTask({
-                start: new Date(2020, 3, 5),
-                end: new Date(2020, 3, 6),
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 4, day: 6 }),
                 progress: 0.5,
                 is_milestone: false,
             } as Task);
@@ -273,8 +288,8 @@ describe("GanttTask", () => {
 
         it("should display nothing if there is no progress", () => {
             const wrapper = mountGanttTask({
-                start: new Date(2020, 3, 5),
-                end: new Date(2020, 3, 6),
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 4, day: 6 }),
                 progress: null,
                 is_milestone: false,
             } as Task);
@@ -288,8 +303,8 @@ describe("GanttTask", () => {
 
         it("should display nothing if the task is a milestone", () => {
             const wrapper = mountGanttTask({
-                start: new Date(2020, 3, 6),
-                end: new Date(2020, 3, 6),
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 6 }),
+                end: DateTime.fromObject({ year: 2020, month: 4, day: 6 }),
                 progress: 0.5,
                 is_milestone: true,
             } as Task);
@@ -304,8 +319,8 @@ describe("GanttTask", () => {
     describe("progress in error", () => {
         it("should display the error sign inside the bar", () => {
             const wrapper = mountGanttTask({
-                start: new Date(2020, 3, 5),
-                end: new Date(2020, 6, 6),
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 7, day: 6 }),
                 progress: null,
                 progress_error_message: "You fucked up!",
                 is_milestone: false,
@@ -318,8 +333,8 @@ describe("GanttTask", () => {
 
         it("should display the error sign outside the bar if the bar is too small", () => {
             const wrapper = mountGanttTask({
-                start: new Date(2020, 3, 5),
-                end: new Date(2020, 3, 6),
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 4, day: 6 }),
                 progress: null,
                 progress_error_message: "You fucked up!",
                 is_milestone: false,
@@ -332,8 +347,8 @@ describe("GanttTask", () => {
 
         it("should not display an error sign if we have a milestone because it does not have any notion of progress", () => {
             const wrapper = mountGanttTask({
-                start: new Date(2020, 3, 5),
-                end: new Date(2020, 3, 5),
+                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                end: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
                 progress: null,
                 progress_error_message: "You fucked up!",
                 is_milestone: true,

@@ -25,6 +25,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as vueuse from "@vueuse/core";
 import type { UseMutationObserverReturn } from "@vueuse/core";
 import * as tooltip from "@tuleap/tooltip";
+import { DateTime } from "luxon";
 
 jest.mock("@vueuse/core");
 jest.mock("@tuleap/tooltip", () => ({
@@ -39,8 +40,8 @@ describe("BarPopover", () => {
                 task: {
                     xref: "art #123",
                     title: "Create button",
-                    start: new Date("2020-01-12T15:00:00.000Z"),
-                    end: new Date("2020-01-30T15:00:00.000Z"),
+                    start: DateTime.fromISO("2020-01-12T15:00:00.000Z"),
+                    end: DateTime.fromISO("2020-01-30T15:00:00.000Z"),
                     progress: null,
                     progress_error_message: "",
                     is_milestone: false,
@@ -68,8 +69,8 @@ describe("BarPopover", () => {
                 task: {
                     xref: "art #123",
                     title: "Create button",
-                    start: new Date("2020-01-12T15:00:00.000Z"),
-                    end: new Date("2020-01-30T15:00:00.000Z"),
+                    start: DateTime.fromISO("2020-01-12T15:00:00.000Z"),
+                    end: DateTime.fromISO("2020-01-30T15:00:00.000Z"),
                     progress: null,
                     progress_error_message: "",
                     is_milestone: true,
@@ -116,8 +117,8 @@ describe("BarPopover", () => {
                 task: {
                     xref: "art #123",
                     title: "Create button",
-                    start: new Date("2020-01-12T15:00:00.000Z"),
-                    end: new Date("2020-01-30T15:00:00.000Z"),
+                    start: DateTime.fromISO("2020-01-12T15:00:00.000Z"),
+                    end: DateTime.fromISO("2020-01-30T15:00:00.000Z"),
                     progress: null,
                     progress_error_message: "",
                     is_milestone: false,

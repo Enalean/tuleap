@@ -26,6 +26,9 @@ import TimePeriodUnits from "./TimePeriodUnits.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TimeperiodState } from "../../../store/timeperiod/type";
 import type { RootState } from "../../../store/type";
+import { DateTime, Settings } from "luxon";
+
+Settings.defaultZone = "UTC";
 
 describe("TimePeriodHeader", () => {
     it("should display years and units", () => {
@@ -40,8 +43,8 @@ describe("TimePeriodHeader", () => {
                     } as RootState,
                     getters: {
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-30T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                     },
@@ -53,11 +56,11 @@ describe("TimePeriodHeader", () => {
             new NbUnitsPerYear([[2020, 5]]),
         );
         expect(wrapper.findComponent(TimePeriodUnits).props().time_units).toEqual([
-            new Date("2020-03-01T00:00:00.000Z"),
-            new Date("2020-04-01T00:00:00.000Z"),
-            new Date("2020-05-01T00:00:00.000Z"),
-            new Date("2020-06-01T00:00:00.000Z"),
-            new Date("2020-07-01T00:00:00.000Z"),
+            DateTime.fromISO("2020-03-01T00:00:00.000Z"),
+            DateTime.fromISO("2020-04-01T00:00:00.000Z"),
+            DateTime.fromISO("2020-05-01T00:00:00.000Z"),
+            DateTime.fromISO("2020-06-01T00:00:00.000Z"),
+            DateTime.fromISO("2020-07-01T00:00:00.000Z"),
         ]);
     });
 
@@ -73,8 +76,8 @@ describe("TimePeriodHeader", () => {
                     } as RootState,
                     getters: {
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2019-12-15T22:00:00.000Z"),
-                            new Date("2021-05-15T22:00:00.000Z"),
+                            DateTime.fromISO("2019-12-15T22:00:00.000Z"),
+                            DateTime.fromISO("2021-05-15T22:00:00.000Z"),
                             "en-US",
                         ),
                     },

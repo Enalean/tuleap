@@ -19,66 +19,67 @@
 
 import { getFirstDate } from "./first-date";
 import type { Iteration, Task } from "../type";
+import { DateTime } from "luxon";
 
 describe("first-date", () => {
     it("Returns now if there isn't any tasks", () => {
-        const now = new Date(2020, 3, 30);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
         expect(getFirstDate([], now)).toBe(now);
     });
 
     it("Returns now if the task doesn't have start nor end dates", () => {
-        const now = new Date(2020, 3, 30);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
         const start = null;
         const end = null;
         expect(getFirstDate([{ start, end } as Task], now)).toBe(now);
     });
 
     it("Returns the start date if end date is null and start < now", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
         const end = null;
         expect(getFirstDate([{ start, end } as Task], now)).toBe(start);
     });
 
     it("Returns now if end date is null and now < start", () => {
-        const now = new Date(2020, 3, 3);
-        const start = new Date(2020, 3, 15);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 3));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
         const end = null;
         expect(getFirstDate([{ start, end } as Task], now)).toBe(now);
     });
 
     it("Returns the start date if end date is lesser than start", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 10);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 10));
         expect(getFirstDate([{ start, end } as Task], now)).toBe(start);
     });
 
     it("Returns now if end date is lesser than start and now < start", () => {
-        const now = new Date(2020, 3, 3);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 10);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 3));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 10));
         expect(getFirstDate([{ start, end } as Task], now)).toBe(now);
     });
 
     it("Returns the end date if start date is null and end < now", () => {
-        const now = new Date(2020, 3, 30);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
         const start = null;
-        const end = new Date(2020, 3, 15);
+        const end = DateTime.fromJSDate(new Date(2020, 3, 15));
         expect(getFirstDate([{ start, end } as Task], now)).toBe(end);
     });
 
     it("Returns now if start date is null and now < end", () => {
-        const now = new Date(2020, 3, 3);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 3));
         const start = null;
-        const end = new Date(2020, 3, 15);
+        const end = DateTime.fromJSDate(new Date(2020, 3, 15));
         expect(getFirstDate([{ start, end } as Task], now)).toBe(now);
     });
 
     it("Returns the start date of the first task if the other has no dates", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 20);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 20));
         const other_start = null;
         const other_end = null;
         expect(
@@ -93,11 +94,11 @@ describe("first-date", () => {
     });
 
     it("Returns the start date of the first task if the other has no start date and end date greater than start", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 20);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 20));
         const other_start = null;
-        const other_end = new Date(2020, 3, 25);
+        const other_end = DateTime.fromJSDate(new Date(2020, 3, 25));
         expect(
             getFirstDate(
                 [
@@ -110,11 +111,11 @@ describe("first-date", () => {
     });
 
     it("Returns the end date of the other task if the other has no start date and end date lesser than start", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 20);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 20));
         const other_start = null;
-        const other_end = new Date(2020, 3, 10);
+        const other_end = DateTime.fromJSDate(new Date(2020, 3, 10));
         expect(
             getFirstDate(
                 [
@@ -127,10 +128,10 @@ describe("first-date", () => {
     });
 
     it("Returns the start date of the first task if the other has no end date and start date greater than start", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 20);
-        const other_start = new Date(2020, 3, 25);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 20));
+        const other_start = DateTime.fromJSDate(new Date(2020, 3, 25));
         const other_end = null;
         expect(
             getFirstDate(
@@ -144,10 +145,10 @@ describe("first-date", () => {
     });
 
     it("Returns the start date of the other task if the other has no end date and start date lesser than start", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 20);
-        const other_start = new Date(2020, 3, 10);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 20));
+        const other_start = DateTime.fromJSDate(new Date(2020, 3, 10));
         const other_end = null;
         expect(
             getFirstDate(
@@ -161,11 +162,11 @@ describe("first-date", () => {
     });
 
     it("Returns the start date of the first task if the other has start date greater than start", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 20);
-        const other_start = new Date(2020, 3, 25);
-        const other_end = new Date(2020, 3, 25);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 20));
+        const other_start = DateTime.fromJSDate(new Date(2020, 3, 25));
+        const other_end = DateTime.fromJSDate(new Date(2020, 3, 25));
         expect(
             getFirstDate(
                 [
@@ -178,11 +179,11 @@ describe("first-date", () => {
     });
 
     it("Returns the start date of the other task if the other has start date lesser than start", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 20);
-        const other_start = new Date(2020, 3, 10);
-        const other_end = new Date(2020, 3, 25);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 20));
+        const other_start = DateTime.fromJSDate(new Date(2020, 3, 10));
+        const other_end = DateTime.fromJSDate(new Date(2020, 3, 25));
         expect(
             getFirstDate(
                 [
@@ -195,11 +196,11 @@ describe("first-date", () => {
     });
 
     it("Returns the start date of the first task if the other has start date greater than start even if end date is lesser", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 20);
-        const other_start = new Date(2020, 3, 25);
-        const other_end = new Date(2020, 3, 5);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 20));
+        const other_start = DateTime.fromJSDate(new Date(2020, 3, 25));
+        const other_end = DateTime.fromJSDate(new Date(2020, 3, 5));
         expect(
             getFirstDate(
                 [
@@ -212,11 +213,11 @@ describe("first-date", () => {
     });
 
     it("Returns the end date of the other task if the other has start date lesser than start even if end date is lesser", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 20);
-        const other_start = new Date(2020, 3, 10);
-        const other_end = new Date(2020, 3, 5);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 20));
+        const other_start = DateTime.fromJSDate(new Date(2020, 3, 10));
+        const other_end = DateTime.fromJSDate(new Date(2020, 3, 5));
         expect(
             getFirstDate(
                 [
@@ -229,11 +230,11 @@ describe("first-date", () => {
     });
 
     it("Accepts both tasks and iterations", () => {
-        const now = new Date(2020, 3, 30);
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 3, 20);
-        const iteration_start = new Date(2020, 3, 10);
-        const iteration_end = new Date(2020, 3, 5);
+        const now = DateTime.fromJSDate(new Date(2020, 3, 30));
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 20));
+        const iteration_start = DateTime.fromJSDate(new Date(2020, 3, 10));
+        const iteration_end = DateTime.fromJSDate(new Date(2020, 3, 5));
         expect(
             getFirstDate(
                 [

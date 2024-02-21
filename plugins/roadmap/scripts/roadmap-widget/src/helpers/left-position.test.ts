@@ -21,25 +21,28 @@ import { getLeftForDate } from "./left-postion";
 import { TimePeriodMonth } from "./time-period-month";
 import { TimePeriodQuarter } from "./time-period-quarter";
 import { createVueGettextProviderPassthrough } from "./vue-gettext-provider-for-test";
+import { DateTime, Settings } from "luxon";
+
+Settings.defaultZone = "UTC";
 
 describe("getLeftForDate", () => {
     it("Gives a left position according to the time period", () => {
         expect(
             getLeftForDate(
-                new Date("2020-04-14T22:00:00.000Z"),
+                DateTime.fromJSDate(new Date("2020-04-14T22:00:00.000Z")),
                 new TimePeriodMonth(
-                    new Date("2020-01-31T23:00:00.000Z"),
-                    new Date("2020-04-30T22:00:00.000Z"),
+                    DateTime.fromJSDate(new Date("2020-01-31T23:00:00.000Z")),
+                    DateTime.fromJSDate(new Date("2020-04-30T22:00:00.000Z")),
                     "en-US",
                 ),
             ),
         ).toBe(346);
         expect(
             getLeftForDate(
-                new Date("2020-04-14T22:00:00.000Z"),
+                DateTime.fromJSDate(new Date("2020-04-14T22:00:00.000Z")),
                 new TimePeriodQuarter(
-                    new Date("2020-01-31T23:00:00.000Z"),
-                    new Date("2020-04-30T22:00:00.000Z"),
+                    DateTime.fromJSDate(new Date("2020-01-31T23:00:00.000Z")),
+                    DateTime.fromJSDate(new Date("2020-04-30T22:00:00.000Z")),
                     createVueGettextProviderPassthrough(),
                 ),
             ),
@@ -49,10 +52,10 @@ describe("getLeftForDate", () => {
     it("Gives a left position based on real user data", () => {
         expect(
             getLeftForDate(
-                new Date("2021-04-01T00:00:00.000Z"),
+                DateTime.fromJSDate(new Date("2021-04-01T00:00:00.000Z")),
                 new TimePeriodMonth(
-                    new Date("2021-03-31T14:36:12.580Z"),
-                    new Date("2021-10-30T22:00:00.000Z"),
+                    DateTime.fromJSDate(new Date("2021-03-31T14:36:12.580Z")),
+                    DateTime.fromJSDate(new Date("2021-10-30T22:00:00.000Z")),
                     "en-US",
                 ),
             ),

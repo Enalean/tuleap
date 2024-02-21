@@ -23,6 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import type { Task, TaskRow } from "../../../type";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
+import { DateTime } from "luxon";
 
 describe("DependencyArrow", () => {
     function mountComponent(
@@ -34,8 +35,8 @@ describe("DependencyArrow", () => {
         is_error_sign_displayed_outside_bar: boolean,
     ): Wrapper<DependencyArrow> {
         const time_period = new TimePeriodMonth(
-            new Date("2020-04-09T22:00:00.000Z"),
-            new Date("2020-04-24T22:00:00.000Z"),
+            DateTime.fromISO("2020-04-09T22:00:00.000Z"),
+            DateTime.fromISO("2020-04-24T22:00:00.000Z"),
             "en-US",
         );
 
@@ -57,13 +58,13 @@ describe("DependencyArrow", () => {
     it("Displays a down right arrow", () => {
         const task_1 = {
             id: 1,
-            start: new Date("2020-04-09T22:00:00.000Z"),
-            end: new Date("2020-04-14T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-09T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date("2020-04-19T22:00:00.000Z"),
-            end: new Date("2020-04-24T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-19T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "", false, false);
@@ -82,13 +83,13 @@ describe("DependencyArrow", () => {
     it("Displays a down left arrow", () => {
         const task_1 = {
             id: 1,
-            start: new Date("2020-04-09T22:00:00.000Z"),
-            end: new Date("2020-04-14T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-09T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date("2020-04-19T22:00:00.000Z"),
-            end: new Date("2020-04-24T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-19T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_2, task_1, [task_2, task_1], "", false, false);
@@ -107,13 +108,13 @@ describe("DependencyArrow", () => {
     it("Displays an up left arrow", () => {
         const task_1 = {
             id: 1,
-            start: new Date("2020-04-09T22:00:00.000Z"),
-            end: new Date("2020-04-14T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-09T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date("2020-04-19T22:00:00.000Z"),
-            end: new Date("2020-04-24T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-19T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_2, task_1, [task_1, task_2], "", false, false);
@@ -132,13 +133,13 @@ describe("DependencyArrow", () => {
     it("Displays an up right arrow", () => {
         const task_1 = {
             id: 1,
-            start: new Date("2020-04-09T22:00:00.000Z"),
-            end: new Date("2020-04-14T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-09T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date("2020-04-19T22:00:00.000Z"),
-            end: new Date("2020-04-24T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-19T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_1, task_2, [task_2, task_1], "", false, false);
@@ -157,13 +158,13 @@ describe("DependencyArrow", () => {
     it("should starts the path after the progress percentage text if it is displayed outside of the bar, but does not consider that the task ends after its dependency start", async () => {
         const task_1 = {
             id: 1,
-            start: new Date("2020-04-09T22:00:00.000Z"),
-            end: new Date("2020-04-14T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-09T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date("2020-04-15T22:00:00.000Z"),
-            end: new Date("2020-04-24T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-15T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "42%", false, false);
@@ -185,14 +186,14 @@ describe("DependencyArrow", () => {
     it("should starts the path after the progress error sign if it is displayed outside of the bar, but does not consider that the task ends after its dependency start", async () => {
         const task_1 = {
             id: 1,
-            start: new Date("2020-04-09T22:00:00.000Z"),
-            end: new Date("2020-04-14T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-09T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
             progress_error_message: "You fucked up!",
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date("2020-04-15T22:00:00.000Z"),
-            end: new Date("2020-04-24T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-15T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "42%", false, true);

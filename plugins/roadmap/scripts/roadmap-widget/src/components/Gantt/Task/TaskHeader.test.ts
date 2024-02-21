@@ -24,6 +24,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TasksState } from "../../../store/tasks/type";
 import HeaderLink from "./HeaderLink.vue";
 import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";
+import { DateTime } from "luxon";
 
 describe("TaskHeader", () => {
     it("Displays link to the task", () => {
@@ -65,8 +66,8 @@ describe("TaskHeader", () => {
     it("should display a warning icon if task has end date < start date", () => {
         const task: Task = {
             id: 123,
-            start: new Date("2020-04-14T22:00:00.000Z"),
-            end: new Date("2020-04-10T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-10T22:00:00.000Z"),
         } as Task;
 
         const wrapper = shallowMount(TaskHeader, {

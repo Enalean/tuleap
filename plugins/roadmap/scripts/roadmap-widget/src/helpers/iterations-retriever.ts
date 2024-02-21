@@ -30,8 +30,8 @@ export function retrieveIterations(
             return iterations.map((iteration: Iteration): Iteration => {
                 return {
                     ...iteration,
-                    start: new Date(iteration.start),
-                    end: new Date(iteration.end),
+                    start: structuredClone(iteration.start),
+                    end: structuredClone(iteration.end),
                 };
             });
         },
