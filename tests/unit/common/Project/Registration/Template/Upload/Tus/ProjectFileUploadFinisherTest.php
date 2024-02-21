@@ -24,18 +24,48 @@ namespace Tuleap\Project\Registration\Template\Upload\Tus;
 
 use Tuleap\Project\Registration\Template\Upload\DeleteFileUploadStub;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Upload\FileAlreadyUploadedInformation;
+use Tuleap\Upload\FileBeingUploadedInformation;
+use Tuleap\Upload\UploadPathAllocator;
 
 final class ProjectFileUploadFinisherTest extends TestCase
 {
+    use \Tuleap\TemporaryTestDirectory;
+
+    private string $base_path;
+    private UploadPathAllocator $path_allocator;
+    private DeleteFileUploadStub $file_upload_dao;
+    private ProjectFileUploadFinisher $finisher;
+
+
+    protected function setUp(): void
+    {
+        $this->base_path       = $this->getTmpDir();
+        $this->path_allocator  = new UploadPathAllocator($this->base_path);
+        $this->file_upload_dao = DeleteFileUploadStub::build();
+        $this->finisher        = new ProjectFileUploadFinisher(
+            $this->file_upload_dao,
+            $this->path_allocator
+        );
+    }
+
     public function testItDeletesTheSavedFileInDBWhenTheUploadIsFinished(): void
     {
-        $file_upload_dao = DeleteFileUploadStub::build();
-        $finisher        = new ProjectFileUploadFinisher(
-            $file_upload_dao
-        );
+        $file_information = new FileBeingUploadedInformation(15, "test.zip", 996, 0);
+        $item_path        = $this->path_allocator->getPathForItemBeingUploaded($file_information);
 
-        $finisher->finishUpload(new FileAlreadyUploadedInformation(15, "CRX del Sol", 1041));
-        self::assertSame(1, $file_upload_dao->getDeleteByIdMethodCallCount());
+        copy(__DIR__ . "/_fixtures/test.zip", $item_path);
+
+        $this->finisher->finishUpload($file_information);
+        self::assertSame(1, $this->file_upload_dao->getDeleteByIdMethodCallCount());
+    }
+
+    public function testItThrowsWhenProvidedFileIsNotAnArchive(): void
+    {
+        $file_information = new FileBeingUploadedInformation(15, "filename.md", 996, 0);
+        $item_path        = $this->path_allocator->getPathForItemBeingUploaded($file_information);
+        file_put_contents($item_path, "#test");
+
+        $this->expectException(FileIsNotAnArchiveException::class);
+        $this->finisher->finishUpload($file_information);
     }
 }

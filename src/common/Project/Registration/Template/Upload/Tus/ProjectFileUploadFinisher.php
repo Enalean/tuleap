@@ -25,15 +25,26 @@ namespace Tuleap\Project\Registration\Template\Upload\Tus;
 use Tuleap\Project\Registration\Template\Upload\DeleteFileUpload;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
+use Tuleap\Upload\UploadPathAllocator;
 
 final readonly class ProjectFileUploadFinisher implements TusFinisherDataStore
 {
-    public function __construct(private DeleteFileUpload $file_ongoing_upload_dao)
-    {
+    public function __construct(
+        private DeleteFileUpload $file_ongoing_upload_dao,
+        private UploadPathAllocator $upload_path_allocator,
+    ) {
     }
 
     public function finishUpload(TusFileInformation $file_information): void
     {
+        $file_path = $this->upload_path_allocator->getPathForItemBeingUploaded($file_information);
+        $zip       = new \ZipArchive();
+        if ($zip->open($file_path) !== true) {
+            $this->file_ongoing_upload_dao->deleteById($file_information);
+            throw new FileIsNotAnArchiveException();
+        }
+        $zip->close();
+
         $this->file_ongoing_upload_dao->deleteById($file_information);
     }
 }
