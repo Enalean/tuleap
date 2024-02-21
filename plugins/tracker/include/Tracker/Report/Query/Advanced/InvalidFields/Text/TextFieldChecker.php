@@ -19,9 +19,9 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text;
 
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldValueWrapperParameters;
@@ -29,6 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
@@ -39,15 +40,41 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedE
  */
 final class TextFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
+    /**
+     * @throws FieldIsNotSupportedForComparisonException
+     * @throws TextToMySelfComparisonException
+     * @throws TextToNowComparisonException
+     * @throws TextToStatusOpenComparisonException
+     */
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    {
+        match ($comparison->getType()) {
+            ComparisonType::Equal,
+            ComparisonType::NotEqual => $this->checkTextValueIsValid($comparison, $field),
+            ComparisonType::Between => throw new FieldIsNotSupportedForComparisonException($field, 'between()'),
+            ComparisonType::GreaterThan => throw new FieldIsNotSupportedForComparisonException($field, '>'),
+            ComparisonType::GreaterThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '>='),
+            ComparisonType::LesserThan => throw new FieldIsNotSupportedForComparisonException($field, '<'),
+            ComparisonType::LesserThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '<='),
+            ComparisonType::In => throw new FieldIsNotSupportedForComparisonException($field, 'in()'),
+            ComparisonType::NotIn => throw new FieldIsNotSupportedForComparisonException($field, 'not in()'),
+        };
+    }
+
+    /**
+     * @throws TextToMySelfComparisonException
+     * @throws TextToNowComparisonException
+     * @throws TextToStatusOpenComparisonException
+     */
+    private function checkTextValueIsValid(Comparison $comparison, \Tracker_FormElement_Field $field): void
     {
         try {
             $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
-        } catch (NowIsNotSupportedException $exception) {
+        } catch (NowIsNotSupportedException) {
             throw new TextToNowComparisonException($field);
-        } catch (MySelfIsNotSupportedException $exception) {
+        } catch (MySelfIsNotSupportedException) {
             throw new TextToMySelfComparisonException($field);
-        } catch (StatusOpenIsNotSupportedException $exception) {
+        } catch (StatusOpenIsNotSupportedException) {
             throw new TextToStatusOpenComparisonException($field);
         }
     }

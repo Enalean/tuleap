@@ -51,6 +51,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\InvalidArtif
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 
 /**
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
@@ -221,6 +222,7 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
                     $comparison,
                     new FloatFieldChecker(),
                     new IntegerFieldChecker(),
+                    new TextFieldChecker(),
                     $this->field_equal_comparison_visitor,
                     $this->field_not_equal_comparison_visitor,
                     $this->field_lesser_than_comparison_visitor,

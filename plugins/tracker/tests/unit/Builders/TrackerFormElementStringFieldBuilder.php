@@ -26,12 +26,14 @@ use Tracker_FormElement_Field_String;
 
 final class TrackerFormElementStringFieldBuilder
 {
-    private string $label                       = 'Title';
-    private string $name                        = 'title';
-    private bool $is_required                   = false;
-    private ?\PFUser $user_with_read_permission = null;
+    private string $label     = 'Title';
+    private string $name      = 'title';
+    private bool $is_required = false;
     private \Tracker $tracker;
-    private bool $read_permission = false;
+    /** @var list<\PFUser> */
+    private array $user_with_read_permissions = [];
+    /** @var array<int, bool> */
+    private array $read_permissions = [];
 
     private function __construct(private readonly int $id)
     {
@@ -69,8 +71,8 @@ final class TrackerFormElementStringFieldBuilder
 
     public function withReadPermission(\PFUser $user, bool $user_can_read): self
     {
-        $this->user_with_read_permission = $user;
-        $this->read_permission           = $user_can_read;
+        $this->user_with_read_permissions[]     = $user;
+        $this->read_permissions[$user->getId()] = $user_can_read;
         return $this;
     }
 
@@ -91,8 +93,8 @@ final class TrackerFormElementStringFieldBuilder
             null
         );
         $field->setTracker($this->tracker);
-        if ($this->user_with_read_permission !== null) {
-            $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
+        foreach ($this->user_with_read_permissions as $user) {
+            $field->setUserCanRead($user, $this->read_permissions[$user->getId()]);
         }
         return $field;
     }

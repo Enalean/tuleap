@@ -65,6 +65,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
@@ -82,6 +83,8 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -223,33 +226,37 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertFalse($this->invalid_searchable_collection->hasInvalidSearchable());
     }
 
+    private static function generateInvalidComparisonsForFieldsThatAreNotLists(
+        Field $field,
+        ValueWrapper $valid_value,
+    ): iterable {
+        $open = new StatusOpenValueWrapper();
+        yield '= OPEN()' => [new EqualComparison($field, $open)];
+        yield 'IN()' => [new InComparison($field, new InValueWrapper([$valid_value]))];
+        yield 'NOT IN()' => [new NotInComparison($field, new InValueWrapper([$valid_value]))];
+    }
+
     public static function generateInvalidNumericComparisons(): iterable
     {
         $field       = new Field(self::FIELD_NAME);
         $empty_value = new SimpleValueWrapper('');
         $valid_value = new SimpleValueWrapper(10.5);
         $now         = new CurrentDateTimeValueWrapper(null, null);
-
-        $open = new StatusOpenValueWrapper();
-        yield ['< empty string' => new LesserThanComparison($field, $empty_value)];
-        yield ['<= empty string' => new LesserThanOrEqualComparison($field, $empty_value)];
-        yield ['> empty string' => new GreaterThanComparison($field, $empty_value)];
-        yield ['>= empty string' => new GreaterThanOrEqualComparison($field, $empty_value)];
-        yield ["BETWEEN('', 10.5)" => new BetweenComparison(
-            $field,
-            new BetweenValueWrapper($empty_value, $valid_value)
-        ),
+        yield '< empty string' => [new LesserThanComparison($field, $empty_value)];
+        yield '<= empty string' => [new LesserThanOrEqualComparison($field, $empty_value)];
+        yield '> empty string' => [new GreaterThanComparison($field, $empty_value)];
+        yield '>= empty string' => [new GreaterThanOrEqualComparison($field, $empty_value)];
+        yield "BETWEEN('', 10.5)" => [
+            new BetweenComparison($field, new BetweenValueWrapper($empty_value, $valid_value)),
         ];
-        yield ["BETWEEN(10.5, '')" => new BetweenComparison(
-            $field,
-            new BetweenValueWrapper($valid_value, $empty_value)
-        ),
+        yield "BETWEEN(10.5, '')" => [
+            new BetweenComparison($field, new BetweenValueWrapper($valid_value, $empty_value)),
         ];
-        yield ['= string value' => new EqualComparison($field, new SimpleValueWrapper('string'))];
-        yield ['= NOW()' => new EqualComparison($field, $now)];
-        yield ['= OPEN()' => new EqualComparison($field, $open)];
-        yield ['IN()' => new InComparison($field, new InValueWrapper([$valid_value]))];
-        yield ['NOT IN()' => new NotInComparison($field, new InValueWrapper([$valid_value]))];
+        yield '= NOW()' => [new EqualComparison($field, $now)];
+        yield '= string value' => [new EqualComparison($field, new SimpleValueWrapper('string'))];
+        foreach (self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value) as $case) {
+            yield $case;
+        }
     }
 
     /**
@@ -275,7 +282,48 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    public function testItRejectsInvalidComparisonToMyself(): void
+    public static function generateInvalidTextComparisons(): iterable
+    {
+        $field       = new Field(self::FIELD_NAME);
+        $valid_value = new SimpleValueWrapper('Graphium');
+        $now         = new CurrentDateTimeValueWrapper(null, null);
+        yield '< anything' => [new LesserThanComparison($field, $valid_value)];
+        yield '<= anything' => [new LesserThanOrEqualComparison($field, $valid_value)];
+        yield '> anything' => [new GreaterThanComparison($field, $valid_value)];
+        yield '>= anything' => [new GreaterThanOrEqualComparison($field, $valid_value)];
+        yield 'BETWEEN anything' => [
+            new BetweenComparison($field, new BetweenValueWrapper($valid_value, $valid_value)),
+        ];
+        yield '= NOW()' => [new EqualComparison($field, $now)];
+        foreach (self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value) as $case) {
+            yield $case;
+        }
+    }
+
+    /**
+     * @dataProvider generateInvalidTextComparisons
+     */
+    public function testItRejectsInvalidTextComparisons(Comparison $comparison): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementStringFieldBuilder::aStringField(619)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+            TrackerFormElementTextFieldBuilder::aTextField(204)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, true)
+                ->build()
+        );
+        $this->comparison       = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    public function testItRejectsNumericComparisonToMyself(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             TrackerFormElementIntFieldBuilder::anIntField(975)
@@ -284,6 +332,32 @@ final class InvalidTermCollectorVisitorTest extends TestCase
                 ->withReadPermission($this->user, true)
                 ->build(),
             TrackerFormElementFloatFieldBuilder::aFloatField(659)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, true)
+                ->build()
+        );
+        $user_manager           = $this->createStub(\UserManager::class);
+        $user_manager->method('getCurrentUser')->willReturn($this->user);
+
+        $this->comparison = new EqualComparison(
+            new Field(self::FIELD_NAME),
+            new CurrentUserValueWrapper($user_manager)
+        );
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    public function testItRejectsTextComparisonToMyself(): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementStringFieldBuilder::aStringField(607)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+            TrackerFormElementTextFieldBuilder::aTextField(292)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -336,19 +410,19 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             new Field(self::FIELD_NAME),
             new SimpleValueWrapper('string value')
         );
-        yield ['AndOperand' => new AndExpression($valid_comparison, new AndOperand($invalid_comparison))];
-        yield ['Tail of AndOperand' => new AndExpression(
+        yield 'AndOperand' => [new AndExpression($valid_comparison, new AndOperand($invalid_comparison))];
+        yield 'Tail of AndOperand' => [new AndExpression(
             $valid_comparison,
             new AndOperand($valid_comparison, new AndOperand($invalid_comparison))
         ),
         ];
-        yield ['OrExpression' => new OrExpression(new AndExpression($invalid_comparison))];
-        yield ['OrOperand' => new OrExpression(
+        yield 'OrExpression' => [new OrExpression(new AndExpression($invalid_comparison))];
+        yield 'OrOperand' => [new OrExpression(
             new AndExpression($valid_comparison),
             new OrOperand(new AndExpression($invalid_comparison))
         ),
         ];
-        yield ['Tail of OrOperand' => new OrExpression(
+        yield 'Tail of OrOperand' => [new OrExpression(
             new AndExpression($valid_comparison),
             new OrOperand(
                 new AndExpression($valid_comparison),
@@ -356,7 +430,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             )
         ),
         ];
-        yield ['Parenthesis' => new AndExpression(
+        yield 'Parenthesis' => [new AndExpression(
             new Parenthesis(
                 new OrExpression(new AndExpression($invalid_comparison))
             )
