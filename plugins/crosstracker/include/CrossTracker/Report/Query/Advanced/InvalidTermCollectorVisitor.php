@@ -61,6 +61,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\InvalidArtifactLinkTypeException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
@@ -218,6 +219,7 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
                     new FloatFieldChecker(),
                     new IntegerFieldChecker(),
                     new TextFieldChecker(),
+                    new DateFieldChecker(),
                     $this->equal_comparison_visitor,
                     $this->not_equal_comparison_visitor,
                     $this->lesser_than_comparison_visitor,

@@ -47,10 +47,6 @@ use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\ValueForFileExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
@@ -82,16 +78,7 @@ final class EqualComparisonVisitor implements
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        if ($field->isTimeDisplayed() === true) {
-            return new DateFieldChecker(
-                new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME),
-                new CollectionOfDateValuesExtractor(DateFormat::DATETIME)
-            );
-        }
-        return new DateFieldChecker(
-            new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATE),
-            new CollectionOfDateValuesExtractor(DateFormat::DATE)
-        );
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)
@@ -201,18 +188,12 @@ final class EqualComparisonVisitor implements
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return new DateFieldChecker(
-            new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME),
-            new CollectionOfDateValuesExtractor(DateFormat::DATETIME)
-        );
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return new DateFieldChecker(
-            new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME),
-            new CollectionOfDateValuesExtractor(DateFormat::DATETIME)
-        );
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitComputed(Tracker_FormElement_Field_Computed $field)

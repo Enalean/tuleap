@@ -34,6 +34,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
@@ -116,6 +117,7 @@ final class InvalidSearchableCollectorParametersBuilder
                 new FloatFieldChecker(),
                 new IntegerFieldChecker(),
                 new TextFieldChecker(),
+                new DateFieldChecker(),
                 new EqualComparisonVisitor(),
                 new NotEqualComparisonVisitor(),
                 new LesserThanComparisonVisitor(),

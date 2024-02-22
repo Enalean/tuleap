@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;

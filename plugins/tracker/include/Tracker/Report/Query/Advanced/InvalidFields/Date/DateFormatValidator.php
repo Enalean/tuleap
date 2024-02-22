@@ -23,17 +23,19 @@ use DateTime;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 
-final class DateFormatValidator
+final readonly class DateFormatValidator
 {
-    public function __construct(private readonly EmptyStringChecker $empty_string_checker, private readonly string $default_format)
-    {
+    public function __construct(
+        private EmptyStringChecker $empty_string_checker,
+        private string $default_format,
+    ) {
     }
 
     /**
      * @throws DateToEmptyStringException
      * @throws DateToStringException
      */
-    public function checkValueIsValid($value)
+    public function checkValueIsValid($value): void
     {
         $date_value = $this->getDateTimeFromValue($value);
 
@@ -46,11 +48,7 @@ final class DateFormatValidator
         }
     }
 
-    /**
-     * @param $value
-     * @return DateTime
-     */
-    private function getDateTimeFromValue($value)
+    private function getDateTimeFromValue($value): DateTime|false
     {
         if ($this->shouldTryDateTimeFormatFirst()) {
             $date_value = DateTime::createFromFormat(DateFormat::DATETIME, $value);
@@ -64,10 +62,7 @@ final class DateFormatValidator
         return $date_value;
     }
 
-    /**
-     * @return bool
-     */
-    private function shouldTryDateTimeFormatFirst()
+    private function shouldTryDateTimeFormatFirst(): bool
     {
         return $this->default_format === DateFormat::DATETIME;
     }

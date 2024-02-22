@@ -17,44 +17,67 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-final class DateFieldChecker implements InvalidFieldChecker
+final readonly class DateFieldChecker implements InvalidFieldChecker
 {
     /**
-     * @var CollectionOfDateValuesExtractor
+     * @throws DateToEmptyStringTermException
+     * @throws DateToMySelfComparisonException
+     * @throws DateToStatusOpenComparisonException
+     * @throws DateToStringComparisonException
+     * @throws FieldIsNotSupportedForComparisonException
      */
-    private $values_extractor;
-
-    /**
-     * @var DateFormatValidator
-     */
-    private $validator;
-
-    public function __construct(DateFormatValidator $validator, CollectionOfDateValuesExtractor $values_extractor)
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
     {
-        $this->validator        = $validator;
-        $this->values_extractor = $values_extractor;
+        assert($field instanceof \Tracker_FormElement_Field_Date);
+        match ($comparison->getType()) {
+            ComparisonType::Equal,
+            ComparisonType::NotEqual => $this->checkDateValueIsValid($comparison, $field, false),
+            ComparisonType::Between,
+            ComparisonType::GreaterThan,
+            ComparisonType::GreaterThanOrEqual,
+            ComparisonType::LesserThan,
+            ComparisonType::LesserThanOrEqual => $this->checkDateValueIsValid($comparison, $field, true),
+            ComparisonType::In => throw new FieldIsNotSupportedForComparisonException($field, 'in()'),
+            ComparisonType::NotIn => throw new FieldIsNotSupportedForComparisonException($field, 'not in()'),
+        };
     }
 
     /**
-     * @throws InvalidFieldException
+     * @throws DateToEmptyStringTermException
+     * @throws DateToMySelfComparisonException
+     * @throws DateToStatusOpenComparisonException
+     * @throws DateToStringComparisonException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
-    {
-        $date_values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
+    private function checkDateValueIsValid(
+        Comparison $comparison,
+        \Tracker_FormElement_Field_Date $field,
+        bool $is_empty_string_a_problem,
+    ): void {
+        $format           = ($field->isTimeDisplayed()) ? DateFormat::DATETIME : DateFormat::DATE;
+        $empty_checker    = ($is_empty_string_a_problem) ? new EmptyStringForbidden() : new EmptyStringAllowed();
+        $validator        = new DateFormatValidator($empty_checker, $format);
+        $values_extractor = new CollectionOfDateValuesExtractor($format);
+
+        $date_values = $values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
 
         foreach ($date_values as $value) {
             try {
-                $this->validator->checkValueIsValid($value);
-            } catch (DateToEmptyStringException $exception) {
+                $validator->checkValueIsValid($value);
+            } catch (DateToEmptyStringException) {
                 throw new DateToEmptyStringTermException($comparison, $field);
-            } catch (DateToStringException $exception) {
+            } catch (DateToStringException) {
                 throw new DateToStringComparisonException($field, $value);
             }
         }
