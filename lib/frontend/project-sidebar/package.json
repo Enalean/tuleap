@@ -26,7 +26,7 @@
     "!src/**/*.test.ts"
   ],
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^6.4.0",
+    "@fortawesome/fontawesome-free": "^6.5.1",
     "@tuleap/build-system-configurator": "link:../build-system-configurator",
     "@tuleap/project-sidebar-internal": "link:../project-sidebar-internal",
     "@tuleap/tlp": "link:../../../src/scripts/tlp"
