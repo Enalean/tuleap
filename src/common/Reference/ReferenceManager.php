@@ -25,11 +25,11 @@ use Tuleap\Reference\ExtractAndSaveCrossReferences;
 use Tuleap\Reference\ExtractReferences;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
+use Tuleap\Reference\NatureCollection;
 use Tuleap\Reference\ReferenceDescriptionTranslation;
 use Tuleap\Reference\ReferenceInstance;
 use Tuleap\Reference\ReferenceValidator;
 use Tuleap\Reference\ReservedKeywordsRetriever;
-use Tuleap\Reference\NatureCollection;
 
 /**
  * Reference Manager
@@ -548,7 +548,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
     private function isAnArtifactKeyword($keyword)
     {
         return $keyword == self::KEYWORD_ARTIFACT_LONG
-            || $keyword == self::KEYWORD_ARTIFACT_SHORT;
+               || $keyword == self::KEYWORD_ARTIFACT_SHORT;
     }
 
     public function buildReference($row, $val = null): Reference
@@ -741,7 +741,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
     /**
      * Return true if given text contains references
      *
-     * @param String  $string
+     * @param String $string
      *
      * @return bool
      */
@@ -887,7 +887,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         EventManager::instance()->processEvent(
             Event::REMOVE_CROSS_REFERENCE,
             [
-                'cross_reference' => $cross_reference,
+                'cross_reference'      => $cross_reference,
                 'is_reference_removed' => &$is_reference_removed,
             ]
         );
@@ -1221,15 +1221,15 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
 
     public function checkKeyword($keyword)
     {
-            // Check that there is no system reference with the same keyword
+        // Check that there is no system reference with the same keyword
         if ($this->getReferenceValidator()->isSystemKeyword($keyword)) {
             return false;
         }
-            // Check list of reserved keywords
+        // Check list of reserved keywords
         if ($this->getReferenceValidator()->isReservedKeyword($keyword)) {
             return false;
         }
-            return true;
+        return true;
     }
 
     public function _keywordAndNumArgsExists($keyword, $num_args, $group_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
