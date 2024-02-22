@@ -263,4 +263,52 @@ final class StaticListDuckTypedFieldTest extends TestIntegrationTestCase
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->sprint_artifact_empty_id], $artifacts);
     }
+
+    public function testInValue(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "list_field IN('lead')",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_lead_id, $this->sprint_artifact_with_cheese_lead_id], $artifacts);
+    }
+
+    public function testInValues(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "list_field IN('lead', 'cheese')",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_with_cheese_id, $this->release_artifact_with_lead_id,
+            $this->sprint_artifact_with_cheese_id, $this->sprint_artifact_with_cheese_lead_id,
+        ], $artifacts);
+    }
+
+    public function testMultipleIn(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "list_field IN('lead') AND list_field IN('cheese')",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(1, $artifacts);
+        self::assertEqualsCanonicalizing([$this->sprint_artifact_with_cheese_lead_id], $artifacts);
+    }
 }
