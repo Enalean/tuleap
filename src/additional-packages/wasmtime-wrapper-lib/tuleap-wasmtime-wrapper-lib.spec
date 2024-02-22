@@ -1,6 +1,6 @@
 %define _buildhost tuleap-builder
-%define _source_payload w9.xzdio
-%define _binary_payload w9.xzdio
+%define _source_payload w9T8.xzdio
+%define _binary_payload w9T8.xzdio
 
 %define __os_install_post %{nil}
 
