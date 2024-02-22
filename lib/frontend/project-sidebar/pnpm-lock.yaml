@@ -1,9 +1,13 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 devDependencies:
   '@fortawesome/fontawesome-free':
-    specifier: ^6.4.0
-    version: 6.4.0
+    specifier: ^6.5.1
+    version: 6.5.1
   '@tuleap/build-system-configurator':
     specifier: link:../build-system-configurator
     version: link:../build-system-configurator
@@ -16,8 +20,8 @@ devDependencies:
 
 packages:
 
-  /@fortawesome/fontawesome-free@6.4.0:
-    resolution: {integrity: sha512-0NyytTlPJwB/BF5LtRV8rrABDbe3TdTXqNB3PdZ+UUUZAEIrdOJdmABqKjt4AXwIoJNaRVVZEXxpNrqvE1GAYQ==}
+  /@fortawesome/fontawesome-free@6.5.1:
+    resolution: {integrity: sha512-CNy5vSwN3fsUStPRLX7fUYojyuzoEMSXPl7zSLJ8TgtRfjv24LOnOWKT2zYwaHZCJGkdyRnTmstR0P+Ah503Gw==}
     engines: {node: '>=6'}
     requiresBuild: true
     dev: true
