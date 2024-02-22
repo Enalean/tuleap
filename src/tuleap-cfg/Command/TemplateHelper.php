@@ -23,10 +23,13 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command;
 
-use Webimpress\SafeWriter\FileWriter;
+use Tuleap\File\FileWriter;
 
 final class TemplateHelper
 {
+    /**
+     * @param non-empty-string $target_path
+     */
     public static function replacePlaceHolderInto(string $template_path, string $target_path, array $variables, array $values, int $chmod): void
     {
         FileWriter::writeFile(
