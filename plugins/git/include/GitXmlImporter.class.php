@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Git\Branch\BranchName;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutor;
 use Tuleap\Git\Events\XMLImportExternalContentEvent;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
@@ -26,6 +27,7 @@ use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
+use Tuleap\Git\RetrieveGitDefaultBranchInXMLImport;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\PHPCast;
@@ -44,22 +46,24 @@ class GitXmlImporter
     public const SERVICE_NAME = 'git';
 
     public function __construct(
-        private \Psr\Log\LoggerInterface $logger,
-        private GitRepositoryManager $repository_manager,
-        private GitRepositoryFactory $repository_factory,
-        private Git_Backend_Gitolite $gitolite_backend,
-        private Git_SystemEventManager $system_event_manager,
-        private PermissionsManager $permission_manager,
-        private EventManager $event_manager,
-        private FineGrainedUpdater $fine_grained_updater,
-        private RegexpFineGrainedRetriever $regexp_fine_grained_retriever,
-        private RegexpFineGrainedEnabler $regexp_fine_grained_enabler,
-        private FineGrainedPermissionFactory $fine_grained_factory,
-        private FineGrainedPermissionSaver $fine_grained_saver,
-        private XmlUgroupRetriever $xml_ugroup_retriever,
-        private GitDao $git_dao,
-        private IFindUserFromXMLReference $user_finder,
-        private ConfigureAllowArtifactClosure $configure_artifact_closure,
+        private readonly \Psr\Log\LoggerInterface $logger,
+        private readonly GitRepositoryManager $repository_manager,
+        private readonly GitRepositoryFactory $repository_factory,
+        private readonly Git_Backend_Gitolite $gitolite_backend,
+        private readonly Git_SystemEventManager $system_event_manager,
+        private readonly PermissionsManager $permission_manager,
+        private readonly EventManager $event_manager,
+        private readonly FineGrainedUpdater $fine_grained_updater,
+        private readonly RegexpFineGrainedRetriever $regexp_fine_grained_retriever,
+        private readonly RegexpFineGrainedEnabler $regexp_fine_grained_enabler,
+        private readonly FineGrainedPermissionFactory $fine_grained_factory,
+        private readonly FineGrainedPermissionSaver $fine_grained_saver,
+        private readonly XmlUgroupRetriever $xml_ugroup_retriever,
+        private readonly GitDao $git_dao,
+        private readonly IFindUserFromXMLReference $user_finder,
+        private readonly ConfigureAllowArtifactClosure $configure_artifact_closure,
+        private readonly RetrieveGitDefaultBranchInXMLImport $retrieve_git_default_branch_in_xml_import,
+        private readonly DefaultBranchUpdateExecutor $default_branch_update_executor,
     ) {
     }
 
@@ -137,6 +141,21 @@ class GitXmlImporter
                 $extraction_path,
                 (string) $repository_info['bundle-path']
             );
+
+            //import default branch from bundle
+            $git_exec           = Git_Exec::buildFromRepository($repository);
+            $new_default_branch = $this->retrieve_git_default_branch_in_xml_import->retrieveDefaultBranchFromXMLContent(
+                $git_exec,
+                $repository_info,
+            );
+
+            if ($new_default_branch !== '') {
+                $this->logger->debug("Set default branch to $new_default_branch");
+                $this->default_branch_update_executor->setDefaultBranch(
+                    $git_exec,
+                    $new_default_branch,
+                );
+            }
         } else {
             $this->repository_manager->create($repository, $this->gitolite_backend, BranchName::defaultBranchName());
         }
@@ -149,6 +168,7 @@ class GitXmlImporter
         }
 
         $this->importLastPushDate($repository_xmlnode, $repository);
+
         $this->system_event_manager->queueProjectsConfigurationUpdate([$project->getGroupId()]);
     }
 

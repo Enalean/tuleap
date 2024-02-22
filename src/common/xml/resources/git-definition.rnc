@@ -4,6 +4,7 @@ git = element repository {
     attribute name { xsd:string } &
     attribute description { xsd:string }? &
     attribute allow_artifact_closure { xsd:boolean }? &
+    attribute default_branch { xsd:string }? &
     (
         (
             element read  { element ugroup { xsd:string }* }? &

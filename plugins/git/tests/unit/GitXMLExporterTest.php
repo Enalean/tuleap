@@ -18,22 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git;
 
 use ForgeConfig;
 use Git;
 use Git_LogDao;
+use GitRepository;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use SimpleXMLElement;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Git\DefaultBranch\RetrieveRepositoryDefaultBranch;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Project\XML\ArchiveException;
 use Tuleap\Project\XML\Export\ZipArchive;
 use Tuleap\TemporaryTestDirectory;
 
-class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
@@ -163,7 +171,25 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 new \UserXMLExportedCollection(new \XML_RNGValidator(), new \XML_SimpleXMLCDATAFactory())
             ),
             $this->event_manager,
-            $this->closure_verifier
+            $this->closure_verifier,
+            new class ($forked_repository, $repository) implements RetrieveRepositoryDefaultBranch {
+                public function __construct(
+                    private readonly GitRepository $forked_repository,
+                    private readonly GitRepository $repository,
+                ) {
+                }
+
+                public function getRepositoryDefaultBranch(GitRepository $repository): Ok|Err
+                {
+                    if ($repository->getId() === $this->repository->getId()) {
+                        return Result::Ok('main');
+                    } elseif ($repository->getId() === $this->forked_repository->getId()) {
+                        return Result::Ok('master');
+                    }
+
+                    return Result::err(Fault::fromMessage('Default branch not found'));
+                }
+            },
         );
 
         $this->event_manager->shouldReceive('processEvent')->once();
@@ -193,24 +219,27 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 
-        $this->assertCount(2, $this->xml_tree->git->repository);
+        self::assertCount(2, $this->xml_tree->git->repository);
 
         $exported_repositories = $this->xml_tree->git[0];
         $repository            = $exported_repositories->repository;
         $attrs                 = $repository->attributes();
 
-        $this->assertEquals('MyRepo', $attrs['name']);
-        $this->assertEquals('1', $attrs['allow_artifact_closure']);
-        $this->assertEquals('Repository description', $attrs['description']);
-        $this->assertEquals('export/repository-101.bundle', $attrs['bundle-path']);
+        self::assertEquals('MyRepo', $attrs['name']);
+        self::assertEquals('1', $attrs['allow_artifact_closure']);
+        self::assertEquals('main', (string) $attrs['default_branch']);
+        self::assertEquals('Repository description', $attrs['description']);
+        self::assertEquals('export/repository-101.bundle', $attrs['bundle-path']);
 
         $repository_02 = $exported_repositories->repository[1];
         $attrs_02      = $repository_02->attributes();
 
-        $this->assertEquals('Empty', $attrs_02['name']);
-        $this->assertEquals('0', $attrs_02['allow_artifact_closure']);
-        $this->assertEquals('Empty repository', $attrs_02['description']);
-        $this->assertEquals('', $attrs_02['bundle-path']);
+
+        self::assertEquals('Empty', $attrs_02['name']);
+        self::assertEquals('0', $attrs_02['allow_artifact_closure']);
+        self::assertNull($attrs_02['default_branch']);
+        self::assertEquals('Empty repository', $attrs_02['description']);
+        self::assertEquals('', $attrs_02['bundle-path']);
     }
 
     public function testItExportsUGroupsAdmins(): void
@@ -219,8 +248,8 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroups_admin = $this->xml_tree->git->{'ugroups-admin'}->ugroup;
 
-        $this->assertEquals('projects-admins', (string) $ugroups_admin[0]);
-        $this->assertEquals('custom', (string) $ugroups_admin[1]);
+        self::assertEquals('projects-admins', (string) $ugroups_admin[0]);
+        self::assertEquals('custom', (string) $ugroups_admin[1]);
     }
 
     public function testItExportRepositoryPermissions(): void
@@ -234,14 +263,14 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 
         $readers = $this->xml_tree->git->repository->read->ugroup;
-        $this->assertEquals('projects-admins', (string) $readers[0]);
-        $this->assertEquals('custom', (string) $readers[1]);
+        self::assertEquals('projects-admins', (string) $readers[0]);
+        self::assertEquals('custom', (string) $readers[1]);
 
         $writers = $this->xml_tree->git->repository->write->ugroup;
-        $this->assertEquals('projects-admins', (string) $writers[0]);
+        self::assertEquals('projects-admins', (string) $writers[0]);
 
         $wplus = $this->xml_tree->git->repository->wplus->ugroup;
-        $this->assertEquals('custom', (string) $wplus[0]);
+        self::assertEquals('custom', (string) $wplus[0]);
     }
 
     public function testItDoesNotCreateWritePermissionIfRepositoryDontHaveCustomWritePermission(): void
@@ -254,14 +283,14 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 
         $readers = $this->xml_tree->git->repository->read->ugroup;
-        $this->assertEquals('projects-admins', (string) $readers[0]);
-        $this->assertEquals('custom', (string) $readers[1]);
+        self::assertEquals('projects-admins', (string) $readers[0]);
+        self::assertEquals('custom', (string) $readers[1]);
 
         $writers = $this->xml_tree->git->repository->write->ugroup;
-        $this->assertEmpty((string) $writers);
+        self::assertEmpty((string) $writers);
 
         $wplus = $this->xml_tree->git->repository->wplus->ugroup;
-        $this->assertEquals('custom', (string) $wplus[0]);
+        self::assertEquals('custom', (string) $wplus[0]);
     }
 
     public function testItDoesNotCreateWplusPermissionIfRepositoryDontHaveCustomWplusPermission(): void
@@ -274,14 +303,14 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 
         $readers = $this->xml_tree->git->repository->read->ugroup;
-        $this->assertEquals('projects-admins', (string) $readers[0]);
-        $this->assertEquals('custom', (string) $readers[1]);
+        self::assertEquals('projects-admins', (string) $readers[0]);
+        self::assertEquals('custom', (string) $readers[1]);
 
         $writers = $this->xml_tree->git->repository->write->ugroup;
-        $this->assertEquals('projects-admins', (string) $writers[0]);
+        self::assertEquals('projects-admins', (string) $writers[0]);
 
         $wplus = $this->xml_tree->git->repository->wplus->ugroup;
-        $this->assertEmpty((string) $wplus);
+        self::assertEmpty((string) $wplus);
     }
 
     public function testItExportGitLastPushDateData(): void
@@ -302,12 +331,12 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 
-        $this->assertCount(2, $this->xml_tree->git->repository);
+        self::assertCount(2, $this->xml_tree->git->repository);
 
         $exported_repository = $this->xml_tree->git->repository[0];
         $last_push_date      = $exported_repository->{'last-push-date'};
         $attrs               = $last_push_date->attributes();
-        $this->assertEquals('my user name', (string) $last_push_date->user);
-        $this->assertEquals('1527145976', (string) $attrs['push_date']);
+        self::assertEquals('my user name', (string) $last_push_date->user);
+        self::assertEquals('1527145976', (string) $attrs['push_date']);
     }
 }

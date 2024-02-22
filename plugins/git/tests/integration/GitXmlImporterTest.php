@@ -49,6 +49,7 @@ use SimpleXMLElement;
 use SiteCache;
 use System_Command;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
@@ -234,6 +235,8 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             $this->git_dao,
             $this->user_finder,
             $this->configure_artifact_closure,
+            new GitXMLImportDefaultBranchRetriever(),
+            new DefaultBranchUpdateExecutorAsGitoliteUser(),
         );
 
         $userManager = \Mockery::spy(\UserManager::class);
