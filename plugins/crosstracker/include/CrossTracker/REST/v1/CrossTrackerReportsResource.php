@@ -391,6 +391,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 new Field\Text\TextFromWhereBuilder($db),
                 new Field\Date\DateFromWhereBuilder($date_time_value_rounder),
                 new Field\Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
+                new Field\StaticList\StaticListFromWhereBuilder(),
             ),
         );
 

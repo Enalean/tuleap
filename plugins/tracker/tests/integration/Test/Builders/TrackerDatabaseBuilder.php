@@ -38,8 +38,8 @@ final class TrackerDatabaseBuilder
             'tracker',
             [
                 'group_id' => $project_id,
-                'name' => $name,
-                'status' => 'A',
+                'name'     => $name,
+                'status'   => 'A',
             ]
         );
         $tracker    = $factory->getTrackerById($tracker_id);
@@ -55,12 +55,12 @@ final class TrackerDatabaseBuilder
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
             [
-                'tracker_id' => $tracker_id,
+                'tracker_id'       => $tracker_id,
                 'formElement_type' => "int",
-                'name' => $name,
-                'label' => $name,
-                'use_it' => true,
-                'scope' => "P",
+                'name'             => $name,
+                'label'            => $name,
+                'use_it'           => true,
+                'scope'            => "P",
             ]
         );
 
@@ -79,12 +79,12 @@ final class TrackerDatabaseBuilder
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
             [
-                'tracker_id' => $tracker_id,
+                'tracker_id'       => $tracker_id,
                 'formElement_type' => "float",
-                'name' => $name,
-                'label' => $name,
-                'use_it' => true,
-                'scope' => "P",
+                'name'             => $name,
+                'label'            => $name,
+                'use_it'           => true,
+                'scope'            => "P",
             ]
         );
 
@@ -103,12 +103,12 @@ final class TrackerDatabaseBuilder
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
             [
-                'tracker_id' => $tracker_id,
+                'tracker_id'       => $tracker_id,
                 'formElement_type' => "computed",
-                'name' => $name,
-                'label' => $name,
-                'use_it' => true,
-                'scope' => "P",
+                'name'             => $name,
+                'label'            => $name,
+                'use_it'           => true,
+                'scope'            => "P",
             ]
         );
 
@@ -127,12 +127,12 @@ final class TrackerDatabaseBuilder
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
             [
-                'tracker_id' => $tracker_id,
+                'tracker_id'       => $tracker_id,
                 'formElement_type' => "text",
-                'name' => $name,
-                'label' => $name,
-                'use_it' => true,
-                'scope' => "P",
+                'name'             => $name,
+                'label'            => $name,
+                'use_it'           => true,
+                'scope'            => "P",
             ]
         );
 
@@ -151,12 +151,12 @@ final class TrackerDatabaseBuilder
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
             [
-                'tracker_id' => $tracker_id,
+                'tracker_id'       => $tracker_id,
                 'formElement_type' => "string",
-                'name' => $name,
-                'label' => $name,
-                'use_it' => true,
-                'scope' => "P",
+                'name'             => $name,
+                'label'            => $name,
+                'use_it'           => true,
+                'scope'            => "P",
             ]
         );
 
@@ -175,19 +175,19 @@ final class TrackerDatabaseBuilder
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
             [
-                'tracker_id' => $tracker_id,
+                'tracker_id'       => $tracker_id,
                 'formElement_type' => "date",
-                'name' => $name,
-                'label' => $name,
-                'use_it' => true,
-                'scope' => "P",
+                'name'             => $name,
+                'label'            => $name,
+                'use_it'           => true,
+                'scope'            => "P",
             ]
         );
 
         $this->db->insert(
             'tracker_field_date',
             [
-                'field_id' => $tracker_field_id,
+                'field_id'     => $tracker_field_id,
                 'display_time' => $display_time,
             ]
         );
@@ -201,8 +201,8 @@ final class TrackerDatabaseBuilder
             'permissions',
             [
                 'permission_type' => \Tracker_FormElement::PERMISSION_READ,
-                'object_id' => (string) $field_id,
-                'ugroup_id' => $user_group_id,
+                'object_id'       => (string) $field_id,
+                'ugroup_id'       => $user_group_id,
             ]
         );
     }
@@ -212,12 +212,12 @@ final class TrackerDatabaseBuilder
         return (int) $this->db->insertReturnId(
             'tracker_artifact',
             [
-                'tracker_id' => $tracker_id,
-                'last_changeset_id' => -1,
-                'submitted_by' => 143,
-                'submitted_on' => 1234567890,
+                'tracker_id'               => $tracker_id,
+                'last_changeset_id'        => -1,
+                'submitted_by'             => 143,
+                'submitted_on'             => 1234567890,
                 'use_artifact_permissions' => 0,
-                'per_tracker_artifact_id' => 1,
+                'per_tracker_artifact_id'  => 1,
             ]
         );
     }
@@ -227,7 +227,7 @@ final class TrackerDatabaseBuilder
         $artifact_changeset_id = (int) $this->db->insertReturnId(
             'tracker_changeset',
             [
-                'artifact_id' => $artifact_id,
+                'artifact_id'  => $artifact_id,
                 'submitted_by' => 143,
                 'submitted_on' => 1234567890,
             ]
@@ -252,8 +252,8 @@ final class TrackerDatabaseBuilder
             'tracker_changeset_value',
             [
                 'changeset_id' => $parent_changeset_id,
-                'field_id' => $field_id,
-                'has_changed' => true,
+                'field_id'     => $field_id,
+                'has_changed'  => true,
             ]
         );
     }
@@ -266,7 +266,7 @@ final class TrackerDatabaseBuilder
             'tracker_changeset_value_int',
             [
                 'changeset_value_id' => $changeset_value_id,
-                'value' => $value,
+                'value'              => $value,
             ]
         );
     }
@@ -279,7 +279,7 @@ final class TrackerDatabaseBuilder
             'tracker_changeset_value_float',
             [
                 'changeset_value_id' => $changeset_value_id,
-                'value' => $value,
+                'value'              => $value,
             ]
         );
     }
@@ -292,8 +292,8 @@ final class TrackerDatabaseBuilder
             'tracker_changeset_value_text',
             [
                 'changeset_value_id' => $changeset_value_id,
-                'value' => $value,
-                'body_format' => $format,
+                'value'              => $value,
+                'body_format'        => $format,
             ]
         );
     }
@@ -306,29 +306,42 @@ final class TrackerDatabaseBuilder
             'tracker_changeset_value_date',
             [
                 'changeset_value_id' => $changeset_value_id,
-                'value' => $value,
+                'value'              => $value,
             ]
         );
     }
 
-    public function buildListField(int $tracker_id): int
+    public function buildListValue(int $parent_changeset_id, int $list_field_id, int $bind_value_id): void
+    {
+        $changeset_value_id = $this->buildChangesetValue($parent_changeset_id, $list_field_id);
+
+        $this->db->insert(
+            'tracker_changeset_value_list',
+            [
+                'changeset_value_id' => $changeset_value_id,
+                'bindvalue_id'       => $bind_value_id,
+            ]
+        );
+    }
+
+    public function buildStaticListField(int $tracker_id, string $name, string $list_type): int
     {
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
             [
-                'tracker_id' => $tracker_id,
-                'formElement_type' => "sb",
-                'name' => "status",
-                'label' => "status",
-                'use_it' => true,
-                'scope' => "P",
+                'tracker_id'       => $tracker_id,
+                'formElement_type' => $list_type,
+                'name'             => $name,
+                'label'            => $name,
+                'use_it'           => true,
+                'scope'            => "P",
             ]
         );
 
         $this->db->insert(
             'tracker_field_list',
             [
-                'field_id' => $tracker_field_id,
+                'field_id'  => $tracker_field_id,
                 "bind_type" => "static",
             ]
         );
@@ -336,12 +349,32 @@ final class TrackerDatabaseBuilder
         $this->db->insert(
             'tracker_field_list_bind_static',
             [
-                'field_id' => $tracker_field_id,
+                'field_id'      => $tracker_field_id,
                 'is_rank_alpha' => 1,
             ]
         );
 
         return $tracker_field_id;
+    }
+
+    /**
+     * @param string[] $values
+     * @return array<string, int>
+     */
+    public function buildValuesForStaticListField(int $tracker_field_id, array $values): array
+    {
+        $ids_list = [];
+        foreach ($values as $value) {
+            $ids_list[$value] = (int) $this->db->insertReturnId(
+                'tracker_field_list_bind_static_value',
+                [
+                    'field_id' => $tracker_field_id,
+                    'label'    => $value,
+                ]
+            );
+        }
+
+        return $ids_list;
     }
 
     /**
@@ -352,34 +385,15 @@ final class TrackerDatabaseBuilder
      */
     public function buildOpenAndClosedValuesForField(int $tracker_field_id, int $tracker_id, array $open_values, array $closed_values): array
     {
-        $open_value_id_list = [];
-        foreach ($open_values as $value) {
-            $open_value_id_list[] = (int) $this->db->insertReturnId(
-                'tracker_field_list_bind_static_value',
-                [
-                    'field_id' => $tracker_field_id,
-                    'label' => $value,
-                ]
-            );
-        }
-
-        $closed_value_id_list = [];
-        foreach ($closed_values as $value) {
-            $closed_value_id_list[] = (int) $this->db->insertReturnId(
-                'tracker_field_list_bind_static_value',
-                [
-                    'field_id' => $tracker_field_id,
-                    'label' => $value,
-                ]
-            );
-        }
+        $open_value_id_list   = array_values($this->buildValuesForStaticListField($tracker_field_id, $open_values));
+        $closed_value_id_list = array_values($this->buildValuesForStaticListField($tracker_field_id, $closed_values));
 
         foreach ($open_value_id_list as $open_value_id) {
             $this->db->insert(
                 'tracker_semantic_status',
                 [
-                    'tracker_id' => $tracker_id,
-                    'field_id' => $tracker_field_id,
+                    'tracker_id'    => $tracker_id,
+                    'field_id'      => $tracker_field_id,
                     'open_value_id' => $open_value_id,
                 ]
             );
@@ -393,12 +407,12 @@ final class TrackerDatabaseBuilder
         return (int) $this->db->insertReturnId(
             'tracker_field',
             [
-                'tracker_id' => $tracker_id,
+                'tracker_id'       => $tracker_id,
                 'formElement_type' => 'art_link',
-                'name' => 'artlink',
-                'label' => 'artlink',
-                'use_it' => true,
-                'scope' => "P",
+                'name'             => 'artlink',
+                'label'            => 'artlink',
+                'use_it'           => true,
+                'scope'            => "P",
             ]
         );
     }
@@ -411,10 +425,10 @@ final class TrackerDatabaseBuilder
             'tracker_changeset_value_artifactlink',
             [
                 'changeset_value_id' => $changeset_value_id,
-                'nature' => $type,
-                'artifact_id' => $artifact_id,
-                'keyword' => 'release',
-                'group_id' => $project_id,
+                'nature'             => $type,
+                'artifact_id'        => $artifact_id,
+                'keyword'            => 'release',
+                'group_id'           => $project_id,
             ]
         );
     }
@@ -427,7 +441,7 @@ final class TrackerDatabaseBuilder
             'tracker_changeset_value_list',
             [
                 'changeset_value_id' => $changeset_value_id,
-                'bindvalue_id' => $bind_open_value_id,
+                'bindvalue_id'       => $bind_open_value_id,
             ]
         );
     }
