@@ -106,3 +106,5 @@ export interface ServiceData {
     is_enabled: boolean;
     icon: string;
 }
+
+export type AdvancedOptions = "from_existing_user_project";

@@ -19,10 +19,14 @@
  */
 
 import type { RootState } from "./type";
-import type { TemplateData } from "../type";
+import type { AdvancedOptions, TemplateData } from "../type";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export default {
+    setAdvancedActiveOption(state: RootState, option: AdvancedOptions | null): void {
+        state.selected_advanced_option = option;
+    },
+
     setSelectedTemplate(state: RootState, selected_template: TemplateData): void {
         if (selected_template.is_built_in) {
             state.selected_tuleap_template = selected_template;
@@ -36,6 +40,7 @@ export default {
     resetSelectedTemplate(state: RootState): void {
         state.selected_tuleap_template = null;
         state.selected_company_template = null;
+        state.selected_advanced_option = null;
     },
 
     resetProjectCreationError(state: RootState): void {

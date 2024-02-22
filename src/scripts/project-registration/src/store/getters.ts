@@ -19,7 +19,7 @@
  */
 
 import type { RootState } from "./type";
-import type { TemplateData } from "../type";
+import type { AdvancedOptions, TemplateData } from "../type";
 
 export const is_template_selected = (state: RootState): boolean =>
     state.selected_tuleap_template !== null || state.selected_company_template !== null;
@@ -39,3 +39,9 @@ export const is_currently_selected_template =
     };
 
 export const has_error = (state: RootState): boolean => state.error !== null;
+
+export const is_advanced_option_selected =
+    (state: RootState) =>
+    (option: AdvancedOptions | null): boolean => {
+        return state.selected_advanced_option === option;
+    };

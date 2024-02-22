@@ -98,6 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         selected_tuleap_template: null,
         selected_company_template: null,
         selected_template_category: null,
+        selected_advanced_option: null,
         projects_user_is_admin_of: [],
         error: null,
         is_creating_project: false,
