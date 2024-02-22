@@ -2257,6 +2257,26 @@ td.first-column {
     display: none;
 }
 
+.tracker-artifact-submit-buttons-bar {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
+    justify-content: center;
+}
+
+.tracker-artifact-submit-buttons-bar-condensed {
+    display: none;
+}
+
+@media screen and (max-width: 900px) {
+    .tracker-artifact-submit-buttons-bar {
+        display: none;
+    }
+
+    .tracker-artifact-submit-buttons-bar-condensed {
+        display: inline-block;
+    }
+}
+
 .artifact-copy-button {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .artifact-submit-button;
