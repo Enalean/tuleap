@@ -24,6 +24,7 @@ import { UserStub } from "../../tests/stubs/UserStub";
 import { LabelFilterBuilder } from "../components/Filters/Labels/LabelFilter";
 import { ProjectLabelStub } from "../../tests/stubs/ProjectLabelStub";
 import { GettextStub } from "../../tests/stubs/GettextStub";
+import { KeywordFilterBuilder } from "../components/Filters/Keywords/KeywordFilter";
 
 describe("get-pull-requests-query-builder", () => {
     let are_closed_pull_requests_shown: boolean;
@@ -77,6 +78,25 @@ describe("get-pull-requests-query-builder", () => {
             expect(query).toContain(
                 JSON.stringify({
                     labels: [{ id: emergency_label.id }, { id: easy_fix_label.id }],
+                }),
+            );
+        });
+    });
+
+    describe("Keywords filters", () => {
+        it("Given keywords filters, then it should return a proper query string", () => {
+            const builder = KeywordFilterBuilder(GettextStub);
+            const foo_keyword = builder.fromKeyword(1, "Foo");
+            const bar_keyword = builder.fromKeyword(2, "Bar");
+
+            const query = buildQueryFromFilters(
+                [foo_keyword, bar_keyword],
+                are_closed_pull_requests_shown,
+            );
+
+            expect(query).toContain(
+                JSON.stringify({
+                    search: [{ keyword: "Foo" }, { keyword: "Bar" }],
                 }),
             );
         });

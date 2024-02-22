@@ -17,21 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AuthorFilter, PullRequestAuthorFilter } from "./Author/AuthorFilter";
-import type { LabelFilter, PullRequestLabelFilter } from "./Labels/LabelFilter";
-import type { KeywordFilter, PullRequestKeywordFilter } from "./Keywords/KeywordFilter";
+import { describe, it, expect } from "vitest";
+import { GettextStub } from "../../../../tests/stubs/GettextStub";
+import { KeywordFilterBuilder, TYPE_FILTER_KEYWORD } from "./KeywordFilter";
 
-export type PullRequestsListFilterType = AuthorFilter | LabelFilter | KeywordFilter;
+describe("KeywordFilter", () => {
+    it("Given a keyword and an id, then it should create a KeywordFilter", () => {
+        const keyword = "security";
+        const keyword_id = 1;
+        const filter = KeywordFilterBuilder(GettextStub).fromKeyword(keyword_id, keyword);
 
-export type BasePullRequestsListFilter<TypeOfFilterValue> = {
-    id: number;
-    type: PullRequestsListFilterType;
-    label: string;
-    value: TypeOfFilterValue;
-    is_unique: boolean;
-};
-
-export type PullRequestsListFilter =
-    | PullRequestAuthorFilter
-    | PullRequestLabelFilter
-    | PullRequestKeywordFilter;
+        expect(filter.id).toBe(keyword_id);
+        expect(filter.type).toBe(TYPE_FILTER_KEYWORD);
+        expect(filter.label).toBe(`Keyword: ${keyword}`);
+        expect(filter.value).toBe(keyword);
+        expect(filter.is_unique).toBe(false);
+    });
+});

@@ -20,13 +20,14 @@
 <template>
     <div class="tlp-framed-vertically">
         <div class="pull-requests-homepage-filters-buttons">
-            <div>
+            <div class="pull-requests-homepage-create-filters-controls">
+                <keywords-search-input v-bind:filters_store="filters_store" />
                 <tuleap-selectors-dropdown
                     v-bind:button_text="$gettext('Add filter')"
                     v-bind:selectors_entries="selectors_entries"
                 />
                 <button
-                    class="tlp-button-outline tlp-button-primary pull-request-homepage-remove-all-filters"
+                    class="tlp-button-outline tlp-button-primary"
                     v-on:click="filters_store.clearAllFilters()"
                     v-bind:disabled="filters_store.getFilters().value.length === 0"
                     data-test="clear-all-list-filters"
@@ -61,6 +62,7 @@ import type { StoreListFilters } from "./ListFiltersStore";
 import ClosedPullRequestsFilterSwitch from "./Status/ClosedPullRequestsFilterSwitch.vue";
 import FilterBadge from "./FilterBadge.vue";
 import PullRequestsSortOrder from "./PullRequestsSortOrder.vue";
+import KeywordsSearchInput from "./Keywords/KeywordsSearchInput.vue";
 
 const { $gettext } = useGettext();
 
@@ -84,14 +86,15 @@ const selectors_entries = [
     justify-content: space-between;
 }
 
+.pull-requests-homepage-create-filters-controls {
+    display: flex;
+    gap: var(--tlp-small-spacing);
+}
+
 .pull-request-autocompleter-avatar {
     display: flex;
     gap: 5px;
     align-items: center;
-}
-
-.pull-request-homepage-remove-all-filters {
-    margin: 0 0 0 var(--tlp-small-spacing);
 }
 
 .pull-requests-homepage-filters {

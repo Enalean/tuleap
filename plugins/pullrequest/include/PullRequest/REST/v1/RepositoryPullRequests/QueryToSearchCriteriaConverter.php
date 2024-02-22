@@ -47,7 +47,7 @@ class QueryToSearchCriteriaConverter
                 ->mapper()
                 ->map(
                     SearchCriteria::class,
-                    new \CuyZ\Valinor\Mapper\Source\JsonSource(stripslashes($query))
+                    new \CuyZ\Valinor\Mapper\Source\JsonSource($query)
                 );
 
             if (count($search_criteria->authors) > 1) {
