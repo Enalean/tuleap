@@ -73,17 +73,17 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         $html .= '<div class="artifact-submit-button">';
         $html .= '<input type="hidden" id="submit-type" />';
         $html .= '<div class="tracker-artifact-submit-buttons-bar">
-                <button type="submit" name="submit_and_continue" class="btn btn-large btn-outline-primary">' . $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') . '</button>
-                <button type="submit" name="submit_and_stay" class="btn btn-large btn-outline-primary">' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '</button>
-                <button class="btn btn-large btn-primary" type="submit">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
+                <button class="btn btn-large btn-primary" type="submit" data-test="artifact-submit-button">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
+                <button type="submit" name="submit_and_stay" value="1" class="btn btn-large btn-outline-primary" data-test="artifact-submit-and-stay">' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '</button>
+                <button type="submit" name="submit_and_continue" value="1" class="btn btn-large btn-outline-primary">' . $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') . '</button>
             </div>';
         $html .= '<div class="btn-group dropup tracker-artifact-submit-buttons-bar-condensed">';
-        $html .= '<button class="btn btn-large btn-primary" data-test="artifact-submit-button" type="submit">'
+        $html .= '<button class="btn btn-large btn-primary" type="submit">'
             . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>';
-        $html .= '<button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown" data-test="artifact-submit-options"><span class="caret"></span></button>';
+        $html .= '<button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
         $html .= '<ul class="dropdown-menu">';
         $html .= '<li><input type="submit" name="submit_and_continue" class="btn btn-link" value="' . $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') . '" /></li>';
-        $html .= '<li><input type="submit" name="submit_and_stay" class="btn btn-link" value="' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '" data-test="artifact-submit-and-stay" /></li>';
+        $html .= '<li><input type="submit" name="submit_and_stay" class="btn btn-link" value="' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '" /></li>';
         $html .= '</ul>';
         $html .= '</div>';
         $html .= '</div>';

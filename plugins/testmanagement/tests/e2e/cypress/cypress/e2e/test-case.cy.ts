@@ -54,7 +54,6 @@ describe(`TestManagement test case`, function () {
                     cy.get("[data-test=expected-results-textarea]").type("The modal disappears");
                 });
 
-            cy.get("[data-test=artifact-submit-options]").click();
             cy.get("[data-test=artifact-submit-and-stay]").click();
 
             cy.log("Assert the steps are saved correctly");

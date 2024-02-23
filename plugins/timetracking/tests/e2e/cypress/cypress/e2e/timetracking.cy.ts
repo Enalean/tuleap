@@ -56,7 +56,6 @@ describe("Time tracking", function () {
 
         cy.get("[data-test=new-artifact]").click();
         cy.get("[data-test=details]").type("My artifact");
-        cy.get("[data-test=artifact-submit-options]").click();
         cy.get("[data-test=artifact-submit-and-stay]").click();
 
         // directly on artifact

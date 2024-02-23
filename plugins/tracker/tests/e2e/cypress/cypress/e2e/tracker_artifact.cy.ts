@@ -19,7 +19,6 @@
  */
 
 function submitAndStay(): void {
-    cy.get("[data-test=artifact-submit-options]").click();
     cy.get("[data-test=artifact-submit-and-stay]").click();
 }
 
@@ -346,7 +345,6 @@ describe("Tracker artifacts", function () {
             // Check popup is shown and submit buttons disabled
             cy.get("[data-test=concurrent-edition-popup-shown]");
             cy.get("[data-test=artifact-submit]").should("be.disabled");
-            cy.get("[data-test=artifact-submit-options]").should("be.disabled");
             cy.get("[data-test=artifact-submit-and-stay]").should("be.disabled");
 
             // Acknowledge changes
@@ -355,7 +353,6 @@ describe("Tracker artifacts", function () {
             // Check popup is hidden and submit buttons enabled
             cy.get("[data-test=concurrent-edition-popup-shown]").should("not.exist");
             cy.get("[data-test=artifact-submit]").should("not.be.disabled");
-            cy.get("[data-test=artifact-submit-options]").should("not.be.disabled");
             cy.get("[data-test=artifact-submit-and-stay]").should("not.be.disabled");
 
             submitAndStay();

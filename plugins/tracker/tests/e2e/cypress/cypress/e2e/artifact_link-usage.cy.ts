@@ -19,7 +19,6 @@
 
 const TITLE_FIELD_NAME = "title";
 function submitArtifactAndStay(): void {
-    cy.get("[data-test=artifact-submit-options]").click();
     cy.get("[data-test=artifact-submit-and-stay]").click();
 }
 

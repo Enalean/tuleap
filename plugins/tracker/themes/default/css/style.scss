@@ -2259,8 +2259,9 @@ td.first-column {
 
 .tracker-artifact-submit-buttons-bar {
     display: flex;
-    gap: var(--tlp-medium-spacing);
+    flex-direction: row-reverse;
     justify-content: center;
+    gap: var(--tlp-medium-spacing);
 }
 
 .tracker-artifact-submit-buttons-bar-condensed {

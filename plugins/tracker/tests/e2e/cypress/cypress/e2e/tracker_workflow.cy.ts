@@ -215,13 +215,11 @@ describe(`Tracker Workflow`, () => {
                 "be.visible",
             );
 
-            cy.get("[data-test=artifact-submit-options]").click();
             cy.get("[data-test=artifact-submit-and-stay]").click();
 
             cy.log("`Access Information` fieldset is hidden at update");
             selectLabelInListPickerDropdown("On going");
 
-            cy.get("[data-test=artifact-submit-options]").click();
             cy.get("[data-test=artifact-submit-and-stay]").click();
 
             getFieldsetWithLabel("Access Information (Fieldset should be hidden)").should(
@@ -238,7 +236,6 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=title]").type("My artifact");
             cy.get("[data-test=points]").type("10");
 
-            cy.get("[data-test=artifact-submit-options]").click();
             cy.get("[data-test=artifact-submit-and-stay]").click();
 
             cy.log("`fields points` and `title` can no longer be updated");
@@ -255,7 +252,6 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=new-artifact]").click();
             cy.get("[data-test=title]").type("My artifact");
 
-            cy.get("[data-test=artifact-submit-options]").click();
             cy.get("[data-test=artifact-submit-and-stay]").click();
 
             cy.log("Comments are required at update");
@@ -263,12 +259,10 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=title]").clear().type("My artifact updated");
             selectLabelInListPickerDropdown("Done");
 
-            cy.get("[data-test=artifact-submit-options]").click();
             cy.get("[data-test=artifact-submit-and-stay]").click();
             cy.get("[data-test=feedback]").contains("Comment must not be empty");
 
             cy.get('[data-test="artifact_followup_comment"]').type("My comment");
-            cy.get("[data-test=artifact-submit-options]").click();
             cy.get("[data-test=artifact-submit-and-stay]").click();
             cy.get("[data-test=feedback]").contains("Successfully Updated");
         });
@@ -281,7 +275,6 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=new-artifact]").click();
             cy.get("[data-test=title]").type("My artifact");
 
-            cy.get("[data-test=artifact-submit-options]").click();
             cy.get("[data-test=artifact-submit-and-stay]").click();
 
             cy.log("Field are required at update");
@@ -289,12 +282,10 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=title]").clear().type("My artifact updated");
             selectLabelInListPickerDropdown("Done");
 
-            cy.get("[data-test=artifact-submit-options]").click();
             cy.get("[data-test=artifact-submit-and-stay]").click();
             cy.get("[data-test=feedback]").contains("Invalid condition: the field");
 
             cy.get("[data-test=required_by_workflow]").type("required");
-            cy.get("[data-test=artifact-submit-options]").click();
             cy.get("[data-test=artifact-submit-and-stay]").click();
             cy.get("[data-test=feedback]").contains("Successfully Updated");
         });
