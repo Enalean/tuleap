@@ -62,7 +62,7 @@ final readonly class IntegerFieldChecker implements InvalidFieldChecker
      * @throws IntegerToStatusOpenComparisonException
      * @throws IntegerToStringComparisonException
      */
-    public function checkIntValueIsValid(
+    private function checkIntValueIsValid(
         Comparison $comparison,
         \Tracker_FormElement_Field $field,
         bool $is_empty_string_a_problem,

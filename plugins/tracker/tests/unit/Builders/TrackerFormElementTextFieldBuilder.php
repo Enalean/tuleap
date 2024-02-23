@@ -28,6 +28,10 @@ final class TrackerFormElementTextFieldBuilder
 {
     private string $name = 'text';
     private \Tracker $tracker;
+    /** @var list<\PFUser> */
+    private array $user_with_read_permissions = [];
+    /** @var array<int, bool> */
+    private array $read_permissions = [];
 
     private function __construct(private readonly int $id)
     {
@@ -42,6 +46,14 @@ final class TrackerFormElementTextFieldBuilder
     public function withName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function withReadPermission(\PFUser $user, bool $user_can_read): self
+    {
+        $this->user_with_read_permissions[]     = $user;
+        $this->read_permissions[$user->getId()] = $user_can_read;
+
         return $this;
     }
 
@@ -68,6 +80,9 @@ final class TrackerFormElementTextFieldBuilder
             null
         );
         $field->setTracker($this->tracker);
+        foreach ($this->user_with_read_permissions as $user) {
+            $field->setUserCanRead($user, $this->read_permissions[$user->getId()]);
+        }
         return $field;
     }
 }

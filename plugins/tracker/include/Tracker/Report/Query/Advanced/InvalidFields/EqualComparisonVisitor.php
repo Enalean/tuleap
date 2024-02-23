@@ -57,7 +57,6 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmit
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use UserManager;
 
@@ -122,12 +121,12 @@ final class EqualComparisonVisitor implements
 
     public function visitString(Tracker_FormElement_Field_String $field)
     {
-        return $this->visitText($field);
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitText(Tracker_FormElement_Field_Text $field)
     {
-        return new TextFieldChecker();
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
