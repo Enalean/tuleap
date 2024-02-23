@@ -81,6 +81,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
@@ -236,12 +237,9 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield 'NOT IN()' => [new NotInComparison($field, new InValueWrapper([$valid_value]))];
     }
 
-    public static function generateInvalidNumericComparisons(): iterable
+    private static function generateInvalidComparisonsToEmptyString(Field $field, ValueWrapper $valid_value): iterable
     {
-        $field       = new Field(self::FIELD_NAME);
         $empty_value = new SimpleValueWrapper('');
-        $valid_value = new SimpleValueWrapper(10.5);
-        $now         = new CurrentDateTimeValueWrapper(null, null);
         yield '< empty string' => [new LesserThanComparison($field, $empty_value)];
         yield '<= empty string' => [new LesserThanOrEqualComparison($field, $empty_value)];
         yield '> empty string' => [new GreaterThanComparison($field, $empty_value)];
@@ -252,8 +250,18 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield "BETWEEN(10.5, '')" => [
             new BetweenComparison($field, new BetweenValueWrapper($valid_value, $empty_value)),
         ];
-        yield '= NOW()' => [new EqualComparison($field, $now)];
+    }
+
+    public static function generateInvalidNumericComparisons(): iterable
+    {
+        $field       = new Field(self::FIELD_NAME);
+        $valid_value = new SimpleValueWrapper(10.5);
+        $now         = new CurrentDateTimeValueWrapper(null, null);
         yield '= string value' => [new EqualComparison($field, new SimpleValueWrapper('string'))];
+        yield '= NOW()' => [new EqualComparison($field, $now)];
+        foreach (self::generateInvalidComparisonsToEmptyString($field, $valid_value) as $case) {
+            yield $case;
+        }
         foreach (self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value) as $case) {
             yield $case;
         }
@@ -323,46 +331,117 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    public function testItRejectsNumericComparisonToMyself(): void
+    public static function generateInvalidDateComparisons(): iterable
+    {
+        $field       = new Field(self::FIELD_NAME);
+        $valid_value = new SimpleValueWrapper('2024-02-22');
+        yield '= string value' => [new EqualComparison($field, new SimpleValueWrapper('string'))];
+        foreach (self::generateInvalidComparisonsToEmptyString($field, $valid_value) as $case) {
+            yield $case;
+        }
+        foreach (self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value) as $case) {
+            yield $case;
+        }
+    }
+
+    /**
+     * @dataProvider generateInvalidDateComparisons
+     */
+    public function testItRejectsInvalidDateComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementIntFieldBuilder::anIntField(975)
+            TrackerFormElementDateFieldBuilder::aDateField(130)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementFloatFieldBuilder::aFloatField(659)
-                ->withName(self::FIELD_NAME)
-                ->inTracker($this->second_tracker)
-                ->withReadPermission($this->user, true)
-                ->build()
         );
-        $user_manager           = $this->createStub(\UserManager::class);
-        $user_manager->method('getCurrentUser')->willReturn($this->user);
+        $this->comparison       = $comparison;
 
-        $this->comparison = new EqualComparison(
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    public function testItRejectsDateFieldWithoutTimeComparedToDateTime(): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementDateFieldBuilder::aDateField(130)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+        );
+        $this->comparison       = new EqualComparison(
             new Field(self::FIELD_NAME),
-            new CurrentUserValueWrapper($user_manager)
+            new SimpleValueWrapper('2024-02-22 12:23')
         );
 
         $this->check();
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    public function testItRejectsTextComparisonToMyself(): void
+    public static function generateFieldTypes(): iterable
     {
-        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementStringFieldBuilder::aStringField(607)
+        $tracker = TrackerTestBuilder::aTracker()->withId(311)->build();
+        $user    = UserTestBuilder::buildWithId(300);
+        yield 'int' => [
+            TrackerFormElementIntFieldBuilder::anIntField(132)
                 ->withName(self::FIELD_NAME)
-                ->inTracker($this->first_tracker)
-                ->withReadPermission($this->user, true)
+                ->inTracker($tracker)
+                ->withReadPermission($user, true)
                 ->build(),
-            TrackerFormElementTextFieldBuilder::aTextField(292)
+            $tracker,
+            $user,
+        ];
+        yield 'float' => [
+            TrackerFormElementFloatFieldBuilder::aFloatField(202)
                 ->withName(self::FIELD_NAME)
-                ->inTracker($this->second_tracker)
-                ->withReadPermission($this->user, true)
-                ->build()
-        );
+                ->inTracker($tracker)
+                ->withReadPermission($user, true)
+                ->build(),
+            $tracker,
+            $user,
+        ];
+        yield 'string' => [
+            TrackerFormElementStringFieldBuilder::aStringField(716)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($tracker)
+                ->withReadPermission($user, true)
+                ->build(),
+            $tracker,
+            $user,
+        ];
+        yield 'text' => [
+            TrackerFormElementTextFieldBuilder::aTextField(198)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($tracker)
+                ->withReadPermission($user, true)
+                ->build(),
+            $tracker,
+            $user,
+        ];
+        yield 'date' => [
+            TrackerFormElementDateFieldBuilder::aDateField(514)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($tracker)
+                ->withReadPermission($user, true)
+                ->build(),
+            $tracker,
+            $user,
+        ];
+    }
+
+    /**
+     * @dataProvider generateFieldTypes
+     */
+    public function testItRejectsInvalidComparisonsToMyself(
+        \Tracker_FormElement_Field $field,
+        \Tracker $tracker,
+        \PFUser $user,
+    ): void {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields($field);
+        $this->first_tracker    = $tracker;
+        $this->user             = $user;
         $user_manager           = $this->createStub(\UserManager::class);
         $user_manager->method('getCurrentUser')->willReturn($this->user);
 
