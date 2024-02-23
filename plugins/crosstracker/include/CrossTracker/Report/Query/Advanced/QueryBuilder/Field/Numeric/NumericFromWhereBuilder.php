@@ -36,7 +36,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
-use Tuleap\Tracker\Report\Query\ParametrizedAndFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 /**
@@ -60,7 +59,7 @@ final class NumericFromWhereBuilder implements ValueWrapperVisitor
             $duck_typed_field->field_ids
         );
         $from                = <<<EOSQL
-        LEFT JOIN tracker_field AS $tracker_field_alias
+        INNER JOIN tracker_field AS $tracker_field_alias
             ON (tracker.id = $tracker_field_alias.tracker_id AND $fields_id_statement)
         LEFT JOIN tracker_changeset_value AS $changeset_value_alias
             ON ($tracker_field_alias.id = $changeset_value_alias.field_id AND last_changeset.id = $changeset_value_alias.changeset_id)
@@ -69,11 +68,13 @@ final class NumericFromWhereBuilder implements ValueWrapperVisitor
         LEFT JOIN tracker_changeset_value_float AS $changeset_value_float_alias
             ON $changeset_value_float_alias.changeset_value_id = $changeset_value_alias.id
         EOSQL;
-        $where               = "$tracker_field_alias.id IS NOT NULL";
 
-        return new ParametrizedAndFromWhere(
-            new ParametrizedFromWhere($from, $where, $fields_id_statement->values(), []),
-            $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($comparison))
+        $where = $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($comparison));
+        return new ParametrizedFromWhere(
+            $from,
+            $where->getWhere(),
+            $fields_id_statement->values(),
+            $where->getWhereParameters(),
         );
     }
 
