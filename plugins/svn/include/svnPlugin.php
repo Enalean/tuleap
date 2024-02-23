@@ -70,6 +70,8 @@ use Tuleap\SVN\AccessControl\AccessControlController;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\AccessControl\DuplicateSectionDetector;
+use Tuleap\SVN\AccessControl\SVNCheckRepositoriesWithDuplicatedAccessFileSections;
 use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\SVN\AccessControl\SVNRefreshAllAccessFilesCommand;
 use Tuleap\SVN\Admin\AdminController;
@@ -254,6 +256,16 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $commands_collector->addCommand(
             SetupSVNCommand::NAME,
             static fn (): SetupSVNCommand => new SetupSVNCommand(),
+        );
+        $commands_collector->addCommand(
+            SVNCheckRepositoriesWithDuplicatedAccessFileSections::NAME,
+            function (): SVNCheckRepositoriesWithDuplicatedAccessFileSections {
+                return new SVNCheckRepositoriesWithDuplicatedAccessFileSections(
+                    $this->getRepositoryManager(),
+                    new SVNAccessFileReader(\Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator::instance()),
+                    new DuplicateSectionDetector(),
+                );
+            }
         );
     }
 
