@@ -77,4 +77,9 @@ final class CoreDatabaseBuilder
     {
         $this->user_permissions_dao->addUserAsProjectMember($project_id, $user_id);
     }
+
+    public function addUserToProjectAdmins(int $user_id, int $project_id): void
+    {
+        $this->user_permissions_dao->addUserAsProjectAdmin($project_id, $user_id);
+    }
 }
