@@ -27,8 +27,9 @@
         data-test="export-cvs-button"
     >
         <i
-            class="tlp-button-icon fa fa-download"
-            v-bind:class="{ 'fa-spin fa-circle-o-notch': is_loading }"
+            aria-hidden="true"
+            class="tlp-button-icon fa-solid"
+            v-bind:class="{ 'fa-spin fa-circle-notch': is_loading, 'fa-download': !is_loading }"
         ></i>
         <translate>Export CSV</translate>
     </button>

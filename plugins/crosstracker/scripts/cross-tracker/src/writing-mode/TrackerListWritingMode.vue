@@ -26,14 +26,18 @@
         >
             <span>
                 <i
-                    class="fa fa-times tlp-badge-icon cross-tracker-remove-tracker"
+                    aria-hidden="false"
+                    class="fa-solid fa-times tlp-badge-icon cross-tracker-remove-tracker"
                     v-on:click="removeTracker(tracker)"
                     v-bind:data-test="`remove-tracker-${tracker.tracker_id}`"
                 ></i>
                 {{ tracker.tracker_label }}
             </span>
             <span>
-                <i class="fa fa-archive cross-tracker-report-archive-icon"></i>
+                <i
+                    aria-hidden="true"
+                    class="fa-solid fa-archive cross-tracker-report-archive-icon"
+                ></i>
                 {{ tracker.project_label }}
             </span>
         </span>

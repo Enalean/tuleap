@@ -62,7 +62,11 @@
                 v-bind:disabled="is_loading_more"
                 data-test="load-more"
             >
-                <i v-if="is_loading_more" class="tlp-button-icon fas fa-circle-notch fa-spin"></i>
+                <i
+                    aria-hidden="true"
+                    v-if="is_loading_more"
+                    class="tlp-button-icon fa-solid fa-circle-notch fa-spin"
+                ></i>
                 <translate>Load more</translate>
             </button>
         </div>

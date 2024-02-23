@@ -128,7 +128,8 @@ exports[`QueryEditor Displays a code mirror integration 1`] = `
       class="tlp-text-info"
     >
       <i
-        class="fa fa-info-circle"
+        aria-hidden="true"
+        class="cross-tracker-query-editor-info-icon fa-solid fa-info-circle"
       />
        
       <translate-stub

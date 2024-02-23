@@ -32,7 +32,10 @@
                 data-test="expert-query-textarea"
             ></textarea>
             <p class="tlp-text-info">
-                <i class="fa fa-info-circle"></i>
+                <i
+                    aria-hidden="true"
+                    class="cross-tracker-query-editor-info-icon fa-solid fa-info-circle"
+                ></i>
                 <translate>
                     You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space.
                 </translate>
