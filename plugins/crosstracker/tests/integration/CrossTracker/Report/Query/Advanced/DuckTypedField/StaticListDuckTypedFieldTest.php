@@ -26,6 +26,7 @@ use ForgeConfig;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
+use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
@@ -94,13 +95,18 @@ final class StaticListDuckTypedFieldTest extends TestIntegrationTestCase
         $this->sprint_artifact_with_cheese_id      = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
         $this->sprint_artifact_with_cheese_lead_id = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
 
-        $tracker_builder->buildLastChangeset($this->release_artifact_empty_id);
-        $release_artifact_with_cheese_changeset = $tracker_builder->buildLastChangeset($this->release_artifact_with_cheese_id);
-        $release_artifact_with_lead_changeset   = $tracker_builder->buildLastChangeset($this->release_artifact_with_lead_id);
-        $tracker_builder->buildLastChangeset($this->sprint_artifact_empty_id);
+        $release_artifact_empty_changeset           = $tracker_builder->buildLastChangeset($this->release_artifact_empty_id);
+        $release_artifact_with_cheese_changeset     = $tracker_builder->buildLastChangeset($this->release_artifact_with_cheese_id);
+        $release_artifact_with_lead_changeset       = $tracker_builder->buildLastChangeset($this->release_artifact_with_lead_id);
+        $sprint_artifact_empty_changeset            = $tracker_builder->buildLastChangeset($this->sprint_artifact_empty_id);
         $sprint_artifact_with_cheese_changeset      = $tracker_builder->buildLastChangeset($this->sprint_artifact_with_cheese_id);
         $sprint_artifact_with_cheese_lead_changeset = $tracker_builder->buildLastChangeset($this->sprint_artifact_with_cheese_lead_id);
 
+        $tracker_builder->buildListValue(
+            $release_artifact_empty_changeset,
+            $release_list_field_id,
+            Tracker_FormElement_Field_List::NONE_VALUE
+        );
         $tracker_builder->buildListValue(
             $release_artifact_with_cheese_changeset,
             $release_list_field_id,
@@ -110,6 +116,11 @@ final class StaticListDuckTypedFieldTest extends TestIntegrationTestCase
             $release_artifact_with_lead_changeset,
             $release_list_field_id,
             $release_bind_ids['lead']
+        );
+        $tracker_builder->buildListValue(
+            $sprint_artifact_empty_changeset,
+            $sprint_list_field_id,
+            Tracker_FormElement_Field_List::NONE_VALUE
         );
         $tracker_builder->buildListValue(
             $sprint_artifact_with_cheese_changeset,
@@ -203,5 +214,53 @@ final class StaticListDuckTypedFieldTest extends TestIntegrationTestCase
 
         self::assertCount(1, $artifacts);
         self::assertEqualsCanonicalizing([$this->sprint_artifact_with_cheese_lead_id], $artifacts);
+    }
+
+    public function testNotEqualEmpty(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "list_field != ''",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_with_cheese_id, $this->release_artifact_with_lead_id,
+            $this->sprint_artifact_with_cheese_id, $this->sprint_artifact_with_cheese_lead_id,
+        ], $artifacts);
+    }
+
+    public function testNotEqualValue(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "list_field != 'cheese'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->release_artifact_with_lead_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
+
+    public function testMultipleNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "list_field != 'cheese' AND list_field != 'lead'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->sprint_artifact_empty_id], $artifacts);
     }
 }

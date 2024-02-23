@@ -24,9 +24,9 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\StaticLis
 
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
+use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\FieldValueWrapperParameters;
-use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
@@ -37,11 +37,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
-use Tuleap\Tracker\Report\Query\ParametrizedAndFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 /**
- * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, ParametrizedWhere>
+ * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, ParametrizedFromWhere>
  */
 final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
 {
@@ -49,68 +48,145 @@ final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
         DuckTypedField $duck_typed_field,
         Comparison $comparison,
     ): IProvideParametrizedFromAndWhereSQLFragments {
-        $suffix = spl_object_hash($comparison);
+        $suffix              = spl_object_hash($comparison);
+        $tracker_field_alias = "TF_$suffix";
+        $filter_alias        = $this->getAliasForFilter($comparison);
 
-        $tracker_field_alias           = "TF_$suffix";
-        $changeset_value_alias         = "CV_$suffix";
-        $changeset_value_list_alias    = "CVL_$suffix";
-        $tracker_field_list_bind_alias = $this->getAliasForStaticList($comparison);
-
-        $fields_id_statement = EasyStatement::open()->in(
-            "$tracker_field_alias.id IN (?*)",
+        $fields_id_statement        = EasyStatement::open()->in(
+            "$tracker_field_alias.id IN(?*)",
             $duck_typed_field->field_ids
         );
-        $from                = <<<EOSQL
-        LEFT JOIN tracker_field AS $tracker_field_alias
-            ON (tracker.id = $tracker_field_alias.tracker_id AND $fields_id_statement)
-        LEFT JOIN tracker_changeset_value AS $changeset_value_alias
-            ON ($tracker_field_alias.id = $changeset_value_alias.field_id AND last_changeset.id = $changeset_value_alias.changeset_id)
-        LEFT JOIN tracker_changeset_value_list AS $changeset_value_list_alias
-            ON $changeset_value_list_alias.changeset_value_id = $changeset_value_alias.id
-        LEFT JOIN tracker_field_list_bind_static_value AS $tracker_field_list_bind_alias
-            ON $tracker_field_list_bind_alias.id = $changeset_value_list_alias.bindvalue_id
-        EOSQL;
-        $where               = "$tracker_field_alias.id IS NOT NULL";
+        $filter_field_ids_statement = EasyStatement::open()->in(
+            'tcv.field_id IN(?*)',
+            $duck_typed_field->field_ids
+        );
 
-        return new ParametrizedAndFromWhere(
-            new ParametrizedFromWhere($from, $where, $fields_id_statement->values(), []),
-            $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($comparison))
+        $from_where = $comparison->getValueWrapper()->accept(
+            $this,
+            new FieldValueWrapperParameters($comparison)
+        );
+        $from       = <<<EOSQL
+        INNER JOIN tracker_field AS $tracker_field_alias
+            ON (tracker.id = $tracker_field_alias.tracker_id AND $fields_id_statement)
+        LEFT JOIN (
+            SELECT c.artifact_id AS artifact_id
+            FROM tracker_artifact AS artifact
+            INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
+            INNER JOIN ({$from_where->getFrom()})
+                ON (tcv.changeset_id = c.id AND $filter_field_ids_statement)
+        ) AS $filter_alias ON (tracker_artifact.id = $filter_alias.artifact_id)
+        EOSQL;
+        return new ParametrizedFromWhere(
+            $from,
+            $from_where->getWhere(),
+            array_merge(
+                $fields_id_statement->values(),
+                $from_where->getFromParameters(),
+                $filter_field_ids_statement->values()
+            ),
+            $from_where->getWhereParameters()
         );
     }
 
-    private function getAliasForStaticList(Comparison $comparison): string
+    private function getAliasForFilter(Comparison $comparison): string
     {
         $suffix = spl_object_hash($comparison);
-        return "TFLB_$suffix";
+        return "FA_$suffix";
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
-        $comparison                    = $parameters->comparison;
-        $tracker_field_list_bind_alias = $this->getAliasForStaticList($comparison);
+        $comparison   = $parameters->comparison;
+        $filter_alias = $this->getAliasForFilter($comparison);
 
         return match ($comparison->getType()) {
-            ComparisonType::Equal    => $this->getWhereForEqual($tracker_field_list_bind_alias, $value_wrapper),
-            ComparisonType::NotEqual => throw new LogicException('Not implemented yet'),
+            ComparisonType::Equal => $this->getWhereForEqual($filter_alias, $value_wrapper),
+            ComparisonType::NotEqual => $this->getWhereForNotEqual($filter_alias, $value_wrapper),
             ComparisonType::In,
-            ComparisonType::NotIn    => throw new LogicException('In comparison expected a InValueWrapper, not a SimpleValueWrapper'),
-            default                  => throw new LogicException('Other comparison types are invalid for Static List field')
+            ComparisonType::NotIn => throw new LogicException(
+                'In comparison expected a InValueWrapper, not a SimpleValueWrapper'
+            ),
+            default => throw new LogicException('Other comparison types are invalid for Static List field')
         };
     }
 
     private function getWhereForEqual(
-        string $tracker_field_list_bind_alias,
+        string $filter_alias,
         SimpleValueWrapper $wrapper,
-    ): ParametrizedWhere {
+    ): ParametrizedFromWhere {
         $value = $wrapper->getValue();
 
         if ($value === '') {
-            return new ParametrizedWhere("$tracker_field_list_bind_alias.label IS NULL", []);
+            $from = <<<EOSQL
+            tracker_changeset_value AS tcv
+            INNER JOIN tracker_changeset_value_list AS tcvl ON (
+                tcvl.changeset_value_id = tcv.id AND tcvl.bindvalue_id = ?
+            )
+            EOSQL;
+
+            return new ParametrizedFromWhere(
+                $from,
+                "$filter_alias.artifact_id IS NOT NULL",
+                [Tracker_FormElement_Field_List::NONE_VALUE],
+                []
+            );
         }
 
-        return new ParametrizedWhere(
-            "$tracker_field_list_bind_alias.label = ?",
-            [$value]
+        $from = <<<EOSQL
+        tracker_changeset_value AS tcv
+        INNER JOIN tracker_changeset_value_list AS tcvl ON (
+            tcvl.changeset_value_id = tcv.id
+        )
+        INNER JOIN tracker_field_list_bind_static_value AS tflbsv ON (
+            tflbsv.id = tcvl.bindvalue_id AND tflbsv.label = ?
+        )
+        EOSQL;
+
+        return new ParametrizedFromWhere(
+            $from,
+            "$filter_alias.artifact_id IS NOT NULL",
+            [$value],
+            []
+        );
+    }
+
+    private function getWhereForNotEqual(
+        string $filter_alias,
+        SimpleValueWrapper $wrapper,
+    ): ParametrizedFromWhere {
+        $value = $wrapper->getValue();
+
+        if ($value === '') {
+            $from = <<<EOSQL
+            tracker_changeset_value AS tcv
+            INNER JOIN tracker_changeset_value_list AS tcvl ON (
+                tcvl.changeset_value_id = tcv.id AND tcvl.bindvalue_id = ?
+            )
+            EOSQL;
+
+            return new ParametrizedFromWhere(
+                $from,
+                "$filter_alias.artifact_id IS NULL",
+                [Tracker_FormElement_Field_List::NONE_VALUE],
+                []
+            );
+        }
+
+        $from = <<<EOSQL
+        tracker_changeset_value AS tcv
+        INNER JOIN tracker_changeset_value_list AS tcvl ON (
+            tcvl.changeset_value_id = tcv.id
+        )
+        INNER JOIN tracker_field_list_bind_static_value AS tflbsv ON (
+            tflbsv.id = tcvl.bindvalue_id AND tflbsv.label = ?
+        )
+        EOSQL;
+
+        return new ParametrizedFromWhere(
+            $from,
+            "$filter_alias.artifact_id IS NULL",
+            [$value],
+            []
         );
     }
 
