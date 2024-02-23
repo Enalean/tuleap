@@ -21,62 +21,70 @@
 
 namespace Tuleap\Request;
 
+use ColinODell\PsrTestLogger\TestLogger;
+use EventManager;
+use Exception;
 use FastRoute;
+use ForgeConfig;
 use HTTPRequest;
-use Mockery;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
+use Plugin;
 use PluginManager;
+use Project;
+use ThemeManager;
 use Tuleap\BrowserDetection\DetectedBrowser;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ErrorRendering;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideCurrentUserWithLoggedInInformationStub;
 use Tuleap\Theme\BurningParrot\BurningParrotTheme;
-use Tuleap\User\CurrentUserWithLoggedInInformation;
-use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
+use URLVerification;
+use URLVerificationFactory;
 use function PHPUnit\Framework\assertInstanceOf;
 
-final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FrontRouterTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    /**
-     * @var FrontRouter
-     */
-    private $router;
-    private $url_verification_factory;
-    private $route_collector;
-    private $request;
-    private $layout;
-    private $logger;
-    private $error_rendering;
-    private $burning_parrot;
-    private $plugin_manager;
-    /**
-     * @var Mockery\MockInterface|RequestInstrumentation
-     */
-    private $request_instrumentation;
+    private FrontRouter $router;
+    private URLVerificationFactory&MockObject $url_verification_factory;
+    private RouteCollector&MockObject $route_collector;
+    private HTTPRequest&MockObject $request;
+    private BaseLayout&MockObject $layout;
+    private TestLogger $logger;
+    private ErrorRendering&MockObject $error_rendering;
+    private BurningParrotTheme&MockObject $burning_parrot;
+    private PluginManager&MockObject $plugin_manager;
+    private RequestInstrumentation&MockObject $request_instrumentation;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->route_collector          = Mockery::mock(RouteCollector::class);
-        $this->url_verification_factory = Mockery::mock(\URLVerificationFactory::class);
-        $this->request                  = Mockery::mock(\HTTPRequest::class);
-        $this->request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
-        $this->layout                  = Mockery::mock(BaseLayout::class);
-        $this->logger                  = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->error_rendering         = Mockery::mock(ErrorRendering::class);
-        $theme_manager                 = Mockery::mock(\ThemeManager::class);
-        $this->burning_parrot          = Mockery::mock(BurningParrotTheme::class);
-        $this->plugin_manager          = Mockery::mock(PluginManager::class);
-        $this->request_instrumentation = Mockery::mock(RequestInstrumentation::class);
+        $this->route_collector          = $this->getMockBuilder(RouteCollector::class)
+            ->setConstructorArgs([$this->createMock(EventManager::class)])
+            ->addMethods(['myHandler'])
+            ->onlyMethods(['collect'])
+            ->getMock();
+        $this->url_verification_factory = $this->createMock(URLVerificationFactory::class);
+        $this->request                  = $this->createMock(HTTPRequest::class);
+        $this->request->method('getFromServer')->willReturn('Some user-agent string');
+        $this->layout                  = $this->createMock(BaseLayout::class);
+        $this->logger                  = new TestLogger();
+        $this->error_rendering         = $this->createMock(ErrorRendering::class);
+        $theme_manager                 = $this->createMock(ThemeManager::class);
+        $this->burning_parrot          = $this->createMock(BurningParrotTheme::class);
+        $this->plugin_manager          = $this->createMock(PluginManager::class);
+        $this->request_instrumentation = $this->createMock(RequestInstrumentation::class);
 
-        $theme_manager->shouldReceive('getBurningParrot')->andReturn($this->burning_parrot);
-        $theme_manager->shouldReceive('getTheme')->andReturn($this->layout);
+        $theme_manager->method('getBurningParrot')->willReturn($this->burning_parrot);
+        $theme_manager->method('getTheme')->willReturn($this->layout);
 
-        \ForgeConfig::store();
-        \ForgeConfig::set('codendi_cache_dir', vfsStream::setup()->url());
+        ForgeConfig::set('codendi_cache_dir', vfsStream::setup()->url());
 
         $this->router = new FrontRouter(
             $this->route_collector,
@@ -86,14 +94,7 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
             $theme_manager,
             $this->plugin_manager,
             $this->request_instrumentation,
-            new class implements ProvideCurrentUserWithLoggedInInformation {
-                public function getCurrentUserWithLoggedInInformation(): \Tuleap\User\CurrentUserWithLoggedInInformation
-                {
-                    return CurrentUserWithLoggedInInformation::fromLoggedInUser(
-                        UserTestBuilder::anActiveUser()->build()
-                    );
-                }
-            }
+            ProvideCurrentUserWithLoggedInInformationStub::buildWithUser(UserTestBuilder::anActiveUser()->build())
         );
     }
 
@@ -104,7 +105,6 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($_SERVER['HTTP_ACCEPT']);
         unset($GLOBALS['HTML']);
         unset($GLOBALS['Response']);
-        \ForgeConfig::restore();
         parent::tearDown();
     }
 
@@ -113,11 +113,11 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->route_collector->shouldReceive('collect');
-        $this->error_rendering->shouldReceive('rendersError')->once()->with(Mockery::any(), Mockery::any(), 404, Mockery::any(), Mockery::any());
-        $this->request_instrumentation->shouldReceive('increment')->with(404, Mockery::type(DetectedBrowser::class))->once();
+        $this->route_collector->method('collect');
+        $this->error_rendering->expects(self::once())->method('rendersError')->with(self::anything(), self::anything(), 404, self::anything(), self::anything());
+        $this->request_instrumentation->expects(self::once())->method('increment')->with(404, self::isInstanceOf(DetectedBrowser::class));
 
-        $this->request->shouldReceive('isAjax')->andReturnFalse();
+        $this->request->method('isAjax')->willReturn(false);
 
         $this->router->route($this->request);
     }
@@ -127,18 +127,18 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->request->shouldReceive('getFromServer')->andReturnFalse();
-        $this->request->shouldReceive('isAjax')->andReturnFalse();
+        $this->request->method('getFromServer')->willReturn(false);
+        $this->request->method('isAjax')->willReturn(false);
 
-        $this->route_collector->shouldReceive('collect');
-        $this->error_rendering->shouldReceive('rendersError')->once()->with(
-            Mockery::any(),
-            Mockery::any(),
+        $this->route_collector->method('collect');
+        $this->error_rendering->expects(self::once())->method('rendersError')->with(
+            self::anything(),
+            self::anything(),
             404,
-            Mockery::any(),
-            Mockery::any()
+            self::anything(),
+            self::anything()
         );
-        $this->request_instrumentation->shouldReceive('increment')->with(404, Mockery::type(DetectedBrowser::class))->once();
+        $this->request_instrumentation->expects(self::once())->method('increment')->with(404, self::isInstanceOf(DetectedBrowser::class));
 
         $this->router->route($this->request);
     }
@@ -148,31 +148,31 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->request->shouldReceive('isAjax')->andReturnTrue();
+        $this->request->method('isAjax')->willReturn(true);
 
-        $this->route_collector->shouldReceive('collect');
-        $this->error_rendering->shouldReceive('rendersError')->once()->with(
-            Mockery::any(),
-            Mockery::any(),
+        $this->route_collector->method('collect');
+        $this->error_rendering->expects(self::once())->method('rendersError')->with(
+            self::anything(),
+            self::anything(),
             404,
-            Mockery::any(),
-            Mockery::any()
+            self::anything(),
+            self::anything()
         );
-        $this->request_instrumentation->shouldReceive('increment')->with(404, Mockery::type(DetectedBrowser::class))->once();
+        $this->request_instrumentation->expects(self::once())->method('increment')->with(404, self::isInstanceOf(DetectedBrowser::class));
 
         $this->router->route($this->request);
     }
 
     public function testItDispatchRequestWithoutAuthz(): void
     {
-        $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
+        $handler = $this->createMock(DispatchableWithRequestNoAuthz::class);
 
-        $handler->shouldReceive('process')->once();
-        $this->request_instrumentation->shouldReceive('increment')->once();
+        $handler->expects(self::once())->method('process');
+        $this->request_instrumentation->expects(self::once())->method('increment');
 
-        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn(Mockery::mock(\URLVerification::class));
+        $this->url_verification_factory->method('getURLVerification')->willReturn($this->createMock(URLVerification::class));
 
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
+        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) use ($handler) {
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
@@ -188,16 +188,16 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksWithURLVerificationWhenDispatchingWithRequest(): void
     {
-        $handler = \Mockery::mock(DispatchableWithRequest::class);
+        $handler = $this->createMock(DispatchableWithRequest::class);
 
-        $handler->shouldReceive('process')->with($this->request, $this->layout, [])->once();
-        $this->request_instrumentation->shouldReceive('increment')->once();
+        $handler->expects(self::once())->method('process')->with($this->request, $this->layout, []);
+        $this->request_instrumentation->expects(self::once())->method('increment');
 
-        $url_verification = Mockery::mock(\URLVerification::class);
-        $url_verification->shouldReceive('assertValidUrl')->with(Mockery::any(), $this->request, null)->once();
-        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+        $url_verification = $this->createMock(URLVerification::class);
+        $url_verification->expects(self::once())->method('assertValidUrl')->with(self::anything(), $this->request, null);
+        $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
 
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
+        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) use ($handler) {
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
@@ -213,14 +213,14 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnErrorWhenHandlerIsUnknown(): void
     {
-        $handler = \Mockery::mock(DispatchableWithRequest::class);
+        $handler = $this->createMock(DispatchableWithRequest::class);
 
-        $url_verification = Mockery::mock(\URLVerification::class);
-        $url_verification->shouldReceive('assertValidUrl')->with(Mockery::any(), $this->request, null)->once();
-        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
-        $this->request_instrumentation->shouldReceive('increment')->once();
+        $url_verification = $this->createMock(URLVerification::class);
+        $url_verification->expects(self::once())->method('assertValidUrl')->with(self::anything(), $this->request, null);
+        $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
+        $this->request_instrumentation->expects(self::once())->method('increment');
 
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
+        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) use ($handler) {
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
@@ -231,33 +231,50 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->logger->shouldReceive('error')->once();
-        $this->error_rendering->shouldReceive('rendersErrorWithException')->once()->with(
-            Mockery::any(),
-            Mockery::any(),
+        $this->error_rendering->expects(self::once())->method('rendersErrorWithException')->with(
+            self::anything(),
+            self::anything(),
             500,
-            Mockery::any(),
-            Mockery::any(),
-            Mockery::any()
+            self::anything(),
+            self::anything(),
+            self::anything()
         );
 
         $this->router->route($this->request);
+        $this->logger->hasErrorRecords();
     }
 
     public function testItDispatchWithProject(): void
     {
-        $handler = \Mockery::mock(DispatchableWithRequest::class . ', ' . DispatchableWithProject::class);
-        $handler->shouldReceive('process')->with($this->request, $this->layout, [])->once();
-        $this->request_instrumentation->shouldReceive('increment')->once();
+        $project = ProjectTestBuilder::aProject()->build();
+        $handler = new class ($project) implements DispatchableWithRequest, DispatchableWithProject {
+            public ?HTTPRequest $request = null;
+            public ?BaseLayout $layout   = null;
+            public ?array $variables     = null;
 
-        $project = \Mockery::mock(\Project::class);
-        $handler->shouldReceive('getProject')->andReturn($project);
+            public function __construct(private readonly Project $project)
+            {
+            }
 
-        $url_verification = Mockery::mock(\URLVerification::class);
-        $url_verification->shouldReceive('assertValidUrl')->with(Mockery::any(), $this->request, $project)->once();
-        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+            public function getProject(array $variables): Project
+            {
+                return $this->project;
+            }
 
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
+            public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+            {
+                $this->request   = $request;
+                $this->layout    = $layout;
+                $this->variables = $variables;
+            }
+        };
+        $this->request_instrumentation->expects(self::once())->method('increment');
+
+        $url_verification = $this->createMock(URLVerification::class);
+        $url_verification->expects(self::once())->method('assertValidUrl')->with(self::anything(), $this->request, $project);
+        $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
+
+        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) use ($handler) {
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
@@ -269,20 +286,32 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['REQUEST_URI']    = '/stuff';
 
         $this->router->route($this->request);
+        self::assertEquals($this->request, $handler->request);
+        self::assertEquals($this->layout, $handler->layout);
+        self::assertEquals([], $handler->variables);
     }
 
     public function testItProvidesABurningParrotThemeWhenControllerAskForIt(): void
     {
-        $handler = \Mockery::mock(DispatchableWithRequest::class . ', ' . DispatchableWithBurningParrot::class);
+        $handler = new class implements DispatchableWithRequest, DispatchableWithBurningParrot {
+            public ?HTTPRequest $request = null;
+            public ?BaseLayout $layout   = null;
+            public ?array $variables     = null;
 
-        $handler->shouldReceive('process')->with($this->request, $this->burning_parrot, [])->once();
-        $this->request_instrumentation->shouldReceive('increment')->once();
+            public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+            {
+                $this->request   = $request;
+                $this->layout    = $layout;
+                $this->variables = $variables;
+            }
+        };
+        $this->request_instrumentation->expects(self::once())->method('increment');
 
-        $url_verification = Mockery::mock(\URLVerification::class);
-        $url_verification->shouldReceive('assertValidUrl');
-        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+        $url_verification = $this->createMock(URLVerification::class);
+        $url_verification->method('assertValidUrl');
+        $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
 
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
+        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) use ($handler) {
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
@@ -294,12 +323,16 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['REQUEST_URI']    = '/stuff';
 
         $this->router->route($this->request);
+        self::assertEquals($this->request, $handler->request);
+        self::assertEquals($this->burning_parrot, $handler->layout);
+        self::assertEquals([], $handler->variables);
     }
 
     public function testItProvidesABurningParrotThemeWhenControllerSelectItExplicitly(): void
     {
         $handler = new class implements DispatchableWithRequest, DispatchableWithThemeSelection {
             public bool $has_processed = false;
+
             public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
             {
                 $this->has_processed = true;
@@ -312,13 +345,13 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $this->request_instrumentation->shouldReceive('increment')->once();
+        $this->request_instrumentation->expects(self::once())->method('increment');
 
-        $url_verification = Mockery::mock(\URLVerification::class);
-        $url_verification->shouldReceive('assertValidUrl');
-        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+        $url_verification = $this->createMock(URLVerification::class);
+        $url_verification->method('assertValidUrl');
+        $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
 
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
+        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) use ($handler) {
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
@@ -336,31 +369,29 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItInstantiatePluginsWhenRoutingAPluginRoute(): void
     {
-        $controller = Mockery::mock(DispatchableWithRequest::class);
-        $controller->shouldReceive('process')->once();
-        $this->request_instrumentation->shouldReceive('increment')->once();
+        $controller = $this->createMock(DispatchableWithRequest::class);
+        $controller->expects(self::once())->method('process');
+        $this->request_instrumentation->expects(self::once())->method('increment');
 
-        $this->plugin_manager->shouldReceive('getPluginByName')->with('foobar')->andReturns(
-            new class ($controller) extends \Plugin {
-                private $controller;
-
-                public function __construct($controller)
+        $this->plugin_manager->method('getPluginByName')->with('foobar')->willReturn(
+            new class ($controller) extends Plugin {
+                public function __construct(private readonly DispatchableWithRequest $controller)
                 {
-                    $this->controller = $controller;
+                    parent::__construct();
                 }
 
-                public function myHandler()
+                public function myHandler(): DispatchableWithRequest
                 {
                     return $this->controller;
                 }
             }
         );
 
-        $url_verification = Mockery::mock(\URLVerification::class);
-        $url_verification->shouldReceive('assertValidUrl');
-        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+        $url_verification = $this->createMock(URLVerification::class);
+        $url_verification->method('assertValidUrl');
+        $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
 
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) {
+        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) {
             $r->get('/stuff', ['plugin' => 'foobar', 'handler' => 'myHandler']);
 
             return true;
@@ -374,14 +405,16 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRoutesToRouteCollectorWithParams(): void
     {
-        $this->request_instrumentation->shouldReceive('increment')->once();
-        $url_verification = Mockery::mock(\URLVerification::class);
-        $url_verification->shouldReceive('assertValidUrl');
-        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+        $this->request_instrumentation->expects(self::once())->method('increment');
+        $url_verification = $this->createMock(URLVerification::class);
+        $url_verification->method('assertValidUrl');
+        $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
 
-        $this->route_collector->shouldReceive('myHandler')->with('some_param1', 'some_param2')->andReturns(Mockery::spy(DispatchableWithRequest::class));
+        $handler = $this->createMock(DispatchableWithRequest::class);
+        $handler->expects(self::once())->method('process');
+        $this->route_collector->method('myHandler')->with('some_param1', 'some_param2')->willReturn($handler);
 
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) {
+        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) {
             $r->get('/stuff', ['core' => true, 'handler' => 'myHandler', 'params' => ['some_param1', 'some_param2']]);
 
             return true;
@@ -403,10 +436,10 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testHTTPStatusCodeIsCorrectlyRecorded(int $status_code): void
     {
-        $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
-        $handler->shouldReceive('process');
+        $handler = $this->createMock(DispatchableWithRequestNoAuthz::class);
+        $handler->method('process');
 
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler, $status_code) {
+        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) use ($handler, $status_code) {
             $r->get('/stuff', function () use ($handler, $status_code) {
                 http_response_code($status_code);
 
@@ -419,108 +452,98 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->request_instrumentation->shouldReceive('increment')->with($status_code, Mockery::type(DetectedBrowser::class))->once();
+        $this->request_instrumentation->expects(self::once())->method('increment')->with($status_code, self::isInstanceOf(DetectedBrowser::class));
 
         $this->router->route($this->request);
     }
 
     public function testHttpStatusCodeIsEqualToExceptionCodeIfTheExceptionImplementsCodeIsAValidHTTPStatus(): void
     {
-        $exception = new class ("Conflict", 409) extends \Exception implements CodeIsAValidHTTPStatus {
+        $exception = new class ("Conflict", 409) extends Exception implements CodeIsAValidHTTPStatus {
         };
 
-        $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
-        $handler->shouldReceive('process')->andThrow($exception);
+        $handler = $this->createMock(DispatchableWithRequestNoAuthz::class);
+        $handler->method('process')->willThrowException($exception);
 
-        $this->route_collector->shouldReceive('collect')->with(
-            Mockery::on(
-                function (FastRoute\RouteCollector $r) use ($handler) {
-                    $r->get(
-                        '/stuff',
-                        function () use ($handler) {
-                            return $handler;
-                        }
-                    );
+        $this->route_collector->method('collect')->with(self::callback(
+            function (FastRoute\RouteCollector $r) use ($handler) {
+                $r->get(
+                    '/stuff',
+                    function () use ($handler) {
+                        return $handler;
+                    }
+                );
 
-                    return true;
-                }
-            )
-        );
+                return true;
+            }
+        ));
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->request_instrumentation->shouldReceive('increment')->with(
+        $this->request_instrumentation->expects(self::once())->method('increment')->with(
             409,
-            Mockery::type(DetectedBrowser::class)
-        )->once();
-
-        $this->logger
-            ->shouldReceive('error')
-            ->with('Caught exception', ['exception' => $exception])
-            ->once();
+            self::isInstanceOf(DetectedBrowser::class)
+        );
 
         $this->error_rendering
-            ->shouldReceive('rendersErrorWithException')
+            ->expects(self::once())
+            ->method('rendersErrorWithException')
             ->with(
-                Mockery::any(),
-                Mockery::any(),
+                self::anything(),
+                self::anything(),
                 409,
-                Mockery::any(),
-                Mockery::any(),
-                Mockery::any(),
-            )->once();
+                self::anything(),
+                self::anything(),
+                self::anything(),
+            );
 
         $this->router->route($this->request);
+        $this->logger->hasErrorThatContains('Caught exception');
     }
 
     public function testHttpStatusCodeIs500IfTheExceptionDoesNotImplementCodeIsAValidHTTPStatus(): void
     {
-        $exception = new class ("Conflict", 409) extends \Exception {
+        $exception = new class ("Conflict", 409) extends Exception {
         };
 
-        $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
-        $handler->shouldReceive('process')->andThrow($exception);
+        $handler = $this->createMock(DispatchableWithRequestNoAuthz::class);
+        $handler->method('process')->willThrowException($exception);
 
-        $this->route_collector->shouldReceive('collect')->with(
-            Mockery::on(
-                function (FastRoute\RouteCollector $r) use ($handler) {
-                    $r->get(
-                        '/stuff',
-                        function () use ($handler) {
-                            return $handler;
-                        }
-                    );
+        $this->route_collector->method('collect')->with(self::callback(
+            function (FastRoute\RouteCollector $r) use ($handler) {
+                $r->get(
+                    '/stuff',
+                    function () use ($handler) {
+                        return $handler;
+                    }
+                );
 
-                    return true;
-                }
-            )
-        );
+                return true;
+            }
+        ));
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->request_instrumentation->shouldReceive('increment')->with(
+        $this->request_instrumentation->expects(self::once())->method('increment')->with(
             500,
-            Mockery::type(DetectedBrowser::class)
-        )->once();
-
-        $this->logger
-            ->shouldReceive('error')
-            ->with('Caught exception', ['exception' => $exception])
-            ->once();
+            self::isInstanceOf(DetectedBrowser::class)
+        );
 
         $this->error_rendering
-            ->shouldReceive('rendersErrorWithException')
+            ->expects(self::once())
+            ->method('rendersErrorWithException')
             ->with(
-                Mockery::any(),
-                Mockery::any(),
+                self::anything(),
+                self::anything(),
                 500,
-                Mockery::any(),
-                Mockery::any(),
-                Mockery::any(),
-            )->once();
+                self::anything(),
+                self::anything(),
+                self::anything(),
+            );
 
         $this->router->route($this->request);
+        $this->logger->hasErrorThatContains('Caught exception');
     }
 }
