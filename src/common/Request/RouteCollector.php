@@ -1451,7 +1451,10 @@ class RouteCollector
                     new ProjectRegistrationUserPermissionChecker(new \ProjectDao())
                 ),
                 new FileBeingUploadedWriter($path_allocator, DBFactory::getMainTuleapDBConnection()),
-                new ProjectFileUploadFinisher($file_ongoing_upload_dao),
+                new ProjectFileUploadFinisher(
+                    $file_ongoing_upload_dao,
+                    $path_allocator
+                ),
                 new ProjectFileUploadCanceler(
                     $path_allocator,
                     $file_ongoing_upload_dao
