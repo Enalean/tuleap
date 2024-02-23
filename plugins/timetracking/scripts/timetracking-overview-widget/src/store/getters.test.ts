@@ -22,42 +22,45 @@
  */
 
 import { describe, beforeEach, afterEach, it, expect } from "@jest/globals";
-import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store.js";
 import { setActivePinia, createPinia } from "pinia";
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { TrackerWithTimes } from "@tuleap/plugin-timetracking-rest-api-types";
+import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store";
+import type { OverviewWidgetStoreInstance } from "../../tests/helpers/pinia-test-store";
 
-describe("Getters Timetracking Overview", () => {
-    let store;
+describe("Getters Timetracking Overview", (): void => {
+    let store: OverviewWidgetStoreInstance;
 
-    beforeEach(() => {
+    beforeEach((): void => {
         setActivePinia(createPinia());
         store = useOverviewWidgetTestStore();
     });
 
-    afterEach(() => {
+    afterEach((): void => {
         store.$reset();
     });
 
     describe("Call has error", () => {
-        it("Given a widget with state initialisation. When there is an error message, Then has_error should be true", () => {
+        it("Given a widget with state initialisation. When there is an error message, Then has_error should be true", (): void => {
             const error_message = "this is an error";
 
             store.setErrorMessage(error_message);
             expect(store.has_error).toBe(true);
         });
 
-        it("Given a widget with state initialisation, Then we reset error has_error should be false", () => {
+        it("Given a widget with state initialisation, Then we reset error has_error should be false", (): void => {
             store.resetMessages();
             expect(store.has_error).toBe(false);
         });
     });
 
-    describe("Call sums", () => {
-        it("Given a widget with state initialisation, Then set trackers, getters should give total times of all trackers", () => {
-            let trackers = [
+    describe("Call sums", (): void => {
+        it("Given a widget with state initialisation, Then set trackers, getters should give total times of all trackers", (): void => {
+            const trackers: TrackerWithTimes[] = [
                 {
-                    id: "16",
+                    id: 16,
                     label: "tracker",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [
                         {
@@ -68,9 +71,9 @@ describe("Getters Timetracking Overview", () => {
                     ],
                 },
                 {
-                    id: "18",
+                    id: 18,
                     label: "tracker 2",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [
                         {
@@ -85,13 +88,13 @@ describe("Getters Timetracking Overview", () => {
             expect(store.get_formatted_total_sum).toBe("01:20");
         });
 
-        it("Given a widget with state initialisation with selected user, Then set trackers, getters should give total times of all trackers' user", () => {
-            store.selected_user = 102;
-            const trackers = [
+        it("Given a widget with state initialisation with selected user, Then set trackers, getters should give total times of all trackers' user", (): void => {
+            store.selected_user_id = 102;
+            const trackers: TrackerWithTimes[] = [
                 {
-                    id: "16",
+                    id: 16,
                     label: "tracker",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [
                         {
@@ -102,9 +105,9 @@ describe("Getters Timetracking Overview", () => {
                     ],
                 },
                 {
-                    id: "18",
+                    id: 18,
                     label: "tracker 2",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [
                         {
@@ -119,11 +122,11 @@ describe("Getters Timetracking Overview", () => {
             expect(store.get_formatted_total_sum).toBe("01:00");
         });
 
-        it("Given a widget with state initialisation, Then get_formatted_time should format total time", () => {
-            const tracker = {
-                id: "16",
+        it("Given a widget with state initialisation, Then get_formatted_time should format total time", (): void => {
+            const tracker: TrackerWithTimes = {
+                id: 16,
                 label: "tracker",
-                project: {},
+                project: {} as ProjectReference,
                 uri: "",
                 time_per_user: [
                     {
@@ -137,11 +140,11 @@ describe("Getters Timetracking Overview", () => {
             expect(store.get_formatted_time(tracker)).toBe("02:00");
         });
 
-        it("Given a widget with state initialisation, Then is_tracker_total_som_equals_zero should be true if no time", () => {
-            const tracker = {
-                id: "16",
+        it("Given a widget with state initialisation, Then is_tracker_total_som_equals_zero should be true if no time", (): void => {
+            const tracker: TrackerWithTimes = {
+                id: 16,
                 label: "tracker",
-                project: {},
+                project: {} as ProjectReference,
                 uri: "",
                 time_per_user: [
                     {
@@ -155,11 +158,11 @@ describe("Getters Timetracking Overview", () => {
             expect(store.is_tracker_total_sum_equals_zero(tracker.time_per_user)).toBeTruthy();
         });
 
-        it("Given a widget with state initialisation, Then is_tracker_total_som_equals_zero should be false if their is times", () => {
-            const tracker = {
-                id: "16",
+        it("Given a widget with state initialisation, Then is_tracker_total_som_equals_zero should be false if their is times", (): void => {
+            const tracker: TrackerWithTimes = {
+                id: 16,
                 label: "tracker",
-                project: {},
+                project: {} as ProjectReference,
                 uri: "",
                 time_per_user: [
                     {
@@ -173,12 +176,12 @@ describe("Getters Timetracking Overview", () => {
             expect(store.is_tracker_total_sum_equals_zero(tracker.time_per_user)).toBeFalsy();
         });
 
-        it("Given a widget with state initialisation, Then is_sum_of_times_equals_zero should return false", () => {
-            let trackers = [
+        it("Given a widget with state initialisation, Then is_sum_of_times_equals_zero should return false", (): void => {
+            const trackers: TrackerWithTimes[] = [
                 {
-                    id: "16",
+                    id: 16,
                     label: "tracker",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [
                         {
@@ -189,9 +192,9 @@ describe("Getters Timetracking Overview", () => {
                     ],
                 },
                 {
-                    id: "18",
+                    id: 18,
                     label: "tracker 2",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [
                         {
@@ -206,12 +209,12 @@ describe("Getters Timetracking Overview", () => {
             expect(store.is_sum_of_times_equals_zero).toBe(false);
         });
 
-        it("Given trackers without times, Then is_sum_of_times_equals_zero should return true", () => {
-            let trackers = [
+        it("Given trackers without times, Then is_sum_of_times_equals_zero should return true", (): void => {
+            const trackers: TrackerWithTimes[] = [
                 {
-                    id: "16",
+                    id: 16,
                     label: "tracker",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [
                         {
@@ -222,9 +225,9 @@ describe("Getters Timetracking Overview", () => {
                     ],
                 },
                 {
-                    id: "18",
+                    id: 18,
                     label: "tracker 2",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [
                         {

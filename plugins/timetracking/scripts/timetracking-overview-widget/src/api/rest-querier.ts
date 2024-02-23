@@ -23,56 +23,67 @@
 
 import { get, put, patch } from "@tuleap/tlp-fetch";
 import { formatDatetimeToISO } from "@tuleap/plugin-timetracking-time-formatters";
-
-export {
-    getTrackersFromReport,
-    getTimesFromReport,
-    getTimes,
-    getProjectsWithTimetracking,
-    getTrackersWithTimetracking,
-    saveNewReport,
-    setDisplayPreference,
-};
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type {
+    OverviewReport,
+    OverviewReportTracker,
+    TrackerWithTimes,
+} from "@tuleap/plugin-timetracking-rest-api-types";
 
 const headers = {
     "content-type": "application/json",
 };
 
-async function getTrackersFromReport(report_id) {
-    const response = await get("/api/v1/timetracking_reports/" + encodeURI(report_id));
+export async function getTrackersFromReport(report_id: number): Promise<OverviewReport> {
+    const response = await get("/api/v1/timetracking_reports/" + encodeURIComponent(report_id));
     return response.json();
 }
 
-async function getTimes(report_id, trackers_id, start_date, end_date) {
+export async function getTimes(
+    report_id: number,
+    trackers_id: number[],
+    start_date: string,
+    end_date: string,
+): Promise<TrackerWithTimes[]> {
     const query = JSON.stringify({
         trackers_id: trackers_id,
         start_date: formatDatetimeToISO(start_date),
         end_date: formatDatetimeToISO(end_date),
     });
 
-    const response = await get("/api/v1/timetracking_reports/" + encodeURI(report_id) + "/times", {
-        params: {
-            query,
+    const response = await get(
+        "/api/v1/timetracking_reports/" + encodeURIComponent(report_id) + "/times",
+        {
+            params: {
+                query,
+            },
         },
-    });
+    );
     return response.json();
 }
 
-async function getTimesFromReport(report_id, start_date, end_date) {
+export async function getTimesFromReport(
+    report_id: number,
+    start_date: string,
+    end_date: string,
+): Promise<TrackerWithTimes[]> {
     const query = JSON.stringify({
         start_date: formatDatetimeToISO(start_date),
         end_date: formatDatetimeToISO(end_date),
     });
 
-    const response = await get("/api/v1/timetracking_reports/" + encodeURI(report_id) + "/times", {
-        params: {
-            query,
+    const response = await get(
+        "/api/v1/timetracking_reports/" + encodeURIComponent(report_id) + "/times",
+        {
+            params: {
+                query,
+            },
         },
-    });
+    );
     return response.json();
 }
 
-async function getProjectsWithTimetracking() {
+export async function getProjectsWithTimetracking(): Promise<ProjectReference[]> {
     const response = await get("/api/v1/projects", {
         params: {
             limit: 50,
@@ -84,7 +95,9 @@ async function getProjectsWithTimetracking() {
     return response.json();
 }
 
-async function getTrackersWithTimetracking(project_id) {
+export async function getTrackersWithTimetracking(
+    project_id: number,
+): Promise<OverviewReportTracker[]> {
     const response = await get("/api/v1/projects/" + project_id + "/trackers", {
         params: {
             representation: "minimal",
@@ -97,7 +110,10 @@ async function getTrackersWithTimetracking(project_id) {
     return response.json();
 }
 
-async function saveNewReport(report_id, trackers_id) {
+export async function saveNewReport(
+    report_id: number,
+    trackers_id: number[],
+): Promise<OverviewReport> {
     const body = JSON.stringify({
         trackers_id: trackers_id,
     });
@@ -110,12 +126,16 @@ async function saveNewReport(report_id, trackers_id) {
     return response.json();
 }
 
-async function setDisplayPreference(report_id, user_id, are_void_trackers_hidden) {
+export async function setDisplayPreference(
+    report_id: number,
+    user_id: number,
+    are_void_trackers_hidden: boolean,
+): Promise<void> {
     const body = JSON.stringify({
         key: "timetracking_overview_display_trackers_without_time_" + report_id,
         value: are_void_trackers_hidden.toString(),
     });
-    await patch("/api/v1/users/" + encodeURI(user_id) + "/preferences", {
+    await patch("/api/v1/users/" + encodeURIComponent(user_id) + "/preferences", {
         headers,
         body,
     });

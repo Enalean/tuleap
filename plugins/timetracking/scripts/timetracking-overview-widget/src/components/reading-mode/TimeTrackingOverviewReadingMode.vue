@@ -63,7 +63,7 @@
 import { inject } from "vue";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
 import TimeTrackingOverviewReadingDates from "./TimeTrackingOverviewReadingDates.vue";
-import { useOverviewWidgetStore } from "../../store/index.js";
+import { useOverviewWidgetStore } from "../../store/index";
 
 export default {
     name: "TimeTrackingOverviewReadingMode",

@@ -44,7 +44,11 @@ export default [
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
                 webpack_configurator.rule_css_assets,
+                ...webpack_configurator.configureTypescriptRules(),
             ],
+        },
+        resolve: {
+            extensions: [".ts", ".js", ".vue"],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),

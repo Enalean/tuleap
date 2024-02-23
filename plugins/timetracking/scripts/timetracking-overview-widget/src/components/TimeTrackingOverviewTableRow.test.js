@@ -22,7 +22,7 @@ import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewTableRow from "./TimeTrackingOverviewTableRow.vue";
-import { createLocalVueForTests } from "../../tests/helpers/local-vue.js";
+import { createLocalVueForTests } from "../../tests/helpers/local-vue";
 
 describe("Given a timetracking overview widget", () => {
     let are_void_trackers_hidden, is_tracker_total_sum_equals_zero;

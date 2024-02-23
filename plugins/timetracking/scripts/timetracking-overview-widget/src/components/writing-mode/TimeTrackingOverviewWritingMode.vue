@@ -47,7 +47,7 @@ import { inject } from "vue";
 import TimeTrackingOverviewWritingDates from "./TimeTrackingOverviewWritingDates.vue";
 import TimeTrackingOverviewWritingTrackers from "./TimeTrackingOverviewWritingTrackers.vue";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
-import { useOverviewWidgetStore } from "../../store/index.js";
+import { useOverviewWidgetStore } from "../../store/index";
 
 export default {
     name: "TimeTrackingOverviewWritingMode",

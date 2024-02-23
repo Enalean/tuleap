@@ -41,7 +41,7 @@
 </template>
 <script>
 import { inject } from "vue";
-import { useOverviewWidgetStore } from "../store/index.js";
+import { useOverviewWidgetStore } from "../store/index";
 
 export default {
     name: "TimeTrackingOverviewUserList",
@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         setSelected() {
-            this.overview_store.setSelectedUser(this.$refs.select.value);
+            this.overview_store.setSelectedUserId(Number.parseInt(this.$refs.select.value, 10));
         },
     },
 };

@@ -21,7 +21,7 @@ import { describe, beforeEach, it, expect } from "@jest/globals";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../tests/helpers/local-vue.js";
+import { createLocalVueForTests } from "../../tests/helpers/local-vue";
 import TimeTrackingOverview from "./TimeTrackingOverview.vue";
 
 const reportId = 8;

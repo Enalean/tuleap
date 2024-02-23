@@ -98,7 +98,7 @@
 import { inject } from "vue";
 import TimeTrackingOverviewTableRow from "./TimeTrackingOverviewTableRow.vue";
 import TimeTrackingOverviewUserList from "./TimeTrackingOverviewUserList.vue";
-import { useOverviewWidgetStore } from "../store/index.js";
+import { useOverviewWidgetStore } from "../store/index";
 
 export default {
     name: "TimeTrackingOverviewTable",

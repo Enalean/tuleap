@@ -22,7 +22,7 @@ import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewUserList from "./TimeTrackingOverviewUserList.vue";
-import { createLocalVueForTests } from "../../tests/helpers/local-vue.js";
+import { createLocalVueForTests } from "../../tests/helpers/local-vue";
 
 const user = {
     user_name: "user_1",
@@ -30,10 +30,10 @@ const user = {
 };
 
 describe("Given a timetracking overview widget", () => {
-    let setSelectedUser;
+    let setSelectedUserId;
 
     beforeEach(() => {
-        setSelectedUser = jest.fn();
+        setSelectedUserId = jest.fn();
     });
 
     const getWrapper = async () => {
@@ -42,7 +42,7 @@ describe("Given a timetracking overview widget", () => {
                 users: [user],
             }),
             actions: {
-                setSelectedUser,
+                setSelectedUserId,
             },
         });
 
@@ -61,6 +61,6 @@ describe("Given a timetracking overview widget", () => {
         input.setValue(user.user_id);
         input.trigger("input");
 
-        expect(setSelectedUser).toHaveBeenCalledWith(String(user.user_id));
+        expect(setSelectedUserId).toHaveBeenCalledWith(user.user_id);
     });
 });
