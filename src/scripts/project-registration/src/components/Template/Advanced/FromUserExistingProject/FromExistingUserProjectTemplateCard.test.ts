@@ -22,30 +22,40 @@ import FromExistingUserProjectTemplateCard from "./FromExistingUserProjectTempla
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { TemplateData } from "../../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import UserProjectList from "./UserProjectList.vue";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
+import { useStore } from "../../../../stores/root";
 
 describe("FromExistingUserProjectTemplateCard", () => {
     let projects_user_is_admin_of: TemplateData[], alm2: TemplateData;
+    const loadUserProjects = jest.fn();
 
     async function getWrapper(
         selected_company_template: null | TemplateData = null,
         projects_user_is_admin_of: TemplateData[] = [],
         is_option_selected: boolean = false,
     ): Promise<Wrapper<FromExistingUserProjectTemplateCard>> {
+        const useStore = defineStore("root", {
+            state: () => ({
+                selected_company_template,
+                projects_user_is_admin_of,
+            }),
+            actions: {
+                loadUserProjects: loadUserProjects,
+            },
+            getters: {
+                is_advanced_option_selected: () => (): boolean => {
+                    return is_option_selected;
+                },
+            },
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
+
         return shallowMount(FromExistingUserProjectTemplateCard, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        selected_company_template,
-                        projects_user_is_admin_of,
-                    },
-                    getters: {
-                        is_advanced_option_selected: () => is_option_selected,
-                    },
-                }),
-            },
+            pinia,
         });
     }
 
@@ -118,12 +128,13 @@ describe("FromExistingUserProjectTemplateCard", () => {
 
     it(`Displays the project list if user has already loaded it and if the card is selected`, async () => {
         const wrapper = await getWrapper(null, projects_user_is_admin_of, true);
+        const store = useStore();
 
         wrapper.get("[data-test=project-registration-card-label").trigger("click");
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalledWith("loadUserProjects");
+        expect(store.loadUserProjects).not.toHaveBeenCalled();
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
         expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBe(false);
@@ -133,12 +144,13 @@ describe("FromExistingUserProjectTemplateCard", () => {
 
     it(`Loads the project list if user has not loaded it yet`, async () => {
         const wrapper = await getWrapper();
+        const store = useStore();
 
         wrapper.get("[data-test=project-registration-card-label").trigger("click");
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadUserProjects");
+        expect(store.loadUserProjects).toHaveBeenCalled();
     });
 
     it("should display the card as checked if the card is currently selected", async () => {

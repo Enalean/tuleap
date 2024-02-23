@@ -35,7 +35,7 @@
                     type="submit"
                     class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
                     data-test="project-registration-next-button"
-                    v-bind:disabled="is_creating_project"
+                    v-bind:disabled="root_store.is_creating_project"
                 >
                     <span v-translate>Start my project</span>
                     <i v-bind:class="get_icon" data-test="project-submission-icon" />
@@ -48,24 +48,16 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { State, namespace } from "vuex-class";
-const configuration = namespace("configuration");
+import { useStore } from "../../stores/root";
 
 @Component({})
 export default class ProjectInformationFooter extends Vue {
-    @State
-    is_creating_project!: boolean;
-
-    @configuration.State
-    is_project_approval_required!: boolean;
-
-    @configuration.State
-    are_restricted_users_allowed!: boolean;
+    root_store = useStore();
 
     is_loading = false;
 
     get get_icon(): string {
-        if (!this.is_creating_project) {
+        if (!this.root_store.is_creating_project) {
             return "fa tlp-button-icon-right fa-arrow-circle-o-right";
         }
 
@@ -73,7 +65,7 @@ export default class ProjectInformationFooter extends Vue {
     }
 
     resetProjectCreationError(): void {
-        this.$store.commit("resetProjectCreationError");
+        this.root_store.resetProjectCreationError();
     }
 }
 </script>

@@ -23,25 +23,25 @@ import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import * as element_checker from "../../helpers/is-element-in-viewport";
 import VueRouter from "vue-router";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import type { RootState } from "../../store/type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import TemplateFooter from "./TemplateFooter.vue";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 
+let is_template_selected = false;
 describe("TemplateFooter", () => {
-    let factory: Wrapper<TemplateFooter>, router: VueRouter, store: Store, state: RootState;
-    beforeEach(async () => {
-        state = {} as RootState;
-        const getters = {
-            is_template_selected: false,
-        };
+    let router: VueRouter;
 
-        const store_options = {
-            state,
-            getters,
-        };
+    async function createWrapper(): Promise<Wrapper<TemplateFooter>> {
+        const useStore = defineStore("root", {
+            getters: {
+                is_template_selected: () => (): boolean => {
+                    return is_template_selected;
+                },
+            },
+        });
 
-        store = createStoreMock(store_options);
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
         router = new VueRouter({
             routes: [
@@ -56,35 +56,28 @@ describe("TemplateFooter", () => {
             ],
         });
 
-        factory = shallowMount(TemplateFooter, {
+        return shallowMount(TemplateFooter, {
             localVue: await createProjectRegistrationLocalVue(),
             router,
-            mocks: { $store: store },
+            pinia,
         });
-    });
+    }
 
     describe("Next button", () => {
         it(`Enables the 'Next' button when template is selected`, async () => {
-            const wrapper = factory;
+            is_template_selected = true;
+            const wrapper = await createWrapper();
 
             const next_button: HTMLButtonElement = wrapper.get(
                 "[data-test=project-registration-next-button]",
             ).element as HTMLButtonElement;
 
-            expect(next_button.getAttribute("disabled")).toBe("disabled");
-
-            wrapper.vm.$store.getters.is_template_selected = true;
-            await wrapper.vm.$nextTick();
-
             expect(next_button.getAttribute("disabled")).toBeNull();
         });
 
         it(`Go to 'Project information' step when the 'Next' button is clicked`, async () => {
-            const wrapper = factory;
-
-            wrapper.vm.$store.getters.is_template_selected = true;
-            await wrapper.vm.$nextTick();
-
+            is_template_selected = true;
+            const wrapper = await createWrapper();
             wrapper.get("[data-test=project-registration-next-button]").trigger("click");
 
             expect(wrapper.vm.$route.name).toBe("information");
@@ -95,14 +88,8 @@ describe("TemplateFooter", () => {
         it("Should have pinned class on scroll when element is NOT visible", async () => {
             jest.spyOn(element_checker, "isElementInViewport").mockReturnValue(false);
 
-            const wrapper = shallowMount(TemplateFooter, {
-                localVue: await createProjectRegistrationLocalVue(),
-                router,
-                mocks: { $store: store },
-            });
-
-            wrapper.vm.$store.getters.is_template_selected = true;
-            await wrapper.vm.$nextTick();
+            is_template_selected = true;
+            const wrapper = await createWrapper();
 
             const template_footer: HTMLElement = wrapper.get("[data-test=project-template-footer]")
                 .element as unknown as HTMLElement;
@@ -110,10 +97,9 @@ describe("TemplateFooter", () => {
             expect(template_footer.classList).toContain("pinned");
         });
 
-        it("Should NOT have pinned class on scroll when element is already visible", () => {
-            const wrapper = factory;
-
-            wrapper.vm.$store.getters.is_template_selected = true;
+        it("Should NOT have pinned class on scroll when element is already visible", async () => {
+            is_template_selected = true;
+            const wrapper = await createWrapper();
 
             const template_footer: HTMLElement = wrapper.get("[data-test=project-template-footer]")
                 .element as unknown as HTMLElement;
@@ -121,10 +107,8 @@ describe("TemplateFooter", () => {
             expect(template_footer.classList).not.toContain("pinned");
         });
 
-        it("Should NOT have pinned class when no template have been selected", () => {
-            const wrapper = factory;
-
-            wrapper.vm.$store.getters.is_template_selected = false;
+        it("Should NOT have pinned class when no template have been selected", async () => {
+            const wrapper = await createWrapper();
             const template_footer: HTMLElement = wrapper.get("[data-test=project-template-footer]")
                 .element as unknown as HTMLElement;
 

@@ -20,8 +20,12 @@
 
 <template>
     <div>
-        <div class="tlp-alert-danger" v-if="has_error" data-test="project-creation-failed">
-            {{ error }}
+        <div
+            class="tlp-alert-danger"
+            v-if="root_store.has_error"
+            data-test="project-creation-failed"
+        >
+            {{ root_store.error }}
         </div>
 
         <div class="project-registration-content">
@@ -65,7 +69,7 @@
 
                         <div
                             class="tlp-form-element project-information-privacy"
-                            v-if="can_user_choose_project_visibility"
+                            v-if="root_store.can_user_choose_project_visibility"
                         >
                             <label
                                 class="tlp-label"
@@ -82,12 +86,12 @@
                         <field-description v-model="field_description" />
                         <trove-category-list
                             v-model="trove_cats"
-                            v-for="trovecat in trove_categories"
+                            v-for="trovecat in root_store.trove_categories"
                             v-bind:key="trovecat.id"
                             v-bind:trovecat="trovecat"
                         />
                         <fields-list
-                            v-for="field in project_fields"
+                            v-for="field in root_store.project_fields"
                             v-bind:key="field.group_desc_id + field.desc_name"
                             v-bind:field="field"
                         />
@@ -108,16 +112,12 @@ import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
 import type {
-    FieldData,
     FieldProperties,
     ProjectNameProperties,
     ProjectProperties,
     ProjectVisibilityProperties,
-    TemplateData,
-    TroveCatData,
     TroveCatProperties,
 } from "../../type";
-import { Getter, State, namespace } from "vuex-class";
 import EventBus from "../../helpers/event-bus";
 import TroveCategoryList from "./TroveCat/TroveCategoryList.vue";
 import FieldDescription from "./Fields/FieldDescription.vue";
@@ -125,7 +125,7 @@ import PolicyAgreement from "./Agreement/PolicyAgreement.vue";
 import FieldsList from "./Fields/FieldsList.vue";
 import { redirectToUrl } from "../../helpers/location-helper";
 import { buildProjectPrivacy } from "../../helpers/privacy-builder";
-const configuration = namespace("configuration");
+import { useStore } from "../../stores/root";
 
 @Component({
     components: {
@@ -140,38 +140,7 @@ const configuration = namespace("configuration");
     },
 })
 export default class ProjectInformation extends Vue {
-    @Getter
-    has_error!: boolean;
-
-    @Getter
-    is_template_selected!: boolean;
-
-    @State
-    error!: string;
-
-    @configuration.State
-    are_restricted_users_allowed!: boolean;
-
-    @configuration.State
-    project_default_visibility!: string;
-
-    @State
-    selected_tuleap_template!: TemplateData;
-
-    @configuration.State
-    is_project_approval_required!: boolean;
-
-    @configuration.State
-    trove_categories!: Array<TroveCatData>;
-
-    @configuration.State
-    project_fields!: Array<FieldData>;
-
-    @State
-    selected_company_template!: TemplateData;
-
-    @configuration.State
-    can_user_choose_project_visibility!: boolean;
+    root_store = useStore();
 
     selected_visibility = "";
 
@@ -191,18 +160,18 @@ export default class ProjectInformation extends Vue {
     field_list: Array<FieldProperties> = [];
 
     mounted(): void {
-        if (!this.is_template_selected) {
+        if (!this.root_store.is_template_selected) {
             this.$router.push("new");
             return;
         }
 
-        if (this.selected_tuleap_template) {
-            this.selected_template_name = this.selected_tuleap_template.title;
-        } else if (this.selected_company_template) {
-            this.selected_template_name = this.selected_company_template.title;
+        if (this.root_store.selected_tuleap_template) {
+            this.selected_template_name = this.root_store.selected_tuleap_template.title;
+        } else if (this.root_store.selected_company_template) {
+            this.selected_template_name = this.root_store.selected_company_template.title;
         }
 
-        this.selected_visibility = this.project_default_visibility;
+        this.selected_visibility = this.root_store.project_default_visibility;
         EventBus.$on("update-project-name", this.updateProjectName);
         EventBus.$on("choose-trove-cat", this.updateTroveCat);
         EventBus.$on("update-field-list", this.updateFieldList);
@@ -253,15 +222,15 @@ export default class ProjectInformation extends Vue {
         };
 
         project_properties = buildProjectPrivacy(
-            this.selected_tuleap_template,
-            this.selected_company_template,
+            this.root_store.selected_tuleap_template,
+            this.root_store.selected_company_template,
             this.selected_visibility,
             project_properties,
         );
 
-        await this.$store.dispatch("createProject", project_properties);
+        await this.root_store.createProject(project_properties);
 
-        if (!this.is_project_approval_required) {
+        if (!this.root_store.is_project_approval_required) {
             const params = new URLSearchParams();
             params.set("should-display-created-project-modal", "true");
             if (project_properties.xml_template_name) {
@@ -280,7 +249,7 @@ export default class ProjectInformation extends Vue {
     }
 
     resetProjectCreationError(): void {
-        this.$store.commit("resetProjectCreationError");
+        this.root_store.resetProjectCreationError();
     }
 }
 </script>

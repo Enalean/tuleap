@@ -29,7 +29,7 @@
         required
     >
         <option
-            v-if="are_restricted_users_allowed"
+            v-if="root_store.are_restricted_users_allowed"
             value="unrestricted"
             v-translate
             data-test="unrestricted"
@@ -40,7 +40,7 @@
         <option value="private" data-test="private" v-translate>Private</option>
         <option
             value="private-wo-restr"
-            v-if="are_restricted_users_allowed"
+            v-if="root_store.are_restricted_users_allowed"
             data-test="private-wo-restr"
             v-translate
         >
@@ -61,17 +61,15 @@ import {
     ACCESS_PUBLIC,
     ACCESS_PUBLIC_UNRESTRICTED,
 } from "../../../constant";
-import { namespace } from "vuex-class";
-const configuration = namespace("configuration");
+import { useStore } from "../../../stores/root";
 
 @Component
 export default class ProjectInformationInputPrivacyList extends Vue {
-    @configuration.State
-    are_restricted_users_allowed!: boolean;
+    root_store = useStore();
 
     private list_picker_instance: ListPicker | null = null;
 
-    selected_visibility = this.$store.state.configuration.project_default_visibility;
+    selected_visibility = this.root_store.project_default_visibility;
 
     mounted(): void {
         setTimeout(() => {
@@ -110,7 +108,7 @@ export default class ProjectInformationInputPrivacyList extends Vue {
                     "Project content is available to all authenticated users. Please note that more restrictive permissions might exist on some items.",
                 );
             case ACCESS_PRIVATE:
-                if (this.are_restricted_users_allowed) {
+                if (this.root_store.are_restricted_users_allowed) {
                     return this.$gettext(
                         "Only project members can access project content. Restricted users can be added to the project.",
                     );

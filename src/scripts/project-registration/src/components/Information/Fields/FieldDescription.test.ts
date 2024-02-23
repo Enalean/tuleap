@@ -22,34 +22,31 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import FieldDescription from "./FieldDescription.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { ConfigurationState } from "../../../store/configuration";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 describe("FieldDescription -", () => {
-    let factory: Wrapper<FieldDescription>;
-    beforeEach(async () => {
-        const configuration_state: ConfigurationState = {
-            is_description_required: false,
-        } as ConfigurationState;
-
-        const getters = {
-            has_error: false,
-            is_template_selected: false,
-        };
-
-        const store = createStoreMock({
-            state: { configuration: configuration_state },
-            getters,
+    async function getWrapper(is_description_required: boolean): Promise<Wrapper<Vue, Element>> {
+        const useStore = defineStore("root", {
+            state: () => ({
+                is_description_required,
+            }),
+            getters: {
+                has_error: () => false,
+                is_template_selected: () => false,
+            },
         });
 
-        factory = shallowMount(FieldDescription, {
+        const pinia = createTestingPinia();
+        useStore(pinia);
+
+        return shallowMount(FieldDescription, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
+            pinia,
         });
-    });
+    }
     it("add correct attribute when description is required", async () => {
-        const wrapper = factory;
-        wrapper.vm.$store.state.configuration.is_description_required = true;
+        const wrapper = await getWrapper(true);
 
         const description = wrapper.get("[data-test=project-description]")
             .element as HTMLTextAreaElement;
@@ -59,8 +56,7 @@ describe("FieldDescription -", () => {
     });
 
     it("add correct attribute when description is NOT requried", async () => {
-        const wrapper = factory;
-        wrapper.vm.$store.state.configuration.is_description_required = false;
+        const wrapper = await getWrapper(false);
 
         const description = wrapper.get("[data-test=project-description]")
             .element as HTMLTextAreaElement;

@@ -17,12 +17,12 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vuex from "vuex";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "@tuleap/vue2-gettext-init";
 import type { Vue } from "vue/types/vue";
 import VueRouter from "vue-router";
+import { PiniaVuePlugin } from "pinia";
 
 export async function createProjectRegistrationLocalVue(): Promise<typeof Vue> {
     const local_vue = createLocalVue();
@@ -30,9 +30,9 @@ export async function createProjectRegistrationLocalVue(): Promise<typeof Vue> {
         throw new Error("Fallback to default");
     });
 
-    local_vue.use(Vuex);
     local_vue.use(VueDOMPurifyHTML);
     local_vue.use(VueRouter);
+    local_vue.use(PiniaVuePlugin);
 
     return local_vue;
 }

@@ -22,24 +22,18 @@ import UserProjectList from "./UserProjectList.vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { TemplateData } from "../../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { RootState } from "../../../../store/type";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
+import { useStore } from "../../../../stores/root";
 
 describe("UserProjectList", () => {
     let wrapper: Wrapper<UserProjectList>,
         project_list: Array<TemplateData>,
         project_a: TemplateData,
-        store: Store;
+        selectedCompanyTemplate: TemplateData | null;
+    const set_selected_template_mock = jest.fn();
 
     beforeEach(() => {
-        const state: RootState = {} as RootState;
-
-        const store_options = {
-            state,
-        };
-        store = createStoreMock(store_options);
-
         project_a = {
             title: "My A project",
             description: "",
@@ -59,32 +53,40 @@ describe("UserProjectList", () => {
         project_list = [project_a, project_b];
     });
 
-    it("Spawns the UserProjectList component", async () => {
-        wrapper = shallowMount(UserProjectList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            propsData: { projectList: project_list, selectedCompanyTemplate: null },
-            mocks: { $store: store },
+    async function getWrapper(): Promise<Wrapper<UserProjectList>> {
+        const useStore = defineStore("root", {
+            actions: {
+                setSelectedTemplate: () => set_selected_template_mock,
+            },
         });
+
+        const pinia = createTestingPinia();
+        useStore(pinia);
+
+        return shallowMount(UserProjectList, {
+            localVue: await createProjectRegistrationLocalVue(),
+            pinia,
+            propsData: { projectList: project_list, selectedCompanyTemplate },
+        });
+    }
+
+    it("Spawns the UserProjectList component", async () => {
+        selectedCompanyTemplate = null;
+        wrapper = await getWrapper();
 
         expect(wrapper).toMatchSnapshot();
     });
 
     it("Should select the previously selected project by default when one has been previously selected", async () => {
-        wrapper = shallowMount(UserProjectList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            propsData: { projectList: project_list, selectedCompanyTemplate: project_a },
-            mocks: { $store: store },
-        });
+        selectedCompanyTemplate = project_a;
+        wrapper = await getWrapper();
 
         expect(wrapper.vm.$data.selected_project).toBe(project_a);
     });
 
     it("Should reset the selection when the currently selected template has been reset", async () => {
-        wrapper = shallowMount(UserProjectList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            propsData: { projectList: project_list, selectedCompanyTemplate: project_a },
-            mocks: { $store: store },
-        });
+        selectedCompanyTemplate = project_a;
+        wrapper = await getWrapper();
 
         wrapper.vm.$data.selected_project = null;
 
@@ -92,11 +94,9 @@ describe("UserProjectList", () => {
     });
 
     it(`user can select a project`, async () => {
-        wrapper = shallowMount(UserProjectList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            propsData: { projectList: project_list, selectedCompanyTemplate: null },
-            mocks: { $store: store },
-        });
+        selectedCompanyTemplate = null;
+        wrapper = await getWrapper();
+        const store = useStore();
 
         wrapper.vm.$data.selected_project = project_a;
         await wrapper.vm.$nextTick();
@@ -104,15 +104,13 @@ describe("UserProjectList", () => {
         wrapper.get("[data-test=from-another-project]").trigger("change");
         await wrapper.vm.$nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("setSelectedTemplate", project_a);
+        expect(store.setSelectedTemplate).toHaveBeenCalled();
     });
 
     it(`displays a message when user is not administrator of any project`, async () => {
-        wrapper = shallowMount(UserProjectList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            propsData: { projectList: [], selectedCompanyTemplate: null },
-            mocks: { $store: store },
-        });
+        project_list = [];
+        selectedCompanyTemplate = project_a;
+        wrapper = await getWrapper();
 
         expect(wrapper.find("[data-test=from-another-project]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=no-project-list]").exists()).toBeTruthy();

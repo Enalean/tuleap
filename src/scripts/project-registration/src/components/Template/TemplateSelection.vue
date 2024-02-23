@@ -21,7 +21,7 @@
     <div class="project-registration-template-selection">
         <nav class="project-registration-template-selection-tabs tlp-tabs tlp-tabs-vertical">
             <a
-                v-if="company_templates.length > 0"
+                v-if="root_store.company_templates.length > 0"
                 v-on:click.prevent="setSelectedTemplateCategory(CATEGORY_ACME)"
                 v-bind:class="getTabsClasses(CATEGORY_ACME)"
                 data-test="project-registration-acme-templates-tab"
@@ -30,7 +30,7 @@
                 {{ platform_template_name }}
             </a>
             <a
-                v-if="tuleap_templates.length > 0"
+                v-if="root_store.tuleap_templates.length > 0"
                 v-on:click.prevent="setSelectedTemplateCategory(CATEGORY_TULEAP)"
                 v-bind:class="getTabsClasses(CATEGORY_TULEAP)"
                 data-test="project-registration-tuleap-templates-tab"
@@ -73,14 +73,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { namespace, State } from "vuex-class";
 import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
 import CompanyTemplatesList from "./Company/CompanyTemplateList.vue";
 import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
 import CategorisedExternalTemplatesList from "./CategorisedExternalTemplates/CategorisedExternalTemplatesList.vue";
-import type { ExternalTemplateCategory, ExternalTemplateData, TemplateData } from "../../type";
-
-const configuration = namespace("configuration");
+import type { ExternalTemplateCategory, ExternalTemplateData } from "../../type";
+import { useStore } from "../../stores/root";
 
 @Component({
     components: {
@@ -98,23 +96,9 @@ export default class TemplateSelection extends Vue {
     external_templates_categories: ExternalTemplateCategory[] = [];
     categorised_external_templates_map = new Map<string, ExternalTemplateData[]>();
 
-    @configuration.State
-    company_name!: string;
-
-    @configuration.State
-    tuleap_templates!: TemplateData[];
-
-    @configuration.State
-    company_templates!: TemplateData[];
-
-    @configuration.State
-    external_templates!: ExternalTemplateData[];
-
-    @State
-    selected_template_category!: string | null;
-
+    root_store = useStore();
     mounted(): void {
-        this.external_templates.forEach((template) => {
+        this.root_store.external_templates.forEach((template) => {
             const category_templates = this.categorised_external_templates_map.get(
                 template.template_category.shortname,
             );
@@ -128,16 +112,16 @@ export default class TemplateSelection extends Vue {
             ]);
         });
 
-        if (this.selected_template_category !== null) {
+        if (this.root_store.selected_template_category !== null) {
             return;
         }
 
-        if (this.company_templates.length > 0) {
+        if (this.root_store.company_templates.length > 0) {
             this.setSelectedTemplateCategory(this.CATEGORY_ACME);
             return;
         }
 
-        if (this.tuleap_templates.length > 0) {
+        if (this.root_store.tuleap_templates.length > 0) {
             this.setSelectedTemplateCategory(this.CATEGORY_TULEAP);
             return;
         }
@@ -154,12 +138,12 @@ export default class TemplateSelection extends Vue {
     }
 
     setSelectedTemplateCategory(template_category: string): void {
-        this.$store.commit("resetSelectedTemplate");
-        this.$store.commit("setSelectedTemplateCategory", template_category);
+        this.root_store.resetSelectedTemplate();
+        this.root_store.setSelectedTemplateCategory(template_category);
     }
 
     isTemplateCategorySelected(template_category: string): boolean {
-        return this.selected_template_category === template_category;
+        return this.root_store.selected_template_category === template_category;
     }
 
     getTabsClasses(template_category: string): string[] {
@@ -183,10 +167,10 @@ export default class TemplateSelection extends Vue {
     }
 
     get platform_template_name(): string {
-        if (this.company_name === "Tuleap") {
+        if (this.root_store.company_name === "Tuleap") {
             return this.$gettext("Custom templates");
         }
-        return this.company_name;
+        return this.root_store.company_name;
     }
 }
 </script>

@@ -21,7 +21,6 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import TemplateCardContent from "../TemplateCard.vue";
 import CategorisedExternalTemplatesList from "./CategorisedExternalTemplatesList.vue";
 
@@ -29,9 +28,6 @@ describe("CategorisedExternalTemplatesList", () => {
     async function getWrapper(): Promise<Wrapper<CategorisedExternalTemplatesList>> {
         return shallowMount(CategorisedExternalTemplatesList, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: {
-                $store: createStoreMock({}),
-            },
             propsData: {
                 templates: [
                     {

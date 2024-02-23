@@ -19,13 +19,13 @@
   -->
 
 <template>
-    <div class="project-registration-templates" v-if="tuleap_templates.length > 0">
+    <div class="project-registration-templates" v-if="root_store.tuleap_templates.length > 0">
         <section
             class="project-registration-default-templates-section"
             data-test="tuleap-templates-section"
         >
             <template-card
-                v-for="template of tuleap_templates"
+                v-for="template of root_store.tuleap_templates"
                 v-bind:key="template.id"
                 v-bind:template="template"
             />
@@ -37,15 +37,12 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import TemplateCard from "../TemplateCard.vue";
-import type { TemplateData } from "../../../type";
-import { namespace } from "vuex-class";
-const configuration = namespace("configuration");
+import { useStore } from "../../../stores/root";
 
 @Component({
     components: { TemplateCard },
 })
 export default class TuleapTemplateList extends Vue {
-    @configuration.State
-    tuleap_templates!: TemplateData[];
+    public root_store = useStore();
 }
 </script>

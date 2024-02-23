@@ -22,13 +22,15 @@ import Vue from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import App from "./components/App.vue";
 import type { TemplateData, TroveCatData } from "./type";
-import { createStore } from "./store";
-import type { RootState } from "./store/type";
+import { useStore } from "./stores/root";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createRouter } from "./router";
-import type { ConfigurationState } from "./store/configuration";
+import { createPinia, PiniaVuePlugin } from "pinia";
+import type { RootState } from "./stores/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    Vue.use(PiniaVuePlugin);
+
     const vue_mount_point = document.getElementById("project-registration");
     if (!vue_mount_point) {
         return;
@@ -80,7 +82,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         external_templates = JSON.parse(external_templates_json);
     }
 
-    const configuration_state: ConfigurationState = {
+    const pinia = createPinia();
+
+    const AppComponent = Vue.extend(App);
+
+    const root_state: RootState = {
         tuleap_templates,
         external_templates,
         are_restricted_users_allowed,
@@ -92,9 +98,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         company_templates,
         company_name,
         can_user_choose_project_visibility,
-    };
-
-    const root_state: RootState = {
         selected_tuleap_template: null,
         selected_company_template: null,
         selected_template_category: null,
@@ -112,12 +115,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
     });
 
-    const AppComponent = Vue.extend(App);
-    const store = createStore(root_state, configuration_state);
+    const store = useStore(pinia);
+    store.$patch(root_state);
     const router = createRouter();
 
     new AppComponent({
-        store,
+        pinia,
         router,
     }).$mount(vue_mount_point);
 });

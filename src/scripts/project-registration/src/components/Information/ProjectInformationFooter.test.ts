@@ -21,41 +21,51 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { RootState } from "../../store/type";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
+import { jest } from "@jest/globals";
+import { useStore } from "../../stores/root";
 
 describe("ProjectInformationFooter", () => {
-    let factory: Wrapper<ProjectInformationFooter>, store: Store;
+    const resetProjectCreationError = jest.fn();
+    let is_creating_project = false;
 
-    beforeEach(async () => {
-        const state: RootState = {
-            is_creating_project: false,
-        } as RootState;
-
-        const store_options = {
-            state,
-        };
-        store = createStoreMock(store_options);
-
-        factory = shallowMount(ProjectInformationFooter, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
+    async function getWrapper(): Promise<Wrapper<Vue, Element>> {
+        const useStore = defineStore("root", {
+            state: () => ({
+                is_creating_project,
+            }),
+            getters: {
+                has_error: () => false,
+            },
+            actions: {
+                resetProjectCreationError,
+            },
         });
-    });
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
-    it(`reset the project creation error when the 'Back' button is clicked`, () => {
-        factory.get("[data-test=project-registration-back-button]").trigger("click");
-        expect(store.commit).toHaveBeenCalledWith("resetProjectCreationError");
+        return shallowMount(ProjectInformationFooter, {
+            localVue: await createProjectRegistrationLocalVue(),
+            pinia,
+        });
+    }
+
+    it(`reset the project creation error when the 'Back' button is clicked`, async () => {
+        const wrapper = await getWrapper();
+        const store = useStore();
+        wrapper.get("[data-test=project-registration-back-button]").trigger("click");
+        await wrapper.vm.$nextTick();
+        expect(store.resetProjectCreationError).toHaveBeenCalled();
     });
 
     it(`Displays spinner when project is creating`, async () => {
-        factory.vm.$store.getters.has_error = false;
-        factory.vm.$store.state.is_creating_project = true;
-        await factory.vm.$nextTick();
+        is_creating_project = true;
+        const wrapper = await getWrapper();
+        await wrapper.vm.$nextTick();
 
-        expect(factory.get("[data-test=project-submission-icon]").classes()).toEqual([
+        expect(wrapper.get("[data-test=project-submission-icon]").classes()).toEqual([
             "fa",
             "tlp-button-icon-right",
             "fa-spin",
@@ -63,11 +73,11 @@ describe("ProjectInformationFooter", () => {
         ]);
     });
 
-    it(`Does not display spinner by default`, () => {
-        factory.vm.$store.getters.has_error = false;
-        factory.vm.$store.state.is_creating_project = false;
+    it(`Does not display spinner by default`, async () => {
+        is_creating_project = false;
+        const wrapper = await getWrapper();
 
-        expect(factory.get("[data-test=project-submission-icon]").classes()).toEqual([
+        expect(wrapper.get("[data-test=project-submission-icon]").classes()).toEqual([
             "fa",
             "tlp-button-icon-right",
             "fa-arrow-circle-o-right",

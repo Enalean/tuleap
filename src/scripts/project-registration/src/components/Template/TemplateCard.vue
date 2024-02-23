@@ -56,27 +56,22 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Getter, Mutation } from "vuex-class";
-import type { AdvancedOptions, TemplateData } from "../../type";
+import type { TemplateData } from "../../type";
+import { useStore } from "../../stores/root";
 
 @Component({})
 export default class TemplateCard extends Vue {
     @Prop({ required: true })
     readonly template!: TemplateData;
 
-    @Getter
-    is_currently_selected_template!: (template: TemplateData) => boolean;
-
-    @Mutation
-    setAdvancedActiveOption!: (option: AdvancedOptions | null) => void;
+    root_store = useStore();
 
     storeSelectedTemplate(): void {
-        this.$store.dispatch("setSelectedTemplate", this.template);
-        this.setAdvancedActiveOption(null);
+        this.root_store.setSelectedTemplate(this.template);
     }
 
     get is_checked(): boolean {
-        return this.is_currently_selected_template(this.template);
+        return this.root_store.is_currently_selected_template(this.template);
     }
 }
 </script>
