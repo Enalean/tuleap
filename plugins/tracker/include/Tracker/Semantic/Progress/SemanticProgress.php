@@ -30,6 +30,7 @@ use Tracker_FormElement_Field;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -104,10 +105,10 @@ class SemanticProgress extends \Tracker_Semantic
             \Tracker_FormElementFactory::instance()
         );
 
-        $assets = new IncludeAssets(__DIR__ . '/../../../../frontend-assets', '/assets/trackers');
-        $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $assets->getFileURL("tracker-semantic-progress-options-selector.js")
-        );
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset(
+            new IncludeAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+            'progress-semantic.js'
+        ));
 
         $renderer->renderToPage(
             'semantic-progress-admin',

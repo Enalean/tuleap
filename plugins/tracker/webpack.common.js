@@ -49,15 +49,8 @@ const config_for_flaming_parrot = {
     entry: {
         "modal-v2": "./scripts/modal-v2/modal-in-place.js",
         "tracker-header": "./scripts/header/header.ts",
-        "tracker-admin": "./scripts/tracker-admin/index.js",
         "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",
         "tracker-report-expert-mode": "./scripts/report/index.js",
-        "tracker-semantic-progress-options-selector":
-            "./scripts/semantics/progress/admin-selectors.ts",
-        "tracker-admin-fields-permissions": "./scripts/tracker-admin/admin-fields-permissions",
-        "tracker-semantic-status": "./scripts/semantics/status/status-picker.ts",
-        "tracker-semantic-done": "./scripts/semantics/status/done-picker.ts",
-        TrackerAdminFields: "./scripts/TrackerAdminFields.js",
     },
     context,
     output,
@@ -83,7 +76,6 @@ const config_for_burning_parrot = {
         "admin-type": "./scripts/admin-type.js",
         "global-admin-artifact-links": "./scripts/global-admin/artifact-links.js",
         "global-admin-trackers": "./scripts/global-admin/trackers.ts",
-        "tracker-admin-semantics": "./scripts/tracker-admin/semantics-admin.ts",
         "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
     },
     context,
@@ -105,7 +97,6 @@ let entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     print: "./themes/default/css/print.scss",
     "burndown-chart": "./themes/burndown-chart.scss",
-    colorpicker: "./themes/FlamingParrot/css/colorpicker.scss",
     "dependencies-matrix": "./themes/FlamingParrot/css/dependencies-matrix.scss",
     "tracker-bp": "./themes/BurningParrot/css/tracker.scss",
 };

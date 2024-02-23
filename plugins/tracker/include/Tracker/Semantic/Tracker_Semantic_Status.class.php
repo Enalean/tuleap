@@ -235,10 +235,10 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         $template_rendreder      = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
         $admin_presenter_builder = new AdminPresenterBuilder(Tracker_FormElementFactory::instance(), new SemanticDoneDao());
 
-        $assets = new IncludeAssets(__DIR__ . '/../../../frontend-assets', '/assets/trackers');
-        $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $assets->getFileURL("tracker-semantic-status.js")
-        );
+        $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset(
+            new IncludeAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+            'status-semantic.js'
+        ));
 
         echo $template_rendreder->renderToString(
             'semantics/admin-status-open',

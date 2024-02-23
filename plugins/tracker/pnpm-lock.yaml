@@ -11,21 +11,12 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:^
     version: link:../../lib/frontend/fetch-result
-  '@tuleap/gettext':
-    specifier: workspace:*
-    version: link:../../lib/frontend/gettext
-  '@tuleap/list-picker':
-    specifier: workspace:*
-    version: link:../../lib/frontend/list-picker
   '@tuleap/mention':
     specifier: workspace:*
     version: link:../../lib/frontend/mention
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
     specifier: workspace:*
     version: link:scripts/lib/artifact-ckeditor-image-upload
-  '@tuleap/plugin-tracker-color-picker':
-    specifier: workspace:*
-    version: link:scripts/lib/colorpicker
   '@tuleap/plugin-tracker-constants':
     specifier: workspace:*
     version: link:scripts/lib/constants
@@ -62,9 +53,6 @@ dependencies:
   '@tuleap/tooltip':
     specifier: workspace:*
     version: link:../../lib/frontend/tooltip
-  '@tuleap/user-and-ugroup-autocompleter':
-    specifier: workspace:*
-    version: link:../../lib/frontend/user-and-ugroup-autocompleter
   d3-array:
     specifier: ^3.0.1
     version: 3.0.1

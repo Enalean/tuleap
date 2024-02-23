@@ -16,6 +16,10 @@
         "rich-text-editor": {
             "src": "scripts/lib/rich-text-editor/src",
             "po": "scripts/lib/rich-text-editor/po"
+        },
+        "tracker-administration": {
+            "src": "scripts/tracker-admin/src",
+            "po": "scripts/tracker-admin/po"
         }
     },
     "gettext-vue": {

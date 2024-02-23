@@ -1,11 +1,10 @@
 {
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
     "compilerOptions": {
-        "types": ["jest", "jquery", "bootstrap"],
+        "types": ["jquery", "bootstrap"],
     },
     "include": [
         "scripts/tracker-homepage/**/*",
         "scripts/header/**/*",
-        "scripts/tracker-admin/**/*",
     ]
 }

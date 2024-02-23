@@ -40,6 +40,7 @@ use Tracker_Semantic_Status;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use XML_SimpleXMLCDATAFactory;
 
 class SemanticDone extends Tracker_Semantic
@@ -152,10 +153,10 @@ class SemanticDone extends Tracker_Semantic
 
         $csrf = $this->getCSRFSynchronizerToken();
 
-        $assets = new IncludeAssets(__DIR__ . '/../../../../../frontend-assets', '/assets/trackers');
-        $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $assets->getFileURL("tracker-semantic-done.js")
-        );
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset(
+            new IncludeAssets(__DIR__ . '/../../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+            'done-semantic.js'
+        ));
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/semantics');
         $presenter = new SemanticDoneAdminPresenter(
             $csrf,

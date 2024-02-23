@@ -1,0 +1,28 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-administration",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/gettext": "workspace:*",
+    "@tuleap/list-picker": "workspace:*",
+    "@tuleap/plugin-tracker-color-picker": "workspace:*",
+    "@tuleap/plugin-tracker-email-copy-paste": "workspace:*",
+    "@tuleap/project-background": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
+    "@tuleap/user-and-ugroup-autocompleter": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@types/bootstrap": "^4.5.1",
+    "@types/jquery": "^3.5.5",
+    "jquery": "^3.6.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch",
+    "test": "jest"
+  }
+}
