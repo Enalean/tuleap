@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template\Upload;
 
-use Tuleap\Project\REST\v1\File\ProjectFilePOSTRepresentation;
+use Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation;
 
 final readonly class InsertFileToUpload
 {

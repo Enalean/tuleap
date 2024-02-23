@@ -24,9 +24,9 @@ namespace Tuleap\Layout\NewDropdown;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use ProjectCreationData;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\Registration\ProjectRegistrationErrorsCollection;
 use Tuleap\Project\Registration\RegistrationForbiddenException;

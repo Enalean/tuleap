@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\common\Project\Admin\DescriptionFields;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use ProjectCreationData;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
@@ -32,6 +31,7 @@ use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCol
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 
 final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase

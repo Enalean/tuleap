@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration;
 
 use PFUser;
-use ProjectCreationData;
 use Psr\Log\NullLogger;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -85,7 +85,7 @@ final class ProjectRegistrationCheckerBlockErrorSetTest extends TestCase
 
         $collected_errors = $checker_block_error_set->collectAllErrorsForProjectRegistration(
             $user,
-            new \ProjectCreationData(
+            new ProjectCreationData(
                 new DefaultProjectVisibilityRetriever(),
                 new NullLogger()
             )
@@ -128,7 +128,7 @@ final class ProjectRegistrationCheckerBlockErrorSetTest extends TestCase
 
         $collected_errors = $checker_block_error_set->collectAllErrorsForProjectRegistration(
             $user,
-            new \ProjectCreationData(
+            new ProjectCreationData(
                 new DefaultProjectVisibilityRetriever(),
                 new NullLogger()
             )

@@ -25,7 +25,6 @@ namespace Tuleap\Project\REST\v1;
 
 use Luracast\Restler\RestException;
 use Project;
-use ProjectCreationData;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -33,6 +32,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
 use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForUserException;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;

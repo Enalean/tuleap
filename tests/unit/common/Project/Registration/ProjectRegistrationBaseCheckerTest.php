@@ -24,12 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration;
 
 use ForgeConfig;
-use ProjectCreationData;
 use Psr\Log\NullLogger;
 use Rule_ProjectFullName;
 use Rule_ProjectName;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 

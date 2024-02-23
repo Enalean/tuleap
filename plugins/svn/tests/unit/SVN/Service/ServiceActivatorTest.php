@@ -20,8 +20,8 @@
 
 namespace Tuleap\SVN\Service;
 
-use ProjectCreationData;
 use Service;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -63,7 +63,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->template = $this->createMock(\Project::class);
         $this->template->method('getId')->willReturn(101);
-        $this->data = $this->createMock(\ProjectCreationData::class);
+        $this->data = $this->createMock(ProjectCreationData::class);
 
         $this->params = [
             'template'              => $this->template,

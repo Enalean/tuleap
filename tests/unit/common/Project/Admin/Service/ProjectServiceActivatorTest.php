@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ReferenceManager;
 use ServiceDao;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Service\ServiceCreator;
@@ -71,7 +72,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUnixName('test-name')
             ->build();
 
-        $data = $this->createMock(\ProjectCreationData::class);
+        $data = $this->createMock(ProjectCreationData::class);
         $data->method('getServiceInfo')->willReturn(['is_used' => true]);
         $data->method('isIsBuiltFromXml')->willReturn(false);
 
@@ -103,7 +104,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUnixName('test-name')
             ->build();
 
-        $data = $this->createMock(\ProjectCreationData::class);
+        $data = $this->createMock(ProjectCreationData::class);
         $data->method('getServiceInfo')->willReturn([]);
         $data->method('isIsBuiltFromXml')->willReturn(false);
 
@@ -151,7 +152,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUnixName('test-name')
             ->build();
 
-        $data = $this->createMock(\ProjectCreationData::class);
+        $data = $this->createMock(ProjectCreationData::class);
         $data->method('getServiceInfo')->willReturn([]);
         $data->method('isIsBuiltFromXml')->willReturn(false);
 
@@ -180,7 +181,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $template_project = ProjectTestBuilder::aProject()->withId(201)->build();
 
-        $data = $this->createMock(\ProjectCreationData::class);
+        $data = $this->createMock(ProjectCreationData::class);
         $data->method('getServiceInfo')->willReturn(['is_used' => true]);
         $data->method('isIsBuiltFromXml')->willReturn(true);
         $data->method('getDataServices')->willReturn([10 => ['is_used' => true]]);
@@ -236,7 +237,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUnixName('test-name')
             ->build();
 
-        $data = $this->createMock(\ProjectCreationData::class);
+        $data = $this->createMock(ProjectCreationData::class);
         $data->method('getServiceInfo')->willReturn([]);
         $data->method('isIsBuiltFromXml')->willReturn(false);
 
@@ -265,7 +266,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $template_project = ProjectTestBuilder::aProject()->withId(201)->build();
 
-        $data = $this->createMock(\ProjectCreationData::class);
+        $data = $this->createMock(ProjectCreationData::class);
         $data->method('getServiceInfo')->willReturn(['is_used' => true]);
         $data->method('isIsBuiltFromXml')->willReturn(true);
         $data->method('getDataServices')->willReturn([10 => ['is_used' => true]]);
@@ -321,7 +322,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUnixName('test-name')
             ->build();
 
-        $data = $this->createMock(\ProjectCreationData::class);
+        $data = $this->createMock(ProjectCreationData::class);
         $data->method('getServiceInfo')->willReturn([]);
         $data->method('isIsBuiltFromXml')->willReturn(false);
 
@@ -350,7 +351,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $template_project = ProjectTestBuilder::aProject()->withId(201)->build();
 
-        $data = $this->createMock(\ProjectCreationData::class);
+        $data = $this->createMock(ProjectCreationData::class);
         $data->method('getServiceInfo')->willReturn([]);
         $data->method('isIsBuiltFromXml')->willReturn(true);
         $data->method('getDataServices')->willReturn([10 => ['is_used' => true]]);
@@ -403,7 +404,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $template_project = ProjectTestBuilder::aProject()->withId(201)->build();
 
-        $data = $this->createMock(\ProjectCreationData::class);
+        $data = $this->createMock(ProjectCreationData::class);
         $data->method('getServiceInfo')->willReturn([]);
         $data->method('isIsBuiltFromXml')->willReturn(true);
         $data->method('getDataServices')->willReturn([10 => false]);
@@ -453,7 +454,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $template_project = ProjectTestBuilder::aProject()->withId(201)->build();
 
-        $data = $this->createMock(\ProjectCreationData::class);
+        $data = $this->createMock(ProjectCreationData::class);
         $data->method('getServiceInfo')->willReturn(['is_used' => true]);
         $data->method('isIsBuiltFromXml')->willReturn(true);
         $data->method('getDataServices')->willReturn([10 => ['is_used' => true]]);

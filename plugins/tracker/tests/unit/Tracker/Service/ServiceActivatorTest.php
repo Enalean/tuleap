@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Service;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Service;
+use Tuleap\Project\ProjectCreationData;
 
 final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,7 +37,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $tracker_plugin_service;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectCreationData
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectCreationData
      */
     private $project_creation_data;
     private $tracker_v3;
@@ -54,7 +55,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->activator       = new ServiceActivator($this->service_manager, $this->tracker_v3, $this->service_creator);
 
         $this->template              = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
-        $this->project_creation_data = \Mockery::spy(\ProjectCreationData::class);
+        $this->project_creation_data = \Mockery::spy(ProjectCreationData::class);
 
         $this->params = [
             'template'              => $this->template,

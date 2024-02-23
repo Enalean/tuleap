@@ -25,9 +25,9 @@ namespace Tuleap\Project\Admin\Service;
 
 use EventManager;
 use Project;
-use ProjectCreationData;
 use ReferenceManager;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Service\ServiceCreator;
 
@@ -128,7 +128,7 @@ class ProjectServiceActivator
         array $template_service,
         string $short_name,
     ) {
-        $service_info = $data->getServiceInfo($template_service['service_id']);
+        $service_info = $data->getServiceInfo((int) $template_service['service_id']);
         if (isset($service_info['is_used'])) {
             return $service_info['is_used'];
         }
@@ -151,7 +151,7 @@ class ProjectServiceActivator
         }
 
         foreach ($data_services as $id => $is_used) {
-            $service_info = $data->getServiceInfo($id);
+            $service_info = $data->getServiceInfo((int) $id);
             if (! isset($service_info)) {
                 continue;
             }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,22 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project\REST\v1;
+namespace Tuleap\Project\REST\v1\Project;
 
 use PFUser;
-use ProjectCreationData;
 use ProjectManager;
 use Psr\Log\LoggerInterface;
 use ServiceManager;
 use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\InsufficientPermissionToUseProjectAsTemplateException;
 use Tuleap\Project\Registration\Template\ProjectIDTemplateNotProvidedException;
 use Tuleap\Project\Registration\Template\ProjectTemplateIDInvalidException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
+use Tuleap\Project\REST\v1\ProjectPostRepresentation;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use URLVerification;
 use XML_RNGValidator;

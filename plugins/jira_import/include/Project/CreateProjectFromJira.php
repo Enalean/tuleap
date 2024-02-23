@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\Project;
 
 use Project;
-use ProjectCreationData;
 use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
@@ -50,6 +49,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\Template\EmptyTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
