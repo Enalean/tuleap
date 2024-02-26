@@ -17,13 +17,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type {
+    OverviewReportTracker,
+    TrackerWithTimes,
+} from "@tuleap/plugin-timetracking-rest-api-types";
+
 const a_month_ago = new Date();
 a_month_ago.setMonth(a_month_ago.getMonth() - 1);
 
-export const default_state = {
-    report_id: null,
-    user_id: null,
-    are_void_trackers_hidden: null,
+export type ProjectTracker = OverviewReportTracker & {
+    disabled: boolean;
+};
+
+type TimetrackingUser = {
+    user_id: number;
+    user_name: string;
+};
+
+export type OverviewWidgetState = {
+    report_id: number;
+    user_id: number;
+    are_void_trackers_hidden: boolean;
+    start_date: string;
+    end_date: string;
+    error_message: null | string;
+    success_message: null | string;
+    selected_trackers: OverviewReportTracker[];
+    trackers_times: TrackerWithTimes[];
+    is_loading: boolean;
+    is_loading_trackers: boolean;
+    is_report_saved: boolean;
+    reading_mode: boolean;
+    trackers: ProjectTracker[];
+    trackers_ids: number[];
+    projects: ProjectReference[];
+    users: TimetrackingUser[];
+    is_added_tracker: boolean;
+    selected_user_id: number | null;
+};
+
+export const default_state: OverviewWidgetState = {
+    report_id: 0,
+    user_id: 0,
+    are_void_trackers_hidden: false,
     start_date: a_month_ago.toISOString().split("T")[0],
     end_date: new Date().toISOString().split("T")[0],
     error_message: null,
@@ -39,5 +76,5 @@ export const default_state = {
     projects: [],
     users: [],
     is_added_tracker: true,
-    selected_user: null,
+    selected_user_id: null,
 };

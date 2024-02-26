@@ -40,7 +40,7 @@ import { provide } from "vue";
 import TimeTrackingOverviewReadingMode from "./reading-mode/TimeTrackingOverviewReadingMode.vue";
 import TimeTrackingOverviewWritingMode from "./writing-mode/TimeTrackingOverviewWritingMode.vue";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
-import { useOverviewWidgetStore } from "../store/index.js";
+import { useOverviewWidgetStore } from "../store/index";
 
 export default {
     name: "TimeTrackingOverview",

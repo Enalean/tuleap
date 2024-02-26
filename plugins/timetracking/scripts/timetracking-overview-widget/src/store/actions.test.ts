@@ -19,13 +19,20 @@
 
 import { describe, beforeEach, afterEach, it, expect, jest } from "@jest/globals";
 import { setActivePinia, createPinia } from "pinia";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { ERROR_OCCURRED } from "@tuleap/plugin-timetracking-constants";
-import * as rest_querier from "../api/rest-querier.js";
-import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store.js";
+import type {
+    OverviewReport,
+    OverviewReportTracker,
+    TrackerWithTimes,
+} from "@tuleap/plugin-timetracking-rest-api-types";
+import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store";
+import type { OverviewWidgetStoreInstance } from "../../tests/helpers/pinia-test-store";
+import * as rest_querier from "../api/rest-querier";
 
 describe("Store actions", () => {
-    let store;
+    let store: OverviewWidgetStoreInstance;
 
     beforeEach(() => {
         setActivePinia(createPinia());
@@ -37,14 +44,13 @@ describe("Store actions", () => {
     });
 
     describe("initWidgetWithReport - success", () => {
-        it("Given a success response, When report is received, Then no message error is received", async () => {
-            const report = [
-                {
-                    id: 1,
-                    uri: "timetracking_reports/1",
-                    trackers: [{ id: 1, label: "timetracking_tracker" }],
-                },
-            ];
+        it("Given a success response, When report is received, Then no message error is received", async (): Promise<void> => {
+            const report: OverviewReport = {
+                id: 1,
+                uri: "timetracking_reports/1",
+                trackers: [{ id: 1, label: "timetracking_tracker" } as OverviewReportTracker],
+                invalid_trackers: [],
+            };
 
             jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(Promise.resolve([]));
             jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(
@@ -58,7 +64,7 @@ describe("Store actions", () => {
     });
 
     describe("initWidgetWithReport - rest errors", () => {
-        it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
+        it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async (): Promise<void> => {
             jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(Promise.reject());
 
             await store.initWidgetWithReport();
@@ -67,32 +73,19 @@ describe("Store actions", () => {
     });
 
     describe("loadTimes - success", () => {
-        it("Given a success response, When times are received, Then no message error is received", async () => {
-            let trackers = [
+        it("Given a success response, When times are received, Then no message error is received", async (): Promise<void> => {
+            const trackers: TrackerWithTimes[] = [
                 {
-                    artifacts: [
-                        {
-                            minutes: 20,
-                        },
-                        {
-                            minutes: 40,
-                        },
-                    ],
-                    id: "16",
+                    id: 16,
                     label: "tracker",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [],
                 },
                 {
-                    artifacts: [
-                        {
-                            minutes: 20,
-                        },
-                    ],
-                    id: "18",
+                    id: 18,
                     label: "tracker 2",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [],
                 },
@@ -112,15 +105,16 @@ describe("Store actions", () => {
     });
 
     describe("loadTimes - rest errors", () => {
-        it("Given a rest error with a known error message, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
-            mockFetchError(jest.spyOn(rest_querier, "getTrackersFromReport"), {
-                error_json: {
-                    error: {
-                        code: 403,
-                        message: "Forbidden",
-                    },
+        it("Given a rest error with a known error message, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async (): Promise<void> => {
+            const response = {
+                json(): Promise<Record<string, unknown>> {
+                    return Promise.resolve({ error: { code: 403, message: "Forbidden" } });
                 },
-            });
+            } as Response;
+
+            jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(
+                Promise.reject(new FetchWrapperError("?edskmlsdq", response)),
+            );
 
             await store.initWidgetWithReport();
 
@@ -128,7 +122,7 @@ describe("Store actions", () => {
             expect(store.error_message).toBe("403 Forbidden");
         });
 
-        it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
+        it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async (): Promise<void> => {
             jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(Promise.reject());
 
             await store.initWidgetWithReport();
@@ -139,10 +133,10 @@ describe("Store actions", () => {
     });
 
     describe("GetProjects - success", () => {
-        it("Given a success response, When projects are received, Then no message error is received", async () => {
+        it("Given a success response, When projects are received, Then no message error is received", async (): Promise<void> => {
             const projects = [
-                { id: 765, label: "timetracking" },
-                { id: 239, label: "projectTest" },
+                { id: 765, label: "timetracking" } as ProjectReference,
+                { id: 239, label: "projectTest" } as ProjectReference,
             ];
 
             jest.spyOn(rest_querier, "getProjectsWithTimetracking").mockReturnValue(
@@ -153,15 +147,24 @@ describe("Store actions", () => {
 
             expect(store.success_message).toBeNull();
             expect(store.error_message).toBeNull();
-            expect(store.projects).toBe(projects);
+            expect(store.projects).toStrictEqual(projects);
         });
     });
 
     describe("GetTrackers - success", () => {
-        it("Given a success response, When trackers are received, Then no message error is received", async () => {
+        it("Given a success response, When trackers are received, Then no message error is received", async (): Promise<void> => {
+            const project_id = 102;
             const trackers = [
-                { id: 16, label: "tracker_1" },
-                { id: 18, label: "tracker_2" },
+                {
+                    id: 16,
+                    label: "tracker_1",
+                    project: { id: project_id },
+                } as OverviewReportTracker,
+                {
+                    id: 18,
+                    label: "tracker_2",
+                    project: { id: project_id },
+                } as OverviewReportTracker,
             ];
 
             jest.spyOn(rest_querier, "getTrackersWithTimetracking").mockReturnValue(
@@ -170,24 +173,28 @@ describe("Store actions", () => {
 
             store.selected_trackers = [];
 
-            await store.getTrackers();
+            await store.getTrackers(project_id);
 
             expect(store.success_message).toBeNull();
             expect(store.error_message).toBeNull();
-            expect(store.trackers).toBe(trackers);
+            expect(store.trackers).toStrictEqual([
+                { ...trackers[0], disabled: false },
+                { ...trackers[1], disabled: false },
+            ]);
         });
     });
 
     describe("SaveReport - success", () => {
-        it("Given a success response, When report is received, Then no message error is received", async () => {
+        it("Given a success response, When report is received, Then no message error is received", async (): Promise<void> => {
             const success_message = "Report has been successfully saved";
-            const report = {
+            const report: OverviewReport = {
                 id: 1,
                 uri: "timetracking_reports/1",
                 trackers: [
-                    { id: 1, label: "timetracking_tracker" },
-                    { id: 2, label: "timetracking_tracker_2" },
+                    { id: 1, label: "timetracking_tracker" } as OverviewReportTracker,
+                    { id: 2, label: "timetracking_tracker_2" } as OverviewReportTracker,
                 ],
+                invalid_trackers: [],
             };
 
             jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(Promise.resolve([]));
@@ -203,7 +210,7 @@ describe("Store actions", () => {
     });
 
     describe("SaveReport - error", () => {
-        it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
+        it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async (): Promise<void> => {
             jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(Promise.reject());
 
             await store.saveReport("Report has been successfully saved");

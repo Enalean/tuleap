@@ -67,7 +67,7 @@
 import { inject } from "vue";
 import TimeTrackingOverviewProjectOption from "./TimeTrackingOverviewProjectOption.vue";
 import TimeTrackingOverviewTrackersOptions from "./TimeTrackingOverviewTrackersOptions.vue";
-import { useOverviewWidgetStore } from "../../store/index.js";
+import { useOverviewWidgetStore } from "../../store/index";
 
 export default {
     name: "TimeTrackingOverviewWritingTrackers",
@@ -103,7 +103,7 @@ export default {
             this.selected_tracker = value;
         },
         addTracker() {
-            this.overview_store.addSelectedTrackers(this.selected_tracker);
+            this.overview_store.addSelectedTrackers(Number.parseInt(this.selected_tracker, 10));
         },
     },
 };

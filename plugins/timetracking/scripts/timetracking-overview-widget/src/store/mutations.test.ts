@@ -23,44 +23,51 @@
 
 import { describe, beforeEach, afterEach, it, expect } from "@jest/globals";
 import { setActivePinia, createPinia } from "pinia";
-import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store.js";
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type {
+    OverviewReportTracker,
+    TrackerWithTimes,
+} from "@tuleap/plugin-timetracking-rest-api-types";
+import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store";
+import type { OverviewWidgetStoreInstance } from "../../tests/helpers/pinia-test-store";
+import type { ProjectTracker } from "./state";
 
-describe("Store mutations", () => {
-    let store;
+describe("Store mutations", (): void => {
+    let store: OverviewWidgetStoreInstance;
 
-    beforeEach(() => {
+    beforeEach((): void => {
         setActivePinia(createPinia());
         store = useOverviewWidgetTestStore();
     });
 
-    afterEach(() => {
+    afterEach((): void => {
         store.$reset();
     });
 
-    describe("Given a widget with state initialisation", () => {
-        it("When selected trackers are set, state must change too", () => {
-            const trackers = [{ id: 1, label: "timetracking_tracker" }];
+    describe("Given a widget with state initialisation", (): void => {
+        it("When selected trackers are set, state must change too", (): void => {
+            const trackers = [{ id: 1, label: "timetracking_tracker" } as OverviewReportTracker];
 
             store.setSelectedTrackers(trackers);
             expect(store.selected_trackers).toStrictEqual(trackers);
         });
 
-        it("When projects are set, state must change too", () => {
+        it("When projects are set, state must change too", (): void => {
             const projects = [
-                { id: 765, label: "timetracking" },
-                { id: 239, label: "projectTest" },
+                { id: 765, label: "timetracking" } as ProjectReference,
+                { id: 239, label: "projectTest" } as ProjectReference,
             ];
 
             store.setProjects(projects);
             expect(store.projects).toStrictEqual(projects);
         });
 
-        it("When times are set, times and user must change on state", () => {
-            const times = [
+        it("When times are set, times and user must change on state", (): void => {
+            const times: TrackerWithTimes[] = [
                 {
-                    id: "16",
+                    id: 16,
                     label: "tracker",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                     time_per_user: [
                         {
@@ -77,7 +84,7 @@ describe("Store mutations", () => {
             expect(store.users).toStrictEqual([{ user_name: "user", user_id: 102 }]);
         });
 
-        it("When we put new dates, state must change too", () => {
+        it("When we put new dates, state must change too", (): void => {
             store.setStartDate("2018-01-01");
             store.setEndDate("2018-02-02");
 
@@ -85,43 +92,43 @@ describe("Store mutations", () => {
             expect(store.end_date).toBe("2018-02-02");
         });
 
-        it("When we set display void trackers, state must change too", () => {
+        it("When we set display void trackers, state must change too", (): void => {
             store.setDisplayVoidTrackers(false);
             expect(store.are_void_trackers_hidden).toBe(false);
         });
 
-        it("When we init user id, state must change too", () => {
+        it("When we init user id, state must change too", (): void => {
             store.initUserId(102);
             expect(store.user_id).toBe(102);
         });
 
-        it("When we toggle display void trackers, state must change too", () => {
+        it("When we toggle display void trackers, state must change too", (): void => {
             store.setDisplayVoidTrackers(false);
             store.toggleDisplayVoidTrackers();
             expect(store.are_void_trackers_hidden).toBe(true);
         });
 
-        it("When we set loading trackers, state must change too", () => {
+        it("When we set loading trackers, state must change too", (): void => {
             store.setLoadingTrackers(true);
             expect(store.is_loading_trackers).toBe(true);
         });
 
-        it("When we set is_loading, state must change too", () => {
+        it("When we set is_loading, state must change too", (): void => {
             store.setIsLoading(true);
             expect(store.is_loading).toBe(true);
         });
 
-        it("When we set error message, state must change too", () => {
+        it("When we set error message, state must change too", (): void => {
             store.setErrorMessage("error");
             expect(store.error_message).toBe("error");
         });
 
-        it("When we set success message, state must change too", () => {
+        it("When we set success message, state must change too", (): void => {
             store.setSuccessMessage("success");
             expect(store.success_message).toBe("success");
         });
 
-        it("When we reset messages, state must change too", () => {
+        it("When we reset messages, state must change too", (): void => {
             store.setSuccessMessage("success");
             store.setErrorMessage("error");
             store.resetMessages();
@@ -129,15 +136,15 @@ describe("Store mutations", () => {
             expect(store.success_message).toBeNull();
         });
 
-        it("When we toggle reading_mode, state must change too", () => {
+        it("When we toggle reading_mode, state must change too", (): void => {
             store.toggleReadingMode();
             expect(store.reading_mode).toBe(false);
         });
 
-        it("When trackers id are set, state must change too", () => {
+        it("When trackers id are set, state must change too", (): void => {
             const trackers = [
-                { id: 1, label: "timetracking_tracker" },
-                { id: 2, label: "support_tracker" },
+                { id: 1, label: "timetracking_tracker" } as OverviewReportTracker,
+                { id: 2, label: "support_tracker" } as OverviewReportTracker,
             ];
 
             store.setSelectedTrackers(trackers);
@@ -145,46 +152,47 @@ describe("Store mutations", () => {
             expect(store.trackers_ids).toStrictEqual([1, 2]);
         });
 
-        it("When we set selected user, state must change too", () => {
-            const user = {
-                user_name: "user",
-                user_id: 102,
-                minutes: 60,
-            };
+        it("When we set selected user, state must change too", (): void => {
+            const user_id = 102;
 
-            store.setSelectedUser(user);
-            expect(store.selected_user).toStrictEqual(user);
+            store.setSelectedUserId(user_id);
+            expect(store.selected_user_id).toStrictEqual(user_id);
         });
 
-        it("When we is_report_saved, state must change too", () => {
+        it("When we is_report_saved, state must change too", (): void => {
             store.setIsReportSave(true);
             expect(store.is_report_saved).toBe(true);
         });
 
-        it("When we remove a selected tracker, state must change too", () => {
-            const selected_tracker = [{ id: 1, label: "timetracking_tracker", disabled: true }];
-            store.setSelectedTrackers(selected_tracker);
+        it("When we remove a selected tracker, state must change too", (): void => {
+            const selected_tracker = {
+                id: 1,
+                label: "timetracking_tracker",
+                disabled: true,
+            } as ProjectTracker;
+
+            store.setSelectedTrackers([selected_tracker]);
             store.removeSelectedTracker(selected_tracker);
             expect(store.selected_trackers).toStrictEqual([]);
         });
 
-        it("When we set report id, state must change too", () => {
+        it("When we set report id, state must change too", (): void => {
             store.setReportId(12);
             expect(store.report_id).toBe(12);
         });
 
-        describe("When trackers are added, state must change too", () => {
+        describe("When trackers are added, state must change too", (): void => {
             beforeEach(() => {
                 const trackers = [
-                    { id: 1, label: "timetracking_tracker" },
-                    { id: 2, label: "support_tracker" },
-                    { id: 3, label: "task_tracker" },
+                    { id: 1, label: "timetracking_tracker" } as OverviewReportTracker,
+                    { id: 2, label: "support_tracker" } as OverviewReportTracker,
+                    { id: 3, label: "task_tracker" } as OverviewReportTracker,
                 ];
 
                 store.setTrackers(trackers);
             });
 
-            it("When we add already existing selected trackers, nothing should change", () => {
+            it("When we add already existing selected trackers, nothing should change", (): void => {
                 const selected_tracker = [{ id: 1, label: "timetracking_tracker", disabled: true }];
                 const tracker_id = 1;
 
@@ -193,41 +201,47 @@ describe("Store mutations", () => {
             });
         });
 
-        describe("When trackers are set, state must change too", () => {
+        describe("When trackers are set, state must change too", (): void => {
             beforeEach(() => {
-                const trackers = [];
+                const trackers: OverviewReportTracker[] = [];
                 store.setSelectedTrackers(trackers);
             });
 
-            it("When no selected_trackers, no tracker are disabled", () => {
+            it("When no selected_trackers, no tracker are disabled", (): void => {
                 const trackers = [
-                    { id: 1, label: "timetracking_tracker" },
-                    { id: 2, label: "support_tracker" },
-                    { id: 3, label: "task_tracker" },
+                    { id: 1, label: "timetracking_tracker" } as OverviewReportTracker,
+                    { id: 2, label: "support_tracker" } as OverviewReportTracker,
+                    { id: 3, label: "task_tracker" } as OverviewReportTracker,
                 ];
 
                 const tracker_temoin = [
-                    { id: 1, label: "timetracking_tracker", disabled: false },
-                    { id: 2, label: "support_tracker", disabled: false },
-                    { id: 3, label: "task_tracker", disabled: false },
+                    { id: 1, label: "timetracking_tracker", disabled: false } as ProjectTracker,
+                    { id: 2, label: "support_tracker", disabled: false } as ProjectTracker,
+                    { id: 3, label: "task_tracker", disabled: false } as ProjectTracker,
                 ];
 
                 store.setTrackers(trackers);
                 expect(store.trackers).toStrictEqual(tracker_temoin);
             });
 
-            it("When selected_trackers, tracker identic is disabled", () => {
-                store.setSelectedTrackers([{ id: 1, label: "timetracking_tracker" }]);
+            it("When selected_trackers, tracker identic is disabled", (): void => {
+                const already_selected_tracker = {
+                    id: 1,
+                    label: "timetracking_tracker",
+                } as OverviewReportTracker;
+
+                store.setSelectedTrackers([already_selected_tracker]);
+
                 const trackers = [
-                    { id: 1, label: "timetracking_tracker" },
-                    { id: 2, label: "support_tracker" },
-                    { id: 3, label: "task_tracker" },
+                    already_selected_tracker,
+                    { id: 2, label: "support_tracker" } as OverviewReportTracker,
+                    { id: 3, label: "task_tracker" } as OverviewReportTracker,
                 ];
 
                 const tracker_temoin = [
-                    { id: 1, label: "timetracking_tracker", disabled: true },
-                    { id: 2, label: "support_tracker", disabled: false },
-                    { id: 3, label: "task_tracker", disabled: false },
+                    { ...already_selected_tracker, disabled: true } as ProjectTracker,
+                    { id: 2, label: "support_tracker", disabled: false } as ProjectTracker,
+                    { id: 3, label: "task_tracker", disabled: false } as ProjectTracker,
                 ];
 
                 store.setTrackers(trackers);

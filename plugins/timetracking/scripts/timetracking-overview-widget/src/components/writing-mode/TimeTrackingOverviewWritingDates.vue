@@ -62,7 +62,7 @@
 <script>
 import { inject } from "vue";
 import { datePicker } from "tlp";
-import { useOverviewWidgetStore } from "../../store/index.js";
+import { useOverviewWidgetStore } from "../../store/index";
 
 export default {
     name: "TimeTrackingOverviewWritingDates",

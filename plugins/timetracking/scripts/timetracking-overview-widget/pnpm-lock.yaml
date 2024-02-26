@@ -1,18 +1,26 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:*
     version: link:../../../../src/themes/BurningParrot
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/rest-api-types
+  '@tuleap/plugin-timetracking-constants':
+    specifier: workspace:*
+    version: link:../lib/constants
+  '@tuleap/plugin-timetracking-rest-api-types':
+    specifier: workspace:*
+    version: link:../lib/rest-api-types
+  '@tuleap/plugin-timetracking-time-formatters':
+    specifier: workspace:*
+    version: link:../lib/time-formatters
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch
   '@tuleap/vue2-gettext-init':
-    specifier: workspace:^
+    specifier: workspace:*
     version: link:../../../../lib/frontend/vue2-gettext-init
   pinia:
     specifier: ^2.0.21
@@ -28,14 +36,8 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/plugin-timetracking-constants':
-    specifier: workspace:*
-    version: link:../lib/constants
-  '@tuleap/plugin-timetracking-time-formatters':
-    specifier: workspace:*
-    version: link:../lib/time-formatters
   '@tuleap/po-gettext-plugin':
-    specifier: workspace:^
+    specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin
   '@tuleap/vuex-store-wrapper-jest':
     specifier: workspace:*
@@ -352,3 +354,7 @@ packages:
   /yallist@2.1.2:
     resolution: {integrity: sha512-ncTzHV7NvsQZkYe1DW7cbDLm0YpzHmZF5r/iyP3ZnQtMiJ+pjzisCiMNI+Sj+xQF5pXhSHxSB3uDbsBTzY/c2A==}
     dev: true
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false

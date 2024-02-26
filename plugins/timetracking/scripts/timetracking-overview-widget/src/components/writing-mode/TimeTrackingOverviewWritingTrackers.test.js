@@ -23,7 +23,7 @@ import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewWritingTrackers from "./TimeTrackingOverviewWritingTrackers.vue";
 import TimeTrackingOverviewTrackersOptions from "./TimeTrackingOverviewTrackersOptions.vue";
-import { createLocalVueForTests } from "../../../tests/helpers/local-vue.js";
+import { createLocalVueForTests } from "../../../tests/helpers/local-vue";
 
 describe("Given a timetracking overview widget on writing mode", () => {
     let projects, trackers, is_loading_tracker, has_success_message, addSelectedTrackers;
@@ -69,10 +69,13 @@ describe("Given a timetracking overview widget on writing mode", () => {
 
     it("When trackers and projects are available, then click on add button", async () => {
         const wrapper = await getWrapper();
+        const selected_tracker_id = 15;
 
-        wrapper.findComponent(TimeTrackingOverviewTrackersOptions).vm.$emit("input", "letracker");
+        wrapper
+            .findComponent(TimeTrackingOverviewTrackersOptions)
+            .vm.$emit("input", String(selected_tracker_id));
         wrapper.get("[data-test=add-tracker-button]").trigger("click");
-        expect(addSelectedTrackers).toHaveBeenCalledWith("letracker");
+        expect(addSelectedTrackers).toHaveBeenCalledWith(selected_tracker_id);
     });
 
     it("When trackers are not available, then ban icon is displayed", async () => {

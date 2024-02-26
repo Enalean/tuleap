@@ -22,7 +22,7 @@ import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
-import { createLocalVueForTests } from "../../../tests/helpers/local-vue.js";
+import { createLocalVueForTests } from "../../../tests/helpers/local-vue";
 
 describe("TimeTrackingOverviewTrackerList tests", () => {
     describe("Given a timetracking overview widget on reading mode", () => {

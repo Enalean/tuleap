@@ -20,7 +20,7 @@
 import Vue from "vue";
 import { createPinia, PiniaVuePlugin } from "pinia";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
-import { useOverviewWidgetStore } from "./store/index.js";
+import { useOverviewWidgetStore } from "./store/index.ts";
 import TimeTrackingOverview from "./components/TimeTrackingOverview.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {

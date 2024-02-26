@@ -34,7 +34,7 @@
 
 <script>
 import { inject } from "vue";
-import { useOverviewWidgetStore } from "../../store/index.js";
+import { useOverviewWidgetStore } from "../../store/index";
 
 export default {
     name: "TimeTrackingOverviewProjectOption",
