@@ -76,8 +76,8 @@ export default {
         saveReport() {
             this.overview_store.saveReport(this.$gettext("Report has been successfully saved"));
         },
-        async discardReport() {
-            await this.overview_store.initWidgetWithReport();
+        discardReport() {
+            this.overview_store.initWidgetWithReport();
             this.overview_store.setIsReportSave(true);
         },
     },

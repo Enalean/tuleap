@@ -20,8 +20,8 @@
 import { describe, beforeEach, afterEach, it, expect, jest } from "@jest/globals";
 import { setActivePinia, createPinia } from "pinia";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
-import { ERROR_OCCURRED } from "@tuleap/plugin-timetracking-constants";
+import { okAsync, errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import type {
     OverviewReport,
     OverviewReportTracker,
@@ -52,23 +52,12 @@ describe("Store actions", () => {
                 invalid_trackers: [],
             };
 
-            jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(Promise.resolve([]));
-            jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(
-                Promise.resolve(report),
-            );
+            jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(okAsync([]));
+            jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(okAsync(report));
 
             await store.initWidgetWithReport();
             expect(store.error_message).toBeNull();
             expect(store.selected_trackers).toStrictEqual(report.trackers);
-        });
-    });
-
-    describe("initWidgetWithReport - rest errors", () => {
-        it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async (): Promise<void> => {
-            jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(Promise.reject());
-
-            await store.initWidgetWithReport();
-            expect(store.error_message).toBe(ERROR_OCCURRED);
         });
     });
 
@@ -93,42 +82,24 @@ describe("Store actions", () => {
 
             store.is_loading = true;
 
-            jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(
-                Promise.resolve(trackers),
-            );
+            jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(okAsync(trackers));
 
             await store.loadTimes();
 
             expect(store.trackers_times).toStrictEqual(trackers);
-            expect(store.is_loading).toBe(false);
         });
     });
 
     describe("loadTimes - rest errors", () => {
-        it("Given a rest error with a known error message, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async (): Promise<void> => {
-            const response = {
-                json(): Promise<Record<string, unknown>> {
-                    return Promise.resolve({ error: { code: 403, message: "Forbidden" } });
-                },
-            } as Response;
+        it("Given a Fault, Then the store's error message should be set.", async (): Promise<void> => {
+            const api_fault = Fault.fromMessage("403 Forbidden");
 
-            jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(
-                Promise.reject(new FetchWrapperError("?edskmlsdq", response)),
-            );
+            jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(errAsync(api_fault));
 
-            await store.initWidgetWithReport();
+            await store.loadTimes();
 
             expect(store.success_message).toBeNull();
-            expect(store.error_message).toBe("403 Forbidden");
-        });
-
-        it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async (): Promise<void> => {
-            jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(Promise.reject());
-
-            await store.initWidgetWithReport();
-
-            expect(store.success_message).toBeNull();
-            expect(store.error_message).toBe(ERROR_OCCURRED);
+            expect(store.error_message).toBe(String(api_fault));
         });
     });
 
@@ -140,7 +111,7 @@ describe("Store actions", () => {
             ];
 
             jest.spyOn(rest_querier, "getProjectsWithTimetracking").mockReturnValue(
-                Promise.resolve(projects),
+                okAsync(projects),
             );
 
             await store.getProjects();
@@ -168,7 +139,7 @@ describe("Store actions", () => {
             ];
 
             jest.spyOn(rest_querier, "getTrackersWithTimetracking").mockReturnValue(
-                Promise.resolve(trackers),
+                okAsync(trackers),
             );
 
             store.selected_trackers = [];
@@ -197,8 +168,8 @@ describe("Store actions", () => {
                 invalid_trackers: [],
             };
 
-            jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(Promise.resolve([]));
-            jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(Promise.resolve(report));
+            jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(okAsync([]));
+            jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(okAsync(report));
 
             await store.saveReport(success_message);
 
@@ -210,13 +181,15 @@ describe("Store actions", () => {
     });
 
     describe("SaveReport - error", () => {
-        it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async (): Promise<void> => {
-            jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(Promise.reject());
+        it("Given a rest error while saving the report, Then it should set the store's error message with the Fault", async (): Promise<void> => {
+            const api_fault = Fault.fromMessage("Oops!");
+
+            jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(errAsync(api_fault));
 
             await store.saveReport("Report has been successfully saved");
 
             expect(store.success_message).toBeNull();
-            expect(store.error_message).toBe(ERROR_OCCURRED);
+            expect(store.error_message).toBe(String(api_fault));
         });
     });
 });

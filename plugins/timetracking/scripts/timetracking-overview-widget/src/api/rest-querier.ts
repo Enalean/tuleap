@@ -21,7 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put, patch } from "@tuleap/tlp-fetch";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { uri, getJSON, putJSON, patch } from "@tuleap/fetch-result";
 import { formatDatetimeToISO } from "@tuleap/plugin-timetracking-time-formatters";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import type {
@@ -30,75 +32,60 @@ import type {
     TrackerWithTimes,
 } from "@tuleap/plugin-timetracking-rest-api-types";
 
-const headers = {
-    "content-type": "application/json",
-};
-
-export async function getTrackersFromReport(report_id: number): Promise<OverviewReport> {
-    const response = await get("/api/v1/timetracking_reports/" + encodeURIComponent(report_id));
-    return response.json();
+export function getTrackersFromReport(report_id: number): ResultAsync<OverviewReport, Fault> {
+    return getJSON(uri`/api/v1/timetracking_reports/${report_id}`);
 }
 
-export async function getTimes(
+export function getTimes(
     report_id: number,
     trackers_id: number[],
     start_date: string,
     end_date: string,
-): Promise<TrackerWithTimes[]> {
+): ResultAsync<TrackerWithTimes[], Fault> {
     const query = JSON.stringify({
         trackers_id: trackers_id,
         start_date: formatDatetimeToISO(start_date),
         end_date: formatDatetimeToISO(end_date),
     });
 
-    const response = await get(
-        "/api/v1/timetracking_reports/" + encodeURIComponent(report_id) + "/times",
-        {
-            params: {
-                query,
-            },
+    return getJSON(uri`/api/v1/timetracking_reports/${report_id}/times`, {
+        params: {
+            query,
         },
-    );
-    return response.json();
+    });
 }
 
-export async function getTimesFromReport(
+export function getTimesFromReport(
     report_id: number,
     start_date: string,
     end_date: string,
-): Promise<TrackerWithTimes[]> {
+): ResultAsync<TrackerWithTimes[], Fault> {
     const query = JSON.stringify({
         start_date: formatDatetimeToISO(start_date),
         end_date: formatDatetimeToISO(end_date),
     });
 
-    const response = await get(
-        "/api/v1/timetracking_reports/" + encodeURIComponent(report_id) + "/times",
-        {
-            params: {
-                query,
-            },
+    return getJSON(uri`/api/v1/timetracking_reports/${report_id}/times`, {
+        params: {
+            query,
         },
-    );
-    return response.json();
+    });
 }
 
-export async function getProjectsWithTimetracking(): Promise<ProjectReference[]> {
-    const response = await get("/api/v1/projects", {
+export function getProjectsWithTimetracking(): ResultAsync<ProjectReference[], Fault> {
+    return getJSON(uri`/api/v1/projects`, {
         params: {
             limit: 50,
             offset: 0,
             query: JSON.stringify({ with_time_tracking: true }),
         },
     });
-
-    return response.json();
 }
 
-export async function getTrackersWithTimetracking(
+export function getTrackersWithTimetracking(
     project_id: number,
-): Promise<OverviewReportTracker[]> {
-    const response = await get("/api/v1/projects/" + project_id + "/trackers", {
+): ResultAsync<OverviewReportTracker[], Fault> {
+    return getJSON(uri`/api/v1/projects/${project_id}/trackers`, {
         params: {
             representation: "minimal",
             limit: 50,
@@ -106,37 +93,28 @@ export async function getTrackersWithTimetracking(
             query: JSON.stringify({ with_time_tracking: true }),
         },
     });
-
-    return response.json();
 }
 
-export async function saveNewReport(
+export function saveNewReport(
     report_id: number,
     trackers_id: number[],
-): Promise<OverviewReport> {
-    const body = JSON.stringify({
-        trackers_id: trackers_id,
+): ResultAsync<OverviewReport, Fault> {
+    return putJSON(uri`/api/v1/timetracking_reports/${report_id}`, {
+        trackers_id,
     });
-
-    const response = await put("/api/v1/timetracking_reports/" + report_id, {
-        headers,
-        body,
-    });
-
-    return response.json();
 }
 
-export async function setDisplayPreference(
+export function setDisplayPreference(
     report_id: number,
     user_id: number,
     are_void_trackers_hidden: boolean,
-): Promise<void> {
-    const body = JSON.stringify({
-        key: "timetracking_overview_display_trackers_without_time_" + report_id,
-        value: are_void_trackers_hidden.toString(),
-    });
-    await patch("/api/v1/users/" + encodeURIComponent(user_id) + "/preferences", {
-        headers,
-        body,
-    });
+): ResultAsync<unknown, Fault> {
+    return patch(
+        uri`/api/v1/users/${user_id}/preferences`,
+        {},
+        {
+            key: "timetracking_overview_display_trackers_without_time_" + report_id,
+            value: are_void_trackers_hidden.toString(),
+        },
+    );
 }

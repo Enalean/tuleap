@@ -19,9 +19,8 @@
 
 import type { StoreDefinition } from "pinia";
 import { defineStore } from "pinia";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { ResultAsync } from "neverthrow";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
-import { ERROR_OCCURRED } from "@tuleap/plugin-timetracking-constants";
 import { formatMinutes } from "@tuleap/plugin-timetracking-time-formatters";
 import type {
     OverviewReportTracker,
@@ -39,19 +38,19 @@ import {
     saveNewReport,
     setDisplayPreference,
 } from "../api/rest-querier";
+import type { Fault } from "@tuleap/fault";
 
 export type OverviewWidgetStoreActions = {
-    initWidgetWithReport(): Promise<void>;
-    getProjects(): Promise<void>;
-    saveReport(message: string): Promise<void>;
-    getTrackers(project_id: number): Promise<void>;
-    loadTimes(): Promise<void>;
-    reloadTimetrackingOverviewTimes(): Promise<void>;
-    loadTimesWithNewParameters(): Promise<void>;
-    setPreference(): Promise<void>;
-    showRestError(rest_error: unknown): Promise<void>;
-    getTimesWithNewParameters(): Promise<TrackerWithTimes[]>;
-    getTimesWithoutNewParameters(): Promise<TrackerWithTimes[]>;
+    initWidgetWithReport(): void;
+    getProjects(): void;
+    saveReport(message: string): void;
+    getTrackers(project_id: number): void;
+    loadTimes(): void;
+    reloadTimetrackingOverviewTimes(): void;
+    loadTimesWithNewParameters(): void;
+    setPreference(): void;
+    getTimesWithNewParameters(): ResultAsync<TrackerWithTimes[], Fault>;
+    getTimesWithoutNewParameters(): ResultAsync<TrackerWithTimes[], Fault>;
     setSelectedTrackers(trackers: OverviewReportTracker[]): void;
     setTrackersTimes(times: TrackerWithTimes[]): void;
     setDisplayVoidTrackers(are_void_trackers_hidden: boolean): void;
@@ -60,7 +59,7 @@ export type OverviewWidgetStoreActions = {
     setLoadingTrackers(is_loading_trackers: boolean): void;
     setIsLoading(is_loading: boolean): void;
     resetMessages(): void;
-    setErrorMessage(error_message: string): void;
+    setErrorMessage(error_message: Fault): void;
     setSuccessMessage(success_message: string): void;
     toggleReadingMode(): void;
     setProjects(projects: ProjectReference[]): void;
@@ -154,126 +153,101 @@ export function useOverviewWidgetStore(report_id: number): OverviewWidgetStoreDe
             },
         },
         actions: {
-            async initWidgetWithReport(): Promise<void> {
-                try {
-                    this.resetMessages();
+            initWidgetWithReport(): void {
+                this.resetMessages();
 
-                    const report = await getTrackersFromReport(this.report_id);
+                getTrackersFromReport(this.report_id).match((report) => {
                     this.setSelectedTrackers(report.trackers);
-
-                    return await this.loadTimes();
-                } catch (error) {
-                    return this.showRestError(error);
-                }
+                    this.loadTimes();
+                }, this.setErrorMessage);
             },
 
-            async getProjects(): Promise<void> {
-                try {
-                    this.resetMessages();
-                    const projects = await getProjectsWithTimetracking();
-                    return this.setProjects(projects);
-                } catch (error) {
-                    return this.showRestError(error);
-                }
+            getProjects(): void {
+                this.resetMessages();
+
+                getProjectsWithTimetracking().match((projects) => {
+                    this.setProjects(projects);
+                }, this.setErrorMessage);
             },
 
-            async saveReport(message: string): Promise<void> {
-                try {
-                    this.resetMessages();
-                    this.setTrackersIds();
-                    const report = await saveNewReport(
-                        this.report_id,
-                        this.trackers_ids ? this.trackers_ids : [],
-                    );
-                    this.setSelectedTrackers(report.trackers);
-                    this.setSuccessMessage(message);
+            saveReport(message: string): void {
+                this.resetMessages();
+                this.setTrackersIds();
 
-                    this.setIsReportSave(true);
-
-                    return await this.loadTimes();
-                } catch (error) {
-                    return this.showRestError(error);
-                }
+                saveNewReport(this.report_id, this.trackers_ids ? this.trackers_ids : []).match(
+                    (report) => {
+                        this.setSelectedTrackers(report.trackers);
+                        this.setSuccessMessage(message);
+                        this.setIsReportSave(true);
+                    },
+                    this.setErrorMessage,
+                );
             },
 
-            async getTrackers(project_id: number): Promise<void> {
-                try {
-                    this.resetMessages();
-                    this.setLoadingTrackers(true);
-                    const trackers = await getTrackersWithTimetracking(project_id);
-                    this.setTrackers(trackers);
-                    return this.setLoadingTrackers(false);
-                } catch (error) {
-                    return this.showRestError(error);
-                }
+            getTrackers(project_id: number): void {
+                this.resetMessages();
+                this.setLoadingTrackers(true);
+
+                getTrackersWithTimetracking(project_id)
+                    .match((trackers) => {
+                        this.setTrackers(trackers);
+                    }, this.setErrorMessage)
+                    .finally(() => {
+                        this.setLoadingTrackers(false);
+                    });
             },
 
-            async loadTimes(): Promise<void> {
+            loadTimes(): void {
                 this.setIsLoading(true);
 
-                const times = await this.getTimesWithoutNewParameters();
-                this.setTrackersTimes(times);
-                this.setIsLoading(false);
+                this.getTimesWithoutNewParameters()
+                    .match((times) => {
+                        this.setTrackersTimes(times);
+                    }, this.setErrorMessage)
+                    .finally(() => {
+                        this.setIsLoading(false);
+                    });
             },
 
-            async reloadTimetrackingOverviewTimes(): Promise<void> {
+            reloadTimetrackingOverviewTimes(): void {
                 this.setIsLoading(true);
-                let times;
-                if (this.trackers_ids.length > 0) {
-                    times = await this.getTimesWithNewParameters();
-                } else {
-                    times = await this.getTimesWithoutNewParameters();
-                }
 
-                this.setTrackersTimes(times);
-                this.setIsLoading(false);
+                const result =
+                    this.trackers_ids.length > 0
+                        ? this.getTimesWithNewParameters()
+                        : this.getTimesWithoutNewParameters();
+
+                result
+                    .match(this.setTrackersTimes, this.setErrorMessage)
+                    .finally(() => this.setIsLoading(false));
             },
 
-            async loadTimesWithNewParameters(): Promise<void> {
+            loadTimesWithNewParameters(): void {
                 this.setIsLoading(true);
                 this.setTrackersIds();
 
-                const times = await this.getTimesWithNewParameters();
-
-                this.toggleReadingMode();
-                this.setIsReportSave(false);
-                this.setTrackersTimes(times);
-                this.setIsLoading(false);
+                this.getTimesWithNewParameters()
+                    .match((times) => {
+                        this.toggleReadingMode();
+                        this.setIsReportSave(false);
+                        this.setTrackersTimes(times);
+                    }, this.setErrorMessage)
+                    .finally(() => this.setIsLoading(false));
             },
 
-            async setPreference(): Promise<void> {
-                try {
-                    await setDisplayPreference(
-                        this.report_id,
-                        this.user_id,
-                        !this.are_void_trackers_hidden,
-                    );
-                    return this.toggleDisplayVoidTrackers();
-                } catch (rest_error) {
-                    return this.showRestError(rest_error);
-                }
+            setPreference(): void {
+                setDisplayPreference(
+                    this.report_id,
+                    this.user_id,
+                    !this.are_void_trackers_hidden,
+                ).match(this.toggleDisplayVoidTrackers, this.setErrorMessage);
             },
 
-            async showRestError(rest_error: unknown): Promise<void> {
-                if (!(rest_error instanceof FetchWrapperError)) {
-                    this.setErrorMessage(ERROR_OCCURRED);
-
-                    return;
-                }
-
-                try {
-                    const { error } = await rest_error.response.json();
-                    this.setErrorMessage(error.code + " " + error.message);
-                } catch (error) {
-                    this.setErrorMessage(ERROR_OCCURRED);
-                }
-            },
-
-            getTimesWithNewParameters(): Promise<TrackerWithTimes[]> {
+            getTimesWithNewParameters(): ResultAsync<TrackerWithTimes[], Fault> {
                 return getTimes(this.report_id, this.trackers_ids, this.start_date, this.end_date);
             },
 
-            getTimesWithoutNewParameters(): Promise<TrackerWithTimes[]> {
+            getTimesWithoutNewParameters(): ResultAsync<TrackerWithTimes[], Fault> {
                 return getTimesFromReport(this.report_id, this.start_date, this.end_date);
             },
 
@@ -313,8 +287,8 @@ export function useOverviewWidgetStore(report_id: number): OverviewWidgetStoreDe
                 this.success_message = null;
             },
 
-            setErrorMessage(error_message: string): void {
-                this.error_message = error_message;
+            setErrorMessage(error_message: Fault): void {
+                this.error_message = String(error_message);
             },
 
             setSuccessMessage(success_message: string): void {

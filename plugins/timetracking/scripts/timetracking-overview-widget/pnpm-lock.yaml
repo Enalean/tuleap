@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:*
@@ -7,6 +11,12 @@ dependencies:
   '@tuleap/core-rest-api-types':
     specifier: workspace:*
     version: link:../../../../lib/frontend/rest-api-types
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fetch-result
   '@tuleap/plugin-timetracking-constants':
     specifier: workspace:*
     version: link:../lib/constants
@@ -16,12 +26,12 @@ dependencies:
   '@tuleap/plugin-timetracking-time-formatters':
     specifier: workspace:*
     version: link:../lib/time-formatters
-  '@tuleap/tlp-fetch':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/tlp-fetch
   '@tuleap/vue2-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue2-gettext-init
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
   pinia:
     specifier: ^2.0.21
     version: 2.1.7(vue@2.7.4)
@@ -248,6 +258,10 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false
+
   /nopt@6.0.0:
     resolution: {integrity: sha512-ZwLpbTgdhuZUnZzjd7nb1ZV+4DoiC6/sfiVKok72ym/4Tlf+DFdlHYmT2JPmcNNWV6Pi3SDf1kT+A4r9RTuT9g==}
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
@@ -354,7 +368,3 @@ packages:
   /yallist@2.1.2:
     resolution: {integrity: sha512-ncTzHV7NvsQZkYe1DW7cbDLm0YpzHmZF5r/iyP3ZnQtMiJ+pjzisCiMNI+Sj+xQF5pXhSHxSB3uDbsBTzY/c2A==}
     dev: true
-
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false

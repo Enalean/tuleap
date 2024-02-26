@@ -23,6 +23,7 @@
 
 import { describe, beforeEach, afterEach, it, expect } from "@jest/globals";
 import { setActivePinia, createPinia } from "pinia";
+import { Fault } from "@tuleap/fault";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import type {
     OverviewReportTracker,
@@ -119,8 +120,9 @@ describe("Store mutations", (): void => {
         });
 
         it("When we set error message, state must change too", (): void => {
-            store.setErrorMessage("error");
-            expect(store.error_message).toBe("error");
+            const error_message = "error";
+            store.setErrorMessage(Fault.fromMessage(error_message));
+            expect(store.error_message).toBe(error_message);
         });
 
         it("When we set success message, state must change too", (): void => {
@@ -130,7 +132,7 @@ describe("Store mutations", (): void => {
 
         it("When we reset messages, state must change too", (): void => {
             store.setSuccessMessage("success");
-            store.setErrorMessage("error");
+            store.setErrorMessage(Fault.fromMessage("error"));
             store.resetMessages();
 
             expect(store.success_message).toBeNull();
