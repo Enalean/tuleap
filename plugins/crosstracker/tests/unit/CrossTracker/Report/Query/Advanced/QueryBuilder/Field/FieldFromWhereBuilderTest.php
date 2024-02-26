@@ -22,20 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
+use BaseLanguageFactory;
+use ForgeConfig;
 use ParagonIE\EasyDB\EasyDB;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
@@ -43,6 +50,9 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class FieldFromWhereBuilderTest extends TestCase
 {
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
+
     private const FIELD_NAME = 'my_field';
     private \PFUser $user;
     private \Tracker $first_tracker;
@@ -50,6 +60,11 @@ final class FieldFromWhereBuilderTest extends TestCase
 
     protected function setUp(): void
     {
+        ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
+        ForgeConfig::set('sys_lang', 'en_US');
+        ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
+        ForgeConfig::set('sys_incdir', __DIR__ . '/../../../../../../../../../../site-content');
+
         $this->user           = UserTestBuilder::buildWithId(133);
         $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(38)->build();
         $this->second_tracker = TrackerTestBuilder::aTracker()->withId(4)->build();
@@ -71,6 +86,9 @@ final class FieldFromWhereBuilderTest extends TestCase
             new Date\DateFromWhereBuilder($date_time_value_rounder),
             new Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
             new StaticList\StaticListFromWhereBuilder(),
+            new UGroupList\UGroupListFromWhereBuilder(
+                new UgroupLabelConverter(new ListFieldBindValueNormalizer(), new BaseLanguageFactory()),
+            ),
         );
         $field                   = new Field(self::FIELD_NAME);
         return $builder->getFromWhere(
@@ -177,6 +195,27 @@ final class FieldFromWhereBuilderTest extends TestCase
         );
 
         $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('my_value'));
+        self::assertNotEmpty($from_where->getFrom());
+    }
+
+    public function testItReturnsSQLForUGroupListField(): void
+    {
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementListFieldBuilder::aListField(457)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withBind(TrackerFormElementListUserGroupBindBuilder::aBind()->build())
+                ->withReadPermission($this->user, true)
+                ->build(),
+            TrackerFormElementListFieldBuilder::aListField(624)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->withBind(TrackerFormElementListUserGroupBindBuilder::aBind()->build())
+                ->withReadPermission($this->user, true)
+                ->build(),
+        );
+
+        $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('Project members'));
         self::assertNotEmpty($from_where->getFrom());
     }
 

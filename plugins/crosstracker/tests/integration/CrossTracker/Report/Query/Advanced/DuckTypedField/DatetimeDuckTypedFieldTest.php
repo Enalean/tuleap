@@ -32,13 +32,12 @@ use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class DatetimeDuckTypedFieldTest extends TestIntegrationTestCase
+final class DatetimeDuckTypedFieldTest extends DuckTypedFieldTestCase
 {
     private PFUser $project_member;
     private PFUser $project_admin;

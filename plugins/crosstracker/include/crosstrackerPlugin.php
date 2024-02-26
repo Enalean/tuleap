@@ -87,9 +87,11 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisit
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 
@@ -403,6 +405,9 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                 new Field\Date\DateFromWhereBuilder($date_time_value_rounder),
                 new Field\Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
                 new Field\StaticList\StaticListFromWhereBuilder(),
+                new Field\UGroupList\UGroupListFromWhereBuilder(
+                    new UgroupLabelConverter(new ListFieldBindValueNormalizer(), new BaseLanguageFactory()),
+                ),
             ),
         );
 

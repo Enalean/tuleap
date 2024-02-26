@@ -35,6 +35,7 @@ enum DuckTypedFieldType
     case DATE;
     case DATETIME;
     case STATIC_LIST;
+    case UGROUP_LIST;
 
     /**
      * @return Ok<self>|Err<Fault>
@@ -49,6 +50,7 @@ enum DuckTypedFieldType
             Tracker_FormElementFactory::FIELD_DATE_TYPE       => Result::ok(self::DATE),
             FieldTypeRetrieverWrapper::FIELD_DATETIME_TYPE    => Result::ok(self::DATETIME),
             FieldTypeRetrieverWrapper::FIELD_STATIC_LIST_TYPE => Result::ok(self::STATIC_LIST),
+            FieldTypeRetrieverWrapper::FIELD_UGROUP_LIST_TYPE => Result::ok(self::UGROUP_LIST),
             default                                           => Result::err(FieldTypeIsNotSupportedFault::build())
         };
     }

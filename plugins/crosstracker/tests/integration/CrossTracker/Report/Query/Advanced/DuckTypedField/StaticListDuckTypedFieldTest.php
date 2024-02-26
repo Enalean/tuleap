@@ -32,18 +32,15 @@ use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class StaticListDuckTypedFieldTest extends TestIntegrationTestCase
+final class StaticListDuckTypedFieldTest extends DuckTypedFieldTestCase
 {
     use GlobalLanguageMock;
-    use TemporaryTestDirectory;
 
     private PFUser $project_member;
     private PFUser $project_admin;
@@ -60,11 +57,6 @@ final class StaticListDuckTypedFieldTest extends TestIntegrationTestCase
 
     protected function setUp(): void
     {
-        ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
-        ForgeConfig::set('sys_lang', 'en_US');
-        ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
-        ForgeConfig::set('sys_incdir', __DIR__ . '/../../../../../../../../../site-content');
-
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         ForgeConfig::setFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
         $tracker_builder      = new TrackerDatabaseBuilder($db);

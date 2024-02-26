@@ -28,13 +28,12 @@ use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
+final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
 {
     private TrackerDatabaseBuilder $database_builder;
     private Tracker $release_tracker;

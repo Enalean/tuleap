@@ -30,6 +30,7 @@ use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserBindBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
@@ -54,6 +55,17 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
         self::assertSame(FieldTypeRetrieverWrapper::FIELD_STATIC_LIST_TYPE, $retriever->getType(
             TrackerFormElementListFieldBuilder::aListField(125)
                 ->withBind(TrackerFormElementListStaticBindBuilder::aBind()->build())
+                ->build()
+        ));
+    }
+
+    public function testItReturnsUGroupList(): void
+    {
+        $retriever = new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType());
+
+        self::assertSame(FieldTypeRetrieverWrapper::FIELD_UGROUP_LIST_TYPE, $retriever->getType(
+            TrackerFormElementListFieldBuilder::aListField(563)
+                ->withBind(TrackerFormElementListUserGroupBindBuilder::aBind()->build())
                 ->build()
         ));
     }

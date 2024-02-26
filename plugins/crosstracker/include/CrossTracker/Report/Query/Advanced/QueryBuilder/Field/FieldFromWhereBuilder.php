@@ -32,6 +32,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Datetime\Dateti
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Numeric\NumericFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\StaticList\StaticListFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Text\TextFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\UGroupList\UGroupListFromWhereBuilder;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -49,6 +50,7 @@ final readonly class FieldFromWhereBuilder
         private DateFromWhereBuilder $date_builder,
         private DatetimeFromWhereBuilder $datetime_builder,
         private StaticListFromWhereBuilder $static_list_builder,
+        private UGroupListFromWhereBuilder $ugroup_list_builder,
     ) {
     }
 
@@ -92,6 +94,7 @@ final readonly class FieldFromWhereBuilder
             DuckTypedFieldType::DATE        => $this->date_builder->getFromWhere($field, $comparison),
             DuckTypedFieldType::DATETIME    => $this->datetime_builder->getFromWhere($field, $comparison),
             DuckTypedFieldType::STATIC_LIST => $this->static_list_builder->getFromWhere($field, $comparison),
+            DuckTypedFieldType::UGROUP_LIST => $this->ugroup_list_builder->getFromWhere($field, $comparison),
         };
     }
 }
