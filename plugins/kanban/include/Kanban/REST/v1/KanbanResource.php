@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\REST\v1;
 
-use Tuleap\DB\DBFactory;
 use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanActionsChecker;
 use Tuleap\Kanban\KanbanCannotAccessException;
@@ -172,7 +171,6 @@ final class KanbanResource extends AuthenticatedResource
     private Client $mercure_client;
     private KanbanStructureRealTimeMercure $structure_realtime_kanban;
     private KanbanRepresentationBuilder $kanban_representation_builder;
-    private \Tuleap\DB\DBConnection $db_connection;
 
     public function __construct()
     {
@@ -193,8 +191,6 @@ final class KanbanResource extends AuthenticatedResource
         );
 
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
-
-        $this->db_connection = DBFactory::getMainTuleapDBConnection();
 
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->permissions_manager  = new KanbanPermissionsManager();
@@ -618,9 +614,7 @@ final class KanbanResource extends AuthenticatedResource
             $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
 
             try {
-                $this->db_connection->getDB()->tryFlatTransaction(function () use ($kanban, $current_user, $add) {
-                    $this->moveArtifactsInBacklog($kanban, $current_user, $add);
-                });
+                $this->moveArtifactsInBacklog($kanban, $current_user, $add);
             } catch (Tracker_NoChangeException $exception) {
             } catch (Exception $exception) {
                 throw new RestException(500, $exception->getMessage());
@@ -884,9 +878,7 @@ final class KanbanResource extends AuthenticatedResource
             $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
 
             try {
-                $this->db_connection->getDB()->tryFlatTransaction(function () use ($kanban, $current_user, $add) {
-                    $this->moveArtifactsInArchive($kanban, $current_user, $add);
-                });
+                $this->moveArtifactsInArchive($kanban, $current_user, $add);
             } catch (Tracker_NoChangeException $exception) {
             } catch (Exception $exception) {
                 throw new RestException(500, $exception->getMessage());
@@ -1080,9 +1072,7 @@ final class KanbanResource extends AuthenticatedResource
             $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
 
             try {
-                $this->db_connection->getDB()->tryFlatTransaction(function () use ($kanban, $current_user, $add, $column_id) {
-                    $this->moveArtifactsInColumn($kanban, $current_user, $add, $column_id);
-                });
+                $this->moveArtifactsInColumn($kanban, $current_user, $add, $column_id);
             } catch (Tracker_NoChangeException $exception) {
             } catch (Tracker_Workflow_GlobalRulesViolationException $exception) {
                 throw new RestException(400, $exception->getMessage());
