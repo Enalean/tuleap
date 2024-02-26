@@ -95,6 +95,9 @@ final class FPMSessionRedis implements FPMSessionInterface
         $this->deployTuleapConf($logger);
     }
 
+    /**
+     * @param non-empty-string $dst_file
+     */
     private function deployFPM(LoggerInterface $logger, string $src_file, string $dst_file): void
     {
         $logger->info("Deploy $src_file into $dst_file");

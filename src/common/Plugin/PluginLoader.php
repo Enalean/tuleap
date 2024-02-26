@@ -27,8 +27,7 @@ use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\VarExporter\VarExporter;
 use Tuleap\Config\PluginWithConfigKeys;
-use Webimpress\SafeWriter\Exception\ExceptionInterface;
-use Webimpress\SafeWriter\FileWriter;
+use Tuleap\File\FileWriter;
 
 class PluginLoader
 {
@@ -85,7 +84,10 @@ class PluginLoader
         }
     }
 
-    private static function getHooksCacheFile()
+    /**
+     * @psalm-return non-empty-string
+     */
+    private static function getHooksCacheFile(): string
     {
         return ForgeConfig::get('codendi_cache_dir') . '/' . self::HOOK_CACHE_KEY;
     }
@@ -110,13 +112,16 @@ class PluginLoader
         $this->serializeInFile(self::getHooksCacheFile(), $proxy->getSerializablePluginCache());
     }
 
+    /**
+     * @psalm-param non-empty-string $path
+     */
     private function serializeInFile(string $path, EventPluginCache $var): void
     {
         $content = '<?php' . PHP_EOL . 'return ' . VarExporter::export($var) . ';';
         try {
             FileWriter::writeFile($path, $content);
-        } catch (ExceptionInterface $exception) {
-            $this->logger->error("Unable to store tuleap hooks content:" . $exception->getMessage());
+        } catch (\RuntimeException $exception) {
+            $this->logger->error("Unable to store tuleap hooks content:" . $exception->getMessage(), ['exception' => $exception]);
         }
     }
 

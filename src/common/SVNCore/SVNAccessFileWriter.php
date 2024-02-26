@@ -21,10 +21,10 @@
 namespace Tuleap\SVNCore;
 
 use ForgeConfig;
+use Tuleap\File\FileWriter;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Webimpress\SafeWriter\FileWriter;
 
 class SVNAccessFileWriter
 {

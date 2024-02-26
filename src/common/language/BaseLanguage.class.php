@@ -22,8 +22,7 @@
  */
 
 use Symfony\Component\VarExporter\VarExporter;
-use Webimpress\SafeWriter\Exception\ExceptionInterface;
-use Webimpress\SafeWriter\FileWriter;
+use Tuleap\File\FileWriter;
 
 class BaseLanguage
 {
@@ -218,7 +217,7 @@ class BaseLanguage
         $content = '<?php' . PHP_EOL . 'return ' . VarExporter::export($text_array) . ';';
         try {
             FileWriter::writeFile($path, $content);
-        } catch (ExceptionInterface $e) {
+        } catch (RuntimeException $e) {
             //Do nothing
         }
     }

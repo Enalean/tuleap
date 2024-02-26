@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace TuleapCfg\Command\SiteDeploy\Gitolite3;
 
 use Psr\Log\LoggerInterface;
-use Webimpress\SafeWriter\FileWriter;
+use Tuleap\File\FileWriter;
 
 final class SiteDeployGitolite3
 {
@@ -132,6 +132,9 @@ final class SiteDeployGitolite3
         return 'export PATH=/usr/lib/tuleap/git/bin${PATH:+:${PATH}}' . "\n";
     }
 
+    /**
+     * @psalm-param non-empty-string $path
+     */
     private function writeFile(string $path, string $content): void
     {
         FileWriter::writeFile($path, $content);

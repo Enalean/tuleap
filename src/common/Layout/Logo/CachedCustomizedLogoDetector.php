@@ -24,7 +24,7 @@ namespace Tuleap\Layout\Logo;
 
 use JsonException;
 use Psr\Log\LoggerInterface;
-use Webimpress\SafeWriter\FileWriter;
+use Tuleap\File\FileWriter;
 
 class CachedCustomizedLogoDetector implements IDetectIfLogoIsCustomized
 {
@@ -50,9 +50,14 @@ class CachedCustomizedLogoDetector implements IDetectIfLogoIsCustomized
         }
     }
 
+    /**
+     * @psalm-return non-empty-string
+     */
     private static function getCacheFile(): string
     {
-        return \ForgeConfig::getCacheDir() . '/customized_logo.json';
+        $cache_file = \ForgeConfig::getCacheDir() . '/customized_logo.json';
+        assert($cache_file !== '');
+        return $cache_file;
     }
 
     public function isLegacyOrganizationLogoCustomized(): bool
@@ -110,7 +115,7 @@ class CachedCustomizedLogoDetector implements IDetectIfLogoIsCustomized
     {
         try {
             FileWriter::writeFile(self::getCacheFile(), json_encode($information, JSON_THROW_ON_ERROR));
-        } catch (JsonException | \Webimpress\SafeWriter\Exception\ExceptionInterface $e) {
+        } catch (JsonException | \RuntimeException $e) {
             $this->logger->error("Unable to store customized logo information in cache.", ["exception" => $e]);
         }
     }
