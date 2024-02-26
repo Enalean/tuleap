@@ -82,6 +82,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementFileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
@@ -380,6 +381,24 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
+    /**
+     * @dataProvider generateInvalidTextComparisons
+     */
+    public function testItRejectsInvalidFileComparisons(Comparison $comparison): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementFileFieldBuilder::aFileField(324)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
+                ->build()
+        );
+        $this->comparison       = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
     public static function generateFieldTypes(): iterable
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(311)->build();
@@ -422,6 +441,15 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         ];
         yield 'date' => [
             TrackerFormElementDateFieldBuilder::aDateField(514)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($tracker)
+                ->withReadPermission($user, true)
+                ->build(),
+            $tracker,
+            $user,
+        ];
+        yield 'file' => [
+            TrackerFormElementFileFieldBuilder::aFileField(415)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($tracker)
                 ->withReadPermission($user, true)

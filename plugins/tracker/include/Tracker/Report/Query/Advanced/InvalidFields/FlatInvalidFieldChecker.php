@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
@@ -38,6 +39,7 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
         private IntegerFieldChecker $int_field_checker,
         private TextFieldChecker $text_field_checker,
         private DateFieldChecker $date_field_checker,
+        private FileFieldChecker $file_field_checker,
         private EqualComparisonVisitor $equal_checker,
         private NotEqualComparisonVisitor $not_equal_checker,
         private LesserThanComparisonVisitor $lesser_than_checker,
@@ -95,6 +97,11 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
         return $this->date_field_checker;
     }
 
+    public function visitFile(\Tracker_FormElement_Field_File $field): InvalidFieldChecker
+    {
+        return $this->file_field_checker;
+    }
+
     private function matchComparisonToFieldChecker(\Tracker_FormElement_Field $field): InvalidFieldChecker
     {
         return match ($this->comparison->getType()) {
@@ -108,11 +115,6 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
             ComparisonType::In => $this->in_checker->getInvalidFieldChecker($field),
             ComparisonType::NotIn => $this->not_in_checker->getInvalidFieldChecker($field)
         };
-    }
-
-    public function visitFile(\Tracker_FormElement_Field_File $field): InvalidFieldChecker
-    {
-        return $this->matchComparisonToFieldChecker($field);
     }
 
     public function visitRadiobutton(\Tracker_FormElement_Field_Radiobutton $field): InvalidFieldChecker

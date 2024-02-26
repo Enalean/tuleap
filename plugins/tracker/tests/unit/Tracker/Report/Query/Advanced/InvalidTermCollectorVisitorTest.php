@@ -72,6 +72,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotInComparisonChecker;
 use Tuleap\Tracker\Test\Builders\Fields\LastUpdateDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementFileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementOpenListBuilder;
@@ -731,17 +732,33 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
+    /**
+     * @dataProvider generateInvalidTextComparisons
+     */
+    public function testItRejectsInvalidFileComparisons(Comparison $comparison): void
+    {
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->willReturn(
+                TrackerFormElementFileFieldBuilder::aFileField(324)
+                    ->withName(self::FIELD_NAME)
+                    ->build()
+            );
+        $this->comparison = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
     public static function generateFieldTypes(): iterable
     {
         yield 'int' => [TrackerFormElementIntFieldBuilder::anIntField(132)->withName(self::FIELD_NAME)->build()];
         yield 'float' => [TrackerFormElementFloatFieldBuilder::aFloatField(202)->withName(self::FIELD_NAME)->build()];
-        yield 'string' => [TrackerFormElementStringFieldBuilder::aStringField(716)->withName(self::FIELD_NAME)->build(
-        ),
-        ];
+        yield 'string' => [TrackerFormElementStringFieldBuilder::aStringField(716)->withName(self::FIELD_NAME)->build()];
         yield 'text' => [TrackerFormElementTextFieldBuilder::aTextField(198)->withName(self::FIELD_NAME)->build()];
         yield 'date' => [TrackerFormElementDateFieldBuilder::aDateField(514)->withName(self::FIELD_NAME)->build()];
         yield 'submitted on' => [SubmittedOnFieldBuilder::aSubmittedOnField(786)->withName(self::FIELD_NAME)->build()];
         yield 'last update date' => [LastUpdateDateFieldBuilder::aLastUpdateDateField(129)->withName(self::FIELD_NAME)->build()];
+        yield 'file' => [TrackerFormElementFileFieldBuilder::aFileField(272)->withName(self::FIELD_NAME)->build()];
     }
 
     /**
