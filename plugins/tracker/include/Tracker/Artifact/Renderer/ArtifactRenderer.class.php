@@ -108,19 +108,18 @@ abstract class Tracker_Artifact_ArtifactRenderer
         return '<div class="hidden-artifact-submit-button">
                     <input type="hidden" id="submit-type" />
                     <div class="tracker-artifact-submit-buttons-bar">
-                        <button type="submit" name="submit_and_stay" class="btn btn-large btn-outline-primary">' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '</button>
-                        <button class="btn btn-large btn-primary" type="submit">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
+                        <button type="submit" data-test="artifact-submit" class="btn btn-large btn-primary">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
+                        <button type="submit" data-test="artifact-submit-and-stay" name="submit_and_stay" value="1" class="btn btn-large btn-outline-primary">' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '</button>
                     </div>
                     <div class="btn-group dropup tracker-artifact-submit-buttons-bar-condensed">
-                        <button class="btn btn-large btn-primary" type="submit" data-test="artifact-submit">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
-                        <button class="btn btn-large btn-primary dropdown-toggle artifact-submit-options" data-toggle="dropdown" data-test="artifact-submit-options">
+                        <button class="btn btn-large btn-primary" type="submit">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
+                        <button class="btn btn-large btn-primary dropdown-toggle artifact-submit-options" data-toggle="dropdown">
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
                                 <input type="submit"
                                         name="submit_and_stay"
-                                        data-test="artifact-submit-and-stay"
                                         class="btn btn-link"
                                         value="' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '" />
                             </li>

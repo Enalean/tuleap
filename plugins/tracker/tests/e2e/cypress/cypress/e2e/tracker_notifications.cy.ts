@@ -39,7 +39,6 @@ function createAndUpdateArtifact(title: string, edited_title: string): void {
     cy.get('[data-test="title"]').type(title);
     cy.intercept(`*func=submit-artifact*`).as("createArtifact");
 
-    cy.get("[data-test=artifact-submit-options]").click();
     cy.get("[data-test=artifact-submit-and-stay]").click();
     cy.wait("@createArtifact", { timeout: 60000 });
 
@@ -162,7 +161,6 @@ describe("Tracker notifications", () => {
                 cy.searchItemInListPickerDropdown("Database").click();
             });
 
-        cy.get("[data-test=artifact-submit-options]").click();
         cy.get("[data-test=artifact-submit-and-stay]").click();
 
         cy.assertEmailWithContentReceived(
@@ -188,7 +186,6 @@ describe("Tracker notifications", () => {
             cy.searchItemInListPickerDropdown("User interface").click();
         });
 
-        cy.get("[data-test=artifact-submit-options]").click();
         cy.get("[data-test=artifact-submit-and-stay]").click();
 
         cy.assertEmailWithContentReceived(
@@ -215,7 +212,6 @@ describe("Tracker notifications", () => {
             cy.searchItemInListPickerDropdown("ProjectMember").click();
         });
 
-        cy.get("[data-test=artifact-submit-options]").click();
         cy.get("[data-test=artifact-submit-and-stay]").click();
 
         cy.assertEmailWithContentReceived(
@@ -303,7 +299,6 @@ describe("Tracker notifications", () => {
             .click();
 
         cy.get("[data-test=title]").type("Artifact");
-        cy.get("[data-test=artifact-submit-options]").click();
         cy.get("[data-test=artifact-submit-and-stay]").click();
         cy.wait("@createArtifact", { timeout: 60000 });
 

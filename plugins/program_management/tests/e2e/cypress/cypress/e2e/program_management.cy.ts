@@ -110,7 +110,6 @@ function createAndLinkUserStory(
     cy.get("[data-test=create-new-item]").first().click();
     cy.get("[data-test=i_want_to]").type("My US");
 
-    cy.get("[data-test=artifact-submit-options]").click();
     cy.get("[data-test=artifact-submit-and-stay]").click();
 
     cy.get("[data-test=current-artifact-id]").then(($input) => {
@@ -136,7 +135,6 @@ function planFeatureIntoProgramIncrement(
     cy.get("[data-test=edit-field-link]").click();
     cy.get("[data-test=artifact-link-submit]").type(user_story_id);
     cy.get("[data-test=artifact-link-type-selector]").select("_is_child");
-    cy.get("[data-test=artifact-submit-options]").click();
     cy.get("[data-test=artifact-submit-and-stay]").click();
 
     cy.log("Add feature to top backlog");
@@ -166,7 +164,6 @@ function createAndPlanFeature(program_project_name: string, team_project_name: s
     cy.get("[data-test=create-new-item]").first().click();
     cy.get("[data-test=title]").type("My awesome feature");
 
-    cy.get("[data-test=artifact-submit-options]").click();
     cy.get("[data-test=artifact-submit-and-stay]").click();
 
     cy.get("[data-test=current-artifact-id]").then(($input) => {
@@ -202,7 +199,6 @@ function planUserStory(team_project_name: string, program_project_name: string):
                     cy.get("[data-test=edit-field-links]").click();
                     cy.get("[data-test=artifact-link-submit]").type(String(user_story_id));
                     cy.get("[data-test=artifact-link-type-selector]").first().select("_is_child");
-                    cy.get("[data-test=artifact-submit-options]").click();
                     cy.get("[data-test=artifact-submit]").click();
                 });
         });
