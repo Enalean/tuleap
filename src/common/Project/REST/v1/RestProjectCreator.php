@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
+use DateTimeImmutable;
 use Luracast\Restler\RestException;
 use Project;
 use Tuleap\NeverThrow\Err;
@@ -38,11 +39,16 @@ use Tuleap\Project\Registration\MaxNumberOfProjectReachedForUserException;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
 use Tuleap\Project\Registration\ProjectInvalidFullNameException;
 use Tuleap\Project\Registration\ProjectInvalidShortNameException;
+use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\Registration\RegistrationErrorException;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\NoTemplateProvidedFault;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\Upload\ProjectFileToUploadCreator;
+use Tuleap\Project\REST\v1\Project\CreatedFileRepresentation;
+use Tuleap\Project\REST\v1\Project\PostProjectCreated;
+use Tuleap\Project\REST\v1\Project\ProjectRepresentationBuilder;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\DirectoryArchive;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -50,78 +56,59 @@ use Tuleap\Project\XML\Import\ImportNotValidException;
 
 class RestProjectCreator
 {
-    /**
-     * @var \ProjectCreator
-     */
-    private $project_creator;
-    /**
-     * @var \ProjectXMLImporter
-     */
-    private $project_XML_importer;
-    /**
-     * @var TemplateFactory
-     */
-    private $template_factory;
-
     public function __construct(
-        \ProjectCreator $project_creator,
-        \ProjectXMLImporter $project_XML_importer,
-        TemplateFactory $template_factory,
+        private readonly \ProjectCreator $project_creator,
+        private readonly \ProjectXMLImporter $project_XML_importer,
+        private readonly TemplateFactory $template_factory,
+        private readonly ProjectFileToUploadCreator $creator,
+        private readonly ProjectRepresentationBuilder $builder,
+        private readonly ProjectRegistrationChecker $checker,
     ) {
-        $this->project_creator      = $project_creator;
-        $this->project_XML_importer = $project_XML_importer;
-        $this->template_factory     = $template_factory;
     }
 
     /**
-     * @throws RestException
-     * @throws \Project_Creation_Exception
+     * @return Ok<PostProjectCreated>|Err<Fault>
+     *@throws \Project_Creation_Exception
      * @throws ProjectInvalidFullNameException
      * @throws ProjectInvalidShortNameException
      * @throws ProjectDescriptionMandatoryException
      * @throws InvalidTemplateException
      *
-     * @return Ok<Project>|Err<Fault>
+     * @throws RestException
      */
     public function create(
         ProjectPostRepresentation $post_representation,
         ProjectCreationData $creation_data,
+        \PFUser $user,
     ): Ok|Err {
         try {
-            return $this->createProjectWithSelectedTemplate($post_representation, $creation_data);
+            return $this->createProjectWithSelectedTemplate($post_representation, $creation_data, $user);
         } catch (MaxNumberOfProjectReachedForPlatformException | MaxNumberOfProjectReachedForUserException $exception) {
             throw new RestException(429, $exception->getMessage());
         } catch (RegistrationForbiddenException $exception) {
             throw new RestException(403, $exception->getMessage());
-        } catch (ProjectCategoriesException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (FieldDoesNotExistException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (MissingMandatoryFieldException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (ImportNotValidException | RegistrationErrorException $exception) {
+        } catch (ProjectCategoriesException | FieldDoesNotExistException | MissingMandatoryFieldException | ImportNotValidException | RegistrationErrorException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
     }
 
     /**
-     * @throws ImportNotValidException
+     * @return Ok<PostProjectCreated>|Err<Fault>
      * @throws InvalidTemplateException
      * @throws \Project_Creation_Exception
      * @throws ProjectInvalidFullNameException
      * @throws ProjectInvalidShortNameException
      * @throws ProjectDescriptionMandatoryException
      *
-     * @return Ok<Project>|Err<Fault>
+     * @throws ImportNotValidException
      */
     private function createProjectWithSelectedTemplate(
         ProjectPostRepresentation $post_representation,
         ProjectCreationData $creation_data,
+        \PFUser $current_user,
     ): Ok|Err {
         if ($post_representation->template_id !== null) {
-            return Result::ok($this->project_creator->processProjectCreation(
-                $creation_data
-            ));
+            return Result::ok(PostProjectCreated::fromProject($this->builder, $current_user, $this->project_creator->processProjectCreation($creation_data)));
         }
 
         if ($post_representation->xml_template_name !== null) {
@@ -135,9 +122,26 @@ class RestProjectCreator
                 $archive,
                 new SystemEventRunnerForProjectCreationFromXMLTemplate(),
                 $creation_data
-            )->andThen(function (Project $project) use ($template) {
-                    return Result::ok($this->template_factory->recordUsedTemplate($project, $template));
+            )->andThen(function (Project $project) use ($template, $current_user) {
+                return Result::ok(PostProjectCreated::fromProject($this->builder, $current_user, $this->template_factory->recordUsedTemplate($project, $template)));
             });
+        }
+
+        if ($post_representation->from_archive !== null) {
+            $errors_collection = $this->checker->collectAllErrorsForProjectRegistration($current_user, $creation_data);
+            if (count($errors_collection->getErrors()) > 0) {
+                return Result::err(
+                    Fault::fromMessage(implode(',', $errors_collection->getI18nErrorsMessages()))
+                );
+            }
+
+            $file_creator = $this->creator->creatFileToUpload(
+                $post_representation->from_archive,
+                $current_user,
+                new DateTimeImmutable()
+            );
+
+            return Result::ok(PostProjectCreated::fromArchive($this->builder, $current_user, new CreatedFileRepresentation($file_creator->getUploadHref())));
         }
 
         return Result::err(NoTemplateProvidedFault::build());

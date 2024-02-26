@@ -20,7 +20,6 @@
 namespace Tuleap\Project\REST\v1;
 
 use BackendLogger;
-use Event;
 use EventManager;
 use ForgeConfig;
 use Luracast\Restler\RestException;
@@ -87,11 +86,16 @@ use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\NoTemplateProvidedFault;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\Upload\FileOngoingUploadDao;
+use Tuleap\Project\Registration\Template\Upload\ProjectFileToUploadCreator;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\MinimalUserGroupRepresentationWithAdditionalInformation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupAdditionalInformationEvent;
+use Tuleap\Project\REST\v1\Project\CreatedFileRepresentation;
+use Tuleap\Project\REST\v1\Project\PostProjectCreated;
 use Tuleap\Project\REST\v1\Project\ProjectCreationDataPOSTProjectBuilder;
+use Tuleap\Project\REST\v1\Project\ProjectRepresentationBuilder;
 use Tuleap\Project\Status\CannotDeletedDefaultAdminProjectException;
 use Tuleap\Project\Status\SwitchingBackToPendingException;
 use Tuleap\Project\XML\InvalidXMLContentFault;
@@ -105,9 +109,7 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\REST\I18NRestMultipleMessagesException;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\REST\ResourcesInjector;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
-use Tuleap\REST\v1\ProjectFieldsMinimalRepresentation;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
@@ -265,21 +267,19 @@ class ProjectResource extends AuthenticatedResource
      * @param ProjectPostRepresentation $post_representation {@from body}
      * @param bool $dry_run {@from query} {@required false}
      *
-     * @return ProjectRepresentation
      *
      * @throws RestException 204
      * @throws RestException 400
      * @throws RestException 403
      * @throws RestException 429
      */
-    protected function post(ProjectPostRepresentation $post_representation, bool $dry_run = false)
+    protected function post(ProjectPostRepresentation $post_representation, bool $dry_run = false): ProjectRepresentation|CreatedFileRepresentation
     {
         $this->options();
         $this->checkAccess();
 
         $user = $this->user_manager->getCurrentUser();
 
-        $creation_data = null;
         try {
             $creation_data_post_project_builder = new ProjectCreationDataPOSTProjectBuilder(
                 $this->project_manager,
@@ -355,12 +355,21 @@ class ProjectResource extends AuthenticatedResource
         }
 
         try {
-            return $this->getRestProjectCreator()->create($post_representation, $creation_data)
+            return $this->getRestProjectCreator()->create($post_representation, $creation_data, $user)
                 ->match(
-                    function (Project $project) use ($user): ProjectRepresentation {
-                        $this->getProjectCreationNotifier()->notifySiteAdmin($project);
+                    function (PostProjectCreated $created): ProjectRepresentation|CreatedFileRepresentation {
+                        $project = $created->getProject();
+                        if ($project !== null) {
+                            $this->getProjectCreationNotifier()->notifySiteAdmin($project);
+                            return $created->getProjectRepresentation();
+                        }
 
-                        return $this->getProjectRepresentation($project, $user);
+                        $created_file_representation = $created->getFileRepresentation();
+                        if ($created_file_representation !== null) {
+                            return $created_file_representation;
+                        }
+
+                        throw new RestException(500, "Failed to return a representation");
                     },
                     function (Fault $fault): void {
                         if ($fault instanceof InvalidXMLContentFault || $fault instanceof NoTemplateProvidedFault) {
@@ -645,57 +654,10 @@ class ProjectResource extends AuthenticatedResource
         return $project;
     }
 
-    /**
-     * Get a ProjectRepresentation
-     *
-     *
-     * @return ProjectRepresentation
-     */
-    private function getProjectRepresentation(Project $project, PFUser $current_user)
+    private function getProjectRepresentation(Project $project, PFUser $current_user): ProjectRepresentation
     {
-        $resources = [];
-        $this->event_manager->processEvent(
-            Event::REST_PROJECT_RESOURCES,
-            [
-                'version'   => 'v1',
-                'project'   => $project,
-                'resources' => &$resources,
-            ]
-        );
-
-        $resources_injector = new ResourcesInjector();
-        $resources_injector->declareProjectResources($resources, $project);
-
-        $informations = [];
-        $this->event_manager->processEvent(
-            Event::REST_PROJECT_ADDITIONAL_INFORMATIONS,
-            [
-                'project'      => $project,
-                'current_user' => $current_user,
-                'informations' => &$informations,
-            ]
-        );
-
-        $project_field_representations = $this->getAdditionalFields($project);
-
-        return ProjectRepresentation::build(
-            $project,
-            $this->user_manager->getCurrentUser(),
-            $resources,
-            $informations,
-            $project_field_representations
-        );
-    }
-
-    private function getFieldValue(array $project_custom_fields, array $custom_field): string
-    {
-        foreach ($project_custom_fields as $project_field) {
-            if ($project_field['group_desc_id'] == $custom_field['group_desc_id']) {
-                return $project_field['value'];
-            }
-        }
-
-        return '';
+        $builder = new ProjectRepresentationBuilder(EventManager::instance(), $this->getDescriptionFieldsFactory());
+        return $builder->build($project, $current_user);
     }
 
     /**
@@ -1436,32 +1398,27 @@ class ProjectResource extends AuthenticatedResource
                 new XMLImportHelper(UserManager::instance()),
                 ProjectCreator::buildSelfRegularValidation()
             ),
-            TemplateFactory::build()
+            TemplateFactory::build(),
+            new ProjectFileToUploadCreator(new FileOngoingUploadDao()),
+            new ProjectRepresentationBuilder(EventManager::instance(), $this->getDescriptionFieldsFactory()),
+            new ProjectRegistrationCheckerAggregator(
+                new ProjectRegistrationBaseChecker(
+                    new \Rule_ProjectName(),
+                    new \Rule_ProjectFullName(),
+                ),
+                new ProjectRegistrationRESTChecker(
+                    new DefaultProjectVisibilityRetriever(),
+                    new CategoryCollectionConsistencyChecker(
+                        new \TroveCatFactory(new \TroveCatDao())
+                    ),
+                    new ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker(
+                        new DescriptionFieldsFactory(
+                            new DescriptionFieldsDao()
+                        )
+                    )
+                )
+            )
         );
-    }
-
-    /**
-     * @return ProjectFieldsMinimalRepresentation[]
-     */
-    private function getAdditionalFields(Project $project): array
-    {
-        $description_fields_infos = $this->getDescriptionFieldsFactory()->getAllDescriptionFields();
-        $fields_values            = $project->getProjectsDescFieldsValue();
-
-        $values = [];
-        foreach ($description_fields_infos as $description_fields_info) {
-            $values[$description_fields_info["desc_name"]] = $this->getFieldValue(
-                $fields_values,
-                $description_fields_info
-            );
-        }
-
-        $project_field_representations = [];
-        foreach ($values as $key => $value) {
-            $project_field_representations[] = new ProjectFieldsMinimalRepresentation($key, $value);
-        }
-
-        return $project_field_representations;
     }
 
     private function getURLVerification(): URLVerification

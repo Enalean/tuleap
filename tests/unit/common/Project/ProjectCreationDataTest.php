@@ -196,4 +196,18 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
+
+    public function testItBuildsFromArchive(): void
+    {
+        $project_data = ProjectCreationData::buildFromArchive(
+            $this->default_project_visibility_retriever,
+            [
+                'project' => [
+                    'is_public' => '1',
+                ],
+            ]
+        );
+
+        self::assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
+    }
 }

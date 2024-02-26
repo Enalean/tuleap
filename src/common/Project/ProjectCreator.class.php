@@ -382,7 +382,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $this->fakeGroupIdIntoHTTPParams($group_id);
 
-        $template_group = $data->getBuiltFromTemplateProject()->getProject();
+        $template_group = ($data->getBuiltFromTemplateProject()) ? $data->getBuiltFromTemplateProject()->getProject() : null;
 
         $legacy = [
             Service::SVN       => true,
@@ -395,56 +395,58 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'use_legacy_services'   => &$legacy,
         ]);
 
-        $this->project_service_activator->activateServicesFromTemplate($group, $template_group, $data, $legacy);
-        $this->setMessageToRequesterFromTemplate($group_id, $template_group->getID());
-        $this->initForumModuleFromTemplate($group_id, $template_group->getID());
+        if ($template_group) {
+            $this->project_service_activator->activateServicesFromTemplate($group, $template_group, $data, $legacy);
+            $this->setMessageToRequesterFromTemplate($group_id, $template_group->getID());
+            $this->initForumModuleFromTemplate($group_id, $template_group->getID());
 
-        if ($legacy[Service::SVN] === true) {
-            $this->initSVNModuleFromTemplate($group_id, $template_group->getID());
-        }
+            if ($legacy[Service::SVN] === true) {
+                $this->initSVNModuleFromTemplate($group_id, $template_group->getID());
+            }
 
-        // Activate other system references not associated with any service
-        $this->reference_manager->addSystemReferencesWithoutService($template_group->getID(), $group_id);
+            // Activate other system references not associated with any service
+            $this->reference_manager->addSystemReferencesWithoutService($template_group->getID(), $group_id);
 
-        $this->synchronized_project_membership_duplicator->duplicate((int) $template_group->getID(), $group);
-        //Copy ugroups
-        $ugroup_mapping = [];
-        $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping, $admin_user);
+            $this->synchronized_project_membership_duplicator->duplicate((int) $template_group->getID(), $group);
+            //Copy ugroups
+            $ugroup_mapping = [];
+            $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping, $admin_user);
 
-        $this->initFRSModuleFromTemplate($group, $template_group, $ugroup_mapping);
+            $this->initFRSModuleFromTemplate($group, $template_group, $ugroup_mapping);
 
-        if ($data->projectShouldInheritFromTemplate() && $legacy[Service::TRACKERV3]) {
-            $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
-        }
-        $this->initWikiModuleFromTemplate($group_id, $template_group->getID());
+            if ($data->projectShouldInheritFromTemplate() && $legacy[Service::TRACKERV3]) {
+                $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
+            }
+            $this->initWikiModuleFromTemplate($group_id, $template_group->getID());
 
-        //Create project specific references if template is not default site template
-        if (! $template_group->isSystem()) {
-            $this->reference_manager->addProjectReferences($template_group->getID(), $group_id);
-        }
+            //Create project specific references if template is not default site template
+            if (! $template_group->isSystem()) {
+                $this->reference_manager->addProjectReferences($template_group->getID(), $group_id);
+            }
 
-        $this->email_copier->copyEmailOptionsFromTemplate($group_id, (int) $template_group->getID());
+            $this->email_copier->copyEmailOptionsFromTemplate($group_id, (int) $template_group->getID());
 
-        $this->label_dao->duplicateLabelsIfNeededBetweenProjectsId($template_group->getID(), $group_id);
+            $this->label_dao->duplicateLabelsIfNeededBetweenProjectsId($template_group->getID(), $group_id);
 
-        $mapping_registry = new MappingRegistry($ugroup_mapping);
-        $this->event_manager->processEvent(
-            new RegisterProjectCreationEvent(
-                $group,
-                $template_group,
-                $mapping_registry,
-                $admin_user,
-                $legacy,
-                $data->projectShouldInheritFromTemplate(),
-            )
-        );
+            $mapping_registry = new MappingRegistry($ugroup_mapping);
+            $this->event_manager->processEvent(
+                new RegisterProjectCreationEvent(
+                    $group,
+                    $template_group,
+                    $mapping_registry,
+                    $admin_user,
+                    $legacy,
+                    $data->projectShouldInheritFromTemplate(),
+                )
+            );
 
-        if ($data->projectShouldInheritFromTemplate()) {
-            $this->initLayoutFromTemplate($group, $template_group, $mapping_registry);
-        }
+            if ($data->projectShouldInheritFromTemplate()) {
+                $this->initLayoutFromTemplate($group, $template_group, $mapping_registry);
+            }
 
-        if ($this->force_activation) {
-            $this->autoActivateProject($group);
+            if ($this->force_activation) {
+                $this->autoActivateProject($group);
+            }
         }
 
         return $group_id;

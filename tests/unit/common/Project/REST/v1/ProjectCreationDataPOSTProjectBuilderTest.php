@@ -31,8 +31,10 @@ use SimpleXMLElement;
 use Tuleap\Glyph\Glyph;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
+use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\REST\v1\Project\ProjectCreationDataPOSTProjectBuilder;
+use Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -214,5 +216,35 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
         self::assertFalse($creation_data->isTest());
         self::assertTrue($creation_data->isIsBuiltFromXml());
         self::assertEmpty($creation_data->getDataFields()->getSubmittedFields());
+    }
+
+    public function testItBuildsFromArchive(): void
+    {
+        $post_representation = ProjectPostRepresentation::build(101);
+
+        \ForgeConfig::setFeatureFlag(CustomProjectArchiveFeatureFlag::FEATURE_FLAG_KEY, '1');
+
+        $post_representation->template_id  = null;
+        $post_representation->shortname    = 'test';
+        $post_representation->label        = 'Project 01';
+        $post_representation->description  = 'desc';
+        $post_representation->is_public    = true;
+        $post_representation->from_archive = new ProjectFilePOSTRepresentation("test.zip", 123);
+
+        $user = UserTestBuilder::anActiveUser()->build();
+
+        $creation_data = $this->builder->buildProjectCreationDataFromPOSTRepresentation(
+            $post_representation,
+            $user
+        );
+
+        self::assertNotNull($creation_data);
+        self::assertEquals('Project 01', $creation_data->getFullName());
+        self::assertEquals('test', $creation_data->getUnixName());
+        self::assertEquals('desc', $creation_data->getShortDescription());
+        self::assertEquals('public', $creation_data->getAccess());
+        self::assertNull($creation_data->isTemplate());
+        self::assertFalse($creation_data->isTest());
+        self::assertFalse($creation_data->isIsBuiltFromXml());
     }
 }

@@ -31,15 +31,8 @@ use URLVerification;
 
 class TemplateFromProjectForCreation
 {
-    /**
-     * @var Project
-     * @psalm-readonly
-     */
-    private $project;
-
-    private function __construct(Project $project)
+    private function __construct(private readonly Project $project)
     {
-        $this->project = $project;
     }
 
     /**
