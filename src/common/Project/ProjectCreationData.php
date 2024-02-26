@@ -17,41 +17,40 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Project;
+
+use EventManager;
+use LogicException;
+use Project;
+use Psr\Log\LoggerInterface;
+use ServiceManager;
+use SimpleXMLElement;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
-use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use WrapperLogger;
+use XML_RNGValidator;
 
-class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ProjectCreationData
 {
-    /**
-     * @var bool
-     */
-    private $is_built_from_xml = false;
-    private $logger;
-    /**
-     * @var DefaultProjectVisibilityRetriever
-     */
-    private $default_project_visibility_retriever;
-    private $data_services;
+    private bool $is_built_from_xml = false;
+    private LoggerInterface $logger;
+    private DefaultProjectVisibilityRetriever $default_project_visibility_retriever;
+    private ?array $data_services;
     private ProjectRegistrationSubmittedFieldsCollection $data_fields;
-    private $full_name;
-    private $unix_name;
-    private $is_test;
-    private $is_template;
-    private $short_description;
-    /**
-     * @var TemplateFromProjectForCreation
-     */
-    private $built_from_template;
+    private string $full_name;
+    private string $unix_name;
+    private bool $is_test;
+    private ?bool $is_template         = null;
+    private ?string $short_description = null;
+    private TemplateFromProjectForCreation $built_from_template;
     private string $icon_codepoint = "";
 
     private CategoryCollection $trove_data;
-    private $inherit_from_template = true;
-    private $access;
+    private bool $inherit_from_template = true;
+    private string $access              = "";
 
     public function __construct(DefaultProjectVisibilityRetriever $default_project_visibility_retriever, ?\Psr\Log\LoggerInterface $logger = null)
     {
@@ -73,54 +72,53 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      * This is mostly useful for XML import where "the true" come from XML
      * and not from the predefined template.
      *
-     * @return bool
      */
-    public function projectShouldInheritFromTemplate()
+    public function projectShouldInheritFromTemplate(): bool
     {
         return $this->inherit_from_template;
     }
 
-    public function getFullName()
+    public function getFullName(): string
     {
         return $this->full_name;
     }
 
-    public function setFullName($name)
+    public function setFullName(string $name): void
     {
         $this->full_name = $name;
     }
 
-    public function getUnixName()
+    public function getUnixName(): string
     {
         return $this->unix_name;
     }
 
-    public function setUnixName($name)
+    public function setUnixName(string $name): void
     {
         $this->unix_name = $name;
     }
 
-    public function getAccess()
+    public function getAccess(): string
     {
         return $this->access;
     }
 
-    public function isTest()
+    public function isTest(): bool
     {
         return $this->is_test;
     }
 
-    public function isTemplate()
+    public function isTemplate(): ?bool
     {
         return $this->is_template;
     }
 
-    public function setIsTemplate()
+    public function setIsTemplate(): void
     {
         $this->is_template = true;
     }
 
-    public function getShortDescription()
+    public function getShortDescription(): ?string
     {
         return $this->short_description;
     }
@@ -150,7 +148,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      * @return array with:
      *     is_used => boolean telling if the service is used
      */
-    public function getServiceInfo($service_id): ?array
+    public function getServiceInfo(int $service_id): ?array
     {
         return isset($this->data_services[$service_id]) ?
             $this->data_services[$service_id] :
@@ -172,27 +170,27 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         TemplateFromProjectForCreation $template_from_project_for_creation,
         array $data,
-    ) {
-        $instance = new ProjectCreationData($default_project_visibility_retriever);
+    ): self {
+        $instance = new self($default_project_visibility_retriever);
         $instance->fromForm($template_from_project_for_creation, $data);
         return $instance;
     }
 
-    private function fromForm(TemplateFromProjectForCreation $template_from_project_for_creation, array $data)
+    private function fromForm(TemplateFromProjectForCreation $template_from_project_for_creation, array $data): void
     {
         $project = isset($data['project']) ? $data['project'] : [];
 
-        $this->unix_name           = isset($project['form_unix_name'])         ? $project['form_unix_name']         : null;
-        $this->full_name           = isset($project['form_full_name'])         ? $project['form_full_name']         : null;
+        $this->unix_name           = isset($project['form_unix_name']) ? $project['form_unix_name'] : "";
+        $this->full_name           = isset($project['form_full_name']) ? $project['form_full_name'] : "";
         $this->short_description   = isset($project['form_short_description']) ? $project['form_short_description'] : null;
         $this->built_from_template = $template_from_project_for_creation;
-        $this->is_test             = isset($project['is_test'])                ? $project['is_test']                : null;
+        $this->is_test             = isset($project['is_test']) ? $project['is_test'] : false;
         $this->setAccessFromProjectData($project);
         $this->trove_data    = isset($project['trove']) ? $project['trove'] : new CategoryCollection();
         $this->data_services = isset($project['services'])               ? $project['services']               : [];
     }
 
-    private function getAccessFromProjectArrayData(array $project)
+    private function getAccessFromProjectArrayData(array $project): string
     {
         if (! isset($project['is_public'])) {
             return $this->default_project_visibility_retriever->getDefaultProjectVisibility();
@@ -224,10 +222,10 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         ?DefaultProjectVisibilityRetriever $default_project_visibility_retriever = null,
         ?ExternalFieldsExtractor $external_fields_extractor = null,
         ?ProjectCreationDataServiceFromXmlInheritor $service_inheritor = null,
-    ) {
+    ): self {
         $default_project_visibility_retriever = $default_project_visibility_retriever ?? new DefaultProjectVisibilityRetriever();
 
-        $instance = new ProjectCreationData($default_project_visibility_retriever, $logger);
+        $instance = new self($default_project_visibility_retriever, $logger);
         $instance->fromXML($xml, $xml_validator, $service_manager, $external_fields_extractor, $service_inheritor);
         return $instance;
     }
@@ -238,7 +236,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         ?ServiceManager $service_manager = null,
         ?ExternalFieldsExtractor $external_fields_extractor = null,
         ?ProjectCreationDataServiceFromXmlInheritor $service_inheritor = null,
-    ) {
+    ): void {
         if (empty($xml_validator)) {
             $xml_validator = new XML_RNGValidator();
         }
@@ -261,7 +259,10 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $xml_validator->validate($partial_element, $rng_path);
         $this->logger->debug("RNG validated, feed the data");
 
-        $attrs                     = $xml->attributes();
+        $attrs = $xml->attributes();
+        if (! isset($attrs)) {
+            throw new LogicException("XML seems valid from rng standpoint, but does not have attributes later");
+        }
         $this->unix_name           = (string) $attrs['unix-name'];
         $this->full_name           = (string) $attrs['full-name'];
         $this->short_description   = (string) $attrs['description'];
@@ -285,21 +286,21 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->logger->debug("Data gathered from XML");
     }
 
-    public function unsetProjectServiceUsage($service_id)
+    public function unsetProjectServiceUsage(int $service_id): void
     {
         if (isset($this->data_services[$service_id])) {
             $this->data_services[$service_id]['is_used'] = '0';
         }
     }
 
-    public function forceServiceUsage($service_id)
+    public function forceServiceUsage(int $service_id): void
     {
         if (isset($this->data_services[$service_id])) {
             $this->data_services[$service_id]['is_used'] = '1';
         }
     }
 
-    public function setShortDescription($short_description): void
+    public function setShortDescription(string $short_description): void
     {
         $this->short_description = $short_description;
     }

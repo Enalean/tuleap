@@ -28,7 +28,6 @@ use ForgeAccess;
 use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use ProjectCreationData;
 use ProjectManager;
 use Service;
 use ServiceManager;

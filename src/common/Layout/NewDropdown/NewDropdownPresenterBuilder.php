@@ -26,6 +26,7 @@ use PFUser;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 
 class NewDropdownPresenterBuilder
@@ -77,7 +78,7 @@ class NewDropdownPresenterBuilder
     {
         $project_registration_errors = $this->project_registration_permissions_checker->collectAllErrorsForProjectRegistration(
             $current_user,
-            new \ProjectCreationData(
+            new ProjectCreationData(
                 new DefaultProjectVisibilityRetriever()
             )
         );

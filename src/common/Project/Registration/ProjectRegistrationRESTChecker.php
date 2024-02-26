@@ -25,12 +25,12 @@ namespace Tuleap\Project\Registration;
 
 use ForgeConfig;
 use PFUser;
-use ProjectCreationData;
 use ProjectManager;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\ProjectCreationData;
 
 final class ProjectRegistrationRESTChecker implements ProjectRegistrationChecker
 {

@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\DescriptionFields;
 
-use ProjectCreationData;
 use Psr\Log\LoggerInterface;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\ProjectCreationData;
 
 class FieldUpdator
 {

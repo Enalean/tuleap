@@ -32,6 +32,7 @@ use Tuleap\Glyph\Glyph;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\REST\v1\Project\ProjectCreationDataPOSTProjectBuilder;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;

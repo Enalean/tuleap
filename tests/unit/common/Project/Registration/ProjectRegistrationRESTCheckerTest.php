@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-use ProjectCreationData;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
@@ -31,6 +30,7 @@ use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCol
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 

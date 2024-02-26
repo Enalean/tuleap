@@ -20,26 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project\REST\v1\File;
+namespace Tuleap\Project\REST\v1\Project;
 /**
- * @psalm-immutable
+* @psalm-immutable
  */
-final class ProjectFilePOSTRepresentation
+final class CreatedFileRepresentation
 {
-    /**
-     * @var string The filename of the file to upload {@from body} {@required true}
-     */
-    public string $file_name;
-    /**
-     * @var int The filesize of the file to upload {@from body} {@required true} {@min 0}
-     */
-    public int $file_size;
-
-    public function __construct(
-        string $file_name,
-        int $file_size,
-    ) {
-        $this->file_name = $file_name;
-        $this->file_size = $file_size;
+    public function __construct(public readonly string $upload_href)
+    {
     }
 }

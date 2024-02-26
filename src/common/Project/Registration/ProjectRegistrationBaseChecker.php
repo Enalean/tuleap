@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration;
 
 use PFUser;
-use ProjectCreationData;
 use Rule_ProjectFullName;
 use Rule_ProjectName;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 
 final class ProjectRegistrationBaseChecker implements ProjectRegistrationChecker

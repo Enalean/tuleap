@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-use ProjectCreationData;
 use Psr\Log\NullLogger;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 

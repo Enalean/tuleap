@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template\Upload;
 
 use DateTimeImmutable;
-use Tuleap\Project\REST\v1\File\ProjectFilePOSTRepresentation;
+use Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 

@@ -24,7 +24,6 @@ namespace Tuleap\Project;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
-use ProjectCreationData;
 use ProjectCreator;
 use ProjectManager;
 use Psr\Log\NullLogger;

@@ -43,6 +43,7 @@ use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdmini
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\SystemEventRunnerInterface;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;

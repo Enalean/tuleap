@@ -25,7 +25,7 @@ namespace Tuleap\Project\Registration\Template\Upload;
 use DateInterval;
 use DateTimeImmutable;
 use PFUser;
-use Tuleap\Project\REST\v1\File\ProjectFilePOSTRepresentation;
+use Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation;
 
 final readonly class ProjectFileToUploadCreator
 {

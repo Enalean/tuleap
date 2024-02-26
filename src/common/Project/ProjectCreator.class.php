@@ -48,6 +48,7 @@ use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
 use Tuleap\Project\Registration\ProjectInvalidFullNameException;
 use Tuleap\Project\Registration\ProjectInvalidShortNameException;

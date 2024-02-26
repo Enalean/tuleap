@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project;
 
-use ProjectCreationData;
 use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
@@ -38,6 +37,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;

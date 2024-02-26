@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration;
 
 use PFUser;
-use ProjectCreationData;
+use Tuleap\Project\ProjectCreationData;
 
 final class ProjectRegistrationCheckerBlockErrorSet implements ProjectRegistrationChecker
 {
