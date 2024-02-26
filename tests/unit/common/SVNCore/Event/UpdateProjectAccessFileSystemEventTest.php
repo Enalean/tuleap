@@ -22,44 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\SVNCore\Event;
 
+use Backend;
+use BackendSVN;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ProjectManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use SystemEvent;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class UpdateProjectAccessFileSystemEventTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UpdateProjectAccessFileSystemEventTest extends TestCase
 {
     private const PROJECT_ID = 102;
 
-    /**
-     * @var \BackendSVN|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $backend_svn;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|EventDispatcherInterface
-     */
-    private $event_dispatcher;
-
-    /**
-     * @var UpdateProjectAccessFileSystemEvent
-     */
-    private $system_event;
+    private ProjectManager&MockObject $project_manager;
+    private EventDispatcherInterface&MockObject $event_dispatcher;
+    private UpdateProjectAccessFileSystemEvent $system_event;
 
     protected function setUp(): void
     {
-        $this->backend_svn = $this->createMock(\BackendSVN::class);
-        \Backend::setInstance(\Backend::SVN, $this->backend_svn);
-        $this->project_manager  = $this->createMock(\ProjectManager::class);
+        $backend_svn = $this->createMock(BackendSVN::class);
+        Backend::setInstance(Backend::SVN, $backend_svn);
+        $this->project_manager  = $this->createMock(ProjectManager::class);
         $this->event_dispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $this->system_event = new UpdateProjectAccessFileSystemEvent(
             12,
-            \SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES,
-            \SystemEvent::OWNER_ROOT,
+            SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES,
+            SystemEvent::OWNER_ROOT,
             (string) self::PROJECT_ID,
-            \SystemEvent::PRIORITY_MEDIUM,
-            \SystemEvent::STATUS_NEW,
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::STATUS_NEW,
             10,
             0,
             0,
@@ -70,12 +63,12 @@ final class UpdateProjectAccessFileSystemEventTest extends \Tuleap\Test\PHPUnit\
 
     protected function tearDown(): void
     {
-        \Backend::clearInstances();
+        Backend::clearInstances();
     }
 
     public function testCanProcessAccessFilesChanges(): void
     {
-        $project = $this->createMock(\Project::class);
+        $project = $this->createMock(Project::class);
         $this->project_manager->method('getProject')->with(self::PROJECT_ID)->willReturn($project);
 
         $this->event_dispatcher->expects(self::once())
