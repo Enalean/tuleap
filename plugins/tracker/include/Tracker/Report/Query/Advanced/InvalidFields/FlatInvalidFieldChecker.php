@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
@@ -36,6 +37,7 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
         private FloatFieldChecker $float_field_checker,
         private IntegerFieldChecker $int_field_checker,
         private TextFieldChecker $text_field_checker,
+        private DateFieldChecker $date_field_checker,
         private EqualComparisonVisitor $equal_checker,
         private NotEqualComparisonVisitor $not_equal_checker,
         private LesserThanComparisonVisitor $lesser_than_checker,
@@ -78,6 +80,21 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
         return $this->text_field_checker;
     }
 
+    public function visitDate(\Tracker_FormElement_Field_Date $field): InvalidFieldChecker
+    {
+        return $this->date_field_checker;
+    }
+
+    public function visitLastUpdateDate(\Tracker_FormElement_Field_LastUpdateDate $field): InvalidFieldChecker
+    {
+        return $this->date_field_checker;
+    }
+
+    public function visitSubmittedOn(\Tracker_FormElement_Field_SubmittedOn $field): InvalidFieldChecker
+    {
+        return $this->date_field_checker;
+    }
+
     private function matchComparisonToFieldChecker(\Tracker_FormElement_Field $field): InvalidFieldChecker
     {
         return match ($this->comparison->getType()) {
@@ -91,11 +108,6 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
             ComparisonType::In => $this->in_checker->getInvalidFieldChecker($field),
             ComparisonType::NotIn => $this->not_in_checker->getInvalidFieldChecker($field)
         };
-    }
-
-    public function visitDate(\Tracker_FormElement_Field_Date $field): InvalidFieldChecker
-    {
-        return $this->matchComparisonToFieldChecker($field);
     }
 
     public function visitFile(\Tracker_FormElement_Field_File $field): InvalidFieldChecker
@@ -129,16 +141,6 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
     }
 
     public function visitLastModifiedBy(\Tracker_FormElement_Field_LastModifiedBy $field): InvalidFieldChecker
-    {
-        return $this->matchComparisonToFieldChecker($field);
-    }
-
-    public function visitLastUpdateDate(\Tracker_FormElement_Field_LastUpdateDate $field): InvalidFieldChecker
-    {
-        return $this->matchComparisonToFieldChecker($field);
-    }
-
-    public function visitSubmittedOn(\Tracker_FormElement_Field_SubmittedOn $field): InvalidFieldChecker
     {
         return $this->matchComparisonToFieldChecker($field);
     }
