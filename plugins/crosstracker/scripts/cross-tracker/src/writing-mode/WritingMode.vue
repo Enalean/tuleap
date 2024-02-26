@@ -45,7 +45,7 @@
                 v-on:click="search"
                 data-test="search-report-button"
             >
-                <i class="fa fa-search tlp-button-icon"></i>
+                <i aria-hidden="true" class="fa-solid fa-search tlp-button-icon"></i>
                 <translate>Search</translate>
             </button>
         </div>

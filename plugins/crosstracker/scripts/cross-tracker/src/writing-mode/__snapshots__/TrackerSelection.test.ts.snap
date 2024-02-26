@@ -19,7 +19,8 @@ exports[`TrackerSelection loadProjects() Displays the projects in selectbox 1`] 
       </translate-stub>
        
       <i
-        class="fa fa-asterisk"
+        aria-hidden="true"
+        class="fa-solid fa-asterisk"
       />
     </label>
      
@@ -60,7 +61,8 @@ exports[`TrackerSelection loadProjects() Displays the projects in selectbox 1`] 
       </translate-stub>
        
       <i
-        class="fa fa-asterisk"
+        aria-hidden="true"
+        class="fa-solid fa-asterisk"
       />
     </label>
      
@@ -96,7 +98,8 @@ exports[`TrackerSelection loadProjects() Displays the projects in selectbox 1`] 
         type="button"
       >
         <i
-          class="tlp-button-icon fas fa-circle-notch fa-spin"
+          aria-hidden="true"
+          class="tlp-button-icon fa-solid fa-circle-notch fa-spin"
           data-test="tracker-loader"
         />
          

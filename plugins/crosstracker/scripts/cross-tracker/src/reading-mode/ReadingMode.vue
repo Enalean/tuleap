@@ -52,8 +52,14 @@
                 v-bind:class="{ disabled: is_save_disabled }"
                 data-test="cross-tracker-save-report"
             >
-                <i v-if="!is_loading" class="tlp-button-icon fa fa-save"></i>
-                <i v-if="is_loading" class="tlp-button-icon fas fa-circle-notch fa-spin"></i>
+                <i
+                    aria-hidden="true"
+                    class="tlp-button-icon fa-solid"
+                    v-bind:class="{
+                        'fa-circle-notch fa-spin': is_loading,
+                        'fa-save': !is_loading,
+                    }"
+                ></i>
                 <translate>Save report</translate>
             </button>
         </div>

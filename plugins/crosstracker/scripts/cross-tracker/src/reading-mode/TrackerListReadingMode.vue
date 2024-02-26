@@ -27,7 +27,10 @@
             >
                 <span>{{ tracker_label }}</span>
                 <span class="cross-tracker-reading-mode-tracker-project-name">
-                    <i class="fa fa-archive cross-tracker-report-archive-icon"></i>
+                    <i
+                        aria-hidden="true"
+                        class="fa-solid fa-archive cross-tracker-report-archive-icon"
+                    ></i>
                     {{ project_label }}
                 </span>
             </div>

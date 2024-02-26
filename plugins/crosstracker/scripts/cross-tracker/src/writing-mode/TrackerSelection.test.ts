@@ -74,7 +74,9 @@ describe("TrackerSelection", () => {
 
             expect(store.commit).toHaveBeenCalledWith("setErrorMessage", expect.anything());
 
-            expect(wrapper.find("[data-test=tracker-loader]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=tracker-loader]").attributes("class")).not.toContain(
+                "fa-spin",
+            );
         });
 
         it("Displays the projects in selectbox", async () => {

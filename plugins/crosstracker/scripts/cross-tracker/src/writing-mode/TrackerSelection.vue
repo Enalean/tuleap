@@ -26,7 +26,7 @@
         >
             <label class="tlp-label" for="project">
                 <translate>Project</translate>
-                <i class="fa fa-asterisk"></i>
+                <i aria-hidden="true" class="fa-solid fa-asterisk"></i>
             </label>
             <select
                 class="cross-tracker-selector-project-input tlp-select"
@@ -47,7 +47,7 @@
         >
             <label class="tlp-label" for="tracker">
                 <translate>Tracker</translate>
-                <i class="fa fa-asterisk"></i>
+                <i aria-hidden="true" class="fa-solid fa-asterisk"></i>
             </label>
             <div class="tlp-form-element tlp-form-element-append">
                 <select
@@ -82,11 +82,14 @@
                     data-test="cross-tracker-selector-tracker-button"
                 >
                     <i
-                        v-if="is_loader_shown"
-                        class="tlp-button-icon fas fa-circle-notch fa-spin"
+                        aria-hidden="true"
+                        class="tlp-button-icon fa-solid"
+                        v-bind:class="{
+                            'fa-circle-notch fa-spin': is_loader_shown,
+                            'fa-plus': !is_loader_shown,
+                        }"
                         data-test="tracker-loader"
                     ></i>
-                    <i v-else class="tlp-button-icon fa fa-plus"></i>
                     <translate>Add</translate>
                 </button>
             </div>
