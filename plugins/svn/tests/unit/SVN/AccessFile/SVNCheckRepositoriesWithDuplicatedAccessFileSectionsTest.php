@@ -55,12 +55,15 @@ final class SVNCheckRepositoriesWithDuplicatedAccessFileSectionsTest extends Tes
     {
         $this->repository_manager->method('getRepositoriesOfNonDeletedProjects')->willReturn([]);
         $command_tester = new CommandTester($this->command);
-        $command_tester->execute([]);
+        $command_tester->execute([], ['capture_stderr_separately' => true]);
 
         $text_table          = $command_tester->getDisplay();
-        $expected_text_table = "Start checking of duplicated sections in platform access files:\nNo duplicated sections in platform access files found.\n";
+        $expected_text_table = "No duplicated sections in platform access files found.\n";
 
         self::assertEquals($expected_text_table, $text_table);
+
+        $command_tester->execute(['--format' => 'json'], ['capture_stderr_separately' => true]);
+        $this->assertEmpty(\Psl\Json\decode($command_tester->getDisplay()));
     }
 
     public function testItDisplayATableOfProjectRepositoriesWithDuplicatedSections(): void
@@ -72,6 +75,7 @@ final class SVNCheckRepositoriesWithDuplicatedAccessFileSectionsTest extends Tes
         $repository_A->method('getProject')->willReturn($project_A);
         $repository_A->method('getSystemPath')->willReturn('/var/lib/tuleap/101/repo_A');
         $repository_A->method('getFullName')->willReturn('Project A/Repository A');
+        $repository_A->method('getId')->willReturn(101);
         $repository_A->method('getName')->willReturn('Repository A');
         $project_A_repositories = [
             $repository_A,
@@ -81,11 +85,13 @@ final class SVNCheckRepositoriesWithDuplicatedAccessFileSectionsTest extends Tes
         $repository_B->method('getProject')->willReturn($project_B);
         $repository_B->method('getSystemPath')->willReturn('/var/lib/tuleap/102/repo_B');
         $repository_B->method('getFullName')->willReturn('Project B/Repository B');
+        $repository_B->method('getId')->willReturn(102);
         $repository_B->method('getName')->willReturn('Repository B');
         $repository_C = $this->createMock(Repository::class);
         $repository_C->method('getProject')->willReturn($project_B);
         $repository_C->method('getSystemPath')->willReturn('/var/lib/tuleap/102/repo_C');
-        $repository_C->method('getFullName')->willReturn('Project B/Repository C');
+        //$repository_C->method('getFullName')->willReturn('Project B/Repository C');
+        $repository_C->method('getId')->willReturn(103);
         $repository_C->method('getName')->willReturn('Repository C');
         $project_B_repositories = [
             $repository_B,
@@ -139,21 +145,47 @@ final class SVNCheckRepositoriesWithDuplicatedAccessFileSectionsTest extends Tes
         );
 
         $command_tester = new CommandTester($this->command);
-        $command_tester->execute([]);
+        $command_tester->execute([], ['capture_stderr_separately' => true]);
 
         $text_table          = $command_tester->getDisplay();
         $expected_text_table = <<<EOT
-            Start checking of duplicated sections in platform access files:
-            ┌────────────┬──────────────┬──────────────┐
-            │ Project Id │ Project name │ Repository   │
-            ├────────────┼──────────────┼──────────────┤
-            │ 101        │ project a    │ Repository A │
-            │ 102        │ project b    │ Repository C │
-            └────────────┴──────────────┴──────────────┘
+            +------------+--------------+---------------+-----------------+
+            | Project ID | Project name | Repository ID | Repository name |
+            +------------+--------------+---------------+-----------------+
+            | 101        | project a    | 101           | Repository A    |
+            | 102        | project b    | 103           | Repository C    |
+            +------------+--------------+---------------+-----------------+
             2 SVN access files with duplicated sections found.
 
             EOT;
 
         self::assertEquals($expected_text_table, $text_table);
+
+        $command_tester->execute(['--format' => 'json'], ['capture_stderr_separately' => true]);
+        $this->assertEqualsCanonicalizing(
+            [
+                [
+                    'project_id' => 101,
+                    'project_unixname' => 'project a',
+                    'repository_id' => 101,
+                    'repository_name' => 'Repository A',
+                ],
+                [
+                    'project_id' => 102,
+                    'project_unixname' => 'project b',
+                    'repository_id' => 103,
+                    'repository_name' => 'Repository C',
+                ],
+            ],
+            \Psl\Json\decode($command_tester->getDisplay())
+        );
+    }
+
+    public function testUnknownFormatIsRejected(): void
+    {
+        $command_tester = new CommandTester($this->command);
+
+        $this->expectException(\RuntimeException::class);
+        $command_tester->execute(['--format' => 'aaaaaaa']);
     }
 }
