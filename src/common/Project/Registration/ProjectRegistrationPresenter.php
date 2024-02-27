@@ -26,64 +26,25 @@ namespace Tuleap\Project\Registration;
 use ForgeConfig;
 use ProjectManager;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
+use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 
-class ProjectRegistrationPresenter
+/**
+* @psalm-immutable
+ */
+final class ProjectRegistrationPresenter
 {
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $tuleap_templates;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $are_restricted_users_allowed;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $project_default_visibility;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $projects_must_be_approved;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $trove_categories;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $field_list;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $is_description_mandatory;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $company_templates;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $company_name;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $can_user_choose_privacy;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $external_templates;
+    public readonly string $tuleap_templates;
+    public readonly bool $are_restricted_users_allowed;
+    public readonly string $project_default_visibility;
+    public readonly bool $projects_must_be_approved;
+    public readonly string $trove_categories;
+    public readonly string $field_list;
+    public readonly bool $is_description_mandatory;
+    public readonly string $company_templates;
+    public readonly string $company_name;
+    public readonly bool $can_user_choose_privacy;
+    public readonly string $external_templates;
+    public readonly bool $can_create_from_project_file;
 
     public function __construct(
         string $project_default_visibility,
@@ -109,5 +70,6 @@ class ProjectRegistrationPresenter
             ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY
         );
         $this->external_templates           = json_encode($external_templates);
+        $this->can_create_from_project_file = CustomProjectArchiveFeatureFlag::canCreateFromCustomArchive();
     }
 }

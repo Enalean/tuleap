@@ -82,6 +82,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         external_templates = JSON.parse(external_templates_json);
     }
 
+    const can_create_from_project_file = Boolean(vue_mount_point.dataset.canCreateFromProjectFile);
+
     const pinia = createPinia();
 
     const AppComponent = Vue.extend(App);
@@ -98,6 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         company_templates,
         company_name,
         can_user_choose_project_visibility,
+        can_create_from_project_file,
         selected_tuleap_template: null,
         selected_company_template: null,
         selected_template_category: null,

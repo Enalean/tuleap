@@ -45,4 +45,5 @@ export interface RootState {
     readonly external_templates: ExternalTemplateData[];
     readonly company_name: string;
     readonly can_user_choose_project_visibility: boolean;
+    readonly can_create_from_project_file: boolean;
 }

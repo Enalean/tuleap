@@ -18,68 +18,59 @@
   -->
 
 <template>
-    <section
-        class="project-registration-default-templates-section"
-        data-test="project-load-user-project-list"
-    >
-        <div class="project-registration-template-card">
-            <input
-                type="radio"
-                id="project-registration-tuleap-template-other-user-project"
-                class="project-registration-selected-template"
-                v-bind:checked="root_store.is_advanced_option_selected(option_name)"
-                name="selected-template"
-                data-test="selected-template-input"
-                v-on:change="root_store.setAdvancedActiveOption(option_name)"
-            />
+    <div class="project-registration-template-card">
+        <input
+            type="radio"
+            id="project-registration-tuleap-template-other-user-project"
+            class="project-registration-selected-template"
+            v-bind:checked="root_store.is_advanced_option_selected(option_name)"
+            name="selected-template"
+            data-test="selected-template-input"
+            v-on:change="root_store.setAdvancedActiveOption(option_name)"
+        />
 
-            <label
-                class="tlp-card tlp-card-selectable project-registration-template-label"
-                data-test="project-registration-card-label"
-                for="project-registration-tuleap-template-other-user-project"
-                v-on:click="loadProjects"
-            >
-                <div class="project-registration-template-glyph"><svg-template /></div>
-                <div class="project-registration-template-content">
-                    <h4 class="project-registration-template-card-title" v-translate>
-                        From another project I'm admin of
-                    </h4>
-                    <div
-                        v-if="
-                            !root_store.is_advanced_option_selected(option_name) &&
-                            !is_loading_project_list &&
-                            !has_error
-                        "
-                        class="project-registration-template-card-description"
-                        data-test="user-project-description"
-                    >
-                        <translate>
-                            Project configuration will be duplicated into your new project.
-                        </translate>
-                    </div>
-                    <div
-                        v-else-if="is_loading_project_list && !has_error"
-                        data-test="user-project-spinner"
-                    >
-                        <i class="fa fa-spinner fa-spin fa-circle-o-notch"></i>
-                    </div>
-                    <div
-                        v-else-if="has_error"
-                        class="tlp-text-danger"
-                        data-test="user-project-error"
-                    >
-                        <translate>Oh snap! Failed to load project you are admin of.</translate>
-                    </div>
-                    <user-project-list
-                        v-else-if="root_store.is_advanced_option_selected(option_name)"
-                        v-bind:project-list="root_store.projects_user_is_admin_of"
-                        v-bind:selected-company-template="root_store.selected_company_template"
-                        data-test="user-project-list"
-                    />
+        <label
+            class="tlp-card tlp-card-selectable project-registration-template-label"
+            data-test="project-registration-card-label"
+            for="project-registration-tuleap-template-other-user-project"
+            v-on:click="loadProjects"
+        >
+            <div class="project-registration-template-glyph"><svg-template /></div>
+            <div class="project-registration-template-content">
+                <h4 class="project-registration-template-card-title" v-translate>
+                    From another project I'm admin of
+                </h4>
+                <div
+                    v-if="
+                        !root_store.is_advanced_option_selected(option_name) &&
+                        !is_loading_project_list &&
+                        !has_error
+                    "
+                    class="project-registration-template-card-description"
+                    data-test="user-project-description"
+                >
+                    <translate>
+                        Project configuration will be duplicated into your new project.
+                    </translate>
                 </div>
-            </label>
-        </div>
-    </section>
+                <div
+                    v-else-if="is_loading_project_list && !has_error"
+                    data-test="user-project-spinner"
+                >
+                    <i class="fa fa-spinner fa-spin fa-circle-o-notch"></i>
+                </div>
+                <div v-else-if="has_error" class="tlp-text-danger" data-test="user-project-error">
+                    <translate>Oh snap! Failed to load project you are admin of.</translate>
+                </div>
+                <user-project-list
+                    v-else-if="root_store.is_advanced_option_selected(option_name)"
+                    v-bind:project-list="root_store.projects_user_is_admin_of"
+                    v-bind:selected-company-template="root_store.selected_company_template"
+                    data-test="user-project-list"
+                />
+            </div>
+        </label>
+    </div>
 </template>
 
 <script lang="ts">

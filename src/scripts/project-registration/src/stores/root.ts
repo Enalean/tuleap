@@ -43,6 +43,7 @@ export const useStore = defineStore("root", {
         error: null,
         is_creating_project: false,
         selected_advanced_option: null,
+        can_create_from_project_file: false,
     }),
     getters: {
         is_template_selected: (state: RootState): boolean =>

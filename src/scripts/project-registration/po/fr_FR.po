@@ -29,6 +29,9 @@ msgstr "Modèle choisi"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Create a project based on a template exported from another platform"
+msgstr "Créer un projet basé sur un modèle exporté d'une autre plateforme"
+
 msgid "Custom templates"
 msgstr "Modèles de projet personnalisés"
 
@@ -40,6 +43,9 @@ msgstr "Pour les utilisateurs avancés"
 
 msgid "From another project I'm admin of"
 msgstr "Depuis un autre projet dont je suis administrateur"
+
+msgid "From project template upload"
+msgstr "Depuis un modèle de projet"
 
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
