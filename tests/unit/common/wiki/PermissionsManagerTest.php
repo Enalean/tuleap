@@ -18,40 +18,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\PHPWiki\WikiPage;
 use Tuleap\Project\UGroupLiteralizer;
+use Tuleap\Test\PHPUnit\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Wiki_PermissionsManagerTest extends TestCase
 {
     private Wiki_PermissionsManager $wiki_permissions_manager;
-    private PermissionsManager&\PHPUnit\Framework\MockObject\MockObject $permission_manager;
-    private ProjectManager&\PHPUnit\Framework\MockObject\MockObject $project_manager;
-    private WikiPage&\PHPUnit\Framework\MockObject\MockObject $wiki_page;
-    /**
-     * @var \Mockery\MockInterface&Project
-     */
-    private $project;
+    private PermissionsManager&MockObject $permission_manager;
+    private WikiPage&MockObject $wiki_page;
+    private Project&MockObject $project;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->project = $this->createMock(\Project::class);
+        $this->project = $this->createMock(Project::class);
         $this->project->method('getUnixName')->willReturn('perceval');
         $this->project->method('getId')->willReturn(200);
 
-        $this->wiki_page = $this->createMock(\Tuleap\PHPWiki\WikiPage::class);
+        $this->wiki_page = $this->createMock(WikiPage::class);
         $this->wiki_page->method('getId')->willReturn(101);
         $this->wiki_page->method('getGid')->willReturn(200);
 
-        $this->permission_manager = $this->createMock(\PermissionsManager::class);
-        $this->project_manager    = $this->createMock(\ProjectManager::class);
-        $this->project_manager->method('getProject')->with(200)->willReturn($this->project);
+        $this->permission_manager = $this->createMock(PermissionsManager::class);
+        $project_manager          = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->with(200)->willReturn($this->project);
 
         $this->wiki_permissions_manager = new Wiki_PermissionsManager(
             $this->permission_manager,
-            $this->project_manager,
+            $project_manager,
             new UGroupLiteralizer(),
         );
     }
