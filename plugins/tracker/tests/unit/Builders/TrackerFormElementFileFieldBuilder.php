@@ -27,9 +27,15 @@ use Tracker_FormElement_Field_File;
 final class TrackerFormElementFileFieldBuilder
 {
     private string $name = "file";
+    private \Tracker $tracker;
+    /** @var list<\PFUser> */
+    private array $user_with_read_permission = [];
+    /** @var array<int, bool> */
+    private array $read_permissions = [];
 
     private function __construct(private readonly int $id)
     {
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(19)->build();
     }
 
     public static function aFileField(int $id): self
@@ -43,11 +49,24 @@ final class TrackerFormElementFileFieldBuilder
         return $this;
     }
 
+    public function inTracker(\Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
+        return $this;
+    }
+
+    public function withReadPermission(\PFUser $user, bool $user_can_read): self
+    {
+        $this->user_with_read_permission[]      = $user;
+        $this->read_permissions[$user->getId()] = $user_can_read;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_File
     {
-        return new Tracker_FormElement_Field_File(
+        $field = new Tracker_FormElement_Field_File(
             $this->id,
-            10,
+            $this->tracker->getId(),
             15,
             $this->name,
             $this->name,
@@ -59,5 +78,10 @@ final class TrackerFormElementFileFieldBuilder
             10,
             null
         );
+        $field->setTracker($this->tracker);
+        foreach ($this->user_with_read_permission as $user) {
+            $field->setUserCanRead($user, $this->read_permissions[$user->getId()]);
+        }
+        return $field;
     }
 }

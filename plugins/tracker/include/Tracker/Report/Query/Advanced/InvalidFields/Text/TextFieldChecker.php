@@ -33,9 +33,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
 
 /**
  * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, void>
@@ -70,41 +67,36 @@ final class TextFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
      */
     private function checkTextValueIsValid(Comparison $comparison, \Tracker_FormElement_Field $field): void
     {
-        try {
-            $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
-        } catch (NowIsNotSupportedException) {
-            throw new TextToNowComparisonException($field);
-        } catch (MySelfIsNotSupportedException) {
-            throw new TextToMySelfComparisonException($field);
-        } catch (StatusOpenIsNotSupportedException) {
-            throw new TextToStatusOpenComparisonException($field);
-        }
-    }
-
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
-    {
-        throw new NowIsNotSupportedException();
+        $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
+        // Do nothing, SimpleValue is valid
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
-    }
-
-    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
-    {
+        throw new TextToNowComparisonException($parameters->field);
     }
 
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
-        throw new MySelfIsNotSupportedException();
+        throw new TextToMySelfComparisonException($parameters->field);
     }
 
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
-        throw new StatusOpenIsNotSupportedException();
+        throw new TextToStatusOpenComparisonException($parameters->field);
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
+    {
+        throw new \LogicException('Should not end there');
+    }
+
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
+    {
+        throw new \LogicException('Should not end there');
     }
 }

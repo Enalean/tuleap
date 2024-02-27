@@ -2949,10 +2949,6 @@ msgid "The file field '%s' cannot be compared to OPEN()."
 msgstr ""
 
 #, php-format
-msgid "The file field '%s' cannot be compared to the value '%s'."
-msgstr ""
-
-#, php-format
 msgid "The float field '%s' cannot be compared to MYSELF()."
 msgstr ""
 

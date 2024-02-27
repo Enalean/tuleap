@@ -17,38 +17,86 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
 
-final class FileFieldChecker implements InvalidFieldChecker
+/**
+ * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, void>
+ */
+final class FileFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
     /**
-     * @var ValueForFileExtractor
+     * @throws FieldIsNotSupportedForComparisonException
+     * @throws FileToMySelfComparisonException
+     * @throws FileToNowComparisonException
+     * @throws FileToStatusOpenComparisonException
      */
-    private $values_extractor;
-
-    public function __construct(
-        ValueForFileExtractor $values_extractor,
-    ) {
-        $this->values_extractor = $values_extractor;
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    {
+        match ($comparison->getType()) {
+            ComparisonType::Equal,
+            ComparisonType::NotEqual => $this->checkFileValueIsValid($comparison, $field),
+            ComparisonType::Between => throw new FieldIsNotSupportedForComparisonException($field, 'between()'),
+            ComparisonType::GreaterThan => throw new FieldIsNotSupportedForComparisonException($field, '>'),
+            ComparisonType::GreaterThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '>='),
+            ComparisonType::LesserThan => throw new FieldIsNotSupportedForComparisonException($field, '<'),
+            ComparisonType::LesserThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '<='),
+            ComparisonType::In => throw new FieldIsNotSupportedForComparisonException($field, 'in()'),
+            ComparisonType::NotIn => throw new FieldIsNotSupportedForComparisonException($field, 'not in()'),
+        };
     }
 
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
+    /**
+     * @throws FileToMySelfComparisonException
+     * @throws FileToNowComparisonException
+     * @throws FileToStatusOpenComparisonException
+     */
+    private function checkFileValueIsValid(Comparison $comparison, \Tracker_FormElement_Field $field): void
     {
-        try {
-            $this->values_extractor->extractValue($comparison->getValueWrapper());
-        } catch (NowIsNotSupportedException $exception) {
-            throw new FileToNowComparisonException($field);
-        } catch (MySelfIsNotSupportedException $exception) {
-            throw new FileToMySelfComparisonException($field);
-        } catch (StatusOpenIsNotSupportedException $exception) {
-            throw new FileToStatusOpenComparisonException($field);
-        }
+        $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
+    }
+
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
+    {
+        // Do nothing, SimpleValue is valid
+    }
+
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
+    {
+        throw new FileToNowComparisonException($parameters->field);
+    }
+
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
+    {
+        throw new FileToMySelfComparisonException($parameters->field);
+    }
+
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
+    {
+        throw new FileToStatusOpenComparisonException($parameters->field);
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
+    {
+        throw new \LogicException('Should not end there');
+    }
+
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
+    {
+        throw new \LogicException('Should not end there');
     }
 }

@@ -47,11 +47,9 @@ use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\ValueForFileExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
 final class NotEqualComparisonVisitor implements
@@ -81,7 +79,7 @@ final class NotEqualComparisonVisitor implements
 
     public function visitFile(Tracker_FormElement_Field_File $field)
     {
-        return new FileFieldChecker(new ValueForFileExtractor());
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
