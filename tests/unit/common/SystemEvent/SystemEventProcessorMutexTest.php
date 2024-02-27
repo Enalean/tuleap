@@ -25,90 +25,68 @@ declare(strict_types=1);
 
 namespace Tuleap\SystemEvent;
 
-use IRunInAMutex;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Exception;
+use IRunInAMutex;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
 use SystemEvent;
 use SystemEventProcess;
 use SystemEventProcessorMutex;
 use Tuleap\DB\DBConnection;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class SystemEventProcessorMutexTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEventProcessorMutexTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|SystemEventProcess
-     */
-    private $process;
-
-    /**
-     * @var IRunInAMutex|Mockery\MockInterface
-     */
-    private $object;
-
-    /**
-     * @var Mockery\MockInterface|DBConnection
-     */
-    private $db_connexion;
-
-    /**
-     * @var Mockery\MockInterface|SystemEventProcessorMutex
-     */
-    private $mutex;
+    private IRunInAMutex&MockObject $object;
+    private DBConnection&MockObject $db_connexion;
+    private SystemEventProcessorMutex&MockObject $mutex;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $process      = $this->createMock(SystemEventProcess::class);
+        $this->object = $this->createMock(IRunInAMutex::class);
 
-        $this->process = Mockery::mock(SystemEventProcess::class);
-        $this->object  = Mockery::mock(IRunInAMutex::class);
+        $process->method('getQueue')->willReturn(SystemEvent::DEFAULT_QUEUE);
+        $process->method('getLockName')->willReturn('lock');
 
-        $this->process->shouldReceive('getQueue')->andReturn(SystemEvent::DEFAULT_QUEUE);
-        $this->process->shouldReceive('getLockName')->andReturn('lock');
+        $this->object->method('getProcess')->willReturn($process);
+        $this->object->method('getProcessOwner')->willReturn('root');
 
-        $this->object->shouldReceive('getProcess')->andReturn($this->process);
-        $this->object->shouldReceive('getProcessOwner')->andReturn('root');
+        $this->db_connexion = $this->createMock(DBConnection::class);
 
-        $this->db_connexion = Mockery::mock(DBConnection::class);
-
-        $this->mutex = Mockery::mock(
-            SystemEventProcessorMutex::class,
-            [$this->object, new LockFactory(new SemaphoreStore()), $this->db_connexion]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->mutex = $this->getMockBuilder(SystemEventProcessorMutex::class)
+            ->setConstructorArgs([$this->object, new LockFactory(new SemaphoreStore()), $this->db_connexion])
+            ->onlyMethods(['checkCurrentUserProcessOwner'])
+            ->getMock();
     }
 
-    public function testItExecuteCallable()
+    public function testItExecuteCallable(): void
     {
-        $this->mutex->shouldReceive('checkCurrentUserProcessOwner')->once();
+        $this->mutex->expects(self::once())->method('checkCurrentUserProcessOwner');
 
-        $this->db_connexion->shouldReceive('reconnectAfterALongRunningProcess')->never();
-        $this->object->shouldReceive('execute')->once();
+        $this->db_connexion->expects(self::never())->method('reconnectAfterALongRunningProcess');
+        $this->object->expects(self::once())->method('execute');
 
         $this->mutex->execute();
     }
 
-    public function testItStopsIfCurrentUserIsNotTheOneThatShouldRun()
+    public function testItStopsIfCurrentUserIsNotTheOneThatShouldRun(): void
     {
-        $this->mutex->shouldReceive('checkCurrentUserProcessOwner')->once()->andThrow(new Exception());
+        $this->mutex->expects(self::once())->method('checkCurrentUserProcessOwner')->willThrowException(new Exception());
 
-        $this->expectException(Exception::class);
-        $this->object->shouldReceive('execute')->never();
+        self::expectException(Exception::class);
+        $this->object->expects(self::never())->method('execute');
 
         $this->mutex->execute();
     }
 
-    public function testWaitAndExecuteReconnectsToTheDatabase()
+    public function testWaitAndExecuteReconnectsToTheDatabase(): void
     {
-        $this->mutex->shouldReceive('checkCurrentUserProcessOwner')->once();
+        $this->mutex->expects(self::once())->method('checkCurrentUserProcessOwner');
 
-        $this->db_connexion->shouldReceive('reconnectAfterALongRunningProcess')->once();
-        $this->object->shouldReceive('execute')->once();
+        $this->db_connexion->expects(self::once())->method('reconnectAfterALongRunningProcess');
+        $this->object->expects(self::once())->method('execute');
 
         $this->mutex->waitAndExecute();
     }
