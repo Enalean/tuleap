@@ -34,7 +34,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
 
@@ -85,10 +85,10 @@ final class TimeframeTooltipEntryTest extends TestCase
     public function testTimeframe(): void
     {
         $user  = UserTestBuilder::buildWithDefaults();
-        $start = TrackerFormElementDateFieldBuilder::aDateField(1)
+        $start = DateFieldBuilder::aDateField(1)
             ->withReadPermission($user, true)
             ->build();
-        $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
+        $end   = DateFieldBuilder::aDateField(2)
             ->withReadPermission($user, true)
             ->build();
 
@@ -214,10 +214,10 @@ final class TimeframeTooltipEntryTest extends TestCase
     public function testUndefinedStart(): void
     {
         $user  = UserTestBuilder::buildWithDefaults();
-        $start = TrackerFormElementDateFieldBuilder::aDateField(1)
+        $start = DateFieldBuilder::aDateField(1)
             ->withReadPermission($user, true)
             ->build();
-        $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
+        $end   = DateFieldBuilder::aDateField(2)
             ->withReadPermission($user, true)
             ->build();
 
@@ -253,10 +253,10 @@ final class TimeframeTooltipEntryTest extends TestCase
     public function testUndefinedEnd(): void
     {
         $user  = UserTestBuilder::buildWithDefaults();
-        $start = TrackerFormElementDateFieldBuilder::aDateField(1)
+        $start = DateFieldBuilder::aDateField(1)
             ->withReadPermission($user, true)
             ->build();
-        $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
+        $end   = DateFieldBuilder::aDateField(2)
             ->withReadPermission($user, true)
             ->build();
 
@@ -292,10 +292,10 @@ final class TimeframeTooltipEntryTest extends TestCase
     public function testNoTimeframeWhenNoStartAndNoEnd(): void
     {
         $user  = UserTestBuilder::buildWithDefaults();
-        $start = TrackerFormElementDateFieldBuilder::aDateField(1)
+        $start = DateFieldBuilder::aDateField(1)
             ->withReadPermission($user, true)
             ->build();
-        $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
+        $end   = DateFieldBuilder::aDateField(2)
             ->withReadPermission($user, true)
             ->build();
 
@@ -327,10 +327,10 @@ final class TimeframeTooltipEntryTest extends TestCase
     public function testWarningWhenEndDateIsBeforeStartDate(): void
     {
         $user  = UserTestBuilder::buildWithDefaults();
-        $start = TrackerFormElementDateFieldBuilder::aDateField(1)
+        $start = DateFieldBuilder::aDateField(1)
             ->withReadPermission($user, true)
             ->build();
-        $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
+        $end   = DateFieldBuilder::aDateField(2)
             ->withReadPermission($user, true)
             ->build();
 

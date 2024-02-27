@@ -39,7 +39,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
 final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -87,7 +87,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
             $this->logger
         );
 
-        $this->field        = TrackerFormElementFileFieldBuilder::aFileField(1)->withName('Attachments')->build();
+        $this->field        = FileFieldBuilder::aFileField(1)->withName('Attachments')->build();
         $this->submitted_by = UserTestBuilder::anActiveUser()->build();
         $this->artifact     = Mockery::mock(Artifact::class);
     }
@@ -446,7 +446,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
                     new TrackerXmlImportConfig(
                         $this->submitted_by,
                         new \DateTimeImmutable(),
-                        MoveImportConfig::buildForMoveArtifact(true, [FieldMapping::fromFields(TrackerFormElementFileFieldBuilder::aFileField(2)->withName('Attachments')->build(), $this->field)])
+                        MoveImportConfig::buildForMoveArtifact(true, [FieldMapping::fromFields(FileFieldBuilder::aFileField(2)->withName('Attachments')->build(), $this->field)])
                     ),
                     false
                 )

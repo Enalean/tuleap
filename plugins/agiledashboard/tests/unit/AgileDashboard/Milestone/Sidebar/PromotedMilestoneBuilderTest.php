@@ -38,8 +38,8 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 /**
@@ -70,11 +70,11 @@ final class PromotedMilestoneBuilderTest extends TestCase
             ->userCanView($this->user)
             ->withChangesets($this->changeset)
             ->build();
-        $this->title_field = TrackerFormElementStringFieldBuilder::aStringField(301)->build();
+        $this->title_field = StringFieldBuilder::aStringField(301)->build();
 
         $this->timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
-        $this->start_field       = TrackerFormElementDateFieldBuilder::aDateField(302)->build();
-        $this->end_field         = TrackerFormElementDateFieldBuilder::aDateField(303)->build();
+        $this->start_field       = DateFieldBuilder::aDateField(302)->build();
+        $this->end_field         = DateFieldBuilder::aDateField(303)->build();
 
         $this->start_field->setUserCanRead($this->user, true);
         $this->end_field->setUserCanRead($this->user, true);

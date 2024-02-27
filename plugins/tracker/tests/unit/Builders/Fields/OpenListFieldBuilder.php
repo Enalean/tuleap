@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Builders;
+namespace Tuleap\Tracker\Test\Builders\Fields;
 
 use Tracker;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
@@ -28,8 +28,9 @@ use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_OpenList;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerFormElementOpenListBuilder
+final class OpenListFieldBuilder
 {
     /**
      * @var \Tracker_FormElement_Field_List_Bind_UsersValue[] array

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Builders;
+namespace Tuleap\Tracker\Test\Builders\Fields;
 
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
@@ -32,8 +32,9 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerExternalFormElementBuilder
+final class ExternalFieldBuilder
 {
     private string $name                        = 'external_field';
     private ?\PFUser $user_with_read_permission = null;

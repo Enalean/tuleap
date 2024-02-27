@@ -42,7 +42,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
 final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {

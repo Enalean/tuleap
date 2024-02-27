@@ -29,10 +29,10 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\VerifyExternalFieldsHaveSameTypeStub;
@@ -157,17 +157,17 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testFieldWillNotBeMigratedWhenTargetTrackerHasNoFieldWithTheSameName(): void
     {
-        $source_string_field = TrackerFormElementStringFieldBuilder::aStringField(101)
+        $source_string_field = StringFieldBuilder::aStringField(101)
             ->withName("source_string")
             ->inTracker($this->source_tracker)
             ->build();
         $this->all_fields    = [
             $source_string_field,
-            TrackerFormElementStringFieldBuilder::aStringField(102)
+            StringFieldBuilder::aStringField(102)
                 ->withName("destination_string")
                 ->inTracker($this->destination_tracker)
                 ->build(),
-            TrackerFormElementStringFieldBuilder::aStringField(103)
+            StringFieldBuilder::aStringField(103)
                 ->withName("another_destination_string")
                 ->inTracker($this->destination_tracker)
                 ->build(),
@@ -193,7 +193,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_open_list->method("userCanUpdate")->willReturn(false);
         $this->all_fields = [
             $source_open_list,
-            TrackerFormElementStringFieldBuilder::aStringField(102)
+            StringFieldBuilder::aStringField(102)
                 ->inTracker($this->destination_tracker)
                 ->withName('release_number')
                 ->withLabel('Release number')
@@ -247,11 +247,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testFieldWillNotBeMigratedWhenFieldInTargetTrackerHasNoCompatibleType(): void
     {
-        $source_string_field   = TrackerFormElementStringFieldBuilder::aStringField(101)
+        $source_string_field   = StringFieldBuilder::aStringField(101)
             ->withName("release_number")
             ->inTracker($this->source_tracker)
             ->build();
-        $destination_int_field = TrackerFormElementIntFieldBuilder::anIntField(102)
+        $destination_int_field = IntFieldBuilder::anIntField(102)
             ->withName("release_number")
             ->inTracker($this->destination_tracker)
             ->build();
@@ -269,11 +269,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testFieldWillBeMigratedWhenFieldInTargetTrackerHasTheSameNameAndIsAnEasilyMovableField(): void
     {
-        $source_string_field      = TrackerFormElementStringFieldBuilder::aStringField(101)
+        $source_string_field      = StringFieldBuilder::aStringField(101)
             ->withName("source_string")
             ->inTracker($this->source_tracker)
             ->build();
-        $destination_string_field = TrackerFormElementStringFieldBuilder::aStringField(102)
+        $destination_string_field = StringFieldBuilder::aStringField(102)
             ->withName("source_string")
             ->inTracker($this->destination_tracker)
             ->build();
@@ -584,11 +584,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testExternalFieldsCannotBeMigratedWhenTheyHaveNotTheSameType(): void
     {
-        $source_external_field      = TrackerExternalFormElementBuilder::anExternalField(1)
+        $source_external_field      = ExternalFieldBuilder::anExternalField(1)
             ->withName("external_field")
             ->inTracker($this->source_tracker)
             ->build();
-        $destination_external_field = TrackerExternalFormElementBuilder::anExternalField(2)
+        $destination_external_field = ExternalFieldBuilder::anExternalField(2)
             ->withName("external_field")
             ->inTracker($this->destination_tracker)
             ->build();
@@ -606,11 +606,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testExternalFieldsWontBeMigratedIfEventSaysSo(): void
     {
-        $source_external_field      = TrackerExternalFormElementBuilder::anExternalField(1)
+        $source_external_field      = ExternalFieldBuilder::anExternalField(1)
             ->withName("external_field")
             ->inTracker($this->source_tracker)
             ->build();
-        $destination_external_field = TrackerExternalFormElementBuilder::anExternalField(2)
+        $destination_external_field = ExternalFieldBuilder::anExternalField(2)
             ->withName("external_field")
             ->inTracker($this->destination_tracker)
             ->build();
@@ -635,11 +635,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testExternalFieldsWillBeFullyMigratedIfEventSaysSo(): void
     {
-        $source_external_field      = TrackerExternalFormElementBuilder::anExternalField(1)
+        $source_external_field      = ExternalFieldBuilder::anExternalField(1)
             ->withName("external_field")
             ->inTracker($this->source_tracker)
             ->build();
-        $destination_external_field = TrackerExternalFormElementBuilder::anExternalField(2)
+        $destination_external_field = ExternalFieldBuilder::anExternalField(2)
             ->withName("external_field")
             ->inTracker($this->destination_tracker)
             ->build();

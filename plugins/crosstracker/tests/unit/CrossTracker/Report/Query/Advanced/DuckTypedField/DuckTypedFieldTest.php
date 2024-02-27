@@ -27,10 +27,10 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 
@@ -52,11 +52,11 @@ final class DuckTypedFieldTest extends TestCase
         $this->second_tracker = TrackerTestBuilder::aTracker()->withId(self::SECOND_TRACKER_ID)->build();
 
         $this->fields = [
-            TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
+            IntFieldBuilder::anIntField(self::INT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->build(),
-            TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
+            FloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->build(),
@@ -101,11 +101,11 @@ final class DuckTypedFieldTest extends TestCase
     public function testItReturnsErrWhenFirstTypeIsNotSupported(): void
     {
         $this->fields = [
-            TrackerExternalFormElementBuilder::anExternalField(91)
+            ExternalFieldBuilder::anExternalField(91)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->build(),
-            TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
+            FloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->build(),
@@ -120,11 +120,11 @@ final class DuckTypedFieldTest extends TestCase
     public function testItReturnsErrWhenSecondFieldTypeIsNotSupported(): void
     {
         $this->fields = [
-            TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
+            IntFieldBuilder::anIntField(self::INT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->build(),
-            TrackerExternalFormElementBuilder::anExternalField(91)
+            ExternalFieldBuilder::anExternalField(91)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->build(),
@@ -139,11 +139,11 @@ final class DuckTypedFieldTest extends TestCase
     public function testItReturnsErrWhenFieldHasAnIncompatibleTypeInSecondTracker(): void
     {
         $this->fields = [
-            TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
+            IntFieldBuilder::anIntField(self::INT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->build(),
-            TrackerFormElementStringFieldBuilder::aStringField(92)
+            StringFieldBuilder::aStringField(92)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->build(),

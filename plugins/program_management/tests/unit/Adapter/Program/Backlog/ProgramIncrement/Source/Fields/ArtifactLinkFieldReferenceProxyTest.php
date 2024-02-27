@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
 final class ArtifactLinkFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {

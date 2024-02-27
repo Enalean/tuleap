@@ -24,7 +24,7 @@ namespace Tuleap\TestManagement\Move;
 
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\TestManagement\Test\Builders\StepExecutionFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 final class IsAStepExecutionFieldVerifierTest extends TestCase
 {
@@ -41,7 +41,7 @@ final class IsAStepExecutionFieldVerifierTest extends TestCase
     {
         self::assertFalse(
             IsAStepExecutionFieldVerifier::isAStepExecutionField(
-                TrackerFormElementStringFieldBuilder::aStringField(1)->build()
+                StringFieldBuilder::aStringField(1)->build()
             )
         );
     }

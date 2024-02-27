@@ -27,7 +27,7 @@ use Tracker_FileInfo;
 use Tuleap\Reference\CrossReferenceManager;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
 final class PostArtifactDeletionCleanerTest extends TestCase
 {
@@ -48,7 +48,7 @@ final class PostArtifactDeletionCleanerTest extends TestCase
         $this->reference_manager->expects(self::once())->method('deleteEntity');
         $this->artifact_dao->expects(self::once())->method('deleteArtifactLinkReference');
 
-        $file_field = TrackerFormElementFileFieldBuilder::aFileField(1)->build();
+        $file_field = FileFieldBuilder::aFileField(1)->build();
         $tracker    = $this->createStub(\Tracker::class);
         $tracker->method('getFormElementFields')->willReturn([$file_field]);
         $tracker->method('getId')->willReturn(987);

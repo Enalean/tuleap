@@ -20,7 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Builders;
+namespace Tuleap\Tracker\Test\Builders\Fields;
+
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactLinkFieldBuilder
 {

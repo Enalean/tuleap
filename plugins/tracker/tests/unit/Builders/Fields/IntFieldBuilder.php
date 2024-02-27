@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Builders;
+namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement_Field_File;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerFormElementFileFieldBuilder
+final class IntFieldBuilder
 {
-    private string $name = "file";
+    private string $name                        = 'initial_effort';
+    private bool $read_permission               = false;
+    private ?\PFUser $user_with_read_permission = null;
     private \Tracker $tracker;
-    /** @var list<\PFUser> */
-    private array $user_with_read_permission = [];
-    /** @var array<int, bool> */
-    private array $read_permissions = [];
 
     private function __construct(private readonly int $id)
     {
-        $this->tracker = TrackerTestBuilder::aTracker()->withId(19)->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
     }
 
-    public static function aFileField(int $id): self
+    public static function anIntField(int $id): self
     {
         return new self($id);
     }
@@ -57,30 +55,30 @@ final class TrackerFormElementFileFieldBuilder
 
     public function withReadPermission(\PFUser $user, bool $user_can_read): self
     {
-        $this->user_with_read_permission[]      = $user;
-        $this->read_permissions[$user->getId()] = $user_can_read;
+        $this->user_with_read_permission = $user;
+        $this->read_permission           = $user_can_read;
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_File
+    public function build(): \Tracker_FormElement_Field_Integer
     {
-        $field = new Tracker_FormElement_Field_File(
+        $field = new \Tracker_FormElement_Field_Integer(
             $this->id,
             $this->tracker->getId(),
             15,
             $this->name,
             $this->name,
-            "",
+            '',
             true,
-            "",
+            'P',
             false,
-            false,
+            '',
             10,
             null
         );
         $field->setTracker($this->tracker);
-        foreach ($this->user_with_read_permission as $user) {
-            $field->setUserCanRead($user, $this->read_permissions[$user->getId()]);
+        if ($this->user_with_read_permission !== null) {
+            $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
         }
         return $field;
     }

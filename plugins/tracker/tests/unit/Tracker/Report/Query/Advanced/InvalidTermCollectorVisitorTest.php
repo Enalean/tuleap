@@ -69,15 +69,15 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\LesserThanComparisonChe
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\LesserThanOrEqualComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotEqualComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotInComparisonChecker;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\LastUpdateDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFileFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementOpenListBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -100,14 +100,14 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     protected function setUp(): void
     {
         $this->tracker         = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
-        $this->field_text      = TrackerFormElementTextFieldBuilder::aTextField(101)->build();
-        $this->int_field       = TrackerFormElementIntFieldBuilder::anIntField(102)->build();
-        $this->open_list_field = TrackerFormElementOpenListBuilder::aBind()
+        $this->field_text      = TextFieldBuilder::aTextField(101)->build();
+        $this->int_field       = IntFieldBuilder::anIntField(102)->build();
+        $this->open_list_field = OpenListFieldBuilder::aBind()
             ->withId(102)
             ->withName(self::UNSUPPORTED_FIELD_NAME)
             ->buildStaticBind()
             ->getField();
-        $this->string_field    = TrackerFormElementStringFieldBuilder::aStringField(103)
+        $this->string_field    = StringFieldBuilder::aStringField(103)
             ->withName(self::STRING_FIELD_NAME)
             ->build();
 
@@ -169,7 +169,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNotCollectInvalidFieldsIfDateFieldIsUsedForEqualComparison(): void
     {
-        $date_field = TrackerFormElementDateFieldBuilder::aDateField(104)->withTime()->build();
+        $date_field = DateFieldBuilder::aDateField(104)->withTime()->build();
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->with(self::TRACKER_ID, "field", $this->user)
             ->willReturn($date_field);
@@ -575,7 +575,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
-                TrackerFormElementFloatFieldBuilder::aFloatField(186)
+                FloatFieldBuilder::aFloatField(186)
                     ->withName(self::FIELD_NAME)
                     ->build()
             );
@@ -592,7 +592,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
-                TrackerFormElementIntFieldBuilder::anIntField(479)
+                IntFieldBuilder::anIntField(479)
                     ->withName(self::FIELD_NAME)
                     ->build()
             );
@@ -627,7 +627,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
-                TrackerFormElementStringFieldBuilder::aStringField(975)
+                StringFieldBuilder::aStringField(975)
                     ->withName(self::FIELD_NAME)
                     ->build()
             );
@@ -644,7 +644,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
-                TrackerFormElementTextFieldBuilder::aTextField(612)
+                TextFieldBuilder::aTextField(612)
                     ->withName(self::FIELD_NAME)
                     ->build()
             );
@@ -674,7 +674,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
-                TrackerFormElementDateFieldBuilder::aDateField(278)
+                DateFieldBuilder::aDateField(278)
                     ->withName(self::FIELD_NAME)
                     ->build()
             );
@@ -722,7 +722,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
-                TrackerFormElementDateFieldBuilder::aDateField(166)
+                DateFieldBuilder::aDateField(166)
                     ->withName(self::FIELD_NAME)
                     ->build()
             );
@@ -739,7 +739,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
-                TrackerFormElementFileFieldBuilder::aFileField(324)
+                FileFieldBuilder::aFileField(324)
                     ->withName(self::FIELD_NAME)
                     ->build()
             );
@@ -751,14 +751,14 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public static function generateFieldTypes(): iterable
     {
-        yield 'int' => [TrackerFormElementIntFieldBuilder::anIntField(132)->withName(self::FIELD_NAME)->build()];
-        yield 'float' => [TrackerFormElementFloatFieldBuilder::aFloatField(202)->withName(self::FIELD_NAME)->build()];
-        yield 'string' => [TrackerFormElementStringFieldBuilder::aStringField(716)->withName(self::FIELD_NAME)->build()];
-        yield 'text' => [TrackerFormElementTextFieldBuilder::aTextField(198)->withName(self::FIELD_NAME)->build()];
-        yield 'date' => [TrackerFormElementDateFieldBuilder::aDateField(514)->withName(self::FIELD_NAME)->build()];
+        yield 'int' => [IntFieldBuilder::anIntField(132)->withName(self::FIELD_NAME)->build()];
+        yield 'float' => [FloatFieldBuilder::aFloatField(202)->withName(self::FIELD_NAME)->build()];
+        yield 'string' => [StringFieldBuilder::aStringField(716)->withName(self::FIELD_NAME)->build()];
+        yield 'text' => [TextFieldBuilder::aTextField(198)->withName(self::FIELD_NAME)->build()];
+        yield 'date' => [DateFieldBuilder::aDateField(514)->withName(self::FIELD_NAME)->build()];
         yield 'submitted on' => [SubmittedOnFieldBuilder::aSubmittedOnField(786)->withName(self::FIELD_NAME)->build()];
         yield 'last update date' => [LastUpdateDateFieldBuilder::aLastUpdateDateField(129)->withName(self::FIELD_NAME)->build()];
-        yield 'file' => [TrackerFormElementFileFieldBuilder::aFileField(272)->withName(self::FIELD_NAME)->build()];
+        yield 'file' => [FileFieldBuilder::aFileField(272)->withName(self::FIELD_NAME)->build()];
     }
 
     /**

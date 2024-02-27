@@ -26,7 +26,7 @@ use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Title;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Semantic\GetTitleSemanticStub;
@@ -44,7 +44,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
     {
         $this->tracker                      = TrackerTestBuilder::aTracker()->withId(3000)->build();
         $this->can_submit_artifact_verifier = VerifySubmissionPermissionStub::withSubmitPermission();
-        $this->semantic_title_field         = TrackerFormElementStringFieldBuilder::aStringField(3)
+        $this->semantic_title_field         = StringFieldBuilder::aStringField(3)
             ->thatIsRequired()
             ->inTracker($this->tracker)
             ->build();
@@ -101,7 +101,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
 
     public function testItFillsTheReasonCollectionWhenTheTrackerHasSeveralMandatoryFields(): void
     {
-        $other_required_field        = TrackerFormElementStringFieldBuilder::aStringField(151)
+        $other_required_field        = StringFieldBuilder::aStringField(151)
             ->withLabel("Other label")
             ->thatIsRequired()
             ->inTracker($this->tracker)
@@ -132,7 +132,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
     public function testItFillsTheReasonCollectionWithSeveralReason(): void
     {
         $this->can_submit_artifact_verifier = VerifySubmissionPermissionStub::withoutSubmitPermission();
-        $other_required_field               = TrackerFormElementStringFieldBuilder::aStringField(151)
+        $other_required_field               = StringFieldBuilder::aStringField(151)
             ->withLabel("Other label")
             ->thatIsRequired()
             ->inTracker($this->tracker)

@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Action;
 
-use Tuleap\Tracker\Test\Builders\TrackerFormElementOpenListBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 final class OpenListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,13 +34,13 @@ final class OpenListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIsNotAnOpenListField(): void
     {
-        $field = TrackerFormElementStringFieldBuilder::aStringField(1)->build();
+        $field = StringFieldBuilder::aStringField(1)->build();
         self::assertFalse($this->open_list_verifier->isAnOpenListField($field));
     }
 
     public function testIsAnOpenListField(): void
     {
-        $bind = TrackerFormElementOpenListBuilder::aBind()->buildUserBind();
+        $bind = OpenListFieldBuilder::aBind()->buildUserBind();
         self::assertTrue($this->open_list_verifier->isAnOpenListField($bind->getField()));
     }
 }

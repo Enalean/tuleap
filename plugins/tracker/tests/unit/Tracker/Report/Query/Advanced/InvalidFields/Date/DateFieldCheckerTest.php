@@ -28,7 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 
 final class DateFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -38,7 +38,7 @@ final class DateFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->field = TrackerFormElementDateFieldBuilder::aDateField(941)->withName(self::FIELD_NAME)->build();
+        $this->field = DateFieldBuilder::aDateField(941)->withName(self::FIELD_NAME)->build();
     }
 
     /**
@@ -91,7 +91,7 @@ final class DateFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAllowsShortFormattedValueForDateTimeField(): void
     {
-        $this->field      = TrackerFormElementDateFieldBuilder::aDateField(140)
+        $this->field      = DateFieldBuilder::aDateField(140)
             ->withTime()
             ->withName(self::FIELD_NAME)
             ->build();
@@ -102,7 +102,7 @@ final class DateFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAllowsLongFormattedValueForDateTimeField(): void
     {
-        $this->field      = TrackerFormElementDateFieldBuilder::aDateField(140)
+        $this->field      = DateFieldBuilder::aDateField(140)
             ->withTime()
             ->withName(self::FIELD_NAME)
             ->build();

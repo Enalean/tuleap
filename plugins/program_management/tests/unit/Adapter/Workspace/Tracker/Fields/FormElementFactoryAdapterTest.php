@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields;
 
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
-use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FormElementFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase

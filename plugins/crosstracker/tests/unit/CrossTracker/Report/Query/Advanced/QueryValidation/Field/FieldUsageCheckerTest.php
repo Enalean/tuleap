@@ -32,10 +32,10 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
-use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -54,12 +54,12 @@ final class FieldUsageCheckerTest extends TestCase
         $this->second_tracker   = TrackerTestBuilder::aTracker()->withId(94)->build();
         $this->user             = UserTestBuilder::buildWithId(103);
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementIntFieldBuilder::anIntField(841)
+            IntFieldBuilder::anIntField(841)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementFloatFieldBuilder::aFloatField(805)
+            FloatFieldBuilder::aFloatField(805)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -92,12 +92,12 @@ final class FieldUsageCheckerTest extends TestCase
     public function testCheckFailsWhenFieldsAreIncompatible(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementIntFieldBuilder::anIntField(308)
+            IntFieldBuilder::anIntField(308)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementStringFieldBuilder::aStringField(358)
+            StringFieldBuilder::aStringField(358)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -112,12 +112,12 @@ final class FieldUsageCheckerTest extends TestCase
     public function testCheckFailsWhenFirstFieldIsNotSupported(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerExternalFormElementBuilder::anExternalField(569)
+            ExternalFieldBuilder::anExternalField(569)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementIntFieldBuilder::anIntField(308)
+            IntFieldBuilder::anIntField(308)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -132,12 +132,12 @@ final class FieldUsageCheckerTest extends TestCase
     public function testCheckFailsWhenUserCannotReadFieldInAnyTracker(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementIntFieldBuilder::anIntField(841)
+            IntFieldBuilder::anIntField(841)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, false)
                 ->build(),
-            TrackerFormElementFloatFieldBuilder::aFloatField(805)
+            FloatFieldBuilder::aFloatField(805)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, false)

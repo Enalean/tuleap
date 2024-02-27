@@ -28,8 +28,8 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestCase
@@ -122,7 +122,7 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestC
         $tracker              = TrackerTestBuilder::aTracker()->build();
         $tracker->semantics[] = new \Tracker_Semantic_Title(
             $tracker,
-            TrackerFormElementTextFieldBuilder::aTextField(1)->build(),
+            TextFieldBuilder::aTextField(1)->build(),
         );
 
         $result = (new TrackerCreationNotificationsSettingsFromXmlBuilder())
@@ -146,7 +146,7 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestC
         $tracker              = TrackerTestBuilder::aTracker()->build();
         $tracker->semantics[] = new \Tracker_Semantic_Title(
             $tracker,
-            TrackerFormElementTextFieldBuilder::aTextField(1)->build(),
+            TextFieldBuilder::aTextField(1)->build(),
         );
         $tracker->semantics[] = new SemanticTimeframe(
             $tracker,
@@ -174,7 +174,7 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestC
         $tracker              = TrackerTestBuilder::aTracker()->build();
         $tracker->semantics[] = new \Tracker_Semantic_Title(
             $tracker,
-            TrackerFormElementTextFieldBuilder::aTextField(1)->build(),
+            TextFieldBuilder::aTextField(1)->build(),
         );
         $tracker->semantics[] = new SemanticTimeframe(
             $tracker,
@@ -202,13 +202,13 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestC
         $tracker              = TrackerTestBuilder::aTracker()->build();
         $tracker->semantics[] = new \Tracker_Semantic_Title(
             $tracker,
-            TrackerFormElementTextFieldBuilder::aTextField(1)->build(),
+            TextFieldBuilder::aTextField(1)->build(),
         );
         $tracker->semantics[] = new SemanticTimeframe(
             $tracker,
             new TimeframeWithEndDate(
-                TrackerFormElementDateFieldBuilder::aDateField(2)->build(),
-                TrackerFormElementDateFieldBuilder::aDateField(3)->build(),
+                DateFieldBuilder::aDateField(2)->build(),
+                DateFieldBuilder::aDateField(3)->build(),
             )
         );
 

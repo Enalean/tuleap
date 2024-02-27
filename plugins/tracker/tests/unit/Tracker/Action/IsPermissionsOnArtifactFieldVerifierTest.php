@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Action;
 
 use Tracker_FormElement_Field_PermissionsOnArtifact;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 final class IsPermissionsOnArtifactFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -29,7 +29,7 @@ final class IsPermissionsOnArtifactFieldVerifierTest extends \Tuleap\Test\PHPUni
     {
         self::assertFalse(
             (new IsPermissionsOnArtifactFieldVerifier())->isPermissionsOnArtifactField(
-                TrackerFormElementStringFieldBuilder::aStringField(1)->build()
+                StringFieldBuilder::aStringField(1)->build()
             )
         );
     }

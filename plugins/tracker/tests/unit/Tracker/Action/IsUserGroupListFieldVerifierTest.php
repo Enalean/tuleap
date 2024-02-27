@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Action;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 class IsUserGroupListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,7 +36,7 @@ class IsUserGroupListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenTheFieldIsNotAListField(): void
     {
-        $field = TrackerFormElementStringFieldBuilder::aStringField(1)->build();
+        $field = StringFieldBuilder::aStringField(1)->build();
 
         self::assertFalse($this->verifier->isUserGroupListField($field));
     }

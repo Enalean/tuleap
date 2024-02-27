@@ -27,13 +27,13 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
-use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -61,16 +61,16 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->tracker      = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
-        $this->int_field    = TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
+        $this->int_field    = IntFieldBuilder::anIntField(self::INT_FIELD_ID)
             ->inTracker($this->tracker)
             ->build();
-        $this->float_field  = TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
+        $this->float_field  = FloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
             ->inTracker($this->tracker)
             ->build();
-        $this->string_field = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+        $this->string_field = StringFieldBuilder::aStringField(self::STRING_FIELD_ID)
             ->inTracker($this->tracker)
             ->build();
-        $this->text_field   = TrackerFormElementTextFieldBuilder::aTextField(self::TEXT_FIELD_ID)
+        $this->text_field   = TextFieldBuilder::aTextField(self::TEXT_FIELD_ID)
             ->inTracker($this->tracker)
             ->build();
 
