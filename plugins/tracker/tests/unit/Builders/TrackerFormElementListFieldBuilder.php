@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_FormElement_Field_List_Bind;
+use Tracker_FormElement_Field_List_Bind_Ugroups;
 
 final class TrackerFormElementListFieldBuilder
 {
@@ -32,7 +33,7 @@ final class TrackerFormElementListFieldBuilder
     private bool $is_multiple                          = false;
     private ?Tracker_FormElement_Field_List_Bind $bind = null;
     private \Tracker $tracker;
-    /** @var list<\PFUser>  */
+    /** @var list<\PFUser> */
     private array $user_with_read_permissions = [];
     /** @var array<int, bool> */
     private array $read_permissions = [];
@@ -59,7 +60,7 @@ final class TrackerFormElementListFieldBuilder
         return $this;
     }
 
-    public function withBind(?Tracker_FormElement_Field_List_Bind $bind): self
+    public function withBind(Tracker_FormElement_Field_List_Bind | Tracker_FormElement_Field_List_Bind_Ugroups | null $bind): self
     {
         $this->bind = $bind;
         return $this;

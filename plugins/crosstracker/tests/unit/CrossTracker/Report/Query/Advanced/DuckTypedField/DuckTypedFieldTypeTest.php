@@ -70,6 +70,12 @@ final class DuckTypedFieldTypeTest extends TestCase
         self::assertSame(DuckTypedFieldType::STATIC_LIST, $result->unwrapOr(null));
     }
 
+    public function testUGroupListBecomesUGroupList(): void
+    {
+        $result = DuckTypedFieldType::fromString(FieldTypeRetrieverWrapper::FIELD_UGROUP_LIST_TYPE);
+        self::assertSame(DuckTypedFieldType::UGROUP_LIST, $result->unwrapOr(null));
+    }
+
     public static function generateTypes(): iterable
     {
         yield [Tracker_FormElementFactory::FIELD_COMPUTED];

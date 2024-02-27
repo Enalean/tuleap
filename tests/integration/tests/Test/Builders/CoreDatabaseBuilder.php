@@ -39,9 +39,9 @@ final class CoreDatabaseBuilder
     public function buildProject(): Project
     {
         $row         = [
-            'group_name' => "cross tracker",
-            'access' => "public",
-            'status' => 'A',
+            'group_name'      => "cross tracker",
+            'access'          => "public",
+            'status'          => 'A',
             "unix_group_name" => "cross-tracker-comparison",
         ];
         $project_id  = (int) $this->db->insertReturnId(
@@ -59,8 +59,8 @@ final class CoreDatabaseBuilder
             'user',
             [
                 'user_name' => $user_name,
-                'email' => $email,
-                'realname' => $real_name,
+                'email'     => $email,
+                'realname'  => $real_name,
             ]
         );
 
@@ -71,6 +71,17 @@ final class CoreDatabaseBuilder
         }
 
         return $user;
+    }
+
+    public function buildStaticUserGroup(int $project_id, string $name): int
+    {
+        return (int) $this->db->insertReturnId(
+            'ugroup',
+            [
+                'name'     => $name,
+                'group_id' => $project_id,
+            ]
+        );
     }
 
     public function addUserToProjectMembers(int $user_id, int $project_id): void

@@ -357,6 +357,31 @@ final class TrackerDatabaseBuilder
         return $tracker_field_id;
     }
 
+    public function buildUserGroupListField(int $tracker_id, string $name, string $list_type): int
+    {
+        $tracker_field_id = (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id'       => $tracker_id,
+                'formElement_type' => $list_type,
+                'name'             => $name,
+                'label'            => $name,
+                'use_it'           => true,
+                'scope'            => "P",
+            ]
+        );
+
+        $this->db->insert(
+            'tracker_field_list',
+            [
+                'field_id'  => $tracker_field_id,
+                "bind_type" => "ugroups",
+            ]
+        );
+
+        return $tracker_field_id;
+    }
+
     /**
      * @param string[] $values
      * @return array<string, int>
@@ -370,6 +395,26 @@ final class TrackerDatabaseBuilder
                 [
                     'field_id' => $tracker_field_id,
                     'label'    => $value,
+                ]
+            );
+        }
+
+        return $ids_list;
+    }
+
+    /**
+     * @param int[] $ugroup_ids
+     * @return array<int, int>
+     */
+    public function buildValuesForUserGroupListField(int $tracker_field_id, array $ugroup_ids): array
+    {
+        $ids_list = [];
+        foreach ($ugroup_ids as $ugroup_id) {
+            $ids_list[$ugroup_id] = (int) $this->db->insertReturnId(
+                'tracker_field_list_bind_ugroups_value',
+                [
+                    'field_id'  => $tracker_field_id,
+                    'ugroup_id' => $ugroup_id,
                 ]
             );
         }
