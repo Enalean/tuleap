@@ -376,4 +376,68 @@ final class UGroupListDuckTypedFieldTest extends DuckTypedFieldTestCase
         self::assertCount(1, $artifacts);
         self::assertEqualsCanonicalizing([$this->sprint_artifact_with_members_static_id], $artifacts);
     }
+
+    public function testNotInUGroup(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "ugroup_field NOT IN('MyStaticUGroup')",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->release_artifact_with_members_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
+
+    public function testPermissionsNotIn(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "ugroup_field NOT IN('MyStaticUGroup')",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_empty_id, $this->release_artifact_with_members_id,
+            $this->sprint_artifact_empty_id,
+            $this->task_artifact_with_members_id,
+        ], $artifacts);
+    }
+
+    public function testNotInMultipleUGroup(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "ugroup_field NOT IN('MyStaticUGroup', 'Project members')",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
+
+    public function testMultipleNotIn(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "ugroup_field NOT IN('MyStaticUGroup') AND ugroup_field NOT IN('Project members')",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
 }
