@@ -20,28 +20,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\SystemEvent;
+
+use Event;
+use EventManager;
+use SystemEvent;
+use SystemEventManager;
+use Tuleap\Test\PHPUnit\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEventManagerGetTypesForQueueTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEventManagerGetTypesForQueueTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
     public const CUSTOM_QUEUE = 'custom_queue';
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->event_manager = new class extends EventManager {
-            public function processEvent($event, $params = [])
+        $event_manager = new class extends EventManager {
+            public function processEvent($event, $params = []): void
             {
                 switch ($event) {
                     case Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE:
@@ -60,7 +60,7 @@ class SystemEventManagerGetTypesForQueueTest extends \Tuleap\Test\PHPUnit\TestCa
             }
         };
 
-        EventManager::setInstance($this->event_manager);
+        EventManager::setInstance($event_manager);
     }
 
     protected function tearDown(): void
@@ -72,69 +72,69 @@ class SystemEventManagerGetTypesForQueueTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItReturnsEmptyArrayIfFantasyQueueIsPassed(): void
     {
-        $manager = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $manager = $this->createPartialMock(SystemEventManager::class, []);
 
         $types = $manager->getTypesForQueue('Unicorne');
 
-        $this->assertEmpty($types);
+        self::assertEmpty($types);
     }
 
     public function testItReturnsEmptyArrayIfNoQueueIsPassed(): void
     {
-        $manager = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $manager = $this->createPartialMock(SystemEventManager::class, []);
 
         $types = $manager->getTypesForQueue(null);
 
-        $this->assertEmpty($types);
+        self::assertEmpty($types);
     }
 
     public function testItReturnsTypesForDefaultQueue(): void
     {
-        $manager = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $manager = $this->createPartialMock(SystemEventManager::class, []);
 
         $types = $manager->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
 
-        $this->assertTrue(in_array('feed_mini', $types));
-        $this->assertTrue(in_array('search_wiki', $types));
+        self::assertTrue(in_array('feed_mini', $types));
+        self::assertTrue(in_array('search_wiki', $types));
     }
 
     public function testItReturnsTypesForAppOwner(): void
     {
-        $manager = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $manager = $this->createPartialMock(SystemEventManager::class, []);
 
         $types = $manager->getTypesForQueue(SystemEvent::APP_OWNER_QUEUE);
 
-        $this->assertTrue(in_array('feed_mini', $types));
-        $this->assertTrue(in_array('search_wiki', $types));
+        self::assertTrue(in_array('feed_mini', $types));
+        self::assertTrue(in_array('search_wiki', $types));
     }
 
     public function testItReturnsTypesForCustomQueue(): void
     {
-        $manager = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $manager = $this->createPartialMock(SystemEventManager::class, []);
 
         $types = $manager->getTypesForQueue(self::CUSTOM_QUEUE);
 
-        $this->assertTrue(in_array('track_me', $types));
-        $this->assertTrue(in_array('track_you', $types));
+        self::assertTrue(in_array('track_me', $types));
+        self::assertTrue(in_array('track_you', $types));
     }
 
     public function testItDoesNotReturnDefaultTypesForCustomQueue(): void
     {
-        $manager = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $manager = $this->createPartialMock(SystemEventManager::class, []);
 
         $types = $manager->getTypesForQueue(self::CUSTOM_QUEUE);
 
-        $this->assertFalse(in_array('feed_mini', $types));
-        $this->assertFalse(in_array('search_wiki', $types));
+        self::assertFalse(in_array('feed_mini', $types));
+        self::assertFalse(in_array('search_wiki', $types));
     }
 
     public function testItDoesNotReturnCustomTypesForDefaultQueue(): void
     {
-        $manager = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $manager = $this->createPartialMock(SystemEventManager::class, []);
 
         $types = $manager->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
 
-        $this->assertFalse(in_array('track_me', $types));
-        $this->assertFalse(in_array('track_you', $types));
+        self::assertFalse(in_array('track_me', $types));
+        self::assertFalse(in_array('track_you', $types));
     }
 }
