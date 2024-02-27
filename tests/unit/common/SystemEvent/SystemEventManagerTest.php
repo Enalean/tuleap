@@ -20,28 +20,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\SystemEvent;
+
+use DataAccessResult;
+use Event;
+use SystemEvent;
+use SystemEventDao;
+use SystemEventManager;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+class SystemEventManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testConcatParameters(): void
     {
-        $sem    = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $sem    = $this->createPartialMock(SystemEventManager::class, []);
         $params = [
             'key1' => 'value1',
             'key2' => 'value2',
             'key3' => 'value3',
         ];
-        $this->assertEquals('', $sem->concatParameters($params, []));
-        $this->assertEquals('value1', $sem->concatParameters($params, ['key1']));
-        $this->assertEquals('value1::value3', $sem->concatParameters($params, ['key1', 'key3']));
-        $this->assertEquals('value3::value1', $sem->concatParameters($params, ['key3', 'key1']));
-        $this->assertEquals('value1::value2::value3', $sem->concatParameters($params, ['key1', 'key2', 'key3']));
+        self::assertEquals('', $sem->concatParameters($params, []));
+        self::assertEquals('value1', $sem->concatParameters($params, ['key1']));
+        self::assertEquals('value1::value3', $sem->concatParameters($params, ['key1', 'key3']));
+        self::assertEquals('value3::value1', $sem->concatParameters($params, ['key3', 'key1']));
+        self::assertEquals('value1::value2::value3', $sem->concatParameters($params, ['key1', 'key2', 'key3']));
     }
 
     /**
@@ -49,39 +56,40 @@ class SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testCanRenameUser(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(102);
+        $user = UserTestBuilder::buildWithId(102);
 
-        $seDao = \Mockery::spy(\SystemEventDao::class);
+        $seDao = $this->createMock(SystemEventDao::class);
 
-        $dar = \Mockery::spy(\DataAccessResult::class);
-        $dar->shouldReceive('rowCount')->andReturns(0);
-        $seDao->shouldReceive('searchWithParam')->with('head', 102, [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])->once()->andReturns($dar);
+        $dar = $this->createMock(DataAccessResult::class);
+        $dar->method('rowCount')->willReturn(0);
+        $dar->method('isError');
+        $seDao->expects(self::once())->method('searchWithParam')
+            ->with('head', 102, [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
+            ->willReturn($dar);
 
-        $se = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $se->shouldReceive('_getDao')->andReturns($seDao);
+        $se = $this->createPartialMock(SystemEventManager::class, ['_getDao']);
+        $se->method('_getDao')->willReturn($seDao);
 
-        $this->assertTrue($se->canRenameUser($user));
+        self::assertTrue($se->canRenameUser($user));
     }
 
     public function testCanRenameUserWithUserAlreadyQueudedForRename(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(102);
+        $user = UserTestBuilder::buildWithId(102);
 
-        $seDao = \Mockery::spy(\SystemEventDao::class);
+        $seDao = $this->createMock(SystemEventDao::class);
 
-        $dar = \Mockery::spy(\DataAccessResult::class);
-        $dar->shouldReceive('rowCount')->andReturns(1);
-        $seDao->shouldReceive('searchWithParam')
+        $dar = $this->createMock(DataAccessResult::class);
+        $dar->method('rowCount')->willReturn(1);
+        $dar->method('isError');
+        $seDao->expects(self::once())->method('searchWithParam')
             ->with('head', 102, [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
-            ->once()
-            ->andReturns($dar);
+            ->willReturn($dar);
 
-        $se = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $se->shouldReceive('_getDao')->andReturns($seDao);
+        $se = $this->createPartialMock(SystemEventManager::class, ['_getDao']);
+        $se->method('_getDao')->willReturn($seDao);
 
-        $this->assertFalse($se->canRenameUser($user));
+        self::assertFalse($se->canRenameUser($user));
     }
 
     /**
@@ -90,45 +98,47 @@ class SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testIsUserNameAvailable(): void
     {
-        $seDao = \Mockery::spy(\SystemEventDao::class);
+        $seDao = $this->createMock(SystemEventDao::class);
 
-        $dar = \Mockery::spy(\DataAccessResult::class);
-        $dar->shouldReceive('rowCount')->andReturns(0);
-        $dar->shouldReceive('isError')->andReturnFalse();
-        $seDao->shouldReceive('searchWithParam')
-            ->once()
+        $dar = $this->createMock(DataAccessResult::class);
+        $dar->method('rowCount')->willReturn(0);
+        $dar->method('isError')->willReturn(false);
+        $seDao->expects(self::once())->method('searchWithParam')
             ->with('tail', 'titi', [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
-            ->andReturns($dar);
+            ->willReturn($dar);
 
-        $se = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $se->shouldReceive('_getDao')->andReturns($seDao);
+        $se = $this->createPartialMock(SystemEventManager::class, ['_getDao']);
+        $se->method('_getDao')->willReturn($seDao);
 
-        $this->assertTrue($se->isUserNameAvailable('titi'));
+        self::assertTrue($se->isUserNameAvailable('titi'));
     }
 
     public function testIsUserNameAvailableWithStringAlreadyQueuded(): void
     {
-        $seDao = \Mockery::spy(\SystemEventDao::class);
+        $seDao = $this->createMock(SystemEventDao::class);
 
-        $dar = \Mockery::spy(\DataAccessResult::class);
-        $dar->shouldReceive('rowCount')->andReturns(1);
-        $seDao->shouldReceive('searchWithParam')
-            ->once()
+        $dar = $this->createMock(DataAccessResult::class);
+        $dar->method('rowCount')->willReturn(1);
+        $dar->method('isError');
+        $seDao->expects(self::once())->method('searchWithParam')
             ->with('tail', 'titi', [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
-            ->andReturns($dar);
+            ->willReturn($dar);
 
-        $se = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $se->shouldReceive('_getDao')->andReturns($seDao);
+        $se = $this->createPartialMock(SystemEventManager::class, ['_getDao']);
+        $se->method('_getDao')->willReturn($seDao);
 
-        $this->assertFalse($se->isUserNameAvailable('titi'));
+        self::assertFalse($se->isUserNameAvailable('titi'));
     }
 
     public function testItDoesNotAccumulateSystemCheckEvents(): void
     {
-        $system_event_manager = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturns(false, true);
+        $system_event_manager = $this->createPartialMock(SystemEventManager::class, [
+            'areThereMultipleEventsQueuedMatchingFirstParameter',
+            'createEvent',
+        ]);
+        $system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturnOnConsecutiveCalls(false, true);
 
-        $system_event_manager->shouldReceive('createEvent')->once();
+        $system_event_manager->expects(self::once())->method('createEvent');
 
         $system_event_manager->addSystemEvent(Event::SYSTEM_CHECK, null);
         $system_event_manager->addSystemEvent(Event::SYSTEM_CHECK, null);

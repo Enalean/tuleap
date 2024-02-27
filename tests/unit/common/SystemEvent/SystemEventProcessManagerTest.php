@@ -23,33 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\SystemEvent;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
+use SystemEventProcess;
 use SystemEventProcessManager;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class SystemEventProcessManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEventProcessManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var SystemEventProcessManager
-     */
-    private $process_manager;
-
-    /**
-     * @var \Mockery\MockInterface|\SystemEventProcess
-     */
-    private $process;
-
-    /**
-     * @var LockFactory
-     */
-    private $lock_factory;
+    private SystemEventProcessManager $process_manager;
+    private SystemEventProcess&MockObject $process;
+    private LockFactory $lock_factory;
 
     public function setUp(): void
     {
-        $this->process = \Mockery::mock(\SystemEventProcess::class, ['getLockName' => 'lock']);
+        $this->process = $this->createMock(SystemEventProcess::class);
+        $this->process->method('getLockName')->willReturn('lock');
 
         $store              = new SemaphoreStore();
         $this->lock_factory = new LockFactory($store);
@@ -59,7 +49,7 @@ class SystemEventProcessManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseIfNoProcessRunning(): void
     {
-        $this->assertFalse($this->process_manager->isAlreadyRunning($this->process));
+        self::assertFalse($this->process_manager->isAlreadyRunning($this->process));
     }
 
     public function testItReturnsTrueIfAProcessIsRunning(): void
@@ -67,7 +57,7 @@ class SystemEventProcessManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $lock = $this->lock_factory->createLock($this->process->getLockName());
         $lock->acquire();
 
-        $this->assertTrue($this->process_manager->isAlreadyRunning($this->process));
+        self::assertTrue($this->process_manager->isAlreadyRunning($this->process));
 
         $lock->release();
     }
