@@ -99,4 +99,22 @@ describe("getters", () => {
             expect(is_currently_selected_template(state)(scrum_template)).toBe(true);
         });
     });
+    describe("is_advanced_option_selected", () => {
+        it(`Should return true when the selected option is the current option`, () => {
+            const state: RootState = {
+                selected_advanced_option: "from_existing_user_project",
+            } as RootState;
+            expect(getters.is_advanced_option_selected(state)("from_existing_user_project")).toBe(
+                true,
+            );
+        });
+        it(`Should return false when the selected option is not the current option`, () => {
+            const state: RootState = {
+                selected_advanced_option: null,
+            } as RootState;
+            expect(getters.is_advanced_option_selected(state)("from_existing_user_project")).toBe(
+                false,
+            );
+        });
+    });
 });

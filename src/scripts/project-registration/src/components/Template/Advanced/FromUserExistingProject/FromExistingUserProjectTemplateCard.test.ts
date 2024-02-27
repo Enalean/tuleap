@@ -31,6 +31,7 @@ describe("FromExistingUserProjectTemplateCard", () => {
     async function getWrapper(
         selected_company_template: null | TemplateData = null,
         projects_user_is_admin_of: TemplateData[] = [],
+        is_option_selected: boolean = false,
     ): Promise<Wrapper<FromExistingUserProjectTemplateCard>> {
         return shallowMount(FromExistingUserProjectTemplateCard, {
             localVue: await createProjectRegistrationLocalVue(),
@@ -39,6 +40,9 @@ describe("FromExistingUserProjectTemplateCard", () => {
                     state: {
                         selected_company_template,
                         projects_user_is_admin_of,
+                    },
+                    getters: {
+                        is_advanced_option_selected: () => is_option_selected,
                     },
                 }),
             },
@@ -69,10 +73,10 @@ describe("FromExistingUserProjectTemplateCard", () => {
     it("Display the description by default", async () => {
         const wrapper = await getWrapper();
 
-        expect(wrapper.find("[data-test=user-project-description]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-error]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-list]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-error]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-list]").exists()).toBe(false);
     });
 
     it(`Display spinner when project list is loading`, async () => {
@@ -81,10 +85,10 @@ describe("FromExistingUserProjectTemplateCard", () => {
         wrapper.vm.$data.is_loading_project_list = true;
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=user-project-description]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=user-project-error]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-list]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=user-project-error]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-list]").exists()).toBe(false);
     });
 
     it(`Does not display spinner if an error happened`, async () => {
@@ -94,10 +98,10 @@ describe("FromExistingUserProjectTemplateCard", () => {
         wrapper.vm.$data.has_error = true;
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=user-project-description]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-error]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=user-project-list]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-error]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=user-project-list]").exists()).toBe(false);
     });
 
     it(`Display error if something went wrong`, async () => {
@@ -106,14 +110,14 @@ describe("FromExistingUserProjectTemplateCard", () => {
         wrapper.vm.$data.has_error = true;
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=user-project-description]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-error]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=user-project-list]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-error]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=user-project-list]").exists()).toBe(false);
     });
 
-    it(`Displays the project list if user has already loaded it`, async () => {
-        const wrapper = await getWrapper(null, projects_user_is_admin_of);
+    it(`Displays the project list if user has already loaded it and if the card is selected`, async () => {
+        const wrapper = await getWrapper(null, projects_user_is_admin_of, true);
 
         wrapper.get("[data-test=project-registration-card-label").trigger("click");
         await wrapper.vm.$nextTick();
@@ -121,10 +125,10 @@ describe("FromExistingUserProjectTemplateCard", () => {
 
         expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalledWith("loadUserProjects");
 
-        expect(wrapper.find("[data-test=user-project-description]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-error]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=user-project-list]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-error]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=user-project-list]").exists()).toBe(true);
     });
 
     it(`Loads the project list if user has not loaded it yet`, async () => {
@@ -137,8 +141,8 @@ describe("FromExistingUserProjectTemplateCard", () => {
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadUserProjects");
     });
 
-    it("should display the card as checked and the current selection if a project has been selected previously", async () => {
-        const wrapper = await getWrapper(alm2, projects_user_is_admin_of);
+    it("should display the card as checked if the card is currently selected", async () => {
+        const wrapper = await getWrapper(alm2, projects_user_is_admin_of, true);
         const input = wrapper.find("[data-test=selected-template-input]").element;
 
         if (!(input instanceof HTMLInputElement)) {

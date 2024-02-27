@@ -25,17 +25,18 @@
         <div class="project-registration-template-card">
             <input
                 type="radio"
-                v-bind:id="'project-registration-tuleap-template-other-user-project'"
-                v-bind:checked="is_checked"
+                id="project-registration-tuleap-template-other-user-project"
                 class="project-registration-selected-template"
+                v-bind:checked="is_advanced_option_selected(option_name)"
                 name="selected-template"
                 data-test="selected-template-input"
+                v-on:change="setAdvancedActiveOption(option_name)"
             />
 
             <label
                 class="tlp-card tlp-card-selectable project-registration-template-label"
                 data-test="project-registration-card-label"
-                v-bind:for="'project-registration-tuleap-template-other-user-project'"
+                for="project-registration-tuleap-template-other-user-project"
                 v-on:click="loadUserProjects"
             >
                 <div class="project-registration-template-glyph"><svg-template /></div>
@@ -44,7 +45,11 @@
                         From another project I'm admin of
                     </h4>
                     <div
-                        v-if="!should_choose_a_project && !is_loading_project_list && !has_error"
+                        v-if="
+                            !is_advanced_option_selected(option_name) &&
+                            !is_loading_project_list &&
+                            !has_error
+                        "
                         class="project-registration-template-card-description"
                         data-test="user-project-description"
                     >
@@ -66,7 +71,7 @@
                         <translate>Oh snap! Failed to load project you are admin of.</translate>
                     </div>
                     <user-project-list
-                        v-else
+                        v-else-if="is_advanced_option_selected(option_name)"
                         v-bind:project-list="projects_user_is_admin_of"
                         v-bind:selected-company-template="selected_company_template"
                         data-test="user-project-list"
@@ -80,8 +85,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { State } from "vuex-class";
-import type { TemplateData } from "../../../../type";
+import { Getter, Mutation, State } from "vuex-class";
+import type { AdvancedOptions, TemplateData } from "../../../../type";
 import TemplateCard from "../../TemplateCard.vue";
 import SvgTemplate from "./SvgTemplate.vue";
 import UserProjectList from "./UserProjectList.vue";
@@ -94,6 +99,8 @@ import UserProjectList from "./UserProjectList.vue";
     },
 })
 export default class FromExistingUserProjectTemplateCard extends Vue {
+    option_name: AdvancedOptions = "from_existing_user_project";
+
     should_choose_a_project = false;
     is_loading_project_list = false;
     has_error = false;
@@ -104,9 +111,15 @@ export default class FromExistingUserProjectTemplateCard extends Vue {
     @State
     projects_user_is_admin_of!: TemplateData[];
 
+    @Mutation
+    readonly setAdvancedActiveOption!: (option: AdvancedOptions | null) => void;
+
+    @Getter
+    readonly is_advanced_option_selected!: (option: AdvancedOptions | null) => boolean;
+
     mounted(): void {
         if (this.projects_user_is_admin_of.length > 0) {
-            this.should_choose_a_project = this.is_checked;
+            this.should_choose_a_project = this.is_advanced_option_selected(this.option_name);
         }
     }
 
@@ -128,14 +141,6 @@ export default class FromExistingUserProjectTemplateCard extends Vue {
             this.is_loading_project_list = false;
             this.should_choose_a_project = true;
         }
-    }
-
-    get is_checked(): boolean {
-        return (
-            this.projects_user_is_admin_of.findIndex(
-                (project) => project.id === this.selected_company_template?.id,
-            ) !== -1
-        );
     }
 }
 </script>

@@ -28,7 +28,7 @@
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false",
+    "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
     "test": "jest"
   }
 }
