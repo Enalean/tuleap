@@ -210,7 +210,7 @@ class ProjectTest extends ProjectBase
         self::assertEquals(204, $response->getStatusCode());
     }
 
-    public function testPOSTForRegularUser()
+    public function testPOSTForRegularUser(): void
     {
         $post_resource = json_encode([
             'label' => 'Test Request 9747 regular user',
@@ -240,7 +240,7 @@ class ProjectTest extends ProjectBase
         );
     }
 
-    public function testPOSTForRegularUserWithTemplateProjectUserCantAccess()
+    public function testPOSTForRegularUserWithTemplateProjectUserCantAccess(): void
     {
         $post_resource = json_encode([
             'label'       => 'Test from template without access',
@@ -263,7 +263,7 @@ class ProjectTest extends ProjectBase
         self::assertEquals(400, $response->getStatusCode());
     }
 
-    public function testPOSTForRegularUserWithPrivateTemplateProjectUserCanAccess()
+    public function testPOSTForRegularUserWithPrivateTemplateProjectUserCanAccess(): void
     {
         $post_resource = json_encode([
             'label'       => 'Test from private template with access',
@@ -284,6 +284,31 @@ class ProjectTest extends ProjectBase
         );
 
         self::assertEquals(201, $response->getStatusCode());
+    }
+
+    public function testPOSTForRegularUserWithArchive(): void
+    {
+        $file_creation_body_content = json_encode([
+            'label' => 'Test create from archive file',
+            'shortname' => 'from-archive',
+            'description' => '',
+            'is_public' => true,
+            'from_archive' => [
+                'file_name' => 'my file',
+                'file_size' => 1234,
+            ],
+        ]);
+
+        $request  = $this->request_factory->createRequest('POST', 'projects')->withBody(
+            $this->stream_factory->createStream($file_creation_body_content)
+        );
+        $response = $this->getResponse($request);
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $file_representation = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertEquals("/uploads/project/file/1", $file_representation['upload_href']);
     }
 
     /**

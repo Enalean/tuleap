@@ -188,6 +188,7 @@ class ProjectCreationData
         $this->setAccessFromProjectData($project);
         $this->trove_data    = isset($project['trove']) ? $project['trove'] : new CategoryCollection();
         $this->data_services = isset($project['services'])               ? $project['services']               : [];
+        $this->data_fields   = isset($project['data_fields']) ? $project['data_fields'] : ProjectRegistrationSubmittedFieldsCollection::buildFromArray([]);
     }
 
     private function getAccessFromProjectArrayData(array $project): string
@@ -212,6 +213,15 @@ class ProjectCreationData
         }
 
         return Project::ACCESS_PRIVATE;
+    }
+
+    public static function buildFromArchive(
+        DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
+        array $data,
+    ): self {
+        $instance = new self($default_project_visibility_retriever);
+        $instance->fromForm(TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(), $data);
+        return $instance;
     }
 
     public static function buildFromXML(

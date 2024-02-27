@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
+use Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation;
 use Tuleap\REST\JsonCast;
 
 /**
@@ -74,6 +75,10 @@ class ProjectPostRepresentation
      * @var array Custom fields to be set a project creation {@from body} {@required false} {@type \Tuleap\Project\REST\v1\FieldsPostRepresentation}
      */
     public $fields;
+    /**
+     * @var \Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation | null Archive to use to create project {@from body} {@required false} {@type \Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation}
+     */
+    public ?ProjectFilePOSTRepresentation $from_archive = null;
 
     private function __construct(int $template_id)
     {

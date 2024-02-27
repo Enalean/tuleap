@@ -28,11 +28,9 @@ use Tuleap\JWT\REST\v1\JWTResource;
 use Tuleap\Label\REST\LabelRepresentation;
 use Tuleap\PhpWiki\REST\v1\PhpWikiResource;
 use Tuleap\Platform\Banner\REST\v1\BannerResource;
-use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\Project\REST\UserGroupRepresentation;
-use Tuleap\Project\REST\v1\ProjectFileResource;
 use Tuleap\Project\REST\v1\ServiceRepresentation;
 use Tuleap\Project\REST\v1\ServiceResource;
 use Tuleap\Project\REST\v1\UserGroupResource;
@@ -54,7 +52,7 @@ use Tuleap\User\REST\v1\UserResource;
  */
 class ResourcesInjector
 {
-    public function populate(Restler $restler)
+    public function populate(Restler $restler): void
     {
         $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', ProjectRepresentation::ROUTE);
         $restler->addAPIClass(TokenResource::class, TokenRepresentation::ROUTE);
@@ -70,9 +68,6 @@ class ResourcesInjector
         $restler->addAPIClass(InvitationsResource::class, InvitationsResource::ROUTE);
         $restler->addAPIClass(BannerResource::class, BannerResource::ROUTE);
         $restler->addAPIClass(VersionResource::class, VersionResource::ROUTE);
-        if (CustomProjectArchiveFeatureFlag::canCreateFromCustomArchive()) {
-            $restler->addAPIClass(ProjectFileResource::class, ProjectFileResource::ROUTE);
-        }
     }
 
     public function declareProjectResources(array &$resources, Project $project)

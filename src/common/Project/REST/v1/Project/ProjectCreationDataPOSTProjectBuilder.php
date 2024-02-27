@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1\Project;
 
+use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use Psr\Log\LoggerInterface;
@@ -31,6 +32,7 @@ use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCol
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
+use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 use Tuleap\Project\Registration\Template\InsufficientPermissionToUseProjectAsTemplateException;
 use Tuleap\Project\Registration\Template\ProjectIDTemplateNotProvidedException;
 use Tuleap\Project\Registration\Template\ProjectTemplateIDInvalidException;
@@ -41,30 +43,17 @@ use Tuleap\Project\XML\XMLFileContentRetriever;
 use URLVerification;
 use XML_RNGValidator;
 
-class ProjectCreationDataPOSTProjectBuilder
+readonly class ProjectCreationDataPOSTProjectBuilder
 {
-    private ProjectManager $project_manager;
-    private LoggerInterface $logger;
-    private TemplateFactory $template_factory;
-    private XMLFileContentRetriever $xml_file_content_retriever;
-    private ServiceManager $service_manager;
-    private ProjectCreationDataServiceFromXmlInheritor $from_xml_inheritor;
-
     public function __construct(
-        ProjectManager $project_manager,
-        TemplateFactory $template_factory,
-        XMLFileContentRetriever $xml_file_content_retriever,
-        ServiceManager $service_manager,
-        ProjectCreationDataServiceFromXmlInheritor $from_xml_inheritor,
-        LoggerInterface $logger,
+        private ProjectManager $project_manager,
+        private TemplateFactory $template_factory,
+        private XMLFileContentRetriever $xml_file_content_retriever,
+        private ServiceManager $service_manager,
+        private ProjectCreationDataServiceFromXmlInheritor $from_xml_inheritor,
+        private LoggerInterface $logger,
         private URLVerification $url_verification,
     ) {
-        $this->project_manager            = $project_manager;
-        $this->template_factory           = $template_factory;
-        $this->xml_file_content_retriever = $xml_file_content_retriever;
-        $this->service_manager            = $service_manager;
-        $this->from_xml_inheritor         = $from_xml_inheritor;
-        $this->logger                     = $logger;
     }
 
     /**
@@ -78,81 +67,106 @@ class ProjectCreationDataPOSTProjectBuilder
         PFUser $user,
     ): ?ProjectCreationData {
         if ($post_representation->template_id !== null) {
-            $data = [
-                'project' => [
-                    'form_short_description' => $post_representation->description,
-                    'is_test'                => false,
-                    'is_public'              => $post_representation->is_public,
-                    'trove'                  => CategoryCollection::buildFromRESTProjectCreation($post_representation),
-                ],
-            ];
-
-            if ($post_representation->allow_restricted !== null) {
-                $data['project']['allow_restricted'] = $post_representation->allow_restricted;
-            }
-
-            $creation_data = ProjectCreationData::buildFromFormArray(
-                new DefaultProjectVisibilityRetriever(),
-                TemplateFromProjectForCreation::fromRESTRepresentation(
-                    $post_representation,
-                    $user,
-                    $this->project_manager,
-                    $this->url_verification
-                ),
-                $data
-            );
-
-            $creation_data->setUnixName($post_representation->shortname);
-            $creation_data->setFullName($post_representation->label);
-            $creation_data->setDataFields(
-                ProjectRegistrationSubmittedFieldsCollection::buildFromRESTProjectCreation($post_representation)
-            );
-
-            return $creation_data;
+            return $this->buildFromAnOtherProjectId($post_representation, $user);
         }
 
         if ($post_representation->xml_template_name !== null) {
-            $template = $this->template_factory->getTemplate($post_representation->xml_template_name);
-            $xml_path = $template->getXMLPath();
+            return $this->buildFromTemplateName($post_representation);
+        }
 
-            return $this->xml_file_content_retriever->getSimpleXMLElementFromFilePath($xml_path)
-                ->match(
-                    function (\SimpleXMLElement $xml_element) use ($post_representation): ProjectCreationData {
-                        $creation_data = ProjectCreationData::buildFromXML(
-                            $xml_element,
-                            new XML_RNGValidator(),
-                            $this->service_manager,
-                            $this->logger,
-                            null,
-                            null,
-                            $this->from_xml_inheritor
-                        );
-
-                        $creation_data->setUnixName($post_representation->shortname);
-                        $creation_data->setFullName($post_representation->label);
-                        $creation_data->setShortDescription($post_representation->description);
-                        $creation_data->setAccessFromProjectData(
-                            [
-                                'is_public'        => $post_representation->is_public,
-                                'allow_restricted' => $post_representation->allow_restricted,
-                            ]
-                        );
-                        $creation_data->setTroveData(
-                            CategoryCollection::buildFromRESTProjectCreation($post_representation)
-                        );
-
-                        $creation_data->setDataFields(
-                            ProjectRegistrationSubmittedFieldsCollection::buildFromRESTProjectCreation($post_representation)
-                        );
-
-                        return $creation_data;
-                    },
-                    function () {
-                        return null;
-                    }
-                );
+        if ($post_representation->from_archive !== null) {
+            return $this->buildFromArchive($post_representation);
         }
 
         return null;
+    }
+
+    private function buildFromAnOtherProjectId(ProjectPostRepresentation $post_representation, PFUser $user): ProjectCreationData
+    {
+        return ProjectCreationData::buildFromFormArray(
+            new DefaultProjectVisibilityRetriever(),
+            TemplateFromProjectForCreation::fromRESTRepresentation(
+                $post_representation,
+                $user,
+                $this->project_manager,
+                $this->url_verification
+            ),
+            $this->extractDataAsArray($post_representation)
+        );
+    }
+
+    private function buildFromTemplateName(ProjectPostRepresentation $post_representation): ProjectCreationData
+    {
+        $template = $this->template_factory->getTemplate($post_representation->xml_template_name);
+        $xml_path = $template->getXMLPath();
+
+        return $this->xml_file_content_retriever->getSimpleXMLElementFromFilePath($xml_path)
+            ->match(
+                function (\SimpleXMLElement $xml_element) use ($post_representation): ProjectCreationData {
+                    $creation_data = ProjectCreationData::buildFromXML(
+                        $xml_element,
+                        new XML_RNGValidator(),
+                        $this->service_manager,
+                        $this->logger,
+                        null,
+                        null,
+                        $this->from_xml_inheritor
+                    );
+
+                    $creation_data->setUnixName($post_representation->shortname);
+                    $creation_data->setFullName($post_representation->label);
+                    $creation_data->setShortDescription($post_representation->description);
+                    $creation_data->setAccessFromProjectData(
+                        [
+                            'is_public' => $post_representation->is_public,
+                            'allow_restricted' => $post_representation->allow_restricted,
+                        ]
+                    );
+                    $creation_data->setTroveData(
+                        CategoryCollection::buildFromRESTProjectCreation($post_representation)
+                    );
+
+                    $creation_data->setDataFields(
+                        ProjectRegistrationSubmittedFieldsCollection::buildFromRESTProjectCreation($post_representation)
+                    );
+
+                    return $creation_data;
+                },
+                function () {
+                    throw new \LogicException("should no t end here");
+                }
+            );
+    }
+
+    private function buildFromArchive(ProjectPostRepresentation $post_representation): ProjectCreationData
+    {
+        if (! CustomProjectArchiveFeatureFlag::canCreateFromCustomArchive()) {
+            throw new RestException(400, 'Create from archive is not available on your platform');
+        }
+
+        return ProjectCreationData::buildFromArchive(
+            new DefaultProjectVisibilityRetriever(),
+            $this->extractDataAsArray($post_representation)
+        );
+    }
+
+    private function extractDataAsArray(ProjectPostRepresentation $post_representation): array
+    {
+        $data = [
+            'project' => [
+                'form_short_description' => $post_representation->description,
+                'is_test' => false,
+                'is_public' => $post_representation->is_public,
+                'trove' => CategoryCollection::buildFromRESTProjectCreation($post_representation),
+                'form_unix_name' => $post_representation->shortname,
+                'form_full_name' => $post_representation->label,
+                'data_fields' => ProjectRegistrationSubmittedFieldsCollection::buildFromRESTProjectCreation($post_representation),
+            ],
+        ];
+
+        if ($post_representation->allow_restricted !== null) {
+            $data['project']['allow_restricted'] = $post_representation->allow_restricted;
+        }
+        return $data;
     }
 }

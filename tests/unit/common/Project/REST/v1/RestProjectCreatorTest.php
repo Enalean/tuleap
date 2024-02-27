@@ -40,12 +40,21 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
+use Tuleap\Project\Registration\ProjectRegistrationChecker;
+use Tuleap\Project\Registration\RestrictedUsersNotAllowedException;
 use Tuleap\Project\Registration\Template\NoTemplateProvidedFault;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateDao;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\Upload\ProjectFileToUploadCreator;
+use Tuleap\Project\Registration\Template\Upload\SaveFileUploadStub;
+use Tuleap\Project\REST\v1\Project\PostProjectCreated;
+use Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation;
+use Tuleap\Project\REST\v1\Project\ProjectRepresentationBuilder;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Project\XML\Import\ArchiveInterface;
@@ -53,6 +62,8 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\Project\Registration\ProjectRegistrationCheckerStub;
 use Tuleap\XML\ProjectXMLMerger;
 use URLVerification;
 use UserManager;
@@ -65,7 +76,6 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \EventManager&MockObject $event_manager;
     private ServiceManager&MockObject $service_manager;
     private ProjectManager&MockObject $project_manager;
-    private RestProjectCreator $creator;
     private \PFUser $user;
     private ProjectPostRepresentation $project_post_representation;
     private ProjectCreator&MockObject $project_creator;
@@ -92,34 +102,13 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager     = $this->createMock(UserManager::class);
         $this->url_verification = $this->createMock(URLVerification::class);
 
-        $this->creator = new RestProjectCreator(
-            $this->project_creator,
-            $this->project_XML_importer,
-            new TemplateFactory(
-                new GlyphFinder(
-                    new \EventManager()
-                ),
-                new ProjectXMLMerger(),
-                new ConsistencyChecker(
-                    new XMLFileContentRetriever(),
-                    $this->event_manager,
-                    $this->retriever,
-                    $this->plugin_factory,
-                ),
-                $this->template_dao,
-                $this->project_manager,
-                new \EventManager(),
-                $this->user_manager,
-                $this->url_verification
-            )
-        );
-
-        $this->user                        = new \PFUser(['language_id' => 'en_US']);
+        $this->user                        = UserTestBuilder::anActiveUser()->build();
         $this->project_post_representation = ProjectPostRepresentation::build(101);
     }
 
     public function testCreateThrowExceptionWhenUserCannotCreateProjects(): void
     {
+        $creator                                             = $this->getCreator(ProjectRegistrationCheckerStub::withoutException());
         $this->project_post_representation->template_id      = 100;
         $this->project_post_representation->shortname        = 'gpig';
         $this->project_post_representation->label            = 'Guinea Pig';
@@ -144,26 +133,30 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(RestException::class);
 
-        $this->creator->create(
+        $creator->create(
             $this->project_post_representation,
             new ProjectCreationData(
                 new DefaultProjectVisibilityRetriever(),
                 new NullLogger()
-            )
+            ),
+            $this->user
         );
     }
 
     public function testFaultWhenNeitherTemplateIdNorTemplateNameIsProvided(): void
     {
+        $creator                                              = $this->getCreator(ProjectRegistrationCheckerStub::withoutException());
         $this->project_post_representation->template_id       = null;
         $this->project_post_representation->xml_template_name = null;
+        $this->project_post_representation->from_archive      = null;
 
-        $this->creator->create(
+        $creator->create(
             $this->project_post_representation,
             new ProjectCreationData(
                 new DefaultProjectVisibilityRetriever(),
-                new NullLogger()
-            )
+                new NullLogger(),
+            ),
+            $this->user
         )->match(
             function () {
                 self::fail("No project should be created if no template");
@@ -176,6 +169,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreateWithDefaultProjectTemplate(): void
     {
+        $creator                                        = $this->getCreator(ProjectRegistrationCheckerStub::withoutException());
         $this->project_post_representation->template_id = 100;
         $this->project_post_representation->shortname   = 'gpig';
         $this->project_post_representation->label       = 'Guinea Pig';
@@ -194,14 +188,16 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->method('getProject')->with($this->project_post_representation->template_id)->willReturn($template_project);
         $this->project_creator->expects(self::atLeastOnce())->method('processProjectCreation')->with($project_creation_data);
 
-        $this->creator->create(
+        $creator->create(
             $this->project_post_representation,
-            $project_creation_data
+            $project_creation_data,
+            $this->user
         );
     }
 
     public function testCreateWithDefaultProjectTemplateAndExcludeRestrictedUsers(): void
     {
+        $creator                                             = $this->getCreator(ProjectRegistrationCheckerStub::withoutException());
         $this->project_post_representation->template_id      = 100;
         $this->project_post_representation->shortname        = 'gpig';
         $this->project_post_representation->label            = 'Guinea Pig';
@@ -221,14 +217,16 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->method('getProject')->with($this->project_post_representation->template_id)->willReturn($template_project);
         $this->project_creator->expects(self::atLeastOnce())->method('processProjectCreation')->with($project_creation_data);
 
-        $this->creator->create(
+        $creator->create(
             $this->project_post_representation,
-            $project_creation_data
+            $project_creation_data,
+            $this->user
         );
     }
 
     public function testCreateFromXMLTemplate(): void
     {
+        $creator = $this->getCreator(ProjectRegistrationCheckerStub::withoutException());
         ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
@@ -239,6 +237,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_post_representation->description       = 'foo';
         $this->project_post_representation->is_public         = false;
         $this->project_post_representation->allow_restricted  = false;
+        $this->project_post_representation->from_archive      = null;
 
         $project_creation_data = new ProjectCreationData(
             new DefaultProjectVisibilityRetriever(),
@@ -303,16 +302,109 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->template_dao->expects(self::once())->method('saveTemplate')->with($new_project, ScrumTemplate::NAME);
 
-        $this->creator->create(
+        $creator->create(
             $this->project_post_representation,
-            $project_creation_data
+            $project_creation_data,
+            $this->user
         )->match(
-            function (Project $project) use ($new_project) {
-                self::assertSame($new_project, $project);
+            function (PostProjectCreated $project) use ($new_project) {
+                self::assertSame($new_project, $project->getProject());
             },
             function () {
                 self::fail("Unexpected fault");
             }
+        );
+    }
+
+    public function testItCreatesFromArchive(): void
+    {
+        $creator = $this->getCreator(ProjectRegistrationCheckerStub::withoutException());
+
+        $this->project_post_representation->template_id      = null;
+        $this->project_post_representation->shortname        = 'gpig';
+        $this->project_post_representation->label            = 'Guinea Pig';
+        $this->project_post_representation->description      = 'foo';
+        $this->project_post_representation->is_public        = false;
+        $this->project_post_representation->allow_restricted = false;
+        $this->project_post_representation->from_archive     = new ProjectFilePOSTRepresentation("test.zip", 123);
+
+        $project_creation_data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
+
+        $creator->create(
+            $this->project_post_representation,
+            $project_creation_data,
+            $this->user
+        )->match(
+            function (PostProjectCreated $project) {
+                self::assertSame("/uploads/project/file/1", $project->getFileRepresentation()->upload_href);
+            },
+            function () {
+                self::fail("Unexpected fault");
+            }
+        );
+    }
+
+    public function testItCollectsErrorFromArchive(): void
+    {
+        $creator                                             = $this->getCreator(ProjectRegistrationCheckerStub::withException(new RestrictedUsersNotAllowedException()));
+        $this->project_post_representation->template_id      = null;
+        $this->project_post_representation->shortname        = 'gpig';
+        $this->project_post_representation->label            = 'Guinea Pig';
+        $this->project_post_representation->description      = 'foo';
+        $this->project_post_representation->is_public        = false;
+        $this->project_post_representation->allow_restricted = false;
+        $this->project_post_representation->from_archive     = new ProjectFilePOSTRepresentation("test.zip", 123);
+
+        $project_creation_data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
+
+        $creator->create(
+            $this->project_post_representation,
+            $project_creation_data,
+            $this->user
+        )->match(
+            function (PostProjectCreated $project) {
+                self::assertSame("/uploads/project/file/1", $project->getFileRepresentation()->upload_href);
+            },
+            function (Fault $fault) {
+                self::assertStringContainsString("Restricted users cannot create projects.", (string) $fault);
+            }
+        );
+    }
+
+    private function getCreator(ProjectRegistrationChecker $checker): RestProjectCreator
+    {
+        return new RestProjectCreator(
+            $this->project_creator,
+            $this->project_XML_importer,
+            new TemplateFactory(
+                new GlyphFinder(
+                    new \EventManager()
+                ),
+                new ProjectXMLMerger(),
+                new ConsistencyChecker(
+                    new XMLFileContentRetriever(),
+                    $this->event_manager,
+                    $this->retriever,
+                    $this->plugin_factory,
+                ),
+                $this->template_dao,
+                $this->project_manager,
+                new \EventManager(),
+                $this->user_manager,
+                $this->url_verification,
+            ),
+            new ProjectFileToUploadCreator(SaveFileUploadStub::withASavedFile(1)),
+            new ProjectRepresentationBuilder(
+                $this->event_manager,
+                new DescriptionFieldsFactory(new DescriptionFieldsDao())
+            ),
+            $checker
         );
     }
 }
