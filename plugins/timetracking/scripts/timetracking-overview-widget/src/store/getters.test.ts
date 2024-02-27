@@ -23,6 +23,7 @@
 
 import { describe, beforeEach, afterEach, it, expect } from "@jest/globals";
 import { setActivePinia, createPinia } from "pinia";
+import { Fault } from "@tuleap/fault";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import type { TrackerWithTimes } from "@tuleap/plugin-timetracking-rest-api-types";
 import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store";
@@ -44,7 +45,7 @@ describe("Getters Timetracking Overview", (): void => {
         it("Given a widget with state initialisation. When there is an error message, Then has_error should be true", (): void => {
             const error_message = "this is an error";
 
-            store.setErrorMessage(error_message);
+            store.setErrorMessage(Fault.fromMessage(error_message));
             expect(store.has_error).toBe(true);
         });
 

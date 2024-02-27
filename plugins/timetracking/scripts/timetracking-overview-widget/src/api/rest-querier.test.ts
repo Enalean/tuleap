@@ -18,8 +18,9 @@
  */
 
 import { describe, it, expect, jest } from "@jest/globals";
-import * as tlp_fetch from "@tuleap/tlp-fetch";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import { okAsync } from "neverthrow";
+import { uri } from "@tuleap/fetch-result";
+import * as fetch_result from "@tuleap/fetch-result";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import type {
     OverviewReport,
@@ -42,15 +43,15 @@ describe("rest-querier", (): void => {
                 trackers: [{ id: 1, label: "timetracking_tracker" } as OverviewReportTracker],
                 invalid_trackers: [],
             };
-            const tlpGet = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(tlpGet, {
-                return_json: report,
-            });
+            const getJSON = jest.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(report));
 
             const result = await getTrackersFromReport(1);
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
 
-            expect(tlpGet).toHaveBeenCalledWith("/api/v1/timetracking_reports/1");
-            expect(result).toStrictEqual(report);
+            expect(getJSON).toHaveBeenCalledWith(uri`/api/v1/timetracking_reports/${report.id}`);
+            expect(result.value).toStrictEqual(report);
         });
     });
 
@@ -70,15 +71,15 @@ describe("rest-querier", (): void => {
                     uri: "",
                 },
             ];
-            const tlpGet = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(tlpGet, {
-                return_json: trackers,
-            });
+            const report_id = 1;
+            const getJSON = jest.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(trackers));
+            const result = await getTrackersFromReport(report_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
 
-            const result = await getTrackersFromReport(1);
-
-            expect(tlpGet).toHaveBeenCalledWith("/api/v1/timetracking_reports/1");
-            expect(result).toStrictEqual(trackers);
+            expect(getJSON).toHaveBeenCalledWith(uri`/api/v1/timetracking_reports/${report_id}`);
+            expect(result.value).toStrictEqual(trackers);
         });
     });
 
@@ -87,21 +88,22 @@ describe("rest-querier", (): void => {
             const project_765 = { id: 765, label: "timetracking" } as ProjectReference;
             const project_239 = { id: 239, label: "projectTest" } as ProjectReference;
 
-            const tlpGet = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(tlpGet, {
-                return_json: [project_765, project_239],
-            });
-
+            const getJSON = jest
+                .spyOn(fetch_result, "getJSON")
+                .mockReturnValue(okAsync([project_765, project_239]));
             const result = await getProjectsWithTimetracking();
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
 
-            expect(tlpGet).toHaveBeenCalledWith("/api/v1/projects", {
+            expect(getJSON).toHaveBeenCalledWith(uri`/api/v1/projects`, {
                 params: {
                     limit: 50,
                     offset: 0,
                     query: JSON.stringify({ with_time_tracking: true }),
                 },
             });
-            expect(result).toStrictEqual([project_765, project_239]);
+            expect(result.value).toStrictEqual([project_765, project_239]);
         });
     });
 
@@ -111,14 +113,14 @@ describe("rest-querier", (): void => {
                 { id: 16, label: "tracker_1" } as OverviewReportTracker,
                 { id: 18, label: "tracker_2" } as OverviewReportTracker,
             ];
-            const tlpGet = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(tlpGet, {
-                return_json: trackers,
-            });
+            const project_id = 102;
+            const getJSON = jest.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(trackers));
+            const result = await getTrackersWithTimetracking(project_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
 
-            const result = await getTrackersWithTimetracking(102);
-
-            expect(tlpGet).toHaveBeenCalledWith("/api/v1/projects/102/trackers", {
+            expect(getJSON).toHaveBeenCalledWith(uri`/api/v1/projects/${project_id}/trackers`, {
                 params: {
                     representation: "minimal",
                     limit: 50,
@@ -126,7 +128,7 @@ describe("rest-querier", (): void => {
                     query: JSON.stringify({ with_time_tracking: true }),
                 },
             });
-            expect(result).toStrictEqual(trackers);
+            expect(result.value).toStrictEqual(trackers);
         });
     });
 
@@ -141,25 +143,22 @@ describe("rest-querier", (): void => {
                 ],
                 invalid_trackers: [],
             };
+            const report_id = 1;
+            const put = jest
+                .spyOn(fetch_result, "putJSON")
+                .mockReturnValue(okAsync(updated_report));
 
-            const tlpPut = jest.spyOn(tlp_fetch, "put");
-            mockFetchSuccess(tlpPut, {
-                return_json: updated_report,
-            });
-            const headers = {
-                "content-type": "application/json",
-            };
-            const body = JSON.stringify({
-                trackers_id: [1, 2],
+            const trackers_id = [1, 2];
+            const result = await saveNewReport(report_id, trackers_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+
+            expect(put).toHaveBeenCalledWith(uri`/api/v1/timetracking_reports/${report_id}`, {
+                trackers_id,
             });
 
-            const result = await saveNewReport(1, [1, 2]);
-
-            expect(tlpPut).toHaveBeenCalledWith("/api/v1/timetracking_reports/1", {
-                headers,
-                body,
-            });
-            expect(result).toStrictEqual(updated_report);
+            expect(result.value).toStrictEqual(updated_report);
         });
     });
 });
