@@ -19,14 +19,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\PHPUnit\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class WikiAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
+class WikiAttachmentTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\TemporaryTestDirectory;
+    use TemporaryTestDirectory;
 
     protected function tearDown(): void
     {
@@ -36,109 +39,109 @@ class WikiAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFilesystemName(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('initWithId');
+        $wa = $this->createPartialMock(WikiAttachment::class, ['initWithId']);
+        $wa->method('initWithId');
         $wa->setFilename('toto.txt');
-        $this->assertEquals('toto.txt', $wa->getFilesystemName());
+        self::assertEquals('toto.txt', $wa->getFilesystemName());
         $wa->initFilesystemName();
-        $this->assertNotEquals('toto.txt', $wa->getFilesystemName());
-        $this->assertMatchesRegularExpression('/toto.txt_[0..9]*/', $wa->getFilesystemName());
+        self::assertNotEquals('toto.txt', $wa->getFilesystemName());
+        self::assertMatchesRegularExpression('/toto.txt_[0..9]*/', $wa->getFilesystemName());
         $wa->filesystemName = 'titi.txt';
-        $this->assertNotEquals('toto.txt', $wa->getFilesystemName());
-        $this->assertDoesNotMatchRegularExpression('/toto.txt_[0..9]*/', $wa->getFilesystemName());
-        $this->assertEquals('titi.txt', $wa->getFilesystemName());
+        self::assertNotEquals('toto.txt', $wa->getFilesystemName());
+        self::assertDoesNotMatchRegularExpression('/toto.txt_[0..9]*/', $wa->getFilesystemName());
+        self::assertEquals('titi.txt', $wa->getFilesystemName());
     }
 
     public function testCreateNoFilesystemName(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('initWithId');
+        $wa = $this->createPartialMock(WikiAttachment::class, ['initWithId', 'dbadd']);
+        $wa->method('initWithId');
         $wa->setFilename('testing.txt');
         $wa->basedir = $this->getTmpDir();
-        $wa->shouldReceive('dbadd')->andReturns(true);
+        $wa->method('dbadd')->willReturn(true);
 
-        $this->assertFalse(is_dir($wa->basedir . '/testing.txt'));
-        $this->assertFalse($wa->exist());
-        $this->assertTrue($wa->create());
-        $this->assertTrue(is_dir($wa->basedir . '/testing.txt'));
-        $this->assertTrue($wa->exist());
+        self::assertFalse(is_dir($wa->basedir . '/testing.txt'));
+        self::assertFalse($wa->exist());
+        self::assertTrue($wa->create());
+        self::assertTrue(is_dir($wa->basedir . '/testing.txt'));
+        self::assertTrue($wa->exist());
         rmdir($wa->basedir . '/testing.txt');
     }
 
     public function testCreateFolderAlreadyExistNoFilesystemName(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('initWithId');
+        $wa = $this->createPartialMock(WikiAttachment::class, ['initWithId', 'dbadd']);
+        $wa->method('initWithId');
         $wa->setFilename('toto.txt');
         $wa->basedir = $this->getTmpDir();
         mkdir("$wa->basedir/toto.txt");
-        $wa->shouldReceive('dbadd')->andReturns(true);
+        $wa->method('dbadd')->willReturn(true);
 
-        $this->assertTrue(is_dir($wa->basedir . '/toto.txt'));
-        $this->assertTrue($wa->exist());
-        $this->assertTrue($wa->create());
-        $this->assertTrue(is_dir($wa->basedir . '/toto.txt'));
-        $this->assertTrue($wa->exist());
+        self::assertTrue(is_dir($wa->basedir . '/toto.txt'));
+        self::assertTrue($wa->exist());
+        self::assertTrue($wa->create());
+        self::assertTrue(is_dir($wa->basedir . '/toto.txt'));
+        self::assertTrue($wa->exist());
     }
 
     public function testCreateFolderAlreadyExistWithFilesystemName(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('initWithId');
+        $wa = $this->createPartialMock(WikiAttachment::class, ['initWithId', 'dbadd']);
+        $wa->method('initWithId');
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
         $wa->basedir = $this->getTmpDir();
-        $wa->shouldReceive('dbadd')->andReturns(true);
+        $wa->method('dbadd')->willReturn(true);
         mkdir($wa->basedir . '/' . $wa->getFilesystemName());
 
-        $this->assertTrue(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
-        $this->assertTrue($wa->exist());
-        $this->assertTrue($wa->create());
-        $this->assertFalse(is_dir($wa->basedir . '/testing.txt'));
-        $this->assertTrue(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
-        $this->assertTrue($wa->exist());
+        self::assertTrue(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
+        self::assertTrue($wa->exist());
+        self::assertTrue($wa->create());
+        self::assertFalse(is_dir($wa->basedir . '/testing.txt'));
+        self::assertTrue(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
+        self::assertTrue($wa->exist());
         rmdir($wa->basedir . '/' . $wa->getFilesystemName());
     }
 
     public function testCreateWithFilesystemName(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $wa = $this->createPartialMock(WikiAttachment::class, ['dbadd']);
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
         $wa->basedir = $this->getTmpDir();
-        $wa->shouldReceive('dbadd')->andReturns(true);
+        $wa->method('dbadd')->willReturn(true);
 
-        $this->assertFalse(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
-        $this->assertFalse($wa->exist());
-        $this->assertTrue($wa->create());
-        $this->assertFalse(is_dir($wa->basedir . '/testing.txt'));
-        $this->assertTrue(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
-        $this->assertTrue($wa->exist());
+        self::assertFalse(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
+        self::assertFalse($wa->exist());
+        self::assertTrue($wa->create());
+        self::assertFalse(is_dir($wa->basedir . '/testing.txt'));
+        self::assertTrue(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
+        self::assertTrue($wa->exist());
         rmdir($wa->basedir . '/' . $wa->getFilesystemName());
     }
 
     public function testPurgeAttachmentSucceeded(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('initWithId');
+        $wa = $this->createPartialMock(WikiAttachment::class, ['initWithId', 'getDao']);
+        $wa->method('initWithId');
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
         $wa->basedir = $this->getTmpDir();
         mkdir($wa->basedir . '/' . $wa->getFilesystemName());
         touch($wa->basedir . '/' . $wa->getFilesystemName() . '/0');
 
-        $dao = \Mockery::spy(\WikiAttachmentDao::class);
-        $wa->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('setPurgeDate')->once()->andReturns(true);
+        $dao = $this->createMock(WikiAttachmentDao::class);
+        $wa->method('getDao')->willReturn($dao);
+        $dao->expects(self::once())->method('setPurgeDate')->willReturn(true);
 
-        $this->assertTrue($wa->purgeAttachment());
-        $this->assertFalse($wa->exist());
+        self::assertTrue($wa->purgeAttachment());
+        self::assertFalse($wa->exist());
     }
 
     public function testPurgeAttachmentDBFailure(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('initWithId');
+        $wa = $this->createPartialMock(WikiAttachment::class, ['initWithId', 'getDao']);
+        $wa->method('initWithId');
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
         $wa->basedir = $this->getTmpDir();
@@ -146,96 +149,96 @@ class WikiAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
         touch($wa->basedir . '/' . $wa->getFilesystemName() . '/0');
         touch($wa->basedir . '/' . $wa->getFilesystemName() . '/1');
 
-        $dao = \Mockery::spy(\WikiAttachmentDao::class);
-        $wa->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('setPurgeDate')->once()->andReturns(false);
+        $dao = $this->createMock(WikiAttachmentDao::class);
+        $wa->method('getDao')->willReturn($dao);
+        $dao->expects(self::once())->method('setPurgeDate')->willReturn(false);
 
-        $this->assertFalse($wa->purgeAttachment());
-        $this->assertFalse($wa->exist());
+        self::assertFalse($wa->purgeAttachment());
+        self::assertFalse($wa->exist());
     }
 
-    public function testDeleteAttachmntSuccess(): void
+    public function testDeleteAttachmentSuccess(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('isActive')->andReturns(true);
+        $wa = $this->createPartialMock(WikiAttachment::class, ['isActive', 'getDao']);
+        $wa->method('isActive')->willReturn(true);
 
-        $dao = \Mockery::spy(\WikiAttachmentDao::class);
-        $wa->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('delete')->once()->andReturns(true);
-        $this->assertTrue($wa->deleteAttachment());
+        $dao = $this->createMock(WikiAttachmentDao::class);
+        $wa->method('getDao')->willReturn($dao);
+        $dao->expects(self::once())->method('delete')->willReturn(true);
+        self::assertTrue($wa->deleteAttachment());
     }
 
     public function testDeleteAttachmentNotActive(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('isActive')->andReturns(false);
+        $wa = $this->createPartialMock(WikiAttachment::class, ['isActive', 'getDao']);
+        $wa->method('isActive')->willReturn(false);
 
-        $dao = \Mockery::spy(\WikiAttachmentDao::class);
-        $wa->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('delete')->never();
-        $this->assertFalse($wa->deleteAttachment());
+        $dao = $this->createMock(WikiAttachmentDao::class);
+        $wa->method('getDao')->willReturn($dao);
+        $dao->expects(self::never())->method('delete');
+        self::assertFalse($wa->deleteAttachment());
     }
 
     public function testDeleteAttachmentDBFailure(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('isActive')->andReturns(true);
+        $wa = $this->createPartialMock(WikiAttachment::class, ['isActive', 'getDao']);
+        $wa->method('isActive')->willReturn(true);
 
-        $dao = \Mockery::spy(\WikiAttachmentDao::class);
-        $wa->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('delete')->once()->andReturns(false);
-        $this->assertFalse($wa->deleteAttachment());
+        $dao = $this->createMock(WikiAttachmentDao::class);
+        $wa->method('getDao')->willReturn($dao);
+        $dao->expects(self::once())->method('delete')->willReturn(false);
+        self::assertFalse($wa->deleteAttachment());
     }
 
     public function testRestoreDeletedAttachmentActiveFileFailure(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('initWithId');
-        $wa->shouldReceive('isActive')->andReturns(true);
-        $wa->shouldReceive('exist')->andReturns(true);
+        $wa = $this->createPartialMock(WikiAttachment::class, ['initWithId', 'isActive', 'exist', 'getDao']);
+        $wa->method('initWithId');
+        $wa->method('isActive')->willReturn(true);
+        $wa->method('exist')->willReturn(true);
 
-        $dao = \Mockery::spy(\WikiAttachmentDao::class);
-        $wa->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('restoreAttachment')->never();
-        $this->assertFalse($wa->restoreDeletedAttachment(1));
+        $dao = $this->createMock(WikiAttachmentDao::class);
+        $wa->method('getDao')->willReturn($dao);
+        $dao->expects(self::never())->method('restoreAttachment');
+        self::assertFalse($wa->restoreDeletedAttachment(1));
     }
 
     public function testRestoreDeletedAttachmentFileSystemFailure(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('initWithId');
-        $wa->shouldReceive('isActive')->andReturns(false);
-        $wa->shouldReceive('exist')->andReturns(false);
+        $wa = $this->createPartialMock(WikiAttachment::class, ['initWithId', 'isActive', 'exist', 'getDao']);
+        $wa->method('initWithId');
+        $wa->method('isActive')->willReturn(false);
+        $wa->method('exist')->willReturn(false);
 
-        $dao = \Mockery::spy(\WikiAttachmentDao::class);
-        $wa->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('restoreAttachment')->never();
-        $this->assertFalse($wa->restoreDeletedAttachment(1));
+        $dao = $this->createMock(WikiAttachmentDao::class);
+        $wa->method('getDao')->willReturn($dao);
+        $dao->expects(self::never())->method('restoreAttachment');
+        self::assertFalse($wa->restoreDeletedAttachment(1));
     }
 
     public function testRestoreDeletedAttachmentDaoFailure(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('initWithId');
-        $wa->shouldReceive('isActive')->andReturns(false);
-        $wa->shouldReceive('exist')->andReturns(true);
+        $wa = $this->createPartialMock(WikiAttachment::class, ['initWithId', 'isActive', 'exist', 'getDao']);
+        $wa->method('initWithId');
+        $wa->method('isActive')->willReturn(false);
+        $wa->method('exist')->willReturn(true);
 
-        $dao = \Mockery::spy(\WikiAttachmentDao::class);
-        $wa->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('restoreAttachment')->andReturns(false);
-        $this->assertFalse($wa->restoreDeletedAttachment(1));
+        $dao = $this->createMock(WikiAttachmentDao::class);
+        $wa->method('getDao')->willReturn($dao);
+        $dao->method('restoreAttachment')->willReturn(false);
+        self::assertFalse($wa->restoreDeletedAttachment(1));
     }
 
     public function testRestoreDeletedAttachmentSuccess(): void
     {
-        $wa = \Mockery::mock(\WikiAttachment::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $wa->shouldReceive('initWithId');
-        $wa->shouldReceive('isActive')->andReturns(false);
-        $wa->shouldReceive('exist')->andReturns(true);
+        $wa = $this->createPartialMock(WikiAttachment::class, ['initWithId', 'isActive', 'exist', 'getDao']);
+        $wa->method('initWithId');
+        $wa->method('isActive')->willReturn(false);
+        $wa->method('exist')->willReturn(true);
 
-        $dao = \Mockery::spy(\WikiAttachmentDao::class);
-        $wa->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('restoreAttachment')->andReturns(true);
-        $this->assertTrue($wa->restoreDeletedAttachment(1));
+        $dao = $this->createMock(WikiAttachmentDao::class);
+        $wa->method('getDao')->willReturn($dao);
+        $dao->method('restoreAttachment')->willReturn(true);
+        self::assertTrue($wa->restoreDeletedAttachment(1));
     }
 }
