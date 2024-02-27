@@ -231,4 +231,89 @@ final class UGroupListDuckTypedFieldTest extends DuckTypedFieldTestCase
         self::assertCount(1, $artifacts);
         self::assertEqualsCanonicalizing([$this->sprint_artifact_with_members_static_id], $artifacts);
     }
+
+    public function testNotEqualEmpty(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "ugroup_field != ''",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_members_id, $this->sprint_artifact_with_members_static_id], $artifacts);
+    }
+
+    public function testNotEqualUGroup(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "ugroup_field != 'Project administrators'",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_empty_id, $this->release_artifact_with_members_id,
+            $this->sprint_artifact_empty_id, $this->sprint_artifact_with_members_static_id,
+        ], $artifacts);
+    }
+
+    public function testPermissionsNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "ugroup_field != 'Project administrators'",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(5, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_empty_id, $this->release_artifact_with_members_id,
+            $this->sprint_artifact_empty_id, $this->sprint_artifact_with_members_static_id,
+            $this->task_artifact_with_members_id,
+        ], $artifacts);
+    }
+
+    public function testNotEqualStaticGroup(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "ugroup_field != 'MyStaticUGroup'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_empty_id, $this->release_artifact_with_members_id,
+            $this->sprint_artifact_empty_id,
+        ], $artifacts);
+    }
+
+    public function testMultipleNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "ugroup_field != 'MyStaticUGroup' AND ugroup_field != 'Project members'",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
 }
