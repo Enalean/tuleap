@@ -21,7 +21,7 @@
 /**
  * PHP representation of a TriggerRule
  */
-class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormatOfMyself
+class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormatOfMyself // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var int */
     private $id;
@@ -128,7 +128,7 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
         foreach ($this->getTriggers() as $trigger) {
             $trg[] = $trigger->getAsChangesetComment($this->getCondition());
         }
-        return dgettext('tuleap-tracker', 'Current artifact children satisfy the following condition(s):') .
+        return dngettext('tuleap-tracker', 'Current artifact children satisfy the following condition:', 'Current artifact children satisfy the following conditions:', count($trg)) .
                '<ul><li>' . implode('</li><li>' . $this->getConditionOperatorLabel() . ' ', $trg) . '</li></ul>';
     }
 

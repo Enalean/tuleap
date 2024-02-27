@@ -63,9 +63,9 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
             $translated_plugin = basename($path);
             foreach ($json['gettext-smarty'] as $component => $gettext) {
                 info("[$translated_plugin][smarty][$component] Generating .mo files");
-                $po       = escapeshellarg("$path/${gettext['po']}");
-                $template = escapeshellarg("$path/${gettext['po']}/$component.pot");
-                foreach (glob("$path/${gettext['po']}/*/LC_MESSAGES/*.po") as $locale_file) {
+                $po       = escapeshellarg("$path/{$gettext['po']}");
+                $template = escapeshellarg("$path/{$gettext['po']}/$component.pot");
+                foreach (glob("$path/{$gettext['po']}/*/LC_MESSAGES/*.po") as $locale_file) {
                     $locale_dir = dirname($locale_file);
                     $mo_file    = escapeshellarg("$locale_dir/$component.mo");
                     $po_file    = escapeshellarg($locale_file);

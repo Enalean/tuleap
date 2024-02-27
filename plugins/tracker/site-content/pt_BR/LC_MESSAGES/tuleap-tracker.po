@@ -945,8 +945,10 @@ msgstr ""
 msgid "Current Full Hierarchy"
 msgstr ""
 
-msgid "Current artifact children satisfy the following condition(s):"
-msgstr ""
+msgid "Current artifact children satisfy the following condition:"
+msgid_plural "Current artifact children satisfy the following conditions:"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Custom columns based on..."
 msgstr ""
