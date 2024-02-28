@@ -32,6 +32,7 @@
                 class="switch-to-projects"
                 aria-labelledby="switch-to-modal-projects-title"
                 v-if="has_filtered_projects"
+                data-test="switch-to-projects"
             >
                 <project-link
                     v-for="project of filtered_projects"

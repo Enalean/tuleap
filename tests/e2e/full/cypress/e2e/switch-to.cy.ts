@@ -47,6 +47,7 @@ describe("Switch To", () => {
             });
 
         cy.projectMemberSession();
+        cy.intercept("/api/users/*/history").as("loadHistory");
         cy.get("@first_artifact").then((artifact_id) => {
             cy.visit(`/plugins/tracker/?aid=${artifact_id}`);
         });
@@ -64,46 +65,54 @@ describe("Switch To", () => {
 
         cy.log("Jump to first project");
         cy.focused().tab();
-        assertFocusedElementIsNthElementInCollection(0, "switch-to-projects-project");
+        assertFocusedElementIsNthElementInCollection(0, "switch-to-projects");
 
         cy.log("Jump to second project");
         cy.focused().tab();
-        assertFocusedElementIsNthElementInCollection(1, "switch-to-projects-project");
+        assertFocusedElementIsNthElementInCollection(1, "switch-to-projects");
+
+        // Wait for history to finish loading and to display
+        cy.wait("@loadHistory", { timeout: 5000 });
+        cy.get("[data-test=switch-to-recent-items-loading]").should("not.exist");
 
         cy.log("Jump to recent item");
         cy.get("@body").type("{rightArrow}");
-        assertFocusedElementIsNthElementInCollection(0, "switch-to-item-entry");
+        assertFocusedElementIsNthElementInCollection(0, "switch-to-recent-items");
 
         cy.log("Jump to next item");
         cy.get("@body").type("{downArrow}");
-        assertFocusedElementIsNthElementInCollection(1, "switch-to-item-entry");
+        assertFocusedElementIsNthElementInCollection(1, "switch-to-recent-items");
 
         cy.log("Jump back to project list");
         cy.get("@body").type("{leftArrow}");
-        assertFocusedElementIsNthElementInCollection(0, "switch-to-projects-project");
+        assertFocusedElementIsNthElementInCollection(0, "switch-to-projects");
 
         cy.log("Close Switch To modal");
         cy.get("@body").type("{esc}");
         cy.get("[data-test=switch-to-modal]").should("not.be.visible");
-
-        function assertFocusedElementIsNthElementInCollection(
-            expected_index: number,
-            collection_name: string,
-        ): void {
-            cy.focused().should(
-                "satisfy",
-                (element) =>
-                    getElementIndex(element[0].closest(`[data-test=${collection_name}]`)) ===
-                    expected_index,
-            );
-        }
-
-        function getElementIndex(element: HTMLElement): number {
-            if (!element.parentElement) {
-                return 0;
-            }
-
-            return Array.prototype.indexOf.call(element.parentElement.children, element);
-        }
     });
 });
+
+function assertFocusedElementIsNthElementInCollection(
+    expected_index: number,
+    collection_name: string,
+): void {
+    cy.focused().should("satisfy", (element_wrapper) => {
+        const focused_element = element_wrapper[0];
+        const closest_collection = focused_element.closest(`[data-test=${collection_name}]`);
+        if (!closest_collection) {
+            return false;
+        }
+        return getElementIndex(closest_collection, focused_element) === expected_index;
+    });
+}
+
+function getElementIndex(collection: HTMLElement, element: HTMLElement): number {
+    const children = Array.from(collection.children);
+    for (let i = 0; i < children.length; i++) {
+        if (children[i].contains(element)) {
+            return i;
+        }
+    }
+    return -1;
+}

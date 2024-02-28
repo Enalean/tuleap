@@ -36,6 +36,7 @@
                 class="switch-to-recent-items-list"
                 aria-labelledby="switch-to-modal-recent-items-title"
                 v-if="has_filtered_history"
+                data-test="switch-to-recent-items"
             >
                 <item-entry
                     v-for="entry of filtered_history.entries"
