@@ -30,8 +30,8 @@ use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -58,7 +58,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field_string = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
             ->inTracker($this->tracker)
             ->build();
-        $this->field_list   = TrackerFormElementListFieldBuilder::aListField(self::LIST_FIELD_ID)
+        $this->field_list   = ListFieldBuilder::aListField(self::LIST_FIELD_ID)
             ->inTracker($this->tracker)
             ->build();
 
@@ -121,7 +121,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->inTracker($this->tracker)
             ->thatIsRequired()
             ->build();
-        $this->field_list   = TrackerFormElementListFieldBuilder::aListField(self::LIST_FIELD_ID)
+        $this->field_list   = ListFieldBuilder::aListField(self::LIST_FIELD_ID)
             ->inTracker($this->tracker)
             ->thatIsRequired()
             ->build();
@@ -155,7 +155,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfTheMandatoryFieldIsNotTheSemanticTitle(): void
     {
-        $this->field_list = TrackerFormElementListFieldBuilder::aListField(self::LIST_FIELD_ID)
+        $this->field_list = ListFieldBuilder::aListField(self::LIST_FIELD_ID)
             ->inTracker($this->tracker)
             ->thatIsRequired()
             ->build();

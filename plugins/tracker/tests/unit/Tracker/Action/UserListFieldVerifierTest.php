@@ -22,8 +22,9 @@ namespace Tuleap\Document\Tests\Action;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Action\UserListFieldVerifier;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 
 final class UserListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -37,7 +38,9 @@ final class UserListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenFieldIsAListFieldBoundToStaticValues(): void
     {
-        $static_bind = TrackerFormElementListStaticBindBuilder::aBind()->withStaticValues([
+        $static_bind = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(422)->build()
+        )->withStaticValues([
             1 => "Open",
             2 => "Closed",
         ])->build();
@@ -47,7 +50,9 @@ final class UserListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueWhenFieldIsAListFieldBoundToUsers(): void
     {
-        $user_bind = TrackerFormElementListUserBindBuilder::aBind()->withUsers([
+        $user_bind = ListUserBindBuilder::aUserBind(
+            ListFieldBuilder::aListField(552)->build()
+        )->withUsers([
             UserTestBuilder::anActiveUser()->build(),
         ])->build();
 

@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use SimpleXMLElement;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveMatchingValueByDuckTypingStub;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 use XML_SimpleXMLCDATAFactory;
@@ -36,8 +36,8 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->source_field = TrackerFormElementListFieldBuilder::aListField(1)->build();
-        $this->target_field = TrackerFormElementListFieldBuilder::aListField(1)->build();
+        $this->source_field = ListFieldBuilder::aListField(1)->build();
+        $this->target_field = ListFieldBuilder::aListField(1)->build();
     }
 
     public function testItDoesNotSetBindValueWhenXmlValueIsZero(): void

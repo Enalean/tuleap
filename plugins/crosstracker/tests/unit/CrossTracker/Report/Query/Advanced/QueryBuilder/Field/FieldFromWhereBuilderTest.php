@@ -37,12 +37,12 @@ use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
@@ -180,18 +180,20 @@ final class FieldFromWhereBuilderTest extends TestCase
     public function testItReturnsSQLForStaticListField(): void
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementListFieldBuilder::aListField(746)
-                ->withName(self::FIELD_NAME)
-                ->inTracker($this->first_tracker)
-                ->withBind(TrackerFormElementListStaticBindBuilder::aBind()->build())
-                ->withReadPermission($this->user, true)
-                ->build(),
-            TrackerFormElementListFieldBuilder::aListField(466)
-                ->withName(self::FIELD_NAME)
-                ->inTracker($this->second_tracker)
-                ->withBind(TrackerFormElementListStaticBindBuilder::aBind()->build())
-                ->withReadPermission($this->user, true)
-                ->build(),
+            ListStaticBindBuilder::aStaticBind(
+                ListFieldBuilder::aListField(746)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
+            ListStaticBindBuilder::aStaticBind(
+                ListFieldBuilder::aListField(466)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->second_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
         );
 
         $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('my_value'));
@@ -201,18 +203,20 @@ final class FieldFromWhereBuilderTest extends TestCase
     public function testItReturnsSQLForUGroupListField(): void
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementListFieldBuilder::aListField(457)
-                ->withName(self::FIELD_NAME)
-                ->inTracker($this->first_tracker)
-                ->withBind(TrackerFormElementListUserGroupBindBuilder::aBind()->build())
-                ->withReadPermission($this->user, true)
-                ->build(),
-            TrackerFormElementListFieldBuilder::aListField(624)
-                ->withName(self::FIELD_NAME)
-                ->inTracker($this->second_tracker)
-                ->withBind(TrackerFormElementListUserGroupBindBuilder::aBind()->build())
-                ->withReadPermission($this->user, true)
-                ->build(),
+            ListUserGroupBindBuilder::aUserGroupBind(
+                ListFieldBuilder::aListField(457)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
+            ListUserGroupBindBuilder::aUserGroupBind(
+                ListFieldBuilder::aListField(624)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->second_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
         );
 
         $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('Project members'));
