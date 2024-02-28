@@ -6,7 +6,7 @@ import {
 } from "../../execution-constants.js";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { resetError, setError } from "../../../feedback-state.js";
-import { updateStatusWithStepResults, updateStepResults } from "./execution-with-steps-updater.js";
+import { updateStepResults } from "./execution-with-steps-updater.js";
 import { sanitize } from "dompurify";
 
 controller.$inject = [
@@ -15,6 +15,7 @@ controller.$inject = [
     "gettextCatalog",
     "ExecutionRestService",
     "ExecutionService",
+    "SharedPropertiesService",
 ];
 
 export default function controller(
@@ -23,6 +24,7 @@ export default function controller(
     gettextCatalog,
     ExecutionRestService,
     ExecutionService,
+    SharedPropertiesService,
 ) {
     const self = this;
     Object.assign(self, {
@@ -80,8 +82,12 @@ export default function controller(
                 () => {
                     updateStepResults(self.execution, self.step.id, status);
                     self.step_result.status = status;
-                    updateStatusWithStepResults(self.execution, ExecutionService);
-                    ExecutionService.updatePresencesOnCampaign();
+                    ExecutionRestService.getExecution(self.execution.id).then((execution) => {
+                        ExecutionService.updateTestExecution(
+                            execution,
+                            SharedPropertiesService.getCurrentUser(),
+                        );
+                    });
                 },
                 (error) =>
                     setError(
