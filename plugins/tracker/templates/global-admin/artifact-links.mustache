@@ -1,4 +1,4 @@
-<h1 class="tlp-framed-horizontally tracker-administration-title">{{ title }}</h1>
+<h1 class="tlp-framed-horizontally tracker-global-administration-title">{{ title }}</h1>
 <div class="main-project-tabs">
     <nav class="tlp-tabs">
         <a href="{{ trackers_url }}" class="tlp-tab">
@@ -15,7 +15,7 @@
         </a>
     </nav>
 </div>
-<div class="tlp-framed-vertically" id="tracker-artifact-link-type-usages">
+<div class="tlp-framed-vertically">
     <div class="tlp-framed-horizontally">
         {{^ are_artifact_link_types_enabled }}
         <section class="tlp-pane">
@@ -36,6 +36,7 @@
                                        id="tracker-enable-artifact-link-type-switch"
                                        class="tlp-switch-checkbox"
                                        data-form-id="tracker-enable-artifact-link-type-form"
+                                       data-switch
                                        name="enable-artifact-link-types"
                                        value="1"
                                 >
@@ -88,6 +89,7 @@
                                                        class="tlp-switch-checkbox"
                                                        data-form-id="use-{{ shortname }}-form"
                                                        data-test="toggle-{{ shortname }}-link"
+                                                       data-switch
                                                        value="1"
                                                        {{# is_used }} checked="checked" {{/ is_used }}
                                                        {{^ can_be_unused }} disabled {{/ can_be_unused }}

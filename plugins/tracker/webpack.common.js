@@ -73,15 +73,11 @@ const config_for_flaming_parrot = {
 
 const config_for_burning_parrot = {
     entry: {
-        "admin-type": "./scripts/admin-type.js",
-        "global-admin-artifact-links": "./scripts/global-admin/artifact-links.js",
-        "global-admin-trackers": "./scripts/global-admin/trackers.ts",
         "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
     },
     context,
     output,
     externals: {
-        jquery: "jQuery",
         tlp: "tlp",
     },
     resolve: {

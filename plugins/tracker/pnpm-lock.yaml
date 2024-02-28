@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/burningparrot-theme':
+    specifier: workspace:^
+    version: link:../../src/themes/BurningParrot
   '@tuleap/chart-builder':
     specifier: workspace:*
     version: link:../../lib/frontend/chart-builder
@@ -44,9 +47,6 @@ dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-modal':
-    specifier: workspace:*
-    version: link:../../lib/frontend/tlp-modal
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-swatch-colors

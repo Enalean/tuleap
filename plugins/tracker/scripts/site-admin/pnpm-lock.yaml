@@ -1,0 +1,15 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-modal
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator

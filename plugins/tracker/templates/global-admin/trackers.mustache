@@ -1,4 +1,4 @@
-<h1 class="tlp-framed-horizontally tracker-administration-title">
+<h1 class="tlp-framed-horizontally tracker-global-administration-title">
     {{# dgettext }} tuleap-tracker | Tracker global administration{{/ dgettext }}
 </h1>
 <div class="main-project-tabs">
@@ -87,7 +87,8 @@
                                             type="checkbox"
                                             id="toggle-promoted-{{ id }}"
                                             name="is_promoted"
-                                            class="tlp-switch-checkbox toggle-promoted-switch"
+                                            class="tlp-switch-checkbox"
+                                            data-switch
                                             {{# is_promoted }}checked{{/ is_promoted }}
                                         >
                                         <label for="toggle-promoted-{{ id }}" class="tlp-switch-button" aria-hidden="true"></label>
@@ -102,10 +103,10 @@
                                         type="button"
                                         class="tlp-table-cell-actions-button
                                             tlp-button-small tlp-button-danger tlp-button-outline
-                                            {{# can_be_deleted }}tracker-global-admin-delete-tracker-button{{/ can_be_deleted }}
                                             {{^ can_be_deleted }}tlp-tooltip tlp-tooltip-left{{/ can_be_deleted }}
                                         "
                                         {{# can_be_deleted }}
+                                            data-delete-button
                                             data-target-modal-id="tracker-global-admin-delete-tracker-{{ id }}"
                                         {{/ can_be_deleted }}
                                         {{^ can_be_deleted }}

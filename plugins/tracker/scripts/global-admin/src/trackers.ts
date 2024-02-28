@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick } from "tlp";
+import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+import "../themes/style.scss";
 
 document.addEventListener("DOMContentLoaded", function () {
     handlePromotedSwitches();
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function handlePromotedSwitches(): void {
-    for (const switch_button of document.querySelectorAll(".toggle-promoted-switch")) {
+    for (const switch_button of document.querySelectorAll("[data-switch]")) {
         if (!(switch_button instanceof HTMLInputElement)) {
             continue;
         }
@@ -42,5 +43,5 @@ function handlePromotedSwitches(): void {
 }
 
 function handleDeletionButtons(): void {
-    openAllTargetModalsOnClick(document, ".tracker-global-admin-delete-tracker-button");
+    openAllTargetModalsOnClick(document, "[data-delete-button]");
 }
