@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="switch-to-recent-items-loading">
+    <div class="switch-to-recent-items-loading" data-test="switch-to-recent-items-loading">
         <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
         <p>
             <span class="tlp-skeleton-text"></span>
