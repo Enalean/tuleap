@@ -22,21 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Redis;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class RedisInitializerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RedisInitializerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testRedisConnectionInitialization()
+    public function testRedisConnectionInitialization(): void
     {
         $password    = '              pwd  ';
         $initializer = new RedisInitializer('redis', 6379, new ConcealedString($password));
 
-        $redis = \Mockery::mock(\Redis::class);
-        $redis->shouldReceive('connect')->once()->andReturns(true);
-        $redis->shouldReceive('auth')->once()->with('pwd')->andReturns(true);
+        $redis = $this->createPartialMock(\Redis::class, [
+            'connect',
+            'auth',
+        ]);
+        $redis->expects(self::once())->method('connect')->willReturn(true);
+        $redis->expects(self::once())->method('auth')->with('pwd')->willReturn(true);
 
         $initializer->init($redis);
     }
@@ -45,9 +46,9 @@ class RedisInitializerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $initializer = new RedisInitializer('', 6379, new ConcealedString(''));
 
-        $redis = \Mockery::mock(\Redis::class);
+        $redis = $this->createPartialMock(\Redis::class, []);
 
-        $this->expectException(RedisConnectionException::class);
+        self::expectException(RedisConnectionException::class);
 
         $initializer->init($redis);
     }
@@ -56,10 +57,10 @@ class RedisInitializerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $initializer = new RedisInitializer('redis', 6379, new ConcealedString(''));
 
-        $redis = \Mockery::mock(\Redis::class);
-        $redis->shouldReceive('connect')->andReturns(false);
+        $redis = $this->createPartialMock(\Redis::class, ['connect']);
+        $redis->method('connect')->willReturn(false);
 
-        $this->expectException(RedisConnectionException::class);
+        self::expectException(RedisConnectionException::class);
 
         $initializer->init($redis);
     }
@@ -69,17 +70,21 @@ class RedisInitializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $password    = 'my_password';
         $initializer = new RedisInitializer('redis', 6379, new ConcealedString($password));
 
-        $redis = \Mockery::mock(\Redis::class);
-        $redis->shouldReceive('connect')->andReturns(true);
-        $redis->shouldReceive('auth')->andReturns(false);
-        $redis->shouldReceive('getLastError')->once()->andReturns($password);
+        $redis = $this->createPartialMock(\Redis::class, [
+            'connect',
+            'auth',
+            'getLastError',
+        ]);
+        $redis->method('connect')->willReturn(true);
+        $redis->method('auth')->willReturn(false);
+        $redis->expects(self::once())->method('getLastError')->willReturn($password);
 
-        $this->expectException(RedisConnectionException::class);
+        self::expectException(RedisConnectionException::class);
 
         try {
             $initializer->init($redis);
         } catch (RedisConnectionException $ex) {
-            $this->assertStringNotContainsStringIgnoringCase($password, $ex->getMessage());
+            self::assertStringNotContainsStringIgnoringCase($password, $ex->getMessage());
             throw $ex;
         }
     }
