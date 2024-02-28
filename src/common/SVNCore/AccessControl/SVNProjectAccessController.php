@@ -103,6 +103,11 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible imple
             return $this->buildAccessDeniedResponse();
         }
 
+        if (! $project->isActive()) {
+            $this->logger->debug(sprintf('Rejected SVN access request: project %s is not active', $project_name));
+            return $this->buildAccessDeniedResponse();
+        }
+
         $user        = null;
         $login_name  = $credentials_set->getUsername();
         $user_secret = $credentials_set->getPassword();
