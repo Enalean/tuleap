@@ -124,15 +124,8 @@ import FieldDescription from "./Fields/FieldDescription.vue";
 import PolicyAgreement from "./Agreement/PolicyAgreement.vue";
 import FieldsList from "./Fields/FieldsList.vue";
 import { redirectToUrl } from "../../helpers/location-helper";
-import {
-    ACCESS_PRIVATE,
-    ACCESS_PRIVATE_WO_RESTRICTED,
-    ACCESS_PUBLIC,
-    ACCESS_PUBLIC_UNRESTRICTED,
-} from "../../constant";
+import { buildProjectPrivacy } from "../../helpers/privacy-builder";
 const configuration = namespace("configuration");
-
-const DEFAULT_PROJECT_ID = "100";
 
 @Component({
     components: {
@@ -250,7 +243,21 @@ export default class ProjectInformation extends Vue {
     }
 
     async createProject(): Promise<void> {
-        const project_properties: ProjectProperties = this.buildProjectPropertyDetailedPrivacy();
+        let project_properties: ProjectProperties = {
+            shortname: this.name_properties.slugified_name,
+            description: this.field_description,
+            label: this.name_properties.name,
+            is_public: !this.is_private,
+            categories: this.trove_cats,
+            fields: this.field_list,
+        };
+
+        project_properties = buildProjectPrivacy(
+            this.selected_tuleap_template,
+            this.selected_company_template,
+            this.selected_visibility,
+            project_properties,
+        );
 
         await this.$store.dispatch("createProject", project_properties);
 
@@ -270,59 +277,6 @@ export default class ProjectInformation extends Vue {
         } else {
             this.$router.push("approval");
         }
-    }
-
-    buildProjectPropertyDetailedPrivacy(): ProjectProperties {
-        const project_properties: ProjectProperties = {
-            shortname: this.name_properties.slugified_name,
-            description: this.field_description,
-            label: this.name_properties.name,
-            is_public: !this.is_private,
-            categories: this.trove_cats,
-            fields: this.field_list,
-        };
-
-        if (
-            this.selected_tuleap_template &&
-            this.selected_tuleap_template.id !== DEFAULT_PROJECT_ID
-        ) {
-            project_properties.xml_template_name = this.selected_tuleap_template.id;
-        }
-        if (
-            this.selected_tuleap_template &&
-            this.selected_tuleap_template.id === DEFAULT_PROJECT_ID
-        ) {
-            project_properties.template_id = parseInt(this.selected_tuleap_template.id, 10);
-        }
-        if (this.selected_company_template) {
-            project_properties.template_id = parseInt(this.selected_company_template.id, 10);
-        }
-
-        let is_public_project = null;
-        let is_restricted_allowed_for_the_project = null;
-        switch (this.selected_visibility) {
-            case ACCESS_PUBLIC:
-                is_public_project = true;
-                is_restricted_allowed_for_the_project = false;
-                break;
-            case ACCESS_PRIVATE:
-                is_public_project = false;
-                is_restricted_allowed_for_the_project = true;
-                break;
-            case ACCESS_PUBLIC_UNRESTRICTED:
-                is_public_project = true;
-                is_restricted_allowed_for_the_project = true;
-                break;
-            case ACCESS_PRIVATE_WO_RESTRICTED:
-                is_public_project = false;
-                is_restricted_allowed_for_the_project = false;
-                break;
-            default:
-                throw new Error("Unable to build the project privacy properties");
-        }
-        project_properties.is_public = is_public_project;
-        project_properties.allow_restricted = is_restricted_allowed_for_the_project;
-        return project_properties;
     }
 
     resetProjectCreationError(): void {
