@@ -121,8 +121,7 @@ class Tracker_Chart_Burndown
                     $data[$date->format('D d')] = [array_sum($last_remaining_effort ?? [])];
                 } else {
                     if ($last_remaining_effort) {
-                        $data[$date->format('D d')]                  = [array_sum($last_remaining_effort)];
-                        $last_remaining_effort[$date->format('Ymd')] = [array_sum($last_remaining_effort)];
+                        $data[$date->format('D d')] = [array_sum($last_remaining_effort)];
                     } else {
                         $data[$date->format('D d')] = null;
                     }
