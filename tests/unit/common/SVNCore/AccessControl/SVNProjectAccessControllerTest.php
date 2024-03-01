@@ -152,6 +152,22 @@ final class SVNProjectAccessControllerTest extends TestCase
         self::assertEquals(403, $response->getStatusCode());
     }
 
+    public function testRequestIsRejectedWhenProjectIsSuspended(): void
+    {
+        $project         = ProjectTestBuilder::aProject()->withId(102)->withStatusSuspended()->build();
+        $project_factory = $this->createStub(\ProjectManager::class);
+        $project_factory->method('getValidProjectByShortNameOrId')->willReturn($project);
+        $controller = $this->buildController($project_factory, CheckProjectAccessStub::withValidAccess(), false);
+
+        $user = UserTestBuilder::anActiveUser()->withUserName('valid_super_user_name')->build();
+        $this->user_retriever->method('getUserFromSVNLoginName')->willReturn($user);
+
+        $request  = self::buildServerRequest('suspended', 'valid_login_name', 'password');
+        $response = $controller->handle($request);
+
+        self::assertEquals(403, $response->getStatusCode());
+    }
+
     public function testRequestIsRejectedWhenUserCannotAccessProject(): void
     {
         $project         = ProjectTestBuilder::aProject()->withId(102)->build();
