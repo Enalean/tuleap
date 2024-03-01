@@ -15,6 +15,7 @@ setup_system_configuration() {
 
     sudo -u codendiadm /usr/bin/tuleap config-set sys_project_approval 0
     sudo -u codendiadm /usr/bin/tuleap config-set project_admin_can_choose_visibility 1
+    sudo -u codendiadm /usr/bin/tuleap config-set feature_flag_check_actions_context_in_transaction 1
 }
 
 enable_plugins() {
