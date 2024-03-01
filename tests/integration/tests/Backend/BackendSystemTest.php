@@ -28,42 +28,26 @@ use Backend;
 use BackendSystem;
 use ForgeConfig;
 use FRSFileFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use WikiAttachment;
 
-final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BackendSystemTest extends TestIntegrationTestCase
 {
     use GlobalLanguageMock;
-    use MockeryPHPUnitIntegration;
-    use \Tuleap\TemporaryTestDirectory;
-
-    private $initial_sys_project_backup_path;
-    private $initial_sys_custom_incdir;
-    private $initial_ftp_anon_dir_prefix;
-    private $initial_ftp_frs_dir_prefix;
-    private $initial_tmp_dir;
-    private $initial_sys_file_deletion_delay;
-    private $initial_codendi_log;
-    private $initial_sys_incdir;
+    use TemporaryTestDirectory;
 
     protected function setUp(): void
     {
-        $this->initial_tmp_dir = $this->getTmpDir() . '/var/tmp';
         ForgeConfig::set('tmp_dir', $this->getTmpDir() . '/var/tmp');
-        $this->initial_sys_file_deletion_delay = ForgeConfig::get('sys_file_deletion_delay');
         ForgeConfig::set('sys_file_deletion_delay', 5);
-        $this->initial_codendi_log = ForgeConfig::get('codendi_log');
         ForgeConfig::set('codendi_log', ForgeConfig::get('tmp_dir'));
-        $this->initial_sys_incdir = ForgeConfig::get('sys_incdir');
         ForgeConfig::set('sys_incdir', ForgeConfig::get('tmp_dir'));
-        $this->initial_sys_project_backup_path = ForgeConfig::get('sys_project_backup_path');
         ForgeConfig::set('sys_project_backup_path', ForgeConfig::get('tmp_dir'));
-        $this->initial_sys_custom_incdir = ForgeConfig::get('sys_custom_incdir');
         ForgeConfig::set('sys_custom_incdir', ForgeConfig::get('tmp_dir'));
-        $this->initial_ftp_anon_dir_prefix = ForgeConfig::get('ftp_anon_dir_prefix');
         ForgeConfig::set('ftp_anon_dir_prefix', $this->getTmpDir() . '/var/lib/codendi/ftp/pub');
-        $this->initial_ftp_frs_dir_prefix = ForgeConfig::get('ftp_frs_dir_prefix');
         ForgeConfig::set('ftp_frs_dir_prefix', $this->getTmpDir() . '/var/lib/codendi/ftp/codendi');
         ForgeConfig::set('are_unix_users_disabled', 0);
 
@@ -75,43 +59,37 @@ final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function tearDown(): void
     {
         Backend::clearInstances();
-        ForgeConfig::set('sys_project_backup_path', $this->initial_sys_project_backup_path);
-        ForgeConfig::set('sys_custom_incdir', $this->initial_sys_custom_incdir);
-        ForgeConfig::set('ftp_anon_dir_prefix', $this->initial_ftp_anon_dir_prefix);
-        ForgeConfig::set('ftp_frs_dir_prefix', $this->initial_ftp_frs_dir_prefix);
-        ForgeConfig::set('tmp_dir', $this->initial_tmp_dir);
-        ForgeConfig::set('sys_file_deletion_delay', $this->initial_sys_file_deletion_delay);
-        ForgeConfig::set('codendi_log', $this->initial_codendi_log);
-        ForgeConfig::set('sys_incdir', $this->initial_sys_incdir);
     }
 
     public function testConstructor(): void
     {
-        $this->assertNotNull(BackendSystem::instance());
+        self::assertNotNull(BackendSystem::instance());
     }
 
     public function testCleanupFrs(): void
     {
-        $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $backend = $this->createPartialMock(BackendSystem::class, [
+            'getFRSFileFactory',
+            'getWikiAttachment',
+        ]);
 
-        $ff = \Mockery::mock(FRSFileFactory::class);
-        $ff->shouldReceive('moveFiles')->andReturn(true);
+        $ff = $this->createMock(FRSFileFactory::class);
+        $ff->method('moveFiles')->willReturn(true);
 
-        $wiki = \Mockery::spy(\WikiAttachment::class);
-        $wiki->shouldReceive('purgeAttachments')->andReturns(true);
+        $wiki = $this->createMock(WikiAttachment::class);
+        $wiki->method('purgeAttachments')->willReturn(true);
 
-        $backend->shouldReceive('getFRSFileFactory')->andReturns($ff);
-        $backend->shouldReceive('getWikiAttachment')->andReturns($wiki);
+        $backend->method('getFRSFileFactory')->willReturn($ff);
+        $backend->method('getWikiAttachment')->willReturn($wiki);
 
-        $this->assertTrue($backend->cleanupFRS());
+        self::assertTrue($backend->cleanupFRS());
     }
 
     public function testRenameFRSFolders(): void
     {
-        $backend = \Mockery::mock(\BackendSystem::class)->makePartial();
+        $backend = $this->createPartialMock(BackendSystem::class, []);
 
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturn('nameBeforeRename');
+        $project = ProjectTestBuilder::aProject()->withUnixName('nameBeforeRename')->build();
 
         $ftp_frs_dir_prefix = ForgeConfig::get('ftp_frs_dir_prefix');
         mkdir($ftp_frs_dir_prefix . '/nameBeforeRename', 0777, true);
@@ -119,7 +97,7 @@ final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $backend->renameFileReleasedDirectory($project, 'nameAfterRename');
 
-        $this->assertDirectoryExists($ftp_frs_dir_prefix . '/nameAfterRename');
-        $this->assertDirectoryExists($ftp_frs_dir_prefix . '/DELETED/nameAfterRename');
+        self::assertDirectoryExists($ftp_frs_dir_prefix . '/nameAfterRename');
+        self::assertDirectoryExists($ftp_frs_dir_prefix . '/DELETED/nameAfterRename');
     }
 }
