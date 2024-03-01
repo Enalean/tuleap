@@ -22,9 +22,10 @@ namespace Tuleap\Tracker\Action;
 
 use Tracker_FormElement_Field_List;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserBindBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
 final class AreListFieldsCompatibleVerifierTest extends TestCase
 {
@@ -54,11 +55,19 @@ final class AreListFieldsCompatibleVerifierTest extends TestCase
 
     public function testItReturnsFalseWhenSelectBoxesHaveNotTheSameMultiplicity(): void
     {
-        $source_single   = TrackerFormElementListStaticBindBuilder::aBind()->build()->getField();
-        $source_multiple = TrackerFormElementListStaticBindBuilder::aBind()->withMultipleField()->build()->getField();
+        $source_single   = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(197)->build()
+        )->build()->getField();
+        $source_multiple = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(869)->withMultipleValues()->build()
+        )->build()->getField();
 
-        $destination_single   = TrackerFormElementListStaticBindBuilder::aBind()->build()->getField();
-        $destination_multiple = TrackerFormElementListStaticBindBuilder::aBind()->withMultipleField()->build()->getField();
+        $destination_single   = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(487)->build()
+        )->build()->getField();
+        $destination_multiple = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(132)->withMultipleValues()->build()
+        )->build()->getField();
 
         self::assertFalse($this->verifier->areListFieldsCompatible($source_single, $destination_multiple));
         self::assertFalse($this->verifier->areListFieldsCompatible($source_multiple, $destination_single));
@@ -68,9 +77,15 @@ final class AreListFieldsCompatibleVerifierTest extends TestCase
 
     public static function getSourceAndDestinationFieldsForSameBindTypeTest(): array
     {
-        $static_list_field     = TrackerFormElementListStaticBindBuilder::aBind()->build()->getField();
-        $user_list_field       = TrackerFormElementListUserBindBuilder::aBind()->build()->getField();
-        $user_group_list_field = TrackerFormElementListUserGroupBindBuilder::aBind()->build()->getField();
+        $static_list_field     = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(992)->build()
+        )->build()->getField();
+        $user_list_field       = ListUserBindBuilder::aUserBind(
+            ListFieldBuilder::aListField(935)->build()
+        )->build()->getField();
+        $user_group_list_field = ListUserGroupBindBuilder::aUserGroupBind(
+            ListFieldBuilder::aListField(807)->build()
+        )->build()->getField();
 
         return [
             [$static_list_field, $static_list_field, true],

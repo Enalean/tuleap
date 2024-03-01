@@ -29,9 +29,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -91,11 +91,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $this->all_fields = [];
 
-        $this->source_list_field      = TrackerFormElementListFieldBuilder::aListField(101)
+        $this->source_list_field      = ListFieldBuilder::aListField(101)
             ->withName('field_name')
             ->inTracker($this->source_tracker)
             ->build();
-        $this->destination_list_field = TrackerFormElementListFieldBuilder::aListField(102)
+        $this->destination_list_field = ListFieldBuilder::aListField(102)
             ->withName('field_name')
             ->inTracker($this->destination_tracker)
             ->build();
@@ -437,7 +437,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $this->all_fields = [
             $source_permissions_field,
-            TrackerFormElementListFieldBuilder::aListField(1)
+            ListFieldBuilder::aListField(1)
                 ->withName("permissions")
                 ->inTracker($this->destination_tracker)
                 ->build(),
@@ -541,7 +541,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_open_list_field->method("getTrackerId")->willReturn(self::SOURCE_TRACKER_ID);
         $this->all_fields = [
             $source_open_list_field,
-            TrackerFormElementListFieldBuilder::aListField(1)
+            ListFieldBuilder::aListField(1)
                 ->withName("open_list")
                 ->inTracker($this->destination_tracker)
                 ->build(),

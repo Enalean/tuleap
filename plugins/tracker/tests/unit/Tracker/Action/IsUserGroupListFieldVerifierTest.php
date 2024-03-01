@@ -20,8 +20,9 @@
 
 namespace Tuleap\Tracker\Action;
 
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserBindBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 
 class IsUserGroupListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -42,14 +43,18 @@ class IsUserGroupListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenTheFieldIsNotBoundToUserGroups(): void
     {
-        $user_bind = TrackerFormElementListUserBindBuilder::aBind()->withFieldId(1)->withFieldName("assigned_to")->build();
+        $user_bind = ListUserBindBuilder::aUserBind(
+            ListFieldBuilder::aListField(1)->withName('assigned_to')->build()
+        )->build();
 
         self::assertFalse($this->verifier->isUserGroupListField($user_bind->getField()));
     }
 
     public function testItReturnsTrueWhenTheFieldIsBoundToUserGroups(): void
     {
-        $user_group_bind = TrackerFormElementListUserGroupBindBuilder::aBind()->withFieldId(1)->withFieldName("cc")->build();
+        $user_group_bind = ListUserGroupBindBuilder::aUserGroupBind(
+            ListFieldBuilder::aListField(1)->withName('cc')->build()
+        )->build();
 
         self::assertTrue($this->verifier->isUserGroupListField($user_group_bind->getField()));
     }

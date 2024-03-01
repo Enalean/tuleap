@@ -36,12 +36,13 @@ use Tuleap\Tracker\Action\UserGroupOpenListFieldVerifier;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserBindBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementOpenListBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
@@ -137,60 +138,98 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $source_cc_field_id      = 6;
         $destination_cc_field_id = 26;
 
-        $source_cc_field_bind = TrackerFormElementListUserGroupBindBuilder::aBind()->withFieldId($source_cc_field_id)->withMultipleField()->withFieldName("cc")->withUserGroups([
+        $source_cc_field_bind = ListUserGroupBindBuilder::aUserGroupBind(
+            ListFieldBuilder::aListField($source_cc_field_id)
+                ->withMultipleValues()
+                ->withName('cc')
+                ->build()
+        )->withUserGroups([
             ProjectUGroupTestBuilder::buildProjectMembers(),
             ProjectUGroupTestBuilder::aCustomUserGroup(100)->withName("semi-crispy")->build(),
             ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName("crispy")->build(),
         ])->build();
 
-        $destination_cc_field_bind = TrackerFormElementListUserGroupBindBuilder::aBind()->withFieldId($destination_cc_field_id)->withMultipleField()->withFieldName("cc")->withUserGroups([
+        $destination_cc_field_bind = ListUserGroupBindBuilder::aUserGroupBind(
+            ListFieldBuilder::aListField($destination_cc_field_id)
+                ->withMultipleValues()
+                ->withName('cc')
+                ->build()
+        )->withUserGroups([
             ProjectUGroupTestBuilder::buildProjectMembers(),
             ProjectUGroupTestBuilder::aCustomUserGroup(200)->withName("semi-crispy")->build(),
         ])->build();
 
-        $source_status_field_bind = TrackerFormElementListStaticBindBuilder::aBind()->withFieldId($source_status_field_id)->withFieldName("status")->withStaticValues([
+        $source_status_field_bind = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField($source_status_field_id)->withName('status')->build()
+        )->withStaticValues([
             105 => "New",
             106 => "In Progress",
             107 => "Fixed",
         ])->build();
 
-        $destination_status_field_bind = TrackerFormElementListStaticBindBuilder::aBind()->withFieldId($destination_status_field_id)->withFieldName("status")->withStaticValues([
+        $destination_status_field_bind = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField($destination_status_field_id)->withName('status')->build()
+        )->withStaticValues([
             205 => "Todo",
             206 => "In Progress",
             207 => "Fixed",
         ])->build();
 
-        $source_severity_field_bind = TrackerFormElementListStaticBindBuilder::aBind()->withFieldId($source_severity_field_id)->withFieldName("severity")->withStaticValues([
+        $source_severity_field_bind = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField($source_severity_field_id)->withName('severity')->build()
+        )->withStaticValues([
             113 => "Low Impact",
             114 => "Major Impact",
             115 => "Critical Impact",
         ])->build();
 
-        $destination_severity_field_bind = TrackerFormElementListStaticBindBuilder::aBind()->withFieldId($destination_severity_field_id)->withFieldName("severity")->withStaticValues([
+        $destination_severity_field_bind = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField($destination_severity_field_id)->withName('severity')->build()
+        )->withStaticValues([
             213 => "Low Impact",
             214 => "Major Impact",
             215 => "Critical Impact",
         ])->build();
 
-        $source_static_multiple_list_field_bind = TrackerFormElementListStaticBindBuilder::aBind()->withMultipleField()->withFieldId($source_multiple_list_field_id)->withFieldName("multiple")->withStaticValues([
+        $source_static_multiple_list_field_bind = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField($source_multiple_list_field_id)
+                ->withMultipleValues()
+                ->withName('multiple')
+                ->build()
+        )->withStaticValues([
             216 => "Value A",
             217 => "Value B",
             218 => "Value C",
         ])->build();
 
-        $destination_static_multiple_list_field_bind = TrackerFormElementListStaticBindBuilder::aBind()->withMultipleField()->withFieldId($destination_multiple_list_field_id)->withFieldName("multiple")->withStaticValues([
+        $destination_static_multiple_list_field_bind = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField($destination_multiple_list_field_id)
+                ->withMultipleValues()
+                ->withName('multiple')
+                ->build()
+        )->withStaticValues([
             316 => "Value B",
             317 => "Value C",
             318 => "Value D",
         ])->build();
 
         $jolasti                       = UserTestBuilder::anActiveUser()->withId(104)->withUserName("Joe l'asticot")->build();
-        $source_assigned_to_field_bind = TrackerFormElementListUserBindBuilder::aBind()->withMultipleField()->withFieldId($source_assigned_to_field_id)->withFieldName('assigned_to')->withUsers([
+        $source_assigned_to_field_bind = ListUserBindBuilder::aUserBind(
+            ListFieldBuilder::aListField($source_assigned_to_field_id)
+                ->withMultipleValues()
+                ->withName('assigned_to')
+                ->build()
+        )->withUsers([
             $jolasti,
             UserTestBuilder::anActiveUser()->withId(105)->withUserName("John Doe")->build(),
         ])->build();
 
-        $destination_assigned_to_field_bind = TrackerFormElementListUserBindBuilder::aBind()->withMultipleField()->withFieldId($destination_assigned_to_field_id)->withFieldName('assigned_to')->withUsers([
+        $destination_assigned_to_field_bind = ListUserBindBuilder::aUserBind(
+            ListFieldBuilder::aListField($destination_assigned_to_field_id)
+                ->withMultipleValues()
+                ->withName('assigned_to')
+                ->build()
+        )->withUsers([
             $jolasti,
             UserTestBuilder::anActiveUser()->withId(106)->withUserName("Jeanne Doe")->build(),
         ])->build();

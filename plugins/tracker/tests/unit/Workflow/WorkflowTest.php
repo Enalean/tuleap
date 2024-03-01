@@ -59,7 +59,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
             }
         };
 
-        $this->status_field = \Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder::aListField(103)->build();
+        $this->status_field = \Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder::aListField(103)->build();
 
         $open_value  = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $close_value = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);

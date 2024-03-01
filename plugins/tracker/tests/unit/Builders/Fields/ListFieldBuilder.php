@@ -20,18 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Builders;
+namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_Bind_Ugroups;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerFormElementListFieldBuilder
+final class ListFieldBuilder
 {
-    private string $label                              = 'A list field';
-    private string $name                               = 'list';
-    private bool $is_required                          = false;
-    private bool $is_multiple                          = false;
-    private ?Tracker_FormElement_Field_List_Bind $bind = null;
+    private string $label     = 'A list field';
+    private string $name      = 'list';
+    private bool $is_required = false;
+    private bool $is_multiple = false;
     private \Tracker $tracker;
     /** @var list<\PFUser> */
     private array $user_with_read_permissions = [];
@@ -60,15 +58,9 @@ final class TrackerFormElementListFieldBuilder
         return $this;
     }
 
-    public function withBind(Tracker_FormElement_Field_List_Bind | Tracker_FormElement_Field_List_Bind_Ugroups | null $bind): self
+    public function withMultipleValues(): self
     {
-        $this->bind = $bind;
-        return $this;
-    }
-
-    public function withMultipleField(bool $is_multiple = true): self
-    {
-        $this->is_multiple = $is_multiple;
+        $this->is_multiple = true;
         return $this;
     }
 
@@ -95,7 +87,7 @@ final class TrackerFormElementListFieldBuilder
     public function build(): \Tracker_FormElement_Field_Selectbox | \Tracker_FormElement_Field_MultiSelectbox
     {
         $selectbox = $this->buildSelectBox();
-        $selectbox->setBind($this->bind);
+        $selectbox->setTracker($this->tracker);
 
         foreach ($this->user_with_read_permissions as $user) {
             $selectbox->setUserCanRead($user, $this->read_permissions[$user->getId()]);
@@ -121,7 +113,6 @@ final class TrackerFormElementListFieldBuilder
                 10,
                 null
             );
-            $field->setTracker($this->tracker);
             return $field;
         }
         $field = new \Tracker_FormElement_Field_Selectbox(
@@ -138,7 +129,6 @@ final class TrackerFormElementListFieldBuilder
             10,
             null
         );
-        $field->setTracker($this->tracker);
         return $field;
     }
 }

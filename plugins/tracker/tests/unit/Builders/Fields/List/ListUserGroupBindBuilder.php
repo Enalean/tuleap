@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Builders;
+namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 
-final class TrackerFormElementListUserGroupBindBuilder
+final class ListUserGroupBindBuilder
 {
     /**
      * @var \Tracker_FormElement_Field_List_Bind_UgroupsValue[]
@@ -34,36 +34,15 @@ final class TrackerFormElementListUserGroupBindBuilder
     /**
      * @var \ProjectUGroup[]
      */
-    private array $user_groups      = [];
-    private int $field_id           = 123;
-    private string $name            = "A field";
-    private bool $is_field_multiple = false;
+    private array $user_groups = [];
 
-    private function __construct()
+    private function __construct(private readonly \Tracker_FormElement_Field_List $field)
     {
     }
 
-    public static function aBind(): self
+    public static function aUserGroupBind(\Tracker_FormElement_Field_List $field): self
     {
-        return new self();
-    }
-
-    public function withFieldId(int $field_id): self
-    {
-        $this->field_id = $field_id;
-        return $this;
-    }
-
-    public function withFieldName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function withMultipleField(): self
-    {
-        $this->is_field_multiple = true;
-        return $this;
+        return new self($field);
     }
 
     /**
@@ -84,9 +63,8 @@ final class TrackerFormElementListUserGroupBindBuilder
 
     public function build(): \Tracker_FormElement_Field_List_Bind_Ugroups
     {
-        $field = TrackerFormElementListFieldBuilder::aListField($this->field_id)->withName($this->name)->withMultipleField($this->is_field_multiple)->build();
-        $bind  = new \Tracker_FormElement_Field_List_Bind_Ugroups(
-            $field,
+        $bind = new \Tracker_FormElement_Field_List_Bind_Ugroups(
+            $this->field,
             $this->bind_values,
             [],
             [],
@@ -94,7 +72,7 @@ final class TrackerFormElementListUserGroupBindBuilder
             (new class extends BindUgroupsValueDao {
             })
         );
-        $field->setBind($bind);
+        $this->field->setBind($bind);
 
         return $bind;
     }
