@@ -25,7 +25,7 @@ use Tracker_FormElement_Field_OpenList;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementOpenListBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\SearchUserGroupsValuesByFieldIdAndUserGroupIdStub;
 use Tuleap\Tracker\Test\Stub\SearchUserGroupsValuesByIdStub;
@@ -46,8 +46,8 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
         $project             = ProjectTestBuilder::aProject()->build();
         $source_tracker      = TrackerTestBuilder::aTracker()->withProject($project)->build();
         $destination_tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
-        $this->source_bind   = TrackerFormElementOpenListBuilder::aBind()->withTracker($source_tracker)->buildUserGroupBind();
-        $this->target_bind   = TrackerFormElementOpenListBuilder::aBind()->withTracker($destination_tracker)->buildUserGroupBind();
+        $this->source_bind   = OpenListFieldBuilder::aBind()->withTracker($source_tracker)->buildUserGroupBind();
+        $this->target_bind   = OpenListFieldBuilder::aBind()->withTracker($destination_tracker)->buildUserGroupBind();
 
         assert($this->source_bind->getField() instanceof Tracker_FormElement_Field_OpenList);
         assert($this->target_bind->getField() instanceof Tracker_FormElement_Field_OpenList);

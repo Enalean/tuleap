@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
 final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
 {

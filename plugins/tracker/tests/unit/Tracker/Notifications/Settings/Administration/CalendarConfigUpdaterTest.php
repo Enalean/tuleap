@@ -25,8 +25,8 @@ namespace Tuleap\Tracker\Notifications\Settings\Administration;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\UpdateCalendarConfigStub;
@@ -58,8 +58,8 @@ final class CalendarConfigUpdaterTest extends TestCase
             $update_config,
             BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
                 $this->tracker,
-                TrackerFormElementDateFieldBuilder::aDateField(1001)->build(),
-                TrackerFormElementDateFieldBuilder::aDateField(1002)->build(),
+                DateFieldBuilder::aDateField(1001)->build(),
+                DateFieldBuilder::aDateField(1002)->build(),
             ),
         );
 
@@ -83,8 +83,8 @@ final class CalendarConfigUpdaterTest extends TestCase
             $update_config,
             BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
                 $this->tracker,
-                TrackerFormElementDateFieldBuilder::aDateField(1001)->build(),
-                TrackerFormElementDateFieldBuilder::aDateField(1002)->build(),
+                DateFieldBuilder::aDateField(1001)->build(),
+                DateFieldBuilder::aDateField(1002)->build(),
             ),
         );
 
@@ -108,8 +108,8 @@ final class CalendarConfigUpdaterTest extends TestCase
             $update_config,
             BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
                 $this->tracker,
-                TrackerFormElementDateFieldBuilder::aDateField(1001)->build(),
-                TrackerFormElementDateFieldBuilder::aDateField(1002)->build(),
+                DateFieldBuilder::aDateField(1001)->build(),
+                DateFieldBuilder::aDateField(1002)->build(),
             ),
         );
 
@@ -131,7 +131,7 @@ final class CalendarConfigUpdaterTest extends TestCase
         \Tracker_Semantic_Title::setInstance(
             new \Tracker_Semantic_Title(
                 $this->tracker,
-                TrackerFormElementTextFieldBuilder::aTextField(1)->build()
+                TextFieldBuilder::aTextField(1)->build()
             ),
             $this->tracker,
         );
@@ -141,8 +141,8 @@ final class CalendarConfigUpdaterTest extends TestCase
             $update_config,
             BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
                 $this->tracker,
-                TrackerFormElementDateFieldBuilder::aDateField(1001)->build(),
-                TrackerFormElementDateFieldBuilder::aDateField(1002)->build(),
+                DateFieldBuilder::aDateField(1001)->build(),
+                DateFieldBuilder::aDateField(1002)->build(),
             ),
         );
 
@@ -166,8 +166,8 @@ final class CalendarConfigUpdaterTest extends TestCase
             $update_config,
             BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
                 $this->tracker,
-                TrackerFormElementDateFieldBuilder::aDateField(1001)->build(),
-                TrackerFormElementDateFieldBuilder::aDateField(1002)->build(),
+                DateFieldBuilder::aDateField(1001)->build(),
+                DateFieldBuilder::aDateField(1002)->build(),
             ),
         );
 
@@ -193,8 +193,8 @@ final class CalendarConfigUpdaterTest extends TestCase
             $update_config,
             BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
                 $this->tracker,
-                TrackerFormElementDateFieldBuilder::aDateField(1001)->build(),
-                TrackerFormElementDateFieldBuilder::aDateField(1002)->build(),
+                DateFieldBuilder::aDateField(1001)->build(),
+                DateFieldBuilder::aDateField(1002)->build(),
             ),
         );
 
@@ -216,7 +216,7 @@ final class CalendarConfigUpdaterTest extends TestCase
         \Tracker_Semantic_Title::setInstance(
             new \Tracker_Semantic_Title(
                 $this->tracker,
-                TrackerFormElementTextFieldBuilder::aTextField(1)->build()
+                TextFieldBuilder::aTextField(1)->build()
             ),
             $this->tracker,
         );

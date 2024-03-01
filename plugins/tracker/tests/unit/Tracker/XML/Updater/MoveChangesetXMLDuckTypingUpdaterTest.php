@@ -35,17 +35,17 @@ use Tuleap\Tracker\Action\OpenListFieldVerifier;
 use Tuleap\Tracker\Action\UserGroupOpenListFieldVerifier;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
-use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementOpenListBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\SearchUserGroupsValuesByFieldIdAndUserGroupIdStub;
 use Tuleap\Tracker\Test\Stub\SearchUserGroupsValuesByIdStub;
@@ -234,46 +234,46 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             UserTestBuilder::anActiveUser()->withId(106)->withUserName("Jeanne Doe")->build(),
         ])->build();
 
-        $source_title_field                = TrackerFormElementStringFieldBuilder::aStringField(1)->withName("summary")->build();
+        $source_title_field                = StringFieldBuilder::aStringField(1)->withName("summary")->build();
         $source_severity_field             = $source_severity_field_bind->getField();
         $source_status_field               = $source_status_field_bind->getField();
         $source_static_multiple_list_field = $source_static_multiple_list_field_bind->getField();
         $source_assigned_to_field          = $source_assigned_to_field_bind->getField();
-        $source_details_field              = TrackerFormElementTextFieldBuilder::aTextField(5)->withName("details")->build();
-        $source_close_date_field           = TrackerFormElementDateFieldBuilder::aDateField(6)->withName("close_date")->build();
-        $source_initial_effort_field       = TrackerFormElementFloatFieldBuilder::aFloatField(7)->withName("initial_effort")->build();
-        $source_remaining_effort_field     = TrackerFormElementFloatFieldBuilder::aFloatField(8)->withName("remaining_effort")->build();
-        $source_not_existing_field         = TrackerFormElementStringFieldBuilder::aStringField(9)->withName("notexisting")->build();
+        $source_details_field              = TextFieldBuilder::aTextField(5)->withName("details")->build();
+        $source_close_date_field           = DateFieldBuilder::aDateField(6)->withName("close_date")->build();
+        $source_initial_effort_field       = FloatFieldBuilder::aFloatField(7)->withName("initial_effort")->build();
+        $source_remaining_effort_field     = FloatFieldBuilder::aFloatField(8)->withName("remaining_effort")->build();
+        $source_not_existing_field         = StringFieldBuilder::aStringField(9)->withName("notexisting")->build();
         $source_cc_field                   = $source_cc_field_bind->getField();
         $source_permissions_field          = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
         $source_permissions_field->method("getName")->willReturn("permissions");
         $source_computed_field = $this->createStub(\Tracker_FormElement_Field_Computed::class);
         $source_computed_field->method("getName")->willReturn("computed");
 
-        $source_open_list_static_field     = TrackerFormElementOpenListBuilder::aBind()->withId(10)->withName("open_static")->buildStaticBind()->getField();
-        $source_open_list_user_field       = TrackerFormElementOpenListBuilder::aBind()->withId(11)->withName("open_users")->buildUserBind()->getField();
-        $source_open_list_user_group_field = TrackerFormElementOpenListBuilder::aBind()->withId(12)->withTracker($this->source_tracker)->withName("open_ugroups")->buildUserGroupBind()->getField();
+        $source_open_list_static_field     = OpenListFieldBuilder::aBind()->withId(10)->withName("open_static")->buildStaticBind()->getField();
+        $source_open_list_user_field       = OpenListFieldBuilder::aBind()->withId(11)->withName("open_users")->buildUserBind()->getField();
+        $source_open_list_user_group_field = OpenListFieldBuilder::aBind()->withId(12)->withTracker($this->source_tracker)->withName("open_ugroups")->buildUserGroupBind()->getField();
 
-        $destination_open_list_static_field     = TrackerFormElementOpenListBuilder::aBind()->withId(30)->withName("open_static")->buildStaticBind()->getField();
-        $destination_open_list_user_field       = TrackerFormElementOpenListBuilder::aBind()->withId(31)->withName("open_users")->buildUserBind()->getField();
-        $destination_open_list_user_group_field = TrackerFormElementOpenListBuilder::aBind()->withId(32)->withTracker($this->destination_tracker)->withName("open_ugroups")->buildUserGroupBind()->getField();
+        $destination_open_list_static_field     = OpenListFieldBuilder::aBind()->withId(30)->withName("open_static")->buildStaticBind()->getField();
+        $destination_open_list_user_field       = OpenListFieldBuilder::aBind()->withId(31)->withName("open_users")->buildUserBind()->getField();
+        $destination_open_list_user_group_field = OpenListFieldBuilder::aBind()->withId(32)->withTracker($this->destination_tracker)->withName("open_ugroups")->buildUserGroupBind()->getField();
 
-        $source_external_field      = TrackerExternalFormElementBuilder::anExternalField(13)->withName("external_field")->build();
-        $destination_external_field = TrackerExternalFormElementBuilder::anExternalField(23)->withName("external_field")->build();
+        $source_external_field      = ExternalFieldBuilder::anExternalField(13)->withName("external_field")->build();
+        $destination_external_field = ExternalFieldBuilder::anExternalField(23)->withName("external_field")->build();
 
         $source_artifactlink_field      = ArtifactLinkFieldBuilder::anArtifactLinkField(34)->withLabel("artifact_link")->build();
         $destination_artifactlink_field = ArtifactLinkFieldBuilder::anArtifactLinkField(35)->withLabel("artifact_link")->build();
 
-        $source_not_movable_external_field = TrackerExternalFormElementBuilder::anExternalField(14)->withName("external_field_not_movable")->build();
+        $source_not_movable_external_field = ExternalFieldBuilder::anExternalField(14)->withName("external_field_not_movable")->build();
 
-        $destination_title_field                = TrackerFormElementStringFieldBuilder::aStringField(21)->withName("summary")->build();
+        $destination_title_field                = StringFieldBuilder::aStringField(21)->withName("summary")->build();
         $destination_severity_field             = $destination_severity_field_bind->getField();
         $destination_status_field               = $destination_status_field_bind->getField();
         $destination_static_multiple_list_field = $destination_static_multiple_list_field_bind->getField();
-        $destination_details_field              = TrackerFormElementTextFieldBuilder::aTextField(25)->withName("details")->build();
-        $destination_close_date_field           = TrackerFormElementDateFieldBuilder::aDateField(26)->withName("close_date")->build();
-        $destination_initial_effort_field       = TrackerFormElementFloatFieldBuilder::aFloatField(27)->withName("initial_effort")->build();
-        $destination_remaining_effort_field     = TrackerFormElementFloatFieldBuilder::aFloatField(28)->withName("remaining_effort")->build();
+        $destination_details_field              = TextFieldBuilder::aTextField(25)->withName("details")->build();
+        $destination_close_date_field           = DateFieldBuilder::aDateField(26)->withName("close_date")->build();
+        $destination_initial_effort_field       = FloatFieldBuilder::aFloatField(27)->withName("initial_effort")->build();
+        $destination_remaining_effort_field     = FloatFieldBuilder::aFloatField(28)->withName("remaining_effort")->build();
         $destination_assigned_to_field          = $destination_assigned_to_field_bind->getField();
         $destination_cc_field                   = $destination_cc_field_bind->getField();
         $destination_permissions_field          = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);

@@ -37,13 +37,13 @@ use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -102,12 +102,12 @@ final class FieldFromWhereBuilderTest extends TestCase
     public function testItReturnsSQLForNumericField(): void
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementIntFieldBuilder::anIntField(134)
+            IntFieldBuilder::anIntField(134)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementIntFieldBuilder::anIntField(859)
+            IntFieldBuilder::anIntField(859)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -121,12 +121,12 @@ final class FieldFromWhereBuilderTest extends TestCase
     public function testItReturnsSQLForTextField(): void
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementStringFieldBuilder::aStringField(209)
+            StringFieldBuilder::aStringField(209)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementStringFieldBuilder::aStringField(134)
+            StringFieldBuilder::aStringField(134)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -140,12 +140,12 @@ final class FieldFromWhereBuilderTest extends TestCase
     public function testItReturnsSQLForDateField(): void
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementDateFieldBuilder::aDateField(125)
+            DateFieldBuilder::aDateField(125)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementDateFieldBuilder::aDateField(334)
+            DateFieldBuilder::aDateField(334)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -159,13 +159,13 @@ final class FieldFromWhereBuilderTest extends TestCase
     public function testItReturnsSQLForDatetimeField(): void
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementDateFieldBuilder::aDateField(253)
+            DateFieldBuilder::aDateField(253)
                 ->withName(self::FIELD_NAME)
                 ->withTime()
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementDateFieldBuilder::aDateField(751)
+            DateFieldBuilder::aDateField(751)
                 ->withName(self::FIELD_NAME)
                 ->withTime()
                 ->inTracker($this->second_tracker)
@@ -226,7 +226,7 @@ final class FieldFromWhereBuilderTest extends TestCase
     public function testItReturnsEmptySQLForInvalidDuckTypedField(): void
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerExternalFormElementBuilder::anExternalField(231)
+            ExternalFieldBuilder::anExternalField(231)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)

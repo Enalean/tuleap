@@ -25,13 +25,13 @@ use Tuleap\Tracker\Action\UserListFieldVerifier;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 final class UserListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsFalseWhenFieldIsNotAListField(): void
     {
-        $field = TrackerFormElementStringFieldBuilder::aStringField(10)->withName('summary')->build();
+        $field = StringFieldBuilder::aStringField(10)->withName('summary')->build();
 
         self::assertFalse((new UserListFieldVerifier())->isUserListField($field));
     }

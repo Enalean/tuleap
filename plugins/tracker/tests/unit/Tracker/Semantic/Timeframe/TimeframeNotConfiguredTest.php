@@ -29,7 +29,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TimeframeNotConfiguredTest extends TestCase
@@ -69,7 +69,7 @@ final class TimeframeNotConfiguredTest extends TestCase
 
     public function testItFieldsAreAlwaysUnused(): void
     {
-        $a_field = TrackerFormElementDateFieldBuilder::aDateField(1)->build();
+        $a_field = DateFieldBuilder::aDateField(1)->build();
 
         self::assertFalse($this->timeframe->isFieldUsed($a_field));
     }

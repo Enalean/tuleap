@@ -32,7 +32,7 @@ use Tuleap\Tracker\Action\FieldMapping;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalFieldRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CollectDryRunTypingFieldStub;
 
@@ -53,11 +53,11 @@ final class DryRunMoverTest extends TestCase
 
     public function testItPerformsTheDuckTypedBasedDryRunWhenFeatureFlagIsDisabled(): void
     {
-        $source_title_field = TrackerFormElementStringFieldBuilder::aStringField(102)->withName("title")->build();
-        $target_title_field = TrackerFormElementStringFieldBuilder::aStringField(202)->withName("title")->build();
+        $source_title_field = StringFieldBuilder::aStringField(102)->withName("title")->build();
+        $target_title_field = StringFieldBuilder::aStringField(202)->withName("title")->build();
 
         $migrated_fields     = [$source_title_field];
-        $not_migrated_fields = [TrackerFormElementStringFieldBuilder::aStringField(103)->withName("summary")->build()];
+        $not_migrated_fields = [StringFieldBuilder::aStringField(103)->withName("summary")->build()];
         $mapping_fields      = [
             FieldMapping::fromFields(
                 $source_title_field,

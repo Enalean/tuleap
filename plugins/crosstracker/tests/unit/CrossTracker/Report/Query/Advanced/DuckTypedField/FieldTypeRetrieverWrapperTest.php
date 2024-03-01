@@ -24,15 +24,15 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
 use Tracker_FormElement;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 
 final class FieldTypeRetrieverWrapperTest extends TestCase
@@ -42,7 +42,7 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
         $retriever = new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType());
 
         self::assertSame(FieldTypeRetrieverWrapper::FIELD_DATETIME_TYPE, $retriever->getType(
-            TrackerFormElementDateFieldBuilder::aDateField(452)
+            DateFieldBuilder::aDateField(452)
                 ->withTime()
                 ->build()
         ));
@@ -72,11 +72,11 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
 
     public static function notHandledTypeProvider(): iterable
     {
-        yield 'int field' => [TrackerFormElementIntFieldBuilder::anIntField(784)->build()];
-        yield 'float field' => [TrackerFormElementFloatFieldBuilder::aFloatField(456)->build()];
-        yield 'date field' => [TrackerFormElementDateFieldBuilder::aDateField(134)->build()];
-        yield 'text field' => [TrackerFormElementTextFieldBuilder::aTextField(458)->build()];
-        yield 'string field' => [TrackerFormElementStringFieldBuilder::aStringField(856)->build()];
+        yield 'int field' => [IntFieldBuilder::anIntField(784)->build()];
+        yield 'float field' => [FloatFieldBuilder::aFloatField(456)->build()];
+        yield 'date field' => [DateFieldBuilder::aDateField(134)->build()];
+        yield 'text field' => [TextFieldBuilder::aTextField(458)->build()];
+        yield 'string field' => [StringFieldBuilder::aStringField(856)->build()];
         yield 'user list field' => [
             ListUserBindBuilder::aUserBind(
                 ListFieldBuilder::aListField(832)->build()

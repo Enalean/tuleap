@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\XML\Updater;
 use SimpleXMLElement;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -204,7 +204,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 </field_change>
             </changeset>';
         $changeset_xml = new SimpleXMLElement($xml);
-        $field         = TrackerFormElementStringFieldBuilder::aStringField(1)->withName("a_field")->build();
+        $field         = StringFieldBuilder::aStringField(1)->withName("a_field")->build();
 
         $this->assertFalse($this->updater->isFieldChangeCorrespondingToField($changeset_xml, $field, 0));
     }
@@ -219,7 +219,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 </field_change>
             </changeset>';
         $changeset_xml = new SimpleXMLElement($xml);
-        $field         = TrackerFormElementStringFieldBuilder::aStringField(1)->withName("status")->build();
+        $field         = StringFieldBuilder::aStringField(1)->withName("status")->build();
 
         $this->assertTrue($this->updater->isFieldChangeCorrespondingToField($changeset_xml, $field, 0));
     }
@@ -233,7 +233,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 </field_change>
             </changeset>';
         $changeset_xml = new SimpleXMLElement($xml);
-        $field         = TrackerFormElementStringFieldBuilder::aStringField(1)->withName("a_field")->build();
+        $field         = StringFieldBuilder::aStringField(1)->withName("a_field")->build();
 
         $this->updater->useTargetTrackerFieldName($changeset_xml, $field, 0);
         $this->assertSame("a_field", (string) $changeset_xml->field_change->attributes()->field_name);

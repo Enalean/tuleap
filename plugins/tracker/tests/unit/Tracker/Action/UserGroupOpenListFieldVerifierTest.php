@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Action;
 
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementOpenListBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 
 final class UserGroupOpenListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -38,7 +38,7 @@ final class UserGroupOpenListFieldVerifierTest extends \Tuleap\Test\PHPUnit\Test
     {
         self::assertFalse(
             (new UserGroupOpenListFieldVerifier())->isUserGroupOpenListField(
-                TrackerFormElementOpenListBuilder::aBind()->buildUserBind()->getField()
+                OpenListFieldBuilder::aBind()->buildUserBind()->getField()
             )
         );
     }
@@ -47,7 +47,7 @@ final class UserGroupOpenListFieldVerifierTest extends \Tuleap\Test\PHPUnit\Test
     {
         self::assertTrue(
             (new UserGroupOpenListFieldVerifier())->isUserGroupOpenListField(
-                TrackerFormElementOpenListBuilder::aBind()->buildUserGroupBind()->getField()
+                OpenListFieldBuilder::aBind()->buildUserGroupBind()->getField()
             )
         );
     }

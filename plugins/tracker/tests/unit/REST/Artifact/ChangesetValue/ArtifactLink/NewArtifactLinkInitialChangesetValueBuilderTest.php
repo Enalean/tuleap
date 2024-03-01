@@ -27,7 +27,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
-use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
 final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {

@@ -80,13 +80,13 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparis
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
-use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFileFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -115,12 +115,12 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementIntFieldBuilder::anIntField(628)
+            IntFieldBuilder::anIntField(628)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementFloatFieldBuilder::aFloatField(274)
+            FloatFieldBuilder::aFloatField(274)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -189,7 +189,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     public function testItAddsNotSupportedFieldToInvalidCollection(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerExternalFormElementBuilder::anExternalField(900)
+            ExternalFieldBuilder::anExternalField(900)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
@@ -211,7 +211,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     public function testItAddsFieldUserCanNotReadToInvalidCollection(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementIntFieldBuilder::anIntField(628)
+            IntFieldBuilder::anIntField(628)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, false)
@@ -274,12 +274,12 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     public function testItRejectsInvalidNumericComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementIntFieldBuilder::anIntField(975)
+            IntFieldBuilder::anIntField(975)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementFloatFieldBuilder::aFloatField(659)
+            FloatFieldBuilder::aFloatField(659)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -315,12 +315,12 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     public function testItRejectsInvalidTextComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementStringFieldBuilder::aStringField(619)
+            StringFieldBuilder::aStringField(619)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementTextFieldBuilder::aTextField(204)
+            TextFieldBuilder::aTextField(204)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -351,7 +351,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     public function testItRejectsInvalidDateComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementDateFieldBuilder::aDateField(130)
+            DateFieldBuilder::aDateField(130)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
@@ -366,7 +366,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     public function testItRejectsDateFieldWithoutTimeComparedToDateTime(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementDateFieldBuilder::aDateField(130)
+            DateFieldBuilder::aDateField(130)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
@@ -387,7 +387,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     public function testItRejectsInvalidFileComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementFileFieldBuilder::aFileField(324)
+            FileFieldBuilder::aFileField(324)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
@@ -404,7 +404,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         $tracker = TrackerTestBuilder::aTracker()->withId(311)->build();
         $user    = UserTestBuilder::buildWithId(300);
         yield 'int' => [
-            TrackerFormElementIntFieldBuilder::anIntField(132)
+            IntFieldBuilder::anIntField(132)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($tracker)
                 ->withReadPermission($user, true)
@@ -413,7 +413,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             $user,
         ];
         yield 'float' => [
-            TrackerFormElementFloatFieldBuilder::aFloatField(202)
+            FloatFieldBuilder::aFloatField(202)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($tracker)
                 ->withReadPermission($user, true)
@@ -422,7 +422,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             $user,
         ];
         yield 'string' => [
-            TrackerFormElementStringFieldBuilder::aStringField(716)
+            StringFieldBuilder::aStringField(716)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($tracker)
                 ->withReadPermission($user, true)
@@ -431,7 +431,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             $user,
         ];
         yield 'text' => [
-            TrackerFormElementTextFieldBuilder::aTextField(198)
+            TextFieldBuilder::aTextField(198)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($tracker)
                 ->withReadPermission($user, true)
@@ -440,7 +440,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             $user,
         ];
         yield 'date' => [
-            TrackerFormElementDateFieldBuilder::aDateField(514)
+            DateFieldBuilder::aDateField(514)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($tracker)
                 ->withReadPermission($user, true)
@@ -449,7 +449,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             $user,
         ];
         yield 'file' => [
-            TrackerFormElementFileFieldBuilder::aFileField(415)
+            FileFieldBuilder::aFileField(415)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($tracker)
                 ->withReadPermission($user, true)
@@ -551,12 +551,12 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     public function testItAddsInvalidFieldInNestedExpressions(Logical $parsed_query): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementIntFieldBuilder::anIntField(893)
+            IntFieldBuilder::anIntField(893)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            TrackerFormElementIntFieldBuilder::anIntField(120)
+            IntFieldBuilder::anIntField(120)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)

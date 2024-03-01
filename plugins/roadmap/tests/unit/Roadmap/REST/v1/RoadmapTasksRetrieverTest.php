@@ -51,7 +51,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\TrackerColor;
 
@@ -631,10 +631,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $title_field->method('userCanRead')->willReturn(true);
         $tracker = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
 
-        $start_date_field = TrackerFormElementDateFieldBuilder::aDateField(1)
+        $start_date_field = DateFieldBuilder::aDateField(1)
             ->withReadPermission($this->user, true)
             ->build();
-        $end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(2)
+        $end_date_field   = DateFieldBuilder::aDateField(2)
             ->withReadPermission($this->user, true)
             ->build();
 
@@ -772,10 +772,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
 
-        $start_date_field = TrackerFormElementDateFieldBuilder::aDateField(1)
+        $start_date_field = DateFieldBuilder::aDateField(1)
             ->withReadPermission($this->user, true)
             ->build();
-        $end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(2)
+        $end_date_field   = DateFieldBuilder::aDateField(2)
             ->withReadPermission($this->user, true)
             ->build();
 
@@ -919,10 +919,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
 
-        $start_date_field   = TrackerFormElementDateFieldBuilder::aDateField(1)
+        $start_date_field   = DateFieldBuilder::aDateField(1)
             ->withReadPermission($this->user, true)
             ->build();
-        $end_date_field     = TrackerFormElementDateFieldBuilder::aDateField(2)
+        $end_date_field     = DateFieldBuilder::aDateField(2)
             ->withReadPermission($this->user, true)
             ->build();
         $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
@@ -1042,17 +1042,17 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker         = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
         $another_tracker = $this->getTracker(self::ANOTHER_TRACKER_ID, $another_title_field, 'red-wine', 'bug');
 
-        $start_date_field = TrackerFormElementDateFieldBuilder::aDateField(1)
+        $start_date_field = DateFieldBuilder::aDateField(1)
             ->withReadPermission($this->user, true)
             ->build();
-        $end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(2)
+        $end_date_field   = DateFieldBuilder::aDateField(2)
             ->withReadPermission($this->user, true)
             ->build();
 
-        $another_start_date_field = TrackerFormElementDateFieldBuilder::aDateField(3)
+        $another_start_date_field = DateFieldBuilder::aDateField(3)
             ->withReadPermission($this->user, true)
             ->build();
-        $another_end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(4)
+        $another_end_date_field   = DateFieldBuilder::aDateField(4)
             ->withReadPermission($this->user, true)
             ->build();
 

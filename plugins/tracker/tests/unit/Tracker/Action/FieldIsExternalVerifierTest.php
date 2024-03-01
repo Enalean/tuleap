@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Action;
 
-use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 class FieldIsExternalVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -29,7 +29,7 @@ class FieldIsExternalVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertTrue(
             (new FieldIsExternalVerifier())->isAnExternalField(
-                TrackerExternalFormElementBuilder::anExternalField(1)->build()
+                ExternalFieldBuilder::anExternalField(1)->build()
             )
         );
     }
@@ -38,7 +38,7 @@ class FieldIsExternalVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertFalse(
             (new FieldIsExternalVerifier())->isAnExternalField(
-                TrackerFormElementStringFieldBuilder::aStringField(1)->build()
+                StringFieldBuilder::aStringField(1)->build()
             )
         );
     }

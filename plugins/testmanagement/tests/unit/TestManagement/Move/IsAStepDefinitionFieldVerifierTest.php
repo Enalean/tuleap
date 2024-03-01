@@ -21,7 +21,7 @@
 namespace Tuleap\TestManagement\Move;
 
 use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 class IsAStepDefinitionFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -38,7 +38,7 @@ class IsAStepDefinitionFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertFalse(
             IsAStepDefinitionFieldVerifier::isAStepDefinitionField(
-                TrackerFormElementStringFieldBuilder::aStringField(1)->build()
+                StringFieldBuilder::aStringField(1)->build()
             )
         );
     }

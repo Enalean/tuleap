@@ -34,7 +34,7 @@ use Tuleap\Tracker\Action\MoveArtifact;
 use Tuleap\Tracker\Action\MoveArtifactByDuckTyping;
 use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\AddPostMoveArtifactFeedbackStub;
 use Tuleap\Tracker\Test\Stub\CollectDryRunTypingFieldStub;
@@ -58,8 +58,8 @@ final class RestArtifactMoverTest extends TestCase
         $this->post_move_action = AddPostMoveArtifactFeedbackStub::build();
         $this->mega_mover       = MoveArtifactByDuckTypingStub::build();
 
-        $source_title_field      = TrackerFormElementStringFieldBuilder::aStringField(1)->withName("title")->build();
-        $destination_title_field = TrackerFormElementStringFieldBuilder::aStringField(2)->withName("title")->build();
+        $source_title_field      = StringFieldBuilder::aStringField(1)->withName("title")->build();
+        $destination_title_field = StringFieldBuilder::aStringField(2)->withName("title")->build();
         $dry_run_collector       = CollectDryRunTypingFieldStub::withCollectionOfField(
             DuckTypedMoveFieldCollection::fromFields(
                 [$source_title_field],

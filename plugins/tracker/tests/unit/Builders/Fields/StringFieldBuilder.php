@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,28 +15,33 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Builders;
+namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement_Field_Float;
+use Tracker_FormElement_Field_String;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerFormElementFloatFieldBuilder
+final class StringFieldBuilder
 {
-    private string $name                        = 'float';
-    private ?\PFUser $user_with_read_permission = null;
-    private bool $read_permission               = false;
+    private string $label     = 'Title';
+    private string $name      = 'title';
+    private bool $is_required = false;
     private \Tracker $tracker;
+    /** @var list<\PFUser> */
+    private array $user_with_read_permissions = [];
+    /** @var array<int, bool> */
+    private array $read_permissions = [];
 
     private function __construct(private readonly int $id)
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
     }
 
-    public static function aFloatField(int $id): self
+    public static function aStringField(int $id): self
     {
         return new self($id);
     }
@@ -47,38 +52,50 @@ final class TrackerFormElementFloatFieldBuilder
         return $this;
     }
 
+    public function withLabel(string $label): self
+    {
+        $this->label = $label;
+        return $this;
+    }
+
     public function inTracker(\Tracker $tracker): self
     {
         $this->tracker = $tracker;
         return $this;
     }
 
-    public function withReadPermission(\PFUser $user, bool $user_can_read): self
+    public function thatIsRequired(): self
     {
-        $this->user_with_read_permission = $user;
-        $this->read_permission           = $user_can_read;
+        $this->is_required = true;
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_Float
+    public function withReadPermission(\PFUser $user, bool $user_can_read): self
     {
-        $field = new Tracker_FormElement_Field_Float(
+        $this->user_with_read_permissions[]     = $user;
+        $this->read_permissions[$user->getId()] = $user_can_read;
+        return $this;
+    }
+
+    public function build(): Tracker_FormElement_Field_String
+    {
+        $field = new Tracker_FormElement_Field_String(
             $this->id,
             $this->tracker->getId(),
             15,
             $this->name,
-            '',
-            '',
+            $this->label,
+            "",
             true,
             'P',
-            false,
+            $this->is_required,
             '',
             10,
             null
         );
         $field->setTracker($this->tracker);
-        if ($this->user_with_read_permission !== null) {
-            $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
+        foreach ($this->user_with_read_permissions as $user) {
+            $field->setUserCanRead($user, $this->read_permissions[$user->getId()]);
         }
         return $field;
     }

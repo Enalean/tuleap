@@ -35,8 +35,8 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
@@ -54,8 +54,8 @@ final class EventDatesRetrieverTest extends TestCase
         $this->recipient = UserTestBuilder::buildWithDefaults();
         $this->logger    = new NullLogger();
 
-        $this->start_field = TrackerFormElementDateFieldBuilder::aDateField(1)->build();
-        $this->end_field   = TrackerFormElementDateFieldBuilder::aDateField(2)->build();
+        $this->start_field = DateFieldBuilder::aDateField(1)->build();
+        $this->end_field   = DateFieldBuilder::aDateField(2)->build();
     }
 
     public function testErrorWhenTimeframeSemanticIsNotConfigured(): void
@@ -304,7 +304,7 @@ final class EventDatesRetrieverTest extends TestCase
 
     public function testDatesAreReturnedEvenIfTimeframeIsZero(): void
     {
-        $duration_field = TrackerFormElementIntFieldBuilder::anIntField(3)->build();
+        $duration_field = IntFieldBuilder::anIntField(3)->build();
         $builder        = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),
@@ -388,7 +388,7 @@ final class EventDatesRetrieverTest extends TestCase
 
     public function testItReturnsTrueForTimeDisplayTimeframeWithDuration(): void
     {
-        $duration_field = TrackerFormElementIntFieldBuilder::anIntField(3)->build();
+        $duration_field = IntFieldBuilder::anIntField(3)->build();
         $builder        = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),

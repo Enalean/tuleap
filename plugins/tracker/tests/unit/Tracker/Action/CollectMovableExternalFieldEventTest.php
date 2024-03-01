@@ -20,15 +20,15 @@
 
 namespace Tuleap\Tracker\Action;
 
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 final class CollectMovableExternalFieldEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTheFieldIsNotMigrateableWhenNoPluginHasAnswered(): void
     {
         $event = new CollectMovableExternalFieldEvent(
-            TrackerFormElementStringFieldBuilder::aStringField(1)->build(),
-            TrackerFormElementStringFieldBuilder::aStringField(2)->build(),
+            StringFieldBuilder::aStringField(1)->build(),
+            StringFieldBuilder::aStringField(2)->build(),
         );
 
         self::assertFalse($event->isFieldMigrateable());
@@ -38,8 +38,8 @@ final class CollectMovableExternalFieldEventTest extends \Tuleap\Test\PHPUnit\Te
     public function testTheFieldIsFullyMigrateableWhenItHasBeenMarkAsIs(): void
     {
         $event = new CollectMovableExternalFieldEvent(
-            TrackerFormElementStringFieldBuilder::aStringField(1)->build(),
-            TrackerFormElementStringFieldBuilder::aStringField(2)->build(),
+            StringFieldBuilder::aStringField(1)->build(),
+            StringFieldBuilder::aStringField(2)->build(),
         );
 
         $event->markFieldAsFullyMigrateable();
@@ -51,8 +51,8 @@ final class CollectMovableExternalFieldEventTest extends \Tuleap\Test\PHPUnit\Te
     public function testTheFieldIsNotMigrateableWhenItHasBeenMarkAsIs(): void
     {
         $event = new CollectMovableExternalFieldEvent(
-            TrackerFormElementStringFieldBuilder::aStringField(1)->build(),
-            TrackerFormElementStringFieldBuilder::aStringField(2)->build(),
+            StringFieldBuilder::aStringField(1)->build(),
+            StringFieldBuilder::aStringField(2)->build(),
         );
 
         $event->markFieldAsNotMigrateable();

@@ -30,10 +30,10 @@ use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -55,7 +55,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project            = ProjectTestBuilder::aProject()->build();
         $this->tracker      = TrackerTestBuilder::aTracker()->withId(888)->withProject($project)->build();
-        $this->field_string = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+        $this->field_string = StringFieldBuilder::aStringField(self::STRING_FIELD_ID)
             ->inTracker($this->tracker)
             ->build();
         $this->field_list   = ListFieldBuilder::aListField(self::LIST_FIELD_ID)
@@ -90,10 +90,10 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private function checkUserCanAddInPlace(): void
     {
-        $field_text = TrackerFormElementTextFieldBuilder::aTextField(20)
+        $field_text = TextFieldBuilder::aTextField(20)
             ->inTracker($this->tracker)
             ->build();
-        $field_int  = TrackerFormElementIntFieldBuilder::anIntField(30)
+        $field_int  = IntFieldBuilder::anIntField(30)
             ->inTracker($this->tracker)
             ->build();
 
@@ -117,7 +117,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfAnotherFieldIsRequired(): void
     {
-        $this->field_string = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+        $this->field_string = StringFieldBuilder::aStringField(self::STRING_FIELD_ID)
             ->inTracker($this->tracker)
             ->thatIsRequired()
             ->build();
@@ -138,7 +138,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfNoSemanticTitle(): void
     {
-        $this->field_string = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+        $this->field_string = StringFieldBuilder::aStringField(self::STRING_FIELD_ID)
             ->inTracker($this->tracker)
             ->thatIsRequired()
             ->build();
@@ -172,7 +172,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfTheUserCannotSubmitArtifact(): void
     {
-        $this->field_string                  = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+        $this->field_string                  = StringFieldBuilder::aStringField(self::STRING_FIELD_ID)
             ->inTracker($this->tracker)
             ->thatIsRequired()
             ->build();
@@ -190,7 +190,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfTheUserCannotSubmitStatusField(): void
     {
-        $this->field_string = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+        $this->field_string = StringFieldBuilder::aStringField(self::STRING_FIELD_ID)
             ->inTracker($this->tracker)
             ->thatIsRequired()
             ->build();

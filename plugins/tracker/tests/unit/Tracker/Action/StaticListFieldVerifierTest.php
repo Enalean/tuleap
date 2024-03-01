@@ -28,7 +28,7 @@ use Tuleap\Tracker\Action\StaticListFieldVerifier;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 final class StaticListFieldVerifierTest extends TestCase
 {
@@ -41,7 +41,7 @@ final class StaticListFieldVerifierTest extends TestCase
 
     public function testItReturnsFalseWhenTheFieldIsNotAListField(): void
     {
-        $field = TrackerFormElementStringFieldBuilder::aStringField(10)->build();
+        $field = StringFieldBuilder::aStringField(10)->build();
 
         self::assertFalse($this->verifier->isStaticListField($field));
     }

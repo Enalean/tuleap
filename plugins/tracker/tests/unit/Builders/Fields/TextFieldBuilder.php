@@ -20,11 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Builders;
+namespace Tuleap\Tracker\Test\Builders\Fields;
 
 use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerFormElementTextFieldBuilder
+final class TextFieldBuilder
 {
     private string $name = 'text';
     private \Tracker $tracker;

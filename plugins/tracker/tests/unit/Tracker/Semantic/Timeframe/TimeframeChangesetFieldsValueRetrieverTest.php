@@ -29,8 +29,8 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
@@ -54,7 +54,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
 
     public function testItCanGetTimestampFromChangeset(): void
     {
-        $date_field = TrackerFormElementDateFieldBuilder::aDateField(1001)->build();
+        $date_field = DateFieldBuilder::aDateField(1001)->build();
         $date_field->setUserCanRead($this->user, true);
         $this->changeset->setFieldValue(
             $date_field,
@@ -70,7 +70,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
 
     public function testItCannotGetTimestampFromChangesetIfUserCantReadField(): void
     {
-        $date_field = TrackerFormElementDateFieldBuilder::aDateField(1001)->build();
+        $date_field = DateFieldBuilder::aDateField(1001)->build();
         $date_field->setUserCanRead($this->user, false);
         $this->changeset->setFieldValue(
             $date_field,
@@ -88,7 +88,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
 
     public function testItCanGetTimestampIfUserIsEncapsulatedInTrackerUserWithReadAllPermission(): void
     {
-        $date_field = TrackerFormElementDateFieldBuilder::aDateField(1001)->build();
+        $date_field = DateFieldBuilder::aDateField(1001)->build();
         $date_field->setUserCanRead($this->user, false);
         $this->changeset->setFieldValue(
             $date_field,
@@ -104,7 +104,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
 
     public function testItCanGetDurationFromChangeset(): void
     {
-        $duration_field = TrackerFormElementIntFieldBuilder::anIntField(1002)->build();
+        $duration_field = IntFieldBuilder::anIntField(1002)->build();
         $duration_field->setUserCanRead($this->user, true);
         $this->changeset->setFieldValue(
             $duration_field,
@@ -120,7 +120,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
 
     public function testItCannotGetDurationFromChangesetIfUserCantReadField(): void
     {
-        $duration_field = TrackerFormElementIntFieldBuilder::anIntField(1002)->build();
+        $duration_field = IntFieldBuilder::anIntField(1002)->build();
         $duration_field->setUserCanRead($this->user, false);
         $this->changeset->setFieldValue(
             $duration_field,
@@ -138,7 +138,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
 
     public function testItCanGetDurationIfUserIsEncapsulatedInTrackerUserWithReadAllPermission(): void
     {
-        $duration_field = TrackerFormElementIntFieldBuilder::anIntField(1002)->build();
+        $duration_field = IntFieldBuilder::anIntField(1002)->build();
         $duration_field->setUserCanRead($this->user, false);
         $this->changeset->setFieldValue(
             $duration_field,

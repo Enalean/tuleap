@@ -46,11 +46,11 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
-use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
@@ -393,7 +393,7 @@ final class ArtifactCreatorTest extends TestCase
         $reference = $create(
             VerifySubmissionPermissionStub::withSubmitPermission(),
             RetrieveUsedFieldsStub::withFields(
-                TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+                StringFieldBuilder::aStringField(self::STRING_FIELD_ID)
                     ->inTracker($tracker)
                     ->withName(self::STRING_FIELD_NAME)
                     ->build(),

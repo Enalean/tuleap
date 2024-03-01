@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Action;
 
-use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 final class ExternalFieldsHaveSameTypeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -30,8 +30,8 @@ final class ExternalFieldsHaveSameTypeVerifierTest extends \Tuleap\Test\PHPUnit\
         self::assertTrue(
             (new ExternalFieldsHaveSameTypeVerifier())
                 ->haveBothFieldsSameType(
-                    TrackerFormElementStringFieldBuilder::aStringField(1)->build(),
-                    TrackerFormElementStringFieldBuilder::aStringField(2)->build(),
+                    StringFieldBuilder::aStringField(1)->build(),
+                    StringFieldBuilder::aStringField(2)->build(),
                 )
         );
     }
@@ -41,8 +41,8 @@ final class ExternalFieldsHaveSameTypeVerifierTest extends \Tuleap\Test\PHPUnit\
         self::assertFalse(
             (new ExternalFieldsHaveSameTypeVerifier())
                 ->haveBothFieldsSameType(
-                    TrackerFormElementStringFieldBuilder::aStringField(1)->build(),
-                    TrackerFormElementDateFieldBuilder::aDateField(2)->build(),
+                    StringFieldBuilder::aStringField(1)->build(),
+                    DateFieldBuilder::aDateField(2)->build(),
                 )
         );
     }

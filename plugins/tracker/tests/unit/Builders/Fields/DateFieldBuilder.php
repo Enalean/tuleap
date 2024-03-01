@@ -20,11 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Builders;
+namespace Tuleap\Tracker\Test\Builders\Fields;
 
 use Tracker_FormElement_Field_Date;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerFormElementDateFieldBuilder
+final class DateFieldBuilder
 {
     private string $name = "date";
     /** @var list<\PFUser> */
