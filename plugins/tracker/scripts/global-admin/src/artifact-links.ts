@@ -17,12 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import jQuery from "jquery";
+import "../themes/style.scss";
 
-!(function ($) {
-    $(document).ready(function () {
-        $('#tracker-artifact-link-type-usages input[type="checkbox"]').on("change", function () {
-            $("#" + $(this).attr("data-form-id")).submit();
+document.addEventListener("DOMContentLoaded", () => {
+    handleTypeSwitches();
+});
+
+function handleTypeSwitches(): void {
+    const switches = document.querySelectorAll("[data-switch]");
+    for (const switch_checkbox of switches) {
+        if (!(switch_checkbox instanceof HTMLInputElement)) {
+            continue;
+        }
+
+        const form = switch_checkbox.form;
+        if (!form) {
+            continue;
+        }
+
+        switch_checkbox.addEventListener("change", () => {
+            form.submit();
         });
-    });
-})(jQuery);
+    }
+}

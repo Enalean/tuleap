@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "semantics";
+@use "@tuleap/project-background";
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
 
-.tracker-administration-title {
+.tracker-global-administration-title {
     margin: var(--tlp-medium-spacing) 0 var(--tlp-title-spacing);
+}
+
+.project-with-background {
+    .tracker-global-administration-title {
+        @include project-background.title-header-typography;
+
+        margin: 0;
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
+    }
+}
+
+body {
+    @include project-background.apply-background(
+        ".tracker-global-administration-title",
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
 }

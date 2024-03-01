@@ -30,8 +30,8 @@ use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\HeaderConfigurationBuilder;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -142,9 +142,12 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         }
 
         $layout->addJavascriptAsset(
-            new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../../../frontend-assets', '/assets/trackers'),
-                'global-admin-trackers.js'
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../../../scripts/global-admin/frontend-assets',
+                    '/assets/trackers/global-admin'
+                ),
+                'src/trackers.ts'
             )
         );
         $title = dgettext('tuleap-tracker', 'Trackers');

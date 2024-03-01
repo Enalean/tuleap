@@ -29,8 +29,8 @@ use TemplateRendererFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -124,9 +124,12 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         $breadcrumbs = [];
 
         $response->addJavascriptAsset(
-            new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../../../frontend-assets', '/assets/trackers'),
-                'global-admin-artifact-links.js'
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../../../scripts/global-admin/frontend-assets',
+                    '/assets/trackers/global-admin'
+                ),
+                'src/artifact-links.ts'
             )
         );
         $title = dgettext('tuleap-tracker', 'Trackers');

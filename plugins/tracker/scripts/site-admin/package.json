@@ -1,0 +1,17 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-site-admin",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/tlp-modal": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "NODE_ENV=development vite build --watch --mode development --minify false"
+  }
+}

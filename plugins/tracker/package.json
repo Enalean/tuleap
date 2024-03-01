@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/burningparrot-theme": "workspace:^",
     "@tuleap/chart-builder": "workspace:*",
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/mention": "workspace:*",
@@ -18,7 +19,6 @@
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
-    "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "d3-array": "^3.0.1",

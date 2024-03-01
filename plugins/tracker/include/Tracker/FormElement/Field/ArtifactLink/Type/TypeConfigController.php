@@ -27,8 +27,8 @@ use Feedback;
 use Response;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 
 class TypeConfigController
 {
@@ -49,11 +49,13 @@ class TypeConfigController
     {
         $title = dgettext('tuleap-tracker', 'Trackers');
 
-        $assets = new IncludeAssets(
-            __DIR__ . '/../../../../../../frontend-assets',
-            '/assets/trackers'
-        );
-        $base_layout->addJavascriptAsset(new JavascriptAsset($assets, 'admin-type.js'));
+        $base_layout->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(
+                __DIR__ . '/../../../../../../scripts/site-admin/frontend-assets',
+                '/assets/trackers/site-admin'
+            ),
+            'src/admin-type.js'
+        ));
 
         $this->admin_page_rendered->renderANoFramedPresenter(
             $title,
