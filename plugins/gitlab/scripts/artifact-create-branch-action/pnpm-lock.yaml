@@ -17,15 +17,15 @@ dependencies:
   '@tuleap/fp-feedback':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fp-feedback
-  '@tuleap/tlp':
-    specifier: workspace:*
-    version: link:../../../../src/scripts/tlp
   '@tuleap/tlp-button':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-button
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-styles':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-styles
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue3-gettext-init

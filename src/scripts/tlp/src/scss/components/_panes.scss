@@ -57,7 +57,7 @@
     padding: var(--tlp-medium-spacing);
 }
 
-%tlp-pane-title {
+%-tlp-pane-title {
     font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1rem;
@@ -65,14 +65,14 @@
 }
 
 .tlp-pane-title {
-    @extend %tlp-pane-title;
+    @extend %-tlp-pane-title;
 
     margin: 0;
     color: var(--tlp-dimmed-color);
 }
 
 .tlp-pane-subtitle {
-    @extend %tlp-pane-title;
+    @extend %-tlp-pane-title;
 
     margin: 0 0 var(--tlp-medium-spacing);
     color: var(--tlp-main-color);

@@ -1,0 +1,20 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/tlp-styles",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "exports": {
+    "./components/alerts": "./themes/components/alerts.scss",
+    "./components/form-element": "./themes/components/form-element.scss",
+    "./components/forms": "./themes/components/forms.scss",
+    "./components/typography": "./themes/components/typography.scss",
+    "./images/field-double-arrows-small.svg": "./images/field-double-arrows-small.svg",
+    "./images/field-double-arrows.svg": "./images/field-double-arrows.svg",
+    "./images/field-ellipsis-small.svg": "./images/field-ellipsis-small.svg",
+    "./images/field-ellipsis.svg": "./images/field-ellipsis.svg",
+    "./images/field-magnifier-large.svg": "./images/field-magnifier-large.svg",
+    "./images/field-magnifier-small.svg": "./images/field-magnifier-small.svg",
+    "./images/field-magnifier.svg": "./images/field-magnifier.svg"
+  }
+}

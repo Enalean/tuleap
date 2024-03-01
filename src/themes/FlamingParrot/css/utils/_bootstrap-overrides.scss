@@ -104,7 +104,7 @@ textarea {
 
 select {
     padding: 0 (12px * 2 + 8px) 0 12px;
-    background: var(--tlp-white-color) url("@tuleap/tlp/src/images/field-double-arrows.svg")
+    background: var(--tlp-white-color) url("@tuleap/tlp-styles/images/field-double-arrows.svg")
         no-repeat;
     background-position: right 12px center;
     -moz-appearance: none; // stylelint-disable-line property-no-vendor-prefix
@@ -116,7 +116,7 @@ select {
         height: 32px;
         padding: 0 calc(var(--tlp-small-spacing) * 2 + 6px) 0 var(--tlp-small-spacing);
         background: var(--tlp-white-color)
-            url("@tuleap/tlp/src/images/field-double-arrows-small.svg") no-repeat;
+            url("@tuleap/tlp-styles/images/field-double-arrows-small.svg") no-repeat;
         background-position: right var(--tlp-small-spacing) center;
         font-size: 0.8125rem;
     }

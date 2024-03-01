@@ -13,6 +13,7 @@
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
+    "@tuleap/tlp-styles": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "flatpickr": "^4.6.9",
     "jquery": "^3.6.0",

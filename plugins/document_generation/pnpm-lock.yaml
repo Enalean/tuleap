@@ -23,9 +23,6 @@ dependencies:
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:*
     version: link:../tracker/scripts/lib/rest-api-types
-  '@tuleap/tlp':
-    specifier: workspace:*
-    version: link:../../src/scripts/tlp
   '@tuleap/tlp-button':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-button
@@ -35,6 +32,9 @@ dependencies:
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-modal
+  '@tuleap/tlp-styles':
+    specifier: workspace:^
+    version: link:../../lib/frontend/tlp-styles
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../lib/frontend/vue3-gettext-init

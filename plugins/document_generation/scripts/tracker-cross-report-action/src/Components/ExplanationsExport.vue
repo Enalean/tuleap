@@ -53,5 +53,5 @@
     padding: var(--tlp-medium-spacing);
 }
 
-@include meta.load-css("@tuleap/tlp/src/scss/components/alerts");
+@include meta.load-css("@tuleap/tlp-styles/components/alerts");
 </style>

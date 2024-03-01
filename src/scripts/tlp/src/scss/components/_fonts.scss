@@ -19,10 +19,10 @@
 
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts/";
 
+@use "../../fonts/tlp-font/tlp-font";
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
 @import "~@fortawesome/fontawesome-free/scss/solid";
 @import "~@fortawesome/fontawesome-free/scss/regular";
 @import "~@fortawesome/fontawesome-free/scss/brands";
 @import "~@fortawesome/fontawesome-free/css/v4-shims.css";
 @import "~@fortawesome/fontawesome-free/css/v4-font-face.css";
-@import "../../fonts/tlp-font/tlp-font";

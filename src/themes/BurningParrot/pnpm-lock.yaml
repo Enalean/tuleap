@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@tuleap/burningparrot-sign-in':
     specifier: workspace:*
@@ -13,9 +17,9 @@ dependencies:
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../../lib/frontend/project-background
-  '@tuleap/tlp':
-    specifier: workspace:*
-    version: link:../../scripts/tlp
+  '@tuleap/tlp-badge':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/tlp-badge
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-dropdown

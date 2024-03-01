@@ -17,12 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-%tlp-avatar {
+$assets-base-path: "../../" !default;
+
+@function asset-url($file_path) {
+    @return url($assets-base-path + $file_path);
+}
+
+%-tlp-avatar {
     display: inline-block;
     flex: 0 0 auto;
     overflow: hidden;
     border-radius: 50%;
-    background: var(--tlp-neutral-normal-color) url("../images/tlp-default-avatar.svg") no-repeat
+    background: var(--tlp-neutral-normal-color) asset-url("images/tlp-default-avatar.svg") no-repeat
         center center;
     background-size: contain;
     vertical-align: middle;
@@ -34,49 +40,49 @@
 }
 
 .tlp-avatar-jumbo {
-    @extend %tlp-avatar;
+    @extend %-tlp-avatar;
 
     width: 96px;
     height: 96px;
 }
 
 .tlp-avatar-extra-large {
-    @extend %tlp-avatar;
+    @extend %-tlp-avatar;
 
     width: 72px;
     height: 72px;
 }
 
 .tlp-avatar-large {
-    @extend %tlp-avatar;
+    @extend %-tlp-avatar;
 
     width: 48px;
     height: 48px;
 }
 
 .tlp-avatar {
-    @extend %tlp-avatar;
+    @extend %-tlp-avatar;
 
     width: 40px;
     height: 40px;
 }
 
 .tlp-avatar-medium {
-    @extend %tlp-avatar;
+    @extend %-tlp-avatar;
 
     width: 32px;
     height: 32px;
 }
 
 .tlp-avatar-small {
-    @extend %tlp-avatar;
+    @extend %-tlp-avatar;
 
     width: 24px;
     height: 24px;
 }
 
 .tlp-avatar-mini {
-    @extend %tlp-avatar;
+    @extend %-tlp-avatar;
 
     width: 20px;
     height: 20px;

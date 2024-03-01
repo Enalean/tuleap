@@ -27,7 +27,7 @@
     text-transform: uppercase;
 }
 
-@mixin circle() {
+@mixin -circle() {
     content: "";
     display: block;
     position: absolute;
@@ -39,7 +39,7 @@
     border-radius: 50%;
 }
 
-@mixin dash() {
+@mixin -dash() {
     content: "";
     display: block;
     position: absolute;
@@ -59,13 +59,13 @@
     color: var(--tlp-dimmed-color);
 
     &::before {
-        @include circle;
+        @include -circle;
 
         left: 32px;
     }
 
     &::after {
-        @include dash;
+        @include -dash;
 
         left: 0;
         width: 46px;
@@ -83,13 +83,13 @@
         padding: 0 0 0 18px;
 
         &::before {
-            @include circle;
+            @include -circle;
 
             left: 0;
         }
 
         &::after {
-            @include dash;
+            @include -dash;
 
             left: 9px;
             width: 4px;

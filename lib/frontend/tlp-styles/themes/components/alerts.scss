@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-%tlp-alert {
+%-tlp-alert {
     position: relative;
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing) 42px;
@@ -45,7 +45,7 @@
 }
 
 .tlp-alert-info {
-    @extend %tlp-alert;
+    @extend %-tlp-alert;
 
     border-left: var(--tlp-alert-info-border);
     background: var(--tlp-alert-info-background);
@@ -63,7 +63,7 @@
 }
 
 .tlp-alert-success {
-    @extend %tlp-alert;
+    @extend %-tlp-alert;
 
     border-left: var(--tlp-alert-success-border);
     background: var(--tlp-alert-success-background);
@@ -81,7 +81,7 @@
 }
 
 .tlp-alert-warning {
-    @extend %tlp-alert;
+    @extend %-tlp-alert;
 
     border-left: var(--tlp-alert-warning-border);
     background: var(--tlp-alert-warning-background);
@@ -99,7 +99,7 @@
 }
 
 .tlp-alert-danger {
-    @extend %tlp-alert;
+    @extend %-tlp-alert;
 
     border-left: var(--tlp-alert-danger-border);
     background: var(--tlp-alert-danger-background);
