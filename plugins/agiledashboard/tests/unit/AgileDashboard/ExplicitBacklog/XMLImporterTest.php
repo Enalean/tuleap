@@ -22,63 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ColinODell\PsrTestLogger\TestLogger;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
 use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XMLImporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var XMLImporter
-     */
-    private $importer;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TopBacklogElementsToAddChecker
-     */
-    private $top_backlog_elements_to_add_checker;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnplannedArtifactsAdder
-     */
-    private $unplanned_artifacts_adder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
+    private XMLImporter $importer;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private TopBacklogElementsToAddChecker&MockObject $top_backlog_elements_to_add_checker;
+    private UnplannedArtifactsAdder&MockObject $unplanned_artifacts_adder;
+    private Project $project;
+    private PFUser $user;
+    private TestLogger $logger;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao                = Mockery::mock(ExplicitBacklogDao::class);
-        $this->top_backlog_elements_to_add_checker = Mockery::mock(TopBacklogElementsToAddChecker::class);
-        $this->unplanned_artifacts_adder           = Mockery::mock(UnplannedArtifactsAdder::class);
+        $this->explicit_backlog_dao                = $this->createMock(ExplicitBacklogDao::class);
+        $this->top_backlog_elements_to_add_checker = $this->createMock(TopBacklogElementsToAddChecker::class);
+        $this->unplanned_artifacts_adder           = $this->createMock(UnplannedArtifactsAdder::class);
 
         $this->importer = new XMLImporter(
             $this->explicit_backlog_dao,
@@ -86,19 +59,17 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->unplanned_artifacts_adder
         );
 
-        $this->project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('101')->getMock();
-        $this->user    = Mockery::mock(PFUser::class);
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->user    = UserTestBuilder::buildWithDefaults();
 
-        $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->logger = new TestLogger();
     }
 
     public function testItSetsExplicitBacklogInXMLImportIfAdminNodeIsNotInXML(): void
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><agiledashboard><plannings/></agiledashboard>');
 
-        $this->explicit_backlog_dao->shouldNotReceive('setProjectIsUsingExplicitBacklog');
-
-        $this->explicit_backlog_dao->shouldReceive('setProjectIsUsingExplicitBacklog')->with(101)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('setProjectIsUsingExplicitBacklog')->with(101);
 
         $this->importer->importConfiguration($xml, $this->project);
     }
@@ -116,7 +87,7 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             </agiledashboard>
         ');
 
-        $this->explicit_backlog_dao->shouldNotReceive('setProjectIsUsingExplicitBacklog');
+        $this->explicit_backlog_dao->expects(self::never())->method('setProjectIsUsingExplicitBacklog');
 
         $this->importer->importConfiguration($xml, $this->project);
     }
@@ -134,7 +105,7 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             </agiledashboard>
         ');
 
-        $this->explicit_backlog_dao->shouldReceive('setProjectIsUsingExplicitBacklog')->with(101)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('setProjectIsUsingExplicitBacklog')->with(101);
 
         $this->importer->importConfiguration($xml, $this->project);
     }
@@ -143,7 +114,7 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><agiledashboard/>');
 
-        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
+        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
 
         $this->importer->importContent(
             $xml,
@@ -158,13 +129,11 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><agiledashboard><top_backlog/></agiledashboard>');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
-
-        $this->logger->shouldReceive('warning')->once();
+        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
 
         $this->importer->importContent(
             $xml,
@@ -173,6 +142,8 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new Tracker_XML_Importer_ArtifactImportedMapping(),
             $this->logger
         );
+
+        self::assertTrue($this->logger->hasWarningRecords());
     }
 
     public function testItDoesNotImportDataIfProjectDoesNotHaveRootPlanning(): void
@@ -185,17 +156,14 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         </agiledashboard>
         ');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
+        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
 
-        $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
-            ->once()
-            ->andThrow(new NoRootPlanningException());
-
-        $this->logger->shouldReceive('error')->once();
+        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
+            ->willThrowException(new NoRootPlanningException());
 
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add('125', '225');
@@ -207,6 +175,8 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $mapping,
             $this->logger
         );
+
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
     public function testItSkipsArtifactsNotInMapping(): void
@@ -220,20 +190,14 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         </agiledashboard>
         ');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
-            ->once()
+        $this->unplanned_artifacts_adder->expects(self::once())->method('addArtifactToTopBacklogFromIds')
             ->with(225, 101);
 
-        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds')
-            ->with(226, 101);
-
-        $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')->once();
-
-        $this->logger->shouldReceive('warning')->once();
+        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
 
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add('125', '225');
@@ -245,6 +209,8 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $mapping,
             $this->logger
         );
+
+        self::assertTrue($this->logger->hasWarningRecords());
     }
 
     public function testItSkipsArtifactsNotInTopBacklogTrackers(): void
@@ -258,26 +224,20 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         </agiledashboard>
         ');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
-            ->once()
+        $this->unplanned_artifacts_adder->expects(self::once())->method('addArtifactToTopBacklogFromIds')
             ->with(225, 101);
 
-        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds')
-            ->with(226, 101);
-
-        $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
+        $this->top_backlog_elements_to_add_checker->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->with(
                 $this->project,
                 $this->user,
                 [225, 226]
             )
-            ->andThrow(new ProvidedAddedIdIsNotInPartOfTopBacklogException([226]));
-
-        $this->logger->shouldReceive('warning')->once();
+            ->willThrowException(new ProvidedAddedIdIsNotInPartOfTopBacklogException([226]));
 
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add('125', '225');
@@ -290,6 +250,8 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $mapping,
             $this->logger
         );
+
+        self::assertTrue($this->logger->hasWarningRecords());
     }
 
     public function testItAddsArtifactsInTopBacklog(): void
@@ -303,19 +265,17 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         </agiledashboard>
         ');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
-            ->once()
-            ->with(225, 101);
+        $this->unplanned_artifacts_adder->expects(self::exactly(2))->method('addArtifactToTopBacklogFromIds')
+            ->withConsecutive(
+                [225, 101],
+                [226, 101],
+            );
 
-        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
-            ->once()
-            ->with(226, 101);
-
-        $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
+        $this->top_backlog_elements_to_add_checker->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
 
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add('125', '225');

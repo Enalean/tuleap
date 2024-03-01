@@ -22,58 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Tracker;
-use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
+use Tracker_ArtifactLinkInfo;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class DirectArtifactLinkCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
+class DirectArtifactLinkCleanerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var DirectArtifactLinkCleaner
-     */
-    private $cleaner;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private DirectArtifactLinkCleaner $cleaner;
+    private Planning_MilestoneFactory&MockObject $milestone_factory;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
+    private Tracker $tracker;
+    private Artifact $artifact;
+    private PFUser $user;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->milestone_factory                 = Mockery::mock(Planning_MilestoneFactory::class);
-        $this->explicit_backlog_dao              = Mockery::mock(ExplicitBacklogDao::class);
-        $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+        $this->milestone_factory                 = $this->createMock(Planning_MilestoneFactory::class);
+        $this->explicit_backlog_dao              = $this->createMock(ExplicitBacklogDao::class);
+        $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
 
         $this->cleaner = new DirectArtifactLinkCleaner(
             $this->milestone_factory,
@@ -81,21 +62,20 @@ class DirectArtifactLinkCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifacts_in_explicit_backlog_dao
         );
 
-        $tracker = Mockery::mock(Tracker::class)->shouldReceive('getGroupId')->andReturn('101')->getMock();
+        $this->tracker = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
+            ->build();
 
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->user     = Mockery::mock(PFUser::class);
-
-        $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $this->artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
+        $this->user     = UserTestBuilder::buildWithDefaults();
     }
 
     public function testItDoesNothingIfProjectDoesNotUseExplicitBacklogMangement(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->andReturnFalse();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+            ->willReturn(false);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
             $this->artifact,
@@ -105,15 +85,13 @@ class DirectArtifactLinkCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNothingIfArtifactIsNotAMilestone(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->andReturnTrue();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+            ->willReturn(true);
 
-        $this->milestone_factory->shouldReceive('getBareMilestoneByArtifact')
-            ->once()
-            ->andReturnNull();
+        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+            ->willReturn(null);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
             $this->artifact,
@@ -123,162 +101,138 @@ class DirectArtifactLinkCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNothingIfArtifactDoesNotHaveAnArtifactLinkField(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->andReturnTrue();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+            ->willReturn(true);
 
-        $this->milestone_factory->shouldReceive('getBareMilestoneByArtifact')
-            ->once()
-            ->andReturn(Mockery::mock(Planning_Milestone::class));
+        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+            ->willReturn($this->createMock(Planning_Milestone::class));
 
-        $this->artifact->shouldReceive('getAnArtifactLinkField')
-            ->once()
-            ->andReturnNull();
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($this->tracker);
+        $artifact->expects(self::once())->method('getAnArtifactLinkField')
+            ->willReturn(null);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
-            $this->artifact,
+            $artifact,
             $this->user
         );
     }
 
     public function testItDoesNothingIfArtifactDoesNotHaveALastChangeset(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->andReturnTrue();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+            ->willReturn(true);
 
-        $this->milestone_factory->shouldReceive('getBareMilestoneByArtifact')
-            ->once()
-            ->andReturn(Mockery::mock(Planning_Milestone::class));
+        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+            ->willReturn($this->createMock(Planning_Milestone::class));
 
-        $this->artifact->shouldReceive('getAnArtifactLinkField')
-            ->once()
-            ->andReturn(Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class));
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($this->tracker);
+        $artifact->expects(self::once())->method('getAnArtifactLinkField')
+            ->willReturn($this->createMock(Tracker_FormElement_Field_ArtifactLink::class));
+        $artifact->expects(self::once())->method('getLastChangeset')
+            ->willReturn(null);
 
-        $this->artifact->shouldReceive('getLastChangeset')
-            ->once()
-            ->andReturnNull();
-
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
-            $this->artifact,
+            $artifact,
             $this->user
         );
     }
 
     public function testItDoesNothingIfArtifactDoesNotHaveALastChangesetValue(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->andReturnTrue();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+            ->willReturn(true);
 
-        $this->milestone_factory->shouldReceive('getBareMilestoneByArtifact')
-            ->once()
-            ->andReturn(Mockery::mock(Planning_Milestone::class));
+        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+            ->willReturn($this->createMock(Planning_Milestone::class));
 
-        $artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $this->artifact->shouldReceive('getAnArtifactLinkField')
-            ->once()
-            ->andReturn($artifact_link_field);
+        $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field->method('getId')->willReturn(124);
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->artifact->shouldReceive('getLastChangeset')
-            ->once()
-            ->andReturn($changeset);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($this->tracker);
+        $artifact->expects(self::once())->method('getAnArtifactLinkField')
+            ->willReturn($artifact_link_field);
+        $artifact->expects(self::once())->method('getLastChangeset')
+            ->willReturn($changeset);
 
-        $changeset->shouldReceive('getValue')
-            ->with($artifact_link_field)
-            ->once()
-            ->andReturnNull();
+        $changeset->setFieldValue($artifact_link_field);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
-            $this->artifact,
+            $artifact,
             $this->user
         );
     }
 
     public function testItDoesNothingIfArtifactDoesNotHaveLinkedArtifacts(): void
     {
-        $this->artifact->shouldReceive('getId')->andReturn('458');
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+            ->willReturn(true);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->andReturnTrue();
+        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+            ->willReturn($this->createMock(Planning_Milestone::class));
 
-        $this->milestone_factory->shouldReceive('getBareMilestoneByArtifact')
-            ->once()
-            ->andReturn(Mockery::mock(Planning_Milestone::class));
+        $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field->method('getId')->willReturn(124);
+        $changeset       = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(12, $changeset, $artifact_link_field)->build();
+        $changeset->setFieldValue($artifact_link_field, $changeset_value);
 
-        $artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $this->artifact->shouldReceive('getAnArtifactLinkField')
-            ->once()
-            ->andReturn($artifact_link_field);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(458);
+        $artifact->method('getTracker')->willReturn($this->tracker);
+        $artifact->expects(self::once())->method('getAnArtifactLinkField')
+            ->willReturn($artifact_link_field);
+        $artifact->expects(self::once())->method('getLastChangeset')
+            ->willReturn($changeset);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->artifact->shouldReceive('getLastChangeset')
-            ->once()
-            ->andReturn($changeset);
-
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset->shouldReceive('getValue')
-            ->with($artifact_link_field)
-            ->once()
-            ->andReturn($changeset_value);
-
-        $changeset_value->shouldReceive('getArtifactIds')->once()->andReturn([]);
-
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
-            $this->artifact,
+            $artifact,
             $this->user
         );
     }
 
     public function testItCleansArtifactInExplicitBacklogThatAreManuallyPlanned(): void
     {
-        $this->artifact->shouldReceive('getId')->andReturn('458');
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+            ->willReturn(true);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->andReturnTrue();
+        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+            ->willReturn($this->createMock(Planning_Milestone::class));
 
-        $this->milestone_factory->shouldReceive('getBareMilestoneByArtifact')
-            ->once()
-            ->andReturn(Mockery::mock(Planning_Milestone::class));
+        $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field->method('getId')->willReturn(124);
+        $changeset       = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(12, $changeset, $artifact_link_field)
+            ->withLinks([
+                450 => new Tracker_ArtifactLinkInfo(450, '', 101, 1, 1, ''),
+                452 => new Tracker_ArtifactLinkInfo(452, '', 101, 1, 1, ''),
+            ])->build();
+        $changeset->setFieldValue($artifact_link_field, $changeset_value);
 
-        $artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $this->artifact->shouldReceive('getAnArtifactLinkField')
-            ->once()
-            ->andReturn($artifact_link_field);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(458);
+        $artifact->method('getTracker')->willReturn($this->tracker);
+        $artifact->expects(self::once())->method('getAnArtifactLinkField')
+            ->willReturn($artifact_link_field);
+        $artifact->expects(self::once())->method('getLastChangeset')
+            ->willReturn($changeset);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->artifact->shouldReceive('getLastChangeset')
-            ->once()
-            ->andReturn($changeset);
-
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset->shouldReceive('getValue')
-            ->with($artifact_link_field)
-            ->once()
-            ->andReturn($changeset_value);
-
-        $changeset_value->shouldReceive('getArtifactIds')->once()->andReturn([450, 452]);
-
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('cleanUpDirectlyPlannedItemsInArtifact')
-            ->once()
-            ->with(
-                458,
-                [450, 452]
-            );
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('cleanUpDirectlyPlannedItemsInArtifact')
+            ->with(458, [450, 452]);
 
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
-            $this->artifact,
+            $artifact,
             $this->user
         );
     }
