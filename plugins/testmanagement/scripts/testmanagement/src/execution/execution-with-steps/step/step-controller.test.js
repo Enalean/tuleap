@@ -23,7 +23,6 @@ import "angular-mocks";
 import BaseController from "./step-controller.js";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import * as feedback_state from "../../../feedback-state.js";
-import * as execution_with_steps_updater from "./execution-with-steps-updater.js";
 
 describe("StepController", () => {
     let $q,
@@ -46,10 +45,6 @@ describe("StepController", () => {
 
         setError = jest.spyOn(feedback_state, "setError");
         resetError = jest.spyOn(feedback_state, "resetError");
-
-        jest.spyOn(execution_with_steps_updater, "updateStatusWithStepResults").mockImplementation(
-            () => {},
-        );
 
         angular.mock.module(execution_module);
 

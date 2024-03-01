@@ -17,27 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    BLOCKED_STATUS,
-    FAILED_STATUS,
-    NOT_RUN_STATUS,
-    PASSED_STATUS,
-} from "../../execution-constants.js";
-
-function updateStatusWithStepResults(execution, ExecutionService) {
-    const previous_status = execution.status;
-    const new_status = computeTestStatusFromStepStatus(
-        execution.definition.steps,
-        Object.values(execution.steps_results),
-    );
-    if (ExecutionService) {
-        ExecutionService.campaign["nb_of_" + previous_status]--;
-        ExecutionService.campaign["nb_of_" + new_status]++;
-    }
-
-    execution.status = new_status;
-}
-
 function updateStepResults(execution, step_id, status) {
     if (typeof execution.steps_results[step_id] === "undefined") {
         execution.steps_results[step_id] = {};
@@ -45,26 +24,4 @@ function updateStepResults(execution, step_id, status) {
     Object.assign(execution.steps_results[step_id], { step_id, status });
 }
 
-function computeTestStatusFromStepStatus(step_definitions, steps_results) {
-    const counts = countStepStatus(steps_results);
-    if (counts[FAILED_STATUS] > 0) {
-        return FAILED_STATUS;
-    }
-    if (counts[BLOCKED_STATUS] > 0) {
-        return BLOCKED_STATUS;
-    }
-    if (counts[NOT_RUN_STATUS] > 0) {
-        return NOT_RUN_STATUS;
-    }
-
-    return counts[PASSED_STATUS] === step_definitions.length ? PASSED_STATUS : NOT_RUN_STATUS;
-}
-
-function countStepStatus(steps_results) {
-    return steps_results.reduce((count, step_result) => {
-        count[step_result.status] = ++count[step_result.status] || 1;
-        return count;
-    }, {});
-}
-
-export { updateStatusWithStepResults, updateStepResults };
+export { updateStepResults };
