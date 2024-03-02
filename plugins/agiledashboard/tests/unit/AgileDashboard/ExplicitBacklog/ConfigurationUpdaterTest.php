@@ -25,94 +25,50 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 use AgileDashboard_BacklogItemDao;
 use Codendi_Request;
 use MilestoneReportCriterionDao;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
-use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use TestHelper;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+class ConfigurationUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /**
-     * @var ConfigurationUpdater
-     */
-    private $updater;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var MilestoneReportCriterionDao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $milestone_report_criterion_dao;
-
-    /**
-     * @var DBTransactionExecutorPassthrough
-     */
-    private $db_transaction_executor;
-
-    /**
-     * @var AgileDashboard_BacklogItemDao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $backlog_item_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
-    /**
-     * @var Codendi_Request|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $request;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnplannedArtifactsAdder
-     */
-    private $unplanned_artifacts_adder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AddToTopBacklogPostActionDao
-     */
-    private $add_to_top_backlog_post_action_dao;
-    private $event_dispatcher;
+    private ConfigurationUpdater $updater;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private MilestoneReportCriterionDao&MockObject $milestone_report_criterion_dao;
+    private AgileDashboard_BacklogItemDao&MockObject $backlog_item_dao;
+    private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
+    private Codendi_Request&MockObject $request;
+    private UnplannedArtifactsAdder&MockObject $unplanned_artifacts_adder;
+    private AddToTopBacklogPostActionDao&MockObject $add_to_top_backlog_post_action_dao;
+    private EventDispatcherInterface $event_dispatcher;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao               = Mockery::mock(ExplicitBacklogDao::class);
-        $this->milestone_report_criterion_dao     = Mockery::mock(MilestoneReportCriterionDao::class);
-        $this->backlog_item_dao                   = Mockery::mock(AgileDashboard_BacklogItemDao::class);
-        $this->milestone_factory                  = Mockery::mock(Planning_MilestoneFactory::class);
-        $this->artifacts_in_explicit_backlog_dao  = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-        $this->unplanned_artifacts_adder          = Mockery::mock(UnplannedArtifactsAdder::class);
-        $this->add_to_top_backlog_post_action_dao = Mockery::mock(AddToTopBacklogPostActionDao::class);
-        $this->db_transaction_executor            = new DBTransactionExecutorPassthrough();
+        $this->explicit_backlog_dao               = $this->createMock(ExplicitBacklogDao::class);
+        $this->milestone_report_criterion_dao     = $this->createMock(MilestoneReportCriterionDao::class);
+        $this->backlog_item_dao                   = $this->createMock(AgileDashboard_BacklogItemDao::class);
+        $milestone_factory                        = $this->createMock(Planning_MilestoneFactory::class);
+        $this->artifacts_in_explicit_backlog_dao  = $this->createMock(ArtifactsInExplicitBacklogDao::class);
+        $this->unplanned_artifacts_adder          = $this->createMock(UnplannedArtifactsAdder::class);
+        $this->add_to_top_backlog_post_action_dao = $this->createMock(AddToTopBacklogPostActionDao::class);
+        $db_transaction_executor                  = new DBTransactionExecutorPassthrough();
         $this->event_dispatcher                   = new class implements EventDispatcherInterface {
-            /**
-             * @var bool
-             */
-            public $is_planning_administration_delegated = false;
+            public bool $is_planning_administration_delegated = false;
 
-            public function dispatch(object $event)
+            public function dispatch(object $event): object
             {
                 if ($event instanceof PlanningAdministrationDelegation && $this->is_planning_administration_delegated) {
                     $event->enablePlanningAdministrationDelegation();
@@ -125,149 +81,144 @@ class ConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->explicit_backlog_dao,
             $this->milestone_report_criterion_dao,
             $this->backlog_item_dao,
-            $this->milestone_factory,
+            $milestone_factory,
             $this->artifacts_in_explicit_backlog_dao,
             $this->unplanned_artifacts_adder,
             $this->add_to_top_backlog_post_action_dao,
-            $this->db_transaction_executor,
+            $db_transaction_executor,
             $this->event_dispatcher
         );
 
-        $project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('101')->getMock();
-        $user    = Mockery::mock(PFUser::class);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $user    = UserTestBuilder::buildWithDefaults();
 
-        $this->request = Mockery::mock(Codendi_Request::class);
-        $this->request->shouldReceive('getProject')->andReturn($project);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->request->shouldReceive('exist')->with('use-explicit-top-backlog')->andReturnTrue();
+        $this->request = $this->createMock(Codendi_Request::class);
+        $this->request->method('getProject')->willReturn($project);
+        $this->request->method('getCurrentUser')->willReturn($user);
+        $this->request->method('exist')->with('use-explicit-top-backlog')->willReturn(true);
 
-        $planning = Mockery::mock(Planning::class);
-        $planning->shouldReceive('getBacklogTrackersIds')->andReturn([101, 102]);
-        $top_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $top_milestone->shouldReceive('getPlanning')->andReturn($planning);
-        $this->milestone_factory->shouldReceive('getVirtualTopMilestone')->andReturn($top_milestone);
+        $planning = $this->createMock(Planning::class);
+        $planning->method('getBacklogTrackersIds')->willReturn([101, 102]);
+        $top_milestone = $this->createMock(Planning_VirtualTopMilestone::class);
+        $top_milestone->method('getPlanning')->willReturn($planning);
+        $milestone_factory->method('getVirtualTopMilestone')->willReturn($top_milestone);
     }
 
-    public function testItDoesNothingIfOptionNotProvidedInRequest()
+    public function testItDoesNothingIfOptionNotProvidedInRequest(): void
     {
         $request = new Codendi_Request([
             'group_id' => '101',
         ]);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeExplicitBacklogOfProject');
-        $this->explicit_backlog_dao->shouldNotReceive('setProjectUsingExplicitBacklog');
-        $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
-        $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
-        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
-        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('deleteAllPostActionsInProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfProject');
+        $this->explicit_backlog_dao->expects(self::never())->method('setProjectIsUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
+        $this->backlog_item_dao->expects(self::never())->method('getOpenUnplannedTopBacklogArtifacts');
+        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
 
         $this->updater->updateScrumConfiguration($request);
     }
 
-    public function testItDoesNothingIfStillActivated()
+    public function testItDoesNothingIfStillActivated(): void
     {
-        $this->request->shouldReceive('exist')->with('use-explicit-top-backlog')->andReturnTrue();
-        $this->request->shouldReceive('get')->with('use-explicit-top-backlog')->andReturn('1');
+        $this->request->method('exist')->with('use-explicit-top-backlog')->willReturn(true);
+        $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('1');
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeExplicitBacklogOfProject');
-        $this->explicit_backlog_dao->shouldNotReceive('setProjectUsingExplicitBacklog');
-        $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
-        $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
-        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
-        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('deleteAllPostActionsInProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfProject');
+        $this->explicit_backlog_dao->expects(self::never())->method('setProjectIsUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
+        $this->backlog_item_dao->expects(self::never())->method('getOpenUnplannedTopBacklogArtifacts');
+        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->updater->updateScrumConfiguration($this->request);
     }
 
-    public function testItDoesNothingIfStillDeactivated()
+    public function testItDoesNothingIfStillDeactivated(): void
     {
-        $this->request->shouldReceive('get')->with('use-explicit-top-backlog')->andReturn('0');
+        $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('0');
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeExplicitBacklogOfProject');
-        $this->explicit_backlog_dao->shouldNotReceive('setProjectUsingExplicitBacklog');
-        $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
-        $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
-        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
-        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('deleteAllPostActionsInProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfProject');
+        $this->explicit_backlog_dao->expects(self::never())->method('setProjectIsUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
+        $this->backlog_item_dao->expects(self::never())->method('getOpenUnplannedTopBacklogArtifacts');
+        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->updater->updateScrumConfiguration($this->request);
     }
 
-    public function testItActivatesExplicitBacklogManagement()
+    public function testItActivatesExplicitBacklogManagement(): void
     {
-        $this->request->shouldReceive('get')->with('use-explicit-top-backlog')->andReturn('1');
+        $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('1');
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeExplicitBacklogOfProject');
-        $this->explicit_backlog_dao->shouldReceive('setProjectIsUsingExplicitBacklog')->once();
-        $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
-        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('deleteAllPostActionsInProject');
-        $this->backlog_item_dao->shouldReceive('getOpenUnplannedTopBacklogArtifacts')->andReturn(
-            \TestHelper::arrayToDar(
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfProject');
+        $this->explicit_backlog_dao->expects(self::once())->method('setProjectIsUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
+        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
+        $this->backlog_item_dao->method('getOpenUnplannedTopBacklogArtifacts')->willReturn(
+            TestHelper::arrayToDar(
                 ['id' => '201'],
                 ['id' => '202']
             )
         );
-        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')->times(2);
+        $this->unplanned_artifacts_adder->expects(self::exactly(2))->method('addArtifactToTopBacklogFromIds');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->updater->updateScrumConfiguration($this->request);
     }
 
-    public function testItDeactivatesExplicitBacklogManagement()
+    public function testItDeactivatesExplicitBacklogManagement(): void
     {
-        $this->request->shouldReceive('get')->with('use-explicit-top-backlog')->andReturn('0');
+        $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('0');
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('removeExplicitBacklogOfProject')->once();
-        $this->explicit_backlog_dao->shouldNotReceive('setProjectIsUsingExplicitBacklog');
-        $this->milestone_report_criterion_dao->shouldReceive('updateAllUnplannedValueToAnyInProject')->once();
-        $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
-        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
-        $this->add_to_top_backlog_post_action_dao->shouldReceive('deleteAllPostActionsInProject')->once();
-        $this->add_to_top_backlog_post_action_dao->shouldReceive('isAtLeastOnePostActionDefinedInProject')->once();
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('removeExplicitBacklogOfProject');
+        $this->explicit_backlog_dao->expects(self::never())->method('setProjectIsUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->expects(self::once())->method('updateAllUnplannedValueToAnyInProject');
+        $this->backlog_item_dao->expects(self::never())->method('getOpenUnplannedTopBacklogArtifacts');
+        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->expects(self::once())->method('deleteAllPostActionsInProject');
+        $this->add_to_top_backlog_post_action_dao->expects(self::once())->method('isAtLeastOnePostActionDefinedInProject');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->updater->updateScrumConfiguration($this->request);
     }
 
     public function testItAlwaysActivatesExplicitBacklogManagementWhenPlanningAdministrationIsDelegatedToAnotherPlugin(): void
     {
-        $this->request->shouldReceive('get')->with('use-explicit-top-backlog')->andReturn('0');
+        $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('0');
         $this->event_dispatcher->is_planning_administration_delegated = true;
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeExplicitBacklogOfProject');
-        $this->explicit_backlog_dao->shouldReceive('setProjectIsUsingExplicitBacklog')->once();
-        $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
-        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('deleteAllPostActionsInProject');
-        $this->backlog_item_dao->shouldReceive('getOpenUnplannedTopBacklogArtifacts')->andReturn(
-            \TestHelper::arrayToDar(
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfProject');
+        $this->explicit_backlog_dao->expects(self::once())->method('setProjectIsUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
+        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
+        $this->backlog_item_dao->method('getOpenUnplannedTopBacklogArtifacts')->willReturn(
+            TestHelper::arrayToDar(
                 ['id' => '201'],
                 ['id' => '202']
             )
         );
-        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')->times(2);
+        $this->unplanned_artifacts_adder->expects(self::exactly(2))->method('addArtifactToTopBacklogFromIds');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->updater->updateScrumConfiguration($this->request);
     }

@@ -22,67 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class UnplannedReportCriterionMatchingIdsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var UnplannedReportCriterionMatchingIdsRetriever
-     */
-    private $retriever;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlannedArtifactDao
-     */
-    private $planned_artifact_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private UnplannedReportCriterionMatchingIdsRetriever $retriever;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
+    private PlannedArtifactDao&MockObject $planned_artifact_dao;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private Tracker $tracker;
+    private PFUser $user;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao              = Mockery::mock(ExplicitBacklogDao::class);
-        $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-        $this->planned_artifact_dao              = Mockery::mock(PlannedArtifactDao::class);
-        $this->artifact_factory                  = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->explicit_backlog_dao              = $this->createMock(ExplicitBacklogDao::class);
+        $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
+        $this->planned_artifact_dao              = $this->createMock(PlannedArtifactDao::class);
+        $this->artifact_factory                  = $this->createMock(Tracker_ArtifactFactory::class);
 
         $this->retriever = new UnplannedReportCriterionMatchingIdsRetriever(
             $this->explicit_backlog_dao,
@@ -91,31 +59,30 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends \Tuleap\Tes
             $this->artifact_factory
         );
 
-        $this->user    = Mockery::mock(PFUser::class);
-        $this->project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
-        $this->tracker = Mockery::mock(Tracker::class)->shouldReceive('getId')->andReturn(1)->getMock();
-
-        $this->tracker->shouldReceive('getProject')->andReturn($this->project);
+        $this->user    = UserTestBuilder::buildWithDefaults();
+        $project       = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->tracker = TrackerTestBuilder::aTracker()
+            ->withId(1)
+            ->withProject($project)
+            ->build();
     }
 
     public function testItThrowsAnExceptionIfProjectIsNotInExplicitBacklog(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->expectException(ProjectNotUsingExplicitBacklogException::class);
+        self::expectException(ProjectNotUsingExplicitBacklogException::class);
 
         $this->retriever->getMatchingIds($this->tracker, $this->user);
     }
 
     public function testItReturnsTheMatchingIds(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->mockDataReturnedByDaos();
         $this->mockArtifactFactory();
@@ -132,20 +99,18 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends \Tuleap\Tes
 
     private function mockDataReturnedByDaos(): void
     {
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('getAllArtifactNotInTopBacklogInTracker')
-            ->once()
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('getAllArtifactNotInTopBacklogInTracker')
             ->with(1)
-            ->andReturn([
+            ->willReturn([
                 ['artifact_id' => 142],
                 ['artifact_id' => 143],
                 ['artifact_id' => 148],
                 ['artifact_id' => 152],
             ]);
 
-        $this->planned_artifact_dao->shouldReceive('gatAllPlannedArtifactsOfTheProject')
-            ->once()
+        $this->planned_artifact_dao->expects(self::once())->method('gatAllPlannedArtifactsOfTheProject')
             ->with(101, 1)
-            ->andReturn([
+            ->willReturn([
                 ['artifact_id' => 143],
                 ['artifact_id' => 152],
             ]);
@@ -153,12 +118,14 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends \Tuleap\Tes
 
     private function mockArtifactFactory(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, 142)
-            ->andReturn(Mockery::mock(Artifact::class));
-
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, 148)
-            ->andReturnNull();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')
+            ->withConsecutive(
+                [$this->user, 142],
+                [$this->user, 148],
+            )
+            ->willReturnOnConsecutiveCalls(
+                ArtifactTestBuilder::anArtifact(142)->build(),
+                null,
+            );
     }
 }

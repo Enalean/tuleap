@@ -22,48 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class UnplannedArtifactsAdderTest extends \Tuleap\Test\PHPUnit\TestCase
+class UnplannedArtifactsAdderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var UnplannedArtifactsAdder
-     */
-    private $adder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlannedArtifactDao
-     */
-    private $planned_artifact_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
+    private UnplannedArtifactsAdder $adder;
+    private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private PlannedArtifactDao&MockObject $planned_artifact_dao;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-        $this->planned_artifact_dao              = Mockery::mock(PlannedArtifactDao::class);
-        $this->explicit_backlog_dao              = Mockery::mock(ExplicitBacklogDao::class);
+        $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
+        $this->planned_artifact_dao              = $this->createMock(PlannedArtifactDao::class);
+        $this->explicit_backlog_dao              = $this->createMock(ExplicitBacklogDao::class);
 
         $this->adder = new UnplannedArtifactsAdder(
             $this->explicit_backlog_dao,
@@ -71,68 +52,69 @@ class UnplannedArtifactsAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->planned_artifact_dao
         );
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
+            ->build();
 
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(1);
-        $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $this->artifact = ArtifactTestBuilder::anArtifact(1)
+            ->inTracker($tracker)
+            ->build();
     }
 
     public function testItDoesNotAddArtifactIfProjectDoesNotUsesExplicitBacklog(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
 
         $this->adder->addArtifactToTopBacklog($this->artifact);
     }
 
     public function testItDoesNotAddArtifactIfArtifactAlreadyPlanned(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')
+        $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')
             ->with(1, 101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
 
-        $this->expectException(ArtifactAlreadyPlannedException::class);
+        self::expectException(ArtifactAlreadyPlannedException::class);
 
         $this->adder->addArtifactToTopBacklog($this->artifact);
     }
 
     public function testItAddsArtifactInTopBacklog(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')
+        $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')
             ->with(1, 101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->once();
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('addArtifactToProjectBacklog');
 
         $this->adder->addArtifactToTopBacklog($this->artifact);
     }
 
     public function testItAddsArtifactInTopBacklogFromIds(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')
+        $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')
             ->with(1, 101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->once();
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('addArtifactToProjectBacklog');
 
         $this->adder->addArtifactToTopBacklogFromIds(1, 101);
     }
