@@ -131,7 +131,7 @@ final class tracker_functionsPlugin extends Plugin
     public function __construct(?int $id)
     {
         parent::__construct($id);
-        $this->setScope(self::SCOPE_SYSTEM);
+        $this->setScope(self::SCOPE_PROJECT);
         bindtextdomain('tuleap-tracker_functions', __DIR__ . '/../site-content');
     }
 
@@ -236,12 +236,17 @@ final class tracker_functionsPlugin extends Plugin
                 new SendMessagesForAdmins(new MailSender()),
                 $logger,
             ),
+            $this,
         ));
     }
 
     #[ListeningToEventClass]
     public function workflowMenuItemCollection(WorkflowMenuItemCollection $collection): void
     {
+        if (! $this->isAllowed((int) $collection->tracker->getProject()->getID())) {
+            return;
+        }
+
         $collection->addItem(
             new WorkflowMenuItem(
                 '/tracker_functions/' . urlencode((string) $collection->tracker->getId()) . '/admin',

@@ -24,6 +24,8 @@ namespace Tuleap\TrackerFunctions;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Plugin;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -40,7 +42,7 @@ use Tuleap\TrackerFunctions\Stubs\WASM\WASMResponseExecutorStub;
 use Tuleap\TrackerFunctions\WASM\WASMResponseRepresentation;
 use UserManager;
 
-class CustomCodeExecutionTaskTest extends TestCase
+final class CustomCodeExecutionTaskTest extends TestCase
 {
     private const WASM_FILE = __FILE__;
 
@@ -57,6 +59,26 @@ class CustomCodeExecutionTaskTest extends TestCase
         UserManager::clearInstance();
     }
 
+    private function buildPluginAllowed(): Plugin
+    {
+        return new class extends Plugin {
+            public function isAllowed($group_id): bool
+            {
+                return true;
+            }
+        };
+    }
+
+    private function buildPluginNotAllowed(): Plugin
+    {
+        return new class extends Plugin {
+            public function isAllowed($group_id): bool
+            {
+                return false;
+            }
+        };
+    }
+
     public function testItReturnsIfSubmitterIsFunctionUser(): void
     {
         $logger    = new TestLogger();
@@ -70,6 +92,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             SaveFunctionLogStub::build(),
             CheckFunctionIsActivatedStub::activated(),
             TrackerAdministratorNotificationSenderStub::build(),
+            $this->buildPluginAllowed(),
         );
         $changeset = ChangesetTestBuilder::aChangeset('1')->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::aUser()
@@ -94,12 +117,40 @@ class CustomCodeExecutionTaskTest extends TestCase
             SaveFunctionLogStub::build(),
             CheckFunctionIsActivatedStub::deactivated(),
             TrackerAdministratorNotificationSenderStub::build(),
+            $this->buildPluginAllowed(),
         );
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $tracker   = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->ofArtifact($artifact)->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $task->execute($changeset, true);
         self::assertTrue($logger->hasDebug('Function is deactivated -> skip'));
+        self::assertFalse($caller->hasBeenCalled());
+    }
+
+    public function testItReturnsIfFunctionPluginIsNotAllowedInProject(): void
+    {
+        $logger    = new TestLogger();
+        $caller    = WASMFunctionCallerStub::withEmptyErrResult();
+        $task      = new CustomCodeExecutionTask(
+            $logger,
+            ArtifactPayloadBuilderStub::withEmptyPayload(),
+            WASMFunctionPathHelperStub::withPath(''),
+            $caller,
+            WASMResponseExecutorStub::buildOk(),
+            SaveFunctionLogStub::build(),
+            CheckFunctionIsActivatedStub::deactivated(),
+            TrackerAdministratorNotificationSenderStub::build(),
+            $this->buildPluginNotAllowed(),
+        );
+        $tracker   = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->ofArtifact($artifact)->build();
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
+
+        $task->execute($changeset, true);
+        self::assertTrue($logger->hasDebug('tracker functions plugins not allowed for project #101 -> skip'));
         self::assertFalse($caller->hasBeenCalled());
     }
 
@@ -116,8 +167,9 @@ class CustomCodeExecutionTaskTest extends TestCase
             SaveFunctionLogStub::build(),
             CheckFunctionIsActivatedStub::activated(),
             TrackerAdministratorNotificationSenderStub::build(),
+            $this->buildPluginAllowed(),
         );
-        $tracker   = TrackerTestBuilder::aTracker()->withId(23)->build();
+        $tracker   = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
         $changeset = ChangesetTestBuilder::aChangeset('1')
             ->ofArtifact($artifact)
@@ -141,8 +193,9 @@ class CustomCodeExecutionTaskTest extends TestCase
             SaveFunctionLogStub::build(),
             CheckFunctionIsActivatedStub::activated(),
             TrackerAdministratorNotificationSenderStub::build(),
+            $this->buildPluginAllowed(),
         );
-        $tracker   = TrackerTestBuilder::aTracker()->withId(23)->build();
+        $tracker   = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
         $changeset = ChangesetTestBuilder::aChangeset('1')
             ->ofArtifact($artifact)
@@ -167,8 +220,9 @@ class CustomCodeExecutionTaskTest extends TestCase
             $dao,
             CheckFunctionIsActivatedStub::activated(),
             $notification,
+            $this->buildPluginAllowed(),
         );
-        $tracker      = TrackerTestBuilder::aTracker()->withId(23)->build();
+        $tracker      = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $artifact     = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
         $changeset    = ChangesetTestBuilder::aChangeset('1')
             ->ofArtifact($artifact)
@@ -197,8 +251,9 @@ class CustomCodeExecutionTaskTest extends TestCase
             $dao,
             CheckFunctionIsActivatedStub::activated(),
             $notification,
+            $this->buildPluginAllowed(),
         );
-        $tracker      = TrackerTestBuilder::aTracker()->withId(23)->build();
+        $tracker      = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $artifact     = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
         $changeset    = ChangesetTestBuilder::aChangeset('1')
             ->ofArtifact($artifact)

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions;
 
+use Plugin;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Tracker;
@@ -53,6 +54,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
         private readonly SaveFunctionLog $log_dao,
         private readonly CheckFunctionIsActivated $check_function_is_activated,
         private readonly TrackerAdministratorNotificationSender $administrator_notification_sender,
+        private readonly Plugin $tracker_functions_plugin,
     ) {
     }
 
@@ -62,6 +64,12 @@ final class CustomCodeExecutionTask implements PostCreationTask
 
         if ($changeset->getSubmitter()->isATechnicalUser()) {
             $this->logger->debug("Changeset submitted by technical user ({$changeset->getSubmitter()->getUserName()}) -> skip");
+            return;
+        }
+
+        $project = $changeset->getTracker()->getProject();
+        if (! $this->tracker_functions_plugin->isAllowed((int) $project->getID())) {
+            $this->logger->debug("tracker functions plugins not allowed for project #{$project->getID()} -> skip");
             return;
         }
 
