@@ -17,6 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "variables/variables-green";
-@import "variables/margins-condensed";
-@import "components/css-var-root";
+@use "./variables/colors/green-colors" as colors;
+@use "./variables/margins-condensed" as margins;
+@use "./components/css-var-root" with (
+    $tlp-density: margins.$tlp-density,
+    $tlp-title-spacing: margins.$tlp-title-spacing,
+    $tlp-small-spacing: margins.$tlp-small-spacing,
+    $tlp-medium-spacing: margins.$tlp-medium-spacing,
+    $tlp-large-spacing: margins.$tlp-large-spacing,
+    $tlp-x-large-spacing: margins.$tlp-x-large-spacing,
+    $tlp-jumbo-spacing: margins.$tlp-jumbo-spacing,
+    $tlp-info-color: colors.$tlp-info-color,
+    $tlp-info-dark-color: colors.$tlp-info-dark-color,
+    $tlp-success-color: colors.$tlp-success-color,
+    $tlp-success-dark-color: colors.$tlp-success-dark-color,
+    $tlp-warning-color: colors.$tlp-warning-color,
+    $tlp-warning-dark-color: colors.$tlp-warning-dark-color,
+    $tlp-danger-color: colors.$tlp-danger-color,
+    $tlp-danger-dark-color: colors.$tlp-danger-dark-color,
+    $tlp-dimmed-color: colors.$tlp-dimmed-color,
+    $tlp-neutral-light-color: colors.$tlp-neutral-light-color,
+    $tlp-neutral-normal-color: colors.$tlp-neutral-normal-color,
+    $tlp-neutral-dark-color: colors.$tlp-neutral-dark-color,
+    $tlp-main-color: colors.$tlp-main-color,
+    $tlp-background-color: colors.$tlp-background-color,
+    $tlp-dark-color: colors.$tlp-dark-color,
+    $tlp-typo-default-text-color: colors.$tlp-typo-default-text-color,
+    $tlp-illustration-grey-on-background: colors.$tlp-illustration-grey-on-background,
+    $tlp-illustration-grey-on-white: colors.$tlp-illustration-grey-on-white,
+    $tlp-illustration-primary-color: colors.$tlp-illustration-primary-color,
+    $tlp-illustration-secondary-light-color: colors.$tlp-illustration-secondary-light-color,
+    $tlp-illustration-secondary-dark-color: colors.$tlp-illustration-secondary-dark-color,
+    $tlp-illustration-tertiary-color: colors.$tlp-illustration-tertiary-color
+);

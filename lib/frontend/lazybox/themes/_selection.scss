@@ -35,7 +35,7 @@ tuleap-lazybox-selection {
     border: 1px solid var(--tlp-form-element-border-color);
     border-radius: var(--tlp-form-element-border-radius);
     background: var(--tlp-form-element-background)
-        url("@tuleap/tlp/src/images/field-double-arrows.svg") no-repeat;
+        url("@tuleap/tlp-styles/images/field-double-arrows.svg") no-repeat;
     background-position: right var(--tlp-form-element-padding-horizontal) center;
     font-size: var(--tlp-form-element-font-size);
     line-height: normal;
@@ -49,7 +49,7 @@ tuleap-lazybox-selection {
         min-height: var(--tlp-form-element-height);
         padding: 0 52px 5px 6px;
         background: var(--tlp-form-element-background)
-            url("@tuleap/tlp/src/images/field-ellipsis.svg") no-repeat;
+            url("@tuleap/tlp-styles/images/field-ellipsis.svg") no-repeat;
         background-position: right 10px top 17px;
         background-size: 15px 5px;
     }

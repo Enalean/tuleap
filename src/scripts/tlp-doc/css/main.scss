@@ -20,6 +20,13 @@
 @use "sass:color";
 @use "@tuleap/list-picker";
 @use "@tuleap/lazybox";
+@use "@tuleap/tlp/src/scss/variables/colors/common-colors";
+@use "@tuleap/tlp/src/scss/variables/colors/orange-colors";
+@use "@tuleap/tlp/src/scss/variables/colors/blue-colors";
+@use "@tuleap/tlp/src/scss/variables/colors/green-colors";
+@use "@tuleap/tlp/src/scss/variables/colors/grey-colors";
+@use "@tuleap/tlp/src/scss/variables/colors/purple-colors";
+@use "@tuleap/tlp/src/scss/variables/colors/red-colors";
 @use "codemirror/lib/codemirror";
 @use "codemirror/theme/mdn-like";
 @use "codemirror/addon/scroll/simplescrollbars";
@@ -34,7 +41,6 @@ $nav-margin: 30px;
     $main-color,
     $tlp-background-color,
     $tlp-dark-color,
-    $tlp-white-color,
     $tlp-dimmed-color,
     $tlp-info-color,
     $tlp-success-color,
@@ -49,7 +55,7 @@ $nav-margin: 30px;
     background: $tlp-background-color;
 
     &.doc-background-white {
-        background: $tlp-white-color;
+        background: common-colors.$tlp-white-color;
     }
 
     &.doc-background-grey {
@@ -206,7 +212,7 @@ $nav-margin: 30px;
     }
 
     .switch-to-background-white {
-        background-color: $tlp-white-color;
+        background-color: common-colors.$tlp-white-color;
     }
 
     .switch-to-background-grey {
@@ -231,122 +237,110 @@ body {
     min-height: 100vh;
 
     &.orange {
-        @import "@tuleap/tlp/src/scss/variables/variables-orange";
         @include themable(
-            $tlp-main-color,
-            $tlp-background-color,
-            $tlp-dark-color,
-            $tlp-white-color,
-            $tlp-dimmed-color,
-            $tlp-info-color,
-            $tlp-success-color,
-            $tlp-warning-color,
-            $tlp-danger-color,
-            $tlp-neutral-normal-color,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
+            orange-colors.$tlp-main-color,
+            orange-colors.$tlp-background-color,
+            orange-colors.$tlp-dark-color,
+            orange-colors.$tlp-dimmed-color,
+            orange-colors.$tlp-info-color,
+            orange-colors.$tlp-success-color,
+            orange-colors.$tlp-warning-color,
+            orange-colors.$tlp-danger-color,
+            orange-colors.$tlp-neutral-normal-color,
+            orange-colors.$tlp-illustration-primary-color,
+            orange-colors.$tlp-illustration-secondary-light-color,
+            orange-colors.$tlp-illustration-secondary-dark-color,
+            orange-colors.$tlp-illustration-tertiary-color
         );
     }
 
     &.blue {
-        @import "@tuleap/tlp/src/scss/variables/variables-blue";
         @include themable(
-            $tlp-main-color,
-            $tlp-background-color,
-            $tlp-dark-color,
-            $tlp-white-color,
-            $tlp-dimmed-color,
-            $tlp-info-color,
-            $tlp-success-color,
-            $tlp-warning-color,
-            $tlp-danger-color,
-            $tlp-neutral-normal-color,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
+            blue-colors.$tlp-main-color,
+            blue-colors.$tlp-background-color,
+            blue-colors.$tlp-dark-color,
+            blue-colors.$tlp-dimmed-color,
+            blue-colors.$tlp-info-color,
+            blue-colors.$tlp-success-color,
+            blue-colors.$tlp-warning-color,
+            blue-colors.$tlp-danger-color,
+            blue-colors.$tlp-neutral-normal-color,
+            blue-colors.$tlp-illustration-primary-color,
+            blue-colors.$tlp-illustration-secondary-light-color,
+            blue-colors.$tlp-illustration-secondary-dark-color,
+            blue-colors.$tlp-illustration-tertiary-color
         );
     }
 
     &.green {
-        @import "@tuleap/tlp/src/scss/variables/variables-green";
         @include themable(
-            $tlp-main-color,
-            $tlp-background-color,
-            $tlp-dark-color,
-            $tlp-white-color,
-            $tlp-dimmed-color,
-            $tlp-info-color,
-            $tlp-success-color,
-            $tlp-warning-color,
-            $tlp-danger-color,
-            $tlp-neutral-normal-color,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
+            green-colors.$tlp-main-color,
+            green-colors.$tlp-background-color,
+            green-colors.$tlp-dark-color,
+            green-colors.$tlp-dimmed-color,
+            green-colors.$tlp-info-color,
+            green-colors.$tlp-success-color,
+            green-colors.$tlp-warning-color,
+            green-colors.$tlp-danger-color,
+            green-colors.$tlp-neutral-normal-color,
+            green-colors.$tlp-illustration-primary-color,
+            green-colors.$tlp-illustration-secondary-light-color,
+            green-colors.$tlp-illustration-secondary-dark-color,
+            green-colors.$tlp-illustration-tertiary-color
         );
     }
 
     &.grey {
-        @import "@tuleap/tlp/src/scss/variables/variables-grey";
         @include themable(
-            $tlp-main-color,
-            $tlp-background-color,
-            $tlp-dark-color,
-            $tlp-white-color,
-            $tlp-dimmed-color,
-            $tlp-info-color,
-            $tlp-success-color,
-            $tlp-warning-color,
-            $tlp-danger-color,
-            $tlp-neutral-normal-color,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
+            grey-colors.$tlp-main-color,
+            grey-colors.$tlp-background-color,
+            grey-colors.$tlp-dark-color,
+            grey-colors.$tlp-dimmed-color,
+            grey-colors.$tlp-info-color,
+            grey-colors.$tlp-success-color,
+            grey-colors.$tlp-warning-color,
+            grey-colors.$tlp-danger-color,
+            grey-colors.$tlp-neutral-normal-color,
+            grey-colors.$tlp-illustration-primary-color,
+            grey-colors.$tlp-illustration-secondary-light-color,
+            grey-colors.$tlp-illustration-secondary-dark-color,
+            grey-colors.$tlp-illustration-tertiary-color
         );
     }
 
     &.purple {
-        @import "@tuleap/tlp/src/scss/variables/variables-purple";
         @include themable(
-            $tlp-main-color,
-            $tlp-background-color,
-            $tlp-dark-color,
-            $tlp-white-color,
-            $tlp-dimmed-color,
-            $tlp-info-color,
-            $tlp-success-color,
-            $tlp-warning-color,
-            $tlp-danger-color,
-            $tlp-neutral-normal-color,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
+            purple-colors.$tlp-main-color,
+            purple-colors.$tlp-background-color,
+            purple-colors.$tlp-dark-color,
+            purple-colors.$tlp-dimmed-color,
+            purple-colors.$tlp-info-color,
+            purple-colors.$tlp-success-color,
+            purple-colors.$tlp-warning-color,
+            purple-colors.$tlp-danger-color,
+            purple-colors.$tlp-neutral-normal-color,
+            purple-colors.$tlp-illustration-primary-color,
+            purple-colors.$tlp-illustration-secondary-light-color,
+            purple-colors.$tlp-illustration-secondary-dark-color,
+            purple-colors.$tlp-illustration-tertiary-color
         );
     }
 
     &.red {
-        @import "@tuleap/tlp/src/scss/variables/variables-red";
         @include themable(
-            $tlp-main-color,
-            $tlp-background-color,
-            $tlp-dark-color,
-            $tlp-white-color,
-            $tlp-dimmed-color,
-            $tlp-info-color,
-            $tlp-success-color,
-            $tlp-warning-color,
-            $tlp-danger-color,
-            $tlp-neutral-normal-color,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
+            red-colors.$tlp-main-color,
+            red-colors.$tlp-background-color,
+            red-colors.$tlp-dark-color,
+            red-colors.$tlp-dimmed-color,
+            red-colors.$tlp-info-color,
+            red-colors.$tlp-success-color,
+            red-colors.$tlp-warning-color,
+            red-colors.$tlp-danger-color,
+            red-colors.$tlp-neutral-normal-color,
+            red-colors.$tlp-illustration-primary-color,
+            red-colors.$tlp-illustration-secondary-light-color,
+            red-colors.$tlp-illustration-secondary-dark-color,
+            red-colors.$tlp-illustration-tertiary-color
         );
     }
 }

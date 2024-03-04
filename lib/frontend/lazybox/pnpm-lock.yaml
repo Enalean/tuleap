@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@floating-ui/dom':
     specifier: 1.2.7
@@ -10,12 +14,12 @@ dependencies:
   '@tuleap/focus-navigation':
     specifier: workspace:*
     version: link:../focus-navigation
-  '@tuleap/tlp':
-    specifier: workspace:*
-    version: link:../../../src/scripts/tlp
   '@tuleap/tlp-badge':
     specifier: workspace:*
     version: link:../tlp-badge
+  '@tuleap/tlp-styles':
+    specifier: workspace:^
+    version: link:../tlp-styles
   hybrids:
     specifier: 8.2.2
     version: 8.2.2
@@ -45,7 +49,3 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
     dev: false
-
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false

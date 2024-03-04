@@ -182,7 +182,7 @@ blockquote {
     color: var(--tlp-danger-dark-color);
 }
 
-%tlp-code {
+%-tlp-code {
     background: var(--tlp-main-color-transparent-90);
     color: var(--tlp-main-color);
     font-family: var(--tlp-font-family-mono);
@@ -209,14 +209,14 @@ kbd {
 }
 
 code {
-    @extend %tlp-code;
+    @extend %-tlp-code;
 
     padding: 3px;
     border-radius: var(--tlp-medium-radius);
 }
 
 pre {
-    @extend %tlp-code;
+    @extend %-tlp-code;
 
     padding: 5px 3px 5px calc(var(--tlp-medium-spacing) / 2);
     overflow: auto;

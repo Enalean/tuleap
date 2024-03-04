@@ -32,6 +32,9 @@ dependencies:
   '@tuleap/tlp-popovers':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-popovers
+  '@tuleap/tlp-styles':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/tlp-styles
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-swatch-colors

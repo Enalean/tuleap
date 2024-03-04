@@ -15,6 +15,7 @@
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
+    "@tuleap/tlp-styles": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*"
   }
 }

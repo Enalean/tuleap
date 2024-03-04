@@ -23,6 +23,14 @@
 
 $-tlp-badge-radius: var(--tlp-small-radius);
 $-tlp-badge-color: var(--tlp-white-color);
+$badge-names: (
+    "tlp-badge-primary",
+    "tlp-badge-secondary",
+    "tlp-badge-info",
+    "tlp-badge-success",
+    "tlp-badge-warning",
+    "tlp-badge-danger"
+);
 
 @mixin -badge {
     display: inline-block;

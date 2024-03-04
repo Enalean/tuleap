@@ -99,7 +99,7 @@ watch(is_sidebar_collapsed, (): void => {
 });
 </script>
 <style lang="scss">
-@use "@tuleap/tlp/src/scss/components/typography";
+@use "@tuleap/tlp-styles/components/typography";
 @use "@tuleap/burningparrot-theme/css/includes/global-variables";
 @use "./Styles/sidebar-generic";
 @use "./Styles/sidebar-collapsed";

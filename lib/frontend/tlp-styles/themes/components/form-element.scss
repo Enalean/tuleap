@@ -1,0 +1,54 @@
+/**
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$assets-base-path: "../../" !default;
+
+@function asset-url($file_path) {
+    @return url($assets-base-path + $file_path);
+}
+
+$tlp-form-element-small-padding-horizontal: var(--tlp-small-spacing);
+$tlp-form-element-large-padding-horizontal: var(--tlp-medium-spacing);
+$tlp-form-element-large-font-size: 1rem;
+$tlp-form-element-large-height: 48px;
+$tlp-form-element-select-small-background-size: 6px;
+
+@mixin tlp-form-element() {
+    display: block;
+    width: 100%;
+    padding: 0 var(--tlp-form-element-padding-horizontal);
+    transition: border-color var(--tlp-form-element-border-transition-duration) linear;
+    border: 1px solid var(--tlp-form-element-border-color);
+    border-radius: var(--tlp-form-element-border-radius);
+    background: var(--tlp-form-element-background);
+    font-family: var(--tlp-font-family);
+    font-size: var(--tlp-form-element-font-size);
+
+    &::placeholder {
+        color: var(--tlp-form-element-placeholder-color);
+    }
+
+    &:focus {
+        transition:
+            border-color var(--tlp-form-element-border-transition-duration) linear,
+            box-shadow 350ms;
+        border-color: var(--tlp-main-color);
+        box-shadow: var(--tlp-shadow-focus);
+    }
+}

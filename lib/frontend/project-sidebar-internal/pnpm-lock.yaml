@@ -20,6 +20,9 @@ dependencies:
   '@tuleap/tlp-popovers':
     specifier: workspace:*
     version: link:../tlp-popovers
+  '@tuleap/tlp-styles':
+    specifier: workspace:^
+    version: link:../tlp-styles
   '@tuleap/vue-strict-inject':
     specifier: workspace:*
     version: link:../vue-strict-inject

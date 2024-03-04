@@ -21,18 +21,22 @@
 @use "@tuleap/tlp-modal";
 @use "./components/fonts";
 @use "./components/layout";
-@use "./components/typography";
-@use "./components/avatars";
+@use "@tuleap/tlp-styles/components/typography";
+@use "./components/avatars" with (
+    $assets-base-path: "../"
+);
 @use "@tuleap/tlp-badge";
 @use "@tuleap/tlp-button";
 @use "./components/button-bar";
 @use "./components/pagination";
 @use "./components/panes";
 @use "./components/cards";
-@use "./components/alerts";
+@use "@tuleap/tlp-styles/components/alerts";
 @use "./components/tables";
 @use "./components/tabs";
-@use "./components/forms";
+@use "@tuleap/tlp-styles/components/forms" with (
+    $assets-base-path: "@tuleap/tlp-styles/"
+);
 @use "./components/forms-select2";
 @use "./components/datepicker";
 @use "./components/tooltips";

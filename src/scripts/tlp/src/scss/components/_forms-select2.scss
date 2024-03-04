@@ -17,8 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "forms";
+@use "@tuleap/tlp-styles/components/form-element" as element;
 @use "@tuleap/tlp-badge";
+
+%-tlp-form-element {
+    @include element.tlp-form-element;
+}
 
 .tlp-form-element {
     &.tlp-form-element-disabled {
@@ -74,7 +78,7 @@
     }
 }
 
-%tlp-select2 {
+%-tlp-select2 {
     z-index: 2003;
 
     /* stylelint-disable selector-class-pattern */
@@ -125,7 +129,7 @@
 
     /* stylelint-disable-next-line selector-class-pattern */
     .select2-selection--single {
-        @extend %tlp-form-element;
+        @extend %-tlp-form-element;
 
         display: flex;
         align-items: center;
@@ -136,8 +140,8 @@
                     var(--tlp-form-element-select-background-size)
             )
             0 var(--tlp-form-element-padding-horizontal);
-        background: var(--tlp-form-element-background) forms.$tlp-form-element-select-background-url
-            no-repeat;
+        background: var(--tlp-form-element-background)
+            url("@tuleap/tlp-styles/images/field-double-arrows.svg") no-repeat;
         background-position: right var(--tlp-form-element-padding-horizontal) center;
         cursor: default;
 
@@ -156,12 +160,12 @@
 
     /* stylelint-disable-next-line selector-class-pattern */
     .select2-selection--multiple {
-        @extend %tlp-form-element;
+        @extend %-tlp-form-element;
 
         min-height: var(--tlp-form-element-height);
         padding: 0 34px 5px 6px;
         background: var(--tlp-form-element-background)
-            forms.$tlp-form-element-select-multiple-background-url no-repeat;
+            url("@tuleap/tlp-styles/images/field-ellipsis.svg") no-repeat;
         background-position: right var(--tlp-form-element-padding-horizontal) top 17px;
 
         // stylelint-disable-next-line selector-class-pattern
@@ -256,7 +260,7 @@
 
             // stylelint-disable-next-line selector-class-pattern
             .select2-search__field {
-                @extend %tlp-form-element;
+                @extend %-tlp-form-element;
 
                 height: var(--tlp-form-element-small-height);
                 padding: 0 4px;
@@ -354,34 +358,34 @@
 /* stylelint-disable selector-no-qualifying-type */
 /* stylelint-disable-next-line selector-class-pattern */
 span.select2-container--tlp-select2 {
-    @extend %tlp-select2;
+    @extend %-tlp-select2;
 }
 
 /* stylelint-disable-next-line selector-class-pattern */
 span.select2-container--tlp-select2-small {
-    @extend %tlp-select2;
+    @extend %-tlp-select2;
 
     /* stylelint-disable-next-line selector-class-pattern */
     .select2-selection--single {
         height: var(--tlp-form-element-small-height);
         padding: 0
             calc(
-                #{forms.$tlp-form-element-small-padding-horizontal} * 2 + #{forms.$tlp-form-element-select-small-background-size}
+                #{element.$tlp-form-element-small-padding-horizontal} * 2 + #{element.$tlp-form-element-select-small-background-size}
             )
-            0 forms.$tlp-form-element-small-padding-horizontal;
+            0 element.$tlp-form-element-small-padding-horizontal;
         background: var(--tlp-form-element-background)
-            forms.$tlp-form-element-select-small-background-url no-repeat;
-        background-position: right forms.$tlp-form-element-small-padding-horizontal center;
+            url("@tuleap/tlp-styles/images/field-double-arrows-small.svg") no-repeat;
+        background-position: right element.$tlp-form-element-small-padding-horizontal center;
         font-size: var(--tlp-form-element-small-font-size);
     }
 
     /* stylelint-disable-next-line selector-class-pattern */
     .select2-selection--multiple {
         min-height: var(--tlp-form-element-small-height);
-        padding: 0 26px 0 forms.$tlp-form-element-small-padding-horizontal;
+        padding: 0 26px 0 element.$tlp-form-element-small-padding-horizontal;
         background: var(--tlp-form-element-background)
-            forms.$tlp-form-element-select-multiple-small-background-url no-repeat;
-        background-position: right forms.$tlp-form-element-small-padding-horizontal top 14px;
+            url("@tuleap/tlp-styles/images/field-ellipsis-small.svg") no-repeat;
+        background-position: right element.$tlp-form-element-small-padding-horizontal top 14px;
 
         // stylelint-disable-next-line selector-class-pattern
         .select2-selection__rendered {
@@ -407,18 +411,18 @@ span.select2-container--tlp-select2-small {
 
 /* stylelint-disable-next-line selector-class-pattern */
 span.select2-container--tlp-select2-large {
-    @extend %tlp-select2;
+    @extend %-tlp-select2;
 
     /* stylelint-disable-next-line selector-class-pattern */
     .select2-selection--single {
-        height: forms.$tlp-form-element-large-height;
+        height: element.$tlp-form-element-large-height;
         padding: 0
             calc(
-                #{forms.$tlp-form-element-large-padding-horizontal} * 2 + var(--tlp-form-element-select-background-size)
+                #{element.$tlp-form-element-large-padding-horizontal} * 2 + var(--tlp-form-element-select-background-size)
             )
-            0 forms.$tlp-form-element-large-padding-horizontal;
-        background-position: right forms.$tlp-form-element-large-padding-horizontal center;
-        font-size: forms.$tlp-form-element-large-font-size;
+            0 element.$tlp-form-element-large-padding-horizontal;
+        background-position: right element.$tlp-form-element-large-padding-horizontal center;
+        font-size: element.$tlp-form-element-large-font-size;
 
         // stylelint-disable-next-line selector-class-pattern
         .select2-selection__rendered .select2-selection__clear {
@@ -429,8 +433,8 @@ span.select2-container--tlp-select2-large {
 
     /* stylelint-disable-next-line selector-class-pattern */
     .select2-selection--multiple {
-        min-height: forms.$tlp-form-element-large-height;
-        padding: 0 34px 0 forms.$tlp-form-element-large-padding-horizontal;
+        min-height: element.$tlp-form-element-large-height;
+        padding: 0 34px 0 element.$tlp-form-element-large-padding-horizontal;
 
         // stylelint-disable-next-line selector-class-pattern
         .select2-selection__rendered {
@@ -440,7 +444,7 @@ span.select2-container--tlp-select2-large {
             .select2-selection__choice {
                 margin: 2px 8px 2px 0;
                 padding: 7px 12px;
-                font-size: forms.$tlp-form-element-large-font-size;
+                font-size: element.$tlp-form-element-large-font-size;
                 font-weight: 400;
 
                 // stylelint-disable-next-line selector-class-pattern
@@ -466,7 +470,7 @@ span.select2-container--tlp-select2-large {
             // stylelint-disable-next-line selector-class-pattern
             .select2-search--inline .select2-search__field {
                 margin: 7px 0 0;
-                font-size: forms.$tlp-form-element-large-font-size;
+                font-size: element.$tlp-form-element-large-font-size;
             }
         }
     }
@@ -488,13 +492,13 @@ span.select2-container--open {
 
     // stylelint-disable-next-line selector-no-qualifying-type,selector-class-pattern
     > span.select2-container--tlp-select2-small .select2-selection--single {
-        padding: 0 forms.$tlp-form-element-small-padding-horizontal;
+        padding: 0 element.$tlp-form-element-small-padding-horizontal;
         background: none;
     }
 
     // stylelint-disable-next-line selector-no-qualifying-type,selector-class-pattern
     > span.select2-container--tlp-select2-large .select2-selection--single {
-        padding: 0 forms.$tlp-form-element-large-padding-horizontal;
+        padding: 0 element.$tlp-form-element-large-padding-horizontal;
         background: none;
     }
 }

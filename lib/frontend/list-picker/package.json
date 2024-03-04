@@ -4,7 +4,6 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "types": "dist/index.d.ts",
   "module": "dist/list-picker.js",
@@ -20,7 +19,7 @@
   },
   "dependencies": {
     "@tuleap/gettext": "workspace:*",
-    "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-styles": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "lit-html": "^2.8.0"
   },

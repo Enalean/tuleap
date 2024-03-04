@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "density";
+@use "./density";
 
-$tlp-density: density.$tlp-density-confortable;
+$tlp-density: density.$tlp-density-comfortable;
 $tlp-title-spacing: 30px;
 $tlp-small-spacing: 8px;
 $tlp-medium-spacing: 16px;

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/tlp/src/scss/variables/names";
+@use "@tuleap/tlp-badge";
 
 .project-admin-permission-per-group {
     display: flex;
@@ -71,7 +71,7 @@
 }
 
 .permission-per-group-table > tbody > tr > td {
-    @each $badge in names.$badge-names {
+    @each $badge in tlp-badge.$badge-names {
         > .#{$badge} {
             margin: 1px 2px 1px 0;
         }

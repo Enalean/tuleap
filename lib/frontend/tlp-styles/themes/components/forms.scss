@@ -19,20 +19,15 @@
 
 @use "sass:math";
 
-$tlp-images-basepath: "../images" !default;
-$tlp-form-element-height: 40px;
-$tlp-form-element-small-padding-horizontal: var(--tlp-small-spacing);
-$tlp-form-element-large-font-size: 1rem;
-$tlp-form-element-large-height: 48px;
-$tlp-form-element-large-padding-horizontal: var(--tlp-medium-spacing);
-$tlp-form-element-select-small-background-size: 6px;
-$tlp-form-element-select-background-url: url("#{$tlp-images-basepath}/field-double-arrows.svg");
-$tlp-form-element-select-small-background-url: url("#{$tlp-images-basepath}/field-double-arrows-small.svg");
-$tlp-form-element-select-multiple-background-url: url("#{$tlp-images-basepath}/field-ellipsis.svg");
-$tlp-form-element-select-multiple-small-background-url: url("#{$tlp-images-basepath}/field-ellipsis-small.svg");
-$tlp-form-element-search-background: url("#{$tlp-images-basepath}/field-magnifier.svg");
-$tlp-form-element-search-small-background: url("#{$tlp-images-basepath}/field-magnifier-small.svg");
-$tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-magnifier-large.svg");
+$assets-base-path: "../../" !default;
+
+@use "./form-element" as element with (
+    $assets-base-path: $assets-base-path
+);
+
+@function asset-url($file_path) {
+    @return url($assets-base-path + $file_path);
+}
 
 .tlp-form-element {
     margin: 0 0 var(--tlp-medium-spacing);
@@ -143,32 +138,13 @@ $tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-ma
 /**
  * Inputs
  */
-%tlp-form-element {
-    display: block;
-    width: 100%;
-    padding: 0 var(--tlp-form-element-padding-horizontal);
-    transition: border-color var(--tlp-form-element-border-transition-duration) linear;
-    border: 1px solid var(--tlp-form-element-border-color);
-    border-radius: var(--tlp-form-element-border-radius);
-    background: var(--tlp-form-element-background);
-    font-family: var(--tlp-font-family);
-    font-size: var(--tlp-form-element-font-size);
 
-    &::placeholder {
-        color: var(--tlp-form-element-placeholder-color);
-    }
-
-    &:focus {
-        transition:
-            border-color var(--tlp-form-element-border-transition-duration) linear,
-            box-shadow 350ms;
-        border-color: var(--tlp-main-color);
-        box-shadow: var(--tlp-shadow-focus);
-    }
+%-tlp-form-element {
+    @include element.tlp-form-element;
 }
 
 .tlp-input {
-    @extend %tlp-form-element;
+    @extend %-tlp-form-element;
 
     height: var(--tlp-form-element-height);
 
@@ -178,24 +154,24 @@ $tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-ma
 
     &.tlp-input-small {
         height: var(--tlp-form-element-small-height);
-        padding: 0 $tlp-form-element-small-padding-horizontal;
+        padding: 0 element.$tlp-form-element-small-padding-horizontal;
         font-size: var(--tlp-form-element-small-font-size);
     }
 
     &.tlp-input-large {
-        height: $tlp-form-element-large-height;
-        padding: 0 $tlp-form-element-large-padding-horizontal;
-        font-size: $tlp-form-element-large-font-size;
+        height: element.$tlp-form-element-large-height;
+        padding: 0 element.$tlp-form-element-large-padding-horizontal;
+        font-size: element.$tlp-form-element-large-font-size;
     }
 }
 
 .tlp-search {
-    @extend %tlp-form-element;
+    @extend %-tlp-form-element;
 
     height: var(--tlp-form-element-height);
     padding: 0 15px 0 33px;
     border-radius: calc(var(--tlp-form-element-height) / 2);
-    background: var(--tlp-form-element-background) $tlp-form-element-search-background no-repeat;
+    background: var(--tlp-form-element-background) asset-url("images/field-magnifier.svg") no-repeat;
     background-position: 13px center;
 
     &::-webkit-search-decoration {
@@ -210,25 +186,25 @@ $tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-ma
         height: var(--tlp-form-element-small-height);
         padding: 0 10px 0 26px;
         border-radius: calc(var(--tlp-form-element-small-height) / 2);
-        background: var(--tlp-form-element-background) $tlp-form-element-search-small-background
+        background: var(--tlp-form-element-background) asset-url("images/field-magnifier-small.svg")
             no-repeat;
         background-position: 10px center;
         font-size: var(--tlp-form-element-small-font-size);
     }
 
     &.tlp-search-large {
-        height: $tlp-form-element-large-height;
+        height: element.$tlp-form-element-large-height;
         padding: 0 22px 0 40px;
-        border-radius: math.div($tlp-form-element-large-height, 2);
-        background: var(--tlp-form-element-background) $tlp-form-element-search-large-background
+        border-radius: math.div(element.$tlp-form-element-large-height, 2);
+        background: var(--tlp-form-element-background) asset-url("images/field-magnifier-large.svg")
             no-repeat;
         background-position: 18px center;
-        font-size: $tlp-form-element-large-font-size;
+        font-size: element.$tlp-form-element-large-font-size;
     }
 }
 
 .tlp-textarea {
-    @extend %tlp-form-element;
+    @extend %-tlp-form-element;
 
     padding: 8px var(--tlp-form-element-padding-horizontal);
     overflow: auto;
@@ -238,18 +214,18 @@ $tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-ma
     }
 
     &.tlp-textarea-small {
-        padding: 6px $tlp-form-element-small-padding-horizontal;
+        padding: 6px element.$tlp-form-element-small-padding-horizontal;
         font-size: var(--tlp-form-element-small-font-size);
     }
 
     &.tlp-textarea-large {
-        padding: 12px $tlp-form-element-large-padding-horizontal;
-        font-size: $tlp-form-element-large-font-size;
+        padding: 12px element.$tlp-form-element-large-padding-horizontal;
+        font-size: element.$tlp-form-element-large-font-size;
     }
 }
 
 .tlp-select {
-    @extend %tlp-form-element;
+    @extend %-tlp-form-element;
 
     height: var(--tlp-form-element-height);
     padding: 0
@@ -258,7 +234,8 @@ $tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-ma
                 var(--tlp-form-element-select-background-size)
         )
         0 var(--tlp-form-element-padding-horizontal);
-    background: var(--tlp-form-element-background) $tlp-form-element-select-background-url no-repeat;
+    background: var(--tlp-form-element-background) asset-url("images/field-double-arrows.svg")
+        no-repeat;
     background-position: right var(--tlp-form-element-padding-horizontal) center;
     -moz-appearance: none; // stylelint-disable-line property-no-vendor-prefix
     -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
@@ -268,24 +245,24 @@ $tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-ma
         height: var(--tlp-form-element-small-height);
         padding: 0
             calc(
-                #{$tlp-form-element-small-padding-horizontal} * 2 + #{$tlp-form-element-select-small-background-size}
+                #{element.$tlp-form-element-small-padding-horizontal} * 2 + #{element.$tlp-form-element-select-small-background-size}
             )
-            0 $tlp-form-element-small-padding-horizontal;
-        background: var(--tlp-form-element-background) $tlp-form-element-select-small-background-url
-            no-repeat;
-        background-position: right $tlp-form-element-small-padding-horizontal center;
+            0 element.$tlp-form-element-small-padding-horizontal;
+        background: var(--tlp-form-element-background)
+            asset-url("images/field-double-arrows-small.svg") no-repeat;
+        background-position: right element.$tlp-form-element-small-padding-horizontal center;
         font-size: var(--tlp-form-element-small-font-size);
     }
 
     &.tlp-select-large {
-        height: $tlp-form-element-large-height;
+        height: element.$tlp-form-element-large-height;
         padding: 0
             calc(
-                #{$tlp-form-element-large-padding-horizontal} * 2 + var(--tlp-form-element-select-background-size)
+                #{element.$tlp-form-element-large-padding-horizontal} * 2 + var(--tlp-form-element-select-background-size)
             )
-            0 $tlp-form-element-large-padding-horizontal;
-        background-position: right $tlp-form-element-large-padding-horizontal center;
-        font-size: $tlp-form-element-large-font-size;
+            0 element.$tlp-form-element-large-padding-horizontal;
+        background-position: right element.$tlp-form-element-large-padding-horizontal center;
+        font-size: element.$tlp-form-element-large-font-size;
     }
 
     &::-ms-expand {
@@ -298,11 +275,11 @@ $tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-ma
         background: var(--tlp-form-element-background);
 
         &.tlp-select-small {
-            padding: 6px $tlp-form-element-small-padding-horizontal;
+            padding: 6px element.$tlp-form-element-small-padding-horizontal;
         }
 
         &.tlp-select-large {
-            padding: 12px $tlp-form-element-large-padding-horizontal;
+            padding: 12px element.$tlp-form-element-large-padding-horizontal;
         }
     }
 
@@ -364,15 +341,15 @@ $tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-ma
         &.tlp-prepend-small,
         &.tlp-append-small {
             height: var(--tlp-form-element-small-height);
-            padding: 0 $tlp-form-element-small-padding-horizontal;
+            padding: 0 element.$tlp-form-element-small-padding-horizontal;
             font-size: var(--tlp-form-element-small-font-size);
         }
 
         &.tlp-prepend-large,
         &.tlp-append-large {
-            height: $tlp-form-element-large-height;
-            padding: 0 $tlp-form-element-large-padding-horizontal;
-            font-size: $tlp-form-element-large-font-size;
+            height: element.$tlp-form-element-large-height;
+            padding: 0 element.$tlp-form-element-large-padding-horizontal;
+            font-size: element.$tlp-form-element-large-font-size;
         }
     }
 

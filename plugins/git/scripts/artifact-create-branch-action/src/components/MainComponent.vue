@@ -44,11 +44,11 @@ defineProps<{
 @use "sass:meta";
 
 .git-tracker-create-branch-modal :deep() {
-    @include meta.load-css("@tuleap/tlp/src/scss/components/typography");
+    @include meta.load-css("@tuleap/tlp-styles/components/typography");
     @include meta.load-css(
-        "@tuleap/tlp/src/scss/components/forms",
+        "@tuleap/tlp-styles/components/forms",
         (
-            "tlp-images-basepath": "@tuleap/tlp/src/images",
+            "assets-base-path": "@tuleap/tlp-styles/",
         )
     );
     @include meta.load-css("@tuleap/tlp-modal");
