@@ -233,6 +233,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $date_time_value_rounder = new DateTimeValueRounder();
         $list_value_extractor    = new ListValueExtractor();
         $artifact_factory        = Tracker_ArtifactFactory::instance();
+        $list_from_where_builder = new Field\ListFromWhereBuilder();
         $query_builder_visitor   = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
             new Metadata\EqualComparisonFromWhereBuilder(
@@ -394,10 +395,12 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 new Field\Text\TextFromWhereBuilder($db),
                 new Field\Date\DateFromWhereBuilder($date_time_value_rounder),
                 new Field\Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
-                new Field\StaticList\StaticListFromWhereBuilder(),
+                new Field\StaticList\StaticListFromWhereBuilder($list_from_where_builder),
                 new Field\UGroupList\UGroupListFromWhereBuilder(
-                    new UgroupLabelConverter(new ListFieldBindValueNormalizer(), new BaseLanguageFactory())
+                    new UgroupLabelConverter(new ListFieldBindValueNormalizer(), new BaseLanguageFactory()),
+                    $list_from_where_builder,
                 ),
+                new Field\UserList\UserListFromWhereBuilder($list_from_where_builder),
             ),
         );
 

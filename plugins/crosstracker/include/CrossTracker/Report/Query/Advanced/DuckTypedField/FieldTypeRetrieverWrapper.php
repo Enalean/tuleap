@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
+use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 
 final readonly class FieldTypeRetrieverWrapper implements RetrieveFieldType
@@ -34,6 +35,7 @@ final readonly class FieldTypeRetrieverWrapper implements RetrieveFieldType
     public const FIELD_DATETIME_TYPE    = 'datetime';
     public const FIELD_STATIC_LIST_TYPE = 'static_list';
     public const FIELD_UGROUP_LIST_TYPE = 'ugroup_list';
+    public const FIELD_USER_LIST_TYPE   = 'user_list';
 
     public function __construct(private RetrieveFieldType $wrapper)
     {
@@ -51,6 +53,8 @@ final readonly class FieldTypeRetrieverWrapper implements RetrieveFieldType
                     return self::FIELD_STATIC_LIST_TYPE;
                 case Tracker_FormElement_Field_List_Bind_Ugroups::TYPE:
                     return self::FIELD_UGROUP_LIST_TYPE;
+                case Tracker_FormElement_Field_List_Bind_Users::TYPE:
+                    return self::FIELD_USER_LIST_TYPE;
             }
         }
 

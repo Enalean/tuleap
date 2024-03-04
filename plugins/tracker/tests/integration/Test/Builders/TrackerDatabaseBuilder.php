@@ -324,7 +324,7 @@ final class TrackerDatabaseBuilder
         );
     }
 
-    public function buildStaticListField(int $tracker_id, string $name, string $list_type): int
+    private function buildListField(int $tracker_id, string $name, string $list_type, string $bind_type): int
     {
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
@@ -334,7 +334,7 @@ final class TrackerDatabaseBuilder
                 'name'             => $name,
                 'label'            => $name,
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
 
@@ -342,9 +342,16 @@ final class TrackerDatabaseBuilder
             'tracker_field_list',
             [
                 'field_id'  => $tracker_field_id,
-                "bind_type" => "static",
+                'bind_type' => $bind_type,
             ]
         );
+
+        return $tracker_field_id;
+    }
+
+    public function buildStaticListField(int $tracker_id, string $name, string $list_type): int
+    {
+        $tracker_field_id = $this->buildListField($tracker_id, $name, $list_type, 'static');
 
         $this->db->insert(
             'tracker_field_list_bind_static',
@@ -359,23 +366,18 @@ final class TrackerDatabaseBuilder
 
     public function buildUserGroupListField(int $tracker_id, string $name, string $list_type): int
     {
-        $tracker_field_id = (int) $this->db->insertReturnId(
-            'tracker_field',
-            [
-                'tracker_id'       => $tracker_id,
-                'formElement_type' => $list_type,
-                'name'             => $name,
-                'label'            => $name,
-                'use_it'           => true,
-                'scope'            => "P",
-            ]
-        );
+        return $this->buildListField($tracker_id, $name, $list_type, 'ugroups');
+    }
+
+    public function buildUserListField(int $tracker_id, string $name, string $list_type): int
+    {
+        $tracker_field_id = $this->buildListField($tracker_id, $name, $list_type, 'users');
 
         $this->db->insert(
-            'tracker_field_list',
+            'tracker_field_list_bind_users',
             [
-                'field_id'  => $tracker_field_id,
-                "bind_type" => "ugroups",
+                'field_id' => $tracker_field_id,
+                'value_function' => 'group_members',
             ]
         );
 
