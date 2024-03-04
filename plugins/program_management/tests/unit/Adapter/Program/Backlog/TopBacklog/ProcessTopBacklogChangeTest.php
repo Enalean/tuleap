@@ -39,7 +39,6 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
@@ -87,7 +86,6 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         return new ProcessTopBacklogChange(
             $this->prioritize_features_permission_verifier,
             $this->dao,
-            new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
             $this->story_verifier,
             $this->visible_feature_verifier,

@@ -27,6 +27,7 @@ use REST_TestDataBuilder;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
@@ -87,7 +88,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $null_logger               = new NullLogger();
         $this->creation_dispatcher = new ProgramIncrementCreationDispatcher(
             $null_logger,
-            new QueueFactory($null_logger),
+            new QueueFactory($null_logger, new ThereIsAnOngoingTransactionChecker()),
             new ProgramIncrementCreationProcessorBuilder()
         );
 

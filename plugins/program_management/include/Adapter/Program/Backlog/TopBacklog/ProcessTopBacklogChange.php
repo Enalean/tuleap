@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
-use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyHasAtLeastOnePlannedUserStory;
@@ -47,7 +46,6 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
     private TopBacklogStore $top_backlog_store;
     private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier;
-    private DBTransactionExecutor $db_transaction_executor;
     private OrderFeatureRank $features_rank_orderer;
     private VerifyHasAtLeastOnePlannedUserStory $story_verifier;
     private VerifyFeatureIsVisibleByProgram $visible_feature_verifier;
@@ -56,7 +54,6 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     public function __construct(
         VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier,
         TopBacklogStore $top_backlog_store,
-        DBTransactionExecutor $db_transaction_executor,
         OrderFeatureRank $features_rank_orderer,
         VerifyHasAtLeastOnePlannedUserStory $story_verifier,
         VerifyFeatureIsVisibleByProgram $visible_feature_verifier,
@@ -64,7 +61,6 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     ) {
         $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
         $this->top_backlog_store                       = $top_backlog_store;
-        $this->db_transaction_executor                 = $db_transaction_executor;
         $this->features_rank_orderer                   = $features_rank_orderer;
         $this->story_verifier                          = $story_verifier;
         $this->visible_feature_verifier                = $visible_feature_verifier;
@@ -77,61 +73,59 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         UserIdentifier $user_identifier,
         ?PermissionBypass $bypass,
     ): void {
-        $this->db_transaction_executor->execute(function () use ($program, $top_backlog_change, $user_identifier, $bypass) {
-            try {
-                $user_can_prioritize = UserCanPrioritize::fromUser(
-                    $this->prioritize_features_permission_verifier,
-                    $user_identifier,
-                    $program,
-                    $bypass
-                );
-            } catch (NotAllowedToPrioritizeException $e) {
-                throw new CannotManipulateTopBacklog($program, $user_identifier);
-            }
-
-            $feature_add_removals = $this->filterFeaturesThatCanBeManipulated(
-                $top_backlog_change->potential_features_id_to_add,
-                $user_can_prioritize,
+        try {
+            $user_can_prioritize = UserCanPrioritize::fromUser(
+                $this->prioritize_features_permission_verifier,
+                $user_identifier,
                 $program,
-                false,
                 $bypass
             );
+        } catch (NotAllowedToPrioritizeException $e) {
+            throw new CannotManipulateTopBacklog($program, $user_identifier);
+        }
 
-            if (count($feature_add_removals) > 0) {
-                if ($top_backlog_change->remove_program_increments_link_to_feature_to_add) {
-                    $this->removeFeaturesFromProgramIncrement($feature_add_removals);
-                }
-                $feature_ids_to_add = [];
-                foreach ($feature_add_removals as $feature_removal) {
-                    $feature_ids_to_add[] = $feature_removal->feature_id;
-                }
-                $this->top_backlog_store->addArtifactsToTheExplicitTopBacklog($feature_ids_to_add);
+        $feature_add_removals = $this->filterFeaturesThatCanBeManipulated(
+            $top_backlog_change->potential_features_id_to_add,
+            $user_can_prioritize,
+            $program,
+            false,
+            $bypass
+        );
+
+        if (count($feature_add_removals) > 0) {
+            if ($top_backlog_change->remove_program_increments_link_to_feature_to_add) {
+                $this->removeFeaturesFromProgramIncrement($feature_add_removals);
             }
+            $feature_ids_to_add = [];
+            foreach ($feature_add_removals as $feature_removal) {
+                $feature_ids_to_add[] = $feature_removal->feature_id;
+            }
+            $this->top_backlog_store->addArtifactsToTheExplicitTopBacklog($feature_ids_to_add);
+        }
 
-            $feature_remove_removals = $this->filterFeaturesThatCanBeManipulated(
-                $top_backlog_change->potential_features_id_to_remove,
-                $user_can_prioritize,
-                $program,
-                true,
-                $bypass
+        $feature_remove_removals = $this->filterFeaturesThatCanBeManipulated(
+            $top_backlog_change->potential_features_id_to_remove,
+            $user_can_prioritize,
+            $program,
+            true,
+            $bypass
+        );
+
+        if (count($feature_remove_removals) > 0) {
+            $feature_ids_to_remove = [];
+            foreach ($feature_remove_removals as $feature_removal) {
+                $feature_ids_to_remove[] = $feature_removal->feature_id;
+            }
+            $this->top_backlog_store->removeArtifactsFromExplicitTopBacklog($feature_ids_to_remove);
+        }
+
+        if ($top_backlog_change->elements_to_order) {
+            $this->features_rank_orderer->reorder(
+                $top_backlog_change->elements_to_order,
+                (string) $program->getId(),
+                $program
             );
-
-            if (count($feature_remove_removals) > 0) {
-                $feature_ids_to_remove = [];
-                foreach ($feature_remove_removals as $feature_removal) {
-                    $feature_ids_to_remove[] = $feature_removal->feature_id;
-                }
-                $this->top_backlog_store->removeArtifactsFromExplicitTopBacklog($feature_ids_to_remove);
-            }
-
-            if ($top_backlog_change->elements_to_order) {
-                $this->features_rank_orderer->reorder(
-                    $top_backlog_change->elements_to_order,
-                    (string) $program->getId(),
-                    $program
-                );
-            }
-        });
+        }
     }
 
     /**

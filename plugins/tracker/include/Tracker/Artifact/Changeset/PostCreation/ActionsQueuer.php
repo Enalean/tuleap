@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
+use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
@@ -43,7 +44,7 @@ final class ActionsQueuer implements PostCreationActionsQueuer
     {
         return new self(
             $logger,
-            new QueueFactory($logger),
+            new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()),
             new WorkerAvailability(),
         );
     }

@@ -29,7 +29,6 @@ use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_NoChangeException;
-use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
@@ -46,7 +45,6 @@ final class PUTHandler
     public function __construct(
         private readonly FieldsDataBuilder $fields_data_builder,
         private readonly ArtifactReverseLinksUpdater $links_updater,
-        private readonly DBTransactionExecutor $transaction_executor,
         private readonly CheckArtifactRestUpdateConditions $check_artifact_rest_update_conditions,
     ) {
     }
@@ -66,18 +64,16 @@ final class PUTHandler
                 $submitter,
                 $artifact
             );
-            $this->transaction_executor->execute(function () use ($artifact, $submitter, $comment, $values) {
-                $changeset_values = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
+            $changeset_values = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
 
-                $submission_date = new \DateTimeImmutable();
-                $this->links_updater->updateArtifactAndItsLinks(
-                    $artifact,
-                    $changeset_values,
-                    $submitter,
-                    $submission_date,
-                    $this->buildNewComment($comment, $submitter, $submission_date)
-                )->mapErr(FaultMapper::mapToRestException(...));
-            });
+            $submission_date = new \DateTimeImmutable();
+            $this->links_updater->updateArtifactAndItsLinks(
+                $artifact,
+                $changeset_values,
+                $submitter,
+                $submission_date,
+                $this->buildNewComment($comment, $submitter, $submission_date)
+            )->mapErr(FaultMapper::mapToRestException(...));
         } catch (Tracker_FormElement_InvalidFieldException | Tracker_FormElement_InvalidFieldValueException | CommentContentNotValidException | FieldValidationException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException) {

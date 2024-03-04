@@ -40,31 +40,19 @@ class RedisPersistentQueue implements PersistentQueue
     private const MAX_MESSAGES               = 1000;
     private const MAX_RETRY_PROCESSING_EVENT = 3;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var BackOffDelayFailedMessage
-     */
-    private $back_off_delay_failed_message;
-    /**
-     * @var \Redis|null
-     */
-    private $redis;
-    private $event_queue_name;
+    private ?\Redis $redis = null;
 
-    public function __construct(LoggerInterface $logger, BackOffDelayFailedMessage $back_off_delay_failed_message, $event_queue_name)
-    {
-        $this->logger                        = $logger;
-        $this->back_off_delay_failed_message = $back_off_delay_failed_message;
-        $this->event_queue_name              = $event_queue_name;
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        private readonly BackOffDelayFailedMessage $back_off_delay_failed_message,
+        private readonly string $event_queue_name,
+    ) {
     }
 
     /**
      * @throws QueueServerConnectionException|RedisException
      */
-    public function listen($queue_id, $topic, callable $callback)
+    public function listen(string $queue_id, string $topic, callable $callback): void
     {
         $reconnect        = false;
         $processing_queue = $this->event_queue_name . '-processing-' . $queue_id;
@@ -180,7 +168,7 @@ class RedisPersistentQueue implements PersistentQueue
      * @throws QueueServerConnectionException
      * @throws \JsonException
      */
-    public function pushSinglePersistentMessage(string $topic, $content): void
+    public function pushSinglePersistentMessage(string $topic, mixed $content): void
     {
         QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_ENQUEUED);
         $this->pushMessageIntoEventQueue(RedisEventMessageForPersistentQueue::fromTopicAndPayload($topic, $content));

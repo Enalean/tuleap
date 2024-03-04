@@ -22,6 +22,7 @@
 namespace Tuleap\Queue;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\DB\CheckThereIsAnOngoingTransaction;
 use Tuleap\Queue\Redis\BackOffDelayFailedMessage;
 use Tuleap\Redis\ClientFactory as RedisClientFactory;
 
@@ -29,20 +30,27 @@ class QueueFactory
 {
     public const REDIS = 'redis';
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        private readonly CheckThereIsAnOngoingTransaction $transaction_checker,
+    ) {
     }
 
     /**
      * @throws NoQueueSystemAvailableException
      */
     public function getPersistentQueue(string $queue_name, string $favor = ''): PersistentQueue
+    {
+        return new PersistentQueueNoTransactionWrapper(
+            $this->getQueue($queue_name, $favor),
+            $this->transaction_checker,
+        );
+    }
+
+    /**
+     * @throws NoQueueSystemAvailableException
+     */
+    private function getQueue(string $queue_name, string $favor): PersistentQueue
     {
         if (RedisClientFactory::canClientBeBuiltFromForgeConfig()) {
             return new Redis\RedisPersistentQueue(
@@ -56,7 +64,7 @@ class QueueFactory
                         sleep($time_to_sleep);
                     }
                 ),
-                $queue_name
+                $queue_name,
             );
         }
         if ($favor === self::REDIS) {

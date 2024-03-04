@@ -27,6 +27,7 @@ use GitRepositoryFactory;
 use ProjectManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
+use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -488,7 +489,7 @@ final class PullRequestNotificationSupport
         return new EventDispatcherWithFallback(
             $logger,
             new EventSubjectToNotificationAsynchronousRedisDispatcher(
-                new QueueFactory($logger),
+                new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()),
                 new WorkerAvailability()
             ),
             self::buildSynchronousDispatcher()

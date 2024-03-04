@@ -25,8 +25,6 @@ namespace Tuleap\ProgramManagement\REST\v1;
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementRetriever;
@@ -474,7 +472,6 @@ final class ProjectResource extends AuthenticatedResource
         $top_backlog_updater = new ProcessTopBacklogChange(
             $this->features_permission_verifier,
             new ArtifactsExplicitTopBacklogDAO(),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
             $this->user_story_linked_verifier,
             new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
