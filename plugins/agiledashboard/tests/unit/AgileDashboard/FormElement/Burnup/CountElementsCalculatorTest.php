@@ -20,57 +20,39 @@
 
 namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker_Artifact_Changeset;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
 use Tracker_Artifact_ChangesetFactory;
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
+use Tracker_ArtifactLinkInfo;
 use Tracker_FormElementFactory;
+use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CountElementsCalculatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var CountElementsCalculator
-     */
-    private $calculator;
-
-    /**
-     * @var Mockery\MockInterface|Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
-
-    /**
-     * @var Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    /**
-     * @var Mockery\MockInterface|BurnupDataDAO
-     */
-    private $burnup_dao;
-    private \Tracker $task_tracker;
-    private \Tracker $user_story_tracker;
+    private CountElementsCalculator $calculator;
+    private Tracker_Artifact_ChangesetFactory&MockObject $changeset_factory;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private BurnupDataDAO&MockObject $burnup_dao;
+    private Tracker $task_tracker;
+    private Tracker $user_story_tracker;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->changeset_factory    = Mockery::mock(Tracker_Artifact_ChangesetFactory::class);
-        $this->artifact_factory     = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->burnup_dao           = Mockery::mock(BurnupDataDAO::class);
+        $this->changeset_factory    = $this->createMock(Tracker_Artifact_ChangesetFactory::class);
+        $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $this->burnup_dao           = $this->createMock(BurnupDataDAO::class);
         $this->user_story_tracker   = TrackerTestBuilder::aTracker()->withId(10)->build();
         $this->task_tracker         = TrackerTestBuilder::aTracker()->withId(20)->build();
 
@@ -91,8 +73,8 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()]);
 
-        $this->assertSame(5, $count_elements_cache_info->getTotalElements());
-        $this->assertSame(3, $count_elements_cache_info->getClosedElements());
+        self::assertSame(5, $count_elements_cache_info->getTotalElements());
+        self::assertSame(3, $count_elements_cache_info->getClosedElements());
     }
 
     public function testItCountsDirectSubElementsOfMilestoneAndTheirChildrenWithoutCoutingTwiceElements(): void
@@ -104,8 +86,8 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp, [10, 20]);
 
-        $this->assertSame(5, $count_elements_cache_info->getTotalElements());
-        $this->assertSame(3, $count_elements_cache_info->getClosedElements());
+        self::assertSame(5, $count_elements_cache_info->getTotalElements());
+        self::assertSame(3, $count_elements_cache_info->getClosedElements());
     }
 
     public function testItOnlyCountsDirectSubElementsOfMilestoneIfTheyDontHaveArtLinkField(): void
@@ -117,8 +99,8 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp, [10, 20]);
 
-        $this->assertSame(3, $count_elements_cache_info->getTotalElements());
-        $this->assertSame(1, $count_elements_cache_info->getClosedElements());
+        self::assertSame(3, $count_elements_cache_info->getTotalElements());
+        self::assertSame(1, $count_elements_cache_info->getClosedElements());
     }
 
     public function testItOnlyCountsDirectSubElementsOfMilestoneIfTheyDontHaveChildren(): void
@@ -130,175 +112,113 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp, [10, 20]);
 
-        $this->assertSame(3, $count_elements_cache_info->getTotalElements());
-        $this->assertSame(1, $count_elements_cache_info->getClosedElements());
+        self::assertSame(3, $count_elements_cache_info->getTotalElements());
+        self::assertSame(1, $count_elements_cache_info->getClosedElements());
     }
 
     private function mockEpicUserStoriesAndTasks(int $artifact_id, int $timestamp): void
     {
-        $this->burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
-            ->once()
+        $this->burnup_dao->expects(self::once())->method('searchLinkedArtifactsAtGivenTimestamp')
             ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
-            ->andReturn([
-                ['id' => 2],
-            ]);
+            ->willReturn([['id' => 2]]);
 
-        $epic_tracker = TrackerTestBuilder::aTracker()->build();
+        $epic_tracker             = TrackerTestBuilder::aTracker()->build();
+        $epic                     = ArtifactTestBuilder::anArtifact(2)->inTracker($epic_tracker)->build();
+        $changeset_epic           = ChangesetTestBuilder::aChangeset('1')->build();
+        $epic_artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
+        ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_epic, $epic_artifact_link_field)
+            ->withLinks([
+                3 => new Tracker_ArtifactLinkInfo(3, '', 101, $this->user_story_tracker->getId(), 1, null),
+                4 => new Tracker_ArtifactLinkInfo(4, '', 101, $this->user_story_tracker->getId(), 1, null),
+            ])
+            ->build();
+        Tracker_Semantic_Status::setInstance(new Tracker_Semantic_Status(
+            $epic_tracker
+        ), $epic_tracker);
 
-        $epic = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(2)
-            ->andReturn($epic);
+        $user_story_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
+        Tracker_Semantic_Status::setInstance($user_story_status_semantic, $this->user_story_tracker);
+        $user_story_artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
 
-        $changeset_epic = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($epic, $timestamp)
-            ->andReturn($changeset_epic);
+        $user_story_01           = ArtifactTestBuilder::anArtifact(3)
+            ->inTracker($this->user_story_tracker)
+            ->withParentWithoutPermissionChecking($epic)
+            ->build();
+        $changeset_user_story_01 = ChangesetTestBuilder::aChangeset('1')->build();
+        ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_01, $user_story_artifact_link_field)
+            ->withLinks([])
+            ->build();
 
-        $epic->shouldReceive('getId')->andReturn(2);
+        $user_story_02           = ArtifactTestBuilder::anArtifact(4)
+            ->inTracker($this->user_story_tracker)
+            ->withParentWithoutPermissionChecking($epic)
+            ->build();
+        $changeset_user_story_02 = ChangesetTestBuilder::aChangeset('1')->build();
+        ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_02, $user_story_artifact_link_field)
+            ->withLinks([
+                5 => new Tracker_ArtifactLinkInfo(5, '', 101, $this->task_tracker->getId(), 1, null),
+                6 => new Tracker_ArtifactLinkInfo(6, '', 101, $this->task_tracker->getId(), 1, null),
+            ])
+            ->build();
 
-        $epic->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_epic)
-            ->andReturnTrue();
+        $task_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
+        Tracker_Semantic_Status::setInstance($task_status_semantic, $this->task_tracker);
 
-        $epic->shouldReceive('getTracker')->andReturn($epic_tracker);
+        $task_01           = ArtifactTestBuilder::anArtifact(5)
+            ->inTracker($this->task_tracker)
+            ->withParentWithoutPermissionChecking($user_story_02)
+            ->build();
+        $changeset_task_01 = ChangesetTestBuilder::aChangeset('1')->build();
 
-        $epic_artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
-            ->once()
-            ->with($epic_tracker)
-            ->andReturn([
-                $epic_artifact_link_field,
-            ]);
+        $task_02           = ArtifactTestBuilder::anArtifact(6)
+            ->inTracker($this->task_tracker)
+            ->withParentWithoutPermissionChecking($user_story_02)
+            ->build();
+        $changeset_task_02 = ChangesetTestBuilder::aChangeset('1')->build();
 
-        $changeset_value_epic = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_epic->shouldReceive('getValue')
-            ->once()
-            ->with($epic_artifact_link_field)
-            ->andReturn($changeset_value_epic);
+        $this->artifact_factory->expects(self::exactly(5))->method('getArtifactById')
+            ->withConsecutive([2], [3], [4], [5], [6])
+            ->willReturn($epic, $user_story_01, $user_story_02, $task_01, $task_02);
 
-        $changeset_value_epic->shouldReceive('getArtifactIds')->once()->andReturn([
-            3,
-            4,
-        ]);
+        $this->changeset_factory->expects(self::exactly(5))->method('getChangesetAtTimestamp')
+            ->withConsecutive(
+                [$epic, $timestamp],
+                [$user_story_01, $timestamp],
+                [$user_story_02, $timestamp],
+                [$task_01, $timestamp],
+                [$task_02, $timestamp],
+            )
+            ->willReturnOnConsecutiveCalls(
+                $changeset_epic,
+                $changeset_user_story_01,
+                $changeset_user_story_02,
+                $changeset_task_01,
+                $changeset_task_02,
+            );
 
-        $user_story_01 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(3)
-            ->andReturn($user_story_01);
+        $this->form_element_factory->expects(self::exactly(5))->method('getUsedArtifactLinkFields')
+            ->withConsecutive(
+                [$epic_tracker],
+                [$this->user_story_tracker],
+                [$this->user_story_tracker],
+                [$this->task_tracker],
+                [$this->task_tracker],
+            )
+            ->willReturnOnConsecutiveCalls(
+                [$epic_artifact_link_field],
+                [$user_story_artifact_link_field],
+                [$user_story_artifact_link_field],
+                [],
+                [],
+            );
 
-        $user_story_02 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(4)
-            ->andReturn($user_story_02);
+        $user_story_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
+            ->withConsecutive([$changeset_user_story_01], [$changeset_user_story_02])
+            ->willReturnOnConsecutiveCalls(true, false);
 
-        $changeset_user_story_01 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($user_story_01, $timestamp)
-            ->andReturn($changeset_user_story_01);
-
-        $changeset_user_story_02 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($user_story_02, $timestamp)
-            ->andReturn($changeset_user_story_02);
-
-        $user_story_01->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_user_story_01)
-            ->andReturnTrue();
-
-        $user_story_02->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_user_story_02)
-            ->andReturnFalse();
-
-        $user_story_01->shouldReceive('getId')->andReturn(3);
-        $user_story_02->shouldReceive('getId')->andReturn(4);
-
-        $user_story_01->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
-        $user_story_02->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
-
-        $user_story_01->shouldReceive('getParentWithoutPermissionChecking')->andReturn($epic);
-        $user_story_02->shouldReceive('getParentWithoutPermissionChecking')->andReturn($epic);
-
-        $user_story_artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
-            ->with($this->user_story_tracker)
-            ->twice()
-            ->andReturn([$user_story_artifact_link_field]);
-
-        $changeset_value_user_story_01 = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_user_story_01->shouldReceive('getValue')
-            ->once()
-            ->with($user_story_artifact_link_field)
-            ->andReturn($changeset_value_user_story_01);
-
-        $changeset_value_user_story_02 = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_user_story_02->shouldReceive('getValue')
-            ->once()
-            ->with($user_story_artifact_link_field)
-            ->andReturn($changeset_value_user_story_02);
-
-        $changeset_value_user_story_01->shouldReceive('getArtifactIds')->once()->andReturn([]);
-        $changeset_value_user_story_02->shouldReceive('getArtifactIds')->once()->andReturn([
-            5,
-            6,
-        ]);
-
-        $task_01 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(5)
-            ->andReturn($task_01);
-
-        $task_02 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(6)
-            ->andReturn($task_02);
-
-        $changeset_task_01 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($task_01, $timestamp)
-            ->andReturn($changeset_task_01);
-
-        $changeset_task_02 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($task_02, $timestamp)
-            ->andReturn($changeset_task_02);
-
-        $task_01->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_task_01)
-            ->andReturnFalse();
-
-        $task_02->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_task_02)
-            ->andReturnFalse();
-
-        $task_01->shouldReceive('getTracker')->andReturn($this->task_tracker);
-        $task_02->shouldReceive('getTracker')->andReturn($this->task_tracker);
-
-        $task_01->shouldReceive('getParentWithoutPermissionChecking')->andReturn($user_story_02);
-        $task_02->shouldReceive('getParentWithoutPermissionChecking')->andReturn($user_story_02);
-
-        $task_01->shouldReceive('getId')->andReturn(5);
-        $task_02->shouldReceive('getId')->andReturn(6);
-
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
-            ->with($this->task_tracker)
-            ->twice()
-            ->andReturn([]);
+        $task_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
+            ->withConsecutive([$changeset_task_01], [$changeset_task_02])
+            ->willReturn(false);
     }
 
     private function mockEpicUserStoriesAndTasksWithMultipleLinksToTask(int $artifact_id, int $timestamp): void
@@ -306,340 +226,213 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         //This use case deal with the fact that epics and tasks can be planned into a Release.
         //So the tasks 01 must not be counted twice.
 
-        $this->burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
-            ->once()
+        $this->burnup_dao->expects(self::once())->method('searchLinkedArtifactsAtGivenTimestamp')
             ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
-            ->andReturn([
+            ->willReturn([
                 ['id' => 2],
                 ['id' => 5],
             ]);
 
-        $epic_tracker = TrackerTestBuilder::aTracker()->build();
+        $epic_tracker         = TrackerTestBuilder::aTracker()->build();
+        $epic_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
+        Tracker_Semantic_Status::setInstance($epic_status_semantic, $epic_tracker);
+        $epic_artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
 
-        $epic = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(2)
-            ->andReturn($epic);
+        $epic           = ArtifactTestBuilder::anArtifact(2)->inTracker($epic_tracker)->build();
+        $changeset_epic = ChangesetTestBuilder::aChangeset('1')->build();
+        ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_epic, $epic_artifact_link_field)
+            ->withLinks([
+                3 => new Tracker_ArtifactLinkInfo(3, '', 101, $this->user_story_tracker->getId(), 1, null),
+                4 => new Tracker_ArtifactLinkInfo(4, '', 101, $this->user_story_tracker->getId(), 1, null),
+            ])
+            ->build();
 
-        $changeset_epic = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($epic, $timestamp)
-            ->andReturn($changeset_epic);
+        $user_story_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
+        Tracker_Semantic_Status::setInstance($user_story_status_semantic, $this->user_story_tracker);
+        $user_story_artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
 
-        $epic->shouldReceive('getId')->andReturn(2);
+        $user_story_01           = ArtifactTestBuilder::anArtifact(3)
+            ->inTracker($this->user_story_tracker)
+            ->withParentWithoutPermissionChecking($epic)
+            ->build();
+        $changeset_user_story_01 = ChangesetTestBuilder::aChangeset('1')->build();
+        ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_01, $user_story_artifact_link_field)
+            ->withLinks([])
+            ->build();
 
-        $epic->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
+        $user_story_02           = ArtifactTestBuilder::anArtifact(4)
+            ->inTracker($this->user_story_tracker)
+            ->withParentWithoutPermissionChecking($epic)
+            ->build();
+        $changeset_user_story_02 = ChangesetTestBuilder::aChangeset('1')->build();
+        ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_02, $user_story_artifact_link_field)
+            ->withLinks([
+                5 => new Tracker_ArtifactLinkInfo(5, '', 101, $this->task_tracker->getId(), 1, null),
+                6 => new Tracker_ArtifactLinkInfo(6, '', 101, $this->task_tracker->getId(), 1, null),
+            ])
+            ->build();
+
+        $task_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
+        Tracker_Semantic_Status::setInstance($task_status_semantic, $this->task_tracker);
+
+        $task_01           = ArtifactTestBuilder::anArtifact(5)
+            ->inTracker($this->task_tracker)
+            ->withParentWithoutPermissionChecking($user_story_02)
+            ->build();
+        $changeset_task_01 = ChangesetTestBuilder::aChangeset('1')->build();
+
+        $task_02           = ArtifactTestBuilder::anArtifact(6)
+            ->inTracker($this->task_tracker)
+            ->withParentWithoutPermissionChecking($user_story_02)
+            ->build();
+        $changeset_task_02 = ChangesetTestBuilder::aChangeset('1')->build();
+
+        $this->artifact_factory->expects(self::exactly(6))->method('getArtifactById')
+            ->withConsecutive([2], [3], [4], [5], [6], [5])
+            ->willReturn($epic, $user_story_01, $user_story_02, $task_01, $task_02, $task_01);
+
+        $this->changeset_factory->expects(self::exactly(5))->method('getChangesetAtTimestamp')
+            ->withConsecutive(
+                [$epic, $timestamp],
+                [$user_story_01, $timestamp],
+                [$user_story_02, $timestamp],
+                [$task_01, $timestamp],
+                [$task_02, $timestamp],
+            )
+            ->willReturnOnConsecutiveCalls(
+                $changeset_epic,
+                $changeset_user_story_01,
+                $changeset_user_story_02,
+                $changeset_task_01,
+                $changeset_task_02,
+            );
+
+        $this->form_element_factory->expects(self::exactly(5))->method('getUsedArtifactLinkFields')
+            ->withConsecutive(
+                [$epic_tracker],
+                [$this->user_story_tracker],
+                [$this->user_story_tracker],
+                [$this->task_tracker],
+                [$this->task_tracker],
+            )
+            ->willReturnOnConsecutiveCalls(
+                [$epic_artifact_link_field],
+                [$user_story_artifact_link_field],
+                [$user_story_artifact_link_field],
+                [],
+                [],
+            );
+
+        $epic_status_semantic->expects(self::once())->method('isOpenAtGivenChangeset')
             ->with($changeset_epic)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $epic->shouldReceive('getTracker')->andReturn($epic_tracker);
+        $user_story_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
+            ->withConsecutive([$changeset_user_story_01], [$changeset_user_story_02])
+            ->willReturnOnConsecutiveCalls(true, false);
 
-        $epic_artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
-            ->once()
-            ->with($epic_tracker)
-            ->andReturn([
-                $epic_artifact_link_field,
-            ]);
-
-        $changeset_value_epic = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_epic->shouldReceive('getValue')
-            ->once()
-            ->with($epic_artifact_link_field)
-            ->andReturn($changeset_value_epic);
-
-        $changeset_value_epic->shouldReceive('getArtifactIds')->once()->andReturn([
-            3,
-            4,
-        ]);
-
-        $user_story_01 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(3)
-            ->andReturn($user_story_01);
-
-        $user_story_02 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(4)
-            ->andReturn($user_story_02);
-
-        $changeset_user_story_01 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($user_story_01, $timestamp)
-            ->andReturn($changeset_user_story_01);
-
-        $changeset_user_story_02 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($user_story_02, $timestamp)
-            ->andReturn($changeset_user_story_02);
-
-        $user_story_01->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_user_story_01)
-            ->andReturnTrue();
-
-        $user_story_02->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_user_story_02)
-            ->andReturnFalse();
-
-        $user_story_01->shouldReceive('getId')->andReturn(3);
-        $user_story_02->shouldReceive('getId')->andReturn(4);
-
-        $user_story_01->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
-        $user_story_02->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
-
-        $user_story_01->shouldReceive('getParentWithoutPermissionChecking')->andReturn($epic);
-        $user_story_02->shouldReceive('getParentWithoutPermissionChecking')->andReturn($epic);
-
-        $user_story_artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
-            ->with($this->user_story_tracker)
-            ->twice()
-            ->andReturn([$user_story_artifact_link_field]);
-
-        $changeset_value_user_story_01 = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_user_story_01->shouldReceive('getValue')
-            ->once()
-            ->with($user_story_artifact_link_field)
-            ->andReturn($changeset_value_user_story_01);
-
-        $changeset_value_user_story_02 = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_user_story_02->shouldReceive('getValue')
-            ->once()
-            ->with($user_story_artifact_link_field)
-            ->andReturn($changeset_value_user_story_02);
-
-        $changeset_value_user_story_01->shouldReceive('getArtifactIds')->once()->andReturn([]);
-        $changeset_value_user_story_02->shouldReceive('getArtifactIds')->once()->andReturn([
-            5,
-            6,
-        ]);
-
-        $task_01 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->twice()
-            ->with(5)
-            ->andReturn($task_01);
-
-        $task_02 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(6)
-            ->andReturn($task_02);
-
-        $changeset_task_01 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($task_01, $timestamp)
-            ->andReturn($changeset_task_01);
-
-        $changeset_task_02 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($task_02, $timestamp)
-            ->andReturn($changeset_task_02);
-
-        $task_01->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_task_01)
-            ->andReturnFalse();
-
-        $task_02->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_task_02)
-            ->andReturnFalse();
-
-        $task_01->shouldReceive('getTracker')->andReturn($this->task_tracker);
-        $task_02->shouldReceive('getTracker')->andReturn($this->task_tracker);
-
-        $task_01->shouldReceive('getParentWithoutPermissionChecking')->andReturn($user_story_02);
-        $task_02->shouldReceive('getParentWithoutPermissionChecking')->andReturn($user_story_02);
-
-        $task_01->shouldReceive('getId')->andReturn(5);
-        $task_02->shouldReceive('getId')->andReturn(6);
-
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
-            ->with($this->task_tracker)
-            ->twice()
-            ->andReturn([]);
+        $task_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
+            ->withConsecutive([$changeset_task_01], [$changeset_task_02])
+            ->willReturn(false);
     }
 
     private function mockUserStoriesWithoutArtLinkField(int $artifact_id, int $timestamp): void
     {
-        $this->burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
-            ->once()
+        $this->burnup_dao->expects(self::once())->method('searchLinkedArtifactsAtGivenTimestamp')
             ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
-            ->andReturn([
+            ->willReturn([
                 ['id' => 2],
                 ['id' => 3],
                 ['id' => 4],
             ]);
 
-        $user_story_01 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(2)
-            ->andReturn($user_story_01);
+        $user_story_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
+        Tracker_Semantic_Status::setInstance($user_story_status_semantic, $this->user_story_tracker);
 
-        $user_story_02 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(3)
-            ->andReturn($user_story_02);
+        $user_story_01           = ArtifactTestBuilder::anArtifact(2)->inTracker($this->user_story_tracker)->build();
+        $changeset_user_story_01 = ChangesetTestBuilder::aChangeset('1')->build();
 
-        $user_story_03 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(4)
-            ->andReturn($user_story_03);
+        $user_story_02           = ArtifactTestBuilder::anArtifact(3)->inTracker($this->user_story_tracker)->build();
+        $changeset_user_story_02 = ChangesetTestBuilder::aChangeset('1')->build();
 
-        $changeset_user_story_01 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($user_story_01, $timestamp)
-            ->andReturn($changeset_user_story_01);
+        $user_story_03           = ArtifactTestBuilder::anArtifact(4)->inTracker($this->user_story_tracker)->build();
+        $changeset_user_story_03 = ChangesetTestBuilder::aChangeset('1')->build();
 
-        $changeset_user_story_02 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($user_story_02, $timestamp)
-            ->andReturn($changeset_user_story_02);
+        $this->artifact_factory->expects(self::exactly(3))->method('getArtifactById')
+            ->withConsecutive([2], [3], [4])
+            ->willReturnOnConsecutiveCalls($user_story_01, $user_story_02, $user_story_03);
 
-        $changeset_user_story_03 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($user_story_03, $timestamp)
-            ->andReturn($changeset_user_story_03);
+        $this->changeset_factory->expects(self::exactly(3))->method('getChangesetAtTimestamp')
+            ->withConsecutive(
+                [$user_story_01, $timestamp],
+                [$user_story_02, $timestamp],
+                [$user_story_03, $timestamp],
+            )
+            ->willReturnOnConsecutiveCalls(
+                $changeset_user_story_01,
+                $changeset_user_story_02,
+                $changeset_user_story_03,
+            );
 
-        $user_story_01->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_user_story_01)
-            ->andReturnTrue();
+        $user_story_status_semantic->expects(self::exactly(3))->method('isOpenAtGivenChangeset')
+            ->withConsecutive([$changeset_user_story_01], [$changeset_user_story_02], [$changeset_user_story_03])
+            ->willReturnOnConsecutiveCalls(true, false, true);
 
-        $user_story_02->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_user_story_02)
-            ->andReturnFalse();
-
-        $user_story_03->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_user_story_03)
-            ->andReturnTrue();
-
-        $user_story_01->shouldReceive('getId')->andReturn(3);
-        $user_story_02->shouldReceive('getId')->andReturn(4);
-        $user_story_03->shouldReceive('getId')->andReturn(5);
-
-        $user_story_01->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
-        $user_story_02->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
-        $user_story_03->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
-
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->andReturn([]);
+        $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([]);
     }
 
     private function mockUserStoriesWithoutChildren(int $artifact_id, int $timestamp): void
     {
-        $this->burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
-            ->once()
+        $this->burnup_dao->expects(self::once())->method('searchLinkedArtifactsAtGivenTimestamp')
             ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
-            ->andReturn([
+            ->willReturn([
                 ['id' => 2],
                 ['id' => 3],
                 ['id' => 4],
             ]);
 
-        $user_story_01 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(2)
-            ->andReturn($user_story_01);
+        $user_story_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
+        Tracker_Semantic_Status::setInstance($user_story_status_semantic, $this->user_story_tracker);
+        $artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
 
-        $user_story_02 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(3)
-            ->andReturn($user_story_02);
+        $user_story_01           = ArtifactTestBuilder::anArtifact(2)->inTracker($this->user_story_tracker)->build();
+        $changeset_user_story_01 = ChangesetTestBuilder::aChangeset('1')->build();
+        ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_01, $artifact_link_field)
+            ->withLinks([])
+            ->build();
 
-        $user_story_03 = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(4)
-            ->andReturn($user_story_03);
+        $user_story_02           = ArtifactTestBuilder::anArtifact(3)->inTracker($this->user_story_tracker)->build();
+        $changeset_user_story_02 = ChangesetTestBuilder::aChangeset('1')->build();
+        ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_02, $artifact_link_field)
+            ->withLinks([])
+            ->build();
 
-        $changeset_user_story_01 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($user_story_01, $timestamp)
-            ->andReturn($changeset_user_story_01);
+        $user_story_03           = ArtifactTestBuilder::anArtifact(4)->inTracker($this->user_story_tracker)->build();
+        $changeset_user_story_03 = ChangesetTestBuilder::aChangeset('1')->build();
+        ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_03, $artifact_link_field)
+            ->withLinks([])
+            ->build();
 
-        $changeset_user_story_02 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($user_story_02, $timestamp)
-            ->andReturn($changeset_user_story_02);
+        $this->artifact_factory->expects(self::exactly(3))->method('getArtifactById')
+            ->withConsecutive([2], [3], [4])
+            ->willReturnOnConsecutiveCalls($user_story_01, $user_story_02, $user_story_03);
 
-        $changeset_user_story_03 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangesetAtTimestamp')
-            ->once()
-            ->with($user_story_03, $timestamp)
-            ->andReturn($changeset_user_story_03);
+        $this->changeset_factory->expects(self::exactly(3))->method('getChangesetAtTimestamp')
+            ->withConsecutive(
+                [$user_story_01, $timestamp],
+                [$user_story_02, $timestamp],
+                [$user_story_03, $timestamp],
+            )
+            ->willReturnOnConsecutiveCalls(
+                $changeset_user_story_01,
+                $changeset_user_story_02,
+                $changeset_user_story_03,
+            );
 
-        $user_story_01->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_user_story_01)
-            ->andReturnTrue();
+        $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([$artifact_link_field]);
 
-        $user_story_02->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_user_story_02)
-            ->andReturnFalse();
-
-        $user_story_03->shouldReceive('isOpenAtGivenChangeset')
-            ->once()
-            ->with($changeset_user_story_03)
-            ->andReturnTrue();
-
-        $user_story_01->shouldReceive('getId')->andReturn(3);
-        $user_story_02->shouldReceive('getId')->andReturn(4);
-        $user_story_03->shouldReceive('getId')->andReturn(5);
-
-        $user_story_01->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
-        $user_story_02->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
-        $user_story_03->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
-
-        $artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->andReturn([
-            $artifact_link_field,
-        ]);
-
-        $changeset_value_user_story_01 = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_user_story_01->shouldReceive('getValue')
-            ->once()
-            ->with($artifact_link_field)
-            ->andReturn($changeset_value_user_story_01);
-
-        $changeset_value_user_story_02 = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_user_story_02->shouldReceive('getValue')
-            ->once()
-            ->with($artifact_link_field)
-            ->andReturn($changeset_value_user_story_02);
-
-        $changeset_value_user_story_03 = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_user_story_03->shouldReceive('getValue')
-            ->once()
-            ->with($artifact_link_field)
-            ->andReturn($changeset_value_user_story_03);
-
-        $changeset_value_user_story_01->shouldReceive('getArtifactIds')->once()->andReturn([]);
-        $changeset_value_user_story_02->shouldReceive('getArtifactIds')->once()->andReturn([]);
-        $changeset_value_user_story_03->shouldReceive('getArtifactIds')->once()->andReturn([]);
+        $user_story_status_semantic->expects(self::exactly(3))->method('isOpenAtGivenChangeset')
+            ->withConsecutive([$changeset_user_story_01], [$changeset_user_story_02], [$changeset_user_story_03])
+            ->willReturnOnConsecutiveCalls(true, false, true);
     }
 }

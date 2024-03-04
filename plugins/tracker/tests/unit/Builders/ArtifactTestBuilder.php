@@ -57,12 +57,14 @@ final class ArtifactTestBuilder
      * @var \Project|null
      */
     private $project;
-    private int $submission_timestamp  = 1234567890;
-    private ?PFUser $submitted_by_user = null;
-    private ?Artifact $parent          = null;
-    private bool $has_parent           = false;
-    private ?bool $is_open             = null;
-    private ?string $status            = null;
+    private int $submission_timestamp                     = 1234567890;
+    private ?PFUser $submitted_by_user                    = null;
+    private ?Artifact $parent                             = null;
+    private bool $has_parent                              = false;
+    private ?Artifact $parent_without_permission_checking = null;
+    private bool $has_parent_without_permission_checking  = false;
+    private ?bool $is_open                                = null;
+    private ?string $status                               = null;
     /**
      * @var Artifact[]|null
      */
@@ -159,6 +161,13 @@ final class ArtifactTestBuilder
         return $this;
     }
 
+    public function withParentWithoutPermissionChecking(?Artifact $artifact): self
+    {
+        $this->parent_without_permission_checking     = $artifact;
+        $this->has_parent_without_permission_checking = true;
+        return $this;
+    }
+
     public function isOpen(bool $is_open): self
     {
         $this->is_open = $is_open;
@@ -237,6 +246,9 @@ final class ArtifactTestBuilder
         }
         if ($this->has_parent) {
             $artifact->setParent($this->parent);
+        }
+        if ($this->has_parent_without_permission_checking) {
+            $artifact->setParentWithoutPermissionChecking($this->parent_without_permission_checking);
         }
         if ($this->is_open !== null) {
             $artifact->setIsOpen($this->is_open);
