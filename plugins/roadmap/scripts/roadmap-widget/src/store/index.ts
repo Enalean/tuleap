@@ -26,6 +26,7 @@ import { createTimeperiodModule } from "./timeperiod";
 import * as actions from "./root-actions";
 import * as mutations from "./root-mutations";
 import type { TimeScale } from "../type";
+import { DateTime } from "luxon";
 
 export function createStore(
     initial_root_state: RootState,
@@ -37,7 +38,7 @@ export function createStore(
         should_display_empty_state: false,
         should_display_error_state: false,
         error_message: "",
-        now: new Date(),
+        now: DateTime.now(),
         show_closed_elements: false,
     };
 

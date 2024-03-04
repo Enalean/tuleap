@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Task } from "../type";
+import type { RestTask, Task } from "../type";
 
-export function doesTaskHaveEndDateGreaterOrEqualToStartDate(task: Task): boolean {
+export function doesTaskHaveEndDateGreaterOrEqualToStartDate(task: Task | RestTask): boolean {
     if (task.start === null && task.end === null) {
         return false;
     }

@@ -20,12 +20,15 @@
 import { shallowMount } from "@vue/test-utils";
 import TimePeriodUnits from "./TimePeriodUnits.vue";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
+import { DateTime, Settings } from "luxon";
+
+Settings.defaultZone = "UTC";
 
 describe("TimePeriodUnits", () => {
     it("should display units", () => {
         const time_period = new TimePeriodMonth(
-            new Date("2020-03-31T22:00:00.000Z"),
-            new Date("2020-04-30T22:00:00.000Z"),
+            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
             "en-US",
         );
 

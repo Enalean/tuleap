@@ -18,10 +18,11 @@
  */
 
 import type { Iteration, Task } from "../type";
+import type { DateTime } from "luxon";
 
-export function getFirstDate(elements: (Task | Iteration)[], now: Date): Date {
+export function getFirstDate(elements: (Task | Iteration)[], now: DateTime): DateTime {
     const first_date = elements.reduce(
-        (first: Date | null, current: Task | Iteration): Date | null => {
+        (first: DateTime | null, current: Task | Iteration): DateTime | null => {
             if (!first) {
                 return current.start || current.end;
             }

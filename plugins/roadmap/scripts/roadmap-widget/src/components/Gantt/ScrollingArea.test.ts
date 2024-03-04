@@ -25,6 +25,7 @@ import Vue from "vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import type { TimeperiodState } from "../../store/timeperiod/type";
+import { DateTime } from "luxon";
 
 describe("ScrollingArea", () => {
     const windowIntersectionObserver = window.IntersectionObserver;
@@ -38,7 +39,7 @@ describe("ScrollingArea", () => {
     function aScrollingArea(): Wrapper<ScrollingArea> {
         return shallowMount(ScrollingArea, {
             propsData: {
-                now: new Date(),
+                now: DateTime.now(),
                 timescale: "month",
             },
             mocks: {
@@ -48,8 +49,8 @@ describe("ScrollingArea", () => {
                     } as RootState,
                     getters: {
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             "en-US",
                         ),
                     },

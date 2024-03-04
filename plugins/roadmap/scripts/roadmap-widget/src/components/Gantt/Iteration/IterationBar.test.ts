@@ -26,6 +26,7 @@ import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import type { TimeperiodState } from "../../../store/timeperiod/type";
 import type { IterationsState } from "../../../store/iterations/type";
 import type { TasksState } from "../../../store/tasks/type";
+import { DateTime } from "luxon";
 
 describe("IterationBar", () => {
     describe("should adjust the height of the iteration according to the number of visible rows so that we have borders of the iteration that take all the height", () => {
@@ -33,8 +34,8 @@ describe("IterationBar", () => {
             const wrapper = shallowMount(IterationBar, {
                 propsData: {
                     iteration: {
-                        start: new Date("2020-01-10T13:42:08+02:00"),
-                        end: new Date("2020-01-20T13:42:08+02:00"),
+                        start: DateTime.fromISO("2020-01-10T13:42:08+02:00"),
+                        end: DateTime.fromISO("2020-01-20T13:42:08+02:00"),
                         html_url: "/path/to/iteration",
                     } as Iteration,
                     level: 2,
@@ -48,8 +49,8 @@ describe("IterationBar", () => {
                         } as RootState,
                         getters: {
                             "timeperiod/time_period": new TimePeriodMonth(
-                                new Date("2020-01-01T13:42:08+02:00"),
-                                new Date("2020-01-30T13:42:08+02:00"),
+                                DateTime.fromISO("2020-01-01T13:42:08+02:00"),
+                                DateTime.fromISO("2020-01-30T13:42:08+02:00"),
                                 "en-US",
                             ),
                             "tasks/rows": [
@@ -69,8 +70,8 @@ describe("IterationBar", () => {
             const wrapper = shallowMount(IterationBar, {
                 propsData: {
                     iteration: {
-                        start: new Date("2020-01-10T13:42:08+02:00"),
-                        end: new Date("2020-01-20T13:42:08+02:00"),
+                        start: DateTime.fromISO("2020-01-10T13:42:08+02:00"),
+                        end: DateTime.fromISO("2020-01-20T13:42:08+02:00"),
                         html_url: "/path/to/iteration",
                     } as Iteration,
                     level: 1,
@@ -86,8 +87,8 @@ describe("IterationBar", () => {
                         } as RootState,
                         getters: {
                             "timeperiod/time_period": new TimePeriodMonth(
-                                new Date("2020-01-01T13:42:08+02:00"),
-                                new Date("2020-01-30T13:42:08+02:00"),
+                                DateTime.fromISO("2020-01-01T13:42:08+02:00"),
+                                DateTime.fromISO("2020-01-30T13:42:08+02:00"),
                                 "en-US",
                             ),
                             "tasks/rows": [

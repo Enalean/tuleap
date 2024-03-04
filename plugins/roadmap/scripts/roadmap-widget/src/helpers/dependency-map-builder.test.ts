@@ -19,6 +19,7 @@
 
 import type { Task } from "../type";
 import { getTasksDependencies } from "./dependency-map-builder";
+import { DateTime } from "luxon";
 
 describe("dependency-map-builder", () => {
     it("Returns an empty map if no dependencies are set", () => {
@@ -57,14 +58,14 @@ describe("dependency-map-builder", () => {
         const task_2 = {
             id: 2,
             dependencies: {},
-            start: new Date("2020-04-14T22:00:00.000Z"),
-            end: new Date("2020-04-14T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
         } as Task;
         const task_3 = {
             id: 3,
             dependencies: {},
-            start: new Date("2020-04-14T22:00:00.000Z"),
-            end: new Date("2020-04-10T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-10T22:00:00.000Z"),
         } as Task;
 
         const map = getTasksDependencies([task_1, task_2, task_3]);
@@ -77,8 +78,8 @@ describe("dependency-map-builder", () => {
         const task_1 = {
             id: 1,
             dependencies: { "": [2, 3] },
-            start: new Date("2020-04-14T22:00:00.000Z"),
-            end: new Date("2020-04-10T22:00:00.000Z"),
+            start: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-10T22:00:00.000Z"),
         } as unknown as Task;
         const task_2 = {
             id: 2,

@@ -23,7 +23,7 @@
         <div
             class="roadmap-gantt-task-background-grid-unit"
             v-for="unit in time_units"
-            v-bind:key="'grid-month-' + unit.toISOString()"
+            v-bind:key="'grid-month-' + unit.toISO()"
             v-bind:class="time_period.getEvenOddClass(unit)"
         />
     </div>
@@ -33,6 +33,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { TimePeriod } from "../../../type";
+import type { DateTime } from "luxon";
 
 @Component
 export default class BackgroundGrid extends Vue {
@@ -42,7 +43,7 @@ export default class BackgroundGrid extends Vue {
     @Prop({ required: true })
     readonly nb_additional_units!: number;
 
-    get time_units(): Date[] {
+    get time_units(): DateTime[] {
         return [
             ...this.time_period.units,
             ...this.time_period.additionalUnits(this.nb_additional_units),

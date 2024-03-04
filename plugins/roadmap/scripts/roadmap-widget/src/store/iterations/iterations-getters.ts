@@ -18,14 +18,15 @@
  */
 import type { IterationsState } from "./type";
 import type { Iteration } from "../../type";
+import type { DateTime } from "luxon";
 
 export const lvl1_iterations_to_display = (
     state: IterationsState,
     getters: unknown,
     root_state: unknown,
     root_getters: {
-        "timeperiod/first_date": Date;
-        "timeperiod/last_date": Date;
+        "timeperiod/first_date": DateTime;
+        "timeperiod/last_date": DateTime;
     },
 ): Iteration[] => {
     return state.lvl1_iterations.filter((iteration) =>
@@ -42,8 +43,8 @@ export const lvl2_iterations_to_display = (
     getters: unknown,
     root_state: unknown,
     root_getters: {
-        "timeperiod/first_date": Date;
-        "timeperiod/last_date": Date;
+        "timeperiod/first_date": DateTime;
+        "timeperiod/last_date": DateTime;
     },
 ): Iteration[] => {
     return state.lvl2_iterations.filter((iteration) =>
@@ -57,8 +58,8 @@ export const lvl2_iterations_to_display = (
 
 function isIterationBetweenFirstDateAndLastDate(
     iteration: Iteration,
-    first_date: Date,
-    last_date: Date,
+    first_date: DateTime,
+    last_date: DateTime,
 ): boolean {
     return first_date <= iteration.start && iteration.end <= last_date;
 }

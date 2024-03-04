@@ -20,26 +20,26 @@
 import type { TimePeriod } from "../type";
 import type { VueGettextProvider } from "./vue-gettext-provider";
 import { getBeginningOfPeriod, getEndOfPeriod } from "./begin-end-of-period";
-import currentWeekNumber from "current-week-number";
+import type { DateTime } from "luxon";
 
 export class TimePeriodWeek implements TimePeriod {
-    readonly weeks: Date[];
+    readonly weeks: DateTime[];
     private readonly gettext_provider: VueGettextProvider;
 
     constructor(
-        readonly from: Date,
-        readonly to: Date,
+        readonly from: DateTime,
+        readonly to: DateTime,
         gettext_provider: VueGettextProvider,
     ) {
         this.gettext_provider = gettext_provider;
         this.weeks = getWeeks(from, to);
     }
 
-    get units(): Date[] {
+    get units(): DateTime[] {
         return this.weeks;
     }
 
-    additionalUnits(nb: number): Date[] {
+    additionalUnits(nb: number): DateTime[] {
         if (nb <= 0) {
             return [];
         }
@@ -49,31 +49,31 @@ export class TimePeriodWeek implements TimePeriod {
         return getBeginningOfNextNthWeeks(next_week, nb - 1);
     }
 
-    formatLong(unit: Date): string {
+    formatLong(unit: DateTime): string {
         return this.gettext_provider.$gettextInterpolate(
             this.gettext_provider.$gettext("Week %{ week } of %{ year }"),
             {
-                week: currentWeekNumber(unit),
-                year: unit.getUTCFullYear(),
+                week: unit.weekNumber,
+                year: unit.year,
             },
         );
     }
 
-    formatShort(unit: Date): string {
+    formatShort(unit: DateTime): string {
         return this.gettext_provider.$gettextInterpolate(
             this.gettext_provider.$gettext("W%{ week }"),
             {
-                week: currentWeekNumber(unit),
+                week: unit.weekNumber,
             },
         );
     }
 
-    getEvenOddClass(unit: Date): string {
-        return unit.getUTCMonth() % 2 === 0 ? "even" : "odd";
+    getEvenOddClass(unit: DateTime): string {
+        return unit.month % 2 === 1 ? "even" : "odd";
     }
 }
 
-function getWeeks(start: Date, end: Date): Date[] {
+function getWeeks(start: DateTime, end: DateTime): DateTime[] {
     const beginning_of_period = getBeginningOfPeriod(start, end);
     const end_of_period = getEndOfPeriod(start, end);
 
@@ -86,17 +86,11 @@ function getWeeks(start: Date, end: Date): Date[] {
     );
 }
 
-function getBeginningOfNextWeek(current_week_start: Date): Date {
-    const next_week_start = new Date(current_week_start);
-    const NB_DAYS_IN_A_WEEK = 7;
-
-    next_week_start.setUTCDate(next_week_start.getUTCDate() + NB_DAYS_IN_A_WEEK);
-    next_week_start.setUTCHours(0, 0, 0);
-
-    return next_week_start;
+function getBeginningOfNextWeek(current_week_start: DateTime): DateTime {
+    return current_week_start.startOf("week").plus({ week: 1 });
 }
 
-function getBeginningOfNextNthWeeks(base_week_start: Date, nth: number): Date[] {
+function getBeginningOfNextNthWeeks(base_week_start: DateTime, nth: number): DateTime[] {
     const weeks = [base_week_start];
     let last_week = base_week_start;
 
@@ -110,29 +104,10 @@ function getBeginningOfNextNthWeeks(base_week_start: Date, nth: number): Date[] 
     return weeks;
 }
 
-function getBeginningOfCurrentWeek(base_date: Date): Date {
-    const first_day_of_week = new Date(base_date);
-    const current_day_of_week = base_date.getUTCDay();
-    const MONDAY_INDEX_IN_WEEK = 1;
-
-    first_day_of_week.setUTCDate(
-        first_day_of_week.getUTCDate() - current_day_of_week + MONDAY_INDEX_IN_WEEK,
-    );
-    first_day_of_week.setUTCHours(0, 0, 0);
-
-    return first_day_of_week;
+function getBeginningOfCurrentWeek(base_date: DateTime): DateTime {
+    return base_date.startOf("week");
 }
 
-function getDateDiffInWeeks(start_date: Date, end_date: Date): number {
-    const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
-    const NB_DAYS_IN_A_WEEK = 7;
-
-    const start_utc = Date.UTC(
-        start_date.getFullYear(),
-        start_date.getMonth(),
-        start_date.getDate(),
-    );
-    const end_utc = Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate());
-
-    return Math.floor((end_utc - start_utc) / MILLISECONDS_PER_DAY / NB_DAYS_IN_A_WEEK);
+function getDateDiffInWeeks(start_date: DateTime, end_date: DateTime): number {
+    return end_date.diff(start_date, "weeks").weeks;
 }

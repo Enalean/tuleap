@@ -18,19 +18,20 @@
  */
 
 import { getBeginningOfPeriod, getEndOfPeriod } from "./begin-end-of-period";
+import { DateTime } from "luxon";
 
 describe("begin-end-of-period", () => {
     describe("getBeginningOfPeriod", () => {
         it("should return start when start < end", () => {
-            const start = new Date(2020, 3, 15);
-            const end = new Date(2020, 4, 15);
+            const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+            const end = DateTime.fromJSDate(new Date(2020, 4, 15));
 
             expect(getBeginningOfPeriod(start, end)).toBe(start);
         });
 
         it("should return end when end < start", () => {
-            const start = new Date(2020, 4, 15);
-            const end = new Date(2020, 3, 15);
+            const start = DateTime.fromJSDate(new Date(2020, 4, 15));
+            const end = DateTime.fromJSDate(new Date(2020, 3, 15));
 
             expect(getBeginningOfPeriod(start, end)).toBe(end);
         });
@@ -38,15 +39,15 @@ describe("begin-end-of-period", () => {
 
     describe("getEndOfPeriod", () => {
         it("should return end when start < end", () => {
-            const start = new Date(2020, 3, 15);
-            const end = new Date(2020, 4, 15);
+            const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+            const end = DateTime.fromJSDate(new Date(2020, 4, 15));
 
             expect(getEndOfPeriod(start, end)).toBe(end);
         });
 
         it("should return start when end < start", () => {
-            const start = new Date(2020, 4, 15);
-            const end = new Date(2020, 3, 15);
+            const start = DateTime.fromJSDate(new Date(2020, 4, 15));
+            const end = DateTime.fromJSDate(new Date(2020, 3, 15));
 
             expect(getEndOfPeriod(start, end)).toBe(start);
         });

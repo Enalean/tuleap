@@ -19,39 +19,42 @@
 
 import { TimePeriodWeek } from "./time-period-week";
 import { createVueGettextProviderPassthrough } from "./vue-gettext-provider-for-test";
+import { DateTime } from "luxon";
 
-function toDateString(collection: Date[]): string[] {
-    return collection.map((date) => date.toDateString());
+function toDateString(collection: DateTime[]): string[] {
+    return collection.map((date) => date.toJSDate().toDateString());
 }
 
 describe("time-period-week", () => {
     describe("formatting", () => {
         it("should format the time in a long format", () => {
             const period = new TimePeriodWeek(
-                new Date("2021-04-07"),
-                new Date("2021-04-08"),
+                DateTime.fromJSDate(new Date("2021-04-07")),
+                DateTime.fromJSDate(new Date("2021-04-08")),
                 createVueGettextProviderPassthrough(),
             );
 
-            expect(period.formatLong(new Date("2021-04-08"))).toBe("Week 14 of 2021");
+            expect(period.formatLong(DateTime.fromJSDate(new Date("2021-04-08")))).toBe(
+                "Week 14 of 2021",
+            );
         });
 
         it("should format the time in a short format", () => {
             const period = new TimePeriodWeek(
-                new Date("2021-04-07"),
-                new Date("2021-04-08"),
+                DateTime.fromJSDate(new Date("2021-04-07")),
+                DateTime.fromJSDate(new Date("2021-04-08")),
                 createVueGettextProviderPassthrough(),
             );
 
-            expect(period.formatShort(new Date("2021-04-08"))).toBe("W14");
+            expect(period.formatShort(DateTime.fromJSDate(new Date("2021-04-08")))).toBe("W14");
         });
     });
 
     describe("generate weeks in period", () => {
         it("should generate a collection containing the start dates of weeks inside the given period", () => {
             const period = new TimePeriodWeek(
-                new Date("2021-04-01"),
-                new Date("2021-04-30"),
+                DateTime.fromJSDate(new Date("2021-04-01")),
+                DateTime.fromJSDate(new Date("2021-04-30")),
                 createVueGettextProviderPassthrough(),
             );
 
@@ -67,8 +70,8 @@ describe("time-period-week", () => {
 
         it("should handle properly years transitions", () => {
             const period = new TimePeriodWeek(
-                new Date("2021-12-15"),
-                new Date("2022-01-15"),
+                DateTime.fromJSDate(new Date("2021-12-15")),
+                DateTime.fromJSDate(new Date("2022-01-15")),
                 createVueGettextProviderPassthrough(),
             );
 
@@ -84,8 +87,8 @@ describe("time-period-week", () => {
 
         it("should generate additional weeks", () => {
             const period = new TimePeriodWeek(
-                new Date("2021-12-15"),
-                new Date("2022-01-15"),
+                DateTime.fromJSDate(new Date("2021-12-15")),
+                DateTime.fromJSDate(new Date("2022-01-15")),
                 createVueGettextProviderPassthrough(),
             );
 
@@ -104,8 +107,8 @@ describe("time-period-week", () => {
             "Returns empty array for additional units when nb is lesser than 0",
             (nb_missing_weeks) => {
                 const period = new TimePeriodWeek(
-                    new Date("2021-01-01"),
-                    new Date("2021-01-31"),
+                    DateTime.fromJSDate(new Date("2021-01-01")),
+                    DateTime.fromJSDate(new Date("2021-01-31")),
                     createVueGettextProviderPassthrough(),
                 );
 
@@ -116,17 +119,17 @@ describe("time-period-week", () => {
 
     it("should return even/odd according to the week's month so that background alternance offers a visual grouping of weeks", () => {
         const period = new TimePeriodWeek(
-            new Date("2020-01-01"),
-            new Date("2021-01-31"),
+            DateTime.fromJSDate(new Date("2020-01-01")),
+            DateTime.fromJSDate(new Date("2021-01-31")),
             createVueGettextProviderPassthrough(),
         );
 
-        expect(period.getEvenOddClass(new Date("2020-01-01"))).toBe("even");
-        expect(period.getEvenOddClass(new Date("2020-01-08"))).toBe("even");
-        expect(period.getEvenOddClass(new Date("2020-01-15"))).toBe("even");
-        expect(period.getEvenOddClass(new Date("2020-01-22"))).toBe("even");
-        expect(period.getEvenOddClass(new Date("2020-01-29"))).toBe("even");
-        expect(period.getEvenOddClass(new Date("2020-02-05"))).toBe("odd");
-        expect(period.getEvenOddClass(new Date("2020-02-13"))).toBe("odd");
+        expect(period.getEvenOddClass(DateTime.fromJSDate(new Date("2020-01-01")))).toBe("even");
+        expect(period.getEvenOddClass(DateTime.fromJSDate(new Date("2020-01-08")))).toBe("even");
+        expect(period.getEvenOddClass(DateTime.fromJSDate(new Date("2020-01-15")))).toBe("even");
+        expect(period.getEvenOddClass(DateTime.fromJSDate(new Date("2020-01-22")))).toBe("even");
+        expect(period.getEvenOddClass(DateTime.fromJSDate(new Date("2020-01-29")))).toBe("even");
+        expect(period.getEvenOddClass(DateTime.fromJSDate(new Date("2020-02-05")))).toBe("odd");
+        expect(period.getEvenOddClass(DateTime.fromJSDate(new Date("2020-02-13")))).toBe("odd");
     });
 });

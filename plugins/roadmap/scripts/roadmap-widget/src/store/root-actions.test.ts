@@ -25,6 +25,7 @@ import * as IterationsRetriever from "../helpers/iterations-retriever";
 import Vue from "vue";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { Iteration, Task } from "../type";
+import { DateTime } from "luxon";
 
 describe("root-actions", () => {
     let context: ActionContext<RootState, RootState>;
@@ -136,14 +137,14 @@ describe("root-actions", () => {
 
             const task_1 = {
                 id: 1,
-                start: new Date(2020, 3, 15),
+                start: DateTime.fromJSDate(new Date(2020, 3, 15)),
                 end: null,
                 is_milestone: true,
                 dependencies: {},
             } as Task;
             const task_2 = {
                 id: 2,
-                start: new Date(2020, 4, 15),
+                start: DateTime.fromJSDate(new Date(2020, 4, 15)),
                 end: null,
                 is_milestone: true,
                 dependencies: {},
@@ -170,14 +171,14 @@ describe("root-actions", () => {
 
                 const task_1 = {
                     id: 1,
-                    start: new Date(2020, 3, 15),
+                    start: DateTime.fromJSDate(new Date(2020, 3, 15)),
                     end: null,
                     is_milestone: true,
                     dependencies: {},
                 } as Task;
                 const task_2 = {
                     id: 2,
-                    start: new Date(2020, 4, 15),
+                    start: DateTime.fromJSDate(new Date(2020, 4, 15)),
                     end: null,
                     is_milestone: true,
                     dependencies: {},

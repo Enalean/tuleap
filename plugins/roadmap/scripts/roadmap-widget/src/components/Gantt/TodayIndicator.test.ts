@@ -24,10 +24,13 @@ import { TimePeriodMonth } from "../../helpers/time-period-month";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TimeperiodState } from "../../store/timeperiod/type";
 import type { RootState } from "../../store/type";
+import { DateTime, Settings } from "luxon";
+
+Settings.defaultZone = "UTC";
 
 describe("TodayIndicator", () => {
     it("Displays a div with a left position depending on the time period", async () => {
-        const now = new Date("2020-04-14T22:00:00.000Z");
+        const now = DateTime.fromISO("2020-04-14T22:00:00.000Z");
         const locale_bcp47 = "en-US";
         const wrapper = shallowMount(TodayIndicator, {
             localVue: await createRoadmapLocalVue(),
@@ -40,8 +43,8 @@ describe("TodayIndicator", () => {
                     } as RootState,
                     getters: {
                         "timeperiod/time_period": new TimePeriodMonth(
-                            new Date("2020-03-31T22:00:00.000Z"),
-                            new Date("2020-04-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
                             locale_bcp47,
                         ),
                     },
@@ -49,11 +52,11 @@ describe("TodayIndicator", () => {
             },
         });
 
-        const expected_today_date = new Intl.DateTimeFormat("en-US", {
+        const expected_today_date = now.setLocale("en-US").toLocaleString({
             day: "numeric",
             month: "long",
             year: "numeric",
-        }).format(now);
+        });
 
         expect(wrapper.classes()).toContain("roadmap-gantt-today");
         expect((wrapper.element as HTMLElement).title).toBe(`Today: ${expected_today_date}`);

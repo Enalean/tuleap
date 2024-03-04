@@ -40,4 +40,5 @@ export default {
         ...configuration.moduleNameMapper,
         "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
     },
+    testEnvironment: "./src/FixJSDOMEnvironment.ts",
 };

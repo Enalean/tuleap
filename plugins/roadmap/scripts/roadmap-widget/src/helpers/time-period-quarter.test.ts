@@ -19,18 +19,19 @@
 
 import { TimePeriodQuarter } from "./time-period-quarter";
 import { createVueGettextProviderPassthrough } from "./vue-gettext-provider-for-test";
+import { DateTime } from "luxon";
 
-function toDateString(collection: Date[]): string[] {
-    return collection.map((date) => date.toDateString());
+function toDateString(collection: DateTime[]): string[] {
+    return collection.map((date) => date.toJSDate().toDateString());
 }
 
 describe("TimePeriodQuarter", () => {
-    let start!: Date;
-    let end!: Date;
+    let start!: DateTime;
+    let end!: DateTime;
 
     it("returns quarters when start is lesser than end", () => {
-        const start = new Date(2020, 1, 15);
-        const end = new Date(2020, 4, 15);
+        const start = DateTime.fromObject({ year: 2020, month: 2, day: 15 });
+        const end = DateTime.fromObject({ year: 2020, month: 5, day: 15 });
 
         const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
         expect(toDateString(period.units)).toStrictEqual([
@@ -41,16 +42,16 @@ describe("TimePeriodQuarter", () => {
     });
 
     it("returns quarters when start is in the same quarter than end", () => {
-        const start = new Date(2020, 2, 15);
-        const end = new Date(2020, 2, 15);
+        const start = DateTime.fromJSDate(new Date(2020, 2, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 2, 15));
 
         const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
         expect(toDateString(period.units)).toStrictEqual(["Wed Jan 01 2020", "Wed Apr 01 2020"]);
     });
 
     it("returns quarters when start is greater than end", () => {
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 1, 15);
+        const start = DateTime.fromJSDate(new Date(2020, 3, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 1, 15));
 
         const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
         expect(toDateString(period.units)).toStrictEqual([
@@ -60,43 +61,37 @@ describe("TimePeriodQuarter", () => {
         ]);
     });
 
-    it("Format a unit", () => {
-        start = new Date(2020, 2, 15);
-        end = new Date(2020, 7, 15);
+    it.each([
+        [1, "Q1", "Quarter 1 of 2020"],
+        [2, "Q1", "Quarter 1 of 2020"],
+        [3, "Q1", "Quarter 1 of 2020"],
+        [4, "Q2", "Quarter 2 of 2020"],
+        [5, "Q2", "Quarter 2 of 2020"],
+        [6, "Q2", "Quarter 2 of 2020"],
+        [7, "Q3", "Quarter 3 of 2020"],
+        [8, "Q3", "Quarter 3 of 2020"],
+        [9, "Q3", "Quarter 3 of 2020"],
+        [10, "Q4", "Quarter 4 of 2020"],
+        [11, "Q4", "Quarter 4 of 2020"],
+        [12, "Q4", "Quarter 4 of 2020"],
+    ])("Format month %s as short: %s and as long: %s", (month, expected_short, expected_long) => {
+        start = DateTime.fromJSDate(new Date(2020, 2, 15));
+        end = DateTime.fromJSDate(new Date(2020, 7, 15));
         const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
 
-        expect(period.formatShort(new Date(2020, 0, 15))).toBe("Q1");
-        expect(period.formatShort(new Date(2020, 1, 15))).toBe("Q1");
-        expect(period.formatShort(new Date(2020, 2, 15))).toBe("Q1");
-        expect(period.formatShort(new Date(2020, 3, 15))).toBe("Q2");
-        expect(period.formatShort(new Date(2020, 4, 15))).toBe("Q2");
-        expect(period.formatShort(new Date(2020, 5, 15))).toBe("Q2");
-        expect(period.formatShort(new Date(2020, 6, 15))).toBe("Q3");
-        expect(period.formatShort(new Date(2020, 7, 15))).toBe("Q3");
-        expect(period.formatShort(new Date(2020, 8, 15))).toBe("Q3");
-        expect(period.formatShort(new Date(2020, 9, 15))).toBe("Q4");
-        expect(period.formatShort(new Date(2020, 10, 15))).toBe("Q4");
-        expect(period.formatShort(new Date(2020, 11, 15))).toBe("Q4");
-
-        expect(period.formatLong(new Date(2020, 0, 15))).toBe("Quarter 1 of 2020");
-        expect(period.formatLong(new Date(2020, 1, 15))).toBe("Quarter 1 of 2020");
-        expect(period.formatLong(new Date(2020, 2, 15))).toBe("Quarter 1 of 2020");
-        expect(period.formatLong(new Date(2020, 3, 15))).toBe("Quarter 2 of 2020");
-        expect(period.formatLong(new Date(2020, 4, 15))).toBe("Quarter 2 of 2020");
-        expect(period.formatLong(new Date(2020, 5, 15))).toBe("Quarter 2 of 2020");
-        expect(period.formatLong(new Date(2020, 6, 15))).toBe("Quarter 3 of 2020");
-        expect(period.formatLong(new Date(2020, 7, 15))).toBe("Quarter 3 of 2020");
-        expect(period.formatLong(new Date(2020, 8, 15))).toBe("Quarter 3 of 2020");
-        expect(period.formatLong(new Date(2020, 9, 15))).toBe("Quarter 4 of 2020");
-        expect(period.formatLong(new Date(2020, 10, 15))).toBe("Quarter 4 of 2020");
-        expect(period.formatLong(new Date(2020, 11, 15))).toBe("Quarter 4 of 2020");
+        expect(period.formatShort(DateTime.fromObject({ year: 2020, month, day: 15 }))).toBe(
+            expected_short,
+        );
+        expect(period.formatLong(DateTime.fromObject({ year: 2020, month, day: 15 }))).toBe(
+            expected_long,
+        );
     });
 
     it.each([[-1], [0]])(
         "Returns empty array for additional units when nb is lesser than 0",
         (nb_missing_quarters) => {
-            start = new Date(2020, 2, 15);
-            end = new Date(2020, 7, 15);
+            start = DateTime.fromJSDate(new Date(2020, 2, 15));
+            end = DateTime.fromJSDate(new Date(2020, 7, 15));
             const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
 
             expect(period.additionalUnits(nb_missing_quarters)).toStrictEqual([]);
@@ -104,8 +99,8 @@ describe("TimePeriodQuarter", () => {
     );
 
     it("Returns an array of additional quarters", () => {
-        start = new Date(2020, 2, 15);
-        end = new Date(2020, 3, 15);
+        start = DateTime.fromJSDate(new Date(2020, 2, 15));
+        end = DateTime.fromJSDate(new Date(2020, 3, 15));
         const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
 
         expect(toDateString(period.additionalUnits(3))).toStrictEqual([
@@ -116,8 +111,8 @@ describe("TimePeriodQuarter", () => {
     });
 
     it("should return empty string for getEvenOddClass since we don't need special background alternance", () => {
-        const start = new Date(2020, 2, 15);
-        const end = new Date(2020, 3, 15);
+        const start = DateTime.fromJSDate(new Date(2020, 2, 15));
+        const end = DateTime.fromJSDate(new Date(2020, 3, 15));
         const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
 
         expect(period.getEvenOddClass()).toBe("");

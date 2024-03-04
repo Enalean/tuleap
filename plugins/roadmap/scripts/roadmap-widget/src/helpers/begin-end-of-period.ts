@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { DateTime } from "luxon";
 
-export function getBeginningOfPeriod(start: Date, end: Date): Date {
+export function getBeginningOfPeriod(start: DateTime, end: DateTime): DateTime {
     return start <= end ? start : end;
 }
 
-export function getEndOfPeriod(start: Date, end: Date): Date {
+export function getEndOfPeriod(start: DateTime, end: DateTime): DateTime {
     return start <= end ? end : start;
 }

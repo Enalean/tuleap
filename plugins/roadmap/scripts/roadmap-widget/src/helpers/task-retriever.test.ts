@@ -50,8 +50,8 @@ describe("task-retriever", () => {
             const tasks = await retrieveTasks();
 
             expect(tasks[0].id).toBe(6422);
-            expect(tasks[0].start?.toDateString()).toBe("Sun Mar 01 2020");
-            expect(tasks[0].end?.toDateString()).toBe("Sat Mar 14 2020");
+            expect(tasks[0].start?.toJSDate().toDateString()).toBe("Sun Mar 01 2020");
+            expect(tasks[0].end?.toJSDate().toDateString()).toBe("Sat Mar 14 2020");
         });
 
         it("Removes tasks that don't have start and end dates because we don't know how to display them yet", async () => {

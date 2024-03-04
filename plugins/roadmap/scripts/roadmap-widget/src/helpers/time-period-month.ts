@@ -19,44 +19,41 @@
 
 import type { TimePeriod } from "../type";
 import { getBeginningOfPeriod, getEndOfPeriod } from "./begin-end-of-period";
+import type { DateTime } from "luxon";
 
 export class TimePeriodMonth implements TimePeriod {
-    private readonly months: Date[];
-    private readonly formatter_short: Intl.DateTimeFormat;
-    private readonly formatter_long: Intl.DateTimeFormat;
+    private readonly months: DateTime[];
 
     constructor(
-        readonly from: Date,
-        readonly to: Date,
-        readonly locale_bcp47: string,
+        readonly from: DateTime,
+        readonly to: DateTime,
+        private readonly locale_bcp47: string,
     ) {
         this.months = getMonths(from, to);
-        this.formatter_short = new Intl.DateTimeFormat(locale_bcp47, {
+    }
+
+    static getDummyTimePeriod(now: DateTime): TimePeriod {
+        return new TimePeriodMonth(now, now, "en-US");
+    }
+
+    get units(): DateTime[] {
+        return this.months;
+    }
+
+    formatShort(unit: DateTime): string {
+        return unit.setLocale(this.locale_bcp47).toLocaleString({
             month: "short",
         });
-        this.formatter_long = new Intl.DateTimeFormat(locale_bcp47, {
+    }
+
+    formatLong(unit: DateTime): string {
+        return unit.setLocale(this.locale_bcp47).toLocaleString({
             month: "long",
             year: "numeric",
         });
     }
 
-    static getDummyTimePeriod(now: Date): TimePeriod {
-        return new TimePeriodMonth(now, now, "en-US");
-    }
-
-    get units(): Date[] {
-        return this.months;
-    }
-
-    formatShort(unit: Date): string {
-        return this.formatter_short.format(unit);
-    }
-
-    formatLong(unit: Date): string {
-        return this.formatter_long.format(unit);
-    }
-
-    additionalUnits(nb: number): Date[] {
+    additionalUnits(nb: number): DateTime[] {
         return getAdditionalMonths(this.months[this.months.length - 1], nb);
     }
 
@@ -65,13 +62,11 @@ export class TimePeriodMonth implements TimePeriod {
     }
 }
 
-function getMonths(start: Date, end: Date): Date[] {
+function getMonths(start: DateTime, end: DateTime): DateTime[] {
     const beginning_of_period = getBeginningOfPeriod(start, end);
     const end_of_period = getEndOfPeriod(start, end);
 
-    const base_month = new Date(beginning_of_period);
-    base_month.setUTCDate(1);
-    base_month.setUTCHours(0, 0, 0);
+    const base_month = beginning_of_period.startOf("month");
 
     const months = [base_month];
     let i = 1;
@@ -82,8 +77,8 @@ function getMonths(start: Date, end: Date): Date[] {
     return months;
 }
 
-function getAdditionalMonths(base_month: Date, nb_missing_months: number): Date[] {
-    const additional_months: Date[] = [];
+function getAdditionalMonths(base_month: DateTime, nb_missing_months: number): DateTime[] {
+    const additional_months: DateTime[] = [];
 
     if (nb_missing_months <= 0) {
         return additional_months;
@@ -96,11 +91,6 @@ function getAdditionalMonths(base_month: Date, nb_missing_months: number): Date[
     return additional_months;
 }
 
-function getBeginningOfNextNthMonth(base_month: Date, nth: number): Date {
-    const next_nth_month = new Date(base_month);
-    next_nth_month.setUTCDate(1);
-    next_nth_month.setUTCHours(0, 0, 0);
-    next_nth_month.setUTCMonth(base_month.getUTCMonth() + nth);
-
-    return next_nth_month;
+function getBeginningOfNextNthMonth(base_month: DateTime, nth: number): DateTime {
+    return base_month.startOf("month").plus({ month: nth });
 }

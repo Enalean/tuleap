@@ -20,6 +20,7 @@
 import type { IterationsState } from "./type";
 import type { Iteration } from "../../type";
 import * as getters from "./iterations-getters";
+import { DateTime } from "luxon";
 
 describe("iterations-getters", () => {
     it.each([
@@ -36,23 +37,23 @@ describe("iterations-getters", () => {
         "Knowing that first date is 15th and last date is 20th, when iteration start on %i and ends on %i, then display of iteration is %s",
         (start: number, end: number, expected_is_displayed: boolean): void => {
             const root_getters = {
-                "timeperiod/first_date": new Date(`2020-04-15T22:00:00.000Z`),
-                "timeperiod/last_date": new Date(`2020-04-20T22:00:00.000Z`),
+                "timeperiod/first_date": DateTime.fromISO(`2020-04-15T22:00:00.000Z`),
+                "timeperiod/last_date": DateTime.fromISO(`2020-04-20T22:00:00.000Z`),
             };
 
             const state: IterationsState = {
                 lvl1_iterations: [
                     {
                         id: 123,
-                        start: new Date(`2020-04-${start}T22:00:00.000Z`),
-                        end: new Date(`2020-04-${end}T22:00:00.000Z`),
+                        start: DateTime.fromISO(`2020-04-${start}T22:00:00.000Z`),
+                        end: DateTime.fromISO(`2020-04-${end}T22:00:00.000Z`),
                     } as Iteration,
                 ],
                 lvl2_iterations: [
                     {
                         id: 124,
-                        start: new Date(`2020-04-${start}T22:00:00.000Z`),
-                        end: new Date(`2020-04-${end}T22:00:00.000Z`),
+                        start: DateTime.fromISO(`2020-04-${start}T22:00:00.000Z`),
+                        end: DateTime.fromISO(`2020-04-${end}T22:00:00.000Z`),
                     } as Iteration,
                 ],
             };

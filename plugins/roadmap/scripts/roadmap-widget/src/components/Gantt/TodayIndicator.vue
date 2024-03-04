@@ -28,6 +28,7 @@ import { Component } from "vue-property-decorator";
 import { getLeftForDate } from "../../helpers/left-postion";
 import type { TimePeriod } from "../../type";
 import { namespace, State } from "vuex-class";
+import type { DateTime } from "luxon";
 
 const timeperiod = namespace("timeperiod");
 
@@ -37,7 +38,7 @@ export default class TodayIndicator extends Vue {
     private readonly time_period!: TimePeriod;
 
     @State
-    readonly now!: Date;
+    readonly now!: DateTime;
 
     @State
     readonly locale_bcp47!: string;
@@ -48,14 +49,12 @@ export default class TodayIndicator extends Vue {
     }
 
     get title(): string {
-        const f = new Intl.DateTimeFormat(this.locale_bcp47, {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-        });
-
         return this.$gettextInterpolate(this.$gettext("Today: %{ date }"), {
-            date: f.format(this.now),
+            date: this.now.setLocale(this.locale_bcp47).toLocaleString({
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+            }),
         });
     }
 }

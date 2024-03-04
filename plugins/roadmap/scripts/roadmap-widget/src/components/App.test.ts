@@ -29,6 +29,7 @@ import LoadingState from "./LoadingState.vue";
 import type { RootState } from "../store/type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TasksState } from "../store/tasks/type";
+import { DateTime } from "luxon";
 
 describe("App", () => {
     async function mountComponent(
@@ -138,8 +139,16 @@ describe("App", () => {
         const wrapper = await mountComponent(
             {
                 tasks: [
-                    { id: 1, start: new Date(2020, 3, 15), end: null } as Task,
-                    { id: 2, start: new Date(2020, 4, 15), end: null } as Task,
+                    {
+                        id: 1,
+                        start: DateTime.fromObject({ year: 2020, month: 4, day: 15 }),
+                        end: null,
+                    } as Task,
+                    {
+                        id: 2,
+                        start: DateTime.fromObject({ year: 2020, month: 5, day: 15 }),
+                        end: null,
+                    } as Task,
                 ],
             },
             {

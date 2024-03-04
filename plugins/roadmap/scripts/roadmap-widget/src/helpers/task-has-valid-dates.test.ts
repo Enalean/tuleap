@@ -18,6 +18,7 @@
  */
 import type { Task } from "../type";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "./task-has-valid-dates";
+import { DateTime } from "luxon";
 
 describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
     it("Returns true if no start date", () => {
@@ -27,7 +28,7 @@ describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
     it("Returns true if no end date", () => {
         expect(
             doesTaskHaveEndDateGreaterOrEqualToStartDate({
-                start: new Date("2020-04-14T22:00:00.000Z"),
+                start: DateTime.fromJSDate(new Date("2020-04-14T22:00:00.000Z")),
                 end: null,
             } as Task),
         ).toBe(true);
@@ -36,8 +37,8 @@ describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
     it("Returns true if end date = start date", () => {
         expect(
             doesTaskHaveEndDateGreaterOrEqualToStartDate({
-                start: new Date("2020-04-14T22:00:00.000Z"),
-                end: new Date("2020-04-14T22:00:00.000Z"),
+                start: DateTime.fromJSDate(new Date("2020-04-14T22:00:00.000Z")),
+                end: DateTime.fromJSDate(new Date("2020-04-14T22:00:00.000Z")),
             } as Task),
         ).toBe(true);
     });
@@ -45,8 +46,8 @@ describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
     it("Returns true if end date > start date", () => {
         expect(
             doesTaskHaveEndDateGreaterOrEqualToStartDate({
-                start: new Date("2020-04-14T22:00:00.000Z"),
-                end: new Date("2020-04-16T22:00:00.000Z"),
+                start: DateTime.fromJSDate(new Date("2020-04-14T22:00:00.000Z")),
+                end: DateTime.fromJSDate(new Date("2020-04-16T22:00:00.000Z")),
             } as Task),
         ).toBe(true);
     });
@@ -63,8 +64,8 @@ describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
     it("Returns false if end date < start date", () => {
         expect(
             doesTaskHaveEndDateGreaterOrEqualToStartDate({
-                start: new Date("2020-04-14T22:00:00.000Z"),
-                end: new Date("2020-04-10T22:00:00.000Z"),
+                start: DateTime.fromJSDate(new Date("2020-04-14T22:00:00.000Z")),
+                end: DateTime.fromJSDate(new Date("2020-04-10T22:00:00.000Z")),
             } as Task),
         ).toBe(false);
     });

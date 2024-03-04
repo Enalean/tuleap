@@ -19,18 +19,21 @@
 
 import type { SkeletonRow, SubtaskRow, Task, TaskRow } from "../type";
 import { sortRows } from "./rows-sorter";
+import { DateTime, Settings } from "luxon";
+
+Settings.defaultZone = "UTC";
 
 describe("rows-sorter", () => {
     it("sort rows", () => {
         const parent_task = {
             id: 70,
-            start: new Date(40),
+            start: DateTime.fromJSDate(new Date(40)),
         } as Task;
         const unsorted_rows = [
             {
                 task: {
                     id: 60,
-                    start: new Date(40),
+                    start: DateTime.fromJSDate(new Date(40)),
                     parent: parent_task,
                 },
             } as TaskRow,
@@ -52,13 +55,13 @@ describe("rows-sorter", () => {
             {
                 subtask: {
                     id: 30,
-                    start: new Date(30),
+                    start: DateTime.fromJSDate(new Date(30)),
                 },
             } as SubtaskRow,
             {
                 task: {
                     id: 20,
-                    start: new Date(20),
+                    start: DateTime.fromJSDate(new Date(20)),
                 },
             } as TaskRow,
             {
@@ -70,54 +73,54 @@ describe("rows-sorter", () => {
         ];
 
         expect(sortRows(unsorted_rows)).toMatchInlineSnapshot(`
-            [
-              {
-                "task": {
-                  "id": 20,
-                  "start": 1970-01-01T00:00:00.020Z,
-                },
-              },
-              {
-                "subtask": {
-                  "id": 30,
-                  "start": 1970-01-01T00:00:00.030Z,
-                },
-              },
-              {
-                "task": {
-                  "id": 70,
-                  "start": 1970-01-01T00:00:00.040Z,
-                },
-              },
-              {
-                "task": {
-                  "id": 60,
-                  "parent": {
-                    "id": 70,
-                    "start": 1970-01-01T00:00:00.040Z,
-                  },
-                  "start": 1970-01-01T00:00:00.040Z,
-                },
-              },
-              {
-                "for_task": {
-                  "id": 5,
-                  "start": null,
-                },
-              },
-              {
-                "for_task": {
-                  "id": 10,
-                  "start": null,
-                },
-              },
-              {
-                "task": {
-                  "id": 50,
-                  "start": null,
-                },
-              },
-            ]
-        `);
+[
+  {
+    "task": {
+      "id": 20,
+      "start": "1970-01-01T00:00:00.020Z",
+    },
+  },
+  {
+    "subtask": {
+      "id": 30,
+      "start": "1970-01-01T00:00:00.030Z",
+    },
+  },
+  {
+    "task": {
+      "id": 70,
+      "start": "1970-01-01T00:00:00.040Z",
+    },
+  },
+  {
+    "task": {
+      "id": 60,
+      "parent": {
+        "id": 70,
+        "start": "1970-01-01T00:00:00.040Z",
+      },
+      "start": "1970-01-01T00:00:00.040Z",
+    },
+  },
+  {
+    "for_task": {
+      "id": 5,
+      "start": null,
+    },
+  },
+  {
+    "for_task": {
+      "id": 10,
+      "start": null,
+    },
+  },
+  {
+    "task": {
+      "id": 50,
+      "start": null,
+    },
+  },
+]
+`);
     });
 });

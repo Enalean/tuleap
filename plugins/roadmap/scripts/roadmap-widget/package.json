@@ -11,8 +11,8 @@
     "@tuleap/tooltip": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:*",
     "@vueuse/core": "^8.7.3",
-    "current-week-number": "^1.0.7",
     "lit-html": "^2.8.0",
+    "luxon": "^3.4.4",
     "vue": "2.7.8",
     "vue-dompurify-html": "^4.0.0",
     "vuex": "^3.6.2"
@@ -22,7 +22,9 @@
     "@tuleap/po-gettext-plugin": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
+    "@types/luxon": "^3.4.2",
     "@vue/test-utils": "^1.3",
+    "jest-environment-jsdom": "^29.7.0",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
     "vuex-class": "^0.3.2"

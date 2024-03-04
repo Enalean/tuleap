@@ -60,10 +60,7 @@ export default class IterationBar extends Vue {
     get style(): string {
         const left = getLeftForDate(this.iteration.start, this.time_period);
 
-        const task_end_date = new Date(this.iteration.end);
-        const task_end_date_plus_one_day = new Date(
-            task_end_date.setUTCDate(task_end_date.getUTCDate() + 1),
-        );
+        const task_end_date_plus_one_day = this.iteration.end.plus({ day: 1 });
         const width = getLeftForDate(task_end_date_plus_one_day, this.time_period) - left;
 
         const height =

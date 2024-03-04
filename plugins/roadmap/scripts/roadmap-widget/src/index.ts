@@ -28,8 +28,14 @@ import type { RootState } from "./store/type";
 import { toBCP47 } from "./helpers/locale-for-intl";
 import type { VueGettextProvider } from "./helpers/vue-gettext-provider";
 import type { TimeScale } from "./type";
+import { Settings } from "luxon";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    const timezone = document.body.dataset.userTimezone;
+    if (timezone) {
+        Settings.defaultZone = timezone;
+    }
+
     const all_vue_mount_points = document.querySelectorAll(".roadmap");
     if (all_vue_mount_points.length === 0) {
         return;

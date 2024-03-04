@@ -18,15 +18,18 @@
  */
 
 import { TimePeriodMonth } from "./time-period-month";
+import { DateTime, Settings } from "luxon";
 
-function toDateString(collection: Date[]): string[] {
-    return collection.map((date) => date.toDateString());
+function toDateString(collection: DateTime[]): string[] {
+    return collection.map((date) => date.toJSDate().toDateString());
 }
+
+Settings.defaultZone = "UTC";
 
 describe("TimePeriodMonth", () => {
     it("returns months when start is lesser than end", () => {
-        const start = new Date(2020, 1, 15);
-        const end = new Date(2020, 3, 15);
+        const start = DateTime.fromObject({ year: 2020, month: 2, day: 15 });
+        const end = DateTime.fromObject({ year: 2020, month: 4, day: 15 });
         const period = new TimePeriodMonth(start, end, "en-US");
 
         expect(toDateString(period.units)).toStrictEqual([
@@ -38,15 +41,15 @@ describe("TimePeriodMonth", () => {
     });
 
     it("returns months when start is in the same month than end", () => {
-        const start = new Date(2020, 3, 10);
-        const end = new Date(2020, 3, 15);
+        const start = DateTime.fromObject({ year: 2020, month: 4, day: 10 });
+        const end = DateTime.fromObject({ year: 2020, month: 4, day: 15 });
         const period = new TimePeriodMonth(start, end, "en-US");
         expect(toDateString(period.units)).toStrictEqual(["Wed Apr 01 2020", "Fri May 01 2020"]);
     });
 
     it("returns months when start is greater than end", () => {
-        const start = new Date(2020, 3, 15);
-        const end = new Date(2020, 1, 15);
+        const start = DateTime.fromObject({ year: 2020, month: 4, day: 15 });
+        const end = DateTime.fromObject({ year: 2020, month: 2, day: 15 });
         const period = new TimePeriodMonth(start, end, "en-US");
         expect(toDateString(period.units)).toStrictEqual([
             "Sat Feb 01 2020",
@@ -58,8 +61,8 @@ describe("TimePeriodMonth", () => {
 
     it("does not mangle months with real user data", () => {
         const period = new TimePeriodMonth(
-            new Date("2021-03-31T22:00:00.000Z"),
-            new Date("2021-10-30T22:00:00.000Z"),
+            DateTime.fromISO("2021-03-31T22:00:00.000Z"),
+            DateTime.fromISO("2021-10-30T22:00:00.000Z"),
             "en-US",
         );
         expect(toDateString(period.units)).toStrictEqual([
@@ -76,16 +79,18 @@ describe("TimePeriodMonth", () => {
     });
 
     it("Builds a dummy period that can be used for skeletons", () => {
-        const period = TimePeriodMonth.getDummyTimePeriod(new Date(2020, 5, 15));
+        const period = TimePeriodMonth.getDummyTimePeriod(
+            DateTime.fromObject({ year: 2020, month: 6, day: 15 }),
+        );
         expect(toDateString(period.units)).toStrictEqual(["Mon Jun 01 2020", "Wed Jul 01 2020"]);
     });
 
     it("Format a unit", () => {
-        const start = new Date(2020, 2, 15);
-        const end = new Date(2020, 7, 15);
+        const start = DateTime.fromObject({ year: 2020, month: 3, day: 15 });
+        const end = DateTime.fromObject({ year: 2020, month: 8, day: 15 });
         const period = new TimePeriodMonth(start, end, "en-US");
 
-        const a_date = new Date(2020, 5, 15);
+        const a_date = DateTime.fromObject({ year: 2020, month: 6, day: 15 });
         expect(period.formatShort(a_date)).toBe("Jun");
         expect(period.formatLong(a_date)).toBe("June 2020");
     });
@@ -93,8 +98,8 @@ describe("TimePeriodMonth", () => {
     it.each([[-1], [0]])(
         "Returns empty array for additional units when nb is lesser than 0",
         (nb_missing_months) => {
-            const start = new Date(2020, 2, 15);
-            const end = new Date(2020, 7, 15);
+            const start = DateTime.fromObject({ year: 2020, month: 3, day: 15 });
+            const end = DateTime.fromObject({ year: 2020, month: 8, day: 15 });
             const period = new TimePeriodMonth(start, end, "en-US");
 
             expect(period.additionalUnits(nb_missing_months)).toStrictEqual([]);
@@ -102,8 +107,8 @@ describe("TimePeriodMonth", () => {
     );
 
     it("Returns an array of additional months", () => {
-        const start = new Date(2020, 2, 15);
-        const end = new Date(2020, 3, 15);
+        const start = DateTime.fromObject({ year: 2020, month: 3, day: 15 });
+        const end = DateTime.fromObject({ year: 2020, month: 4, day: 15 });
         const period = new TimePeriodMonth(start, end, "en-US");
 
         expect(toDateString(period.additionalUnits(3))).toStrictEqual([
@@ -114,8 +119,8 @@ describe("TimePeriodMonth", () => {
     });
 
     it("should return empty string for getEvenOddClass since we don't need special background alternance", () => {
-        const start = new Date(2020, 2, 15);
-        const end = new Date(2020, 3, 15);
+        const start = DateTime.fromObject({ year: 2020, month: 3, day: 15 });
+        const end = DateTime.fromObject({ year: 2020, month: 4, day: 15 });
         const period = new TimePeriodMonth(start, end, "en-US");
 
         expect(period.getEvenOddClass()).toBe("");
