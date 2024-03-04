@@ -28,6 +28,7 @@ use Tuleap\PullRequest\Criterion\LabelCriterion;
 use Tuleap\PullRequest\Criterion\PullRequestSortOrder;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\Criterion\StatusCriterion;
+use Tuleap\PullRequest\Criterion\TargetBranchCriterion;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
@@ -194,6 +195,29 @@ final class DaoTest extends TestCase
         self::assertEquals(2, $result->total_size);
     }
 
+    public function testItFiltersOnTargetBranches(): void
+    {
+        $result = $this->dao->getPaginatedPullRequests(
+            self::REPOSITORY_ID,
+            new SearchCriteria(
+                null,
+                [],
+                [],
+                [],
+                [new TargetBranchCriterion("walnut")],
+            ),
+            PullRequestSortOrder::DESCENDING,
+            self::LIMIT,
+            self::OFFSET,
+        );
+
+        self::assertEqualsCanonicalizing([
+            $this->open_pull_request_id,
+            $this->merged_pull_request_id,
+        ], array_column($result->pull_requests, "id"));
+        self::assertEquals(2, $result->total_size);
+    }
+
     public function testItAppliesAllTheFilters(): void
     {
         $result = $this->dao->getPaginatedPullRequests(
@@ -203,6 +227,7 @@ final class DaoTest extends TestCase
                 [new AuthorCriterion(self::ALICE_USER_ID)],
                 [new LabelCriterion(self::LABEL_EASY_FIX_ID)],
                 [new KeywordCriterion("external")],
+                [new TargetBranchCriterion("baobab")],
             ),
             PullRequestSortOrder::DESCENDING,
             self::LIMIT,
@@ -246,6 +271,7 @@ final class DaoTest extends TestCase
                 ->createdBy(self::ALICE_USER_ID)
                 ->createdAt(1)
                 ->withRepositoryId(self::REPOSITORY_ID)
+                ->toDestinationBranch("walnut")
                 ->build(),
         );
     }
@@ -259,6 +285,7 @@ final class DaoTest extends TestCase
                 ->createdBy(self::BOB_USER_ID)
                 ->createdAt(2)
                 ->withRepositoryId(self::REPOSITORY_ID)
+                ->toDestinationBranch("walnut")
                 ->build(),
         );
 
@@ -276,6 +303,7 @@ final class DaoTest extends TestCase
                 ->createdBy(self::ALICE_USER_ID)
                 ->createdAt(3)
                 ->withRepositoryId(self::REPOSITORY_ID)
+                ->toDestinationBranch("baobab")
                 ->build()
         );
 
