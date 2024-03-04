@@ -58,6 +58,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { DISPLAY_TULEAP_API_ERROR, PROJECT_ID, REPOSITORY_ID } from "../../injection-symbols";
 import { AuthorSelectorEntry } from "./Author/AuthorSelectorEntry";
 import { LabelsSelectorEntry } from "./Labels/LabelsSelectorEntry";
+import { TargetBranchSelectorEntry } from "./Branches/TargetBranchSelectorEntry";
 import type { StoreListFilters } from "./ListFiltersStore";
 import ClosedPullRequestsFilterSwitch from "./Status/ClosedPullRequestsFilterSwitch.vue";
 import FilterBadge from "./FilterBadge.vue";
@@ -77,6 +78,7 @@ const props = defineProps<{
 const selectors_entries = [
     AuthorSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, repository_id),
     LabelsSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, project_id),
+    TargetBranchSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, repository_id),
 ];
 </script>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { User, ProjectLabel, ProjectLabelsCollection } from "@tuleap/core-rest-api-types";
+import type { LazyboxItem } from "@tuleap/lazybox";
+import { isBranch } from "./TargetBranchSelectorEntry";
 
-export * from "./pull-request";
-export * from "./timeline";
-export * from "./post-comments";
-export * from "./patch-comments";
-export * from "./labels";
-export * from "./branches";
+export const BranchFilteringCallback = (query: string, items: LazyboxItem[]): LazyboxItem[] => {
+    const lowercase_query = query.toLowerCase();
+    if (lowercase_query === "") {
+        return items;
+    }
+
+    return items.filter(
+        (branch) =>
+            isBranch(branch.value) && branch.value.name.toLowerCase().includes(lowercase_query),
+    );
+};

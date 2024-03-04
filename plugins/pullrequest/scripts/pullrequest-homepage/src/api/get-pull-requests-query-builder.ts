@@ -21,6 +21,7 @@ import type { PullRequestsListFilter } from "../components/Filters/PullRequestsL
 import { TYPE_FILTER_AUTHOR } from "../components/Filters/Author/AuthorFilter";
 import { TYPE_FILTER_LABEL } from "../components/Filters/Labels/LabelFilter";
 import { TYPE_FILTER_KEYWORD } from "../components/Filters/Keywords/KeywordFilter";
+import { TYPE_FILTER_TARGET_BRANCH } from "../components/Filters/Branches/TargetBranchFilter";
 
 const assignLabelsToQuery = (query: object, labels_ids: number[]): void => {
     if (labels_ids.length === 0) {
@@ -55,18 +56,25 @@ export const buildQueryFromFilters = (
     }
 
     filters.forEach((filter) => {
-        if (filter.type === TYPE_FILTER_AUTHOR) {
-            Object.assign(query, {
-                authors: [{ id: filter.value.id }],
-            });
-        }
-
-        if (filter.type === TYPE_FILTER_LABEL) {
-            labels_ids.push(filter.value.id);
-        }
-
-        if (filter.type === TYPE_FILTER_KEYWORD) {
-            keywords.push(filter.value);
+        switch (filter.type) {
+            case TYPE_FILTER_AUTHOR:
+                Object.assign(query, {
+                    authors: [{ id: filter.value.id }],
+                });
+                break;
+            case TYPE_FILTER_LABEL:
+                labels_ids.push(filter.value.id);
+                break;
+            case TYPE_FILTER_KEYWORD:
+                keywords.push(filter.value);
+                break;
+            case TYPE_FILTER_TARGET_BRANCH:
+                Object.assign(query, {
+                    target_branches: [{ name: filter.value.name }],
+                });
+                break;
+            default:
+                break;
         }
     });
 
