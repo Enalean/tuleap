@@ -22,6 +22,7 @@ import type {
     OverviewReportTracker,
     TrackerWithTimes,
 } from "@tuleap/plugin-timetracking-rest-api-types";
+import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
 
 const a_month_ago = new Date();
 a_month_ago.setMonth(a_month_ago.getMonth() - 1);
@@ -57,12 +58,12 @@ export type OverviewWidgetState = {
     selected_user_id: number | null;
 };
 
-export const default_state: OverviewWidgetState = {
+export const default_state = {
     report_id: 0,
     user_id: 0,
     are_void_trackers_hidden: false,
-    start_date: a_month_ago.toISOString().split("T")[0],
-    end_date: new Date().toISOString().split("T")[0],
+    start_date: formatDatetimeToYearMonthDay(a_month_ago),
+    end_date: formatDatetimeToYearMonthDay(new Date()),
     error_message: null,
     success_message: null,
     selected_trackers: [],

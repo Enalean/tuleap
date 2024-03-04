@@ -18,7 +18,10 @@
  */
 
 import { defineStore } from "pinia";
-import { formatMinutes } from "@tuleap/plugin-timetracking-time-formatters";
+import {
+    formatDatetimeToYearMonthDay,
+    formatMinutes,
+} from "@tuleap/plugin-timetracking-time-formatters";
 import { postTime, delTime, getTrackedTimes, putTime } from "../api/rest-querier";
 import {
     REST_FEEDBACK_ADD,
@@ -57,8 +60,8 @@ export const usePersonalTimetrackingWidgetStore = defineStore("root", {
     state: (): State => {
         return {
             user_id: 0,
-            start_date: a_week_ago.toISOString().split("T")[0],
-            end_date: new Date().toISOString().split("T")[0],
+            start_date: formatDatetimeToYearMonthDay(a_week_ago),
+            end_date: formatDatetimeToYearMonthDay(new Date()),
             reading_mode: true,
             total_times: 0,
             user_locale: "",

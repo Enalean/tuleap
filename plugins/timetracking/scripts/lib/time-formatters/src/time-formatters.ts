@@ -54,9 +54,7 @@ export function formatDatetimeToISO(string_date: string): string {
     );
 }
 
-export function formatDatetimeToYearMonthDay(string_date: string): string {
-    const date: Date = new Date(string_date);
-
+export function formatDatetimeToYearMonthDay(date: Date): string {
     return `${date.getUTCFullYear()}-${padTimeNumber(date.getUTCMonth() + 1)}-${padTimeNumber(
         date.getUTCDate(),
     )}`;

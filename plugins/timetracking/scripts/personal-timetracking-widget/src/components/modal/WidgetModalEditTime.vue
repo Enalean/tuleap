@@ -98,8 +98,8 @@ const props = defineProps<{
 
 const date = ref(
     props.timeData
-        ? formatDatetimeToYearMonthDay(props.timeData.date)
-        : formatDatetimeToYearMonthDay(new Date().toISOString()),
+        ? formatDatetimeToYearMonthDay(new Date(props.timeData.date))
+        : formatDatetimeToYearMonthDay(new Date()),
 );
 const step = ref(props.timeData && props.timeData.step ? props.timeData.step : "");
 const time = ref(

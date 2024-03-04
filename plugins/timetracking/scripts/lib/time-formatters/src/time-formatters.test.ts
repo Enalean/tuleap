@@ -69,7 +69,9 @@ describe("Time formatters", (): void => {
 
     describe("formatDatetimeToYearMonthDay", (): void => {
         it("When I call this method, then it should return the current date in YYYY-mm-dd format", (): void => {
-            const formatted_date: string = formatDatetimeToYearMonthDay("2018-01-01T00:00:00Z");
+            const formatted_date: string = formatDatetimeToYearMonthDay(
+                new Date("2018-01-01T00:00:00Z"),
+            );
 
             expect(formatted_date).toBe("2018-01-01");
         });
