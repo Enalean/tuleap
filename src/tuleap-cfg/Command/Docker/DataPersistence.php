@@ -43,7 +43,7 @@ final class DataPersistence
      */
     private $process_factory;
 
-    public function __construct(ProcessFactory $process_factory, string ...$paths)
+    public function __construct(ProcessFactory $process_factory, private readonly SSHDaemon $ssh_daemon, string ...$paths)
     {
         $this->process_factory = $process_factory;
         $this->paths           = $paths;
@@ -95,5 +95,8 @@ final class DataPersistence
             $output->writeln("Create link to persistent storage for $path");
             symlink(self::BASEDIR . $path, $path);
         }
+        // Some SSH server host keys might have been created with improper rights/owner
+        // We might also need to create SSH host keys with new cryptographic algorithms
+        $this->ssh_daemon->generateSSHServerKeys();
     }
 }

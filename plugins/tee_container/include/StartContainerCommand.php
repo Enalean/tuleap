@@ -39,6 +39,7 @@ use Tuleap\BuildVersion\VersionPresenter;
 use TuleapCfg\Command\Docker\DataPersistence;
 use TuleapCfg\Command\Docker\PluginsInstallClosureBuilder;
 use TuleapCfg\Command\Docker\Postfix;
+use TuleapCfg\Command\Docker\SSHDaemon;
 use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
 use TuleapCfg\Command\Docker\VariableProviderInterface;
@@ -68,7 +69,11 @@ final class StartContainerCommand extends Command
         private readonly PluginsInstallClosureBuilder $plugins_install_closure_builder,
         private readonly VariableProviderInterface $variable_provider,
     ) {
-        $this->data_persistence = new DataPersistence($this->process_factory, ...self::PERSISTENT_DATA);
+        $this->data_persistence = new DataPersistence(
+            $this->process_factory,
+            new SSHDaemon($this->process_factory),
+            ...self::PERSISTENT_DATA,
+        );
 
         parent::__construct();
     }

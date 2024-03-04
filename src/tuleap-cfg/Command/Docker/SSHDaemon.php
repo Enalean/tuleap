@@ -42,7 +42,6 @@ final class SSHDaemon
     {
         $output->writeln("Start SSH Daemon");
         $this->generateSSHServerKeys();
-        $this->ensureHostPermissionsAndOwnership();
         $this->process = $this->process_factory->getProcess(['/usr/sbin/sshd', '-E', '/dev/stderr', '-D']);
         $this->process->start();
     }
@@ -55,7 +54,7 @@ final class SSHDaemon
         }
     }
 
-    private function generateSSHServerKeys(): void
+    public function generateSSHServerKeys(): void
     {
         \Psl\Filesystem\create_directory(self::SSHD_DATA_DIRECTORY, 0755);
 
@@ -70,6 +69,8 @@ final class SSHDaemon
                 ['/usr/bin/ssh-keygen', '-t', $key_type, '-f', $host_key_path, '-N', '', '-C', '']
             )->mustRun();
         }
+
+        $this->ensureHostPermissionsAndOwnership();
     }
 
     private function ensureHostPermissionsAndOwnership(): void
