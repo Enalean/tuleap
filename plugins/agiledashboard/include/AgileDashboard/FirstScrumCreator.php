@@ -62,7 +62,10 @@ class AgileDashboard_FirstScrumCreator
         if ($already_existing_tracker) {
             return NewFeedback::warn(
                 sprintf(
-                    dgettext('tuleap-agiledashboard', 'We tried to create an initial scrum configuration for you but an existing tracker (%1$s) prevented it.'),
+                    dgettext(
+                        'tuleap-agiledashboard',
+                        'We tried to create an initial backlog configuration for you but an existing tracker (%1$s) prevented it.',
+                    ),
                     $already_existing_tracker,
                 )
             );
@@ -77,7 +80,10 @@ class AgileDashboard_FirstScrumCreator
                 ->match(
                     function (): NewFeedback {
                         return NewFeedback::success(
-                            dgettext('tuleap-agiledashboard', 'We created an initial scrum configuration for you. Enjoy!'),
+                            dgettext(
+                                'tuleap-agiledashboard',
+                                'We created an initial backlog configuration based on the scrum methodology for you. Enjoy!',
+                            ),
                         );
                     },
                     function (\Tuleap\NeverThrow\Fault $fault): NewFeedback {
@@ -86,7 +92,10 @@ class AgileDashboard_FirstScrumCreator
                 );
         } catch (Exception) {
             return NewFeedback::warn(
-                dgettext('tuleap-agiledashboard', 'We tried to create an initial scrum configuration for you but an internal error prevented it.')
+                dgettext(
+                    'tuleap-agiledashboard',
+                    'We tried to create an initial backlog configuration for you but an internal error prevented it.',
+                )
             );
         }
     }

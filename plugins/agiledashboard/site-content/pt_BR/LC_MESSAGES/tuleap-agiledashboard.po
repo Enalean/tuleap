@@ -467,7 +467,9 @@ msgstr ""
 msgid "View Planning"
 msgstr ""
 
-msgid "We created an initial scrum configuration for you. Enjoy!"
+msgid ""
+"We created an initial backlog configuration based on the scrum methodology "
+"for you. Enjoy!"
 msgstr ""
 
 msgid ""
@@ -487,12 +489,12 @@ msgstr ""
 
 #, php-format
 msgid ""
-"We tried to create an initial scrum configuration for you but an existing "
+"We tried to create an initial backlog configuration for you but an existing "
 "tracker (%1$s) prevented it."
 msgstr ""
 
 msgid ""
-"We tried to create an initial scrum configuration for you but an internal "
+"We tried to create an initial backlog configuration for you but an internal "
 "error prevented it."
 msgstr ""
 
