@@ -24,7 +24,7 @@
             data-test="tuleap-templates-section"
         >
             <template-card
-                v-for="template of templates"
+                v-for="template of props.templates"
                 v-bind:key="template.id"
                 v-bind:template="template"
             />
@@ -32,19 +32,9 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { ExternalTemplateData } from "../../../type";
 import TemplateCard from "../TemplateCard.vue";
 
-@Component({
-    components: {
-        TemplateCard,
-    },
-})
-export default class CategorisedExternalTemplatesList extends Vue {
-    @Prop({ required: true })
-    readonly templates!: ExternalTemplateData[];
-}
+const props = defineProps<{ templates: ExternalTemplateData[] }>();
 </script>
