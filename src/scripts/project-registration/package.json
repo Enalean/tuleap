@@ -6,10 +6,12 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@pinia/testing": "^0.1.3",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:*",
+    "pinia": "^2.0.21",
     "slugify": "^1.6.1",
     "vue": "^2.7.8",
     "vue-dompurify-html": "^4.0.0",

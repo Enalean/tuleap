@@ -77,12 +77,11 @@ import EventBus from "../../../helpers/event-bus";
 import slugify from "slugify";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Getter } from "vuex-class";
+import { useStore } from "../../../stores/root";
 
 @Component
 export default class ProjectShortName extends Vue {
-    @Getter
-    has_error!: boolean;
+    root_store = useStore();
 
     override $refs!: {
         shortname: HTMLFormElement;
@@ -113,7 +112,7 @@ export default class ProjectShortName extends Vue {
     }
 
     slugifyProjectShortName(value: string): void {
-        if (this.has_error || this.is_in_edit_mode) {
+        if (this.root_store.has_error || this.is_in_edit_mode) {
             return;
         }
 
@@ -159,10 +158,10 @@ export default class ProjectShortName extends Vue {
     }
 
     checkValidity(value: string): void {
-        if (this.has_error) {
+        if (this.root_store.has_error) {
             this.is_in_edit_mode = true;
             this.has_slug_error = true;
-            this.$store.commit("resetError");
+            this.root_store.resetError();
         }
 
         if (value.length < this.min_project_length || value.length > this.max_project_length) {
@@ -179,7 +178,7 @@ export default class ProjectShortName extends Vue {
             return false;
         }
 
-        return !this.has_error;
+        return !this.root_store.has_error;
     }
 
     shouldDisplayEditShortName(): boolean {
@@ -187,7 +186,7 @@ export default class ProjectShortName extends Vue {
             return true;
         }
 
-        return this.has_error;
+        return this.root_store.has_error;
     }
 }
 </script>

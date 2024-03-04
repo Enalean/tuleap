@@ -21,30 +21,31 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import ProjectShortName from "./ProjectShortName.vue";
 import type { DefaultData } from "vue/types/options";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import EventBus from "../../../helpers/event-bus";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 
 describe("ProjectShortName", () => {
-    let store: Store;
-
     async function createWrapper(
         data: DefaultData<ProjectShortName>,
     ): Promise<Wrapper<ProjectShortName>> {
-        const store_options = {
-            getters: { has_error: false },
-        };
+        const useStore = defineStore("root", {
+            getters: {
+                has_error: () => false,
+            },
+        });
 
-        store = createStoreMock(store_options);
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
         return shallowMount(ProjectShortName, {
             data(): DefaultData<ProjectShortName> {
                 return { ...data };
             },
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
+            pinia,
         });
     }
 

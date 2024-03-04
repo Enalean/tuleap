@@ -22,7 +22,7 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="field_description">
             <span v-translate>Description</span>
-            <i class="fa fa-asterisk" v-if="is_description_required" />
+            <i class="fa fa-asterisk" v-if="root_store.is_description_required" />
         </label>
 
         <textarea
@@ -30,7 +30,7 @@
             id="field_description"
             name="description"
             v-bind:placeholder="$gettext('My useful project description')"
-            v-bind:required="is_description_required"
+            v-bind:required="root_store.is_description_required"
             v-on:input="onInput"
             data-test="project-description"
         />
@@ -40,13 +40,11 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-import { namespace } from "vuex-class";
-const configuration = namespace("configuration");
+import { useStore } from "../../../stores/root";
 
 @Component
 export default class FieldDescription extends Vue {
-    @configuration.State
-    is_description_required!: boolean;
+    root_store = useStore();
 
     onInput(event: Event): void {
         if (!(event.target instanceof HTMLTextAreaElement)) {

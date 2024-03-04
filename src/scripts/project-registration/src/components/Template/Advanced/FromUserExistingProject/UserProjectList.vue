@@ -48,6 +48,7 @@
 import { Component, Prop, Watch } from "vue-property-decorator";
 import Vue from "vue";
 import type { TemplateData } from "../../../../type";
+import { useStore } from "../../../../stores/root";
 
 @Component({})
 export default class UserProjectList extends Vue {
@@ -64,6 +65,8 @@ export default class UserProjectList extends Vue {
         }
     }
 
+    root_store = useStore();
+
     selected_project: TemplateData | string = "";
 
     mounted(): void {
@@ -73,7 +76,9 @@ export default class UserProjectList extends Vue {
     }
 
     storeSelectedTemplate(): void {
-        this.$store.dispatch("setSelectedTemplate", this.selected_project);
+        if (typeof this.selected_project === "object") {
+            this.root_store.setSelectedTemplate(this.selected_project);
+        }
     }
 }
 </script>

@@ -29,7 +29,7 @@
                 type="button"
                 class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
                 data-test="project-registration-next-button"
-                v-bind:disabled="!is_template_selected"
+                v-bind:disabled="!root_store.is_template_selected"
                 v-on:click.prevent="goToInformationPage"
             >
                 <span v-translate>Next</span>
@@ -42,13 +42,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Getter } from "vuex-class";
 import { isElementInViewport } from "../../helpers/is-element-in-viewport";
+import { useStore } from "../../stores/root";
 
 @Component({})
 export default class TemplateFooter extends Vue {
-    @Getter
-    is_template_selected!: boolean;
+    root_store = useStore();
 
     private is_footer_in_viewport = false;
     private ticking = false;
@@ -84,7 +83,7 @@ export default class TemplateFooter extends Vue {
     }
 
     get pinned_class(): string {
-        if (!this.is_footer_in_viewport && this.is_template_selected) {
+        if (!this.is_footer_in_viewport && this.root_store.is_template_selected) {
             this.removeFooterListener();
 
             return "pinned";

@@ -26,20 +26,25 @@ import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
-import type { RootState } from "../../store/type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import EventBus from "../../helpers/event-bus";
 import VueRouter from "vue-router";
 import * as location_helper from "../../helpers/location-helper";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import type { ConfigurationState } from "../../store/configuration";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
+import EventBus from "../../helpers/event-bus";
+import { useStore } from "../../stores/root";
 
+let has_error = false;
+let are_restricted_users_allowed = false;
+let is_project_approval_required = false;
+let is_template_selected = true;
+const create_project_mock = jest.fn();
 describe("ProjectInformation -", () => {
-    let router: VueRouter,
-        store: Store,
-        root_state: RootState,
-        configuration_state: ConfigurationState;
+    let router: VueRouter;
     beforeEach(() => {
+        has_error = false;
+        are_restricted_users_allowed = false;
+        is_project_approval_required = false;
+        is_template_selected = true;
         router = new VueRouter({
             routes: [
                 {
@@ -56,19 +61,15 @@ describe("ProjectInformation -", () => {
                 },
             ],
         });
+    });
 
-        configuration_state = {
-            are_restricted_users_allowed: true,
-            can_user_choose_project_visibility: true,
-        } as ConfigurationState;
-
-        const getters = {
-            has_error: false,
-            is_template_selected: true,
-        };
-
-        store = createStoreMock({
-            state: {
+    async function getWrapper(): Promise<Wrapper<ProjectInformation>> {
+        const useStore = defineStore("root", {
+            state: () => ({
+                is_template_selected,
+                is_project_approval_required,
+                are_restricted_users_allowed,
+                can_user_choose_project_visibility: true,
                 selected_tuleap_template: {
                     title: "string",
                     description: "string",
@@ -76,16 +77,21 @@ describe("ProjectInformation -", () => {
                     glyph: "string",
                     is_built_in: true,
                 },
-                configuration: configuration_state,
+            }),
+            getters: {
+                has_error: () => has_error,
             },
-            getters,
+            actions: {
+                createProject: create_project_mock,
+            },
         });
-    });
 
-    async function getWrapper(): Promise<Wrapper<ProjectInformation>> {
+        const pinia = createTestingPinia();
+        useStore(pinia);
+
         return shallowMount(ProjectInformation, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
+            pinia,
             router,
         });
     }
@@ -93,7 +99,7 @@ describe("ProjectInformation -", () => {
     it("Spawns the ProjectInformation component", async () => {
         const wrapper = await getWrapper();
 
-        wrapper.vm.$store.getters.has_error = false;
+        has_error = false;
 
         expect(wrapper.findComponent(ProjectInformationSvg).exists()).toBe(true);
         expect(wrapper.findComponent(ProjectInformationFooter).exists()).toBe(true);
@@ -103,9 +109,9 @@ describe("ProjectInformation -", () => {
     });
 
     it("Displays error message", async () => {
-        const wrapper = await getWrapper();
+        has_error = true;
 
-        wrapper.vm.$store.getters.has_error = true;
+        const wrapper = await getWrapper();
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ProjectInformationSvg).exists()).toBe(true);
@@ -117,18 +123,8 @@ describe("ProjectInformation -", () => {
     });
 
     it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
-        const getters = {
-            has_error: false,
-            is_template_selected: false,
-        };
-
-        store = createStoreMock({
-            state: { root_state, configuration: configuration_state },
-            getters,
-        });
-
+        is_template_selected = false;
         const wrapper = await getWrapper();
-
         expect(wrapper.vm.$route.name).toBe("template");
     });
 
@@ -137,15 +133,18 @@ describe("ProjectInformation -", () => {
         expect(wrapper.vm.$data.trove_cats).toStrictEqual([]);
 
         EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 10 });
+        wrapper.vm.$nextTick();
         expect(wrapper.vm.$data.trove_cats).toStrictEqual([{ category_id: 1, value_id: 10 }]);
 
         EventBus.$emit("choose-trove-cat", { category_id: 2, value_id: 20 });
+        wrapper.vm.$nextTick();
         expect(wrapper.vm.$data.trove_cats).toStrictEqual([
             { category_id: 1, value_id: 10 },
             { category_id: 2, value_id: 20 },
         ]);
 
         EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 100 });
+        wrapper.vm.$nextTick();
         expect(wrapper.vm.$data.trove_cats).toStrictEqual([
             { category_id: 1, value_id: 100 },
             { category_id: 2, value_id: 20 },
@@ -156,6 +155,7 @@ describe("ProjectInformation -", () => {
         const redirect_to_url = jest.spyOn(location_helper, "redirectToUrl").mockImplementation();
 
         const wrapper = await getWrapper();
+        const store = useStore();
 
         const expected_project_properties = {
             shortname: "this-is-a-test",
@@ -168,7 +168,7 @@ describe("ProjectInformation -", () => {
             allow_restricted: false,
         };
 
-        wrapper.vm.$store.state.configuration.are_restricted_users_allowed = true;
+        are_restricted_users_allowed = true;
         wrapper.vm.$data.selected_visibility = "public";
 
         wrapper.vm.$data.name_properties = {
@@ -179,7 +179,7 @@ describe("ProjectInformation -", () => {
         wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
+        expect(store.createProject).toHaveBeenCalledWith(expected_project_properties);
 
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
@@ -190,11 +190,10 @@ describe("ProjectInformation -", () => {
     });
 
     it(`Redirects user on waiting for validation when project needs a site administrator approval`, async () => {
+        is_project_approval_required = true;
+        are_restricted_users_allowed = true;
         const wrapper = await getWrapper();
-        wrapper.vm.$store.state.configuration.is_project_approval_required = true;
-        wrapper.vm.$store.state.configuration.are_restricted_users_allowed = true;
         wrapper.vm.$data.selected_visibility = "private";
-        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
         wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");

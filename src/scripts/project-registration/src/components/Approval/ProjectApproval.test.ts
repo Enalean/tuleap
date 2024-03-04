@@ -18,14 +18,17 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectApproval from "./ProjectApproval.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import VueRouter from "vue-router";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 
 describe("ProjectApproval -", () => {
     let router: VueRouter;
+    let is_template_selected = true;
     beforeEach(() => {
         router = new VueRouter({
             routes: [
@@ -36,39 +39,37 @@ describe("ProjectApproval -", () => {
             ],
         });
     });
-    it("Spawns the ProjectApproval component", async () => {
-        const getters = {
-            has_error: false,
-            is_template_selected: true,
-        };
 
-        const store_options = {
-            getters,
-        };
+    async function getWrapper(): Promise<Wrapper<ProjectApproval>> {
+        const useStore = defineStore("root", {
+            getters: {
+                has_error: () => false,
+                is_template_selected: () => {
+                    return is_template_selected;
+                },
+            },
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
-        const store = createStoreMock(store_options);
-
-        const wrapper = shallowMount(ProjectApproval, {
+        return shallowMount(ProjectApproval, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
+            pinia,
             router,
         });
+    }
+
+    it("Spawns the ProjectApproval component", async () => {
+        is_template_selected = true;
+        const wrapper = await getWrapper();
 
         expect(wrapper).toMatchSnapshot();
     });
 
     it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
-        const getters = {
-            has_error: false,
-            is_template_selected: false,
-        };
+        is_template_selected = false;
+        const wrapper = await getWrapper();
 
-        const store = createStoreMock({ getters });
-        const wrapper = shallowMount(ProjectApproval, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-            router,
-        });
         expect(wrapper.vm.$route.name).toBe("template");
     });
 });

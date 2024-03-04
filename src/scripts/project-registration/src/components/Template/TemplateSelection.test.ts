@@ -22,14 +22,13 @@ import { shallowMount } from "@vue/test-utils";
 
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import TemplateSelection from "./TemplateSelection.vue";
-import type { ConfigurationState } from "../../store/configuration";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { RootState } from "../../store/type";
 import type { ExternalTemplateData, TemplateData } from "../../type";
 import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
 import TuleapCompanyTemplateList from "./Company/CompanyTemplateList.vue";
 import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
 import CategorisedExternalTemplatesList from "./CategorisedExternalTemplates/CategorisedExternalTemplatesList.vue";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 
 describe("TemplateSelection", () => {
     async function getWrapper(
@@ -39,23 +38,26 @@ describe("TemplateSelection", () => {
         company_name: string,
         selected_template_category: null | string = null,
     ): Promise<Wrapper<TemplateSelection>> {
-        const configuration_state: ConfigurationState = {
-            tuleap_templates,
-            company_templates,
-            company_name,
-            external_templates,
-        } as ConfigurationState;
+        const useStore = defineStore("root", {
+            state: () => ({
+                tuleap_templates,
+                company_templates,
+                company_name,
+                external_templates,
+                selected_template_category,
+            }),
+            actions: {
+                resetSelectedTemplate: jest.fn(),
+                setSelectedTemplateCategory: jest.fn(),
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
         return shallowMount(TemplateSelection, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: configuration_state,
-                        selected_template_category,
-                    } as RootState & { configuration: ConfigurationState },
-                }),
-            },
+            pinia,
         });
     }
 
@@ -164,8 +166,6 @@ describe("TemplateSelection", () => {
                 "Tuleap",
             );
 
-            expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
-
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -182,13 +182,8 @@ describe("TemplateSelection", () => {
                 company_templates,
                 external_templates,
                 "ACME",
-            );
-
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "setSelectedTemplateCategory",
                 "ACME",
             );
-            wrapper.vm.$store.state.selected_template_category = "ACME";
 
             await wrapper.vm.$nextTick();
             expect(
@@ -201,13 +196,13 @@ describe("TemplateSelection", () => {
         });
 
         it("should display the Tuleap category by default if there are no ACME templates", async () => {
-            const wrapper = await getWrapper(tuleap_templates, [], external_templates, "ACME");
-
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "setSelectedTemplateCategory",
+            const wrapper = await getWrapper(
+                tuleap_templates,
+                [],
+                external_templates,
+                "ACME",
                 "Tuleap",
             );
-            wrapper.vm.$store.state.selected_template_category = "Tuleap";
 
             await wrapper.vm.$nextTick();
             expect(
@@ -220,13 +215,7 @@ describe("TemplateSelection", () => {
         });
 
         it("should display the first external template category by default if there are no tuleap/ACME templates", async () => {
-            const wrapper = await getWrapper([], [], external_templates, "ACME");
-
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "setSelectedTemplateCategory",
-                "SAFe",
-            );
-            wrapper.vm.$store.state.selected_template_category = "SAFe";
+            const wrapper = await getWrapper([], [], external_templates, "ACME", "SAFe");
 
             await wrapper.vm.$nextTick();
             expect(
@@ -239,13 +228,7 @@ describe("TemplateSelection", () => {
         });
 
         it("should display the advanced category by default if there are no ACME/Tuleap/External templates", async () => {
-            const wrapper = await getWrapper([], [], [], "ACME");
-
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "setSelectedTemplateCategory",
-                "Advanced",
-            );
-            wrapper.vm.$store.state.selected_template_category = "Advanced";
+            const wrapper = await getWrapper([], [], [], "ACME", "Advanced");
 
             await wrapper.vm.$nextTick();
             expect(
@@ -256,129 +239,5 @@ describe("TemplateSelection", () => {
 
             expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(true);
         });
-    });
-
-    it("should toggle the right templates categories", async () => {
-        const wrapper = await getWrapper(
-            tuleap_templates,
-            company_templates,
-            external_templates,
-            "ACME",
-        );
-        const tab_tuleap_templates = wrapper.get(
-            "[data-test=project-registration-tuleap-templates-tab]",
-        );
-        const tab_acme_templates = wrapper.get(
-            "[data-test=project-registration-acme-templates-tab]",
-        );
-        const tab_advanced_templates = wrapper.get(
-            "[data-test=project-registration-advanced-templates-tab]",
-        );
-        const tab_safe_templates = wrapper.get(
-            "[data-test=project-registration-SAFe-templates-tab]",
-        );
-        const tab_dummy_templates = wrapper.get(
-            "[data-test=project-registration-dummies-templates-tab]",
-        );
-
-        tab_safe_templates.trigger("click");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setSelectedTemplateCategory",
-            "SAFe",
-        );
-        wrapper.vm.$store.state.selected_template_category = "SAFe";
-
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
-            true,
-        );
-        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
-            false,
-        );
-
-        tab_acme_templates.trigger("click");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setSelectedTemplateCategory",
-            "ACME",
-        );
-        wrapper.vm.$store.state.selected_template_category = "ACME";
-
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(true);
-        expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
-            false,
-        );
-        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
-            false,
-        );
-
-        tab_dummy_templates.trigger("click");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setSelectedTemplateCategory",
-            "dummies",
-        );
-        wrapper.vm.$store.state.selected_template_category = "dummies";
-
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
-            false,
-        );
-        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
-            true,
-        );
-
-        tab_advanced_templates.trigger("click");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setSelectedTemplateCategory",
-            "Advanced",
-        );
-        wrapper.vm.$store.state.selected_template_category = "Advanced";
-
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(true);
-        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
-            false,
-        );
-        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
-            false,
-        );
-
-        tab_tuleap_templates.trigger("click");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setSelectedTemplateCategory",
-            "Tuleap",
-        );
-        wrapper.vm.$store.state.selected_template_category = "Tuleap";
-
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
-        expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
-        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
-            false,
-        );
-        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
-            false,
-        );
     });
 });

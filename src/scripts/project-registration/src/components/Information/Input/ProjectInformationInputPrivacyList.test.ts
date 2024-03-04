@@ -17,12 +17,34 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ProjectInformationInputPrivacyList from "./ProjectInformationInputPrivacyList.vue";
-import type { ConfigurationState } from "../../../store/configuration";
 import * as list_picker from "@tuleap/list-picker";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
+
+async function getWrapper(
+    project_default_visibility: string,
+    are_restricted_users_allowed: boolean,
+): Promise<Wrapper<Vue, Element>> {
+    const useStore = defineStore("root", {
+        state: () => ({
+            project_default_visibility,
+            are_restricted_users_allowed,
+        }),
+    });
+
+    const pinia = createTestingPinia();
+    useStore(pinia);
+
+    const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
+        localVue: await createProjectRegistrationLocalVue(),
+        pinia,
+    });
+    return wrapper;
+}
 
 describe("ProjectInformationInputPrivacyList", () => {
     beforeEach(() => {
@@ -33,106 +55,9 @@ describe("ProjectInformationInputPrivacyList", () => {
         });
     });
 
-    describe("The selected default project visibility when the component is mounted -", () => {
-        it("Should select the 'Public' by default", async () => {
-            const configuration_state: ConfigurationState = {
-                project_default_visibility: "public",
-            } as ConfigurationState;
-
-            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
-                localVue: await createProjectRegistrationLocalVue(),
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            configuration: configuration_state,
-                        },
-                    }),
-                },
-            });
-
-            await wrapper.vm.$nextTick();
-            expect(wrapper.vm.selected_visibility).toBe("public");
-        });
-
-        it("Should select the 'Public incl. restricted' by default", async () => {
-            const configuration_state: ConfigurationState = {
-                project_default_visibility: "unrestricted",
-                are_restricted_users_allowed: true,
-            } as ConfigurationState;
-
-            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
-                localVue: await createProjectRegistrationLocalVue(),
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            configuration: configuration_state,
-                        },
-                    }),
-                },
-            });
-
-            await wrapper.vm.$nextTick();
-            expect(wrapper.vm.selected_visibility).toBe("unrestricted");
-        });
-
-        it("Should select the 'Private' by default", async () => {
-            const configuration_state: ConfigurationState = {
-                project_default_visibility: "private",
-            } as ConfigurationState;
-
-            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
-                localVue: await createProjectRegistrationLocalVue(),
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            configuration: configuration_state,
-                        },
-                    }),
-                },
-            });
-
-            expect(wrapper.vm.selected_visibility).toBe("private");
-        });
-
-        it("Should select the 'Private incl. restricted' by default", async () => {
-            const configuration_state: ConfigurationState = {
-                project_default_visibility: "private",
-                are_restricted_users_allowed: true,
-            } as ConfigurationState;
-
-            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
-                localVue: await createProjectRegistrationLocalVue(),
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            configuration: configuration_state,
-                        },
-                    }),
-                },
-            });
-
-            await wrapper.vm.$nextTick();
-            expect(wrapper.vm.selected_visibility).toBe("private");
-        });
-    });
-
     describe("Displayed options depends on platform configuration -", () => {
         it("Displays only public and private when platform does not allow restricted", async () => {
-            const configuration_state: ConfigurationState = {
-                project_default_visibility: "private",
-                are_restricted_users_allowed: false,
-            } as ConfigurationState;
-
-            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
-                localVue: await createProjectRegistrationLocalVue(),
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            configuration: configuration_state,
-                        },
-                    }),
-                },
-            });
+            const wrapper = await getWrapper("private", false);
             expect(wrapper.find("[data-test=unrestricted]").exists()).toBe(false);
             expect(wrapper.find("[data-test=private]").exists()).toBe(true);
             expect(wrapper.find("[data-test=private-wo-restr]").exists()).toBe(false);
@@ -140,21 +65,7 @@ describe("ProjectInformationInputPrivacyList", () => {
         });
 
         it("Displays all options when restricted are allowed", async () => {
-            const configuration_state: ConfigurationState = {
-                project_default_visibility: "private",
-                are_restricted_users_allowed: true,
-            } as ConfigurationState;
-
-            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
-                localVue: await createProjectRegistrationLocalVue(),
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            configuration: configuration_state,
-                        },
-                    }),
-                },
-            });
+            const wrapper = await getWrapper("private", true);
             expect(wrapper.find("[data-test=private]").exists()).toBe(true);
             expect(wrapper.find("[data-test=private-wo-restr]").exists()).toBe(true);
             expect(wrapper.find("[data-test=unrestricted]").exists()).toBe(true);

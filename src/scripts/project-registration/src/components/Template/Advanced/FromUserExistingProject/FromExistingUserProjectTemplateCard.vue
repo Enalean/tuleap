@@ -27,17 +27,17 @@
                 type="radio"
                 id="project-registration-tuleap-template-other-user-project"
                 class="project-registration-selected-template"
-                v-bind:checked="is_advanced_option_selected(option_name)"
+                v-bind:checked="root_store.is_advanced_option_selected(option_name)"
                 name="selected-template"
                 data-test="selected-template-input"
-                v-on:change="setAdvancedActiveOption(option_name)"
+                v-on:change="root_store.setAdvancedActiveOption(option_name)"
             />
 
             <label
                 class="tlp-card tlp-card-selectable project-registration-template-label"
                 data-test="project-registration-card-label"
                 for="project-registration-tuleap-template-other-user-project"
-                v-on:click="loadUserProjects"
+                v-on:click="loadProjects"
             >
                 <div class="project-registration-template-glyph"><svg-template /></div>
                 <div class="project-registration-template-content">
@@ -46,7 +46,7 @@
                     </h4>
                     <div
                         v-if="
-                            !is_advanced_option_selected(option_name) &&
+                            !root_store.is_advanced_option_selected(option_name) &&
                             !is_loading_project_list &&
                             !has_error
                         "
@@ -71,9 +71,9 @@
                         <translate>Oh snap! Failed to load project you are admin of.</translate>
                     </div>
                     <user-project-list
-                        v-else-if="is_advanced_option_selected(option_name)"
-                        v-bind:project-list="projects_user_is_admin_of"
-                        v-bind:selected-company-template="selected_company_template"
+                        v-else-if="root_store.is_advanced_option_selected(option_name)"
+                        v-bind:project-list="root_store.projects_user_is_admin_of"
+                        v-bind:selected-company-template="root_store.selected_company_template"
                         data-test="user-project-list"
                     />
                 </div>
@@ -85,11 +85,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Getter, Mutation, State } from "vuex-class";
-import type { AdvancedOptions, TemplateData } from "../../../../type";
+import type { AdvancedOptions } from "../../../../type";
 import TemplateCard from "../../TemplateCard.vue";
 import SvgTemplate from "./SvgTemplate.vue";
 import UserProjectList from "./UserProjectList.vue";
+import { useStore } from "../../../../stores/root";
 
 @Component({
     components: {
@@ -105,26 +105,18 @@ export default class FromExistingUserProjectTemplateCard extends Vue {
     is_loading_project_list = false;
     has_error = false;
 
-    @State
-    selected_company_template!: null | TemplateData;
-
-    @State
-    projects_user_is_admin_of!: TemplateData[];
-
-    @Mutation
-    readonly setAdvancedActiveOption!: (option: AdvancedOptions | null) => void;
-
-    @Getter
-    readonly is_advanced_option_selected!: (option: AdvancedOptions | null) => boolean;
+    root_store = useStore();
 
     mounted(): void {
-        if (this.projects_user_is_admin_of.length > 0) {
-            this.should_choose_a_project = this.is_advanced_option_selected(this.option_name);
+        if (this.root_store.projects_user_is_admin_of.length > 0) {
+            this.should_choose_a_project = this.root_store.is_advanced_option_selected(
+                this.option_name,
+            );
         }
     }
 
-    async loadUserProjects(): Promise<void> {
-        if (this.projects_user_is_admin_of.length > 0) {
+    async loadProjects(): Promise<void> {
+        if (this.root_store.projects_user_is_admin_of.length > 0) {
             this.is_loading_project_list = false;
             this.should_choose_a_project = true;
             return;
@@ -133,7 +125,7 @@ export default class FromExistingUserProjectTemplateCard extends Vue {
         this.has_error = false;
         this.is_loading_project_list = true;
         try {
-            await this.$store.dispatch("loadUserProjects");
+            await this.root_store.loadUserProjects();
         } catch (error) {
             this.has_error = true;
             throw error;

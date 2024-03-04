@@ -40,16 +40,15 @@
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import ProjectApprovalSvg from "./ProjectApprovalSvg.vue";
-import { Getter } from "vuex-class";
+import { useStore } from "../../stores/root";
 @Component({
     components: { ProjectApprovalSvg },
 })
 export default class ProjectApproval extends Vue {
-    @Getter
-    is_template_selected!: boolean;
+    root_store = useStore();
 
     mounted(): void {
-        if (!this.is_template_selected) {
+        if (!this.root_store.is_template_selected) {
             this.$router.push("new");
         }
     }

@@ -18,13 +18,13 @@
  *
  */
 
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import TemplateCardContent from "../TemplateCard.vue";
 import CompanyTemplateList from "./CompanyTemplateList.vue";
-import type { ConfigurationState } from "../../../store/configuration";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 
 describe("CompanyTemplateList", () => {
     let local_vue = createLocalVue();
@@ -49,22 +49,21 @@ describe("CompanyTemplateList", () => {
                 },
             ];
 
-            const configuration_state: ConfigurationState = {
-                company_templates: company_templates,
-                company_name: "",
-            } as ConfigurationState;
+            const useStore = defineStore("root", {
+                state: () => ({
+                    company_templates: company_templates,
+                    company_name: "",
+                }),
+            });
+
+            const pinia = createTestingPinia();
+            useStore(pinia);
 
             local_vue = await createProjectRegistrationLocalVue();
 
             wrapper = shallowMount(CompanyTemplateList, {
                 localVue: local_vue,
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            configuration: configuration_state,
-                        },
-                    }),
-                },
+                pinia,
             });
         });
 

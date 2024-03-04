@@ -23,20 +23,38 @@ import { shallowMount } from "@vue/test-utils";
 import TemplateCard from "./TemplateCard.vue";
 import type { TemplateData } from "../../type";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
+import { useStore } from "../../stores/root";
 
 describe("CardWithChildren", () => {
-    const getters = {
-        is_currently_selected_template: (): boolean => false,
-    };
+    let setSelectedTemplate: jest.Mock;
+    let is_currently_selected = false;
+
+    beforeEach(() => {
+        setSelectedTemplate = jest.fn();
+        is_currently_selected = false;
+    });
 
     async function createWrapper(tuleap_template: TemplateData): Promise<Wrapper<TemplateCard>> {
+        const useStore = defineStore("root", {
+            getters: {
+                is_currently_selected_template: () => (): boolean => {
+                    return is_currently_selected;
+                },
+            },
+            actions: {
+                setSelectedTemplate: setSelectedTemplate,
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useStore(pinia);
+
         return shallowMount(TemplateCard, {
             localVue: await createProjectRegistrationLocalVue(),
             propsData: { template: tuleap_template },
-            mocks: {
-                $store: createStoreMock({ getters }),
-            },
+            pinia,
         });
     }
 
@@ -80,13 +98,11 @@ describe("CardWithChildren", () => {
         };
 
         const wrapper = await createWrapper(tuleap_template);
+        const store = useStore();
 
         wrapper.get("[data-test=project-registration-radio]").trigger("change");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
-            "setSelectedTemplate",
-            tuleap_template,
-        );
+        expect(store.setSelectedTemplate).toHaveBeenCalledWith(tuleap_template);
     });
 
     it("should check the input when the current template is selected", async () => {
@@ -98,7 +114,7 @@ describe("CardWithChildren", () => {
             is_built_in: true,
         };
 
-        getters.is_currently_selected_template = (): boolean => true;
+        is_currently_selected = true;
 
         const wrapper = await createWrapper(tuleap_template);
 

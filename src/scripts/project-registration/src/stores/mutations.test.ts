@@ -18,23 +18,26 @@
  *
  */
 
-import mutations from "./mutations";
-import type { RootState } from "./type";
 import type { TemplateData } from "../type";
+import { createPinia, setActivePinia } from "pinia";
+import { useStore } from "./root";
 
 describe("mutation", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+    });
+
     describe("setSelectedTemplate()", () => {
         it(`stores the tuleap template and make sure the company template is null`, () => {
-            const state = {
-                selected_tuleap_template: null,
-                selected_company_template: {
-                    title: "Whole lot company",
-                    description: "I have got whole lot",
-                    id: "10",
-                    glyph: "<svg></svg>",
-                    is_built_in: false,
-                } as TemplateData,
-            } as RootState;
+            const store = useStore();
+            store.selected_tuleap_template = null;
+            store.selected_company_template = {
+                title: "Whole lot company",
+                description: "I have got whole lot",
+                id: "10",
+                glyph: "<svg></svg>",
+                is_built_in: false,
+            } as TemplateData;
 
             const selected_template = {
                 title: "scrum template",
@@ -43,22 +46,21 @@ describe("mutation", () => {
                 glyph: "<svg></svg>",
                 is_built_in: true,
             };
-            mutations.setSelectedTemplate(state, selected_template);
-            expect(state.selected_tuleap_template).toStrictEqual(selected_template);
-            expect(state.selected_company_template).toBeNull();
+            store.setSelectedTemplate(selected_template);
+            expect(store.selected_tuleap_template).toStrictEqual(selected_template);
+            expect(store.selected_company_template).toBeNull();
         });
 
         it(`stores the company template and make sure the tuleap template is null`, () => {
-            const state = {
-                selected_tuleap_template: {
-                    title: "scrum template",
-                    description: "scrum desc",
-                    id: "scrum",
-                    glyph: "<svg></svg>",
-                    is_built_in: true,
-                } as TemplateData,
-                selected_company_template: null,
-            } as RootState;
+            const store = useStore();
+            store.selected_tuleap_template = {
+                title: "scrum template",
+                description: "scrum desc",
+                id: "scrum",
+                glyph: "<svg></svg>",
+                is_built_in: true,
+            } as TemplateData;
+            store.selected_company_template = null;
 
             const selected_template = {
                 title: "Whole lot company",
@@ -67,19 +69,18 @@ describe("mutation", () => {
                 glyph: "<svg></svg>",
                 is_built_in: false,
             };
-            mutations.setSelectedTemplate(state, selected_template);
-            expect(state.selected_company_template).toStrictEqual(selected_template);
-            expect(state.selected_tuleap_template).toBeNull();
+            store.setSelectedTemplate(selected_template);
+            expect(store.selected_company_template).toStrictEqual(selected_template);
+            expect(store.selected_tuleap_template).toBeNull();
         });
     });
     describe("resetProjectCreationError() -", () => {
         it("reset the project creation error", () => {
-            const state = {
-                error: "It does not work :(",
-            } as RootState;
+            const store = useStore();
+            store.error = "It does not work :(";
 
-            mutations.resetProjectCreationError(state);
-            expect(state.error).toBeNull();
+            store.resetProjectCreationError();
+            expect(store.error).toBeNull();
         });
     });
 });
