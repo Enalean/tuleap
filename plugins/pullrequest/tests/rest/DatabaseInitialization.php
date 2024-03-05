@@ -38,6 +38,7 @@ final class DatabaseInitialization extends \DatabaseInitialization
         $this->insertFakeGitPullRequestReferences();
         $this->insertPullRequestComments();
         $this->insertFakeInlineComments();
+        $this->insertPullRequestsReviewers();
     }
 
     private function insertPullRequest(): void
@@ -83,5 +84,25 @@ final class DatabaseInitialization extends \DatabaseInitialization
         EOSQL;
 
         $this->mysqli->real_query($sql);
+    }
+
+    private function insertPullRequestsReviewers(): void
+    {
+        $change_1       = 1;
+        $reviewer_102   = 102;
+        $pull_request_2 = 2;
+
+        $sql_insert_changes = <<<EOSQL
+        INSERT INTO plugin_pullrequest_reviewer_change (change_id, pull_request_id, user_id, change_date)
+        VALUES ($change_1, $pull_request_2, $reviewer_102, '1455598096')
+        EOSQL;
+
+        $sql_insert_changes_users = <<<EOSQL
+        INSERT INTO plugin_pullrequest_reviewer_change_user (change_id, user_id, is_removal)
+        VALUES ($change_1, $reviewer_102, 0)
+        EOSQL;
+
+        $this->mysqli->real_query($sql_insert_changes);
+        $this->mysqli->real_query($sql_insert_changes_users);
     }
 }

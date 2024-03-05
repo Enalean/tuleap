@@ -643,6 +643,25 @@ final class RepositoryTest extends TestBase
         $this->assertEquals(1, count($content));
     }
 
+    public function testOPTIONSGetPullRequestsReviewers(): void
+    {
+        $url      = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/pull_requests_reviewers';
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', $url));
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
+    }
+
+    public function testGETPullRequestsReviewers(): void
+    {
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/pull_requests_reviewers';
+
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
+        $content  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertCount(1, $content);
+        $this->assertEquals(102, $content[0]['id']);
+    }
+
     public function testOPTIONSGetCommits(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/commits/whateverreference'));
