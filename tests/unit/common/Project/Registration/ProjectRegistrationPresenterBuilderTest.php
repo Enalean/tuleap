@@ -68,6 +68,7 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
             $this->trove_cat_factory,
             $this->fields_factory
         );
+        \ForgeConfig::set('sys_org_name', "My orga");
     }
 
     public function testItShouldBuildPresenter(): void

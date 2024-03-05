@@ -19,11 +19,18 @@
   -->
 
 <template>
-    <div class="project-registration-templates">
-        <from-existing-user-project-template-card />
-    </div>
+    <section class="project-registration-default-templates-section">
+        <div class="project-registration-templates">
+            <from-existing-user-project-template-card />
+            <from-project-archive-card v-if="root_store.can_create_from_project_file" />
+        </div>
+    </section>
 </template>
 
 <script setup lang="ts">
 import FromExistingUserProjectTemplateCard from "./FromUserExistingProject/FromExistingUserProjectTemplateCard.vue";
+import FromProjectArchiveCard from "./FromProjectArchive/FromProjectArchiveCard.vue";
+import { useStore } from "../../../stores/root";
+
+const root_store = useStore();
 </script>

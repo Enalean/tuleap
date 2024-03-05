@@ -107,4 +107,4 @@ export interface ServiceData {
     icon: string;
 }
 
-export type AdvancedOptions = "from_existing_user_project";
+export type AdvancedOptions = "from_existing_user_project" | "from_project_archive";

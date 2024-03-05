@@ -22,6 +22,9 @@ msgstr ""
 msgid "Close"
 msgstr "Fechar"
 
+msgid "Create a project based on a template exported from another platform"
+msgstr ""
+
 msgid "Custom templates"
 msgstr "Modelos personalizados"
 
@@ -32,6 +35,9 @@ msgid "For advanced users"
 msgstr "Para usuários avançados"
 
 msgid "From another project I'm admin of"
+msgstr ""
+
+msgid "From project template upload"
 msgstr ""
 
 msgid "Go to my home page"
