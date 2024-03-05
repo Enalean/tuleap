@@ -24,9 +24,11 @@ namespace Tuleap\PullRequest\Reviewer;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\PullRequest\PullRequest\Reviewer\RepositoryPullRequestsReviewersIdsPage;
+use Tuleap\PullRequest\PullRequest\Reviewer\SearchRepositoryReviewers;
 use Tuleap\PullRequest\PullRequest\Reviewer\SearchReviewers;
 
-class ReviewerDAO extends DataAccessObject implements SearchReviewers
+class ReviewerDAO extends DataAccessObject implements SearchReviewers, SearchRepositoryReviewers
 {
     /**
      * @psalm-return list<array{
@@ -124,6 +126,28 @@ class ReviewerDAO extends DataAccessObject implements SearchReviewers
             );
 
             return $change_id;
+        });
+    }
+
+    public function searchRepositoryPullRequestsReviewersIds(int $repository_id, int $limit, int $offset): RepositoryPullRequestsReviewersIdsPage
+    {
+        return $this->getDB()->tryFlatTransaction(function () use ($repository_id, $limit, $offset) {
+            $sql_select_count = "SELECT COUNT(*) OVER ()";
+            $sql_select_data  = "SELECT change_user.user_id";
+
+            $sql_query_body = "
+                FROM plugin_pullrequest_reviewer_change_user change_user
+                JOIN plugin_pullrequest_reviewer_change ON (plugin_pullrequest_reviewer_change.change_id = change_user.change_id)
+                JOIN plugin_pullrequest_review ON (plugin_pullrequest_review.id = plugin_pullrequest_reviewer_change.pull_request_id)
+                WHERE plugin_pullrequest_review.repository_id = ?
+                GROUP BY change_user.user_id
+                HAVING SUM(IF(change_user.is_removal = FALSE, 1, -1)) > 0
+            ";
+
+            return new RepositoryPullRequestsReviewersIdsPage(
+                (int) $this->getDB()->single($sql_select_count . $sql_query_body . 'LIMIT 1', [$repository_id]),
+                $this->getDB()->column($sql_select_data . $sql_query_body . 'LIMIT ? OFFSET ?', [$repository_id, $limit, $offset]),
+            );
         });
     }
 }

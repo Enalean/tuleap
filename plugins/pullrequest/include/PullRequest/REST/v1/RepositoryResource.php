@@ -44,6 +44,7 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
 use Tuleap\PullRequest\PullRequest\REST\v1\RepositoryPullRequests\GETHandler;
 use Tuleap\PullRequest\REST\v1\RepositoryPullRequests\QueryToSearchCriteriaConverter;
+use Tuleap\PullRequest\REST\v1\Reviewers\RepositoryPullRequestsReviewersRepresentation;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\REST\AuthenticatedResource;
@@ -231,6 +232,52 @@ class RepositoryResource extends AuthenticatedResource
                 $this->sendPaginationHeaders($limit, $offset, $representations->total_size);
 
                 return $representations->collection;
+            },
+            FaultMapper::mapToRestException(...)
+        );
+    }
+
+    /**
+     * @url OPTIONS {id}/pull_requests_reviewers
+     *
+     * @param int $id Id of the repository
+     */
+    public function optionsPullRequestsReviewers(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get pull requests reviewers in a given git repository
+     *
+     * @url GET {id}/pull_requests_reviewers
+     *
+     * @access protected
+     *
+     * @param int $id Id of the repository
+     * @param int $limit Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int $offset Position of the first element to display {@from path} {@min 0}
+     *
+     * @return MinimalUserRepresentation[]
+     * @throws RestException
+     */
+    public function getPullRequestsReviewers(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        $this->checkAccess();
+
+        $repository = $this->getRepositoryUserCanSee($id);
+
+        return (
+            new \Tuleap\PullRequest\REST\v1\Reviewers\GETHandler(
+                UserManager::instance(),
+                new ReviewerDAO()
+            )
+        )->handle($repository, $limit, $offset)->match(
+            function (RepositoryPullRequestsReviewersRepresentation $representation) use ($limit, $offset) {
+                Header::allowOptionsGet();
+                $this->sendPaginationHeaders($limit, $offset, $representation->total_size);
+
+                return $representation->collection;
             },
             FaultMapper::mapToRestException(...)
         );
