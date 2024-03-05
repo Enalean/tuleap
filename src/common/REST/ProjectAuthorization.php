@@ -21,32 +21,32 @@ namespace Tuleap\REST;
 
 use PFUser;
 use Project;
+use Tuleap\Project\AccessNotActiveException;
 use URLVerification;
 use Luracast\Restler\RestException;
 use Project_AccessProjectNotFoundException;
 use Project_AccessException;
 use Project_AccessNotAdminException;
 
-class ProjectAuthorization
+final readonly class ProjectAuthorization
 {
-    public static function userCanAccessProject(PFUser $user, Project $project, URLVerification $url_verification)
+    public static function userCanAccessProject(PFUser $user, Project $project, URLVerification $url_verification): void
     {
         try {
             $url_verification->userCanAccessProject($user, $project);
-            return true;
-        } catch (Project_AccessProjectNotFoundException $exception) {
+        } catch (Project_AccessProjectNotFoundException | AccessNotActiveException) {
             throw new RestException(404, "Project does not exist");
         } catch (Project_AccessException $exception) {
             throw new RestException(403, $exception->getMessage());
         }
     }
 
-    public static function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project)
+    public static function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project): void
     {
         try {
             $url_verification = new URLVerification();
             $url_verification->userCanAccessProjectAndIsProjectAdmin($user, $project);
-        } catch (Project_AccessProjectNotFoundException $exception) {
+        } catch (Project_AccessProjectNotFoundException | AccessNotActiveException) {
             throw new RestException(404, "Project does not exist");
         } catch (Project_AccessNotAdminException $exception) {
             throw new RestException(403, $exception->getMessage());
@@ -55,12 +55,12 @@ class ProjectAuthorization
         }
     }
 
-    public static function userCanAccessProjectAndCanManageMembership(PFUser $user, Project $project)
+    public static function userCanAccessProjectAndCanManageMembership(PFUser $user, Project $project): void
     {
         try {
             $url_verification = new URLVerification();
             $url_verification->userCanManageProjectMembership($user, $project);
-        } catch (Project_AccessProjectNotFoundException $exception) {
+        } catch (Project_AccessProjectNotFoundException | AccessNotActiveException) {
             throw new RestException(404, "Project does not exist");
         } catch (Project_AccessNotAdminException $exception) {
             throw new RestException(403, $exception->getMessage());

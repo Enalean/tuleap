@@ -68,7 +68,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(Project::ACCESS_PRIVATE_WO_RESTRICTED)
             ->build();
 
-        self::expectException(\Project_AccessRestrictedException::class);
+        $this->expectException(\Project_AccessRestrictedException::class);
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -87,7 +87,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->verifier->method('isRestrictedUserAllowedToAccess')->willReturn(true);
 
-        self::expectNotToPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -106,7 +106,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->verifier->method('isRestrictedUserAllowedToAccess')->willReturn(false);
 
-        self::expectException(\Project_AccessRestrictedException::class);
+        $this->expectException(\Project_AccessRestrictedException::class);
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -125,7 +125,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withMemberOf($project)
             ->build();
 
-        self::expectException(Project_AccessProjectNotFoundException::class);
+        $this->expectException(Project_AccessProjectNotFoundException::class);
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -144,7 +144,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withMemberOf($project)
             ->build();
 
-        self::expectNotToPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -161,7 +161,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withMemberOf($project)
             ->build();
 
-        self::expectNotToPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -178,7 +178,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(Project::ACCESS_PUBLIC)
             ->build();
 
-        self::expectNotToPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -195,7 +195,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(Project::ACCESS_PRIVATE_WO_RESTRICTED)
             ->build();
 
-        self::expectException(Project_AccessRestrictedException::class);
+        $this->expectException(Project_AccessRestrictedException::class);
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -212,7 +212,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withoutSiteAdministrator()
             ->build();
 
-        self::expectNotToPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -231,7 +231,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->event_manager->method('processEvent');
 
-        self::expectException(Project_AccessPrivateException::class);
+        $this->expectException(Project_AccessPrivateException::class);
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -248,7 +248,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(Project::ACCESS_PUBLIC)
             ->build();
 
-        self::expectException(Project_AccessRestrictedException::class);
+        $this->expectException(Project_AccessRestrictedException::class);
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -266,7 +266,24 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withoutSiteAdministrator()
             ->build();
 
-        self::expectException(Project_AccessDeletedException::class);
+        $this->expectException(Project_AccessDeletedException::class);
+        $this->checker->checkUserCanAccessProject($user, $project);
+    }
+
+    public function testItForbidsAccessToNotActiveProjects(): void
+    {
+        $project = ProjectTestBuilder::aProject()
+            ->withId(110)
+            ->withAccess(Project::ACCESS_PUBLIC)
+            ->withStatusPending()
+            ->build();
+
+        $user = UserTestBuilder::anActiveUser()
+            ->withMemberOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
+
+        $this->expectException(AccessNotActiveException::class);
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
@@ -283,7 +300,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withoutSiteAdministrator()
             ->build();
 
-        self::expectException(ProjectAccessSuspendedException::class);
+        $this->expectException(ProjectAccessSuspendedException::class);
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
@@ -297,7 +314,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->method('isPublic')->willReturn(true);
         $project->method('isActive')->willReturn(true);
 
-        self::expectException(Project_AccessProjectNotFoundException::class);
+        $this->expectException(Project_AccessProjectNotFoundException::class);
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
@@ -310,7 +327,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(Project::ACCESS_PRIVATE)
             ->build();
 
-        self::expectNotToPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -334,7 +351,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             })
         );
 
-        self::expectNotToPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -347,7 +364,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = ProjectTestBuilder::aProject()->build();
 
-        self::expectException(Project_AccessProjectNotFoundException::class);
+        $this->expectException(Project_AccessProjectNotFoundException::class);
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
@@ -362,7 +379,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(Project::ACCESS_PUBLIC)
             ->build();
 
-        self::expectNotToPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }

@@ -87,6 +87,12 @@ final class ProjectTestBuilder
         return $this;
     }
 
+    public function withStatusPending(): self
+    {
+        $this->data['status'] = Project::STATUS_PENDING;
+        return $this;
+    }
+
     public function withStatusActive(): self
     {
         $this->data['status'] = Project::STATUS_ACTIVE;

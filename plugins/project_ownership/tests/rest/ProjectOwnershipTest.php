@@ -25,7 +25,7 @@ class ProjectOwnershipTest extends \RestBase
     public function testOptions()
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('OPTIONS', 'project_ownership/' . \REST_TestDataBuilder::ADMIN_PROJECT_ID)
+            $this->request_factory->createRequest('OPTIONS', 'project_ownership/' . \REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID)
         );
 
         $this->assertEquals(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));

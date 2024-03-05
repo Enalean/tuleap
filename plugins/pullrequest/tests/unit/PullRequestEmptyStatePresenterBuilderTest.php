@@ -36,7 +36,7 @@ final class PullRequestEmptyStatePresenterBuilderTest extends TestCase
     protected function setUp(): void
     {
         $url_verification = $this->createStub(\URLVerification::class);
-        $url_verification->method('userCanAccessProject')->willReturn(false);
+        $url_verification->method('userCanAccessProject')->willThrowException(new \Project_AccessPrivateException());
 
         $repository_url_manager = $this->createStub(\Git_GitRepositoryUrlManager::class);
         $repository_url_manager->method('getRepositoryBaseUrl')->willReturn(self::PARENT_REPOSITORY_URL);

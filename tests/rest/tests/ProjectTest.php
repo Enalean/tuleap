@@ -22,6 +22,7 @@ namespace Tuleap\REST;
 
 use REST_TestDataBuilder;
 use Test\Rest\TuleapConfig;
+use TestDataBuilder;
 
 /**
  * @group ProjectTests
@@ -818,7 +819,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETbyIdForAdminProjectReturnAdditionalField()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::ADMIN_PROJECT_ID));
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID));
 
         $json_project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -867,10 +868,19 @@ class ProjectTest extends ProjectBase
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    public function testGETbyIdForForbiddenUser()
+    public function testGETbyIdForForbiddenUser(): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::ADMIN_PROJECT_ID));
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'projects/' . $this->project_deleted_id));
         self::assertEquals(403, $response->getStatusCode());
+    }
+
+    public function testGETbyIdForSystemProject(): void
+    {
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID));
+        self::assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID));
+        self::assertEquals(404, $response->getStatusCode());
     }
 
     public function testGETBadRequest()

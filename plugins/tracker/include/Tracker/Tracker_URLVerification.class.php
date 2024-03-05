@@ -29,14 +29,14 @@ class Tracker_URLVerification extends URLVerification
     /**
      * Ensure given user can access given project
      *
-     * @return bool
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessDeletedException
      * @throws Project_AccessRestrictedException
      * @throws Project_AccessPrivateException
      * @throws \Tuleap\Project\ProjectAccessSuspendedException
+     * @throws \Tuleap\Project\AccessNotActiveException
      */
-    public function userCanAccessProject(PFUser $user, Project $project)
+    public function userCanAccessProject(PFUser $user, Project $project): true
     {
         $permissions_checker = new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao())
