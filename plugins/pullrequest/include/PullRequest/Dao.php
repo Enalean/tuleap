@@ -273,7 +273,7 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
             $authors_id[] = $author->id;
         }
         if (count($authors_id) > 0) {
-            $where_statement->andIn('user_id IN (?*)', $authors_id);
+            $where_statement->andIn('plugin_pullrequest_review.user_id IN (?*)', $authors_id);
         }
 
         $target_branches_names = [];
@@ -282,6 +282,21 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
         }
         if (count($target_branches_names) > 0) {
             $where_statement->andIn('branch_dest IN (?*)', $target_branches_names);
+        }
+
+        $reviewers_ids = [];
+        foreach ($search_criteria->reviewers as $reviewer) {
+            $reviewers_ids[] = $reviewer->id;
+        }
+        if (count($reviewers_ids) > 0) {
+            $tables[] = "plugin_pullrequest_reviewer_change";
+            $tables[] = "plugin_pullrequest_reviewer_change_user";
+            $where_statement->andIn('
+                plugin_pullrequest_review.id = plugin_pullrequest_reviewer_change.pull_request_id
+                AND plugin_pullrequest_reviewer_change.change_id = plugin_pullrequest_reviewer_change_user.change_id
+                AND plugin_pullrequest_reviewer_change_user.user_id IN (?*)
+            ', $reviewers_ids);
+            $having_statement->andWith('SUM(IF(plugin_pullrequest_reviewer_change_user.is_removal = FALSE, 1, -1)) > 0');
         }
 
         if (count($search_criteria->labels) > 0) {
@@ -382,7 +397,7 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
     public function deletePullRequestWithAllItsContent(int $pull_request_id): void
     {
         $sql = '
-            DELETE pr, label, comments, inline, event
+            DELETE pr, label, comments, inline, event, pr_change, pr_change_user
             FROM plugin_pullrequest_review AS pr
                 LEFT JOIN plugin_pullrequest_label AS label ON (
                     pr.id = label.pull_request_id
@@ -395,6 +410,12 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
                 )
                 LEFT JOIN plugin_pullrequest_timeline_event AS event ON (
                     pr.id = event.pull_request_id
+                )
+                LEFT JOIN plugin_pullrequest_reviewer_change AS pr_change ON (
+                    pr.id = pr_change.pull_request_id
+                )
+                LEFT JOIN plugin_pullrequest_reviewer_change_user AS pr_change_user ON (
+                    pr_change.change_id = pr_change_user.change_id
                 )
             WHERE pr.id = ?
         ';
