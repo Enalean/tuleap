@@ -54,6 +54,10 @@ class QueryToSearchCriteriaConverter
                 return Result::err(MalformedQueryFault::onlyOneItemAccepted('authors'));
             }
 
+            if (count($search_criteria->target_branches) > 1) {
+                return Result::err(MalformedQueryFault::onlyOneItemAccepted('target_branches'));
+            }
+
             return Result::ok($search_criteria);
         } catch (MappingError $mapping_error) {
             return Result::err($this->buildFaultFromMappingError($mapping_error));

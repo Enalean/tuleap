@@ -276,6 +276,14 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
             $where_statement->andIn('user_id IN (?*)', $authors_id);
         }
 
+        $target_branches_names = [];
+        foreach ($search_criteria->target_branches as $branch) {
+            $target_branches_names[] = $branch->name;
+        }
+        if (count($target_branches_names) > 0) {
+            $where_statement->andIn('branch_dest IN (?*)', $target_branches_names);
+        }
+
         if (count($search_criteria->labels) > 0) {
             $labels_ids = [];
             foreach ($search_criteria->labels as $label) {

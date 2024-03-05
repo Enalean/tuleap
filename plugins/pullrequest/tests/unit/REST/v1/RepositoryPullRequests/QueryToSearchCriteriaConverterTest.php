@@ -158,6 +158,26 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         self::assertEquals("bump", $criteria->search[1]->keyword);
     }
 
+    public function testItReturnsAnErrorWhenTryingToFilterMultipleTargetBranches(): void
+    {
+        $result = $this->converter->convert(json_encode(['target_branches' => [['name' => 'walnut'], ['name' => 'palm tree']]], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MalformedQueryFault::class, $result->error);
+        self::assertStringContainsString("target_branches", (string) $result->error);
+    }
+
+    public function testItWillFilterOnTargetBranches(): void
+    {
+        $result = $this->converter->convert(json_encode(['target_branches' => [['name' => 'walnut']]], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isOk($result));
+
+        $criteria = $result->unwrapOr(null);
+
+        self::assertEquals("walnut", $criteria->target_branches[0]->name);
+    }
+
     public function testItWillApplyAllFilters(): void
     {
         $result = $this->converter->convert(
@@ -166,6 +186,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
                 'authors' => [['id' => 102]],
                 'labels' => [['id' => 1], ['id' => 2]],
                 'search' => [['keyword' => 'security'], ['keyword' => 'bump']],
+                'target_branches' => [['name' => 'walnut']],
             ], JSON_THROW_ON_ERROR)
         );
 
@@ -179,6 +200,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         self::assertEquals(2, $criteria->labels[1]->id);
         self::assertEquals("security", $criteria->search[0]->keyword);
         self::assertEquals("bump", $criteria->search[1]->keyword);
+        self::assertEquals("walnut", $criteria->target_branches[0]->name);
 
         self::assertTrue($status_criterion->shouldOnlyRetrieveOpenPullRequests());
         self::assertFalse($status_criterion->shouldOnlyRetrieveClosedPullRequests());

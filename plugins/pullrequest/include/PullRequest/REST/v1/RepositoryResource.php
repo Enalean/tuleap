@@ -93,6 +93,9 @@ class RepositoryResource extends AuthenticatedResource
      *         <b>Search</b>: <code>query={"search": [{"keyword": string}]}</code> where "keyword" is the keyword to find in the pull-requests titles or descriptions.
      *         The search on keywords is additive. It will retrieve only pull-requests whose titles AND/OR descriptions contain ALL the provided keywords.
      *     </p>
+     *     <p>
+     *         <b>Target branch</b>: <code>query={"target_branches": [{"name": string}]}</code> where "name" is the name of the target branch.
+     *     </p>
      * </p>
      *
      * <p>
