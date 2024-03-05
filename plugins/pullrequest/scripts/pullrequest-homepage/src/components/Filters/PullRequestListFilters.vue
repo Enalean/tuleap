@@ -64,6 +64,7 @@ import ClosedPullRequestsFilterSwitch from "./Status/ClosedPullRequestsFilterSwi
 import FilterBadge from "./FilterBadge.vue";
 import PullRequestsSortOrder from "./PullRequestsSortOrder.vue";
 import KeywordsSearchInput from "./Keywords/KeywordsSearchInput.vue";
+import { ReviewerSelectorEntry } from "./Reviewer/ReviewerSelectorEntry";
 
 const { $gettext } = useGettext();
 
@@ -77,8 +78,9 @@ const props = defineProps<{
 
 const selectors_entries = [
     AuthorSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, repository_id),
-    LabelsSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, project_id),
+    ReviewerSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, repository_id),
     TargetBranchSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, repository_id),
+    LabelsSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, project_id),
 ];
 </script>
 

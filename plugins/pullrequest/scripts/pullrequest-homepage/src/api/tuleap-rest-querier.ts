@@ -90,9 +90,17 @@ export const fetchProjectLabels = (
 };
 
 export const fetchRepositoryBranches = (
-    repoitory_id: number,
+    repository_id: number,
 ): ResultAsync<readonly Branch[], Fault> => {
-    return getAllJSON(uri`/api/v1/git/${repoitory_id}/branches`, {
+    return getAllJSON(uri`/api/v1/git/${repository_id}/branches`, {
+        params: { limit: 50 },
+    });
+};
+
+export const fetchRepositoryReviewers = (
+    repository_id: number,
+): ResultAsync<readonly User[], Fault> => {
+    return getAllJSON(uri`/api/v1/git/${repository_id}/pull_requests_reviewers`, {
         params: { limit: 50 },
     });
 };
