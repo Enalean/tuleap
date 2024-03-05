@@ -27,7 +27,7 @@ use Tuleap\Project\REST\ProjectRepresentation;
 
 final readonly class PostProjectCreated
 {
-    public function __construct(private ProjectRepresentationBuilder $builder, private \PFUser $user, private ?Project $project, private ?CreatedFileRepresentation $created_file_representation)
+    public function __construct(private ProjectRepresentationBuilder $builder, private \PFUser $user, private ?Project $project, private ?ProjectFromArchiveRepresentation $project_from_archive_representation)
     {
     }
 
@@ -36,9 +36,9 @@ final readonly class PostProjectCreated
         return new self($builder, $user, $project, null);
     }
 
-    public static function fromArchive(ProjectRepresentationBuilder $builder, \PFUser $user, CreatedFileRepresentation $created_file_representation): self
+    public static function fromArchive(ProjectRepresentationBuilder $builder, \PFUser $user, ProjectFromArchiveRepresentation $project_from_archive_representation): self
     {
-        return new self($builder, $user, null, $created_file_representation);
+        return new self($builder, $user, null, $project_from_archive_representation);
     }
 
     public function getProjectRepresentation(): ProjectRepresentation
@@ -54,8 +54,8 @@ final readonly class PostProjectCreated
         return $this->project;
     }
 
-    public function getFileRepresentation(): ?CreatedFileRepresentation
+    public function getProjectFromArchiveRepresentation(): ?ProjectFromArchiveRepresentation
     {
-        return $this->created_file_representation;
+        return $this->project_from_archive_representation;
     }
 }

@@ -46,7 +46,7 @@ use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\NoTemplateProvidedFault;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\Upload\ProjectFileToUploadCreator;
-use Tuleap\Project\REST\v1\Project\CreatedFileRepresentation;
+use Tuleap\Project\REST\v1\Project\ProjectFromArchiveRepresentation;
 use Tuleap\Project\REST\v1\Project\PostProjectCreated;
 use Tuleap\Project\REST\v1\Project\ProjectRepresentationBuilder;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
@@ -141,7 +141,7 @@ class RestProjectCreator
                 new DateTimeImmutable()
             );
 
-            return Result::ok(PostProjectCreated::fromArchive($this->builder, $current_user, new CreatedFileRepresentation($file_creator->getUploadHref())));
+            return Result::ok(PostProjectCreated::fromArchive($this->builder, $current_user, new ProjectFromArchiveRepresentation($file_creator->getUploadHref())));
         }
 
         return Result::err(NoTemplateProvidedFault::build());

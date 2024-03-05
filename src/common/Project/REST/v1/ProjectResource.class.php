@@ -92,7 +92,7 @@ use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\MinimalUserGroupRepresentationWithAdditionalInformation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupAdditionalInformationEvent;
-use Tuleap\Project\REST\v1\Project\CreatedFileRepresentation;
+use Tuleap\Project\REST\v1\Project\ProjectFromArchiveRepresentation;
 use Tuleap\Project\REST\v1\Project\PostProjectCreated;
 use Tuleap\Project\REST\v1\Project\ProjectCreationDataPOSTProjectBuilder;
 use Tuleap\Project\REST\v1\Project\ProjectRepresentationBuilder;
@@ -273,7 +273,7 @@ class ProjectResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 429
      */
-    protected function post(ProjectPostRepresentation $post_representation, bool $dry_run = false): ProjectRepresentation|CreatedFileRepresentation
+    protected function post(ProjectPostRepresentation $post_representation, bool $dry_run = false): ProjectRepresentation|ProjectFromArchiveRepresentation
     {
         $this->options();
         $this->checkAccess();
@@ -357,16 +357,16 @@ class ProjectResource extends AuthenticatedResource
         try {
             return $this->getRestProjectCreator()->create($post_representation, $creation_data, $user)
                 ->match(
-                    function (PostProjectCreated $created): ProjectRepresentation|CreatedFileRepresentation {
+                    function (PostProjectCreated $created): ProjectRepresentation|ProjectFromArchiveRepresentation {
                         $project = $created->getProject();
                         if ($project !== null) {
                             $this->getProjectCreationNotifier()->notifySiteAdmin($project);
                             return $created->getProjectRepresentation();
                         }
 
-                        $created_file_representation = $created->getFileRepresentation();
-                        if ($created_file_representation !== null) {
-                            return $created_file_representation;
+                        $project_from_archive_representation = $created->getProjectFromArchiveRepresentation();
+                        if ($project_from_archive_representation !== null) {
+                            return $project_from_archive_representation;
                         }
 
                         throw new RestException(500, "Failed to return a representation");
