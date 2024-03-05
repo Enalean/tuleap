@@ -18,10 +18,10 @@
  */
 
 import type { LazyboxItem } from "@tuleap/lazybox";
-import { isUser } from "./AuthorSelectorEntry";
 import type { SelectorsDropdownFilterItemsCallback } from "@tuleap/plugin-pullrequest-selectors-dropdown";
+import { isUser } from "./UserTypeGuard";
 
-export const AuthorFilteringCallback: SelectorsDropdownFilterItemsCallback = (
+export const UserFilteringCallback: SelectorsDropdownFilterItemsCallback = (
     query: string,
     items: LazyboxItem[],
 ): LazyboxItem[] => {
@@ -31,8 +31,7 @@ export const AuthorFilteringCallback: SelectorsDropdownFilterItemsCallback = (
     }
 
     return items.filter(
-        (author) =>
-            isUser(author.value) &&
-            author.value.display_name.toLowerCase().includes(lowercase_query),
+        (item) =>
+            isUser(item.value) && item.value.display_name.toLowerCase().includes(lowercase_query),
     );
 };

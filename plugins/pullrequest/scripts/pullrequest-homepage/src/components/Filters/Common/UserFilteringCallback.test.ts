@@ -19,7 +19,7 @@
 
 import { describe, it, expect } from "vitest";
 import { UserStub } from "../../../../tests/stubs/UserStub";
-import { AuthorFilteringCallback } from "./AuthorFilteringCallback";
+import { UserFilteringCallback } from "./UserFilteringCallback";
 
 const jolasti = {
     is_disabled: false,
@@ -28,18 +28,18 @@ const jolasti = {
 const jdoe = { is_disabled: false, value: UserStub.withIdAndName(102, "John Doe (jdoe)") };
 const hobo_joe = { is_disabled: true, value: UserStub.withIdAndName(103, "Joe the hobo (jhobo)") };
 
-describe("AuthorFilteringCallback", () => {
+describe("UserFilteringCallback", () => {
     it("Given an empty query and a collection of LazyboxItems, then it should return all the items", () => {
-        const filtered_authors = AuthorFilteringCallback("", [jolasti, jdoe, hobo_joe]);
+        const filtered_users = UserFilteringCallback("", [jolasti, jdoe, hobo_joe]);
 
-        expect(filtered_authors).toHaveLength(3);
-        expect(filtered_authors).toStrictEqual([jolasti, jdoe, hobo_joe]);
+        expect(filtered_users).toHaveLength(3);
+        expect(filtered_users).toStrictEqual([jolasti, jdoe, hobo_joe]);
     });
 
     it("Given a query and a collection of LazyboxItems, then it should only return items corresponding to the query", () => {
-        const filtered_authors = AuthorFilteringCallback("joe", [jolasti, jdoe, hobo_joe]);
+        const filtered_users = UserFilteringCallback("joe", [jolasti, jdoe, hobo_joe]);
 
-        expect(filtered_authors).toHaveLength(2);
-        expect(filtered_authors).toStrictEqual([jolasti, hobo_joe]);
+        expect(filtered_users).toHaveLength(2);
+        expect(filtered_users).toStrictEqual([jolasti, hobo_joe]);
     });
 });

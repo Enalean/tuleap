@@ -18,9 +18,9 @@
  */
 
 import type { HTMLTemplateStringProcessor, HTMLTemplateResult, LazyboxItem } from "@tuleap/lazybox";
-import { isUser } from "./AuthorSelectorEntry";
+import { isUser } from "./UserTypeGuard";
 
-export const AuthorTemplatingCallback = (
+export const UserTemplatingCallback = (
     html: typeof HTMLTemplateStringProcessor,
     item: LazyboxItem,
 ): HTMLTemplateResult => {
@@ -29,9 +29,9 @@ export const AuthorTemplatingCallback = (
     }
 
     return html`
-        <span class="pull-request-autocompleter-avatar" data-test="pull-request-author">
+        <span class="pull-request-autocompleter-avatar" data-test="pull-request-user">
             <div class="tlp-avatar-mini">
-                <img src="${item.value.avatar_url}" data-test="pull-request-author-avatar" />
+                <img src="${item.value.avatar_url}" data-test="pull-request-user-avatar" />
             </div>
             ${item.value.display_name}
         </span>

@@ -22,42 +22,40 @@ import { describe, it, expect } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import type { LazyboxItem } from "@tuleap/lazybox";
 import { UserStub } from "../../../../tests/stubs/UserStub";
-import { AuthorTemplatingCallback } from "./AuthorTemplatingCallback";
+import { UserTemplatingCallback } from "./UserTemplatingCallback";
 
 const renderTemplate = (item: LazyboxItem): HTMLElement => {
     const doc = document.implementation.createHTMLDocument();
     const target = doc.createElement("span");
-    const template = AuthorTemplatingCallback(html, item);
+    const template = UserTemplatingCallback(html, item);
 
     template(target, target);
 
     return target;
 };
 
-describe("AuthorTemplatingCallback", () => {
+describe("UserTemplatingCallback", () => {
     it("Given a LazyboxItem containing a user, then it should display its name and avatar", () => {
-        const author = UserStub.withIdAndName(101, "Joe l'asticot (jolasti)");
-        const author_display = renderTemplate({
+        const user = UserStub.withIdAndName(101, "Joe l'asticot (jolasti)");
+        const user_display = renderTemplate({
             is_disabled: false,
-            value: author,
+            value: user,
         });
 
         expect(
-            selectOrThrow(author_display, "[data-test=pull-request-author]").textContent?.trim(),
-        ).toBe(author.display_name);
+            selectOrThrow(user_display, "[data-test=pull-request-user]").textContent?.trim(),
+        ).toBe(user.display_name);
         expect(
-            selectOrThrow(author_display, "[data-test=pull-request-author-avatar]").getAttribute(
-                "src",
-            ),
-        ).toBe(author.avatar_url);
+            selectOrThrow(user_display, "[data-test=pull-request-user-avatar]").getAttribute("src"),
+        ).toBe(user.avatar_url);
     });
 
     it("Given a LazyboxItem which does not contain a user, then it should display nothing", () => {
-        const author_display = renderTemplate({
+        const user_display = renderTemplate({
             is_disabled: false,
             value: {},
         });
 
-        expect(author_display.childElementCount).toBe(0);
+        expect(user_display.childElementCount).toBe(0);
     });
 });
