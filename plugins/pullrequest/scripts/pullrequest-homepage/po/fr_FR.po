@@ -21,6 +21,9 @@ msgstr "Une erreur est survenue durant l’une de vos dernières actions."
 msgid "Author"
 msgstr "Auteur"
 
+msgid "Branch"
+msgstr "Branche"
+
 msgid "Clear filters"
 msgstr "Effacer tous les filtres"
 
@@ -57,6 +60,9 @@ msgstr "Labels"
 msgid "Latest"
 msgstr "Plus anciennes"
 
+msgid "Matching branches"
+msgstr "Branches correspondantes"
+
 msgid "Matching labels"
 msgstr "Labels correspondant"
 
@@ -68,6 +74,9 @@ msgstr "Nom"
 
 msgid "Newest"
 msgstr "Plus récentes"
+
+msgid "No matching branch"
+msgstr "Aucune branche correspondante"
 
 msgid "No matching labels"
 msgstr "Aucun label correspondant"
@@ -93,6 +102,9 @@ msgstr "Voir les détails"
 msgid "Sort"
 msgstr "Trier"
 
+msgid "Target branch name"
+msgstr "Nom de branche cible"
+
 msgid "There are no open pull-requests"
 msgstr "Il n'y a aucune pull-request ouverte"
 
@@ -107,6 +119,9 @@ msgstr "Essayez d'afficher les pull-requests fermées."
 
 msgid "You can only filter on one author"
 msgstr "Vous ne pouvez filtrer que sur un auteur"
+
+msgid "You can only filter on one target branch"
+msgstr "Vous ne pouvez filtrer que sur une branche cible"
 
 msgid "You may have set too many filters. Try to modify them."
 msgstr "Vous avez peut-être défini trop de filtres. Essayez de les modifier."

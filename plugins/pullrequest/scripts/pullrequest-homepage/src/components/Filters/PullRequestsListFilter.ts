@@ -20,8 +20,16 @@
 import type { AuthorFilter, PullRequestAuthorFilter } from "./Author/AuthorFilter";
 import type { LabelFilter, PullRequestLabelFilter } from "./Labels/LabelFilter";
 import type { KeywordFilter, PullRequestKeywordFilter } from "./Keywords/KeywordFilter";
+import type {
+    TargetBranchFilter,
+    PullRequestTargetBranchFilter,
+} from "./Branches/TargetBranchFilter";
 
-export type PullRequestsListFilterType = AuthorFilter | LabelFilter | KeywordFilter;
+export type PullRequestsListFilterType =
+    | AuthorFilter
+    | LabelFilter
+    | KeywordFilter
+    | TargetBranchFilter;
 
 export type BasePullRequestsListFilter<TypeOfFilterValue> = {
     id: number;
@@ -34,4 +42,5 @@ export type BasePullRequestsListFilter<TypeOfFilterValue> = {
 export type PullRequestsListFilter =
     | PullRequestAuthorFilter
     | PullRequestLabelFilter
-    | PullRequestKeywordFilter;
+    | PullRequestKeywordFilter
+    | PullRequestTargetBranchFilter;

@@ -20,6 +20,7 @@
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type {
+    Branch,
     ProjectLabel,
     ProjectLabelsCollection,
     PullRequest,
@@ -86,4 +87,12 @@ export const fetchProjectLabels = (
             getCollectionCallback: (payload) => payload.labels,
         },
     );
+};
+
+export const fetchRepositoryBranches = (
+    repoitory_id: number,
+): ResultAsync<readonly Branch[], Fault> => {
+    return getAllJSON(uri`/api/v1/git/${repoitory_id}/branches`, {
+        params: { limit: 50 },
+    });
 };

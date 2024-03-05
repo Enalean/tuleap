@@ -25,6 +25,7 @@ import { LabelFilterBuilder } from "../components/Filters/Labels/LabelFilter";
 import { ProjectLabelStub } from "../../tests/stubs/ProjectLabelStub";
 import { GettextStub } from "../../tests/stubs/GettextStub";
 import { KeywordFilterBuilder } from "../components/Filters/Keywords/KeywordFilter";
+import { TargetBranchFilterBuilder } from "../components/Filters/Branches/TargetBranchFilter";
 
 describe("get-pull-requests-query-builder", () => {
     let are_closed_pull_requests_shown: boolean;
@@ -99,6 +100,18 @@ describe("get-pull-requests-query-builder", () => {
                     search: [{ keyword: "Foo" }, { keyword: "Bar" }],
                 }),
             );
+        });
+    });
+
+    describe("Target branch filter", () => {
+        it("Given a filter on a target branch, then it should return a proper query string", () => {
+            const branch = { name: "walnut" };
+            const query = buildQueryFromFilters(
+                [TargetBranchFilterBuilder(GettextStub).fromBranch(branch)],
+                are_closed_pull_requests_shown,
+            );
+
+            expect(query).toContain(JSON.stringify({ target_branches: [{ name: branch.name }] }));
         });
     });
 });

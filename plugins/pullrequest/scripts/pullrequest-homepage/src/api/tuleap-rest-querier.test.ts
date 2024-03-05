@@ -27,6 +27,7 @@ import {
     fetchProjectLabels,
     fetchPullRequestLabels,
     fetchPullRequestsAuthors,
+    fetchRepositoryBranches,
 } from "./tuleap-rest-querier";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { UserStub } from "../../tests/stubs/UserStub";
@@ -167,6 +168,26 @@ describe("tuleap-rest-querier", () => {
             );
 
             expect(result.value).toStrictEqual(labels_collection);
+        });
+    });
+
+    describe("fetchRepositoryBranches", () => {
+        it("should query all the branches inside a given repository", async () => {
+            const branches = [{ name: "walnut" }, { name: "baobab" }, { name: "palm tree" }];
+            vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(branches));
+
+            const result = await fetchRepositoryBranches(repository_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an OK");
+            }
+
+            expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
+                uri`/api/v1/git/${repository_id}/branches`,
+                {
+                    params: { limit: 50 },
+                },
+            );
+            expect(result.value).toStrictEqual(branches);
         });
     });
 });
