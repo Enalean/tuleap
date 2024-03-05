@@ -1,3 +1,5 @@
+import { buildHomepageUrl } from "./helpers/homepage-url-builder";
+
 export default MainController;
 
 MainController.$inject = [
@@ -43,15 +45,26 @@ function MainController($element, $document, $state, gettextCatalog, SharedPrope
         SharedPropertiesService.setUserLocale(document.body.dataset.userLocale);
         SharedPropertiesService.setUserAvatarUrl(pullrequest_init_data.userAvatarUrl);
 
-        useUiRouterInPullRequestTabLink();
+        useUiRouterInPullRequestTabLink(
+            project_id,
+            repository_id,
+            Boolean(pullrequest_init_data.shouldRedirectToLegacyDashboard),
+        );
     }
 
     function initLocale(language) {
         gettextCatalog.setCurrentLanguage(language);
     }
 
-    function useUiRouterInPullRequestTabLink() {
+    function useUiRouterInPullRequestTabLink(
+        project_id,
+        repository_id,
+        should_redirect_to_legacy_dashboard,
+    ) {
         const tab_element = $document[0].getElementById("tabs-pullrequest");
-        tab_element.href = $state.href("dashboard");
+
+        tab_element.href = should_redirect_to_legacy_dashboard
+            ? $state.href("dashboard")
+            : buildHomepageUrl(window.location, project_id, repository_id);
     }
 }
