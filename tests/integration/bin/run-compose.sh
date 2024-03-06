@@ -14,9 +14,13 @@ case "${1:-}" in
     "82")
     export PHP_VERSION="php82"
     ;;
+    "83")
+    export PHP_VERSION="php83"
+    ;;
     *)
     echo "A PHP version must be provided as parameter. Allowed values are:"
     echo "* 82"
+    echo "* 83"
     exit 1
 esac
 
