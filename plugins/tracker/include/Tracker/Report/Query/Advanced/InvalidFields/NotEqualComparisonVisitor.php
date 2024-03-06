@@ -46,7 +46,6 @@ use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
-use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
@@ -114,22 +113,22 @@ final class NotEqualComparisonVisitor implements
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        return $this->visitList();
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        return $this->visitList();
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        return $this->visitList();
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        return $this->visitList();
+        throw new \LogicException('Should have been handled');
     }
 
     private function visitList()
@@ -141,8 +140,6 @@ final class NotEqualComparisonVisitor implements
         );
 
         return new ListFieldChecker(
-            new EmptyStringAllowed(),
-            new CollectionOfListValuesExtractor(),
             $list_field_bind_value_normalizer,
             new CollectionOfNormalizedBindLabelsExtractor(
                 $list_field_bind_value_normalizer,

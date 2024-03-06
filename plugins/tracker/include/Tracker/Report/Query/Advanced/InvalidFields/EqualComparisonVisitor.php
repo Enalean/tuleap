@@ -19,7 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
-use BaseLanguageFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -48,10 +47,6 @@ use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
-use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use UserManager;
 
 final class EqualComparisonVisitor implements
@@ -116,42 +111,22 @@ final class EqualComparisonVisitor implements
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        return $this->visitList();
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        return $this->visitList();
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        return $this->visitList();
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        return $this->visitList();
-    }
-
-    private function visitList()
-    {
-        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
-        $ugroup_label_converter           = new UgroupLabelConverter(
-            $list_field_bind_value_normalizer,
-            new BaseLanguageFactory()
-        );
-
-        return new ListFieldChecker(
-            new EmptyStringAllowed(),
-            new CollectionOfListValuesExtractor(),
-            $list_field_bind_value_normalizer,
-            new CollectionOfNormalizedBindLabelsExtractor(
-                $list_field_bind_value_normalizer,
-                $ugroup_label_converter
-            ),
-            $ugroup_label_converter
-        );
+        throw new \LogicException('Should have been handled');
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field): ArtifactSubmitterChecker

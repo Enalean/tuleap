@@ -41,16 +41,21 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedE
  */
 class CollectionOfListValuesExtractor implements ValueWrapperVisitor
 {
-    /** @return array<string | int | float> */
+    /**
+     * @return array<string | int | float>
+     * @throws ListToMySelfForAnonymousComparisonException
+     * @throws ListToNowComparisonException
+     * @throws ListToStatusOpenComparisonException
+     */
     public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field): array
     {
         try {
             return (array) $value_wrapper->accept($this, new FieldValueWrapperParameters($field));
-        } catch (NowIsNotSupportedException $exception) {
+        } catch (NowIsNotSupportedException) {
             throw new ListToNowComparisonException($field);
-        } catch (MySelfIsNotSupportedForAnonymousException $exception) {
+        } catch (MySelfIsNotSupportedForAnonymousException) {
             throw new ListToMySelfForAnonymousComparisonException($field);
-        } catch (StatusOpenIsNotSupportedException $exception) {
+        } catch (StatusOpenIsNotSupportedException) {
             throw new ListToStatusOpenComparisonException($field);
         }
     }

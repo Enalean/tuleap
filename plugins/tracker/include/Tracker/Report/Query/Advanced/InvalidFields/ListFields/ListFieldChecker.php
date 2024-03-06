@@ -17,61 +17,69 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-final class ListFieldChecker implements InvalidFieldChecker
+final readonly class ListFieldChecker implements InvalidFieldChecker
 {
-    /**
-     * @var EmptyStringChecker
-     */
-    private $empty_string_checker;
-
-    /**
-     * @var CollectionOfListValuesExtractor
-     */
-    private $values_extractor;
-    /**
-     * @var CollectionOfNormalizedBindLabelsExtractor
-     */
-    private $bind_labels_extractor;
-    /**
-     * @var ListFieldBindValueNormalizer
-     */
-    private $value_normalizer;
-    /**
-     * @var UgroupLabelConverter
-     */
-    private $label_converter;
-
     public function __construct(
-        EmptyStringChecker $empty_string_checker,
-        CollectionOfListValuesExtractor $values_extractor,
-        ListFieldBindValueNormalizer $value_normalizer,
-        CollectionOfNormalizedBindLabelsExtractor $bind_labels_extractor,
-        UgroupLabelConverter $label_converter,
+        private ListFieldBindValueNormalizer $value_normalizer,
+        private CollectionOfNormalizedBindLabelsExtractor $bind_labels_extractor,
+        private UgroupLabelConverter $label_converter,
     ) {
-        $this->empty_string_checker  = $empty_string_checker;
-        $this->values_extractor      = $values_extractor;
-        $this->bind_labels_extractor = $bind_labels_extractor;
-        $this->value_normalizer      = $value_normalizer;
-        $this->label_converter       = $label_converter;
     }
 
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field,): void
+    /**
+     * @throws FieldIsNotSupportedForComparisonException
+     * @throws ListToEmptyStringTermException
+     * @throws ListToMySelfForAnonymousComparisonException
+     * @throws ListToNowComparisonException
+     * @throws ListToStatusOpenComparisonException
+     * @throws ListValueDoNotExistComparisonException
+     */
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field,): void
     {
-        $values            = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
+        assert($field instanceof \Tracker_FormElement_Field_List);
+        match ($comparison->getType()) {
+            ComparisonType::Equal,
+            ComparisonType::NotEqual => $this->checkListValueIsValid($comparison, $field, false),
+            ComparisonType::In,
+            ComparisonType::NotIn => $this->checkListValueIsValid($comparison, $field, true),
+            ComparisonType::Between => throw new FieldIsNotSupportedForComparisonException($field, 'between()'),
+            ComparisonType::GreaterThan => throw new FieldIsNotSupportedForComparisonException($field, '>'),
+            ComparisonType::GreaterThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '>='),
+            ComparisonType::LesserThan => throw new FieldIsNotSupportedForComparisonException($field, '<'),
+            ComparisonType::LesserThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '<='),
+        };
+    }
+
+    /**
+     * @throws ListToEmptyStringTermException
+     * @throws ListToMySelfForAnonymousComparisonException
+     * @throws ListToNowComparisonException
+     * @throws ListToStatusOpenComparisonException
+     * @throws ListValueDoNotExistComparisonException
+     */
+    private function checkListValueIsValid(
+        Comparison $comparison,
+        \Tracker_FormElement_Field_List $field,
+        bool $is_empty_string_a_problem,
+    ): void {
+        $values_extractor  = new CollectionOfListValuesExtractor();
+        $values            = $values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         $normalized_labels = $this->bind_labels_extractor->extractCollectionOfNormalizedLabels($field);
 
         foreach ($values as $value) {
-            if ($this->empty_string_checker->isEmptyStringAProblem((string) $value)) {
+            if ($is_empty_string_a_problem && $value === '') {
                 throw new ListToEmptyStringTermException($comparison, $field);
             }
 
@@ -80,7 +88,7 @@ final class ListFieldChecker implements InvalidFieldChecker
             }
             $normalized_value = $this->value_normalizer->normalize((string) $value);
 
-            if ($value !== '' && ! in_array($normalized_value, $normalized_labels)) {
+            if ($value !== '' && ! in_array($normalized_value, $normalized_labels, true)) {
                 throw new ListValueDoNotExistComparisonException($field, (string) $value);
             }
         }

@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use BaseLanguageFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -53,6 +54,8 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 
 /**
@@ -216,6 +219,11 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
         InvalidMetadata\ICheckMetadataForAComparison $metadata_checker,
         InvalidComparisonCollectorParameters $parameters,
     ): void {
+        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+        $ugroup_label_converter           = new UgroupLabelConverter(
+            $list_field_bind_value_normalizer,
+            new BaseLanguageFactory()
+        );
         $comparison->getSearchable()->acceptSearchableVisitor(
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
@@ -227,6 +235,14 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
                     new TextFieldChecker(),
                     new DateFieldChecker(),
                     new FileFieldChecker(),
+                    new ListFieldChecker(
+                        $list_field_bind_value_normalizer,
+                        new CollectionOfNormalizedBindLabelsExtractor(
+                            $list_field_bind_value_normalizer,
+                            $ugroup_label_converter
+                        ),
+                        $ugroup_label_converter
+                    ),
                     $this->field_equal_comparison_visitor,
                     $this->field_not_equal_comparison_visitor,
                     $this->field_lesser_than_comparison_visitor,

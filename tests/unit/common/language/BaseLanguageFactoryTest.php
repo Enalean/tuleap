@@ -25,27 +25,22 @@ namespace Tuleap\language;
 use BaseLanguage;
 use BaseLanguageFactory;
 use ForgeConfig;
+use Tuleap\Test\LegacyTabTranslationsSupport;
 
 final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Tuleap\ForgeConfigSandbox;
-    use \Tuleap\TemporaryTestDirectory;
+    use LegacyTabTranslationsSupport;
 
     private string $supportedLanguages;
     private string|false $oldLocale;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
-        ForgeConfig::set('sys_lang', 'fr_FR');
-        ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
         $this->supportedLanguages = ForgeConfig::get('sys_supported_languages');
         $this->oldLocale          = setlocale(LC_ALL, "0");
         setlocale(LC_ALL, 'fr_FR');
         ForgeConfig::set('tmp_dir', $this->getTmpDir() . '/tuleap_cache');
         ForgeConfig::set('sys_custom_incdir', $this->getTmpDir());
-        ForgeConfig::set('sys_incdir', $this->getTmpDir());
         ForgeConfig::set('sys_custompluginsroot', $this->getTmpDir());
     }
 

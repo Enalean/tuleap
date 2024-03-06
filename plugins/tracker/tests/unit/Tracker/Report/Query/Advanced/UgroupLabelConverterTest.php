@@ -22,12 +22,12 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\LegacyTabTranslationsSupport;
 
 final class UgroupLabelConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ForgeConfigSandbox;
+    use LegacyTabTranslationsSupport;
 
     /** @var  UgroupLabelConverter */
     private $ugroup_label_converter;
@@ -40,8 +40,6 @@ final class UgroupLabelConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
-
         $this->english_base_language = \Mockery::spy(\BaseLanguage::class);
         $this->french_base_language  = \Mockery::spy(\BaseLanguage::class);
         $this->base_language_factory = \Mockery::spy(\BaseLanguageFactory::class);
