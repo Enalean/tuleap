@@ -35,9 +35,10 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\N
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -80,11 +81,16 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparis
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
+use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -93,7 +99,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class InvalidTermCollectorVisitorTest extends TestCase
 {
-    use ForgeConfigSandbox;
+    use LegacyTabTranslationsSupport;
 
     private const FIELD_NAME = 'a_field';
     private MetadataCheckerStub $metadata_checker;
@@ -399,6 +405,92 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
+    public static function generateInvalidListComparisons(): iterable
+    {
+        $field       = new Field(self::FIELD_NAME);
+        $valid_value = new SimpleValueWrapper('unbait');
+        $empty_value = new SimpleValueWrapper('');
+        $open        = new StatusOpenValueWrapper();
+        $now         = new CurrentDateTimeValueWrapper(null, null);
+
+        yield '< anything' => [new LesserThanComparison($field, $valid_value)];
+        yield '<= anything' => [new LesserThanOrEqualComparison($field, $valid_value)];
+        yield '> anything' => [new GreaterThanComparison($field, $valid_value)];
+        yield '>= anything' => [new GreaterThanOrEqualComparison($field, $valid_value)];
+        yield 'BETWEEN anything' => [
+            new BetweenComparison($field, new BetweenValueWrapper($valid_value, $valid_value)),
+        ];
+        yield '= NOW()' => [new EqualComparison($field, $now)];
+        yield '= OPEN()' => [new EqualComparison($field, $open)];
+        yield "IN('', valid value)" => [
+            new InComparison($field, new InValueWrapper([$empty_value, $valid_value])),
+        ];
+        yield "IN(valid value, '')" => [
+            new InComparison($field, new InValueWrapper([$valid_value, $empty_value])),
+        ];
+        yield "NOT IN('', valid value)" => [
+            new NotInComparison($field, new InValueWrapper([$empty_value, $valid_value])),
+        ];
+        yield "NOT IN(valid value, '')" => [
+            new NotInComparison($field, new InValueWrapper([$valid_value, $empty_value])),
+        ];
+    }
+
+    /**
+     * @dataProvider generateInvalidListComparisons
+     */
+    public function testItRejectsInvalidListComparisons(Comparison $comparison): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ListStaticBindBuilder::aStaticBind(
+                ListFieldBuilder::aListField(334)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
+            ListStaticBindBuilder::aStaticBind(
+                ListFieldBuilder::aListField(789)
+                    ->withName(self::FIELD_NAME)
+                    ->withMultipleValues()
+                    ->inTracker($this->second_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField()
+        );
+        $this->comparison       = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    /**
+     * @dataProvider generateInvalidListComparisons
+     */
+    public function testItRejectsMoreInvalidListComparisons(Comparison $comparison): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ListStaticBindBuilder::aStaticBind(
+                CheckboxFieldBuilder::aCheckboxField(167)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
+            ListStaticBindBuilder::aStaticBind(
+                RadioButtonFieldBuilder::aRadioButtonField(930)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->second_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField()
+        );
+        $this->comparison       = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
     public static function generateFieldTypes(): iterable
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(311)->build();
@@ -457,6 +549,23 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             $tracker,
             $user,
         ];
+
+        $list_field = ListFieldBuilder::aListField(637)
+            ->withName(self::FIELD_NAME)
+            ->inTracker($tracker)
+            ->withReadPermission($user, true)
+            ->build();
+
+        yield 'static list' => [
+            ListStaticBindBuilder::aStaticBind($list_field)->build()->getField(),
+            $tracker,
+            $user,
+        ];
+        yield 'user group list' => [
+            ListUserGroupBindBuilder::aUserGroupBind($list_field)->build()->getField(),
+            $tracker,
+            $user,
+        ];
     }
 
     /**
@@ -470,12 +579,10 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields($field);
         $this->first_tracker    = $tracker;
         $this->user             = $user;
-        $user_manager           = $this->createStub(\UserManager::class);
-        $user_manager->method('getCurrentUser')->willReturn($this->user);
 
         $this->comparison = new EqualComparison(
             new Field(self::FIELD_NAME),
-            new CurrentUserValueWrapper($user_manager)
+            new CurrentUserValueWrapper(ProvideCurrentUserStub::buildWithUser($this->user))
         );
 
         $this->check();
@@ -518,30 +625,34 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             new SimpleValueWrapper('string value')
         );
         yield 'AndOperand' => [new AndExpression($valid_comparison, new AndOperand($invalid_comparison))];
-        yield 'Tail of AndOperand' => [new AndExpression(
-            $valid_comparison,
-            new AndOperand($valid_comparison, new AndOperand($invalid_comparison))
-        ),
+        yield 'Tail of AndOperand' => [
+            new AndExpression(
+                $valid_comparison,
+                new AndOperand($valid_comparison, new AndOperand($invalid_comparison))
+            ),
         ];
         yield 'OrExpression' => [new OrExpression(new AndExpression($invalid_comparison))];
-        yield 'OrOperand' => [new OrExpression(
-            new AndExpression($valid_comparison),
-            new OrOperand(new AndExpression($invalid_comparison))
-        ),
-        ];
-        yield 'Tail of OrOperand' => [new OrExpression(
-            new AndExpression($valid_comparison),
-            new OrOperand(
+        yield 'OrOperand' => [
+            new OrExpression(
                 new AndExpression($valid_comparison),
                 new OrOperand(new AndExpression($invalid_comparison))
-            )
-        ),
+            ),
         ];
-        yield 'Parenthesis' => [new AndExpression(
-            new Parenthesis(
-                new OrExpression(new AndExpression($invalid_comparison))
-            )
-        ),
+        yield 'Tail of OrOperand' => [
+            new OrExpression(
+                new AndExpression($valid_comparison),
+                new OrOperand(
+                    new AndExpression($valid_comparison),
+                    new OrOperand(new AndExpression($invalid_comparison))
+                )
+            ),
+        ];
+        yield 'Parenthesis' => [
+            new AndExpression(
+                new Parenthesis(
+                    new OrExpression(new AndExpression($invalid_comparison))
+                )
+            ),
         ];
     }
 

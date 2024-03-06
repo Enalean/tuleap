@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Tests\Builders;
 
+use BaseLanguageFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
@@ -48,10 +49,14 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class InvalidSearchableCollectorParametersBuilder
@@ -97,17 +102,22 @@ final class InvalidSearchableCollectorParametersBuilder
 
     public function build(): InvalidSearchableCollectorParameters
     {
-        $comparison_parameters = new InvalidComparisonCollectorParameters(
+        $comparison_parameters            = new InvalidComparisonCollectorParameters(
             new InvalidSearchablesCollection(),
             $this->trackers,
             $this->user
         );
-        $comparison_checker    = new EqualComparisonChecker(
+        $comparison_checker               = new EqualComparisonChecker(
             new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
             new ListValueValidator(
                 new EmptyStringAllowed(),
                 ProvideAndRetrieveUserStub::build($this->user)
             )
+        );
+        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+        $ugroup_label_converter           = new UgroupLabelConverter(
+            $list_field_bind_value_normalizer,
+            new BaseLanguageFactory()
         );
         return new InvalidSearchableCollectorParameters(
             $comparison_parameters,
@@ -120,6 +130,14 @@ final class InvalidSearchableCollectorParametersBuilder
                 new TextFieldChecker(),
                 new DateFieldChecker(),
                 new FileFieldChecker(),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    new CollectionOfNormalizedBindLabelsExtractor(
+                        $list_field_bind_value_normalizer,
+                        $ugroup_label_converter
+                    ),
+                    $ugroup_label_converter
+                ),
                 new EqualComparisonVisitor(),
                 new NotEqualComparisonVisitor(),
                 new LesserThanComparisonVisitor(),

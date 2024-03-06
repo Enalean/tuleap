@@ -23,11 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
 use BaseLanguageFactory;
-use ForgeConfig;
 use ParagonIE\EasyDB\EasyDB;
-use Tuleap\ForgeConfigSandbox;
-use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -50,8 +48,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class FieldFromWhereBuilderTest extends TestCase
 {
-    use ForgeConfigSandbox;
-    use TemporaryTestDirectory;
+    use LegacyTabTranslationsSupport;
 
     private const FIELD_NAME = 'my_field';
     private \PFUser $user;
@@ -60,11 +57,6 @@ final class FieldFromWhereBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
-        ForgeConfig::set('sys_lang', 'en_US');
-        ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
-        ForgeConfig::set('sys_incdir', __DIR__ . '/../../../../../../../../../../site-content');
-
         $this->user           = UserTestBuilder::buildWithId(133);
         $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(38)->build();
         $this->second_tracker = TrackerTestBuilder::aTracker()->withId(4)->build();

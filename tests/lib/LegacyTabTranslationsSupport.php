@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Test;
 
-use Tuleap\User\ProvideCurrentUser;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\TemporaryTestDirectory;
 
-final readonly class CurrentUserValueWrapper implements ValueWrapper
+trait LegacyTabTranslationsSupport
 {
-    private ?string $value;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
-    public function __construct(ProvideCurrentUser $user_provider)
+    /**
+     * @before
+     */
+    protected function configureLegacyTabTranslations(): void
     {
-        $current_user = $user_provider->getCurrentUser();
-        $this->value  = $current_user->getUserName();
-    }
-
-    public function accept(ValueWrapperVisitor $visitor, $parameters)
-    {
-        return $visitor->visitCurrentUserValueWrapper($this, $parameters);
-    }
-
-    public function getValue(): ?string
-    {
-        return $this->value;
+        \ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
+        \ForgeConfig::set('sys_lang', 'en_US');
+        \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
+        \ForgeConfig::set('sys_incdir', __DIR__ . '/../../site-content');
     }
 }

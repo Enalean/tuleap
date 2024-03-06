@@ -30,6 +30,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
@@ -42,6 +43,8 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class FieldUsageCheckerTest extends TestCase
 {
+    use LegacyTabTranslationsSupport;
+
     private const FIELD_NAME = 'toto';
     private \Tracker $first_tracker;
     private \Tracker $second_tracker;

@@ -20,6 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use BaseLanguageFactory;
 use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
@@ -36,24 +37,24 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkArtifactCondition;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkConditionVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerEqualCondition;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerNotEqualCondition;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkArtifactCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkConditionVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerEqualCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerNotEqualCondition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LogicalVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
@@ -72,10 +73,14 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
 /**
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
@@ -209,6 +214,11 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
         ComparisonChecker $comparison_checker,
         InvalidComparisonCollectorParameters $parameters,
     ): void {
+        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+        $ugroup_label_converter           = new UgroupLabelConverter(
+            $list_field_bind_value_normalizer,
+            new BaseLanguageFactory()
+        );
         $comparison->getSearchable()->acceptSearchableVisitor(
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
@@ -222,6 +232,14 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
                     new TextFieldChecker(),
                     new DateFieldChecker(),
                     new FileFieldChecker(),
+                    new ListFieldChecker(
+                        $list_field_bind_value_normalizer,
+                        new CollectionOfNormalizedBindLabelsExtractor(
+                            $list_field_bind_value_normalizer,
+                            $ugroup_label_converter
+                        ),
+                        $ugroup_label_converter
+                    ),
                     $this->equal_comparison_visitor,
                     $this->not_equal_comparison_visitor,
                     $this->lesser_than_comparison_visitor,

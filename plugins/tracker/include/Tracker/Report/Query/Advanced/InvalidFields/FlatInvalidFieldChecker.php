@@ -29,6 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 
 final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
@@ -40,6 +41,7 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
         private TextFieldChecker $text_field_checker,
         private DateFieldChecker $date_field_checker,
         private FileFieldChecker $file_field_checker,
+        private ListFieldChecker $list_field_checker,
         private EqualComparisonVisitor $equal_checker,
         private NotEqualComparisonVisitor $not_equal_checker,
         private LesserThanComparisonVisitor $lesser_than_checker,
@@ -102,6 +104,26 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
         return $this->file_field_checker;
     }
 
+    public function visitRadiobutton(\Tracker_FormElement_Field_Radiobutton $field): InvalidFieldChecker
+    {
+        return $this->list_field_checker;
+    }
+
+    public function visitCheckbox(\Tracker_FormElement_Field_Checkbox $field): InvalidFieldChecker
+    {
+        return $this->list_field_checker;
+    }
+
+    public function visitMultiSelectbox(\Tracker_FormElement_Field_MultiSelectbox $field): InvalidFieldChecker
+    {
+        return $this->list_field_checker;
+    }
+
+    public function visitSelectbox(\Tracker_FormElement_Field_Selectbox $field): InvalidFieldChecker
+    {
+        return $this->list_field_checker;
+    }
+
     private function matchComparisonToFieldChecker(\Tracker_FormElement_Field $field): InvalidFieldChecker
     {
         return match ($this->comparison->getType()) {
@@ -115,26 +137,6 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
             ComparisonType::In => $this->in_checker->getInvalidFieldChecker($field),
             ComparisonType::NotIn => $this->not_in_checker->getInvalidFieldChecker($field)
         };
-    }
-
-    public function visitRadiobutton(\Tracker_FormElement_Field_Radiobutton $field): InvalidFieldChecker
-    {
-        return $this->matchComparisonToFieldChecker($field);
-    }
-
-    public function visitCheckbox(\Tracker_FormElement_Field_Checkbox $field): InvalidFieldChecker
-    {
-        return $this->matchComparisonToFieldChecker($field);
-    }
-
-    public function visitMultiSelectbox(\Tracker_FormElement_Field_MultiSelectbox $field): InvalidFieldChecker
-    {
-        return $this->matchComparisonToFieldChecker($field);
-    }
-
-    public function visitSelectbox(\Tracker_FormElement_Field_Selectbox $field): InvalidFieldChecker
-    {
-        return $this->matchComparisonToFieldChecker($field);
     }
 
     public function visitSubmittedBy(\Tracker_FormElement_Field_SubmittedBy $field): InvalidFieldChecker
