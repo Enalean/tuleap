@@ -43,6 +43,7 @@ use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\Project\Registration\StoreProjectInformationStub;
 use Tuleap\XML\MappingsRegistry;
 use XML_RNGValidator;
 use XMLImportHelper;
@@ -96,6 +97,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createMock(ProjectRegistrationChecker::class),
             $this->createMock(ProjectCategoriesUpdater::class),
             $this->createStub(EmailCopier::class),
+            StoreProjectInformationStub::build(),
             false
         );
 
