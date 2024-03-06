@@ -814,7 +814,7 @@ msgid "Cannot update the requested dashboard."
 msgstr "Impossible d'éditer le tableau de bord demandé."
 
 msgid "Cannot update users group."
-msgstr "Impossible de mettre à jour le groupe utilisateur"
+msgstr "Impossible de mettre à jour le groupe utilisateur."
 
 msgid "Catchy email subject line"
 msgstr "Phrase d'accroche"
@@ -950,7 +950,7 @@ msgstr "Copier la clé d'accès"
 
 #, php-format
 msgid "Copyright (c) %s, %s Team, 2001-%d. All Rights Reserved"
-msgstr "Copyright (c) %s, Equipe %s, 2001-%d. Tous droits réservés."
+msgstr "Copyright (c) %s, Equipe %s, 2001-%d. Tous droits réservés"
 
 msgid "Could not commit repository initial layout"
 msgstr "Impossible de commiter la structure initiale du dépôt"
@@ -2776,7 +2776,7 @@ msgstr ""
 "instants (%1$s -> %2$s)."
 
 msgid "Provided release note URL is not well formed"
-msgstr "Le lien de la release note n'est pas au bon format."
+msgstr "Le lien de la release note n'est pas au bon format"
 
 msgid "Public"
 msgstr "Publique"
@@ -3169,7 +3169,7 @@ msgstr "La description courte ne doit pas dépasser 255 caractères."
 
 msgid "Short name must start with an alphanumeric character."
 msgstr ""
-"Le nom court doit obligatoirement commencer par un caractère alphanumérique. "
+"Le nom court doit obligatoirement commencer par un caractère alphanumérique."
 
 msgid "Shortcut"
 msgstr "Raccourci"
@@ -3253,7 +3253,7 @@ msgid "Specific project"
 msgstr "Projet spécifique"
 
 msgid "Specify the nature of the reference, or Other if any."
-msgstr "pécifiez la nature de la référence, ou Autre sinon."
+msgstr "Spécifiez la nature de la référence, ou Autre sinon."
 
 msgid "Start New Thread"
 msgstr "Commencer une nouvelle discussion"
@@ -3295,13 +3295,13 @@ msgid "Submitted CSV separator is not valid"
 msgstr "Le séparateur CSV n'est pas valide"
 
 msgid "Submitted relative dates display is not valid."
-msgstr "Le format d'affichage des dates relatives n'est pas valide"
+msgstr "Le format d'affichage des dates relatives n'est pas valide."
 
 msgid "Submitted text format is not valid"
 msgstr "Le formal de texte n'est pas valide"
 
 msgid "Submitted username display is not valid."
-msgstr "Le formal d'affichage des noms n'est pas valide"
+msgstr "Le formal d'affichage des noms n'est pas valide."
 
 msgid "Successfully created reference pattern"
 msgstr "Modèle de référence créé avec succès"
@@ -3390,7 +3390,7 @@ msgid "Thanks!"
 msgstr "Merci !"
 
 msgid "That user does not exist."
-msgstr "Cet utilisateur n'existe pas"
+msgstr "Cet utilisateur n'existe pas."
 
 msgid "The %s team."
 msgstr "L'équipe %s."
@@ -3454,7 +3454,7 @@ msgstr "Le répertoire %s n'est valide"
 
 msgid "The display preference has been forced for each user successfully."
 msgstr ""
-"La préférence d'affichage a été forcée pour chaque utilisateur avec succès"
+"La préférence d'affichage a été forcée pour chaque utilisateur avec succès."
 
 #, php-format
 msgid "The entered value '%s' is invalid."
@@ -3758,7 +3758,7 @@ msgstr ""
 
 msgid "This message cannot be hidden until it has been taken into account"
 msgstr ""
-"Ce message ne peut pas être caché tant qu'il n'a pas été pris en compte."
+"Ce message ne peut pas être caché tant qu'il n'a pas été pris en compte"
 
 #, php-format
 msgid ""
@@ -3819,6 +3819,9 @@ msgstr "Ce project n'utilise pas de service avec des permissions"
 
 msgid "This project is deleted"
 msgstr "Ce projet est supprimé"
+
+msgid "This project is not active"
+msgstr "Ce projet n'est pas actif"
 
 msgid "This project is not categorized yet."
 msgstr "Ce projet n'est pas encore catégorisé."
@@ -4138,7 +4141,7 @@ msgstr ""
 "nom."
 
 msgid "User group created but cannot get Id."
-msgstr "Groupe utilisateur crée, mais impossible de retrouver son Id"
+msgstr "Groupe utilisateur crée, mais impossible de retrouver son Id."
 
 msgid "User group does not exist"
 msgstr "Le groupe d'utilisateurs n'existe pas"
@@ -4594,7 +4597,7 @@ msgid ""
 "platform would forbid it."
 msgstr ""
 "Vous pouvez rendre accessible aux anonymes les pages ci-dessous même si la "
-"plateforme force l'authentification"
+"plateforme force l'authentification."
 
 msgid ""
 "You can delegate to this group several permissions. All the members of this\n"
@@ -4691,7 +4694,7 @@ msgid ""
 "You can't remove the last group containing site administrator permissions"
 msgstr ""
 "Vous ne pouvez pas supprimer le dernier groupe ayant les droits "
-"d'administration de la plateforme."
+"d'administration de la plateforme"
 
 msgid ""
 "You can't remove the last group containing site administrator permissions."
@@ -4851,7 +4854,7 @@ msgid ""
 "him from writers."
 msgstr ""
 "Vous devez supprimer l'utilisateur des administrateurs d'annonces avant de "
-"pouvoir l'enlever des rédacteurs"
+"pouvoir l'enlever des rédacteurs."
 
 msgid "You should send a png image"
 msgstr "Merci d'uploader une image au format png"
@@ -4948,10 +4951,10 @@ msgstr ""
 "utilisé, dans ce cas vous pouvez directement vous connecter."
 
 msgid "Your place was saved"
-msgstr "Position dans le forum sauvegardée."
+msgstr "Position dans le forum sauvegardée"
 
 msgid "Your platform does not allow restricted users."
-msgstr "Votre plateforme n'authorise pas les utilisateurs restreints"
+msgstr "Votre plateforme n’autorise pas les utilisateurs restreints."
 
 msgid "Your request is invalid"
 msgstr "Votre requête n'est pas valide"
@@ -5048,7 +5051,7 @@ msgid "pending"
 msgstr "en attente"
 
 msgid "people monitoring"
-msgstr "Forum sous surveillance"
+msgstr "forum sous surveillance"
 
 msgid "permissions"
 msgstr "permissions"

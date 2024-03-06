@@ -242,7 +242,7 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         $project_fields_dao  = new ProjectFieldsDao();
         $project_details_dao = new ProjectDetailsDAO();
         $project_fields_dao->createProjectField("Test Rest", "Field for test rest", 2, "text", 0);
-        $project_details_dao->createGroupDescription(self::ADMIN_PROJECT_ID, 1, "Admin test");
+        $project_details_dao->createGroupDescription(self::DEFAULT_TEMPLATE_PROJECT_ID, 1, "Admin test");
     }
 
     public function suspendProject()

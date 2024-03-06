@@ -29,6 +29,7 @@ use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\ErrorRendering;
+use Tuleap\Project\AccessNotActiveException;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
 use Tuleap\Project\ProjectAccessChecker;
@@ -359,7 +360,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
                     $exception->getMessage()
                 );
                 exit;
-            } catch (Project_AccessDeletedException $exception) {
+            } catch (Project_AccessDeletedException | AccessNotActiveException $exception) {
                 $this->exitError(
                     $GLOBALS['Language']->getText('include_session', 'insufficient_g_access'),
                     $exception->getMessage()
@@ -379,14 +380,14 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     /**
      * Ensure given user can access given project
      *
-     * @return bool
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessDeletedException
      * @throws Project_AccessRestrictedException
      * @throws Project_AccessPrivateException
      * @throws ProjectAccessSuspendedException
+     * @throws AccessNotActiveException
      */
-    public function userCanAccessProject(PFUser $user, Project $project)
+    public function userCanAccessProject(PFUser $user, Project $project): true
     {
         $checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessUrlOrProjectVerifier(
@@ -411,6 +412,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      * @throws Project_AccessPrivateException
      * @throws Project_AccessNotAdminException
      * @throws ProjectAccessSuspendedException
+     * @throws AccessNotActiveException
      */
     public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project): void
     {
@@ -429,6 +431,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      * @throws Project_AccessPrivateException
      * @throws Project_AccessNotAdminException
      * @throws ProjectAccessSuspendedException
+     * @throws AccessNotActiveException
      */
     public function userCanManageProjectMembership(PFUser $user, Project $project): void
     {

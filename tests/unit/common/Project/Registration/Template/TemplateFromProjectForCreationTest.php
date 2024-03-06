@@ -161,7 +161,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
         $project->method('isActive')->willReturn(true);
         $project->method('isTemplate')->willReturn(true);
 
-        $this->url_verification->method('userCanAccessProject')->willReturn(false);
+        $this->url_verification->method('userCanAccessProject')->willThrowException(new \Project_AccessPrivateException());
 
         $this->project_manager->method('getProject')->with($representation->template_id)->willThrowException(new InsufficientPermissionToUseCompanyTemplateException($project));
 

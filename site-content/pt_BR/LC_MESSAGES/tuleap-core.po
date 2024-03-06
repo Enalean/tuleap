@@ -3749,6 +3749,9 @@ msgstr "Este projeto não utiliza nenhum serviço com permissões"
 msgid "This project is deleted"
 msgstr "Este projeto foi excluído"
 
+msgid "This project is not active"
+msgstr ""
+
 msgid "This project is not categorized yet."
 msgstr "Este projeto ainda não foi categorizado."
 

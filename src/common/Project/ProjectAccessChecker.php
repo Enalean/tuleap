@@ -45,6 +45,7 @@ class ProjectAccessChecker implements CheckProjectAccess
      * @throws Project_AccessPrivateException
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessRestrictedException
+     * @throws AccessNotActiveException
      */
     public function checkUserCanAccessProject(PFUser $user, Project $project): void
     {
@@ -65,7 +66,11 @@ class ProjectAccessChecker implements CheckProjectAccess
                 throw new ProjectAccessSuspendedException();
             }
 
-            throw new Project_AccessDeletedException();
+            if ($project->isDeleted()) {
+                throw new Project_AccessDeletedException();
+            }
+
+            throw new AccessNotActiveException();
         }
 
         if ($user->isMember($project->getID())) {

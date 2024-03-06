@@ -57,7 +57,7 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
 
     public const TEST_USER_CATCH_ALL_PROJECT_ADMIN = 'rest_api_catch_all_project_admin';
 
-    public const ADMIN_PROJECT_ID = 100;
+    public const DEFAULT_TEMPLATE_PROJECT_ID = 100;
 
     public const PROJECT_PRIVATE_MEMBER_SHORTNAME         = 'private-member';
     public const PROJECT_PRIVATE_MEMBER_LABEL             = 'Private member';

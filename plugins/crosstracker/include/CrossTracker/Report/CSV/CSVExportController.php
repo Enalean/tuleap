@@ -36,6 +36,7 @@ use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\AccessNotActiveException;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -223,7 +224,7 @@ class CSVExportController implements DispatchableWithRequest
             try {
                 $url_verification = new URLVerification();
                 $url_verification->userCanAccessProject($user, $project);
-            } catch (Project_AccessProjectNotFoundException $exception) {
+            } catch (Project_AccessProjectNotFoundException | AccessNotActiveException) {
                 throw new NotFoundException(dgettext('tuleap-crosstracker', 'Project not found'));
             } catch (Project_AccessException $exception) {
                 throw new ForbiddenException(dgettext('tuleap-crosstracker', "You don't have permission to access this project"));

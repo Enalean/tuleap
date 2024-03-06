@@ -284,7 +284,7 @@ class DocmanProjectBuilder extends REST_TestDataBuilder
     public function createAdminOnlyItem(int $folder_id, string $title, int $item_type): void
     {
         $read_only_file_id = $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            \REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID,
             $folder_id,
             $title,
             $item_type
