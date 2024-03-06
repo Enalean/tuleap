@@ -86,18 +86,18 @@ use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
@@ -184,6 +184,12 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $this->user_manager);
         $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $this->user_manager);
 
+        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+        $ugroup_label_converter           = new UgroupLabelConverter(
+            $list_field_bind_value_normalizer,
+            new \BaseLanguageFactory()
+        );
+
         $form_element_factory                = Tracker_FormElementFactory::instance();
         $this->invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
@@ -213,15 +219,22 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     new ArtifactLinksUsageDao(),
                 ),
             ),
-            new InComparisonVisitor(),
-            new EqualComparisonVisitor(),
-            new LesserThanOrEqualComparisonVisitor(),
-            new LesserThanComparisonVisitor(),
-            new NotInComparisonVisitor(),
-            new GreaterThanComparisonVisitor(),
-            new BetweenComparisonVisitor(),
-            new GreaterThanOrEqualComparisonVisitor(),
-            new NotEqualComparisonVisitor(),
+            new FlatInvalidFieldChecker(
+                new FloatFieldChecker(),
+                new IntegerFieldChecker(),
+                new TextFieldChecker(),
+                new DateFieldChecker(),
+                new FileFieldChecker(),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    new CollectionOfNormalizedBindLabelsExtractor(
+                        $list_field_bind_value_normalizer,
+                        $ugroup_label_converter
+                    ),
+                    $ugroup_label_converter
+                ),
+                new ArtifactSubmitterChecker($this->user_manager)
+            )
         );
 
         $submitted_on_alias_field     = 'tracker_artifact.submitted_on';
