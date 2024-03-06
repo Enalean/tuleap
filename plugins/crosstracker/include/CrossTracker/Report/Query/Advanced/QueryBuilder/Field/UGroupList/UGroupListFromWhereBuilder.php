@@ -27,6 +27,7 @@ use ParagonIE\EasyDB\EasyStatement;
 use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\FieldValueWrapperParameters;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\ListFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
@@ -47,6 +48,7 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
 {
     public function __construct(
         private UgroupLabelConverter $label_converter,
+        private ListFromWhereBuilder $list_builder,
     ) {
     }
 
@@ -58,39 +60,15 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
         $tracker_field_alias = "TF_$suffix";
         $filter_alias        = $this->getAliasForFilter($comparison);
 
-        $fields_id_statement        = EasyStatement::open()->in(
-            "$tracker_field_alias.id IN(?*)",
-            $duck_typed_field->field_ids
-        );
-        $filter_field_ids_statement = EasyStatement::open()->in(
-            'tcv.field_id IN(?*)',
-            $duck_typed_field->field_ids
-        );
-
-        $from_where = $comparison->getValueWrapper()->accept(
+        $bind_from_where = $comparison->getValueWrapper()->accept(
             $this,
             new FieldValueWrapperParameters($comparison)
         );
-        $from       = <<<EOSQL
-        INNER JOIN tracker_field AS $tracker_field_alias
-            ON (tracker.id = $tracker_field_alias.tracker_id AND $fields_id_statement)
-        LEFT JOIN (
-            SELECT c.artifact_id AS artifact_id
-            FROM tracker_artifact AS artifact
-            INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
-            INNER JOIN ({$from_where->getFrom()})
-                ON (tcv.changeset_id = c.id AND $filter_field_ids_statement)
-        ) AS $filter_alias ON (tracker_artifact.id = $filter_alias.artifact_id)
-        EOSQL;
-        return new ParametrizedFromWhere(
-            $from,
-            $from_where->getWhere(),
-            array_merge(
-                $fields_id_statement->values(),
-                $from_where->getFromParameters(),
-                $filter_field_ids_statement->values()
-            ),
-            $from_where->getWhereParameters()
+        return $this->list_builder->getComposedFromWhere(
+            $duck_typed_field,
+            $tracker_field_alias,
+            $filter_alias,
+            $bind_from_where
         );
     }
 

@@ -41,6 +41,7 @@ use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
@@ -77,20 +78,23 @@ final class FieldFromWhereBuilderTest extends TestCase
         $db = $this->createStub(EasyDB::class);
         $db->method('escapeLikeValue')->willReturnArgument(0);
 
-        $date_time_value_rounder = new DateTimeValueRounder();
-        $builder                 = new FieldFromWhereBuilder(
+        $date_time_value_rounder  = new DateTimeValueRounder();
+        $field_from_where_builder = new ListFromWhereBuilder();
+        $builder                  = new FieldFromWhereBuilder(
             $fields_retriever,
             RetrieveFieldTypeStub::withDetectionOfType(),
             new Numeric\NumericFromWhereBuilder(),
             new Text\TextFromWhereBuilder($db),
             new Date\DateFromWhereBuilder($date_time_value_rounder),
             new Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
-            new StaticList\StaticListFromWhereBuilder(),
+            new StaticList\StaticListFromWhereBuilder($field_from_where_builder),
             new UGroupList\UGroupListFromWhereBuilder(
                 new UgroupLabelConverter(new ListFieldBindValueNormalizer(), new BaseLanguageFactory()),
+                $field_from_where_builder,
             ),
+            new UserList\UserListFromWhereBuilder($field_from_where_builder),
         );
-        $field                   = new Field(self::FIELD_NAME);
+        $field                    = new Field(self::FIELD_NAME);
         return $builder->getFromWhere(
             $field,
             new EqualComparison($field, $value_wrapper),
@@ -220,6 +224,29 @@ final class FieldFromWhereBuilderTest extends TestCase
         );
 
         $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('Project members'));
+        self::assertNotEmpty($from_where->getFrom());
+    }
+
+    public function testItReturnsSQLForUserListField(): void
+    {
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ListUserBindBuilder::aUserBind(
+                ListFieldBuilder::aListField(832)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
+            ListUserBindBuilder::aUserBind(
+                ListFieldBuilder::aListField(156)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->second_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
+        );
+
+        $from_where = $this->getFromWhere($fields_retriever, new SimpleValueWrapper('Fred'));
         self::assertNotEmpty($from_where->getFrom());
     }
 

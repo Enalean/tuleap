@@ -156,11 +156,12 @@ final class ArtifactReportFactoryInstantiator
         $submitted_by_alias_field     = 'tracker_artifact.submitted_by';
         $last_update_by_alias_field   = 'last_changeset.submitted_by';
 
-        $date_value_extractor    = new Date\DateValueExtractor();
-        $date_time_value_rounder = new DateTimeValueRounder();
-        $list_value_extractor    = new ListValueExtractor();
-        $artifact_factory        = Tracker_ArtifactFactory::instance();
-        $query_builder_visitor   = new QueryBuilderVisitor(
+        $date_value_extractor     = new Date\DateValueExtractor();
+        $date_time_value_rounder  = new DateTimeValueRounder();
+        $list_value_extractor     = new ListValueExtractor();
+        $artifact_factory         = Tracker_ArtifactFactory::instance();
+        $field_from_where_builder = new Field\ListFromWhereBuilder();
+        $query_builder_visitor    = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
             new Metadata\EqualComparisonFromWhereBuilder(
                 new Title\EqualComparisonFromWhereBuilder(),
@@ -321,10 +322,12 @@ final class ArtifactReportFactoryInstantiator
                 new Field\Text\TextFromWhereBuilder($db),
                 new Field\Date\DateFromWhereBuilder($date_time_value_rounder),
                 new Field\Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
-                new Field\StaticList\StaticListFromWhereBuilder(),
+                new Field\StaticList\StaticListFromWhereBuilder($field_from_where_builder),
                 new Field\UGroupList\UGroupListFromWhereBuilder(
                     new UgroupLabelConverter(new ListFieldBindValueNormalizer(), new BaseLanguageFactory()),
+                    $field_from_where_builder,
                 ),
+                new Field\UserList\UserListFromWhereBuilder($field_from_where_builder),
             ),
         );
 

@@ -36,6 +36,7 @@ enum DuckTypedFieldType
     case DATETIME;
     case STATIC_LIST;
     case UGROUP_LIST;
+    case USER_LIST;
 
     /**
      * @return Ok<self>|Err<Fault>
@@ -51,6 +52,7 @@ enum DuckTypedFieldType
             FieldTypeRetrieverWrapper::FIELD_DATETIME_TYPE    => Result::ok(self::DATETIME),
             FieldTypeRetrieverWrapper::FIELD_STATIC_LIST_TYPE => Result::ok(self::STATIC_LIST),
             FieldTypeRetrieverWrapper::FIELD_UGROUP_LIST_TYPE => Result::ok(self::UGROUP_LIST),
+            FieldTypeRetrieverWrapper::FIELD_USER_LIST_TYPE   => Result::ok(self::USER_LIST),
             default                                           => Result::err(FieldTypeIsNotSupportedFault::build())
         };
     }

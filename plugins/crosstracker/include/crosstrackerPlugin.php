@@ -243,6 +243,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
         $date_value_extractor    = new Date\DateValueExtractor();
         $date_time_value_rounder = new DateTimeValueRounder();
         $list_value_extractor    = new ListValueExtractor();
+        $list_from_where_builder = new Field\ListFromWhereBuilder();
         $query_builder_visitor   = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
             new Metadata\EqualComparisonFromWhereBuilder(
@@ -404,10 +405,12 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                 new Field\Text\TextFromWhereBuilder($db),
                 new Field\Date\DateFromWhereBuilder($date_time_value_rounder),
                 new Field\Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
-                new Field\StaticList\StaticListFromWhereBuilder(),
+                new Field\StaticList\StaticListFromWhereBuilder($list_from_where_builder),
                 new Field\UGroupList\UGroupListFromWhereBuilder(
                     new UgroupLabelConverter(new ListFieldBindValueNormalizer(), new BaseLanguageFactory()),
+                    $list_from_where_builder,
                 ),
+                new Field\UserList\UserListFromWhereBuilder($list_from_where_builder),
             ),
         );
 

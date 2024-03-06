@@ -70,6 +70,17 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
         ));
     }
 
+    public function testItReturnsUserList(): void
+    {
+        $retriever = new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType());
+
+        self::assertSame(FieldTypeRetrieverWrapper::FIELD_USER_LIST_TYPE, $retriever->getType(
+            ListUserBindBuilder::aUserBind(
+                ListFieldBuilder::aListField(832)->build()
+            )->build()->getField()
+        ));
+    }
+
     public static function notHandledTypeProvider(): iterable
     {
         yield 'int field' => [IntFieldBuilder::anIntField(784)->build()];
@@ -77,11 +88,6 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
         yield 'date field' => [DateFieldBuilder::aDateField(134)->build()];
         yield 'text field' => [TextFieldBuilder::aTextField(458)->build()];
         yield 'string field' => [StringFieldBuilder::aStringField(856)->build()];
-        yield 'user list field' => [
-            ListUserBindBuilder::aUserBind(
-                ListFieldBuilder::aListField(832)->build()
-            )->build()->getField(),
-        ];
     }
 
     /**
