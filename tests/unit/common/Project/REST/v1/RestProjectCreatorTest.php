@@ -339,7 +339,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user
         )->match(
             function (PostProjectCreated $project) {
-                self::assertSame("/uploads/project/file/1", $project->getFileRepresentation()->upload_href);
+                self::assertSame("/uploads/project/file/1", $project->getProjectFromArchiveRepresentation()->upload_href);
             },
             function () {
                 self::fail("Unexpected fault");
@@ -369,7 +369,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user
         )->match(
             function (PostProjectCreated $project) {
-                self::assertSame("/uploads/project/file/1", $project->getFileRepresentation()->upload_href);
+                self::assertSame("/uploads/project/file/1", $project->getProjectFromArchiveRepresentation()->upload_href);
             },
             function (Fault $fault) {
                 self::assertStringContainsString("Restricted users cannot create projects.", (string) $fault);

@@ -21,12 +21,13 @@
 declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1\Project;
+
 /**
 * @psalm-immutable
  */
-final class CreatedFileRepresentation
+final readonly class ProjectFromArchiveRepresentation
 {
-    public function __construct(public readonly string $upload_href)
+    public function __construct(public string $upload_href)
     {
     }
 }
