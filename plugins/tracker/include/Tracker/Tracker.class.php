@@ -3294,18 +3294,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         );
     }
 
-    public function hasFieldBindedToUserGroupsViewableByUser(PFUser $user)
-    {
-        $form_elements = $this->formElementFactory->getUsedFieldsBindedToUserGroups($this);
-
-        foreach ($form_elements as $field) {
-            if ($field->userCanRead($user)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * @return WebhookXMLExporter
      */

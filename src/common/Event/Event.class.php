@@ -605,16 +605,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SITE_ACCESS_CHANGE = 'site_access_change';
 
     /**
-     * When a user account is created
-     *
-     * Parameter:
-     *     'can_access' => bool,
-     *     'user'       => PFUser
-     *     'project'    => Project
-     */
-    public const CAN_USER_ACCESS_UGROUP_INFO = 'can_user_access_ugroup_info';
-
-    /**
      * Gather the services allowed for a given project
      *
      * Parameters:

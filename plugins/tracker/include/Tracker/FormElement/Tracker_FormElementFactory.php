@@ -744,28 +744,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return $this->getUsedFormElementsByType($tracker, ['fieldset']);
     }
 
-    /**
-     * @return Tracker_FormElement_Field[]
-     */
-    public function getUsedFieldsBindedToUserGroups($tracker)
-    {
-        $fields = [];
-
-        $permission_field = $this->getUsedFormElementsByType($tracker, ['perm']);
-        if ($permission_field) {
-            $fields[] = $permission_field[0];
-        }
-
-        $binded_fields = (array) $this->getUsedFormElementsByType($tracker, ['tbl', 'sb', 'msb']);
-        foreach ($binded_fields as $field) {
-            if ($field->getBind()->getType() === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE) {
-                $fields[] = $field;
-            }
-        }
-
-        return $fields;
-    }
-
     public function getAnArtifactLinkField(PFUser $user, Tracker $tracker): ?Tracker_FormElement_Field_ArtifactLink
     {
         $artifact_link_fields = $this->getUsedArtifactLinkFields($tracker);

@@ -352,7 +352,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
         $this->addHook(ExportXmlProject::NAME);
         $this->addHook(GetReferenceEvent::NAME);
-        $this->addHook(Event::CAN_USER_ACCESS_UGROUP_INFO);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
@@ -1575,20 +1574,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $reference_manager,
             $this->getArtifactFactory()
         );
-    }
-
-    public function can_user_access_ugroup_info($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $project = $params['project'];
-        $user    = $params['user'];
-
-        $trackers = $this->getTrackerFactory()->getTrackersByProjectIdUserCanView($project->getID(), $user);
-        foreach ($trackers as $tracker) {
-            if ($tracker->hasFieldBindedToUserGroupsViewableByUser($user)) {
-                $params['can_access'] = true;
-                break;
-            }
-        }
     }
 
     /** @see TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS */
