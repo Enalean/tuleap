@@ -1394,6 +1394,7 @@ class ProjectResource extends AuthenticatedResource
     {
         return new RestProjectCreator(
             ProjectCreator::buildSelfRegularValidation(),
+            ProjectCreator::buildSelfDelayActivation(),
             ProjectXMLImporter::build(
                 new XMLImportHelper(UserManager::instance()),
                 ProjectCreator::buildSelfRegularValidation()

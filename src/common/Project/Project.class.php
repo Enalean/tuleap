@@ -51,6 +51,8 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public const STATUS_DELETED       = 'D';
     public const STATUS_DELETED_LABEL = 'deleted';
 
+    public const STATUS_CREATING_FROM_ARCHIVE = 'X';
+
     /**
      * The project is system
      */

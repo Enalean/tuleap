@@ -36,8 +36,11 @@ final readonly class PostProjectCreated
         return new self($builder, $user, $project, null);
     }
 
-    public static function fromArchive(ProjectRepresentationBuilder $builder, \PFUser $user, ProjectFromArchiveRepresentation $project_from_archive_representation): self
-    {
+    public static function fromArchive(
+        ProjectRepresentationBuilder $builder,
+        \PFUser $user,
+        ProjectFromArchiveRepresentation $project_from_archive_representation,
+    ): self {
         return new self($builder, $user, null, $project_from_archive_representation);
     }
 

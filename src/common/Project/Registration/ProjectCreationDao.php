@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration;
 
 use ForgeConfig;
-use Project;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectCreationData;
@@ -58,7 +57,7 @@ final class ProjectCreationDao extends DataAccessObject implements StoreProjectI
                 'access'              => $access,
                 'unix_group_name'     => $data->getUnixName(),
                 'http_domain'         => $http_domain,
-                'status'              => Project::STATUS_PENDING,
+                'status'              => $data->getStatus(),
                 'short_description'   => $data->getShortDescription(),
                 'register_time'       => time(),
                 'rand_hash'           => bin2hex(random_bytes(16)),

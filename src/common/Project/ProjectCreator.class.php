@@ -195,6 +195,25 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return self::buildSelf(true, false, new ProjectRegistrationXMLChecker());
     }
 
+    public static function buildSelfDelayActivation(): self
+    {
+        return self::buildSelf(
+            false,
+            false,
+            new ProjectRegistrationRESTChecker(
+                new DefaultProjectVisibilityRetriever(),
+                new CategoryCollectionConsistencyChecker(
+                    new \TroveCatFactory(new \TroveCatDao())
+                ),
+                new ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker(
+                    new DescriptionFieldsFactory(
+                        new DescriptionFieldsDao()
+                    )
+                )
+            )
+        );
+    }
+
     public static function buildSelfRegularValidation(): self
     {
         return self::buildSelf(
@@ -348,6 +367,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @throws ProjectInvalidFullNameException
      * @throws ProjectInvalidShortNameException
      * @throws ProjectDescriptionMandatoryException
+     * @throws Project_Creation_Exception
      */
     protected function createProject(ProjectCreationData $data): Project
     {

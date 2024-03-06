@@ -22,12 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1\Project;
 
+use Project;
+use Tuleap\Project\REST\ProjectRepresentation;
+use Tuleap\REST\JsonCast;
+
 /**
 * @psalm-immutable
  */
 final readonly class ProjectFromArchiveRepresentation
 {
-    public function __construct(public string $upload_href)
+    private function __construct(public int $id, public string $uri, public string $upload_href)
     {
+    }
+
+    public static function fromCreatedProject(Project $project, string $upload_href): self
+    {
+        return new self(
+            JsonCast::toInt($project->getID()),
+            ProjectRepresentation::ROUTE . '/' . $project->getID(),
+            $upload_href
+        );
     }
 }
