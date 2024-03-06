@@ -19,15 +19,12 @@
 
 import type { Fault } from "@tuleap/fault";
 import type { SelectorEntry } from "@tuleap/plugin-pullrequest-selectors-dropdown";
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { AuthorTemplatingCallback } from "./AuthorTemplatingCallback";
+import { UserTemplatingCallback } from "../Common/UserTemplatingCallback";
 import { AuthorsLoader } from "./AuthorsLoader";
-import { AuthorFilteringCallback } from "./AuthorFilteringCallback";
+import { UserFilteringCallback } from "../Common/UserFilteringCallback";
+import { isUser } from "../Common/UserTypeGuard";
 import { AuthorFilterBuilder, TYPE_FILTER_AUTHOR } from "./AuthorFilter";
 import type { StoreListFilters } from "../ListFiltersStore";
-
-export const isUser = (item_value: unknown): item_value is User =>
-    typeof item_value === "object" && item_value !== null && "id" in item_value;
 
 export const AuthorSelectorEntry = (
     $gettext: (string: string) => string,
@@ -42,9 +39,9 @@ export const AuthorSelectorEntry = (
         label: $gettext("Matching users"),
         empty_message: $gettext("No matching user"),
         disabled_message: $gettext("You can only filter on one author"),
-        templating_callback: AuthorTemplatingCallback,
+        templating_callback: UserTemplatingCallback,
         loadItems: AuthorsLoader(on_error_callback, repository_id),
-        filterItems: AuthorFilteringCallback,
+        filterItems: UserFilteringCallback,
         onItemSelection: (item: unknown): void => {
             if (!isUser(item)) {
                 return;
