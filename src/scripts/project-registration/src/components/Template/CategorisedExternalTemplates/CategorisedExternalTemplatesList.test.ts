@@ -25,7 +25,7 @@ import TemplateCardContent from "../TemplateCard.vue";
 import CategorisedExternalTemplatesList from "./CategorisedExternalTemplatesList.vue";
 
 describe("CategorisedExternalTemplatesList", () => {
-    async function getWrapper(): Promise<Wrapper<CategorisedExternalTemplatesList>> {
+    async function getWrapper(): Promise<Wrapper<Vue, Element>> {
         return shallowMount(CategorisedExternalTemplatesList, {
             localVue: await createProjectRegistrationLocalVue(),
             propsData: {
