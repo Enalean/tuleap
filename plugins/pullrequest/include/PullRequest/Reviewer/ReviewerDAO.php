@@ -89,6 +89,7 @@ class ReviewerDAO extends DataAccessObject implements SearchReviewers, SearchRep
                 },
                 $this->searchReviewers($pull_request_id)
             );
+
             $added_reviewer_ids   = array_diff($user_ids, $current_reviewer_ids);
             $removed_reviewer_ids = array_diff($current_reviewer_ids, $user_ids);
 

@@ -26,11 +26,13 @@ use Tuleap\PullRequest\Criterion\AuthorCriterion;
 use Tuleap\PullRequest\Criterion\KeywordCriterion;
 use Tuleap\PullRequest\Criterion\LabelCriterion;
 use Tuleap\PullRequest\Criterion\PullRequestSortOrder;
+use Tuleap\PullRequest\Criterion\ReviewerCriterion;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\Criterion\StatusCriterion;
 use Tuleap\PullRequest\Criterion\TargetBranchCriterion;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
+use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -39,6 +41,7 @@ final class DaoTest extends TestCase
     private const REPOSITORY_ID = 5;
     private const LIMIT         = 10;
     private const OFFSET        = 0;
+
     private const BOB_USER_ID   = 102;
     private const ALICE_USER_ID = 103;
 
@@ -47,6 +50,7 @@ final class DaoTest extends TestCase
 
     private Dao $dao;
     private PullRequestLabelDao $pull_requests_labels_dao;
+    private ReviewerDAO $reviewer_dao;
 
     private int $open_pull_request_id;
     private int $merged_pull_request_id;
@@ -56,6 +60,7 @@ final class DaoTest extends TestCase
     {
         $this->dao                      = new Dao();
         $this->pull_requests_labels_dao = new PullRequestLabelDao();
+        $this->reviewer_dao             = new ReviewerDAO();
 
         $this->open_pull_request_id      = $this->insertOpenPullRequest();
         $this->merged_pull_request_id    = $this->insertMergedPullRequest();
@@ -64,6 +69,10 @@ final class DaoTest extends TestCase
         $this->addLabelsToPullRequest($this->open_pull_request_id, self::LABEL_EMERGENCY_ID);
         $this->addLabelsToPullRequest($this->merged_pull_request_id, self::LABEL_EMERGENCY_ID, self::LABEL_EASY_FIX_ID);
         $this->addLabelsToPullRequest($this->abandoned_pull_request_id, self::LABEL_EASY_FIX_ID);
+
+        $this->assignReviewerToPullRequest($this->open_pull_request_id, self::BOB_USER_ID);
+        $this->assignReviewerToPullRequest($this->merged_pull_request_id, self::ALICE_USER_ID);
+        $this->assignReviewerToPullRequest($this->abandoned_pull_request_id, self::BOB_USER_ID);
     }
 
     protected function tearDown(): void
@@ -218,6 +227,29 @@ final class DaoTest extends TestCase
         self::assertEquals(2, $result->total_size);
     }
 
+    public function testItFiltersOnReviewers(): void
+    {
+        $result = $this->dao->getPaginatedPullRequests(
+            self::REPOSITORY_ID,
+            new SearchCriteria(
+                null,
+                [],
+                [],
+                [],
+                [],
+                [new ReviewerCriterion(self::ALICE_USER_ID)]
+            ),
+            PullRequestSortOrder::DESCENDING,
+            self::LIMIT,
+            self::OFFSET,
+        );
+
+        self::assertEqualsCanonicalizing([
+            $this->merged_pull_request_id,
+        ], array_column($result->pull_requests, "id"));
+        self::assertEquals(1, $result->total_size);
+    }
+
     public function testItAppliesAllTheFilters(): void
     {
         $result = $this->dao->getPaginatedPullRequests(
@@ -228,6 +260,7 @@ final class DaoTest extends TestCase
                 [new LabelCriterion(self::LABEL_EASY_FIX_ID)],
                 [new KeywordCriterion("external")],
                 [new TargetBranchCriterion("baobab")],
+                [new ReviewerCriterion(self::BOB_USER_ID)]
             ),
             PullRequestSortOrder::DESCENDING,
             self::LIMIT,
@@ -333,5 +366,10 @@ final class DaoTest extends TestCase
     private function addLabelsToPullRequest(int $pull_request_id, int ...$label_id): void
     {
         $this->pull_requests_labels_dao->addLabelsInTransaction($pull_request_id, $label_id);
+    }
+
+    private function assignReviewerToPullRequest(int $pull_request_id, int $reviewer_id): void
+    {
+        $this->reviewer_dao->setReviewers($pull_request_id, self::BOB_USER_ID, 1, $reviewer_id);
     }
 }

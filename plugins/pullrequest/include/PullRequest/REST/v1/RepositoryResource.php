@@ -97,6 +97,9 @@ class RepositoryResource extends AuthenticatedResource
      *     <p>
      *         <b>Target branch</b>: <code>query={"target_branches": [{"name": string}]}</code> where "name" is the name of the target branch.
      *     </p>
+     *     <p>
+     *         <b>Reviewer</b>: <code>query={"reviewers": [{"id": int}]}</code> where "id" is the user_id of the reviewer.
+     *     </p>
      * </p>
      *
      * <p>

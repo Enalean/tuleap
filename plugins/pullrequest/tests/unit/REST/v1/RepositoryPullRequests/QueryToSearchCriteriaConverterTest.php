@@ -178,6 +178,26 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         self::assertEquals("walnut", $criteria->target_branches[0]->name);
     }
 
+    public function testItReturnsAnErrorWhenTryingToFilterMultipleReviewers(): void
+    {
+        $result = $this->converter->convert(json_encode(['reviewers' => [['id' => 102], ['id' => 103]]], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MalformedQueryFault::class, $result->error);
+        self::assertStringContainsString("reviewers", (string) $result->error);
+    }
+
+    public function testItWillFilterOnReviewers(): void
+    {
+        $result = $this->converter->convert(json_encode(['reviewers' => [['id' => 102]]], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isOk($result));
+
+        $criteria = $result->unwrapOr(null);
+
+        self::assertEquals(102, $criteria->reviewers[0]->id);
+    }
+
     public function testItWillApplyAllFilters(): void
     {
         $result = $this->converter->convert(
@@ -187,6 +207,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
                 'labels' => [['id' => 1], ['id' => 2]],
                 'search' => [['keyword' => 'security'], ['keyword' => 'bump']],
                 'target_branches' => [['name' => 'walnut']],
+                'reviewers' => [["id" => 102]],
             ], JSON_THROW_ON_ERROR)
         );
 
@@ -201,6 +222,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         self::assertEquals("security", $criteria->search[0]->keyword);
         self::assertEquals("bump", $criteria->search[1]->keyword);
         self::assertEquals("walnut", $criteria->target_branches[0]->name);
+        self::assertEquals(102, $criteria->reviewers[0]->id);
 
         self::assertTrue($status_criterion->shouldOnlyRetrieveOpenPullRequests());
         self::assertFalse($status_criterion->shouldOnlyRetrieveClosedPullRequests());
