@@ -4,12 +4,15 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/tlp-dropdown.js",
-  "main": "dist/tlp-dropdown.umd.cjs",
-  "style": "dist/style.css",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "sass": "./dist/style.css",
+      "import": "./dist/tlp-dropdown.js",
+      "require": "./dist/tlp-dropdown.umd.cjs"
+    }
+  },
   "dependencies": {
     "@floating-ui/dom": "^1.2.7"
   },

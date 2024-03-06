@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/project-background";
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "pkg:@tuleap/project-background";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 
 .agiledashboard-header-title {
     margin: 0;

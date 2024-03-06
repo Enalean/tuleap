@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 .tracker-cross-reference-hide-referenced-by {
     display: none;

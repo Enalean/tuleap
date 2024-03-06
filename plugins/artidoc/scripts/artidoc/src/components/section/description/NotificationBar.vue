@@ -59,7 +59,7 @@ const upload_message = computed(() =>
 );
 </script>
 <style lang="scss" scoped>
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 
 $title-height: 65px;
 

@@ -5,10 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/plugin-pullrequest-comments.js",
-  "main": "dist/plugin-pullrequest-comments.umd.cjs",
-  "types": "dist/index.d.ts",
-  "style": "dist/style.css",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "sass": "./dist/style.css",
+      "import": "./dist/plugin-pullrequest-comments.js",
+      "require": "./dist/plugin-pullrequest-comments.umd.cjs"
+    }
+  },
   "dependencies": {
     "@tuleap/commonmark-popover": "workspace:*",
     "@tuleap/date-helper": "workspace:*",

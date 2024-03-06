@@ -6,7 +6,7 @@
   "private": true,
   "exports": {
     ".": {
-      "default": "./themes/burndown-chart.scss"
+      "sass": "./themes/burndown-chart.scss"
     }
   },
   "dependencies": {

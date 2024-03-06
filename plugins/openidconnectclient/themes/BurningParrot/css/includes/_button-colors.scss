@@ -20,7 +20,7 @@
 @use "sass:map";
 @use "sass:color";
 @use "../../../case";
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 @mixin provider-button-colors() {
     @each $color-name, $colors in tlp-swatch-colors.$color-map {

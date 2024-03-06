@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/tlp/src/scss/components/skeleton";
+@use "pkg:@tuleap/tlp/src/scss/components/skeleton";
 @use "../../../common/css/utils/switch-to";
 
 #switch-to-modal {

@@ -9,20 +9,20 @@
   "exports": {
     ".": {
       "types": "./dist/main.d.ts",
+      "sass": "./dist/style.css",
       "import": "./dist/en_US.js",
-      "require": "./dist/en_US.cjs",
-      "default": "./scss/main.scss"
+      "require": "./dist/en_US.cjs"
     },
     "./fr_FR": {
       "types": "./dist/main.d.ts",
       "import": "./dist/fr_FR.js"
-    },
-    "./style": "./scss/main.scss"
+    }
   },
   "dependencies": {
     "flatpickr": "^4.6.9"
   },
   "devDependencies": {
+    "@rollup/plugin-replace": "^5.0.7",
     "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {

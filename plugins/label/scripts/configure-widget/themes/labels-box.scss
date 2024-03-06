@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 /* stylelint-disable selector-class-pattern, max-nesting-depth, selector-max-compound-selectors */
 .select2-container {

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/burningparrot-sign-in";
+@use "pkg:@tuleap/burningparrot-sign-in";
 
 #main-container {
     align-items: center;

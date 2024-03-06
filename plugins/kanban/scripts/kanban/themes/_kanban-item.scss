@@ -19,8 +19,8 @@
 
 @use "sass:map";
 @use "sass:color";
-@use "@tuleap/tlp-swatch-colors";
-@use "@tuleap/plugin-cardwall-card-fields";
+@use "pkg:@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/plugin-cardwall-card-fields";
 @use "./kanban-item-moves";
 @use "./kanban-item-transit";
 @use "./transition-variables" as transition;

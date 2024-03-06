@@ -5,14 +5,11 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/plugin-cardwall-card-fields.js",
-  "main": "dist/plugin-cardwall-card-fields.umd.cjs",
-  "style": "dist/style.css",
   "exports": {
     ".": {
+      "sass": "./dist/style.css",
       "import": "./dist/plugin-cardwall-card-fields.js",
-      "require": "./dist/plugin-cardwall-card-fields.umd.cjs",
-      "style": "./dist/style.css"
+      "require": "./dist/plugin-cardwall-card-fields.umd.cjs"
     }
   },
   "dependencies": {

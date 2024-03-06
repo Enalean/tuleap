@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 
 #backlog-items-selected-bar {
     position: fixed;

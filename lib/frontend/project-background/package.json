@@ -4,12 +4,7 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
-  "main": "themes/main.scss",
-  "style": "themes/main.scss",
   "exports": {
-    ".": {
-      "default": "./themes/main.scss"
-    }
+    ".": "./themes/main.scss"
   }
 }

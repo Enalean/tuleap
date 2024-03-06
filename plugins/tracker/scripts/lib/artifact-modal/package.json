@@ -4,8 +4,12 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "main": "dist/plugin-tracker-artifact-modal.js",
-  "style": "dist/style.css",
+  "exports": {
+    ".": {
+      "sass": "./dist/style.css",
+      "import": "./dist/plugin-tracker-artifact-modal.js"
+    }
+  },
   "dependencies": {
     "@tuleap/angular-tlp": "workspace:*",
     "@tuleap/ckeditor-image-upload": "workspace:*",

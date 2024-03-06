@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/plugin-tracker-chart-styles";
+@use "pkg:@tuleap/plugin-tracker-chart-styles";
 
 .velocity-chart-bar {
     fill: var(--tlp-main-color);

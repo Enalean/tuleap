@@ -20,11 +20,17 @@
 $fa-font-path: "@fortawesome/fontawesome-free/webfonts/";
 
 @use "../../fonts/fontawesome-v4-font-face";
-@import "@fortawesome/fontawesome-free/scss/fontawesome";
-@import "@fortawesome/fontawesome-free/scss/solid";
-@import "@fortawesome/fontawesome-free/scss/regular";
-@import "@fortawesome/fontawesome-free/scss/brands";
-@import "@fortawesome/fontawesome-free/css/v4-shims";
+@use "pkg:@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@use "pkg:@fortawesome/fontawesome-free/scss/solid.scss" with (
+    $fa-font-path: $fa-font-path
+);
+@use "pkg:@fortawesome/fontawesome-free/scss/regular.scss" with (
+    $fa-font-path: $fa-font-path
+);
+@use "pkg:@fortawesome/fontawesome-free/scss/brands.scss" with (
+    $fa-font-path: $fa-font-path
+);
+@use "pkg:@fortawesome/fontawesome-free/css/v4-shims.css";
 
 // tlp-font MUST come after font-awesome, otherwise `fa`, `fa-solid`, etc. will overwrite the font-family and mix up the icons
-@import "../../fonts/tlp-font/tlp-font";
+@use "../../fonts/tlp-font/tlp-font";

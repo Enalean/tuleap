@@ -6,7 +6,7 @@
   "private": true,
   "exports": {
     ".": "./themes/main.scss",
-    "./badge-with-remove-button": "./themes/badge-with-remove-button.scss"
+    "./badge-with-remove-button.scss": "./themes/badge-with-remove-button.scss"
   },
   "dependencies": {
     "@tuleap/tlp-swatch-colors": "workspace:*"

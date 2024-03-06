@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 form[name="edit_chart_form"] label {
     font-weight: bold;

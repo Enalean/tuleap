@@ -17,8 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import process from "node:process";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { NodePackageImporter } from "sass";
 import { browserlist_config, esbuild_target } from "../browserslist_config";
 
 export function configureTypescriptRules(): object[] {
@@ -104,7 +107,15 @@ export const rule_scss_loader = {
                 },
             },
         },
-        "sass-loader",
+        {
+            loader: "sass-loader",
+            options: {
+                api: "modern",
+                sassOptions: {
+                    importers: [new NodePackageImporter(process.cwd())],
+                },
+            },
+        },
     ],
 };
 

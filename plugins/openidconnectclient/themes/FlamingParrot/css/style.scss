@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@use "themes/BurningParrot/css/includes/button-colors";
+@use "../../BurningParrot/css/includes/button-colors";
 @use "../../default/css/style";
 
 #linked-providers > .provider > .provider-header {
@@ -43,7 +43,7 @@ body {
     &.FlamingParrot_Orange {
         &.openid-connect-link {
             background:
-                url("../../../../../src/themes/FlamingParrot/images/login/login-background-orange.png")
+                url("@tuleap/flamingparrot-theme/images/login/login-background-orange.png")
                     no-repeat center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
@@ -53,8 +53,8 @@ body {
     &.FlamingParrot_Blue {
         &.openid-connect-link {
             background:
-                url("../../../../../src/themes/FlamingParrot/images/login/login-background-blue.png")
-                    no-repeat center top,
+                url("@tuleap/flamingparrot-theme/images/login/login-background-blue.png") no-repeat
+                    center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
     }
@@ -63,8 +63,8 @@ body {
     &.FlamingParrot_Green {
         &.openid-connect-link {
             background:
-                url("../../../../../src/themes/FlamingParrot/images/login/login-background-green.png")
-                    no-repeat center top,
+                url("@tuleap/flamingparrot-theme/images/login/login-background-green.png") no-repeat
+                    center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
     }
@@ -73,7 +73,7 @@ body {
     &.FlamingParrot_BlueGrey {
         &.openid-connect-link {
             background:
-                url("../../../../../src/themes/FlamingParrot/images/login/login-background-bluegrey.png")
+                url("@tuleap/flamingparrot-theme/images/login/login-background-bluegrey.png")
                     no-repeat center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
@@ -83,7 +83,7 @@ body {
     &.FlamingParrot_Purple {
         &.openid-connect-link {
             background:
-                url("../../../../../src/themes/FlamingParrot/images/login/login-background-purple.png")
+                url("@tuleap/flamingparrot-theme/images/login/login-background-purple.png")
                     no-repeat center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
@@ -93,8 +93,8 @@ body {
     &.FlamingParrot_Red {
         &.openid-connect-link {
             background:
-                url("../../../../../src/themes/FlamingParrot/images/login/login-background-red.png")
-                    no-repeat center top,
+                url("@tuleap/flamingparrot-theme/images/login/login-background-red.png") no-repeat
+                    center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
     }

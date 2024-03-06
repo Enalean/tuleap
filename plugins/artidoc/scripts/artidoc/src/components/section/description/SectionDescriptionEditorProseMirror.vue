@@ -100,7 +100,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 
 /* stylelint-disable selector-class-pattern */
 .ProseMirror-menubar {

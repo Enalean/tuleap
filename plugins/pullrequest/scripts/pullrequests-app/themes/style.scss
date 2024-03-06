@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "codemirror/lib/codemirror";
-@use "codemirror/addon/merge/merge";
-@use "@tuleap/plugin-pullrequest-comments";
+@use "pkg:codemirror/lib/codemirror";
+@use "pkg:codemirror/addon/merge/merge";
+@use "pkg:@tuleap/plugin-pullrequest-comments";
 @use "./includes/pull-request";
 @use "./includes/commits";
 @use "./includes/files";

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
-@use "@tuleap/project-background";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "pkg:@tuleap/project-background";
 
 .project-with-background .kanban:not(.widget-context) {
     .kanban-header-title,

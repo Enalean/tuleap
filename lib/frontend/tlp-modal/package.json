@@ -5,10 +5,15 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/tlp-modal.js",
-  "main": "dist/tlp-modal.umd.cjs",
-  "style": "dist/style.css",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "sass": "./dist/style.css",
+      "import": "./dist/tlp-modal.js",
+      "require": "./dist/tlp-modal.umd.cjs"
+    }
+  },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/dom": "workspace:*"

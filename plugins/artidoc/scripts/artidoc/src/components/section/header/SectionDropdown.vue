@@ -106,7 +106,7 @@ function edit(event: Event): void {
 </script>
 
 <style lang="scss" scoped>
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 
 $button-size: 24px;
 

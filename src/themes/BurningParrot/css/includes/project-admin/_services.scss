@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/list-picker";
+@use "pkg:@tuleap/list-picker";
 @use "../global-variables";
 
 .project-admin-services-icon {

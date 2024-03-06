@@ -20,7 +20,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components";
 import { html, type TemplateResult } from "lit";
 import type { Lazybox } from "@tuleap/lazybox";
-import "@tuleap/lazybox/style";
 import { buildLazyboxSingle } from "./lazybox-single";
 import { buildLazyboxMultiple } from "./lazybox-multiple";
 import "./lazybox.scss";

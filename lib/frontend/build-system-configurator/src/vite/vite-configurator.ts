@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import path from "path";
+import path from "node:path";
+import process from "node:process";
 import type { UserConfigExport } from "vitest/config";
 import {
     configDefaults as config_defaults_vitest,
@@ -27,6 +28,8 @@ import type { BuildOptions, CSSOptions, ServerOptions, UserConfig } from "vite";
 import type { CoverageOptions } from "vitest";
 import { browserlist_config, esbuild_target } from "../browserslist_config";
 import autoprefixer from "autoprefixer";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { NodePackageImporter } from "sass";
 
 export type TuleapSpecificConfiguration = {
     plugin_name: string;
@@ -130,6 +133,12 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
         },
         css: {
             ...config.css,
+            preprocessorOptions: {
+                scss: {
+                    api: "modern",
+                    importers: [new NodePackageImporter(process.cwd())],
+                },
+            },
             postcss: {
                 plugins: [autoprefixer({ overrideBrowserslist: browserlist_config })],
             },

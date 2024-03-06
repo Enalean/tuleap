@@ -5,10 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "types": "dist/index.d.ts",
-  "module": "dist/plugin-tracker-rich-text-editor.js",
-  "main": "dist/plugin-tracker-rich-text-editor.umd.cjs",
-  "style": "dist/style.css",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "sass": "./dist/style.css",
+      "import": "./dist/plugin-tracker-rich-text-editor.js",
+      "require": "./dist/plugin-tracker-rich-text-editor.umd.cjs"
+    }
+  },
   "dependencies": {
     "@tuleap/gettext": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",

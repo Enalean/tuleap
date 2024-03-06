@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/tlp-dropdown";
-@use "dragula/dist/dragula";
+@use "pkg:@tuleap/tlp-dropdown";
+@use "pkg:dragula/dist/dragula";
 
 .dashboard-tabs-dropdown {
     margin: 0 0 0 var(--tlp-small-spacing);

@@ -4,12 +4,15 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/plugin-tracker-tql-codemirror.js",
-  "main": "dist/plugin-tracker-tql-codemirror.umd.cjs",
-  "style": "dist/style.css",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "sass": "./dist/style.css",
+      "import": "./dist/plugin-tracker-tql-codemirror.js",
+      "require": "./dist/plugin-tracker-tql-codemirror.umd.cjs"
+    }
+  },
   "dependencies": {
     "codemirror": "^5.62.0"
   },

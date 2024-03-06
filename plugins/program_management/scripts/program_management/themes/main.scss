@@ -21,7 +21,7 @@
 @use "./backlog";
 @use "./element";
 @use "./program-increment";
-@use "@tuleap/drag-and-drop";
+@use "pkg:@tuleap/drag-and-drop";
 
 .program-management-title-header {
     margin: 0;

@@ -365,7 +365,7 @@ function loadReportsAccordingToSelectedTracker(): void {
 </script>
 
 <style lang="scss">
-@use "@tuleap/list-picker/style";
+@use "pkg:@tuleap/list-picker";
 
 .roadmap-widget-configuration-separator {
     margin: var(--tlp-large-spacing) calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing);

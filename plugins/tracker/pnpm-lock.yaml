@@ -11,6 +11,9 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:^
     version: link:../../lib/frontend/fetch-result
+  '@tuleap/flamingparrot-theme':
+    specifier: workspace:^
+    version: link:../../src/themes/FlamingParrot
   '@tuleap/mention':
     specifier: workspace:*
     version: link:../../lib/frontend/mention

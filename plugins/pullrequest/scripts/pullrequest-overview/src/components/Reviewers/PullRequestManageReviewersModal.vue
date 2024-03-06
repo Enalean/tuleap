@@ -166,7 +166,7 @@ function saveReviewers(): void {
 </script>
 
 <style lang="scss">
-@use "@tuleap/lazybox-users-autocomplete/style";
+@use "pkg:@tuleap/lazybox-users-autocomplete";
 
 .pull-request-manage-reviewers-modal-footer {
     align-items: center;

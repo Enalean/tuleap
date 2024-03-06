@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/lazybox";
+@use "pkg:@tuleap/lazybox";
 @use "./variables";
 @use "./dropdown/linkable_item";
 @use "./creation/artifact-creator";

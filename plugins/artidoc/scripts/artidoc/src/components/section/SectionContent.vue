@@ -114,7 +114,7 @@ const {
 </script>
 
 <style lang="scss" scoped>
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 @use "@/themes/includes/zindex";
 @use "@/themes/includes/whitespace";
 

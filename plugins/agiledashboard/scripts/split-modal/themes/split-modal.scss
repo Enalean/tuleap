@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/tlp-modal";
-@use "@tuleap/tlp-button";
+@use "pkg:@tuleap/tlp-modal";
+@use "pkg:@tuleap/tlp-button";
 
 .agiledashboard-split-kanban-modal-body {
     display: flex;

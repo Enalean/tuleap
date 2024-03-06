@@ -5,10 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/plugin-pullrequest-selectors-dropdown.js",
-  "main": "dist/plugin-pullrequest-selectors-dropdown.umd.cjs",
-  "types": "dist/index.d.ts",
-  "style": "dist/style.css",
+  "types": "./dist/index.d.ts",
   "exports": {
     "types": "./dist/index.d.ts",
     "import": "./dist/plugin-pullrequest-selectors-dropdown.js",

@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/plugin-tracker-color-picker':
     specifier: workspace:*
     version: link:../tracker/scripts/lib/colorpicker
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:^
+    version: link:../../lib/frontend/tlp-swatch-colors
 
 devDependencies:
   '@tuleap/build-system-configurator':

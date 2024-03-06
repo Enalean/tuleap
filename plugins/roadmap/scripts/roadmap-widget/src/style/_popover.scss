@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 .roadmap-gantt-task-popover {
     &.tlp-popover.tlp-popover-shown {

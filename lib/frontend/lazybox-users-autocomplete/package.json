@@ -4,19 +4,14 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/lazybox-users-autocomplete.js",
-  "main": "dist/lazybox-users-autocomplete.umd.cjs",
-  "types": "dist/main.d.ts",
-  "style": "dist/style.css",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
+      "sass": "./dist/style.css",
       "import": "./dist/lazybox-users-autocomplete.js",
-      "require": "./dist/lazybox-users-autocomplete.umd.cjs",
-      "style": "./dist/style.css"
-    },
-    "./style": "./dist/style.css"
+      "require": "./dist/lazybox-users-autocomplete.umd.cjs"
+    }
   },
   "dependencies": {
     "@tuleap/fault": "workspace:*",

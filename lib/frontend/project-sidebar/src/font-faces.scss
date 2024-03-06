@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-@use "@tuleap/tlp/src/fonts/tlp-font/font-face" with (
+@use "pkg:@tuleap/tlp/src/fonts/tlp-font/font-face" with (
     $tlp-font-basepath: "@tuleap/tlp/src/"
 );
 

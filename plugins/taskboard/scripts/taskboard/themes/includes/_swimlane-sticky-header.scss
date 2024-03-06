@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
-@use "header";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "./header";
 
 .taskboard-cell-swimlane-header {
     position: initial;

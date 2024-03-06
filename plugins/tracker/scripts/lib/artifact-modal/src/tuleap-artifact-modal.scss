@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "adapters/UI/comments/comments";
-@use "adapters/UI/footer/quota-display";
-@use "adapters/UI/fields/link-field/link-field";
-@use "adapters/UI/fields/burndown-field/bundown-field";
-@use "adapters/UI/fields/file-field/file-field";
-@use "adapters/UI/fields/user-avatar-field/user-avatar-field";
-@use "adapters/UI/fields/select-box-field/select-box-field";
-@use "adapters/UI/fields/computed-field/computed-field";
-@import "fields/open-list-field/open-list-field";
-@import "@tuleap/list-picker";
+@use "./adapters/UI/comments/comments";
+@use "./adapters/UI/footer/quota-display";
+@use "./adapters/UI/fields/link-field/link-field";
+@use "./adapters/UI/fields/burndown-field/bundown-field";
+@use "./adapters/UI/fields/file-field/file-field";
+@use "./adapters/UI/fields/user-avatar-field/user-avatar-field";
+@use "./adapters/UI/fields/select-box-field/select-box-field";
+@use "./adapters/UI/fields/computed-field/computed-field";
+@use "./fields/open-list-field/open-list-field";
+@use "pkg:@tuleap/list-picker";
 
 .tuleap-artifact-modal-title {
     display: flex;

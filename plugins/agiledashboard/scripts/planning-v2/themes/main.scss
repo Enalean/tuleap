@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/plugin-agiledashboard-scrum-header";
-@use "@tuleap/plugin-agiledashboard-scrum-milestone-header";
-@use "@tuleap/plugin-tracker-artifact-modal";
-@use "dragular/dist/dragular";
-@use "animate.css/animate";
+@use "pkg:@tuleap/plugin-agiledashboard-scrum-header";
+@use "pkg:@tuleap/plugin-agiledashboard-scrum-milestone-header";
+@use "pkg:@tuleap/plugin-tracker-artifact-modal";
+@use "pkg:dragular/dist/dragular";
+@use "pkg:animate.css/animate";
 @use "./backlog";
 @use "./milestones";
 @use "./backlog-item";

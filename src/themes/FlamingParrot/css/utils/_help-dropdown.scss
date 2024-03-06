@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "@tuleap/tlp-dropdown";
+@use "pkg:@tuleap/tlp-dropdown";
 
 .dropdown-menu-item {
     padding: 8px 16px;

@@ -17,11 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import Replace from "@rollup/plugin-replace";
 
 export default vite.defineLibConfig({
-    plugins: [viteDtsPlugin()],
+    plugins: [
+        // Remove IE hack in distributed flatpickr CSS
+        Replace({
+            include: ["scss/main.scss"],
+            values: { "7ch\\0": "6ch" },
+            preventAssignment: true,
+        }),
+        viteDtsPlugin(),
+    ],
     build: {
         lib: {
             name: "TlpDatePicker",

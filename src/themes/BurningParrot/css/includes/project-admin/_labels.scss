@@ -19,7 +19,7 @@
 
 @use "sass:map";
 @use "sass:color";
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 %color-area {
     display: block;

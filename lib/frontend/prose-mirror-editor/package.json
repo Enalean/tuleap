@@ -8,12 +8,11 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/prose-mirror-editor.js",
-      "require": "./dist/prose-mirror-editor.umd.cjs",
       "types": "./dist/index.d.ts",
-      "style": "./dist/style.css"
-    },
-    "./style": "./dist/style.css"
+      "sass": "./dist/style.css",
+      "import": "./dist/prose-mirror-editor.js",
+      "require": "./dist/prose-mirror-editor.umd.cjs"
+    }
   },
   "dependencies": {
     "@tuleap/fault": "workspace:^",

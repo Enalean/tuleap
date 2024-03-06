@@ -20,7 +20,7 @@ import type { Ref } from "vue";
 import { onScopeDispose, watch } from "vue";
 import type { ListPicker, ListPickerOptions } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
-import "@tuleap/list-picker/style";
+import "@tuleap/list-picker/style.css";
 
 export function useListPicker(
     target: Ref<HTMLSelectElement | undefined>,

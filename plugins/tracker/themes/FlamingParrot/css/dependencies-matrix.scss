@@ -19,7 +19,7 @@
 
 /* stylelint-disable selector-class-pattern */
 
-@use "../../../../../src/themes/FlamingParrot/css/utils/variables-common";
+@use "pkg:@tuleap/flamingparrot-theme/css/utils/variables-common";
 
 .pc_checkbox {
     display: inline;

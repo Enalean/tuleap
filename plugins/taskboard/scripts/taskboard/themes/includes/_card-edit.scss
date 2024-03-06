@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 @use "sass:map";
 @use "sass:color";
-@use "card-read";
+@use "./card-read";
 
 .taskboard-card-label-editor {
     margin: var(--tlp-small-spacing) 0 0;

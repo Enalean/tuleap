@@ -20,7 +20,7 @@ Also, make sure to include jQuery sources in PHP **before** loading this module.
 This lib also provides a CSS file at `dist/style.css`, make sure to include it:
 
 ```scss
-@import '~@tuleap/mention';
+@use "pkg:@tuleap/mention";
 ```
 ## Usage:
 

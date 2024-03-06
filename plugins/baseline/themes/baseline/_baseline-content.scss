@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-@use "statistics";
-@use "@tuleap/tlp-swatch-colors";
+@use "./statistics";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 $artifact-body-padding: var(--tlp-medium-spacing);
 
