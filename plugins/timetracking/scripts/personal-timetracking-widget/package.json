@@ -10,6 +10,7 @@
     "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/option": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",

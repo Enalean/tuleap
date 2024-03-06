@@ -23,6 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
 import * as predefined_time_periods from "../helper/predefined-time-periods";
+import type { PredefinedTimePeriod } from "../helper/predefined-time-periods";
 import {
     CURRENT_WEEK,
     LAST_7_DAYS,
@@ -31,6 +32,8 @@ import {
     TODAY,
     YESTERDAY,
 } from "../helper/predefined-time-periods";
+import type { Option } from "@tuleap/option";
+import { usePersonalTimetrackingWidgetStore } from "../store/root";
 
 vi.mock("tlp", () => ({
     datePicker: (): { setDate(): void } => ({
@@ -40,7 +43,7 @@ vi.mock("tlp", () => ({
     }),
 }));
 
-let selected_time_period: string;
+let selected_time_period: Option<PredefinedTimePeriod>;
 
 describe("Given a personal timetracking widget in writing mode", () => {
     function getWritingModeInstance(): VueWrapper {
@@ -58,13 +61,12 @@ describe("Given a personal timetracking widget in writing mode", () => {
     }
 
     it("When nothing is selected, then 'Last 7 days' should be selected", () => {
-        selected_time_period = LAST_7_DAYS;
         const wrapper = getWritingModeInstance();
 
         expect(
             wrapper.find<HTMLSelectElement>("[data-test=timetracking-predefined-periods]").element
                 .value,
-        ).toBe(selected_time_period);
+        ).toBe(LAST_7_DAYS);
     });
 
     it("When Today is selected, then 'getTodayPeriod' should be called", () => {
@@ -75,6 +77,9 @@ describe("Given a personal timetracking widget in writing mode", () => {
         );
         select.setValue(TODAY);
 
+        const store = usePersonalTimetrackingWidgetStore();
+
+        expect(store.selected_time_period.unwrapOr("")).toBe(TODAY);
         expect(getTodayPeriod).toHaveBeenCalledOnce();
     });
 
@@ -86,6 +91,9 @@ describe("Given a personal timetracking widget in writing mode", () => {
         );
         select.setValue(YESTERDAY);
 
+        const store = usePersonalTimetrackingWidgetStore();
+
+        expect(store.selected_time_period.unwrapOr("")).toBe(YESTERDAY);
         expect(getYesterdayPeriod).toHaveBeenCalledOnce();
     });
 
@@ -97,6 +105,9 @@ describe("Given a personal timetracking widget in writing mode", () => {
         );
         select.setValue(LAST_7_DAYS);
 
+        const store = usePersonalTimetrackingWidgetStore();
+
+        expect(store.selected_time_period.unwrapOr("")).toBe(LAST_7_DAYS);
         expect(getLastSevenDaysPeriod).toHaveBeenCalledOnce();
     });
 
@@ -108,6 +119,9 @@ describe("Given a personal timetracking widget in writing mode", () => {
         );
         select.setValue(CURRENT_WEEK);
 
+        const store = usePersonalTimetrackingWidgetStore();
+
+        expect(store.selected_time_period.unwrapOr("")).toBe(CURRENT_WEEK);
         expect(getCurrentWeekPeriod).toHaveBeenCalledOnce();
     });
 
@@ -119,6 +133,9 @@ describe("Given a personal timetracking widget in writing mode", () => {
         );
         select.setValue(LAST_WEEK);
 
+        const store = usePersonalTimetrackingWidgetStore();
+
+        expect(store.selected_time_period.unwrapOr("")).toBe(LAST_WEEK);
         expect(getLastWeekPeriod).toHaveBeenCalledOnce();
     });
 
@@ -130,6 +147,37 @@ describe("Given a personal timetracking widget in writing mode", () => {
         );
         select.setValue(LAST_MONTH);
 
+        const store = usePersonalTimetrackingWidgetStore();
+
+        expect(store.selected_time_period.unwrapOr("")).toBe(LAST_MONTH);
         expect(getLastMonthPeriod).toHaveBeenCalledOnce();
+    });
+
+    it("When start date is selected manually, then the selected predefined time period should be cleared", async () => {
+        const wrapper = getWritingModeInstance();
+        const select = wrapper.find<HTMLSelectElement>(
+            "[data-test=timetracking-predefined-periods]",
+        );
+        const input = wrapper.find<HTMLInputElement>("[data-test=timetracking-start-date]");
+        await input.setValue("2024-03-01");
+
+        const store = usePersonalTimetrackingWidgetStore();
+
+        expect(select.element.value).toBe("");
+        expect(store.selected_time_period.isNothing()).toBe(true);
+    });
+
+    it("When end date is selected manually, then the selected predefined time period should be cleared", async () => {
+        const wrapper = getWritingModeInstance();
+        const select = wrapper.find<HTMLSelectElement>(
+            "[data-test=timetracking-predefined-periods]",
+        );
+        const input = wrapper.find<HTMLInputElement>("[data-test=timetracking-end-date]");
+        await input.setValue("2024-03-31");
+
+        const store = usePersonalTimetrackingWidgetStore();
+
+        expect(select.element.value).toBe("");
+        expect(store.selected_time_period.isNothing()).toBe(true);
     });
 });

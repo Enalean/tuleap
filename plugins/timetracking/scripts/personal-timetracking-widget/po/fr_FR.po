@@ -66,6 +66,9 @@ msgstr "Aucun temps suivi n'a été trouvé sur cette période et cet artéfact"
 msgid "Please check time's format (hh:mm)"
 msgstr "Vérifiez le format du temps (hh:mm)"
 
+msgid "Please choose..."
+msgstr "Veuillez choisir..."
+
 msgid "Predefined periods"
 msgstr "Périodes prédéfinies"
 
