@@ -82,7 +82,7 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
 
         return match ($comparison->getType()) {
             ComparisonType::Equal    => $this->getWhereForEqual($filter_alias, $value_wrapper),
-            ComparisonType::NotEqual => throw new LogicException('Not implemented yet'),
+            ComparisonType::NotEqual => $this->getWhereForNotEqual($filter_alias, $value_wrapper),
             ComparisonType::In,
             ComparisonType::NotIn    => throw new LogicException('In comparison expected a InValueWrapper, not a SimpleValueWrapper'),
             default                  => throw new LogicException('Other comparison types are invalid for UGroup List field')
@@ -124,6 +124,46 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedFromWhere(
             $from,
             "$filter_alias.artifact_id IS NOT NULL",
+            [$value],
+            []
+        );
+    }
+
+    private function getWhereForNotEqual(
+        string $filter_alias,
+        SimpleValueWrapper $wrapper,
+    ): ParametrizedFromWhere {
+        $value = $wrapper->getValue();
+
+        if ($value === '') {
+            $from = <<<EOSQL
+            tracker_changeset_value as tcv
+            INNER JOIN tracker_changeset_value_list as tcvl ON (
+                tcvl.changeset_value_id = tcv.id AND tcvl.bindvalue_id = ?
+            )
+            EOSQL;
+
+            return new ParametrizedFromWhere(
+                $from,
+                "$filter_alias.artifact_id IS NULL",
+                [Tracker_FormElement_Field_List::NONE_VALUE],
+                []
+            );
+        }
+
+        $from = <<<EOSQL
+        tracker_changeset_value AS tcv
+        INNER JOIN tracker_changeset_value_list AS tcvl ON (
+            tcvl.changeset_value_id = tcv.id
+        )
+        INNER JOIN user ON (
+            user.user_id = tcvl.bindvalue_id AND user.user_name = ?
+        )
+        EOSQL;
+
+        return new ParametrizedFromWhere(
+            $from,
+            "$filter_alias.artifact_id IS NULL",
             [$value],
             []
         );
