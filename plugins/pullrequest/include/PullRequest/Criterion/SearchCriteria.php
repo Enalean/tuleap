@@ -40,6 +40,7 @@ final class SearchCriteria
      * @psalm-param list<KeywordCriterion> $search
      * @psalm-param list<TargetBranchCriterion> $target_branches
      * @psalm-param list<ReviewerCriterion> $reviewers
+     * @psalm-param list<RelatedToCriterion> $related_to
      */
     public function __construct(
         ?StatusCriterion $status = null,
@@ -48,6 +49,7 @@ final class SearchCriteria
         public readonly array $search = [],
         public readonly array $target_branches = [],
         public readonly array $reviewers = [],
+        public readonly array $related_to = [],
     ) {
         $this->status = Option::fromNullable($status);
     }

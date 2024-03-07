@@ -26,6 +26,7 @@ use Tuleap\PullRequest\Criterion\AuthorCriterion;
 use Tuleap\PullRequest\Criterion\KeywordCriterion;
 use Tuleap\PullRequest\Criterion\LabelCriterion;
 use Tuleap\PullRequest\Criterion\PullRequestSortOrder;
+use Tuleap\PullRequest\Criterion\RelatedToCriterion;
 use Tuleap\PullRequest\Criterion\ReviewerCriterion;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\Criterion\StatusCriterion;
@@ -160,8 +161,11 @@ final class DaoTest extends TestCase
             self::OFFSET,
         );
 
-        self::assertEqualsCanonicalizing([$this->merged_pull_request_id], array_column($result->pull_requests, "id"));
-        self::assertEquals(1, $result->total_size);
+        self::assertEqualsCanonicalizing([
+            $this->open_pull_request_id,
+            $this->merged_pull_request_id,
+        ], array_column($result->pull_requests, "id"));
+        self::assertEquals(2, $result->total_size);
     }
 
     public function testItFiltersOnLabels(): void
@@ -250,6 +254,52 @@ final class DaoTest extends TestCase
         self::assertEquals(1, $result->total_size);
     }
 
+    public function testItFiltersOnRelatedTo(): void
+    {
+        $result = $this->dao->getPaginatedPullRequests(
+            self::REPOSITORY_ID,
+            new SearchCriteria(
+                null,
+                [],
+                [],
+                [],
+                [],
+                [],
+                [new RelatedToCriterion(self::ALICE_USER_ID)]
+            ),
+            PullRequestSortOrder::DESCENDING,
+            self::LIMIT,
+            self::OFFSET,
+        );
+
+        self::assertEqualsCanonicalizing([
+            $this->merged_pull_request_id,
+            $this->abandoned_pull_request_id,
+        ], array_column($result->pull_requests, "id"));
+        self::assertEquals(2, $result->total_size);
+    }
+
+    public function testItAppliesAllTheFiltersOnPullRequestsRelatedToASpecificUser(): void
+    {
+        $result = $this->dao->getPaginatedPullRequests(
+            self::REPOSITORY_ID,
+            new SearchCriteria(
+                StatusCriterion::OPEN,
+                [],
+                [new LabelCriterion(self::LABEL_EMERGENCY_ID)],
+                [new KeywordCriterion("good")],
+                [new TargetBranchCriterion("walnut")],
+                [],
+                [new RelatedToCriterion(self::BOB_USER_ID)]
+            ),
+            PullRequestSortOrder::DESCENDING,
+            self::LIMIT,
+            self::OFFSET,
+        );
+
+        self::assertEqualsCanonicalizing([$this->open_pull_request_id], array_column($result->pull_requests, "id"));
+    }
+
     public function testItAppliesAllTheFilters(): void
     {
         $result = $this->dao->getPaginatedPullRequests(
@@ -301,7 +351,7 @@ final class DaoTest extends TestCase
             PullRequestTestBuilder::aPullRequestInReview()
                 ->withTitle("A good pull-request")
                 ->withDescription(TimelineComment::FORMAT_TEXT, "A nice description")
-                ->createdBy(self::ALICE_USER_ID)
+                ->createdBy(self::BOB_USER_ID)
                 ->createdAt(1)
                 ->withRepositoryId(self::REPOSITORY_ID)
                 ->toDestinationBranch("walnut")

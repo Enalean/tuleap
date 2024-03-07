@@ -319,6 +319,25 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
             );
         }
 
+        $related_to_ids = [];
+        foreach ($search_criteria->related_to as $user) {
+            $related_to_ids[] = $user->id;
+        }
+        if (count($related_to_ids) > 0) {
+            $where_statement
+                ->andGroup()
+                    ->andIn('plugin_pullrequest_review.id IN (
+                        SELECT plugin_pullrequest_reviewer_change.pull_request_id
+                        FROM plugin_pullrequest_reviewer_change
+                        JOIN plugin_pullrequest_reviewer_change_user ON (plugin_pullrequest_reviewer_change_user.change_id = plugin_pullrequest_reviewer_change.change_id)
+                        WHERE plugin_pullrequest_reviewer_change_user.user_id IN (?*)
+                        GROUP BY plugin_pullrequest_reviewer_change.pull_request_id
+                        HAVING SUM(IF(plugin_pullrequest_reviewer_change_user.is_removal = FALSE, 1, -1)) > 0
+                    )', $related_to_ids)
+                    ->orIn('plugin_pullrequest_review.user_id IN (?*)', $related_to_ids)
+                ->endGroup();
+        }
+
         return new PullRequestDAOSearchCriteria(
             $where_statement,
             $having_statement,

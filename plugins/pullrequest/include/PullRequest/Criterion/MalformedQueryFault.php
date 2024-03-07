@@ -49,4 +49,9 @@ final class MalformedQueryFault extends Fault
 
         return new self($all_error_messages);
     }
+
+    public static function relatedToCriterionCannotBeUsedWithAuthorOrReviewerCriteria(): Fault
+    {
+        return new self('Query is malformed. The related_to criterion cannot be used with the authors or reviewers criteria');
+    }
 }
