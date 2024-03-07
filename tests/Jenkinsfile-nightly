@@ -80,6 +80,14 @@ pipeline {
                     steps { script { actions.runPHPUnitTests('83', false) } }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
+                stage('DB/Integration') {
+                    steps { script { actions.runDBTests('mysql80', '83') } }
+                    post { always { junit 'results/db/*/db_tests.xml' } }
+                }
+                stage('REST') {
+                    steps { script { actions.runRESTTests('mysql80', '83') } }
+                    post { always { junit 'results/api-rest/*/*' } }
+                }
             }
         }
     }

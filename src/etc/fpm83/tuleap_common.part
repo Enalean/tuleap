@@ -1,0 +1,17 @@
+; Client configuration
+listen.allowed_clients = 127.0.0.1
+
+; Process Owners
+user = %application_user%
+group = %application_user%
+
+; Errors handling
+catch_workers_output = yes
+php_admin_value[error_log] = /var/opt/remi/php83/log/php-fpm/www-error.log
+php_admin_flag[log_errors] = on
+
+; Security
+php_value[session.use_strict_mode] = on
+
+; Configuration variables should be readable from environment
+clear_env = no
