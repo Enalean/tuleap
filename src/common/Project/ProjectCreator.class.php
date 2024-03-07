@@ -45,10 +45,10 @@ use Tuleap\Project\Email\EmailCopier;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
-use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Project\ProjectCreationData;
+use Tuleap\Project\Registration\ProjectCreationDao;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
 use Tuleap\Project\Registration\ProjectInvalidFullNameException;
 use Tuleap\Project\Registration\ProjectInvalidShortNameException;
@@ -62,6 +62,7 @@ use Tuleap\Project\Registration\ProjectRegistrationBaseChecker;
 use Tuleap\Project\Registration\ProjectRegistrationXMLChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
+use Tuleap\Project\Registration\StoreProjectInformation;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
@@ -87,10 +88,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      *  - use_legacy_services   => (output) array
      */
     public const PROJECT_CREATION_REMOVE_LEGACY_SERVICES = 'project_creation_remove_legacy_services';
-
-    private const TYPE_PROJECT  = 1;
-    private const TYPE_TEMPLATE = 2;
-    private const TYPE_TEST     = 3;
 
     /**
      * @var UgroupDuplicator
@@ -172,6 +169,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         ProjectRegistrationChecker $registration_checker,
         ProjectCategoriesUpdater $project_categories_updater,
         private EmailCopier $email_copier,
+        private readonly StoreProjectInformation $store_project_information,
         $force_activation = false,
     ) {
         $this->send_notifications                         = $send_notifications;
@@ -307,6 +305,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 new TroveSetNodeFacade(),
             ),
             new EmailCopier(),
+            new ProjectCreationDao(),
             $force_activation
         );
     }
@@ -350,7 +349,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @throws ProjectInvalidShortNameException
      * @throws ProjectDescriptionMandatoryException
      */
-    protected function createProject(ProjectCreationData $data): ?int
+    protected function createProject(ProjectCreationData $data): Project
     {
         $admin_user = $this->user_manager->getCurrentUser();
 
@@ -363,10 +362,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             throw $error;
         }
 
-        $group_id = $this->createGroupEntry($data);
-        if ($group_id === false) {
-            return null;
-        }
+        $group_id = $this->store_project_information->create($data);
 
         $this->field_updator->update($data, $group_id);
         $this->initFileModule($group_id);
@@ -449,53 +445,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             }
         }
 
-        return $group_id;
-    }
-
-    /**
-     * for testing purpose
-     * @return int|false the group id created
-     */
-    protected function createGroupEntry(ProjectCreationData $data)
-    {
-        if (ForgeConfig::get('sys_disable_subdomains')) {
-            $http_domain = \Tuleap\ServerHostname::hostnameWithHTTPSPort();
-        } else {
-            $http_domain = $data->getUnixName() . '.' . \Tuleap\ServerHostname::hostnameWithHTTPSPort();
-        }
-
-        $access = $data->getAccess();
-
-        $type = self::TYPE_PROJECT;
-        if ($data->isTest()) {
-            $type = self::TYPE_TEST;
-        } elseif ($data->isTemplate()) {
-            $type = self::TYPE_TEMPLATE;
-        }
-
-        // make group entry
-        $insert_data = [
-            'group_name'          => "'" . db_es($data->getFullName()) . "'",
-            'access'              => "'" . $access . "'",
-            'unix_group_name'     => "'" . db_es($data->getUnixName()) . "'",
-            'http_domain'         => "'" . db_es($http_domain) . "'",
-            'status'              => "'P'",
-            'short_description'   => "'" . db_es($data->getShortDescription()) . "'",
-            'register_time'       => time(),
-            'rand_hash'           => "'" . db_es(bin2hex(random_bytes(16))) . "'",
-            'built_from_template' => db_ei($data->getBuiltFromTemplateProject()->getProject()->getID()),
-            'type'                => db_ei($type),
-            'icon_codepoint'      =>  "'" . db_es(EmojiCodepointConverter::convertEmojiToStoreFormat($data->getIconCodePoint())) . "'",
-        ];
-        $sql         = 'INSERT INTO `groups`(' . implode(', ', array_keys($insert_data)) . ') VALUES (' . implode(', ', array_values($insert_data)) . ')';
-        $result      = db_query($sql);
-
-        if (! $result) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'upd_fail', [ForgeConfig::get('sys_email_admin'), db_error()]));
-        } else {
-            $group_id = db_insertid($result);
-            return $group_id;
-        }
+        return $group;
     }
 
     /**
@@ -747,11 +697,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     public function processProjectCreation(ProjectCreationData $data): Project
     {
-        $id = $this->createProject($data);
-        if (! $id) {
-            throw new Project_Creation_Exception();
-        }
-
-        return $this->project_manager->getProject($id);
+        return $this->createProject($data);
     }
 }

@@ -45,6 +45,7 @@ use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\Project\Registration\StoreProjectInformationStub;
 use UserManager;
 
 final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -63,6 +64,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectRegistrationChecker&MockObject $registration_checker;
     private ProjectCategoriesUpdater&MockObject $project_categories_updater;
     private EmailCopier&Stub $email_copier;
+    private StoreProjectInformationStub $store_project_information;
 
     protected function setUp(): void
     {
@@ -82,6 +84,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->registration_checker                       = $this->createMock(ProjectRegistrationChecker::class);
         $this->project_categories_updater                 = $this->createMock(ProjectCategoriesUpdater::class);
         $this->email_copier                               = $this->createStub(EmailCopier::class);
+        $this->store_project_information                  = StoreProjectInformationStub::build();
     }
 
     public function testMandatoryDescriptionNotSetRaiseException(): void
@@ -187,7 +190,6 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::buildWithDefaults();
         $this->user_manager->method('getCurrentUser')->willReturn($user);
 
-        $this->creator->expects(self::once())->method('createGroupEntry')->willReturn(101);
         $this->project_categories_updater->expects(self::once())->method('update');
         $this->creator->expects(self::once())->method('initFileModule');
         $this->creator->expects(self::once())->method('setProjectAdmin');
@@ -220,6 +222,8 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->expects(self::once())->method('autoActivateProject');
 
         $this->creator->processProjectCreation($project_creation_data);
+
+        self::assertTrue($this->store_project_information->isCalled());
     }
 
     public function testItCreatesAProjectWithoutAutoValidation(): void
@@ -241,7 +245,6 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::buildWithDefaults();
         $this->user_manager->method('getCurrentUser')->willReturn($user);
 
-        $this->creator->expects(self::once())->method('createGroupEntry')->willReturn(101);
         $this->project_categories_updater->expects(self::once())->method('update');
         $this->creator->expects(self::once())->method('initFileModule');
         $this->creator->expects(self::once())->method('setProjectAdmin');
@@ -274,6 +277,8 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->expects(self::never())->method('autoActivateProject');
 
         $this->creator->processProjectCreation($project_creation_data);
+
+        self::assertTrue($this->store_project_information->isCalled());
     }
 
     private function buildProjectCreator(bool $force_activation): void
@@ -296,10 +301,10 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->registration_checker,
                 $this->project_categories_updater,
                 $this->email_copier,
+                $this->store_project_information,
                 $force_activation,
             ])
             ->onlyMethods([
-                'createGroupEntry',
                 'initFileModule',
                 'setProjectAdmin',
                 'fakeGroupIdIntoHTTPParams',
