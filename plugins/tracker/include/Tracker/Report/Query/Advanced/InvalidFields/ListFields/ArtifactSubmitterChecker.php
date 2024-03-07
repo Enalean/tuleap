@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 
@@ -35,8 +36,8 @@ final readonly class ArtifactSubmitterChecker implements InvalidFieldChecker
     }
 
     /**
+     * @throws ArtifactSubmitterToEmptyStringException
      * @throws FieldIsNotSupportedForComparisonException
-     * @throws ListToEmptyStringTermException
      * @throws ListToMySelfForAnonymousComparisonException
      * @throws ListToNowComparisonException
      * @throws ListToStatusOpenComparisonException
@@ -46,9 +47,9 @@ final readonly class ArtifactSubmitterChecker implements InvalidFieldChecker
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
-            ComparisonType::NotEqual => $this->checkValueIsValid($comparison, $field, false),
+            ComparisonType::NotEqual,
             ComparisonType::In,
-            ComparisonType::NotIn    => $this->checkValueIsValid($comparison, $field, true),
+            ComparisonType::NotIn => $this->checkValueIsValid($comparison->getValueWrapper(), $field),
             ComparisonType::Between => throw new FieldIsNotSupportedForComparisonException($field, 'between()'),
             ComparisonType::GreaterThan => throw new FieldIsNotSupportedForComparisonException($field, '>'),
             ComparisonType::GreaterThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '>='),
@@ -58,26 +59,22 @@ final readonly class ArtifactSubmitterChecker implements InvalidFieldChecker
     }
 
     /**
-     * @throws ListToEmptyStringTermException
+     * @throws ArtifactSubmitterToEmptyStringException
      * @throws ListToMySelfForAnonymousComparisonException
      * @throws ListToNowComparisonException
      * @throws ListToStatusOpenComparisonException
      * @throws SubmittedByUserDoesntExistException
      */
     private function checkValueIsValid(
-        Comparison $comparison,
+        ValueWrapper $value_wrapper,
         \Tracker_FormElement_Field $field,
-        bool $is_empty_string_a_problem,
     ): void {
         $extractor = new CollectionOfListValuesExtractor();
-        $values    = $extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
+        $values    = $extractor->extractCollectionOfValues($value_wrapper, $field);
 
         foreach ($values as $value) {
             if ($value === '') {
-                if ($is_empty_string_a_problem) {
-                    throw new ListToEmptyStringTermException($comparison, $field);
-                }
-                continue;
+                throw new ArtifactSubmitterToEmptyStringException($field);
             }
 
             $user = $this->user_manager->getUserByLoginName((string) $value);

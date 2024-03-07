@@ -47,6 +47,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
@@ -560,14 +561,17 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    public static function generateInvalidUserListComparisons(): iterable
+    public static function generateInvalidSubmitterComparisons(): iterable
     {
         $field       = new Field(self::FIELD_NAME);
         $valid_value = new SimpleValueWrapper('rdavis');
+        $empty_value = new SimpleValueWrapper('');
         $open        = new StatusOpenValueWrapper();
         $now         = new CurrentDateTimeValueWrapper(null, null);
         yield '= NOW()' => [new EqualComparison($field, $now)];
         yield '= OPEN()' => [new EqualComparison($field, $open)];
+        yield '= empty string' => [new EqualComparison($field, $empty_value)];
+        yield '!= empty string' => [new NotEqualComparison($field, $empty_value)];
         foreach (self::generateInvalidListComparisonsToEmptyString($field, $valid_value) as $case) {
             yield $case;
         }
@@ -577,7 +581,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     }
 
     /**
-     * @dataProvider generateInvalidUserListComparisons
+     * @dataProvider generateInvalidSubmitterComparisons
      */
     public function testItRejectsInvalidSubmittedByComparisons(Comparison $comparison): void
     {
@@ -593,7 +597,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     }
 
     /**
-     * @dataProvider generateInvalidUserListComparisons
+     * @dataProvider generateInvalidSubmitterComparisons
      */
     public function testItRejectsInvalidLastUpdateByComparisons(Comparison $comparison): void
     {
