@@ -43,19 +43,23 @@ use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilderFactory;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
@@ -2136,16 +2140,29 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     private function getCollector()
     {
         if (! isset($this->collector)) {
+            $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+            $ugroup_label_converter           = new UgroupLabelConverter(
+                $list_field_bind_value_normalizer,
+                new \BaseLanguageFactory()
+            );
+
             $this->collector = new InvalidTermCollectorVisitor(
-                new InvalidFields\EqualComparisonVisitor(),
-                new InvalidFields\NotEqualComparisonVisitor(),
-                new InvalidFields\LesserThanComparisonVisitor(),
-                new InvalidFields\GreaterThanComparisonVisitor(),
-                new InvalidFields\LesserThanOrEqualComparisonVisitor(),
-                new InvalidFields\GreaterThanOrEqualComparisonVisitor(),
-                new InvalidFields\BetweenComparisonVisitor(),
-                new InvalidFields\InComparisonVisitor(),
-                new InvalidFields\NotInComparisonVisitor(),
+                new InvalidFields\FlatInvalidFieldChecker(
+                    new InvalidFields\FloatFields\FloatFieldChecker(),
+                    new InvalidFields\Integer\IntegerFieldChecker(),
+                    new InvalidFields\Text\TextFieldChecker(),
+                    new InvalidFields\Date\DateFieldChecker(),
+                    new InvalidFields\File\FileFieldChecker(),
+                    new InvalidFields\ListFields\ListFieldChecker(
+                        $list_field_bind_value_normalizer,
+                        new CollectionOfNormalizedBindLabelsExtractor(
+                            $list_field_bind_value_normalizer,
+                            $ugroup_label_converter
+                        ),
+                        $ugroup_label_converter
+                    ),
+                    new ArtifactSubmitterChecker(\UserManager::instance())
+                ),
                 new InvalidFields\ArtifactLink\ArtifactLinkTypeChecker(
                     new TypePresenterFactory(
                         new TypeDao(),

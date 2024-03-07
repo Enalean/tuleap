@@ -23,34 +23,24 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 
 final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
 {
     public function __construct(
-        private Comparison $comparison,
         private FloatFieldChecker $float_field_checker,
         private IntegerFieldChecker $int_field_checker,
         private TextFieldChecker $text_field_checker,
         private DateFieldChecker $date_field_checker,
         private FileFieldChecker $file_field_checker,
         private ListFieldChecker $list_field_checker,
-        private EqualComparisonVisitor $equal_checker,
-        private NotEqualComparisonVisitor $not_equal_checker,
-        private LesserThanComparisonVisitor $lesser_than_checker,
-        private LesserThanOrEqualComparisonVisitor $lesser_than_or_equal_checker,
-        private GreaterThanComparisonVisitor $greater_than_checker,
-        private GreaterThanOrEqualComparisonVisitor $greater_than_or_equal_checker,
-        private BetweenComparisonVisitor $between_checker,
-        private InComparisonVisitor $in_checker,
-        private NotInComparisonVisitor $not_in_checker,
+        private ArtifactSubmitterChecker $submitter_checker,
     ) {
     }
 
@@ -124,29 +114,14 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
         return $this->list_field_checker;
     }
 
-    private function matchComparisonToFieldChecker(\Tracker_FormElement_Field $field): InvalidFieldChecker
-    {
-        return match ($this->comparison->getType()) {
-            ComparisonType::Equal => $this->equal_checker->getInvalidFieldChecker($field),
-            ComparisonType::NotEqual => $this->not_equal_checker->getInvalidFieldChecker($field),
-            ComparisonType::LesserThan => $this->lesser_than_checker->getInvalidFieldChecker($field),
-            ComparisonType::LesserThanOrEqual => $this->lesser_than_or_equal_checker->getInvalidFieldChecker($field),
-            ComparisonType::GreaterThan => $this->greater_than_checker->getInvalidFieldChecker($field),
-            ComparisonType::GreaterThanOrEqual => $this->greater_than_or_equal_checker->getInvalidFieldChecker($field),
-            ComparisonType::Between => $this->between_checker->getInvalidFieldChecker($field),
-            ComparisonType::In => $this->in_checker->getInvalidFieldChecker($field),
-            ComparisonType::NotIn => $this->not_in_checker->getInvalidFieldChecker($field)
-        };
-    }
-
     public function visitSubmittedBy(\Tracker_FormElement_Field_SubmittedBy $field): InvalidFieldChecker
     {
-        return $this->matchComparisonToFieldChecker($field);
+        return $this->submitter_checker;
     }
 
     public function visitLastModifiedBy(\Tracker_FormElement_Field_LastModifiedBy $field): InvalidFieldChecker
     {
-        return $this->matchComparisonToFieldChecker($field);
+        return $this->submitter_checker;
     }
 
     public function visitArtifactLink(\Tracker_FormElement_Field_ArtifactLink $field): never

@@ -20,7 +20,6 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use BaseLanguageFactory;
 use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
@@ -61,26 +60,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\InvalidArtifactLinkTypeException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
-use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
-use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
 /**
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
@@ -101,15 +82,7 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
         private InComparisonChecker $in_comparison_checker,
         private NotInComparisonChecker $not_in_comparison_checker,
         private ArtifactLinkTypeChecker $artifact_link_type_checker,
-        private InComparisonVisitor $in_comparison_visitor,
-        private EqualComparisonVisitor $equal_comparison_visitor,
-        private LesserThanOrEqualComparisonVisitor $lesser_than_or_equal_comparison_visitor,
-        private LesserThanComparisonVisitor $lesser_than_comparison_visitor,
-        private NotInComparisonVisitor $not_in_comparison_visitor,
-        private GreaterThanComparisonVisitor $greater_than_comparison_visitor,
-        private BetweenComparisonVisitor $between_comparison_visitor,
-        private GreaterThanOrEqualComparisonVisitor $greater_than_or_equal_comparison_visitor,
-        private NotEqualComparisonVisitor $not_equal_comparison_visitor,
+        private FlatInvalidFieldChecker $field_checker,
     ) {
     }
 
@@ -214,42 +187,13 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
         ComparisonChecker $comparison_checker,
         InvalidComparisonCollectorParameters $parameters,
     ): void {
-        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
-        $ugroup_label_converter           = new UgroupLabelConverter(
-            $list_field_bind_value_normalizer,
-            new BaseLanguageFactory()
-        );
         $comparison->getSearchable()->acceptSearchableVisitor(
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
                 $parameters,
                 $comparison_checker,
                 $comparison,
-                new FlatInvalidFieldChecker(
-                    $comparison,
-                    new FloatFieldChecker(),
-                    new IntegerFieldChecker(),
-                    new TextFieldChecker(),
-                    new DateFieldChecker(),
-                    new FileFieldChecker(),
-                    new ListFieldChecker(
-                        $list_field_bind_value_normalizer,
-                        new CollectionOfNormalizedBindLabelsExtractor(
-                            $list_field_bind_value_normalizer,
-                            $ugroup_label_converter
-                        ),
-                        $ugroup_label_converter
-                    ),
-                    $this->equal_comparison_visitor,
-                    $this->not_equal_comparison_visitor,
-                    $this->lesser_than_comparison_visitor,
-                    $this->lesser_than_or_equal_comparison_visitor,
-                    $this->greater_than_comparison_visitor,
-                    $this->greater_than_or_equal_comparison_visitor,
-                    $this->between_comparison_visitor,
-                    $this->in_comparison_visitor,
-                    $this->not_in_comparison_visitor
-                )
+                $this->field_checker
             )
         );
     }

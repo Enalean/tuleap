@@ -21,32 +21,62 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
-use UserManager;
 
-final class ArtifactSubmitterChecker implements InvalidFieldChecker
+final readonly class ArtifactSubmitterChecker implements InvalidFieldChecker
 {
     public function __construct(
-        private CollectionOfListValuesExtractor $values_extractor,
-        private UserManager $user_manager,
+        private \UserManager $user_manager,
     ) {
     }
 
     /**
+     * @throws FieldIsNotSupportedForComparisonException
+     * @throws ListToEmptyStringTermException
+     * @throws ListToMySelfForAnonymousComparisonException
      * @throws ListToNowComparisonException
      * @throws ListToStatusOpenComparisonException
-     * @throws ListToMySelfForAnonymousComparisonException
      * @throws SubmittedByUserDoesntExistException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
     {
-        $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
+        match ($comparison->getType()) {
+            ComparisonType::Equal,
+            ComparisonType::NotEqual => $this->checkValueIsValid($comparison, $field, false),
+            ComparisonType::In,
+            ComparisonType::NotIn    => $this->checkValueIsValid($comparison, $field, true),
+            ComparisonType::Between => throw new FieldIsNotSupportedForComparisonException($field, 'between()'),
+            ComparisonType::GreaterThan => throw new FieldIsNotSupportedForComparisonException($field, '>'),
+            ComparisonType::GreaterThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '>='),
+            ComparisonType::LesserThan => throw new FieldIsNotSupportedForComparisonException($field, '<'),
+            ComparisonType::LesserThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '<='),
+        };
+    }
+
+    /**
+     * @throws ListToEmptyStringTermException
+     * @throws ListToMySelfForAnonymousComparisonException
+     * @throws ListToNowComparisonException
+     * @throws ListToStatusOpenComparisonException
+     * @throws SubmittedByUserDoesntExistException
+     */
+    private function checkValueIsValid(
+        Comparison $comparison,
+        \Tracker_FormElement_Field $field,
+        bool $is_empty_string_a_problem,
+    ): void {
+        $extractor = new CollectionOfListValuesExtractor();
+        $values    = $extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
 
         foreach ($values as $value) {
-            if ($value === "") {
+            if ($value === '') {
+                if ($is_empty_string_a_problem) {
+                    throw new ListToEmptyStringTermException($comparison, $field);
+                }
                 continue;
             }
 
