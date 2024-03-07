@@ -24,12 +24,14 @@ import type {
     TargetBranchFilter,
     PullRequestTargetBranchFilter,
 } from "./Branches/TargetBranchFilter";
+import type { ReviewerFilter, PullRequestReviewerFilter } from "./Reviewer/ReviewerFilter";
 
 export type PullRequestsListFilterType =
     | AuthorFilter
     | LabelFilter
     | KeywordFilter
-    | TargetBranchFilter;
+    | TargetBranchFilter
+    | ReviewerFilter;
 
 export type BasePullRequestsListFilter<TypeOfFilterValue> = {
     id: number;
@@ -43,4 +45,5 @@ export type PullRequestsListFilter =
     | PullRequestAuthorFilter
     | PullRequestLabelFilter
     | PullRequestKeywordFilter
-    | PullRequestTargetBranchFilter;
+    | PullRequestTargetBranchFilter
+    | PullRequestReviewerFilter;

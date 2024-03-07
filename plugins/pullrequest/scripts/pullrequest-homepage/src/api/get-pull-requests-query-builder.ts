@@ -22,6 +22,7 @@ import { TYPE_FILTER_AUTHOR } from "../components/Filters/Author/AuthorFilter";
 import { TYPE_FILTER_LABEL } from "../components/Filters/Labels/LabelFilter";
 import { TYPE_FILTER_KEYWORD } from "../components/Filters/Keywords/KeywordFilter";
 import { TYPE_FILTER_TARGET_BRANCH } from "../components/Filters/Branches/TargetBranchFilter";
+import { TYPE_FILTER_REVIEWER } from "../components/Filters/Reviewer/ReviewerFilter";
 
 const assignLabelsToQuery = (query: object, labels_ids: number[]): void => {
     if (labels_ids.length === 0) {
@@ -71,6 +72,11 @@ export const buildQueryFromFilters = (
             case TYPE_FILTER_TARGET_BRANCH:
                 Object.assign(query, {
                     target_branches: [{ name: filter.value.name }],
+                });
+                break;
+            case TYPE_FILTER_REVIEWER:
+                Object.assign(query, {
+                    reviewers: [{ id: filter.value.id }],
                 });
                 break;
             default:

@@ -93,6 +93,9 @@ msgstr "OK"
 msgid "Oh snap!"
 msgstr "Oh mince !"
 
+msgid "Reviewer"
+msgstr "Relecteur"
+
 msgid "Show closed"
 msgstr "Afficher fermées"
 
@@ -119,6 +122,9 @@ msgstr "Essayez d'afficher les pull-requests fermées."
 
 msgid "You can only filter on one author"
 msgstr "Vous ne pouvez filtrer que sur un auteur"
+
+msgid "You can only filter on one reviewer"
+msgstr "Vous ne pouvez filtrer que sur un relecteur"
 
 msgid "You can only filter on one target branch"
 msgstr "Vous ne pouvez filtrer que sur une branche cible"

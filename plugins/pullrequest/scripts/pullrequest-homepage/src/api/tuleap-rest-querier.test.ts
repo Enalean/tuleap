@@ -28,6 +28,7 @@ import {
     fetchPullRequestLabels,
     fetchPullRequestsAuthors,
     fetchRepositoryBranches,
+    fetchRepositoryReviewers,
 } from "./tuleap-rest-querier";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { UserStub } from "../../tests/stubs/UserStub";
@@ -188,6 +189,25 @@ describe("tuleap-rest-querier", () => {
                 },
             );
             expect(result.value).toStrictEqual(branches);
+        });
+    });
+
+    describe("fetchRepositoryReviewers", () => {
+        it("should query all the pull-requests reviewers inside a given repository", async () => {
+            vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(users_collection));
+
+            const result = await fetchRepositoryReviewers(repository_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an OK");
+            }
+
+            expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
+                uri`/api/v1/git/${repository_id}/pull_requests_reviewers`,
+                {
+                    params: { limit: 50 },
+                },
+            );
+            expect(result.value).toStrictEqual(users_collection);
         });
     });
 });
