@@ -24,6 +24,7 @@ namespace Tuleap\Project\Registration\Template\Upload;
 
 use DateTimeImmutable;
 use Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -41,7 +42,8 @@ final class FileToUploadCreatorTest extends TestCase
                 1277
             ),
             UserTestBuilder::buildWithId(101),
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            ProjectTestBuilder::aProject()->withId(1001)->build(),
         );
         self::assertSame('/uploads/project/file/' . self::SAVED_FILE_ID, $result->getUploadHref());
     }

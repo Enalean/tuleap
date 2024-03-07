@@ -1506,7 +1506,8 @@ CREATE TABLE project_file_upload
     file_name VARCHAR(255) NOT NULL DEFAULT '',
     file_size BIGINT NOT NULL DEFAULT 0,
     user_id INT NOT NULL,
-    expiration_date INT UNSIGNED NOT NULL
+    expiration_date INT UNSIGNED NOT NULL,
+    project_id INT NOT NULL
 ) ENGINE = InnoDB;
 #
 # EOF
