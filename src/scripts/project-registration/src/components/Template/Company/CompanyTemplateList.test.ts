@@ -28,7 +28,7 @@ import { createTestingPinia } from "@pinia/testing";
 
 describe("CompanyTemplateList", () => {
     let local_vue = createLocalVue();
-    let wrapper: Wrapper<CompanyTemplateList>;
+    let wrapper: Wrapper<Vue, Element>;
 
     describe("has several project templates -", () => {
         beforeEach(async () => {

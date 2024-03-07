@@ -30,16 +30,9 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import TemplateCard from "../TemplateCard.vue";
 import { useStore } from "../../../stores/root";
 
-@Component({
-    components: { TemplateCard },
-})
-export default class TuleapCompanyTemplateList extends Vue {
-    root_store = useStore();
-}
+const root_store = useStore();
 </script>
