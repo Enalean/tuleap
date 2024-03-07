@@ -177,7 +177,7 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
 
         return match ($comparison->getType()) {
             ComparisonType::In       => $this->getWhereForIn($filter_alias, $collection_of_value_wrappers),
-            ComparisonType::NotIn    => throw new LogicException('Not implemented yet'),
+            ComparisonType::NotIn    => $this->getWhereForNotIn($filter_alias, $collection_of_value_wrappers),
             ComparisonType::Equal    => throw new LogicException('Equal comparison expected a SimpleValueWrapper, not a InValueWrapper'),
             ComparisonType::NotEqual => throw new LogicException('Not Equal comparison expected a SimpleValueWrapper, not a InValueWrapper'),
             default                  => throw new LogicException('Other comparison types are invalid for Static List field')
@@ -206,6 +206,33 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedFromWhere(
             $from,
             "$filter_alias.artifact_id IS NOT NULL",
+            $values_statement->values(),
+            [],
+        );
+    }
+
+    private function getWhereForNotIn(
+        string $filter_alias,
+        InValueWrapper $wrapper,
+    ): ParametrizedFromWhere {
+        $values_statement = EasyStatement::open()->in(
+            "user.user_name IN (?*)",
+            array_map(static fn(SimpleValueWrapper $value_wrapper) => $value_wrapper->getValue(), $wrapper->getValueWrappers())
+        );
+
+        $from = <<<EOSQL
+        tracker_changeset_value AS tcv
+        INNER JOIN tracker_changeset_value_list AS tcvl ON (
+            tcvl.changeset_value_id = tcv.id
+        )
+        INNER JOIN user ON (
+            user.user_id = tcvl.bindvalue_id AND $values_statement
+        )
+        EOSQL;
+
+        return new ParametrizedFromWhere(
+            $from,
+            "$filter_alias.artifact_id IS NULL",
             $values_statement->values(),
             [],
         );

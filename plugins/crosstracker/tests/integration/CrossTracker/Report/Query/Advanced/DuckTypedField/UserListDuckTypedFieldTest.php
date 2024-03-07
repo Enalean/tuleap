@@ -331,4 +331,68 @@ final class UserListDuckTypedFieldTest extends DuckTypedFieldTestCase
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_with_alice_id, $this->sprint_artifact_with_alice_bob_id], $artifacts);
     }
+
+    public function testNotInUser(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "user_field NOT IN('bob')",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->release_artifact_with_alice_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
+
+    public function testPermissionsNotIn(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "user_field NOT IN('bob')",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_empty_id, $this->release_artifact_with_alice_id,
+            $this->sprint_artifact_empty_id,
+            $this->task_artifact_with_alice_id,
+        ], $artifacts);
+    }
+
+    public function testNotInMultipleUser(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "user_field NOT IN('bob', 'alice')",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
+
+    public function testMultipleNotIn(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "user_field NOT IN('bob') AND user_field NOT IN('alice')",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
 }
