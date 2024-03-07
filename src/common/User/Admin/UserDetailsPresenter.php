@@ -62,7 +62,10 @@ class UserDetailsPresenter
     public $expiry_date_label;
     public $more_title;
     public $has_additional_details;
-    public $additional_details;
+    /**
+     * @var string[]
+     */
+    public array $additional_details;
     public $expiry;
     public $is_in_limbo;
     public $current_status_id;

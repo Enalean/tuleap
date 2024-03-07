@@ -448,13 +448,18 @@ class LdapPlugin extends Plugin
                 $login_info     = sprintf(dgettext('tuleap-ldap', 'No %1$s login found'), $this->getLDAPServerCommonName());
             }
 
-            $params['additional_details'][] = [
-                'login_label'    => $login_label,
-                'login_info'     => $login_info,
-                'ldap_id_label'  => $ldap_id_label,
-                'ldap_id'        => $ldap_id,
-                'has_login_info' => $has_login_info,
-            ];
+            $mustache_renderer = TemplateRendererFactory::build()->getRenderer(LDAP_TEMPLATE_DIR . '/user');
+
+            $params['additional_details'][] = $mustache_renderer->renderToString(
+                'user-additional-information',
+                [
+                    'login_label'    => $login_label,
+                    'login_info'     => $login_info,
+                    'ldap_id_label'  => $ldap_id_label,
+                    'ldap_id'        => $ldap_id,
+                    'has_login_info' => $has_login_info,
+                ],
+            );
         }
     }
 
