@@ -1,0 +1,12 @@
+<div class="siteadmin-user-details-row">
+    <div class="tlp-property siteadmin-user-details-row-field">
+        <label class="tlp-label"> {{ login_label }} </label>
+        <p class="{{^ has_login_info }} tlp-property-empty {{/has_login_info}}">
+            {{ login_info }}
+        </p>
+    </div>
+    <div class="tlp-form-element siteadmin-user-details-row-field">
+        <label class="tlp-label" for="ldap_id"> {{ ldap_id_label }} </label>
+        <input type="text" class="tlp-input" id="ldap_id" name="ldap_id" value="{{ ldap_id }}">
+    </div>
+</div>
