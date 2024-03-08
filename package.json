@@ -59,7 +59,7 @@
     "postcss-loader": "^8.0.0",
     "prettier": "^3.2.5",
     "sass": "^1.71.1",
-    "sass-loader": "^14.0.0",
+    "sass-loader": "^14.1.1",
     "stylelint": "^16.1.0",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-property-sort-order-smacss": "^10.0.0",
