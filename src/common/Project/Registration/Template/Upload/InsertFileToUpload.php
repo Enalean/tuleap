@@ -31,11 +31,22 @@ final readonly class InsertFileToUpload
         public int $file_size,
         public int $user_id,
         public int $expiration_date,
+        public int $project_id,
     ) {
     }
 
-    public static function fromREST(ProjectFilePOSTRepresentation $representation, \PFUser $user, \DateTimeImmutable $expiration_date): self
-    {
-        return new self($representation->file_name, $representation->file_size, (int) $user->getId(), $expiration_date->getTimestamp());
+    public static function fromREST(
+        ProjectFilePOSTRepresentation $representation,
+        \PFUser $user,
+        \DateTimeImmutable $expiration_date,
+        \Project $project,
+    ): self {
+        return new self(
+            $representation->file_name,
+            $representation->file_size,
+            (int) $user->getId(),
+            $expiration_date->getTimestamp(),
+            (int) $project->getID(),
+        );
     }
 }

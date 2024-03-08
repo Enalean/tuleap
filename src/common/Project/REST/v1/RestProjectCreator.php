@@ -136,10 +136,12 @@ class RestProjectCreator
                 );
             }
 
+            $project      = $this->project_creator_for_archive->processProjectCreation($creation_data);
             $file_creator = $this->creator->creatFileToUpload(
                 $post_representation->from_archive,
                 $current_user,
-                new DateTimeImmutable()
+                new DateTimeImmutable(),
+                $project,
             );
 
             return Result::ok(
@@ -147,7 +149,7 @@ class RestProjectCreator
                     $this->builder,
                     $current_user,
                     ProjectFromArchiveRepresentation::fromCreatedProject(
-                        $this->project_creator_for_archive->processProjectCreation($creation_data),
+                        $project,
                         $file_creator->getUploadHref(),
                     )
                 )

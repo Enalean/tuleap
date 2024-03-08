@@ -33,10 +33,11 @@ final class FileOngoingUploadDao extends DataAccessObject implements SaveFileUpl
         return (int) $this->getDB()->insertReturnId(
             'project_file_upload',
             [
-                'file_name'            => $file_to_upload->name,
+                'file_name'       => $file_to_upload->name,
                 'file_size'       => $file_to_upload->file_size,
                 'user_id'         => $file_to_upload->user_id,
                 'expiration_date' => $file_to_upload->expiration_date,
+                'project_id'      => $file_to_upload->project_id,
             ]
         );
     }

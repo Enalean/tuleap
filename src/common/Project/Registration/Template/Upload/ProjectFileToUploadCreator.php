@@ -40,11 +40,13 @@ final readonly class ProjectFileToUploadCreator
         ProjectFilePOSTRepresentation $template_file_representation,
         PFUser $current_user,
         DateTimeImmutable $current_time,
+        \Project $project,
     ): FileToUpload {
         $file_to_insert = InsertFileToUpload::fromREST(
             $template_file_representation,
             $current_user,
-            $current_time->add(new DateInterval('PT' . self::EXPIRATION_DELAY_IN_HOURS . 'H'))
+            $current_time->add(new DateInterval('PT' . self::EXPIRATION_DELAY_IN_HOURS . 'H')),
+            $project,
         );
         $upload_file_id = $this->file_ongoing_upload_save_dao->saveFileOnGoingUpload(
             $file_to_insert
