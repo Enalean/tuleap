@@ -3210,6 +3210,14 @@ msgid "The field '%1$s' will be automatically set to %2$s"
 msgstr "Le champ '%1$s' sera automatiquement valué à %2$s"
 
 #, php-format
+msgid ""
+"The field '%s' cannot be compared to the empty string, it can never yield "
+"results."
+msgstr ""
+"Le champ '%s' ne peut pas être comparé à une chaîne vide, cela ne peut "
+"produire aucun résultat."
+
+#, php-format
 msgid "The field '%s' is not supported for the operator %s."
 msgstr "Le champ '%s' n'est pas supporté pour l'opérateur %s."
 

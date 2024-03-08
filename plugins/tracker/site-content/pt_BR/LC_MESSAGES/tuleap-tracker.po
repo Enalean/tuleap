@@ -2868,6 +2868,12 @@ msgid "The field '%1$s' will be automatically set to %2$s"
 msgstr ""
 
 #, php-format
+msgid ""
+"The field '%s' cannot be compared to the empty string, it can never yield "
+"results."
+msgstr ""
+
+#, php-format
 msgid "The field '%s' is not supported for the operator %s."
 msgstr ""
 
