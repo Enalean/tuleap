@@ -18,12 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Registration\Template\Upload;
+namespace Tuleap\Project;
 
-interface SearchFileUpload
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\Project\XML\Import\ArchiveInterface;
+use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Project\XML\Import\ImportNotValidException;
+
+interface ImportFromArchive
 {
     /**
-     * @return array{id: int, file_size: int, file_name: string, user_id: int, expiration_date: int, project_id: int} | array{}
+     * @return Ok<true>|Err<Fault>
+     * @throws ImportNotValidException
      */
-    public function searchFileOngoingUploadById(int $id): array;
+    public function importFromArchive(
+        ImportConfig $configuration,
+        int $project_id,
+        ArchiveInterface $archive,
+    ): Ok|Err;
 }

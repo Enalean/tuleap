@@ -26,7 +26,7 @@ use DateTimeImmutable;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Tus\TusFileInformation;
 
-final class FileOngoingUploadDao extends DataAccessObject implements SaveFileUpload, SearchFileUpload, DeleteFileUpload
+final class ProjectArchiveOngoingUploadDao extends DataAccessObject implements SaveFileUpload, SearchFileUpload, SearchFileUploadByExpirationDate, DeleteFileUpload
 {
     public function saveFileOnGoingUpload(InsertFileToUpload $file_to_upload): int
     {
@@ -57,5 +57,10 @@ final class FileOngoingUploadDao extends DataAccessObject implements SaveFileUpl
         $this->getDB()->delete('project_file_upload', [
             'id' => $file_information->getID(),
         ]);
+    }
+
+    public function searchFileOngoingUploadById(int $id): array
+    {
+        return $this->getDB()->row('SELECT * FROM project_file_upload WHERE id = ?', $id);
     }
 }

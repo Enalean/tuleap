@@ -191,7 +191,7 @@ class ImportProjectXMLCommand extends Command
                     $project_name_override
                 );
             } else {
-                $result = $xml_importer->importFromArchive($configuration, $project_id, $archive);
+                $result = $xml_importer->importFromArchive($configuration, (int) $project_id, $archive);
             }
 
             return $result->match(

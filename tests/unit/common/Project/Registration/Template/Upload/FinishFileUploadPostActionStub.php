@@ -18,12 +18,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\Registration\Template\Upload;
 
-interface SearchFileUpload
+
+final class FinishFileUploadPostActionStub implements FinishFileUploadPostAction
 {
-    /**
-     * @return array{id: int, file_size: int, file_name: string, user_id: int, expiration_date: int, project_id: int} | array{}
-     */
-    public function searchFileOngoingUploadById(int $id): array;
+    private ?int $processed_project_id  = null;
+    private ?string $processed_filename = null;
+
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function process(int $project_id, string $filename): void
+    {
+        $this->processed_project_id = $project_id;
+        $this->processed_filename   = $filename;
+    }
+
+    public function getProcessedFilename(): ?string
+    {
+        return $this->processed_filename;
+    }
+
+    public function getProcessedProjectId(): ?int
+    {
+        return $this->processed_project_id;
+    }
 }

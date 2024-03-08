@@ -162,7 +162,8 @@ use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\TemplateFactory;
-use Tuleap\Project\Registration\Template\Upload\FileOngoingUploadDao;
+use Tuleap\Project\Registration\Template\Upload\ExtractArchiveAndCreateProject;
+use Tuleap\Project\Registration\Template\Upload\ProjectArchiveOngoingUploadDao;
 use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileBeingUploadedInformationProvider;
 use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileDataStore;
 use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileUploadCanceler;
@@ -266,6 +267,7 @@ use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
+use XMLImportHelper;
 
 class RouteCollector
 {
@@ -1436,7 +1438,7 @@ class RouteCollector
     public static function routeProjectUpload(): FileUploadController
     {
         $path_allocator          = new UploadPathAllocator(ForgeConfig::get('tmp_dir') . '/project/ongoing-upload');
-        $file_ongoing_upload_dao = new FileOngoingUploadDao();
+        $file_ongoing_upload_dao = new ProjectArchiveOngoingUploadDao();
         $current_user            = new RESTCurrentUserMiddleware(
             UserManager::build(),
             new BasicAuthentication()
@@ -1453,7 +1455,15 @@ class RouteCollector
                 new FileBeingUploadedWriter($path_allocator, DBFactory::getMainTuleapDBConnection()),
                 new ProjectFileUploadFinisher(
                     $file_ongoing_upload_dao,
-                    $path_allocator
+                    $file_ongoing_upload_dao,
+                    $path_allocator,
+                    new ExtractArchiveAndCreateProject(
+                        \ProjectXMLImporter::build(
+                            new XMLImportHelper(\UserManager::instance()),
+                            \ProjectCreator::buildSelfByPassValidation(),
+                        ),
+                        \BackendLogger::getDefaultLogger(),
+                    ),
                 ),
                 new ProjectFileUploadCanceler(
                     $path_allocator,

@@ -43,6 +43,7 @@ use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdmini
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
+use Tuleap\Project\ImportFromArchive;
 use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\SystemEventRunnerInterface;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
@@ -58,7 +59,7 @@ use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Widget\WidgetFactory;
 use Tuleap\XML\MappingsRegistry;
 
-class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var EventManager */
     private $event_manager;
@@ -329,11 +330,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         return $project;
     }
 
-    /**
-     * @return Ok<true>|Err<Fault>
-     * @throws ImportNotValidException
-     */
-    public function importFromArchive(ImportConfig $configuration, $project_id, ArchiveInterface $archive): Ok|Err
+    public function importFromArchive(ImportConfig $configuration, int $project_id, ArchiveInterface $archive): Ok|Err
     {
         $this->logger->info('Start importing into existing project from archive ' . $archive->getExtractionPath());
 
@@ -365,17 +362,26 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     private function importFromXMLIntoExistingProject(ImportConfig $configuration, $project_id, SimpleXMLElement $xml_element, $extraction_path): void
     {
         $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
-        $this->activateServices($project, $xml_element);
+        $this->toggleServices($project, $xml_element);
 
         $this->importContent($configuration, $project, $xml_element, $extraction_path);
     }
 
-    private function activateServices(Project $project, SimpleXMLElement $xml_element): void
+    private function toggleServices(Project $project, SimpleXMLElement $xml_element): void
     {
         if ($xml_element->services) {
+            $services = [];
+            foreach ($project->getServices() as $service) {
+                $short_name            = $service->getShortName();
+                $services[$short_name] = false;
+            }
             foreach ($xml_element->services->service as $service) {
-                $short_name = (string) $service['shortname'];
-                $enabled    = \Tuleap\XML\PHPCast::toBoolean($service['enabled']);
+                $short_name            = (string) $service['shortname'];
+                $services[$short_name] = \Tuleap\XML\PHPCast::toBoolean($service['enabled']);
+            }
+            $services[Service::SUMMARY] = true;
+            $services[Service::ADMIN]   = true;
+            foreach ($services as $short_name => $enabled) {
                 $this->service_manager->toggleServiceUsage($project, $short_name, $enabled);
             }
         }

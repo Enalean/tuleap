@@ -24,8 +24,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Project\Registration\CheckProjectRegistrationUserPermission;
 use Tuleap\Project\Registration\RestrictedUsersNotAllowedException;
-use Tuleap\Project\Registration\Template\Upload\SearchFileUpload;
-use Tuleap\Project\Registration\Template\Upload\SearchFileUploadStub;
+use Tuleap\Project\Registration\Template\Upload\SearchFileUploadByExpirationDate;
+use Tuleap\Project\Registration\Template\Upload\SearchFileUploadByExpirationDateStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -41,20 +41,20 @@ final class ProjectFileBeingUploadedInformationProviderTest extends TestCase
     private const FILE_ONGOING_UPLOAD_ID = 10;
     private ServerRequestInterface|NullServerRequest $request;
     private CheckProjectRegistrationUserPermissionStub $permission_checker;
-    private SearchFileUploadStub $file_upload_dao;
+    private SearchFileUploadByExpirationDateStub $file_upload_dao;
     private CurrentRequestUserProviderStub $current_user_provider;
 
     protected function setUp(): void
     {
         $this->request = (new NullServerRequest())->withAttribute('id', self::FILE_ONGOING_UPLOAD_ID);
 
-        $this->file_upload_dao       = SearchFileUploadStub::withEmptyRow();
+        $this->file_upload_dao       = SearchFileUploadByExpirationDateStub::withEmptyRow();
         $this->current_user_provider =   new CurrentRequestUserProviderStub(UserTestBuilder::buildWithId(101));
         $this->permission_checker    =  CheckProjectRegistrationUserPermissionStub::withoutException();
     }
 
     private function buildProjectFileBeingUploadedInformationProvider(
-        SearchFileUpload $dao,
+        SearchFileUploadByExpirationDate $dao,
         ProvideCurrentRequestUser $current_user_provider,
         CheckProjectRegistrationUserPermission $permission_checker,
     ): ProjectFileBeingUploadedInformationProvider {
@@ -124,7 +124,7 @@ final class ProjectFileBeingUploadedInformationProviderTest extends TestCase
         $file_name = 'GR86';
 
         $result = $this->buildProjectFileBeingUploadedInformationProvider(
-            SearchFileUploadStub::withExistingRow(
+            SearchFileUploadByExpirationDateStub::withExistingRow(
                 ['id' => self::FILE_ONGOING_UPLOAD_ID, 'file_size' => $file_size, 'file_name' => $file_name]
             ),
             $this->current_user_provider,

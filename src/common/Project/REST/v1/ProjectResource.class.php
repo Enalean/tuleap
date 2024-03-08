@@ -86,7 +86,7 @@ use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\NoTemplateProvidedFault;
 use Tuleap\Project\Registration\Template\TemplateFactory;
-use Tuleap\Project\Registration\Template\Upload\FileOngoingUploadDao;
+use Tuleap\Project\Registration\Template\Upload\ProjectArchiveOngoingUploadDao;
 use Tuleap\Project\Registration\Template\Upload\ProjectFileToUploadCreator;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\MinimalUserGroupRepresentationWithAdditionalInformation;
@@ -1400,7 +1400,7 @@ class ProjectResource extends AuthenticatedResource
                 ProjectCreator::buildSelfRegularValidation()
             ),
             TemplateFactory::build(),
-            new ProjectFileToUploadCreator(new FileOngoingUploadDao()),
+            new ProjectFileToUploadCreator(new ProjectArchiveOngoingUploadDao()),
             new ProjectRepresentationBuilder(EventManager::instance(), $this->getDescriptionFieldsFactory()),
             new ProjectRegistrationCheckerAggregator(
                 new ProjectRegistrationBaseChecker(
