@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,4 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "./default/css/includes/burndown-chart";
+const common = require("./webpack.common.js");
+const { webpack_configurator } = require("@tuleap/build-system-configurator");
+
+module.exports = webpack_configurator.extendDevConfiguration(common);

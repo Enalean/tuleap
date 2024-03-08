@@ -1,0 +1,25 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-burndown-chart",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "style": "./themes/burndown-chart.scss",
+  "dependencies": {
+    "@tuleap/chart-builder": "workspace:*",
+    "@tuleap/tlp-swatch-colors": "workspace:*",
+    "d3-array": "^3.0.1",
+    "d3-selection": "^3.0.0",
+    "d3-shape": "^3.0.1",
+    "moment": "^2.29.4",
+    "node-gettext": "^3.0.0",
+    "sprintf-js": "^1.1.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch"
+  }
+}

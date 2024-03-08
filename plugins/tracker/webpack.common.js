@@ -27,24 +27,6 @@ const output = webpack_configurator.configureOutput(
     "/assets/trackers/",
 );
 
-const webpack_config_for_burndown_chart = {
-    entry: {
-        "burndown-chart": "./scripts/burndown-chart/src/burndown-chart.js",
-    },
-    context,
-    output,
-    resolve: {
-        alias: {
-            // deduplicate moment that is also used by chart-builder
-            moment$: path.resolve(__dirname, "node_modules/moment"),
-        },
-    },
-    module: {
-        rules: [webpack_configurator.rule_po_files],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
-};
-
 const config_for_flaming_parrot = {
     entry: {
         "modal-v2": "./scripts/modal-v2/modal-in-place.js",
@@ -92,7 +74,6 @@ const config_for_burning_parrot = {
 let entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     print: "./themes/default/css/print.scss",
-    "burndown-chart": "./themes/burndown-chart.scss",
     "dependencies-matrix": "./themes/FlamingParrot/css/dependencies-matrix.scss",
     "tracker-bp": "./themes/BurningParrot/css/tracker.scss",
 };
@@ -107,9 +88,4 @@ const config_for_themes = {
     plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
 };
 
-module.exports = [
-    webpack_config_for_burndown_chart,
-    config_for_flaming_parrot,
-    config_for_burning_parrot,
-    config_for_themes,
-];
+module.exports = [config_for_flaming_parrot, config_for_burning_parrot, config_for_themes];
