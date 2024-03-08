@@ -54,6 +54,7 @@
                     accept="application/zip"
                     v-else-if="root_store.is_advanced_option_selected(option_name)"
                     data-test="archive-project-file-input"
+                    v-on:input="setSelectedTemplate"
                 />
             </div>
         </label>
@@ -62,7 +63,7 @@
 
 <script setup lang="ts">
 import FromProjectSvg from "./FromProjectSvg.vue";
-import type { AdvancedOptions } from "../../../../type";
+import type { AdvancedOptions, ProjectArchiveTemplateData } from "../../../../type";
 import { useStore } from "../../../../stores/root";
 
 const root_store = useStore();
@@ -72,5 +73,28 @@ const option_name = "from_project_archive";
 function setSelectedOption(option_name: AdvancedOptions): void {
     root_store.resetSelectedTemplate();
     root_store.setAdvancedActiveOption(option_name);
+}
+
+function setSelectedTemplate(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement) || event.target.files === null) {
+        return;
+    }
+    const files = event.target.files;
+
+    if (files[0] === null) {
+        return;
+    }
+
+    const archive = files[0];
+
+    const template: ProjectArchiveTemplateData = {
+        id: "from_project_archive",
+        title: "From project template upload",
+        is_built_in: false,
+        glyph: "",
+        description: "Create a project based on a template exported from another platform",
+        archive,
+    };
+    root_store.setSelectedTemplate(template);
 }
 </script>

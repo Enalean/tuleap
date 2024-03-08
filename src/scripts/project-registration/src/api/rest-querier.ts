@@ -17,10 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post, recursiveGet, get } from "@tuleap/tlp-fetch";
-import type { ProjectProperties, MinimalProjectRepresentation, TemplateData } from "../type";
+import { get, post, recursiveGet } from "@tuleap/tlp-fetch";
+import type { MinimalProjectRepresentation, ProjectProperties, TemplateData } from "../type";
+import type { ProjectArchiveReference, ProjectReference } from "@tuleap/core-rest-api-types";
 
-export async function postProject(project_properties: ProjectProperties): Promise<string> {
+export async function postProject(
+    project_properties: ProjectProperties,
+): Promise<ProjectReference | ProjectArchiveReference> {
     const headers = {
         "content-type": "application/json",
     };

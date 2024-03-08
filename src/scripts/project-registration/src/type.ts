@@ -58,6 +58,10 @@ export interface ExternalTemplateData extends TemplateData {
     template_category: ExternalTemplateCategory;
 }
 
+export type ProjectArchiveTemplateData = TemplateData & {
+    archive: File;
+};
+
 export interface ExternalTemplateCategory {
     shortname: string;
     label: string;
@@ -71,10 +75,16 @@ export interface ProjectProperties {
     allow_restricted?: boolean;
     xml_template_name?: string | null;
     template_id?: number | null;
+    from_archive?: ProjectArchive | null;
     categories: Array<TroveCatProperties>;
     description: string;
     fields: Array<FieldProperties>;
 }
+
+export type ProjectArchive = {
+    readonly file_name: string;
+    readonly file_size: number;
+};
 
 export interface ProjectNameProperties {
     slugified_name: string;

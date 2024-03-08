@@ -98,6 +98,29 @@ describe("PrivacyBuilder", () => {
         expect(properties_with_privacy.template_id).toBe(
             parseInt(selected_company_template.id, 10),
         );
+        expect(properties_with_privacy.from_archive).toBeUndefined();
+    });
+
+    it("Builds selected company template from a project archive", () => {
+        const selected_tuleap_template = null;
+        const selected_company_template = {
+            id: "from_project_archive",
+            title: "From project template upload",
+            is_built_in: false,
+            glyph: "",
+            description: "Create a project based on a template exported from another platform",
+            archive: new File([], "export_102.zip"),
+        };
+
+        const properties_with_privacy = buildProjectPrivacy(
+            selected_tuleap_template,
+            selected_company_template,
+            visibility,
+            project_properties,
+        );
+        expect(properties_with_privacy.from_archive?.file_name).toBe("export_102.zip");
+        expect(properties_with_privacy.from_archive?.file_size).toBe(0);
+        expect(properties_with_privacy.template_id).toBeUndefined();
     });
 
     it.each([

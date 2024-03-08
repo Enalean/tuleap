@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ProjectProperties, TemplateData } from "../type";
+import type { ProjectArchiveTemplateData, ProjectProperties, TemplateData } from "../type";
 import {
     ACCESS_PRIVATE,
     ACCESS_PRIVATE_WO_RESTRICTED,
@@ -29,7 +29,7 @@ const DEFAULT_PROJECT_ID = "100";
 
 export function buildProjectPrivacy(
     selected_tuleap_template: TemplateData | null,
-    selected_company_template: TemplateData | null,
+    selected_company_template: TemplateData | ProjectArchiveTemplateData | null,
     visibility: string,
     project_properties: ProjectProperties,
 ): ProjectProperties {
@@ -41,7 +41,17 @@ export function buildProjectPrivacy(
         project_properties.template_id = parseInt(selected_tuleap_template.id, 10);
     }
     if (selected_company_template) {
-        project_properties.template_id = parseInt(selected_company_template.id, 10);
+        if (
+            selected_company_template.id === "from_project_archive" &&
+            "archive" in selected_company_template
+        ) {
+            project_properties.from_archive = {
+                file_name: selected_company_template.archive.name,
+                file_size: selected_company_template.archive.size,
+            };
+        } else {
+            project_properties.template_id = parseInt(selected_company_template.id, 10);
+        }
     }
 
     let is_public_project = null;
