@@ -75,6 +75,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('Kanban Sample project', $project_data->getFullName());
         self::assertEquals('Control project workflow and focus on what’s hot with a card board. Connect it to development tools.', $project_data->getShortDescription());
         self::assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
+        self::assertEquals(Project::STATUS_PENDING, $project_data->getStatus());
     }
 
     public function testItLoadsPrivateProjects(): void
@@ -209,5 +210,6 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
+        self::assertEquals(Project::STATUS_CREATING_FROM_ARCHIVE, $project_data->getStatus());
     }
 }

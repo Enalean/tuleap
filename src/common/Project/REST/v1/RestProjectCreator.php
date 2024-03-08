@@ -58,6 +58,7 @@ class RestProjectCreator
 {
     public function __construct(
         private readonly \ProjectCreator $project_creator,
+        private readonly \ProjectCreator $project_creator_for_archive,
         private readonly \ProjectXMLImporter $project_XML_importer,
         private readonly TemplateFactory $template_factory,
         private readonly ProjectFileToUploadCreator $creator,
@@ -141,7 +142,16 @@ class RestProjectCreator
                 new DateTimeImmutable()
             );
 
-            return Result::ok(PostProjectCreated::fromArchive($this->builder, $current_user, new ProjectFromArchiveRepresentation($file_creator->getUploadHref())));
+            return Result::ok(
+                PostProjectCreated::fromArchive(
+                    $this->builder,
+                    $current_user,
+                    ProjectFromArchiveRepresentation::fromCreatedProject(
+                        $this->project_creator_for_archive->processProjectCreation($creation_data),
+                        $file_creator->getUploadHref(),
+                    )
+                )
+            );
         }
 
         return Result::err(NoTemplateProvidedFault::build());

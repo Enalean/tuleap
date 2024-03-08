@@ -51,6 +51,10 @@ class ProjectCreationData
     private CategoryCollection $trove_data;
     private bool $inherit_from_template = true;
     private string $access              = "";
+    /**
+     * @psalm-var Project::STATUS_PENDING | Project::STATUS_CREATING_FROM_ARCHIVE
+     */
+    private string $status = Project::STATUS_PENDING;
 
     public function __construct(DefaultProjectVisibilityRetriever $default_project_visibility_retriever, ?\Psr\Log\LoggerInterface $logger = null)
     {
@@ -221,6 +225,8 @@ class ProjectCreationData
     ): self {
         $instance = new self($default_project_visibility_retriever);
         $instance->fromForm(TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(), $data);
+        $instance->status = Project::STATUS_CREATING_FROM_ARCHIVE;
+
         return $instance;
     }
 
@@ -352,5 +358,10 @@ class ProjectCreationData
     public function getIconCodePoint(): string
     {
         return $this->icon_codepoint;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 }

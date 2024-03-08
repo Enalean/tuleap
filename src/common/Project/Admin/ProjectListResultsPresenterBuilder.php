@@ -37,6 +37,10 @@ class ProjectListResultsPresenterBuilder
         $matching_projects = [];
 
         foreach ($projects as $row) {
+            if ($row['status'] === Project::STATUS_CREATING_FROM_ARCHIVE) {
+                continue;
+            }
+
             if (! $this->isProjectStatusValid($row['status'])) {
                 $GLOBALS['Response']->addFeedback(
                     \Feedback::ERROR,

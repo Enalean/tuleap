@@ -362,7 +362,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             });
     }
 
-    private function importFromXMLIntoExistingProject(ImportConfig $configuration, $project_id, SimpleXMLElement $xml_element, $extraction_path)
+    private function importFromXMLIntoExistingProject(ImportConfig $configuration, $project_id, SimpleXMLElement $xml_element, $extraction_path): void
     {
         $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
         $this->activateServices($project, $xml_element);
@@ -370,7 +370,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->importContent($configuration, $project, $xml_element, $extraction_path);
     }
 
-    private function activateServices(Project $project, SimpleXMLElement $xml_element)
+    private function activateServices(Project $project, SimpleXMLElement $xml_element): void
     {
         if ($xml_element->services) {
             foreach ($xml_element->services->service as $service) {

@@ -79,6 +79,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user;
     private ProjectPostRepresentation $project_post_representation;
     private ProjectCreator&MockObject $project_creator;
+    private ProjectCreator&MockObject $project_creator_for_archive;
     private ProjectXMLImporter&MockObject $project_XML_importer;
     private TemplateDao&MockObject $template_dao;
     private \PluginFactory&MockObject $plugin_factory;
@@ -94,6 +95,8 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->service_manager      = $this->createMock(ServiceManager::class);
         $this->project_XML_importer = $this->createMock(ProjectXMLImporter::class);
         $this->template_dao         = $this->createMock(TemplateDao::class);
+
+        $this->project_creator_for_archive = $this->createMock(ProjectCreator::class);
 
         $this->event_manager  = $this->createMock(\EventManager::class);
         $this->retriever      = $this->createMock(ServiceEnableForXmlImportRetriever::class);
@@ -333,12 +336,21 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
+
+        $this->project_creator_for_archive
+            ->expects(self::atLeastOnce())
+            ->method('processProjectCreation')
+            ->with($project_creation_data)
+            ->willReturn(ProjectTestBuilder::aProject()->withId(1001)->build());
+
         $creator->create(
             $this->project_post_representation,
             $project_creation_data,
             $this->user
         )->match(
             function (PostProjectCreated $project) {
+                self::assertSame(1001, $project->getProjectFromArchiveRepresentation()->id);
+                self::assertSame("projects/1001", $project->getProjectFromArchiveRepresentation()->uri);
                 self::assertSame("/uploads/project/file/1", $project->getProjectFromArchiveRepresentation()->upload_href);
             },
             function () {
@@ -381,6 +393,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new RestProjectCreator(
             $this->project_creator,
+            $this->project_creator_for_archive,
             $this->project_XML_importer,
             new TemplateFactory(
                 new GlyphFinder(
