@@ -20,16 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\Metadata;
 
-use ForgeConfig;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -39,33 +37,27 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use UserManager;
 
-final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
+final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
 {
     private PFUser $project_member;
-    private PFUser $project_admin;
     private PFUser $alice;
     private Tracker $release_tracker;
     private Tracker $sprint_tracker;
-    private Tracker $task_tracker;
     private int $release_artifact_empty_id;
     private int $release_artifact_with_alice_id;
     private int $sprint_artifact_empty_id;
     private int $sprint_artifact_with_alice_bob_id;
-    private int $task_artifact_with_alice_id;
 
     protected function setUp(): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        ForgeConfig::setFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
-        $tracker_builder      = new TrackerDatabaseBuilder($db);
-        $core_builder         = new CoreDatabaseBuilder($db);
+        $db              = DBFactory::getMainTuleapDBConnection()->getDB();
+        $tracker_builder = new TrackerDatabaseBuilder($db);
+        $core_builder    = new CoreDatabaseBuilder($db);
+
         $project              = $core_builder->buildProject();
         $project_id           = (int) $project->getID();
         $this->project_member = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
-        $this->project_admin  = $core_builder->buildUser('project_admin', 'Project Admin', 'project_admin@example.com');
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
-        $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
-        $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
 
         $this->alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
         $bob         = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
@@ -78,66 +70,56 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
 
         $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
 
-        $release_user_field_id = $tracker_builder->buildUserListField($this->release_tracker->getId(), 'user_field', 'sb');
-        $sprint_user_field_id  = $tracker_builder->buildUserListField($this->sprint_tracker->getId(), 'user_field', 'msb');
-        $task_user_field_id    = $tracker_builder->buildUserListField($this->task_tracker->getId(), 'user_field', 'sb');
+        $release_assignee_field_id = $tracker_builder->buildUserListField($this->release_tracker->getId(), 'release_assignee', 'sb');
+        $sprint_assignee_field_id  = $tracker_builder->buildUserListField($this->sprint_tracker->getId(), 'sprint_assignee', 'msb');
+
+        $tracker_builder->buildContributorAssigneeSemantic($this->release_tracker->getId(), $release_assignee_field_id);
+        $tracker_builder->buildContributorAssigneeSemantic($this->sprint_tracker->getId(), $sprint_assignee_field_id);
 
         $tracker_builder->setReadPermission(
-            $release_user_field_id,
+            $release_assignee_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
         $tracker_builder->setReadPermission(
-            $sprint_user_field_id,
+            $sprint_assignee_field_id,
             ProjectUGroup::PROJECT_MEMBERS
-        );
-        $tracker_builder->setReadPermission(
-            $task_user_field_id,
-            ProjectUGroup::PROJECT_ADMIN
         );
 
         $this->release_artifact_empty_id         = $tracker_builder->buildArtifact($this->release_tracker->getId());
         $this->release_artifact_with_alice_id    = $tracker_builder->buildArtifact($this->release_tracker->getId());
         $this->sprint_artifact_empty_id          = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
         $this->sprint_artifact_with_alice_bob_id = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->task_artifact_with_alice_id       = $tracker_builder->buildArtifact($this->task_tracker->getId());
 
         $release_artifact_empty_changeset         = $tracker_builder->buildLastChangeset($this->release_artifact_empty_id);
         $release_artifact_with_alice_changeset    = $tracker_builder->buildLastChangeset($this->release_artifact_with_alice_id);
         $sprint_artifact_empty_changeset          = $tracker_builder->buildLastChangeset($this->sprint_artifact_empty_id);
         $sprint_artifact_with_alice_bob_changeset = $tracker_builder->buildLastChangeset($this->sprint_artifact_with_alice_bob_id);
-        $task_artifact_with_alice_changeset       = $tracker_builder->buildLastChangeset($this->task_artifact_with_alice_id);
 
         $tracker_builder->buildListValue(
             $release_artifact_empty_changeset,
-            $release_user_field_id,
+            $release_assignee_field_id,
             Tracker_FormElement_Field_List::NONE_VALUE,
         );
         $tracker_builder->buildListValue(
             $release_artifact_with_alice_changeset,
-            $release_user_field_id,
+            $release_assignee_field_id,
             (int) $this->alice->getId(),
         );
         $tracker_builder->buildListValue(
             $sprint_artifact_empty_changeset,
-            $sprint_user_field_id,
+            $sprint_assignee_field_id,
             Tracker_FormElement_Field_List::NONE_VALUE,
         );
         $tracker_builder->buildListValue(
             $sprint_artifact_with_alice_bob_changeset,
-            $sprint_user_field_id,
+            $sprint_assignee_field_id,
             (int) $this->alice->getId(),
         );
         $tracker_builder->buildListValue(
             $sprint_artifact_with_alice_bob_changeset,
-            $sprint_user_field_id,
+            $sprint_assignee_field_id,
             (int) $bob->getId(),
-        );
-        $tracker_builder->buildListValue(
-            $task_artifact_with_alice_changeset,
-            $task_user_field_id,
-            (int) $this->alice->getId(),
         );
     }
 
@@ -150,7 +132,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     {
         $artifacts = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 5, 0)
+            ->getArtifactsMatchingReport($report, $user, 10, 0)
             ->getArtifacts();
         return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $artifacts));
     }
@@ -160,7 +142,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field = ''",
+                "@assigned_to = ''",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -175,8 +157,8 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field = 'alice'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "@assigned_to = 'alice'",
+                [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
         );
@@ -185,27 +167,12 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         self::assertEqualsCanonicalizing([$this->release_artifact_with_alice_id, $this->sprint_artifact_with_alice_bob_id], $artifacts);
     }
 
-    public function testPermissionsEqual(): void
-    {
-        $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
-                1,
-                "user_field = 'alice'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-            ),
-            $this->project_admin
-        );
-
-        self::assertCount(3, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_with_alice_id, $this->sprint_artifact_with_alice_bob_id, $this->task_artifact_with_alice_id], $artifacts);
-    }
-
     public function testEqualMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field = MYSELF()",
+                "@assigned_to = MYSELF()",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -220,7 +187,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field = 'alice' AND user_field = 'bob'",
+                "@assigned_to = 'alice' AND @assigned_to = 'bob'",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -235,7 +202,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field != ''",
+                "@assigned_to != ''",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -250,8 +217,8 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field != 'bob'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "@assigned_to != 'bob'",
+                [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
         );
@@ -260,31 +227,12 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->release_artifact_with_alice_id, $this->sprint_artifact_empty_id], $artifacts);
     }
 
-    public function testPermissionsNotEqual(): void
-    {
-        $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
-                1,
-                "user_field != 'bob'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-            ),
-            $this->project_admin
-        );
-
-        self::assertCount(4, $artifacts);
-        self::assertEqualsCanonicalizing([
-            $this->release_artifact_empty_id, $this->release_artifact_with_alice_id,
-            $this->sprint_artifact_empty_id,
-            $this->task_artifact_with_alice_id,
-        ], $artifacts);
-    }
-
     public function testNotEqualMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field != MYSELF()",
+                "@assigned_to != MYSELF()",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -299,7 +247,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field != 'alice' AND user_field != 'bob'",
+                "@assigned_to != 'alice' AND @assigned_to != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -314,8 +262,8 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field IN('alice')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "@assigned_to IN('alice')",
+                [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
         );
@@ -324,27 +272,12 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         self::assertEqualsCanonicalizing([$this->release_artifact_with_alice_id, $this->sprint_artifact_with_alice_bob_id], $artifacts);
     }
 
-    public function testPermissionsIn(): void
-    {
-        $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
-                1,
-                "user_field IN('alice')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-            ),
-            $this->project_admin
-        );
-
-        self::assertCount(3, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_with_alice_id, $this->sprint_artifact_with_alice_bob_id, $this->task_artifact_with_alice_id], $artifacts);
-    }
-
     public function testInMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field IN(MYSELF())",
+                "@assigned_to IN(MYSELF())",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -359,7 +292,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field IN(MYSELF(), 'bob')",
+                "@assigned_to IN(MYSELF(), 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -374,7 +307,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field IN('alice', 'bob')",
+                "@assigned_to IN('alice', 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -389,7 +322,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field IN('alice') OR user_field IN('bob')",
+                "@assigned_to IN('alice') OR @assigned_to IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -404,8 +337,8 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field NOT IN('bob')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "@assigned_to NOT IN('bob')",
+                [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
         );
@@ -414,31 +347,12 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->release_artifact_with_alice_id, $this->sprint_artifact_empty_id], $artifacts);
     }
 
-    public function testPermissionsNotIn(): void
-    {
-        $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
-                1,
-                "user_field NOT IN('bob')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-            ),
-            $this->project_admin
-        );
-
-        self::assertCount(4, $artifacts);
-        self::assertEqualsCanonicalizing([
-            $this->release_artifact_empty_id, $this->release_artifact_with_alice_id,
-            $this->sprint_artifact_empty_id,
-            $this->task_artifact_with_alice_id,
-        ], $artifacts);
-    }
-
     public function testNotInMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field NOT IN(MYSELF())",
+                "@assigned_to NOT IN(MYSELF())",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -453,7 +367,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field NOT IN(MYSELF(), 'bob')",
+                "@assigned_to NOT IN(MYSELF(), 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -468,7 +382,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field NOT IN('bob', 'alice')",
+                "@assigned_to NOT IN('bob', 'alice')",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
@@ -483,7 +397,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field NOT IN('bob') AND user_field NOT IN('alice')",
+                "@assigned_to NOT IN('bob') AND @assigned_to NOT IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member

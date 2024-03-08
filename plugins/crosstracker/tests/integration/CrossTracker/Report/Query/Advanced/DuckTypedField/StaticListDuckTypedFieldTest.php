@@ -28,6 +28,7 @@ use ProjectUGroup;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -38,7 +39,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class StaticListDuckTypedFieldTest extends DuckTypedFieldTestCase
+final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
 {
     use GlobalLanguageMock;
 

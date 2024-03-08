@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -33,7 +34,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
+final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
 {
     private Tracker $release_tracker;
     private Tracker $sprint_tracker;

@@ -376,7 +376,7 @@ final class TrackerDatabaseBuilder
         $this->db->insert(
             'tracker_field_list_bind_users',
             [
-                'field_id' => $tracker_field_id,
+                'field_id'       => $tracker_field_id,
                 'value_function' => 'group_members',
             ]
         );
@@ -489,6 +489,39 @@ final class TrackerDatabaseBuilder
             [
                 'changeset_value_id' => $changeset_value_id,
                 'bindvalue_id'       => $bind_open_value_id,
+            ]
+        );
+    }
+
+    public function buildTitleSemantic(int $tracker_id, int $field_id): void
+    {
+        $this->db->insert(
+            'tracker_semantic_title',
+            [
+                'tracker_id' => $tracker_id,
+                'field_id'   => $field_id,
+            ]
+        );
+    }
+
+    public function buildDescriptionSemantic(int $tracker_id, int $field_id): void
+    {
+        $this->db->insert(
+            'tracker_semantic_description',
+            [
+                'tracker_id' => $tracker_id,
+                'field_id'   => $field_id,
+            ]
+        );
+    }
+
+    public function buildContributorAssigneeSemantic(int $tracker_id, int $field_id): void
+    {
+        $this->db->insert(
+            'tracker_semantic_contributor',
+            [
+                'tracker_id' => $tracker_id,
+                'field_id'   => $field_id,
             ]
         );
     }
