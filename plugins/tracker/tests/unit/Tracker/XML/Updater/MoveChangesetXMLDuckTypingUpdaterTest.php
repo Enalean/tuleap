@@ -82,6 +82,15 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             $XML_updater,
             $cdata_factory
         );
+        $bind_open_value_updater  = new BindOpenValueForDuckTypingUpdater(
+            new FieldValueMatcher(
+                new XMLImportHelper(
+                    $this->createMock(\UserManager::class)
+                )
+            ),
+            $XML_updater,
+            $cdata_factory
+        );
         $permissions_updater      = new PermissionsByDuckTypingUpdater(
             new PermissionDuckTypingMatcher(),
             $XML_updater
@@ -104,6 +113,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $this->updater = new MoveChangesetXMLDuckTypingUpdater(
             $XML_updater,
             $bind_value_updater,
+            $bind_open_value_updater,
             $permissions_updater,
             new OpenListUserGroupsByDuckTypingUpdater(
                 SearchUserGroupsValuesByIdStub::withValues($user_groups_bind_values),

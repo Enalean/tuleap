@@ -156,6 +156,7 @@ use Tuleap\Tracker\REST\v1\Move\MovePatchAction;
 use Tuleap\Tracker\REST\v1\Move\PostMoveArtifactRESTAddFeedback;
 use Tuleap\Tracker\REST\v1\Move\RestArtifactMover;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
+use Tuleap\Tracker\Tracker\XML\Updater\BindOpenValueForDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\FieldChangeArtifactLinksUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLDuckTypingUpdater;
@@ -1349,6 +1350,11 @@ class ArtifactsResource extends AuthenticatedResource
             new MoveChangesetXMLDuckTypingUpdater(
                 $XML_updater,
                 new BindValueForDuckTypingUpdater(
+                    new FieldValueMatcher($user_finder),
+                    $XML_updater,
+                    $cdata_factory
+                ),
+                new BindOpenValueForDuckTypingUpdater(
                     new FieldValueMatcher($user_finder),
                     $XML_updater,
                     $cdata_factory
