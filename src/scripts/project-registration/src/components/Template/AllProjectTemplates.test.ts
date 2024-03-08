@@ -27,7 +27,7 @@ import TemplateSelection from "./TemplateSelection.vue";
 import TemplateFooter from "./TemplateFooter.vue";
 
 describe("AllProjectTemplates", () => {
-    let factory: Wrapper<ProjectList>;
+    let factory: Wrapper<Vue, Element>;
     beforeEach(async () => {
         factory = shallowMount(ProjectList, {
             localVue: await createProjectRegistrationLocalVue(),

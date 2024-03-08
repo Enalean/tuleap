@@ -46,19 +46,8 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
 import TemplateFooter from "./TemplateFooter.vue";
 import TemplateSelection from "./TemplateSelection.vue";
-
-@Component({
-    components: {
-        NewProjectBoxes,
-        TemplateSelection,
-        TemplateFooter,
-    },
-})
-export default class ProjectList extends Vue {}
 </script>
