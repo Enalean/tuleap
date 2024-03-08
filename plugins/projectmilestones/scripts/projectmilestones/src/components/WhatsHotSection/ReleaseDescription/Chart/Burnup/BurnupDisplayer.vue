@@ -37,7 +37,7 @@ import type { BurnupData, MilestoneData } from "../../../../../type";
 import { computed } from "vue";
 import ChartError from "../ChartError.vue";
 import { useStore } from "../../../../../stores/root";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import BurnupChart from "./BurnupChart.vue";
 
 const props = defineProps<{ release_data: MilestoneData; burnup_data: BurnupData | null }>();

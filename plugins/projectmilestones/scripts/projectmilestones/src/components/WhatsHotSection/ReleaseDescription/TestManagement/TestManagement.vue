@@ -31,7 +31,7 @@ import { computed, onMounted } from "vue";
 import type { MilestoneData, TestManagementCampaign } from "../../../../type";
 import type { DataPieChart } from "@tuleap/pie-chart";
 import { createPieChart } from "../../../../chart_builder/pie_chart_drawer/pie-chart-drawer";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 
 const props = defineProps<{

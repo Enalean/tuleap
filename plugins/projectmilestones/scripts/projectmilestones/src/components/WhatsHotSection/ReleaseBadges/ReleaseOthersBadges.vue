@@ -55,7 +55,7 @@ import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
 import ReleaseButtonsDescription from "../ReleaseDescription/ReleaseButtonsDescription.vue";
 import { useStore } from "../../../stores/root";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
     release_data: MilestoneData;

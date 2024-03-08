@@ -41,7 +41,7 @@ import type { BurndownData, MilestoneData } from "../../../../../type";
 import { computed } from "vue";
 import ChartError from "../ChartError.vue";
 import { useStore } from "../../../../../stores/root";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import BurndownChart from "./BurndownChart.vue";
 
 const props = defineProps<{ release_data: MilestoneData; burndown_data: BurndownData | null }>();

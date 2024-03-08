@@ -44,7 +44,7 @@
 import { computed } from "vue";
 import SVGProjectMilestonesEmptyState from "./SVGProjectMilestonesEmptyState.vue";
 import { useStore } from "../../stores/root";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const root_store = useStore();
 const gettext_provider = useGettext();

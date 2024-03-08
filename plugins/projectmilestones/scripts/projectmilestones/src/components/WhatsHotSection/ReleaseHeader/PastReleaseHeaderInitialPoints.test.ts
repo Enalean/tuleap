@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import PastReleaseHeaderInitialPoints from "./PastReleaseHeaderInitialPoints.vue";
 import type { MilestoneData } from "../../../type";
-import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("PastReleaseHeaderInitialPoints", () => {
-    async function getPersonalWidgetInstance(
+    function getPersonalWidgetInstance(
         initial_effort: number | null,
-    ): Promise<Wrapper<Vue, Element>> {
+    ): VueWrapper<InstanceType<typeof PastReleaseHeaderInitialPoints>> {
         const release_data = {
             label: "mile",
             initial_effort,
@@ -36,19 +36,21 @@ describe("PastReleaseHeaderInitialPoints", () => {
             propsData: {
                 release_data,
             },
-            localVue: await createReleaseWidgetLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
         };
         return mount(PastReleaseHeaderInitialPoints, component_options);
     }
 
     describe("Display initial effort", () => {
-        it("When there is initial effort, Then it's displayed", async () => {
-            const wrapper = await getPersonalWidgetInstance(10);
+        it("When there is initial effort, Then it's displayed", () => {
+            const wrapper = getPersonalWidgetInstance(10);
             expect(wrapper.get("[data-test=points-initial-value]").text()).toBe("10");
         });
 
-        it("When there isn't initial effort, Then 0 displayed", async () => {
-            const wrapper = await getPersonalWidgetInstance(null);
+        it("When there isn't initial effort, Then 0 displayed", () => {
+            const wrapper = getPersonalWidgetInstance(null);
             expect(wrapper.get("[data-test=points-initial-value]").text()).toBe("0");
         });
     });

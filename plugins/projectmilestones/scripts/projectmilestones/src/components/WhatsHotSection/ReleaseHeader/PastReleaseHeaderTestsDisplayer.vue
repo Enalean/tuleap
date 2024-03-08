@@ -31,7 +31,7 @@
 import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
 import { is_testplan_activated } from "../../../helpers/test-management-helper";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $ngettext } = useGettext();
 

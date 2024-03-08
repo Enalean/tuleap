@@ -17,20 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PastSection from "./PastSection.vue";
 import type { MilestoneData } from "../../type";
 import ReleaseDisplayer from "../WhatsHotSection/ReleaseDisplayer.vue";
-import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 const project_id = 102;
 
-async function getPersonalWidgetInstance(
+function getPersonalWidgetInstance(
     last_release: MilestoneData | null = null,
-): Promise<Wrapper<Vue, Element>> {
+): VueWrapper<InstanceType<typeof PastSection>> {
     const useStore = defineStore("root", {
         state: () => ({
             project_id: project_id,
@@ -45,16 +45,17 @@ async function getPersonalWidgetInstance(
         propsData: {
             label_tracker_planning: "sprint",
         },
-        localVue: await createReleaseWidgetLocalVue(),
-        pinia,
+        global: {
+            ...getGlobalTestOptions(pinia),
+        },
     };
 
     return shallowMount(PastSection, component_options);
 }
 
 describe("PastSection", () => {
-    it("Given user display widget, Then a good link to done releases of the project is rendered", async () => {
-        const wrapper = await getPersonalWidgetInstance();
+    it("Given user display widget, Then a good link to done releases of the project is rendered", () => {
+        const wrapper = getPersonalWidgetInstance();
 
         expect(wrapper.get("[data-test=past-releases-link]").attributes("href")).toContain(
             "/plugins/agiledashboard/?action=show-top&group_id=" +
@@ -63,17 +64,17 @@ describe("PastSection", () => {
         );
     });
 
-    it("When there is no last_milestone, then ReleaseDisplayer Component is not displayed", async () => {
-        const wrapper = await getPersonalWidgetInstance(null);
+    it("When there is no last_milestone, then ReleaseDisplayer Component is not displayed", () => {
+        const wrapper = getPersonalWidgetInstance(null);
 
         expect(wrapper.findComponent(ReleaseDisplayer).exists()).toBe(false);
     });
 
-    it("When there is one last_milestone, then ReleaseDisplayer Component is displayed", async () => {
+    it("When there is one last_milestone, then ReleaseDisplayer Component is displayed", () => {
         const last_release = {
             id: 1,
         } as MilestoneData;
-        const wrapper = await getPersonalWidgetInstance(last_release);
+        const wrapper = getPersonalWidgetInstance(last_release);
 
         expect(wrapper.findComponent(ReleaseDisplayer).exists()).toBe(true);
     });

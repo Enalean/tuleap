@@ -18,16 +18,16 @@
  */
 
 import type { MilestoneData } from "../../../../../type";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import BurnupChart from "./BurnupChart.vue";
 
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 
 describe("BurnupChart", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
+    function getPersonalWidgetInstance(): VueWrapper<InstanceType<typeof BurnupChart>> {
         const useStore = defineStore("root", {
             state: () => ({}),
         });
@@ -41,8 +41,9 @@ describe("BurnupChart", () => {
                 } as MilestoneData,
                 burnup_data: null,
             },
-            localVue: await createReleaseWidgetLocalVue(),
-            pinia,
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
         });
     }
 
@@ -50,8 +51,8 @@ describe("BurnupChart", () => {
         getPersonalWidgetInstance();
     });
 
-    it("When component is renderer, Then there is a svg element with id of release", async () => {
-        const wrapper = await getPersonalWidgetInstance();
+    it("When component is renderer, Then there is a svg element with id of release", () => {
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.element).toMatchSnapshot();
     });
 });

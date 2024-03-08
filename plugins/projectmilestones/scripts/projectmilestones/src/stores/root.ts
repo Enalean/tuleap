@@ -61,6 +61,20 @@ export const useStore = defineStore("root", {
         last_release: null,
     }),
     actions: {
+        setInitialState(initial_state: State) {
+            this.project_id = initial_state.project_id;
+            this.project_name = initial_state.project_name;
+            this.nb_upcoming_releases = initial_state.nb_upcoming_releases;
+            this.nb_backlog_items = initial_state.nb_backlog_items;
+            this.trackers_agile_dashboard = initial_state.trackers_agile_dashboard;
+            this.label_tracker_planning = initial_state.label_tracker_planning;
+            this.is_timeframe_duration = initial_state.is_timeframe_duration;
+            this.label_start_date = initial_state.label_start_date;
+            this.label_timeframe = initial_state.label_timeframe;
+            this.user_can_view_sub_milestones_planning =
+                initial_state.user_can_view_sub_milestones_planning;
+            this.burnup_mode = initial_state.burnup_mode;
+        },
         async getCurrentMilestones(): Promise<void> {
             this.resetErrorMessage();
             let milestones: MilestoneData[] = [];

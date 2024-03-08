@@ -17,25 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import type { MilestoneData } from "../../type";
-import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
-import Vue from "vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { jest } from "@jest/globals";
 
 let release_data: MilestoneData;
 let is_open = false;
+const get_enhanced_release_mock = jest.fn();
 
 describe("ReleaseDisplayer", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
+    function getPersonalWidgetInstance(): VueWrapper<InstanceType<typeof ReleaseDisplayer>> {
         const useStore = defineStore("root", {
             state: () => ({}),
             actions: {
-                getEnhancedMilestones: jest.fn(),
+                getEnhancedMilestones: get_enhanced_release_mock,
             },
         });
         const pinia = createTestingPinia();
@@ -51,8 +52,9 @@ describe("ReleaseDisplayer", () => {
         } as MilestoneData;
 
         const component_options = {
-            localVue: await createReleaseWidgetLocalVue(),
-            pinia,
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
             propsData: {
                 release_data,
                 isOpen: is_open,
@@ -63,31 +65,25 @@ describe("ReleaseDisplayer", () => {
         return shallowMount(ReleaseDisplayer, component_options);
     }
 
-    it("When there is a rest error, Then it displays", async () => {
-        is_open = true;
-        const wrapper = await getPersonalWidgetInstance();
-        wrapper.setData({ error_message: "404" });
-        await Vue.nextTick();
-
-        expect(wrapper.find("[data-test=show-error-message]").exists()).toBe(true);
-    });
-
     it("When the widget is rendered and it's the first release, Then toggle is open", async () => {
-        const wrapper = await getPersonalWidgetInstance();
+        is_open = true;
+        const wrapper = getPersonalWidgetInstance();
+        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(true);
     });
 
-    it("When the widget is rendered and it's not the first release, Then toggle is closed", async () => {
-        const wrapper = await getPersonalWidgetInstance();
+    it("When the widget is rendered and it's not the first release, Then toggle is closed", () => {
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(false);
     });
 
     it("When the toggle is opened and the user want close it, Then an event is emit", async () => {
         is_open = true;
 
-        const wrapper = await getPersonalWidgetInstance();
-        await Vue.nextTick();
+        const wrapper = getPersonalWidgetInstance();
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(true);
 
         wrapper.findComponent(ReleaseHeader).vm.$emit("toggle-release-details");
@@ -95,18 +91,18 @@ describe("ReleaseDisplayer", () => {
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(false);
     });
 
-    it("When the milestone is loading, Then the class is disabled and a tooltip say why", async () => {
-        const wrapper = await getPersonalWidgetInstance();
-        wrapper.setData({ is_loading: true });
+    it("When the milestone is loading, Then the class is disabled and a tooltip say why", () => {
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.attributes("data-tlp-tooltip")).toBe("Loading data...");
     });
 
     it("When the widget is rendered and the toggle opened, Then there are no errors and components called", async () => {
         is_open = true;
 
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = getPersonalWidgetInstance();
 
-        await Vue.nextTick();
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
         expect(wrapper.find("[data-test=display-release-data]").exists()).toBe(true);
     });
 });

@@ -85,9 +85,9 @@ describe("Store actions", () => {
                 jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
 
                 await store.getMilestones();
-                expect(store.current_milestones).toBe(milestones);
+                expect(store.current_milestones).toStrictEqual(milestones);
                 expect(store.nb_past_releases).toBe(10);
-                expect(store.last_release).toBe(last_release[0]);
+                expect(store.last_release).toStrictEqual(last_release[0]);
                 expect(store.is_loading).toBe(false);
             });
         });
@@ -135,9 +135,9 @@ describe("Store actions", () => {
             jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
 
             await store.getMilestones();
-            expect(store.current_milestones).toEqual(milestones_sorted);
+            expect(store.current_milestones).toStrictEqual(milestones_sorted);
             expect(store.nb_past_releases).toBe(10);
-            expect(store.last_release).toBe(last_release[0]);
+            expect(store.last_release).toStrictEqual(last_release[0]);
             expect(store.is_loading).toBe(false);
         });
     });

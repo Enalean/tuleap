@@ -17,29 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./components/App.vue";
-import { setUserLocale } from "./helpers/user-locale-helper";
-import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import type { BurnupMode, State, TrackerAgileDashboard } from "./type";
 import { COUNT, EFFORT } from "./type";
-import { createPinia, PiniaVuePlugin } from "pinia";
+import { createPinia } from "pinia";
+import { createGettext } from "vue3-gettext";
+import { createApp } from "vue";
 import { useStore } from "./stores/root";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    Vue.use(VueDOMPurifyHTML);
-    Vue.use(PiniaVuePlugin);
-
-    const locale = document.body.dataset.userLocale;
-    if (locale !== undefined) {
-        Vue.config.language = locale;
-        setUserLocale(locale.replace("_", "-"));
-    }
-    await initVueGettext(
-        Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
-    );
+    const gettext = await initVueGettext(createGettext, (locale: string) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+    });
 
     const widgets: NodeListOf<HTMLElement> = document.querySelectorAll(".projectmilestones");
 
@@ -106,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             user_can_view_sub_milestones_planning_dataset,
         );
 
-        const AppComponent = Vue.extend(App);
+        const app = createApp(App);
 
         const root_state: State = {
             project_id,
@@ -129,11 +120,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             last_release: null,
         };
 
-        const store = useStore(pinia);
-        store.$patch(root_state);
+        app.use(pinia);
+        const store = useStore();
+        store.setInitialState(root_state);
+        app.use(gettext);
+        app.use(VueDOMPurifyHTML);
 
-        new AppComponent({
-            pinia,
-        }).$mount(widget);
+        app.mount(widget);
     }
 });
