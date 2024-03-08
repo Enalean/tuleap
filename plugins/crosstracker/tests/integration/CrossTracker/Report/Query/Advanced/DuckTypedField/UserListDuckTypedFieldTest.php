@@ -36,11 +36,13 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use UserManager;
 
 final class UserListDuckTypedFieldTest extends DuckTypedFieldTestCase
 {
     private PFUser $project_member;
     private PFUser $project_admin;
+    private PFUser $alice;
     private Tracker $release_tracker;
     private Tracker $sprint_tracker;
     private Tracker $task_tracker;
@@ -64,10 +66,14 @@ final class UserListDuckTypedFieldTest extends DuckTypedFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
 
-        $alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
-        $bob   = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
-        $core_builder->addUserToProjectMembers((int) $alice->getId(), $project_id);
+        $this->alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
+        $bob         = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
+        $core_builder->addUserToProjectMembers((int) $this->alice->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $bob->getId(), $project_id);
+
+        $user_manager = $this->createPartialMock(UserManager::class, ['getCurrentUser']);
+        $user_manager->method('getCurrentUser')->willReturn($this->alice);
+        UserManager::setInstance($user_manager);
 
         $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
@@ -110,7 +116,7 @@ final class UserListDuckTypedFieldTest extends DuckTypedFieldTestCase
         $tracker_builder->buildListValue(
             $release_artifact_with_alice_changeset,
             $release_user_field_id,
-            (int) $alice->getId(),
+            (int) $this->alice->getId(),
         );
         $tracker_builder->buildListValue(
             $sprint_artifact_empty_changeset,
@@ -120,7 +126,7 @@ final class UserListDuckTypedFieldTest extends DuckTypedFieldTestCase
         $tracker_builder->buildListValue(
             $sprint_artifact_with_alice_bob_changeset,
             $sprint_user_field_id,
-            (int) $alice->getId(),
+            (int) $this->alice->getId(),
         );
         $tracker_builder->buildListValue(
             $sprint_artifact_with_alice_bob_changeset,
@@ -130,7 +136,7 @@ final class UserListDuckTypedFieldTest extends DuckTypedFieldTestCase
         $tracker_builder->buildListValue(
             $task_artifact_with_alice_changeset,
             $task_user_field_id,
-            (int) $alice->getId(),
+            (int) $this->alice->getId(),
         );
     }
 
@@ -191,6 +197,21 @@ final class UserListDuckTypedFieldTest extends DuckTypedFieldTestCase
 
         self::assertCount(3, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_with_alice_id, $this->sprint_artifact_with_alice_bob_id, $this->task_artifact_with_alice_id], $artifacts);
+    }
+
+    public function testEqualMyself(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "user_field = MYSELF()",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->alice
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_alice_id, $this->sprint_artifact_with_alice_bob_id], $artifacts);
     }
 
     public function testMultipleEqual(): void
@@ -257,6 +278,21 @@ final class UserListDuckTypedFieldTest extends DuckTypedFieldTestCase
         ], $artifacts);
     }
 
+    public function testNotEqualMyself(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "user_field != MYSELF()",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->alice
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
+
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
@@ -300,6 +336,36 @@ final class UserListDuckTypedFieldTest extends DuckTypedFieldTestCase
 
         self::assertCount(3, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_with_alice_id, $this->sprint_artifact_with_alice_bob_id, $this->task_artifact_with_alice_id], $artifacts);
+    }
+
+    public function testInMyself(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "user_field IN(MYSELF())",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->alice
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_alice_id, $this->sprint_artifact_with_alice_bob_id], $artifacts);
+    }
+
+    public function testInMyselfUser(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "user_field IN(MYSELF(), 'bob')",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->alice
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_with_alice_id, $this->sprint_artifact_with_alice_bob_id], $artifacts);
     }
 
     public function testInMultipleUser(): void
@@ -364,6 +430,36 @@ final class UserListDuckTypedFieldTest extends DuckTypedFieldTestCase
             $this->sprint_artifact_empty_id,
             $this->task_artifact_with_alice_id,
         ], $artifacts);
+    }
+
+    public function testNotInMyself(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "user_field NOT IN(MYSELF())",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->alice
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->sprint_artifact_empty_id], $artifacts);
+    }
+
+    public function testNotInMyselfUser(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "user_field NOT IN(MYSELF(), 'bob')",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->alice
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_empty_id, $this->sprint_artifact_empty_id], $artifacts);
     }
 
     public function testNotInMultipleUser(): void

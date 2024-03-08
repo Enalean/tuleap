@@ -36,6 +36,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
@@ -86,7 +87,7 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
             ComparisonType::NotEqual => $this->getWhereForNotEqual($filter_alias, $value_wrapper),
             ComparisonType::In,
             ComparisonType::NotIn    => throw new LogicException('In comparison expected a InValueWrapper, not a SimpleValueWrapper'),
-            default                  => throw new LogicException('Other comparison types are invalid for UGroup List field')
+            default                  => throw new LogicException('Other comparison types are invalid for User List field')
         };
     }
 
@@ -180,8 +181,24 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
             ComparisonType::NotIn    => $this->getWhereForNotIn($filter_alias, $collection_of_value_wrappers),
             ComparisonType::Equal    => throw new LogicException('Equal comparison expected a SimpleValueWrapper, not a InValueWrapper'),
             ComparisonType::NotEqual => throw new LogicException('Not Equal comparison expected a SimpleValueWrapper, not a InValueWrapper'),
-            default                  => throw new LogicException('Other comparison types are invalid for Static List field')
+            default                  => throw new LogicException('Other comparison types are invalid for User List field')
         };
+    }
+
+    /**
+     * @param ValueWrapper[] $value_wrappers
+     * @return string[]
+     */
+    private function parseValueWrappersToValues(array $value_wrappers): array
+    {
+        return array_map(
+            static fn(ValueWrapper $value_wrapper) => match ($value_wrapper::class) {
+                SimpleValueWrapper::class      => (string) $value_wrapper->getValue(),
+                CurrentUserValueWrapper::class => (string) $value_wrapper->getValue(),
+                default                        => throw new LogicException('Expected a SimpleValueWrapper or a CurrentUserValueWrapper, not a ' . $value_wrapper::class),
+            },
+            $value_wrappers
+        );
     }
 
     private function getWhereForIn(
@@ -190,7 +207,7 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
     ): ParametrizedFromWhere {
         $values_statement = EasyStatement::open()->in(
             "user.user_name IN (?*)",
-            array_map(static fn(SimpleValueWrapper $value_wrapper) => $value_wrapper->getValue(), $wrapper->getValueWrappers())
+            $this->parseValueWrappersToValues($wrapper->getValueWrappers()),
         );
 
         $from = <<<EOSQL
@@ -217,7 +234,7 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
     ): ParametrizedFromWhere {
         $values_statement = EasyStatement::open()->in(
             "user.user_name IN (?*)",
-            array_map(static fn(SimpleValueWrapper $value_wrapper) => $value_wrapper->getValue(), $wrapper->getValueWrappers())
+            $this->parseValueWrappersToValues($wrapper->getValueWrappers()),
         );
 
         $from = <<<EOSQL
@@ -240,7 +257,16 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
 
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
-        throw new LogicException('Not implemented yet');
+        $simple_value_wrapper = new SimpleValueWrapper((string) $value_wrapper->getValue());
+
+        $comparison = $parameters->comparison;
+        return match ($comparison->getType()) {
+            ComparisonType::Equal,
+            ComparisonType::NotEqual => $this->visitSimpleValueWrapper($simple_value_wrapper, $parameters),
+            ComparisonType::In,
+            ComparisonType::NotIn,   => throw new LogicException('In comparison expected a InValueWrapper, not a CurrentUserValueWrapper'),
+            default                  => throw new LogicException('Other comparison types are invalid for User List field')
+        };
     }
 
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
