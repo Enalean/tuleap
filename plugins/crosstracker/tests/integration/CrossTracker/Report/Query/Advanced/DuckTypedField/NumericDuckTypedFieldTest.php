@@ -35,90 +35,89 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
 {
-    private TrackerDatabaseBuilder $database_builder;
     private Tracker $release_tracker;
     private Tracker $sprint_tracker;
     private Tracker $task_tracker;
     private \PFUser $project_member;
-    private \PFUser $outsider_user;
-    private Tracker $epic_tracker;
+    private \PFUser $project_admin;
     private int $release_empty_id;
     private int $sprint_empty_id;
     private int $release_with_5_id;
     private int $sprint_with_5_id;
     private int $sprint_with_3_id;
     private int $release_with_3_id;
+    private int $task_with_5_id;
+    private int $task_with_3_id;
 
     protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         \ForgeConfig::setFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
-        $this->database_builder = new TrackerDatabaseBuilder($db);
-        $core_builder           = new CoreDatabaseBuilder($db);
+        $tracker_builder = new TrackerDatabaseBuilder($db);
+        $core_builder    = new CoreDatabaseBuilder($db);
 
         $project              = $core_builder->buildProject();
         $project_id           = (int) $project->getID();
-        $this->project_member = $core_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
+        $this->project_member = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->project_admin  = $core_builder->buildUser('project_admin', 'Project Admin', 'project_admin@example.com');
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
-        $this->outsider_user = $core_builder->buildUser('outsider', 'User OutsideProject', 'outsider@example.com');
+        $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
+        $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
 
-        $this->release_tracker = $this->database_builder->buildTracker($project_id, "Release");
-        $this->sprint_tracker  = $this->database_builder->buildTracker($project_id, "Sprint");
-        $this->task_tracker    = $this->database_builder->buildTracker($project_id, "Task");
-        $this->epic_tracker    = $this->database_builder->buildTracker($project_id, "Epic");
+        $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
+        $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
+        $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
 
-        $release_initial_effort_field_id  = $this->database_builder->buildIntField(
+        $release_initial_effort_field_id = $tracker_builder->buildIntField(
             $this->release_tracker->getId(),
             'initial_effort'
         );
-        $sprint_initial_effort_field_id   = $this->database_builder->buildFloatField(
+        $sprint_initial_effort_field_id  = $tracker_builder->buildFloatField(
             $this->sprint_tracker->getId(),
             'initial_effort'
         );
-        $initial_effort_computed_field_id = $this->database_builder->buildComputedField(
+        $task_initial_effort_field_id    = $tracker_builder->buildIntField(
             $this->task_tracker->getId(),
             'initial_effort'
         );
-        $initial_effort_read_field_id     = $this->database_builder->buildFloatField(
-            $this->epic_tracker->getId(),
-            'initial_effort'
-        );
 
-        $this->database_builder->setReadPermission(
+        $tracker_builder->setReadPermission(
             $release_initial_effort_field_id,
             \ProjectUGroup::PROJECT_MEMBERS
         );
-        $this->database_builder->setReadPermission(
+        $tracker_builder->setReadPermission(
             $sprint_initial_effort_field_id,
             \ProjectUGroup::PROJECT_MEMBERS
         );
-        $this->database_builder->setReadPermission(
-            $initial_effort_computed_field_id,
-            \ProjectUGroup::PROJECT_MEMBERS
-        );
-        $this->database_builder->setReadPermission(
-            $initial_effort_read_field_id,
+        $tracker_builder->setReadPermission(
+            $task_initial_effort_field_id,
             \ProjectUGroup::PROJECT_ADMIN
         );
 
-        $this->release_empty_id  = $this->database_builder->buildArtifact($this->release_tracker->getId());
-        $this->release_with_5_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
-        $this->release_with_3_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
-        $this->sprint_empty_id   = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->sprint_with_5_id  = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->sprint_with_3_id  = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
+        $this->release_empty_id  = $tracker_builder->buildArtifact($this->release_tracker->getId());
+        $this->release_with_5_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
+        $this->release_with_3_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
+        $this->sprint_empty_id   = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
+        $this->sprint_with_5_id  = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
+        $this->sprint_with_3_id  = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
+        $this->task_with_5_id    = $tracker_builder->buildArtifact($this->task_tracker->getId());
+        $this->task_with_3_id    = $tracker_builder->buildArtifact($this->task_tracker->getId());
 
-        $this->database_builder->buildLastChangeset($this->release_empty_id);
-        $release_with_5_changeset_id = $this->database_builder->buildLastChangeset($this->release_with_5_id);
-        $release_with_3_changeset_id = $this->database_builder->buildLastChangeset($this->release_with_3_id);
-        $this->database_builder->buildLastChangeset($this->sprint_empty_id);
-        $sprint_with_5_changeset_id = $this->database_builder->buildLastChangeset($this->sprint_with_5_id);
-        $sprint_with_3_changeset_id = $this->database_builder->buildLastChangeset($this->sprint_with_3_id);
+        $tracker_builder->buildLastChangeset($this->release_empty_id);
+        $release_with_5_changeset = $tracker_builder->buildLastChangeset($this->release_with_5_id);
+        $release_with_3_changeset = $tracker_builder->buildLastChangeset($this->release_with_3_id);
+        $tracker_builder->buildLastChangeset($this->sprint_empty_id);
+        $sprint_with_5_changeset = $tracker_builder->buildLastChangeset($this->sprint_with_5_id);
+        $sprint_with_3_changeset = $tracker_builder->buildLastChangeset($this->sprint_with_3_id);
+        $task_with_5_changeset   = $tracker_builder->buildLastChangeset($this->task_with_5_id);
+        $task_with_3_changeset   = $tracker_builder->buildLastChangeset($this->task_with_3_id);
 
-        $this->database_builder->buildIntValue($release_with_5_changeset_id, $release_initial_effort_field_id, 5);
-        $this->database_builder->buildIntValue($release_with_3_changeset_id, $release_initial_effort_field_id, 3);
-        $this->database_builder->buildFloatValue($sprint_with_5_changeset_id, $sprint_initial_effort_field_id, 5);
-        $this->database_builder->buildFloatValue($sprint_with_3_changeset_id, $sprint_initial_effort_field_id, 3);
+        $tracker_builder->buildIntValue($release_with_5_changeset, $release_initial_effort_field_id, 5);
+        $tracker_builder->buildIntValue($release_with_3_changeset, $release_initial_effort_field_id, 3);
+        $tracker_builder->buildFloatValue($sprint_with_5_changeset, $sprint_initial_effort_field_id, 5);
+        $tracker_builder->buildFloatValue($sprint_with_3_changeset, $sprint_initial_effort_field_id, 3);
+        $tracker_builder->buildIntValue($task_with_5_changeset, $task_initial_effort_field_id, 5);
+        $tracker_builder->buildIntValue($task_with_3_changeset, $task_initial_effort_field_id, 3);
     }
 
     /**
@@ -130,7 +129,7 @@ final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
     {
         $artifacts = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 5, 0)
+            ->getArtifactsMatchingReport($report, $user, 10, 0)
             ->getArtifacts();
         return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $artifacts));
     }
@@ -155,14 +154,32 @@ final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                'initial_effort=5',
-                [$this->release_tracker, $this->sprint_tracker]
+                'initial_effort = 5',
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
             ),
             $this->project_member
         );
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_with_5_id, $this->sprint_with_5_id], $artifacts);
+    }
+
+    public function testPermissionsEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort = 5',
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing(
+            [$this->release_with_5_id, $this->sprint_with_5_id, $this->task_with_5_id],
+            $artifacts
+        );
     }
 
     public function testMultipleEqual(): void
@@ -195,30 +212,47 @@ final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
         );
 
         self::assertCount(4, $artifacts);
-        self::assertNotContains($this->release_empty_id, $artifacts);
-        self::assertNotContains($this->sprint_empty_id, $artifacts);
         self::assertEqualsCanonicalizing(
             [$this->release_with_5_id, $this->release_with_3_id, $this->sprint_with_5_id, $this->sprint_with_3_id],
             $artifacts
         );
     }
 
-    public function testNotEqual(): void
+    public function testNotEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
                 'initial_effort != 5',
-                [$this->release_tracker, $this->sprint_tracker]
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
             ),
             $this->project_member
         );
 
         self::assertCount(4, $artifacts);
-        self::assertEqualsCanonicalizing(
-            [$this->release_empty_id, $this->sprint_empty_id, $this->release_with_3_id, $this->sprint_with_3_id],
-            $artifacts
+        self::assertEqualsCanonicalizing([
+            $this->release_empty_id, $this->release_with_3_id,
+            $this->sprint_empty_id, $this->sprint_with_3_id,
+        ], $artifacts);
+    }
+
+    public function testPermissionsNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort != 5',
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
+            ),
+            $this->project_admin
         );
+
+        self::assertCount(5, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_empty_id, $this->release_with_3_id,
+            $this->sprint_empty_id, $this->sprint_with_3_id,
+            $this->task_with_3_id,
+        ], $artifacts);
     }
 
     public function testMultipleNotEqual(): void
@@ -242,15 +276,28 @@ final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
             new CrossTrackerReport(
                 1,
                 'initial_effort < 5',
-                [$this->release_tracker, $this->sprint_tracker]
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
             ),
             $this->project_member
         );
 
         self::assertCount(2, $artifacts);
-        self::assertNotContains($this->release_empty_id, $artifacts);
-        self::assertNotContains($this->sprint_empty_id, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_with_3_id, $this->sprint_with_3_id], $artifacts);
+    }
+
+    public function testPermissionsLesserThan(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort < 5',
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_with_3_id, $this->sprint_with_3_id, $this->task_with_3_id], $artifacts);
     }
 
     public function testMultipleLesserThan(): void
@@ -277,18 +324,35 @@ final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
             new CrossTrackerReport(
                 1,
                 'initial_effort <= 5',
-                [$this->release_tracker, $this->sprint_tracker]
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
             ),
             $this->project_member
         );
 
         self::assertCount(4, $artifacts);
-        self::assertNotContains($this->release_empty_id, $artifacts);
-        self::assertNotContains($this->sprint_empty_id, $artifacts);
-        self::assertEqualsCanonicalizing(
-            [$this->release_with_5_id, $this->sprint_with_5_id, $this->release_with_3_id, $this->sprint_with_3_id],
-            $artifacts
+        self::assertEqualsCanonicalizing([
+            $this->release_with_5_id, $this->release_with_3_id,
+            $this->sprint_with_5_id, $this->sprint_with_3_id,
+        ], $artifacts);
+    }
+
+    public function testPermissionsLesserThanOrEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort <= 5',
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
+            ),
+            $this->project_admin
         );
+
+        self::assertCount(6, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_with_5_id, $this->release_with_3_id,
+            $this->sprint_with_5_id, $this->sprint_with_3_id,
+            $this->task_with_5_id, $this->task_with_3_id,
+        ], $artifacts);
     }
 
     public function testMultipleLesserThanOrEqual(): void
@@ -315,15 +379,28 @@ final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
             new CrossTrackerReport(
                 1,
                 'initial_effort > 3',
-                [$this->release_tracker, $this->sprint_tracker]
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
             ),
             $this->project_member
         );
 
         self::assertCount(2, $artifacts);
-        self::assertNotContains($this->release_empty_id, $artifacts);
-        self::assertNotContains($this->sprint_empty_id, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_with_5_id, $this->sprint_with_5_id], $artifacts);
+    }
+
+    public function testPermissionsGreaterThan(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort > 3',
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_with_5_id, $this->sprint_with_5_id, $this->task_with_5_id], $artifacts);
     }
 
     public function testMultipleGreaterThan(): void
@@ -350,18 +427,35 @@ final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
             new CrossTrackerReport(
                 1,
                 'initial_effort >= 3',
-                [$this->release_tracker, $this->sprint_tracker]
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
             ),
             $this->project_member
         );
 
         self::assertCount(4, $artifacts);
-        self::assertNotContains($this->release_empty_id, $artifacts);
-        self::assertNotContains($this->sprint_empty_id, $artifacts);
-        self::assertEqualsCanonicalizing(
-            [$this->release_with_5_id, $this->sprint_with_5_id, $this->release_with_3_id, $this->sprint_with_3_id],
-            $artifacts
+        self::assertEqualsCanonicalizing([
+            $this->release_with_5_id, $this->release_with_3_id,
+            $this->sprint_with_5_id, $this->sprint_with_3_id,
+        ], $artifacts);
+    }
+
+    public function testPermissionsGreaterThanOrEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort >= 3',
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
+            ),
+            $this->project_admin
         );
+
+        self::assertCount(6, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_with_5_id, $this->release_with_3_id,
+            $this->sprint_with_5_id, $this->sprint_with_3_id,
+            $this->task_with_5_id, $this->task_with_3_id,
+        ], $artifacts);
     }
 
     public function testMultipleGreaterThanOrEqual(): void
@@ -388,13 +482,28 @@ final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
             new CrossTrackerReport(
                 1,
                 'initial_effort BETWEEN(2, 4)',
-                [$this->release_tracker, $this->sprint_tracker]
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
             ),
             $this->project_member
         );
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_with_3_id, $this->sprint_with_3_id], $artifacts);
+    }
+
+    public function testPermissionsBetween(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort BETWEEN(2, 4)',
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker]
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_with_3_id, $this->sprint_with_3_id, $this->task_with_3_id], $artifacts);
     }
 
     public function testMultipleBetween(): void
@@ -415,50 +524,6 @@ final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
         );
     }
 
-    public function testInvalidFieldComparison(): void
-    {
-        $this->expectException(SearchablesAreInvalidException::class);
-        $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
-                1,
-                "initial_effort=''",
-                [$this->release_tracker, $this->task_tracker]
-            ),
-            $this->project_member
-        );
-    }
-
-    public function testUserCanNotReadAnyField(): void
-    {
-        $this->expectException(SearchablesDoNotExistException::class);
-        $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
-                1,
-                "initial_effort=''",
-                [$this->release_tracker, $this->sprint_tracker]
-            ),
-            $this->outsider_user
-        );
-    }
-
-    public function testUserCanNotReadEpicField(): void
-    {
-        $epic_empty_id = $this->database_builder->buildArtifact($this->epic_tracker->getId());
-        $this->database_builder->buildLastChangeset($epic_empty_id);
-
-        $artifact_user_can_read = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
-                1,
-                "initial_effort=''",
-                [$this->epic_tracker, $this->release_tracker]
-            ),
-            $this->project_member
-        );
-
-        self::assertCount(1, $artifact_user_can_read);
-        self::assertEqualsCanonicalizing([$this->release_empty_id], $artifact_user_can_read);
-    }
-
     public function testIntegerFieldComparisonIsValid(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
@@ -471,42 +536,6 @@ final class NumericDuckTypedFieldTest extends DuckTypedFieldTestCase
         );
 
         self::assertCount(2, $artifacts);
-        self::assertNotContains($this->release_empty_id, $artifacts);
-        self::assertNotContains($this->sprint_empty_id, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_with_5_id, $this->sprint_with_5_id], $artifacts);
-    }
-
-    public function testIntegerFieldComparisonToEmptyIsNotValid(): void
-    {
-        $epic_empty_id = $this->database_builder->buildArtifact($this->epic_tracker->getId());
-        $this->database_builder->buildLastChangeset($epic_empty_id);
-
-        $this->expectException(SearchablesAreInvalidException::class);
-        $this->expectExceptionMessage("cannot be compared to the empty string with > operator");
-        $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
-                1,
-                "initial_effort > ''",
-                [$this->epic_tracker, $this->release_tracker]
-            ),
-            $this->project_member
-        );
-    }
-
-    public function testIntegerFieldComparisonToMyselfIsNotValid(): void
-    {
-        $epic_empty_id = $this->database_builder->buildArtifact($this->epic_tracker->getId());
-        $this->database_builder->buildLastChangeset($epic_empty_id);
-
-        $this->expectException(SearchablesAreInvalidException::class);
-        $this->expectExceptionMessage("cannot be compared to MYSELF()");
-        $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
-                1,
-                "initial_effort=MYSELF()",
-                [$this->epic_tracker, $this->release_tracker]
-            ),
-            $this->project_member
-        );
     }
 }
