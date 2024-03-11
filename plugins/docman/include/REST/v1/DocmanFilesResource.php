@@ -553,8 +553,8 @@ final class DocmanFilesResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id Id of the item
+     * @param int $limit Number of elements displayed {@from path}{@min 0}{@max 100}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
-     * @param int $limit Number of elements displayed {@from path}{@min 0}{@max 50}
      *
      * @return array {@type \Tuleap\Docman\REST\v1\Files\FileVersionRepresentation}
      *
