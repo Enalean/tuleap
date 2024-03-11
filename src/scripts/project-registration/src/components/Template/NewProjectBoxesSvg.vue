@@ -17,7 +17,7 @@
   -  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="register-new-project-boxes">
         <svg
             width="316"
@@ -146,10 +146,4 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-
-@Component
-export default class NewProjectBoxes extends Vue {}
-</script>
+<script setup lang="ts"></script>
