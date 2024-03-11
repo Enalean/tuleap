@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "azjezz/psl",
-            "version": "2.4.1",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azjezz/psl.git",
-                "reference": "eacc90cfdfd7eafffd630e81ab69b113309e594b"
+                "reference": "a8685b297644f3898c986e89b15309d31b1f47bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azjezz/psl/zipball/eacc90cfdfd7eafffd630e81ab69b113309e594b",
-                "reference": "eacc90cfdfd7eafffd630e81ab69b113309e594b",
+                "url": "https://api.github.com/repos/azjezz/psl/zipball/a8685b297644f3898c986e89b15309d31b1f47bf",
+                "reference": "a8685b297644f3898c986e89b15309d31b1f47bf",
                 "shasum": ""
             },
             "require": {
@@ -26,18 +26,18 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-sodium": "*",
-                "php": "~8.1.0 || ~8.2.0",
-                "revolt/event-loop": "^1.0.0"
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+                "revolt/event-loop": "^1.0.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.4.0",
-                "php-coveralls/php-coveralls": "^2.5.2",
-                "php-standard-library/psalm-plugin": "^2.2",
-                "phpbench/phpbench": "^1.2.3",
-                "phpunit/phpunit": "^9.5.16",
-                "roave/infection-static-analysis-plugin": "^1.26.0",
-                "squizlabs/php_codesniffer": "^3.6.2",
-                "vimeo/psalm": "^5.0.0"
+                "friendsofphp/php-cs-fixer": "^3.22.0",
+                "php-coveralls/php-coveralls": "^2.6.0",
+                "php-standard-library/psalm-plugin": "^2.2.1",
+                "phpbench/phpbench": "^1.2.14",
+                "phpunit/phpunit": "^9.6.10",
+                "roave/infection-static-analysis-plugin": "^1.32.0",
+                "squizlabs/php_codesniffer": "^3.7.2",
+                "vimeo/psalm": "^5.13.1"
             },
             "suggest": {
                 "php-standard-library/psalm-plugin": "Psalm integration"
@@ -70,15 +70,15 @@
             "description": "PHP Standard Library",
             "support": {
                 "issues": "https://github.com/azjezz/psl/issues",
-                "source": "https://github.com/azjezz/psl/tree/2.4.1"
+                "source": "https://github.com/azjezz/psl/tree/2.9.0"
             },
             "funding": [
                 {
-                    "url": "https://opencollective.com/php-standard-library",
-                    "type": "open_collective"
+                    "url": "https://github.com/azjezz",
+                    "type": "github"
                 }
             ],
-            "time": "2023-01-26T12:53:04+00:00"
+            "time": "2023-12-29T10:23:32+00:00"
         },
         {
             "name": "brick/math",
@@ -4474,16 +4474,16 @@
         },
         {
             "name": "revolt/event-loop",
-            "version": "v1.0.0",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/revoltphp/event-loop.git",
-                "reference": "81dd825a0a7fa7a39cae25ef731bb944f3e18295"
+                "reference": "25de49af7223ba039f64da4ae9a28ec2d10d0254"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/revoltphp/event-loop/zipball/81dd825a0a7fa7a39cae25ef731bb944f3e18295",
-                "reference": "81dd825a0a7fa7a39cae25ef731bb944f3e18295",
+                "url": "https://api.github.com/repos/revoltphp/event-loop/zipball/25de49af7223ba039f64da4ae9a28ec2d10d0254",
+                "reference": "25de49af7223ba039f64da4ae9a28ec2d10d0254",
                 "shasum": ""
             },
             "require": {
@@ -4493,7 +4493,7 @@
                 "ext-json": "*",
                 "jetbrains/phpstorm-stubs": "^2019.3",
                 "phpunit/phpunit": "^9",
-                "psalm/phar": "^4.7"
+                "psalm/phar": "^5.15"
             },
             "type": "library",
             "extra": {
@@ -4540,9 +4540,9 @@
             ],
             "support": {
                 "issues": "https://github.com/revoltphp/event-loop/issues",
-                "source": "https://github.com/revoltphp/event-loop/tree/v1.0.0"
+                "source": "https://github.com/revoltphp/event-loop/tree/v1.0.6"
             },
-            "time": "2022-11-02T21:46:22+00:00"
+            "time": "2023-11-30T05:34:44+00:00"
         },
         {
             "name": "spomky-labs/cbor-php",
