@@ -4,6 +4,7 @@ set -ex
 
 TULEAP_SOURCES="/tuleap"
 RPM_BUILD="/rpms"
+USER="$(id -u -n)"
 
 push_nix_build_cache=''
 if [ -s "/cachix_auth_token" ]; then
