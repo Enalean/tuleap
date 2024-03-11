@@ -18,26 +18,25 @@
  */
 
 import SwaggerUI from "swagger-ui";
-import React from "react"
+import React from "react";
 import "../themes/style.scss";
 
 interface TuleapLayoutProps {
     errSelectors: {
         lastError(): {
-            get(name: string): string
+            get(name: string): string;
         } | null;
-    },
+    };
     specSelectors: {
         specStr(): string;
         loadingStatus(): string;
-    },
+    };
     getComponent(name: string, bool?: boolean): React.ComponentType;
 }
 
 class TuleapLayout extends React.Component<TuleapLayoutProps> {
-
     override render() {
-        const {errSelectors, specSelectors, getComponent} = this.props;
+        const { errSelectors, specSelectors, getComponent } = this.props;
 
         const SvgAssets = getComponent("SvgAssets");
         const Operations = getComponent("operations", true);
@@ -52,69 +51,78 @@ class TuleapLayout extends React.Component<TuleapLayoutProps> {
         let loadingMessage = null;
 
         if (loadingStatus === "loading") {
-            loadingMessage = <div className="info">
-                <div className="loading-container">
-                    <div className="loading"></div>
+            loadingMessage = (
+                <div className="info">
+                    <div className="loading-container">
+                        <div className="loading"></div>
+                    </div>
                 </div>
-            </div>
+            );
         }
 
         if (loadingStatus === "failed") {
-            loadingMessage = <div className="info">
-                <div className="loading-container">
-                    <h4 className="title">Failed to load API definition.</h4>
-                    <Errors/>
+            loadingMessage = (
+                <div className="info">
+                    <div className="loading-container">
+                        <h4 className="title">Failed to load API definition.</h4>
+                        <Errors />
+                    </div>
                 </div>
-            </div>
+            );
         }
 
         if (loadingStatus === "failedConfig") {
             const lastErr = errSelectors.lastError();
             const lastErrMsg = lastErr ? lastErr.get("message") : "";
-            loadingMessage = <div className="info" style={{
-                maxWidth: "880px",
-                marginLeft: "auto",
-                marginRight: "auto",
-                textAlign: "center"
-            }}>
-                <div className="loading-container">
-                    <h4 className="title">Failed to load remote configuration.</h4>
-                    <p>{lastErrMsg}</p>
+            loadingMessage = (
+                <div
+                    className="info"
+                    style={{
+                        maxWidth: "880px",
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                        textAlign: "center",
+                    }}
+                >
+                    <div className="loading-container">
+                        <h4 className="title">Failed to load remote configuration.</h4>
+                        <p>{lastErrMsg}</p>
+                    </div>
                 </div>
-            </div>
+            );
         }
 
         if (!loadingMessage && isSpecEmpty) {
-            loadingMessage = <h4>No API definition provided.</h4>
+            loadingMessage = <h4>No API definition provided.</h4>;
         }
 
         if (loadingMessage) {
-            return <div className="swagger-ui">
-                <div className="loading-container">
-                    {loadingMessage}
+            return (
+                <div className="swagger-ui">
+                    <div className="loading-container">{loadingMessage}</div>
                 </div>
-            </div>
+            );
         }
 
         return (
-            <div className='swagger-ui'>
+            <div className="swagger-ui">
                 <SvgAssets />
                 <Row>
                     <Col>
-                        <Operations/>
+                        <Operations />
                     </Col>
                 </Row>
             </div>
-        )
+        );
     }
 }
 
 const TuleapLayoutPlugin = () => {
     return {
         components: {
-            TuleapLayout: TuleapLayout
-        }
-    }
+            TuleapLayout: TuleapLayout,
+        },
+    };
 };
 
 SwaggerUI({
@@ -126,5 +134,5 @@ SwaggerUI({
     validatorUrl: null,
     deepLinking: true,
     plugins: [TuleapLayoutPlugin],
-    layout: "TuleapLayout"
+    layout: "TuleapLayout",
 });

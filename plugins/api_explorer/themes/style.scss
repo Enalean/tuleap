@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "swagger-ui/dist/swagger-ui.css";
+@use "swagger-ui/dist/swagger-ui.css";
 
 .swagger-ui {
     .wrapper {

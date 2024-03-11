@@ -54,7 +54,7 @@
     "minimist": "^1.2.8",
     "ng-cache-loader": "0.0.26",
     "po-gettext-loader": "^1.0.0",
-    "postcss": "^8.4.31",
+    "postcss": "^8.4.35",
     "postcss-html": "^1.5.0",
     "postcss-loader": "^8.0.0",
     "prettier": "^3.2.5",
