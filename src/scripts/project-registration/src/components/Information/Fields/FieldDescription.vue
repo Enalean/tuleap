@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" for="field_description">
-            <span v-translate>Description</span>
+            <span>{{ $gettext("Description") }}</span>
             <i class="fa fa-asterisk" v-if="root_store.is_description_required" />
         </label>
 
@@ -37,20 +37,19 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
 import { useStore } from "../../../stores/root";
 
-@Component
-export default class FieldDescription extends Vue {
-    root_store = useStore();
+const root_store = useStore();
 
-    onInput(event: Event): void {
-        if (!(event.target instanceof HTMLTextAreaElement)) {
-            return;
-        }
-        this.$emit("input", event.target.value);
+const emit = defineEmits<{
+    (e: "input", value: string): void;
+}>();
+
+function onInput(event: Event): void {
+    if (!(event.target instanceof HTMLTextAreaElement)) {
+        return;
     }
+    emit("input", event.target.value);
 }
 </script>
