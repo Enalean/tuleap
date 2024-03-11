@@ -39,6 +39,7 @@ import { SORT_DESCENDANT } from "../injection-symbols";
 const repository_id = 10;
 const pull_request_id = 2;
 const project_id = 102;
+const current_user_id = 113;
 
 const pull_requests_collection = [
     {
@@ -67,6 +68,7 @@ const users_collection: User[] = [
 ];
 
 const are_closed_pull_requests_shown = false;
+const are_pull_requests_related_to_me_shown = false;
 const sort_order = SORT_DESCENDANT;
 
 describe("tuleap-rest-querier", () => {
@@ -77,8 +79,10 @@ describe("tuleap-rest-querier", () => {
             const john_doe = UserStub.withIdAndName(102, "John doe");
             const result = await fetchAllPullRequests(
                 repository_id,
+                current_user_id,
                 [AuthorFilterStub.fromAuthor(john_doe)],
                 are_closed_pull_requests_shown,
+                are_pull_requests_related_to_me_shown,
                 sort_order,
             );
             if (!result.isOk()) {

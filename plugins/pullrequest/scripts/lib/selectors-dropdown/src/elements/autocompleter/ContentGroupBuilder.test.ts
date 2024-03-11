@@ -21,10 +21,11 @@ import { describe, it, expect } from "vitest";
 import { ContentGroupBuilder } from "./ContentGroupBuilder";
 import type { AutocompleterConfig } from "../SelectorsDropdown";
 
+const disabled_message = "You can select anything";
 const config = {
     label: "Select some stuff",
     empty_message: "Nothing to see here",
-    disabled_message: "You can select anything",
+    getDisabledMessage: () => disabled_message,
 } as AutocompleterConfig;
 
 describe("ContentGroupBuilder", () => {
@@ -62,7 +63,7 @@ describe("ContentGroupBuilder", () => {
 
         expect(group).toStrictEqual({
             items: [],
-            empty_message: config.disabled_message,
+            empty_message: disabled_message,
             label: config.label,
             footer_message: "",
             is_loading: false,

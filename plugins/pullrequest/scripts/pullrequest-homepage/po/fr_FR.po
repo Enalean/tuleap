@@ -93,6 +93,9 @@ msgstr "OK"
 msgid "Oh snap!"
 msgstr "Oh mince !"
 
+msgid "Related to me"
+msgstr "En lien avec moi"
+
 msgid "Reviewer"
 msgstr "Relecteur"
 
@@ -128,6 +131,26 @@ msgstr "Vous ne pouvez filtrer que sur un relecteur"
 
 msgid "You can only filter on one target branch"
 msgstr "Vous ne pouvez filtrer que sur une branche cible"
+
+msgid ""
+"You cannot activate this filter when an \"author\" or \"reviewer\" filter is "
+"already defined."
+msgstr ""
+"Vous ne pouvez pas activer ce filtre quand un filtre \"auteur\" ou "
+"\"relecteur\" est déjà défini."
+
+msgid ""
+"You cannot filter on \"author\" when the \"related to me\" filter is active."
+msgstr ""
+"Vous ne pouvez pas filtrer sur \"auteur\" quand le filtre \"en lien avec "
+"moi\" est actif."
+
+msgid ""
+"You cannot filter on \"reviewer\" when the \"related to me\" filter is "
+"active."
+msgstr ""
+"Vous ne pouvez pas filtrer sur \"relecteur\" quand le filtre \"en lien avec "
+"moi\" est actif."
 
 msgid "You may have set too many filters. Try to modify them."
 msgstr "Vous avez peut-être défini trop de filtres. Essayez de les modifier."

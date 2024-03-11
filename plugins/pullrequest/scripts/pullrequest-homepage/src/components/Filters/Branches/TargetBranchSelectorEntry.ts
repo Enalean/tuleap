@@ -41,7 +41,7 @@ export const TargetBranchSelectorEntry = (
         placeholder: $gettext("Target branch name"),
         label: $gettext("Matching branches"),
         empty_message: $gettext("No matching branch"),
-        disabled_message: $gettext("You can only filter on one target branch"),
+        getDisabledMessage: () => $gettext("You can only filter on one target branch"),
         templating_callback: BranchTemplatingCallback,
         loadItems: BranchesLoader(on_error_callback, repository_id),
         filterItems: BranchFilteringCallback,

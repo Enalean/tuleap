@@ -45,8 +45,10 @@ const assignKeywordsToQuery = (query: object, keywords: string[]): void => {
 };
 
 export const buildQueryFromFilters = (
+    current_user_id: number,
     filters: PullRequestsListFilter[],
     are_closed_pull_requests_shown: boolean,
+    are_pull_requests_related_to_me_shown: boolean,
 ): string => {
     const query = {};
     const labels_ids: number[] = [];
@@ -54,6 +56,10 @@ export const buildQueryFromFilters = (
 
     if (!are_closed_pull_requests_shown) {
         Object.assign(query, { status: "open" });
+    }
+
+    if (are_pull_requests_related_to_me_shown) {
+        Object.assign(query, { related_to: [{ id: current_user_id }] });
     }
 
     filters.forEach((filter) => {

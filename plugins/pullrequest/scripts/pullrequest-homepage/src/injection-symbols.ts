@@ -34,6 +34,7 @@ export type PullRequestSortOrder = SortAscendant | SortDescendant;
 
 export const REPOSITORY_ID: StrictInjectionKey<number> = Symbol("repository_id");
 export const PROJECT_ID: StrictInjectionKey<number> = Symbol("project_id");
+export const CURRENT_USER_ID: StrictInjectionKey<number> = Symbol("current_user_id");
 export const BASE_URL: StrictInjectionKey<URL> = Symbol("base_url");
 export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_locale");
 export const USER_DATE_TIME_FORMAT_KEY: StrictInjectionKey<string> =
@@ -44,6 +45,9 @@ export const DISPLAY_TULEAP_API_ERROR: StrictInjectionKey<DisplayErrorCallback> 
     Symbol("display_tuleap_api");
 export const SHOW_CLOSED_PULL_REQUESTS: StrictInjectionKey<Ref<boolean>> = Symbol(
     "show_closed_pull_requests",
+);
+export const SHOW_PULL_REQUESTS_RELATED_TO_ME: StrictInjectionKey<Ref<boolean>> = Symbol(
+    "show_pull_requests_related_to_me",
 );
 export const PULL_REQUEST_SORT_ORDER: StrictInjectionKey<Ref<PullRequestSortOrder>> = Symbol(
     "pull_requests_sort_order",

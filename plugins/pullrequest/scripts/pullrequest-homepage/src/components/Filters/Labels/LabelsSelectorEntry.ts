@@ -46,7 +46,7 @@ export const LabelsSelectorEntry = (
         placeholder: $gettext("Label name"),
         label: $gettext("Matching labels"),
         empty_message: $gettext("No matching labels"),
-        disabled_message: "",
+        getDisabledMessage: () => "",
         templating_callback: LabelsTemplatingCallback($gettext),
         loadItems: LabelsLoader(
             on_error_callback,

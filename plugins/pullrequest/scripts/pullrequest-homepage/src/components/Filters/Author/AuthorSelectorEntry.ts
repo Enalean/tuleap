@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Ref } from "vue";
 import type { Fault } from "@tuleap/fault";
 import type { SelectorEntry } from "@tuleap/plugin-pullrequest-selectors-dropdown";
 import { UserTemplatingCallback } from "../Common/UserTemplatingCallback";
@@ -31,14 +32,25 @@ export const AuthorSelectorEntry = (
     on_error_callback: (fault: Fault) => void,
     filters_store: StoreListFilters,
     repository_id: number,
+    are_related_pull_requests_shown: Ref<boolean>,
 ): SelectorEntry => ({
     entry_name: $gettext("Author"),
-    isDisabled: (): boolean => filters_store.hasAFilterWithType(TYPE_FILTER_AUTHOR),
+    isDisabled: (): boolean =>
+        filters_store.hasAFilterWithType(TYPE_FILTER_AUTHOR) ||
+        are_related_pull_requests_shown.value === true,
     config: {
         placeholder: $gettext("Name"),
         label: $gettext("Matching users"),
         empty_message: $gettext("No matching user"),
-        disabled_message: $gettext("You can only filter on one author"),
+        getDisabledMessage: (): string => {
+            if (are_related_pull_requests_shown.value === true) {
+                return $gettext(
+                    `You cannot filter on "author" when the "related to me" filter is active.`,
+                );
+            }
+
+            return $gettext("You can only filter on one author");
+        },
         templating_callback: UserTemplatingCallback,
         loadItems: AuthorsLoader(on_error_callback, repository_id),
         filterItems: UserFilteringCallback,

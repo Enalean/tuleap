@@ -27,25 +27,34 @@ import { GettextStub } from "../../tests/stubs/GettextStub";
 import { KeywordFilterBuilder } from "../components/Filters/Keywords/KeywordFilter";
 import { TargetBranchFilterBuilder } from "../components/Filters/Branches/TargetBranchFilter";
 import { ReviewerFilterBuilder } from "../components/Filters/Reviewer/ReviewerFilter";
+import type { PullRequestsListFilter } from "../components/Filters/PullRequestsListFilter";
+
+const current_user_id = 113;
 
 describe("get-pull-requests-query-builder", () => {
-    let are_closed_pull_requests_shown: boolean;
+    let are_closed_pull_requests_shown: boolean, are_pull_requests_related_to_me_shown: boolean;
 
     beforeEach(() => {
         are_closed_pull_requests_shown = true;
+        are_pull_requests_related_to_me_shown = false;
     });
+
+    const buildQuery = (filters: PullRequestsListFilter[]): string =>
+        buildQueryFromFilters(
+            current_user_id,
+            filters,
+            are_closed_pull_requests_shown,
+            are_pull_requests_related_to_me_shown,
+        );
 
     describe("Author filter", () => {
         it("Given a filter on author, then it should return a proper query string", () => {
             const user_id = 102;
-            const query = buildQueryFromFilters(
-                [
-                    AuthorFilterBuilder(GettextStub).fromAuthor(
-                        UserStub.withIdAndName(user_id, "John Doe (jdoe)"),
-                    ),
-                ],
-                are_closed_pull_requests_shown,
-            );
+            const query = buildQuery([
+                AuthorFilterBuilder(GettextStub).fromAuthor(
+                    UserStub.withIdAndName(user_id, "John Doe (jdoe)"),
+                ),
+            ]);
 
             expect(query).toContain(JSON.stringify({ authors: [{ id: user_id }] }));
         });
@@ -54,14 +63,14 @@ describe("get-pull-requests-query-builder", () => {
     describe("Closed pull-requests filter", () => {
         it('When closed pull-requests are shown, then it should NOT set { status: "open" } in the query', () => {
             are_closed_pull_requests_shown = true;
-            const query = buildQueryFromFilters([], are_closed_pull_requests_shown);
+            const query = buildQuery([]);
 
             expect(query).toStrictEqual(JSON.stringify({}));
         });
 
         it('When closed pull-requests are hidden, then it should set { status: "open" } in the query', () => {
             are_closed_pull_requests_shown = false;
-            const query = buildQueryFromFilters([], are_closed_pull_requests_shown);
+            const query = buildQuery([]);
 
             expect(query).toContain(JSON.stringify({ status: "open" }));
         });
@@ -72,10 +81,10 @@ describe("get-pull-requests-query-builder", () => {
             const builder = LabelFilterBuilder(GettextStub);
             const emergency_label = ProjectLabelStub.regulardWithIdAndLabel(1, "Emergency");
             const easy_fix_label = ProjectLabelStub.outlinedWithIdAndLabel(2, "Easy fix");
-            const query = buildQueryFromFilters(
-                [builder.fromLabel(emergency_label), builder.fromLabel(easy_fix_label)],
-                are_closed_pull_requests_shown,
-            );
+            const query = buildQuery([
+                builder.fromLabel(emergency_label),
+                builder.fromLabel(easy_fix_label),
+            ]);
 
             expect(query).toContain(
                 JSON.stringify({
@@ -91,10 +100,7 @@ describe("get-pull-requests-query-builder", () => {
             const foo_keyword = builder.fromKeyword(1, "Foo");
             const bar_keyword = builder.fromKeyword(2, "Bar");
 
-            const query = buildQueryFromFilters(
-                [foo_keyword, bar_keyword],
-                are_closed_pull_requests_shown,
-            );
+            const query = buildQuery([foo_keyword, bar_keyword]);
 
             expect(query).toContain(
                 JSON.stringify({
@@ -107,10 +113,7 @@ describe("get-pull-requests-query-builder", () => {
     describe("Target branch filter", () => {
         it("Given a filter on a target branch, then it should return a proper query string", () => {
             const branch = { name: "walnut" };
-            const query = buildQueryFromFilters(
-                [TargetBranchFilterBuilder(GettextStub).fromBranch(branch)],
-                are_closed_pull_requests_shown,
-            );
+            const query = buildQuery([TargetBranchFilterBuilder(GettextStub).fromBranch(branch)]);
 
             expect(query).toContain(JSON.stringify({ target_branches: [{ name: branch.name }] }));
         });
@@ -119,12 +122,25 @@ describe("get-pull-requests-query-builder", () => {
     describe("Reviewer filter", () => {
         it("Given a filter on a reviewer, then it should return a proper query string", () => {
             const reviewer = UserStub.withIdAndName(102, "John Doe");
-            const query = buildQueryFromFilters(
-                [ReviewerFilterBuilder(GettextStub).fromReviewer(reviewer)],
-                are_closed_pull_requests_shown,
-            );
+            const query = buildQuery([ReviewerFilterBuilder(GettextStub).fromReviewer(reviewer)]);
 
             expect(query).toContain(JSON.stringify({ reviewers: [{ id: reviewer.id }] }));
+        });
+    });
+
+    describe("Related to me filter", () => {
+        it("When the related to me filter is active, then it should set { related_to: [{id: current_user_id }] } in the query", () => {
+            are_pull_requests_related_to_me_shown = true;
+            const query = buildQuery([]);
+
+            expect(query).toStrictEqual(JSON.stringify({ related_to: [{ id: current_user_id }] }));
+        });
+
+        it("When the related to me filter is NOT active, then it should NOT set { related_to: [{id: current_user_id }] } in the query", () => {
+            are_pull_requests_related_to_me_shown = false;
+            const query = buildQuery([]);
+
+            expect(query).toContain(JSON.stringify({}));
         });
     });
 });
