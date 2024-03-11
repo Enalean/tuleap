@@ -24,11 +24,12 @@ import type {
     FieldData,
     TroveCatData,
     AdvancedOptions,
+    ProjectArchiveTemplateData,
 } from "../type";
 
 export interface RootState {
     selected_tuleap_template: TemplateData | null;
-    selected_company_template: TemplateData | null;
+    selected_company_template: TemplateData | ProjectArchiveTemplateData | null;
     selected_template_category: string | null;
     selected_advanced_option: AdvancedOptions | null;
     projects_user_is_admin_of: TemplateData[];

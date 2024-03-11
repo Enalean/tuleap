@@ -18,9 +18,12 @@
  *
  */
 
-import type { TemplateData } from "../type";
+import type { ProjectProperties, TemplateData } from "../type";
 import { createPinia, setActivePinia } from "pinia";
 import { useStore } from "./root";
+import * as rest_querier from "../api/rest-querier";
+import * as uploadFile from "../helpers/upload-file";
+import type { ProjectArchiveReference, ProjectReference } from "@tuleap/core-rest-api-types";
 
 describe("mutation", () => {
     beforeEach(() => {
@@ -81,6 +84,116 @@ describe("mutation", () => {
 
             store.resetProjectCreationError();
             expect(store.error).toBeNull();
+        });
+    });
+    describe("createProject() -", () => {
+        it("Creates the project from a template", async () => {
+            const uploadFileMock = jest.spyOn(uploadFile, "uploadFile");
+            const store = useStore();
+
+            const response: ProjectReference = {
+                id: 101,
+                label: "cts-v",
+                icon: "",
+                uri: "project/cts-v",
+            };
+
+            jest.spyOn(rest_querier, "postProject").mockResolvedValue(response);
+
+            const project: ProjectProperties = {
+                shortname: "Cadillac",
+                label: "cts-v",
+                is_public: false,
+                allow_restricted: false,
+                xml_template_name: "kanban",
+                template_id: null,
+                from_archive: null,
+                categories: [],
+                description: "",
+                fields: [],
+            };
+            const result = await store.createProject(project);
+
+            expect(uploadFileMock).not.toHaveBeenCalled();
+            expect(result).toStrictEqual(response);
+            expect(store.is_creating_project).toBe(false);
+        });
+        it("Creates the project from an archive", async () => {
+            const uploadFileMock = jest.spyOn(uploadFile, "uploadFile").mockImplementation();
+            const store = useStore();
+            store.selected_company_template = {
+                id: "from_project_archive",
+                title: "From project template upload",
+                is_built_in: false,
+                glyph: "",
+                description: "Create a project based on a template exported from another platform",
+                archive: new File([], "export_102.zip"),
+            };
+
+            const response: ProjectArchiveReference = {
+                id: 101,
+                upload_href: "project/ongoing-upload/20",
+                uri: "project/cts-v",
+            };
+
+            jest.spyOn(rest_querier, "postProject").mockResolvedValue(response);
+
+            const project: ProjectProperties = {
+                shortname: "Cadillac",
+                label: "cts-v",
+                is_public: false,
+                allow_restricted: false,
+                xml_template_name: null,
+                template_id: null,
+                from_archive: {
+                    file_name: "export_102.zip",
+                    file_size: 25,
+                },
+                categories: [],
+                description: "",
+                fields: [],
+            };
+            const result = await store.createProject(project);
+
+            expect(uploadFileMock).toHaveBeenCalled();
+            expect(result).toStrictEqual(response);
+            expect(store.is_creating_project).toBe(false);
+        });
+        it("Throws an error if the project cannot be created", async () => {
+            const uploadFileMock = jest.spyOn(uploadFile, "uploadFile").mockImplementation();
+            const store = useStore();
+            store.selected_company_template = {
+                id: "from_project_archive",
+                title: "From project template upload",
+                is_built_in: false,
+                glyph: "",
+                description: "Create a project based on a template exported from another platform",
+                archive: new File([], "export_102.zip"),
+            };
+
+            jest.spyOn(rest_querier, "postProject").mockImplementation(() => {
+                throw new Error("cannot be created :'(");
+            });
+
+            const project: ProjectProperties = {
+                shortname: "Cadillac",
+                label: "cts-v",
+                is_public: false,
+                allow_restricted: false,
+                xml_template_name: null,
+                template_id: null,
+                from_archive: {
+                    file_name: "export_102.zip",
+                    file_size: 25,
+                },
+                categories: [],
+                description: "",
+                fields: [],
+            };
+
+            await expect(() => store.createProject(project)).rejects.toThrow();
+            expect(uploadFileMock).not.toHaveBeenCalled();
+            expect(store.is_creating_project).toBe(false);
         });
     });
 });

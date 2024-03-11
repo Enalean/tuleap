@@ -34,6 +34,12 @@ export type ProjectResponse = ProjectReference & {
     readonly shortname: string;
 };
 
+export type ProjectArchiveReference = {
+    readonly id: number;
+    readonly upload_href: string;
+    readonly uri: string;
+};
+
 export type QuickLink = {
     readonly name: string;
     readonly html_url: string;
