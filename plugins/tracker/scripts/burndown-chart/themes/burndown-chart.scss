@@ -19,7 +19,7 @@
 
 @use "sass:color";
 @use "@tuleap/tlp-swatch-colors";
-@use "./graph";
+@use "../../../themes/default/css/includes/graph";
 
 $remaining-effort-color: tlp-swatch-colors.$neon-green-primary;
 

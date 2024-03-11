@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFormattedDates } from "@tuleap/chart-builder";
+const common = require("./webpack.common.js");
+const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
-export function getLastDayData(dataset) {
-    if (!dataset.length) {
-        return {};
-    }
-
-    return dataset[dataset.length - 1];
-}
-
-export function getDisplayableData(dataset) {
-    const filtered_data = dataset.filter(({ remaining_effort }) => remaining_effort !== null);
-
-    return getFormattedDates(filtered_data);
-}
+module.exports = webpack_configurator.extendProdConfiguration(common);

@@ -39,9 +39,12 @@ import {
 
 import { getLastDayData, getDisplayableData } from "./chart-data-service.js";
 
-export { createBurndownChart };
-
-function createBurndownChart({ chart_container, chart_props, chart_legends, burndown_data }) {
+export function createBurndownChart({
+    chart_container,
+    chart_props,
+    chart_legends,
+    burndown_data,
+}) {
     const tooltip_factory = new TooltipFactory({
         tooltip_margin_bottom: 30,
         tooltip_padding_width: 10,

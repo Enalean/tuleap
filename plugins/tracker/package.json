@@ -6,7 +6,6 @@
   "private": true,
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:^",
-    "@tuleap/chart-builder": "workspace:*",
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/mention": "workspace:*",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:*",
@@ -19,15 +18,9 @@
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
-    "@tuleap/tlp-swatch-colors": "workspace:*",
+    "@tuleap/tlp-swatch-colors": "workspace:^",
     "@tuleap/tooltip": "workspace:*",
-    "d3-array": "^3.0.1",
-    "d3-selection": "^3.0.0",
-    "d3-shape": "^3.0.1",
-    "dompurify": "^3.0.8",
-    "moment": "^2.29.4",
-    "node-gettext": "^3.0.0",
-    "sprintf-js": "^1.1.2"
+    "dompurify": "^3.0.8"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
@@ -37,7 +30,6 @@
     "@types/bootstrap": "^4.5.1",
     "@types/dompurify": "^3.0.5",
     "@types/jquery": "^3.5.5",
-    "@types/sprintf-js": "^1.1.2",
     "jquery": "^3.6.0"
   },
   "scripts": {

@@ -31,19 +31,16 @@ class BurndownFieldPresenter
 {
     public $data_burndown;
     public $locale;
-    public $css_url;
     public $warning;
     public $has_warning;
 
     public function __construct(
         PFUser $current_user,
-        $css_url,
         $warning,
         ?BurndownRepresentation $burndown_representation = null,
     ) {
         $this->data_burndown = json_encode($burndown_representation);
         $this->locale        = $current_user->getLocale();
-        $this->css_url       = $css_url;
         $this->warning       = $warning;
         $this->has_warning   = $warning !== "";
     }

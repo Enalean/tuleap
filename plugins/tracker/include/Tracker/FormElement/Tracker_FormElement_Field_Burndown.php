@@ -176,16 +176,16 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
 
         $assets = new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/trackers'
+            __DIR__ . '/../../../scripts/burndown-chart/frontend-assets',
+            '/assets/trackers/burndown-chart'
         );
 
-        $css_file_url = $assets->getFileURL('burndown-chart.css');
-        $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('burndown-chart.js'));
+        assert($GLOBALS['HTML'] instanceof \Tuleap\Layout\BaseLayout);
+        $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'burndown-chart.js'));
+        $GLOBALS['HTML']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'burndown-chart-style'));
 
         return new BurndownFieldPresenter(
             $user,
-            $css_file_url,
             $warning,
             $burndown_rest_representation
         );

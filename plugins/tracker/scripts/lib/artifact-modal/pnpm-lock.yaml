@@ -103,6 +103,9 @@ devDependencies:
   '@types/ckeditor':
     specifier: ^4.9.10
     version: 4.9.10
+  '@types/sprintf-js':
+    specifier: ^1.1.2
+    version: 1.1.4
   angular:
     specifier: ^1.8.2
     version: 1.8.2
@@ -114,6 +117,10 @@ packages:
 
   /@types/ckeditor@4.9.10:
     resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
+    dev: true
+
+  /@types/sprintf-js@1.1.4:
+    resolution: {integrity: sha512-aWK1reDYWxcjgcIIPmQi3u+OQDuYa9b+lr6eIsGWrekJ9vr1NSjr4Eab8oQ1iKuH1ltFHpXGyerAv1a3FMKxzQ==}
     dev: true
 
   /angular-custom-elements@2.1.0:

@@ -44,6 +44,7 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/core-constants": "workspace:*",
     "@types/ckeditor": "^4.9.10",
+    "@types/sprintf-js": "^1.1.2",
     "angular": "^1.8.2",
     "angular-mocks": "^1.8.2"
   },
