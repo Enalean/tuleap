@@ -162,7 +162,7 @@ use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\TemplateFactory;
-use Tuleap\Project\Registration\Template\Upload\ExtractArchiveAndCreateProject;
+use Tuleap\Project\Registration\Template\Upload\EnqueueProjectCreationFromArchive;
 use Tuleap\Project\Registration\Template\Upload\ProjectArchiveOngoingUploadDao;
 use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileBeingUploadedInformationProvider;
 use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileDataStore;
@@ -176,6 +176,7 @@ use Tuleap\Project\Service\EditController;
 use Tuleap\Project\Service\ServicesPresenterBuilder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UserPermissionsDao;
+use Tuleap\Queue\EnqueueTask;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
@@ -267,7 +268,6 @@ use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
-use XMLImportHelper;
 
 class RouteCollector
 {
@@ -1457,13 +1457,7 @@ class RouteCollector
                     $file_ongoing_upload_dao,
                     $file_ongoing_upload_dao,
                     $path_allocator,
-                    new ExtractArchiveAndCreateProject(
-                        \ProjectXMLImporter::build(
-                            new XMLImportHelper(\UserManager::instance()),
-                            \ProjectCreator::buildSelfByPassValidation(),
-                        ),
-                        \BackendLogger::getDefaultLogger(),
-                    ),
+                    new EnqueueProjectCreationFromArchive(new EnqueueTask()),
                 ),
                 new ProjectFileUploadCanceler(
                     $path_allocator,

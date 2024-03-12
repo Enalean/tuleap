@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template\Upload;
 
 use ColinODell\PsrTestLogger\TestLogger;
+use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\Project\ImportFromArchiveStub;
@@ -47,16 +49,86 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         \Psl\Filesystem\copy(__DIR__ . "/Tus/_fixtures/test.zip", $this->upload . '/test.zip');
     }
 
+    public function testProjectIdIsNotInPayload(): void
+    {
+        $this->expectException(\Exception::class);
+
+        ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                new NullLogger(),
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => [],
+                ]
+            ),
+            ImportFromArchiveStub::buildWithSuccessfulImport(),
+        );
+    }
+
+    public function testProjectIdIsNotAnInt(): void
+    {
+        $this->expectException(\Exception::class);
+
+        ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                new NullLogger(),
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => ['project_id' => 'a string'],
+                ]
+            ),
+            ImportFromArchiveStub::buildWithSuccessfulImport(),
+        );
+    }
+
+    public function testFilenameIsNotInPayload(): void
+    {
+        $this->expectException(\Exception::class);
+
+        ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                new NullLogger(),
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => ['project_id' => 1001],
+                ]
+            ),
+            ImportFromArchiveStub::buildWithSuccessfulImport(),
+        );
+    }
+
+    public function testFilenameIsNotIAString(): void
+    {
+        $this->expectException(\Exception::class);
+
+        ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                new NullLogger(),
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => ['project_id' => 1001, 'filename' => []],
+                ]
+            ),
+            ImportFromArchiveStub::buildWithSuccessfulImport(),
+        );
+    }
+
     public function testProcessHappyPath(): void
     {
         $logger = new TestLogger();
 
-        $action = new ExtractArchiveAndCreateProject(
+        $action = ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                $logger,
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => ['project_id' => 1001, 'filename' => $this->upload . '/test.zip'],
+                ]
+            ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
-            $logger,
         );
 
-        $action->process(1001, $this->upload . "/test.zip");
+        $action->process();
 
         self::assertTrue($logger->hasInfoRecords());
         self::assertFalse(\Psl\Filesystem\is_file($this->upload . "/test.zip"));
@@ -66,12 +138,18 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
     {
         $logger = new TestLogger();
 
-        $action = new ExtractArchiveAndCreateProject(
+        $action = ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                $logger,
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => ['project_id' => 1001, 'filename' => $this->upload . '/test.zip'],
+                ]
+            ),
             ImportFromArchiveStub::buildWithErrorDuringImport("Task failed successfully"),
-            $logger,
         );
 
-        $action->process(1001, $this->upload . "/test.zip");
+        $action->process();
 
         self::assertTrue($logger->hasError("Task failed successfully"));
         self::assertFalse(\Psl\Filesystem\is_file($this->upload . "/test.zip"));
