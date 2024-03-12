@@ -9,7 +9,7 @@
 %define _binary_payload w9T8.xzdio
 
 # Define variables
-%define PKG_NAME @@PKG_NAME@@
+%define PKG_NAME tuleap
 %define APP_NAME tuleap
 %define APP_USER codendiadm
 %define APP_HOME_DIR /home/%{APP_USER}
@@ -35,13 +35,13 @@
 
 Summary: The Tuleap forge
 Name: %{PKG_NAME}
-Version: @@VERSION@@
-Release: @@RELEASE@@%{?dist}
+Version: %{tuleap_version}
+Release: %{tuleap_release}%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
 URL: http://tuleap.net
-Source0: %{name}-%{version}.tar.gz
+Source0: %{name}-src.tar
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Tuleap team <security@tuleap.org>
 
@@ -60,10 +60,10 @@ Requires: glibc-locale-source
 Requires: sudo, openssh
 Requires: perl(File::Copy)
 Requires: highlight, nginx, logrotate
-Requires: tuleap-realtime = @@VERSION@@
-Requires: tuleap-mercure = @@VERSION@@
-Requires: tuleap-smokescreen = @@VERSION@@
-Requires: tuleap-wasmtime-wrapper-lib = @@VERSION@@
+Requires: tuleap-realtime = %{tuleap_version}
+Requires: tuleap-mercure = %{tuleap_version}
+Requires: tuleap-smokescreen = %{tuleap_version}
+Requires: tuleap-wasmtime-wrapper-lib = %{tuleap_version}
 
 # xmllint
 Requires: libxml2
@@ -101,8 +101,8 @@ Tuleap is a web based application that address all the aspects of product develo
 Summary: Subversion component for Tuleap
 Group: Development/Tools
 Version: 1.2
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, mod_dav_svn
+Release: %{tuleap_version}_%{tuleap_release}%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, mod_dav_svn
 %if "%{?dist}" == ".el9"
 Requires: viewvc-tuleap, httpd, glibc-langpack-en
 %else
@@ -122,7 +122,7 @@ Manage dependencies for Tuleap Subversion integration
 Summary: Subversion plugin for Tuleap
 Group: Development/Tools
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-core-subversion
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-core-subversion
 %description plugin-svn
 Integration of Subversion software configuration management tool with Tuleap.
 
@@ -131,7 +131,7 @@ Summary: Git plugin for Tuleap
 Group: Development/Tools
 AutoReqProv: no
 Requires(pre): shadow-utils
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-git-bin = @@VERSION@@, %{name}-gitolite3 = @@VERSION@@
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, %{name}-git-bin = %{tuleap_version}, %{name}-gitolite3 = %{tuleap_version}
 Requires: sudo, openssh-server
 %description plugin-git
 Integration of git distributed software configuration management tool together
@@ -140,14 +140,14 @@ This package is integrated with gitolite v3 (new version)
 
 %package plugin-gitlfs
 Summary: Support of large file upload and download in Git
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, sudo
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, %{name}-plugin-git, sudo
 Group: Development/Tools
 %description plugin-gitlfs
 %{summary}.
 
 %package plugin-pullrequest
 Summary: Pullrequest management for Tuleap
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, %{name}-git-bin = @@VERSION@@, grep
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, %{name}-plugin-git, %{name}-git-bin = %{tuleap_version}, grep
 Group: Development/Tools
 %description plugin-pullrequest
 %{summary}.
@@ -163,28 +163,28 @@ authentication, user and group management.
 %package plugin-hudson
 Summary: Hudson plugin for Tuleap
 Group: Development/Tools/Building
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-hudson
 Plugin to install the Tuleap Hudson plugin for continuous integration
 
 %package plugin-hudson-svn
 Summary: Hudson/Jenkins plugin for Tuleap SVN multiple repositories
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-hudson, tuleap-plugin-svn
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-hudson, tuleap-plugin-svn
 %description plugin-hudson-svn
 Hudson/Jenkins plugin for Tuleap SVN multiple repositories
 
 %package plugin-hudson-git
 Summary: Hudson/Jenkins plugin for Tuleap Git repositories
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-hudson, tuleap-plugin-git
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-hudson, tuleap-plugin-git
 %description plugin-hudson-git
 Hudson/Jenkins plugin for Tuleap Git repositories
 
 %package plugin-webdav
 Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-document
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-document
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 
@@ -192,21 +192,21 @@ Plugin to access to file releases & docman though WebDAV
 AutoReqProv: no
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php82-php-pecl-mailparse
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, libxslt, php82-php-pecl-mailparse
 %description plugin-tracker
 New tracker generation for Tuleap.
 
 %package plugin-graphontrackers
 Summary: Graphs for Tracker v5
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker >= 0.8.4
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker >= 0.8.4
 %description plugin-graphontrackers
 Graphs for new tracker generation
 
 %package plugin-tracker-encryption
 Summary: Encryption for tracker
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-tracker-encryption
 Adding a new type of tracker fields that are encrypted.
 This plugin is still in beta.
@@ -214,7 +214,7 @@ This plugin is still in beta.
 %package plugin-cardwall
 Summary: Graphs for Tracker v5
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 Requires: tuleap-plugin-tracker
 %description plugin-cardwall
 Fancy cardwall output on top of Tracker v5
@@ -222,7 +222,7 @@ Fancy cardwall output on top of Tracker v5
 %package plugin-agiledashboard
 Summary: Agile dashboard
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall
 %description plugin-agiledashboard
 Agile Dashboard aims to provide an nice integration of Scrum/Kanban
 tool on top of Tracker.
@@ -230,14 +230,14 @@ tool on top of Tracker.
 %package plugin-archivedeleteditems
 Summary: Archiving plugin
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-archivedeleteditems
 Archive deleted items before purging them from filesystem
 
 %package plugin-mediawiki
 Summary: Mediawiki plugin
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 Requires: php-mediawiki-tuleap-123 >= 1.23.9-17, tuleap-plugin-mediawiki-standalone
 %if "%{?dist}" == ".el7"
 Requires: htmldoc
@@ -248,22 +248,22 @@ This plugin provides Mediawiki integration in Tuleap.
 %package plugin-mediawiki-standalone
 Summary: MediaWiki Standalone plugin
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: mediawiki-%{name}-flavor-current-lts = @@VERSION@@, mediawiki-%{name}-flavor-1.35 = @@VERSION@@
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
+Requires: mediawiki-%{name}-flavor-current-lts = %{tuleap_version}, mediawiki-%{name}-flavor-1.35 = %{tuleap_version}
 %description plugin-mediawiki-standalone
 %{summary}.
 
 %package plugin-onlyoffice
 Summary: Integration with ONLYOFFICE
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-document
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-document
 %description plugin-onlyoffice
 %{summary}.
 
 %package plugin-openidconnectclient
 Summary: OpenId consumer plugin
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-openidconnectclient
 Connect to Tuleap using an OpenID Connect provider
 
@@ -271,35 +271,35 @@ Connect to Tuleap using an OpenID Connect provider
 AutoReqProv: no
 Summary: File release system plugin
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker
 %description plugin-frs
 Add features to the file release system provided by Tuleap
 
 %package plugin-captcha
 Summary: Add a captcha protection to sensitive operations
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-captcha
 %{summary}.
 
 %package plugin-bugzilla-reference
 Summary: References between Bugzilla and Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-bugzilla-reference
 %{summary}.
 
 %package plugin-create-test-env
 Summary: Create test environment on a Tuleap server
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-botmattermost
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-botmattermost
 %description plugin-create-test-env
 %{summary}.
 
 %package plugin-document
 Summary: Document plugin for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 Obsoletes: tuleap-plugin-docman < 13.10
 Provides: tuleap-plugin-docman
 %description plugin-document
@@ -308,7 +308,7 @@ Provides: tuleap-plugin-docman
 %package plugin-api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 Obsoletes: tuleap-api-explorer <= 999
 Provides: tuleap-api-explorer
 %description plugin-api-explorer
@@ -317,42 +317,42 @@ Provides: tuleap-api-explorer
 %package plugin-embed
 Summary: Embed various services in artifacts
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-embed
 %{summary}.
 
 %package plugin-gitlab
 Summary: Provides an integration GitLab to Tuleap.
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-git
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-git
 %description plugin-gitlab
 %{summary}.
 
 %package plugin-securitytxt
 Summary: Add support of security.txt file (RFC 9116)
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-securitytxt
 %{summary}.
 
 %package plugin-botmattermost
 Summary: Bot Mattermost management for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-botmattermost
 %{summary}.
 
 %package plugin-botmattermost-agiledashboard
 Summary: Bot Mattermost AgileDashboard - Stand up summary
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-botmattermost, tuleap-plugin-agiledashboard
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-botmattermost, tuleap-plugin-agiledashboard
 %description plugin-botmattermost-agiledashboard
 %{summary}.
 
 %package plugin-botmattermost-git
 Summary: Bot Mattermost git - Git Notification
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-botmattermost, tuleap-plugin-git
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-botmattermost, tuleap-plugin-git
 %description plugin-botmattermost-git
 %{summary}.
 
@@ -361,70 +361,70 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-botmattermost
 %package plugin-baseline
 Summary: Set and compare baselines
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist},  tuleap-plugin-tracker
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist},  tuleap-plugin-tracker
 %description plugin-baseline
 %{summary}.
 
 %package plugin-crosstracker
 Summary: Cross tracker search widget
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist},  tuleap-plugin-tracker
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist},  tuleap-plugin-tracker
 %description plugin-crosstracker
 %{summary}.
 
 %package plugin-dynamic-credentials
 Summary: Dynamic credentials generation
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-dynamic-credentials
 %{summary}.
 
 %package plugin-label
 Summary: Label widget
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-label
 %{summary}.
 
 %package plugin-roadmap
 Summary: Displays roadmap in a widget
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker
 %description plugin-roadmap
 %{summary}.
 
 %package plugin-fts-common
 Summary: Common parts of full-Text search backends
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-fts-common
 %{summary}.
 
 %package plugin-fts-db
 Summary: Full-Text search DB backend
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-fts-common
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-fts-common
 %description plugin-fts-db
 %{summary}.
 
 %package plugin-fts-meilisearch
 Summary: Full-Text search Meilisearch backend
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-fts-common
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-fts-common
 %description plugin-fts-meilisearch
 %{summary}.
 
 %package plugin-oauth2-server
 Summary: OAuth2 Server
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-oauth2-server
 %{summary}.
 
 %package plugin-project-ownership
 Summary: Project ownership
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 Obsoletes: tuleap-plugin-project-certification < 999
 %description plugin-project-ownership
 %{summary}.
@@ -432,77 +432,77 @@ Obsoletes: tuleap-plugin-project-certification < 999
 %package plugin-projectmilestones
 Summary: A widget for milestones monitoring
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboard
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-agiledashboard
 %description plugin-projectmilestones
 %{summary}.
 
 %package plugin-prometheus-metrics
 Summary: Prometheus metrics end point
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-prometheus-metrics
 %{summary}.
 
 %package plugin-taskboard
 Summary: Taskboard
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboard
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-agiledashboard
 %description plugin-taskboard
 %{summary}.
 
 %package plugin-tee-container
 Summary: Tuleap Enterprise Edition containers management
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-tee-container
 %{summary}.
 
 %package plugin-testmanagement
 Summary: Test Management plugin for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-agiledashboard
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-agiledashboard
 %description plugin-testmanagement
 %{summary}.
 
 %package plugin-testplan
 Summary: Integration between the agiledashboard and the testmanagement plugins
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-agiledashboard, tuleap-plugin-testmanagement
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-agiledashboard, tuleap-plugin-testmanagement
 %description plugin-testplan
 %{summary}.
 
 %package plugin-timetracking
 Summary: Timetracking plugin for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-timetracking
 %{summary}.
 
 %package plugin-velocity
 Summary: Velocity chart
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboard
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-agiledashboard
 %description plugin-velocity
 %{summary}.
 
 %package plugin-jira-import
 Summary: Import Jira Projects
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard, tuleap-plugin-projectmilestones
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard, tuleap-plugin-projectmilestones
 %description plugin-jira-import
 %{summary}.
 
 %package plugin-program_management
 Summary: Program Management
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard
 %description plugin-program_management
 %{summary}.
 
 %package plugin-document_generation
 Summary: Document Generation
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker
 Obsoletes: tuleap-plugin-textualreport < 13.4
 Provides: tuleap-plugin-textualreport
 %description plugin-document_generation
@@ -511,28 +511,28 @@ Provides: tuleap-plugin-textualreport
 %package plugin-mytuleap-contact-support
 Summary: myTuleap Contact support
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-mytuleap-contact-support
 %{summary}.
 
 %package plugin-enalean-licensemanager
 Summary: Manage usage of license for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-enalean-licensemanager
 %{summary}.
 
 %package plugin-webauthn
 Summary: WebAuthn plugin
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-webauthn
 Allow users to register and use passkeys with WebAuthn protocol.
 
 %package plugin-tracker-functions
 Summary: Tracker Functions plugin
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 Obsoletes: tuleap-plugin-tracker-cce < 15.5
 Provides: tuleap-plugin-tracker-cce
 %description plugin-tracker-functions
@@ -551,14 +551,14 @@ Provides: tuleap-plugin-tracker-cce
 %package theme-flamingparrot
 Summary: FlamingParrot, default theme starting Tuleap 7
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description theme-flamingparrot
 FlamingParrot, default theme starting Tuleap 7
 
 %package theme-burningparrot
 Summary: BurningParrot, default theme starting Tuleap 10
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description theme-burningparrot
 BurningParrot, default theme starting Tuleap 10
 
@@ -571,7 +571,7 @@ BurningParrot, default theme starting Tuleap 10
 # Build
 %build
 %if %{with enterprise}
-echo '@@VERSION@@-@@RELEASE@@' > VERSION
+echo '%{tuleap_version}-%{tuleap_release}' > VERSION
 %endif
 
 #

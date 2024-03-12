@@ -20,7 +20,7 @@ pipeline {
                 dir ('sources') {
                     script {
                         actions = load 'tests/actions.groovy'
-                        actions.runInsideNixDockerEnv('make scan-vuln-deps', '--read-only --tmpfs /home_build:rw,noexec,nosuid', 'dev')
+                        actions.runInsideNixShell('make scan-vuln-deps', 'dev')
                     }
                 }
             }

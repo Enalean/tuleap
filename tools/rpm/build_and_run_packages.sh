@@ -35,19 +35,16 @@ fi
 
 export DOCKER_BUILDKIT=1
 
-docker build -t tuleap-generated-files-builder -f "$SRC_DIR"/tools/utils/nix/nix.dockerfile "$SRC_DIR"/tools/utils/nix/
-
 clean_tuleap_sources="$(mktemp -d)"
+rpms="$(mktemp -d)"
 
 function cleanup {
-    docker rm -fv rpm-builder rpm-installer || true
+    docker rm -fv rpm-installer || true
     docker volume rm -f rpm-volume || true
-    docker volume rm -f nix-volume || true
     git worktree remove -f "$clean_tuleap_sources"
+    rm -rf "$rpms"
 }
 trap cleanup EXIT
-
-docker rm rpm-builder || true
 
 git worktree add --detach "$clean_tuleap_sources/"
 
@@ -55,19 +52,11 @@ if [ "$ENTERPRISE" == "1" ]; then
     touch "$clean_tuleap_sources/ENTERPRISE_BUILD"
 fi
 
-docker volume create rpm-volume
-docker volume create nix-volume
-docker run --rm -v rpm-volume:/rpms tuleap-generated-files-builder chown "$(id -u)":"$(id -g)" /rpms
-docker run --rm -v nix-volume:/nix tuleap-generated-files-builder chown "$(id -u)":"$(id -g)" /nix
-
-docker run -i --name rpm-builder \
-    -v rpm-volume:/rpms -v "$clean_tuleap_sources":/tuleap -w /tuleap \
-    -v nix-volume:/nix \
-    -v /etc/passwd:/etc/passwd:ro \
-    -u "$(id -u)":"$(id -g)" \
-    tuleap-generated-files-builder \
-    nix-shell --pure -I nixpkgs="/tuleap/tools/utils/nix/pinned-nixpkgs.nix" "/tuleap/tools/utils/nix/build-tools/" \
-        --run "export EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0} && export OS=${OS} && tools/utils/scripts/generated-files-builder.sh prod && XDG_CACHE_HOME=/home_build tools/rpm/build_rpm_inside_container.sh"
+nix-shell --pure -I nixpkgs="$clean_tuleap_sources/tools/utils/nix/pinned-nixpkgs.nix" "$clean_tuleap_sources/tools/utils/nix/build-tools/" \
+    --run "export EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0} && export OS=${OS} && export RELEASE=${RELEASE:-1} && \
+        cd $clean_tuleap_sources && \
+        tools/utils/scripts/generated-files-builder.sh prod && \
+        tools/rpm/build_all_rpm.sh $clean_tuleap_sources $rpms"
 
 if [ "$OS" == "centos7" ]; then
     INSTALL_IMAGE=tuleap-installrpms:centos7
@@ -79,6 +68,13 @@ else
     >&2 echo "OS environment variable does not have a valid value"
     exit 1
 fi
+
+docker volume create "rpm-volume"
+docker run --rm \
+    -v "rpm-volume":/rpms \
+    -v "$rpms":/source-rpms:ro \
+    --entrypoint=/bin/sh \
+    $INSTALL_IMAGE -c 'cp -a /source-rpms/* /rpms/'
 
 docker run -t -d --rm \
     --name rpm-installer \

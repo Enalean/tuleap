@@ -1,18 +1,13 @@
 #!/usr/bin/env groovy
 
-def runInsideNixDockerEnv(String command, String container_run_args = '', String tool_flavor = 'build') {
-    sh ('mkdir -p "$HOME/nix-content"')
-    def image = docker.build('nix-env', '-f "$(pwd)"/tools/utils/nix/nix.dockerfile "$(pwd)"/tools/utils/nix/');
-    image
-        .inside(container_run_args + ' -v $HOME/nix-content:/nix -v /etc/passwd:/etc/passwd:ro') {
-            sh """
-            nix-shell -I nixpkgs="\$(pwd)/tools/utils/nix/pinned-nixpkgs.nix" "\$(pwd)/tools/utils/nix/${tool_flavor}-tools/" --run "${command}"
-            """
-        }
+def runInsideNixShell(String command, String tool_flavor = 'build') {
+    sh """
+    nix-shell -I nixpkgs="\$(pwd)/tools/utils/nix/pinned-nixpkgs.nix" "\$(pwd)/tools/utils/nix/${tool_flavor}-tools/" --run "${command}"
+    """
 }
 
 def prepareSources(String prepare_flavor) {
-    runInsideNixDockerEnv("tools/utils/scripts/generated-files-builder.sh ${prepare_flavor}", '--read-only --tmpfs /home_build:rw,noexec,nosuid')
+    runInsideNixShell("tools/utils/scripts/generated-files-builder.sh ${prepare_flavor}")
 }
 
 def runFilesStatusChangesDetection(String repository_to_inspect, String name_of_verified_files, String verified_files) {
@@ -36,7 +31,7 @@ def runJSUnitTests(Boolean with_coverage = false) {
     }
     sh("mkdir -p ${WORKSPACE}/results/")
     dir ('sources') {
-      runInsideNixDockerEnv("${coverage_env} lib/frontend/build-system-configurator/bin/run-js-units-ci.sh", "--network none -v ${WORKSPACE}/results:/results")
+      runInsideNixShell("${coverage_env} lib/frontend/build-system-configurator/bin/run-js-units-ci.sh")
     }
 }
 
@@ -69,13 +64,13 @@ def runBuildAndRun(String os) {
 def runESLint() {
     sh("mkdir -p ${WORKSPACE}/results/eslint/")
     dir ('sources') {
-        runInsideNixDockerEnv('pnpm run eslint --quiet --format=checkstyle --output-file=/results/eslint/checkstyle.xml .', "--network none -v ${WORKSPACE}/results:/results")
+        runInsideNixShell("pnpm run eslint --quiet --format=checkstyle --output-file=${WORKSPACE}/results/eslint/checkstyle.xml .")
     }
 }
 
 def runStylelint() {
     dir ('sources') {
-        runInsideNixDockerEnv('pnpm run stylelint **/*.scss **/*.vue', '--network none')
+        runInsideNixShell('pnpm run stylelint **/*.scss **/*.vue')
     }
 }
 

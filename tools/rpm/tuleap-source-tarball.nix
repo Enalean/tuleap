@@ -86,7 +86,7 @@ let
     in
       path: type:
         srcIgnored path type && cleanCoreScriptsSubAppCode path type && cleanPluginScriptsSubAppCode path type && cleanPluginScriptsFiles path type;
-  name = "tuleap-${tuleapVersion}.tar.gz";
+  name = "tuleap-${tuleapVersion}-tarball";
   rootFolderSrc = ../..;
 in pkgs.stdenv.mkDerivation {
   inherit name;
@@ -99,6 +99,7 @@ in pkgs.stdenv.mkDerivation {
   dontConfigure = true;
   dontBuild = true;
   dontPatch = true;
+  dontFixup = true;
 
   doCheck = true;
   checkPhase = ''
@@ -112,9 +113,10 @@ in pkgs.stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
 
+    mkdir $out/
     pushd $src/
 
-    tar czf $out *
+    tar cf $out/tuleap-src.tar *
 
     popd
 
