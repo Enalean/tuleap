@@ -29,11 +29,9 @@ import { createTestingPinia } from "@pinia/testing";
 
 describe("TuleapTemplateList", () => {
     let local_vue = createLocalVue();
-    let wrapper: Wrapper<TuleapTemplateList>;
+    let wrapper: Wrapper<Vue, Element>;
 
-    async function createWrapper(
-        tuleap_templates: TemplateData[],
-    ): Promise<Wrapper<TuleapTemplateList>> {
+    async function createWrapper(tuleap_templates: TemplateData[]): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
                 tuleap_templates,
