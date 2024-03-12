@@ -253,9 +253,9 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
                 $comment_dao,
                 $reference_manager,
                 Mockery::spy(TrackerPrivateCommentUGroupPermissionInserter::class),
-                $changeset_comment_indexer,
                 new TextValueValidator(),
             ),
+            $changeset_comment_indexer,
         );
         $creator->create($changeset_creation, PostCreationContext::withNoConfig(false));
     }

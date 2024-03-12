@@ -150,13 +150,13 @@ class ArchiveAndDeleteArtifactTaskBuilder
                     new TrackerPrivateCommentUGroupPermissionInserter(
                         new TrackerPrivateCommentUGroupPermissionDao()
                     ),
-                    new ChangesetCommentIndexer(
-                        new ItemToIndexQueueEventBased($event_manager),
-                        $event_manager,
-                        new \Tracker_Artifact_Changeset_CommentDao(),
-                    ),
                     new TextValueValidator(),
-                )
+                ),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
             ),
             new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), $tracker_artifact_factory),
         );

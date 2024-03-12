@@ -394,13 +394,13 @@ final class tracker_functionsPlugin extends Plugin
                 new Tracker_Artifact_Changeset_CommentDao(),
                 ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_manager),
-                    $event_manager,
-                    new Tracker_Artifact_Changeset_CommentDao(),
-                ),
                 new TextValueValidator(),
-            )
+            ),
+            new ChangesetCommentIndexer(
+                new ItemToIndexQueueEventBased($event_manager),
+                $event_manager,
+                new Tracker_Artifact_Changeset_CommentDao(),
+            ),
         );
 
         $fields_data_builder       = new FieldsDataBuilder(

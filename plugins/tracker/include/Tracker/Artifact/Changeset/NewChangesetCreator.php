@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreation;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
@@ -54,6 +55,7 @@ class NewChangesetCreator implements CreateNewChangeset
         private SaveChangesetValue $changeset_value_saver,
         private RetrieveWorkflow $workflow_retriever,
         private CommentCreator $comment_creator,
+        private ChangesetCommentIndexer $changeset_comment_indexer,
     ) {
     }
 
@@ -68,7 +70,7 @@ class NewChangesetCreator implements CreateNewChangeset
         $old_changeset = $artifact->getLastChangeset();
 
         try {
-            $new_changeset = $this->transaction_executor->execute(function () use (
+            $changeset_created = $this->transaction_executor->execute(function () use (
                 $artifact,
                 $submitter,
                 $changeset,
@@ -113,12 +115,12 @@ class NewChangesetCreator implements CreateNewChangeset
                         $workflow
                     );
 
-                    $comment_creation = CommentCreation::fromNewComment(
+                    $comment_creation  = CommentCreation::fromNewComment(
                         $changeset->getComment(),
                         $changeset_id,
                         $changeset->getUrlMapping()
                     );
-                    $this->comment_creator->createComment($artifact, $comment_creation);
+                    $should_update_fts = $this->comment_creator->createComment($artifact, $comment_creation);
 
                     $new_changeset = new \Tracker_Artifact_Changeset(
                         $changeset_id,
@@ -142,7 +144,7 @@ class NewChangesetCreator implements CreateNewChangeset
                         throw new \Tracker_AfterSaveException();
                     }
                     ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_UPDATED);
-                    return $new_changeset;
+                    return new NewChangesetCreated($new_changeset, $should_update_fts, $comment_creation);
                 } catch (\Tracker_NoChangeException $exception) {
                     throw $exception;
                 } catch (LinkToParentWithoutCurrentArtifactChangeException $exception) {
@@ -152,9 +154,17 @@ class NewChangesetCreator implements CreateNewChangeset
                 }
             });
 
-            if (! $new_changeset) {
+            if (! $changeset_created) {
                 return null;
             }
+            assert($changeset_created instanceof NewChangesetCreated);
+
+            $new_changeset = $changeset_created->changeset;
+
+            if ($changeset_created->should_launch_fts_update) {
+                $this->changeset_comment_indexer->indexNewChangesetComment($changeset_created->comment_creation, $artifact);
+            }
+
             if (! $context->getImportConfig()->isFromXml()) {
                 $this->post_creation_queuer->queuePostCreation(
                     $new_changeset,

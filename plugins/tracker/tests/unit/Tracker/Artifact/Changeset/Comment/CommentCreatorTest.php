@@ -87,7 +87,6 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             $this->reference_manager,
             $this->ugroup_inserter,
-            $this->changeset_comment_indexer,
             new TextValueValidator(),
         );
 

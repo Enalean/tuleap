@@ -2214,13 +2214,13 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $this->getChangesetCommentDao(),
                 $this->getReferenceManager(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_dispatcher),
-                    $event_dispatcher,
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                ),
                 new TextValueValidator(),
-            )
+            ),
+            new ChangesetCommentIndexer(
+                new ItemToIndexQueueEventBased($event_dispatcher),
+                $event_dispatcher,
+                new \Tracker_Artifact_Changeset_CommentDao(),
+            ),
         );
     }
 
