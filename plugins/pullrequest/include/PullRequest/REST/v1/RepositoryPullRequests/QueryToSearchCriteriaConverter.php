@@ -50,19 +50,7 @@ class QueryToSearchCriteriaConverter
                     new \CuyZ\Valinor\Mapper\Source\JsonSource($query)
                 );
 
-            if (count($search_criteria->authors) > 1) {
-                return Result::err(MalformedQueryFault::onlyOneItemAccepted('authors'));
-            }
-
-            if (count($search_criteria->target_branches) > 1) {
-                return Result::err(MalformedQueryFault::onlyOneItemAccepted('target_branches'));
-            }
-
-            if (count($search_criteria->reviewers) > 1) {
-                return Result::err(MalformedQueryFault::onlyOneItemAccepted('reviewers'));
-            }
-
-            return Result::ok($search_criteria);
+            return $this->getValidatedSearchCriteria($search_criteria);
         } catch (MappingError $mapping_error) {
             return Result::err($this->buildFaultFromMappingError($mapping_error));
         } catch (\Exception $exception) {
@@ -75,5 +63,36 @@ class QueryToSearchCriteriaConverter
         return MalformedQueryFault::buildFromMappingErrors(
             \CuyZ\Valinor\Mapper\Tree\Message\Messages::flattenFromNode($mapping_error->node())->errors()
         );
+    }
+
+    /**
+     * @return Ok<SearchCriteria> | Err<Fault>
+     */
+    private function getValidatedSearchCriteria(mixed $search_criteria): Ok | Err
+    {
+        if (
+            count($search_criteria->related_to) &&
+            (count($search_criteria->authors) > 0 || count($search_criteria->reviewers) > 0)
+        ) {
+            return Result::err(MalformedQueryFault::relatedToCriterionCannotBeUsedWithAuthorOrReviewerCriteria());
+        }
+
+        if (count($search_criteria->authors) > 1) {
+            return Result::err(MalformedQueryFault::onlyOneItemAccepted('authors'));
+        }
+
+        if (count($search_criteria->target_branches) > 1) {
+            return Result::err(MalformedQueryFault::onlyOneItemAccepted('target_branches'));
+        }
+
+        if (count($search_criteria->reviewers) > 1) {
+            return Result::err(MalformedQueryFault::onlyOneItemAccepted('reviewers'));
+        }
+
+        if (count($search_criteria->related_to) > 1) {
+            return Result::err(MalformedQueryFault::onlyOneItemAccepted('related_to'));
+        }
+
+        return Result::ok($search_criteria);
     }
 }

@@ -100,6 +100,11 @@ class RepositoryResource extends AuthenticatedResource
      *     <p>
      *         <b>Reviewer</b>: <code>query={"reviewers": [{"id": int}]}</code> where "id" is the user_id of the reviewer.
      *     </p>
+     *     <p>
+     *         <b>Related to</b>: <code>query={"related_to": [{"id": int}]}</code> where "id" is the user_id of the user.
+     *         <br>It will return all the pull-requests on which the user is author OR reviewer.
+     *         <br>NOTE: You cannot combine the related_to filter with the authors or the reviewers filters.
+     *     </p>
      * </p>
      *
      * <p>

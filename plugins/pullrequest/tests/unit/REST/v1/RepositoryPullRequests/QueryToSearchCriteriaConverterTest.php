@@ -198,6 +198,61 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         self::assertEquals(102, $criteria->reviewers[0]->id);
     }
 
+    public function testItReturnsAnErrorWhenTryingToFilterOnRelatedToAndAuthorsCriteria(): void
+    {
+        $result = $this->converter->convert(
+            json_encode([
+                'authors' => [['id' => 102]],
+                'related_to' => [['id' => 103]],
+            ], JSON_THROW_ON_ERROR)
+        );
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MalformedQueryFault::class, $result->error);
+        self::assertStringContainsString("related_to", (string) $result->error);
+    }
+
+    public function testItReturnsAnErrorWhenTryingToFilterOnRelatedToAndReviewersCriteria(): void
+    {
+        $result = $this->converter->convert(
+            json_encode([
+                'reviewers' => [['id' => 102]],
+                'related_to' => [['id' => 103]],
+            ], JSON_THROW_ON_ERROR)
+        );
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MalformedQueryFault::class, $result->error);
+        self::assertStringContainsString("related_to", (string) $result->error);
+    }
+
+    public function testItReturnsAnErrorWhenTryingToFilterOnMultipleRelatedTo(): void
+    {
+        $result = $this->converter->convert(
+            json_encode([
+                'related_to' => [['id' => 102], ['id' => 103]],
+            ], JSON_THROW_ON_ERROR)
+        );
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MalformedQueryFault::class, $result->error);
+        self::assertStringContainsString("related_to", (string) $result->error);
+    }
+
+    public function testItWillFilterOnRelatedTo(): void
+    {
+        $result = $this->converter->convert(
+            json_encode([
+                'related_to' => [['id' => 102]],
+            ], JSON_THROW_ON_ERROR)
+        );
+
+        self::assertTrue(Result::isOk($result));
+
+        $criteria = $result->unwrapOr(null);
+        self::assertEquals(102, $criteria->related_to[0]->id);
+    }
+
     public function testItWillApplyAllFilters(): void
     {
         $result = $this->converter->convert(
