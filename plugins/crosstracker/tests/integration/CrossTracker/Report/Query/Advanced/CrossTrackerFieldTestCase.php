@@ -20,13 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
+namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use ForgeConfig;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-abstract class DuckTypedFieldTestCase extends TestIntegrationTestCase
+abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
 {
     use TemporaryTestDirectory;
 
@@ -38,6 +38,6 @@ abstract class DuckTypedFieldTestCase extends TestIntegrationTestCase
         ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
         ForgeConfig::set('sys_lang', 'en_US');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
-        ForgeConfig::set('sys_incdir', __DIR__ . '/../../../../../../../../../site-content');
+        ForgeConfig::set('sys_incdir', __DIR__ . '/../../../../../../../../site-content');
     }
 }

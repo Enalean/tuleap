@@ -28,6 +28,7 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -37,7 +38,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class DateDuckTypedFieldTest extends DuckTypedFieldTestCase
+final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
 {
     private PFUser $project_member;
     private PFUser $project_admin;
