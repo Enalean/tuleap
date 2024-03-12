@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\FieldValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\ListFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\ParametrizedListFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
@@ -39,13 +40,26 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
-use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 /**
- * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, ParametrizedFromWhere>
+ * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, ParametrizedListFromWhere>
  */
 final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
 {
+    private const OPENLIST_FROM = <<<EOSQL
+        LEFT JOIN user AS user1 ON (
+            user1.user_id = tcvol.bindvalue_id
+        )
+        LEFT JOIN tracker_field_openlist_value AS tfov ON (
+            tfov.id = tcvol.openvalue_id
+        )
+        EOSQL;
+    private const LIST_FROM     = <<<EOSQL
+        LEFT JOIN user AS user2 ON (
+            user2.user_id = tcvl.bindvalue_id
+        )
+        EOSQL;
+
     public function __construct(
         private ListFromWhereBuilder $list_builder,
     ) {
@@ -94,80 +108,50 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
     private function getWhereForEqual(
         string $filter_alias,
         SimpleValueWrapper $wrapper,
-    ): ParametrizedFromWhere {
+    ): ParametrizedListFromWhere {
         $value = $wrapper->getValue();
 
         if ($value === '') {
-            $from = <<<EOSQL
-            tracker_changeset_value as tcv
-            INNER JOIN tracker_changeset_value_list as tcvl ON (
-                tcvl.changeset_value_id = tcv.id AND tcvl.bindvalue_id = ?
-            )
-            EOSQL;
-
-            return new ParametrizedFromWhere(
-                $from,
+            return new ParametrizedListFromWhere(
+                self::OPENLIST_FROM,
+                self::LIST_FROM,
+                "IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)",
                 "$filter_alias.artifact_id IS NOT NULL",
                 [Tracker_FormElement_Field_List::NONE_VALUE],
-                []
             );
         }
 
-        $from = <<<EOSQL
-        tracker_changeset_value AS tcv
-        INNER JOIN tracker_changeset_value_list AS tcvl ON (
-            tcvl.changeset_value_id = tcv.id
-        )
-        INNER JOIN user ON (
-            user.user_id = tcvl.bindvalue_id AND user.user_name = ?
-        )
-        EOSQL;
-
-        return new ParametrizedFromWhere(
-            $from,
+        return new ParametrizedListFromWhere(
+            self::OPENLIST_FROM,
+            self::LIST_FROM,
+            "user1.user_name = ? OR user2.user_name = ? OR tfov.label = ?",
             "$filter_alias.artifact_id IS NOT NULL",
-            [$value],
-            []
+            [$value, $value, $value],
         );
     }
 
     private function getWhereForNotEqual(
         string $filter_alias,
         SimpleValueWrapper $wrapper,
-    ): ParametrizedFromWhere {
+    ): ParametrizedListFromWhere {
         $value = $wrapper->getValue();
 
         if ($value === '') {
-            $from = <<<EOSQL
-            tracker_changeset_value as tcv
-            INNER JOIN tracker_changeset_value_list as tcvl ON (
-                tcvl.changeset_value_id = tcv.id AND tcvl.bindvalue_id = ?
-            )
-            EOSQL;
-
-            return new ParametrizedFromWhere(
-                $from,
+            return new ParametrizedListFromWhere(
+                self::OPENLIST_FROM,
+                self::LIST_FROM,
+                "IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)",
                 "$filter_alias.artifact_id IS NULL",
                 [Tracker_FormElement_Field_List::NONE_VALUE],
-                []
             );
         }
 
-        $from = <<<EOSQL
-        tracker_changeset_value AS tcv
-        INNER JOIN tracker_changeset_value_list AS tcvl ON (
-            tcvl.changeset_value_id = tcv.id
-        )
-        INNER JOIN user ON (
-            user.user_id = tcvl.bindvalue_id AND user.user_name = ?
-        )
-        EOSQL;
-
-        return new ParametrizedFromWhere(
-            $from,
+        return new ParametrizedListFromWhere(
+            self::OPENLIST_FROM,
+            self::LIST_FROM,
+            "user1.user_name = ? OR user2.user_name = ? OR tfov.label = ?",
             "$filter_alias.artifact_id IS NULL",
-            [$value],
-            []
+            [$value, $value, $value],
         );
     }
 
@@ -204,54 +188,36 @@ final readonly class UserListFromWhereBuilder implements ValueWrapperVisitor
     private function getWhereForIn(
         string $filter_alias,
         InValueWrapper $wrapper,
-    ): ParametrizedFromWhere {
-        $values_statement = EasyStatement::open()->in(
-            "user.user_name IN (?*)",
-            $this->parseValueWrappersToValues($wrapper->getValueWrappers()),
-        );
+    ): ParametrizedListFromWhere {
+        $values          = $this->parseValueWrappersToValues($wrapper->getValueWrappers());
+        $user1_statement = EasyStatement::open()->in("user1.user_name IN (?*)", $values);
+        $user2_statement = EasyStatement::open()->in("user2.user_name IN (?*)", $values);
+        $tfov_statement  = EasyStatement::open()->in("tfov.label IN (?*)", $values);
 
-        $from = <<<EOSQL
-        tracker_changeset_value AS tcv
-        INNER JOIN tracker_changeset_value_list AS tcvl ON (
-            tcvl.changeset_value_id = tcv.id
-        )
-        INNER JOIN user ON (
-            user.user_id = tcvl.bindvalue_id AND $values_statement
-        )
-        EOSQL;
-
-        return new ParametrizedFromWhere(
-            $from,
+        return new ParametrizedListFromWhere(
+            self::OPENLIST_FROM,
+            self::LIST_FROM,
+            "$user1_statement OR $user2_statement OR $tfov_statement",
             "$filter_alias.artifact_id IS NOT NULL",
-            $values_statement->values(),
-            [],
+            array_merge($user1_statement->values(), $user2_statement->values(), $tfov_statement->values()),
         );
     }
 
     private function getWhereForNotIn(
         string $filter_alias,
         InValueWrapper $wrapper,
-    ): ParametrizedFromWhere {
-        $values_statement = EasyStatement::open()->in(
-            "user.user_name IN (?*)",
-            $this->parseValueWrappersToValues($wrapper->getValueWrappers()),
-        );
+    ): ParametrizedListFromWhere {
+        $values          = $this->parseValueWrappersToValues($wrapper->getValueWrappers());
+        $user1_statement = EasyStatement::open()->in("user1.user_name IN (?*)", $values);
+        $user2_statement = EasyStatement::open()->in("user2.user_name IN (?*)", $values);
+        $tfov_statement  = EasyStatement::open()->in("tfov.label IN (?*)", $values);
 
-        $from = <<<EOSQL
-        tracker_changeset_value AS tcv
-        INNER JOIN tracker_changeset_value_list AS tcvl ON (
-            tcvl.changeset_value_id = tcv.id
-        )
-        INNER JOIN user ON (
-            user.user_id = tcvl.bindvalue_id AND $values_statement
-        )
-        EOSQL;
-
-        return new ParametrizedFromWhere(
-            $from,
+        return new ParametrizedListFromWhere(
+            self::OPENLIST_FROM,
+            self::LIST_FROM,
+            "$user1_statement OR $user2_statement OR $tfov_statement",
             "$filter_alias.artifact_id IS NULL",
-            $values_statement->values(),
-            [],
+            array_merge($user1_statement->values(), $user2_statement->values(), $tfov_statement->values()),
         );
     }
 

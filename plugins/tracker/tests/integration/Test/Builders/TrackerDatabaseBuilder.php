@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Test\Builders;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tracker;
+use Tracker_FormElement_Field_List;
 
 final class TrackerDatabaseBuilder
 {
@@ -324,6 +325,33 @@ final class TrackerDatabaseBuilder
         );
     }
 
+    public function buildOpenValue(int $parent_changeset_id, int $list_field_id, int $bind_value_id, bool $is_new_value): void
+    {
+        $changeset_value_id = $this->buildChangesetValue($parent_changeset_id, $list_field_id);
+
+        if ($bind_value_id === Tracker_FormElement_Field_List::NONE_VALUE) {
+            return;
+        }
+
+        if ($is_new_value) {
+            $this->db->insert(
+                'tracker_changeset_value_openlist',
+                [
+                    'changeset_value_id' => $changeset_value_id,
+                    'openvalue_id'       => $bind_value_id,
+                ]
+            );
+        } else {
+            $this->db->insert(
+                'tracker_changeset_value_openlist',
+                [
+                    'changeset_value_id' => $changeset_value_id,
+                    'bindvalue_id'       => $bind_value_id,
+                ]
+            );
+        }
+    }
+
     private function buildListField(int $tracker_id, string $name, string $list_type, string $bind_type): int
     {
         $tracker_field_id = (int) $this->db->insertReturnId(
@@ -394,6 +422,26 @@ final class TrackerDatabaseBuilder
         foreach ($values as $value) {
             $ids_list[$value] = (int) $this->db->insertReturnId(
                 'tracker_field_list_bind_static_value',
+                [
+                    'field_id' => $tracker_field_id,
+                    'label'    => $value,
+                ]
+            );
+        }
+
+        return $ids_list;
+    }
+
+    /**
+     * @param string[] $values
+     * @return array<string, int>
+     */
+    public function buildValuesForStaticOpenListField(int $tracker_field_id, array $values): array
+    {
+        $ids_list = [];
+        foreach ($values as $value) {
+            $ids_list[$value] = (int) $this->db->insertReturnId(
+                'tracker_field_openlist_value',
                 [
                     'field_id' => $tracker_field_id,
                     'label'    => $value,
