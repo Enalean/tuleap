@@ -18,7 +18,7 @@
  */
 
 @use "sass:color";
-@import "../../../../tracker/themes/default/css/includes/graph";
+@use "@tuleap/plugin-tracker-chart-styles" as chart;
 
 $team-effort-color: #57b258;
 $total-effort-color: #bd2626;
@@ -73,7 +73,7 @@ $total-effort-color: #bd2626;
     fill: transparent;
 
     &.highlighted {
-        fill: $text-color;
+        fill: chart.$text-color;
     }
 }
 
@@ -82,17 +82,17 @@ $total-effort-color: #bd2626;
 }
 
 .chart-plot-ideal-burnup {
-    fill: $line-color;
+    fill: chart.$line-color;
 }
 
 .ideal-line {
     > circle {
-        fill: $line-color;
+        fill: chart.$line-color;
     }
 
     > path {
         stroke-width: 3px;
-        stroke: $line-color;
+        stroke: chart.$line-color;
         fill: transparent;
     }
 }

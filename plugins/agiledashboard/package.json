@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/chart-builder": "workspace:*",
     "@tuleap/plugin-agiledashboard-burnup-data-transformer": "workspace:*",
+    "@tuleap/plugin-tracker-chart-styles": "workspace:^",
     "@tuleap/plugin-tracker-color-picker": "workspace:*",
     "d3-array": "^3.0.1",
     "d3-selection": "^3.0.0",

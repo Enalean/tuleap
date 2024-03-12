@@ -1,0 +1,12 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-chart-styles",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "exports": {
+    ".": {
+      "default": "./themes/main.scss"
+    }
+  }
+}
