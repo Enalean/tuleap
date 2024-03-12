@@ -37,6 +37,7 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
     public function __construct(
         private readonly MoveChangesetXMLUpdater $move_changeset_XML_updater,
         private readonly UpdateBindValueByDuckTyping $duck_typing_updater,
+        private readonly UpdateBindOpenValueByDuckTyping $open_value_duck_typing_updater,
         private readonly UpdatePermissionsByDuckTyping $permissions_by_duck_typing,
         private readonly UpdateOpenListUserGroupsByDuckTyping $update_open_list_user_groups_by_duck_typing,
         private readonly UpdateArtifactLinkXML $update_artifact_link_XML,
@@ -188,6 +189,13 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
                 && ($source_field instanceof \Tracker_FormElement_Field_List && $destination_field instanceof \Tracker_FormElement_Field_List)
             ) {
                 $this->duck_typing_updater->updateValueForDuckTypingMove($changeset_xml, $source_field, $destination_field, $index);
+            }
+
+            if (
+                ($this->verify_is_open_list_field->isAnOpenListField($source_field) && $this->verify_is_open_list_field->isAnOpenListField($destination_field))
+                && ($source_field instanceof \Tracker_FormElement_Field_List && $destination_field instanceof \Tracker_FormElement_Field_List)
+            ) {
+                $this->open_value_duck_typing_updater->updateOpenValueForDuckTypingMove($changeset_xml, $source_field, $destination_field, $index);
             }
 
             if (
