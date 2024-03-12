@@ -18,12 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Registration\Template\Upload;
+declare(strict_types=1);
 
-interface SearchFileUpload
+namespace Tuleap\Project\Registration\Template\Upload\Tus;
+
+use Tuleap\Tus\TusFileInformation;
+
+final class ProjectNotFoundException extends \RuntimeException
 {
-    /**
-     * @return array{id: int, file_size: int, file_name: string, user_id: int, expiration_date: int, project_id: int} | array{}
-     */
-    public function searchFileOngoingUploadById(int $id): array;
+    public function __construct(TusFileInformation $file_information)
+    {
+        parent::__construct("Unable to find corresponding project id from tus file information #{$file_information->getID()}");
+    }
 }

@@ -26,7 +26,7 @@ use DateTimeImmutable;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Project\Registration\CheckProjectRegistrationUserPermission;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
-use Tuleap\Project\Registration\Template\Upload\SearchFileUpload;
+use Tuleap\Project\Registration\Template\Upload\SearchFileUploadByExpirationDate;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tus\TusFileInformation;
@@ -39,7 +39,7 @@ final readonly class ProjectFileBeingUploadedInformationProvider implements TusF
 {
     public function __construct(
         private UploadPathAllocator $path_allocator,
-        private SearchFileUpload $file_ongoing_upload_dao,
+        private SearchFileUploadByExpirationDate $file_ongoing_upload_dao,
         private ProvideCurrentRequestUser $current_user_request,
         private CheckProjectRegistrationUserPermission $permission_checker,
     ) {

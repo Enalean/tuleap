@@ -20,10 +20,7 @@
 
 namespace Tuleap\Project\Registration\Template\Upload;
 
-interface SearchFileUpload
+interface FinishFileUploadPostAction
 {
-    /**
-     * @return array{id: int, file_size: int, file_name: string, user_id: int, expiration_date: int, project_id: int} | array{}
-     */
-    public function searchFileOngoingUploadById(int $id): array;
+    public function process(int $project_id, string $filename): void;
 }
