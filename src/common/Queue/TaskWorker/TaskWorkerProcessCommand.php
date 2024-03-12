@@ -28,25 +28,20 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\Queue\FindWorkerEventProcessor;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventProcessor;
 
 final class TaskWorkerProcessCommand extends Command
 {
     public const NAME = 'queue:task-worker-process';
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
-    public function __construct(EventDispatcherInterface $event_dispatcher, LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly EventDispatcherInterface $event_dispatcher,
+        private readonly LoggerInterface $logger,
+        private readonly FindWorkerEventProcessor $find_worker_event_processor,
+    ) {
         parent::__construct(self::NAME);
-        $this->event_dispatcher = $event_dispatcher;
-        $this->logger           = $logger;
     }
 
     protected function configure(): void
@@ -69,7 +64,12 @@ final class TaskWorkerProcessCommand extends Command
         $this->logger->debug('Starting to process message: ' . $event_string);
         $event              = json_decode($event_string, true, 512, JSON_THROW_ON_ERROR);
         $worker_queue_event = new WorkerEvent($this->logger, $event);
-        $this->event_dispatcher->dispatch($worker_queue_event);
+        $this->find_worker_event_processor
+            ->findFromWorkerEvent($worker_queue_event)
+            ->match(
+                static fn (WorkerEventProcessor $event_processor) => $event_processor->process(),
+                fn () => $this->event_dispatcher->dispatch($worker_queue_event),
+            );
 
         return 0;
     }

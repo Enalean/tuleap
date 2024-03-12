@@ -27,30 +27,55 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\ImportFromArchive;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ZipArchive;
+use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventProcessor;
 
-final readonly class ExtractArchiveAndCreateProject implements FinishFileUploadPostAction
+final readonly class ExtractArchiveAndCreateProject implements WorkerEventProcessor
 {
-    public function __construct(
+    public const TOPIC = 'tuleap.project.create-from-archive';
+
+    private function __construct(
         private ImportFromArchive $importer,
         private LoggerInterface $logger,
+        private int $project_id,
+        private string $filename,
     ) {
     }
 
-    public function process(int $project_id, string $filename): void
+    public static function fromEvent(WorkerEvent $event, ImportFromArchive $importer): WorkerEventProcessor
+    {
+        $payload = $event->getPayload();
+        if (! isset($payload['project_id']) || ! is_int($payload['project_id'])) {
+            throw new \Exception(sprintf('Payload doesnt have project_id or project_id is not integer: %s', var_export($payload, true)));
+        }
+
+        if (! isset($payload['filename']) || ! is_string($payload['filename'])) {
+            throw new \Exception(sprintf('Payload doesnt have filename or filename is not string: %s', var_export($payload, true)));
+        }
+
+        return new self(
+            $importer,
+            $event->getLogger(),
+            $payload['project_id'],
+            $payload['filename'],
+        );
+    }
+
+    public function process(): void
     {
         $this->importer->importFromArchive(
             new ImportConfig(),
-            $project_id,
-            new ZipArchive($filename, \ForgeConfig::get('tmp_dir')),
+            $this->project_id,
+            new ZipArchive($this->filename, \ForgeConfig::get('tmp_dir')),
         )->match(
-            function () use ($project_id): void {
-                $this->logger->info("Successfully imported archive into project #{$project_id}");
+            function (): void {
+                $this->logger->info("Successfully imported archive into project #{$this->project_id}");
             },
-            function (Fault $fault) use ($project_id): void {
-                $this->logger->error("Unable to import archive into project #{$project_id}");
+            function (Fault $fault): void {
+                $this->logger->error("Unable to import archive into project #{$this->project_id}");
                 Fault::writeToLogger($fault, $this->logger);
             }
         );
-        unlink($filename);
+        unlink($this->filename);
     }
 }
