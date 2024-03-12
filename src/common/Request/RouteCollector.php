@@ -161,6 +161,7 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundAdministrationController;
 use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\Upload\EnqueueProjectCreationFromArchive;
 use Tuleap\Project\Registration\Template\Upload\ProjectArchiveOngoingUploadDao;
@@ -177,6 +178,7 @@ use Tuleap\Project\Service\ServicesPresenterBuilder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Queue\EnqueueTask;
+use Tuleap\Queue\WorkerAvailability;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
@@ -935,7 +937,6 @@ class RouteCollector
 
     public static function getProjectRegistrationController(): ProjectRegistrationController
     {
-        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         return new ProjectRegistrationController(
             TemplateRendererFactory::build(),
             new JavascriptViteAsset(
@@ -952,7 +953,8 @@ class RouteCollector
                 TemplateFactory::build(),
                 new DefaultProjectVisibilityRetriever(),
                 new TroveCatFactory(new TroveCatDao()),
-                new DescriptionFieldsFactory(new DescriptionFieldsDao())
+                new DescriptionFieldsFactory(new DescriptionFieldsDao()),
+                new CustomProjectArchiveFeatureFlag(new WorkerAvailability()),
             )
         );
     }

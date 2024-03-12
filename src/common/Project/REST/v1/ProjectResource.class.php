@@ -83,6 +83,7 @@ use Tuleap\Project\Registration\ProjectRegistrationCheckerBlockErrorSet;
 use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
 use Tuleap\Project\Registration\ProjectRegistrationRESTChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\NoTemplateProvidedFault;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -100,6 +101,7 @@ use Tuleap\Project\Status\CannotDeletedDefaultAdminProjectException;
 use Tuleap\Project\Status\SwitchingBackToPendingException;
 use Tuleap\Project\XML\InvalidXMLContentFault;
 use Tuleap\Project\XML\XMLFileContentRetriever;
+use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Reference\REST\ReferenceRepresentationBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
@@ -290,7 +292,8 @@ class ProjectResource extends AuthenticatedResource
                     ServiceManager::instance(),
                 ),
                 $this->getBackendLogger(),
-                $this->getURLVerification()
+                $this->getURLVerification(),
+                new CustomProjectArchiveFeatureFlag(new WorkerAvailability()),
             );
 
             $creation_data = $creation_data_post_project_builder->buildProjectCreationDataFromPOSTRepresentation(

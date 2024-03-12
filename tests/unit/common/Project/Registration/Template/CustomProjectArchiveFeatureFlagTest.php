@@ -24,6 +24,7 @@ namespace Tuleap\Project\Registration\Template;
 
 use ForgeConfig;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class CustomProjectArchiveFeatureFlagTest extends TestCase
@@ -33,12 +34,48 @@ final class CustomProjectArchiveFeatureFlagTest extends TestCase
     public function testUserCanCreateProjectFromCustomTemplate(): void
     {
         ForgeConfig::setFeatureFlag(CustomProjectArchiveFeatureFlag::FEATURE_FLAG_KEY, '1');
-        self::assertTrue(CustomProjectArchiveFeatureFlag::canCreateFromCustomArchive());
+
+        $verifier = new CustomProjectArchiveFeatureFlag(
+            new class implements IsAsyncTaskProcessingAvailable {
+                public function canProcessAsyncTasks(): bool
+                {
+                    return true;
+                }
+            }
+        );
+
+        self::assertTrue($verifier->canCreateFromCustomArchive());
     }
 
     public function testUserCannotCreateProjectFromCustomTemplate(): void
     {
         ForgeConfig::setFeatureFlag(CustomProjectArchiveFeatureFlag::FEATURE_FLAG_KEY, '0');
-        self::assertFalse(CustomProjectArchiveFeatureFlag::canCreateFromCustomArchive());
+
+        $verifier = new CustomProjectArchiveFeatureFlag(
+            new class implements IsAsyncTaskProcessingAvailable {
+                public function canProcessAsyncTasks(): bool
+                {
+                    return true;
+                }
+            }
+        );
+
+        self::assertFalse($verifier->canCreateFromCustomArchive());
+    }
+
+    public function testCreateProjectFromCustomTemplateHasFeatureFlagOnButNoWorkerIsAvailable(): void
+    {
+        ForgeConfig::setFeatureFlag(CustomProjectArchiveFeatureFlag::FEATURE_FLAG_KEY, '1');
+
+        $verifier = new CustomProjectArchiveFeatureFlag(
+            new class implements IsAsyncTaskProcessingAvailable {
+                public function canProcessAsyncTasks(): bool
+                {
+                    return false;
+                }
+            }
+        );
+
+        self::assertFalse($verifier->canCreateFromCustomArchive());
     }
 }

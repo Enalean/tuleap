@@ -32,12 +32,12 @@ use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCol
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
-use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 use Tuleap\Project\Registration\Template\InsufficientPermissionToUseProjectAsTemplateException;
 use Tuleap\Project\Registration\Template\ProjectIDTemplateNotProvidedException;
 use Tuleap\Project\Registration\Template\ProjectTemplateIDInvalidException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
+use Tuleap\Project\Registration\Template\VerifyProjectCreationFromArchiveIsAllowed;
 use Tuleap\Project\REST\v1\ProjectPostRepresentation;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use URLVerification;
@@ -53,6 +53,7 @@ readonly class ProjectCreationDataPOSTProjectBuilder
         private ProjectCreationDataServiceFromXmlInheritor $from_xml_inheritor,
         private LoggerInterface $logger,
         private URLVerification $url_verification,
+        private VerifyProjectCreationFromArchiveIsAllowed $creation_from_archive_is_allowed,
     ) {
     }
 
@@ -140,7 +141,7 @@ readonly class ProjectCreationDataPOSTProjectBuilder
 
     private function buildFromArchive(ProjectPostRepresentation $post_representation): ProjectCreationData
     {
-        if (! CustomProjectArchiveFeatureFlag::canCreateFromCustomArchive()) {
+        if (! $this->creation_from_archive_is_allowed->canCreateFromCustomArchive()) {
             throw new RestException(400, 'Create from archive is not available on your platform');
         }
 
