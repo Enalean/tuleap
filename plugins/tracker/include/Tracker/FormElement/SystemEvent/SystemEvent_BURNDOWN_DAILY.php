@@ -83,6 +83,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
         }
 
         foreach ($this->burndown_dao->getArtifactsWithBurndown() as $burndown) {
+            $this->logger->debug('Calculating burndown for artifact #' . $burndown['id']);
             if (empty($burndown['duration'])) {
                 $burndown_period = DatePeriodWithoutWeekEnd::buildFromEndDate(
                     $burndown['start_date'],
