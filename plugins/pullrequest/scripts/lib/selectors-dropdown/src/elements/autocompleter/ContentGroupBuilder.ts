@@ -46,6 +46,6 @@ export const ContentGroupBuilder = (config: AutocompleterConfig): BuildContentGr
     }),
     buildEmptyAndDisabled: () => ({
         ...getBaseGroupFromConfig(config),
-        empty_message: config.disabled_message,
+        empty_message: config.getDisabledMessage(),
     }),
 });

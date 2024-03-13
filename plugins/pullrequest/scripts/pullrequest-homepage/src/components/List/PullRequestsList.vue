@@ -45,10 +45,12 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { fetchAllPullRequests } from "../../api/tuleap-rest-querier";
 import {
+    CURRENT_USER_ID,
     DISPLAY_TULEAP_API_ERROR,
     PULL_REQUEST_SORT_ORDER,
     REPOSITORY_ID,
     SHOW_CLOSED_PULL_REQUESTS,
+    SHOW_PULL_REQUESTS_RELATED_TO_ME,
 } from "../../injection-symbols";
 import type { StoreListFilters } from "../Filters/ListFiltersStore";
 import PullRequestCard from "./PullRequest/PullRequestCard.vue";
@@ -56,8 +58,10 @@ import PullRequestsCardsSkeletons from "./PullRequestsCardsSkeletons.vue";
 import PullRequestsListEmptyState from "./PullRequestsListEmptyState.vue";
 
 const repository_id = strictInject(REPOSITORY_ID);
+const current_user_id = strictInject(CURRENT_USER_ID);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const are_closed_pull_requests_shown = strictInject(SHOW_CLOSED_PULL_REQUESTS);
+const are_pull_requests_related_to_me_shown = strictInject(SHOW_PULL_REQUESTS_RELATED_TO_ME);
 const sort_direction = strictInject(PULL_REQUEST_SORT_ORDER);
 
 const pull_requests: Ref<readonly PullRequest[]> = ref([]);
@@ -72,8 +76,10 @@ const loadPullRequests = (): void => {
 
     fetchAllPullRequests(
         repository_id,
+        current_user_id,
         props.filters_store.getFilters().value,
         are_closed_pull_requests_shown.value,
+        are_pull_requests_related_to_me_shown.value,
         sort_direction.value,
     ).match((all_pull_requests) => {
         pull_requests.value = all_pull_requests;
@@ -86,6 +92,7 @@ watch(
     () => [
         props.filters_store.getFilters().value.length,
         are_closed_pull_requests_shown.value,
+        are_pull_requests_related_to_me_shown.value,
         sort_direction.value,
     ],
     loadPullRequests,

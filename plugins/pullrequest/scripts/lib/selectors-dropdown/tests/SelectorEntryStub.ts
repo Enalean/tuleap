@@ -29,7 +29,7 @@ export const SelectorEntryStub = {
             placeholder: "Hold the place",
             label: "Test",
             empty_message: "Nothing to see here",
-            disabled_message: "Disabled. Nothing can be selected",
+            getDisabledMessage: () => "Disabled. Nothing can be selected",
             templating_callback: () => html``,
             loadItems(): Promise<[]> {
                 return Promise.resolve([]);

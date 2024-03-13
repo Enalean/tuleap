@@ -79,7 +79,9 @@ describe("OnSelectionCallback", () => {
 
         expect(selector.config.onItemSelection).toHaveBeenCalledOnce();
         expect(selector.config.onItemSelection).toHaveBeenCalledWith(selected_item);
-        expect(replaced_groups[0].empty_message).toStrictEqual(selector.config.disabled_message);
+        expect(replaced_groups[0].empty_message).toStrictEqual(
+            selector.config.getDisabledMessage(),
+        );
         expect(lazy_autocompleter.disabled).toBe(true);
     });
 

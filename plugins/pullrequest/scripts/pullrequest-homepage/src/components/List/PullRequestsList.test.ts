@@ -26,9 +26,11 @@ import { Fault } from "@tuleap/fault";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import {
+    injected_current_user_id,
     injected_pull_requests_sort_order,
     injected_repository_id,
     injected_show_closed_pull_requests,
+    injected_show_pull_requests_related_to_me,
     StubInjectionSymbols,
 } from "../../../tests/injection-symbols-stub";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
@@ -83,8 +85,10 @@ describe("PullRequestsList", () => {
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
             injected_repository_id,
+            injected_current_user_id,
             [],
             injected_show_closed_pull_requests.value,
+            injected_show_pull_requests_related_to_me.value,
             injected_pull_requests_sort_order.value,
         );
 
@@ -95,8 +99,10 @@ describe("PullRequestsList", () => {
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(2);
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
             injected_repository_id,
+            injected_current_user_id,
             [filter],
             injected_show_closed_pull_requests.value,
+            injected_show_pull_requests_related_to_me.value,
             injected_pull_requests_sort_order.value,
         );
 
@@ -106,8 +112,10 @@ describe("PullRequestsList", () => {
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(3);
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
             injected_repository_id,
+            injected_current_user_id,
             [],
             injected_show_closed_pull_requests.value,
+            injected_show_pull_requests_related_to_me.value,
             injected_pull_requests_sort_order.value,
         );
     });
@@ -121,8 +129,10 @@ describe("PullRequestsList", () => {
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
             injected_repository_id,
+            injected_current_user_id,
             [],
             false,
+            injected_show_pull_requests_related_to_me.value,
             injected_pull_requests_sort_order.value,
         );
 
@@ -132,7 +142,39 @@ describe("PullRequestsList", () => {
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(2);
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
             injected_repository_id,
+            injected_current_user_id,
             [],
+            true,
+            injected_show_pull_requests_related_to_me.value,
+            injected_pull_requests_sort_order.value,
+        );
+    });
+
+    it("When SHOW_PULL_REQUESTS_ASSIGNED_TO_ME value changes, then it should reload the list of pull-requests", async () => {
+        vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(okAsync([]));
+
+        const wrapper = getWrapper();
+        await wrapper.vm.$nextTick();
+
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
+            injected_repository_id,
+            injected_current_user_id,
+            [],
+            injected_show_closed_pull_requests.value,
+            false,
+            injected_pull_requests_sort_order.value,
+        );
+
+        injected_show_pull_requests_related_to_me.value = true;
+        await wrapper.vm.$nextTick();
+
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(2);
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
+            injected_repository_id,
+            injected_current_user_id,
+            [],
+            injected_show_closed_pull_requests.value,
             true,
             injected_pull_requests_sort_order.value,
         );
@@ -147,8 +189,10 @@ describe("PullRequestsList", () => {
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
             injected_repository_id,
+            injected_current_user_id,
             [],
             injected_show_closed_pull_requests.value,
+            injected_show_pull_requests_related_to_me.value,
             SORT_DESCENDANT,
         );
 
@@ -158,8 +202,10 @@ describe("PullRequestsList", () => {
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(2);
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
             injected_repository_id,
+            injected_current_user_id,
             [],
             injected_show_closed_pull_requests.value,
+            injected_show_pull_requests_related_to_me.value,
             SORT_ASCENDANT,
         );
     });

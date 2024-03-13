@@ -34,16 +34,20 @@ import {
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
     SORT_DESCENDANT,
+    SHOW_PULL_REQUESTS_RELATED_TO_ME,
+    CURRENT_USER_ID,
 } from "./injection-symbols";
 
 export const init = async (mount_point: HTMLElement): Promise<void> => {
     const repository_id = Number.parseInt(getDatasetItemOrThrow(mount_point, "repositoryId"), 10);
     const project_id = Number.parseInt(getDatasetItemOrThrow(mount_point, "projectId"), 10);
+    const user_id = Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10);
     const base_url = buildBaseUrl(window.location, repository_id, project_id);
 
     createApp(HomePage)
         .provide(REPOSITORY_ID, repository_id)
         .provide(PROJECT_ID, project_id)
+        .provide(CURRENT_USER_ID, user_id)
         .provide(BASE_URL, base_url)
         .provide(USER_LOCALE_KEY, getDatasetItemOrThrow(document.body, "userLocale"))
         .provide(USER_DATE_TIME_FORMAT_KEY, getDatasetItemOrThrow(document.body, "dateTimeFormat"))
@@ -52,6 +56,7 @@ export const init = async (mount_point: HTMLElement): Promise<void> => {
             getDatasetItemOrThrow(mount_point, "relativeDateDisplay"),
         )
         .provide(SHOW_CLOSED_PULL_REQUESTS, ref(false))
+        .provide(SHOW_PULL_REQUESTS_RELATED_TO_ME, ref(false))
         .provide(PULL_REQUEST_SORT_ORDER, ref(SORT_DESCENDANT))
         .use(VueDOMPurifyHTML)
         .use(

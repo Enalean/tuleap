@@ -47,7 +47,7 @@ export type AutocompleterConfig = {
     label: string;
     placeholder: string;
     empty_message: string;
-    disabled_message: string;
+    getDisabledMessage: () => string;
     loadItems: SelectorsDropdownLoadItemsCallback;
     filterItems: SelectorsDropdownFilterItemsCallback;
     onItemSelection: SelectorsDropdownOnItemSelectionCallback;

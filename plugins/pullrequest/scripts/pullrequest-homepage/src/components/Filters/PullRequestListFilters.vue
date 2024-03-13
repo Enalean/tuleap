@@ -37,6 +37,7 @@
             </div>
             <div class="pull-requests-homepage-display-buttons">
                 <closed-pull-requests-filter-switch />
+                <related-to-switch v-bind:filters_store="filters_store" />
                 <pull-requests-sort-order />
             </div>
         </div>
@@ -55,12 +56,18 @@
 import { useGettext } from "vue3-gettext";
 import "@tuleap/plugin-pullrequest-selectors-dropdown";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { DISPLAY_TULEAP_API_ERROR, PROJECT_ID, REPOSITORY_ID } from "../../injection-symbols";
+import {
+    DISPLAY_TULEAP_API_ERROR,
+    PROJECT_ID,
+    REPOSITORY_ID,
+    SHOW_PULL_REQUESTS_RELATED_TO_ME,
+} from "../../injection-symbols";
 import { AuthorSelectorEntry } from "./Author/AuthorSelectorEntry";
 import { LabelsSelectorEntry } from "./Labels/LabelsSelectorEntry";
 import { TargetBranchSelectorEntry } from "./Branches/TargetBranchSelectorEntry";
 import type { StoreListFilters } from "./ListFiltersStore";
 import ClosedPullRequestsFilterSwitch from "./Status/ClosedPullRequestsFilterSwitch.vue";
+import RelatedToSwitch from "./RelatedToMe/RelatedToMeSwitch.vue";
 import FilterBadge from "./FilterBadge.vue";
 import PullRequestsSortOrder from "./PullRequestsSortOrder.vue";
 import KeywordsSearchInput from "./Keywords/KeywordsSearchInput.vue";
@@ -71,14 +78,27 @@ const { $gettext } = useGettext();
 const repository_id = strictInject(REPOSITORY_ID);
 const project_id = strictInject(PROJECT_ID);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
+const are_pull_requests_related_to_me_shown = strictInject(SHOW_PULL_REQUESTS_RELATED_TO_ME);
 
 const props = defineProps<{
     filters_store: StoreListFilters;
 }>();
 
 const selectors_entries = [
-    AuthorSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, repository_id),
-    ReviewerSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, repository_id),
+    AuthorSelectorEntry(
+        $gettext,
+        displayTuleapAPIFault,
+        props.filters_store,
+        repository_id,
+        are_pull_requests_related_to_me_shown,
+    ),
+    ReviewerSelectorEntry(
+        $gettext,
+        displayTuleapAPIFault,
+        props.filters_store,
+        repository_id,
+        are_pull_requests_related_to_me_shown,
+    ),
     TargetBranchSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, repository_id),
     LabelsSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, project_id),
 ];

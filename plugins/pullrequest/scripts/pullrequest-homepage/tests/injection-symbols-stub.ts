@@ -32,6 +32,8 @@ import {
     USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+    SHOW_PULL_REQUESTS_RELATED_TO_ME,
+    CURRENT_USER_ID,
 } from "../src/injection-symbols";
 import type { DisplayErrorCallback, PullRequestSortOrder } from "../src/injection-symbols";
 
@@ -41,9 +43,11 @@ const noop = (): void => {
 
 export const injected_repository_id = 2;
 const injected_project_id = 102;
+export const injected_current_user_id = 113;
 export const injected_base_url = new URL("https://example.com");
 export const injected_user_locale = "fr_FR";
 export let injected_show_closed_pull_requests = ref(false);
+export let injected_show_pull_requests_related_to_me = ref(false);
 export let injected_pull_requests_sort_order: Ref<PullRequestSortOrder> = ref(SORT_DESCENDANT);
 export let injected_tuleap_error_api_callback: DisplayErrorCallback = noop;
 
@@ -55,6 +59,8 @@ const injection_symbols: StrictInjectImplementation = (key): unknown => {
             return injected_repository_id;
         case PROJECT_ID:
             return injected_project_id;
+        case CURRENT_USER_ID:
+            return injected_current_user_id;
         case BASE_URL:
             return injected_base_url;
         case USER_LOCALE_KEY:
@@ -67,6 +73,8 @@ const injection_symbols: StrictInjectImplementation = (key): unknown => {
             return injected_tuleap_error_api_callback;
         case SHOW_CLOSED_PULL_REQUESTS:
             return injected_show_closed_pull_requests;
+        case SHOW_PULL_REQUESTS_RELATED_TO_ME:
+            return injected_show_pull_requests_related_to_me;
         case PULL_REQUEST_SORT_ORDER:
             return injected_pull_requests_sort_order;
         default:
@@ -77,6 +85,7 @@ const injection_symbols: StrictInjectImplementation = (key): unknown => {
 export const StubInjectionSymbols = {
     withDefaults: (): StrictInjectImplementation => {
         injected_show_closed_pull_requests = ref(false);
+        injected_show_pull_requests_related_to_me = ref(false);
         injected_pull_requests_sort_order = ref(SORT_DESCENDANT);
 
         return injection_symbols;

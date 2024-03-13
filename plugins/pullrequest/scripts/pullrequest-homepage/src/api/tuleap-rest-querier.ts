@@ -37,8 +37,10 @@ type PullRequestCollection = {
 
 export const fetchAllPullRequests = (
     repository_id: number,
+    current_user_id: number,
     filters: PullRequestsListFilter[],
     are_closed_pull_requests_shown: boolean,
+    are_pull_requests_related_to_me_shown: boolean,
     sort_order: PullRequestSortOrder,
 ): ResultAsync<readonly PullRequest[], Fault> =>
     getAllJSON<PullRequest, PullRequestCollection>(
@@ -47,7 +49,12 @@ export const fetchAllPullRequests = (
             params: {
                 limit: 50,
                 order: sort_order,
-                query: buildQueryFromFilters(filters, are_closed_pull_requests_shown),
+                query: buildQueryFromFilters(
+                    current_user_id,
+                    filters,
+                    are_closed_pull_requests_shown,
+                    are_pull_requests_related_to_me_shown,
+                ),
             },
             getCollectionCallback: (payload) => payload.collection,
         },
