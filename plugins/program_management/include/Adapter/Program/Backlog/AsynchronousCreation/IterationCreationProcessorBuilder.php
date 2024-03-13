@@ -201,13 +201,13 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                 new \Tracker_Artifact_Changeset_CommentDao(),
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_manager),
-                    $event_manager,
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                ),
                 new TextValueValidator(),
-            )
+            ),
+            new ChangesetCommentIndexer(
+                new ItemToIndexQueueEventBased($event_manager),
+                $event_manager,
+                new \Tracker_Artifact_Changeset_CommentDao(),
+            ),
         );
 
         $changeset_adder = new ChangesetAdder(

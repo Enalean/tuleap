@@ -145,9 +145,9 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->comment_dao,
                 $reference_manager,
                 $this->ugroup_private_comment_inserter,
-                $changeset_comment_indexer,
                 new TextValueValidator(),
             ),
+            $changeset_comment_indexer,
         );
         $creator->create($new_changeset, PostCreationContext::withNoConfig(false));
     }

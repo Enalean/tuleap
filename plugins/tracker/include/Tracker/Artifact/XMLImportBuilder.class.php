@@ -109,13 +109,13 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
                 $changeset_comment_dao,
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_manager),
-                    $event_manager,
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                ),
                 new TextValueValidator(),
-            )
+            ),
+            new ChangesetCommentIndexer(
+                new ItemToIndexQueueEventBased($event_manager),
+                $event_manager,
+                new \Tracker_Artifact_Changeset_CommentDao(),
+            ),
         );
 
         return new Tracker_Artifact_XMLImport(

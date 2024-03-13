@@ -339,13 +339,13 @@ class gitlabPlugin extends Plugin
                 new TrackerPrivateCommentUGroupPermissionInserter(
                     new TrackerPrivateCommentUGroupPermissionDao()
                 ),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_manager),
-                    $event_manager,
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                ),
                 new TextValueValidator(),
-            )
+            ),
+            new ChangesetCommentIndexer(
+                new ItemToIndexQueueEventBased($event_manager),
+                $event_manager,
+                new \Tracker_Artifact_Changeset_CommentDao(),
+            ),
         );
 
         return new GitlabRepositoryWebhookController(
@@ -568,13 +568,13 @@ class gitlabPlugin extends Plugin
                 new TrackerPrivateCommentUGroupPermissionInserter(
                     new TrackerPrivateCommentUGroupPermissionDao()
                 ),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_manager),
-                    $event_manager,
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                ),
                 new TextValueValidator(),
-            )
+            ),
+            new ChangesetCommentIndexer(
+                new ItemToIndexQueueEventBased($event_manager),
+                $event_manager,
+                new \Tracker_Artifact_Changeset_CommentDao(),
+            ),
         );
 
         return new IntegrationWebhookController(

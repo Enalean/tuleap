@@ -137,13 +137,13 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
                 new \Tracker_Artifact_Changeset_CommentDao(),
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_dispatcher),
-                    $event_dispatcher,
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                ),
                 new TextValueValidator(),
-            )
+            ),
+            new ChangesetCommentIndexer(
+                new ItemToIndexQueueEventBased($event_dispatcher),
+                $event_dispatcher,
+                new \Tracker_Artifact_Changeset_CommentDao(),
+            ),
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(

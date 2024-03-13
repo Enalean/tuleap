@@ -2664,13 +2664,13 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 new TrackerPrivateCommentUGroupPermissionInserter(
                     new TrackerPrivateCommentUGroupPermissionDao()
                 ),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_manager),
-                    $event_manager,
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                ),
                 new TextValueValidator(),
-            )
+            ),
+            new ChangesetCommentIndexer(
+                new ItemToIndexQueueEventBased($event_manager),
+                $event_manager,
+                new \Tracker_Artifact_Changeset_CommentDao(),
+            ),
         );
 
         $handler = new ArtifactClosingReferencesHandler(

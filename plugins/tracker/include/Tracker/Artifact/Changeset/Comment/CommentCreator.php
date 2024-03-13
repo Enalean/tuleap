@@ -33,7 +33,6 @@ final class CommentCreator
         private \Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
         private \ReferenceManager $reference_manager,
         private TrackerPrivateCommentUGroupPermissionInserter $comment_ugroup_permission_inserter,
-        private ChangesetCommentIndexer $changeset_comment_indexer,
         private TextValueValidator $text_value_validator,
     ) {
     }
@@ -42,10 +41,10 @@ final class CommentCreator
      * @throws \Tracker_CommentNotStoredException
      * @throws CommentContentNotValidException
      */
-    public function createComment(Artifact $artifact, CommentCreation $comment): void
+    public function createComment(Artifact $artifact, CommentCreation $comment): bool
     {
         //check size here.
-        $this->text_value_validator->isCommentContentValid($comment)
+        return $this->text_value_validator->isCommentContentValid($comment)
             ->match(function () use ($comment, $artifact) {
                 $comment_added = $this->changeset_comment_dao->createNewVersion(
                     $comment->getChangesetId(),
@@ -77,7 +76,7 @@ final class CommentCreator
                     $artifact->getTracker()->getItemName()
                 );
 
-                $this->changeset_comment_indexer->indexNewChangesetComment($comment, $artifact);
+                return true;
             }, function (Fault $fault) {
                 throw new CommentContentNotValidException((string) $fault);
             });
