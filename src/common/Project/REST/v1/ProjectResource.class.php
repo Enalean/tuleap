@@ -262,6 +262,8 @@ class ProjectResource extends AuthenticatedResource
      * To see if your project creation data are correctly set, you can use the ?dry_run=true option.
      * <br>
      * All errors (if found) will be returned at once.
+     * <br>
+     * Note: dry run is not allowed when creating a project from an archive.
      *
      * @url    POST
      * @status 201
@@ -324,6 +326,13 @@ class ProjectResource extends AuthenticatedResource
         }
 
         if ($dry_run === true) {
+            if ($post_representation->from_archive !== null) {
+                throw new I18NRestException(
+                    400,
+                    gettext('You cannot ask for a dry-run when creating a project from an archive')
+                );
+            }
+
             $checker = new ProjectRegistrationCheckerBlockErrorSet(
                 new ProjectRegistrationPermissionsChecker(
                     new ProjectRegistrationUserPermissionChecker(
