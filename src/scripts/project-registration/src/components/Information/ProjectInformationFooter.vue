@@ -29,7 +29,9 @@
                     data-test="project-registration-back-button"
                 >
                     <i class="fas fa-long-arrow-alt-left"></i>
-                    <span class="project-registration-back-button-text" v-translate>Back</span>
+                    <span class="project-registration-back-button-text">{{
+                        $gettext("Back")
+                    }}</span>
                 </router-link>
                 <button
                     type="submit"
@@ -37,7 +39,7 @@
                     data-test="project-registration-next-button"
                     v-bind:disabled="root_store.is_creating_project"
                 >
-                    <span v-translate>Start my project</span>
+                    <span>{{ $gettext("Start my project") }}</span>
                     <i v-bind:class="get_icon" data-test="project-submission-icon" />
                 </button>
             </div>
@@ -45,27 +47,21 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useStore } from "../../stores/root";
 
-@Component({})
-export default class ProjectInformationFooter extends Vue {
-    root_store = useStore();
+const root_store = useStore();
 
-    is_loading = false;
-
-    get get_icon(): string {
-        if (!this.root_store.is_creating_project) {
-            return "fa tlp-button-icon-right fa-arrow-circle-o-right";
-        }
-
-        return "fa tlp-button-icon-right fa-spin fa-circle-o-notch";
+const get_icon = computed((): string => {
+    if (!root_store.is_creating_project) {
+        return "fa tlp-button-icon-right fa-arrow-circle-o-right";
     }
 
-    resetProjectCreationError(): void {
-        this.root_store.resetProjectCreationError();
-    }
+    return "fa tlp-button-icon-right fa-spin fa-circle-o-notch";
+});
+
+function resetProjectCreationError(): void {
+    root_store.resetProjectCreationError();
 }
 </script>
