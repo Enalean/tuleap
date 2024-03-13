@@ -31,6 +31,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\Masschange\MasschangeUpdater;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionPresenter;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
@@ -2145,6 +2146,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 $list_field_bind_value_normalizer,
                 new \BaseLanguageFactory()
             );
+            $bind_labels_extractor            = new CollectionOfNormalizedBindLabelsExtractor(
+                $list_field_bind_value_normalizer,
+                $ugroup_label_converter
+            );
 
             $this->collector = new InvalidTermCollectorVisitor(
                 new InvalidFields\ArtifactLink\ArtifactLinkTypeChecker(
@@ -2171,13 +2176,20 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                         new InvalidFields\File\FileFieldChecker(),
                         new InvalidFields\ListFields\ListFieldChecker(
                             $list_field_bind_value_normalizer,
-                            new CollectionOfNormalizedBindLabelsExtractor(
-                                $list_field_bind_value_normalizer,
-                                $ugroup_label_converter
-                            ),
+                            $bind_labels_extractor,
                             $ugroup_label_converter
                         ),
-                        new ArtifactSubmitterChecker(\UserManager::instance())
+                        new InvalidFields\ListFields\ListFieldChecker(
+                            $list_field_bind_value_normalizer,
+                            new InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractorForOpenList(
+                                $bind_labels_extractor,
+                                new OpenListValueDao(),
+                                $list_field_bind_value_normalizer,
+                            ),
+                            $ugroup_label_converter,
+                        ),
+                        new ArtifactSubmitterChecker(\UserManager::instance()),
+                        false,
                     ),
                     $this->getTracker(),
                     $this->getCurrentUser()

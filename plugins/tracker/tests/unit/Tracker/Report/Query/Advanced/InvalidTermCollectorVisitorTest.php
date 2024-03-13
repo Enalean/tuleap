@@ -30,6 +30,7 @@ use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -62,6 +63,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChe
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractorForOpenList;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\BetweenComparisonChecker;
@@ -127,6 +129,10 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
             $list_field_bind_value_normalizer,
             new \BaseLanguageFactory()
         );
+        $bind_labels_extractor            = new CollectionOfNormalizedBindLabelsExtractor(
+            $list_field_bind_value_normalizer,
+            $ugroup_label_converter
+        );
 
         $collector = new InvalidTermCollectorVisitor(
             new InvalidFields\ArtifactLink\ArtifactLinkTypeChecker(
@@ -153,13 +159,20 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
                     new FileFieldChecker(),
                     new ListFieldChecker(
                         $list_field_bind_value_normalizer,
-                        new CollectionOfNormalizedBindLabelsExtractor(
+                        $bind_labels_extractor,
+                        $ugroup_label_converter
+                    ),
+                    new ListFieldChecker(
+                        $list_field_bind_value_normalizer,
+                        new CollectionOfNormalizedBindLabelsExtractorForOpenList(
+                            $bind_labels_extractor,
+                            new OpenListValueDao(),
                             $list_field_bind_value_normalizer,
-                            $ugroup_label_converter
                         ),
                         $ugroup_label_converter
                     ),
-                    new ArtifactSubmitterChecker($this->user_manager)
+                    new ArtifactSubmitterChecker($this->user_manager),
+                    false,
                 ),
                 $this->tracker,
                 $this->user

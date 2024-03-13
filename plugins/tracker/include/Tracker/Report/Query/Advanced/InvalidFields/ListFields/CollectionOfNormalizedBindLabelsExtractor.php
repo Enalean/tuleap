@@ -30,27 +30,15 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-final class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
+final readonly class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor, ExtractCollectionOfNormalizedLabels
 {
-    /**
-     * @var ListFieldBindValueNormalizer
-     */
-    private $value_normalizer;
-    /**
-     * @var UgroupLabelConverter
-     */
-    private $label_converter;
-
     public function __construct(
-        ListFieldBindValueNormalizer $value_normalizer,
-        UgroupLabelConverter $label_converter,
+        private ListFieldBindValueNormalizer $value_normalizer,
+        private UgroupLabelConverter $label_converter,
     ) {
-        $this->value_normalizer = $value_normalizer;
-        $this->label_converter  = $label_converter;
     }
 
-    /** @return array */
-    public function extractCollectionOfNormalizedLabels(Tracker_FormElement_Field_List $field)
+    public function extractCollectionOfNormalizedLabels(Tracker_FormElement_Field_List $field): array
     {
         return (array) $field->getBind()->accept($this, new BindParameters($field));
     }

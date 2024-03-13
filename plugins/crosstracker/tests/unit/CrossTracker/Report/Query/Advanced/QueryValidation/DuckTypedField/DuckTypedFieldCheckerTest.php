@@ -32,6 +32,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
@@ -40,6 +41,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChe
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractorForOpenList;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
@@ -96,6 +98,10 @@ final class DuckTypedFieldCheckerTest extends TestCase
             $list_field_bind_value_normalizer,
             new \BaseLanguageFactory()
         );
+        $bind_labels_extractor            = new CollectionOfNormalizedBindLabelsExtractor(
+            $list_field_bind_value_normalizer,
+            $ugroup_label_converter
+        );
 
         $checker = new DuckTypedFieldChecker(
             $this->fields_retriever,
@@ -108,13 +114,20 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 new FileFieldChecker(),
                 new ListFieldChecker(
                     $list_field_bind_value_normalizer,
-                    new CollectionOfNormalizedBindLabelsExtractor(
+                    $bind_labels_extractor,
+                    $ugroup_label_converter
+                ),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    new CollectionOfNormalizedBindLabelsExtractorForOpenList(
+                        $bind_labels_extractor,
+                        new OpenListValueDao(),
                         $list_field_bind_value_normalizer,
-                        $ugroup_label_converter
                     ),
                     $ugroup_label_converter
                 ),
-                new ArtifactSubmitterChecker(\UserManager::instance())
+                new ArtifactSubmitterChecker(\UserManager::instance()),
+                true,
             )
         );
         return $checker->checkFieldIsValid(

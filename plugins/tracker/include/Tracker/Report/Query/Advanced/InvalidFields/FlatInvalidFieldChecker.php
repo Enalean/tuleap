@@ -40,7 +40,9 @@ final readonly class FlatInvalidFieldChecker
         private DateFieldChecker $date_field_checker,
         private FileFieldChecker $file_field_checker,
         private ListFieldChecker $list_field_checker,
+        private ListFieldChecker $openlist_field_checker,
         private ArtifactSubmitterChecker $submitter_checker,
+        private bool $is_cross_tracker_search,
     ) {
     }
 
@@ -67,8 +69,8 @@ final readonly class FlatInvalidFieldChecker
             \Tracker_FormElement_Field_Selectbox::class => $this->list_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tracker_FormElement_Field_SubmittedBy::class,
             \Tracker_FormElement_Field_LastModifiedBy::class => $this->submitter_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tracker_FormElement_Field_OpenList::class => $this->checkOpenList($comparison, $field),
             \Tracker_FormElement_Field_ArtifactLink::class,
-            \Tracker_FormElement_Field_OpenList::class,
             \Tracker_FormElement_Field_PermissionsOnArtifact::class,
             \Tracker_FormElement_Field_ArtifactId::class,
             \Tracker_FormElement_Field_PerTrackerArtifactId::class,
@@ -78,5 +80,14 @@ final readonly class FlatInvalidFieldChecker
             \Tracker_FormElement_Field_Priority::class => throw new FieldIsNotSupportedAtAllException($field),
             default => throw new ExternalFieldNotSupportedException()
         };
+    }
+
+    private function checkOpenList(Comparison $comparison, \Tracker_FormElement_Field_List $field): void
+    {
+        if ($this->is_cross_tracker_search) {
+            $this->openlist_field_checker->checkFieldIsValidForComparison($comparison, $field);
+        } else {
+            throw new FieldIsNotSupportedAtAllException($field);
+        }
     }
 }

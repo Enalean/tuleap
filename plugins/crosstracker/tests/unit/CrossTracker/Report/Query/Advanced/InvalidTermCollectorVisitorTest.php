@@ -42,6 +42,7 @@ use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
@@ -78,6 +79,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChe
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractorForOpenList;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
@@ -92,6 +94,7 @@ use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -154,6 +157,12 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             $list_field_bind_value_normalizer,
             new \BaseLanguageFactory()
         );
+        $bind_labels_extractor            = new CollectionOfNormalizedBindLabelsExtractor(
+            $list_field_bind_value_normalizer,
+            $ugroup_label_converter
+        );
+        $open_list_value_dao              = $this->createMock(OpenListValueDao::class);
+        $open_list_value_dao->method('searchByFieldId')->willReturn(\TestHelper::emptyDar());
 
         $collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
@@ -169,13 +178,20 @@ final class InvalidTermCollectorVisitorTest extends TestCase
                         new FileFieldChecker(),
                         new ListFieldChecker(
                             $list_field_bind_value_normalizer,
-                            new CollectionOfNormalizedBindLabelsExtractor(
+                            $bind_labels_extractor,
+                            $ugroup_label_converter
+                        ),
+                        new ListFieldChecker(
+                            $list_field_bind_value_normalizer,
+                            new CollectionOfNormalizedBindLabelsExtractorForOpenList(
+                                $bind_labels_extractor,
+                                $open_list_value_dao,
                                 $list_field_bind_value_normalizer,
-                                $ugroup_label_converter
                             ),
                             $ugroup_label_converter
                         ),
-                        new ArtifactSubmitterChecker($user_manager)
+                        new ArtifactSubmitterChecker($user_manager),
+                        true,
                     ),
                 )
             ),
@@ -509,6 +525,25 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
+    /**
+     * @dataProvider generateInvalidListComparisons
+     */
+    public function testItRejectsMoreInvalidOpenListComparisons(Comparison $comparison): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            OpenListFieldBuilder::aBind()
+                ->withName(self::FIELD_NAME)
+                ->withTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
+                ->withStaticValues(['unbait'])
+                ->buildStaticBind()->getField(),
+        );
+        $this->comparison       = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
     public static function generateFieldTypes(): iterable
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(311)->build();
@@ -581,6 +616,21 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         ];
         yield 'user group list' => [
             ListUserGroupBindBuilder::aUserGroupBind($list_field)->build()->getField(),
+            $tracker,
+            $user,
+        ];
+
+        $open_list_field_builder = OpenListFieldBuilder::aBind()
+            ->withName(self::FIELD_NAME)
+            ->withTracker($tracker)
+            ->withReadPermission($user, true);
+        yield 'static open list' => [
+            $open_list_field_builder->buildStaticBind()->getField(),
+            $tracker,
+            $user,
+        ];
+        yield 'user group open list' => [
+            $open_list_field_builder->buildUserGroupBind()->getField(),
             $tracker,
             $user,
         ];
