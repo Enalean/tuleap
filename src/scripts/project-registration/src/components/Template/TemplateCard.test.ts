@@ -36,7 +36,7 @@ describe("CardWithChildren", () => {
         is_currently_selected = false;
     });
 
-    async function createWrapper(tuleap_template: TemplateData): Promise<Wrapper<TemplateCard>> {
+    async function createWrapper(tuleap_template: TemplateData): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             getters: {
                 is_currently_selected_template: () => (): boolean => {

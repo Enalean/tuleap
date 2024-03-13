@@ -22,8 +22,8 @@
     <div class="project-registration-template-card">
         <input
             type="radio"
-            v-bind:id="'project-registration-tuleap-template-' + template.id"
-            v-bind:value="template.id"
+            v-bind:id="'project-registration-tuleap-template-' + props.template.id"
+            v-bind:value="props.template.id"
             v-bind:checked="is_checked"
             class="project-registration-selected-template"
             name="selected-template"
@@ -34,18 +34,18 @@
         <label
             class="tlp-card tlp-card-selectable project-registration-template-label"
             data-test="project-registration-card-label"
-            v-bind:for="'project-registration-tuleap-template-' + template.id"
+            v-bind:for="'project-registration-tuleap-template-' + props.template.id"
         >
             <div
                 class="project-registration-template-glyph"
-                v-dompurify-html:svg="template.glyph"
+                v-dompurify-html:svg="props.template.glyph"
                 data-test="scrum-template-svg"
             />
             <div class="project-registration-template-content">
-                <h4 class="project-registration-template-card-title">{{ template.title }}</h4>
+                <h4 class="project-registration-template-card-title">{{ props.template.title }}</h4>
                 <div class="project-registration-template-card-description-content">
                     <span class="project-registration-template-card-description">
-                        {{ template.description }}
+                        {{ props.template.description }}
                     </span>
                 </div>
             </div>
@@ -53,25 +53,20 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { TemplateData } from "../../type";
 import { useStore } from "../../stores/root";
 
-@Component({})
-export default class TemplateCard extends Vue {
-    @Prop({ required: true })
-    readonly template!: TemplateData;
+const props = defineProps<{ template: TemplateData }>();
 
-    root_store = useStore();
+const root_store = useStore();
 
-    storeSelectedTemplate(): void {
-        this.root_store.setSelectedTemplate(this.template);
-    }
-
-    get is_checked(): boolean {
-        return this.root_store.is_currently_selected_template(this.template);
-    }
+function storeSelectedTemplate(): void {
+    root_store.setSelectedTemplate(props.template);
 }
+
+const is_checked = computed((): boolean => {
+    return root_store.is_currently_selected_template(props.template);
+});
 </script>
