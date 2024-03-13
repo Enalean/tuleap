@@ -70,9 +70,6 @@ devDependencies:
   vue-property-decorator:
     specifier: ^9.1.2
     version: 9.1.2(vue-class-component@7.2.6)(vue@2.7.8)
-  vuex-class:
-    specifier: ^0.3.2
-    version: 0.3.2(vue-class-component@7.2.6)(vue@2.7.8)(vuex@3.6.2)
 
 packages:
 
@@ -549,18 +546,6 @@ packages:
       '@vue/compiler-sfc': 2.7.8
       csstype: 3.1.0
 
-  /vuex-class@0.3.2(vue-class-component@7.2.6)(vue@2.7.8)(vuex@3.6.2):
-    resolution: {integrity: sha512-m0w7/FMsNcwJgunJeM+wcNaHzK2KX1K1rw2WUQf7Q16ndXHo7pflRyOV/E8795JO/7fstyjH3EgqBI4h4n4qXQ==}
-    peerDependencies:
-      vue: ^2.5.0
-      vue-class-component: ^6.0.0 || ^7.0.0
-      vuex: ^3.0.0
-    dependencies:
-      vue: 2.7.8
-      vue-class-component: 7.2.6(vue@2.7.8)
-      vuex: 3.6.2(vue@2.7.8)
-    dev: true
-
   /vuex-composition-helpers@2.0.3(vue@2.7.8)(vuex@3.6.2):
     resolution: {integrity: sha512-tIkGHfUqA3dzq8ePBXUXfZldqgZOXr6hb6TF6M5bhR/5ls2fsqhPJiOygC40UKZe4w6pP7cJ1HiLrZaYckz4nw==}
     peerDependencies:
@@ -577,6 +562,7 @@ packages:
       vue: ^2.0.0
     dependencies:
       vue: 2.7.8
+    dev: false
 
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}

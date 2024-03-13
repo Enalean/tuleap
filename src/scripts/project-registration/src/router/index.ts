@@ -22,6 +22,7 @@ import VueRouter from "vue-router";
 import AllProjectTemplates from "../components/Template/AllProjectTemplates.vue";
 import ProjectInformation from "../components/Information/ProjectInformation.vue";
 import ProjectApproval from "../components/Approval/ProjectApproval.vue";
+import ProjectOngoingCreation from "../components/Template/Advanced/FromProjectArchive/ProjectOnGoingCreation/ProjectOngoingCreation.vue";
 
 Vue.use(VueRouter);
 
@@ -44,6 +45,11 @@ export function createRouter(): VueRouter {
                 path: "/approval",
                 name: "approval",
                 component: ProjectApproval,
+            },
+            {
+                path: "/from-archive-creation",
+                name: "from-archive-creation",
+                component: ProjectOngoingCreation,
             },
         ],
     });

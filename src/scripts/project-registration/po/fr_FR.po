@@ -12,11 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.4.3\n"
 
-msgid ""
-"<b>You will receive an email</b> when the administrator has validated it."
-msgstr ""
-"<b>Vous allez recevoir un email</b> lorsque l'administrateur l'aura validé."
-
 msgid "Back"
 msgstr "Précédent"
 
@@ -180,8 +175,17 @@ msgstr "Quel type de projet est-ce ?"
 msgid "You are not administrator of any project."
 msgstr "Vous êtes administrateur d'aucun projet."
 
+msgid "You will receive an email when the administrator has validated it."
+msgstr "Vous allez recevoir un email lorsque l'administrateur l'aura validé."
+
+msgid "You will receive an email when the project is created."
+msgstr "Vous allez recevoir un email lorsque le projet sera créé."
+
 msgid "Your project has been submitted to the administrators for validation"
 msgstr "Votre projet a été soumis aux administrateurs pour validation"
+
+msgid "Your project is being created."
+msgstr "Votre projet est en cours de création."
 
 msgid "project-shortname"
 msgstr "nom-court-de-projet"

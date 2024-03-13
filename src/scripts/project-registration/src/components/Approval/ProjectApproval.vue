@@ -54,9 +54,7 @@ export default class ProjectApproval extends Vue {
     }
 
     get message_admin_validation(): string {
-        return this.$gettext(
-            "<b>You will receive an email</b> when the administrator has validated it.",
-        );
+        return this.$gettext("You will receive an email when the administrator has validated it.");
     }
 }
 </script>
