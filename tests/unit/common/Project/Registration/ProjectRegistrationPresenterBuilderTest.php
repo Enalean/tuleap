@@ -34,6 +34,7 @@ use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateCategory;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\ConsistencyChecker;
+use Tuleap\Test\Stubs\Project\Registration\Template\VerifyProjectCreationFromArchiveIsAllowedStub;
 use Tuleap\XML\ProjectXMLMerger;
 
 final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -66,7 +67,8 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
             $this->template_factory,
             $this->default_project_visibility_retriever,
             $this->trove_cat_factory,
-            $this->fields_factory
+            $this->fields_factory,
+            VerifyProjectCreationFromArchiveIsAllowedStub::buildAllowed(),
         );
         \ForgeConfig::set('sys_org_name', "My orga");
     }

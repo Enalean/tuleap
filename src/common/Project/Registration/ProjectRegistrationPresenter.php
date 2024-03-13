@@ -26,7 +26,6 @@ namespace Tuleap\Project\Registration;
 use ForgeConfig;
 use ProjectManager;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
-use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 
 /**
 * @psalm-immutable
@@ -44,7 +43,6 @@ final class ProjectRegistrationPresenter
     public readonly string $company_name;
     public readonly bool $can_user_choose_privacy;
     public readonly string $external_templates;
-    public readonly bool $can_create_from_project_file;
 
     public function __construct(
         string $project_default_visibility,
@@ -53,6 +51,7 @@ final class ProjectRegistrationPresenter
         array $company_templates,
         array $tuleap_templates,
         array $external_templates,
+        public readonly bool $can_create_from_project_file,
     ) {
         $this->tuleap_templates             = json_encode($tuleap_templates);
         $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
@@ -70,6 +69,5 @@ final class ProjectRegistrationPresenter
             ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY
         );
         $this->external_templates           = json_encode($external_templates);
-        $this->can_create_from_project_file = CustomProjectArchiveFeatureFlag::canCreateFromCustomArchive();
     }
 }

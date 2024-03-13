@@ -38,6 +38,7 @@ use Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\Project\Registration\Template\VerifyProjectCreationFromArchiveIsAllowedStub;
 
 final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
 {
@@ -80,7 +81,8 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
             $this->service_manager,
             $this->from_xml_inheritor,
             new NullLogger(),
-            new \URLVerification()
+            new \URLVerification(),
+            VerifyProjectCreationFromArchiveIsAllowedStub::buildAllowed(),
         );
     }
 

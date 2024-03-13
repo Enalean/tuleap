@@ -32,36 +32,17 @@ use Tuleap\Project\Registration\Template\CategorisedTemplatePresenter;
 use Tuleap\Project\Registration\Template\ProjectTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\TemplatePresenter;
+use Tuleap\Project\Registration\Template\VerifyProjectCreationFromArchiveIsAllowed;
 
-class ProjectRegistrationPresenterBuilder
+final readonly class ProjectRegistrationPresenterBuilder
 {
-    /**
-     * @var TemplateFactory
-     */
-    private $template_factory;
-    /**
-     * @var DefaultProjectVisibilityRetriever
-     */
-    private $default_project_visibility_retriever;
-    /**
-     * @var \TroveCatFactory
-     */
-    private $trove_cat_factory;
-    /**
-     * @var DescriptionFieldsFactory
-     */
-    private $fields_factory;
-
     public function __construct(
-        TemplateFactory $template_factory,
-        DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
-        \TroveCatFactory $trove_cat_factory,
-        DescriptionFieldsFactory $fields_factory,
+        private TemplateFactory $template_factory,
+        private DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
+        private \TroveCatFactory $trove_cat_factory,
+        private DescriptionFieldsFactory $fields_factory,
+        private VerifyProjectCreationFromArchiveIsAllowed $creation_from_archive_is_allowed,
     ) {
-        $this->template_factory                     = $template_factory;
-        $this->default_project_visibility_retriever = $default_project_visibility_retriever;
-        $this->trove_cat_factory                    = $trove_cat_factory;
-        $this->fields_factory                       = $fields_factory;
     }
 
     public function buildPresenter(): ProjectRegistrationPresenter
@@ -98,7 +79,8 @@ class ProjectRegistrationPresenterBuilder
             array_map(
                 static fn(CategorisedTemplate $external_template) => new CategorisedTemplatePresenter($external_template),
                 $categorised_external_templates
-            )
+            ),
+            $this->creation_from_archive_is_allowed->canCreateFromCustomArchive(),
         );
     }
 }
