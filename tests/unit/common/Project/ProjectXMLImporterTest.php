@@ -32,6 +32,7 @@ use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
+use Tuleap\DB\ReconnectAfterALongRunningProcess;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\Email\EmailCopier;
@@ -120,7 +121,8 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $dashboard_importer,
             $this->sync_members,
             new XMLFileContentRetriever(),
-            $this->createMock(DescriptionFieldsFactory::class)
+            $this->createMock(DescriptionFieldsFactory::class),
+            $this->createMock(ReconnectAfterALongRunningProcess::class),
         );
 
         $this->configuration = new Import\ImportConfig();

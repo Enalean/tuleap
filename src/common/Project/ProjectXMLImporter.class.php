@@ -137,6 +137,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
         SynchronizedProjectMembershipDao $synchronized_project_membership_dao,
         XMLFileContentRetriever $XML_file_content_retriever,
         DescriptionFieldsFactory $description_fields_factory,
+        private readonly \Tuleap\DB\ReconnectAfterALongRunningProcess $db_connection,
     ) {
         $this->event_manager                       = $event_manager;
         $this->project_manager                     = $project_manager;
@@ -222,6 +223,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
             new DescriptionFieldsFactory(
                 new DescriptionFieldsDao()
             ),
+            DBFactory::getMainTuleapDBConnection(),
         );
     }
 
@@ -615,7 +617,13 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
             return Result::err(Fault::fromMessage('No content available in archive for file ' . ArchiveInterface::PROJECT_FILE));
         }
 
-        return $this->XML_file_content_retriever->getSimpleXMLElementFromString($xml_contents);
+        return $this->XML_file_content_retriever
+            ->getSimpleXMLElementFromString($xml_contents)
+            ->andThen(function (SimpleXMLElement $xml) {
+                $this->db_connection->reconnectAfterALongRunningProcess();
+
+                return Result::ok($xml);
+            });
     }
 
     private function importDashboards(SimpleXMLElement $xml_element, PFUser $user, Project $project, MappingsRegistry $mapping_registry)
