@@ -24,7 +24,7 @@ namespace Tuleap\DB;
 
 use ParagonIE\EasyDB\EasyDB;
 
-class DBConnection
+class DBConnection implements ReconnectAfterALongRunningProcess
 {
     /**
      * @var DBCreator
@@ -48,12 +48,6 @@ class DBConnection
         return $this->db;
     }
 
-    /**
-     * The method exists to handle long running process for which the MySQL server might decide to
-     * close the connection
-     *
-     * @throws \PDOException
-     */
     public function reconnectAfterALongRunningProcess(): void
     {
         if ($this->db === null) {
