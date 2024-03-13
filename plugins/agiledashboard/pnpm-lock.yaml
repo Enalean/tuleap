@@ -11,6 +11,9 @@ dependencies:
   '@tuleap/plugin-agiledashboard-burnup-data-transformer':
     specifier: workspace:*
     version: link:scripts/lib/burnup-data-transformer
+  '@tuleap/plugin-tracker-chart-styles':
+    specifier: workspace:^
+    version: link:../tracker/scripts/lib/chart-styles
   '@tuleap/plugin-tracker-color-picker':
     specifier: workspace:*
     version: link:../tracker/scripts/lib/colorpicker

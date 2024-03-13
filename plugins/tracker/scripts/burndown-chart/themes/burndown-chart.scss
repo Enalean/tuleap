@@ -19,7 +19,7 @@
 
 @use "sass:color";
 @use "@tuleap/tlp-swatch-colors";
-@use "../../../themes/default/css/includes/graph";
+@use "@tuleap/plugin-tracker-chart-styles" as chart;
 
 $remaining-effort-color: tlp-swatch-colors.$neon-green-primary;
 
@@ -58,7 +58,7 @@ $remaining-effort-color: tlp-swatch-colors.$neon-green-primary;
     fill: transparent;
 
     &.highlighted {
-        fill: graph.$text-color;
+        fill: chart.$text-color;
     }
 }
 
@@ -67,17 +67,17 @@ $remaining-effort-color: tlp-swatch-colors.$neon-green-primary;
 }
 
 .chart-plot-ideal-burndown {
-    fill: graph.$line-color;
+    fill: chart.$line-color;
 }
 
 .ideal-line {
     > circle {
-        fill: graph.$line-color;
+        fill: chart.$line-color;
     }
 
     > path {
         stroke-width: 3px;
-        stroke: graph.$line-color;
+        stroke: chart.$line-color;
         fill: transparent;
     }
 }
