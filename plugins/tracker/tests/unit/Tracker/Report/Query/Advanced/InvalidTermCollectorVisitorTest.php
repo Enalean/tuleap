@@ -129,22 +129,6 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $collector = new InvalidTermCollectorVisitor(
-            new FlatInvalidFieldChecker(
-                new FloatFieldChecker(),
-                new IntegerFieldChecker(),
-                new TextFieldChecker(),
-                new DateFieldChecker(),
-                new FileFieldChecker(),
-                new ListFieldChecker(
-                    $list_field_bind_value_normalizer,
-                    new CollectionOfNormalizedBindLabelsExtractor(
-                        $list_field_bind_value_normalizer,
-                        $ugroup_label_converter
-                    ),
-                    $ugroup_label_converter
-                ),
-                new ArtifactSubmitterChecker($this->user_manager)
-            ),
             new InvalidFields\ArtifactLink\ArtifactLinkTypeChecker(
                 new TypePresenterFactory(
                     new TypeDao(),
@@ -159,7 +143,27 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
             new BetweenComparisonChecker(),
             new InComparisonChecker(),
             new NotInComparisonChecker(),
-            new InvalidSearchableCollectorVisitor($this->formelement_factory, $this->tracker, $this->user)
+            new InvalidSearchableCollectorVisitor(
+                $this->formelement_factory,
+                new FlatInvalidFieldChecker(
+                    new FloatFieldChecker(),
+                    new IntegerFieldChecker(),
+                    new TextFieldChecker(),
+                    new DateFieldChecker(),
+                    new FileFieldChecker(),
+                    new ListFieldChecker(
+                        $list_field_bind_value_normalizer,
+                        new CollectionOfNormalizedBindLabelsExtractor(
+                            $list_field_bind_value_normalizer,
+                            $ugroup_label_converter
+                        ),
+                        $ugroup_label_converter
+                    ),
+                    new ArtifactSubmitterChecker($this->user_manager)
+                ),
+                $this->tracker,
+                $this->user
+            )
         );
         $collector->collectErrors(
             $this->parsed_query ?? new AndExpression($this->comparison),

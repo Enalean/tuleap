@@ -2147,22 +2147,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             );
 
             $this->collector = new InvalidTermCollectorVisitor(
-                new InvalidFields\FlatInvalidFieldChecker(
-                    new InvalidFields\FloatFields\FloatFieldChecker(),
-                    new InvalidFields\Integer\IntegerFieldChecker(),
-                    new InvalidFields\Text\TextFieldChecker(),
-                    new InvalidFields\Date\DateFieldChecker(),
-                    new InvalidFields\File\FileFieldChecker(),
-                    new InvalidFields\ListFields\ListFieldChecker(
-                        $list_field_bind_value_normalizer,
-                        new CollectionOfNormalizedBindLabelsExtractor(
-                            $list_field_bind_value_normalizer,
-                            $ugroup_label_converter
-                        ),
-                        $ugroup_label_converter
-                    ),
-                    new ArtifactSubmitterChecker(\UserManager::instance())
-                ),
                 new InvalidFields\ArtifactLink\ArtifactLinkTypeChecker(
                     new TypePresenterFactory(
                         new TypeDao(),
@@ -2179,6 +2163,22 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 new InvalidMetadata\NotInComparisonChecker(),
                 new InvalidSearchableCollectorVisitor(
                     $this->getFormElementFactory(),
+                    new InvalidFields\FlatInvalidFieldChecker(
+                        new InvalidFields\FloatFields\FloatFieldChecker(),
+                        new InvalidFields\Integer\IntegerFieldChecker(),
+                        new InvalidFields\Text\TextFieldChecker(),
+                        new InvalidFields\Date\DateFieldChecker(),
+                        new InvalidFields\File\FileFieldChecker(),
+                        new InvalidFields\ListFields\ListFieldChecker(
+                            $list_field_bind_value_normalizer,
+                            new CollectionOfNormalizedBindLabelsExtractor(
+                                $list_field_bind_value_normalizer,
+                                $ugroup_label_converter
+                            ),
+                            $ugroup_label_converter
+                        ),
+                        new ArtifactSubmitterChecker(\UserManager::instance())
+                    ),
                     $this->getTracker(),
                     $this->getCurrentUser()
                 )

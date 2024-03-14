@@ -32,12 +32,11 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 
 /**
  * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, void>
  */
-final class FileFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
+final class FileFieldChecker implements ValueWrapperVisitor
 {
     /**
      * @throws FieldIsNotSupportedForComparisonException

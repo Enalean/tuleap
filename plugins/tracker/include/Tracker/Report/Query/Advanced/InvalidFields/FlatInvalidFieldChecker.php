@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
-use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
@@ -31,7 +31,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmit
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 
-final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
+final readonly class FlatInvalidFieldChecker
 {
     public function __construct(
         private FloatFieldChecker $float_field_checker,
@@ -45,132 +45,38 @@ final readonly class FlatInvalidFieldChecker implements \Tracker_FormElement_Fie
     }
 
     /**
-     * @throws FieldIsNotSupportedForComparisonException
-     * @throws FieldIsNotSupportedAtAllException
      * @throws ExternalFieldNotSupportedException
+     * @throws FieldIsNotSupportedAtAllException
+     * @throws FieldIsNotSupportedForComparisonException
+     * @throws InvalidFieldException
      */
-    public function getInvalidFieldChecker(\Tracker_FormElement_Field $field): InvalidFieldChecker
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
     {
-        return $field->accept($this);
-    }
-
-    public function visitFloat(\Tracker_FormElement_Field_Float $field): InvalidFieldChecker
-    {
-        return $this->float_field_checker;
-    }
-
-    public function visitInteger(\Tracker_FormElement_Field_Integer $field): InvalidFieldChecker
-    {
-        return $this->int_field_checker;
-    }
-
-    public function visitString(\Tracker_FormElement_Field_String $field): InvalidFieldChecker
-    {
-        return $this->text_field_checker;
-    }
-
-    public function visitText(\Tracker_FormElement_Field_Text $field): InvalidFieldChecker
-    {
-        return $this->text_field_checker;
-    }
-
-    public function visitDate(\Tracker_FormElement_Field_Date $field): InvalidFieldChecker
-    {
-        return $this->date_field_checker;
-    }
-
-    public function visitLastUpdateDate(\Tracker_FormElement_Field_LastUpdateDate $field): InvalidFieldChecker
-    {
-        return $this->date_field_checker;
-    }
-
-    public function visitSubmittedOn(\Tracker_FormElement_Field_SubmittedOn $field): InvalidFieldChecker
-    {
-        return $this->date_field_checker;
-    }
-
-    public function visitFile(\Tracker_FormElement_Field_File $field): InvalidFieldChecker
-    {
-        return $this->file_field_checker;
-    }
-
-    public function visitRadiobutton(\Tracker_FormElement_Field_Radiobutton $field): InvalidFieldChecker
-    {
-        return $this->list_field_checker;
-    }
-
-    public function visitCheckbox(\Tracker_FormElement_Field_Checkbox $field): InvalidFieldChecker
-    {
-        return $this->list_field_checker;
-    }
-
-    public function visitMultiSelectbox(\Tracker_FormElement_Field_MultiSelectbox $field): InvalidFieldChecker
-    {
-        return $this->list_field_checker;
-    }
-
-    public function visitSelectbox(\Tracker_FormElement_Field_Selectbox $field): InvalidFieldChecker
-    {
-        return $this->list_field_checker;
-    }
-
-    public function visitSubmittedBy(\Tracker_FormElement_Field_SubmittedBy $field): InvalidFieldChecker
-    {
-        return $this->submitter_checker;
-    }
-
-    public function visitLastModifiedBy(\Tracker_FormElement_Field_LastModifiedBy $field): InvalidFieldChecker
-    {
-        return $this->submitter_checker;
-    }
-
-    public function visitArtifactLink(\Tracker_FormElement_Field_ArtifactLink $field): never
-    {
-        throw new FieldIsNotSupportedAtAllException($field);
-    }
-
-    public function visitOpenList(\Tracker_FormElement_Field_OpenList $field): never
-    {
-        throw new FieldIsNotSupportedAtAllException($field);
-    }
-
-    public function visitPermissionsOnArtifact(\Tracker_FormElement_Field_PermissionsOnArtifact $field): never
-    {
-        throw new FieldIsNotSupportedAtAllException($field);
-    }
-
-    public function visitArtifactId(\Tracker_FormElement_Field_ArtifactId $field): never
-    {
-        throw new FieldIsNotSupportedAtAllException($field);
-    }
-
-    public function visitPerTrackerArtifactId(\Tracker_FormElement_Field_PerTrackerArtifactId $field): never
-    {
-        throw new FieldIsNotSupportedAtAllException($field);
-    }
-
-    public function visitCrossReferences(\Tracker_FormElement_Field_CrossReferences $field): never
-    {
-        throw new FieldIsNotSupportedAtAllException($field);
-    }
-
-    public function visitBurndown(\Tracker_FormElement_Field_Burndown $field): never
-    {
-        throw new FieldIsNotSupportedAtAllException($field);
-    }
-
-    public function visitComputed(\Tracker_FormElement_Field_Computed $field): never
-    {
-        throw new FieldIsNotSupportedAtAllException($field);
-    }
-
-    public function visitPriority(\Tracker_FormElement_Field_Priority $field): never
-    {
-        throw new FieldIsNotSupportedAtAllException($field);
-    }
-
-    public function visitExternalField(TrackerFormElementExternalField $element): never
-    {
-        throw new ExternalFieldNotSupportedException();
+        match ($field::class) {
+            \Tracker_FormElement_Field_Float::class => $this->float_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tracker_FormElement_Field_Integer::class => $this->int_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tracker_FormElement_Field_String::class,
+            \Tracker_FormElement_Field_Text::class => $this->text_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tracker_FormElement_Field_Date::class,
+            \Tracker_FormElement_Field_LastUpdateDate::class,
+            \Tracker_FormElement_Field_SubmittedOn::class => $this->date_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tracker_FormElement_Field_File::class => $this->file_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tracker_FormElement_Field_Radiobutton::class,
+            \Tracker_FormElement_Field_Checkbox::class,
+            \Tracker_FormElement_Field_MultiSelectbox::class,
+            \Tracker_FormElement_Field_Selectbox::class => $this->list_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tracker_FormElement_Field_SubmittedBy::class,
+            \Tracker_FormElement_Field_LastModifiedBy::class => $this->submitter_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tracker_FormElement_Field_ArtifactLink::class,
+            \Tracker_FormElement_Field_OpenList::class,
+            \Tracker_FormElement_Field_PermissionsOnArtifact::class,
+            \Tracker_FormElement_Field_ArtifactId::class,
+            \Tracker_FormElement_Field_PerTrackerArtifactId::class,
+            \Tracker_FormElement_Field_CrossReferences::class,
+            \Tracker_FormElement_Field_Burndown::class,
+            \Tracker_FormElement_Field_Computed::class,
+            \Tracker_FormElement_Field_Priority::class => throw new FieldIsNotSupportedAtAllException($field),
+            default => throw new ExternalFieldNotSupportedException()
+        };
     }
 }

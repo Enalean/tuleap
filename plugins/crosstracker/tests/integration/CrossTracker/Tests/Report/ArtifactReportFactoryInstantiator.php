@@ -57,7 +57,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserT
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListValueValidator;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\DB\DBFactory;
@@ -129,7 +129,26 @@ final class ArtifactReportFactoryInstantiator
                         new Tracker_Semantic_ContributorDao()
                     )
                 ),
-                new FieldUsageChecker($form_element_factory, $form_element_factory),
+                new DuckTypedFieldChecker(
+                    $form_element_factory,
+                    $form_element_factory,
+                    new FlatInvalidFieldChecker(
+                        new FloatFieldChecker(),
+                        new IntegerFieldChecker(),
+                        new TextFieldChecker(),
+                        new DateFieldChecker(),
+                        new FileFieldChecker(),
+                        new ListFieldChecker(
+                            $list_field_bind_value_normalizer,
+                            new CollectionOfNormalizedBindLabelsExtractor(
+                                $list_field_bind_value_normalizer,
+                                $ugroup_label_converter
+                            ),
+                            $ugroup_label_converter
+                        ),
+                        new ArtifactSubmitterChecker($user_manager)
+                    )
+                ),
             ),
             new EqualComparisonChecker($date_validator, $list_value_validator),
             new NotEqualComparisonChecker($date_validator, $list_value_validator),
@@ -145,22 +164,6 @@ final class ArtifactReportFactoryInstantiator
                     new TypeDao(),
                     new ArtifactLinksUsageDao(),
                 ),
-            ),
-            new FlatInvalidFieldChecker(
-                new FloatFieldChecker(),
-                new IntegerFieldChecker(),
-                new TextFieldChecker(),
-                new DateFieldChecker(),
-                new FileFieldChecker(),
-                new ListFieldChecker(
-                    $list_field_bind_value_normalizer,
-                    new CollectionOfNormalizedBindLabelsExtractor(
-                        $list_field_bind_value_normalizer,
-                        $ugroup_label_converter
-                    ),
-                    $ugroup_label_converter
-                ),
-                new ArtifactSubmitterChecker($user_manager)
             )
         );
 

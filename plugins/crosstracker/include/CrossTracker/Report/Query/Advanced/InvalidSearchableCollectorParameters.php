@@ -25,15 +25,13 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\IProvideTheInvalidFieldCheckerForAComparison;
 
-final class InvalidSearchableCollectorParameters implements VisitorParameters
+final readonly class InvalidSearchableCollectorParameters implements VisitorParameters
 {
     public function __construct(
-        private readonly InvalidComparisonCollectorParameters $invalid_searchables_collector_parameters,
-        private readonly ComparisonChecker $comparison_checker,
-        private readonly Comparison $comparison,
-        private readonly IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
+        private InvalidComparisonCollectorParameters $invalid_searchables_collector_parameters,
+        private ComparisonChecker $comparison_checker,
+        private Comparison $comparison,
     ) {
     }
 
@@ -50,10 +48,5 @@ final class InvalidSearchableCollectorParameters implements VisitorParameters
     public function getComparisonChecker(): ComparisonChecker
     {
         return $this->comparison_checker;
-    }
-
-    public function getCheckerProvider(): IProvideTheInvalidFieldCheckerForAComparison
-    {
-        return $this->checker_provider;
     }
 }
