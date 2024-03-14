@@ -14,10 +14,12 @@ export DOCKER_BUILDKIT=1
 
 UNIQUE_NAME=$(echo "$JOB_NAME-$BUILD_NUMBER-$OS" | tr '[:upper:]' '[:lower:]')
 
+rpms="$(mktemp -d)"
+
 function cleanup {
-    docker rm -fv "$UNIQUE_NAME-rpm-builder" || true
     docker rm -fv "$UNIQUE_NAME-rpm-installer" || true
     docker volume rm -f "$UNIQUE_NAME-rpm-volume" || true
+    rm -rf "$rpms"
 }
 trap cleanup EXIT
 
@@ -32,22 +34,16 @@ else
     exit 1
 fi
 
-docker build -t "$UNIQUE_NAME-rpm-builder" -f "$WORKSPACE"/sources/tools/utils/nix/nix.dockerfile "$WORKSPACE"/sources/tools/utils/nix/
+nix-shell --pure -I nixpkgs="$WORKSPACE/sources/tools/utils/nix/pinned-nixpkgs.nix" "$WORKSPACE/sources/tools/utils/nix/build-tools/" \
+    --run "cd $WORKSPACE/sources && \
+        OS=${OS} RELEASE=1 tools/rpm/build_all_rpm.sh $WORKSPACE/sources $rpms"
 
 docker volume create "$UNIQUE_NAME-rpm-volume"
-docker run --rm -v "$UNIQUE_NAME-rpm-volume":/rpms "$UNIQUE_NAME-rpm-builder" chown "$(id -u)":"$(id -g)" /rpms
-
-docker run -i \
-    --name "$UNIQUE_NAME-rpm-builder" \
+docker run --rm \
     -v "$UNIQUE_NAME-rpm-volume":/rpms \
-    -v "$WORKSPACE/sources":/tuleap:ro \
-    -v "$HOME/nix-content":/nix \
-    -v /etc/passwd:/etc/passwd:ro \
-    -w /tuleap \
-    -u "$(id -u)":"$(id -g)" \
-    "$UNIQUE_NAME-rpm-builder" \
-    nix-shell --pure -I nixpkgs="/tuleap/tools/utils/nix/pinned-nixpkgs.nix" "/tuleap/tools/utils/nix/build-tools/" \
-        --run "OS=${OS} XDG_CACHE_HOME=/home_build tools/rpm/build_rpm_inside_container.sh"
+    -v "$rpms":/source-rpms:ro \
+    --entrypoint=/bin/sh \
+    $INSTALL_IMAGE -c 'cp -a /source-rpms/* /rpms/'
 
 docker run -t \
     --name "$UNIQUE_NAME-rpm-installer" \

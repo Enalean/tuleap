@@ -2,7 +2,7 @@
 
 set -exuo pipefail
 
-RESULT_FOLDER=/results/js-test-results/
+RESULT_FOLDER="${WORKSPACE}/results/js-test-results/"
 
 mkdir -p "$RESULT_FOLDER"
 export CI_MODE="true"
