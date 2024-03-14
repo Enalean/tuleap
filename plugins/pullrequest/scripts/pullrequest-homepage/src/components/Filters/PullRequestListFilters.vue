@@ -27,7 +27,7 @@
                     v-bind:selectors_entries="selectors_entries"
                 />
                 <button
-                    class="tlp-button-outline tlp-button-primary"
+                    class="tlp-button-outline tlp-button-primary pull-requests-homepage-clear-all-filters-button"
                     v-on:click="filters_store.clearAllFilters()"
                     v-bind:disabled="filters_store.getFilters().value.length === 0"
                     data-test="clear-all-list-filters"
@@ -108,11 +108,17 @@ const selectors_entries = [
 .pull-requests-homepage-filters-buttons {
     display: flex;
     justify-content: space-between;
+    gap: var(--tlp-large-spacing);
 }
 
 .pull-requests-homepage-create-filters-controls {
     display: flex;
     gap: var(--tlp-small-spacing);
+    flex: 1 1 auto;
+}
+
+.pull-requests-homepage-clear-all-filters-button {
+    flex-shrink: 0;
 }
 
 .pull-request-autocompleter-avatar {
@@ -123,9 +129,9 @@ const selectors_entries = [
 
 .pull-requests-homepage-filters {
     display: flex;
-    flex-direction: row;
-    gap: var(--tlp-small-spacing);
+    flex-flow: row wrap;
     margin: var(--tlp-medium-spacing) 0 0 0;
+    gap: var(--tlp-small-spacing);
 }
 
 .pull-request-homepage-filter-badge {
@@ -157,8 +163,10 @@ const selectors_entries = [
 
 .pull-requests-homepage-display-buttons {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: row;
     align-items: center;
+    justify-content: flex-end;
     gap: var(--tlp-large-spacing);
 }
 </style>
