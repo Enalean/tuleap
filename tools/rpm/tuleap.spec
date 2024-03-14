@@ -998,7 +998,6 @@ fi
 /usr/bin/systemctl disable tuleap-process-system-events-grokmirror.timer tuleap-process-system-events-grokmirror.service &>/dev/null || :
 
 %postun
-/usr/bin/systemctl unmask php82-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
 %postun core-subversion
