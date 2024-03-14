@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
+use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
@@ -323,7 +323,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
                 case AlwaysThereFieldsExporter::JIRA_ISSUE_TYPE_NAME:
-                    if ($import_mode !== CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE) {
+                    if ($import_mode === FromJiraTrackerCreator::DEFAULT_IMPORT_MODE) {
                         break;
                     }
 

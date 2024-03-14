@@ -30,8 +30,8 @@ use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
-use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
+use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
@@ -685,7 +685,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->id_generator,
             new PlatformConfiguration(),
             $this->field_mapping_collection,
-            CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE,
+            'whatever',
         );
 
         $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -711,7 +711,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->id_generator,
             new PlatformConfiguration(),
             $this->field_mapping_collection,
-            CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE,
+            FromJiraTrackerCreator::DEFAULT_IMPORT_MODE,
         );
 
         self::assertEquals(" |_ Field votes_id (votes) ignored ", $this->logger->messages['debug'][0]);
@@ -739,7 +739,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->id_generator,
             $platform_configuration,
             $this->field_mapping_collection,
-            CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE,
+            'whatever',
         );
 
         $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -770,7 +770,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->id_generator,
             new PlatformConfiguration(),
             $this->field_mapping_collection,
-            CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE,
+            FromJiraTrackerCreator::DEFAULT_IMPORT_MODE,
         );
 
         $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
