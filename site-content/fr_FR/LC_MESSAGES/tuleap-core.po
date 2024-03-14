@@ -4710,6 +4710,11 @@ msgstr ""
 msgid "You cannot access to this page."
 msgstr "Vous ne pouvez pas accéder à cette page."
 
+msgid "You cannot ask for a dry-run when creating a project from an archive"
+msgstr ""
+"Vous ne pouvez pas demander un essai (dry-run) lorsque vous créez un projet "
+"depuis une archive"
+
 msgid "You cannot create an already expired access key."
 msgstr "Vous ne pouvez pas créer une clé déja expirée."
 
