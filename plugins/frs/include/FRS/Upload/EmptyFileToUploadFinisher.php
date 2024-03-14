@@ -64,6 +64,6 @@ class EmptyFileToUploadFinisher
             throw new CannotWriteFileException();
         }
 
-        $this->finisher->finishUpload($file_information);
+        $this->finisher->finishUploadFile($file_information);
     }
 }

@@ -22,12 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template\Upload\Tus;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Project\Registration\Template\Upload\DeleteFileUpload;
 use Tuleap\Project\Registration\Template\Upload\FinishFileUploadPostAction;
 use Tuleap\Project\Registration\Template\Upload\SearchFileUpload;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
 use Tuleap\Upload\UploadPathAllocator;
+use Tuleap\User\ProvideCurrentRequestUser;
 
 final readonly class ProjectFileUploadFinisher implements TusFinisherDataStore
 {
@@ -36,15 +39,25 @@ final readonly class ProjectFileUploadFinisher implements TusFinisherDataStore
         private SearchFileUpload $search_file_upload,
         private UploadPathAllocator $upload_path_allocator,
         private FinishFileUploadPostAction $finish_file_upload_post_action,
+        private ProvideCurrentRequestUser $current_user_request,
     ) {
     }
 
-    public function finishUpload(TusFileInformation $file_information): void
+    public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
     {
         $file_path = $this->upload_path_allocator->getPathForItemBeingUploaded($file_information);
         try {
             $this->tryToOpenArchive($file_path);
-            $this->finish_file_upload_post_action->process($this->getProjectId($file_information), $file_path);
+            $user = $this->current_user_request->getCurrentRequestUser($request);
+            if (! $user) {
+                throw new ForbiddenException();
+            }
+
+            $this->finish_file_upload_post_action->process(
+                $this->getProjectId($file_information),
+                $file_path,
+                (int) $user->getId(),
+            );
         } finally {
             $this->file_ongoing_upload_dao->deleteById($file_information);
         }

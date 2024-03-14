@@ -705,7 +705,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         if ($this->force_activation || $auto_approval == PROJECT_APPROVAL_AUTO) {
             if ($this->send_notifications) {
-                $this->project_manager->activate($group);
+                $this->project_manager->activateWithNotifications($group);
             } else {
                 $this->project_manager->activateWithoutNotifications($group);
             }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Upload\Version;
 
 use Docman_LockFactory;
+use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
@@ -119,7 +120,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->approval_table_action_checker  = $approval_table_action_checker;
     }
 
-    public function finishUpload(TusFileInformation $file_information): void
+    public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
     {
         $upload_id = $file_information->getID();
 

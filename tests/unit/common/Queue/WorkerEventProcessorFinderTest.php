@@ -22,12 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue;
 
+use ForgeConfig;
 use Psr\Log\NullLogger;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Registration\Template\Upload\ExtractArchiveAndCreateProject;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class WorkerEventProcessorFinderTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     public function testNothingWhenUnknownEvent(): void
     {
         self::assertTrue(
@@ -45,6 +49,8 @@ final class WorkerEventProcessorFinderTest extends TestCase
 
     public function testExtractArchiveAndCreateProject(): void
     {
+        ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../');
+
         self::assertInstanceOf(
             ExtractArchiveAndCreateProject::class,
             (new WorkerEventProcessorFinder())->findFromWorkerEvent(
@@ -52,7 +58,7 @@ final class WorkerEventProcessorFinderTest extends TestCase
                     new NullLogger(),
                     [
                         'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                        'payload' => ['project_id' => 1001, 'filename' => '/test.zip'],
+                        'payload' => ['project_id' => 1001, 'filename' => '/test.zip', 'user_id' => 102],
                     ]
                 )
             )->unwrapOr(null),

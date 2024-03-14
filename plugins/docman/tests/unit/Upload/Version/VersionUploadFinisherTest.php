@@ -31,6 +31,7 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
+use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
@@ -170,7 +171,7 @@ final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->approval_table_updater->shouldReceive('updateApprovalTable')->withArgs([$item, $user, 'copy'])->once();
 
-        $upload_finisher->finishUpload($file_information);
+        $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
 
         $this->assertFileDoesNotExist($path_item_being_uploaded);
     }
@@ -274,7 +275,7 @@ final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->approval_table_updater->shouldReceive('updateApprovalTable')->never();
         $this->lock_factory->shouldReceive('unlock');
 
-        $upload_finisher->finishUpload($file_information);
+        $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
 
         $this->assertFileDoesNotExist($path_item_being_uploaded);
     }
@@ -378,7 +379,7 @@ final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->approval_table_updater->shouldReceive('updateApprovalTable')->never();
 
-        $upload_finisher->finishUpload($file_information);
+        $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
 
         $this->assertFileDoesNotExist($path_item_being_uploaded);
     }

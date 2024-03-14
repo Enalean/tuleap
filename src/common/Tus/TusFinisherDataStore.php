@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tus;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 interface TusFinisherDataStore
 {
-    public function finishUpload(TusFileInformation $file_information): void;
+    public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void;
 }

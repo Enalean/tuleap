@@ -25,6 +25,7 @@ namespace Tuleap\FRS\Upload\Tus;
 use FRSFile;
 use FRSFileDao;
 use FRSLogDao;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
@@ -93,7 +94,12 @@ class FileUploadFinisher implements TusFinisherDataStore
         $this->frs_file_builder     = $frs_file_builder;
     }
 
-    public function finishUpload(TusFileInformation $file_information): void
+    public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
+    {
+        $this->finishUploadFile($file_information);
+    }
+
+    public function finishUploadFile(TusFileInformation $file_information): void
     {
         $id       = $file_information->getID();
         $filepath = $this->path_allocator->getPathForItemBeingUploaded($file_information);

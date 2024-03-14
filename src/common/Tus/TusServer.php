@@ -185,7 +185,7 @@ final class TusServer implements RequestHandlerInterface
         $finisher           = $this->data_store->getFinisher();
         $is_upload_finished = ($file_information->getOffset() + $copied_size) >= $file_information->getLength();
         if ($finisher !== null && $is_upload_finished) {
-            $finisher->finishUpload($file_information);
+            $finisher->finishUpload($request, $file_information);
         }
 
         return $this->response_factory->createResponse(204)

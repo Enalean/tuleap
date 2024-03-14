@@ -30,10 +30,10 @@ final readonly class EnqueueProjectCreationFromArchive implements FinishFileUplo
     {
     }
 
-    public function process(int $project_id, string $filename): void
+    public function process(int $project_id, string $filename, int $user_id): void
     {
         $this->enqueue_task->enqueue(
-            new ProjectCreationFromArchiveTask($project_id, $filename),
+            new ProjectCreationFromArchiveTask($project_id, $filename, $user_id),
         );
     }
 }

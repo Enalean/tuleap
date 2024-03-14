@@ -61,6 +61,6 @@ class EmptyFileToUploadFinisher
         }
         touch($uploaded_document_path);
 
-        $this->finisher->finishUpload($file_information);
+        $this->finisher->finishUploadEmptyFile($file_information);
     }
 }

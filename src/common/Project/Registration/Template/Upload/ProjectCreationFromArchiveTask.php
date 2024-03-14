@@ -26,7 +26,7 @@ use Tuleap\Queue\QueueTask;
 
 final readonly class ProjectCreationFromArchiveTask implements QueueTask
 {
-    public function __construct(private int $project_id, private string $filename)
+    public function __construct(private int $project_id, private string $filename, private int $user_id)
     {
     }
 
@@ -37,11 +37,11 @@ final readonly class ProjectCreationFromArchiveTask implements QueueTask
 
     public function getPayload(): array
     {
-        return ['project_id' => $this->project_id, 'filename' => $this->filename];
+        return ['project_id' => $this->project_id, 'filename' => $this->filename, 'user_id' => $this->user_id];
     }
 
     public function getPreEnqueueMessage(): string
     {
-        return "Create project #{$this->project_id} from archive {$this->filename}";
+        return "Create project #{$this->project_id} from archive {$this->filename} for user #{$this->user_id}";
     }
 }

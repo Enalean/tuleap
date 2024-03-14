@@ -172,7 +172,7 @@ final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('deleteByItemID')
             ->with($uploading_id);
 
-        $this->finisher->finishUpload(
+        $this->finisher->finishUploadFile(
             new FileAlreadyUploadedInformation($uploading_id, 'readme.md', 123)
         );
     }

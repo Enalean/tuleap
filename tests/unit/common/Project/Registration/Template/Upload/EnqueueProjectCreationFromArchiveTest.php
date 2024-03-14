@@ -32,7 +32,7 @@ final class EnqueueProjectCreationFromArchiveTest extends TestCase
         $enqueue_task = new EnqueueTaskStub();
 
         $action = new EnqueueProjectCreationFromArchive($enqueue_task);
-        $action->process(101, 'filename.zip');
+        $action->process(101, 'filename.zip', 102);
 
         self::assertInstanceOf(ProjectCreationFromArchiveTask::class, $enqueue_task->queue_task);
     }

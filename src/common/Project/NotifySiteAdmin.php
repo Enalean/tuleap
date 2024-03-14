@@ -20,19 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project\Registration\Template\Upload;
+namespace Tuleap\Project;
 
-use Tuleap\Test\PHPUnit\TestCase;
+use Project;
 
-final class ProjectCreationFromArchiveTaskTest extends TestCase
+interface NotifySiteAdmin
 {
-    public function testGetPayload(): void
-    {
-        $task = new ProjectCreationFromArchiveTask(101, 'filename.zip', 102);
-
-        self::assertSame(
-            ['project_id' => 101, 'filename' => 'filename.zip', 'user_id' => 102],
-            $task->getPayload(),
-        );
-    }
+    public function notifySiteAdmin(Project $project): void;
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload\Tus;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Tracker_FileInfo;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
@@ -45,7 +46,7 @@ class FileUploadFinisher implements TusFinisherDataStore
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function finishUpload(TusFileInformation $file_information): void
+    public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
     {
         $row = $this->dao->searchFileOngoingUploadById($file_information->getID());
         if (! $row) {

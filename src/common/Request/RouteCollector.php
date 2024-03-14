@@ -1460,6 +1460,7 @@ class RouteCollector
                     $file_ongoing_upload_dao,
                     $path_allocator,
                     new EnqueueProjectCreationFromArchive(new EnqueueTask()),
+                    $current_user,
                 ),
                 new ProjectFileUploadCanceler(
                     $path_allocator,

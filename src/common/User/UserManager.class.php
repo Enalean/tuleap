@@ -28,6 +28,7 @@ use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\User\Account\AccountCreated;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\FindUserByEmailEvent;
+use Tuleap\User\ForceLogin;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\ICreateAccount;
 use Tuleap\User\InvalidSessionException;
@@ -47,7 +48,7 @@ use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, RetrieveUserByEmail, RetrieveUserByUserName, ProvideUserFromRow, ICreateAccount, LogUser, SwitchPasswordlessOnlyState, RetrievePasswordlessOnlyState // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, RetrieveUserByEmail, RetrieveUserByUserName, ProvideUserFromRow, ICreateAccount, LogUser, SwitchPasswordlessOnlyState, RetrievePasswordlessOnlyState, ForceLogin // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
@@ -773,7 +774,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
      *
      * @return PFUser Registered user or anonymous if nothing match
      */
-    public function forceLogin($name)
+    public function forceLogin(string $name): PFUser
     {
         if (! IS_SCRIPT) {
             throw new Exception("Can't log in the user when not is script");
