@@ -26,9 +26,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 
-final readonly class ArtifactSubmitterChecker implements InvalidFieldChecker
+final readonly class ArtifactSubmitterChecker
 {
     public function __construct(
         private \UserManager $user_manager,

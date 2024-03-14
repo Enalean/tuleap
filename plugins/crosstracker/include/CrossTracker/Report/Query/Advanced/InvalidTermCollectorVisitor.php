@@ -60,7 +60,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\InvalidArtifactLinkTypeException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
 /**
@@ -82,7 +81,6 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
         private InComparisonChecker $in_comparison_checker,
         private NotInComparisonChecker $not_in_comparison_checker,
         private ArtifactLinkTypeChecker $artifact_link_type_checker,
-        private FlatInvalidFieldChecker $field_checker,
     ) {
     }
 
@@ -193,7 +191,6 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
                 $parameters,
                 $comparison_checker,
                 $comparison,
-                $this->field_checker
             )
         );
     }

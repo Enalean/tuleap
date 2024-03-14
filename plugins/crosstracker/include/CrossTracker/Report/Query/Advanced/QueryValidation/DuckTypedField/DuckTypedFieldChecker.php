@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
@@ -32,13 +32,15 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-final class FieldUsageChecker
+final readonly class DuckTypedFieldChecker
 {
     public function __construct(
-        private readonly RetrieveUsedFields $retrieve_used_fields,
-        private readonly RetrieveFieldType $retrieve_field_type,
+        private RetrieveUsedFields $retrieve_used_fields,
+        private RetrieveFieldType $retrieve_field_type,
+        private FlatInvalidFieldChecker $field_checker,
     ) {
     }
 
@@ -57,9 +59,7 @@ final class FieldUsageChecker
             if ($used_field && $used_field->userCanRead($user)) {
                 try {
                     $comparison = $collector_parameters->getComparison();
-                    $collector_parameters->getCheckerProvider()
-                        ->getInvalidFieldChecker($used_field)
-                        ->checkFieldIsValidForComparison($comparison, $used_field);
+                    $this->field_checker->checkFieldIsValidForComparison($comparison, $used_field);
                 } catch (InvalidFieldException $e) {
                     return Result::err(Fault::fromThrowable($e));
                 }

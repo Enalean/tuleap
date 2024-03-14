@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
@@ -33,6 +33,17 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
@@ -41,7 +52,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
-final class FieldUsageCheckerTest extends TestCase
+final class DuckTypedFieldCheckerTest extends TestCase
 {
     use LegacyTabTranslationsSupport;
 
@@ -80,7 +91,32 @@ final class FieldUsageCheckerTest extends TestCase
             ->onTrackers($this->first_tracker, $this->second_tracker)
             ->build();
 
-        $checker = new FieldUsageChecker($this->fields_retriever, RetrieveFieldTypeStub::withDetectionOfType());
+        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+        $ugroup_label_converter           = new UgroupLabelConverter(
+            $list_field_bind_value_normalizer,
+            new \BaseLanguageFactory()
+        );
+
+        $checker = new DuckTypedFieldChecker(
+            $this->fields_retriever,
+            RetrieveFieldTypeStub::withDetectionOfType(),
+            new FlatInvalidFieldChecker(
+                new FloatFieldChecker(),
+                new IntegerFieldChecker(),
+                new TextFieldChecker(),
+                new DateFieldChecker(),
+                new FileFieldChecker(),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    new CollectionOfNormalizedBindLabelsExtractor(
+                        $list_field_bind_value_normalizer,
+                        $ugroup_label_converter
+                    ),
+                    $ugroup_label_converter
+                ),
+                new ArtifactSubmitterChecker(\UserManager::instance())
+            )
+        );
         return $checker->checkFieldIsValid(
             new Field(self::FIELD_NAME),
             $visitor_parameters

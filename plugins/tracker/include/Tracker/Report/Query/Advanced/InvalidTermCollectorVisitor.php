@@ -48,7 +48,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\InvalidArtifactLinkTypeException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
 
 /**
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
@@ -58,7 +57,6 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
 final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, LinkConditionVisitor
 {
     public function __construct(
-        private FlatInvalidFieldChecker $field_checker,
         private InvalidFields\ArtifactLink\ArtifactLinkTypeChecker $artifact_link_type_checker,
         private InvalidMetadata\EqualComparisonChecker $metadata_equal_comparison_checker,
         private InvalidMetadata\NotEqualComparisonChecker $metadata_not_equal_comparison_checker,
@@ -207,7 +205,6 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
                 $parameters,
-                $this->field_checker,
                 $metadata_checker,
                 $comparison
             )

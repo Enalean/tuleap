@@ -22,67 +22,27 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\IProvideTheInvalidFieldCheckerForAComparison;
 
-final class InvalidSearchableCollectorParameters implements VisitorParameters
+final readonly class InvalidSearchableCollectorParameters implements VisitorParameters
 {
-    /**
-     * @var IProvideTheInvalidFieldCheckerForAComparison
-     */
-    private $checker_provider;
-    /**
-     * @var Comparison
-     */
-    private $comparison;
-    /**
-     * @var InvalidComparisonCollectorParameters
-     */
-    private $invalid_searchables_collector_parameters;
-    /**
-     * @var InvalidMetadata\ICheckMetadataForAComparison
-     */
-    private $metadata_checker;
-
     public function __construct(
-        InvalidComparisonCollectorParameters $invalid_searchables_collector_parameters,
-        IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
-        InvalidMetadata\ICheckMetadataForAComparison $metadata_checker,
-        Comparison $comparison,
+        private InvalidComparisonCollectorParameters $invalid_searchables_collector_parameters,
+        private InvalidMetadata\ICheckMetadataForAComparison $metadata_checker,
+        private Comparison $comparison,
     ) {
-        $this->checker_provider                         = $checker_provider;
-        $this->metadata_checker                         = $metadata_checker;
-        $this->comparison                               = $comparison;
-        $this->invalid_searchables_collector_parameters = $invalid_searchables_collector_parameters;
     }
 
-    /**
-     * @return IProvideTheInvalidFieldCheckerForAComparison
-     */
-    public function getCheckerProvider()
-    {
-        return $this->checker_provider;
-    }
-
-    /**
-     * @return Comparison
-     */
-    public function getComparison()
+    public function getComparison(): Comparison
     {
         return $this->comparison;
     }
 
-    /**
-     * @return InvalidComparisonCollectorParameters
-     */
-    public function getInvalidSearchablesCollectorParameters()
+    public function getInvalidSearchablesCollectorParameters(): InvalidComparisonCollectorParameters
     {
         return $this->invalid_searchables_collector_parameters;
     }
 
-    /**
-     * @return InvalidMetadata\ICheckMetadataForAComparison
-     */
-    public function getMetadataChecker()
+    public function getMetadataChecker(): InvalidMetadata\ICheckMetadataForAComparison
     {
         return $this->metadata_checker;
     }

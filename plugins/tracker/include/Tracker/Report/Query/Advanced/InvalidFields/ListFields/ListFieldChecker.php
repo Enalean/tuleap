@@ -25,11 +25,10 @@ use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-final readonly class ListFieldChecker implements InvalidFieldChecker
+final readonly class ListFieldChecker
 {
     public function __construct(
         private ListFieldBindValueNormalizer $value_normalizer,
@@ -46,9 +45,8 @@ final readonly class ListFieldChecker implements InvalidFieldChecker
      * @throws ListToStatusOpenComparisonException
      * @throws ListValueDoNotExistComparisonException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field,): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field_List $field,): void
     {
-        assert($field instanceof \Tracker_FormElement_Field_List);
         match ($comparison->getType()) {
             ComparisonType::Equal,
             ComparisonType::NotEqual => $this->checkListValueIsValid($comparison, $field, false),

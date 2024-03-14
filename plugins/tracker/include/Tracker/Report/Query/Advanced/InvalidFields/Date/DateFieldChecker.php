@@ -27,9 +27,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 
-final readonly class DateFieldChecker implements InvalidFieldChecker
+final readonly class DateFieldChecker
 {
     /**
      * @throws DateToEmptyStringTermException
@@ -38,9 +37,8 @@ final readonly class DateFieldChecker implements InvalidFieldChecker
      * @throws DateToStringComparisonException
      * @throws FieldIsNotSupportedForComparisonException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field_Date $field): void
     {
-        assert($field instanceof \Tracker_FormElement_Field_Date);
         match ($comparison->getType()) {
             ComparisonType::Equal,
             ComparisonType::NotEqual => $this->checkDateValueIsValid($comparison, $field, false),
