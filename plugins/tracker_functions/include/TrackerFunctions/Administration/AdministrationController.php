@@ -29,6 +29,7 @@ use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
@@ -67,6 +68,16 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
         if (! $tracker->userIsAdmin($current_user)) {
             throw new NotFoundException();
         }
+
+        $layout->addCssAsset(
+            new CssAssetWithoutVariantDeclinaisons(
+                new IncludeAssets(
+                    __DIR__ . '/../../../../tracker/frontend-assets',
+                    '/assets/trackers',
+                ),
+                'tracker-bp',
+            ),
+        );
 
         $layout->addJavascriptAsset(
             new JavascriptViteAsset(
