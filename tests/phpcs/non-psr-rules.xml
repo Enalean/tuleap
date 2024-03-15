@@ -30,7 +30,7 @@
     <!-- Force space after ! -->
     <rule ref="Generic.Formatting.SpaceAfterNot"/>
     <!-- Force space after language constructs -->
-    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+    <rule ref="Generic.WhiteSpace.LanguageConstructSpacing"/>
     <!-- Force space around logical operators -->
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
     <!-- Forbid space around typehint union (Ok|Err) and force replacing Type|null by ?Type -->)

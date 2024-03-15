@@ -70,19 +70,19 @@ class TrackerGeneralSettingsChecker
 
         if ($previous_shortname !== $validated_short_name) {
             if (! $this->itemNameIsValid($validated_short_name)) {
-                throw  TrackerIsInvalidException::shortnameIsInvalid($validated_short_name);
+                throw TrackerIsInvalidException::shortnameIsInvalid($validated_short_name);
             }
 
             if ($this->tracker_factory->isShortNameExists($validated_short_name, $project_id)) {
-                throw  TrackerIsInvalidException::shortnameAlreadyExists($validated_short_name);
+                throw TrackerIsInvalidException::shortnameAlreadyExists($validated_short_name);
             }
 
             if (! $this->reference_manager->checkKeyword($validated_short_name)) {
-                throw  TrackerIsInvalidException::shortnameIsInvalid($validated_short_name);
+                throw TrackerIsInvalidException::shortnameIsInvalid($validated_short_name);
             }
 
             if ($this->reference_manager->_isKeywordExists($validated_short_name, $project_id)) {
-                throw  TrackerIsInvalidException::shortnameAlreadyExists($validated_short_name);
+                throw TrackerIsInvalidException::shortnameAlreadyExists($validated_short_name);
             }
         }
     }
