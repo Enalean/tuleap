@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project;
 
-interface CheckProjectAccess
+final class AccessArchiveNotImportedYetException extends AccessNotActiveException
 {
-    /**
-     * @throws ProjectAccessSuspendedException
-     * @throws \Project_AccessDeletedException
-     * @throws \Project_AccessPrivateException
-     * @throws \Project_AccessProjectNotFoundException
-     * @throws \Project_AccessRestrictedException
-     * @throws AccessArchiveNotImportedYetException
-     */
-    public function checkUserCanAccessProject(\PFUser $user, \Project $project): void;
+    public function __construct()
+    {
+        parent::__construct(_('This project is not imported yet'));
+    }
 }

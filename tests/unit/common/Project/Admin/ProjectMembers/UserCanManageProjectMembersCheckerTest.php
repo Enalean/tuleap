@@ -85,4 +85,24 @@ final class UserCanManageProjectMembersCheckerTest extends TestCase
             $delegation_dao,
         ))->checkUserCanManageProjectMembers($user, $project);
     }
+
+    public function testExceptionIfUserIsProjectAdminButProjectIsNotImportedYet(): void
+    {
+        $project = ProjectTestBuilder::aProject()
+            ->withId(111)
+            ->withStatusCreatingFromArchive()
+            ->build();
+
+        $user = UserTestBuilder::aUser()
+            ->withId(101)
+            ->withoutSiteAdministrator()
+            ->withAdministratorOf($project)
+            ->build();
+
+        self::expectException(UserIsNotAllowedToManageProjectMembersException::class);
+
+        (new UserCanManageProjectMembersChecker(
+            $this->createMock(MembershipDelegationDao::class),
+        ))->checkUserCanManageProjectMembers($user, $project);
+    }
 }

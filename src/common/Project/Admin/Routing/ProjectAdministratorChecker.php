@@ -33,7 +33,7 @@ class ProjectAdministratorChecker
      */
     public function checkUserIsProjectAdministrator(PFUser $user, Project $project): void
     {
-        if (! $user->isAdmin($project->getID())) {
+        if ($project->getStatus() === Project::STATUS_CREATING_FROM_ARCHIVE || ! $user->isAdmin($project->getID())) {
             throw new ForbiddenException(
                 gettext("You don't have permission to access administration of this project.")
             );

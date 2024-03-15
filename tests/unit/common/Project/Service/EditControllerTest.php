@@ -120,6 +120,8 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->method('getMinimalRank')->willReturn(1);
         $project->method('isError')->willReturn(false);
         $project->method('isDeleted')->willReturn(false);
+        $project->method('getStatus')->willReturn(\Project::STATUS_ACTIVE);
+
         $current_user    = UserTestBuilder::anActiveUser()->withId(101)->withAdministratorOf($project)->build();
         $request_builder = HTTPRequestBuilder::get()->withUser($current_user);
 

@@ -599,9 +599,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
 
     public function testTrackerInNotActiveProjectIsOnlyReadableBySuperAdmin(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(42);
-        $project->shouldReceive('isActive')->andReturns(false);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withId(42)->build();
 
         $tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $tracker->shouldReceive('getId')->andReturns(7);

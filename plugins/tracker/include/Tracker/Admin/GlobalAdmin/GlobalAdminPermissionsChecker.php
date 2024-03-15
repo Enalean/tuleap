@@ -45,6 +45,10 @@ class GlobalAdminPermissionsChecker
 
     public function doesUserHaveTrackerGlobalAdminRightsOnProject(\Project $project, \PFUser $user): bool
     {
+        if ($project->getStatus() === \Project::STATUS_CREATING_FROM_ARCHIVE) {
+            return false;
+        }
+
         return $user->isAdmin($project->getID())
             || $this->doesUserHaveTrackerGlobalAdminRightsOnTheWholePlatform($user);
     }

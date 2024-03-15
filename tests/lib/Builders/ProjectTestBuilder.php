@@ -105,6 +105,12 @@ final class ProjectTestBuilder
         return $this;
     }
 
+    public function withStatusCreatingFromArchive(): self
+    {
+        $this->data['status'] = Project::STATUS_CREATING_FROM_ARCHIVE;
+        return $this;
+    }
+
     public function withAccess(string $access): self
     {
         $this->data['access'] = $access;
