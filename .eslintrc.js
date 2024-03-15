@@ -9,6 +9,7 @@ module.exports = {
         "no-unsanitized",
         "no-only-tests",
         "monorepo-cop",
+        "storybook",
     ],
     extends: [
         "eslint:recommended",
@@ -18,6 +19,7 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended",
         "plugin:monorepo-cop/recommended",
+        "plugin:storybook/recommended",
     ],
     parser: "vue-eslint-parser",
     parserOptions: {

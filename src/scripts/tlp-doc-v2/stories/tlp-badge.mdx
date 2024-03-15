@@ -1,0 +1,35 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as BadgeStories from "./tlp-badge.stories.ts";
+
+<Meta of={BadgeStories}/>
+
+# Badges
+
+<code>tlp-badge-[type]</code>
+
+<Canvas withToolbar={true} of={BadgeStories.Badge}></Canvas>
+
+Use the table to see some variations of this component. You will also get the new code.
+<Controls></Controls>
+
+## On dark background
+
+To keep a good contrast ratio on dark background : <code>tlp-badge-on-dark-background</code>.
+
+<Canvas withToolbar={true} of={BadgeStories.BadgeOnDarkBackground}></Canvas>
+
+## All variations
+
+<Canvas withToolbar={true} of={BadgeStories.AllVariations}></Canvas>
+
+#### Outline
+
+<Canvas withToolbar={true} of={BadgeStories.AllVariationsOutline}></Canvas>
+
+#### Rounded
+
+<Canvas withToolbar={true} of={BadgeStories.AllVariationsRounded}></Canvas>
+
+#### On dark background
+
+<Canvas withToolbar={true} of={BadgeStories.AllVariationsOnDarkBackground}></Canvas>

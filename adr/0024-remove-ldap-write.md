@@ -1,7 +1,7 @@
 # Remove LDAP write
 
 * Status: Accepted
-* Deciders: Manuel Vacelet
+* Deciders: Manuel VACELET
 * Date: 2023-06-14
 
 Technical Story: [request #31528 Remove LDAP Write part of tuleap LDAP plugin][1]
