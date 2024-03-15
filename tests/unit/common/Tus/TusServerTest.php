@@ -29,12 +29,9 @@ use Tuleap\Http\HTTPFactoryBuilder;
 
 final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var ResponseFactoryInterface
-     */
-    private $response_factory;
-    private $data_store;
-    private $file_information_provider;
+    private ResponseFactoryInterface $response_factory;
+    private TusDataStore & \PHPUnit\Framework\MockObject\MockObject $data_store;
+    private TusFileInformationProvider & \PHPUnit\Framework\MockObject\MockObject $file_information_provider;
 
     protected function setUp(): void
     {
@@ -145,7 +142,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             )->willReturn(strlen($body_content));
         if ($has_finisher) {
-            $finisher_data_store->expects(self::once())->method('finishUpload')->with($file_information);
+            $finisher_data_store->expects(self::once())->method('finishUpload')->with($upload_request, $file_information);
         }
         $locker->expects(self::once())->method('lock')->willReturn(true);
         $locker->expects(self::once())->method('unlock');

@@ -61,7 +61,7 @@ if ($action == 'activate') {
     }
     foreach ($groups as $group_id) {
         $project = $project_manager->getProject($group_id);
-        $project_manager->activate($project);
+        $project_manager->activateWithNotifications($project);
     }
     $GLOBALS['Response']->redirect('/admin/approve-pending.php');
 } elseif ($action == 'delete') {

@@ -27,8 +27,14 @@ use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\Project\ImportFromArchiveStub;
+use Tuleap\Test\Stubs\Project\Registration\Template\Upload\ActivateProjectAfterArchiveImportStub;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\ForceLoginStub;
 use function Psl\Filesystem\create_directory;
 
 final class ExtractArchiveAndCreateProjectTest extends TestCase
@@ -36,7 +42,12 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
     use TemporaryTestDirectory;
     use ForgeConfigSandbox;
 
+    private const PROJECT_ID = 1001;
+    private const USER_ID    = 102;
+
     private string $upload;
+    private \Project $project;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
@@ -47,6 +58,12 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         $this->upload = $this->getTmpDir() . '/upload';
         create_directory($this->upload);
         \Psl\Filesystem\copy(__DIR__ . "/Tus/_fixtures/test.zip", $this->upload . '/test.zip');
+
+        $this->project = ProjectTestBuilder::aProject()
+            ->withId(self::PROJECT_ID)
+            ->build();
+
+        $this->user = UserTestBuilder::buildWithId(self::USER_ID);
     }
 
     public function testProjectIdIsNotInPayload(): void
@@ -62,6 +79,10 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
                 ]
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
+            ActivateProjectAfterArchiveImportStub::build(),
+            ProjectByIDFactoryStub::buildWith($this->project),
+            RetrieveUserByIdStub::withUser($this->user),
+            ForceLoginStub::build(),
         );
     }
 
@@ -78,6 +99,10 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
                 ]
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
+            ActivateProjectAfterArchiveImportStub::build(),
+            ProjectByIDFactoryStub::buildWith($this->project),
+            RetrieveUserByIdStub::withUser($this->user),
+            ForceLoginStub::build(),
         );
     }
 
@@ -90,10 +115,14 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
                 new NullLogger(),
                 [
                     'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => ['project_id' => 1001],
+                    'payload' => ['project_id' => self::PROJECT_ID],
                 ]
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
+            ActivateProjectAfterArchiveImportStub::build(),
+            ProjectByIDFactoryStub::buildWith($this->project),
+            RetrieveUserByIdStub::withUser($this->user),
+            ForceLoginStub::build(),
         );
     }
 
@@ -106,52 +135,153 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
                 new NullLogger(),
                 [
                     'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => ['project_id' => 1001, 'filename' => []],
+                    'payload' => ['project_id' => self::PROJECT_ID, 'filename' => []],
                 ]
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
+            ActivateProjectAfterArchiveImportStub::build(),
+            ProjectByIDFactoryStub::buildWith($this->project),
+            RetrieveUserByIdStub::withUser($this->user),
+            ForceLoginStub::build(),
         );
+    }
+
+    public function testUserIdIsNotInPayload(): void
+    {
+        $this->expectException(\Exception::class);
+
+        ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                new NullLogger(),
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => [
+                        'project_id' => self::PROJECT_ID,
+                        'filename' => $this->upload . '/test.zip',
+                    ],
+                ]
+            ),
+            ImportFromArchiveStub::buildWithSuccessfulImport(),
+            ActivateProjectAfterArchiveImportStub::build(),
+            ProjectByIDFactoryStub::buildWith($this->project),
+            RetrieveUserByIdStub::withUser($this->user),
+            ForceLoginStub::build(),
+        );
+    }
+
+    public function testUserIdIsNotAnInt(): void
+    {
+        $this->expectException(\Exception::class);
+
+        ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                new NullLogger(),
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => [
+                        'project_id' => self::PROJECT_ID,
+                        'filename'   => $this->upload . '/test.zip',
+                        'user_id'    => 'a string',
+                    ],
+                ]
+            ),
+            ImportFromArchiveStub::buildWithSuccessfulImport(),
+            ActivateProjectAfterArchiveImportStub::build(),
+            ProjectByIDFactoryStub::buildWith($this->project),
+            RetrieveUserByIdStub::withUser($this->user),
+            ForceLoginStub::build(),
+        );
+    }
+
+    public function testProjectDoesNotExists(): void
+    {
+        $this->expectException(\Exception::class);
+
+        $action = ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                new NullLogger(),
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => [
+                        'project_id' => self::PROJECT_ID,
+                        'filename'   => 'test.zip',
+                        'user_id'    => self::USER_ID,
+                    ],
+                ]
+            ),
+            ImportFromArchiveStub::buildWithSuccessfulImport(),
+            ActivateProjectAfterArchiveImportStub::build(),
+            ProjectByIDFactoryStub::buildWithoutProject(),
+            RetrieveUserByIdStub::withUser($this->user),
+            ForceLoginStub::build(),
+        );
+
+        $action->process();
     }
 
     public function testProcessHappyPath(): void
     {
         $logger = new TestLogger();
 
+        $activator = ActivateProjectAfterArchiveImportStub::build();
+
+        $force_login = ForceLoginStub::build();
+
         $action = ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 $logger,
                 [
                     'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => ['project_id' => 1001, 'filename' => $this->upload . '/test.zip'],
+                    'payload' => [
+                        'project_id' => self::PROJECT_ID,
+                        'filename'   => $this->upload . '/test.zip',
+                        'user_id'    => self::USER_ID,
+                    ],
                 ]
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
+            $activator,
+            ProjectByIDFactoryStub::buildWith($this->project),
+            RetrieveUserByIdStub::withUser($this->user),
+            $force_login,
         );
 
         $action->process();
 
         self::assertTrue($logger->hasInfoRecords());
         self::assertFalse(\Psl\Filesystem\is_file($this->upload . "/test.zip"));
+        self::assertTrue($activator->isCalled());
+        self::assertTrue($force_login->isForced());
     }
 
     public function testProcessFailure(): void
     {
         $logger = new TestLogger();
 
-        $action = ExtractArchiveAndCreateProject::fromEvent(
+        $activator = ActivateProjectAfterArchiveImportStub::build();
+        $action    = ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 $logger,
                 [
                     'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => ['project_id' => 1001, 'filename' => $this->upload . '/test.zip'],
+                    'payload' => [
+                        'project_id' => self::PROJECT_ID,
+                        'filename'   => $this->upload . '/test.zip',
+                        'user_id'    => self::USER_ID,
+                    ],
                 ]
             ),
             ImportFromArchiveStub::buildWithErrorDuringImport("Task failed successfully"),
+            $activator,
+            ProjectByIDFactoryStub::buildWith($this->project),
+            RetrieveUserByIdStub::withUser($this->user),
+            ForceLoginStub::build(),
         );
 
         $action->process();
 
         self::assertTrue($logger->hasError("Task failed successfully"));
         self::assertFalse(\Psl\Filesystem\is_file($this->upload . "/test.zip"));
+        self::assertFalse($activator->isCalled());
     }
 }

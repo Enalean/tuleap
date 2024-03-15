@@ -27,7 +27,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use TuleapRegisterMail;
 
-class ProjectCreationNotifier
+class ProjectCreationNotifier implements NotifySiteAdmin
 {
     private $logger;
     /**

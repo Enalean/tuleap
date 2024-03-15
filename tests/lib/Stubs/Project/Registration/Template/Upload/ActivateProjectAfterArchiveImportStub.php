@@ -20,19 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project\Registration\Template\Upload;
+namespace Tuleap\Test\Stubs\Project\Registration\Template\Upload;
 
-use Tuleap\Test\PHPUnit\TestCase;
+use Project;
+use Tuleap\Project\Registration\Template\Upload\ActivateProjectAfterArchiveImport;
 
-final class ProjectCreationFromArchiveTaskTest extends TestCase
+final class ActivateProjectAfterArchiveImportStub implements ActivateProjectAfterArchiveImport
 {
-    public function testGetPayload(): void
-    {
-        $task = new ProjectCreationFromArchiveTask(101, 'filename.zip', 102);
+    private bool $called = false;
 
-        self::assertSame(
-            ['project_id' => 101, 'filename' => 'filename.zip', 'user_id' => 102],
-            $task->getPayload(),
-        );
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function activateProject(Project $project): void
+    {
+        $this->called = true;
+    }
+
+    public function isCalled(): bool
+    {
+        return $this->called;
     }
 }

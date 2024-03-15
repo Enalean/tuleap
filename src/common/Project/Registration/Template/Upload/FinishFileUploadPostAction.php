@@ -22,5 +22,5 @@ namespace Tuleap\Project\Registration\Template\Upload;
 
 interface FinishFileUploadPostAction
 {
-    public function process(int $project_id, string $filename): void;
+    public function process(int $project_id, string $filename, int $user_id): void;
 }

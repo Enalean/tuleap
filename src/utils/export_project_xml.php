@@ -157,7 +157,7 @@ try {
         $archive = new Export\ZipArchive($output);
     }
 
-    $user                              = UserManager::instance()->forceLogin($username);
+    $user                              = UserManager::instance()->forceLogin((string) $username);
     $temporary_dump_path_on_filesystem = $archive->getArchivePath() . time();
 
     try {

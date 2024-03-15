@@ -22,14 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue;
 
+use ForgeConfig;
+use MailPresenterFactory;
+use TemplateRendererFactory;
+use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Option\Option;
+use Tuleap\Project\ProjectCreationNotifier;
 use Tuleap\Project\Registration\Template\Upload\ExtractArchiveAndCreateProject;
+use Tuleap\Project\Registration\Template\Upload\ProjectAfterArchiveImportActivation;
+use TuleapRegisterMail;
+use UserManager;
 use XMLImportHelper;
 
 final readonly class WorkerEventProcessorFinder implements FindWorkerEventProcessor
 {
     public function findFromWorkerEvent(WorkerEvent $worker_event): Option
     {
+        $project_manager = \ProjectManager::instance();
+        $user_manager    = UserManager::instance();
+
         return match ($worker_event->getEventName()) {
             ExtractArchiveAndCreateProject::TOPIC =>
                 Option::fromValue(
@@ -39,6 +50,25 @@ final readonly class WorkerEventProcessorFinder implements FindWorkerEventProces
                             new XMLImportHelper(\UserManager::instance()),
                             \ProjectCreator::buildSelfByPassValidation(),
                         ),
+                        new ProjectAfterArchiveImportActivation(
+                            new \ProjectDao(),
+                            new ProjectCreationNotifier(
+                                new TuleapRegisterMail(
+                                    new MailPresenterFactory(),
+                                    TemplateRendererFactory::build()->getRenderer(
+                                        ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
+                                    ),
+                                    $user_manager,
+                                    new LocaleSwitcher(),
+                                    "mail-project-register-admin"
+                                ),
+                                $worker_event->getLogger(),
+                            ),
+                            $project_manager,
+                        ),
+                        $project_manager,
+                        $user_manager,
+                        $user_manager,
                     ),
                 ),
             default =>

@@ -25,6 +25,7 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Project\ActivateProject;
 use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectByIDFactory;
@@ -45,7 +46,7 @@ use Tuleap\Project\Webhook\WebhookDao;
 use Tuleap\Project\Webhook\Retriever;
 use Tuleap\Webhook\Emitter;
 
-class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory, ActivateProject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     #[ConfigKey("Is project creation allowed to regular users (1) or not (0)")]
     public const CONFIG_PROJECTS_CAN_BE_CREATED = 'sys_use_project_registration';
@@ -411,13 +412,7 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
         return null;
     }
 
-    /**
-     * Make project available
-     *
-     *
-     * @return bool
-     */
-    public function activate(Project $project)
+    public function activateWithNotifications(Project $project): bool
     {
         if ($this->activateWithoutNotifications($project)) {
             if (! send_new_project_email($project)) {
@@ -428,7 +423,7 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
         return false;
     }
 
-    public function activateWithoutNotifications(Project $project)
+    public function activateWithoutNotifications(Project $project): bool
     {
         if ($this->_getDao()->updateStatus($project->getId(), 'A')) {
             include_once __DIR__ . '/../../www/include/proj_email.php';

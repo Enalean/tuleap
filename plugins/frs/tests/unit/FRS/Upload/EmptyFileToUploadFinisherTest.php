@@ -41,7 +41,7 @@ final class EmptyFileToUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $finisher = $this->createMock(FileUploadFinisher::class);
         $finisher->expects(self::once())
-            ->method('finishUpload')
+            ->method('finishUploadFile')
             ->with(self::callback(
                 static function (TusFileInformation $file_information) {
                     return $file_information->getID() === 42;

@@ -20,14 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project\Registration\Template\Upload;
+namespace Tuleap\Test\Stubs\Project;
 
+use Project;
+use Tuleap\Project\ActivateProject;
 
-final class FinishFileUploadPostActionStub implements FinishFileUploadPostAction
+final class ActivateProjectStub implements ActivateProject
 {
-    private ?int $processed_project_id  = null;
-    private ?string $processed_filename = null;
-    private ?int $processed_user_id     = null;
+    private bool $activate_with_notifications_called = false;
+
+    private bool $activate_without_notifications_called = false;
 
     private function __construct()
     {
@@ -38,25 +40,27 @@ final class FinishFileUploadPostActionStub implements FinishFileUploadPostAction
         return new self();
     }
 
-    public function process(int $project_id, string $filename, int $user_id): void
+    public function activateWithNotifications(Project $project): bool
     {
-        $this->processed_project_id = $project_id;
-        $this->processed_filename   = $filename;
-        $this->processed_user_id    = $user_id;
+        $this->activate_with_notifications_called = true;
+
+        return true;
     }
 
-    public function getProcessedFilename(): ?string
+    public function activateWithoutNotifications(Project $project): bool
     {
-        return $this->processed_filename;
+        $this->activate_without_notifications_called = true;
+
+        return true;
     }
 
-    public function getProcessedProjectId(): ?int
+    public function isActivateWithNotificationsCalled(): bool
     {
-        return $this->processed_project_id;
+        return $this->activate_with_notifications_called;
     }
 
-    public function getProcessedUserId(): ?int
+    public function isActivateWithoutNotificationsCalled(): bool
     {
-        return $this->processed_user_id;
+        return $this->activate_without_notifications_called;
     }
 }

@@ -18,21 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Project\Registration\Template\Upload;
 
-use Tuleap\Test\PHPUnit\TestCase;
+use Project;
 
-final class ProjectCreationFromArchiveTaskTest extends TestCase
+interface ActivateProjectAfterArchiveImport
 {
-    public function testGetPayload(): void
-    {
-        $task = new ProjectCreationFromArchiveTask(101, 'filename.zip', 102);
-
-        self::assertSame(
-            ['project_id' => 101, 'filename' => 'filename.zip', 'user_id' => 102],
-            $task->getPayload(),
-        );
-    }
+    public function activateProject(Project $project): void;
 }

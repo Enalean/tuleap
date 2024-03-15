@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Document;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
@@ -103,7 +104,12 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->transaction_executor           = $transaction_executor;
     }
 
-    public function finishUpload(TusFileInformation $file_information): void
+    public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
+    {
+        $this->finishUploadEmptyFile($file_information);
+    }
+
+    public function finishUploadEmptyFile(TusFileInformation $file_information): void
     {
         $item_id = $file_information->getID();
 

@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
+use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
@@ -130,7 +131,7 @@ final class DocumentUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
 
-        $upload_finisher->finishUpload($file_information);
+        $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
 
         $this->assertFileDoesNotExist($path_item_being_uploaded);
     }

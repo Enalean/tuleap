@@ -28,6 +28,7 @@ use org\bovigo\vfs\vfsStream;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
@@ -65,7 +66,7 @@ class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $file_information = new FileBeingUploadedInformation(42, 'Lenna.png', 473831, 473831);
 
-        (new FileUploadFinisher($dao, $factory))->finishUpload($file_information);
+        (new FileUploadFinisher($dao, $factory))->finishUpload(new NullServerRequest(), $file_information);
         $this->assertFileEquals(__DIR__ . '/_fixtures/Lenna-expected-thumbnail.png', $base_path . '/thumbnails/42');
     }
 }

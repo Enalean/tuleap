@@ -20,19 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project\Registration\Template\Upload;
+namespace Tuleap\Test\Stubs\User;
 
-use Tuleap\Test\PHPUnit\TestCase;
+use PFUser;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\ForceLogin;
 
-final class ProjectCreationFromArchiveTaskTest extends TestCase
+final class ForceLoginStub implements ForceLogin
 {
-    public function testGetPayload(): void
-    {
-        $task = new ProjectCreationFromArchiveTask(101, 'filename.zip', 102);
+    private bool $forced = false;
 
-        self::assertSame(
-            ['project_id' => 101, 'filename' => 'filename.zip', 'user_id' => 102],
-            $task->getPayload(),
-        );
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function forceLogin(string $name): PFUser
+    {
+        $this->forced = true;
+
+        return UserTestBuilder::buildWithDefaults();
+    }
+
+    public function isForced(): bool
+    {
+        return $this->forced;
     }
 }
