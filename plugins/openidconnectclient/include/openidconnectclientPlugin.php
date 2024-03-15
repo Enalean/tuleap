@@ -79,6 +79,7 @@ use Tuleap\OpenIDConnectClient\UserAccount\UnlinkController;
 use Tuleap\OpenIDConnectClient\UserMapping\CanRemoveUserMappingChecker;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
+use Tuleap\OpenIDConnectClient\UserMapping\UserMappingUsage;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
@@ -88,6 +89,7 @@ use Tuleap\User\Account\Register\BeforeUserRegistrationEvent;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\AdditionalConnector;
 use Tuleap\User\AdditionalConnectorsCollector;
+use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\User\UserAuthenticationSucceeded;
 use Tuleap\User\UserNameNormalizer;
 
@@ -540,5 +542,28 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
             new CanRemoveUserMappingChecker(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventName(UserDetailsPresenter::ADDITIONAL_DETAILS)]
+    public function additionalDetails(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $user = $params['user'];
+        if ($this->getUserMappingManager()->userHasProvider($user)) {
+            $all_used_providers_names = array_map(
+                function (UserMappingUsage $mapping_usage): string {
+                    return $mapping_usage->getProviderName();
+                },
+                $this->getUserMappingManager()->getUsageByUser($user),
+            );
+
+            $mustache_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/user');
+
+            $params['additional_details'][] = $mustache_renderer->renderToString(
+                'user-additional-information',
+                [
+                    'provider_names' => implode(', ', $all_used_providers_names),
+                ],
+            );
+        }
     }
 }
