@@ -61,6 +61,6 @@ const createFilter = (event: KeyboardEvent): void => {
 
 <style scoped lang="scss">
 .pull-requests-homepage-keyword-search-input {
-    width: 300px;
+    flex: 300px 0 1;
 }
 </style>

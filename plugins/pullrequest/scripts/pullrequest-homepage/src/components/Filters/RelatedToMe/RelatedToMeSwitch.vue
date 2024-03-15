@@ -79,6 +79,7 @@ const deactivated_switch_message = computed(() =>
 <style scoped lang="scss">
 .pull-requests-homepage-related-to-me-switch-label {
     margin: 0;
+    white-space: nowrap;
 
     &.disabled {
         opacity: 0.5;
@@ -87,7 +88,8 @@ const deactivated_switch_message = computed(() =>
 
 .pull-requests-homepage-related-to-me-switch {
     display: flex;
-    flex-direction: row;
+    flex-flow: row wrap;
     gap: var(--tlp-small-spacing);
+    justify-content: center;
 }
 </style>

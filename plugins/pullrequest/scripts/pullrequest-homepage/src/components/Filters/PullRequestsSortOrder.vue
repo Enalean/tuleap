@@ -55,11 +55,12 @@ const sort_direction = strictInject(PULL_REQUEST_SORT_ORDER);
 }
 
 .pull-requests-sort-control-select {
-    width: 200px;
+    flex: 1;
 }
 
 .pull-requests-sort-control {
     display: flex;
+    flex: 232px 0 1;
     flex-direction: row;
     align-items: center;
     gap: var(--tlp-small-spacing);

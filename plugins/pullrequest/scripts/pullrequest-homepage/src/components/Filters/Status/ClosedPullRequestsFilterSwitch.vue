@@ -52,11 +52,13 @@ const are_closed_pull_requests_shown = strictInject(SHOW_CLOSED_PULL_REQUESTS);
 <style scoped lang="scss">
 .pull-requests-homepage-status-switch-label {
     margin: 0;
+    white-space: nowrap;
 }
 
 .pull-requests-homepage-open-closed-switch {
     display: flex;
-    flex-direction: row;
+    flex-flow: row wrap;
     gap: var(--tlp-small-spacing);
+    justify-content: center;
 }
 </style>
