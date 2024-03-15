@@ -30,6 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\DB\DBConnection;
 use Tuleap\InviteBuddy\InvitationCleaner;
+use Tuleap\Project\Registration\Template\Upload\ProjectArchiveUploadCleaner;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
 use Tuleap\User\UserSuspensionManager;
 
@@ -38,12 +39,13 @@ class DailyJobCommand extends Command
     public const NAME = 'daily-job';
 
     public function __construct(
-        private EventManager $event_manager,
-        private AccessKeyRevoker $access_key_revoker,
-        private DBConnection $db_connection,
-        private ExecutionDelayedLauncher $execution_delayed_launcher,
-        private UserSuspensionManager $user_suspension_manager,
-        private InvitationCleaner $invitation_cleaner,
+        private readonly EventManager $event_manager,
+        private readonly AccessKeyRevoker $access_key_revoker,
+        private readonly DBConnection $db_connection,
+        private readonly ExecutionDelayedLauncher $execution_delayed_launcher,
+        private readonly UserSuspensionManager $user_suspension_manager,
+        private readonly InvitationCleaner $invitation_cleaner,
+        private readonly ProjectArchiveUploadCleaner $project_archive_cleaner,
     ) {
         parent::__construct(self::NAME);
     }
@@ -65,6 +67,7 @@ class DailyJobCommand extends Command
             $now = new \DateTimeImmutable();
             $this->access_key_revoker->revokeUnusableUserAccessKeys($now);
             $this->invitation_cleaner->cleanObsoleteInvitations($now);
+            $this->project_archive_cleaner->deleteUploadedDanglingProjectArchive($now);
         });
         return 0;
     }

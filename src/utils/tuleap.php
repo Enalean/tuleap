@@ -42,20 +42,21 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\GetConfigKeys;
+use Tuleap\Dao\UserSuspensionDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
 use Tuleap\InviteBuddy\InvitationCleaner;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\Language\LocaleSwitcher;
-use Tuleap\Plugin\PluginInstallCommand;
-use Tuleap\Queue\WorkerLogger;
-use Tuleap\User\Profile\ForceRegenerationDefaultAvatarCommand;
-use Tuleap\User\UserSuspensionManager;
 use Tuleap\Password\PasswordSanityChecker;
+use Tuleap\Plugin\PluginInstallCommand;
+use Tuleap\Project\Registration\Template\Upload\ProjectArchiveOngoingUploadDao;
 use Tuleap\Queue\TaskWorker\TaskWorkerProcessCommand;
+use Tuleap\Queue\WorkerLogger;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
-use Tuleap\Dao\UserSuspensionDao;
+use Tuleap\User\Profile\ForceRegenerationDefaultAvatarCommand;
+use Tuleap\User\UserSuspensionManager;
 use TuleapCfg\Command\ProcessFactory;
 
 (static function () {
@@ -188,8 +189,8 @@ $CLI_command_collector->addCommand(
 $CLI_command_collector->addCommand(
     DailyJobCommand::NAME,
     static function () use ($event_manager, $user_manager): DailyJobCommand {
-        $locale_switcher = new LocaleSwitcher();
-
+        $locale_switcher     = new LocaleSwitcher();
+        $project_archive_dao = new ProjectArchiveOngoingUploadDao();
         return new DailyJobCommand(
             $event_manager,
             new AccessKeyRevoker(
@@ -230,6 +231,11 @@ $CLI_command_collector->addCommand(
                 ProjectManager::instance(),
                 new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
             ),
+            new \Tuleap\Project\Registration\Template\Upload\ProjectArchiveUploadCleaner(
+                new \Tuleap\Upload\UploadPathAllocator(ForgeConfig::get('tmp_dir') . '/project/ongoing-upload'),
+                $project_archive_dao,
+                $project_archive_dao
+            )
         );
     }
 );
