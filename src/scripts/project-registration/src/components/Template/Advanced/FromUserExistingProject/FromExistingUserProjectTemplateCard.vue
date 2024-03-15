@@ -73,57 +73,34 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref } from "vue";
 import type { AdvancedOptions } from "../../../../type";
-import TemplateCard from "../../TemplateCard.vue";
 import SvgTemplate from "./SvgTemplate.vue";
 import UserProjectList from "./UserProjectList.vue";
 import { useStore } from "../../../../stores/root";
+const option_name: AdvancedOptions = "from_existing_user_project";
 
-@Component({
-    components: {
-        TemplateCard,
-        SvgTemplate,
-        UserProjectList,
-    },
-})
-export default class FromExistingUserProjectTemplateCard extends Vue {
-    option_name: AdvancedOptions = "from_existing_user_project";
+const is_loading_project_list = ref<boolean>(false);
+const has_error = ref<boolean>(false);
 
-    should_choose_a_project = false;
-    is_loading_project_list = false;
-    has_error = false;
+const root_store = useStore();
 
-    root_store = useStore();
-
-    mounted(): void {
-        if (this.root_store.projects_user_is_admin_of.length > 0) {
-            this.should_choose_a_project = this.root_store.is_advanced_option_selected(
-                this.option_name,
-            );
-        }
+async function loadProjects(): Promise<void> {
+    if (root_store.projects_user_is_admin_of.length > 0) {
+        is_loading_project_list.value = false;
+        return;
     }
 
-    async loadProjects(): Promise<void> {
-        if (this.root_store.projects_user_is_admin_of.length > 0) {
-            this.is_loading_project_list = false;
-            this.should_choose_a_project = true;
-            return;
-        }
-
-        this.has_error = false;
-        this.is_loading_project_list = true;
-        try {
-            await this.root_store.loadUserProjects();
-        } catch (error) {
-            this.has_error = true;
-            throw error;
-        } finally {
-            this.is_loading_project_list = false;
-            this.should_choose_a_project = true;
-        }
+    has_error.value = false;
+    is_loading_project_list.value = true;
+    try {
+        await root_store.loadUserProjects();
+    } catch (error) {
+        has_error.value = true;
+        throw error;
+    } finally {
+        is_loading_project_list.value = false;
     }
 }
 </script>
