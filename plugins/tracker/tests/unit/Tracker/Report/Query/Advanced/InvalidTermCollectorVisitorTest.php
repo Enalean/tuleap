@@ -278,12 +278,8 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         $now         = new CurrentDateTimeValueWrapper(null, null);
         yield '= string value' => [new EqualComparison($field, new SimpleValueWrapper('string'))];
         yield '= NOW()' => [new EqualComparison($field, $now)];
-        foreach (self::generateInvalidNumericComparisonsToEmptyString($field, $valid_value) as $case) {
-            yield $case;
-        }
-        foreach (self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value) as $case) {
-            yield $case;
-        }
+        yield from self::generateInvalidNumericComparisonsToEmptyString($field, $valid_value);
+        yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
     }
 
     /**
@@ -337,12 +333,8 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         $valid_value = new SimpleValueWrapper('Graphium');
         $now         = new CurrentDateTimeValueWrapper(null, null);
         yield '= NOW()' => [new EqualComparison($field, $now)];
-        foreach (self::generateInvalidComparisonsForFieldsThatAreNotNumeric($field, $valid_value) as $case) {
-            yield $case;
-        }
-        foreach (self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value) as $case) {
-            yield $case;
-        }
+        yield from self::generateInvalidComparisonsForFieldsThatAreNotNumeric($field, $valid_value);
+        yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
     }
 
     /**
@@ -384,12 +376,8 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         $field       = new Field(self::FIELD_NAME);
         $valid_value = new SimpleValueWrapper('2024-02-22');
         yield '= string value' => [new EqualComparison($field, new SimpleValueWrapper('string'))];
-        foreach (self::generateInvalidNumericComparisonsToEmptyString($field, $valid_value) as $case) {
-            yield $case;
-        }
-        foreach (self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value) as $case) {
-            yield $case;
-        }
+        yield from self::generateInvalidNumericComparisonsToEmptyString($field, $valid_value);
+        yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
     }
 
     /**
@@ -502,12 +490,8 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         $now         = new CurrentDateTimeValueWrapper(null, null);
         yield '= NOW()' => [new EqualComparison($field, $now)];
         yield '= OPEN()' => [new EqualComparison($field, $open)];
-        foreach (self::generateInvalidListComparisonsToEmptyString($field, $valid_value) as $case) {
-            yield $case;
-        }
-        foreach (self::generateInvalidComparisonsForFieldsThatAreNotNumeric($field, $valid_value) as $case) {
-            yield $case;
-        }
+        yield from self::generateInvalidListComparisonsToEmptyString($field, $valid_value);
+        yield from self::generateInvalidComparisonsForFieldsThatAreNotNumeric($field, $valid_value);
     }
 
     /**
@@ -589,12 +573,8 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         yield '= OPEN()' => [new EqualComparison($field, $open)];
         yield '= empty string' => [new EqualComparison($field, $empty_value)];
         yield '!= empty string' => [new NotEqualComparison($field, $empty_value)];
-        foreach (self::generateInvalidListComparisonsToEmptyString($field, $valid_value) as $case) {
-            yield $case;
-        }
-        foreach (self::generateInvalidComparisonsForFieldsThatAreNotNumeric($field, $valid_value) as $case) {
-            yield $case;
-        }
+        yield from self::generateInvalidListComparisonsToEmptyString($field, $valid_value);
+        yield from self::generateInvalidComparisonsForFieldsThatAreNotNumeric($field, $valid_value);
     }
 
     /**
