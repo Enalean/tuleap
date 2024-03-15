@@ -35,7 +35,7 @@ class AndOperand implements Logical
         return $this->operand;
     }
 
-    public function getTail(): OrOperand | AndOperand | null
+    public function getTail(): OrOperand|AndOperand|null
     {
         return $this->tail;
     }

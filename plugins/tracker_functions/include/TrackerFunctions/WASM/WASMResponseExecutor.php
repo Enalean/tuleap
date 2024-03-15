@@ -32,5 +32,5 @@ interface WASMResponseExecutor
     /**
      * @return Ok<null>|Err<Fault>
      */
-    public function executeResponse(WASMResponseRepresentation $response, Artifact $artifact): Ok | Err;
+    public function executeResponse(WASMResponseRepresentation $response, Artifact $artifact): Ok|Err;
 }

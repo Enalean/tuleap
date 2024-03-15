@@ -43,5 +43,5 @@ final class FilePOSTRepresentation
     /**
      * @var string | null Description of the file {@from body} {@required false}
      */
-    public string | null $description;
+    public ?string $description;
 }

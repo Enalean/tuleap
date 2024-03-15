@@ -58,7 +58,7 @@ final class ProvideAndRetrieveUserStub implements ProvideCurrentUser, RetrieveUs
         return $this->current_user;
     }
 
-    public function getUserByUserName(string $user_name): PFUser|null
+    public function getUserByUserName(string $user_name): ?PFUser
     {
         foreach ($this->users as $user) {
             if ($user->getUserName() === $user_name) {

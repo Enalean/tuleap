@@ -164,7 +164,7 @@ abstract class AdminView
         return (int) $params['group_id'];
     }
 
-    private function getProjectFromParams(array $params): \Project|null
+    private function getProjectFromParams(array $params): ?\Project
     {
         $project = null;
 
@@ -176,7 +176,7 @@ abstract class AdminView
         return $project;
     }
 
-    private function getUserFromParams(array $params): \PFUser|null
+    private function getUserFromParams(array $params): ?\PFUser
     {
         return $params['user'] ?? null;
     }

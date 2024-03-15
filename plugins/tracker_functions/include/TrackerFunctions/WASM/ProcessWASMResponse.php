@@ -42,11 +42,11 @@ final class ProcessWASMResponse implements WASMResponseProcessor
     ) {
     }
 
-    public function processResponse(Ok | Err $wasm_response): Ok | Err
+    public function processResponse(Ok|Err $wasm_response): Ok|Err
     {
         return $wasm_response->match(
         /** @return Ok<WASMResponseRepresentation>|Err<Fault> */
-            function (string $json_response): Ok | Err {
+            function (string $json_response): Ok|Err {
                 $this->logger->debug("Got response from WASM function : {$json_response}");
                 try {
                     return Result::ok($this->mapper->map(

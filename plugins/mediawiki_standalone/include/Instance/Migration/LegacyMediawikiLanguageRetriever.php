@@ -24,5 +24,5 @@ namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 interface LegacyMediawikiLanguageRetriever
 {
-    public function getLanguageFor(int $project_id): string | false;
+    public function getLanguageFor(int $project_id): string|false;
 }

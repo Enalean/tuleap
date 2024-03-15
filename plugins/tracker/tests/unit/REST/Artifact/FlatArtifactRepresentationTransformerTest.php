@@ -109,7 +109,7 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
         yield 'computed field (computed value)' => [$build_computed_field_value(true, 123.456), ['f1' => 123.456]];
         yield 'computed field (manual value)' => [$build_computed_field_value(false, 456.123), ['f1' => 456.123]];
         yield 'unknown field type' => [$build_base_field_value('unknown', 'val'), []];
-        $build_list_field = static function (array|null $list_values): ArtifactFieldValueListFullRepresentation {
+        $build_list_field = static function (?array $list_values): ArtifactFieldValueListFullRepresentation {
             $field_value = new ArtifactFieldValueListFullRepresentation();
             $field_value->build(1, 'sb', 'label1', $list_values, []);
             return $field_value;

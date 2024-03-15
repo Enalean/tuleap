@@ -33,5 +33,5 @@ interface TrackerAdminRecipientsRetriever
     /**
      * @return Ok<non-empty-array<PFUser>> | Err<Fault>
      */
-    public function retrieveRecipients(Tracker $tracker): Ok | Err;
+    public function retrieveRecipients(Tracker $tracker): Ok|Err;
 }

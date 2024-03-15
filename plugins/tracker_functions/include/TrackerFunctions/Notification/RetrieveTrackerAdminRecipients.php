@@ -42,7 +42,7 @@ final class RetrieveTrackerAdminRecipients implements TrackerAdminRecipientsRetr
     /**
      * @return Ok<non-empty-array<PFUser>> | Err<Fault>
      */
-    public function retrieveRecipients(Tracker $tracker): Ok | Err
+    public function retrieveRecipients(Tracker $tracker): Ok|Err
     {
         $admin_ugroup = $this->admins_ugroup_retriever->getProjectAdminsUGroup($tracker->getProject());
         $result       = $admin_ugroup->getMembers();

@@ -32,7 +32,7 @@ use Tuleap\TrackerFunctions\Notification\MessageSender;
 final class MessageSenderStub implements MessageSender
 {
     private function __construct(
-        private readonly Ok | Err $result,
+        private readonly Ok|Err $result,
     ) {
     }
 
@@ -46,7 +46,7 @@ final class MessageSenderStub implements MessageSender
         return new self(Result::err(Fault::fromMessage($message)));
     }
 
-    public function sendMessages(array $messages, Tracker_Artifact_Changeset $changeset): Ok | Err
+    public function sendMessages(array $messages, Tracker_Artifact_Changeset $changeset): Ok|Err
     {
         return $this->result;
     }

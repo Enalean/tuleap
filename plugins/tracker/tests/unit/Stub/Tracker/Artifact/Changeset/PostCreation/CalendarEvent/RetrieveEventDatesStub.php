@@ -32,7 +32,7 @@ final class RetrieveEventDatesStub implements RetrieveEventDates
 {
     private bool $time_displayed = false;
 
-    private function __construct(private readonly int|null $start, private readonly int $end, private readonly string|null $error)
+    private function __construct(private readonly ?int $start, private readonly int $end, private readonly ?string $error)
     {
     }
 

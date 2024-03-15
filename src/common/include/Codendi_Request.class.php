@@ -33,7 +33,7 @@ class Codendi_Request
      */
     protected $current_user;
 
-    protected Project|null $project = null;
+    protected ?Project $project = null;
 
     private readonly ProjectByIDFactory $project_manager;
 

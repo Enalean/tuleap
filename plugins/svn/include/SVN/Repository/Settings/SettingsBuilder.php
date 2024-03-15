@@ -50,7 +50,7 @@ class SettingsBuilder
      */
     public function buildFromPOSTPUTRESTRepresentation(
         Repository $repository,
-        SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings,
+        SettingsPOSTRepresentation|SettingsPUTRepresentation|null $settings,
     ): Ok|Err {
         $commit_rules            = [];
         $immutable_tag           = $this->immutable_tag_factory->getEmpty($repository);

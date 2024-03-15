@@ -37,7 +37,7 @@ final class WASMFunctionCallerStub implements WASMFunctionCaller
      * @param Ok<WASMResponseRepresentation>|Err<Fault> $result
      */
     private function __construct(
-        private readonly Ok | Err $result,
+        private readonly Ok|Err $result,
     ) {
     }
 
@@ -56,7 +56,7 @@ final class WASMFunctionCallerStub implements WASMFunctionCaller
         return self::withErrResult('');
     }
 
-    public function callWASMFunction(string $wasm_function_path, string $payload): Ok | Err
+    public function callWASMFunction(string $wasm_function_path, string $payload): Ok|Err
     {
         $this->has_been_called = true;
         return $this->result;

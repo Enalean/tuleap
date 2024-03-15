@@ -145,7 +145,7 @@ final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
         $this->visitTail($and_operand->getTail(), $parameters);
     }
 
-    private function visitTail(OrOperand | AndOperand | null $tail, SizeValidatorParameters $parameters)
+    private function visitTail(OrOperand|AndOperand|null $tail, SizeValidatorParameters $parameters)
     {
         if ($tail) {
             $tail->acceptLogicalVisitor($this, $parameters);

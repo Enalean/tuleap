@@ -66,7 +66,7 @@ final class ProjectSidebarLegacyPNGHrefTest extends TestCase
         self::assertStringStartsWith('https://', $representation->small);
     }
 
-    private function buildRepresentation(IDetectIfLogoIsCustomized $customized_logo_detector): ProjectSidebarLegacyPNGHref|null
+    private function buildRepresentation(IDetectIfLogoIsCustomized $customized_logo_detector): ?ProjectSidebarLegacyPNGHref
     {
         return ProjectSidebarLegacyPNGHref::fromDetector($customized_logo_detector);
     }

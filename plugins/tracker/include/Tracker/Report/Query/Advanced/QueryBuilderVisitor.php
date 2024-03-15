@@ -353,7 +353,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         return $this->buildAndClause($parameters, $tail, $from_where_expression);
     }
 
-    private function buildAndClause(QueryBuilderParameters $parameters, OrOperand | AndOperand | null $tail, $from_where_expression)
+    private function buildAndClause(QueryBuilderParameters $parameters, OrOperand|AndOperand|null $tail, $from_where_expression)
     {
         if (! $tail) {
             return $from_where_expression;
@@ -364,7 +364,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         return new ParametrizedAndFromWhere($from_where_expression, $from_where_tail);
     }
 
-    private function buildOrClause(QueryBuilderParameters $parameters, OrOperand | AndOperand | null $tail, $from_where_expression)
+    private function buildOrClause(QueryBuilderParameters $parameters, OrOperand|AndOperand|null $tail, $from_where_expression)
     {
         if (! $tail) {
             return $from_where_expression;

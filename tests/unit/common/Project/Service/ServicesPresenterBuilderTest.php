@@ -83,7 +83,7 @@ final class ServicesPresenterBuilderTest extends TestCase
 
         $this->service_manager->expects(self::once())->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $summary_service, $tracker_service]);
 
-        $this->event_manager = EventDispatcherStub::withCallback(function (AddMissingService | HideServiceInUserInterfaceEvent | ServiceDisabledCollector $event) {
+        $this->event_manager = EventDispatcherStub::withCallback(function (AddMissingService|HideServiceInUserInterfaceEvent|ServiceDisabledCollector $event) {
             if ($event instanceof ServiceDisabledCollector) {
                 $event->setIsDisabled('Disabled by plugin');
             }
@@ -107,7 +107,7 @@ final class ServicesPresenterBuilderTest extends TestCase
                         ->withShortName('plugin_mediawiki_standalone')
                         ->build();
 
-        $this->event_manager = EventDispatcherStub::withCallback(function (AddMissingService | HideServiceInUserInterfaceEvent | ServiceDisabledCollector $event) use ($extra_service) {
+        $this->event_manager = EventDispatcherStub::withCallback(function (AddMissingService|HideServiceInUserInterfaceEvent|ServiceDisabledCollector $event) use ($extra_service) {
             if ($event instanceof AddMissingService) {
                 $event->addService($extra_service);
             }

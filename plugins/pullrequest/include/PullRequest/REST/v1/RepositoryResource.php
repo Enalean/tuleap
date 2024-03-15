@@ -155,7 +155,7 @@ class RepositoryResource extends AuthenticatedResource
     /**
      * @return Ok<GETHandler> | Err<Fault>
      */
-    private function getGETHandler(): Ok | Err
+    private function getGETHandler(): Ok|Err
     {
         $git_plugin = \PluginFactory::instance()->getPluginByName('git');
         if (! $git_plugin) {

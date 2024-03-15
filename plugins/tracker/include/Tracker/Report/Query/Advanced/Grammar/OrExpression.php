@@ -35,7 +35,7 @@ final class OrExpression implements Logical
         return $this->expression;
     }
 
-    public function getTail(): OrOperand | AndOperand | null
+    public function getTail(): OrOperand|AndOperand|null
     {
         return $this->tail;
     }

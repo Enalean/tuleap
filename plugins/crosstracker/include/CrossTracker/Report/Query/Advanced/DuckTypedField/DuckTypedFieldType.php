@@ -41,7 +41,7 @@ enum DuckTypedFieldType
     /**
      * @return Ok<self>|Err<Fault>
      */
-    public static function fromString(string $type_name): Ok | Err
+    public static function fromString(string $type_name): Ok|Err
     {
         return match ($type_name) {
             Tracker_FormElementFactory::FIELD_INTEGER_TYPE,

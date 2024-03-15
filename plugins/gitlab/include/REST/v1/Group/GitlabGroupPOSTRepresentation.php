@@ -35,7 +35,7 @@ final class GitlabGroupPOSTRepresentation
     /**
      * @var string | null $create_branch_prefix {@required false}
      */
-    public string | null $create_branch_prefix = null;
+    public ?string $create_branch_prefix = null;
 
     public function __construct(
         public int $project_id,

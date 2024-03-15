@@ -114,8 +114,8 @@ final class ListOfSearchCriterionPresenterBuilder
         usort(
             $criteria['custom'],
             static fn (
-                SearchCriterionPresenter | SearchCriterionListPresenter $a,
-                SearchCriterionPresenter | SearchCriterionListPresenter $b,
+                SearchCriterionPresenter|SearchCriterionListPresenter $a,
+                SearchCriterionPresenter|SearchCriterionListPresenter $b,
             ): int => strnatcasecmp($a->label, $b->label)
         );
 

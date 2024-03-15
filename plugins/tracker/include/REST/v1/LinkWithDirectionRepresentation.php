@@ -40,7 +40,7 @@ final class LinkWithDirectionRepresentation
     public string $direction;
 
     /**
-     * @var string | null {@required false}
+     * @var string | null $type {@required false}
      */
-    public string | null $type = null;
+    public ?string $type = null;
 }

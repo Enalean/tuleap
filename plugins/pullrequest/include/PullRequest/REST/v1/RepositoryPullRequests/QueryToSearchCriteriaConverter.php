@@ -36,7 +36,7 @@ class QueryToSearchCriteriaConverter
     /**
      * @return Ok<SearchCriteria> | Err<Fault>
      */
-    public function convert(string $query): Ok | Err
+    public function convert(string $query): Ok|Err
     {
         if ($query === '') {
             return Result::ok(new SearchCriteria(null));
@@ -68,7 +68,7 @@ class QueryToSearchCriteriaConverter
     /**
      * @return Ok<SearchCriteria> | Err<Fault>
      */
-    private function getValidatedSearchCriteria(mixed $search_criteria): Ok | Err
+    private function getValidatedSearchCriteria(mixed $search_criteria): Ok|Err
     {
         if (
             count($search_criteria->related_to) &&

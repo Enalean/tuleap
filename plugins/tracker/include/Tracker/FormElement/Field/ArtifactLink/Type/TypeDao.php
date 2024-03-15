@@ -146,7 +146,7 @@ class TypeDao extends DataAccessObject
     /**
      * @psalm-return array{shortname: string, forward_label: string, reverse_label: string}|null
      */
-    public function getFromShortname($shortname): array|null
+    public function getFromShortname($shortname): ?array
     {
         $sql = 'SELECT shortname, forward_label, reverse_label
                 FROM plugin_tracker_artifactlink_natures

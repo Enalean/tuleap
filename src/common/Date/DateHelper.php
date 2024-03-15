@@ -106,7 +106,7 @@ class DateHelper
     /**
      * Calculate the approximate distance between two times
      */
-    public static function distanceOfTimeInWords($from_time, $to_time, $include_seconds = false): string|null
+    public static function distanceOfTimeInWords($from_time, $to_time, $include_seconds = false): ?string
     {
         $distance_in_minutes = round((abs($to_time - $from_time)) / 60);
         $distance_in_seconds = round(abs($to_time - $from_time));
@@ -114,7 +114,7 @@ class DateHelper
         return self::getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds);
     }
 
-    public static function getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds): string|null
+    public static function getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds): ?string
     {
         if ($distance_in_minutes <= 1) {
             if (! $include_seconds) {

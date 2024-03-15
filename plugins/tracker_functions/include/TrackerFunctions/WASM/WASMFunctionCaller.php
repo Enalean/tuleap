@@ -31,5 +31,5 @@ interface WASMFunctionCaller
     /**
      * @return Ok<WASMResponseRepresentation>|Err<Fault>
      */
-    public function callWASMFunction(string $wasm_function_path, string $payload): Ok | Err;
+    public function callWASMFunction(string $wasm_function_path, string $payload): Ok|Err;
 }

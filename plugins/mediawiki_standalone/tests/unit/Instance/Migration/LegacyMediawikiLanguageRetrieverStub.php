@@ -22,7 +22,7 @@ namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 final class LegacyMediawikiLanguageRetrieverStub implements LegacyMediawikiLanguageRetriever
 {
-    private function __construct(private readonly string | false $language)
+    private function __construct(private readonly string|false $language)
     {
     }
 
@@ -36,7 +36,7 @@ final class LegacyMediawikiLanguageRetrieverStub implements LegacyMediawikiLangu
         return new self($language);
     }
 
-    public function getLanguageFor(int $project_id): string | false
+    public function getLanguageFor(int $project_id): string|false
     {
         return $this->language;
     }

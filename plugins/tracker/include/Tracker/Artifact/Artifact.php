@@ -244,7 +244,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     private $transaction_executor;
     private ?Artifact $parent    = null;
     private bool $has_set_parent = false;
-    private bool | null $is_open = null;
+    private ?bool $is_open       = null;
 
     /**
      * Constructor

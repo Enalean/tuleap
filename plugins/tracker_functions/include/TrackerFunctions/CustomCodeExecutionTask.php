@@ -83,14 +83,14 @@ final class CustomCodeExecutionTask implements PostCreationTask
         $this->getWASMFunctionPath($changeset->getTracker())
             ->andThen(
             /** @psalm-return Ok<WASMResponseRepresentation>|Err<Fault> */
-                function (string $wasm_function_path) use ($source_payload): Ok | Err {
+                function (string $wasm_function_path) use ($source_payload): Ok|Err {
                     $this->logger->debug("Found function to execute: {$wasm_function_path}");
                     return $this->function_caller->callWASMFunction($wasm_function_path, $source_payload);
                 }
             )
             ->andThen(
             /** @psalm-return Ok<null>|Err<Fault> */
-                function (WASMResponseRepresentation $response) use ($changeset, &$generated_payload): Ok | Err {
+                function (WASMResponseRepresentation $response) use ($changeset, &$generated_payload): Ok|Err {
                     $generated_payload = $response;
                     return $this->response_executor->executeResponse($response, $changeset->getArtifact());
                 }
@@ -120,7 +120,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
     /**
      * @return Ok<string>|Err<Fault>
      */
-    private function getWASMFunctionPath(Tracker $tracker): Ok | Err
+    private function getWASMFunctionPath(Tracker $tracker): Ok|Err
     {
         $wasm_function_path = $this->function_path_helper->getPathForTracker($tracker);
 

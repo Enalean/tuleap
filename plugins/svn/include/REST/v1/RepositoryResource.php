@@ -717,7 +717,7 @@ class RepositoryResource extends AuthenticatedResource
      */
     private function extractSettingsFromRepresentation(
         Repository $repository,
-        SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings_representation = null,
+        SettingsPOSTRepresentation|SettingsPUTRepresentation|null $settings_representation = null,
     ): Settings {
         $builder = new SettingsBuilder(
             $this->immutable_tag_factory,

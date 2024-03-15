@@ -84,7 +84,7 @@ final class ListFieldBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_Selectbox | \Tracker_FormElement_Field_MultiSelectbox
+    public function build(): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox
     {
         $selectbox = $this->buildSelectBox();
         $selectbox->setTracker($this->tracker);
@@ -96,7 +96,7 @@ final class ListFieldBuilder
         return $selectbox;
     }
 
-    private function buildSelectBox(): \Tracker_FormElement_Field_Selectbox | \Tracker_FormElement_Field_MultiSelectbox
+    private function buildSelectBox(): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox
     {
         if ($this->is_multiple) {
             $field = new \Tracker_FormElement_Field_MultiSelectbox(

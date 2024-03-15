@@ -35,7 +35,7 @@ final class FormElementFactoryAdapter implements RetrieveFullArtifactLinkField
 
     public function getArtifactLinkField(
         TrackerIdentifier $tracker_identifier,
-    ): \Tracker_FormElement_Field_ArtifactLink|null {
+    ): ?\Tracker_FormElement_Field_ArtifactLink {
         $tracker              = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
         $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($tracker);
         if (count($artifact_link_fields) > 0) {

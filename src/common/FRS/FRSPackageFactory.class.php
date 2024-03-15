@@ -25,13 +25,14 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class FRSPackageFactory
 {
     // Kept for legacy
     public $STATUS_ACTIVE  = FRSPackage::STATUS_ACTIVE;
     public $STATUS_DELETED = FRSPackage::STATUS_DELETED;
     public $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
-    private static self|null $instance;
+    private static ?self $instance;
 
     public static function instance()
     {
@@ -289,6 +290,7 @@ class FRSPackageFactory
         );
     }
 
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     public function _delete($package_id)
     {
         $_id     = (int) $package_id;
@@ -317,7 +319,7 @@ class FRSPackageFactory
      *
      * @return bool
      */
-    public function delete_package($group_id, $package_id)
+    public function delete_package($group_id, $package_id) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $package = $this->getFRSPackageFromDb($package_id, $group_id);
 
@@ -485,7 +487,9 @@ class FRSPackageFactory
         return UserManager::instance();
     }
 
-    public FRSPackageDao|null $dao = null;
+    public ?FRSPackageDao $dao = null;
+
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     public function _getFRSPackageDao()
     {
         if (! $this->dao) {

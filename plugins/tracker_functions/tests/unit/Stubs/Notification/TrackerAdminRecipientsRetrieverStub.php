@@ -36,7 +36,7 @@ final class TrackerAdminRecipientsRetrieverStub implements TrackerAdminRecipient
      * @param Ok<non-empty-array<PFUser>>|Err<Fault> $result
      */
     private function __construct(
-        private readonly Ok | Err $result,
+        private readonly Ok|Err $result,
     ) {
     }
 
@@ -50,7 +50,7 @@ final class TrackerAdminRecipientsRetrieverStub implements TrackerAdminRecipient
         return new self(Result::err(Fault::fromMessage($message)));
     }
 
-    public function retrieveRecipients(Tracker $tracker): Err | Ok
+    public function retrieveRecipients(Tracker $tracker): Err|Ok
     {
         return $this->result;
     }

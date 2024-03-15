@@ -33,8 +33,8 @@ final class ProjectSidebarLogoInformation
 {
     private function __construct(
         public string $logo_link_href,
-        public ProjectSidebarSVGLogo|null $svg,
-        public ProjectSidebarLegacyPNGHref|null $legacy_png_href,
+        public ?ProjectSidebarSVGLogo $svg,
+        public ?ProjectSidebarLegacyPNGHref $legacy_png_href,
     ) {
     }
 
