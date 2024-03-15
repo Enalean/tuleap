@@ -39,7 +39,7 @@ final class ListStaticBindBuilder
     }
 
     /**
-     * @psalm-param array{id: number, label: string} $values_labels
+     * @psalm-param array<int, string> $values_labels
      */
     public function withStaticValues(array $values_labels): self
     {
