@@ -5,36 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@tuleap/chart-builder':
-    specifier: workspace:*
-    version: link:../../lib/frontend/chart-builder
-  '@tuleap/plugin-agiledashboard-burnup-data-transformer':
-    specifier: workspace:*
-    version: link:scripts/lib/burnup-data-transformer
-  '@tuleap/plugin-tracker-chart-styles':
-    specifier: workspace:^
-    version: link:../tracker/scripts/lib/chart-styles
   '@tuleap/plugin-tracker-color-picker':
     specifier: workspace:*
     version: link:../tracker/scripts/lib/colorpicker
-  d3-array:
-    specifier: ^3.0.1
-    version: 3.2.4
-  d3-selection:
-    specifier: ^3.0.0
-    version: 3.0.0
-  d3-shape:
-    specifier: ^3.0.1
-    version: 3.0.1
-  moment:
-    specifier: ^2.29.4
-    version: 2.29.4
-  node-gettext:
-    specifier: ^3.0.0
-    version: 3.0.0
-  sprintf-js:
-    specifier: ^1.1.2
-    version: 1.1.2
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -46,52 +19,3 @@ devDependencies:
   '@tuleap/cypress-utilities-support':
     specifier: workspace:*
     version: link:../../lib/test-utils/cypress-utilities-support
-
-packages:
-
-  /d3-array@3.2.4:
-    resolution: {integrity: sha512-tdQAmyA18i4J7wprpYq8ClcxZy3SC31QMeByyCFyRt7BVHdREQZ5lpzoe5mFEYZUWe+oq8HBvk9JjpibyEV4Jg==}
-    engines: {node: '>=12'}
-    dependencies:
-      internmap: 2.0.3
-    dev: false
-
-  /d3-path@3.0.1:
-    resolution: {integrity: sha512-gq6gZom9AFZby0YLduxT1qmrp4xpBA1YZr19OI717WIdKE2OM5ETq5qrHLb301IgxhLwcuxvGZVLeeWc/k1I6w==}
-    engines: {node: '>=12'}
-    dev: false
-
-  /d3-selection@3.0.0:
-    resolution: {integrity: sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==}
-    engines: {node: '>=12'}
-    dev: false
-
-  /d3-shape@3.0.1:
-    resolution: {integrity: sha512-HNZNEQoDhuCrDWEc/BMbF/hKtzMZVoe64TvisFLDp2Iyj0UShB/E6/lBsLlJTfBMbYgftHj90cXJ0SEitlE6Xw==}
-    engines: {node: '>=12'}
-    dependencies:
-      d3-path: 3.0.1
-    dev: false
-
-  /internmap@2.0.3:
-    resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
-    engines: {node: '>=12'}
-    dev: false
-
-  /lodash.get@4.4.2:
-    resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
-    dev: false
-
-  /moment@2.29.4:
-    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
-    dev: false
-
-  /node-gettext@3.0.0:
-    resolution: {integrity: sha512-/VRYibXmVoN6tnSAY2JWhNRhWYJ8Cd844jrZU/DwLVoI4vBI6ceYbd8i42sYZ9uOgDH3S7vslIKOWV/ZrT2YBA==}
-    dependencies:
-      lodash.get: 4.4.2
-    dev: false
-
-  /sprintf-js@1.1.2:
-    resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
-    dev: false

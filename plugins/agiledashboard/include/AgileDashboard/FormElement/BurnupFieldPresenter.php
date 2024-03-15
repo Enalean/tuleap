@@ -47,10 +47,6 @@ class BurnupFieldPresenter
     /**
      * @var string
      */
-    public $css_url;
-    /**
-     * @var string
-     */
     public $user_locale;
     /**
      * @var string
@@ -71,7 +67,6 @@ class BurnupFieldPresenter
         BurnupRepresentation $burnup_representation,
         \Tuleap\Tracker\Artifact\Artifact $artifact,
         $can_burnup_be_regenerated,
-        $css_url,
         $user_locale,
         $warning,
     ) {
@@ -79,7 +74,6 @@ class BurnupFieldPresenter
         $this->project_id                = $artifact->getTracker()->getProject()->getId();
         $this->artifact_id               = $artifact->getId();
         $this->can_burnup_be_regenerated = $can_burnup_be_regenerated;
-        $this->css_url                   = $css_url;
         $this->user_locale               = $user_locale;
         $this->warning                   = $warning;
         $this->has_warning               = $warning !== "";

@@ -56,3 +56,9 @@ export interface DaysDisplayingBurndownData {
     points_with_date: Array<{ date: string }>;
     start_date: string;
 }
+
+export interface PointsWithDateForGenericBurnup {
+    date: string;
+    total: number | null;
+    progression: number | null;
+}

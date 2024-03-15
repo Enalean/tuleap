@@ -22,6 +22,7 @@ export type {
     PointsWithDate,
     PropertiesBuilderGraph,
     XYScale,
+    PointsWithDateForGenericBurnup,
 } from "./type";
 export { buildGraphScales } from "./line-chart-scales-factory";
 export { buildChartLayout } from "./chart-layout-builder";

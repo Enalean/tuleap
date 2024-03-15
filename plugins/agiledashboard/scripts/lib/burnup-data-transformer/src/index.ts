@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { PointsWithDateForGenericBurnup } from "@tuleap/chart-builder";
+
 export { transformToGenericBurnupData } from "./burnup-data-transformer";
+export type { PointsWithDateForGenericBurnup };
 
 export interface BurnupData {
     start_date: string;
@@ -49,12 +52,6 @@ export interface GenericBurnupData {
     is_under_calculation: boolean;
     opening_days: Array<number>;
     points_with_date: PointsWithDateForGenericBurnup[];
-}
-
-export interface PointsWithDateForGenericBurnup {
-    date: string;
-    total: number | null;
-    progression: number | null;
 }
 
 export interface PointsNotNullWithDateForGenericBurnup {

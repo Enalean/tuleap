@@ -4,16 +4,18 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/plugin-agiledashboard-burnup-data-transformer.js",
-  "main": "dist/plugin-agiledashboard-burnup-data-transformer.umd.cjs",
-  "types": "dist/index.d.ts",
+  "module": "./dist/plugin-agiledashboard-burnup-data-transformer.js",
+  "main": "./dist/plugin-agiledashboard-burnup-data-transformer.umd.cjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/plugin-agiledashboard-burnup-data-transformer.js",
       "require": "./dist/plugin-agiledashboard-burnup-data-transformer.umd.cjs"
     }
+  },
+  "dependencies": {
+    "@tuleap/chart-builder": "workspace:*"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

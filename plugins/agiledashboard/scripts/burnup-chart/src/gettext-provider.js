@@ -17,11 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext from "node-gettext";
-import french_translations from "../po/fr_FR.po";
+import { initGettextSync } from "@tuleap/gettext";
+import fr_FR from "../po/fr_FR.po";
 
-const gettext_provider = new Gettext();
-gettext_provider.addTranslations("fr_FR", "burnup-chart", french_translations);
-gettext_provider.setTextDomain("burnup-chart");
-
-export { gettext_provider };
+export const buildProvider = (locale) => initGettextSync("burnup-chart", { fr_FR }, locale);

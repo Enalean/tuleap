@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "../themes/burnup-chart.scss";
 import moment from "moment";
+import "moment/dist/locale/fr";
 import { createBurnupChart } from "./burnup-chart-drawer.js";
 import { transformToGenericBurnupData } from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
-import { gettext_provider } from "./gettext-provider.js";
+import { buildProvider } from "./gettext-provider.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const chart_container = document.getElementById("burnup-chart");
@@ -34,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const locale = chart_container.dataset.locale;
     const mode = chart_container.dataset.mode;
 
-    gettext_provider.setLocale(locale);
+    const gettext_provider = buildProvider(locale);
     moment.locale(locale);
 
     let left_progression_label = gettext_provider.gettext("%s - Team effort");
@@ -83,5 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     const generic_burnup_data = transformToGenericBurnupData(burnup_data, mode);
-    createBurnupChart({ chart_container, chart_props, chart_legends, generic_burnup_data, mode });
+    createBurnupChart(
+        { chart_container, chart_props, chart_legends, generic_burnup_data, mode },
+        gettext_provider,
+    );
 });
