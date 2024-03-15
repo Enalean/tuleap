@@ -140,14 +140,14 @@ class ReviewerDAO extends DataAccessObject implements SearchReviewers, SearchRep
                 FROM plugin_pullrequest_reviewer_change_user change_user
                 JOIN plugin_pullrequest_reviewer_change ON (plugin_pullrequest_reviewer_change.change_id = change_user.change_id)
                 JOIN plugin_pullrequest_review ON (plugin_pullrequest_review.id = plugin_pullrequest_reviewer_change.pull_request_id)
-                WHERE plugin_pullrequest_review.repository_id = ?
+                WHERE plugin_pullrequest_review.repository_id = ? OR plugin_pullrequest_review.repo_dest_id = ?
                 GROUP BY change_user.user_id
                 HAVING SUM(IF(change_user.is_removal = FALSE, 1, -1)) > 0
             ";
 
             return new RepositoryPullRequestsReviewersIdsPage(
-                (int) $this->getDB()->single($sql_select_count . $sql_query_body . 'LIMIT 1', [$repository_id]),
-                $this->getDB()->column($sql_select_data . $sql_query_body . 'LIMIT ? OFFSET ?', [$repository_id, $limit, $offset]),
+                (int) $this->getDB()->single($sql_select_count . $sql_query_body . 'LIMIT 1', [$repository_id, $repository_id]),
+                $this->getDB()->column($sql_select_data . $sql_query_body . 'LIMIT ? OFFSET ?', [$repository_id, $repository_id, $limit, $offset]),
             );
         });
     }
