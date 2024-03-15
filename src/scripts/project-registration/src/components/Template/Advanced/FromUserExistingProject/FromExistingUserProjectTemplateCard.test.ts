@@ -26,6 +26,8 @@ import UserProjectList from "./UserProjectList.vue";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { useStore } from "../../../../stores/root";
+import type Vue from "vue";
+import type { DefaultData } from "vue/types/options";
 
 describe("FromExistingUserProjectTemplateCard", () => {
     let projects_user_is_admin_of: TemplateData[], alm2: TemplateData;
@@ -35,7 +37,8 @@ describe("FromExistingUserProjectTemplateCard", () => {
         selected_company_template: null | TemplateData = null,
         projects_user_is_admin_of: TemplateData[] = [],
         is_option_selected: boolean = false,
-    ): Promise<Wrapper<FromExistingUserProjectTemplateCard>> {
+        data: DefaultData<Vue> = {},
+    ): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
                 selected_company_template,
@@ -54,6 +57,9 @@ describe("FromExistingUserProjectTemplateCard", () => {
         useStore(pinia);
 
         return shallowMount(FromExistingUserProjectTemplateCard, {
+            data(): DefaultData<Vue> {
+                return { ...data };
+            },
             localVue: await createProjectRegistrationLocalVue(),
             pinia,
         });
@@ -90,9 +96,10 @@ describe("FromExistingUserProjectTemplateCard", () => {
     });
 
     it(`Display spinner when project list is loading`, async () => {
-        const wrapper = await getWrapper();
-
-        wrapper.vm.$data.is_loading_project_list = true;
+        const data = {
+            is_loading_project_list: true,
+        };
+        const wrapper = await getWrapper(null, [], false, data);
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
@@ -102,10 +109,12 @@ describe("FromExistingUserProjectTemplateCard", () => {
     });
 
     it(`Does not display spinner if an error happened`, async () => {
-        const wrapper = await getWrapper();
+        const data = {
+            is_loading_project_list: true,
+            has_error: true,
+        };
+        const wrapper = await getWrapper(null, [], false, data);
 
-        wrapper.vm.$data.is_loading_project_list = true;
-        wrapper.vm.$data.has_error = true;
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
@@ -115,9 +124,11 @@ describe("FromExistingUserProjectTemplateCard", () => {
     });
 
     it(`Display error if something went wrong`, async () => {
-        const wrapper = await getWrapper();
+        const data = {
+            has_error: true,
+        };
+        const wrapper = await getWrapper(null, [], false, data);
 
-        wrapper.vm.$data.has_error = true;
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
