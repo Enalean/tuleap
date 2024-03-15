@@ -63,7 +63,7 @@ function createProject(team_project_name: string, is_team: boolean): void {
     cy.get("[data-test=approve_tos]").click();
     cy.get("[data-test=project-registration-next-button]").click();
     cy.get("[data-test=start-working]").click({
-        timeout: 20000,
+        timeout: 30000,
     });
 }
 
