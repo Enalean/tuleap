@@ -50,6 +50,9 @@ msgstr ""
 msgid "Color"
 msgstr "Cor"
 
+msgid "Connected OpenID Connect providers"
+msgstr ""
+
 msgid "Create the provider"
 msgstr ""
 

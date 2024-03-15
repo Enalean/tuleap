@@ -60,6 +60,9 @@ msgstr "Clé secrète du client"
 msgid "Color"
 msgstr "Couleur"
 
+msgid "Connected OpenID Connect providers"
+msgstr "Fournisseurs OpenID Connect connectés"
+
 msgid "Create the provider"
 msgstr "Créer le fournisseur"
 
