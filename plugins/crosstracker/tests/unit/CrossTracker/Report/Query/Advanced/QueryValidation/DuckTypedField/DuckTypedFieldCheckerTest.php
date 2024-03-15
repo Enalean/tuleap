@@ -33,7 +33,10 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
@@ -49,6 +52,8 @@ use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
@@ -86,11 +91,12 @@ final class DuckTypedFieldCheckerTest extends TestCase
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function check(): Ok|Err
+    private function check(Comparison $comparison): Ok | Err
     {
         $visitor_parameters = InvalidSearchableCollectorParametersBuilder::aParameter()
             ->withUser($this->user)
             ->onTrackers($this->first_tracker, $this->second_tracker)
+            ->withComparison($comparison)
             ->build();
 
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
@@ -138,7 +144,10 @@ final class DuckTypedFieldCheckerTest extends TestCase
 
     public function testCheckWhenAllFieldsAreIntOrFloat(): void
     {
-        self::assertTrue(Result::isOk($this->check()));
+        self::assertTrue(Result::isOk($this->check(new EqualComparison(
+            new Field(self::FIELD_NAME),
+            new SimpleValueWrapper(12)
+        ))));
     }
 
     public function testCheckFailsWhenFieldsAreIncompatible(): void
@@ -156,7 +165,10 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 ->build()
         );
 
-        $result = $this->check();
+        $result = $this->check(new EqualComparison(
+            new Field(self::FIELD_NAME),
+            new SimpleValueWrapper(12)
+        ));
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(FieldTypesAreIncompatibleFault::class, $result->error);
     }
@@ -176,7 +188,10 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 ->build(),
         );
 
-        $result = $this->check();
+        $result = $this->check(new EqualComparison(
+            new Field(self::FIELD_NAME),
+            new SimpleValueWrapper(12)
+        ));
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(Fault::class, $result->error);
     }
@@ -196,8 +211,77 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 ->build()
         );
 
-        $result = $this->check();
+        $result = $this->check(new EqualComparison(
+            new Field(self::FIELD_NAME),
+            new SimpleValueWrapper(12)
+        ));
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(FieldNotFoundInAnyTrackerFault::class, $result->error);
+    }
+
+    public function testCheckGoodWhenLabelMissingOnlyInOneField(): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ListStaticBindBuilder::aStaticBind(
+                ListFieldBuilder::aListField(586)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->withStaticValues([
+                0 => 'a',
+                1 => 'b',
+            ])->build()->getField(),
+            ListStaticBindBuilder::aStaticBind(
+                ListFieldBuilder::aListField(489)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->second_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->withStaticValues([
+                2 => 'c',
+                3 => 'd',
+            ])->build()->getField()
+        );
+
+        $result = $this->check(new EqualComparison(
+            new Field(self::FIELD_NAME),
+            new SimpleValueWrapper('a')
+        ));
+        self::assertTrue(Result::isOk($result));
+    }
+
+    public function testCheckFailsWhenLabelMissingInAllField(): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ListStaticBindBuilder::aStaticBind(
+                ListFieldBuilder::aListField(586)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->withStaticValues([
+                0 => 'a',
+                1 => 'b',
+            ])->build()->getField(),
+            ListStaticBindBuilder::aStaticBind(
+                ListFieldBuilder::aListField(489)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->second_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->withStaticValues([
+                2 => 'c',
+                3 => 'd',
+            ])->build()->getField()
+        );
+
+        $result = $this->check(new EqualComparison(
+            new Field(self::FIELD_NAME),
+            new SimpleValueWrapper('e')
+        ));
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(Fault::class, $result->error);
+        self::assertEquals("The value 'e' doesn't exist for the list field '" . self::FIELD_NAME . "'.", (string) $result->error);
     }
 }

@@ -71,6 +71,12 @@ final class InvalidSearchableCollectorParametersBuilder
         return $this;
     }
 
+    public function withComparison(Comparison $comparison): self
+    {
+        $this->comparison = $comparison;
+        return $this;
+    }
+
     /**
      * @no-named-arguments
      */

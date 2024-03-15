@@ -50,10 +50,11 @@ final readonly class DuckTypedFieldChecker
     public function checkFieldIsValid(
         Field $field,
         InvalidSearchableCollectorParameters $collector_parameters,
-    ): Ok|Err {
+    ): Ok | Err {
         $tracker_ids          = $collector_parameters->getInvalidSearchablesCollectorParameters()->getTrackerIds();
         $user                 = $collector_parameters->getInvalidSearchablesCollectorParameters()->getUser();
         $fields_user_can_read = [];
+        $exception_collector  = [];
         foreach ($tracker_ids as $tracker_id) {
             $used_field = $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName());
             if ($used_field && $used_field->userCanRead($user)) {
@@ -61,10 +62,14 @@ final readonly class DuckTypedFieldChecker
                     $comparison = $collector_parameters->getComparison();
                     $this->field_checker->checkFieldIsValidForComparison($comparison, $used_field);
                 } catch (InvalidFieldException $e) {
-                    return Result::err(Fault::fromThrowable($e));
+                    $exception_collector[] = $e;
                 }
                 $fields_user_can_read[] = $used_field;
             }
+        }
+
+        if (count($fields_user_can_read) > 0 && count($exception_collector) === count($fields_user_can_read)) {
+            return Result::err(Fault::fromThrowable($exception_collector[0]));
         }
 
         return DuckTypedField::build(
