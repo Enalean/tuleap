@@ -32,7 +32,7 @@ final readonly class ListFieldChecker
 {
     public function __construct(
         private ListFieldBindValueNormalizer $value_normalizer,
-        private CollectionOfNormalizedBindLabelsExtractor $bind_labels_extractor,
+        private ExtractCollectionOfNormalizedLabels $bind_labels_extractor,
         private UgroupLabelConverter $label_converter,
     ) {
     }

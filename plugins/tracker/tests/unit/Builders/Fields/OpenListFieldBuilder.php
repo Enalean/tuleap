@@ -47,10 +47,13 @@ final class OpenListFieldBuilder
     /**
      * @var \ProjectUGroup[]
      */
-    private array $user_groups = [];
-    private int $field_id      = 123;
-    private string $name       = "A field";
-    private ?Tracker $tracker  = null;
+    private array $user_groups                = [];
+    private int $field_id                     = 123;
+    private string $name                      = "A field";
+    private ?Tracker $tracker                 = null;
+    private array $user_with_read_permissions = [];
+    /** @var array<int, bool> */
+    private array $read_permissions = [];
 
     public static function aBind(): self
     {
@@ -120,25 +123,31 @@ final class OpenListFieldBuilder
         return $this;
     }
 
+    public function withReadPermission(\PFUser $user, bool $user_can_read): self
+    {
+        $this->user_with_read_permissions[]     = $user;
+        $this->read_permissions[$user->getId()] = $user_can_read;
+
+        return $this;
+    }
+
     public function buildUserBind(): \Tracker_FormElement_Field_List_Bind_Users
     {
-        $field = new Tracker_FormElement_Field_OpenList($this->field_id, 1, 1, $this->name, "open_list_field", "", true, "P", false, false, 1);
+        $field = $this->buildField();
         $bind  = new Tracker_FormElement_Field_List_Bind_Users(
             $field,
             $this->user_bind_values,
             [],
             [],
         );
-
         $field->setBind($bind);
-        $this->setFieldTracker($field);
 
         return $bind;
     }
 
     public function buildUserGroupBind(): \Tracker_FormElement_Field_List_Bind_Ugroups
     {
-        $field = new Tracker_FormElement_Field_OpenList($this->field_id, 1, 1, $this->name, "open_list_field", "", true, "P", false, false, 1);
+        $field = $this->buildField();
         $bind  = new Tracker_FormElement_Field_List_Bind_Ugroups(
             $field,
             $this->user_group_bind_values,
@@ -149,14 +158,13 @@ final class OpenListFieldBuilder
             })
         );
         $field->setBind($bind);
-        $this->setFieldTracker($field);
 
         return $bind;
     }
 
     public function buildStaticBind(): \Tracker_FormElement_Field_List_Bind_Static
     {
-        $field = new Tracker_FormElement_Field_OpenList($this->field_id, 1, 1, $this->name, "open_list_field", "", true, "P", false, false, 1);
+        $field = $this->buildField();
         $bind  = new \Tracker_FormElement_Field_List_Bind_Static(
             $field,
             $this->bind_static_values,
@@ -165,17 +173,23 @@ final class OpenListFieldBuilder
             []
         );
         $field->setBind($bind);
-        $this->setFieldTracker($field);
 
         return $bind;
     }
 
-    private function setFieldTracker(Tracker_FormElement_Field_OpenList $field): void
+    private function buildField(): Tracker_FormElement_Field_OpenList
     {
+        $field = new Tracker_FormElement_Field_OpenList($this->field_id, 1, 1, $this->name, "open_list_field", "", true, "P", false, false, 1);
+
         if ($this->tracker === null) {
             $this->tracker = TrackerTestBuilder::aTracker()->build();
         }
-
         $field->setTracker($this->tracker);
+
+        foreach ($this->user_with_read_permissions as $user) {
+            $field->setUserCanRead($user, $this->read_permissions[$user->getId()]);
+        }
+
+        return $field;
     }
 }
