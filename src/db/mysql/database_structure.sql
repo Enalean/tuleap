@@ -491,6 +491,11 @@ CREATE TABLE project_template_xml (
     template_name VARCHAR(255)
 );
 
+CREATE TABLE project_template_archive (
+    project_id INT(11) PRIMARY KEY,
+    archive_path TEXT
+);
+
 CREATE TABLE svn_accessfile_history (
     id INT(11) AUTO_INCREMENT,
     version_number INT(11) NOT NULL,

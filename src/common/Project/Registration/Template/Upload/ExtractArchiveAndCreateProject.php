@@ -43,6 +43,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         private ProjectByIDFactory $project_manager,
         private RetrieveUserById $user_manager,
         private ForceLogin $force_login,
+        private SaveUploadedArchiveForProject $archive_for_project_dao,
         private LoggerInterface $logger,
         private int $project_id,
         private string $filename,
@@ -57,6 +58,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         ProjectByIDFactory $project_manager,
         RetrieveUserById $user_manager,
         ForceLogin $force_login,
+        SaveUploadedArchiveForProject $archive_for_project_dao,
     ): WorkerEventProcessor {
         $payload = $event->getPayload();
         if (! isset($payload['project_id']) || ! is_int($payload['project_id'])) {
@@ -77,6 +79,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
             $project_manager,
             $user_manager,
             $force_login,
+            $archive_for_project_dao,
             $event->getLogger(),
             $payload['project_id'],
             $payload['filename'],
@@ -101,6 +104,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
             new ZipArchive($this->filename, \ForgeConfig::get('tmp_dir')),
         )->match(
             function () use ($project): void {
+                $this->archive_for_project_dao->save((int) $project->getID(), $this->filename);
                 $this->activator->activateProject($project);
                 $this->logger->info("Successfully imported archive into project #{$project->getID()}");
             },
