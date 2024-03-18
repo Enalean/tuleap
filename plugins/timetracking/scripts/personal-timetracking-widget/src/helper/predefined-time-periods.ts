@@ -17,12 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const TODAY = "today";
-export const YESTERDAY = "yesterday";
-export const LAST_7_DAYS = "last_7_days";
-export const CURRENT_WEEK = "current_week";
-export const LAST_WEEK = "last_week";
-export const LAST_MONTH = "last_month";
+export type PredefinedTimePeriod =
+    | "today"
+    | "yesterday"
+    | "last_7_days"
+    | "current_week"
+    | "last_week"
+    | "last_month";
+
+export const TODAY: PredefinedTimePeriod = "today";
+export const YESTERDAY: PredefinedTimePeriod = "yesterday";
+export const LAST_7_DAYS: PredefinedTimePeriod = "last_7_days";
+export const CURRENT_WEEK: PredefinedTimePeriod = "current_week";
+export const LAST_WEEK: PredefinedTimePeriod = "last_week";
+export const LAST_MONTH: PredefinedTimePeriod = "last_month";
 
 const today: Date = new Date();
 const days_since_last_monday = 1 - today.getDay();

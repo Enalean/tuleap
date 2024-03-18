@@ -31,7 +31,9 @@ import {
 } from "@tuleap/plugin-timetracking-constants";
 import { updateEvent } from "../TimetrackingEvents";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import type { PredefinedTimePeriod } from "../helper/predefined-time-periods";
 import { LAST_7_DAYS } from "../helper/predefined-time-periods";
+import { Option } from "@tuleap/option";
 
 const a_week_ago: Date = new Date();
 a_week_ago.setDate(a_week_ago.getDate() - 7);
@@ -40,7 +42,7 @@ interface State {
     user_id: number;
     start_date: string;
     end_date: string;
-    selected_time_period: string;
+    selected_time_period: Option<PredefinedTimePeriod>;
     reading_mode: boolean;
     total_times: number;
     user_locale: string;
@@ -64,7 +66,7 @@ export const usePersonalTimetrackingWidgetStore = defineStore("root", {
             user_id: 0,
             start_date: formatDatetimeToYearMonthDay(a_week_ago),
             end_date: formatDatetimeToYearMonthDay(new Date()),
-            selected_time_period: LAST_7_DAYS,
+            selected_time_period: Option.fromValue(LAST_7_DAYS),
             reading_mode: true,
             total_times: 0,
             user_locale: "",

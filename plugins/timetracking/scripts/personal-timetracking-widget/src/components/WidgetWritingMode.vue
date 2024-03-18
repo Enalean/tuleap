@@ -33,6 +33,7 @@
                         id="timetracking-start-date"
                         ref="start_date_input"
                         size="11"
+                        v-on:change="resetSelectedOption"
                         data-test="timetracking-start-date"
                     />
                 </div>
@@ -51,6 +52,7 @@
                         id="timetracking-end-date"
                         ref="end_date_input"
                         size="11"
+                        v-on:change="resetSelectedOption"
                         data-test="timetracking-end-date"
                     />
                 </div>
@@ -70,6 +72,7 @@
                         v-on:change="applyDatesPreset"
                         data-test="timetracking-predefined-periods"
                     >
+                        <option value="">{{ $gettext("Please choose...") }}</option>
                         <option v-bind:value="TODAY">{{ $gettext("Today") }}</option>
                         <option v-bind:value="YESTERDAY">{{ $gettext("Yesterday") }}</option>
                         <option v-bind:value="LAST_7_DAYS">{{ $gettext("Last 7 days") }}</option>
@@ -106,7 +109,7 @@ import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { onMounted, ref } from "vue";
 import type { Ref } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { Period } from "../helper/predefined-time-periods";
+import type { Period, PredefinedTimePeriod } from "../helper/predefined-time-periods";
 import {
     TODAY,
     YESTERDAY,
@@ -121,13 +124,16 @@ import {
     getLastMonthPeriod,
     getLastSevenDaysPeriod,
 } from "../helper/predefined-time-periods";
+import { Option } from "@tuleap/option";
 
 const { $gettext } = useGettext();
 const personal_store = usePersonalTimetrackingWidgetStore();
 
 let start_date_input: Ref<HTMLInputElement | undefined> = ref();
 let end_date_input: Ref<HTMLInputElement | undefined> = ref();
-let selected_option: Ref<string> = ref(personal_store.selected_time_period);
+let selected_option: Ref<PredefinedTimePeriod | ""> = ref(
+    personal_store.selected_time_period.unwrapOr(""),
+);
 
 let start_date_picker: DatePickerInstance;
 let end_date_picker: DatePickerInstance;
@@ -148,6 +154,11 @@ onMounted((): void => {
     end_date_picker.setDate(personal_store.end_date);
 });
 
+const resetSelectedOption = (): void => {
+    selected_option.value = "";
+    personal_store.selected_time_period = Option.nothing();
+};
+
 const applyDatesPreset = (): void => {
     const setDatePickersValues = (period: Period): void => {
         start_date_picker.setDate(period.start);
@@ -156,24 +167,25 @@ const applyDatesPreset = (): void => {
 
     switch (selected_option.value) {
         case TODAY:
-            personal_store.selected_time_period = TODAY;
+            personal_store.selected_time_period = Option.fromValue(TODAY);
             return setDatePickersValues(getTodayPeriod());
         case YESTERDAY:
-            personal_store.selected_time_period = YESTERDAY;
+            personal_store.selected_time_period = Option.fromValue(YESTERDAY);
             return setDatePickersValues(getYesterdayPeriod());
         case LAST_7_DAYS:
-            personal_store.selected_time_period = LAST_7_DAYS;
+            personal_store.selected_time_period = Option.fromValue(LAST_7_DAYS);
             return setDatePickersValues(getLastSevenDaysPeriod());
         case CURRENT_WEEK:
-            personal_store.selected_time_period = CURRENT_WEEK;
+            personal_store.selected_time_period = Option.fromValue(CURRENT_WEEK);
             return setDatePickersValues(getCurrentWeekPeriod());
         case LAST_WEEK:
-            personal_store.selected_time_period = LAST_WEEK;
+            personal_store.selected_time_period = Option.fromValue(LAST_WEEK);
             return setDatePickersValues(getLastWeekPeriod());
         case LAST_MONTH:
-            personal_store.selected_time_period = LAST_MONTH;
+            personal_store.selected_time_period = Option.fromValue(LAST_MONTH);
             return setDatePickersValues(getLastMonthPeriod());
         default:
+            return resetSelectedOption();
     }
 };
 
