@@ -1029,12 +1029,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $html .= '</div>';
 
             if ($request->get('should-display-created-tracker-modal')) {
-                $javascript_assets = new IncludeAssets(
-                    __DIR__ . '/../../../frontend-assets',
-                    '/assets/trackers'
+                $assets = new IncludeAssets(
+                    __DIR__ . '/../../../scripts/tracker-creation/frontend-assets',
+                    '/assets/trackers/tracker-creation'
                 );
 
-                $GLOBALS['Response']->includeFooterJavascriptFile($javascript_assets->getFileURL('tracker-creation-success.js'));
+                $GLOBALS['Response']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'tracker-creation-success.js'));
+                $GLOBALS['Response']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'tracker-creation-success-style'));
 
                 $renderer = TemplateRendererFactory::build()->getRenderer(
                     TRACKER_TEMPLATE_DIR  . '/tracker-creation/'

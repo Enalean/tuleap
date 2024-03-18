@@ -28,6 +28,8 @@ const __dirname = path.dirname(__filename);
 const config = {
     entry: {
         "tracker-creation": "./src/index.ts",
+        "tracker-creation-success": "./src/success-modal/success-modal.ts",
+        "tracker-creation-success-style": "./themes/success-modal.scss",
         "tracker-creation-style": "./themes/main.scss",
     },
     context: __dirname,
@@ -36,7 +38,6 @@ const config = {
         "/assets/trackers/tracker-creation/",
     ),
     externals: {
-        jquery: "jQuery",
         tlp: "tlp",
     },
     resolve: {

@@ -18,13 +18,17 @@
  *
  */
 
-import jQuery from "jquery";
-
-(function ($): void {
-    $("#tracker-creation-success-modal").modal();
-})(jQuery);
+import { createModal } from "@tuleap/tlp-modal";
 
 const url = new URL(window.location.href);
 url.searchParams.delete("should-display-created-tracker-modal");
 
-history.replaceState("", "", url.pathname + url.search + location.hash);
+window.history.replaceState("", "", url.pathname + url.search + window.location.hash);
+
+document.addEventListener("DOMContentLoaded", () => {
+    const modal_mount = document.getElementById("tracker-creation-success-modal");
+    if (!modal_mount) {
+        return;
+    }
+    createModal(modal_mount).show();
+});

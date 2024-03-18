@@ -1,7 +1,7 @@
-/*
+/**
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,34 +15,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-.tracker-creation-link {
-    align-self: center;
-    height: 20px;
-    margin: 0 0 0 10px;
+@use "@tuleap/tlp-modal";
+@use "@tuleap/tlp-button";
+
+.tracker-creation-success-body {
+    font-size: 1.125rem;
+    line-height: 1.625rem;
+    text-align: center;
 }
 
-#tracker-creation-success-modal {
-    > .modal-body {
-        font-size: 18px;
-        line-height: 26px;
-        text-align: center;
-    }
-
-    > .modal-footer {
-        display: flex;
-        justify-content: center;
-
-        > .btn {
-            flex: 1;
-        }
-    }
+.tracker-created {
+    font-size: 2.125rem;
 }
 
-#tracker-created {
-    font-size: 34px;
+.tracker-creation-success-start,
+.tracker-creation-success-config {
+    flex: 1;
+}
+
+.tracker-creation-success-config {
+    &:hover,
+    &:focus {
+        color: var(--tlp-white-color);
+    }
 }
 
 @keyframes move-stars {
@@ -52,13 +49,9 @@
     }
 
     to {
-        transform: scale(1.2);
+        transform: scale(120%);
         opacity: 1;
     }
-}
-
-.tracker-creation-success-modal-illustration {
-    margin: 40px 0 10px;
 }
 
 .tracker-creation-success-modal-illustration-stars {
