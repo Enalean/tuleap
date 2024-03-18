@@ -25,7 +25,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeIsNotSuppo
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
-use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -44,13 +43,6 @@ final class InvalidSearchableCollectorVisitor implements SearchableVisitor
 
     public function visitField(Field $searchable_field, $parameters)
     {
-        if (! SearchOnDuckTypedFieldsConfig::isSearchOnDuckTypedFieldsEnabled()) {
-            $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
-                $searchable_field->getName()
-            );
-            return;
-        }
-
         $this->field_checker->checkFieldIsValid($searchable_field, $parameters)
             ->match(
                 static function () {

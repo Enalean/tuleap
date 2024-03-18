@@ -33,7 +33,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListVal
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
-use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
@@ -118,8 +117,6 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 
     protected function setUp(): void
     {
-        \ForgeConfig::setFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
-
         $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(67)->build();
         $this->second_tracker = TrackerTestBuilder::aTracker()->withId(21)->build();
         $this->user           = UserTestBuilder::buildWithId(443);
@@ -217,13 +214,6 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             [$this->first_tracker, $this->second_tracker],
             $this->user
         );
-    }
-
-    public function testItAddsFieldToInvalidCollectionWhenFFIsOff(): void
-    {
-        \ForgeConfig::clearFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS);
-        $this->check();
-        self::assertNotEmpty($this->invalid_searchable_collection->getNonexistentSearchables());
     }
 
     public function testItAddsNotSupportedFieldToInvalidCollection(): void
@@ -649,7 +639,6 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 
     public function testItAddsUnknownMetadataToInvalidCollection(): void
     {
-        \ForgeConfig::clearFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS);
         $this->comparison = new EqualComparison(new Metadata('unknown'), new SimpleValueWrapper(12));
 
         $this->check();
@@ -658,7 +647,6 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 
     public function testItAllowsValidMetadata(): void
     {
-        \ForgeConfig::clearFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS);
         $this->comparison = new EqualComparison(new Metadata("title"), new SimpleValueWrapper('romeo'));
 
         $this->check();
@@ -667,7 +655,6 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 
     public function testItAddsInvalidMetadataToCollection(): void
     {
-        \ForgeConfig::clearFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS);
         $this->comparison       = new EqualComparison(new Metadata("title"), new SimpleValueWrapper('romeo'));
         $this->metadata_checker = MetadataCheckerStub::withInvalidMetadata();
 
