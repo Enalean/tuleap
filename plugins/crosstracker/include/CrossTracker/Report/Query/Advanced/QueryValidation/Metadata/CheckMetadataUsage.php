@@ -23,20 +23,22 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 interface CheckMetadataUsage
 {
     /**
-     * @throws InvalidQueryException
+     * @throws DescriptionIsMissingInAtLeastOneTrackerException
+     * @throws StatusIsMissingInAtLeastOneTrackerException
+     * @throws SubmittedOnIsMissingInAtLeastOneTrackerException
+     * @throws TitleIsMissingInAtLeastOneTrackerException
+     * @throws LastUpdateDateIsMissingInAtLeastOneTrackerException
+     * @throws SubmittedByIsMissingInAtLeastOneTrackerException
+     * @throws LastUpdateByIsMissingInAtLeastOneTrackerException
+     * @throws AssignedToIsMissingInAtLeastOneTrackerException
      */
-    public function checkMetadataIsValid(
+    public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,
-        Comparison $comparison,
         InvalidComparisonCollectorParameters $collector_parameters,
-        ComparisonChecker $checker,
     ): void;
 }

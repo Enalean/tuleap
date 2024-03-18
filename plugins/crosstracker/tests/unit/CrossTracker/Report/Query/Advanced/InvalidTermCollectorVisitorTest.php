@@ -33,10 +33,12 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListVal
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -60,10 +62,12 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Searchable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
@@ -105,7 +109,8 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 {
     use LegacyTabTranslationsSupport;
 
-    private const FIELD_NAME = 'a_field';
+    private const FIELD_NAME        = 'a_field';
+    private const CURRENT_USER_NAME = 'alice';
     private MetadataCheckerStub $metadata_checker;
     private InvalidSearchablesCollection $invalid_searchable_collection;
     private Comparison $comparison;
@@ -119,7 +124,10 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     {
         $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(67)->build();
         $this->second_tracker = TrackerTestBuilder::aTracker()->withId(21)->build();
-        $this->user           = UserTestBuilder::buildWithId(443);
+        $this->user           = UserTestBuilder::aUser()
+            ->withUserName(self::CURRENT_USER_NAME)
+            ->withId(443)
+            ->build();
 
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -143,11 +151,12 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 
     private function check(): void
     {
-        $user_manager = $this->createStub(\UserManager::class);
+        $user_manager   = $this->createStub(\UserManager::class);
+        $user_retriever = ProvideAndRetrieveUserStub::build($this->user);
 
         $date_validator                 = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
-        $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $user_manager);
-        $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $user_manager);
+        $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $user_retriever);
+        $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $user_retriever);
 
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
         $ugroup_label_converter           = new UgroupLabelConverter(
@@ -163,7 +172,9 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 
         $collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
-                $this->metadata_checker,
+                new MetadataChecker(
+                    $this->metadata_checker
+                ),
                 new DuckTypedFieldChecker(
                     $this->fields_retriever,
                     RetrieveFieldTypeStub::withDetectionOfType(),
@@ -259,13 +270,13 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     }
 
     private static function generateInvalidComparisonsForFieldsThatAreNotLists(
-        Field $field,
+        Searchable $searchable,
         ValueWrapper $valid_value,
     ): iterable {
         $open = new StatusOpenValueWrapper();
-        yield '= OPEN()' => [new EqualComparison($field, $open)];
-        yield 'IN()' => [new InComparison($field, new InValueWrapper([$valid_value]))];
-        yield 'NOT IN()' => [new NotInComparison($field, new InValueWrapper([$valid_value]))];
+        yield '= OPEN()' => [new EqualComparison($searchable, $open)];
+        yield 'IN()' => [new InComparison($searchable, new InValueWrapper([$valid_value]))];
+        yield 'NOT IN()' => [new NotInComparison($searchable, new InValueWrapper([$valid_value]))];
     }
 
     private static function generateInvalidComparisonsToEmptyString(Field $field, ValueWrapper $valid_value): iterable
@@ -317,24 +328,29 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    public static function generateInvalidTextComparisons(): iterable
+    private static function generateInvalidTextComparisons(Searchable $searchable): iterable
     {
-        $field       = new Field(self::FIELD_NAME);
         $valid_value = new SimpleValueWrapper('Graphium');
         $now         = new CurrentDateTimeValueWrapper(null, null);
-        yield '< anything' => [new LesserThanComparison($field, $valid_value)];
-        yield '<= anything' => [new LesserThanOrEqualComparison($field, $valid_value)];
-        yield '> anything' => [new GreaterThanComparison($field, $valid_value)];
-        yield '>= anything' => [new GreaterThanOrEqualComparison($field, $valid_value)];
+
+        yield '< anything' => [new LesserThanComparison($searchable, $valid_value)];
+        yield '<= anything' => [new LesserThanOrEqualComparison($searchable, $valid_value)];
+        yield '> anything' => [new GreaterThanComparison($searchable, $valid_value)];
+        yield '>= anything' => [new GreaterThanOrEqualComparison($searchable, $valid_value)];
         yield 'BETWEEN anything' => [
-            new BetweenComparison($field, new BetweenValueWrapper($valid_value, $valid_value)),
+            new BetweenComparison($searchable, new BetweenValueWrapper($valid_value, $valid_value)),
         ];
-        yield '= NOW()' => [new EqualComparison($field, $now)];
-        yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
+        yield '= NOW()' => [new EqualComparison($searchable, $now)];
+        yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($searchable, $valid_value);
+    }
+
+    public static function generateInvalidTextFieldComparisons(): iterable
+    {
+        yield from self::generateInvalidTextComparisons(new Field(self::FIELD_NAME));
     }
 
     /**
-     * @dataProvider generateInvalidTextComparisons
+     * @dataProvider generateInvalidTextFieldComparisons
      */
     public function testItRejectsInvalidTextComparisons(Comparison $comparison): void
     {
@@ -402,7 +418,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     }
 
     /**
-     * @dataProvider generateInvalidTextComparisons
+     * @dataProvider generateInvalidTextFieldComparisons
      */
     public function testItRejectsInvalidFileComparisons(Comparison $comparison): void
     {
@@ -419,39 +435,46 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    public static function generateInvalidListComparisons(): iterable
-    {
-        $field       = new Field(self::FIELD_NAME);
-        $valid_value = new SimpleValueWrapper('unbait');
+    private static function generateInvalidListComparisons(
+        Searchable $searchable,
+        SimpleValueWrapper $valid_value,
+    ): iterable {
         $empty_value = new SimpleValueWrapper('');
-        $open        = new StatusOpenValueWrapper();
         $now         = new CurrentDateTimeValueWrapper(null, null);
 
-        yield '< anything' => [new LesserThanComparison($field, $valid_value)];
-        yield '<= anything' => [new LesserThanOrEqualComparison($field, $valid_value)];
-        yield '> anything' => [new GreaterThanComparison($field, $valid_value)];
-        yield '>= anything' => [new GreaterThanOrEqualComparison($field, $valid_value)];
+        yield '< anything' => [new LesserThanComparison($searchable, $valid_value)];
+        yield '<= anything' => [new LesserThanOrEqualComparison($searchable, $valid_value)];
+        yield '> anything' => [new GreaterThanComparison($searchable, $valid_value)];
+        yield '>= anything' => [new GreaterThanOrEqualComparison($searchable, $valid_value)];
         yield 'BETWEEN anything' => [
-            new BetweenComparison($field, new BetweenValueWrapper($valid_value, $valid_value)),
+            new BetweenComparison($searchable, new BetweenValueWrapper($valid_value, $valid_value)),
         ];
-        yield '= NOW()' => [new EqualComparison($field, $now)];
-        yield '= OPEN()' => [new EqualComparison($field, $open)];
+        yield '= NOW()' => [new EqualComparison($searchable, $now)];
         yield "IN('', valid value)" => [
-            new InComparison($field, new InValueWrapper([$empty_value, $valid_value])),
+            new InComparison($searchable, new InValueWrapper([$empty_value, $valid_value])),
         ];
         yield "IN(valid value, '')" => [
-            new InComparison($field, new InValueWrapper([$valid_value, $empty_value])),
+            new InComparison($searchable, new InValueWrapper([$valid_value, $empty_value])),
         ];
         yield "NOT IN('', valid value)" => [
-            new NotInComparison($field, new InValueWrapper([$empty_value, $valid_value])),
+            new NotInComparison($searchable, new InValueWrapper([$empty_value, $valid_value])),
         ];
         yield "NOT IN(valid value, '')" => [
-            new NotInComparison($field, new InValueWrapper([$valid_value, $empty_value])),
+            new NotInComparison($searchable, new InValueWrapper([$valid_value, $empty_value])),
         ];
     }
 
+    public static function generateInvalidListFieldComparisons(): iterable
+    {
+        $field       = new Field(self::FIELD_NAME);
+        $valid_value = new SimpleValueWrapper('unbait');
+        $open        = new StatusOpenValueWrapper();
+        yield '= OPEN()' => [new EqualComparison($field, $open)];
+        yield from self::generateInvalidListComparisons($field, $valid_value);
+    }
+
     /**
-     * @dataProvider generateInvalidListComparisons
+     * @dataProvider generateInvalidListFieldComparisons
      */
     public function testItRejectsInvalidListComparisons(Comparison $comparison): void
     {
@@ -479,7 +502,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     }
 
     /**
-     * @dataProvider generateInvalidListComparisons
+     * @dataProvider generateInvalidListFieldComparisons
      */
     public function testItRejectsMoreInvalidListComparisons(Comparison $comparison): void
     {
@@ -506,7 +529,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     }
 
     /**
-     * @dataProvider generateInvalidListComparisons
+     * @dataProvider generateInvalidListFieldComparisons
      */
     public function testItRejectsMoreInvalidOpenListComparisons(Comparison $comparison): void
     {
@@ -524,7 +547,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    public static function generateFieldTypes(): iterable
+    public static function generateFieldsThatCannotBeComparedToMyself(): iterable
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(311)->build();
         $user    = UserTestBuilder::buildWithId(300);
@@ -617,9 +640,9 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     }
 
     /**
-     * @dataProvider generateFieldTypes
+     * @dataProvider generateFieldsThatCannotBeComparedToMyself
      */
-    public function testItRejectsInvalidComparisonsToMyself(
+    public function testItRejectsInvalidFieldComparisonsToMyself(
         \Tracker_FormElement_Field $field,
         \Tracker $tracker,
         \PFUser $user,
@@ -645,15 +668,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getNonexistentSearchables());
     }
 
-    public function testItAllowsValidMetadata(): void
-    {
-        $this->comparison = new EqualComparison(new Metadata("title"), new SimpleValueWrapper('romeo'));
-
-        $this->check();
-        self::assertFalse($this->invalid_searchable_collection->hasInvalidSearchable());
-    }
-
-    public function testItAddsInvalidMetadataToCollection(): void
+    public function testItAddsMetadataThatDoesNotExistInAllTrackersToCollection(): void
     {
         $this->comparison       = new EqualComparison(new Metadata("title"), new SimpleValueWrapper('romeo'));
         $this->metadata_checker = MetadataCheckerStub::withInvalidMetadata();
@@ -662,13 +677,113 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertTrue($this->invalid_searchable_collection->hasInvalidSearchable());
     }
 
-    public static function generateNestedExpressions(): iterable
+    public static function generateInvalidTitleComparisons(): iterable
     {
-        $valid_comparison   = new EqualComparison(new Field(self::FIELD_NAME), new SimpleValueWrapper(5));
-        $invalid_comparison = new EqualComparison(
-            new Field(self::FIELD_NAME),
-            new SimpleValueWrapper('string value')
+        yield from self::generateInvalidTextComparisons(new Metadata('title'));
+    }
+
+    /**
+     * @dataProvider generateInvalidTitleComparisons
+     */
+    public function testItRejectsInvalidTitleComparisons(Comparison $comparison): void
+    {
+        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
+        $this->comparison       = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    public static function generateInvalidDescriptionComparisons(): iterable
+    {
+        yield from self::generateInvalidTextComparisons(new Metadata('description'));
+    }
+
+    /**
+     * @dataProvider generateInvalidDescriptionComparisons
+     */
+    public function testItRejectsInvalidDescriptionComparisons(Comparison $comparison): void
+    {
+        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
+        $this->comparison       = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    public static function generateInvalidStatusComparisons(): iterable
+    {
+        $semantic     = new Metadata('status');
+        $simple_value = new SimpleValueWrapper('ongoing');
+        $empty_value  = new SimpleValueWrapper('');
+        yield '= simple value' => [new EqualComparison($semantic, $simple_value)];
+        yield '!= simple value' => [new NotEqualComparison($semantic, $simple_value)];
+        yield '= empty string' => [new EqualComparison($semantic, $empty_value)];
+        yield '!= empty string' => [new NotEqualComparison($semantic, $empty_value)];
+        yield 'IN(anything)' => [new InComparison($semantic, new InValueWrapper([$simple_value]))];
+        yield 'NOT IN(anything)' => [new NotInComparison($semantic, new InValueWrapper([$simple_value]))];
+        yield from self::generateInvalidListComparisons($semantic, $simple_value);
+    }
+
+    /**
+     * @dataProvider generateInvalidStatusComparisons
+     */
+    public function testItRejectsInvalidStatusComparisons(Comparison $comparison): void
+    {
+        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
+        $this->comparison       = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    public static function generateInvalidAssignedToComparisons(): iterable
+    {
+        $semantic    = new Metadata('assigned_to');
+        $valid_value = new SimpleValueWrapper(self::CURRENT_USER_NAME);
+        $open        = new StatusOpenValueWrapper();
+        yield '= OPEN()' => [new EqualComparison($semantic, $open)];
+        yield from self::generateInvalidListComparisons($semantic, $valid_value);
+    }
+
+    /**
+     * @dataProvider generateInvalidAssignedToComparisons
+     */
+    public function testItRejectsInvalidAssignedToComparisons(Comparison $comparison): void
+    {
+        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
+        $this->comparison       = $comparison;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    public static function generateMetadataThatCannotBeComparedToMyself(): iterable
+    {
+        yield '@title' => [new Metadata('title')];
+        yield '@description' => [new Metadata('description')];
+        yield '@status' => [new Metadata('status')];
+    }
+
+    /**
+     * @dataProvider generateMetadataThatCannotBeComparedToMyself
+     */
+    public function testItRejectsInvalidMetadataComparisonsToMyself(Metadata $metadata): void
+    {
+        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
+        $this->comparison       = new EqualComparison(
+            $metadata,
+            new CurrentUserValueWrapper(ProvideCurrentUserStub::buildWithUser($this->user))
         );
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    private static function generateNestedExpressions(
+        Comparison $valid_comparison,
+        Comparison $invalid_comparison,
+    ): iterable {
         yield 'AndOperand' => [new AndExpression($valid_comparison, new AndOperand($invalid_comparison))];
         yield 'Tail of AndOperand' => [
             new AndExpression(
@@ -701,8 +816,18 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         ];
     }
 
+    public static function generateNestedFields(): iterable
+    {
+        $valid_comparison   = new EqualComparison(new Field(self::FIELD_NAME), new SimpleValueWrapper(5));
+        $invalid_comparison = new EqualComparison(
+            new Field(self::FIELD_NAME),
+            new SimpleValueWrapper('string value')
+        );
+        yield from self::generateNestedExpressions($valid_comparison, $invalid_comparison);
+    }
+
     /**
-     * @dataProvider generateNestedExpressions
+     * @dataProvider generateNestedFields
      */
     public function testItAddsInvalidFieldInNestedExpressions(Logical $parsed_query): void
     {
@@ -718,6 +843,25 @@ final class InvalidTermCollectorVisitorTest extends TestCase
                 ->withReadPermission($this->user, true)
                 ->build(),
         );
+        $this->parsed_query     = $parsed_query;
+
+        $this->check();
+        self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
+    }
+
+    public static function generateNestedMetadata(): iterable
+    {
+        $valid_comparison   = new EqualComparison(new Metadata('title'), new SimpleValueWrapper('advantage'));
+        $invalid_comparison = new EqualComparison(new Metadata('status'), new SimpleValueWrapper('simple value'));
+        yield from self::generateNestedExpressions($valid_comparison, $invalid_comparison);
+    }
+
+    /**
+     * @dataProvider generateNestedMetadata
+     */
+    public function testItAddsInvalidMetadataInNestedExpressions(Logical $parsed_query): void
+    {
+        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
         $this->parsed_query     = $parsed_query;
 
         $this->check();

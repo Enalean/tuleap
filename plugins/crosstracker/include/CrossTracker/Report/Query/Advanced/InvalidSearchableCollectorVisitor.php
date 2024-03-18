@@ -24,7 +24,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyT
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -36,7 +36,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
 final class InvalidSearchableCollectorVisitor implements SearchableVisitor
 {
     public function __construct(
-        private readonly CheckMetadataUsage $metadata_checker,
+        private readonly MetadataChecker $metadata_checker,
         private readonly DuckTypedFieldChecker $field_checker,
     ) {
     }

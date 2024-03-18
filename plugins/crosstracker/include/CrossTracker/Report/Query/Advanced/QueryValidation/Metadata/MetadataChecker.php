@@ -26,9 +26,9 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryExcept
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-final class MetadataChecker implements CheckMetadataUsage
+final class MetadataChecker
 {
-    public function __construct(private readonly MetadataUsageChecker $semantic_usage_checker)
+    public function __construct(private readonly CheckMetadataUsage $semantic_usage_checker)
     {
     }
 
