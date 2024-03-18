@@ -50,6 +50,7 @@ use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\Icons\ProjectIconRetriever;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\Upload\RetrieveUploadedArchiveForProject;
 use Tuleap\TroveCat\TroveCatLinkDao;
 use UGroupBinding;
 
@@ -126,6 +127,7 @@ class ProjectDetailsController
         TroveCatLinkDao $trove_cat_link_dao,
         CSRFSynchronizerToken $csrf_token,
         TemplateFactory $template_factory,
+        private readonly RetrieveUploadedArchiveForProject $uploaded_archive_for_project_retriever,
         private ProjectIconRetriever $project_icon_retriever,
         private readonly UpdateVisibilityChecker $update_visibility_checker,
     ) {
@@ -191,6 +193,7 @@ class ProjectDetailsController
                 $project,
                 $template_project,
                 $this->template_factory->getTemplateForProject($project),
+                $this->uploaded_archive_for_project_retriever->searchByProjectId((int) $project->getID()),
                 $group_info,
                 $description_field_representations,
                 $hierarchy_presenter,

@@ -97,11 +97,16 @@ class ProjectDetailsPresenter
      * @var string
      */
     public $all_project_icon;
+    /**
+     * @var ?array{href: string}
+     */
+    public ?array $built_from_archive = null;
 
     public function __construct(
         Project $project,
         Project $template_project,
         ?ProjectTemplate $template,
+        ?string $uploaded_archive_for_project_path,
         array $group_info,
         array $description_fields_representation,
         ProjectHierarchyPresenter $project_hierarchy_presenter,
@@ -144,16 +149,7 @@ class ProjectDetailsPresenter
         $this->template_label                 = _('Projects created from this template');
 
         $this->template_project_label = _('Template used by project');
-        if ($template) {
-            $this->built_from_xml_template = [
-                'name' => $template->getId(),
-            ];
-        } else {
-            $this->built_from_project = [
-                'template_project_name' => $template_project->getPublicName(),
-                'template_project_url'  => '/projects/' . urlencode($template_project->getUnixNameLowerCase()),
-            ];
-        }
+        $this->constructBuiltFrom($template, $template_project, $uploaded_archive_for_project_path);
 
         $this->icon_label_name  = _('Icon');
         $this->project_icon     = $project_icon;
@@ -164,5 +160,30 @@ class ProjectDetailsPresenter
     {
         $localized_types = TemplateSingleton::instance()->getLocalizedTypes();
         return $localized_types[$project_type_id];
+    }
+
+    private function constructBuiltFrom(
+        ?ProjectTemplate $template,
+        Project $template_project,
+        ?string $uploaded_archive_for_project_path,
+    ): void {
+        if ($template) {
+            $this->built_from_xml_template = [
+                'name' => $template->getId(),
+            ];
+            return;
+        }
+
+        if ($uploaded_archive_for_project_path) {
+            $this->built_from_archive = [
+                'href' => '/not-implemented-yet',
+            ];
+            return;
+        }
+
+        $this->built_from_project = [
+            'template_project_name' => $template_project->getPublicName(),
+            'template_project_url' => '/projects/' . urlencode($template_project->getUnixNameLowerCase()),
+        ];
     }
 }

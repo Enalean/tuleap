@@ -4177,6 +4177,9 @@ msgstr "Les préférences utilisateur ont été mises à jour"
 msgid "User profile"
 msgstr "Profil utilisateur"
 
+msgid "User provided template"
+msgstr "Modèle fourni par l'utilisateur"
+
 msgid "User settings"
 msgstr "Paramètres utilisateurs"
 

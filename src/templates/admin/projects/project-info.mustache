@@ -98,6 +98,11 @@
                                         {{# built_from_project }}
                                             <a href="{{ href }}">{{ name }}</a>
                                         {{/ built_from_project }}
+                                        {{# built_from_archive }}
+                                            <a href="{{ href }}">
+                                                {{# gettext }}User provided template{{/ gettext }}
+                                            </a>
+                                        {{/ built_from_archive }}
                                         {{# built_from_xml_template }}
                                             {{ name }}
                                         {{/ built_from_xml_template }}

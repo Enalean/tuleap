@@ -26,6 +26,7 @@ use ProjectManager;
 use TemplateSingleton;
 use Tuleap\Project\ProjectAccessPresenter;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectDao;
 
 class ProjectDetailsPresenter
 {
@@ -93,6 +94,10 @@ class ProjectDetailsPresenter
      * @var string
      */
     public $not_editable_reason;
+    /**
+     * @var ?array{href: string}
+     */
+    public ?array $built_from_archive = null;
 
     /**
      * @param list<string> $plugin_suspended_and_not_blocked_warnings
@@ -131,19 +136,7 @@ class ProjectDetailsPresenter
         $this->can_change_status = $project->getStatus() === Project::STATUS_DELETED;
         $this->types             = $this->getTypes($project);
 
-        $template_factory = TemplateFactory::build();
-        $xml_template     = $template_factory->getTemplateForProject($project);
-        if ($xml_template) {
-            $this->built_from_xml_template = [
-                'name' => $xml_template->getId(),
-            ];
-        } else {
-            $template                 = ProjectManager::instance()->getProject($project->getTemplate());
-            $this->built_from_project = [
-                'href' => '/admin/groupedit.php?group_id=' . $template->getID(),
-                'name' => $template->getPublicname(),
-            ];
-        }
+        $this->constructBuiltFrom($project);
 
         $this->custom_fields     = $all_custom_fields;
         $this->has_custom_fields = count($this->custom_fields) > 0;
@@ -218,5 +211,32 @@ class ProjectDetailsPresenter
         }
 
         return $status;
+    }
+
+    private function constructBuiltFrom(Project $project): void
+    {
+        $template_factory = TemplateFactory::build();
+        $xml_template     = $template_factory->getTemplateForProject($project);
+        if ($xml_template) {
+            $this->built_from_xml_template = [
+                'name' => $xml_template->getId(),
+            ];
+            return;
+        }
+
+        $uploaded_archive_for_project_retriever = new UploadedArchiveForProjectDao();
+        $archive_path                           = $uploaded_archive_for_project_retriever->searchByProjectId((int) $project->getID());
+        if ($archive_path) {
+            $this->built_from_archive = [
+                'href' => '/not-implemented-yet',
+            ];
+            return;
+        }
+
+        $template                 = ProjectManager::instance()->getProject($project->getTemplate());
+        $this->built_from_project = [
+            'href' => '/admin/groupedit.php?group_id=' . $template->getID(),
+            'name' => $template->getPublicname(),
+        ];
     }
 }

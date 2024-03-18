@@ -85,6 +85,7 @@ $project_details_controller = new ProjectDetailsController(
     $trove_cat_link_dao,
     $csrf_token,
     TemplateFactory::build(),
+    new \Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectDao(),
     $project_icons_retriever,
     new \Tuleap\Project\Admin\Visibility\UpdateVisibilityChecker($event_manager),
 );

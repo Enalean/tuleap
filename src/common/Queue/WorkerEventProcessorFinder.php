@@ -30,6 +30,7 @@ use Tuleap\Option\Option;
 use Tuleap\Project\ProjectCreationNotifier;
 use Tuleap\Project\Registration\Template\Upload\ExtractArchiveAndCreateProject;
 use Tuleap\Project\Registration\Template\Upload\ProjectAfterArchiveImportActivation;
+use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectDao;
 use TuleapRegisterMail;
 use UserManager;
 use XMLImportHelper;
@@ -69,6 +70,7 @@ final readonly class WorkerEventProcessorFinder implements FindWorkerEventProces
                         $project_manager,
                         $user_manager,
                         $user_manager,
+                        new UploadedArchiveForProjectDao(),
                     ),
                 ),
             default =>

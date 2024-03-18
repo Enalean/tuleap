@@ -44,6 +44,7 @@ use Tuleap\Project\Admin\Visibility\UpdateVisibilityChecker;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Icons\ProjectIconRetriever;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\Upload\RetrieveUploadedArchiveForProjectStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TroveCat\TroveCatLinkDao;
@@ -91,6 +92,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trove_cat_link_dao,
             $this->csrf_token,
             $this->createMock(TemplateFactory::class),
+            RetrieveUploadedArchiveForProjectStub::withoutArchive(),
             new ProjectIconRetriever(),
             new UpdateVisibilityChecker($this->event_manager),
         );
