@@ -91,7 +91,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function check(Comparison $comparison): Ok | Err
+    private function check(Comparison $comparison): Ok|Err
     {
         $visitor_parameters = InvalidSearchableCollectorParametersBuilder::aParameter()
             ->withUser($this->user)
