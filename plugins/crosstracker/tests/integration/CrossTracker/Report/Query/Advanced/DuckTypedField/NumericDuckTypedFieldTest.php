@@ -25,7 +25,6 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -52,8 +51,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
 
     protected function setUp(): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        \ForgeConfig::setFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
+        $db              = DBFactory::getMainTuleapDBConnection()->getDB();
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 

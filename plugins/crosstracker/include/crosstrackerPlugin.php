@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
@@ -102,7 +101,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
+class crosstrackerPlugin extends Plugin
 {
     public function __construct($id)
     {
@@ -481,10 +480,5 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                 new BindNameVisitor()
             )
         );
-    }
-
-    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
-    {
-        $event->addConfigClass(\Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig::class);
     }
 }
