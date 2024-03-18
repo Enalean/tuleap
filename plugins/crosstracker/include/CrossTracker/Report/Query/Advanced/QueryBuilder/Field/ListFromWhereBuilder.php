@@ -33,7 +33,7 @@ final readonly class ListFromWhereBuilder
         DuckTypedField $duck_typed_field,
         string $tracker_field_alias,
         string $filter_alias,
-        ParametrizedFromWhere $bind_from_where,
+        ParametrizedListFromWhere $bind_from_where,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         $fields_id_statement        = EasyStatement::open()->in(
             "$tracker_field_alias.id IN(?*)",
@@ -51,19 +51,30 @@ final readonly class ListFromWhereBuilder
             SELECT c.artifact_id AS artifact_id
             FROM tracker_artifact AS artifact
             INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
-            INNER JOIN ({$bind_from_where->getFrom()})
-                ON (tcv.changeset_id = c.id AND $filter_field_ids_statement)
+            INNER JOIN (
+                tracker_changeset_value AS tcv
+                LEFT JOIN (tracker_changeset_value_openlist AS tcvol
+                    {$bind_from_where->openlist_from}
+                ) ON (tcvol.changeset_value_id = tcv.id)
+                LEFT JOIN (tracker_changeset_value_list AS tcvl
+                    {$bind_from_where->list_from}
+                ) ON (tcvl.changeset_value_id = tcv.id)
+            ) ON (
+                tcv.changeset_id = c.id AND $filter_field_ids_statement
+                AND ({$bind_from_where->filter_where})
+            )
         ) AS $filter_alias ON (tracker_artifact.id = $filter_alias.artifact_id)
         EOSQL;
+
         return new ParametrizedFromWhere(
             $from,
-            $bind_from_where->getWhere(),
+            $bind_from_where->where,
             array_merge(
                 $fields_id_statement->values(),
-                $bind_from_where->getFromParameters(),
-                $filter_field_ids_statement->values()
+                $filter_field_ids_statement->values(),
+                $bind_from_where->filter_where_parameters,
             ),
-            $bind_from_where->getWhereParameters()
+            []
         );
     }
 }

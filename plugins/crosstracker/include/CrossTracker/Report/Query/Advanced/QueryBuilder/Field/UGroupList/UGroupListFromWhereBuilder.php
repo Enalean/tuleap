@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\FieldValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\ListFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\ParametrizedListFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
@@ -39,13 +40,29 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
-use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 /**
- * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, ParametrizedFromWhere>
+ * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, ParametrizedListFromWhere>
  */
 final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
 {
+    private const OPENLIST_FROM = <<<EOSQL
+        LEFT JOIN tracker_field_list_bind_ugroups_value AS tflbuv1 ON (
+            tflbuv1.id = tcvol.bindvalue_id
+        )
+        LEFT JOIN ugroup AS ugroup1 ON (
+            tflbuv1.ugroup_id = ugroup1.ugroup_id
+        )
+        EOSQL;
+    private const LIST_FROM     = <<<EOSQL
+        LEFT JOIN tracker_field_list_bind_ugroups_value AS tflbuv2 ON (
+            tflbuv2.id = tcvl.bindvalue_id
+        )
+        LEFT JOIN ugroup AS ugroup2 ON (
+            tflbuv2.ugroup_id = ugroup2.ugroup_id
+        )
+        EOSQL;
+
     public function __construct(
         private UgroupLabelConverter $label_converter,
         private ListFromWhereBuilder $list_builder,
@@ -95,22 +112,16 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
     private function getWhereForEqual(
         string $filter_alias,
         SimpleValueWrapper $wrapper,
-    ): ParametrizedFromWhere {
+    ): ParametrizedListFromWhere {
         $value = $wrapper->getValue();
 
         if ($value === '') {
-            $from = <<<EOSQL
-            tracker_changeset_value AS tcv
-            INNER JOIN tracker_changeset_value_list AS tcvl ON (
-                tcvl.changeset_value_id = tcv.id AND tcvl.bindvalue_id = ?
-            )
-            EOSQL;
-
-            return new ParametrizedFromWhere(
-                $from,
+            return new ParametrizedListFromWhere(
+                self::OPENLIST_FROM,
+                self::LIST_FROM,
+                "IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)",
                 "$filter_alias.artifact_id IS NOT NULL",
                 [Tracker_FormElement_Field_List::NONE_VALUE],
-                []
             );
         }
 
@@ -118,46 +129,28 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
             $value = $this->label_converter->convertLabelToTranslationKey($value);
         }
 
-        $from = <<<EOSQL
-        tracker_changeset_value AS tcv
-        INNER JOIN tracker_changeset_value_list AS tcvl ON (
-            tcvl.changeset_value_id = tcv.id
-        )
-        INNER JOIN tracker_field_list_bind_ugroups_value AS tflbuv ON (
-            tflbuv.id = tcvl.bindvalue_id
-        )
-        INNER JOIN ugroup ON (
-            tflbuv.ugroup_id = ugroup.ugroup_id AND ugroup.name = ?
-        )
-        EOSQL;
-
-        return new ParametrizedFromWhere(
-            $from,
+        return new ParametrizedListFromWhere(
+            self::OPENLIST_FROM,
+            self::LIST_FROM,
+            "ugroup1.name = ? OR ugroup2.name = ?",
             "$filter_alias.artifact_id IS NOT NULL",
-            [$value],
-            []
+            [$value, $value],
         );
     }
 
     private function getWhereForNotEqual(
         string $filter_alias,
         SimpleValueWrapper $wrapper,
-    ): ParametrizedFromWhere {
+    ): ParametrizedListFromWhere {
         $value = $wrapper->getValue();
 
         if ($value === '') {
-            $from = <<<EOSQL
-            tracker_changeset_value AS tcv
-            INNER JOIN tracker_changeset_value_list AS tcvl ON (
-                tcvl.changeset_value_id = tcv.id AND tcvl.bindvalue_id = ?
-            )
-            EOSQL;
-
-            return new ParametrizedFromWhere(
-                $from,
+            return new ParametrizedListFromWhere(
+                self::OPENLIST_FROM,
+                self::LIST_FROM,
+                "IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)",
                 "$filter_alias.artifact_id IS NULL",
                 [Tracker_FormElement_Field_List::NONE_VALUE],
-                []
             );
         }
 
@@ -165,24 +158,12 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
             $value = $this->label_converter->convertLabelToTranslationKey($value);
         }
 
-        $from = <<<EOSQL
-        tracker_changeset_value AS tcv
-        INNER JOIN tracker_changeset_value_list AS tcvl ON (
-            tcvl.changeset_value_id = tcv.id
-        )
-        INNER JOIN tracker_field_list_bind_ugroups_value AS tflbuv ON (
-            tflbuv.id = tcvl.bindvalue_id
-        )
-        INNER JOIN ugroup ON (
-            tflbuv.ugroup_id = ugroup.ugroup_id AND ugroup.name = ?
-        )
-        EOSQL;
-
-        return new ParametrizedFromWhere(
-            $from,
+        return new ParametrizedListFromWhere(
+            self::OPENLIST_FROM,
+            self::LIST_FROM,
+            "ugroup1.name = ? OR ugroup2.name = ?",
             "$filter_alias.artifact_id IS NULL",
-            [$value],
-            []
+            [$value, $value],
         );
     }
 
@@ -203,74 +184,48 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
     private function getWhereForIn(
         string $filter_alias,
         InValueWrapper $wrapper,
-    ): ParametrizedFromWhere {
-        $values_statement = EasyStatement::open()->in(
-            "ugroup.name IN (?*)",
-            array_map(function (SimpleValueWrapper $value_wrapper) {
-                $value = $value_wrapper->getValue();
-                if ($this->label_converter->isASupportedDynamicUgroup($value)) {
-                    $value = $this->label_converter->convertLabelToTranslationKey($value);
-                }
+    ): ParametrizedListFromWhere {
+        $values            = array_map(function (SimpleValueWrapper $value_wrapper) {
+            $value = $value_wrapper->getValue();
+            if ($this->label_converter->isASupportedDynamicUgroup($value)) {
+                $value = $this->label_converter->convertLabelToTranslationKey($value);
+            }
 
-                return $value;
-            }, $wrapper->getValueWrappers())
-        );
+            return $value;
+        }, $wrapper->getValueWrappers());
+        $ugroup1_statement = EasyStatement::open()->in("ugroup1.name IN (?*)", $values);
+        $ugroup2_statement = EasyStatement::open()->in("ugroup2.name IN (?*)", $values);
 
-        $from = <<<EOSQL
-        tracker_changeset_value AS tcv
-        INNER JOIN tracker_changeset_value_list AS tcvl ON (
-            tcvl.changeset_value_id = tcv.id
-        )
-        INNER JOIN tracker_field_list_bind_ugroups_value AS tflbuv ON (
-            tflbuv.id = tcvl.bindvalue_id
-        )
-        INNER JOIN ugroup ON (
-            tflbuv.ugroup_id = ugroup.ugroup_id AND $values_statement
-        )
-        EOSQL;
-
-        return new ParametrizedFromWhere(
-            $from,
+        return new ParametrizedListFromWhere(
+            self::OPENLIST_FROM,
+            self::LIST_FROM,
+            "$ugroup1_statement OR $ugroup2_statement",
             "$filter_alias.artifact_id IS NOT NULL",
-            $values_statement->values(),
-            [],
+            array_merge($ugroup1_statement->values(), $ugroup2_statement->values())
         );
     }
 
     private function getWhereForNotIn(
         string $filter_alias,
         InValueWrapper $wrapper,
-    ): ParametrizedFromWhere {
-        $values_statement = EasyStatement::open()->in(
-            "ugroup.name IN (?*)",
-            array_map(function (SimpleValueWrapper $value_wrapper) {
-                $value = $value_wrapper->getValue();
-                if ($this->label_converter->isASupportedDynamicUgroup($value)) {
-                    $value = $this->label_converter->convertLabelToTranslationKey($value);
-                }
+    ): ParametrizedListFromWhere {
+        $values            = array_map(function (SimpleValueWrapper $value_wrapper) {
+            $value = $value_wrapper->getValue();
+            if ($this->label_converter->isASupportedDynamicUgroup($value)) {
+                $value = $this->label_converter->convertLabelToTranslationKey($value);
+            }
 
-                return $value;
-            }, $wrapper->getValueWrappers())
-        );
+            return $value;
+        }, $wrapper->getValueWrappers());
+        $ugroup1_statement = EasyStatement::open()->in("ugroup1.name IN (?*)", $values);
+        $ugroup2_statement = EasyStatement::open()->in("ugroup2.name IN (?*)", $values);
 
-        $from = <<<EOSQL
-        tracker_changeset_value AS tcv
-        INNER JOIN tracker_changeset_value_list AS tcvl ON (
-            tcvl.changeset_value_id = tcv.id
-        )
-        INNER JOIN tracker_field_list_bind_ugroups_value AS tflbuv ON (
-            tflbuv.id = tcvl.bindvalue_id
-        )
-        INNER JOIN ugroup ON (
-            tflbuv.ugroup_id = ugroup.ugroup_id AND $values_statement
-        )
-        EOSQL;
-
-        return new ParametrizedFromWhere(
-            $from,
+        return new ParametrizedListFromWhere(
+            self::OPENLIST_FROM,
+            self::LIST_FROM,
+            "$ugroup1_statement OR $ugroup2_statement",
             "$filter_alias.artifact_id IS NULL",
-            $values_statement->values(),
-            [],
+            array_merge($ugroup1_statement->values(), $ugroup2_statement->values())
         );
     }
 
