@@ -28,7 +28,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 
 final class RetrieveAnArtifactLinkFieldStub implements RetrieveAnArtifactLinkField
 {
-    private function __construct(private readonly Tracker_FormElement_Field_ArtifactLink | null $field)
+    private function __construct(private readonly ?Tracker_FormElement_Field_ArtifactLink $field)
     {
     }
 

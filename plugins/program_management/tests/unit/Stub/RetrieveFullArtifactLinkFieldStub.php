@@ -43,7 +43,7 @@ final class RetrieveFullArtifactLinkFieldStub implements RetrieveFullArtifactLin
 
     public function getArtifactLinkField(
         TrackerIdentifier $tracker_identifier,
-    ): \Tracker_FormElement_Field_ArtifactLink|null {
+    ): ?\Tracker_FormElement_Field_ArtifactLink {
         return $this->artifact_link;
     }
 }

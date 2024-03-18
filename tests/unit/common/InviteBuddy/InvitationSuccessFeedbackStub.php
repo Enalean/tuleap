@@ -26,7 +26,7 @@ use Tuleap\User\Account\Register\RegisterFormContext;
 
 final class InvitationSuccessFeedbackStub implements InvitationSuccessFeedback
 {
-    private \PFUser | null $has_been_called_with = null;
+    private ?\PFUser $has_been_called_with = null;
 
     private function __construct()
     {

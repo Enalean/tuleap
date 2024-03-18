@@ -27,5 +27,5 @@ interface RetrieveUserByUserName
     /**
      * @param string $user_name the user_name of the user to find
      */
-    public function getUserByUserName(string $user_name): PFUser|null;
+    public function getUserByUserName(string $user_name): ?PFUser;
 }

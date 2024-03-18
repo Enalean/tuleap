@@ -35,7 +35,7 @@ final class ArtifactLinkTypeChecker
     }
 
     public function checkArtifactLinkTypeIsValid(
-        WithReverseLink | WithoutReverseLink | WithForwardLink | WithoutForwardLink $condition,
+        WithReverseLink|WithoutReverseLink|WithForwardLink|WithoutForwardLink $condition,
     ): void {
         if ($condition->link_type === null) {
             return;

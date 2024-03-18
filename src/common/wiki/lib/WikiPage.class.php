@@ -43,7 +43,7 @@ class WikiPage
     public $id;       /* wiki_page.id */
     public $pagename; /* wiki_page.pagename */
     public static $gid;      /* wiki_page.group_id */
-    public bool|null $empty;
+    public ?bool $empty;
 
     /** @var WikiPageWrapper */
     private $wrapper;

@@ -54,7 +54,7 @@ final readonly class DuckTypedField
         string $field_name,
         array $fields,
         array $tracker_ids,
-    ): Ok | Err {
+    ): Ok|Err {
         if (count($fields) === 0) {
             return Result::err(FieldNotFoundInAnyTrackerFault::build());
         }

@@ -178,7 +178,7 @@ final class UpdateFunctionController extends DispatchablePSR15Compatible
     /**
      * @return Ok<UploadedFileInterface>|Err<Fault>
      */
-    private function checkFunctionSize(UploadedFileInterface $file): Ok | Err
+    private function checkFunctionSize(UploadedFileInterface $file): Ok|Err
     {
         $max_function_size_in_mb = $this->max_size_provider->getMaxSizeForFunctionInMb();
 

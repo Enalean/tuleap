@@ -68,7 +68,7 @@ final class ProjectSidebarSVGLogoTest extends TestCase
         self::assertNotEmpty($representation->small);
     }
 
-    private function buildRepresentation(IDetectIfLogoIsCustomized $customized_logo_detector): ProjectSidebarSVGLogo|null
+    private function buildRepresentation(IDetectIfLogoIsCustomized $customized_logo_detector): ?ProjectSidebarSVGLogo
     {
         $glyph_finder = $this->createStub(GlyphFinder::class);
         $glyph        = new Glyph('<svg>Some content</svg>');

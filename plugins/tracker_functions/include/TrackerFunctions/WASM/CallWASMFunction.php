@@ -39,7 +39,7 @@ final class CallWASMFunction implements WASMFunctionCaller
     ) {
     }
 
-    public function callWASMFunction(string $wasm_function_path, string $payload): Ok | Err
+    public function callWASMFunction(string $wasm_function_path, string $payload): Ok|Err
     {
         try {
             return $this->wasm_caller

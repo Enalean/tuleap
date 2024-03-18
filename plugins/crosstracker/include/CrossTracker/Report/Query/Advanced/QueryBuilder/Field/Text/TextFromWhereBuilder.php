@@ -134,7 +134,7 @@ final readonly class TextFromWhereBuilder implements ValueWrapperVisitor
         );
     }
 
-    private function quoteLikeValueSurround(float | int | string $value): string
+    private function quoteLikeValueSurround(float|int|string $value): string
     {
         return '%' . $this->db->escapeLikeValue((string) $value) . '%';
     }

@@ -33,5 +33,5 @@ interface MessageBuilder
      * @param PFUser[] $admins
      * @return Ok<list<MessageRepresentation>>|Err<Fault>
      */
-    public function buildMessagesForAdmins(array $admins, \Tracker_Artifact_Changeset $changeset): Ok | Err;
+    public function buildMessagesForAdmins(array $admins, \Tracker_Artifact_Changeset $changeset): Ok|Err;
 }

@@ -56,7 +56,7 @@ class PullRequestCreator
         GitRepository $repository_dest,
         string $branch_dest,
         \PFUser $creator,
-        string|null $description_format,
+        ?string $description_format,
     ): PullRequest {
         $executor_repository_source      = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
         $executor_repository_destination = GitExec::buildFromRepository($repository_dest);

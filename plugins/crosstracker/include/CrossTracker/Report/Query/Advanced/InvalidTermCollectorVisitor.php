@@ -225,7 +225,7 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
     }
 
     private function visitTail(
-        OrOperand | AndOperand | null $tail,
+        OrOperand|AndOperand|null $tail,
         InvalidComparisonCollectorParameters $parameters,
     ): void {
         if ($tail) {
@@ -260,7 +260,7 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
     }
 
     private function visitRelationshipCondition(
-        WithReverseLink | WithoutReverseLink | WithForwardLink | WithoutForwardLink $condition,
+        WithReverseLink|WithoutReverseLink|WithForwardLink|WithoutForwardLink $condition,
         InvalidComparisonCollectorParameters $parameters,
     ): void {
         try {

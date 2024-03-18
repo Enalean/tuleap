@@ -33,5 +33,5 @@ interface MessageSender
      * @param MessageRepresentation[] $messages
      * @return Ok<null>|Err<Fault>
      */
-    public function sendMessages(array $messages, Tracker_Artifact_Changeset $changeset): Ok | Err;
+    public function sendMessages(array $messages, Tracker_Artifact_Changeset $changeset): Ok|Err;
 }

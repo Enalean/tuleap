@@ -31,7 +31,7 @@ use Tuleap\TrackerFunctions\Notification\MessageBuilder;
 final class MessageBuilderStub implements MessageBuilder
 {
     private function __construct(
-        private readonly Ok | Err $result,
+        private readonly Ok|Err $result,
     ) {
     }
 
@@ -45,7 +45,7 @@ final class MessageBuilderStub implements MessageBuilder
         return new self(Result::err(Fault::fromMessage($message)));
     }
 
-    public function buildMessagesForAdmins(array $admins, \Tracker_Artifact_Changeset $changeset): Ok | Err
+    public function buildMessagesForAdmins(array $admins, \Tracker_Artifact_Changeset $changeset): Ok|Err
     {
         return $this->result;
     }

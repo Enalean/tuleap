@@ -37,7 +37,7 @@ class Wiki
 {
     public $gid;
     public string $language_id = "";
-    public bool|null $exist;
+    public ?bool $exist;
 
   /**
    * WikiSericeModel - Constructor

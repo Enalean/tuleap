@@ -30,7 +30,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDe
 
 final class RetrieveEventDescriptionStub implements RetrieveEventDescription
 {
-    private function __construct(private readonly string|null $description)
+    private function __construct(private readonly ?string $description)
     {
     }
 

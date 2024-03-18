@@ -27,7 +27,7 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public FileModuleMonitorDao|null $dao = null;
+    public ?FileModuleMonitorDao $dao = null;
 
     public function whoIsMonitoringPackageById($group_id, $package_id)
     {

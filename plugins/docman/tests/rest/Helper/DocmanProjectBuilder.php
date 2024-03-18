@@ -298,7 +298,7 @@ class DocmanProjectBuilder extends REST_TestDataBuilder
         return $this->user->getId();
     }
 
-    public function getRoot(): \Docman_Item|null
+    public function getRoot(): ?\Docman_Item
     {
         return $this->docman_item_factory->getRoot($this->project->getID());
     }

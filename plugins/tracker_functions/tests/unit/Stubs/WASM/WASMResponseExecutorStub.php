@@ -36,7 +36,7 @@ final class WASMResponseExecutorStub implements WASMResponseExecutor
      * @param Ok<null>|Err<Fault> $result
      */
     private function __construct(
-        private readonly Ok | Err $result,
+        private readonly Ok|Err $result,
     ) {
     }
 
@@ -55,7 +55,7 @@ final class WASMResponseExecutorStub implements WASMResponseExecutor
         return $this;
     }
 
-    public function executeResponse(WASMResponseRepresentation $response, Artifact $artifact): Ok | Err
+    public function executeResponse(WASMResponseRepresentation $response, Artifact $artifact): Ok|Err
     {
         return $this->result;
     }

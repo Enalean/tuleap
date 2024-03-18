@@ -36,7 +36,7 @@ final class ProjectSidebarSVGLogo
     ) {
     }
 
-    public static function fromDetectorAndGlyphFinder(IDetectIfLogoIsCustomized $customized_logo_detector, GlyphFinder $glyph_finder): self|null
+    public static function fromDetectorAndGlyphFinder(IDetectIfLogoIsCustomized $customized_logo_detector, GlyphFinder $glyph_finder): ?self
     {
         if (! $customized_logo_detector->isSvgOrganizationLogoCustomized()) {
             return null;

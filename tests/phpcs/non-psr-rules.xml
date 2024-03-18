@@ -19,18 +19,27 @@
 
     <!-- Forbid useless semicolon `;` -->
     <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
+    <!-- Forbid blank line after function opening brace -->
+    <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+
+    <!-- Spacing-->
     <!-- Forbid spaces around square brackets -->
     <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
     <!-- Require that single line arrays have the correct spacing: no space around brackets and one space after comma -->
     <rule ref="SlevomatCodingStandard.Arrays.SingleLineArrayWhitespace"/>
-    <!-- Forbid blank line after function opening brace -->
-    <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
     <!-- Force space after ! -->
     <rule ref="Generic.Formatting.SpaceAfterNot"/>
     <!-- Force space after language constructs -->
     <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
     <!-- Force space around logical operators -->
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+    <!-- Forbid space around typehint union (Ok|Err) and force replacing Type|null by ?Type -->)
+    <rule ref="SlevomatCodingStandard.TypeHints.UnionTypeHintFormat">
+        <properties>
+            <property name="withSpaces" value="no"/>
+            <property name="shortNullable" value="yes"/>
+        </properties>
+    </rule>
     <!-- Force space after a type cast -->
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
     <!-- Forbid space between increment/decrement operator and its operand -->
@@ -53,6 +62,7 @@
             <property name="spacing" value="1"/>
         </properties>
     </rule>
+
     <!-- Force alignment of corresponding assignment statement tokens -->
     <rule ref="Generic.Formatting.MultipleStatementAlignment">
           <properties>

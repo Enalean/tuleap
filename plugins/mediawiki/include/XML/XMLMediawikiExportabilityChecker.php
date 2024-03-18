@@ -45,7 +45,7 @@ final class XMLMediawikiExportabilityChecker implements CheckXMLMediawikiExporta
     public function checkMediawikiCanBeExportedToXML(
         ExportXmlProject $event,
         MediawikiDataDir $mediawiki_data_dir,
-    ): Ok | Err {
+    ): Ok|Err {
         if (! $event->shouldExportAllData()) {
             return Result::Err(XMLPartialExportFault::buildForXMLExportLogger());
         }

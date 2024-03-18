@@ -35,7 +35,7 @@ final class SendMessagesForAdmins implements MessageSender
     ) {
     }
 
-    public function sendMessages(array $messages, Tracker_Artifact_Changeset $changeset): Ok | Err
+    public function sendMessages(array $messages, Tracker_Artifact_Changeset $changeset): Ok|Err
     {
         foreach ($messages as $message) {
             $this->mail_sender->send(

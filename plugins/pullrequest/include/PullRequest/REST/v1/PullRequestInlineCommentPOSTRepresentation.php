@@ -50,9 +50,9 @@ class PullRequestInlineCommentPOSTRepresentation
      */
     public $position;
     /**
-     * @var int | null {@type int} {@required false}
+     * @var int | null $parent_id {@required false}
      */
-    public int|null $parent_id = 0;
+    public ?int $parent_id = 0;
 
     private function __construct(
         string $content,

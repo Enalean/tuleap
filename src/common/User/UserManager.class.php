@@ -66,8 +66,8 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     public array $_userid_bynames  = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     public array $_userid_byldapid = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
-    private UserDao|null $_userdao                                             = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-    private \Tuleap\User\CurrentUserWithLoggedInInformation|null $current_user = null;
+    private ?UserDao $_userdao                                             = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    private ?\Tuleap\User\CurrentUserWithLoggedInInformation $current_user = null;
 
     /**
      * @var User_PendingUserNotifier
@@ -189,7 +189,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     /**
      * @param string $user_name the user_name of the user to find
      */
-    public function getUserByUserName(string $user_name): PFUser|null
+    public function getUserByUserName(string $user_name): ?PFUser
     {
         if (! isset($this->_userid_bynames[$user_name])) {
             $row = $this->getDao()->searchByUserName($user_name);

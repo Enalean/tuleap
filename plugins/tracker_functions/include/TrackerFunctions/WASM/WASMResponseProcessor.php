@@ -32,5 +32,5 @@ interface WASMResponseProcessor
      * @param Ok<string>|Err<Fault> $wasm_response
      * @return Ok<WASMResponseRepresentation>|Err<Fault>
      */
-    public function processResponse(Ok | Err $wasm_response): Ok | Err;
+    public function processResponse(Ok|Err $wasm_response): Ok|Err;
 }

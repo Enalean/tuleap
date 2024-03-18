@@ -28,7 +28,7 @@ use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 
 final class FormatNotificationContentStub implements FormatNotificationContent
 {
-    private function __construct(private readonly string | null $formatted_content)
+    private function __construct(private readonly ?string $formatted_content)
     {
     }
 

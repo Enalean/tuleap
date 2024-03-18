@@ -40,7 +40,7 @@ final class ExecuteWASMResponse implements WASMResponseExecutor
     ) {
     }
 
-    public function executeResponse(WASMResponseRepresentation $response, Artifact $artifact): Ok | Err
+    public function executeResponse(WASMResponseRepresentation $response, Artifact $artifact): Ok|Err
     {
         try {
             $this->handler->handle($response->values, $artifact, new TuleapFunctionsUser(), $response->comment);

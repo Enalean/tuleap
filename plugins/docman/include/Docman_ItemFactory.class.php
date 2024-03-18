@@ -839,7 +839,7 @@ class Docman_ItemFactory
         return $ii;
     }
 
-    public Docman_ItemDao|null $dao = null;
+    public ?Docman_ItemDao $dao = null;
     /**
      * @return Docman_ItemDao
      */

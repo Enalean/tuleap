@@ -65,7 +65,7 @@ final class GETHandler
      * @param "asc"|"desc" $order
      * @return Ok<RepositoryPullRequestRepresentation> | Err<Fault>
      */
-    public function handle(GitRepository $repository, string $query, string $order, int $limit, int $offset): Ok | Err
+    public function handle(GitRepository $repository, string $query, string $order, int $limit, int $offset): Ok|Err
     {
         return $this->query_to_search_criteria_converter->convert($query)->andThen(
             function (SearchCriteria $criteria) use ($order, $repository, $limit, $offset) {
@@ -77,7 +77,7 @@ final class GETHandler
     /**
      * @return Ok<RepositoryPullRequestRepresentation> | Err<Fault>
      */
-    private function retrievePullRequests(GitRepository $repository, SearchCriteria $criteria, PullRequestSortOrder $order, int $limit, int $offset): Ok | Err
+    private function retrievePullRequests(GitRepository $repository, SearchCriteria $criteria, PullRequestSortOrder $order, int $limit, int $offset): Ok|Err
     {
         $result = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criteria, $order, $limit, $offset);
 

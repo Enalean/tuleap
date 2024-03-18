@@ -42,7 +42,7 @@ final class GETHandler
     /**
      * @return Ok<RepositoryPullRequestsAuthorsRepresentation> | Err<Fault>
      */
-    public function handle(\GitRepository $repository, int $limit, int $offset): Ok | Err
+    public function handle(\GitRepository $repository, int $limit, int $offset): Ok|Err
     {
         $result = $this->search_paginated_pull_requests_authors->getPaginatedPullRequestsAuthorsIds($repository->getId(), $limit, $offset);
 

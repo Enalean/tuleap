@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 interface Logical
 {
-    public function getTail(): OrOperand | AndOperand | null;
+    public function getTail(): OrOperand|AndOperand|null;
 
     /**
      * @template ReturnType

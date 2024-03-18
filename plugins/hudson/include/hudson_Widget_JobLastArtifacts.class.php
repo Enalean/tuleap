@@ -30,7 +30,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
      * @var HudsonJob
      */
     private $job;
-    public HudsonBuild|null $build;
+    public ?HudsonBuild $build;
     public $last_build_url;
     /**
      * @var HudsonJobBuilder

@@ -50,7 +50,7 @@ final readonly class DuckTypedFieldChecker
     public function checkFieldIsValid(
         Field $field,
         InvalidSearchableCollectorParameters $collector_parameters,
-    ): Ok | Err {
+    ): Ok|Err {
         $tracker_ids          = $collector_parameters->getInvalidSearchablesCollectorParameters()->getTrackerIds();
         $user                 = $collector_parameters->getInvalidSearchablesCollectorParameters()->getUser();
         $fields_user_can_read = [];

@@ -42,7 +42,7 @@ final class GETHandler
     /**
      * @return Ok<RepositoryPullRequestsReviewersRepresentation> | Err<Fault>
      */
-    public function handle(\GitRepository $repository, int $limit, int $offset): Ok | Err
+    public function handle(\GitRepository $repository, int $limit, int $offset): Ok|Err
     {
         $result          = $this->search_repository_reviewers->searchRepositoryPullRequestsReviewersIds($repository->getId(), $limit, $offset);
         $representations = [];

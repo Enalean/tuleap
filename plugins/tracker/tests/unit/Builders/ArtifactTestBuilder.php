@@ -41,8 +41,8 @@ final class ArtifactTestBuilder
     /**
      * @var \Tracker_Artifact_Changeset[]
      */
-    private array $changesets                                = [];
-    private \Tracker_Artifact_Changeset|null $last_changeset = null;
+    private array $changesets                            = [];
+    private ?\Tracker_Artifact_Changeset $last_changeset = null;
     /**
      * @var \Tracker_ArtifactFactory | null
      */
@@ -61,8 +61,8 @@ final class ArtifactTestBuilder
     private ?PFUser $submitted_by_user = null;
     private ?Artifact $parent          = null;
     private bool $has_parent           = false;
-    private bool|null $is_open         = null;
-    private string|null $status        = null;
+    private ?bool $is_open             = null;
+    private ?string $status            = null;
     /**
      * @var Artifact[]|null
      */

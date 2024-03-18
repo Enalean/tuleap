@@ -36,7 +36,7 @@ final class ProjectSidebarLegacyPNGHref
     ) {
     }
 
-    public static function fromDetector(IDetectIfLogoIsCustomized $customized_logo_detector): self|null
+    public static function fromDetector(IDetectIfLogoIsCustomized $customized_logo_detector): ?self
     {
         if (! $customized_logo_detector->isLegacyOrganizationLogoCustomized()) {
             return null;

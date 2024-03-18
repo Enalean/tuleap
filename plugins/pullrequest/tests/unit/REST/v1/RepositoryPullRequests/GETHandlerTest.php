@@ -120,7 +120,7 @@ final class GETHandlerTest extends TestCase
     /**
      * @return Ok<RepositoryPullRequestRepresentation> | Err<Fault>
      */
-    public function handle(string $query): Ok | Err
+    public function handle(string $query): Ok|Err
     {
         $handler = new GETHandler(
             new QueryToSearchCriteriaConverter(),
