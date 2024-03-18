@@ -269,8 +269,6 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     public static function dataProviderProcessableItemClasses(): ?\Generator
     {
         yield [Docman_Folder::class];
-        foreach (self::dataProviderProcessableDocumentClasses() as $document_class) {
-            yield $document_class;
-        }
+        yield from self::dataProviderProcessableDocumentClasses();
     }
 }

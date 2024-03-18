@@ -300,12 +300,8 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         $now         = new CurrentDateTimeValueWrapper(null, null);
         yield '= string value' => [new EqualComparison($field, new SimpleValueWrapper('string'))];
         yield '= NOW()' => [new EqualComparison($field, $now)];
-        foreach (self::generateInvalidComparisonsToEmptyString($field, $valid_value) as $case) {
-            yield $case;
-        }
-        foreach (self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value) as $case) {
-            yield $case;
-        }
+        yield from self::generateInvalidComparisonsToEmptyString($field, $valid_value);
+        yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
     }
 
     /**
@@ -344,9 +340,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             new BetweenComparison($field, new BetweenValueWrapper($valid_value, $valid_value)),
         ];
         yield '= NOW()' => [new EqualComparison($field, $now)];
-        foreach (self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value) as $case) {
-            yield $case;
-        }
+        yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
     }
 
     /**
@@ -377,12 +371,8 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         $field       = new Field(self::FIELD_NAME);
         $valid_value = new SimpleValueWrapper('2024-02-22');
         yield '= string value' => [new EqualComparison($field, new SimpleValueWrapper('string'))];
-        foreach (self::generateInvalidComparisonsToEmptyString($field, $valid_value) as $case) {
-            yield $case;
-        }
-        foreach (self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value) as $case) {
-            yield $case;
-        }
+        yield from self::generateInvalidComparisonsToEmptyString($field, $valid_value);
+        yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
     }
 
     /**
