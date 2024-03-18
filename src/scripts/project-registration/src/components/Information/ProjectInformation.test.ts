@@ -32,12 +32,14 @@ import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import EventBus from "../../helpers/event-bus";
 import { useStore } from "../../stores/root";
+import type { ProjectArchiveTemplateData, TemplateData } from "../../type";
 
 let has_error = false;
 let are_restricted_users_allowed = false;
 let is_project_approval_required = false;
 let is_template_selected = true;
 const create_project_mock = jest.fn();
+const create_project_from_archive_mock = jest.fn();
 describe("ProjectInformation -", () => {
     let router: VueRouter;
     beforeEach(() => {
@@ -59,11 +61,17 @@ describe("ProjectInformation -", () => {
                     path: "/approval",
                     name: "approval",
                 },
+                {
+                    path: "/from-archive-creation",
+                    name: "from-archive-creation",
+                },
             ],
         });
     });
 
-    async function getWrapper(): Promise<Wrapper<ProjectInformation>> {
+    async function getWrapper(
+        selected_company_template: TemplateData | ProjectArchiveTemplateData | null = null,
+    ): Promise<Wrapper<ProjectInformation>> {
         const useStore = defineStore("root", {
             state: () => ({
                 is_template_selected,
@@ -77,12 +85,14 @@ describe("ProjectInformation -", () => {
                     glyph: "string",
                     is_built_in: true,
                 },
+                selected_company_template,
             }),
             getters: {
                 has_error: () => has_error,
             },
             actions: {
                 createProject: create_project_mock,
+                createProjectFromArchive: create_project_from_archive_mock,
             },
         });
 
@@ -180,6 +190,7 @@ describe("ProjectInformation -", () => {
         await wrapper.vm.$nextTick();
 
         expect(store.createProject).toHaveBeenCalledWith(expected_project_properties);
+        expect(store.createProjectFromArchive).not.toHaveBeenCalled();
 
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
@@ -201,6 +212,25 @@ describe("ProjectInformation -", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$route.name).toBe("approval");
+    });
+
+    it(`Create a new project when project is created from an archive`, async () => {
+        const selected_company_template = {
+            title: "my title",
+            description: "string",
+            id: "from_project_archive",
+            glyph: "string",
+            is_built_in: false,
+        };
+        const wrapper = await getWrapper(selected_company_template);
+        const store = useStore();
+        wrapper.vm.$data.selected_visibility = "private";
+        await wrapper.vm.$nextTick();
+
+        wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
+
+        expect(store.createProjectFromArchive).toHaveBeenCalled();
+        expect(store.createProject).not.toHaveBeenCalled();
     });
 
     it("build the field list object", async () => {

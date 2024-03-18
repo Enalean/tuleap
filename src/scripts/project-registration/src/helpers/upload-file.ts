@@ -18,8 +18,14 @@
  */
 
 import { Upload } from "tus-js-client";
+import type VueRouter from "vue-router";
 
-export function uploadFile(project_archive: File, upload_href: string): void {
+export function uploadFile(
+    project_archive: File,
+    upload_href: string,
+    router: VueRouter,
+    setIsCreatingProject: (is_creating_project: boolean) => void,
+): void {
     const uploader = new Upload(project_archive, {
         uploadUrl: upload_href,
         metadata: {
@@ -29,14 +35,9 @@ export function uploadFile(project_archive: File, upload_href: string): void {
         onError: function (error): void {
             throw new Error(error.message);
         },
-        onProgress: function (bytesUploaded, bytesTotal): void {
-            const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-            // eslint-disable-next-line no-console
-            console.log(bytesUploaded, bytesTotal, percentage + "%");
-        },
-        onSuccess: function (): void {
-            // eslint-disable-next-line no-console
-            console.log("Download %s from %s", uploader.file, uploader.url);
+        onSuccess: async function (): Promise<void> {
+            setIsCreatingProject(true);
+            await router.push("from-archive-creation");
         },
     });
     uploader.start();

@@ -228,8 +228,12 @@ export default class ProjectInformation extends Vue {
             project_properties,
         );
 
-        await this.root_store.createProject(project_properties);
+        if (this.root_store.selected_company_template?.id === "from_project_archive") {
+            await this.root_store.createProjectFromArchive(project_properties, this.$router);
+            return;
+        }
 
+        await this.root_store.createProject(project_properties);
         if (!this.root_store.is_project_approval_required) {
             const params = new URLSearchParams();
             params.set("should-display-created-project-modal", "true");

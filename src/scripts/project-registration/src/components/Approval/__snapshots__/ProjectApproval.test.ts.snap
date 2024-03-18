@@ -10,6 +10,6 @@ exports[`ProjectApproval - Spawns the ProjectApproval component 1`] = `
     " data-current-language="en_US">
     Your project has been submitted to the administrators for validation
   </h1>
-  <p class="empty-state-text"><b>You will receive an email</b> when the administrator has validated it.</p> <a href="/my/" class="tlp-button-primary tlp-button-large empty-state-action"><i class="fa fa-reply tlp-button-icon"></i> <span data-msgid="Go to my home page" data-current-language="en_US">Go to my home page</span></a>
+  <p class="empty-state-text">You will receive an email when the administrator has validated it.</p> <a href="/my/" class="tlp-button-primary tlp-button-large empty-state-action"><i class="fa fa-reply tlp-button-icon"></i> <span data-msgid="Go to my home page" data-current-language="en_US">Go to my home page</span></a>
 </div>
 `;

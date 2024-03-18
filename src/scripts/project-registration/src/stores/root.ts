@@ -24,6 +24,7 @@ import { getProjectUserIsAdminOf, postProject } from "../api/rest-querier";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { uploadFile } from "../helpers/upload-file";
 import type { ProjectArchiveReference, ProjectReference } from "@tuleap/core-rest-api-types";
+import type VueRouter from "vue-router";
 
 export const useStore = defineStore("root", {
     state: (): RootState => ({
@@ -85,11 +86,11 @@ export const useStore = defineStore("root", {
             }
         },
 
-        async createProject(
+        async createProjectFromArchive(
             project_properties: ProjectProperties,
+            router: VueRouter,
         ): Promise<ProjectReference | ProjectArchiveReference> {
             let response;
-
             try {
                 this.setIsCreatingProject(true);
                 response = await postProject(project_properties);
@@ -98,8 +99,30 @@ export const useStore = defineStore("root", {
                     "upload_href" in response &&
                     "archive" in this.selected_company_template
                 ) {
-                    uploadFile(this.selected_company_template.archive, response.upload_href);
+                    uploadFile(
+                        this.selected_company_template.archive,
+                        response.upload_href,
+                        router,
+                        this.setIsCreatingProject,
+                    );
                 }
+            } catch (error) {
+                if (error instanceof FetchWrapperError) {
+                    await this.handleError(error);
+                }
+                throw error;
+            }
+            return response;
+        },
+
+        async createProject(
+            project_properties: ProjectProperties,
+        ): Promise<ProjectReference | ProjectArchiveReference> {
+            let response;
+
+            try {
+                this.setIsCreatingProject(true);
+                response = await postProject(project_properties);
             } catch (error) {
                 if (error instanceof FetchWrapperError) {
                     await this.handleError(error);
