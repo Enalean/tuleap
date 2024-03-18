@@ -20,35 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\Stubs\Project\Registration\Template\Upload;
+namespace Tuleap\Project\Registration\Template\Upload;
 
-use Tuleap\Project\Registration\Template\Upload\SaveUploadedArchiveForProject;
 
-final class SaveUploadedArchiveForProjectStub implements SaveUploadedArchiveForProject
+final readonly class UploadedArchiveForProjectArchiver implements ArchiveUploadedArchive
 {
-    private ?string $saved = null;
-
-    private function __construct()
+    public function __construct(private string $data_dir)
     {
     }
 
-    public static function build(): self
+    public function archive(\Project $project, string $uploaded_archive_path): string
     {
-        return new self();
-    }
+        $destination = $this->data_dir . '/project/' . $project->getID() . '/created-from-archive/uploaded-archive-for-' . $project->getID() . '.zip';
 
-    public function save(int $project_id, string $archive_path): void
-    {
-        $this->saved = $archive_path;
-    }
+        \Psl\Filesystem\copy(
+            $uploaded_archive_path,
+            $destination,
+        );
 
-    public function isSaved(): bool
-    {
-        return $this->saved !== null;
-    }
-
-    public function getSavedDestination(): ?string
-    {
-        return $this->saved;
+        return $destination;
     }
 }

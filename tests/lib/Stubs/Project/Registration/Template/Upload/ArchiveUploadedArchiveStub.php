@@ -22,33 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Stubs\Project\Registration\Template\Upload;
 
-use Tuleap\Project\Registration\Template\Upload\SaveUploadedArchiveForProject;
+use Tuleap\Project\Registration\Template\Upload\ArchiveUploadedArchive;
 
-final class SaveUploadedArchiveForProjectStub implements SaveUploadedArchiveForProject
+final readonly class ArchiveUploadedArchiveStub implements ArchiveUploadedArchive
 {
-    private ?string $saved = null;
-
-    private function __construct()
+    /**
+     * @param non-empty-string|null $destination
+     */
+    private function __construct(private ?string $destination)
     {
     }
 
-    public static function build(): self
+    /**
+     * @param non-empty-string $destination
+     */
+    public static function withDestination(string $destination): self
     {
-        return new self();
+        return new self($destination);
     }
 
-    public function save(int $project_id, string $archive_path): void
+    public static function notExpectedToBeCalled(): self
     {
-        $this->saved = $archive_path;
+        return new self(null);
     }
 
-    public function isSaved(): bool
+    public function archive(\Project $project, string $uploaded_archive_path): string
     {
-        return $this->saved !== null;
-    }
+        if ($this->destination === null) {
+            throw new \Exception('Should not be called');
+        }
 
-    public function getSavedDestination(): ?string
-    {
-        return $this->saved;
+        return $this->destination;
     }
 }

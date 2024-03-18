@@ -29,6 +29,7 @@ use Project;
 use TemplateSingleton;
 use Tuleap\Project\Admin\ProjectGlobalVisibilityPresenter;
 use Tuleap\Project\Registration\Template\ProjectTemplate;
+use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectController;
 
 class ProjectDetailsPresenter
 {
@@ -149,7 +150,7 @@ class ProjectDetailsPresenter
         $this->template_label                 = _('Projects created from this template');
 
         $this->template_project_label = _('Template used by project');
-        $this->constructBuiltFrom($template, $template_project, $uploaded_archive_for_project_path);
+        $this->constructBuiltFrom($project, $template, $template_project, $uploaded_archive_for_project_path);
 
         $this->icon_label_name  = _('Icon');
         $this->project_icon     = $project_icon;
@@ -163,6 +164,7 @@ class ProjectDetailsPresenter
     }
 
     private function constructBuiltFrom(
+        Project $project,
         ?ProjectTemplate $template,
         Project $template_project,
         ?string $uploaded_archive_for_project_path,
@@ -176,7 +178,7 @@ class ProjectDetailsPresenter
 
         if ($uploaded_archive_for_project_path) {
             $this->built_from_archive = [
-                'href' => '/not-implemented-yet',
+                'href' => UploadedArchiveForProjectController::getUrl($project),
             ];
             return;
         }
