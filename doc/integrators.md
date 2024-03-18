@@ -92,9 +92,6 @@ git config gpg.ssh.allowedSignersFile tools/utils/signing-keys/allowed-integrato
 
 -   Update the corresponding artifact(s) with the following information:
 
-    -   Follow-up comment message:
-        `gerrit #2548 integrated into Tuleap 12.2.99.12` (adjust `2548`
-        and `12.2.99.12` to your situation)
     -   If the contribution closes the artifact (mentioned in the
         commit message or to be checked with the contributor), then you
         can close it:
