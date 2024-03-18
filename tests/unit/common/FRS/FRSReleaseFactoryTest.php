@@ -26,8 +26,8 @@ use FRSReleaseFactory;
 use PermissionsManager;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Project;
 use ProjectManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
@@ -70,13 +70,10 @@ class FRSReleaseFactoryTest extends TestCase
         $this->permission_manager  = $this->createMock(PermissionsManager::class);
         $this->user_manager->method('getUserById')->willReturn($this->user);
         $this->frs_release_factory->method('getUserManager')->willReturn($this->user_manager);
-        $project = $this->createMock(Project::class);
-        $project->method('getID')->willReturn($this->group_id);
-        $project->method('isActive')->willReturn(true);
-        $project->method('isPublic')->willReturn(true);
-        $project->method('isError');
         $project_manager = $this->createMock(ProjectManager::class);
-        $project_manager->method('getProject')->willReturn($project);
+        $project_manager->method('getProject')->willReturn(
+            ProjectTestBuilder::aProject()->withId($this->group_id)->build()
+        );
         ProjectManager::setInstance($project_manager);
     }
 

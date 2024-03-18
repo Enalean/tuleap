@@ -19,10 +19,10 @@
 
 namespace Tuleap\Project;
 
-final class AccessNotActiveException extends \Project_AccessException
+class AccessNotActiveException extends \Project_AccessException
 {
-    public function __construct()
+    public function __construct(?string $message = null)
     {
-        parent::__construct(_('This project is not active'));
+        parent::__construct($message ?: _('This project is not active'));
     }
 }

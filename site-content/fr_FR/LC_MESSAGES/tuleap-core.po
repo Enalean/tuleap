@@ -3826,6 +3826,9 @@ msgstr "Ce projet n'est pas actif"
 msgid "This project is not categorized yet."
 msgstr "Ce projet n'est pas encore catégorisé."
 
+msgid "This project is not imported yet"
+msgstr "Ce projet n'a pas encore été importé"
+
 msgid "This project is suspended"
 msgstr "Ce projet est suspendu"
 

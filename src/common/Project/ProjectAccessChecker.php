@@ -46,6 +46,7 @@ class ProjectAccessChecker implements CheckProjectAccess
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessRestrictedException
      * @throws AccessNotActiveException
+     * @throws AccessArchiveNotImportedYetException
      */
     public function checkUserCanAccessProject(PFUser $user, Project $project): void
     {
@@ -55,6 +56,10 @@ class ProjectAccessChecker implements CheckProjectAccess
 
         if ($user->isAnonymous() && ! ForgeConfig::areAnonymousAllowed()) {
             throw new Project_AccessProjectNotFoundException(_('Project does not exist'));
+        }
+
+        if ($project->getStatus() === Project::STATUS_CREATING_FROM_ARCHIVE) {
+            throw new AccessArchiveNotImportedYetException();
         }
 
         if ($user->isSuperUser()) {

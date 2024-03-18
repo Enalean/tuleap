@@ -3755,6 +3755,9 @@ msgstr ""
 msgid "This project is not categorized yet."
 msgstr "Este projeto ainda não foi categorizado."
 
+msgid "This project is not imported yet"
+msgstr ""
+
 msgid "This project is suspended"
 msgstr "Este projeto está suspenso"
 

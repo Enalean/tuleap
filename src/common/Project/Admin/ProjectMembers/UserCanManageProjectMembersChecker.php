@@ -32,6 +32,10 @@ final class UserCanManageProjectMembersChecker implements EnsureUserCanManagePro
 
     public function checkUserCanManageProjectMembers(\PFUser $user, \Project $project): void
     {
+        if ($project->getStatus() === \Project::STATUS_CREATING_FROM_ARCHIVE) {
+            throw new UserIsNotAllowedToManageProjectMembersException();
+        }
+
         if ($user->isAdmin((int) $project->getID())) {
             return;
         }

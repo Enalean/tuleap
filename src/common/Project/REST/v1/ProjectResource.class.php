@@ -659,7 +659,7 @@ class ProjectResource extends AuthenticatedResource
     {
         $project = $this->project_manager->getProject($project_id);
 
-        if ($project->isError()) {
+        if ($project->isError() || $project->getStatus() === Project::STATUS_CREATING_FROM_ARCHIVE) {
             throw new RestException(404, "Project does not exist");
         }
 
