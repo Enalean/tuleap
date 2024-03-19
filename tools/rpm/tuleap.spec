@@ -652,6 +652,7 @@ done
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
 %{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
+%{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/project
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/images
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/incoming
@@ -1088,6 +1089,7 @@ fi
 # Data dir
 %dir %attr(755,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/user
+%dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/project
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/images
 %dir %attr(0755, root, %{ftp_group}) %{APP_DATA_DIR}/ftp
 %dir %attr(3777, %{APP_USER}, %{APP_USER}) %{APP_DATA_DIR}/ftp/incoming

@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\Project\ImportFromArchiveStub;
 use Tuleap\Test\Stubs\Project\Registration\Template\Upload\ActivateProjectAfterArchiveImportStub;
+use Tuleap\Test\Stubs\Project\Registration\Template\Upload\ArchiveUploadedArchiveStub;
 use Tuleap\Test\Stubs\Project\Registration\Template\Upload\SaveUploadedArchiveForProjectStub;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
@@ -84,6 +85,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project),
             RetrieveUserByIdStub::withUser($this->user),
             ForceLoginStub::build(),
+            ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
         );
     }
@@ -105,6 +107,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project),
             RetrieveUserByIdStub::withUser($this->user),
             ForceLoginStub::build(),
+            ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
         );
     }
@@ -126,6 +129,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project),
             RetrieveUserByIdStub::withUser($this->user),
             ForceLoginStub::build(),
+            ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
         );
     }
@@ -147,6 +151,29 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project),
             RetrieveUserByIdStub::withUser($this->user),
             ForceLoginStub::build(),
+            ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
+            SaveUploadedArchiveForProjectStub::build(),
+        );
+    }
+
+    public function testFilenameIsAnEmptyString(): void
+    {
+        $this->expectException(\Exception::class);
+
+        ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                new NullLogger(),
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => ['project_id' => self::PROJECT_ID, 'filename' => '', 'user_id' => 123],
+                ]
+            ),
+            ImportFromArchiveStub::buildWithSuccessfulImport(),
+            ActivateProjectAfterArchiveImportStub::build(),
+            ProjectByIDFactoryStub::buildWith($this->project),
+            RetrieveUserByIdStub::withUser($this->user),
+            ForceLoginStub::build(),
+            ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
         );
     }
@@ -171,6 +198,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project),
             RetrieveUserByIdStub::withUser($this->user),
             ForceLoginStub::build(),
+            ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
         );
     }
@@ -196,6 +224,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project),
             RetrieveUserByIdStub::withUser($this->user),
             ForceLoginStub::build(),
+            ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
         );
     }
@@ -221,6 +250,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ProjectByIDFactoryStub::buildWithoutProject(),
             RetrieveUserByIdStub::withUser($this->user),
             ForceLoginStub::build(),
+            ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
         );
 
@@ -254,6 +284,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project),
             RetrieveUserByIdStub::withUser($this->user),
             $force_login,
+            ArchiveUploadedArchiveStub::withDestination('/final/destination'),
             $archive_for_project_dao,
         );
 
@@ -264,6 +295,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         self::assertTrue($activator->isCalled());
         self::assertTrue($force_login->isForced());
         self::assertTrue($archive_for_project_dao->isSaved());
+        self::assertEquals('/final/destination', $archive_for_project_dao->getSavedDestination());
     }
 
     public function testProcessFailure(): void
@@ -290,6 +322,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project),
             RetrieveUserByIdStub::withUser($this->user),
             ForceLoginStub::build(),
+            ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             $archive_for_project_dao,
         );
 

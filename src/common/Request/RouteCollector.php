@@ -149,6 +149,7 @@ use Tuleap\Project\Admin\Reference\Browse\LegacyReferenceAdministrationBrowsingR
 use Tuleap\Project\Admin\Reference\Browse\ReferenceAdministrationBrowseController;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
+use Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware;
 use Tuleap\Project\Admin\Routing\RejectNonProjectMembersAdministratorMiddleware;
 use Tuleap\Project\Banner\BannerAdministrationController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
@@ -169,6 +170,8 @@ use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileBeingUploadedInfo
 use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileDataStore;
 use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileUploadCanceler;
 use Tuleap\Project\Registration\Template\Upload\Tus\ProjectFileUploadFinisher;
+use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectController;
+use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectDao;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Routing\ProjectRetrieverMiddleware;
 use Tuleap\Project\Service\AddController;
@@ -1472,6 +1475,28 @@ class RouteCollector
         );
     }
 
+    public static function getUploadedArchiveController(): DispatchableWithRequest
+    {
+        return new UploadedArchiveForProjectController(
+            new BinaryFileResponseBuilder(
+                HTTPFactoryBuilder::responseFactory(),
+                HTTPFactoryBuilder::streamFactory()
+            ),
+            new UploadedArchiveForProjectDao(),
+            new SapiStreamEmitter(),
+            new SessionWriteCloseMiddleware(),
+            new ProjectRetrieverMiddleware(
+                new ProjectRetriever(
+                    ProjectManager::instance(),
+                ),
+            ),
+            new RejectNonProjectAdministratorMiddleware(
+                \UserManager::instance(),
+                new ProjectAdministratorChecker(),
+            ),
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r): void
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -1510,6 +1535,7 @@ class RouteCollector
 
             $r->get('/export/xml', [self::class, 'getProjectXmlExportController']);
             $r->get('/export', [self::class, 'getProjectExportController']);
+            $r->get('/uploaded-archive', [self::class, 'getUploadedArchiveController']);
         });
 
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);

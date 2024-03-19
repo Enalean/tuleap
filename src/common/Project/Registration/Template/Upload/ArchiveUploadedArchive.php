@@ -18,37 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Project\Registration\Template\Upload;
 
-namespace Tuleap\Test\Stubs\Project\Registration\Template\Upload;
-
-use Tuleap\Project\Registration\Template\Upload\SaveUploadedArchiveForProject;
-
-final class SaveUploadedArchiveForProjectStub implements SaveUploadedArchiveForProject
+interface ArchiveUploadedArchive
 {
-    private ?string $saved = null;
-
-    private function __construct()
-    {
-    }
-
-    public static function build(): self
-    {
-        return new self();
-    }
-
-    public function save(int $project_id, string $archive_path): void
-    {
-        $this->saved = $archive_path;
-    }
-
-    public function isSaved(): bool
-    {
-        return $this->saved !== null;
-    }
-
-    public function getSavedDestination(): ?string
-    {
-        return $this->saved;
-    }
+    /**
+     * @param non-empty-string $uploaded_archive_path
+     * @return non-empty-string
+     */
+    public function archive(\Project $project, string $uploaded_archive_path): string;
 }

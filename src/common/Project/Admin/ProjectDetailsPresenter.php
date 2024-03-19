@@ -26,6 +26,7 @@ use ProjectManager;
 use TemplateSingleton;
 use Tuleap\Project\ProjectAccessPresenter;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectController;
 use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectDao;
 
 class ProjectDetailsPresenter
@@ -228,7 +229,7 @@ class ProjectDetailsPresenter
         $archive_path                           = $uploaded_archive_for_project_retriever->searchByProjectId((int) $project->getID());
         if ($archive_path) {
             $this->built_from_archive = [
-                'href' => '/not-implemented-yet',
+                'href' => UploadedArchiveForProjectController::getUrl($project),
             ];
             return;
         }

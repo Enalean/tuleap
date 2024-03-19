@@ -37,12 +37,16 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
 {
     public const TOPIC = 'tuleap.project.create-from-archive';
 
+    /**
+     * @param non-empty-string $filename
+     */
     private function __construct(
         private ImportFromArchive $importer,
         private ActivateProjectAfterArchiveImport $activator,
         private ProjectByIDFactory $project_manager,
         private RetrieveUserById $user_manager,
         private ForceLogin $force_login,
+        private ArchiveUploadedArchive $archiver,
         private SaveUploadedArchiveForProject $archive_for_project_dao,
         private LoggerInterface $logger,
         private int $project_id,
@@ -58,6 +62,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         ProjectByIDFactory $project_manager,
         RetrieveUserById $user_manager,
         ForceLogin $force_login,
+        ArchiveUploadedArchive $archiver,
         SaveUploadedArchiveForProject $archive_for_project_dao,
     ): WorkerEventProcessor {
         $payload = $event->getPayload();
@@ -65,7 +70,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
             throw new \Exception(sprintf('Payload doesnt have project_id or project_id is not integer: %s', var_export($payload, true)));
         }
 
-        if (! isset($payload['filename']) || ! is_string($payload['filename'])) {
+        if (! isset($payload['filename']) || ! is_string($payload['filename']) || $payload['filename'] === '') {
             throw new \Exception(sprintf('Payload doesnt have filename or filename is not string: %s', var_export($payload, true)));
         }
 
@@ -79,6 +84,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
             $project_manager,
             $user_manager,
             $force_login,
+            $archiver,
             $archive_for_project_dao,
             $event->getLogger(),
             $payload['project_id'],
@@ -104,7 +110,10 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
             new ZipArchive($this->filename, \ForgeConfig::get('tmp_dir')),
         )->match(
             function () use ($project): void {
-                $this->archive_for_project_dao->save((int) $project->getID(), $this->filename);
+                $this->archive_for_project_dao->save(
+                    (int) $project->getID(),
+                    $this->archiver->archive($project, $this->filename),
+                );
                 $this->activator->activateProject($project);
                 $this->logger->info("Successfully imported archive into project #{$project->getID()}");
             },
