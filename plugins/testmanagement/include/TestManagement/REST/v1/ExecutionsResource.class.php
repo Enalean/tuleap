@@ -80,7 +80,10 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
@@ -258,25 +261,9 @@ class ExecutionsResource
         $event_dispatcher = \EventManager::instance();
 
         $changeset_creator = new NewChangesetCreator(
-            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                $this->formelement_factory,
-                new ArtifactLinkValidator(
-                    $this->artifact_factory,
-                    new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao,
-                    $event_dispatcher,
-                ),
-                new WorkflowUpdateChecker($this->getFrozenFieldDetector())
-            ),
-            $fields_retriever,
-            \EventManager::instance(),
-            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
-            new ParentLinkAction($this->artifact_factory),
             new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
-            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
-            new ChangesetValueSaver(),
             \WorkflowFactory::instance(),
             new CommentCreator(
                 new \Tracker_Artifact_Changeset_CommentDao(),
@@ -284,10 +271,32 @@ class ExecutionsResource
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new TextValueValidator(),
             ),
-            new ChangesetCommentIndexer(
-                new ItemToIndexQueueEventBased($event_dispatcher),
-                $event_dispatcher,
-                new \Tracker_Artifact_Changeset_CommentDao(),
+            new NewChangesetFieldValueSaver(
+                $fields_retriever,
+                new ChangesetValueSaver(),
+            ),
+            new NewChangesetValidator(
+                new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                    $this->formelement_factory,
+                    new ArtifactLinkValidator(
+                        $this->artifact_factory,
+                        new TypePresenterFactory(new TypeDao(), $usage_dao),
+                        $usage_dao,
+                        $event_dispatcher,
+                    ),
+                    new WorkflowUpdateChecker($this->getFrozenFieldDetector())
+                ),
+                new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
+                new ParentLinkAction($this->artifact_factory),
+            ),
+            new NewChangesetPostProcessor(
+                \EventManager::instance(),
+                ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
             ),
         );
 

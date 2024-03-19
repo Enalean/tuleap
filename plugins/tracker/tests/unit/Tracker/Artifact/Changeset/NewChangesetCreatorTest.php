@@ -24,14 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_Artifact_Changeset;
-use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_Null;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -44,7 +41,8 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuerStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\ProcessChangesetPostCreationStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\ValidateNewChangesetStub;
 
 final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -65,6 +63,8 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \ProjectUGroup[]
      */
     private array $ugroups_array;
+    private ProcessChangesetPostCreationStub $post_changeset_creation;
+    private ValidateNewChangesetStub $validate_new_changset;
 
     protected function setUp(): void
     {
@@ -114,32 +114,19 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new CreatedFileURLMapping()
         );
 
-        $fields_validator = $this->createMock(\Tracker_Artifact_Changeset_NewChangesetFieldsValidator::class);
-        $fields_validator->method('validate')->willReturn(true);
         $field_retriever = $this->createMock(FieldsToBeSavedInSpecificOrderRetriever::class);
         $field_retriever->method('getFields')->willReturn([]);
-        $field_initializator = $this->createMock(Tracker_Artifact_Changeset_ChangesetDataInitializator::class);
-        $field_initializator->method('process')->willReturn([]);
-
-        $changeset_comment_indexer = $this->createStub(ChangesetCommentIndexer::class);
-        $changeset_comment_indexer->method('indexNewChangesetComment');
 
         $reference_manager = $this->createMock(\ReferenceManager::class);
         $reference_manager->method('extractCrossRef');
-        $event_manager = $this->createMock(\EventManager::class);
-        $event_manager->method('processEvent');
+
+        $this->post_changeset_creation = ProcessChangesetPostCreationStub::init();
+        $this->validate_new_changset   = ValidateNewChangesetStub::init();
 
         $creator = new NewChangesetCreator(
-            $fields_validator,
-            $field_retriever,
-            $event_manager,
-            $field_initializator,
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
             $this->changeset_saver,
-            $this->parent_link_action,
             new AfterNewChangesetHandler($this->artifact_saver, $field_retriever),
-            PostCreationActionsQueuerStub::doNothing(),
-            new ChangesetValueSaver(),
             RetrieveWorkflowStub::withWorkflow($this->workflow),
             new CommentCreator(
                 $this->comment_dao,
@@ -147,7 +134,12 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->ugroup_private_comment_inserter,
                 new TextValueValidator(),
             ),
-            $changeset_comment_indexer,
+            new NewChangesetFieldValueSaver(
+                $field_retriever,
+                new ChangesetValueSaver(),
+            ),
+            $this->validate_new_changset,
+            $this->post_changeset_creation
         );
         $creator->create($new_changeset, PostCreationContext::withNoConfig(false));
     }
@@ -159,26 +151,9 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->comment_dao->method('createNewVersion')->willReturn(true);
 
         $this->create();
-    }
 
-    public function testItCallsTheParentLinkActionIfNoChangesDetected(): void
-    {
-        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
-        $changeset->method('hasChanges')->willReturn(false);
-
-        $tracker        = TrackerTestBuilder::aTracker()->build();
-        $this->artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->method('getLastChangeset')->willReturn($changeset);
-        $this->artifact->method('getId')->willReturn(154);
-        $this->artifact->method('getXRef')->willReturn('xRef');
-        $this->artifact->method('getTracker')->willReturn($tracker);
-
-        $this->workflow->expects(self::never())->method('after');
-        $this->changeset_saver->expects(self::never())->method('saveChangeset');
-
-        $this->parent_link_action->expects(self::once())->method('linkParent')->willReturn(true);
-
-        $this->create();
+        self::assertEquals(1, $this->post_changeset_creation->getCount());
+        self::assertEquals(1, $this->validate_new_changset->getCount());
     }
 
     public function testItDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails(): void

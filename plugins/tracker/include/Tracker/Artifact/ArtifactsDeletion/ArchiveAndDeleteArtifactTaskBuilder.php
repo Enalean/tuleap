@@ -54,7 +54,10 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
@@ -113,36 +116,9 @@ class ArchiveAndDeleteArtifactTaskBuilder
         $artifact_linker          = new ArtifactLinker(
             Tracker_FormElementFactory::instance(),
             new NewChangesetCreator(
-                new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                    $formelement_factory,
-                    new ArtifactLinkValidator(
-                        $tracker_artifact_factory,
-                        new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
-                        $artifact_links_usage_dao,
-                        $event_manager,
-                    ),
-                    new WorkflowUpdateChecker(
-                        new FrozenFieldDetector(
-                            new TransitionRetriever(
-                                new StateFactory(
-                                    TransitionFactory::instance(),
-                                    new SimpleWorkflowDao()
-                                ),
-                                new TransitionExtractor()
-                            ),
-                            FrozenFieldsRetriever::instance()
-                        )
-                    )
-                ),
-                $fields_retriever,
-                $event_manager,
-                new \Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 ArtifactChangesetSaver::build(),
-                new ParentLinkAction($tracker_artifact_factory),
                 new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever),
-                ActionsQueuer::build($logger),
-                new ChangesetValueSaver(),
                 \WorkflowFactory::instance(),
                 new CommentCreator(
                     new \Tracker_Artifact_Changeset_CommentDao(),
@@ -152,10 +128,43 @@ class ArchiveAndDeleteArtifactTaskBuilder
                     ),
                     new TextValueValidator(),
                 ),
-                new ChangesetCommentIndexer(
-                    new ItemToIndexQueueEventBased($event_manager),
+                new NewChangesetFieldValueSaver(
+                    $fields_retriever,
+                    new ChangesetValueSaver(),
+                ),
+                new NewChangesetValidator(
+                    new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                        $formelement_factory,
+                        new ArtifactLinkValidator(
+                            $tracker_artifact_factory,
+                            new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                            $artifact_links_usage_dao,
+                            $event_manager,
+                        ),
+                        new WorkflowUpdateChecker(
+                            new FrozenFieldDetector(
+                                new TransitionRetriever(
+                                    new StateFactory(
+                                        TransitionFactory::instance(),
+                                        new SimpleWorkflowDao()
+                                    ),
+                                    new TransitionExtractor()
+                                ),
+                                FrozenFieldsRetriever::instance()
+                            )
+                        )
+                    ),
+                    new \Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
+                    new ParentLinkAction($tracker_artifact_factory),
+                ),
+                new NewChangesetPostProcessor(
                     $event_manager,
-                    new \Tracker_Artifact_Changeset_CommentDao(),
+                    ActionsQueuer::build($logger),
+                    new ChangesetCommentIndexer(
+                        new ItemToIndexQueueEventBased($event_manager),
+                        $event_manager,
+                        new \Tracker_Artifact_Changeset_CommentDao(),
+                    ),
                 ),
             ),
             new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), $tracker_artifact_factory),

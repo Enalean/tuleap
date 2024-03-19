@@ -51,7 +51,10 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\MailSender;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskCollectorEvent;
@@ -362,33 +365,9 @@ final class tracker_functionsPlugin extends Plugin
 
         $artifact_factory  = Tracker_ArtifactFactory::instance();
         $changeset_creator = new NewChangesetCreator(
-            new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                $formelement_factory,
-                new ArtifactLinkValidator(
-                    $artifact_factory,
-                    new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao,
-                    $event_manager,
-                ),
-                new WorkflowUpdateChecker(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(TransitionFactory::instance(), new SimpleWorkflowDao()),
-                            new TransitionExtractor()
-                        ),
-                        FrozenFieldsRetriever::instance(),
-                    )
-                )
-            ),
-            $fields_retriever,
-            $event_manager,
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
             $transaction_executor,
             ArtifactChangesetSaver::build(),
-            new ParentLinkAction($artifact_factory),
             new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
-            ActionsQueuer::build($logger),
-            new ChangesetValueSaver(),
             WorkflowFactory::instance(),
             new CommentCreator(
                 new Tracker_Artifact_Changeset_CommentDao(),
@@ -396,10 +375,40 @@ final class tracker_functionsPlugin extends Plugin
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new TextValueValidator(),
             ),
-            new ChangesetCommentIndexer(
-                new ItemToIndexQueueEventBased($event_manager),
+            new NewChangesetFieldValueSaver(
+                $fields_retriever,
+                new ChangesetValueSaver(),
+            ),
+            new NewChangesetValidator(
+                new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                    $formelement_factory,
+                    new ArtifactLinkValidator(
+                        $artifact_factory,
+                        new TypePresenterFactory(new TypeDao(), $usage_dao),
+                        $usage_dao,
+                        $event_manager,
+                    ),
+                    new WorkflowUpdateChecker(
+                        new FrozenFieldDetector(
+                            new TransitionRetriever(
+                                new StateFactory(TransitionFactory::instance(), new SimpleWorkflowDao()),
+                                new TransitionExtractor()
+                            ),
+                            FrozenFieldsRetriever::instance(),
+                        )
+                    )
+                ),
+                new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
+                new ParentLinkAction($artifact_factory),
+            ),
+            new NewChangesetPostProcessor(
                 $event_manager,
-                new Tracker_Artifact_Changeset_CommentDao(),
+                ActionsQueuer::build($logger),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    new Tracker_Artifact_Changeset_CommentDao(),
+                ),
             ),
         );
 

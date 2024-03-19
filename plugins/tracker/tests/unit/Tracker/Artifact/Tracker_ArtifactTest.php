@@ -42,7 +42,10 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
@@ -235,19 +238,12 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $changeset_comment_indexer->method('indexNewChangesetComment');
 
         $creator = new NewChangesetCreator(
-            $fields_validator,
-            $fields_retriever,
-            \Mockery::spy(\EventManager::class),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory),
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
             $artifact_saver,
-            Mockery::mock(ParentLinkAction::class),
             new AfterNewChangesetHandler(
                 SaveArtifactStub::withSuccess(),
                 $fields_retriever,
             ),
-            PostCreationActionsQueuerStub::doNothing(),
-            new ChangesetValueSaver(),
             RetrieveWorkflowStub::withWorkflow($workflow),
             new CommentCreator(
                 $comment_dao,
@@ -255,7 +251,20 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
                 Mockery::spy(TrackerPrivateCommentUGroupPermissionInserter::class),
                 new TextValueValidator(),
             ),
-            $changeset_comment_indexer,
+            new NewChangesetFieldValueSaver(
+                $fields_retriever,
+                new ChangesetValueSaver(),
+            ),
+            new NewChangesetValidator(
+                $fields_validator,
+                new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory),
+                Mockery::mock(ParentLinkAction::class),
+            ),
+            new NewChangesetPostProcessor(
+                \Mockery::spy(\EventManager::class),
+                PostCreationActionsQueuerStub::doNothing(),
+                $changeset_comment_indexer,
+            ),
         );
         $creator->create($changeset_creation, PostCreationContext::withNoConfig(false));
     }
