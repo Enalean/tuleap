@@ -196,6 +196,66 @@ final class TrackerDatabaseBuilder
         return $tracker_field_id;
     }
 
+    public function buildSubmittedOnField(int $tracker_id): int
+    {
+        return (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id'       => $tracker_id,
+                'formElement_type' => 'subon',
+                'name'             => 'submitted_on',
+                'label'            => 'Submitted On',
+                'use_it'           => true,
+                'scope'            => "P",
+            ]
+        );
+    }
+
+    public function buildLastUpdateDateField(int $tracker_id): int
+    {
+        return (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id'       => $tracker_id,
+                'formElement_type' => 'lud',
+                'name'             => 'last_update',
+                'label'            => 'Last Update',
+                'use_it'           => true,
+                'scope'            => "P",
+            ]
+        );
+    }
+
+    public function buildSubmittedByField(int $tracker_id): int
+    {
+        return (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id'       => $tracker_id,
+                'formElement_type' => 'subby',
+                'name'             => 'submitted_by',
+                'label'            => 'Submitted By',
+                'use_it'           => true,
+                'scope'            => "P",
+            ]
+        );
+    }
+
+    public function buildLastUpdateByField(int $tracker_id): int
+    {
+        return (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id'       => $tracker_id,
+                'formElement_type' => 'luby',
+                'name'             => 'last_update_by',
+                'label'            => 'Last Update By',
+                'use_it'           => true,
+                'scope'            => "P",
+            ]
+        );
+    }
+
     public function setReadPermission(int $field_id, int $user_group_id): void
     {
         $this->db->insert(
@@ -208,29 +268,29 @@ final class TrackerDatabaseBuilder
         );
     }
 
-    public function buildArtifact(int $tracker_id): int
+    public function buildArtifact(int $tracker_id, int $submitted_on = 1234567890, int $submitted_by = 143): int
     {
         return (int) $this->db->insertReturnId(
             'tracker_artifact',
             [
                 'tracker_id'               => $tracker_id,
                 'last_changeset_id'        => -1,
-                'submitted_by'             => 143,
-                'submitted_on'             => 1234567890,
+                'submitted_by'             => $submitted_by,
+                'submitted_on'             => $submitted_on,
                 'use_artifact_permissions' => 0,
                 'per_tracker_artifact_id'  => 1,
             ]
         );
     }
 
-    public function buildLastChangeset(int $artifact_id): int
+    public function buildLastChangeset(int $artifact_id, int $submitted_on = 0, int $submitted_by = 101): int
     {
         $artifact_changeset_id = (int) $this->db->insertReturnId(
             'tracker_changeset',
             [
                 'artifact_id'  => $artifact_id,
-                'submitted_by' => 143,
-                'submitted_on' => 1234567890,
+                'submitted_by' => $submitted_by,
+                'submitted_on' => $submitted_on,
             ]
         );
 
