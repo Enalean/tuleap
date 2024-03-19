@@ -80,4 +80,9 @@ reason = "@vue/component-compiler-utils will be removed when the Vue 2 migration
 
 ### TO BE FIXED
 
-# Nothing right now
+# tuleap-mercure
+## gopkg.in/go-jose/go-jose.v2
+[[IgnoredVulns]]
+id = "GO-2024-2631" # CVE-2024-28180
+reason = "No JWE in Tuleap use case and upstreams need to sort out the issue in their dep trees."
+ignoreUntil = 2024-05-19
