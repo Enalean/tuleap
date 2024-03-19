@@ -109,12 +109,12 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
             (int) $project->getID(),
             new ZipArchive($this->filename, \ForgeConfig::get('tmp_dir')),
         )->match(
-            function () use ($project): void {
+            function () use ($project, $user): void {
                 $this->archive_for_project_dao->save(
                     (int) $project->getID(),
                     $this->archiver->archive($project, $this->filename),
                 );
-                $this->activator->activateProject($project);
+                $this->activator->activateProject($project, $user);
                 $this->logger->info("Successfully imported archive into project #{$project->getID()}");
             },
             function (Fault $fault) use ($project): void {

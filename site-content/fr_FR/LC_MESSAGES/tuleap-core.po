@@ -2580,6 +2580,10 @@ msgid "Project"
 msgstr "Projet"
 
 #, php-format
+msgid "Project \"%s\" imported"
+msgstr "Projet \"%s\" importé"
+
+#, php-format
 msgid "Project #%d is not active."
 msgstr "Le project #%d n'est pas actif."
 
@@ -3569,6 +3573,9 @@ msgstr "La politique des mots de passe a correctement été mise à jour."
 msgid "The platform mandates a license agreement, none given"
 msgstr ""
 "La plateforme impose la selection d'une license, aucune n'a été fournit"
+
+msgid "The project \"%s\" has just been successfully imported."
+msgstr "Le projet \"%s\" vient juste d'être importé avec succès."
 
 #, php-format
 msgid ""
@@ -4891,6 +4898,10 @@ msgstr ""
 "Vous recevrez désormais un courrier électronique pour chaque message posté "
 "sur ce forum."
 
+msgid "You will receive an email when the project is approved."
+msgstr ""
+"Vous allez recevoir un courrier électronique lorsque le projet sera approuvé."
+
 msgid "You're about to withdraw %s invitation from this project."
 msgstr "Vous êtes sur le point d'annuler l'invitation de %s pour ce projet."
 
@@ -4966,6 +4977,9 @@ msgstr "Position dans le forum sauvegardée"
 
 msgid "Your platform does not allow restricted users."
 msgstr "Votre plateforme n’autorise pas les utilisateurs restreints."
+
+msgid "Your project has been submitted to the administrators for validation."
+msgstr "Votre projet a été soumis aux administrateurs pour validation."
 
 msgid "Your request is invalid"
 msgstr "Votre requête n'est pas valide"

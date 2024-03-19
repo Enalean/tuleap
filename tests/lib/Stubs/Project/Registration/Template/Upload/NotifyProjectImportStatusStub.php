@@ -18,11 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Registration\Template\Upload;
+declare(strict_types=1);
 
-use Project;
+namespace Tuleap\Test\Stubs\Project\Registration\Template\Upload;
 
-interface ActivateProjectAfterArchiveImport
+use Tuleap\Project\Registration\Template\Upload\NotifyProjectImportStatus;
+
+final class NotifyProjectImportStatusStub implements NotifyProjectImportStatus
 {
-    public function activateProject(Project $project, \PFUser $project_admin): void;
+    private bool $notified = false;
+
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function notify(\Project $project, \PFUser $project_admin): void
+    {
+        $this->notified = true;
+    }
+
+    public function isCalled(): bool
+    {
+        return $this->notified;
+    }
 }
