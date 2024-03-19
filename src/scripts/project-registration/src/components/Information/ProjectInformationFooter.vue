@@ -37,7 +37,7 @@
                     type="submit"
                     class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
                     data-test="project-registration-next-button"
-                    v-bind:disabled="root_store.is_creating_project"
+                    v-bind:disabled="root_store.is_creating_project && !root_store.has_error"
                 >
                     <span>{{ $gettext("Start my project") }}</span>
                     <i v-bind:class="get_icon" data-test="project-submission-icon" />

@@ -110,6 +110,7 @@ export const useStore = defineStore("root", {
                 if (error instanceof FetchWrapperError) {
                     await this.handleError(error);
                 }
+                this.setIsCreatingProject(false);
                 throw error;
             }
             return response;
@@ -151,7 +152,6 @@ export const useStore = defineStore("root", {
         },
 
         setIsCreatingProject(is_creating_project: boolean): void {
-            this.error = null;
             this.is_creating_project = is_creating_project;
         },
 
