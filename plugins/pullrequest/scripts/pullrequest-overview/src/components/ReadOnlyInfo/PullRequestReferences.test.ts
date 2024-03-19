@@ -17,13 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
-import { mount } from "@vue/test-utils";
-import PullRequestReferences from "./PullRequestReferences.vue";
+import { describe, beforeEach, it, expect, vi } from "vitest";
+import { mount, shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
+import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
+import type { PullRequest, PullRequestRepository } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import PullRequestReferences from "./PullRequestReferences.vue";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+import { CURRENT_REPOSITORY_ID } from "../../constants";
+
+vi.mock("@tuleap/vue-strict-inject");
+
+const current_repository_id = 5;
 
 describe("PullRequestReferences", () => {
+    beforeEach(() => {
+        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
+            if (key !== CURRENT_REPOSITORY_ID) {
+                throw new Error("Tried to strictInject a value while it was not mocked");
+            }
+
+            return current_repository_id;
+        });
+    });
+
     it("should display a skeleton while the pull request is loading, and the references when finished", async () => {
         const wrapper = mount(PullRequestReferences, {
             global: {
@@ -38,30 +56,115 @@ describe("PullRequestReferences", () => {
         expect(wrapper.find("[data-test=pullrequest-source-reference]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pull-request-source-destination]").exists()).toBe(false);
 
-        const pull_request_info = {
+        const repository = {
+            id: current_repository_id,
+        } as PullRequestRepository;
+
+        const pull_request_info = PullRequestStub.buildOpenPullRequest({
             reference_src: "a1e2i3o4u5y6",
             branch_src: "vowels-and-numbers",
             branch_dest: "master",
-        } as PullRequest;
+            repository,
+            repository_dest: repository,
+        });
 
-        wrapper.setProps({
+        await wrapper.setProps({
             pull_request_info,
         });
 
-        await wrapper.vm.$nextTick();
-
         const source_reference = wrapper.find("[data-test=pullrequest-source-reference]");
-        const source_destination = wrapper.find("[data-test=pull-request-source-destination]");
 
         expect(wrapper.findAll("[data-test=pullrequest-property-skeleton]")).toHaveLength(0);
         expect(source_reference.exists()).toBe(true);
         expect(source_reference.text()).toBe("a1e2i3o4u5y6");
-        expect(source_destination.exists()).toBe(true);
-        expect(source_destination.element.textContent ?? "").toContain(
+        expect(wrapper.find("[data-test=pull-request-source-destination]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=pull-request-source-branch]").text()).toBe(
             pull_request_info.branch_src,
         );
-        expect(source_destination.element.textContent ?? "").toContain(
+        expect(wrapper.find("[data-test=pull-request-destination-branch]").text()).toBe(
             pull_request_info.branch_dest,
         );
+    });
+
+    describe("Branches references", () => {
+        let pull_request_info: PullRequest;
+
+        const getWrapper = (): VueWrapper =>
+            shallowMount(PullRequestReferences, {
+                global: {
+                    ...getGlobalTestOptions(),
+                },
+                props: {
+                    pull_request_info,
+                },
+            });
+
+        beforeEach(() => {
+            pull_request_info = PullRequestStub.buildOpenPullRequest();
+        });
+
+        it(`When the source repository is different than the current repository
+            Then its source branch name should be prefixed with its source repository name`, () => {
+            pull_request_info = PullRequestStub.buildOpenPullRequest({
+                branch_src: "a-nice-feature",
+                repository: {
+                    id: 15,
+                    name: "u/jdoe/cool-features",
+                } as PullRequestRepository,
+            });
+
+            const source_branch = getWrapper().find("[data-test=pull-request-source-branch]");
+
+            expect(source_branch.text()).toBe("u/jdoe/cool-features:a-nice-feature");
+        });
+
+        it(`When the source repository is the current repository
+            Then its source branch name should NOT be prefixed with its source repository name`, () => {
+            pull_request_info = PullRequestStub.buildOpenPullRequest({
+                branch_src: "a-nice-feature",
+                repository: {
+                    id: current_repository_id,
+                    name: "u/jdoe/cool-features",
+                } as PullRequestRepository,
+            });
+
+            const source_branch = getWrapper().find("[data-test=pull-request-source-branch]");
+
+            expect(source_branch.text()).toBe("a-nice-feature");
+        });
+
+        it(`When the destination repository is different than the current repository
+            Then its destination branch name should be prefixed with its destination repository name`, () => {
+            pull_request_info = PullRequestStub.buildOpenPullRequest({
+                branch_dest: "master",
+                repository_dest: {
+                    id: 15,
+                    name: "cool-features",
+                } as PullRequestRepository,
+            });
+
+            const destination_branch = getWrapper().find(
+                "[data-test=pull-request-destination-branch]",
+            );
+
+            expect(destination_branch.text()).toBe("cool-features:master");
+        });
+
+        it(`When the destination repository is the current repository
+            Then its destination branch name should NOT be prefixed with its destination repository name`, () => {
+            pull_request_info = PullRequestStub.buildOpenPullRequest({
+                branch_dest: "master",
+                repository_dest: {
+                    id: current_repository_id,
+                    name: "cool-features",
+                } as PullRequestRepository,
+            });
+
+            const destination_branch = getWrapper().find(
+                "[data-test=pull-request-destination-branch]",
+            );
+
+            expect(destination_branch.text()).toBe("master");
+        });
     });
 });

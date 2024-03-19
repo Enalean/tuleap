@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@tuleap/copy-to-clipboard':
     specifier: workspace:*
@@ -35,6 +31,9 @@ dependencies:
   '@tuleap/plugin-pullrequest-rest-api-types':
     specifier: workspace:*
     version: link:../lib/rest-api-types
+  '@tuleap/plugin-pullrequest-stub':
+    specifier: workspace:*
+    version: link:../lib/pull-request-stub
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-dropdown
@@ -798,3 +797,7 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
     dev: false
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false

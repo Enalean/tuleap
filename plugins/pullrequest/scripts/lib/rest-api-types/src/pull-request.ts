@@ -34,6 +34,14 @@ export interface PullRequestStatusInfo {
     readonly status_updater: User;
 }
 
+export type PullRequestRepository = {
+    readonly id: number;
+    readonly name: string;
+    readonly project: ProjectReference;
+    readonly clone_http_url: string;
+    readonly clone_ssh_url: string;
+};
+
 interface CommonPullRequest {
     readonly id: number;
     readonly title: string;
@@ -47,13 +55,11 @@ interface CommonPullRequest {
     readonly reference_dest: string;
     readonly branch_src: string;
     readonly branch_dest: string;
+    readonly repository: PullRequestRepository;
+    readonly repository_dest: PullRequestRepository;
     readonly last_build_status: BuildStatus;
     readonly last_build_date: string;
     readonly user_id: number;
-    readonly repository_dest: {
-        readonly clone_http_url: string;
-        readonly clone_ssh_url: string;
-    };
     readonly head_reference: string;
     readonly description: string;
     readonly post_processed_description: string;
@@ -67,9 +73,6 @@ interface CommonPullRequest {
     readonly status: PullRequestStatusType;
     readonly merge_status: PullRequestMergeStatusType;
     readonly status_info: PullRequestStatusInfo | null;
-    readonly repository: {
-        readonly project: ProjectReference;
-    };
     readonly is_git_reference_broken: boolean;
     readonly creator: User;
     readonly reviewers: readonly User[];
