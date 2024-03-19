@@ -116,7 +116,7 @@ final class ArtifactReportFactoryInstantiator
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
         $ugroup_label_converter           = new UgroupLabelConverter(
             $list_field_bind_value_normalizer,
-            new \BaseLanguageFactory()
+            new BaseLanguageFactory()
         );
         $bind_labels_extractor            = new CollectionOfNormalizedBindLabelsExtractor(
             $list_field_bind_value_normalizer,
@@ -192,156 +192,6 @@ final class ArtifactReportFactoryInstantiator
         $field_from_where_builder = new Field\ListFromWhereBuilder();
         $query_builder_visitor    = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
-            new Metadata\EqualComparisonFromWhereBuilder(
-                new Title\EqualComparisonFromWhereBuilder(),
-                new Description\EqualComparisonFromWhereBuilder(),
-                new Status\EqualComparisonFromWhereBuilder(),
-                new Date\EqualComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $submitted_on_alias_field
-                ),
-                new Date\EqualComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $last_update_date_alias_field
-                ),
-                new Users\EqualComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager,
-                    $submitted_by_alias_field
-                ),
-                new Users\EqualComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager,
-                    $last_update_by_alias_field
-                ),
-                new Metadata\Semantic\AssignedTo\EqualComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager
-                )
-            ),
-            new Metadata\NotEqualComparisonFromWhereBuilder(
-                new Title\NotEqualComparisonFromWhereBuilder(),
-                new Description\NotEqualComparisonFromWhereBuilder(),
-                new Status\NotEqualComparisonFromWhereBuilder(),
-                new Date\NotEqualComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $submitted_on_alias_field
-                ),
-                new Date\NotEqualComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $last_update_date_alias_field
-                ),
-                new Users\NotEqualComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager,
-                    $submitted_by_alias_field
-                ),
-                new Users\NotEqualComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager,
-                    $last_update_by_alias_field
-                ),
-                new AssignedTo\NotEqualComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager
-                )
-            ),
-            new Metadata\GreaterThanComparisonFromWhereBuilder(
-                new Date\GreaterThanComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $submitted_on_alias_field
-                ),
-                new Date\GreaterThanComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $last_update_date_alias_field
-                )
-            ),
-            new Metadata\GreaterThanOrEqualComparisonFromWhereBuilder(
-                new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $submitted_on_alias_field
-                ),
-                new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $last_update_date_alias_field
-                )
-            ),
-            new Metadata\LesserThanComparisonFromWhereBuilder(
-                new Date\LesserThanComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $submitted_on_alias_field
-                ),
-                new Date\LesserThanComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $last_update_date_alias_field
-                )
-            ),
-            new Metadata\LesserThanOrEqualComparisonFromWhereBuilder(
-                new Date\LesserThanOrEqualComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $submitted_on_alias_field
-                ),
-                new Date\LesserThanOrEqualComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $last_update_date_alias_field
-                )
-            ),
-            new Metadata\BetweenComparisonFromWhereBuilder(
-                new Date\BetweenComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $submitted_on_alias_field
-                ),
-                new Date\BetweenComparisonFromWhereBuilder(
-                    $date_value_extractor,
-                    $date_time_value_rounder,
-                    $last_update_date_alias_field
-                )
-            ),
-            new Metadata\InComparisonFromWhereBuilder(
-                new Users\InComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager,
-                    $submitted_by_alias_field
-                ),
-                new Users\InComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager,
-                    $last_update_by_alias_field
-                ),
-                new AssignedTo\InComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager
-                )
-            ),
-            new Metadata\NotInComparisonFromWhereBuilder(
-                new Users\NotInComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager,
-                    $submitted_by_alias_field
-                ),
-                new Users\NotInComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager,
-                    $last_update_by_alias_field
-                ),
-                new AssignedTo\NotInComparisonFromWhereBuilder(
-                    $list_value_extractor,
-                    $user_manager
-                )
-            ),
             new ReverseLinkFromWhereBuilder($artifact_factory),
             new ForwardLinkFromWhereBuilder($artifact_factory),
             new Field\FieldFromWhereBuilder(
@@ -357,6 +207,158 @@ final class ArtifactReportFactoryInstantiator
                     $field_from_where_builder,
                 ),
                 new Field\UserList\UserListFromWhereBuilder($field_from_where_builder),
+            ),
+            new Metadata\MetadataFromWhereBuilder(
+                new Metadata\EqualComparisonFromWhereBuilder(
+                    new Title\EqualComparisonFromWhereBuilder(),
+                    new Description\EqualComparisonFromWhereBuilder(),
+                    new Status\EqualComparisonFromWhereBuilder(),
+                    new Date\EqualComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $submitted_on_alias_field
+                    ),
+                    new Date\EqualComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $last_update_date_alias_field
+                    ),
+                    new Users\EqualComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager,
+                        $submitted_by_alias_field
+                    ),
+                    new Users\EqualComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager,
+                        $last_update_by_alias_field
+                    ),
+                    new Metadata\Semantic\AssignedTo\EqualComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager
+                    )
+                ),
+                new Metadata\NotEqualComparisonFromWhereBuilder(
+                    new Title\NotEqualComparisonFromWhereBuilder(),
+                    new Description\NotEqualComparisonFromWhereBuilder(),
+                    new Status\NotEqualComparisonFromWhereBuilder(),
+                    new Date\NotEqualComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $submitted_on_alias_field
+                    ),
+                    new Date\NotEqualComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $last_update_date_alias_field
+                    ),
+                    new Users\NotEqualComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager,
+                        $submitted_by_alias_field
+                    ),
+                    new Users\NotEqualComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager,
+                        $last_update_by_alias_field
+                    ),
+                    new AssignedTo\NotEqualComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager
+                    )
+                ),
+                new Metadata\GreaterThanComparisonFromWhereBuilder(
+                    new Date\GreaterThanComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $submitted_on_alias_field
+                    ),
+                    new Date\GreaterThanComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $last_update_date_alias_field
+                    )
+                ),
+                new Metadata\GreaterThanOrEqualComparisonFromWhereBuilder(
+                    new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $submitted_on_alias_field
+                    ),
+                    new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $last_update_date_alias_field
+                    )
+                ),
+                new Metadata\LesserThanComparisonFromWhereBuilder(
+                    new Date\LesserThanComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $submitted_on_alias_field
+                    ),
+                    new Date\LesserThanComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $last_update_date_alias_field
+                    )
+                ),
+                new Metadata\LesserThanOrEqualComparisonFromWhereBuilder(
+                    new Date\LesserThanOrEqualComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $submitted_on_alias_field
+                    ),
+                    new Date\LesserThanOrEqualComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $last_update_date_alias_field
+                    )
+                ),
+                new Metadata\BetweenComparisonFromWhereBuilder(
+                    new Date\BetweenComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $submitted_on_alias_field
+                    ),
+                    new Date\BetweenComparisonFromWhereBuilder(
+                        $date_value_extractor,
+                        $date_time_value_rounder,
+                        $last_update_date_alias_field
+                    )
+                ),
+                new Metadata\InComparisonFromWhereBuilder(
+                    new Users\InComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager,
+                        $submitted_by_alias_field
+                    ),
+                    new Users\InComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager,
+                        $last_update_by_alias_field
+                    ),
+                    new AssignedTo\InComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager
+                    )
+                ),
+                new Metadata\NotInComparisonFromWhereBuilder(
+                    new Users\NotInComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager,
+                        $submitted_by_alias_field
+                    ),
+                    new Users\NotInComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager,
+                        $last_update_by_alias_field
+                    ),
+                    new AssignedTo\NotInComparisonFromWhereBuilder(
+                        $list_value_extractor,
+                        $user_manager
+                    )
+                ),
             ),
         );
 
