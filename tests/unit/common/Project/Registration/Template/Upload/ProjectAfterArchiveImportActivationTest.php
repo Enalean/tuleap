@@ -24,9 +24,11 @@ namespace Tuleap\Project\Registration\Template\Upload;
 
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\Project\ActivateProjectStub;
 use Tuleap\Test\Stubs\Project\NotifySiteAdminStub;
+use Tuleap\Test\Stubs\Project\Registration\Template\Upload\NotifyProjectImportStatusStub;
 
 final class ProjectAfterArchiveImportActivationTest extends TestCase
 {
@@ -42,19 +44,25 @@ final class ProjectAfterArchiveImportActivationTest extends TestCase
             ->method('updateStatus')
             ->with(self::PROJECT_ID, \Project::STATUS_PENDING);
 
-        $site_admin_notifier = NotifySiteAdminStub::build();
+        $site_admin_notifier    = NotifySiteAdminStub::build();
+        $project_admin_notifier = NotifyProjectImportStatusStub::build();
 
         $project_manager = ActivateProjectStub::build();
 
         $activator = new ProjectAfterArchiveImportActivation(
             $project_dao,
             $site_admin_notifier,
+            $project_admin_notifier,
             $project_manager,
         );
 
-        $activator->activateProject(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build());
+        $activator->activateProject(
+            ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build(),
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertTrue($site_admin_notifier->isCalled());
+        self::assertTrue($project_admin_notifier->isCalled());
         self::assertFalse($project_manager->isActivateWithNotificationsCalled());
         self::assertFalse($project_manager->isActivateWithoutNotificationsCalled());
     }
@@ -69,19 +77,25 @@ final class ProjectAfterArchiveImportActivationTest extends TestCase
             ->method('updateStatus')
             ->with(self::PROJECT_ID, \Project::STATUS_PENDING);
 
-        $site_admin_notifier = NotifySiteAdminStub::build();
+        $site_admin_notifier    = NotifySiteAdminStub::build();
+        $project_admin_notifier = NotifyProjectImportStatusStub::build();
 
         $project_manager = ActivateProjectStub::build();
 
         $activator = new ProjectAfterArchiveImportActivation(
             $project_dao,
             $site_admin_notifier,
+            $project_admin_notifier,
             $project_manager,
         );
 
-        $activator->activateProject(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build());
+        $activator->activateProject(
+            ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build(),
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertTrue($site_admin_notifier->isCalled());
+        self::assertTrue($project_admin_notifier->isCalled());
         self::assertFalse($project_manager->isActivateWithNotificationsCalled());
         self::assertFalse($project_manager->isActivateWithoutNotificationsCalled());
     }
@@ -95,19 +109,25 @@ final class ProjectAfterArchiveImportActivationTest extends TestCase
             ->expects(self::never())
             ->method('updateStatus');
 
-        $site_admin_notifier = NotifySiteAdminStub::build();
+        $site_admin_notifier    = NotifySiteAdminStub::build();
+        $project_admin_notifier = NotifyProjectImportStatusStub::build();
 
         $project_manager = ActivateProjectStub::build();
 
         $activator = new ProjectAfterArchiveImportActivation(
             $project_dao,
             $site_admin_notifier,
+            $project_admin_notifier,
             $project_manager,
         );
 
-        $activator->activateProject(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build());
+        $activator->activateProject(
+            ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build(),
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertTrue($site_admin_notifier->isCalled());
+        self::assertFalse($project_admin_notifier->isCalled());
         self::assertTrue($project_manager->isActivateWithNotificationsCalled());
         self::assertFalse($project_manager->isActivateWithoutNotificationsCalled());
     }

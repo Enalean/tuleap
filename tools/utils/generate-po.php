@@ -114,6 +114,7 @@ if (! $plugin) {
             "$basedir/src/themes/FlamingParrot/templates",
             "$basedir/src/common/FRS",
             "$basedir/src/common/User",
+            "$basedir/src/common/Project",
         ],
         $mustache_template
     );

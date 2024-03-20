@@ -30,6 +30,7 @@ use Tuleap\Option\Option;
 use Tuleap\Project\ProjectCreationNotifier;
 use Tuleap\Project\Registration\Template\Upload\ExtractArchiveAndCreateProject;
 use Tuleap\Project\Registration\Template\Upload\ProjectAfterArchiveImportActivation;
+use Tuleap\Project\Registration\Template\Upload\ProjectImportStatusNotifier;
 use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectArchiver;
 use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectDao;
 use TuleapRegisterMail;
@@ -42,6 +43,7 @@ final readonly class WorkerEventProcessorFinder implements FindWorkerEventProces
     {
         $project_manager = \ProjectManager::instance();
         $user_manager    = UserManager::instance();
+        $locale_switcher = new LocaleSwitcher();
 
         return match ($worker_event->getEventName()) {
             ExtractArchiveAndCreateProject::TOPIC =>
@@ -61,11 +63,12 @@ final readonly class WorkerEventProcessorFinder implements FindWorkerEventProces
                                         ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
                                     ),
                                     $user_manager,
-                                    new LocaleSwitcher(),
+                                    $locale_switcher,
                                     "mail-project-register-admin"
                                 ),
                                 $worker_event->getLogger(),
                             ),
+                            new ProjectImportStatusNotifier($worker_event->getLogger(), $locale_switcher),
                             $project_manager,
                         ),
                         $project_manager,

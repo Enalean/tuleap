@@ -20,9 +20,7 @@
 
 namespace Tuleap\Project\Registration\Template\Upload;
 
-use Project;
-
-interface ActivateProjectAfterArchiveImport
+interface NotifyProjectImportStatus
 {
-    public function activateProject(Project $project, \PFUser $project_admin): void;
+    public function notify(\Project $project, \PFUser $project_admin): void;
 }

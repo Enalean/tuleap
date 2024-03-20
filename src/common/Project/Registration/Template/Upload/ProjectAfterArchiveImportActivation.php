@@ -31,15 +31,17 @@ final readonly class ProjectAfterArchiveImportActivation implements ActivateProj
     public function __construct(
         private \ProjectDao $project_dao,
         private NotifySiteAdmin $site_admin_notifier,
+        private NotifyProjectImportStatus $notify_project_import_status,
         private ActivateProject $project_manager,
     ) {
     }
 
-    public function activateProject(Project $project): void
+    public function activateProject(Project $project, \PFUser $project_admin): void
     {
         if ($this->shouldProjectBeApprovedByAdmin()) {
             $this->project_dao->updateStatus($project->getID(), Project::STATUS_PENDING);
             $this->site_admin_notifier->notifySiteAdmin($project);
+            $this->notify_project_import_status->notify($project, $project_admin);
             return;
         }
 
