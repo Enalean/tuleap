@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
@@ -32,6 +33,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
@@ -58,22 +60,14 @@ use Tuleap\Tracker\Report\Query\ParametrizedOrFromWhere;
  * @template-implements LogicalVisitor<QueryBuilderVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
  * @template-implements TermVisitor<QueryBuilderVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
  */
-final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
+final readonly class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 {
     public function __construct(
-        private readonly FromWhereSearchableVisitor $searchable_visitor,
-        private readonly Metadata\EqualComparisonFromWhereBuilder $metadata_equal_builder,
-        private readonly Metadata\NotEqualComparisonFromWhereBuilder $metadata_not_equal_builder,
-        private readonly Metadata\GreaterThanComparisonFromWhereBuilder $metadata_greater_than_builder,
-        private readonly Metadata\GreaterThanOrEqualComparisonFromWhereBuilder $metadata_greater_than_or_equal_builder,
-        private readonly Metadata\LesserThanComparisonFromWhereBuilder $metadata_lesser_than_builder,
-        private readonly Metadata\LesserThanOrEqualComparisonFromWhereBuilder $metadata_lesser_than_or_equal_builder,
-        private readonly Metadata\BetweenComparisonFromWhereBuilder $metadata_between_builder,
-        private readonly Metadata\InComparisonFromWhereBuilder $metadata_in_builder,
-        private readonly Metadata\NotInComparisonFromWhereBuilder $metadata_not_in_builder,
-        private readonly ReverseLinkFromWhereBuilder $reverse_link_from_where_builder,
-        private readonly ForwardLinkFromWhereBuilder $forward_link_from_where_builder,
-        private readonly Field\FieldFromWhereBuilder $field_from_where_builder,
+        private FromWhereSearchableVisitor $searchable_visitor,
+        private ReverseLinkFromWhereBuilder $reverse_link_from_where_builder,
+        private ForwardLinkFromWhereBuilder $forward_link_from_where_builder,
+        private Field\FieldFromWhereBuilder $field_from_where_builder,
+        private Metadata\MetadataFromWhereBuilder $metadata_from_where_builder,
     ) {
     }
 
@@ -83,142 +77,67 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
     public function buildFromWhere(
         Logical $parsed_query,
         array $trackers,
-        \PFUser $user,
+        PFUser $user,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         return $parsed_query->acceptLogicalVisitor($this, new QueryBuilderVisitorParameters($trackers, $user));
     }
 
     public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
-        return $comparison->getSearchable()->acceptSearchableVisitor(
-            $this->searchable_visitor,
-            new FromWhereSearchableVisitorParameters(
-                $comparison,
-                $this->metadata_equal_builder,
-                $this->field_from_where_builder,
-                $parameters->user,
-                $parameters->trackers
-            )
-        );
+        return $this->visitComparison($comparison, $parameters);
     }
 
     public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
-        return $comparison->getSearchable()->acceptSearchableVisitor(
-            $this->searchable_visitor,
-            new FromWhereSearchableVisitorParameters(
-                $comparison,
-                $this->metadata_not_equal_builder,
-                $this->field_from_where_builder,
-                $parameters->user,
-                $parameters->trackers
-            )
-        );
+        return $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitLesserThanComparison(
-        LesserThanComparison $comparison,
-        $parameters,
-    ) {
-        return $comparison->getSearchable()->acceptSearchableVisitor(
-            $this->searchable_visitor,
-            new FromWhereSearchableVisitorParameters(
-                $comparison,
-                $this->metadata_lesser_than_builder,
-                $this->field_from_where_builder,
-                $parameters->user,
-                $parameters->trackers
-            )
-        );
+    public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
+    {
+        return $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitGreaterThanComparison(
-        GreaterThanComparison $comparison,
-        $parameters,
-    ) {
-        return $comparison->getSearchable()->acceptSearchableVisitor(
-            $this->searchable_visitor,
-            new FromWhereSearchableVisitorParameters(
-                $comparison,
-                $this->metadata_greater_than_builder,
-                $this->field_from_where_builder,
-                $parameters->user,
-                $parameters->trackers
-            )
-        );
+    public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
+    {
+        return $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitLesserThanOrEqualComparison(
-        LesserThanOrEqualComparison $comparison,
-        $parameters,
-    ) {
-        return $comparison->getSearchable()->acceptSearchableVisitor(
-            $this->searchable_visitor,
-            new FromWhereSearchableVisitorParameters(
-                $comparison,
-                $this->metadata_lesser_than_or_equal_builder,
-                $this->field_from_where_builder,
-                $parameters->user,
-                $parameters->trackers
-            )
-        );
+    public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
+    {
+        return $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitGreaterThanOrEqualComparison(
-        GreaterThanOrEqualComparison $comparison,
-        $parameters,
-    ) {
-        return $comparison->getSearchable()->acceptSearchableVisitor(
-            $this->searchable_visitor,
-            new FromWhereSearchableVisitorParameters(
-                $comparison,
-                $this->metadata_greater_than_or_equal_builder,
-                $this->field_from_where_builder,
-                $parameters->user,
-                $parameters->trackers
-            )
-        );
+    public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
+    {
+        return $this->visitComparison($comparison, $parameters);
     }
 
     public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
-        return $comparison->getSearchable()->acceptSearchableVisitor(
-            $this->searchable_visitor,
-            new FromWhereSearchableVisitorParameters(
-                $comparison,
-                $this->metadata_between_builder,
-                $this->field_from_where_builder,
-                $parameters->user,
-                $parameters->trackers
-            )
-        );
+        return $this->visitComparison($comparison, $parameters);
     }
 
     public function visitInComparison(InComparison $comparison, $parameters)
     {
-        return $comparison->getSearchable()->acceptSearchableVisitor(
-            $this->searchable_visitor,
-            new FromWhereSearchableVisitorParameters(
-                $comparison,
-                $this->metadata_in_builder,
-                $this->field_from_where_builder,
-                $parameters->user,
-                $parameters->trackers
-            )
-        );
+        return $this->visitComparison($comparison, $parameters);
     }
 
     public function visitNotInComparison(NotInComparison $comparison, $parameters)
+    {
+        return $this->visitComparison($comparison, $parameters);
+    }
+
+    private function visitComparison(Comparison $comparison, QueryBuilderVisitorParameters $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
             new FromWhereSearchableVisitorParameters(
                 $comparison,
-                $this->metadata_not_in_builder,
+                $this->metadata_from_where_builder,
                 $this->field_from_where_builder,
                 $parameters->user,
-                $parameters->trackers
-            )
+                $parameters->trackers,
+            ),
         );
     }
 
