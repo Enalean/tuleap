@@ -43,7 +43,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExt
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
@@ -292,7 +291,6 @@ class crosstrackerPlugin extends Plugin
             ),
             new Metadata\MetadataFromWhereBuilder(
                 new Metadata\EqualComparisonFromWhereBuilder(
-                    new Title\EqualComparisonFromWhereBuilder(),
                     new Description\EqualComparisonFromWhereBuilder(),
                     new Status\EqualComparisonFromWhereBuilder(),
                     new Date\EqualComparisonFromWhereBuilder(
@@ -321,7 +319,6 @@ class crosstrackerPlugin extends Plugin
                     )
                 ),
                 new Metadata\NotEqualComparisonFromWhereBuilder(
-                    new Title\NotEqualComparisonFromWhereBuilder(),
                     new Description\NotEqualComparisonFromWhereBuilder(),
                     new Status\NotEqualComparisonFromWhereBuilder(),
                     new Date\NotEqualComparisonFromWhereBuilder(
@@ -441,6 +438,7 @@ class crosstrackerPlugin extends Plugin
                         $user_manager
                     )
                 ),
+                new Metadata\Semantic\Title\TitleFromWhereBuilder($db),
             ),
         );
 

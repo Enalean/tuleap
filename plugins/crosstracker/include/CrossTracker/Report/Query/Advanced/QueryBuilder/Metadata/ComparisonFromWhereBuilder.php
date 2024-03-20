@@ -28,10 +28,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /**
-     * @var Semantic\Title\FromWhereBuilder
-     */
-    private $title_builder;
-    /**
      * @var Semantic\Description\FromWhereBuilder
      */
     private $description_builder;
@@ -62,7 +58,6 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
     private $assigned_to_builder;
 
     public function __construct(
-        Semantic\Title\FromWhereBuilder $title_builder,
         Semantic\Description\FromWhereBuilder $description_builder,
         Semantic\Status\FromWhereBuilder $status_builder,
         AlwaysThereField\Date\FromWhereBuilder $submitted_on_builder,
@@ -71,7 +66,6 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
         AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder,
         Semantic\AssignedTo\FromWhereBuilder $assigned_to_builder,
     ) {
-        $this->title_builder            = $title_builder;
         $this->description_builder      = $description_builder;
         $this->status_builder           = $status_builder;
         $this->submitted_on_builder     = $submitted_on_builder;
@@ -88,7 +82,7 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
     {
         switch ($metadata->getName()) {
             case AllowedMetadata::TITLE:
-                return $this->title_builder->getFromWhere($metadata, $comparison, $trackers);
+                throw new \LogicException('Should have been handled');
             case AllowedMetadata::DESCRIPTION:
                 return $this->description_builder->getFromWhere($metadata, $comparison, $trackers);
             case AllowedMetadata::STATUS:

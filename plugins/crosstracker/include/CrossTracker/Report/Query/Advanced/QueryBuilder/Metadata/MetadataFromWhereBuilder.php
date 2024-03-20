@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use LogicException;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title\TitleFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -42,6 +43,7 @@ final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
         private BetweenComparisonFromWhereBuilder $metadata_between_builder,
         private InComparisonFromWhereBuilder $metadata_in_builder,
         private NotInComparisonFromWhereBuilder $metadata_not_in_builder,
+        private TitleFromWhereBuilder $title_builder,
     ) {
     }
 
@@ -54,7 +56,7 @@ final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
         array $trackers,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         return match ($metadata->getName()) {
-            AllowedMetadata::TITLE,
+            AllowedMetadata::TITLE       => $this->title_builder->getFromWhere($comparison),
             AllowedMetadata::DESCRIPTION,
             AllowedMetadata::STATUS,
             AllowedMetadata::SUBMITTED_ON,
