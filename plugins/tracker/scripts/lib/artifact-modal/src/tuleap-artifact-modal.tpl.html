@@ -258,13 +258,13 @@
 </script>
 
 <script type="text/ng-template" id="field-tbl.tpl.html">
-<div
+<tuleap-artifact-modal-static-open-list-field
     ng-if="::field.bindings.type === 'static'"
     class="field"
-    tuleap-artifact-modal-static-open-list-field="field"
-    is-disabled="modal.isDisabled(field)"
-    value-model="modal.values[field.field_id]"
-></div>
+    disabled="modal.isDisabled(field)"
+    controller="modal.getStaticOpenListFieldController(field)"
+    ce-one-way
+></tuleap-artifact-modal-static-open-list-field>
 <div
     ng-if="::field.bindings.type === 'ugroups'"
     class="field"

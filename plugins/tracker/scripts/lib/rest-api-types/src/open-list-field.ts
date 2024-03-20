@@ -27,7 +27,7 @@ import type {
 import type { RegisteredUserWithEmailAndStatus } from "./users";
 import type { BaseFieldStructure } from "./trackers";
 
-type StaticOpenListItem = {
+export type StaticOpenListItem = {
     readonly id: number;
     readonly label: string;
 };
@@ -44,6 +44,7 @@ type UserGroupOpenListItem = {
 type CommonOpenListFieldStructure = BaseFieldStructure & {
     readonly type: OpenListFieldIdentifier;
     readonly permissions: ReadonlyArray<Permission>;
+    readonly hint: string;
 };
 
 export type StaticBoundOpenListField = CommonOpenListFieldStructure & {
@@ -51,6 +52,7 @@ export type StaticBoundOpenListField = CommonOpenListFieldStructure & {
         readonly type: StaticBindIdentifier;
     };
     readonly default_value: ReadonlyArray<StaticOpenListItem>;
+    readonly values: ReadonlyArray<StaticOpenListItem>;
 };
 
 export type UserBoundOpenListField = CommonOpenListFieldStructure & {
