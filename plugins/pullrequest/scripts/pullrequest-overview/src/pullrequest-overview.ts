@@ -34,15 +34,13 @@ import {
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
     PROJECT_ID,
+    CURRENT_REPOSITORY_ID,
 } from "./constants";
 
 export async function init(mount_point: HTMLElement): Promise<void> {
     const project_id = getDatasetItemOrThrow(mount_point, "projectId");
-    const base_url = buildBaseUrl(
-        window.location,
-        getDatasetItemOrThrow(mount_point, "repositoryId"),
-        project_id,
-    );
+    const current_repository_id = getDatasetItemOrThrow(mount_point, "repositoryId");
+    const base_url = buildBaseUrl(window.location, current_repository_id, project_id);
 
     createApp(OverviewApp)
         .provide(OVERVIEW_APP_BASE_URL_KEY, readonly(base_url))
@@ -53,6 +51,7 @@ export async function init(mount_point: HTMLElement): Promise<void> {
             Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10),
         )
         .provide(PROJECT_ID, Number.parseInt(project_id, 10))
+        .provide(CURRENT_REPOSITORY_ID, Number.parseInt(current_repository_id, 10))
         .provide(CURRENT_USER_AVATAR_URL, getDatasetItemOrThrow(mount_point, "userAvatarUrl"))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,

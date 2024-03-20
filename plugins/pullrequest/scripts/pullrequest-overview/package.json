@@ -16,6 +16,7 @@
     "@tuleap/plugin-pullrequest-comments": "workspace:*",
     "@tuleap/plugin-pullrequest-constants": "workspace:*",
     "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
+    "@tuleap/plugin-pullrequest-stub": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",

@@ -35,27 +35,58 @@
             class="tlp-badge-secondary"
             data-test="pull-request-source-destination"
         >
-            {{ props.pull_request_info.branch_src }}
+            <span data-test="pull-request-source-branch">{{ branch_src }}</span>
             <i
                 class="fa-solid fa-fw fa-long-arrow-alt-right pull-request-source-destination-icon"
                 aria-hidden="true"
             ></i>
-            {{ props.pull_request_info.branch_dest }}
+            <span data-test="pull-request-destination-branch">{{ branch_dest }}</span>
         </span>
         <property-skeleton v-if="!props.pull_request_info" />
     </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
-import PropertySkeleton from "./PropertySkeleton.vue";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { CURRENT_REPOSITORY_ID } from "../../constants";
+import PropertySkeleton from "./PropertySkeleton.vue";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
     pull_request_info: PullRequest | null;
 }>();
+
+const repo_id = strictInject(CURRENT_REPOSITORY_ID);
+
+const branch_src = computed((): string => {
+    if (!props.pull_request_info) {
+        return "";
+    }
+
+    const source_repository = props.pull_request_info.repository;
+    const source_branch_name = props.pull_request_info.branch_src;
+
+    return source_repository.id !== repo_id
+        ? `${source_repository.name}:${source_branch_name}`
+        : source_branch_name;
+});
+
+const branch_dest = computed((): string => {
+    if (!props.pull_request_info) {
+        return "";
+    }
+
+    const destination_repository = props.pull_request_info.repository_dest;
+    const destination_branch_name = props.pull_request_info.branch_dest;
+
+    return destination_repository.id !== repo_id
+        ? `${destination_repository.name}:${destination_branch_name}`
+        : destination_branch_name;
+});
 </script>
 <style lang="scss">
 .pullrequest-source-reference {
