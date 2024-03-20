@@ -216,10 +216,18 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
                 $sql_columns       = \Psl\Str\join($columns_to_select, ', ');
                 $sql_select_data   = "SELECT $sql_columns ";
 
-                $sql_tables = \Psl\Str\join(['plugin_pullrequest_review', ...$search_criteria_statements->tables], ', ');
+                $sql_tables = 'FROM plugin_pullrequest_review ';
+                foreach ($search_criteria_statements->table_joins as $table_join) {
+                    $sql_tables .= sprintf(
+                        '%s JOIN %s ON (%s) ',
+                        $table_join->join_type,
+                        $table_join->table_name,
+                        $table_join->join_condition,
+                    );
+                }
 
                 $sql_query_body = "
-                    FROM $sql_tables
+                    $sql_tables
                     WHERE (plugin_pullrequest_review.repository_id = ? OR plugin_pullrequest_review.repo_dest_id = ?)
                         AND $search_criteria_statements->where_statement
                     GROUP BY $sql_columns
@@ -289,13 +297,15 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
             $reviewers_ids[] = $reviewer->id;
         }
         if (count($reviewers_ids) > 0) {
-            $tables[] = "plugin_pullrequest_reviewer_change";
-            $tables[] = "plugin_pullrequest_reviewer_change_user";
-            $where_statement->andIn('
-                plugin_pullrequest_review.id = plugin_pullrequest_reviewer_change.pull_request_id
-                AND plugin_pullrequest_reviewer_change.change_id = plugin_pullrequest_reviewer_change_user.change_id
-                AND plugin_pullrequest_reviewer_change_user.user_id IN (?*)
-            ', $reviewers_ids);
+            $tables[] = PullRequestDAOTableJoin::innerJoin(
+                'plugin_pullrequest_reviewer_change',
+                'plugin_pullrequest_review.id = plugin_pullrequest_reviewer_change.pull_request_id'
+            );
+            $tables[] = PullRequestDAOTableJoin::innerJoin(
+                'plugin_pullrequest_reviewer_change_user',
+                'plugin_pullrequest_reviewer_change.change_id = plugin_pullrequest_reviewer_change_user.change_id'
+            );
+            $where_statement->andIn('plugin_pullrequest_reviewer_change_user.user_id IN (?*)', $reviewers_ids);
             $having_statement->andWith('SUM(IF(plugin_pullrequest_reviewer_change_user.is_removal = FALSE, 1, -1)) > 0');
         }
 
@@ -305,9 +315,12 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
                 $labels_ids[] = $label->id;
             }
 
-            $tables[] = 'plugin_pullrequest_label';
+            $tables[] = PullRequestDAOTableJoin::innerJoin(
+                'plugin_pullrequest_label',
+                'plugin_pullrequest_review.id = plugin_pullrequest_label.pull_request_id'
+            );
             $having_statement->andWith('COUNT(plugin_pullrequest_label.label_id) = ?', count($labels_ids));
-            $where_statement->andIn('plugin_pullrequest_review.id = plugin_pullrequest_label.pull_request_id AND plugin_pullrequest_label.label_id IN (?*)', $labels_ids);
+            $where_statement->andIn('plugin_pullrequest_label.label_id IN (?*)', $labels_ids);
         }
 
         foreach ($search_criteria->search as $search_part) {
@@ -324,16 +337,22 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
             $related_to_ids[] = $user->id;
         }
         if (count($related_to_ids) > 0) {
+            $tables[] = PullRequestDAOTableJoin::leftJoin(
+                'plugin_pullrequest_reviewer_change',
+                'plugin_pullrequest_review.id = plugin_pullrequest_reviewer_change.pull_request_id'
+            );
+            $tables[] = PullRequestDAOTableJoin::leftJoin(
+                'plugin_pullrequest_reviewer_change_user',
+                'plugin_pullrequest_reviewer_change.change_id = plugin_pullrequest_reviewer_change_user.change_id'
+            );
             $where_statement
                 ->andGroup()
-                    ->andIn('plugin_pullrequest_review.id IN (
-                        SELECT plugin_pullrequest_reviewer_change.pull_request_id
-                        FROM plugin_pullrequest_reviewer_change
-                        JOIN plugin_pullrequest_reviewer_change_user ON (plugin_pullrequest_reviewer_change_user.change_id = plugin_pullrequest_reviewer_change.change_id)
-                        WHERE plugin_pullrequest_reviewer_change_user.user_id IN (?*)
-                        GROUP BY plugin_pullrequest_reviewer_change.pull_request_id
-                        HAVING SUM(IF(plugin_pullrequest_reviewer_change_user.is_removal = FALSE, 1, -1)) > 0
-                    )', $related_to_ids)
+                    ->andIn('plugin_pullrequest_reviewer_change_user.user_id IN (?*)', $related_to_ids)
+                    ->orIn('plugin_pullrequest_review.user_id IN (?*)', $related_to_ids)
+                ->endGroup();
+            $having_statement
+                ->andGroup()
+                    ->andWith('SUM(IF(plugin_pullrequest_reviewer_change_user.is_removal = FALSE, 1, -1)) > 0')
                     ->orIn('plugin_pullrequest_review.user_id IN (?*)', $related_to_ids)
                 ->endGroup();
         }

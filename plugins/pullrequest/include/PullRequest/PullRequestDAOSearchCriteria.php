@@ -27,12 +27,12 @@ use ParagonIE\EasyDB\EasyStatement;
 final readonly class PullRequestDAOSearchCriteria
 {
     /**
-     * @param list<non-empty-string> $tables
+     * @param list<PullRequestDAOTableJoin> $table_joins
      */
     public function __construct(
         public EasyStatement $where_statement,
         public EasyStatement $having_statement,
-        public array $tables,
+        public array $table_joins,
     ) {
     }
 }
