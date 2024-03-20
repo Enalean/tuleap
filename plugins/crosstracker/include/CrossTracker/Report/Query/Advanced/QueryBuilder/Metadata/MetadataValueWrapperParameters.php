@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
+declare(strict_types=1);
 
-interface FromWhereBuilder extends \Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\FromWhereBuilder
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
+
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class MetadataValueWrapperParameters implements ValueWrapperParameters
 {
+    public function __construct(public Comparison $comparison)
+    {
+    }
 }
