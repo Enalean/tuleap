@@ -23,10 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Tests\Stub;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TitleIsMissingInAtLeastOneTrackerException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 final class MetadataCheckerStub implements CheckMetadataUsage
@@ -45,7 +43,7 @@ final class MetadataCheckerStub implements CheckMetadataUsage
         return new self(false);
     }
 
-    public function checkMetadataIsValid(Metadata $metadata, Comparison $comparison, InvalidComparisonCollectorParameters $collector_parameters, ComparisonChecker $checker,): void
+    public function checkMetadataIsUsedByAllTrackers(Metadata $metadata, InvalidComparisonCollectorParameters $collector_parameters): void
     {
         if (! $this->is_valid) {
             throw new TitleIsMissingInAtLeastOneTrackerException(2);
