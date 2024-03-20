@@ -104,24 +104,30 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         }
         $this->force_login->forceLogin($user->getUserName());
 
-        $this->importer->importFromArchive(
-            new ImportConfig(),
-            (int) $project->getID(),
-            new ZipArchive($this->filename, \ForgeConfig::get('tmp_dir')),
-        )->match(
-            function () use ($project, $user): void {
-                $this->archive_for_project_dao->save(
-                    (int) $project->getID(),
-                    $this->archiver->archive($project, $this->filename),
-                );
-                $this->activator->activateProject($project, $user);
-                $this->logger->info("Successfully imported archive into project #{$project->getID()}");
-            },
-            function (Fault $fault) use ($project): void {
-                $this->logger->error("Unable to import archive into project #{$project->getID()}");
-                Fault::writeToLogger($fault, $this->logger);
-            }
-        );
-        unlink($this->filename);
+        $archive = new ZipArchive($this->filename, \ForgeConfig::get('tmp_dir'));
+
+        try {
+            $this->importer->importFromArchive(
+                new ImportConfig(),
+                (int) $project->getID(),
+                $archive
+            )->match(
+                function () use ($project, $user): void {
+                    $this->archive_for_project_dao->save(
+                        (int) $project->getID(),
+                        $this->archiver->archive($project, $this->filename),
+                    );
+                    $this->activator->activateProject($project, $user);
+                    $this->logger->info("Successfully imported archive into project #{$project->getID()}");
+                },
+                function (Fault $fault) use ($project): void {
+                    $this->logger->error("Unable to import archive into project #{$project->getID()}");
+                    Fault::writeToLogger($fault, $this->logger);
+                }
+            );
+            unlink($this->filename);
+        } finally {
+            $archive->cleanUp();
+        }
     }
 }
