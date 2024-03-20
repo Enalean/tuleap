@@ -15,7 +15,7 @@
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:*",
-    "dompurify": "^3.0.8",
+    "dompurify": "^3.0.10",
     "fscreen": "^1.2.0",
     "mustache": "^4.2.0",
     "p-retry": "^4.5.0",

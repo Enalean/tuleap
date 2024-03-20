@@ -39,8 +39,8 @@ dependencies:
     specifier: ^5.62.0
     version: 5.62.0
   dompurify:
-    specifier: ^3.0.8
-    version: 3.0.8
+    specifier: ^3.0.10
+    version: 3.0.10
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -53,6 +53,6 @@ packages:
     resolution: {integrity: sha512-Xnl3304iCc8nyVZuRkzDVVwc794uc9QNX0UcPGeNic1fbzkSrO4l4GVXho9tRNKBgPYZXgocUqXyfIv3BILhCQ==}
     dev: false
 
-  /dompurify@3.0.8:
-    resolution: {integrity: sha512-b7uwreMYL2eZhrSCRC4ahLTeZcPZxSmYfmcQGXGkXiZSNW1X85v+SDM5KsWcpivIiUBH47Ji7NtyUdpLeF5JZQ==}
+  /dompurify@3.0.10:
+    resolution: {integrity: sha512-WZDL8ZHTliEVP3Lk4phtvjg8SNQ3YMc5WVstxE8cszKZrFjzI4PF4ZTIk9VGAc9vZADO7uGO2V/ZiStcRSAT4Q==}
     dev: false

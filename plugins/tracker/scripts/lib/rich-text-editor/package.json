@@ -13,7 +13,7 @@
     "@tuleap/gettext": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
-    "dompurify": "^3.0.8",
+    "dompurify": "^3.0.10",
     "lit-html": "^2.8.0",
     "marked": "^4.0.10",
     "turndown": "^7.0.0"

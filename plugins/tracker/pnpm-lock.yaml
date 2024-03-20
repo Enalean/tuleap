@@ -51,8 +51,8 @@ dependencies:
     specifier: workspace:*
     version: link:../../lib/frontend/tooltip
   dompurify:
-    specifier: ^3.0.8
-    version: 3.0.8
+    specifier: ^3.0.10
+    version: 3.0.10
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -109,8 +109,8 @@ packages:
     resolution: {integrity: sha512-IDaobHimLQhjwsQ/NMwRVfa/yL7L/wriQPMhw1ZJall0KX6E1oxk29XMDeilW5qTIg5aoiqf5Udy8U/51aNoQQ==}
     dev: true
 
-  /dompurify@3.0.8:
-    resolution: {integrity: sha512-b7uwreMYL2eZhrSCRC4ahLTeZcPZxSmYfmcQGXGkXiZSNW1X85v+SDM5KsWcpivIiUBH47Ji7NtyUdpLeF5JZQ==}
+  /dompurify@3.0.10:
+    resolution: {integrity: sha512-WZDL8ZHTliEVP3Lk4phtvjg8SNQ3YMc5WVstxE8cszKZrFjzI4PF4ZTIk9VGAc9vZADO7uGO2V/ZiStcRSAT4Q==}
     dev: false
 
   /jquery@3.6.0:
