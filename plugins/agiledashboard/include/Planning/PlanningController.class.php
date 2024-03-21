@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\AgileDashboard\Planning\EnsureThatTrackerIsReadableByUser;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
@@ -277,7 +278,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     {
         $this->checkUserIsAdmin();
 
-        if ($this->planning_request_validator->isValid($this->request)) {
+        if ($this->planning_request_validator->isValid($this->request, new EnsureThatTrackerIsReadableByUser())) {
             $this->planning_factory->createPlanning(
                 $this->group_id,
                 PlanningParameters::fromArray(

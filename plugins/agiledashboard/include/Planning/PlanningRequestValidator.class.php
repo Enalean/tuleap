@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\AgileDashboard\Planning\VerifyTrackerAccessDuringImportStrategy;
 use Tuleap\User\ProvideCurrentUser;
 
 /**
@@ -53,8 +54,10 @@ class Planning_RequestValidator
      *
      * Existing planning update validation is not implemented yet.
      */
-    public function isValid(Codendi_Request $request): bool
-    {
+    public function isValid(
+        Codendi_Request $request,
+        VerifyTrackerAccessDuringImportStrategy $tracker_access_during_import_strategy,
+    ): bool {
         $group_id            = (int) $request->get('group_id');
         $planning_id         = $request->get('planning_id');
         $planning_parameters = $request->get('planning');
@@ -68,8 +71,18 @@ class Planning_RequestValidator
         $planning_parameters = PlanningParameters::fromArray($planning_parameters);
 
         return $this->nameIsPresent($planning_parameters)
-            && $this->backlogTrackerIdsArePresentAndAreValid($planning_parameters, $group_id, $current_user)
-            && $this->planningTrackerIdIsValid($planning_parameters, $group_id, $current_user)
+            && $this->backlogTrackerIdsArePresentAndAreValid(
+                $planning_parameters,
+                $group_id,
+                $current_user,
+                $tracker_access_during_import_strategy,
+            )
+            && $this->planningTrackerIdIsValid(
+                $planning_parameters,
+                $group_id,
+                $current_user,
+                $tracker_access_during_import_strategy,
+            )
             && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, $planning_parameters);
     }
 
@@ -94,13 +107,22 @@ class Planning_RequestValidator
      *
      * @param PlanningParameters $planning_parameters The validated parameters.
      */
-    private function backlogTrackerIdsArePresentAndAreValid(PlanningParameters $planning_parameters, int $project_id, PFUser $user): bool
-    {
+    private function backlogTrackerIdsArePresentAndAreValid(
+        PlanningParameters $planning_parameters,
+        int $project_id,
+        PFUser $user,
+        VerifyTrackerAccessDuringImportStrategy $tracker_access_during_import_strategy,
+    ): bool {
         $are_present = count($planning_parameters->backlog_tracker_ids) > 0;
         $are_valid   = true;
 
         foreach ($planning_parameters->backlog_tracker_ids as $tracker_id) {
-            $are_valid = $are_valid && $this->doesTrackerExistInProject($user, $tracker_id, $project_id);
+            $are_valid = $are_valid && $this->doesTrackerExistInProject(
+                $user,
+                $tracker_id,
+                $project_id,
+                $tracker_access_during_import_strategy,
+            );
         }
 
         return $are_present && $are_valid;
@@ -112,13 +134,22 @@ class Planning_RequestValidator
      *
      * @param PlanningParameters $planning_parameters The validated parameters.
      */
-    private function planningTrackerIdIsValid(PlanningParameters $planning_parameters, int $project_id, PFUser $user): bool
-    {
+    private function planningTrackerIdIsValid(
+        PlanningParameters $planning_parameters,
+        int $project_id,
+        PFUser $user,
+        VerifyTrackerAccessDuringImportStrategy $tracker_access_during_import_strategy,
+    ): bool {
         $planning_tracker_id = null;
         if ($planning_parameters->planning_tracker_id !== null) {
             $planning_tracker_id = (int) $planning_parameters->planning_tracker_id;
         }
-        return $this->doesTrackerExistInProject($user, $planning_tracker_id, $project_id);
+        return $this->doesTrackerExistInProject(
+            $user,
+            $planning_tracker_id,
+            $project_id,
+            $tracker_access_during_import_strategy,
+        );
     }
 
     /**
@@ -178,8 +209,12 @@ class Planning_RequestValidator
         return ! in_array($planning_tracker_id, $project_planning_tracker_ids);
     }
 
-    private function doesTrackerExistInProject(PFUser $user, ?int $tracker_id, int $project_id): bool
-    {
+    private function doesTrackerExistInProject(
+        PFUser $user,
+        ?int $tracker_id,
+        int $project_id,
+        VerifyTrackerAccessDuringImportStrategy $tracker_access_during_import_strategy,
+    ): bool {
         if ($tracker_id === null) {
             return false;
         }
@@ -192,6 +227,6 @@ class Planning_RequestValidator
             return false;
         }
 
-        return $tracker->userCanView($user);
+        return $tracker_access_during_import_strategy->canUserViewTracker($user, $tracker);
     }
 }

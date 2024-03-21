@@ -20,6 +20,9 @@
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarXmlImport;
+use Tuleap\AgileDashboard\AgileDashboard\Planning\BypassTrackerPermissionDuringImport;
+use Tuleap\AgileDashboard\AgileDashboard\Planning\VerifyTrackerAccessDuringImportStrategy;
+use Tuleap\AgileDashboard\AgileDashboard\Planning\EnsureThatTrackerIsReadableByUser;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
@@ -125,7 +128,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
 
         $this->milestones_in_sidebar_xml_import->import($xml, $project);
 
-        $this->importPlannings($xml);
+        $this->importPlannings($xml, new EnsureThatTrackerIsReadableByUser());
 
         $this->explicit_backlog_xml_import->importConfiguration($xml, $project);
     }
@@ -156,7 +159,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
 
         $this->milestones_in_sidebar_xml_import->import($xml_agiledashboard, $project);
 
-        $this->importPlannings($xml_agiledashboard);
+        $this->importPlannings($xml_agiledashboard, new BypassTrackerPermissionDuringImport());
 
         $this->explicit_backlog_xml_import->importConfiguration($xml_agiledashboard, $project);
         $this->explicit_backlog_xml_import->importContent(
@@ -171,8 +174,10 @@ class AgileDashboard_XMLController extends MVC2_PluginController
     /**
      * @throws Exception
      */
-    private function importPlannings(SimpleXMLElement $xml): void
-    {
+    private function importPlannings(
+        SimpleXMLElement $xml,
+        VerifyTrackerAccessDuringImportStrategy $tracker_access_during_import_strategy,
+    ): void {
         $data = $this->agiledashboard_xml_importer->toArray($xml, $this->request->get('mapping'));
 
         foreach ($data['plannings'] as $planning) {
@@ -184,7 +189,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
 
             $request = new Codendi_Request($request_params);
 
-            if ($this->planning_request_validator->isValid($request)) {
+            if ($this->planning_request_validator->isValid($request, $tracker_access_during_import_strategy)) {
                 $this->planning_factory->createPlanning(
                     $this->group_id,
                     PlanningParameters::fromArray($planning)
