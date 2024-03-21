@@ -56,6 +56,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListVal
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\DB\DBFactory;
@@ -161,20 +162,22 @@ final class ArtifactReportFactoryInstantiator
                     )
                 ),
             ),
-            new EqualComparisonChecker($date_validator, $list_value_validator),
-            new NotEqualComparisonChecker($date_validator, $list_value_validator),
-            new GreaterThanComparisonChecker($date_validator, $list_value_validator),
-            new GreaterThanOrEqualComparisonChecker($date_validator, $list_value_validator),
-            new LesserThanComparisonChecker($date_validator, $list_value_validator),
-            new LesserThanOrEqualComparisonChecker($date_validator, $list_value_validator),
-            new BetweenComparisonChecker($date_validator, $list_value_validator),
-            new InComparisonChecker($date_validator, $list_value_validator_not_empty),
-            new NotInComparisonChecker($date_validator, $list_value_validator_not_empty),
             new ArtifactLinkTypeChecker(
                 new TypePresenterFactory(
                     new TypeDao(),
                     new ArtifactLinksUsageDao(),
                 ),
+            ),
+            new FlatInvalidMetadataChecker(
+                new EqualComparisonChecker($date_validator, $list_value_validator),
+                new NotEqualComparisonChecker($date_validator, $list_value_validator),
+                new GreaterThanComparisonChecker($date_validator, $list_value_validator),
+                new GreaterThanOrEqualComparisonChecker($date_validator, $list_value_validator),
+                new LesserThanComparisonChecker($date_validator, $list_value_validator),
+                new LesserThanOrEqualComparisonChecker($date_validator, $list_value_validator),
+                new BetweenComparisonChecker($date_validator, $list_value_validator),
+                new InComparisonChecker($date_validator, $list_value_validator_not_empty),
+                new NotInComparisonChecker($date_validator, $list_value_validator_not_empty),
             )
         );
 

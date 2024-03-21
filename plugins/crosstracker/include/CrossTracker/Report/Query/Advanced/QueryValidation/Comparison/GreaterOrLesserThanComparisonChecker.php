@@ -35,7 +35,7 @@ abstract class GreaterOrLesserThanComparisonChecker extends ComparisonChecker
     /**
      * @throws InvalidQueryException
      */
-    public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison)
+    public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison): void
     {
         if (! in_array($metadata->getName(), AllowedMetadata::DATES)) {
             throw new OperatorNotAllowedForMetadataException($metadata, $this->getOperator());
