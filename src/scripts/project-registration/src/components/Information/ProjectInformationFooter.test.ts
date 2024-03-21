@@ -31,13 +31,13 @@ describe("ProjectInformationFooter", () => {
     const resetProjectCreationError = jest.fn();
     let is_creating_project = false;
 
-    async function getWrapper(): Promise<Wrapper<Vue, Element>> {
+    async function getWrapper(has_error: boolean = false): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
                 is_creating_project,
             }),
             getters: {
-                has_error: () => false,
+                has_error: () => has_error,
             },
             actions: {
                 resetProjectCreationError,
@@ -82,5 +82,16 @@ describe("ProjectInformationFooter", () => {
             "tlp-button-icon-right",
             "fa-arrow-circle-o-right",
         ]);
+    });
+
+    it(`disable the submission button when the project is being created and there is no error displayed`, async () => {
+        is_creating_project = true;
+        const has_error = false;
+        const wrapper = await getWrapper(has_error);
+
+        const submit_button = wrapper.get<HTMLButtonElement>(
+            "[data-test=project-registration-next-button]",
+        );
+        expect(submit_button.element.disabled).toBe(true);
     });
 });
