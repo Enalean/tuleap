@@ -43,7 +43,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereF
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
@@ -209,7 +208,6 @@ final class ArtifactReportFactoryInstantiator
             ),
             new Metadata\MetadataFromWhereBuilder(
                 new Metadata\EqualComparisonFromWhereBuilder(
-                    new Description\EqualComparisonFromWhereBuilder(),
                     new Status\EqualComparisonFromWhereBuilder(),
                     new Date\EqualComparisonFromWhereBuilder(
                         $date_value_extractor,
@@ -237,7 +235,6 @@ final class ArtifactReportFactoryInstantiator
                     )
                 ),
                 new Metadata\NotEqualComparisonFromWhereBuilder(
-                    new Description\NotEqualComparisonFromWhereBuilder(),
                     new Status\NotEqualComparisonFromWhereBuilder(),
                     new Date\NotEqualComparisonFromWhereBuilder(
                         $date_value_extractor,
@@ -357,6 +354,7 @@ final class ArtifactReportFactoryInstantiator
                     )
                 ),
                 new Metadata\Semantic\Title\TitleFromWhereBuilder($db),
+                new Metadata\Semantic\Description\DescriptionFromWhereBuilder($db),
             ),
         );
 

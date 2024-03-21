@@ -21,21 +21,16 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
-use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /**
-     * @var Semantic\Description\FromWhereBuilder
-     */
-    private $description_builder;
-    /**
      * @var Semantic\Status\FromWhereBuilder
      */
     private $status_builder;
-
     /**
      * @var AlwaysThereField\Date\FromWhereBuilder
      */
@@ -58,7 +53,6 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
     private $assigned_to_builder;
 
     public function __construct(
-        Semantic\Description\FromWhereBuilder $description_builder,
         Semantic\Status\FromWhereBuilder $status_builder,
         AlwaysThereField\Date\FromWhereBuilder $submitted_on_builder,
         AlwaysThereField\Date\FromWhereBuilder $last_update_date_builder,
@@ -66,7 +60,6 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
         AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder,
         Semantic\AssignedTo\FromWhereBuilder $assigned_to_builder,
     ) {
-        $this->description_builder      = $description_builder;
         $this->status_builder           = $status_builder;
         $this->submitted_on_builder     = $submitted_on_builder;
         $this->last_update_date_builder = $last_update_date_builder;
@@ -82,9 +75,8 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
     {
         switch ($metadata->getName()) {
             case AllowedMetadata::TITLE:
-                throw new \LogicException('Should have been handled');
             case AllowedMetadata::DESCRIPTION:
-                return $this->description_builder->getFromWhere($metadata, $comparison, $trackers);
+                throw new \LogicException('Should have been handled');
             case AllowedMetadata::STATUS:
                 return $this->status_builder->getFromWhere($metadata, $comparison, $trackers);
             case AllowedMetadata::SUBMITTED_ON:
