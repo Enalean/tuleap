@@ -225,7 +225,9 @@ class ProjectCreationData
     ): self {
         $instance = new self($default_project_visibility_retriever);
         $instance->fromForm(TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(), $data);
-        $instance->status = Project::STATUS_CREATING_FROM_ARCHIVE;
+
+        $instance->status                = Project::STATUS_CREATING_FROM_ARCHIVE;
+        $instance->inherit_from_template = false;
 
         return $instance;
     }
