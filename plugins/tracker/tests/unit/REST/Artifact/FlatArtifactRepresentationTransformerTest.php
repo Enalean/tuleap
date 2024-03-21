@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -56,6 +59,35 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
             ['f1' => 'val1', 'f2' => 'val2'],
             $result->unwrapOr('Unexpected error'),
         );
+    }
+
+    public function testReturnsErrorWhenCannotTransformAListValueLabel(): void
+    {
+        $field       = $this->buildField(1, 'f1');
+        $field_value = new ArtifactFieldValueListFullRepresentation();
+        $field_value->build(1, 'sb', 'label1', [[]], []);
+
+        $artifact_representation = $this->buildArtifactRepresentation([
+            $field_value,
+        ]);
+
+        $transformer = $this->buildTransformer(
+            [$field],
+            new class implements FlatArtifactListValueLabelTransformer
+            {
+                public function transformListValueLabels(
+                    int $artifact_id,
+                    int $field_id,
+                    string $field_name,
+                    array $value_labels,
+                ): Ok|Err {
+                    return Result::err(Fault::fromMessage('Something is not OK'));
+                }
+            }
+        );
+        $result      = $transformer($artifact_representation);
+
+        self::assertSame('Something is not OK.', (string) $result->error);
     }
 
     /**
@@ -148,7 +180,7 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
     /**
      * @psalm-param \Tracker_FormElement_Field[] $fields
      */
-    private function buildTransformer(array $fields): FlatArtifactRepresentationTransformer
+    private function buildTransformer(array $fields, ?FlatArtifactListValueLabelTransformer $value_labels_transformer = null): FlatArtifactRepresentationTransformer
     {
         $html_purifier = $this->createStub(\Codendi_HTMLPurifier::class);
         $html_purifier->method('purify')->willReturnCallback(fn (string $value): string => strip_tags($value));
@@ -159,7 +191,11 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
             $fields_retriever = RetrieveUsedFieldsStub::withNoFields();
         }
 
-        return new FlatArtifactRepresentationTransformer($fields_retriever, $html_purifier);
+        if ($value_labels_transformer === null) {
+            $value_labels_transformer = new FlatArtifactListValueLabelArrayTransformer();
+        }
+
+        return new FlatArtifactRepresentationTransformer($fields_retriever, $html_purifier, $value_labels_transformer);
     }
 
     private function buildField(int $id, string $name): \Tracker_FormElement_Field

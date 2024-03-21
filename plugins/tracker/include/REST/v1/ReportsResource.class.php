@@ -46,6 +46,8 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\FlatArtifactListValueLabelArrayTransformer;
+use Tuleap\Tracker\REST\Artifact\FlatArtifactListValueLabelFlatStringTransformer;
 use Tuleap\Tracker\REST\Artifact\FlatArtifactRepresentationTransformer;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -169,8 +171,8 @@ class ReportsResource extends AuthenticatedResource
      * @param bool $with_unsaved_changes Enable to take into account unsaved changes made to the report on your ongoing session {@from query}{@required false}
      * @param string $values Which fields to include in the response. Default is no field values {@from query}{@choice ,all,from_table_renderer}
      * @param int | null $table_renderer_id Which table renderer to use when values=from_table_renderer {@from query}{@required false}
-     * @param string $output_format Format of the response: nested (default) or a simplified and incomplete flat format {@from query}{@choice nested,flat}
-     * @psalm-param 'nested'|'flat' $output_format
+     * @param string $output_format Format of the response: nested (default) or a simplified and incomplete flat format {@from query}{@choice nested,flat,flat_with_semicolon_string_array}
+     * @psalm-param 'nested'|'flat'|'flat_with_semicolon_string_array' $output_format
      * @param int $limit Number of elements displayed per page {@from query}{@min 1} {@max 50}
      * @param int $offset Position of the first element to display {@from query}{@min 0}
      *
@@ -247,7 +249,11 @@ class ReportsResource extends AuthenticatedResource
         return match ($output_format) {
             'flat' => RESTCollectionTransformer::flattenRepresentations(
                 $artifact_representations,
-                new FlatArtifactRepresentationTransformer(Tracker_FormElementFactory::instance(), \Codendi_HTMLPurifier::instance())
+                new FlatArtifactRepresentationTransformer(Tracker_FormElementFactory::instance(), \Codendi_HTMLPurifier::instance(), new FlatArtifactListValueLabelArrayTransformer())
+            ),
+            'flat_with_semicolon_string_array' => RESTCollectionTransformer::flattenRepresentations(
+                $artifact_representations,
+                new FlatArtifactRepresentationTransformer(Tracker_FormElementFactory::instance(), \Codendi_HTMLPurifier::instance(), new FlatArtifactListValueLabelFlatStringTransformer())
             ),
             'nested' => $artifact_representations,
         };
