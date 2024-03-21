@@ -281,7 +281,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             ),
             new Metadata\MetadataFromWhereBuilder(
                 new Metadata\EqualComparisonFromWhereBuilder(
-                    new Status\EqualComparisonFromWhereBuilder(),
                     new Date\EqualComparisonFromWhereBuilder(
                         $date_value_extractor,
                         $date_time_value_rounder,
@@ -308,7 +307,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     )
                 ),
                 new Metadata\NotEqualComparisonFromWhereBuilder(
-                    new Status\NotEqualComparisonFromWhereBuilder(),
                     new Date\NotEqualComparisonFromWhereBuilder(
                         $date_value_extractor,
                         $date_time_value_rounder,
@@ -428,6 +426,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 ),
                 new Metadata\Semantic\Title\TitleFromWhereBuilder($db),
                 new Metadata\Semantic\Description\DescriptionFromWhereBuilder($db),
+                new Metadata\Semantic\Status\StatusFromWhereBuilder(),
             ),
         );
 

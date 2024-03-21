@@ -27,7 +27,6 @@ use ParagonIE\EasyDB\EasyDB;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
@@ -46,9 +45,9 @@ final readonly class TitleFromWhereBuilder implements ValueWrapperVisitor
     {
     }
 
-    public function getFromWhere(Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
+    public function getFromWhere(MetadataValueWrapperParameters $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
-        return $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($comparison));
+        return $parameters->comparison->getValueWrapper()->accept($this, $parameters);
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
