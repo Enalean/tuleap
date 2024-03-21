@@ -26,6 +26,7 @@ use LogicException;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description\DescriptionFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\StatusFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title\TitleFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
@@ -46,6 +47,7 @@ final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
         private NotInComparisonFromWhereBuilder $metadata_not_in_builder,
         private TitleFromWhereBuilder $title_builder,
         private DescriptionFromWhereBuilder $description_builder,
+        private StatusFromWhereBuilder $status_builder,
     ) {
     }
 
@@ -57,10 +59,11 @@ final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
         Comparison $comparison,
         array $trackers,
     ): IProvideParametrizedFromAndWhereSQLFragments {
+        $parameters = new MetadataValueWrapperParameters($comparison, $trackers);
         return match ($metadata->getName()) {
-            AllowedMetadata::TITLE       => $this->title_builder->getFromWhere($comparison),
-            AllowedMetadata::DESCRIPTION => $this->description_builder->getFromWhere($comparison),
-            AllowedMetadata::STATUS,
+            AllowedMetadata::TITLE       => $this->title_builder->getFromWhere($parameters),
+            AllowedMetadata::DESCRIPTION => $this->description_builder->getFromWhere($parameters),
+            AllowedMetadata::STATUS      => $this->status_builder->getFromWhere($parameters),
             AllowedMetadata::SUBMITTED_ON,
             AllowedMetadata::LAST_UPDATE_DATE,
             AllowedMetadata::SUBMITTED_BY,

@@ -28,10 +28,6 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /**
-     * @var Semantic\Status\FromWhereBuilder
-     */
-    private $status_builder;
-    /**
      * @var AlwaysThereField\Date\FromWhereBuilder
      */
     private $submitted_on_builder;
@@ -53,14 +49,12 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
     private $assigned_to_builder;
 
     public function __construct(
-        Semantic\Status\FromWhereBuilder $status_builder,
         AlwaysThereField\Date\FromWhereBuilder $submitted_on_builder,
         AlwaysThereField\Date\FromWhereBuilder $last_update_date_builder,
         AlwaysThereField\Users\FromWhereBuilder $submitted_by_builder,
         AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder,
         Semantic\AssignedTo\FromWhereBuilder $assigned_to_builder,
     ) {
-        $this->status_builder           = $status_builder;
         $this->submitted_on_builder     = $submitted_on_builder;
         $this->last_update_date_builder = $last_update_date_builder;
         $this->submitted_by_builder     = $submitted_by_builder;
@@ -76,9 +70,8 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
         switch ($metadata->getName()) {
             case AllowedMetadata::TITLE:
             case AllowedMetadata::DESCRIPTION:
-                throw new \LogicException('Should have been handled');
             case AllowedMetadata::STATUS:
-                return $this->status_builder->getFromWhere($metadata, $comparison, $trackers);
+                throw new \LogicException('Should have been handled');
             case AllowedMetadata::SUBMITTED_ON:
                 return $this->submitted_on_builder->getFromWhere($metadata, $comparison, $trackers);
             case AllowedMetadata::LAST_UPDATE_DATE:

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 
+use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
@@ -30,7 +31,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
  */
 final readonly class MetadataValueWrapperParameters implements ValueWrapperParameters
 {
-    public function __construct(public Comparison $comparison)
+    /**
+     * @param Tracker[] $trackers
+     */
+    public function __construct(public Comparison $comparison, public array $trackers)
     {
     }
 }
