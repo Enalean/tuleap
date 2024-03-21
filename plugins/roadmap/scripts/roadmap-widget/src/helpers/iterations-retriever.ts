@@ -19,21 +19,30 @@
 
 import { recursiveGet } from "@tuleap/tlp-fetch";
 import type { Iteration, IterationLevel } from "../type";
+import { DateTime } from "luxon";
 
 export function retrieveIterations(
     roadmap_id: number,
     level: IterationLevel,
 ): Promise<Iteration[]> {
-    return recursiveGet<Array<Iteration>, Iteration>(`/api/roadmaps/${roadmap_id}/iterations`, {
+    return recursiveGet<Array<RestIteration>, Iteration>(`/api/roadmaps/${roadmap_id}/iterations`, {
         params: { level },
-        getCollectionCallback: (iterations: Iteration[]): Iteration[] => {
-            return iterations.map((iteration: Iteration): Iteration => {
+        getCollectionCallback: (iterations: RestIteration[]): Iteration[] => {
+            return iterations.map((iteration: RestIteration): Iteration => {
                 return {
                     ...iteration,
-                    start: structuredClone(iteration.start),
-                    end: structuredClone(iteration.end),
+                    start: DateTime.fromISO(iteration.start),
+                    end: DateTime.fromISO(iteration.end),
                 };
             });
         },
     });
+}
+
+interface RestIteration {
+    readonly id: number;
+    readonly start: string;
+    readonly end: string;
+    readonly title: string;
+    readonly html_url: string;
 }
