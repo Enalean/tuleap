@@ -21,7 +21,6 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -39,7 +38,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringExceptio
 /**
  * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, void>
  */
-abstract class ComparisonChecker implements ValueWrapperVisitor
+abstract class ComparisonChecker implements ValueWrapperVisitor, CheckComparison
 {
     public function __construct(
         protected readonly DateFormatValidator $date_validator,
@@ -49,10 +48,7 @@ abstract class ComparisonChecker implements ValueWrapperVisitor
 
     abstract public function getOperator(): string;
 
-    /**
-     * @throws InvalidQueryException
-     */
-    public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison)
+    public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison): void
     {
         try {
             $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));

@@ -22,16 +22,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use PFUser;
 use Tracker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanOrEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\In\InComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanOrEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -71,16 +62,8 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
 {
     public function __construct(
         private InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
-        private EqualComparisonChecker $equal_comparison_checker,
-        private NotEqualComparisonChecker $not_equal_comparison_checker,
-        private GreaterThanComparisonChecker $greater_than_comparison_checker,
-        private GreaterThanOrEqualComparisonChecker $greater_than_or_equal_comparison_checker,
-        private LesserThanComparisonChecker $lesser_than_comparison_checker,
-        private LesserThanOrEqualComparisonChecker $lesser_than_or_equal_comparison_checker,
-        private BetweenComparisonChecker $between_comparison_checker,
-        private InComparisonChecker $in_comparison_checker,
-        private NotInComparisonChecker $not_in_comparison_checker,
         private ArtifactLinkTypeChecker $artifact_link_type_checker,
+        private FlatInvalidMetadataChecker $metadata_checker,
     ) {
     }
 
@@ -101,95 +84,58 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
 
     public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
-        $this->visitComparison(
-            $comparison,
-            $this->equal_comparison_checker,
-            $parameters
-        );
+        $this->visitComparison($comparison, $parameters);
     }
 
     public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
-        $this->visitComparison(
-            $comparison,
-            $this->not_equal_comparison_checker,
-            $parameters
-        );
+        $this->visitComparison($comparison, $parameters);
     }
 
     public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
     {
-        $this->visitComparison(
-            $comparison,
-            $this->lesser_than_comparison_checker,
-            $parameters
-        );
+        $this->visitComparison($comparison, $parameters);
     }
 
     public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
     {
-        $this->visitComparison(
-            $comparison,
-            $this->greater_than_comparison_checker,
-            $parameters
-        );
+        $this->visitComparison($comparison, $parameters);
     }
 
     public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
     {
-        $this->visitComparison(
-            $comparison,
-            $this->lesser_than_or_equal_comparison_checker,
-            $parameters
-        );
+        $this->visitComparison($comparison, $parameters);
     }
 
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
     {
-        $this->visitComparison(
-            $comparison,
-            $this->greater_than_or_equal_comparison_checker,
-            $parameters
-        );
+        $this->visitComparison($comparison, $parameters);
     }
 
     public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
-        $this->visitComparison(
-            $comparison,
-            $this->between_comparison_checker,
-            $parameters
-        );
+        $this->visitComparison($comparison, $parameters);
     }
 
     public function visitInComparison(InComparison $comparison, $parameters)
     {
-        $this->visitComparison(
-            $comparison,
-            $this->in_comparison_checker,
-            $parameters
-        );
+        $this->visitComparison($comparison, $parameters);
     }
 
     public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
-        $this->visitComparison(
-            $comparison,
-            $this->not_in_comparison_checker,
-            $parameters
-        );
+        $this->visitComparison($comparison, $parameters);
     }
 
     private function visitComparison(
         Comparison $comparison,
-        ComparisonChecker $comparison_checker,
         InvalidComparisonCollectorParameters $parameters,
     ): void {
         $comparison->getSearchable()->acceptSearchableVisitor(
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
                 $parameters,
-                $comparison_checker,
+                $this->metadata_checker,
                 $comparison,
             )
         );

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\CheckComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
@@ -30,7 +30,7 @@ final readonly class InvalidSearchableCollectorParameters implements VisitorPara
 {
     public function __construct(
         private InvalidComparisonCollectorParameters $invalid_searchables_collector_parameters,
-        private ComparisonChecker $comparison_checker,
+        private CheckComparison $comparison_checker,
         private Comparison $comparison,
     ) {
     }
@@ -45,7 +45,7 @@ final readonly class InvalidSearchableCollectorParameters implements VisitorPara
         return $this->invalid_searchables_collector_parameters;
     }
 
-    public function getComparisonChecker(): ComparisonChecker
+    public function getComparisonChecker(): CheckComparison
     {
         return $this->comparison_checker;
     }
