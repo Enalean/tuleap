@@ -35,6 +35,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\N
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TitleChecker;
 use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
@@ -220,6 +221,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
                 new BetweenComparisonChecker($date_validator, $list_value_validator),
                 new InComparisonChecker($date_validator, $list_value_validator_not_empty),
                 new NotInComparisonChecker($date_validator, $list_value_validator_not_empty),
+                new TitleChecker(),
             )
         );
         $collector->collectErrors(

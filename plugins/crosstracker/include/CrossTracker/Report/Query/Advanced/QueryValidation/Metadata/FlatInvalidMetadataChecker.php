@@ -50,6 +50,7 @@ final readonly class FlatInvalidMetadataChecker implements CheckComparison
         private BetweenComparisonChecker $between_checker,
         private InComparisonChecker $in_checker,
         private NotInComparisonChecker $not_in_checker,
+        private TitleChecker $title_checker,
     ) {
     }
 
@@ -59,7 +60,7 @@ final readonly class FlatInvalidMetadataChecker implements CheckComparison
     public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison): void
     {
         match ($metadata->getName()) {
-            AllowedMetadata::TITLE,
+            AllowedMetadata::TITLE => $this->title_checker->checkTitleIsValidForComparison($comparison, $metadata),
             AllowedMetadata::DESCRIPTION,
             AllowedMetadata::STATUS,
             AllowedMetadata::SUBMITTED_ON,
