@@ -41,7 +41,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 /**
  * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, void>
  */
-final readonly class TitleChecker implements ValueWrapperVisitor
+final readonly class TextSemanticChecker implements ValueWrapperVisitor
 {
     /**
      * @throws OperatorNotAllowedForMetadataException
@@ -49,7 +49,7 @@ final readonly class TitleChecker implements ValueWrapperVisitor
      * @throws ToNowComparisonException
      * @throws ToStatusOpenComparisonException
      */
-    public function checkTitleIsValidForComparison(Comparison $comparison, Metadata $metadata): void
+    public function checkSemanticIsValidForComparison(Comparison $comparison, Metadata $metadata): void
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
