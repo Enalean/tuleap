@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\AgileDashboard\Planning\VerifyTrackerAccessDuringImportStrategy;
+use Tuleap\AgileDashboard\AgileDashboard\Planning\EnsureThatTrackerIsReadableByUser;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -57,6 +59,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker_factory;
     private PlanningFactory|\PHPUnit\Framework\MockObject\MockObject $planning_factory;
+    private EnsureThatTrackerIsReadableByUser $tracker_access_during_import_strategy;
 
     protected function setUp(): void
     {
@@ -78,12 +81,14 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->releases_tracker_id = 56;
         $this->sprints_tracker_id  = 78;
         $this->holidays_tracker_id = 90;
+
+        $this->tracker_access_during_import_strategy = new EnsureThatTrackerIsReadableByUser();
     }
 
     public function testItRejectsTheRequestWhenNameIsMissing(): void
     {
         $request = $this->getPlanningRequest(null, 1, 2, null);
-        $this->assertFalse($this->validator->isValid($request));
+        $this->assertFalse($this->validator->isValid($request, $this->tracker_access_during_import_strategy));
     }
 
     public function testItRejectsTheRequestWhenBacklogTrackerIdsAreMissing(): void
@@ -100,7 +105,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         );
         $request = $this->getPlanningRequest("test", 1, null, null);
-        $this->assertFalse($this->validator->isValid($request));
+        $this->assertFalse($this->validator->isValid($request, $this->tracker_access_during_import_strategy));
     }
 
     public function testItRejectsTheRequestWhenPlanningTrackerIdIsMissing(): void
@@ -117,7 +122,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         );
         $request = $this->getPlanningRequest("test", null, 2, null);
-        $this->assertFalse($this->validator->isValid($request));
+        $this->assertFalse($this->validator->isValid($request, $this->tracker_access_during_import_strategy));
     }
 
     public function testItRejectsTheRequestWhenPlanningTrackerIsFromAnotherProject(): void
@@ -126,7 +131,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->method('getGroupId')->willReturn('403');
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
         $request = $this->getPlanningRequest("test", 52, 2, null);
-        self::assertFalse($this->validator->isValid($request));
+        self::assertFalse($this->validator->isValid($request, $this->tracker_access_during_import_strategy));
     }
 
     public function testItRejectsTheRequestWhenPlanningTrackerCannotBeSeenByTheCurrentUser(): void
@@ -136,7 +141,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->method('userCanView')->willReturn(false);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
         $request = $this->getPlanningRequest("test", 53, 2, null);
-        self::assertFalse($this->validator->isValid($request));
+        self::assertFalse($this->validator->isValid($request, $this->tracker_access_during_import_strategy));
     }
 
     private function getPlanningRequest(
@@ -169,7 +174,48 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getAReleaseWithPlanning();
         $request = $this->getPlanningRequest("test", $this->holidays_tracker_id, 1, $this->release_planning_id);
 
-        $this->assertTrue($this->validator->isValid($request));
+        $this->assertTrue($this->validator->isValid($request, $this->tracker_access_during_import_strategy));
+    }
+
+    public function testItValidatesTheRequestWhenPlanningTrackerCannotBeSeenByTheCurrentUserButWeDecidedToBypassPermissions(): void
+    {
+        $group_id = 12;
+
+        $release_tracker        = TrackerTestBuilder::aTracker()
+            ->withId($this->releases_tracker_id)
+            ->build();
+        $this->release_planning = PlanningBuilder::aPlanning($group_id)
+            ->withId($this->release_planning_id)
+            ->withMilestoneTracker($release_tracker)
+            ->build();
+
+        $this->planning_factory->method('getPlanning')->with($this->release_planning_id)->willReturn(
+            $this->release_planning
+        );
+        $this->planning_factory->method('getPlanningTrackerIdsByGroupId')->with($group_id)->willReturn(
+            [
+                $this->releases_tracker_id,
+                $this->sprints_tracker_id,
+            ]
+        );
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn('12');
+        $tracker->method('userCanView')->willReturn(false);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+
+        $request = $this->getPlanningRequest("test", $this->holidays_tracker_id, 1, $this->release_planning_id);
+
+        self::assertTrue(
+            $this->validator->isValid(
+                $request,
+                new class implements VerifyTrackerAccessDuringImportStrategy {
+                    public function canUserViewTracker(\PFUser $user, \Tracker $tracker): bool
+                    {
+                        return true;
+                    }
+                },
+            ),
+        );
     }
 
     public function testItValidatesTheRequestWhenPlanningTrackerIsTheCurrentOne(): void
@@ -177,7 +223,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getAReleaseWithPlanning();
         $request = $this->getPlanningRequest("test", $this->releases_tracker_id, 2, $this->release_planning_id);
 
-        $this->assertTrue($this->validator->isValid($request));
+        $this->assertTrue($this->validator->isValid($request, $this->tracker_access_during_import_strategy));
     }
 
     public function testItRejectsTheRequestWhenPlanningTrackerIsUsedInAPlanningOfTheSameProject(): void
@@ -185,7 +231,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getAReleaseWithPlanning();
         $request = $this->getPlanningRequest("test", $this->sprints_tracker_id, null, $this->release_planning_id);
 
-        $this->assertFalse($this->validator->isValid($request));
+        $this->assertFalse($this->validator->isValid($request, $this->tracker_access_during_import_strategy));
     }
 
     private function getAReleaseWithPlanning(): void
