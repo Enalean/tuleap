@@ -35,6 +35,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\N
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
 use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -222,6 +223,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
                 new InComparisonChecker($date_validator, $list_value_validator_not_empty),
                 new NotInComparisonChecker($date_validator, $list_value_validator_not_empty),
                 new TextSemanticChecker(),
+                new StatusChecker(),
             )
         );
         $collector->collectErrors(
@@ -731,8 +733,10 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield '!= simple value' => [new NotEqualComparison($semantic, $simple_value)];
         yield '= empty string' => [new EqualComparison($semantic, $empty_value)];
         yield '!= empty string' => [new NotEqualComparison($semantic, $empty_value)];
-        yield 'IN(anything)' => [new InComparison($semantic, new InValueWrapper([$simple_value]))];
-        yield 'NOT IN(anything)' => [new NotInComparison($semantic, new InValueWrapper([$simple_value]))];
+        yield 'IN(simple value)' => [new InComparison($semantic, new InValueWrapper([$simple_value]))];
+        yield 'IN(OPEN())' => [new InComparison($semantic, new InValueWrapper([new StatusOpenValueWrapper()]))];
+        yield 'NOT IN(simple value)' => [new NotInComparison($semantic, new InValueWrapper([$simple_value]))];
+        yield 'NOT IN(OPEN())' => [new NotInComparison($semantic, new InValueWrapper([new StatusOpenValueWrapper()]))];
         yield from self::generateInvalidListComparisons($semantic, $simple_value);
     }
 
