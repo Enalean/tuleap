@@ -34,17 +34,12 @@ final class NotInComparisonFromWhereBuilder implements FromWhereBuilder
     /** @var AlwaysThereField\Users\FromWhereBuilder */
     private $last_update_by_builder;
 
-    /** @var Semantic\AssignedTo\FromWhereBuilder */
-    private $assigned_to_builder;
-
     public function __construct(
         AlwaysThereField\Users\FromWhereBuilder $submitted_by_builder,
         AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder,
-        Semantic\AssignedTo\FromWhereBuilder $assigned_to_builder,
     ) {
         $this->submitted_by_builder   = $submitted_by_builder;
         $this->last_update_by_builder = $last_update_by_builder;
-        $this->assigned_to_builder    = $assigned_to_builder;
     }
 
     /**
@@ -59,7 +54,7 @@ final class NotInComparisonFromWhereBuilder implements FromWhereBuilder
             case AllowedMetadata::LAST_UPDATE_BY:
                 return $this->last_update_by_builder->getFromWhere($metadata, $comparison, $trackers);
             case AllowedMetadata::ASSIGNED_TO:
-                return $this->assigned_to_builder->getFromWhere($metadata, $comparison, $trackers);
+                throw new \LogicException('Should have been handled');
         }
     }
 }
