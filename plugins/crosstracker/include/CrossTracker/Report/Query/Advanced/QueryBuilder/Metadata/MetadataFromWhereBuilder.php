@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use LogicException;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description\DescriptionFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\StatusFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title\TitleFromWhereBuilder;
@@ -48,6 +49,7 @@ final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
         private TitleFromWhereBuilder $title_builder,
         private DescriptionFromWhereBuilder $description_builder,
         private StatusFromWhereBuilder $status_builder,
+        private AssignedToFromWhereBuilder $assigned_to_builder,
     ) {
     }
 
@@ -61,15 +63,17 @@ final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
     ): IProvideParametrizedFromAndWhereSQLFragments {
         $parameters = new MetadataValueWrapperParameters($comparison, $trackers);
         return match ($metadata->getName()) {
-            AllowedMetadata::TITLE       => $this->title_builder->getFromWhere($parameters),
-            AllowedMetadata::DESCRIPTION => $this->description_builder->getFromWhere($parameters),
-            AllowedMetadata::STATUS      => $this->status_builder->getFromWhere($parameters),
+            AllowedMetadata::TITLE          => $this->title_builder->getFromWhere($parameters),
+            AllowedMetadata::DESCRIPTION    => $this->description_builder->getFromWhere($parameters),
+            AllowedMetadata::STATUS         => $this->status_builder->getFromWhere($parameters),
+            AllowedMetadata::ASSIGNED_TO    => $this->assigned_to_builder->getFromWhere($parameters),
+
+            // Always there fields
             AllowedMetadata::SUBMITTED_ON,
             AllowedMetadata::LAST_UPDATE_DATE,
             AllowedMetadata::SUBMITTED_BY,
-            AllowedMetadata::LAST_UPDATE_BY,
-            AllowedMetadata::ASSIGNED_TO => $this->matchOnComparisonType($metadata, $comparison, $trackers),
-            default                      => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
+            AllowedMetadata::LAST_UPDATE_BY => $this->matchOnComparisonType($metadata, $comparison, $trackers),
+            default                         => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
 

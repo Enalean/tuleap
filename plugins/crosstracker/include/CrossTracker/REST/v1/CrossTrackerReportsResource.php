@@ -53,7 +53,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
@@ -305,10 +304,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                         $list_value_extractor,
                         $this->user_manager,
                         $last_update_by_alias_field
-                    ),
-                    new Metadata\Semantic\AssignedTo\EqualComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $this->user_manager
                     )
                 ),
                 new Metadata\NotEqualComparisonFromWhereBuilder(
@@ -331,10 +326,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                         $list_value_extractor,
                         $this->user_manager,
                         $last_update_by_alias_field
-                    ),
-                    new AssignedTo\NotEqualComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $this->user_manager
                     )
                 ),
                 new Metadata\GreaterThanComparisonFromWhereBuilder(
@@ -407,10 +398,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                         $list_value_extractor,
                         $this->user_manager,
                         $last_update_by_alias_field
-                    ),
-                    new AssignedTo\InComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $this->user_manager
                     )
                 ),
                 new Metadata\NotInComparisonFromWhereBuilder(
@@ -423,15 +410,12 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                         $list_value_extractor,
                         $this->user_manager,
                         $last_update_by_alias_field
-                    ),
-                    new AssignedTo\NotInComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $this->user_manager
                     )
                 ),
                 new Metadata\Semantic\Title\TitleFromWhereBuilder($db),
                 new Metadata\Semantic\Description\DescriptionFromWhereBuilder($db),
                 new Metadata\Semantic\Status\StatusFromWhereBuilder(),
+                new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder($this->user_manager),
             ),
         );
 

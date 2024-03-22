@@ -42,7 +42,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
@@ -231,10 +230,6 @@ final class ArtifactReportFactoryInstantiator
                         $list_value_extractor,
                         $user_manager,
                         $last_update_by_alias_field
-                    ),
-                    new Metadata\Semantic\AssignedTo\EqualComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager
                     )
                 ),
                 new Metadata\NotEqualComparisonFromWhereBuilder(
@@ -257,10 +252,6 @@ final class ArtifactReportFactoryInstantiator
                         $list_value_extractor,
                         $user_manager,
                         $last_update_by_alias_field
-                    ),
-                    new AssignedTo\NotEqualComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager
                     )
                 ),
                 new Metadata\GreaterThanComparisonFromWhereBuilder(
@@ -333,10 +324,6 @@ final class ArtifactReportFactoryInstantiator
                         $list_value_extractor,
                         $user_manager,
                         $last_update_by_alias_field
-                    ),
-                    new AssignedTo\InComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager
                     )
                 ),
                 new Metadata\NotInComparisonFromWhereBuilder(
@@ -349,15 +336,12 @@ final class ArtifactReportFactoryInstantiator
                         $list_value_extractor,
                         $user_manager,
                         $last_update_by_alias_field
-                    ),
-                    new AssignedTo\NotInComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager
                     )
                 ),
                 new Metadata\Semantic\Title\TitleFromWhereBuilder($db),
                 new Metadata\Semantic\Description\DescriptionFromWhereBuilder($db),
                 new Metadata\Semantic\Status\StatusFromWhereBuilder(),
+                new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder($user_manager),
             ),
         );
 
