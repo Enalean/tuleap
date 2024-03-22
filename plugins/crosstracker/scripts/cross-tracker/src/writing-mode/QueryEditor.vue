@@ -20,8 +20,8 @@
 <template>
     <div class="cross-tracker-expert-content">
         <div class="cross-tracker-expert-content-query tlp-form-element">
-            <label class="tlp-label" for="expert-query-textarea" v-translate>Query</label>
-            <textarea
+            <label class="tlp-label" for="expert-query-textarea">{{ $gettext("Query") }}</label
+            ><textarea
                 ref="query_textarea"
                 type="text"
                 class="cross-tracker-expert-content-query-textarea tlp-textarea"
@@ -35,17 +35,20 @@
                 <i
                     aria-hidden="true"
                     class="cross-tracker-query-editor-info-icon fa-solid fa-info-circle"
-                ></i>
-                <translate>
-                    You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space.
-                </translate>
+                ></i
+                >{{
+                    $gettext(
+                        "You can use: AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, WITHOUT CHILDREN, BETWEEN(), NOW(), MYSELF(), OPEN(), IN(), NOT IN(), parenthesis. Autocomplete is activated with Ctrl + Space.",
+                    )
+                }}
             </p>
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="expert-query-allowed-fields" v-translate>
-                Allowed fields
-            </label>
-            <select
+            <label
+                class="cross-tracker-expert-content-fields-label tlp-label"
+                for="expert-query-allowed-fields"
+                >{{ $gettext("Semantic suggestions") }}</label
+            ><select
                 class="cross-tracker-expert-content-query-allowed-fields tlp-select"
                 name="allowed-fields"
                 id="expert-query-allowed-fields"
