@@ -35,7 +35,7 @@ interface TuleapLayoutProps {
 }
 
 class TuleapLayout extends React.Component<TuleapLayoutProps> {
-    override render() {
+    override render(): React.ReactNode {
         const { errSelectors, specSelectors, getComponent } = this.props;
 
         const SvgAssets = getComponent("SvgAssets");
@@ -107,7 +107,9 @@ class TuleapLayout extends React.Component<TuleapLayoutProps> {
         return (
             <div className="swagger-ui">
                 <SvgAssets />
+                {/* @ts-expect-error API explorer works correctly, TypeScript expects IntrinsicAttributes type for some reason */}
                 <Row>
+                    {/* @ts-expect-error API explorer works correctly, TypeScript expects IntrinsicAttributes type for some reason */}
                     <Col>
                         <Operations />
                     </Col>
