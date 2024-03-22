@@ -34,7 +34,10 @@ final readonly class MetadataValueWrapperParameters implements ValueWrapperParam
     /**
      * @param Tracker[] $trackers
      */
-    public function __construct(public Comparison $comparison, public array $trackers)
-    {
+    public function __construct(
+        public Comparison $comparison,
+        public array $trackers,
+        public string $field_alias = '',
+    ) {
     }
 }
