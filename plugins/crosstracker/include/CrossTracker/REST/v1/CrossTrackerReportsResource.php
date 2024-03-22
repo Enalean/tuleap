@@ -70,6 +70,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\Duc
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TitleChecker;
 use Tuleap\DB\DBFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -251,6 +252,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 new BetweenComparisonChecker($date_validator, $list_value_validator),
                 new InComparisonChecker($date_validator, $list_value_validator_not_empty),
                 new NotInComparisonChecker($date_validator, $list_value_validator_not_empty),
+                new TitleChecker(),
             )
         );
 
