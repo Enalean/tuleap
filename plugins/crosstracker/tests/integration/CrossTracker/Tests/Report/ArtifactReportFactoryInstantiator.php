@@ -39,7 +39,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQue
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
@@ -183,12 +182,9 @@ final class ArtifactReportFactoryInstantiator
             )
         );
 
-        $submitted_on_alias_field     = 'tracker_artifact.submitted_on';
-        $last_update_date_alias_field = 'last_changeset.submitted_on';
-        $submitted_by_alias_field     = 'tracker_artifact.submitted_by';
-        $last_update_by_alias_field   = 'last_changeset.submitted_by';
+        $submitted_by_alias_field   = 'tracker_artifact.submitted_by';
+        $last_update_by_alias_field = 'last_changeset.submitted_by';
 
-        $date_value_extractor     = new Date\DateValueExtractor();
         $date_time_value_rounder  = new DateTimeValueRounder();
         $list_value_extractor     = new ListValueExtractor();
         $artifact_factory         = Tracker_ArtifactFactory::instance();
@@ -213,16 +209,6 @@ final class ArtifactReportFactoryInstantiator
             ),
             new Metadata\MetadataFromWhereBuilder(
                 new Metadata\EqualComparisonFromWhereBuilder(
-                    new Date\EqualComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $submitted_on_alias_field
-                    ),
-                    new Date\EqualComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $last_update_date_alias_field
-                    ),
                     new Users\EqualComparisonFromWhereBuilder(
                         $list_value_extractor,
                         $user_manager,
@@ -235,16 +221,6 @@ final class ArtifactReportFactoryInstantiator
                     )
                 ),
                 new Metadata\NotEqualComparisonFromWhereBuilder(
-                    new Date\NotEqualComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $submitted_on_alias_field
-                    ),
-                    new Date\NotEqualComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $last_update_date_alias_field
-                    ),
                     new Users\NotEqualComparisonFromWhereBuilder(
                         $list_value_extractor,
                         $user_manager,
@@ -254,66 +230,6 @@ final class ArtifactReportFactoryInstantiator
                         $list_value_extractor,
                         $user_manager,
                         $last_update_by_alias_field
-                    )
-                ),
-                new Metadata\GreaterThanComparisonFromWhereBuilder(
-                    new Date\GreaterThanComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $submitted_on_alias_field
-                    ),
-                    new Date\GreaterThanComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $last_update_date_alias_field
-                    )
-                ),
-                new Metadata\GreaterThanOrEqualComparisonFromWhereBuilder(
-                    new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $submitted_on_alias_field
-                    ),
-                    new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $last_update_date_alias_field
-                    )
-                ),
-                new Metadata\LesserThanComparisonFromWhereBuilder(
-                    new Date\LesserThanComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $submitted_on_alias_field
-                    ),
-                    new Date\LesserThanComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $last_update_date_alias_field
-                    )
-                ),
-                new Metadata\LesserThanOrEqualComparisonFromWhereBuilder(
-                    new Date\LesserThanOrEqualComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $submitted_on_alias_field
-                    ),
-                    new Date\LesserThanOrEqualComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $last_update_date_alias_field
-                    )
-                ),
-                new Metadata\BetweenComparisonFromWhereBuilder(
-                    new Date\BetweenComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $submitted_on_alias_field
-                    ),
-                    new Date\BetweenComparisonFromWhereBuilder(
-                        $date_value_extractor,
-                        $date_time_value_rounder,
-                        $last_update_date_alias_field
                     )
                 ),
                 new Metadata\InComparisonFromWhereBuilder(
@@ -344,6 +260,7 @@ final class ArtifactReportFactoryInstantiator
                 new Metadata\Semantic\Description\DescriptionFromWhereBuilder($db),
                 new Metadata\Semantic\Status\StatusFromWhereBuilder(),
                 new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder($user_manager),
+                new Metadata\AlwaysThereField\Date\DateFromWhereBuilder($date_time_value_rounder),
             ),
         );
 

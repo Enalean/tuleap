@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use LogicException;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date\DateFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description\DescriptionFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\StatusFromWhereBuilder;
@@ -36,20 +37,19 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
 {
+    private const SUBMITTED_ON_ALIAS     = 'tracker_artifact.submitted_on';
+    private const LAST_UPDATE_DATE_ALIAS = 'last_changeset.submitted_on';
+
     public function __construct(
         private EqualComparisonFromWhereBuilder $metadata_equal_builder,
         private NotEqualComparisonFromWhereBuilder $metadata_not_equal_builder,
-        private GreaterThanComparisonFromWhereBuilder $metadata_greater_than_builder,
-        private GreaterThanOrEqualComparisonFromWhereBuilder $metadata_greater_than_or_equal_builder,
-        private LesserThanComparisonFromWhereBuilder $metadata_lesser_than_builder,
-        private LesserThanOrEqualComparisonFromWhereBuilder $metadata_lesser_than_or_equal_builder,
-        private BetweenComparisonFromWhereBuilder $metadata_between_builder,
         private InComparisonFromWhereBuilder $metadata_in_builder,
         private NotInComparisonFromWhereBuilder $metadata_not_in_builder,
         private TitleFromWhereBuilder $title_builder,
         private DescriptionFromWhereBuilder $description_builder,
         private StatusFromWhereBuilder $status_builder,
         private AssignedToFromWhereBuilder $assigned_to_builder,
+        private DateFromWhereBuilder $date_builder,
     ) {
     }
 
@@ -61,19 +61,20 @@ final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
         Comparison $comparison,
         array $trackers,
     ): IProvideParametrizedFromAndWhereSQLFragments {
-        $parameters = new MetadataValueWrapperParameters($comparison, $trackers);
+        $parameters = new MetadataValueWrapperParameters($comparison, $trackers, '');
         return match ($metadata->getName()) {
-            AllowedMetadata::TITLE          => $this->title_builder->getFromWhere($parameters),
-            AllowedMetadata::DESCRIPTION    => $this->description_builder->getFromWhere($parameters),
-            AllowedMetadata::STATUS         => $this->status_builder->getFromWhere($parameters),
-            AllowedMetadata::ASSIGNED_TO    => $this->assigned_to_builder->getFromWhere($parameters),
+            // Semantics
+            AllowedMetadata::TITLE            => $this->title_builder->getFromWhere($parameters),
+            AllowedMetadata::DESCRIPTION      => $this->description_builder->getFromWhere($parameters),
+            AllowedMetadata::STATUS           => $this->status_builder->getFromWhere($parameters),
+            AllowedMetadata::ASSIGNED_TO      => $this->assigned_to_builder->getFromWhere($parameters),
 
             // Always there fields
-            AllowedMetadata::SUBMITTED_ON,
-            AllowedMetadata::LAST_UPDATE_DATE,
+            AllowedMetadata::SUBMITTED_ON     => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, self::SUBMITTED_ON_ALIAS)),
+            AllowedMetadata::LAST_UPDATE_DATE => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, self::LAST_UPDATE_DATE_ALIAS)),
             AllowedMetadata::SUBMITTED_BY,
-            AllowedMetadata::LAST_UPDATE_BY => $this->matchOnComparisonType($metadata, $comparison, $trackers),
-            default                         => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
+            AllowedMetadata::LAST_UPDATE_BY   => $this->matchOnComparisonType($metadata, $comparison, $trackers),
+            default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
 
@@ -86,15 +87,11 @@ final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
         array $trackers,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         return match ($comparison->getType()) {
-            ComparisonType::Equal              => $this->metadata_equal_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::NotEqual           => $this->metadata_not_equal_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::LesserThan         => $this->metadata_lesser_than_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::GreaterThan        => $this->metadata_greater_than_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::LesserThanOrEqual  => $this->metadata_lesser_than_or_equal_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::GreaterThanOrEqual => $this->metadata_greater_than_or_equal_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::Between            => $this->metadata_between_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::In                 => $this->metadata_in_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::NotIn              => $this->metadata_not_in_builder->getFromWhere($metadata, $comparison, $trackers),
+            ComparisonType::Equal    => $this->metadata_equal_builder->getFromWhere($metadata, $comparison, $trackers),
+            ComparisonType::NotEqual => $this->metadata_not_equal_builder->getFromWhere($metadata, $comparison, $trackers),
+            ComparisonType::In       => $this->metadata_in_builder->getFromWhere($metadata, $comparison, $trackers),
+            ComparisonType::NotIn    => $this->metadata_not_in_builder->getFromWhere($metadata, $comparison, $trackers),
+            default                  => throw new LogicException('Should have been handled'),
         };
     }
 }
