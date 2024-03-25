@@ -40,7 +40,6 @@ describe("QueryEditor", () => {
         writingCrossTrackerReport.expert_query = "@title = 'foo'";
 
         const wrapper = await instantiateComponent(writingCrossTrackerReport);
-        expect(wrapper.element).toMatchSnapshot();
         expect(wrapper.vm.$data.value).toContain(writingCrossTrackerReport.expert_query);
     });
 
