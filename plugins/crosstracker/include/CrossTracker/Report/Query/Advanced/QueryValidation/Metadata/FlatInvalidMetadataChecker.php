@@ -52,6 +52,7 @@ final readonly class FlatInvalidMetadataChecker implements CheckComparison
         private NotInComparisonChecker $not_in_checker,
         private TextSemanticChecker $text_semantic_checker,
         private StatusChecker $status_checker,
+        private AssignedToChecker $assigned_to_checker,
     ) {
     }
 
@@ -64,11 +65,11 @@ final readonly class FlatInvalidMetadataChecker implements CheckComparison
             AllowedMetadata::TITLE,
             AllowedMetadata::DESCRIPTION => $this->text_semantic_checker->checkSemanticIsValidForComparison($comparison, $metadata),
             AllowedMetadata::STATUS => $this->status_checker->checkSemanticIsValidForComparison($comparison, $metadata),
+            AllowedMetadata::ASSIGNED_TO => $this->assigned_to_checker->checkSemanticIsValidForComparison($comparison, $metadata),
             AllowedMetadata::SUBMITTED_ON,
             AllowedMetadata::LAST_UPDATE_DATE,
             AllowedMetadata::SUBMITTED_BY,
-            AllowedMetadata::LAST_UPDATE_BY,
-            AllowedMetadata::ASSIGNED_TO => $this->matchOnComparisonType($metadata, $comparison),
+            AllowedMetadata::LAST_UPDATE_BY => $this->matchOnComparisonType($metadata, $comparison),
             default => throw new \LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
