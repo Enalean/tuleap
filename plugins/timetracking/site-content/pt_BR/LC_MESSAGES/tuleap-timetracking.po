@@ -21,6 +21,9 @@ msgstr ""
 msgid "Add times"
 msgstr ""
 
+msgid "Archive should not contain timetracking data."
+msgstr ""
+
 msgid "Close"
 msgstr "Fechar"
 

@@ -65,6 +65,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Registration\Template\DefineIssueTemplateEvent;
 use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
+use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
@@ -635,7 +636,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         return self::SERVICE_SHORTNAME;
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
         $event->addService($this->getServiceShortname(), ServiceTracker::class);
@@ -944,7 +945,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function referenceGetTooltipRepresentationEvent(Tuleap\Reference\ReferenceGetTooltipRepresentationEvent $event): void
     {
         if ($event->getReference()->getServiceShortName() === self::SERVICE_SHORTNAME && $event->getReference()->getNature() === Artifact::REFERENCE_NATURE) {
@@ -1157,7 +1158,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
     {
         if ($event->getKey() === MarkTrackerAsDeletedController::PROJECT_HISTORY_TRACKER_DELETION_KEY) {
@@ -2791,5 +2792,17 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 implode(', ', array_map(static fn($service) => $service->getInternationalizedName(), $services)),
             )
         );
+    }
+
+    #[ListeningToEventClass]
+    public function archiveWithoutDataCheckerEvent(ArchiveWithoutDataCheckerErrorCollection $event): void
+    {
+        $event->getLogger()->debug('Checking that tracker does not contain data');
+
+        if (! empty($event->getXmlElement()->xpath('//trackers/tracker/artifacts/artifact'))) {
+            $event->addError(
+                dgettext('tuleap-tracker', 'Archive should not contain tracker data.'),
+            );
+        }
     }
 }

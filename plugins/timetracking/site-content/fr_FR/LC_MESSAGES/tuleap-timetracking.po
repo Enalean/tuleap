@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "Access denied. You don't have permissions to perform this action."
 msgstr ""
@@ -27,6 +27,9 @@ msgstr "Ajouter un temps"
 
 msgid "Add times"
 msgstr "Ajouter des temps"
+
+msgid "Archive should not contain timetracking data."
+msgstr "L'archive ne peut pas contenir des données de suivi de temps."
 
 msgid "Close"
 msgstr "Fermer"

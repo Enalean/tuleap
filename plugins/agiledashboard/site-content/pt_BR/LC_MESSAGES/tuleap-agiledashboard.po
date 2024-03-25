@@ -53,6 +53,9 @@ msgid ""
 "removed."
 msgstr ""
 
+msgid "Archive should not contain agiledashboard data."
+msgstr ""
+
 #, php-format
 msgid ""
 "Artifact #%d not added in the backlog because it's already planned in a "

@@ -67,6 +67,9 @@ msgstr ""
 "Les actions workflow de type \"AddToTopBacklog\" définies dans le projet "
 "seront supprimées."
 
+msgid "Archive should not contain agiledashboard data."
+msgstr "L'archive ne peut pas contenir des données agiledashboard."
+
 #, php-format
 msgid ""
 "Artifact #%d not added in the backlog because it's already planned in a "

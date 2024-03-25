@@ -627,6 +627,12 @@ msgstr ""
 msgid "Appearance & language"
 msgstr "Apparence et langue"
 
+msgid "Archive should not contain FRS packages."
+msgstr "L'archive ne peut pas contenir de paquets FRS."
+
+msgid "Archive should not contain users."
+msgstr "L'archive ne peut pas contenir des utilisateurs."
+
 msgid "Are you sure you want to remove this passkey?"
 msgstr "Êtes-vous sûr de vouloir supprimer cette clé d'authentification ?"
 

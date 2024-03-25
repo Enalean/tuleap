@@ -56,6 +56,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 use Tuleap\Project\DelegatedUserAccessForProject;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\PluginWithService;
@@ -883,5 +884,22 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
 
     public function serviceEnableForXmlImportRetriever(\Tuleap\Project\XML\ServiceEnableForXmlImportRetriever $event): void
     {
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function archiveWithoutDataCheckerEvent(ArchiveWithoutDataCheckerErrorCollection $event): void
+    {
+        $event->getLogger()->debug('Checking that mediawiki does not contain data');
+
+        $xml_mediawiki = $event->getXmlElement()->mediawiki;
+        if (! $xml_mediawiki) {
+            return;
+        }
+
+        if (isset($xml_mediawiki['pages-backup']) || isset($xml_mediawiki['files-folder-backup'])) {
+            $event->addError(
+                dgettext('tuleap-mediawiki', 'Archive should not contain mediawiki data.'),
+            );
+        }
     }
 }

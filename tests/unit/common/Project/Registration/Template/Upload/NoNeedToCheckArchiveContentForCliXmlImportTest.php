@@ -18,26 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project;
+declare(strict_types=1);
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\Project\Registration\Template\Upload\CheckArchiveContent;
-use Tuleap\Project\XML\Import\ArchiveInterface;
-use Tuleap\Project\XML\Import\ImportConfig;
-use Tuleap\Project\XML\Import\ImportNotValidException;
+namespace Tuleap\Project\Registration\Template\Upload;
 
-interface ImportFromArchive
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class NoNeedToCheckArchiveContentForCliXmlImportTest extends TestCase
 {
-    /**
-     * @return Ok<true>|Err<Fault>
-     * @throws ImportNotValidException
-     */
-    public function importFromArchive(
-        ImportConfig $configuration,
-        int $project_id,
-        ArchiveInterface $archive,
-        CheckArchiveContent $check_archive_content,
-    ): Ok|Err;
+    public function testCheckArchiveContent(): void
+    {
+        $xml = new \SimpleXMLElement('<whatever />');
+
+        self::assertSame(
+            $xml,
+            (new NoNeedToCheckArchiveContentForCliXmlImport())->checkArchiveContent($xml)->unwrapOr(null),
+        );
+    }
 }

@@ -51,6 +51,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
@@ -508,7 +509,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
         $event->addService($this->getServiceShortname(), \Tuleap\SVN\ServiceSvn::class);
@@ -1278,5 +1279,17 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
+    }
+
+    #[ListeningToEventClass]
+    public function archiveWithoutDataCheckerEvent(ArchiveWithoutDataCheckerErrorCollection $event): void
+    {
+        $event->getLogger()->debug('Checking that svn does not contain data');
+
+        if (! empty($event->getXmlElement()->xpath('//svn/repository'))) {
+            $event->addError(
+                dgettext('tuleap-svn', 'Archive should not contain svn data.'),
+            );
+        }
     }
 }

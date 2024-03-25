@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #, php-format
 msgid "\"%1$s\" Property details"
@@ -469,6 +469,9 @@ msgstr "Table d'approbation :"
 msgid "Approved"
 msgstr "Approuvé"
 
+msgid "Archive should not contain docman data."
+msgstr "L'archive ne peut pas contenir des données docman."
+
 msgid "Are you sure you want to delete the property '%1$s'?"
 msgstr "Etes-vous sûr de vouloir supprimer la propriété '%1$s' ?"
 
@@ -607,7 +610,7 @@ msgstr "Propager la suppression au service wiki"
 
 #, php-format
 msgid "Change \"%1$s\""
-msgstr ""
+msgstr "Changer \"%1$s\""
 
 msgid "Change Log"
 msgstr "Description des changements"

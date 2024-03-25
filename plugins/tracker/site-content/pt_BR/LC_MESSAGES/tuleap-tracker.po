@@ -439,6 +439,9 @@ msgid ""
 "settings of the machine on which the server is running."
 msgstr ""
 
+msgid "Archive should not contain tracker data."
+msgstr ""
+
 msgid "Are you sure that you want to delete it?"
 msgstr ""
 

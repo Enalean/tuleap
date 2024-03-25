@@ -87,6 +87,7 @@ use Tuleap\Git\Hook\PreReceive\PreReceiveAction;
 use Tuleap\Git\Hook\PreReceive\PreReceiveCommand;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\WebAssembly\FFIWASMCaller;
@@ -369,7 +370,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return parent::getHooksAndCallbacks();
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
         $event->addService($this->getServiceShortname(), \Tuleap\Git\GitService::class);
@@ -2882,5 +2883,17 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             __DIR__ . '/../frontend-assets',
             '/assets/git'
         );
+    }
+
+    #[ListeningToEventClass]
+    public function archiveWithoutDataCheckerEvent(ArchiveWithoutDataCheckerErrorCollection $event): void
+    {
+        $event->getLogger()->debug('Checking that git does not contain data');
+
+        if (! empty($event->getXmlElement()->xpath('//git/repository'))) {
+            $event->addError(
+                dgettext('tuleap-git', 'Archive should not contain git data.'),
+            );
+        }
     }
 }

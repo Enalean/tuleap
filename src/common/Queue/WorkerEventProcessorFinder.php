@@ -28,6 +28,7 @@ use TemplateRendererFactory;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Option\Option;
 use Tuleap\Project\ProjectCreationNotifier;
+use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataChecker;
 use Tuleap\Project\Registration\Template\Upload\ExtractArchiveAndCreateProject;
 use Tuleap\Project\Registration\Template\Upload\ProjectAfterArchiveImportActivation;
 use Tuleap\Project\Registration\Template\Upload\ProjectImportStatusNotifier;
@@ -76,6 +77,10 @@ final readonly class WorkerEventProcessorFinder implements FindWorkerEventProces
                         $user_manager,
                         new UploadedArchiveForProjectArchiver(ForgeConfig::get('sys_data_dir')),
                         new UploadedArchiveForProjectDao(),
+                        new ArchiveWithoutDataChecker(
+                            \EventManager::instance(),
+                            $worker_event->getLogger(),
+                        ),
                     ),
                 ),
             default =>

@@ -152,6 +152,7 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
@@ -1812,5 +1813,17 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $xml_importer->import($params['xml_content']->docman);
 
         $logger->info('Import completed');
+    }
+
+    #[ListeningToEventClass]
+    public function archiveWithoutDataCheckerEvent(ArchiveWithoutDataCheckerErrorCollection $event): void
+    {
+        $event->getLogger()->debug('Checking that docman does not contain data');
+
+        if (! empty($event->getXmlElement()->xpath('//docman/item'))) {
+            $event->addError(
+                dgettext('tuleap-docman', 'Archive should not contain docman data.'),
+            );
+        }
     }
 }

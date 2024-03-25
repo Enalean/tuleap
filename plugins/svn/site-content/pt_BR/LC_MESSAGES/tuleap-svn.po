@@ -40,6 +40,9 @@ msgstr ""
 msgid "An error occured when deleting repository."
 msgstr ""
 
+msgid "Archive should not contain svn data."
+msgstr ""
+
 msgid "Authentication cache"
 msgstr ""
 
