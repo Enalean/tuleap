@@ -37,8 +37,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQue
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
@@ -265,11 +263,7 @@ class crosstrackerPlugin extends Plugin
             )
         );
 
-        $submitted_by_alias_field   = 'tracker_artifact.submitted_by';
-        $last_update_by_alias_field = 'last_changeset.submitted_by';
-
         $date_time_value_rounder = new DateTimeValueRounder();
-        $list_value_extractor    = new ListValueExtractor();
         $list_from_where_builder = new Field\ListFromWhereBuilder();
         $query_builder_visitor   = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
@@ -290,59 +284,12 @@ class crosstrackerPlugin extends Plugin
                 new Field\UserList\UserListFromWhereBuilder($list_from_where_builder),
             ),
             new Metadata\MetadataFromWhereBuilder(
-                new Metadata\EqualComparisonFromWhereBuilder(
-                    new Users\EqualComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager,
-                        $submitted_by_alias_field
-                    ),
-                    new Users\EqualComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager,
-                        $last_update_by_alias_field
-                    )
-                ),
-                new Metadata\NotEqualComparisonFromWhereBuilder(
-                    new Users\NotEqualComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager,
-                        $submitted_by_alias_field
-                    ),
-                    new Users\NotEqualComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager,
-                        $last_update_by_alias_field
-                    )
-                ),
-                new Metadata\InComparisonFromWhereBuilder(
-                    new Users\InComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager,
-                        $submitted_by_alias_field
-                    ),
-                    new Users\InComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager,
-                        $last_update_by_alias_field
-                    )
-                ),
-                new Metadata\NotInComparisonFromWhereBuilder(
-                    new Users\NotInComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager,
-                        $submitted_by_alias_field
-                    ),
-                    new Users\NotInComparisonFromWhereBuilder(
-                        $list_value_extractor,
-                        $user_manager,
-                        $last_update_by_alias_field
-                    )
-                ),
                 new Metadata\Semantic\Title\TitleFromWhereBuilder($db),
                 new Metadata\Semantic\Description\DescriptionFromWhereBuilder($db),
                 new Metadata\Semantic\Status\StatusFromWhereBuilder(),
                 new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder($user_manager),
                 new Metadata\AlwaysThereField\Date\DateFromWhereBuilder($date_time_value_rounder),
+                new Metadata\AlwaysThereField\Users\UsersFromWhereBuilder($user_manager),
             ),
         );
 

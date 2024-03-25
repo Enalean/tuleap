@@ -26,12 +26,12 @@ use LogicException;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date\DateFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users\UsersFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description\DescriptionFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\StatusFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title\TitleFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
@@ -39,17 +39,16 @@ final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
 {
     private const SUBMITTED_ON_ALIAS     = 'tracker_artifact.submitted_on';
     private const LAST_UPDATE_DATE_ALIAS = 'last_changeset.submitted_on';
+    private const SUBMITTED_BY_ALIAS     = 'tracker_artifact.submitted_by';
+    private const LAST_UPDATE_BY_ALIAS   = 'last_changeset.submitted_by';
 
     public function __construct(
-        private EqualComparisonFromWhereBuilder $metadata_equal_builder,
-        private NotEqualComparisonFromWhereBuilder $metadata_not_equal_builder,
-        private InComparisonFromWhereBuilder $metadata_in_builder,
-        private NotInComparisonFromWhereBuilder $metadata_not_in_builder,
         private TitleFromWhereBuilder $title_builder,
         private DescriptionFromWhereBuilder $description_builder,
         private StatusFromWhereBuilder $status_builder,
         private AssignedToFromWhereBuilder $assigned_to_builder,
         private DateFromWhereBuilder $date_builder,
+        private UsersFromWhereBuilder $users_builder,
     ) {
     }
 
@@ -72,26 +71,9 @@ final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
             // Always there fields
             AllowedMetadata::SUBMITTED_ON     => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, self::SUBMITTED_ON_ALIAS)),
             AllowedMetadata::LAST_UPDATE_DATE => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, self::LAST_UPDATE_DATE_ALIAS)),
-            AllowedMetadata::SUBMITTED_BY,
-            AllowedMetadata::LAST_UPDATE_BY   => $this->matchOnComparisonType($metadata, $comparison, $trackers),
+            AllowedMetadata::SUBMITTED_BY     => $this->users_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, self::SUBMITTED_BY_ALIAS)),
+            AllowedMetadata::LAST_UPDATE_BY   => $this->users_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, self::LAST_UPDATE_BY_ALIAS)),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
-        };
-    }
-
-    /**
-     * @param Tracker[] $trackers
-     */
-    private function matchOnComparisonType(
-        Metadata $metadata,
-        Comparison $comparison,
-        array $trackers,
-    ): IProvideParametrizedFromAndWhereSQLFragments {
-        return match ($comparison->getType()) {
-            ComparisonType::Equal    => $this->metadata_equal_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::NotEqual => $this->metadata_not_equal_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::In       => $this->metadata_in_builder->getFromWhere($metadata, $comparison, $trackers),
-            ComparisonType::NotIn    => $this->metadata_not_in_builder->getFromWhere($metadata, $comparison, $trackers),
-            default                  => throw new LogicException('Should have been handled'),
         };
     }
 }
