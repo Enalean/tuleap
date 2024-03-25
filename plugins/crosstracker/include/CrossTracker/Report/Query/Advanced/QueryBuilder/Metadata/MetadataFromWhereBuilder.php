@@ -35,7 +35,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
-final readonly class MetadataFromWhereBuilder implements FromWhereBuilder
+final readonly class MetadataFromWhereBuilder
 {
     private const SUBMITTED_ON_ALIAS     = 'tracker_artifact.submitted_on';
     private const LAST_UPDATE_DATE_ALIAS = 'last_changeset.submitted_on';
