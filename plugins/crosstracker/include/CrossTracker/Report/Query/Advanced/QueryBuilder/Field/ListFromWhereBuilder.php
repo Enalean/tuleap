@@ -48,9 +48,8 @@ final readonly class ListFromWhereBuilder
         INNER JOIN tracker_field AS $tracker_field_alias
             ON (tracker.id = $tracker_field_alias.tracker_id AND $fields_id_statement)
         LEFT JOIN (
-            SELECT c.artifact_id AS artifact_id
+            SELECT artifact.id AS artifact_id
             FROM tracker_artifact AS artifact
-            INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
             INNER JOIN (
                 tracker_changeset_value AS tcv
                 LEFT JOIN (tracker_changeset_value_openlist AS tcvol
@@ -60,7 +59,7 @@ final readonly class ListFromWhereBuilder
                     {$bind_from_where->list_from}
                 ) ON (tcvl.changeset_value_id = tcv.id)
             ) ON (
-                tcv.changeset_id = c.id AND $filter_field_ids_statement
+                tcv.changeset_id = artifact.last_changeset_id AND $filter_field_ids_statement
                 AND ({$bind_from_where->filter_where})
             )
         ) AS $filter_alias ON (tracker_artifact.id = $filter_alias.artifact_id)
