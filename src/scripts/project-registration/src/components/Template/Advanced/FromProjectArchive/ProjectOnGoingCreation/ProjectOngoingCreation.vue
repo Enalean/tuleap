@@ -37,8 +37,58 @@
 
 <script setup lang="ts">
 import ProjectOngoingCreationSvg from "./ProjectOngoingCreationSvg.vue";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { getJSON, uri } from "@tuleap/fetch-result";
+import type { MinimalProjectRepresentation } from "../../../../../type";
+import { useStore } from "../../../../../stores/root";
+import { redirectToUrl } from "../../../../../helpers/location-helper";
+
+const root_store = useStore();
+
+onMounted(() => {
+    if (root_store.is_project_approval_required) {
+        return;
+    }
+    const match = /\/(\d+)$/.exec(location.href);
+    if (match && match.length > 1) {
+        pollProjectCreation(0, Number.parseInt(match[1], 10));
+    }
+});
+
+const delays = [0, 500, 1000, 1000, 1500, 1500, 2000, 2000, 3000, 3000];
+
+function scheduleProjectPolling(i: number, id: number): void {
+    if (i > delays.length) {
+        return;
+    }
+
+    setTimeout(() => {
+        pollProjectCreation(i, id);
+    }, delays[i]);
+}
+
+function pollProjectCreation(i: number, id: number): void {
+    getProject(id).match(
+        function (project: MinimalProjectRepresentation): void {
+            const params = new URLSearchParams();
+            params.set("should-display-created-project-modal", "true");
+
+            redirectToUrl("/projects/" + encodeURIComponent(project.shortname) + "/?" + params);
+        },
+        function (fault: Fault): void {
+            if ("isNotFound" in fault && fault.isNotFound()) {
+                scheduleProjectPolling(i + 1, id);
+            }
+        },
+    );
+}
+
+function getProject(id: number): ResultAsync<MinimalProjectRepresentation, Fault> {
+    return getJSON<MinimalProjectRepresentation>(uri`/api/projects/${id}`);
+}
 
 const gettext_provider = useGettext();
 

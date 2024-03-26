@@ -21,6 +21,7 @@ import { Upload } from "tus-js-client";
 import type VueRouter from "vue-router";
 
 export function uploadFile(
+    project_id: number,
     project_archive: File,
     upload_href: string,
     router: VueRouter,
@@ -37,7 +38,10 @@ export function uploadFile(
         },
         onSuccess: async function (): Promise<void> {
             setIsCreatingProject(true);
-            await router.push("from-archive-creation");
+            await router.push({
+                name: "from-archive-creation",
+                params: { project_id: String(project_id) },
+            });
         },
     });
     uploader.start();

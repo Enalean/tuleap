@@ -1656,6 +1656,7 @@ class RouteCollector
         $r->addGroup('/project', function (FastRoute\RouteCollector $r) {
             $r->get('/new', [self::class, 'getProjectRegistrationController']);
             $r->get('/new-information', [self::class, 'getProjectRegistrationController']);
+            $r->get('/from-archive-creation/{project_id:\d+}', [self::class, 'getProjectRegistrationController']);
             $r->get('/approval', [self::class, 'getProjectRegistrationController']);
             $r->post('/{project_id:\d+}/interpret-commonmark', [self::class, 'getInterpretedCommonmark']);
         });
