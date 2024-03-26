@@ -100,6 +100,7 @@ export const useStore = defineStore("root", {
                     "archive" in this.selected_company_template
                 ) {
                     uploadFile(
+                        response.id,
                         this.selected_company_template.archive,
                         response.upload_href,
                         router,

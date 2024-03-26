@@ -47,9 +47,12 @@ export function createRouter(): VueRouter {
                 component: ProjectApproval,
             },
             {
-                path: "/from-archive-creation",
+                path: "/from-archive-creation/:project_id",
                 name: "from-archive-creation",
                 component: ProjectOngoingCreation,
+                props: (route) => ({
+                    project_id: Number.parseInt(route.params.project_id, 10),
+                }),
             },
         ],
     });
