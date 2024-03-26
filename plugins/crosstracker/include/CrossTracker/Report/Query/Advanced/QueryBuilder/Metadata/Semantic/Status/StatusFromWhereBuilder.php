@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
 
 use LogicException;
+use ParagonIE\EasyDB\EasyStatement;
+use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
-use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -37,38 +38,111 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 /**
- * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, ParametrizedWhere>
+ * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, ParametrizedFromWhere>
  */
 final class StatusFromWhereBuilder implements ValueWrapperVisitor
 {
     public function getFromWhere(MetadataValueWrapperParameters $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $from = <<<EOSQL
-        LEFT JOIN (
-            SELECT artifact.id AS artifact_id
-            FROM tracker_artifact AS artifact
-            INNER JOIN tracker_changeset_value AS tcv ON (tcv.changeset_id = artifact.last_changeset_id)
-            INNER JOIN tracker_changeset_value_list AS tcvl ON (tcvl.changeset_value_id = tcv.id)
-            INNER JOIN tracker_semantic_status AS tss ON (tcvl.bindvalue_id = tss.open_value_id)
-        ) AS artifact_filter ON (tracker_artifact.id = artifact_filter.artifact_id)
-        EOSQL;
-
-        $where = $parameters->comparison->getValueWrapper()->accept($this, $parameters);
-        return new ParametrizedFromWhere(
-            $from,
-            $where->getWhere(),
-            [],
-            $where->getWhereParameters(),
-        );
+        return $parameters->comparison->getValueWrapper()->accept($this, $parameters);
     }
 
-    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters): ParametrizedWhere
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         return match ($parameters->comparison->getType()) {
-            ComparisonType::Equal    => new ParametrizedWhere("artifact_filter.artifact_id IS NOT NULL", []),
-            ComparisonType::NotEqual => new ParametrizedWhere("artifact_filter.artifact_id IS NULL", []),
+            ComparisonType::Equal    => $this->getFromWhereForEqual($parameters),
+            ComparisonType::NotEqual => $this->getFromWhereForNotEqual($parameters),
             default                  => throw new LogicException('Other comparison types are invalid for Status semantic'),
         };
+    }
+
+    private function getFromWhereForEqual(MetadataValueWrapperParameters $parameters): ParametrizedFromWhere
+    {
+        $tracker_ids_statement = EasyStatement::open()->in(
+            'field.tracker_id IN (?*)',
+            array_map(
+                static fn(Tracker $tracker) => $tracker->getId(),
+                $parameters->trackers
+            )
+        );
+
+        $from = <<<EOSQL
+        LEFT JOIN (
+            tracker_changeset_value AS changeset_value_status
+            INNER JOIN (
+                SELECT DISTINCT field_id
+                FROM tracker_semantic_status AS field
+                WHERE $tracker_ids_statement
+            ) AS equal_status_field ON (equal_status_field.field_id = changeset_value_status.field_id)
+            INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_status
+                ON (
+                    tracker_changeset_value_status.changeset_value_id = changeset_value_status.id
+                )
+        ) ON (
+            changeset_value_status.changeset_id = tracker_artifact.last_changeset_id
+        )
+        EOSQL;
+
+        $where = <<<EOSQL
+        changeset_value_status.changeset_id IS NOT NULL
+        AND tracker_changeset_value_status.bindvalue_id IN (
+            SELECT open_value_id
+            FROM tracker_semantic_status AS field
+            WHERE $tracker_ids_statement
+        )
+        EOSQL;
+
+        $values = $tracker_ids_statement->values();
+        return new ParametrizedFromWhere($from, $where, $values, $values);
+    }
+
+    private function getFromWhereForNotEqual(MetadataValueWrapperParameters $parameters): ParametrizedFromWhere
+    {
+        $tracker_ids_statement = EasyStatement::open()->in(
+            'field.tracker_id IN (?*)',
+            array_map(
+                static fn(Tracker $tracker) => $tracker->getId(),
+                $parameters->trackers
+            )
+        );
+
+        $from = <<<EOSQL
+        LEFT JOIN (
+            tracker_changeset_value AS not_equal_changeset_value_status
+            INNER JOIN tracker_changeset_value_list AS not_equal_tracker_changeset_value_status
+                ON (
+                    not_equal_tracker_changeset_value_status.changeset_value_id = not_equal_changeset_value_status.id
+                )
+            INNER JOIN (
+                SELECT DISTINCT field_id
+                FROM tracker_semantic_status AS field
+                WHERE $tracker_ids_statement
+            ) AS not_equal_status_field
+                ON (
+                    not_equal_status_field.field_id = not_equal_changeset_value_status.field_id
+                )
+        ) ON (
+            not_equal_changeset_value_status.changeset_id = tracker_artifact.last_changeset_id
+        )
+        EOSQL;
+
+        $where = <<<EOSQL
+        not_equal_changeset_value_status.changeset_id IS NOT NULL
+        AND not_equal_tracker_changeset_value_status.bindvalue_id IN (
+            SELECT static.id
+            FROM tracker_field_list_bind_static_value AS static
+                INNER JOIN tracker_field AS field
+                    ON field.id = static.field_id AND $tracker_ids_statement
+                INNER JOIN tracker_semantic_status AS SS1
+                    ON field.id = SS1.field_id
+                LEFT JOIN tracker_semantic_status AS SS2
+                    ON static.field_id = SS2.field_id AND static.id = SS2.open_value_id
+            WHERE SS2.open_value_id IS NULL
+        )
+        EOSQL;
+
+        $values = $tracker_ids_statement->values();
+        return new ParametrizedFromWhere($from, $where, $values, $values);
     }
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
