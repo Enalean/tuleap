@@ -226,6 +226,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
                 new TextSemanticChecker(),
                 new StatusChecker(),
                 new AssignedToChecker($user_retriever),
+                new QueryValidation\Metadata\ArtifactSubmitterChecker($user_retriever),
             )
         );
         $collector->collectErrors(

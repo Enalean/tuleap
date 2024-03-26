@@ -262,6 +262,7 @@ class crosstrackerPlugin extends Plugin
                 new TextSemanticChecker(),
                 new StatusChecker(),
                 new AssignedToChecker($user_manager),
+                new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker($user_manager),
             )
         );
 
