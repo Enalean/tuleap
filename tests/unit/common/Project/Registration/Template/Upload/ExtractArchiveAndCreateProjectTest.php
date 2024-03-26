@@ -257,6 +257,48 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         $action->process();
     }
 
+    public function testUploadedArchiveIsNotAZip(): void
+    {
+        $logger = new TestLogger();
+
+        $activator = ActivateProjectAfterArchiveImportStub::build();
+
+        $force_login = ForceLoginStub::build();
+
+        $archive_for_project_dao = SaveUploadedArchiveForProjectStub::build();
+
+        file_put_contents($this->upload . '/test.zip', 'dummy data');
+
+        $action = ExtractArchiveAndCreateProject::fromEvent(
+            new WorkerEvent(
+                $logger,
+                [
+                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
+                    'payload' => [
+                        'project_id' => self::PROJECT_ID,
+                        'filename'   => $this->upload . '/test.zip',
+                        'user_id'    => self::USER_ID,
+                    ],
+                ]
+            ),
+            ImportFromArchiveStub::buildWithSuccessfulImport(),
+            $activator,
+            ProjectByIDFactoryStub::buildWith($this->project),
+            RetrieveUserByIdStub::withUser($this->user),
+            $force_login,
+            ArchiveUploadedArchiveStub::withDestination('/final/destination'),
+            $archive_for_project_dao,
+        );
+
+        $action->process();
+
+        self::assertTrue($force_login->isForced());
+        self::assertFalse($activator->isCalled());
+        self::assertFalse($archive_for_project_dao->isSaved());
+        self::assertTrue($logger->hasErrorRecords());
+        self::assertNull($archive_for_project_dao->getSavedDestination());
+    }
+
     public function testProcessHappyPath(): void
     {
         $logger = new TestLogger();
