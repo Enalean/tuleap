@@ -18,7 +18,7 @@
  */
 
 import type { Meta, StoryObj } from "@storybook/web-components";
-import { USER_INTERFACE_EMPHASIS_COLORS } from "@tuleap/core-constants";
+import { USER_INTERFACE_EMPHASIS_COLORS, COLOR_VARIANTS } from "@tuleap/core-constants";
 import type { UserInterfaceEmphasisColorName } from "@tuleap/core-constants";
 import { html } from "lit";
 import "@tuleap/tlp-badge";
@@ -53,7 +53,7 @@ function getClasses(args: BadgeProps): string {
 }
 
 const meta: Meta<BadgeProps> = {
-    title: "TLP/Badge",
+    title: "TLP/Visual Assets/Badges",
     parameters: {
         controls: {
             exclude: ["all_variations", "on_dark_background"],
@@ -63,39 +63,12 @@ const meta: Meta<BadgeProps> = {
         args.all_variations
             ? html`<div class="doc-example-badges">
                   <span class="tlp-badge-primary ${getClasses(args)}">
-                      <i class="fa-solid fa-tlp-tuleap tlp-badge-icon" aria-hidden="true"></i
-                      >Badge</span
-                  >
-                  <span class="tlp-badge-primary ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-secondary ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-info ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-success ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-warning ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-danger ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-inca-silver ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-chrome-silver ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-firemist-silver ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-red-wine ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-fiesta-red ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-coral-pink ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-teddy-brown ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-clockwork-orange ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-graffiti-yellow ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-army-green ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-neon-green ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-acid-green ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-sherwood-green ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-ocean-turquoise ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-surf-green ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-deep-blue ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-lake-placid-blue ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-daphne-blue ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-plum-crazy ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-ultra-violet ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-lilac-purple ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-panther-pink ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-peggy-pink ${getClasses(args)}">Badge</span>
-                  <span class="tlp-badge-flamingo-pink ${getClasses(args)}">Badge</span>
+                      <i class="fa-solid fa-tlp-tuleap tlp-badge-icon" aria-hidden="true"></i> Badge
+                  </span>
+                  ${COLOR_VARIANTS.map(
+                      (color) =>
+                          html`<span class="tlp-badge-${color} ${getClasses(args)}">Badge</span>`,
+                  )}
               </div>`
             : html`<span class="${getClasses(args)}"
                   >${args.with_icon
@@ -121,7 +94,7 @@ const meta: Meta<BadgeProps> = {
             description: "Applies the class",
             defaultValue: false,
             table: {
-                type: { summary: "tlp-badge-outline" },
+                type: { summary: ".tlp-badge-outline" },
             },
             control: { type: "boolean" },
         },
@@ -130,7 +103,7 @@ const meta: Meta<BadgeProps> = {
             description: `To be used only in some cases (as a counter in pane header, as a representation for numeric values only…)`,
             defaultValue: false,
             table: {
-                type: { summary: "tlp-badge-rounded" },
+                type: { summary: ".tlp-badge-rounded" },
             },
             control: { type: "boolean" },
         },
@@ -138,7 +111,7 @@ const meta: Meta<BadgeProps> = {
             name: "With icon",
             description: "Add an icon with the appropriate class",
             table: {
-                type: { summary: "tlp-badge-icon" },
+                type: { summary: ".tlp-badge-icon" },
             },
             control: { type: "boolean" },
         },

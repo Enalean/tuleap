@@ -63,13 +63,18 @@ export type UserInterfaceColorName = "info" | "success" | "warning" | "danger";
 export type EmphasisColorName = "primary" | "secondary";
 export type UserInterfaceEmphasisColorName = UserInterfaceColorName | EmphasisColorName;
 export type ColorVariant = ColorName | UserInterfaceEmphasisColorName;
-export const USER_INTERFACE_EMPHASIS_COLORS: ReadonlyArray<UserInterfaceEmphasisColorName> = [
-    "primary",
-    "secondary",
+
+export const USER_INTERFACE_COLORS: ReadonlyArray<UserInterfaceColorName> = [
     "info",
     "success",
     "warning",
     "danger",
+];
+
+export const USER_INTERFACE_EMPHASIS_COLORS: ReadonlyArray<UserInterfaceEmphasisColorName> = [
+    "primary",
+    "secondary",
+    ...USER_INTERFACE_COLORS,
 ];
 
 export const COLOR_VARIANTS: ReadonlyArray<ColorVariant> = [

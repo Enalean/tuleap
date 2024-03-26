@@ -1,0 +1,17 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as AlertStories from "./tlp-alert.stories";
+
+<Meta of={AlertStories}/>
+
+# Alerts
+
+<code>.tlp-alert-[type]</code>
+
+<Canvas withToolbar={true} of={AlertStories.Alert}></Canvas>
+
+<Controls></Controls>
+
+<Canvas withToolbar={true} of={AlertStories.InfoAlert}></Canvas>
+<Canvas withToolbar={true} of={AlertStories.SuccessAlert}></Canvas>
+<Canvas withToolbar={true} of={AlertStories.WarningAlert}></Canvas>
+<Canvas withToolbar={true} of={AlertStories.DangerAlert}></Canvas>
