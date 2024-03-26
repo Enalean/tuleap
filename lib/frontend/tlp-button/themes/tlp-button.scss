@@ -121,11 +121,6 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     }
 }
 
-@mixin tlp-button-darken($color, $percentage) {
-    border-color: color.adjust($color, $lightness: - $percentage);
-    background: color.adjust($color, $lightness: - $percentage);
-}
-
 @mixin tlp-button-disabled($background-color, $text-color) {
     border-color: transparent;
     background: $background-color;
