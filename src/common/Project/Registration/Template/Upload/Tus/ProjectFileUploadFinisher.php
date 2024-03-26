@@ -47,7 +47,6 @@ final readonly class ProjectFileUploadFinisher implements TusFinisherDataStore
     {
         $file_path = $this->upload_path_allocator->getPathForItemBeingUploaded($file_information);
         try {
-            $this->tryToOpenArchive($file_path);
             $user = $this->current_user_request->getCurrentRequestUser($request);
             if (! $user) {
                 throw new ForbiddenException();
@@ -61,19 +60,6 @@ final readonly class ProjectFileUploadFinisher implements TusFinisherDataStore
         } finally {
             $this->file_ongoing_upload_dao->deleteById($file_information);
         }
-    }
-
-    /**
-     * @throws FileIsNotAnArchiveException
-     */
-    private function tryToOpenArchive(string $file_path): void
-    {
-        $zip = new \ZipArchive();
-        if ($zip->open($file_path) !== true) {
-            unlink($file_path);
-            throw new FileIsNotAnArchiveException();
-        }
-        $zip->close();
     }
 
     private function getProjectId(TusFileInformation $file_information): int

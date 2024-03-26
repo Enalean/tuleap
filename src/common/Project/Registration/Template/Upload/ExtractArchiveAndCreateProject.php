@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\ImportFromArchive;
 use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\Project\XML\ArchiveException;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ZipArchive;
 use Tuleap\Queue\WorkerEvent;
@@ -104,9 +105,8 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         }
         $this->force_login->forceLogin($user->getUserName());
 
-        $archive = new ZipArchive($this->filename, \ForgeConfig::get('tmp_dir'));
-
         try {
+            $archive = new ZipArchive($this->filename, \ForgeConfig::get('tmp_dir'));
             $this->importer->importFromArchive(
                 new ImportConfig(),
                 (int) $project->getID(),
@@ -125,9 +125,13 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
                     Fault::writeToLogger($fault, $this->logger);
                 }
             );
-            unlink($this->filename);
+        } catch (ArchiveException $exception) {
+            $this->logger->error($exception->getMessage());
         } finally {
-            $archive->cleanUp();
+            if (isset($archive)) {
+                $archive->cleanUp();
+            }
+            unlink($this->filename);
         }
     }
 }

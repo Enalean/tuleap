@@ -132,25 +132,6 @@ final class ProjectFileUploadFinisherTest extends TestCase
         self::assertSame(1, $this->file_upload_dao->getDeleteByIdMethodCallCount());
     }
 
-    public function testItThrowsWhenProvidedFileIsNotAnArchive(): void
-    {
-        $file_information = new FileBeingUploadedInformation(15, "filename.md", 996, 0);
-        $item_path        = $this->path_allocator->getPathForItemBeingUploaded($file_information);
-        file_put_contents($item_path, "#test");
-
-        $this->expectException(FileIsNotAnArchiveException::class);
-
-        $this
-            ->getFinisher(
-                SearchFileUploadStub::withExistingRow(['project_id' => self::PROJECT_ID]),
-                new CurrentRequestUserProviderStub($this->user),
-            )
-            ->finishUpload($this->request, $file_information);
-
-        self::assertFalse(file_exists($item_path));
-        self::assertSame(1, $this->file_upload_dao->getDeleteByIdMethodCallCount());
-    }
-
     public function testItThrowsWhenProjectCannotBeFound(): void
     {
         $file_information = new FileBeingUploadedInformation(15, "test.zip", 996, 0);
