@@ -118,8 +118,11 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
@@ -2197,18 +2200,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $event_dispatcher         = EventManager::instance();
         $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         return new NewChangesetCreator(
-            $fields_validator,
-            $fields_retriever,
-            $this->getEventManager(),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
             $this->getTransactionExecutor(),
             $this->getChangesetSaver(),
-            new Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
-                $tracker_artifact_factory
-            ),
             new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever),
-            $this->getActionsQueuer(),
-            new ChangesetValueSaver(),
             $this->getWorkflowRetriever(),
             new CommentCreator(
                 $this->getChangesetCommentDao(),
@@ -2216,10 +2210,25 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new TextValueValidator(),
             ),
-            new ChangesetCommentIndexer(
-                new ItemToIndexQueueEventBased($event_dispatcher),
-                $event_dispatcher,
-                new \Tracker_Artifact_Changeset_CommentDao(),
+            new NewChangesetFieldValueSaver(
+                $fields_retriever,
+                new ChangesetValueSaver(),
+            ),
+            new NewChangesetValidator(
+                $fields_validator,
+                new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+                new Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
+                    $tracker_artifact_factory
+                ),
+            ),
+            new NewChangesetPostProcessor(
+                $this->getEventManager(),
+                $this->getActionsQueuer(),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
             ),
         );
     }

@@ -24,17 +24,10 @@ namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
-use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreation;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
-use Tuleap\Tracker\Artifact\ChangesetValue\SaveChangesetValue;
-use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
-use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
-use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinkToParentWithoutCurrentArtifactChangeException;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 
 /**
@@ -43,19 +36,14 @@ use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 class NewChangesetCreator implements CreateNewChangeset
 {
     public function __construct(
-        private \Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        private FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
-        private \EventManager $event_manager,
-        private \Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
         private DBTransactionExecutor $transaction_executor,
         private ArtifactChangesetSaver $artifact_changeset_saver,
-        private ParentLinkAction $parent_link_action,
         private AfterNewChangesetHandler $after_new_changeset_handler,
-        private PostCreationActionsQueuer $post_creation_queuer,
-        private SaveChangesetValue $changeset_value_saver,
         private RetrieveWorkflow $workflow_retriever,
         private CommentCreator $comment_creator,
-        private ChangesetCommentIndexer $changeset_comment_indexer,
+        private StoreNewChangesetFieldValues $store_new_changeset_field_values,
+        private ValidateNewChangeset $validate_new_changeset,
+        private ProcessChangesetPostCreation $changeset_created_post_process_creation,
     ) {
     }
 
@@ -81,7 +69,7 @@ class NewChangesetCreator implements CreateNewChangeset
 
                 try {
                     $workflow = $this->workflow_retriever->getNonNullWorkflow($artifact->getTracker());
-                    $this->validateNewChangeset($changeset, $email, $workflow);
+                    $this->validate_new_changeset->validateNewChangeset($changeset, $email, $workflow);
 
                     $previous_changeset = $artifact->getLastChangeset();
 
@@ -107,7 +95,7 @@ class NewChangesetCreator implements CreateNewChangeset
                         throw new \Tracker_ChangesetNotCreatedException();
                     }
 
-                    $this->storeFieldsValues(
+                    $this->store_new_changeset_field_values->storeFieldsValues(
                         $changeset,
                         $previous_changeset,
                         $fields_data,
@@ -161,111 +149,11 @@ class NewChangesetCreator implements CreateNewChangeset
 
             $new_changeset = $changeset_created->changeset;
 
-            if ($changeset_created->should_launch_fts_update) {
-                $this->changeset_comment_indexer->indexNewChangesetComment($changeset_created->comment_creation, $artifact);
-            }
-
-            if (! $context->getImportConfig()->isFromXml()) {
-                $this->post_creation_queuer->queuePostCreation(
-                    $new_changeset,
-                    $context->shouldSendNotifications()
-                );
-            }
-
-            if (! $old_changeset) {
-                $old_changeset = $new_changeset;
-            }
-            $this->event_manager->processEvent(new ArtifactUpdated($artifact, $submitter, $new_changeset, $old_changeset));
+            $this->changeset_created_post_process_creation->postProcessCreation($changeset_created, $artifact, $context, $old_changeset, $submitter);
 
             return $new_changeset;
         } catch (\PDOException $exception) {
             throw new \Tracker_ChangesetCommitException($exception);
         }
-    }
-
-    /**
-     * @throws \Tracker_FieldValueNotStoredException
-     */
-    private function storeFieldsValues(
-        NewChangeset $new_changeset,
-        ?\Tracker_Artifact_Changeset $previous_changeset,
-        array $fields_data,
-        int $changeset_id,
-        \Workflow $workflow,
-    ): void {
-        $artifact = $new_changeset->getArtifact();
-        foreach ($this->fields_retriever->getFields($artifact) as $field) {
-            if (
-                ! $this->changeset_value_saver->saveNewChangesetForField(
-                    $field,
-                    $artifact,
-                    $previous_changeset,
-                    $fields_data,
-                    $new_changeset->getSubmitter(),
-                    $changeset_id,
-                    $workflow,
-                    $new_changeset->getUrlMapping()
-                )
-            ) {
-                $purifier = \Codendi_HTMLPurifier::instance();
-                throw new \Tracker_FieldValueNotStoredException(
-                    sprintf(
-                        dgettext('tuleap-tracker', 'The field "%1$s" cannot be stored.'),
-                        $purifier->purify($field->getLabel())
-                    )
-                );
-            }
-        }
-    }
-
-    /**
-     * @throws \Tracker_Workflow_Transition_InvalidConditionForTransitionException
-     * @throws \Tracker_Workflow_GlobalRulesViolationException
-     * @throws FieldValidationException
-     * @throws \Tracker_NoChangeException
-     * @throws \Tracker_Exception
-     * @throws LinkToParentWithoutCurrentArtifactChangeException
-     */
-    private function validateNewChangeset(NewChangeset $new_changeset, ?string $email, \Workflow $workflow): void
-    {
-        $artifact    = $new_changeset->getArtifact();
-        $submitter   = $new_changeset->getSubmitter();
-        $fields_data = $new_changeset->getFieldsData();
-        $comment     = $new_changeset->getComment()->getBody();
-        if ($submitter->isAnonymous() && ($email === null || $email === '')) {
-            $message = dgettext('tuleap-tracker', 'You are not logged in.');
-            throw new \Tracker_Exception($message);
-        }
-
-        $are_fields_valid = $this->fields_validator->validate(
-            $artifact,
-            $submitter,
-            $fields_data,
-            new NullChangesetValidationContext()
-        );
-        if (! $are_fields_valid) {
-            $errors_from_feedback = $GLOBALS['Response']->getFeedbackErrors();
-            $GLOBALS['Response']->clearFeedbackErrors();
-
-            throw new FieldValidationException($errors_from_feedback);
-        }
-
-        $last_changeset = $artifact->getLastChangeset();
-
-        if ($last_changeset && ! $comment && ! $last_changeset->hasChanges($fields_data)) {
-            if ($this->parent_link_action->linkParent($artifact, $submitter, $fields_data)) {
-                throw new LinkToParentWithoutCurrentArtifactChangeException();
-            }
-            throw new \Tracker_NoChangeException($artifact->getId(), $artifact->getXRef());
-        }
-
-        $initialized_fields_data = $this->field_initializator->process($artifact, $fields_data);
-
-        $workflow->validate($initialized_fields_data, $artifact, $comment, $submitter);
-        /*
-         * We need to run the post actions to validate the data
-         */
-        $workflow->before($initialized_fields_data, $submitter, $artifact);
-        $workflow->checkGlobalRules($initialized_fields_data);
     }
 }

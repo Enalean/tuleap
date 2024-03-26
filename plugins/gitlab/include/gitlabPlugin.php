@@ -130,7 +130,10 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\CommentOnlyChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
@@ -302,36 +305,9 @@ class gitlabPlugin extends Plugin
         $cross_reference_manager        = new CrossReferenceManager(new CrossReferencesDao());
 
         $changeset_creator = new NewChangesetCreator(
-            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                $form_element_factory,
-                new ArtifactLinkValidator(
-                    $artifact_factory,
-                    new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
-                    $artifact_links_usage_dao,
-                    $event_manager,
-                ),
-                new WorkflowUpdateChecker(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                TransitionFactory::instance(),
-                                new SimpleWorkflowDao()
-                            ),
-                            new TransitionExtractor()
-                        ),
-                        FrozenFieldsRetriever::instance()
-                    )
-                )
-            ),
-            $fields_retriever,
-            $event_manager,
-            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
             $db_transaction_executor,
             ArtifactChangesetSaver::build(),
-            new ParentLinkAction($artifact_factory),
             new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
-            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
-            new ChangesetValueSaver(),
             \WorkflowFactory::instance(),
             new CommentCreator(
                 new \Tracker_Artifact_Changeset_CommentDao(),
@@ -341,10 +317,43 @@ class gitlabPlugin extends Plugin
                 ),
                 new TextValueValidator(),
             ),
-            new ChangesetCommentIndexer(
-                new ItemToIndexQueueEventBased($event_manager),
+            new NewChangesetFieldValueSaver(
+                $fields_retriever,
+                new ChangesetValueSaver(),
+            ),
+            new NewChangesetValidator(
+                new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                    $form_element_factory,
+                    new ArtifactLinkValidator(
+                        $artifact_factory,
+                        new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                        $artifact_links_usage_dao,
+                        $event_manager,
+                    ),
+                    new WorkflowUpdateChecker(
+                        new FrozenFieldDetector(
+                            new TransitionRetriever(
+                                new StateFactory(
+                                    TransitionFactory::instance(),
+                                    new SimpleWorkflowDao()
+                                ),
+                                new TransitionExtractor()
+                            ),
+                            FrozenFieldsRetriever::instance()
+                        )
+                    )
+                ),
+                new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+                new ParentLinkAction($artifact_factory),
+            ),
+            new NewChangesetPostProcessor(
                 $event_manager,
-                new \Tracker_Artifact_Changeset_CommentDao(),
+                ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                )
             ),
         );
 
@@ -531,36 +540,9 @@ class gitlabPlugin extends Plugin
         $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
 
         $changeset_creator = new NewChangesetCreator(
-            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                $form_element_factory,
-                new ArtifactLinkValidator(
-                    $artifact_factory,
-                    new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
-                    $artifact_links_usage_dao,
-                    $event_manager,
-                ),
-                new WorkflowUpdateChecker(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                TransitionFactory::instance(),
-                                new SimpleWorkflowDao()
-                            ),
-                            new TransitionExtractor()
-                        ),
-                        FrozenFieldsRetriever::instance()
-                    )
-                )
-            ),
-            $fields_retriever,
-            $event_manager,
-            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
             $db_transaction_executor,
             ArtifactChangesetSaver::build(),
-            new ParentLinkAction($artifact_factory),
             new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
-            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
-            new ChangesetValueSaver(),
             \WorkflowFactory::instance(),
             new CommentCreator(
                 new \Tracker_Artifact_Changeset_CommentDao(),
@@ -570,11 +552,44 @@ class gitlabPlugin extends Plugin
                 ),
                 new TextValueValidator(),
             ),
-            new ChangesetCommentIndexer(
-                new ItemToIndexQueueEventBased($event_manager),
-                $event_manager,
-                new \Tracker_Artifact_Changeset_CommentDao(),
+            new NewChangesetFieldValueSaver(
+                $fields_retriever,
+                new ChangesetValueSaver(),
             ),
+            new NewChangesetValidator(
+                new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                    $form_element_factory,
+                    new ArtifactLinkValidator(
+                        $artifact_factory,
+                        new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                        $artifact_links_usage_dao,
+                        $event_manager,
+                    ),
+                    new WorkflowUpdateChecker(
+                        new FrozenFieldDetector(
+                            new TransitionRetriever(
+                                new StateFactory(
+                                    TransitionFactory::instance(),
+                                    new SimpleWorkflowDao()
+                                ),
+                                new TransitionExtractor()
+                            ),
+                            FrozenFieldsRetriever::instance()
+                        )
+                    )
+                ),
+                new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+                new ParentLinkAction($artifact_factory),
+            ),
+            new NewChangesetPostProcessor(
+                $event_manager,
+                ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
+            )
         );
 
         return new IntegrationWebhookController(

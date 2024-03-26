@@ -52,7 +52,10 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaverIgnoringPermissions;
@@ -3186,18 +3189,9 @@ class Tracker implements Tracker_Dispatchable_Interface
         );
 
         $new_changeset_creator = new NewChangesetCreator(
-            $fields_validator,
-            $fields_retriever,
-            $event_manager,
-            $field_initializator,
             new DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
             $artifact_changeset_saver,
-            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
-                $artifact_factory
-            ),
             $after_new_changeset_handler,
-            ActionsQueuer::build($logger),
-            new ChangesetValueSaverIgnoringPermissions(),
             $workflow_retriever,
             new CommentCreator(
                 $changeset_comment_dao,
@@ -3205,10 +3199,25 @@ class Tracker implements Tracker_Dispatchable_Interface
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new TextValueValidator(),
             ),
-            new ChangesetCommentIndexer(
-                new ItemToIndexQueueEventBased($event_manager),
+            new NewChangesetFieldValueSaver(
+                $fields_retriever,
+                new ChangesetValueSaverIgnoringPermissions(),
+            ),
+            new NewChangesetValidator(
+                $fields_validator,
+                $field_initializator,
+                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
+                    $artifact_factory
+                ),
+            ),
+            new NewChangesetPostProcessor(
                 $event_manager,
-                new \Tracker_Artifact_Changeset_CommentDao(),
+                ActionsQueuer::build($logger),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
             ),
         );
 

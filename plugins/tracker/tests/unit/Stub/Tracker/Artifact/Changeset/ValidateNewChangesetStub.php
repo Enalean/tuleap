@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation;
+namespace Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset;
 
-use Tracker_Artifact_Changeset;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\ValidateNewChangeset;
 
-final class PostCreationActionsQueuerStub implements PostCreationActionsQueuer
+final class ValidateNewChangesetStub implements ValidateNewChangeset
 {
-    private function __construct(private $count = 0)
-    {
-    }
+    private int $count = 0;
 
-    public static function doNothing(): self
+    public static function init(): self
     {
         return new self();
     }
 
-    public function queuePostCreation(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
+    public function validateNewChangeset(NewChangeset $new_changeset, ?string $email, \Workflow $workflow): void
     {
         $this->count++;
     }

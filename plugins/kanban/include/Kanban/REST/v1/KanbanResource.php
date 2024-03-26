@@ -75,7 +75,10 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
@@ -1638,39 +1641,9 @@ final class KanbanResource extends AuthenticatedResource
         $usage_dao                = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
 
         return new NewChangesetCreator(
-            new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                $form_element_factory,
-                new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
-                    $tracker_artifact_factory,
-                    new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory(
-                        new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao(),
-                        $usage_dao
-                    ),
-                    $usage_dao,
-                    $event_dispatcher,
-                ),
-                new WorkflowUpdateChecker(new FrozenFieldDetector(
-                    new TransitionRetriever(
-                        new StateFactory(
-                            TransitionFactory::instance(),
-                            new SimpleWorkflowDao()
-                        ),
-                        new TransitionExtractor()
-                    ),
-                    FrozenFieldsRetriever::instance(),
-                )),
-            ),
-            $fields_retriever,
-            $event_dispatcher,
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
-            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
-                $tracker_artifact_factory
-            ),
             new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever),
-            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
-            new ChangesetValueSaver(),
             \WorkflowFactory::instance(),
             new CommentCreator(
                 new Tracker_Artifact_Changeset_CommentDao(),
@@ -1678,10 +1651,46 @@ final class KanbanResource extends AuthenticatedResource
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new TextValueValidator(),
             ),
-            new ChangesetCommentIndexer(
-                new ItemToIndexQueueEventBased($event_dispatcher),
+            new NewChangesetFieldValueSaver(
+                $fields_retriever,
+                new ChangesetValueSaver(),
+            ),
+            new NewChangesetValidator(
+                new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                    $form_element_factory,
+                    new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
+                        $tracker_artifact_factory,
+                        new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory(
+                            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao(),
+                            $usage_dao
+                        ),
+                        $usage_dao,
+                        $event_dispatcher,
+                    ),
+                    new WorkflowUpdateChecker(new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                TransitionFactory::instance(),
+                                new SimpleWorkflowDao()
+                            ),
+                            new TransitionExtractor()
+                        ),
+                        FrozenFieldsRetriever::instance(),
+                    )),
+                ),
+                new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
+                    $tracker_artifact_factory
+                ),
+            ),
+            new NewChangesetPostProcessor(
                 $event_dispatcher,
-                new \Tracker_Artifact_Changeset_CommentDao(),
+                ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
             ),
         );
     }
