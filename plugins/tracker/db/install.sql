@@ -113,7 +113,8 @@ CREATE TABLE tracker(
     from_tv3_id INT(11) NULL,
     color varchar(64) NOT NULL DEFAULT 'inca-silver',
     enable_emailgateway TINYINT(1) NOT NULL DEFAULT '0',
-    INDEX idx_fk_group_id( group_id )
+    INDEX idx_fk_group_id( group_id ),
+    INDEX idx_delete_date(deletion_date, group_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_field;
