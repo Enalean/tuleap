@@ -24,7 +24,12 @@ namespace Tuleap\Project\Registration\Template\Upload;
 
 use DateTimeImmutable;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Test\Stubs\Project\ProjectByStatusStub;
+use Tuleap\Test\Stubs\Project\ProjectRenameStub;
+use Tuleap\Test\Stubs\Project\UpdateProjectStatusStub;
 use Tuleap\Upload\UploadPathAllocator;
 
 final class ProjectArchiveUploadCleanerTest extends TestCase
@@ -35,7 +40,7 @@ final class ProjectArchiveUploadCleanerTest extends TestCase
     {
     }
 
-    public function testDeleteExpiredAndDanglingFiles(): void
+    public function testDeleteExpiredAndDanglingFilesAndProjects(): void
     {
         $base_dir =  $this->getTmpDir() . '/project/ongoing-upload';
 
@@ -48,11 +53,25 @@ final class ProjectArchiveUploadCleanerTest extends TestCase
         touch($second_file_uploaded_path);
         touch($third_file_uploaded_path);
 
-        $delete_unused_file      = DeleteUnusedFilesStub::build();
-        $project_archive_cleaner = new ProjectArchiveUploadCleaner(
+        $project_101 = ProjectTestBuilder::aProject()->withId(101)->build();
+        $project_102 = ProjectTestBuilder::aProject()->withId(102)->build();
+        $project_103 = ProjectTestBuilder::aProject()->withId(103)->build();
+
+        $delete_unused_file = DeleteUnusedFilesStub::build();
+        $event_manager      = EventDispatcherStub::withIdentityCallback();
+
+        $project_manager_update_status  = UpdateProjectStatusStub::build();
+        $project_manager_rename_project = ProjectRenameStub::successfullyRenamedProject();
+        $project_archive_cleaner        = new ProjectArchiveUploadCleaner(
             new UploadPathAllocator($base_dir),
-            SearchFileUploadIdsStub::withFileIds([1, 3]),
-            $delete_unused_file
+            SearchFileUploadIdsAndProjectIdsStub::withFileAndProjectIds(
+                [['id' => 1, 'project_id' => 101], ['id' => 3, 'project_id' => 103]]
+            ),
+            $delete_unused_file,
+            $event_manager,
+            ProjectByStatusStub::withProjects($project_101, $project_102, $project_103),
+            $project_manager_update_status,
+            $project_manager_rename_project,
         );
 
         self::assertFileExists($first_file_uploaded_path);
@@ -65,5 +84,9 @@ final class ProjectArchiveUploadCleanerTest extends TestCase
         self::assertFileDoesNotExist($second_file_uploaded_path);
         self::assertFileExists($third_file_uploaded_path);
         self::assertSame(1, $delete_unused_file->getCallCount());
+
+        self::assertSame(1, $project_manager_update_status->getCallCount());
+        self::assertSame(1, $project_manager_rename_project->getCallCount());
+        self::assertSame(1, $event_manager->getCallCount());
     }
 }
