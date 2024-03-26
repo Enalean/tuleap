@@ -118,12 +118,42 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
         self::assertEqualsCanonicalizing([$this->release_artifact_open_id, $this->sprint_artifact_open_id], $artifacts);
     }
 
+    public function testMultipleEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@status = OPEN() OR @status = OPEN()",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_open_id, $this->sprint_artifact_open_id], $artifacts);
+    }
+
     public function testNotEqualOpen(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
                 "@status != OPEN()",
+                [$this->release_tracker, $this->sprint_tracker],
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_close_id, $this->sprint_artifact_close_id], $artifacts);
+    }
+
+    public function testMultipleNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@status != OPEN() AND @status != OPEN()",
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->project_member
