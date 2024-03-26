@@ -51,6 +51,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListVal
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
@@ -177,6 +178,7 @@ final class ArtifactReportFactoryInstantiator
                 new NotInComparisonChecker($date_validator, $list_value_validator_not_empty),
                 new TextSemanticChecker(),
                 new StatusChecker(),
+                new AssignedToChecker($user_manager),
             )
         );
 

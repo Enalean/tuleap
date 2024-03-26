@@ -17,6 +17,10 @@ msgid "%s cannot be compared to '%s'."
 msgstr "%s ne peut pas être comparé à '%s'."
 
 #, php-format
+msgid "%s cannot be compared to MYSELF() for anonymous users."
+msgstr "%s ne peut pas être comparé à MYSELF() pour les utilisateurs anonymes."
+
+#, php-format
 msgid "%s cannot be compared to MYSELF()."
 msgstr "%s ne peut pas être comparé à MYSELF()."
 
