@@ -24,37 +24,32 @@
             <project-approval-svg />
         </div>
 
-        <h1 class="empty-state-title" v-translate>
-            Your project has been submitted to the administrators for validation
+        <h1 class="empty-state-title">
+            {{ $gettext("Your project has been submitted to the administrators for validation") }}
         </h1>
-        <p class="empty-state-text" v-dompurify-html="message_admin_validation"></p>
+        <p class="empty-state-text">
+            {{ $gettext("You will receive an email when the administrator has validated it.") }}
+        </p>
 
         <a class="tlp-button-primary tlp-button-large empty-state-action" href="/my/">
             <i class="fa fa-reply tlp-button-icon"></i>
-            <span v-translate>Go to my home page</span>
+            <span>{{ $gettext("Go to my home page") }}</span>
         </a>
     </div>
 </template>
 
-<script lang="ts">
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
-import ProjectApprovalSvg from "./ProjectApprovalSvg.vue";
+<script setup lang="ts">
+import { onMounted } from "vue";
 import { useStore } from "../../stores/root";
-@Component({
-    components: { ProjectApprovalSvg },
-})
-export default class ProjectApproval extends Vue {
-    root_store = useStore();
+import ProjectApprovalSvg from "./ProjectApprovalSvg.vue";
+import { useRouter } from "../../helpers/use-router";
 
-    mounted(): void {
-        if (!this.root_store.is_template_selected) {
-            this.$router.push("new");
-        }
-    }
+const root_store = useStore();
+const router = useRouter();
 
-    get message_admin_validation(): string {
-        return this.$gettext("You will receive an email when the administrator has validated it.");
+onMounted(() => {
+    if (!root_store.is_template_selected) {
+        router.push("new");
     }
-}
+});
 </script>
