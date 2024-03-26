@@ -49,13 +49,7 @@ final class TextFieldChecker implements ValueWrapperVisitor
         match ($comparison->getType()) {
             ComparisonType::Equal,
             ComparisonType::NotEqual => $this->checkTextValueIsValid($comparison, $field),
-            ComparisonType::Between => throw new FieldIsNotSupportedForComparisonException($field, 'between()'),
-            ComparisonType::GreaterThan => throw new FieldIsNotSupportedForComparisonException($field, '>'),
-            ComparisonType::GreaterThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '>='),
-            ComparisonType::LesserThan => throw new FieldIsNotSupportedForComparisonException($field, '<'),
-            ComparisonType::LesserThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '<='),
-            ComparisonType::In => throw new FieldIsNotSupportedForComparisonException($field, 'in()'),
-            ComparisonType::NotIn => throw new FieldIsNotSupportedForComparisonException($field, 'not in()'),
+            default => throw new FieldIsNotSupportedForComparisonException($field, $comparison->getType()->value),
         };
     }
 

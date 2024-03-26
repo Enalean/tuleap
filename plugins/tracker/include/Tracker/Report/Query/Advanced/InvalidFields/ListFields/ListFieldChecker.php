@@ -52,11 +52,7 @@ final readonly class ListFieldChecker
             ComparisonType::NotEqual => $this->checkListValueIsValid($comparison, $field, false),
             ComparisonType::In,
             ComparisonType::NotIn => $this->checkListValueIsValid($comparison, $field, true),
-            ComparisonType::Between => throw new FieldIsNotSupportedForComparisonException($field, 'between()'),
-            ComparisonType::GreaterThan => throw new FieldIsNotSupportedForComparisonException($field, '>'),
-            ComparisonType::GreaterThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '>='),
-            ComparisonType::LesserThan => throw new FieldIsNotSupportedForComparisonException($field, '<'),
-            ComparisonType::LesserThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '<='),
+            default => throw new FieldIsNotSupportedForComparisonException($field, $comparison->getType()->value),
         };
     }
 

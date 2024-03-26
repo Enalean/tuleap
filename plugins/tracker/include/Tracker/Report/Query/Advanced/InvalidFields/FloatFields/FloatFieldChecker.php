@@ -50,8 +50,7 @@ final readonly class FloatFieldChecker
             ComparisonType::GreaterThan,
             ComparisonType::GreaterThanOrEqual,
             ComparisonType::Between => $this->checkFloatValueIsValid($comparison, $field, true),
-            ComparisonType::In => throw new FieldIsNotSupportedForComparisonException($field, 'in()'),
-            ComparisonType::NotIn => throw new FieldIsNotSupportedForComparisonException($field, 'not in()'),
+            default => throw new FieldIsNotSupportedForComparisonException($field, $comparison->getType()->value),
         };
     }
 
