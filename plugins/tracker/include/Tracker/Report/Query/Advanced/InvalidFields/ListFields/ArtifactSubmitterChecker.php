@@ -49,11 +49,7 @@ final readonly class ArtifactSubmitterChecker
             ComparisonType::NotEqual,
             ComparisonType::In,
             ComparisonType::NotIn => $this->checkValueIsValid($comparison->getValueWrapper(), $field),
-            ComparisonType::Between => throw new FieldIsNotSupportedForComparisonException($field, 'between()'),
-            ComparisonType::GreaterThan => throw new FieldIsNotSupportedForComparisonException($field, '>'),
-            ComparisonType::GreaterThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '>='),
-            ComparisonType::LesserThan => throw new FieldIsNotSupportedForComparisonException($field, '<'),
-            ComparisonType::LesserThanOrEqual => throw new FieldIsNotSupportedForComparisonException($field, '<='),
+            default => throw new FieldIsNotSupportedForComparisonException($field, $comparison->getType()->value),
         };
     }
 

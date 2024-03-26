@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-enum ComparisonType
+enum ComparisonType: string
 {
-    case Equal;
-    case NotEqual;
-    case LesserThan;
-    case GreaterThan;
-    case LesserThanOrEqual;
-    case GreaterThanOrEqual;
-    case Between;
-    case In;
-    case NotIn;
+    case Equal              = '=';
+    case NotEqual           = '!=';
+    case LesserThan         = '<';
+    case GreaterThan        = '>';
+    case LesserThanOrEqual  = '<=';
+    case GreaterThanOrEqual = '>=';
+    case Between            = 'BETWEEN()';
+    case In                 = 'IN()';
+    case NotIn              = 'NOT IN()';
 }

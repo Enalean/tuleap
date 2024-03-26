@@ -47,8 +47,7 @@ final readonly class DateFieldChecker
             ComparisonType::GreaterThanOrEqual,
             ComparisonType::LesserThan,
             ComparisonType::LesserThanOrEqual => $this->checkDateValueIsValid($comparison, $field, true),
-            ComparisonType::In => throw new FieldIsNotSupportedForComparisonException($field, 'in()'),
-            ComparisonType::NotIn => throw new FieldIsNotSupportedForComparisonException($field, 'not in()'),
+            default => throw new FieldIsNotSupportedForComparisonException($field, $comparison->getType()->value),
         };
     }
 

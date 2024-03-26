@@ -59,11 +59,7 @@ final readonly class AssignedToChecker
             ComparisonType::NotEqual => $this->checkListValueIsValid($comparison, $metadata, false),
             ComparisonType::In,
             ComparisonType::NotIn => $this->checkListValueIsValid($comparison, $metadata, true),
-            ComparisonType::Between => throw new OperatorNotAllowedForMetadataException($metadata, 'BETWEEN()'),
-            ComparisonType::GreaterThan => throw new OperatorNotAllowedForMetadataException($metadata, '>'),
-            ComparisonType::GreaterThanOrEqual => throw new OperatorNotAllowedForMetadataException($metadata, '>='),
-            ComparisonType::LesserThan => throw new OperatorNotAllowedForMetadataException($metadata, '<'),
-            ComparisonType::LesserThanOrEqual => throw new OperatorNotAllowedForMetadataException($metadata, '<='),
+            default => throw new OperatorNotAllowedForMetadataException($metadata, $comparison->getType()->value),
         };
     }
 
@@ -86,8 +82,7 @@ final readonly class AssignedToChecker
                         if (! $is_empty_string_a_problem) {
                             continue;
                         }
-                        $operator = ($comparison->getType() === ComparisonType::In) ? 'IN()' : 'NOT IN()';
-                        throw new EmptyStringComparisonException($metadata, $operator);
+                        throw new EmptyStringComparisonException($metadata, $comparison->getType()->value);
                     }
                     $user = $this->user_retriever->getUserByUserName($username);
                     if ($user === null) {

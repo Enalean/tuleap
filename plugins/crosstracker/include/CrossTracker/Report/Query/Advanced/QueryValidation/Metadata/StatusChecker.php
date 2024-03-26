@@ -54,13 +54,7 @@ final readonly class StatusChecker implements ValueWrapperVisitor
         match ($comparison->getType()) {
             ComparisonType::Equal,
             ComparisonType::NotEqual => $this->checkValueIsValid($comparison, $metadata),
-            ComparisonType::Between => throw new OperatorNotAllowedForMetadataException($metadata, 'BETWEEN()'),
-            ComparisonType::GreaterThan => throw new OperatorNotAllowedForMetadataException($metadata, '>'),
-            ComparisonType::GreaterThanOrEqual => throw new OperatorNotAllowedForMetadataException($metadata, '>='),
-            ComparisonType::LesserThan => throw new OperatorNotAllowedForMetadataException($metadata, '<'),
-            ComparisonType::LesserThanOrEqual => throw new OperatorNotAllowedForMetadataException($metadata, '<='),
-            ComparisonType::In => throw new OperatorNotAllowedForMetadataException($metadata, 'IN()'),
-            ComparisonType::NotIn => throw new OperatorNotAllowedForMetadataException($metadata, 'NOT IN()'),
+            default => throw new OperatorNotAllowedForMetadataException($metadata, $comparison->getType()->value),
         };
     }
 
