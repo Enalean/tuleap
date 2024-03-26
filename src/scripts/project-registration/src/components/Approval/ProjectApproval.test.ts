@@ -22,25 +22,23 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectApproval from "./ProjectApproval.vue";
-import VueRouter from "vue-router";
+import * as router from "../../helpers/use-router";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
+import type VueRouter from "vue-router";
 
 describe("ProjectApproval -", () => {
-    let router: VueRouter;
+    let push_route_spy: jest.Mock;
     let is_template_selected = true;
     beforeEach(() => {
-        router = new VueRouter({
-            routes: [
-                {
-                    path: "/new",
-                    name: "template",
-                },
-            ],
+        push_route_spy = jest.fn();
+
+        jest.spyOn(router, "useRouter").mockImplementation(() => {
+            return { push: push_route_spy } as unknown as VueRouter;
         });
     });
 
-    async function getWrapper(): Promise<Wrapper<ProjectApproval>> {
+    async function getWrapper(): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             getters: {
                 has_error: () => false,
@@ -55,7 +53,6 @@ describe("ProjectApproval -", () => {
         return shallowMount(ProjectApproval, {
             localVue: await createProjectRegistrationLocalVue(),
             pinia,
-            router,
         });
     }
 
@@ -68,8 +65,8 @@ describe("ProjectApproval -", () => {
 
     it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
         is_template_selected = false;
-        const wrapper = await getWrapper();
+        await getWrapper();
 
-        expect(wrapper.vm.$route.name).toBe("template");
+        expect(push_route_spy).toHaveBeenCalledWith("new");
     });
 });
