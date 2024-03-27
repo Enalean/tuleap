@@ -22,10 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\DB;
 
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
+
 final class ThereIsAnOngoingTransactionChecker extends DataAccessObject implements CheckThereIsAnOngoingTransaction
 {
+    #[FeatureFlagConfigKey('Reject actions that are going to be processed in a different context while being in a DB transaction')]
+    #[ConfigKeyInt(0)]
+    public const FEATURE_FLAG = 'check_actions_context_in_transaction';
+
     public function checkNoOngoingTransaction(): void
     {
+        $feature_flag = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG);
+
+        if ((int) $feature_flag !== 1) {
+            return;
+        }
+
         if ($this->getDB()->inTransaction()) {
             throw new \RuntimeException("You should not start something that will be processed in a different context while being in a transaction");
         }
