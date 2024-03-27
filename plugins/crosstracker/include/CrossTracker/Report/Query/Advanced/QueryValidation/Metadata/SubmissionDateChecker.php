@@ -23,77 +23,82 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\EmptyStringComparisonException;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListToMyselfForAnonymousComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorNotAllowedForMetadataException;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToNowComparisonException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorToNowComparisonException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToMyselfComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToStatusOpenComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToStringComparisonException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DateValuesCollection;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidComparisonToCurrentDateTimeFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidComparisonToCurrentUserFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidComparisonToStatusOpenFault;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\ListValuesCollection;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\MyselfNotAllowedForAnonymousFault;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\User\RetrieveUserByUserName;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
 
-final readonly class AssignedToChecker
+final readonly class SubmissionDateChecker
 {
-    public function __construct(private RetrieveUserByUserName $user_retriever)
-    {
-    }
-
     /**
      * @throws EmptyStringComparisonException
-     * @throws ListToMyselfForAnonymousComparisonException
      * @throws OperatorNotAllowedForMetadataException
-     * @throws ToNowComparisonException
+     * @throws OperatorToNowComparisonException
+     * @throws ToMyselfComparisonException
      * @throws ToStatusOpenComparisonException
      * @throws ToStringComparisonException
      */
-    public function checkSemanticIsValidForComparison(Comparison $comparison, Metadata $metadata): void
+    public function checkAlwaysThereFieldIsValidForComparison(Comparison $comparison, Metadata $metadata): void
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
-            ComparisonType::NotEqual => $this->checkListValueIsValid($comparison, $metadata, false),
-            ComparisonType::In,
-            ComparisonType::NotIn => $this->checkListValueIsValid($comparison, $metadata, true),
+            ComparisonType::NotEqual => $this->checkValueIsValid($comparison, $metadata, false),
+            ComparisonType::Between,
+            ComparisonType::GreaterThan,
+            ComparisonType::GreaterThanOrEqual,
+            ComparisonType::LesserThan,
+            ComparisonType::LesserThanOrEqual => $this->checkValueIsValid($comparison, $metadata, true),
             default => throw new OperatorNotAllowedForMetadataException($metadata, $comparison->getType()->value),
         };
     }
 
     /**
      * @throws EmptyStringComparisonException
-     * @throws ListToMyselfForAnonymousComparisonException
-     * @throws ToNowComparisonException
+     * @throws OperatorToNowComparisonException
+     * @throws ToMyselfComparisonException
      * @throws ToStatusOpenComparisonException
      * @throws ToStringComparisonException
      */
-    private function checkListValueIsValid(
+    private function checkValueIsValid(
         Comparison $comparison,
         Metadata $metadata,
-        bool $is_empty_string_a_problem,
+        bool $is_current_datetime_allowed,
     ): void {
-        ListValuesCollection::fromValueWrapper($comparison->getValueWrapper())
-            ->match(function (ListValuesCollection $collection) use ($comparison, $metadata, $is_empty_string_a_problem) {
-                foreach ($collection->list_values as $username) {
-                    if ($username === '') {
-                        if (! $is_empty_string_a_problem) {
-                            continue;
-                        }
+        $validator = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
+
+        DateValuesCollection::fromValueWrapper($comparison->getValueWrapper(), $is_current_datetime_allowed)
+            ->match(function (DateValuesCollection $collection) use ($comparison, $metadata, $validator) {
+                foreach ($collection->date_values as $date_string) {
+                    try {
+                        $validator->checkValueIsValid($date_string);
+                    } catch (DateToEmptyStringException) {
                         throw new EmptyStringComparisonException($metadata, $comparison->getType()->value);
-                    }
-                    $user = $this->user_retriever->getUserByUserName($username);
-                    if ($user === null) {
-                        throw new ToStringComparisonException($metadata, $username);
+                    } catch (DateToStringException) {
+                        throw new ToStringComparisonException($metadata, $comparison->getType()->value);
                     }
                 }
-            }, static function (Fault $fault) use ($metadata) {
+            }, static function (Fault $fault) use ($comparison, $metadata) {
                 match ($fault::class) {
+                    InvalidComparisonToCurrentDateTimeFault::class => throw new OperatorToNowComparisonException(
+                        $metadata,
+                        $comparison->getType()->value
+                    ),
                     InvalidComparisonToStatusOpenFault::class => throw new ToStatusOpenComparisonException($metadata),
-                    InvalidComparisonToCurrentDateTimeFault::class => throw new ToNowComparisonException($metadata),
-                    MyselfNotAllowedForAnonymousFault::class => throw new ListToMyselfForAnonymousComparisonException($metadata),
+                    InvalidComparisonToCurrentUserFault::class => throw new ToMyselfComparisonException($metadata),
                 };
             });
     }

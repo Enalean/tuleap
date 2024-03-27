@@ -24,18 +24,18 @@ namespace Tuleap\CrossTracker\Tests\Builders;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListValueValidator;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -93,12 +93,13 @@ final class InvalidSearchableCollectorParametersBuilder
             $this->trackers,
             $this->user
         );
-        $comparison_checker    = new EqualComparisonChecker(
-            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
-            new ListValueValidator(
-                new EmptyStringAllowed(),
-                ProvideAndRetrieveUserStub::build($this->user)
-            )
+        $user_retriever        = ProvideAndRetrieveUserStub::build($this->user);
+        $comparison_checker    = new FlatInvalidMetadataChecker(
+            new TextSemanticChecker(),
+            new StatusChecker(),
+            new AssignedToChecker($user_retriever),
+            new ArtifactSubmitterChecker($user_retriever),
+            new SubmissionDateChecker(),
         );
         return new InvalidSearchableCollectorParameters(
             $comparison_parameters,

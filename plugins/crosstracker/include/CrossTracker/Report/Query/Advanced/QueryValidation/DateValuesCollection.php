@@ -20,12 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ListFields;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation;
 
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
@@ -38,24 +39,25 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
 /**
  * @template-implements ValueWrapperVisitor<NoValueWrapperParameters, Ok<list<string>>|Err<Fault>>
- * @psalm-immutable
  */
-final readonly class ListValuesCollection implements ValueWrapperVisitor
+final readonly class DateValuesCollection implements ValueWrapperVisitor
 {
     /**
-     * @param list<string> $list_values
+     * @param list<string> $date_values
      */
-    private function __construct(public array $list_values)
-    {
+    private function __construct(
+        public array $date_values,
+        private bool $is_current_datetime_allowed,
+    ) {
     }
 
     /**
      * @return Ok<self>|Err<Fault>
      */
-    public static function fromValueWrapper(ValueWrapper $wrapper): Ok|Err
+    public static function fromValueWrapper(ValueWrapper $wrapper, bool $is_current_datetime_allowed): Ok|Err
     {
-        return $wrapper->accept(new self([]), new NoValueWrapperParameters())
-            ->map(static fn(array $list_values) => new self($list_values));
+        return $wrapper->accept(new self([], $is_current_datetime_allowed), new NoValueWrapperParameters())
+            ->map(static fn(array $date_values) => new self($date_values, $is_current_datetime_allowed));
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
@@ -65,37 +67,26 @@ final readonly class ListValuesCollection implements ValueWrapperVisitor
         return $ok;
     }
 
-    /**
-     * @param NoValueWrapperParameters $parameters
-     * @return Ok<list<string>>|Err<Fault>
-     */
-    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
-        $usernames = [];
-        foreach ($collection_of_value_wrappers->getValueWrappers() as $wrapper) {
-            $result = $wrapper->accept($this, $parameters);
-            if (Result::isErr($result)) {
-                return $result;
-            }
-            if (count($result->value) > 0) {
-                $usernames[] = (string) $result->value[0];
-            }
-        }
-        return Result::ok($usernames);
-    }
-
-    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
-    {
-        $value = $value_wrapper->getValue();
-        if ($value === '') {
-            return Result::err(MyselfNotAllowedForAnonymousFault::build());
+        if (! $this->is_current_datetime_allowed) {
+            return Result::err(InvalidComparisonToCurrentDateTimeFault::build());
         }
         /** @var Ok<list<string>> $ok */
-        $ok = Result::ok([$value]);
+        $ok = Result::ok([$value_wrapper->getValue()->format(DateFormat::DATETIME)]);
         return $ok;
     }
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
+    {
+        return $value_wrapper->getMinValue()
+            ->accept($this, $parameters)
+            ->andThen(fn(array $min_date_strings) => $value_wrapper->getMaxValue()
+                ->accept($this, $parameters)
+                ->map(static fn(array $max_date_strings) => array_merge($min_date_strings, $max_date_strings)));
+    }
+
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new \LogicException('Should not end there');
     }
@@ -104,9 +95,9 @@ final readonly class ListValuesCollection implements ValueWrapperVisitor
      * @param NoValueWrapperParameters $parameters
      * @return Err<Fault>
      */
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
-        return Result::err(ListComparisonToCurrentDateTimeFault::build());
+        return Result::err(InvalidComparisonToCurrentUserFault::build());
     }
 
     /**
@@ -115,6 +106,6 @@ final readonly class ListValuesCollection implements ValueWrapperVisitor
      */
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
-        return Result::err(ListComparisonToStatusOpenFault::build());
+        return Result::err(InvalidComparisonToStatusOpenFault::build());
     }
 }

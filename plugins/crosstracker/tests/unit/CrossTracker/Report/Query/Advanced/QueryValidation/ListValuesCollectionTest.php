@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ListFields;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation;
 
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -110,14 +110,14 @@ final class ListValuesCollectionTest extends TestCase
     {
         $result = ListValuesCollection::fromValueWrapper(new CurrentDateTimeValueWrapper(null, null));
         self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(ListComparisonToCurrentDateTimeFault::class, $result->error);
+        self::assertInstanceOf(InvalidComparisonToCurrentDateTimeFault::class, $result->error);
     }
 
     public function testItReturnsErrForStatusOpen(): void
     {
         $result = ListValuesCollection::fromValueWrapper(new StatusOpenValueWrapper());
         self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(ListComparisonToStatusOpenFault::class, $result->error);
+        self::assertInstanceOf(InvalidComparisonToStatusOpenFault::class, $result->error);
     }
 
     public function testItThrowsForBetweenValueAsListsNeverSupportBetween(): void

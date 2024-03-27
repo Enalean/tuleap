@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
+declare(strict_types=1);
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation;
 
-final class ListValueToEmptyStringComparisonException extends InvalidQueryException
+use Tuleap\NeverThrow\Fault;
+
+/**
+ * @psalm-immutable
+ */
+final class InvalidComparisonToCurrentUserFault extends Fault
 {
-    public function __construct(Metadata $metadata, $operator)
+    /**
+     * @psalm-mutation-free
+     */
+    public static function build(): Fault
     {
-        $message = sprintf(
-            dgettext('tuleap-crosstracker', '%s cannot be compared to the empty string with %s operator.'),
-            $metadata->getName(),
-            $operator
-        );
-        parent::__construct($message);
+        return new self('Comparison with MYSELF() is not allowed');
     }
 }

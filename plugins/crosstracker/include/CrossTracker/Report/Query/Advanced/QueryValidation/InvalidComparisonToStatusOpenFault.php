@@ -20,20 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ListFields;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation;
 
 use Tuleap\NeverThrow\Fault;
 
 /**
  * @psalm-immutable
  */
-final class MyselfNotAllowedForAnonymousFault extends Fault
+final class InvalidComparisonToStatusOpenFault extends Fault
 {
     /**
      * @psalm-mutation-free
      */
     public static function build(): Fault
     {
-        return new self('Using MYSELF() is not allowed for anonymous user');
+        return new self('Comparison with OPEN() is not allowed');
     }
 }

@@ -23,37 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\CheckComparison;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanOrEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\In\InComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanOrEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 final readonly class FlatInvalidMetadataChecker implements CheckComparison
 {
     public function __construct(
-        private EqualComparisonChecker $equal_checker,
-        private NotEqualComparisonChecker $not_equal_checker,
-        private GreaterThanComparisonChecker $greater_than_checker,
-        private GreaterThanOrEqualComparisonChecker $greater_than_or_equal_checker,
-        private LesserThanComparisonChecker $lesser_than_checker,
-        private LesserThanOrEqualComparisonChecker $lesser_than_or_equal_checker,
-        private BetweenComparisonChecker $between_checker,
-        private InComparisonChecker $in_checker,
-        private NotInComparisonChecker $not_in_checker,
         private TextSemanticChecker $text_semantic_checker,
         private StatusChecker $status_checker,
         private AssignedToChecker $assigned_to_checker,
         private ArtifactSubmitterChecker $submitter_checker,
+        private SubmissionDateChecker $submission_date_checker,
     ) {
     }
 
@@ -68,28 +50,10 @@ final readonly class FlatInvalidMetadataChecker implements CheckComparison
             AllowedMetadata::STATUS => $this->status_checker->checkSemanticIsValidForComparison($comparison, $metadata),
             AllowedMetadata::ASSIGNED_TO => $this->assigned_to_checker->checkSemanticIsValidForComparison($comparison, $metadata),
             AllowedMetadata::SUBMITTED_ON,
-            AllowedMetadata::LAST_UPDATE_DATE => $this->matchOnComparisonType($metadata, $comparison),
+            AllowedMetadata::LAST_UPDATE_DATE => $this->submission_date_checker->checkAlwaysThereFieldIsValidForComparison($comparison, $metadata),
             AllowedMetadata::SUBMITTED_BY,
             AllowedMetadata::LAST_UPDATE_BY => $this->submitter_checker->checkAlwaysThereFieldIsValidForComparison($comparison, $metadata),
             default => throw new \LogicException("Unknown metadata type: {$metadata->getName()}"),
-        };
-    }
-
-    /**
-     * @throws InvalidQueryException
-     */
-    private function matchOnComparisonType(Metadata $metadata, Comparison $comparison): void
-    {
-        match ($comparison->getType()) {
-            ComparisonType::Equal => $this->equal_checker->checkComparisonIsValid($metadata, $comparison),
-            ComparisonType::NotEqual => $this->not_equal_checker->checkComparisonIsValid($metadata, $comparison),
-            ComparisonType::LesserThan => $this->lesser_than_checker->checkComparisonIsValid($metadata, $comparison),
-            ComparisonType::LesserThanOrEqual => $this->lesser_than_or_equal_checker->checkComparisonIsValid($metadata, $comparison),
-            ComparisonType::GreaterThan => $this->greater_than_checker->checkComparisonIsValid($metadata, $comparison),
-            ComparisonType::GreaterThanOrEqual => $this->greater_than_or_equal_checker->checkComparisonIsValid($metadata, $comparison),
-            ComparisonType::Between => $this->between_checker->checkComparisonIsValid($metadata, $comparison),
-            ComparisonType::In => $this->in_checker->checkComparisonIsValid($metadata, $comparison),
-            ComparisonType::NotIn => $this->not_in_checker->checkComparisonIsValid($metadata, $comparison),
         };
     }
 }
