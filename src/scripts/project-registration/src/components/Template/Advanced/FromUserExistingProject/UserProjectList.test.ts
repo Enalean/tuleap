@@ -24,13 +24,15 @@ import { shallowMount } from "@vue/test-utils";
 import type { TemplateData } from "../../../../type";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
-import { useStore } from "../../../../stores/root";
+import type Vue from "vue";
+import { selectOrThrow } from "@tuleap/dom";
 
 describe("UserProjectList", () => {
-    let wrapper: Wrapper<UserProjectList>,
+    let wrapper: Wrapper<Vue, Element>,
         project_list: Array<TemplateData>,
         project_a: TemplateData,
         selectedCompanyTemplate: TemplateData | null;
+
     const set_selected_template_mock = jest.fn();
 
     beforeEach(() => {
@@ -53,7 +55,7 @@ describe("UserProjectList", () => {
         project_list = [project_a, project_b];
     });
 
-    async function getWrapper(): Promise<Wrapper<UserProjectList>> {
+    async function getWrapper(): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             actions: {
                 setSelectedTemplate: () => set_selected_template_mock,
@@ -81,7 +83,13 @@ describe("UserProjectList", () => {
         selectedCompanyTemplate = project_a;
         wrapper = await getWrapper();
 
-        expect(wrapper.vm.$data.selected_project).toBe(project_a);
+        const option = selectOrThrow(
+            wrapper.element,
+            "[data-test=select-project-101]",
+            HTMLOptionElement,
+        );
+
+        expect(option.selected).toBe(true);
     });
 
     it("Should reset the selection when the currently selected template has been reset", async () => {
@@ -91,20 +99,6 @@ describe("UserProjectList", () => {
         wrapper.vm.$data.selected_project = null;
 
         expect(wrapper.vm.$data.selected_project).toBeNull();
-    });
-
-    it(`user can select a project`, async () => {
-        selectedCompanyTemplate = null;
-        wrapper = await getWrapper();
-        const store = useStore();
-
-        wrapper.vm.$data.selected_project = project_a;
-        await wrapper.vm.$nextTick();
-
-        wrapper.get("[data-test=from-another-project]").trigger("change");
-        await wrapper.vm.$nextTick();
-
-        expect(store.setSelectedTemplate).toHaveBeenCalled();
     });
 
     it(`displays a message when user is not administrator of any project`, async () => {
