@@ -27,6 +27,7 @@ use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\DB\DBConfig;
+use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Event\Dispatchable;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerter;
@@ -90,6 +91,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         RequestInstrumentation::class,
         WorkerAvailability::class,
         CustomProjectArchiveFeatureFlag::class,
+        ThereIsAnOngoingTransactionChecker::class,
     ];
 
     /**

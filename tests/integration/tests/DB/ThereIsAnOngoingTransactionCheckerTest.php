@@ -26,8 +26,14 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class ThereIsAnOngoingTransactionCheckerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        \ForgeConfig::setFeatureFlag(ThereIsAnOngoingTransactionChecker::FEATURE_FLAG, 0);
+    }
+
     public function testNotInTransaction(): void
     {
+        \ForgeConfig::setFeatureFlag(ThereIsAnOngoingTransactionChecker::FEATURE_FLAG, 1);
         $this->expectNotToPerformAssertions();
 
         $checker = new ThereIsAnOngoingTransactionChecker();
@@ -36,7 +42,16 @@ final class ThereIsAnOngoingTransactionCheckerTest extends TestCase
 
     public function testInTransaction(): void
     {
+        \ForgeConfig::setFeatureFlag(ThereIsAnOngoingTransactionChecker::FEATURE_FLAG, 1);
         $this->expectException(\RuntimeException::class);
+
+        $checker = new ThereIsAnOngoingTransactionChecker();
+        DBFactory::getMainTuleapDBConnection()->getDB()->tryFlatTransaction(static fn () => $checker->checkNoOngoingTransaction());
+    }
+
+    public function testDoesNothingWhenInTransactionWithoutTheFeatureFlag(): void
+    {
+        $this->expectNotToPerformAssertions();
 
         $checker = new ThereIsAnOngoingTransactionChecker();
         DBFactory::getMainTuleapDBConnection()->getDB()->tryFlatTransaction(static fn () => $checker->checkNoOngoingTransaction());
@@ -44,6 +59,7 @@ final class ThereIsAnOngoingTransactionCheckerTest extends TestCase
 
     public function testWhenTransactionCommitted(): void
     {
+        \ForgeConfig::setFeatureFlag(ThereIsAnOngoingTransactionChecker::FEATURE_FLAG, 1);
         $this->expectNotToPerformAssertions();
 
         $checker = new ThereIsAnOngoingTransactionChecker();
