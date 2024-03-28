@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,22 +16,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\Queue;
 
-interface PersistentQueue
+/**
+ * @psalm-immutable
+ */
+final readonly class WorkerEventContent
 {
-    /**
-     * @throws QueueServerConnectionException
-     */
-    public function pushSinglePersistentMessage(string $topic, mixed $content): void;
-
-    /**
-     * @psalm-param callable(WorkerEventContent): void $callback
-     */
-    public function listen(string $queue_id, string $topic, callable $callback): void;
-
-    public function getStatistics(): PersistentQueueStatistics;
+    public function __construct(
+        public string $event_name,
+        public mixed $payload,
+    ) {
+    }
 }

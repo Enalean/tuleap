@@ -44,6 +44,7 @@ use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\Template\CustomProjectArchive;
+use Tuleap\Queue\DB\DBPersistentQueue;
 use Tuleap\Queue\WorkerAvailability;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Request\RequestInstrumentation;
@@ -92,6 +93,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         WorkerAvailability::class,
         CustomProjectArchive::class,
         ThereIsAnOngoingTransactionChecker::class,
+        DBPersistentQueue::class,
     ];
 
     /**

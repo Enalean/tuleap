@@ -26,6 +26,7 @@ use Psr\Log\NullLogger;
 use Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems;
 use Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -37,7 +38,7 @@ final class IndexingWorkerEventDispatcherTest extends TestCase
         $dispatcher = self::buildIndexingWorkerEventDispatcher($this->createStub(InsertItemsIntoIndex::class), $this->createStub(DeleteIndexedItems::class));
 
         $this->expectNotToPerformAssertions();
-        $dispatcher->process(new WorkerEvent(new NullLogger(), ['event_name' => 'not.a.indexing.event', 'payload' => []]));
+        $dispatcher->process(new WorkerEvent(new NullLogger(), new WorkerEventContent('not.a.indexing.event', [])));
     }
 
     public function testCanProcessItemToIndexWorkerEvent(): void
@@ -54,7 +55,7 @@ final class IndexingWorkerEventDispatcherTest extends TestCase
 
         $task = IndexItemTask::fromItemToIndex(new ItemToIndex('type', 102, 'content', 'plaintext', ['A' => 'A']));
 
-        $dispatcher->process(new WorkerEvent(new NullLogger(), ['event_name' => $task->getTopic(), 'payload' => $task->getPayload()]));
+        $dispatcher->process(new WorkerEvent(new NullLogger(), new WorkerEventContent($task->getTopic(), $task->getPayload())));
 
         self::assertTrue($inserter->has_been_called);
     }
@@ -77,7 +78,7 @@ final class IndexingWorkerEventDispatcherTest extends TestCase
 
         $task = RemoveItemsFromIndexTask::fromItemsToRemove(new IndexedItemsToRemove('type', ['A' => 'A']));
 
-        $dispatcher->process(new WorkerEvent(new NullLogger(), ['event_name' => $task->getTopic(), 'payload' => $task->getPayload()]));
+        $dispatcher->process(new WorkerEvent(new NullLogger(), new WorkerEventContent($task->getTopic(), $task->getPayload())));
 
         self::assertTrue($remover->has_been_called);
     }

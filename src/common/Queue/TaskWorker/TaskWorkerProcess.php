@@ -22,16 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue\TaskWorker;
 
-use Symfony\Component\Process\Exception\ProcessTimedOutException;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Tuleap\CLI\DelayExecution\ConditionalTuleapCronEnvExecutionDelayer;
+use Tuleap\DB\ReconnectAfterALongRunningProcess;
+use Tuleap\Queue\WorkerEventContent;
 
 final class TaskWorkerProcess implements TaskWorker
 {
-    private const PROCESS_TIMEOUT_SECONDS = 15 * 60;
-    private const TULEAP_SOURCE_ROOT      = __DIR__ . '/../../../../';
+    private const PROCESS_TIMEOUT_SECONDS          = 15 * 60;
+    private const TULEAP_SOURCE_ROOT               = __DIR__ . '/../../../../';
+    private const CONNECTION_KEEP_ALIVE_NB_SECONDS = 15;
 
-    public function run(string $event): void
+    public function __construct(
+        private readonly ReconnectAfterALongRunningProcess $connection_to_keep_alive,
+    ) {
+    }
+
+    public function run(WorkerEventContent $worker_event_content): void
     {
         $process = new Process(
             ['tuleap', TaskWorkerProcessCommand::NAME],
@@ -42,11 +50,27 @@ final class TaskWorkerProcess implements TaskWorker
             ]
         );
         $process->setTimeout(self::PROCESS_TIMEOUT_SECONDS);
-        $process->setInput($event);
-        try {
-            $process->mustRun();
-        } catch (ProcessTimedOutException $exception) {
-            throw new TaskWorkerTimedOutException($event, self::PROCESS_TIMEOUT_SECONDS, $exception);
+        $encoded_worker_event_content = \Psl\Json\encode($worker_event_content);
+        $process->setInput($encoded_worker_event_content);
+        $process->start();
+
+        $last_connection_check_elapsed_time = 0;
+
+        while ($process->isRunning()) {
+            $elapsed_time = microtime(true) - $process->getStartTime();
+            if (($elapsed_time - $last_connection_check_elapsed_time) > 15) {
+                $this->connection_to_keep_alive->reconnectAfterALongRunningProcess();
+                $last_connection_check_elapsed_time = $elapsed_time;
+            }
+            if (self::PROCESS_TIMEOUT_SECONDS < $elapsed_time) {
+                $process->stop(0);
+                throw new TaskWorkerTimedOutException($encoded_worker_event_content, self::CONNECTION_KEEP_ALIVE_NB_SECONDS);
+            }
+            usleep(1000);
+        }
+
+        if (! $process->isSuccessful()) {
+            throw new ProcessFailedException($process);
         }
     }
 }

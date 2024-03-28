@@ -30,6 +30,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
@@ -69,10 +70,13 @@ final class DefaultBranchPushParserTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private function parsePush(): Ok|Err
     {
-        $worker_event = new WorkerEvent(new NullLogger(), [
-            'event_name' => $this->topic,
-            'payload'    => $this->payload,
-        ]);
+        $worker_event = new WorkerEvent(
+            new NullLogger(),
+            new WorkerEventContent(
+                $this->topic,
+                $this->payload
+            )
+        );
         $parser       = new DefaultBranchPushParser($this->user_retriever, $this->git_repository_retriever);
         return $parser->parse($worker_event);
     }

@@ -38,10 +38,7 @@ final class WorkerEventProcessorFinderTest extends TestCase
             (new WorkerEventProcessorFinder())->findFromWorkerEvent(
                 new WorkerEvent(
                     new NullLogger(),
-                    [
-                        'event_name' => 'unknown',
-                        'payload' => 'whatever',
-                    ]
+                    new WorkerEventContent('unknown', 'whatever')
                 )
             )->isNothing(),
         );
@@ -57,10 +54,10 @@ final class WorkerEventProcessorFinderTest extends TestCase
             (new WorkerEventProcessorFinder())->findFromWorkerEvent(
                 new WorkerEvent(
                     new NullLogger(),
-                    [
-                        'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                        'payload' => ['project_id' => 1001, 'filename' => '/test.zip', 'user_id' => 102],
-                    ]
+                    new WorkerEventContent(
+                        ExtractArchiveAndCreateProject::TOPIC,
+                        ['project_id' => 1001, 'filename' => '/test.zip', 'user_id' => 102]
+                    )
                 )
             )->unwrapOr(null),
         );

@@ -26,6 +26,7 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -83,10 +84,10 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 new NullLogger(),
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => [],
-                ]
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    []
+                )
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
             ActivateProjectAfterArchiveImportStub::build(),
@@ -107,10 +108,10 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 new NullLogger(),
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => ['project_id' => 'a string'],
-                ]
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    ['project_id' => 'a string']
+                )
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
             ActivateProjectAfterArchiveImportStub::build(),
@@ -131,10 +132,10 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 new NullLogger(),
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => ['project_id' => self::PROJECT_ID],
-                ]
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    ['project_id' => self::PROJECT_ID]
+                )
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
             ActivateProjectAfterArchiveImportStub::build(),
@@ -155,10 +156,10 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 new NullLogger(),
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => ['project_id' => self::PROJECT_ID, 'filename' => []],
-                ]
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    ['project_id' => self::PROJECT_ID, 'filename' => []]
+                )
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
             ActivateProjectAfterArchiveImportStub::build(),
@@ -179,10 +180,10 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 new NullLogger(),
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => ['project_id' => self::PROJECT_ID, 'filename' => '', 'user_id' => 123],
-                ]
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    ['project_id' => self::PROJECT_ID, 'filename' => '', 'user_id' => 123]
+                )
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
             ActivateProjectAfterArchiveImportStub::build(),
@@ -203,13 +204,10 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 new NullLogger(),
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => [
-                        'project_id' => self::PROJECT_ID,
-                        'filename' => $this->upload . '/test.zip',
-                    ],
-                ]
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    ['project_id' => self::PROJECT_ID, 'filename' => $this->upload . '/test.zip']
+                )
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
             ActivateProjectAfterArchiveImportStub::build(),
@@ -230,14 +228,14 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 new NullLogger(),
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => [
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    [
                         'project_id' => self::PROJECT_ID,
                         'filename'   => $this->upload . '/test.zip',
                         'user_id'    => 'a string',
-                    ],
-                ]
+                    ]
+                )
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
             ActivateProjectAfterArchiveImportStub::build(),
@@ -258,14 +256,14 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         $action = ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 new NullLogger(),
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => [
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    [
                         'project_id' => self::PROJECT_ID,
                         'filename'   => 'test.zip',
                         'user_id'    => self::USER_ID,
-                    ],
-                ]
+                    ]
+                )
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
             ActivateProjectAfterArchiveImportStub::build(),
@@ -296,14 +294,14 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         $action = ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 $logger,
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => [
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    [
                         'project_id' => self::PROJECT_ID,
                         'filename'   => $this->upload . '/test.zip',
                         'user_id'    => self::USER_ID,
-                    ],
-                ]
+                    ]
+                )
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
             $activator,
@@ -338,14 +336,14 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         $action = ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 $logger,
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => [
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    [
                         'project_id' => self::PROJECT_ID,
                         'filename'   => $this->upload . '/test.zip',
                         'user_id'    => self::USER_ID,
-                    ],
-                ]
+                    ]
+                )
             ),
             ImportFromArchiveStub::buildWithSuccessfulImport(),
             $activator,
@@ -379,14 +377,14 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         $action    = ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 $logger,
-                [
-                    'event_name' => ExtractArchiveAndCreateProject::TOPIC,
-                    'payload' => [
+                new WorkerEventContent(
+                    ExtractArchiveAndCreateProject::TOPIC,
+                    [
                         'project_id' => self::PROJECT_ID,
                         'filename'   => $this->upload . '/test.zip',
                         'user_id'    => self::USER_ID,
-                    ],
-                ]
+                    ]
+                )
             ),
             ImportFromArchiveStub::buildWithErrorDuringImport('Task failed successfully'),
             $activator,

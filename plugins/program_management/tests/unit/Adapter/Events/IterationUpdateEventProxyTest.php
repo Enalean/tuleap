@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class IterationUpdateEventProxyTest extends TestCase
@@ -68,14 +69,14 @@ final class IterationUpdateEventProxyTest extends TestCase
     {
         return new WorkerEvent(
             $this->logger,
-            [
-                'event_name' => IterationUpdateEvent::TOPIC,
-                'payload'    => [
+            new WorkerEventContent(
+                IterationUpdateEvent::TOPIC,
+                [
                     'user_id'      => self::USER_ID,
                     'iteration_id' => self::ITERATION_ID,
                     'changeset_id' => self::CHANGESET_ID,
-                ],
-            ]
+                ]
+            )
         );
     }
 
@@ -84,14 +85,14 @@ final class IterationUpdateEventProxyTest extends TestCase
         $bad_event_name = 'need.moula.bad.event';
         $event          = new WorkerEvent(
             $this->logger,
-            [
-                'event_name' => $bad_event_name,
-                'payload'    => [
+            new WorkerEventContent(
+                $bad_event_name,
+                [
                     'user_id'      => self::USER_ID,
                     'iteration_id' => self::ITERATION_ID,
                     'changeset_id' => self::CHANGESET_ID,
-                ],
-            ]
+                ]
+            )
         );
 
         $iteration_update_event = $this->getIterationUpdateEvent($event);
@@ -105,14 +106,14 @@ final class IterationUpdateEventProxyTest extends TestCase
     {
         $event = new WorkerEvent(
             $this->logger,
-            [
-                'event_name' => IterationUpdateEvent::TOPIC,
-                'payload'    => [
+            new WorkerEventContent(
+                IterationUpdateEvent::TOPIC,
+                [
                     'user_id'           => self::USER_ID,
                     'program_increment' => 1,
                     'changeset_id'      => self::CHANGESET_ID,
-                ],
-            ]
+                ]
+            )
         );
 
         $iteration_update_event = $this->getIterationUpdateEvent($event);
@@ -126,13 +127,13 @@ final class IterationUpdateEventProxyTest extends TestCase
     {
         $event = new WorkerEvent(
             $this->logger,
-            [
-                'event_name' => IterationUpdateEvent::TOPIC,
-                'payload'    => [
+            new WorkerEventContent(
+                IterationUpdateEvent::TOPIC,
+                [
                     'iteration_id' => self::ITERATION_ID,
                     'changeset_id' => self::CHANGESET_ID,
-                ],
-            ]
+                ]
+            )
         );
 
         $iteration_update_event = $this->getIterationUpdateEvent($event);
@@ -146,14 +147,14 @@ final class IterationUpdateEventProxyTest extends TestCase
     {
         $event = new WorkerEvent(
             $this->logger,
-            [
-                'event_name' => IterationUpdateEvent::TOPIC,
-                'payload'    => [
+            new WorkerEventContent(
+                IterationUpdateEvent::TOPIC,
+                [
                     'user_id'      => self::USER_ID,
                     'iteration_id' => self::ITERATION_ID,
                     'wololo'       => 'No Changeset',
-                ],
-            ]
+                ]
+            )
         );
 
         $iteration_update_event = $this->getIterationUpdateEvent($event);

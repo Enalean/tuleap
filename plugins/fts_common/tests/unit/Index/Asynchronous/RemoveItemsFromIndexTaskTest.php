@@ -24,6 +24,7 @@ namespace Tuleap\FullTextSearchCommon\Index\Asynchronous;
 
 use Psr\Log\NullLogger;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -45,10 +46,10 @@ final class RemoveItemsFromIndexTaskTest extends TestCase
     {
         $worker_event = new WorkerEvent(
             new NullLogger(),
-            [
-                'event_name' => 'tuleap.fts.remove-items-index',
-                'payload' => ['type' => 'type', 'metadata' => ['A' => 'A']],
-            ]
+            new WorkerEventContent(
+                'tuleap.fts.remove-items-index',
+                ['type' => 'type', 'metadata' => ['A' => 'A']]
+            )
         );
 
         self::assertEquals(
@@ -61,10 +62,10 @@ final class RemoveItemsFromIndexTaskTest extends TestCase
     {
         $worker_event = new WorkerEvent(
             new NullLogger(),
-            [
-                'event_name' => 'something.else',
-                'payload' => ['type' => 'type', 'metadata' => ['A' => 'A']],
-            ]
+            new WorkerEventContent(
+                'something.else',
+                ['type' => 'type', 'metadata' => ['A' => 'A']]
+            )
         );
 
         self::assertNull(
@@ -76,10 +77,10 @@ final class RemoveItemsFromIndexTaskTest extends TestCase
     {
         $worker_event = new WorkerEvent(
             new NullLogger(),
-            [
-                'event_name' => 'tuleap.fts.index-item',
-                'payload' => [],
-            ]
+            new WorkerEventContent(
+                'tuleap.fts.remove-items-index',
+                []
+            )
         );
 
         self::assertNull(

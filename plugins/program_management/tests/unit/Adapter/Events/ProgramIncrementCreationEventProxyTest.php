@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\Stub;
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -47,14 +48,17 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
 
     public function testItBuildsFromValidWorkerEvent(): void
     {
-        $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => ProgramIncrementCreationEvent::TOPIC,
-            'payload'    => [
-                'artifact_id'  => self::ARTIFACT_ID,
-                'user_id'      => self::USER_ID,
-                'changeset_id' => self::CHANGESET_ID,
-            ],
-        ]);
+        $worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent(
+                ProgramIncrementCreationEvent::TOPIC,
+                [
+                    'artifact_id'  => self::ARTIFACT_ID,
+                    'user_id'      => self::USER_ID,
+                    'changeset_id' => self::CHANGESET_ID,
+                ]
+            )
+        );
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithId(186));
 
         $event = ProgramIncrementCreationEventProxy::fromWorkerEvent(
@@ -69,10 +73,14 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
 
     public function testItReturnsNullWhenUnrelatedTopic(): void
     {
-        $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => 'unrelated.topic',
-            'payload'    => [],
-        ]);
+        $worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent(
+                'unrelated.topic',
+                [
+                ]
+            )
+        );
         self::assertNull(
             ProgramIncrementCreationEventProxy::fromWorkerEvent($this->logger, $this->user_manager, $worker_event)
         );
@@ -80,10 +88,13 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
 
     public function testItLogsMalformedPayload(): void
     {
-        $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => ProgramIncrementCreationEvent::TOPIC,
-            'payload'    => [],
-        ]);
+        $worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent(
+                ProgramIncrementCreationEvent::TOPIC,
+                []
+            )
+        );
         self::assertNull(
             ProgramIncrementCreationEventProxy::fromWorkerEvent($this->logger, $this->user_manager, $worker_event)
         );
@@ -96,14 +107,17 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
 
     public function testItLogsUnknownUser(): void
     {
-        $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => ProgramIncrementCreationEvent::TOPIC,
-            'payload'    => [
-                'artifact_id'  => self::ARTIFACT_ID,
-                'user_id'      => 404,
-                'changeset_id' => self::CHANGESET_ID,
-            ],
-        ]);
+        $worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent(
+                ProgramIncrementCreationEvent::TOPIC,
+                [
+                    'artifact_id'  => self::ARTIFACT_ID,
+                    'user_id'      => 404,
+                    'changeset_id' => self::CHANGESET_ID,
+                ]
+            )
+        );
         $this->user_manager->method('getUserById')->willReturn(null);
 
         self::assertNull(

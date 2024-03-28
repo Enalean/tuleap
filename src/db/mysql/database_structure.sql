@@ -1178,6 +1178,16 @@ CREATE TABLE system_events_followers (
   types VARCHAR( 31 ) NOT NULL
 );
 
+CREATE TABLE async_events (
+    id BINARY(16) NOT NULL PRIMARY KEY,
+    queue_name VARCHAR(255) NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    payload JSON NOT NULL,
+    enqueue_timestamp INT UNSIGNED NOT NULL,
+    enqueue_timestamp_microsecond MEDIUMINT UNSIGNED NOT NULL,
+    nb_added_in_queue TINYINT UNSIGNED NOT NULL,
+    INDEX idx_queue_name (queue_name)
+);
 
 # --------------------------------------------------------
 

@@ -20,8 +20,11 @@
 
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\NullLogger;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 
 class AsynchronousActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -40,8 +43,10 @@ class AsynchronousActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
-        $worker_event = \Mockery::mock(WorkerEvent::class);
-        $worker_event->shouldReceive('getPayload')->andReturns(['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true]);
+        $worker_event = new WorkerEvent(
+            new NullLogger(),
+            new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true])
+        );
 
         $artifact  = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
@@ -57,56 +62,52 @@ class AsynchronousActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
-        $worker_event = \Mockery::mock(WorkerEvent::class);
-        $worker_event->shouldReceive('getPayload')->andReturns([]);
-        $worker_event->shouldReceive('getEventName')->andReturns('Event name');
+        $logger       = new TestLogger();
+        $worker_event = new WorkerEvent($logger, new WorkerEventContent('Event name', []));
 
-        $logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $worker_event->shouldReceive('getLogger')->andReturns($logger);
-        $logger->shouldReceive('warning')->atLeast()->once();
-        $logger->shouldReceive('debug')->atLeast()->once();
         $this->actions_runner->shouldReceive('processAsyncPostCreationActions')->never();
 
         $async_actions_runner->process($worker_event);
+        self::assertTrue($logger->hasWarningRecords());
+        self::assertTrue($logger->hasDebugRecords());
     }
 
     public function testActionsAreNotProcessedWhenArtifactIsNotFound()
     {
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
-        $worker_event = \Mockery::mock(WorkerEvent::class);
-        $worker_event->shouldReceive('getPayload')->andReturns(['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true]);
-        $worker_event->shouldReceive('getEventName')->andReturns('Event name');
+        $logger       = new TestLogger();
+        $worker_event = new WorkerEvent(
+            $logger,
+            new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true])
+        );
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns(null);
-
-        $logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $worker_event->shouldReceive('getLogger')->andReturns($logger);
-        $logger->shouldReceive('info')->atLeast()->once();
 
         $this->actions_runner->shouldReceive('processAsyncPostCreationActions')->never();
 
         $async_actions_runner->process($worker_event);
+
+        self::assertTrue($logger->hasInfoRecords());
     }
 
     public function testActionsAreNotProcessedWhenChangesetIsNotFound()
     {
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
-        $worker_event = \Mockery::mock(WorkerEvent::class);
-        $worker_event->shouldReceive('getPayload')->andReturns(['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true]);
-        $worker_event->shouldReceive('getEventName')->andReturns('Event name');
+        $logger       = new TestLogger();
+        $worker_event = new WorkerEvent(
+            $logger,
+            new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true])
+        );
 
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getChangeset')->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($artifact);
 
-        $logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $worker_event->shouldReceive('getLogger')->andReturns($logger);
-        $logger->shouldReceive('info')->atLeast()->once();
-
         $this->actions_runner->shouldReceive('processAsyncPostCreationActions')->never();
 
         $async_actions_runner->process($worker_event);
+        self::assertTrue($logger->hasInfoRecords());
     }
 }

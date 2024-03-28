@@ -42,6 +42,7 @@ use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\ServerHostname;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -95,7 +96,7 @@ final class MigrateInstanceTest extends TestCase
         $legacy_mw_create_missing_users = new LegacyMediawikiCreateMissingUsersStub();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
-            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            new WorkerEvent(new NullLogger(), new WorkerEventContent(MigrateInstance::TOPIC, ['project_id' => 120])),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing(), new MediaWikiManagementCommandDoNothing()]),
@@ -152,7 +153,7 @@ final class MigrateInstanceTest extends TestCase
         $switcher = SwitchMediawikiServiceStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
-            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            new WorkerEvent(new NullLogger(), new WorkerEventContent(MigrateInstance::TOPIC, ['project_id' => 120])),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing(), new MediaWikiManagementCommandDoNothing()]),
@@ -205,7 +206,7 @@ final class MigrateInstanceTest extends TestCase
         $switcher = SwitchMediawikiServiceStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
-            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            new WorkerEvent(new NullLogger(), new WorkerEventContent(MigrateInstance::TOPIC, ['project_id' => 120])),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing(), new MediaWikiManagementCommandDoNothing()]),
@@ -246,7 +247,7 @@ final class MigrateInstanceTest extends TestCase
         $legacy_permissions_migrator = LegacyPermissionsMigratorStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
-            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            new WorkerEvent(new NullLogger(), new WorkerEventContent(MigrateInstance::TOPIC, ['project_id' => 120])),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing(), new MediaWikiManagementCommandDoNothing()]),
@@ -287,7 +288,7 @@ final class MigrateInstanceTest extends TestCase
         $legacy_permissions_migrator = LegacyPermissionsMigratorStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
-            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            new WorkerEvent(new NullLogger(), new WorkerEventContent(MigrateInstance::TOPIC, ['project_id' => 120])),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
@@ -340,7 +341,7 @@ final class MigrateInstanceTest extends TestCase
         $legacy_permissions_migrator = LegacyPermissionsMigratorStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
-            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            new WorkerEvent(new NullLogger(), new WorkerEventContent(MigrateInstance::TOPIC, ['project_id' => 120])),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
@@ -394,7 +395,7 @@ final class MigrateInstanceTest extends TestCase
         $legacy_permissions_migrator = LegacyPermissionsMigratorStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
-            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            new WorkerEvent(new NullLogger(), new WorkerEventContent(MigrateInstance::TOPIC, ['project_id' => 120])),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
@@ -432,7 +433,7 @@ final class MigrateInstanceTest extends TestCase
         $legacy_permissions_migrator   = LegacyPermissionsMigratorStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
-            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            new WorkerEvent(new NullLogger(), new WorkerEventContent(MigrateInstance::TOPIC, ['project_id' => 120])),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
@@ -465,7 +466,7 @@ final class MigrateInstanceTest extends TestCase
     public function testDoesNotInstantiateTaskWhenEventIsNotAMigration(): void
     {
         $migrate_instance_option = MigrateInstance::fromEvent(
-            new WorkerEvent(new NullLogger(), ['event_name' => 'something_else_that_is_not_a_migration', 'payload' => []]),
+            new WorkerEvent(new NullLogger(), new WorkerEventContent('something_else_that_is_not_a_migration', [])),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),

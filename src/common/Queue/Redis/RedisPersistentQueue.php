@@ -24,6 +24,7 @@ namespace Tuleap\Queue\Redis;
 use Tuleap\Queue\PersistentQueueStatistics;
 use Tuleap\Queue\QueueInstrumentation;
 use Tuleap\Queue\TaskWorker\TaskWorkerTimedOutException;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Redis;
 use RedisException;
 use Psr\Log\LoggerInterface;
@@ -114,7 +115,7 @@ class RedisPersistentQueue implements PersistentQueue
     }
 
     /**
-     * @psalm-param callable(string): void $callback
+     * @psalm-param callable(WorkerEventContent): void $callback
      */
     private function waitForEvents(\Redis $redis, string $processing_queue, callable $callback): void
     {
@@ -128,7 +129,7 @@ class RedisPersistentQueue implements PersistentQueue
             $enqueue_time     = $message_metadata->getEnqueueTime();
             QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_DEQUEUED);
             try {
-                $callback($value);
+                $callback(new WorkerEventContent($topic, $message_metadata->getPayload()));
                 QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_DONE);
             } catch (TaskWorkerTimedOutException $exception) {
                 $this->logger->error($exception->getMessage());

@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 
 final class ProgramIncrementCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -79,10 +80,10 @@ final class ProgramIncrementCreationEventHandlerTest extends \Tuleap\Test\PHPUni
 
     public function testItDoesNothingWhenEventIsNull(): void
     {
-        $invalid_worker_event = new WorkerEvent($this->logger, [
-            'event_name' => 'unrelated.topic',
-            'payload'    => [],
-        ]);
+        $invalid_worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent('unrelated.topic', [])
+        );
         $event                = ProgramIncrementCreationEventProxy::fromWorkerEvent(
             $this->logger,
             $this->createStub(\UserManager::class),
