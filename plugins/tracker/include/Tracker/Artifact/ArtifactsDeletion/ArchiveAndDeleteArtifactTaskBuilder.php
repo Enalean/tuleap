@@ -217,7 +217,6 @@ class ArchiveAndDeleteArtifactTaskBuilder
                 new ComputedFieldDaoCache(new ComputedFieldDao()),
                 new RecentlyVisitedDao(),
                 new PendingArtifactRemovalDao(),
-                new ArtifactChangesetValueDeletorDAO(),
                 new PostArtifactMoveReferencesCleaner(
                     $cross_reference_manager,
                     new ReverseLinksRetriever(new ReverseLinksDao(), $tracker_artifact_factory),

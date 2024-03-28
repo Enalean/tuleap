@@ -52,7 +52,6 @@ final class ArtifactDependenciesDeletorTest extends TestCase
         $computed_dao_cache                = $this->createStub(ComputedFieldDaoCache::class);
         $recently_visited_dao              = $this->createStub(RecentlyVisitedDao::class);
         $artifact_removal                  = $this->createStub(PendingArtifactRemovalDao::class);
-        $value_deletor                     = $this->createStub(ArtifactChangesetValueDeletorDAO::class);
         $this->post_move_deletor           = $this->createStub(PostArtifactMoveReferencesCleaner::class);
         $this->artifact_deletor            = $this->createStub(PostArtifactDeletionCleaner::class);
 
@@ -62,7 +61,6 @@ final class ArtifactDependenciesDeletorTest extends TestCase
         $computed_dao_cache->expects(self::atLeastOnce())->method('deleteAllArtifactCacheValues');
         $recently_visited_dao->expects(self::atLeastOnce())->method('deleteVisitByArtifactId');
         $artifact_removal->expects(self::atLeastOnce())->method('removeArtifact');
-        $value_deletor->expects(self::atLeastOnce())->method('cleanAllChangesetValueInTransaction');
 
         $this->deletor = new ArtifactDependenciesCleaner(
             $permissions_manager,
@@ -71,7 +69,6 @@ final class ArtifactDependenciesDeletorTest extends TestCase
             $computed_dao_cache,
             $recently_visited_dao,
             $artifact_removal,
-            $value_deletor,
             $this->post_move_deletor,
             $this->artifact_deletor
         );
