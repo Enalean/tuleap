@@ -108,7 +108,7 @@ class XMLExport
             }
 
             $xml_timetracking = $xml_tracker->addChild('timetracking');
-            $xml_timetracking->addAttribute('is_enabled', "1");
+            $xml_timetracking->addAttribute('is_enabled', '1');
 
             $this->exportPermissions($xml_timetracking, $exported_tracker);
             $this->exportTimes($exported_tracker, $user, $xml_timetracking);
@@ -124,7 +124,7 @@ class XMLExport
             $xml_timetracking_permission_read = $xml_timetracking_permissions->addChild('read');
             foreach ($reader_ugroups as $reader_ugroup) {
                 $cdata = new XML_SimpleXMLCDATAFactory();
-                $cdata->insert($xml_timetracking_permission_read, "ugroup", $reader_ugroup->getNormalizedName());
+                $cdata->insert($xml_timetracking_permission_read, 'ugroup', $reader_ugroup->getNormalizedName());
             }
         }
 
@@ -133,7 +133,7 @@ class XMLExport
             $xml_timetracking_permission_write = $xml_timetracking_permissions->addChild('write');
             foreach ($writer_ugroups as $writer_ugroup) {
                 $cdata = new XML_SimpleXMLCDATAFactory();
-                $cdata->insert($xml_timetracking_permission_write, "ugroup", $writer_ugroup->getNormalizedName());
+                $cdata->insert($xml_timetracking_permission_write, 'ugroup', $writer_ugroup->getNormalizedName());
             }
         }
     }
@@ -153,17 +153,17 @@ class XMLExport
                 }
 
                 $xml_time = $xml_timetracking->addChild('time');
-                $xml_time->addAttribute("artifact_id", (string) $time->getArtifactId());
+                $xml_time->addAttribute('artifact_id', (string) $time->getArtifactId());
                 $this->user_xml_exporter->exportUser(
                     $time_user,
                     $xml_time,
-                    "user"
+                    'user'
                 );
-                $xml_time->addChild("minutes", (string) $time->getMinutes());
-                $xml_time->addChild("step", $time->getStep());
+                $xml_time->addChild('minutes', (string) $time->getMinutes());
+                $xml_time->addChild('step', $time->getStep());
                 XMLDateHelper::addChild(
                     $xml_time,
-                    "day",
+                    'day',
                     new DateTimeImmutable($time->getDay())
                 );
             }

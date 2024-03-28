@@ -214,12 +214,12 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
         $test_dir = vfsStream::setup()->url();
 
         // Create dummy dirs and files
-        mkdir($test_dir . "/test1");
-        mkdir($test_dir . "/test1/A");
-        mkdir($test_dir . "/test1/B");
-        mkdir($test_dir . "/test2");
-        mkdir($test_dir . "/test2/A");
-        mkdir($test_dir . "/test3");
+        mkdir($test_dir . '/test1');
+        mkdir($test_dir . '/test1/A');
+        mkdir($test_dir . '/test1/B');
+        mkdir($test_dir . '/test2');
+        mkdir($test_dir . '/test2/A');
+        mkdir($test_dir . '/test3');
 
         // Run tested method
         Backend::instance()->recurseDeleteInDir($test_dir);

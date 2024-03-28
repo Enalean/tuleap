@@ -172,7 +172,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         $title                   = sprintf(
             dgettext(
                 'tuleap-program_management',
-                "%s - Iterations - %s"
+                '%s - Iterations - %s'
             ),
             $program_increment_title,
             $project_title

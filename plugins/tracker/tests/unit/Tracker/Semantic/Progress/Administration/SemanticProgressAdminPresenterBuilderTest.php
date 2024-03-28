@@ -61,9 +61,9 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
         $presenter = $this->builder->build(
             $this->tracker,
-            "Used in the Roadmap widget",
+            'Used in the Roadmap widget',
             false,
-            "url/to/updater",
+            'url/to/updater',
             \Mockery::mock(\CSRFSynchronizerToken::class),
             new MethodNotConfigured()
         );
@@ -103,9 +103,9 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
         $presenter = $this->builder->build(
             $this->tracker,
-            "Used in the Roadmap widget",
+            'Used in the Roadmap widget',
             false,
-            "url/to/updater",
+            'url/to/updater',
             \Mockery::mock(\CSRFSynchronizerToken::class),
             new InvalidMethod('This is broken')
         );
@@ -145,14 +145,14 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
         $presenter = $this->builder->build(
             $this->tracker,
-            "Used in the Roadmap widget",
+            'Used in the Roadmap widget',
             false,
-            "url/to/updater",
+            'url/to/updater',
             \Mockery::mock(\CSRFSynchronizerToken::class),
             new MethodBasedOnEffort(
                 \Mockery::mock(SemanticProgressDao::class),
-                $this->getNumericFieldMock(3, "Total effort"),
-                $this->getNumericFieldMock(2, "Remaining effort")
+                $this->getNumericFieldMock(3, 'Total effort'),
+                $this->getNumericFieldMock(2, 'Remaining effort')
             )
         );
 
@@ -191,9 +191,9 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
         $presenter = $this->builder->build(
             $this->tracker,
-            "Used in the Roadmap widget",
+            'Used in the Roadmap widget',
             false,
-            "url/to/updater",
+            'url/to/updater',
             \Mockery::mock(\CSRFSynchronizerToken::class),
             new MethodBasedOnLinksCount(
                 \Mockery::mock(SemanticProgressDao::class),
@@ -237,9 +237,9 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
                 ['int', 'float', 'computed']
             )->andReturn(
                 [
-                    $this->getNumericFieldMock(1, "Velocity"),
-                    $this->getNumericFieldMock(2, "Remaining effort"),
-                    $this->getNumericFieldMock(3, "Total effort"),
+                    $this->getNumericFieldMock(1, 'Velocity'),
+                    $this->getNumericFieldMock(2, 'Remaining effort'),
+                    $this->getNumericFieldMock(3, 'Total effort'),
                 ]
             )->once();
     }

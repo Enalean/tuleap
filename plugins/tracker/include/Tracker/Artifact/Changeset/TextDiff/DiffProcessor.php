@@ -59,7 +59,7 @@ class DiffProcessor
                 $next_value     = explode(PHP_EOL, $next_changeset_value->getText());
                 return $next_changeset_value->getFormattedDiff($previous_value, $next_value, CODENDI_PURIFIER_CONVERT_HTML);
             default:
-                return "";
+                return '';
         }
     }
 }

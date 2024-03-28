@@ -22,7 +22,7 @@ class b201803091459_add_jenkins_configuration_to_campaign extends \Tuleap\ForgeU
 {
     public function description()
     {
-        return "Create plugin_testmanagement_campaign table";
+        return 'Create plugin_testmanagement_campaign table';
     }
 
     public function preUp()
@@ -32,11 +32,11 @@ class b201803091459_add_jenkins_configuration_to_campaign extends \Tuleap\ForgeU
 
     public function up()
     {
-        $sql    = "CREATE TABLE IF NOT EXISTS plugin_testmanagement_campaign(
+        $sql    = 'CREATE TABLE IF NOT EXISTS plugin_testmanagement_campaign(
             artifact_id INT(11) NOT NULL PRIMARY KEY,
             job_url VARCHAR(255) DEFAULT NULL,
             encrypted_job_token BLOB DEFAULT NULL
-        );";
+        );';
         $result = $this->db->createTable('plugin_testmanagement_campaign', $sql);
 
         if ($result === false) {

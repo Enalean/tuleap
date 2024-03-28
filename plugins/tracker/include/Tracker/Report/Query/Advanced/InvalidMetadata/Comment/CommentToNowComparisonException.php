@@ -26,6 +26,6 @@ final class CommentToNowComparisonException extends InvalidMetadataException
 {
     public function __construct()
     {
-        parent::__construct(dgettext("tuleap-tracker", "The @comments metadata cannot be compared to NOW()."));
+        parent::__construct(dgettext('tuleap-tracker', 'The @comments metadata cannot be compared to NOW().'));
     }
 }

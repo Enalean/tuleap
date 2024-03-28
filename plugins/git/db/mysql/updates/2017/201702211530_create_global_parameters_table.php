@@ -22,7 +22,7 @@ class b201702211530_create_global_parameters_table extends \Tuleap\ForgeUpgrade\
 {
     public function description()
     {
-        return "Add table to store the global parameters of the Git plugin";
+        return 'Add table to store the global parameters of the Git plugin';
     }
 
     public function preUp()
@@ -32,10 +32,10 @@ class b201702211530_create_global_parameters_table extends \Tuleap\ForgeUpgrade\
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_global_parameters (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_global_parameters (
                   name VARCHAR(255) NOT NULL PRIMARY KEY,
                   value TEXT NOT NULL
-                )";
+                )';
 
         $this->db->createTable('plugin_git_global_parameters', $sql);
     }

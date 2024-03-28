@@ -58,10 +58,10 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker = $this->createMock(\Tracker::class);
         $this->tracker->method('getId')->willReturn($tracker_id);
         $this->artifact  = new Artifact($artifact_id, $this->tracker->getId(), $this->user->getId(), 1669714644, false);
-        $this->changeset = new \Tracker_Artifact_Changeset($changset_id, $this->artifact, $this->user->getId(), 1669714644, "example@email.com");
+        $this->changeset = new \Tracker_Artifact_Changeset($changset_id, $this->artifact, $this->user->getId(), 1669714644, 'example@email.com');
         $this->field     = $this->createMock(\Tracker_FormElement_Field_List::class);
         $this->field->method('getId')->willReturn(4);
-        $this->bind_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(1233, "My bind value", "", 1, 0);
+        $this->bind_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(1233, 'My bind value', '', 1, 0);
     }
 
     public function testNoColorIsDefinedWhenStatusFieldIsNotDefined(): void
@@ -118,10 +118,10 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker->method('getStatusField')->willReturn($this->field);
         $bind_value = $this->createMock(\Tracker_FormElement_Field_List_BindValue::class);
         $bind_value->method('getId')->willReturn($this->field->getId());
-        $bind = new \Tracker_FormElement_Field_List_Bind_Static($this->field, false, [$this->bind_value], [], [$this->field->getId() => new \Tracker_FormElement_Field_List_BindDecorator($this->field->getId(), $this->bind_value->getId(), null, null, null, "flamingo-pink")]);
+        $bind = new \Tracker_FormElement_Field_List_Bind_Static($this->field, false, [$this->bind_value], [], [$this->field->getId() => new \Tracker_FormElement_Field_List_BindDecorator($this->field->getId(), $this->bind_value->getId(), null, null, null, 'flamingo-pink')]);
         $this->value_for_changeset_provider->method('getStatusValueForChangeset')->willReturn($bind_value);
         $this->field->method('getBind')->willReturn($bind);
 
-        $this->assertSame("flamingo-pink", $this->color_provider->provideColor($this->changeset, $this->tracker, $this->user));
+        $this->assertSame('flamingo-pink', $this->color_provider->provideColor($this->changeset, $this->tracker, $this->user));
     }
 }

@@ -44,56 +44,56 @@ final class CrossReferenceValidatorTest extends TestCase
         $valid_cross_ref                       = new CrossReference(
             1,
             108,
-            "plugin_tracker_artifact",
-            "rel",
+            'plugin_tracker_artifact',
+            'rel',
             2,
             108,
-            "plugin_tracker_artifact",
-            "rev",
+            'plugin_tracker_artifact',
+            'rev',
             102
         );
         $not_artifact_cross_reference          = new CrossReference(
             11,
             108,
-            "banana",
-            "rel",
+            'banana',
+            'rel',
             2,
             108,
-            "apple",
-            "rev",
+            'apple',
+            'rev',
             102
         );
         $artifact_not_existing_cross_reference = new CrossReference(
             3,
             108,
-            "plugin_tracker_artifact",
-            "rel",
+            'plugin_tracker_artifact',
+            'rel',
             2,
             108,
-            "plugin_tracker_artifact",
-            "rev",
+            'plugin_tracker_artifact',
+            'rev',
             102
         );
         $user_cant_view_cross_reference        = new CrossReference(
             4,
             108,
-            "plugin_tracker_artifact",
-            "rel",
+            'plugin_tracker_artifact',
+            'rel',
             2,
             108,
-            "plugin_tracker_artifact",
-            "rev",
+            'plugin_tracker_artifact',
+            'rev',
             102
         );
         $invalid_target_cross_reference        = new CrossReference(
             1,
             108,
-            "plugin_tracker_artifact",
-            "rel",
+            'plugin_tracker_artifact',
+            'rel',
             13,
             108,
-            "plugin_tracker_artifact",
-            "rev",
+            'plugin_tracker_artifact',
+            'rev',
             102
         );
 
@@ -101,11 +101,11 @@ final class CrossReferenceValidatorTest extends TestCase
         $artifact_valid_2          = $this->createStub(Artifact::class);
         $artifact_4_user_cant_view = $this->createStub(Artifact::class);
 
-        $artifact_valid_1->method("getId")->willReturn(1);
-        $artifact_valid_2->method("getId")->willReturn(2);
-        $artifact_4_user_cant_view->method("getId")->willReturn(4);
+        $artifact_valid_1->method('getId')->willReturn(1);
+        $artifact_valid_2->method('getId')->willReturn(2);
+        $artifact_4_user_cant_view->method('getId')->willReturn(4);
 
-        $this->artifact_factory->method("getArtifactById")->willReturnCallback(
+        $this->artifact_factory->method('getArtifactById')->willReturnCallback(
             fn (int $artifact_id): ?Artifact => match ($artifact_id) {
                 1 => $artifact_valid_1,
                 2 => $artifact_valid_2,

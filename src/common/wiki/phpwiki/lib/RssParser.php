@@ -44,16 +44,16 @@ require_once('lib/XmlParserPHPWiki.php');
 
 class RSSParser extends XmlParserPHPWiki
 {
-    public $title       = "";
-    public $link        = "";
-    public $description = "";
+    public $title       = '';
+    public $link        = '';
+    public $description = '';
     public $inside_item = false;
     public $list_items  = false;
     public $item        = [];
     public $items;
     public $channel;
-    public $divers = "";
-    public $date   = "";
+    public $divers = '';
+    public $date   = '';
 
     public function tag_open($parser, $name, $attrs = '')
     {
@@ -61,11 +61,11 @@ class RSSParser extends XmlParserPHPWiki
 
         $current_tag   = $name;
         $current_attrs = $attrs;
-        if ($name == "ITEM") {
+        if ($name == 'ITEM') {
             $this->inside_item = true;
-        } elseif ($name == "ITEMS") {
+        } elseif ($name == 'ITEMS') {
             $this->list_items = true;
-        } elseif ($name == "IMAGE") {
+        } elseif ($name == 'IMAGE') {
             $this->inside_item = true;
         }
     }
@@ -74,7 +74,7 @@ class RSSParser extends XmlParserPHPWiki
     {
         global $current_tag;
 
-        if ($tagName == "ITEM") {
+        if ($tagName == 'ITEM') {
             if (empty($this->items)) {
                 $this->items                 = [];
                 $GLOBALS['rss_parser_items'] = $this->items;
@@ -83,39 +83,39 @@ class RSSParser extends XmlParserPHPWiki
                 $this->items                 = [];
                 $GLOBALS['rss_parser_items'] = $this->items;
             }
-            $this->items[]     = ["title"       => $this->item['TITLE'],
-                "description" => @$this->item['DESCRIPTION'],
-                "link"        => $this->item['LINK'],
+            $this->items[]     = ['title'       => $this->item['TITLE'],
+                'description' => @$this->item['DESCRIPTION'],
+                'link'        => $this->item['LINK'],
             ];
-            $this->item        = ["TITLE"       => "",
-                "DESCRIPTION" => "",
-                "LINK"        => "",
-            ];
-            $this->inside_item = false;
-        } elseif ($tagName == "IMAGE") {
-            $this->item        = ["TITLE"       => "",
-                "DESCRIPTION" => "",
-                "LINK"        => "",
+            $this->item        = ['TITLE'       => '',
+                'DESCRIPTION' => '',
+                'LINK'        => '',
             ];
             $this->inside_item = false;
-        } elseif ($tagName == "CHANNEL") {
-            $this->channel                 = ["title" => $this->title,
-                "description" => $this->description,
-                "link" => $this->link,
-                "date" => $this->date,
-                "divers" => $this->divers,
+        } elseif ($tagName == 'IMAGE') {
+            $this->item        = ['TITLE'       => '',
+                'DESCRIPTION' => '',
+                'LINK'        => '',
+            ];
+            $this->inside_item = false;
+        } elseif ($tagName == 'CHANNEL') {
+            $this->channel                 = ['title' => $this->title,
+                'description' => $this->description,
+                'link' => $this->link,
+                'date' => $this->date,
+                'divers' => $this->divers,
             ];
             $GLOBALS['rss_parser_channel'] = $this->channel;
-            $this->title                   = "";
-            $this->description             = "";
-            $this->link                    = "";
-            $this->divers                  = "";
-            $this->date                    = "";
-        } elseif ($tagName == "ITEMS") {
+            $this->title                   = '';
+            $this->description             = '';
+            $this->link                    = '';
+            $this->divers                  = '';
+            $this->date                    = '';
+        } elseif ($tagName == 'ITEMS') {
             $GLOBALS['rss_parser_items'] = $this->items;
-            $this->item                  = ["TITLE"       => "",
-                "DESCRIPTION" => "",
-                "LINK"        => "",
+            $this->item                  = ['TITLE'       => '',
+                'DESCRIPTION' => '',
+                'LINK'        => '',
             ];
             $this->list_items            = false;
         }
@@ -147,29 +147,29 @@ class RSSParser extends XmlParserPHPWiki
             }
         } else {
             switch ($current_tag) {
-                case "TITLE":
+                case 'TITLE':
                     if (trim($data)) {
-                        $this->title .= " " . trim($data);
+                        $this->title .= ' ' . trim($data);
                     }
                     break;
-                case "DESCRIPTION":
+                case 'DESCRIPTION':
                     if (trim($data)) {
                         $this->description .= trim($data);
                     }
                     break;
-                case "LINK":
+                case 'LINK':
                     if (trim($data)) {
                         $this->link = trim($data);
                     }
                     break;
-                case "DC:DATE":
+                case 'DC:DATE':
                     if (trim($data)) {
-                        $this->date .= " " . trim($data);
+                        $this->date .= ' ' . trim($data);
                     }
                     // Let's just say the fall-through here is intentional but it's likely nobody knows or wants to remember
                 default:
                     if (trim($data)) {
-                        $this->divers .= " " . $current_tag . "/" . $data;
+                        $this->divers .= ' ' . $current_tag . '/' . $data;
                     }
                     break;
             }
@@ -181,7 +181,7 @@ class RSSParser extends XmlParserPHPWiki
         xml_parse($this->_parser, $content, $is_final) or
             trigger_error(
                 sprintf(
-                    "XML error: %s at line %d",
+                    'XML error: %s at line %d',
                     xml_error_string(xml_get_error_code($this->_parser)),
                     xml_get_current_line_number($this->_parser)
                 ),

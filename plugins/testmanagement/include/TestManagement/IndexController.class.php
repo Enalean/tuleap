@@ -88,7 +88,7 @@ class IndexController extends TestManagementController
                 $current_user,
                 $milestone_representation,
                 $this->project_flags_builder->buildProjectFlags($this->project),
-                new CSRFSynchronizerToken("/plugins/testmanagement/?group_id=" . (int) $this->project->getID()),
+                new CSRFSynchronizerToken('/plugins/testmanagement/?group_id=' . (int) $this->project->getID()),
                 \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
                 \Tuleap\ServerHostname::HTTPSUrl(),
                 \Admin_Homepage_LogoFinder::getCurrentUrl(),
@@ -106,9 +106,9 @@ class IndexController extends TestManagementController
     {
         $issue_tracker_id = $this->config->getIssueTrackerId($this->project);
         $empty_config     = [
-            "permissions" => [
-                "create" => false,
-                "link"   => false,
+            'permissions' => [
+                'create' => false,
+                'link'   => false,
             ],
         ];
 
@@ -136,11 +136,11 @@ class IndexController extends TestManagementController
         $form_element_factory = Tracker_FormElementFactory::instance();
         $link_field           = $form_element_factory->getAnArtifactLinkField($current_user, $execution_tracker);
         return [
-            "permissions" => [
-                "create" => $issue_tracker->userCanSubmitArtifact($current_user),
-                "link"   => $link_field && $link_field->userCanUpdate($current_user),
+            'permissions' => [
+                'create' => $issue_tracker->userCanSubmitArtifact($current_user),
+                'link'   => $link_field && $link_field->userCanUpdate($current_user),
             ],
-            "xref_color" => $issue_tracker->getColor()->getName(),
+            'xref_color' => $issue_tracker->getColor()->getName(),
         ];
     }
 

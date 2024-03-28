@@ -129,7 +129,7 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
                 continue;
             }
 
-            $field_change_name = (string) $changeset_xml->field_change[$index]["field_name"];
+            $field_change_name = (string) $changeset_xml->field_change[$index]['field_name'];
             if (in_array($field_change_name, $not_migrateable_fields_names, true)) {
                 $this->move_changeset_XML_updater->deleteFieldChangeNode($changeset_xml, $index);
                 continue;
@@ -156,7 +156,7 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
                 continue;
             }
 
-            $field_change_name = (string) $changeset_xml->external_field_change[$index]["field_name"];
+            $field_change_name = (string) $changeset_xml->external_field_change[$index]['field_name'];
             if (in_array($field_change_name, $not_migrateable_fields_names, true)) {
                 $this->move_changeset_XML_updater->deleteExternalFieldChangeNode($changeset_xml, $index);
             }

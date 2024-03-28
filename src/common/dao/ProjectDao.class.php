@@ -39,9 +39,9 @@ class ProjectDao extends DataAccessObject
 
     public function searchById($id)
     {
-        $sql = "SELECT *" .
-               " FROM `groups` " .
-               " WHERE group_id = " . $this->da->quoteSmart($id);
+        $sql = 'SELECT *' .
+               ' FROM `groups` ' .
+               ' WHERE group_id = ' . $this->da->quoteSmart($id);
         return $this->retrieve($sql);
     }
 
@@ -155,16 +155,16 @@ class ProjectDao extends DataAccessObject
             $where .= ' AND ' . $public;
         }
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS g.*" .
-               " FROM `groups` AS g" .
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS g.*' .
+               ' FROM `groups` AS g' .
                $join .
-               " WHERE (g.group_name like " . $this->da->quoteSmart($name . '%') .
-               " OR g.unix_group_name like " . $this->da->quoteSmart($name . '%') . ")" .
+               ' WHERE (g.group_name like ' . $this->da->quoteSmart($name . '%') .
+               ' OR g.unix_group_name like ' . $this->da->quoteSmart($name . '%') . ')' .
                " AND g.status='A'" .
                $where .
                $groupby .
-               " ORDER BY group_name" .
-               " LIMIT " . $this->da->escapeInt($offset) . ", " . $this->da->escapeInt($limit);
+               ' ORDER BY group_name' .
+               ' LIMIT ' . $this->da->escapeInt($offset) . ', ' . $this->da->escapeInt($limit);
 
         return $this->retrieve($sql);
     }
@@ -278,7 +278,7 @@ class ProjectDao extends DataAccessObject
     public function returnAllProjects($offset, $limit, $status = false, $groupName = false)
     {
         $cond          = [];
-        $project_limit = "";
+        $project_limit = '';
         if ($limit != 0) {
             $project_limit .= ' LIMIT ' . $this->da->escapeInt($offset) . ', ' . $this->da->escapeInt($limit);
         }
@@ -585,7 +585,7 @@ class ProjectDao extends DataAccessObject
     public function searchGlobalPaginatedForRestrictedUsers($words, $offset, $exact, $user_id, $limit)
     {
         $user_id = $this->da->escapeInt($user_id);
-        $from    = " JOIN user_group ON (user_group.group_id = `groups`.group_id)";
+        $from    = ' JOIN user_group ON (user_group.group_id = `groups`.group_id)';
         $where   = " AND user_group.user_id = $user_id";
         return $this->searchGlobalParams($words, $offset, $exact, $from, $where, $limit);
     }
@@ -732,7 +732,7 @@ class ProjectDao extends DataAccessObject
 
     public function getProjectsGroupByStatus()
     {
-        return $this->retrieve("SELECT status, count(*) AS project_nb FROM `groups` GROUP BY status");
+        return $this->retrieve('SELECT status, count(*) AS project_nb FROM `groups` GROUP BY status');
     }
 
     public function countProjectRegisteredBefore($timestamp)

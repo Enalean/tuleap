@@ -162,7 +162,7 @@ class FRSPackageController
             $ugroups = $request->get('ugroups');
         }
         $override_collection = $this->permission_manager->savePermissions($project, $package->getPackageID(), FRSPackage::PERM_READ, $ugroups);
-        $override_collection->emitFeedback("");
+        $override_collection->emitFeedback('');
 
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_updated', $package->getName()));
         $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode($project->getGroupId()));

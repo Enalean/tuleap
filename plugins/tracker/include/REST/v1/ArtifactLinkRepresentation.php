@@ -92,11 +92,11 @@ class ArtifactLinkRepresentation
         $label = $direction === TypePresenter::FORWARD_LABEL ? $type->forward_label : $type->reverse_label;
 
         return [
-            "shortname"    => $type->shortname,
-            "direction"    => $direction,
-            "label"        => $label,
-            "uri"          => "artifacts/" . $artifact->getId() . "/linked_artifacts?nature=" . urlencode($type->shortname) .
-                              "&direction=" . urlencode($direction),
+            'shortname'    => $type->shortname,
+            'direction'    => $direction,
+            'label'        => $label,
+            'uri'          => 'artifacts/' . $artifact->getId() . '/linked_artifacts?nature=' . urlencode($type->shortname) .
+                              '&direction=' . urlencode($direction),
         ];
     }
 }

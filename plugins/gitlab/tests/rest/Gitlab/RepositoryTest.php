@@ -38,7 +38,7 @@ class RepositoryTest extends TestBase
     public function testPatchGitlabRepositoryIntegrationToAllowArtifactClosure(): void
     {
         $gitlab_integration_before_patch = json_decode($this->getGitlabRepositoryIntegration()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)[0];
-        self::assertFalse($gitlab_integration_before_patch["allow_artifact_closure"]);
+        self::assertFalse($gitlab_integration_before_patch['allow_artifact_closure']);
 
         $patch_body = json_encode(
             [
@@ -52,17 +52,17 @@ class RepositoryTest extends TestBase
         self::assertSame(200, $response->getStatusCode());
 
         $gitlab_integration_after_patch = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        self::assertTrue($gitlab_integration_after_patch["allow_artifact_closure"]);
+        self::assertTrue($gitlab_integration_after_patch['allow_artifact_closure']);
     }
 
     public function testPatchGitlabRepositoryIntegrationToUpdateCreateBranchPrefix(): void
     {
         $gitlab_integration_before_patch = json_decode($this->getGitlabRepositoryIntegration()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)[0];
-        self::assertSame("", $gitlab_integration_before_patch["create_branch_prefix"]);
+        self::assertSame('', $gitlab_integration_before_patch['create_branch_prefix']);
 
         $patch_body = json_encode(
             [
-                'create_branch_prefix' => "dev-",
+                'create_branch_prefix' => 'dev-',
             ]
         );
 
@@ -72,7 +72,7 @@ class RepositoryTest extends TestBase
         self::assertSame(200, $response->getStatusCode());
 
         $gitlab_integration_after_patch = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        self::assertSame("dev-", $gitlab_integration_after_patch["create_branch_prefix"]);
+        self::assertSame('dev-', $gitlab_integration_after_patch['create_branch_prefix']);
     }
 
     public function testPatchGitlabRepositoryIntegrationToUpdateCreateBranchPrefixFailsIfPrefixIsNotValid(): void
@@ -81,7 +81,7 @@ class RepositoryTest extends TestBase
 
         $patch_body = json_encode(
             [
-                'create_branch_prefix' => "dev:",
+                'create_branch_prefix' => 'dev:',
             ]
         );
 

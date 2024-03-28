@@ -54,15 +54,15 @@ class XMLExporter
             return;
         }
 
-        $this->logger->info("Exporting all project jenkins servers.");
-        $jenkins_servers_admin_node = $xml_git->addChild("jenkins-servers-admin");
+        $this->logger->info('Exporting all project jenkins servers.');
+        $jenkins_servers_admin_node = $xml_git->addChild('jenkins-servers-admin');
         foreach ($project_jenkins_server as $jenkins_server) {
-            $this->logger->info("Exporting project jenkins server: " . $jenkins_server->getServerURL());
-            $jenkins_server_node = $jenkins_servers_admin_node->addChild("jenkins-server");
-            $jenkins_server_node->addAttribute("url", $jenkins_server->getServerURL());
+            $this->logger->info('Exporting project jenkins server: ' . $jenkins_server->getServerURL());
+            $jenkins_server_node = $jenkins_servers_admin_node->addChild('jenkins-server');
+            $jenkins_server_node->addAttribute('url', $jenkins_server->getServerURL());
             $encrypted_token = $jenkins_server->getEncryptedToken();
             if ($encrypted_token !== null) {
-                $jenkins_server_node->addAttribute("jenkins_token", SymmetricCrypto::decrypt($encrypted_token, $this->encryption_key)->getString());
+                $jenkins_server_node->addAttribute('jenkins_token', SymmetricCrypto::decrypt($encrypted_token, $this->encryption_key)->getString());
             }
         }
     }

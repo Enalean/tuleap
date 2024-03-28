@@ -69,27 +69,27 @@ final class ChangesetFromXmlDisplayerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('getUserById')->never();
         $this->renderer->shouldReceive('renderToString')->never();
 
-        $this->assertEquals("", $this->displayer->display(1234));
+        $this->assertEquals('', $this->displayer->display(1234));
     }
 
     public function testItReturnsAnEmptyStringIfUserWhoPerfomTheImportDoesNotExisit(): void
     {
-        $this->dao->shouldReceive('searchChangeset')->andReturn(["user_id" => 101, "timestamp" => 123456789]);
+        $this->dao->shouldReceive('searchChangeset')->andReturn(['user_id' => 101, 'timestamp' => 123456789]);
         $this->user_manager->shouldReceive('getUserById')->once()->andReturn(null);
         $this->renderer->shouldReceive('renderToString')->never();
 
-        $this->assertEquals("", $this->displayer->display(1234));
+        $this->assertEquals('', $this->displayer->display(1234));
     }
 
     public function testItRendersTheChangeset(): void
     {
-        $this->dao->shouldReceive('searchChangeset')->andReturn(["user_id" => 101, "timestamp" => 123456789]);
+        $this->dao->shouldReceive('searchChangeset')->andReturn(['user_id' => 101, 'timestamp' => 123456789]);
         $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getUserName')->andReturn("user");
-        $user->shouldReceive('getPublicProfileUrl')->andReturn("user");
+        $user->shouldReceive('getUserName')->andReturn('user');
+        $user->shouldReceive('getPublicProfileUrl')->andReturn('user');
         $this->user_manager->shouldReceive('getUserById')->once()->andReturn($user);
-        $this->renderer->shouldReceive('renderToString')->once()->andReturn("Imported by user on 2020-04-20");
+        $this->renderer->shouldReceive('renderToString')->once()->andReturn('Imported by user on 2020-04-20');
 
-        $this->assertEquals("Imported by user on 2020-04-20", $this->displayer->display(1234));
+        $this->assertEquals('Imported by user on 2020-04-20', $this->displayer->display(1234));
     }
 }

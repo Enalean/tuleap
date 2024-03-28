@@ -78,23 +78,23 @@ class AddController implements DispatchableWithRequest
         );
 
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
 
         $user = $request->getCurrentUser();
         if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
-            throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
+            throw new ForbiddenException(dgettext('tuleap-hudson_git', 'User is not Git administrator.'));
         }
 
         $provided_url = $request->get('url');
         if ($provided_url === false) {
-            throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected Jenkins server URL not found"));
+            throw new RuntimeException(dgettext('tuleap-hudson_git', 'Expected Jenkins server URL not found'));
         }
         $cleartext_token = (string) $request->get('token');
         if ($cleartext_token === '') {
             $layout->addFeedback(
                 Feedback::ERROR,
-                dgettext("tuleap-hudson_git", "Jenkins token is missing.")
+                dgettext('tuleap-hudson_git', 'Jenkins token is missing.')
             );
             $layout->redirect(
                 URLBuilder::buildUrl($project)
@@ -112,17 +112,17 @@ class AddController implements DispatchableWithRequest
 
             $layout->addFeedback(
                 Feedback::INFO,
-                dgettext("tuleap-hudson_git", "The Jenkins server has successfully been added.")
+                dgettext('tuleap-hudson_git', 'The Jenkins server has successfully been added.')
             );
         } catch (JenkinsServerAlreadyDefinedException $exception) {
             $layout->addFeedback(
                 Feedback::WARN,
-                dgettext("tuleap-hudson_git", "The Jenkins server is already defined in project.")
+                dgettext('tuleap-hudson_git', 'The Jenkins server is already defined in project.')
             );
         } catch (JenkinsServerURLNotValidException $exception) {
             $layout->addFeedback(
                 Feedback::ERROR,
-                dgettext("tuleap-hudson_git", "The Jenkins server URL provided is not well formed.")
+                dgettext('tuleap-hudson_git', 'The Jenkins server URL provided is not well formed.')
             );
         } finally {
             $layout->redirect(
@@ -138,12 +138,12 @@ class AddController implements DispatchableWithRequest
     {
         $project_id = $request->get('project_id');
         if ($project_id === false) {
-            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Project not found.'));
         }
 
         $project = $this->project_manager->getProject((int) $project_id);
         if (! $project || $project->isError()) {
-            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Project not found.'));
         }
 
         return $project;

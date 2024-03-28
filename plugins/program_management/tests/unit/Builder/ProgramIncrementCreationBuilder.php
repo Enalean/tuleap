@@ -46,7 +46,7 @@ final class ProgramIncrementCreationBuilder
         );
 
         if (! $program_increment_creation) {
-            throw new \LogicException("Program increment creation have not been created");
+            throw new \LogicException('Program increment creation have not been created');
         }
 
         return $program_increment_creation;

@@ -76,7 +76,7 @@ class BurnupFieldPresenter
         $this->can_burnup_be_regenerated = $can_burnup_be_regenerated;
         $this->user_locale               = $user_locale;
         $this->warning                   = $warning;
-        $this->has_warning               = $warning !== "";
+        $this->has_warning               = $warning !== '';
 
         $this->burnup_mode = self::EFFORT_MODE;
         if ($mode_checker->burnupMustUseCountElementsMode($artifact->getTracker()->getProject())) {

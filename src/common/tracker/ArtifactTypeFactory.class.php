@@ -83,8 +83,8 @@ class ArtifactTypeFactory
     public function getStatusIdCount($group_artifact_id)
     {
         $count_array = [];
-        $sql         = "select status_id,count(*) from artifact where group_artifact_id = " . db_ei($group_artifact_id) .
-        " group by status_id";
+        $sql         = 'select status_id,count(*) from artifact where group_artifact_id = ' . db_ei($group_artifact_id) .
+        ' group by status_id';
         $result      = db_query($sql);
 
         $rows = db_numrows($result);
@@ -124,7 +124,7 @@ class ArtifactTypeFactory
         if (! $includeDeleted) {
             $sql .= " AND status != 'D' ";
         }
-        $sql .= " ORDER BY name ASC";
+        $sql .= ' ORDER BY name ASC';
 
         $result = db_query($sql);
 
@@ -265,28 +265,28 @@ class ArtifactTypeFactory
     public function deleteArtifactType($atid)
     {
      // Delete artifact_canned_responses
-        $sql = "DELETE FROM artifact_canned_responses
-			    WHERE group_artifact_id=" . db_ei($atid);
+        $sql = 'DELETE FROM artifact_canned_responses
+			    WHERE group_artifact_id=' . db_ei($atid);
         db_query($sql);
 
      // Delete artifact_notification
-        $sql = "DELETE FROM artifact_notification
-			    WHERE group_artifact_id=" . db_ei($atid);
+        $sql = 'DELETE FROM artifact_notification
+			    WHERE group_artifact_id=' . db_ei($atid);
         db_query($sql);
 
      // Delete artifact_notification_event
-        $sql = "DELETE FROM artifact_notification_event
-			    WHERE group_artifact_id=" . db_ei($atid);
+        $sql = 'DELETE FROM artifact_notification_event
+			    WHERE group_artifact_id=' . db_ei($atid);
         db_query($sql);
 
      // Delete artifact_notification_role
-        $sql = "DELETE FROM artifact_notification_role
-			    WHERE group_artifact_id=" . db_ei($atid);
+        $sql = 'DELETE FROM artifact_notification_role
+			    WHERE group_artifact_id=' . db_ei($atid);
         db_query($sql);
 
      // Delete artifact_perm
-        $sql = "DELETE FROM artifact_perm
-			    WHERE group_artifact_id=" . db_ei($atid);
+        $sql = 'DELETE FROM artifact_perm
+			    WHERE group_artifact_id=' . db_ei($atid);
         db_query($sql);
 
         // We need to instanciate an artifactType to instanciate the factories
@@ -313,8 +313,8 @@ class ArtifactTypeFactory
         $art_rule_fact->deleteRulesByArtifactType($atid);
 
         // Delete artifact_watcher (be carefull, the column is named artifact_group_id)
-        $sql = "DELETE FROM artifact_watcher
-			    WHERE artifact_group_id=" . db_ei($atid);
+        $sql = 'DELETE FROM artifact_watcher
+			    WHERE artifact_group_id=' . db_ei($atid);
         db_query($sql);
 
      // Delete all records linked to artifact_id
@@ -327,30 +327,30 @@ class ArtifactTypeFactory
         $res = db_query($sql_artifacts);
 
         while ($artifacts_array = db_fetch_array($res)) {
-            $id = $artifacts_array["artifact_id"];
+            $id = $artifacts_array['artifact_id'];
 
       // Delete artifact_cc records
-            $sql = "DELETE FROM artifact_cc WHERE artifact_id = " . db_ei($id);
+            $sql = 'DELETE FROM artifact_cc WHERE artifact_id = ' . db_ei($id);
             db_query($sql);
 
       // Delete artifact_dependencies records
-            $sql = "DELETE FROM artifact_dependencies WHERE artifact_id = " . db_ei($id);
+            $sql = 'DELETE FROM artifact_dependencies WHERE artifact_id = ' . db_ei($id);
             db_query($sql);
 
       // Delete artifact_field_value records
-            $sql = "DELETE FROM artifact_field_value WHERE artifact_id = " . db_ei($id);
+            $sql = 'DELETE FROM artifact_field_value WHERE artifact_id = ' . db_ei($id);
             db_query($sql);
 
       // Delete artifact_file records
-            $sql = "DELETE FROM artifact_file WHERE artifact_id = " . db_ei($id);
+            $sql = 'DELETE FROM artifact_file WHERE artifact_id = ' . db_ei($id);
             db_query($sql);
 
       // Delete artifact_history records
-            $sql = "DELETE FROM artifact_history WHERE artifact_id = " . db_ei($id);
+            $sql = 'DELETE FROM artifact_history WHERE artifact_id = ' . db_ei($id);
             db_query($sql);
 
       // Delete artifact records
-            $sql = "DELETE FROM artifact WHERE artifact_id = " . db_ei($id);
+            $sql = 'DELETE FROM artifact WHERE artifact_id = ' . db_ei($id);
             db_query($sql);
         } // while
 
@@ -358,8 +358,8 @@ class ArtifactTypeFactory
                 ArtifactFile::deleteAllByArtifactType($atid);
 
      // Delete artifact_group_list
-        $sql = "DELETE FROM artifact_group_list
-			    WHERE group_artifact_id=" . db_ei($atid);
+        $sql = 'DELETE FROM artifact_group_list
+			    WHERE group_artifact_id=' . db_ei($atid);
      //echo $sql;
 
         $result = db_query($sql);
@@ -373,7 +373,7 @@ class ArtifactTypeFactory
         permission_clear_all_tracker($this->Group->getID(), $atid);
 
         $em = EventManager::instance();
-        $em->processEvent("artifact_type_factory_delete_artifact_type", ['tracker_id' => $atid]);
+        $em->processEvent('artifact_type_factory_delete_artifact_type', ['tracker_id' => $atid]);
 
         return true;
     }
@@ -543,13 +543,13 @@ class ArtifactTypeFactory
     {
         global $Language;
 
-        if (! $name || ! $description || ! $itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == "") {
+        if (! $name || ! $description || ! $itemname || trim($name) == '' || trim($description) == '' || trim($itemname) == '') {
             $this->setError('ArtifactTypeFactory: ' . $Language->getText('tracker_common_type', 'name_requ'));
             return false;
         }
 
          // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
-        if (! preg_match("/^[a-zA-Z0-9_]+$/i", $itemname)) {
+        if (! preg_match('/^[a-zA-Z0-9_]+$/i', $itemname)) {
                 $this->setError($Language->getText('tracker_common_type', 'invalid_shortname', $itemname));
                 return false;
         }
@@ -616,10 +616,10 @@ class ArtifactTypeFactory
                     return false;
                 } else {
                     //create global notifications
-                    $sql = "INSERT INTO artifact_global_notification (tracker_id, addresses, all_updates, check_permissions)
-                    SELECT " . db_ei($id) . ", addresses, all_updates, check_permissions
+                    $sql = 'INSERT INTO artifact_global_notification (tracker_id, addresses, all_updates, check_permissions)
+                    SELECT ' . db_ei($id) . ', addresses, all_updates, check_permissions
                     FROM artifact_global_notification
-                    WHERE tracker_id = " . db_ei($atid_template);
+                    WHERE tracker_id = ' . db_ei($atid_template);
                     $res = db_query($sql);
                     if (! $res || db_affected_rows($res) <= 0) {
                         $this->setError('ArtifactTypeFactory: ' . db_error());

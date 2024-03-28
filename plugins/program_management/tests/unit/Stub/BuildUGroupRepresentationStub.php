@@ -34,6 +34,6 @@ final class BuildUGroupRepresentationStub implements BuildUGroupRepresentation
 
     public function getUGroupRepresentation(int $project_id, int $ugroup_id): string
     {
-        return "101_5";
+        return '101_5';
     }
 }

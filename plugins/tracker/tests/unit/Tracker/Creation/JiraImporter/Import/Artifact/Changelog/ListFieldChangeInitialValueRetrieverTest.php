@@ -61,7 +61,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
     public function testItReturnsTheStaticListValueFormatted(): void
     {
         $list_value = $this->list_field_change_initial_value_retriever->retrieveBoundValue(
-            "10005",
+            '10005',
             new ListFieldMapping(
                 'status',
                 'Status',

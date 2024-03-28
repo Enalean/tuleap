@@ -77,7 +77,7 @@ class User_SSHKeyValidator_KeyValidationTest extends \PHPUnit\Framework\TestCase
 
     public function testItRaisesAWarningWhenTheKeyIsInvalid(): void
     {
-        $keys = ["bla"];
+        $keys = ['bla'];
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('warning');
 
@@ -110,7 +110,7 @@ class User_SSHKeyValidator_KeyValidationTest extends \PHPUnit\Framework\TestCase
     {
         $keys = [
             $this->key1,
-            "bla",
+            'bla',
             $this->key2,
         ];
 

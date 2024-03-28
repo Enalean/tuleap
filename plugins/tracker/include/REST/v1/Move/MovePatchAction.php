@@ -58,22 +58,22 @@ final class MovePatchAction
             $target_tracker = $this->retrieve_tracker->getTrackerById($patch->move->tracker_id);
 
             if ($target_tracker === null) {
-                throw new RestException(404, "Target tracker not found");
+                throw new RestException(404, 'Target tracker not found');
             }
 
             $event = new MoveArtifactActionAllowedByPluginRetriever($artifact, $user);
             $this->before_move_checker->check($source_tracker, $target_tracker, $user, $artifact, $event);
 
             if ($patch->move->dry_run) {
-                $logger->debug(sprintf("Dry run move of artifact #%d in tracker #%d (#%s)", $artifact->getId(), $target_tracker->getId(), $target_tracker->getName()));
+                $logger->debug(sprintf('Dry run move of artifact #%d in tracker #%d (#%s)', $artifact->getId(), $target_tracker->getId(), $target_tracker->getName()));
                 return $this->dry_run_move->move($source_tracker, $target_tracker, $artifact, $user, $logger);
             }
 
-            $logger->debug(sprintf("Move of artifact #%d in tracker #%d (#%s)", $artifact->getId(), $target_tracker->getId(), $target_tracker->getName()));
+            $logger->debug(sprintf('Move of artifact #%d in tracker #%d (#%s)', $artifact->getId(), $target_tracker->getId(), $target_tracker->getName()));
             $this->move_rest_artifact
                 ->move($source_tracker, $target_tracker, $artifact, $user, $patch->move->should_populate_feedback_on_success, $logger);
 
-            $logger->debug("Move is ok");
+            $logger->debug('Move is ok');
             return ArtifactPatchResponseRepresentation::withoutDryRun();
         } catch (MoveArtifactNotDoneException $exception) {
             throw new RestException(500, $exception->getMessage());

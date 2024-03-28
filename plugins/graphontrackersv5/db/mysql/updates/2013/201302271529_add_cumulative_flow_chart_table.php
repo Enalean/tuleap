@@ -37,13 +37,13 @@ EOT;
     public function up()
     {
         if (! $this->db->tableNameExists('plugin_graphontrackersv5_cumulative_flow_chart')) {
-            $sql = "CREATE TABLE plugin_graphontrackersv5_cumulative_flow_chart(
+            $sql = 'CREATE TABLE plugin_graphontrackersv5_cumulative_flow_chart(
   id int(11)  NOT NULL PRIMARY KEY ,
   field_id int(11),
   start_date int(11),
   stop_date int(11),
   scale tinyint(1)
-)";
+)';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
                 throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding table plugin_graphontrackersv5_cumulative_flow_chart: ' . implode(', ', $this->db->dbh->errorInfo()));

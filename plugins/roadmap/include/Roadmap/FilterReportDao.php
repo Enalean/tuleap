@@ -30,7 +30,7 @@ final class FilterReportDao extends \Tuleap\DB\DataAccessObject
     {
         return $this->getDB()->tryFlatTransaction(static function (EasyDB $db) use ($widget_id): ?int {
             $nb_selected_trackers = $db->cell(
-                "SELECT count(*) FROM plugin_roadmap_widget_trackers WHERE plugin_roadmap_widget_id = ?",
+                'SELECT count(*) FROM plugin_roadmap_widget_trackers WHERE plugin_roadmap_widget_id = ?',
                 $widget_id
             );
             if ($nb_selected_trackers !== 1) {
@@ -38,11 +38,11 @@ final class FilterReportDao extends \Tuleap\DB\DataAccessObject
             }
 
             $report_id = $db->cell(
-                "SELECT report_id
+                'SELECT report_id
                     FROM plugin_roadmap_widget_filter AS filter
                         INNER JOIN tracker_report AS report ON (report.id = filter.report_id AND report.user_id IS NULL)
                         INNER JOIN plugin_roadmap_widget_trackers USING (tracker_id)
-                    WHERE widget_id = ?",
+                    WHERE widget_id = ?',
                 $widget_id
             );
 
@@ -66,10 +66,10 @@ final class FilterReportDao extends \Tuleap\DB\DataAccessObject
             $this->deleteByWidget($widget_id);
 
             $is_existing_public_report = $this->getDB()->cell(
-                "SELECT report.id
+                'SELECT report.id
                     FROM tracker_report AS report
                         INNER JOIN plugin_roadmap_widget_trackers USING (tracker_id)
-                    WHERE plugin_roadmap_widget_id = ? AND report.id = ? AND report.user_id IS NULL",
+                    WHERE plugin_roadmap_widget_id = ? AND report.id = ? AND report.user_id IS NULL',
                 $widget_id,
                 $report_id
             );

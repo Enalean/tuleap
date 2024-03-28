@@ -157,7 +157,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             [],
         );
-        $this->event_dispatcher->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->method('dispatch')->willReturn($returned_event);
 
         self::assertFalse(
             $this->artifact_link_validator->isValid(
@@ -204,7 +204,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         self::assertFalse(
             $this->artifact_link_validator->isValid(
@@ -227,7 +227,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         self::assertFalse(
             $this->artifact_link_validator->isValid(
@@ -250,7 +250,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         self::assertFalse(
             $this->artifact_link_validator->isValid(
@@ -273,7 +273,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         self::assertTrue(
             $this->artifact_link_validator->isValid(
@@ -299,7 +299,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         self::assertFalse(
             $this->artifact_link_validator->isValid(
@@ -334,7 +334,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             [],
         );
-        $this->event_dispatcher->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->method('dispatch')->willReturn($returned_event);
 
         $value = ['new_values' => '1000', 'types' => ['_is_child', 'fixed_in']];
         self::assertTrue(
@@ -393,7 +393,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         self::assertTrue(
             $this->artifact_link_validator->isValid(
@@ -429,7 +429,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         self::assertFalse(
             $this->artifact_link_validator->isValid(
@@ -465,7 +465,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         self::assertFalse(
             $this->artifact_link_validator->isValid(
@@ -501,7 +501,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         self::assertTrue(
             $this->artifact_link_validator->isValid(
@@ -537,7 +537,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         self::assertTrue(
             $this->artifact_link_validator->isValid(
@@ -555,7 +555,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'new_values' => '',
             'types' => ['123' => ''],
             'removed_values' => [
-                "666" => ["666"],
+                '666' => ['666'],
             ],
         ];
 
@@ -572,7 +572,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $value,
         );
-        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+        $this->event_dispatcher->expects(self::once())->method('dispatch')->willReturn($returned_event);
 
         $this->artifact_link_validator->isValid(
             $value,

@@ -193,7 +193,7 @@ function WikiURL($pagename, $args = '', $get_abs_url = false)
     }
 
     if (USE_PATH_INFO or ! empty($GLOBALS['WikiTheme']->HTML_DUMP_SUFFIX)) {
-        $url = $get_abs_url ? (SERVER_URL . VIRTUAL_PATH . "/") : "";
+        $url = $get_abs_url ? (SERVER_URL . VIRTUAL_PATH . '/') : '';
         $url = $url . preg_replace('/%2f/i', '/', rawurlencode($pagename));
         if (! empty($GLOBALS['WikiTheme']->HTML_DUMP_SUFFIX)) {
             $url .= $GLOBALS['WikiTheme']->HTML_DUMP_SUFFIX;
@@ -203,7 +203,7 @@ function WikiURL($pagename, $args = '', $get_abs_url = false)
         }
     } else {
         $url  = $get_abs_url ? SERVER_URL . SCRIPT_NAME : basename(SCRIPT_NAME);
-        $url .= "?pagename=" . rawurlencode($pagename);
+        $url .= '?pagename=' . rawurlencode($pagename);
         if ($args) {
             $url .= "&$args";
         }
@@ -215,7 +215,7 @@ function WikiURL($pagename, $args = '', $get_abs_url = false)
         $url .= '&pv=' . $pv;
     }
     if ($anchor) {
-        $url .= "#" . MangleXmlIdentifier($anchor);
+        $url .= '#' . MangleXmlIdentifier($anchor);
     }
     return $url;
 }
@@ -235,7 +235,7 @@ function AbsoluteURL($url)
     }
     if ($url[0] != '/') {
         $base = USE_PATH_INFO ? VIRTUAL_PATH : dirname(SCRIPT_NAME);
-        while ($base != '/' and substr($url, 0, 3) == "../") {
+        while ($base != '/' and substr($url, 0, 3) == '../') {
             $url  = substr($url, 3);
             $base = dirname($base);
         }
@@ -254,7 +254,7 @@ function DataURL($url)
     }
     $url = NormalizeWebFileName($url);
     if (DEBUG and $GLOBALS['request']->getArg('start_debug') and substr($url, -4, 4) == '.php') {
-        $url .= "?start_debug=1"; // XMLRPC and SOAP debugging helper.
+        $url .= '?start_debug=1'; // XMLRPC and SOAP debugging helper.
     }
     return AbsoluteURL($url);
 }
@@ -282,7 +282,7 @@ function IconForLink($protocol_or_url)
         list ($proto) = explode(':', $protocol_or_url, 2);
         $src          = $WikiTheme->getLinkIconURL($proto);
         if ($src) {
-            return HTML::img(['src' => $src, 'alt' => "", 'class' => 'linkicon', 'border' => 0]);
+            return HTML::img(['src' => $src, 'alt' => '', 'class' => 'linkicon', 'border' => 0]);
         } else {
             return false;
         }
@@ -395,15 +395,15 @@ function LinkURL($url, $linktext = '')
     if (! IsSafeURL($url)) {
         $link = HTML::strong(HTML::u(
             ['class' => 'baduri'],
-            _("BAD URL -- remove all of <, >, \"")
+            _('BAD URL -- remove all of <, >, "')
         ));
     } else {
         if (! $linktext) {
-            $linktext = preg_replace("/mailto:/A", "", $url);
+            $linktext = preg_replace('/mailto:/A', '', $url);
         }
         $args = ['href' => $url, 'rel' => 'noreferrer'];
         if (defined('EXTERNAL_LINK_TARGET')) { // can also be set in the css
-            $args['target'] = is_string(EXTERNAL_LINK_TARGET) ? EXTERNAL_LINK_TARGET : "_blank";
+            $args['target'] = is_string(EXTERNAL_LINK_TARGET) ? EXTERNAL_LINK_TARGET : '_blank';
         }
         $link = HTML::a($args, PossiblyGlueIconToText($url, $linktext));
     }
@@ -422,17 +422,17 @@ function LinkURL($url, $linktext = '')
  */
 function LinkImage($url, $alt = false)
 {
-    $force_img = "png|jpg|gif|jpeg|bmp|pl|cgi";
+    $force_img = 'png|jpg|gif|jpeg|bmp|pl|cgi';
     // Disallow tags in img src urls. Typical CSS attacks.
     // FIXME: Is this needed (or sufficient?)
     if (! IsSafeURL($url)) {
         $link = HTML::strong(HTML::u(
             ['class' => 'baduri'],
-            _("BAD URL -- remove all of <, >, \"")
+            _('BAD URL -- remove all of <, >, "')
         ));
     } else {
         // support new syntax: [image.jpg size=50% border=n]
-        if (! preg_match("/\.(" . $force_img . ")/i", $url)) {
+        if (! preg_match('/\.(' . $force_img . ')/i', $url)) {
             $ori_url = $url;
         }
         $arr = preg_split('/ /D', $url);
@@ -477,7 +477,7 @@ function LinkImage($url, $alt = false)
                 ($height < 3 and $width < 20) or
                 ($height < 7 and $width < 7)
             ) {
-                trigger_error(_("Invalid image size"), E_USER_WARNING);
+                trigger_error(_('Invalid image size'), E_USER_WARNING);
                 return '';
             }
         } else {
@@ -489,7 +489,7 @@ function LinkImage($url, $alt = false)
                     or ($height < 3 and $width < 20)
                     or ($height < 7 and $width < 7)
                 ) {
-                    trigger_error(_("Invalid image size"), E_USER_WARNING);
+                    trigger_error(_('Invalid image size'), E_USER_WARNING);
                     return '';
                 }
             }
@@ -501,7 +501,7 @@ function LinkImage($url, $alt = false)
      * png|jpg|gif|jpeg|bmp|pl|cgi
      * Note: Allow cgi's (pl,cgi) returning images.
      */
-    if (! preg_match("/\.(" . $force_img . ")/i", $url)) {
+    if (! preg_match('/\.(' . $force_img . ')/i', $url)) {
         //HTML::img(array('src' => $url, 'alt' => $alt, 'title' => $alt));
         // => HTML::object(array('src' => $url)) ...;
         return ImgObject($link, $ori_url);
@@ -614,7 +614,7 @@ function LinkPhpwikiURL($url, $text = '', $basepage = false)
             ['class' => 'rawurl'],
             HTML::u(
                 ['class' => 'baduri'],
-                _("BAD phpwiki: URL")
+                _('BAD phpwiki: URL')
             )
         );
     }
@@ -631,7 +631,7 @@ function LinkPhpwikiURL($url, $text = '', $basepage = false)
         // Convert old style links (to not break diff links in
         // RecentChanges).
         $pagename = urldecode($m[2]);
-        $args     = ["action" => $m[1]];
+        $args     = ['action' => $m[1]];
     } else {
         $args = SplitQueryArgs($qargs);
     }
@@ -659,7 +659,7 @@ function LinkPhpwikiURL($url, $text = '', $basepage = false)
         if (! $page->get('locked')) {
             return HTML::span(
                 ['class' => 'wikiunsafe'],
-                HTML::u(_("Lock page to enable link"))
+                HTML::u(_('Lock page to enable link'))
             );
         }
         $class = 'wikiadmin';
@@ -727,7 +727,7 @@ class WikiPageName
         if (is_string($name)) {
             $this->shortName = $name;
             if (strstr($name, ':')) {
-                list($moniker, $this->shortName) = preg_split("/:/D", $name, 2);
+                list($moniker, $this->shortName) = preg_split('/:/D', $name, 2);
                 $map                             = getInterwikiMap(); // allow overrides to custom maps
                 if (isset($map->_map[$moniker])) {
                     $url = $map->_map[$moniker];
@@ -739,7 +739,7 @@ class WikiPageName
                     // expand Talk or User, but not to absolute urls!
                     if (strstr($url, '//')) {
                         if ($moniker == 'Talk') {
-                            $name = $name . SUBPAGE_SEPARATOR . _("Discussion");
+                            $name = $name . SUBPAGE_SEPARATOR . _('Discussion');
                         } elseif ($moniker == 'User') {
                             $name = $name;
                         }
@@ -838,7 +838,7 @@ class WikiPageName
 
     public function _normalize_bad_pagename($name)
     {
-        trigger_error("Bad pagename: " . $name, E_USER_WARNING);
+        trigger_error('Bad pagename: ' . $name, E_USER_WARNING);
 
         // Punt...  You really shouldn't get here.
         if (empty($name)) {
@@ -846,7 +846,7 @@ class WikiPageName
             return $request->getArg('pagename');
         }
         assert($name[0] == SUBPAGE_SEPARATOR);
-        $this->_errors[] = sprintf(_("Leading %s not allowed"), SUBPAGE_SEPARATOR);
+        $this->_errors[] = sprintf(_('Leading %s not allowed'), SUBPAGE_SEPARATOR);
         return substr($name, 1);
     }
 
@@ -859,14 +859,14 @@ class WikiPageName
         //$pagename = preg_replace('/[\s\xa0]+/', ' ', $orig = $pagename);
 
         if ($pagename != $orig) {
-            $this->_warnings[] = _("White space converted to single space");
+            $this->_warnings[] = _('White space converted to single space');
         }
 
         // Delete any control characters.
         if (DATABASE_TYPE == 'cvs' or DATABASE_TYPE == 'file') {
             $pagename = preg_replace('/[\x00-\x1f\x7f\x80-\x9f]/', '', $orig = $pagename);
             if ($pagename != $orig) {
-                $this->_errors[] = _("Control characters not allowed");
+                $this->_errors[] = _('Control characters not allowed');
             }
         }
 
@@ -878,7 +878,7 @@ class WikiPageName
             $pagename = substr($pagename, 1);
         }
         if ($pagename != $orig) {
-            $this->_errors[] = sprintf(_("Leading %s not allowed"), SUBPAGE_SEPARATOR);
+            $this->_errors[] = sprintf(_('Leading %s not allowed'), SUBPAGE_SEPARATOR);
         }
 
         // ";" is urlencoded, so safe from php arg-delim problems
@@ -890,7 +890,7 @@ class WikiPageName
         // not only for SQL, also to restrict url length
         if (strlen($pagename) > MAX_PAGENAME_LENGTH) {
             $pagename        = substr($pagename, 0, MAX_PAGENAME_LENGTH);
-            $this->_errors[] = _("too long");
+            $this->_errors[] = _('too long');
         }
 
         // disallow some chars only on file and cvs
@@ -898,7 +898,7 @@ class WikiPageName
             (DATABASE_TYPE == 'cvs' or DATABASE_TYPE == 'file')
             and preg_match('/(:|\.\.)/', $pagename, $m)
         ) {
-            $this->_warnings[] = sprintf(_("Illegal chars %s removed"), $m[1]);
+            $this->_warnings[] = sprintf(_('Illegal chars %s removed'), $m[1]);
             $pagename          = str_replace('..', '', $pagename);
             $pagename          = str_replace(':', '', $pagename);
         }
@@ -929,7 +929,7 @@ class WikiPageName
  *   It only crashes with CreateToc so far, but other pages (not in pgsrc) are
  *   also known to crash, even with Apache1.
  */
-function ConvertOldMarkup($text, $markup_type = "block")
+function ConvertOldMarkup($text, $markup_type = 'block')
 {
     static $subs;
     static $block_re;
@@ -943,11 +943,11 @@ function ConvertOldMarkup($text, $markup_type = "block")
     // I suspect this only to crash with Apache2 and IIS.
     if (
         in_array(php_sapi_name(), ['apache2handler', 'apache2filter', 'isapi'])
-        and preg_match("/plugin CreateToc/", $text)
+        and preg_match('/plugin CreateToc/', $text)
     ) {
-        trigger_error(_("The CreateTocPlugin is not yet old markup compatible! ")
-                     . _("Please remove the CreateToc line to be able to reformat this page to old markup. ")
-                     . _("Skipped."), E_USER_WARNING);
+        trigger_error(_('The CreateTocPlugin is not yet old markup compatible! ')
+                     . _('Please remove the CreateToc line to be able to reformat this page to old markup. ')
+                     . _('Skipped.'), E_USER_WARNING);
         $debug_skip = true;
         //if (!DEBUG) return $text;
         return $text;
@@ -968,17 +968,17 @@ function ConvertOldMarkup($text, $markup_type = "block")
 
         // change ! escapes to ~'s.
         global $WikiNameRegexp, $request;
-        $bang_esc[] = "(?:" . ALLOWED_PROTOCOLS . "):[^\s<>\[\]\"'()]*[^\s<>\[\]\"'(),.?]";
+        $bang_esc[] = '(?:' . ALLOWED_PROTOCOLS . "):[^\s<>\[\]\"'()]*[^\s<>\[\]\"'(),.?]";
         // before 4.3.9 pcre had a memory release bug, which might hit us here. so be safe.
         $map = getInterwikiMap();
         if ($map_regex = $map->getRegexp()) {
-            $bang_esc[] = $map_regex . ":[^\\s.,;?()]+"; // FIXME: is this really needed?
+            $bang_esc[] = $map_regex . ':[^\\s.,;?()]+'; // FIXME: is this really needed?
         }
         $bang_esc[] = $WikiNameRegexp;
         $orig[]     = '/!((?:' . join(')|(', $bang_esc) . '))/';
         $repl[]     = '~\\1';
 
-        $subs["links"] = [$orig, $repl];
+        $subs['links'] = [$orig, $repl];
 
         // Temporarily URL-encode pairs of underscores in links to hide
         // them from the re for bold markup.
@@ -1012,7 +1012,7 @@ function ConvertOldMarkup($text, $markup_type = "block")
         $orig = '/\[[^\[\]]*?%5F%5F[^\[\]]*?\]/e';
         $repl = 'str_replace(\'%5F%5F\', \'__\', \'\\0\')';
 
-        $subs["inline"] = [$orig, $repl];
+        $subs['inline'] = [$orig, $repl];
 
         /*****************************************************************
          * Patterns which match block markup constructs which take
@@ -1042,11 +1042,11 @@ function ConvertOldMarkup($text, $markup_type = "block")
     this breaks headings but it doesn't crash anymore (crash on non-cgi, non-cli only)
     */
         $block_re = ( '/\A((?:.|\n)*?)(^(?:'
-                      . join("|", $blockpats)
+                      . join('|', $blockpats)
                       . ').*$)\n?/m' );
     }
 
-    if ($markup_type != "block") {
+    if ($markup_type != 'block') {
         list ($orig, $repl) = $subs[$markup_type];
         return preg_replace($orig, $repl, $text);
     } else {
@@ -1069,7 +1069,7 @@ function ConvertOldMarkup($text, $markup_type = "block")
                 // Old-style table
                 $prefix = "<?plugin OldStyleTable\n";
                 $suffix = "\n?>\n";
-            } elseif (strchr("#*;", $block[0])) {
+            } elseif (strchr('#*;', $block[0])) {
                 // Old-style list item
                 preg_match('/^([#*;]*)([*#]|;.*?:) */', $block, $m);
                 list (,$ind,$bullet) = $m;
@@ -1136,7 +1136,7 @@ function expand_tabs($str, $tab_width = 8)
     foreach ($split as $hunk) {
         $expanded .= $hunk;
         $pos       = strlen(strrchr($expanded, "\n")) - 1;
-        $expanded .= str_repeat(" ", ($tab_width - $pos % $tab_width));
+        $expanded .= str_repeat(' ', ($tab_width - $pos % $tab_width));
     }
     return substr($expanded, 1) . $tail;
 }
@@ -1154,7 +1154,7 @@ function expand_tabs($str, $tab_width = 8)
  */
 function SplitPagename($page)
 {
-    if (preg_match("/\s/", $page)) {
+    if (preg_match('/\s/', $page)) {
         return $page;           // Already split --- don't split any more.
     }
 
@@ -1207,7 +1207,7 @@ function SplitPagename($page)
 function NoSuchRevision(&$request, $page, $version)
 {
     $html = HTML(
-        HTML::h2(_("Revision Not Found")),
+        HTML::h2(_('Revision Not Found')),
         HTML::p(fmt(
             "I'm sorry.  Version %d of %s is not in the database.",
             $version,
@@ -1215,7 +1215,7 @@ function NoSuchRevision(&$request, $page, $version)
         ))
     );
     include_once('lib/Template.php');
-    GeneratePage($html, _("Bad Version"), $page->getCurrentRevision());
+    GeneratePage($html, _('Bad Version'), $page->getCurrentRevision());
     $request->finish();
 }
 
@@ -1243,7 +1243,7 @@ function TimezoneOffset($time = false, $no_colon = false)
     $colon = $no_colon ? '' : ':';
     $mins  = intval(($secs + 30) / 60);
     return sprintf(
-        "%s%02d%s%02d",
+        '%s%02d%s%02d',
         $sign,
         $mins / 60,
         $colon,
@@ -1366,7 +1366,7 @@ function CTime($time = false)
     if ($time === false) {
         $time = time();
     }
-    return date("D M j H:i:s Y", $time);
+    return date('D M j H:i:s Y', $time);
 }
 
 
@@ -1382,20 +1382,20 @@ function CTime($time = false)
 function ByteFormatter($bytes = 0, $longformat = false)
 {
     if ($bytes < 0) {
-        return fmt("-???");
+        return fmt('-???');
     }
     if ($bytes < 1024) {
         if (! $longformat) {
-            $size = fmt("%s b", $bytes);
+            $size = fmt('%s b', $bytes);
         } else {
-            $size = fmt("%s bytes", $bytes);
+            $size = fmt('%s bytes', $bytes);
         }
     } else {
         $kb = round($bytes / 1024, 1);
         if (! $longformat) {
-            $size = fmt("%s k", $kb);
+            $size = fmt('%s k', $kb);
         } else {
-            $size = fmt("%s Kb (%s bytes)", $kb, $bytes);
+            $size = fmt('%s Kb (%s bytes)', $kb, $bytes);
         }
     }
     return $size;
@@ -1500,7 +1500,7 @@ function PHPWikiVsprintf($fmt, $args)
         foreach ($m[1] as $argnum) {
             if ($argnum < 1 || $argnum > count($args)) {
                 trigger_error(sprintf(
-                    _("%s: argument index out of range"),
+                    _('%s: argument index out of range'),
                     $argnum
                 ), E_USER_WARNING);
             }
@@ -1596,7 +1596,7 @@ class fileSet
 
         if (empty($directory)) {
             trigger_error(
-                sprintf(_("%s is empty."), 'directoryname'),
+                sprintf(_('%s is empty.'), 'directoryname'),
                 E_USER_NOTICE
             );
             return; // early return
@@ -1669,14 +1669,14 @@ function glob_to_pcre($glob)
 {
     // check simple case: no need to escape
     $escape = '\[](){}=!<>|:/';
-    if (strcspn($glob, $escape . ".+*?^$") == strlen($glob)) {
+    if (strcspn($glob, $escape . '.+*?^$') == strlen($glob)) {
         return $glob;
     }
     // preg_replace cannot handle "\\\\\\2" so convert \\ to \xff
-    $glob = strtr($glob, "\\", "\xff");
-    $glob = str_replace("/", '\/', $glob);
+    $glob = strtr($glob, '\\', "\xff");
+    $glob = str_replace('/', '\/', $glob);
     // first convert some unescaped expressions to pcre style: . => \.
-    $special = ".^$";
+    $special = '.^$';
     $re      = preg_replace(
         '/([^\xff])?([' . preg_quote($special, '/') . '])/',
         "\\1\xff\\2",
@@ -1696,11 +1696,11 @@ function glob_to_pcre($glob)
     // .*? handled above, now escape the rest
     //while (strcspn($re, $escape) != strlen($re)) // loop strangely needed
     $re = preg_replace(
-        '/([^\xff])([' . preg_quote($escape, "/") . '])/',
+        '/([^\xff])([' . preg_quote($escape, '/') . '])/',
         "\\1\xff\\2",
         $re
     );
-    return strtr($re, "\xff", "\\");
+    return strtr($re, "\xff", '\\');
 }
 
 function glob_match($glob, $against, $case_sensitive = true)
@@ -1742,7 +1742,7 @@ function explodePageList(
     $limit = false,
     $exclude = false,
 ) {
-    include_once("lib/PageList.php");
+    include_once('lib/PageList.php');
     return PageList::explodePageList($input, $include_empty, $sortby, $limit, $exclude);
 }
 
@@ -1827,7 +1827,7 @@ function wikihash($x)
 
 function rand_ascii($length = 1)
 {
-    $s = "";
+    $s = '';
     for ($i = 1; $i <= $length; $i++) {
         // return only typeable 7 bit ascii, avoid quotes
         $s .= chr(random_int(40, 126));
@@ -1924,7 +1924,7 @@ class Alert
 
         $buttons = $this->_buttons;
         if (! $buttons) {
-            $buttons = [_("Okay") => $request->getURLtoSelf()];
+            $buttons = [_('Okay') => $request->getURLtoSelf()];
         }
 
         global $WikiTheme;
@@ -1962,7 +1962,7 @@ function phpwiki_gzhandler($ob)
     }
         $GLOBALS['request']->_ob_get_length = strlen($ob);
     if (! headers_sent()) {
-        header(sprintf("Content-Length: %d", $GLOBALS['request']->_ob_get_length));
+        header(sprintf('Content-Length: %d', $GLOBALS['request']->_ob_get_length));
     }
     return $ob;
 }
@@ -2036,16 +2036,16 @@ function fixTitleEncoding($s)
     $isutf     = ($ishigh ? isUtf8String($s) : true);
     $locharset = strtolower($charset);
 
-    if ($locharset != "utf-8" and $ishigh and $isutf) {
+    if ($locharset != 'utf-8' and $ishigh and $isutf) {
         // if charset == 'iso-8859-1' then simply use utf8_decode()
         if ($locharset == 'iso-8859-1') {
             return utf8_decode($s);
         } else { // TODO: check for iconv support
-            return iconv("UTF-8", $charset, $s);
+            return iconv('UTF-8', $charset, $s);
         }
     }
 
-    if ($locharset == "utf-8" and $ishigh and ! $isutf) {
+    if ($locharset == 'utf-8' and $ishigh and ! $isutf) {
         return utf8_encode($s);
     }
 
@@ -2126,7 +2126,7 @@ function firstNWordsOfContent($n, $content)
                 $words = explode(' ', $line);
                 if ($wordcount + count($words) > $n) {
                     $new[] = implode(' ', array_slice($words, 0, $n - $wordcount))
-                           . sprintf(_("... (first %s words)"), $n);
+                           . sprintf(_('... (first %s words)'), $n);
                     return $new;
                 } else {
                     $wordcount += count($words);
@@ -2139,7 +2139,7 @@ function firstNWordsOfContent($n, $content)
             $words = explode(' ', $content);
             if (count($words) > $n) {
                 return join(' ', array_slice($words, 0, $n))
-                       . sprintf(_("... (first %s words)"), $n);
+                       . sprintf(_('... (first %s words)'), $n);
             } else {
                 return $content;
             }
@@ -2165,18 +2165,18 @@ function extractSection($section, $content, $page, $quiet = false, $sectionhead 
         )
     ) {
         // Strip trailing blanks lines and ---- <hr>s
-        $text = preg_replace("/\\s*^-{4,}\\s*$/m", "", $match[2]);
+        $text = preg_replace('/\\s*^-{4,}\\s*$/m', '', $match[2]);
         if ($sectionhead) {
             $text = $match[1] . $section . "\n" . $text;
         }
         return explode("\n", $text);
     }
     if ($quiet) {
-        $mesg = $page . " " . $section;
+        $mesg = $page . ' ' . $section;
     } else {
         $mesg = $section;
     }
-    return [sprintf(_("<%s: no such section>"), $mesg)];
+    return [sprintf(_('<%s: no such section>'), $mesg)];
 }
 
 // use this faster version: only load ExternalReferrer if we came from an external referrer
@@ -2187,7 +2187,7 @@ function isExternalReferrer(&$request)
         if (string_starts_with(strtolower($referrer), strtolower($home))) {
             return false;
         }
-        require_once("lib/ExternalReferrer.php");
+        require_once('lib/ExternalReferrer.php');
         $se = new SearchEngines();
         return $se->parseSearchQuery($referrer);
     }
@@ -2219,7 +2219,7 @@ function string_ends_with($string, $suffix)
  */
 function longer_timeout($secs = 30)
 {
-    $timeout  = @ini_get("max_execution_time") ? ini_get("max_execution_time") : 30;
+    $timeout  = @ini_get('max_execution_time') ? ini_get('max_execution_time') : 30;
     $timeleft = $timeout - $GLOBALS['RUNTIMER']->getTime();
     if ($timeleft < $secs) {
         @set_time_limit(max($timeout, (int) ($secs + $timeleft)));
@@ -2234,7 +2234,7 @@ function printSimpleTrace($bt)
         if (! array_key_exists('file', $elem)) {
             continue;
         }
-        echo join(" ", array_values($elem)),"\n";
+        echo join(' ', array_values($elem)),"\n";
         //print "  " . $elem['file'] . ':' . $elem['line'] . " " .$elem['function']"\n";
     }
 }

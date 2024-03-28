@@ -32,11 +32,11 @@ class b201609261450_remove_rogue_artifacts extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "DELETE a.*
+        $sql = 'DELETE a.*
                 FROM tracker_artifact AS a
                   LEFT JOIN tracker_changeset AS c ON (a.id = c.artifact_id)
                 WHERE a.last_changeset_id = 0
-                  AND c.id IS NULL";
+                  AND c.id IS NULL';
 
         $res = $this->db->dbh->exec($sql);
 

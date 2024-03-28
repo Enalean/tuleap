@@ -33,6 +33,6 @@ final class SemanticStatusNoField
     public function __construct(public int $tracker_id)
     {
         $this->semantic_url = '/plugins/tracker/?' .
-            http_build_query(['tracker' => $tracker_id, 'func' => 'admin-semantic', 'semantic' => "status"]);
+            http_build_query(['tracker' => $tracker_id, 'func' => 'admin-semantic', 'semantic' => 'status']);
     }
 }

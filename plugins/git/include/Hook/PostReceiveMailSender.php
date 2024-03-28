@@ -157,7 +157,7 @@ class PostReceiveMailSender
         $mail->setSubject("Potential misuse of Git detected in the repository $repository_name of project $project_name");
         $mail->setBodyText(
             "A recent push in $repository_name on the reference $refname has reached a timeout. " .
-            "You should inspect the repository."
+            'You should inspect the repository.'
         );
         $mail->send();
     }

@@ -115,12 +115,12 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->webhook_data
             ->expects(self::once())
-            ->method("getSha1")
-            ->willReturn("azer12563");
+            ->method('getSha1')
+            ->willReturn('azer12563');
 
         $this->logger
             ->expects(self::once())
-            ->method("debug")
+            ->method('debug')
             ->with("Comment can't be added on commit #azer12563 because there is no bot API token.");
 
         $this->credentials_retriever
@@ -144,8 +144,8 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->webhook_data
             ->expects(self::exactly(2))
-            ->method("getSha1")
-            ->willReturn("azer12563");
+            ->method('getSha1')
+            ->willReturn('azer12563');
 
         $this->gitlab_repository
             ->expects(self::once())
@@ -166,8 +166,8 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $references_presenter = [
-            new BotCommentReferencePresenter(123, "https://example.fr"),
-            new BotCommentReferencePresenter(59, "https://example.fr"),
+            new BotCommentReferencePresenter(123, 'https://example.fr'),
+            new BotCommentReferencePresenter(59, 'https://example.fr'),
         ];
 
         $this->bot_comment_reference_presenter_builder
@@ -176,22 +176,22 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($references)
             ->willReturn($references_presenter);
 
-        $url     = "/projects/4/repository/commits/azer12563/comments";
+        $url     = '/projects/4/repository/commits/azer12563/comments';
         $comment = "\nThis commit references:\n * [TULEAP-123](https://example.fr)\n * [TULEAP-59](https://example.fr)\n";
 
         $this->client_wrapper
             ->expects(self::once())
             ->method('postUrl')
-            ->with($credentials, $url, ["note" => $comment])
-            ->willThrowException(new GitlabRequestException(404, "not found"));
+            ->with($credentials, $url, ['note' => $comment])
+            ->willThrowException(new GitlabRequestException(404, 'not found'));
 
         $this->logger
             ->method('error')
             ->willReturnCallback(
                 function (string $message): void {
                     match ($message) {
-                        "An error occurred during automatically comment commit #azer12563",
-                        "|  |_Error returned by the GitLab server: not found" => true,
+                        'An error occurred during automatically comment commit #azer12563',
+                        '|  |_Error returned by the GitLab server: not found' => true,
                     };
                 }
             );
@@ -207,8 +207,8 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->webhook_data
             ->expects(self::exactly(2))
-            ->method("getSha1")
-            ->willReturn("azer12563");
+            ->method('getSha1')
+            ->willReturn('azer12563');
 
         $this->gitlab_repository
             ->expects(self::once())
@@ -228,7 +228,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $references_presenter = [
-            new BotCommentReferencePresenter(123, "https://example.fr"),
+            new BotCommentReferencePresenter(123, 'https://example.fr'),
         ];
 
         $this->bot_comment_reference_presenter_builder
@@ -237,18 +237,18 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($references)
             ->willReturn($references_presenter);
 
-        $url     = "/projects/4/repository/commits/azer12563/comments";
+        $url     = '/projects/4/repository/commits/azer12563/comments';
         $comment = "This commit references: [TULEAP-123](https://example.fr).\n";
 
         $this->client_wrapper
             ->expects(self::once())
             ->method('postUrl')
-            ->with($credentials, $url, ["note" => $comment]);
+            ->with($credentials, $url, ['note' => $comment]);
 
         $this->logger
             ->expects(self::once())
-            ->method("debug")
-            ->with("Comment was successfully added on commit #azer12563");
+            ->method('debug')
+            ->with('Comment was successfully added on commit #azer12563');
 
         $this->commenter->addCommentOnCommit(
             $this->webhook_data,

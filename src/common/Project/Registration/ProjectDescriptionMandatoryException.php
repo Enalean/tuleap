@@ -32,6 +32,6 @@ final class ProjectDescriptionMandatoryException extends \RuntimeException imple
 
     public function getI18NMessage(): string
     {
-        return dgettext("tuleap-core", '`description` is required.');
+        return dgettext('tuleap-core', '`description` is required.');
     }
 }

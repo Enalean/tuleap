@@ -120,7 +120,7 @@ EOT;
                     AND status = 'A'
                     AND is_public = 0
                 )";
-        $this->execDB($sql, "Cannot insert initial values");
+        $this->execDB($sql, 'Cannot insert initial values');
     }
 
     private function execDB($sql, $message)

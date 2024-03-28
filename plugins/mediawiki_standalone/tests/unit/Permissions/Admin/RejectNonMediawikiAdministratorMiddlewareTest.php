@@ -72,7 +72,7 @@ class RejectNonMediawikiAdministratorMiddlewareTest extends TestCase
 
         $captured_request = $handler->getCapturedRequest();
         if (! $captured_request) {
-            self::fail("Failed to capture the request");
+            self::fail('Failed to capture the request');
             return;
         }
         self::assertSame(

@@ -122,25 +122,25 @@ final class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertCount(5, $tracker_node->semantics->children());
 
         $semantic_title_node = $tracker_node->semantics->semantic[0];
-        self::assertSame("title", (string) $semantic_title_node['type']);
-        self::assertSame("Fsummary", (string) $semantic_title_node->field['REF']);
+        self::assertSame('title', (string) $semantic_title_node['type']);
+        self::assertSame('Fsummary', (string) $semantic_title_node->field['REF']);
 
         $semantic_description_node = $tracker_node->semantics->semantic[1];
-        self::assertSame("description", (string) $semantic_description_node['type']);
-        self::assertSame("Fdescription", (string) $semantic_description_node->field['REF']);
+        self::assertSame('description', (string) $semantic_description_node['type']);
+        self::assertSame('Fdescription', (string) $semantic_description_node->field['REF']);
 
         $semantic_status_node = $tracker_node->semantics->semantic[2];
-        self::assertSame("status", (string) $semantic_status_node['type']);
-        self::assertSame("Fstatus", (string) $semantic_status_node->field['REF']);
+        self::assertSame('status', (string) $semantic_status_node['type']);
+        self::assertSame('Fstatus', (string) $semantic_status_node->field['REF']);
         self::assertCount(2, $semantic_status_node->open_values->children());
 
         $semantic_done_node = $tracker_node->semantics->semantic[3];
-        self::assertSame("done", (string) $semantic_done_node['type']);
+        self::assertSame('done', (string) $semantic_done_node['type']);
         self::assertCount(3, $semantic_done_node->closed_values->children());
 
         $semantic_assignee_node = $tracker_node->semantics->semantic[4];
-        self::assertSame("contributor", (string) $semantic_assignee_node['type']);
-        self::assertSame("Fassignee", (string) $semantic_assignee_node->field['REF']);
+        self::assertSame('contributor', (string) $semantic_assignee_node['type']);
+        self::assertSame('Fassignee', (string) $semantic_assignee_node->field['REF']);
     }
 
     public function testItDoesNotExportSemanticTitleIfSummaryFieldNotfoundInMapping(): void

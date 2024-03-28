@@ -86,7 +86,7 @@ class PageType
         if (! $name) {
             $name = 'wikitext';
         }
-        $class = "PageType_" . (string) $name;
+        $class = 'PageType_' . (string) $name;
         if (class_exists($class)) {
             return new $class();
         }
@@ -105,7 +105,7 @@ class PageType
     public function getName()
     {
         if (! preg_match('/^PageType_(.+)$/i', static::class, $m)) {
-            trigger_error("Bad class name for formatter(?)", E_USER_ERROR);
+            trigger_error('Bad class name for formatter(?)', E_USER_ERROR);
         }
         return $m[1];
     }
@@ -159,13 +159,13 @@ class PageType_interwikimap extends PageType
     {
         if (! $pagetext) {
             $dbi  = $GLOBALS['request']->getDbh();
-            $page = $dbi->getPage(_("InterWikiMap"));
+            $page = $dbi->getPage(_('InterWikiMap'));
             if ($page->get('locked')) {
                 $current  = $page->getCurrentRevision();
                 $pagetext = $current->getPackedContent();
                 $intermap = $this->_getMapFromWikiText($pagetext);
             } elseif ($page->exists()) {
-                trigger_error(_("WARNING: InterWikiMap page is unlocked, so not using those links."));
+                trigger_error(_('WARNING: InterWikiMap page is unlocked, so not using those links.'));
                 $intermap = false;
             } else {
                 $intermap = false;
@@ -199,7 +199,7 @@ class PageType_interwikimap extends PageType
 
     public function link($link, $linktext = false)
     {
-        list ($moniker, $page) = preg_split("/:/D", $link, 2);
+        list ($moniker, $page) = preg_split('/:/D', $link, 2);
 
         if (! isset($this->_map[$moniker])) {
             return HTML::span(
@@ -248,7 +248,7 @@ class PageType_interwikimap extends PageType
     {
         if (
             ! preg_match_all(
-                "/^\s*(\S+)\s+(.+)$/m",
+                '/^\s*(\S+)\s+(.+)$/m',
                 $text,
                 $matches,
                 PREG_SET_ORDER
@@ -275,17 +275,17 @@ class PageType_interwikimap extends PageType
         // User:ReiniUrban => ReiniUrban or Users/ReiniUrban
         // Can be easily overriden by a customized InterWikiMap:
         //   User Users/%s
-        if (empty($map["User"])) {
-            $map["User"] = "%s";
+        if (empty($map['User'])) {
+            $map['User'] = '%s';
         }
         // Talk:PageName => PageName/Discussion as default, which might be overridden
-        if (empty($map["Talk"])) {
+        if (empty($map['Talk'])) {
             $pagename = $GLOBALS['request']->getArg('pagename');
             // against PageName/Discussion/Discussion
-            if (string_ends_with($pagename, SUBPAGE_SEPARATOR . _("Discussion"))) {
-                $map["Talk"] = "%s";
+            if (string_ends_with($pagename, SUBPAGE_SEPARATOR . _('Discussion'))) {
+                $map['Talk'] = '%s';
             } else {
-                $map["Talk"] = "%s" . SUBPAGE_SEPARATOR . _("Discussion");
+                $map['Talk'] = '%s' . SUBPAGE_SEPARATOR . _('Discussion');
             }
         }
 
@@ -338,7 +338,7 @@ class PageType_interwikimap extends PageType
     {
         if (defined('WARN_NONPUBLIC_INTERWIKIMAP') and WARN_NONPUBLIC_INTERWIKIMAP) {
             $error_html = sprintf(
-                _("Loading InterWikiMap from external file %s."),
+                _('Loading InterWikiMap from external file %s.'),
                 $filename
             );
             trigger_error($error_html, E_USER_NOTICE);
@@ -347,7 +347,7 @@ class PageType_interwikimap extends PageType
             $finder   = new FileFinder();
             $filename = $finder->findFile(INTERWIKI_MAP_FILE);
         }
-        @$fd   = fopen($filename, "rb");
+        @$fd   = fopen($filename, 'rb');
         @$data = fread($fd, filesize($filename));
         @fclose($fd);
 
@@ -363,7 +363,7 @@ class PageType_interwikimap extends PageType
         foreach (array_keys($this->_map) as $moniker) {
             $qkeys[] = preg_quote($moniker, '/');
         }
-        return "(?:" . join("|", $qkeys) . ")";
+        return '(?:' . join('|', $qkeys) . ')';
     }
 }
 
@@ -403,7 +403,7 @@ class PageFormatter
      */
     public function format($text)
     {
-        trigger_error("pure virtual", E_USER_ERROR);
+        trigger_error('pure virtual', E_USER_ERROR);
     }
 }
 
@@ -450,15 +450,15 @@ class PageFormatter_interwikimap extends PageFormatter
     {
         $map = $this->_getMap($pagetext);
         if (! $map) {
-            return HTML::p("<No interwiki map found>"); // Shouldn't happen.
+            return HTML::p('<No interwiki map found>'); // Shouldn't happen.
         }
 
         $mon_attr = ['class' => 'interwiki-moniker'];
         $url_attr = ['class' => 'interwiki-url'];
 
         $thead = HTML::thead(HTML::tr(
-            HTML::th($mon_attr, _("Moniker")),
-            HTML::th($url_attr, _("InterWiki Address"))
+            HTML::th($mon_attr, _('Moniker')),
+            HTML::th($url_attr, _('InterWiki Address'))
         ));
         foreach ($map as $moniker => $interurl) {
             $rows[] = HTML::tr(
@@ -510,11 +510,11 @@ class PageFormatter_attach extends PageFormatter
         $tokens['rev']     = new FakePageRevision($this->_meta);
 
         $name                              = new WikiPageName($this->_page->getName());
-        $tokens[$this->prefix . "_PARENT"] = $name->getParent();
+        $tokens[$this->prefix . '_PARENT'] = $name->getParent();
 
         $meta = $this->_meta[$this->type];
         foreach (['ctime', 'creator', 'creator_id'] as $key) {
-            $tokens[$this->prefix . "_" . strtoupper($key)] = $meta[$key];
+            $tokens[$this->prefix . '_' . strtoupper($key)] = $meta[$key];
         }
 
         return new Template($this->type, $request, $tokens);
@@ -524,17 +524,17 @@ class PageFormatter_attach extends PageFormatter
 class PageFormatter_wikiblog extends PageFormatter_attach
 {
     public $type   = 'wikiblog';
-    public $prefix = "BLOG";
+    public $prefix = 'BLOG';
 }
 class PageFormatter_comment extends PageFormatter_attach
 {
     public $type   = 'comment';
-    public $prefix = "COMMENT";
+    public $prefix = 'COMMENT';
 }
 class PageFormatter_wikiforum extends PageFormatter_attach
 {
     public $type   = 'wikiforum';
-    public $prefix = "FORUM";
+    public $prefix = 'FORUM';
 }
 
 /** wikiabuse for htmlarea editing. not yet used.

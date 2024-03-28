@@ -134,7 +134,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $md_uri = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&action=details&id=' . urlencode($item->getId());
 
         //Add a pen icon linked to document properties.
-        $pen_icon = '<a href="' . $md_uri . '"><img src="' . util_get_image_theme("ic/edit.png") . '" /></a>';
+        $pen_icon = '<a href="' . $md_uri . '"><img src="' . util_get_image_theme('ic/edit.png') . '" /></a>';
 
         $html .= '<a href="' . $item_url . $reference->getId() . '">' . $purifier->purify($reference->getTitle()) . '</a>';
         $html .= $pen_icon;

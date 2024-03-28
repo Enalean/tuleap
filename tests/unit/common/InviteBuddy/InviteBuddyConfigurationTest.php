@@ -66,7 +66,7 @@ final class InviteBuddyConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 0);
         self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
 
-        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, "invalid value");
+        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 'invalid value');
         self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, -1);
@@ -101,7 +101,7 @@ final class InviteBuddyConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
             (new InviteBuddyConfiguration($event_manager))->getNbMaxInvitationsByDay()
         );
 
-        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, "invalid value");
+        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 'invalid value');
         self::assertEquals(0, (new InviteBuddyConfiguration($event_manager))->getNbMaxInvitationsByDay());
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 13);

@@ -151,7 +151,7 @@ final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ];
 
                 if (! isset($map[$repository_id])) {
-                    throw new \Exception("Unable to find the repository " . $repository_id);
+                    throw new \Exception('Unable to find the repository ' . $repository_id);
                 }
 
                 return $map[$repository_id];
@@ -320,9 +320,9 @@ final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'user_id'        => 102,
             'push_date'      => 1527145976,
             'commits_number' => 1,
-            'refname'        => "refs/heads/master",
-            'operation_type' => "create",
-            'refname_type'   => "branch",
+            'refname'        => 'refs/heads/master',
+            'operation_type' => 'create',
+            'refname_type'   => 'branch',
         ]);
 
         $this->user_manager->shouldReceive('getUserById')->andReturns(

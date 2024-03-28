@@ -36,19 +36,19 @@ class b202106161205_multiple_trackers_in_roadmap extends \Tuleap\ForgeUpgrade\Bu
     public function up(): void
     {
         $this->execDB(
-            "CREATE TABLE IF NOT EXISTS plugin_roadmap_widget_trackers (
+            'CREATE TABLE IF NOT EXISTS plugin_roadmap_widget_trackers (
                 plugin_roadmap_widget_id INT(11) UNSIGNED NOT NULL,
                 tracker_id INT(11) NOT NULL,
                 PRIMARY KEY (plugin_roadmap_widget_id, tracker_id)
-            ) ENGINE=InnoDB;",
-            "Unable to create table plugin_roadmap_widget_trackers"
+            ) ENGINE=InnoDB;',
+            'Unable to create table plugin_roadmap_widget_trackers'
         );
 
         $this->execDB(
-            "INSERT INTO plugin_roadmap_widget_trackers (plugin_roadmap_widget_id, tracker_id)
+            'INSERT INTO plugin_roadmap_widget_trackers (plugin_roadmap_widget_id, tracker_id)
             SELECT id, tracker_id
-            FROM plugin_roadmap_widget",
-            "Unable to populate new table plugin_roadmap_widget_trackers"
+            FROM plugin_roadmap_widget',
+            'Unable to populate new table plugin_roadmap_widget_trackers'
         );
     }
 

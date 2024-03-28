@@ -40,7 +40,7 @@ final class SSHDaemon
 
     public function startDaemon(OutputInterface $output): void
     {
-        $output->writeln("Start SSH Daemon");
+        $output->writeln('Start SSH Daemon');
         $this->generateSSHServerKeys();
         $this->process = $this->process_factory->getProcess(['/usr/sbin/sshd', '-E', '/dev/stderr', '-D']);
         $this->process->start();
@@ -49,7 +49,7 @@ final class SSHDaemon
     public function shutdownDaemon(OutputInterface $output): void
     {
         if ($this->process) {
-            $output->writeln("Shutdown SSH Daemon");
+            $output->writeln('Shutdown SSH Daemon');
             $this->process->stop(0, SIGTERM);
         }
     }

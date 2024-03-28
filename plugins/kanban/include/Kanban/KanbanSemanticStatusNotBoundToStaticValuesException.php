@@ -24,6 +24,6 @@ final class KanbanSemanticStatusNotBoundToStaticValuesException extends \Excepti
 {
     public function __construct()
     {
-        parent::__construct("The list field defined as semantic status is not bound to static values");
+        parent::__construct('The list field defined as semantic status is not bound to static values');
     }
 }

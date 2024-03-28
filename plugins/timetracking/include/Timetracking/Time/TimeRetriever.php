@@ -83,8 +83,8 @@ class TimeRetriever
     {
         $projects = [];
         foreach ($this->admin_dao->getProjectstWithEnabledTimetracking($limit, $offset) as $project_id) {
-            if ($user->isMember($project_id["group_id"])) {
-                $projects[] = $this->project_manager->getProject($project_id["group_id"]);
+            if ($user->isMember($project_id['group_id'])) {
+                $projects[] = $this->project_manager->getProject($project_id['group_id']);
             }
         }
 

@@ -28,7 +28,7 @@ final class ToMyselfComparisonException extends InvalidQueryException
     public function __construct(Metadata $metadata)
     {
         $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s cannot be compared to MYSELF()."),
+            dgettext('tuleap-crosstracker', '%s cannot be compared to MYSELF().'),
             $metadata->getName()
         );
         parent::__construct($message);

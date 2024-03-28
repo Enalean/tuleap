@@ -55,9 +55,9 @@ class b201608041530_migrate_existing_read_permissions extends \Tuleap\ForgeUpgra
         $already_set_projects = array_merge($restricted['projects'], $anonymous['projects']);
         $ugroups_query        = array_merge($restricted['ugroups'], $anonymous['ugroups']);
 
-        $already_set_sql = "";
+        $already_set_sql = '';
         if (count($already_set_projects) > 0) {
-            $already_set_sql = "AND group_id NOT IN (" . implode(',', $already_set_projects) . ")";
+            $already_set_sql = 'AND group_id NOT IN (' . implode(',', $already_set_projects) . ')';
         }
 
         $sql = "SELECT group_id FROM `groups`
@@ -69,9 +69,9 @@ class b201608041530_migrate_existing_read_permissions extends \Tuleap\ForgeUpgra
             $ugroups_query[]        = "('" . $public['group_id'] . "', '$permission_frs_reader', 2)";
         }
 
-        $already_set_sql = "";
+        $already_set_sql = '';
         if (count($already_set_projects) > 0) {
-            $already_set_sql = " WHERE group_id NOT IN (" . implode(',', $already_set_projects) . ")";
+            $already_set_sql = ' WHERE group_id NOT IN (' . implode(',', $already_set_projects) . ')';
         }
 
         $sql = "SELECT group_id FROM `groups`
@@ -81,7 +81,7 @@ class b201608041530_migrate_existing_read_permissions extends \Tuleap\ForgeUpgra
             $ugroups_query[] = "('" . $frs_admins['group_id'] . "', '$permission_frs_reader', 3)";
         }
 
-        $frs_sql = "INSERT INTO frs_global_permissions VALUES " . implode(',', $ugroups_query);
+        $frs_sql = 'INSERT INTO frs_global_permissions VALUES ' . implode(',', $ugroups_query);
 
         return $this->db->dbh->query($frs_sql);
     }
@@ -104,8 +104,8 @@ class b201608041530_migrate_existing_read_permissions extends \Tuleap\ForgeUpgra
         }
 
         return [
-            "ugroups"  => $ugroups,
-            "projects" => $projects,
+            'ugroups'  => $ugroups,
+            'projects' => $projects,
         ];
     }
 }

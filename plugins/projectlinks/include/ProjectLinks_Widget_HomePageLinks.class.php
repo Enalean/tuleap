@@ -99,7 +99,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         $forward  = $this->getLinksByLinkType('links', $dao->searchForwardLinks($groupId));
         $backward = $this->getLinksByLinkType('back_links', $dao->searchBackLinks($groupId));
         if ($forward === '' && $backward === '') {
-            $html .= "<div>" . dgettext('tuleap-projectlinks', 'No project link found.') . "</div>";
+            $html .= '<div>' . dgettext('tuleap-projectlinks', 'No project link found.') . '</div>';
         } else {
             $html .= "<ul class=\"project-link-list project-link-list-content\">\n";
             $html .= $forward;
@@ -127,12 +127,12 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
             }
 
             $cssClass  = Toggler::getClassName($linkTypeCmdId);
-            $titleSpan = "<span id=\"" . $this->html_purifier->purify($linkTypeCmdId) .
-                "\" class=\"" . $this->html_purifier->purify($cssClass) . "\">" .
+            $titleSpan = '<span id="' . $this->html_purifier->purify($linkTypeCmdId) .
+                '" class="' . $this->html_purifier->purify($cssClass) . '">' .
                 $this->html_purifier->purify($title) .
                 '</span>';
 
-            $html .= "<li>" . $titleSpan;
+            $html .= '<li>' . $titleSpan;
             $links = $this->getLinks($way, $dar);
             if ($links != '') {
                 $html .= "\n";
@@ -172,7 +172,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
                 // Link name title
                 $html    .= "  <li class='project-link-list'><span id=\""
                     . $this->html_purifier->purify($spanId) .
-                    "\" class=\"" . $this->html_purifier->purify($cssClass) . "\">" .
+                    '" class="' . $this->html_purifier->purify($cssClass) . '">' .
                     $this->html_purifier->purify($row['link_name']) . "</span>\n";
                 $html    .= "    <ul class='project-link-list'>\n";
                 $ulClosed = false;
@@ -203,7 +203,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         $url = str_replace('$projname', $row['unix_group_name'], $row['uri_plus']);
         $ic  = '';
         if ($row['type'] == 2) {
-            $path = $this->html_purifier->purify($this->themePath . "/images/template.png");
+            $path = $this->html_purifier->purify($this->themePath . '/images/template.png');
             $alt  = $this->html_purifier->purify(dgettext('tuleap-projectlinks', 'template project'));
             $ic   = '<img src="' . $path . '" alt="' . $alt . '" title="' . $alt . '" /> ';
         }

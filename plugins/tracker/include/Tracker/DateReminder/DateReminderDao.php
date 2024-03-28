@@ -33,11 +33,11 @@ class DateReminderDao extends DataAccessObject
      */
     public function getAllDateReminders(int $tracker_id): array
     {
-        $sql = "SELECT tracker_reminder.*
+        $sql = 'SELECT tracker_reminder.*
                 FROM tracker_reminder
                 JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
                 WHERE tracker_reminder.tracker_id = ? AND tracker_field.use_it = 1
-                ORDER BY reminder_id";
+                ORDER BY reminder_id';
 
         return $this->getDB()->run(
             $sql,
@@ -50,11 +50,11 @@ class DateReminderDao extends DataAccessObject
      */
     public function getActiveDateReminders(int $tracker_id): array
     {
-        $sql = "SELECT tracker_reminder.*
+        $sql = 'SELECT tracker_reminder.*
                 FROM tracker_reminder
                 JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
                 WHERE tracker_reminder.tracker_id = ? AND tracker_field.use_it = 1 AND tracker_reminder.status = 1
-                ORDER BY reminder_id";
+                ORDER BY reminder_id';
 
         return $this->getDB()->run(
             $sql,
@@ -74,7 +74,7 @@ class DateReminderDao extends DataAccessObject
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($tracker_id, $field_id, $ugroups, $notification_type, $distance, $roles, $notify_closed_artifacts): int {
                 $reminder_id = (int) $db->insertReturnId(
-                    "tracker_reminder",
+                    'tracker_reminder',
                     [
                         'tracker_id' => $tracker_id,
                         'field_id' => $field_id,
@@ -104,7 +104,7 @@ class DateReminderDao extends DataAccessObject
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($reminder_id, $ugroups, $notification_type, $distance, $roles, $status, $notify_closed_artifacts): bool {
                 $db->update(
-                    "tracker_reminder",
+                    'tracker_reminder',
                     [
                         'ugroups' => $ugroups,
                         'notification_type' => $notification_type,
@@ -115,7 +115,7 @@ class DateReminderDao extends DataAccessObject
                     ['reminder_id' => $reminder_id],
                 );
                 $db->delete(
-                    "tracker_reminder_notified_roles",
+                    'tracker_reminder_notified_roles',
                     ['reminder_id' => $reminder_id],
                 );
                 if (! empty($roles)) {
@@ -135,7 +135,7 @@ class DateReminderDao extends DataAccessObject
         }
 
         $this->getDB()->insertMany(
-            "tracker_reminder_notified_roles",
+            'tracker_reminder_notified_roles',
             $data_to_insert,
         );
     }
@@ -145,10 +145,10 @@ class DateReminderDao extends DataAccessObject
      */
     public function searchById(int $reminder_id): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
             FROM tracker_reminder
             JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
-            WHERE reminder_id = ? AND tracker_field.use_it = 1";
+            WHERE reminder_id = ? AND tracker_field.use_it = 1';
 
         return $this->getDB()->row($sql, $reminder_id);
     }
@@ -158,11 +158,11 @@ class DateReminderDao extends DataAccessObject
         $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($reminder_id): void {
                 $db->delete(
-                    "tracker_reminder",
+                    'tracker_reminder',
                     ['reminder_id' => $reminder_id],
                 );
                 $db->delete(
-                    "tracker_reminder_notified_roles",
+                    'tracker_reminder_notified_roles',
                     ['reminder_id' => $reminder_id],
                 );
             }
@@ -174,16 +174,16 @@ class DateReminderDao extends DataAccessObject
      */
     public function getRolesByReminderId(int $reminder_id): array
     {
-        $sql = "SELECT role_id
+        $sql = 'SELECT role_id
             FROM tracker_reminder_notified_roles
-            WHERE reminder_id = ?";
+            WHERE reminder_id = ?';
 
         return $this->getDB()->column($sql, [$reminder_id]);
     }
 
     public function doesARemindersAlreadyExist(int $tracker_id, int $field_id, int $notification_type, int $distance): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM tracker_reminder
                 JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
                 WHERE tracker_reminder.tracker_id = ?
@@ -191,7 +191,7 @@ class DateReminderDao extends DataAccessObject
                   AND notification_type           = ?
                   AND distance                    = ?
                   AND tracker_reminder.status     = 1
-                  AND tracker_field.use_it        = 1";
+                  AND tracker_field.use_it        = 1';
 
         $rows = $this->getDB()->run($sql, $tracker_id, $field_id, $notification_type, $distance);
 
@@ -200,7 +200,7 @@ class DateReminderDao extends DataAccessObject
 
     public function doesAnotherRemindersAlreadyExist(int $tracker_id, int $field_id, int $notification_type, int $distance, int $reminder_id): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM tracker_reminder
                 JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
                 WHERE tracker_reminder.tracker_id = ?
@@ -209,7 +209,7 @@ class DateReminderDao extends DataAccessObject
                   AND distance                    = ?
                   AND tracker_reminder.status     = 1
                   AND tracker_field.use_it        = 1
-                  AND reminder_id <>                ?";
+                  AND reminder_id <>                ?';
 
         $rows = $this->getDB()->run($sql, $tracker_id, $field_id, $notification_type, $distance, $reminder_id);
 

@@ -249,7 +249,7 @@ class ServicePOSTDataBuilder
     private function checkIcon(string $icon_name): void
     {
         if (! ServiceIconValidator::isValidIcon($icon_name)) {
-            throw new InvalidServicePOSTDataException(_("This service icon name is not allowed."));
+            throw new InvalidServicePOSTDataException(_('This service icon name is not allowed.'));
         }
     }
 
@@ -260,7 +260,7 @@ class ServicePOSTDataBuilder
     {
         if ($is_in_iframe === true && $is_in_new_tab === true) {
             throw new InvalidServicePOSTDataException(
-                _("The service cannot be opened in a new tab and in an iframe simultaneously. Please choose one.")
+                _('The service cannot be opened in a new tab and in an iframe simultaneously. Please choose one.')
             );
         }
     }

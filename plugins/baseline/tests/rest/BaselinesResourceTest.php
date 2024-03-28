@@ -220,7 +220,7 @@ final class BaselinesResourceTest extends RestBase
     public function testGetBaselineArtifactsWithIds(): void
     {
         $baseline = $this->createABaseline($this->an_artifact_id);
-        $query    = json_encode(["ids" => [$this->an_artifact_id]]);
+        $query    = json_encode(['ids' => [$this->an_artifact_id]]);
         $url      = 'baselines/' . $baseline['id'] . '/artifacts?query=' . urlencode($query);
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,

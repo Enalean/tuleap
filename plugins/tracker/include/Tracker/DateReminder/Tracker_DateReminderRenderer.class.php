@@ -110,31 +110,31 @@ class Tracker_DateReminderRenderer
         if ($reminder) {
             $notificationType = $reminder->getNotificationType();
             if ($notificationType == Tracker_DateReminder::AFTER) {
-                $after  = "selected";
-                $before = "";
+                $after  = 'selected';
+                $before = '';
             } else {
-                $after  = "";
-                $before = "selected";
+                $after  = '';
+                $before = 'selected';
             }
             $reminderStatus = $reminder->getStatus();
             if ($reminderStatus == Tracker_DateReminder::ENABLED) {
-                $enabled  = "selected";
-                $disabled = "";
+                $enabled  = 'selected';
+                $disabled = '';
             } else {
-                $enabled  = "";
-                $disabled = "selected";
+                $enabled  = '';
+                $disabled = 'selected';
             }
 
-            $notify_closed_artifacts    = "selected";
-            $notify_only_open_artifacts = "";
+            $notify_closed_artifacts    = 'selected';
+            $notify_only_open_artifacts = '';
             if (! $reminder->mustNotifyClosedArtifacts()) {
-                $notify_only_open_artifacts = "selected";
-                $notify_closed_artifacts    = "";
+                $notify_only_open_artifacts = 'selected';
+                $notify_closed_artifacts    = '';
             }
 
             $purifier = Codendi_HTMLPurifier::instance();
 
-            $output .= "<h3>" . dgettext('tuleap-tracker', 'Update reminder') . "</h3>";
+            $output .= '<h3>' . dgettext('tuleap-tracker', 'Update reminder') . '</h3>';
             $output .= '<form method="post" name="update_date_field_reminder" class="form-inline">';
             $output .= '<input type="hidden" name="action" value="update_reminder">';
             $output .= '<input type="hidden" name="reminder_id" value="' . $purifier->purify($reminderId) . '">
@@ -424,7 +424,7 @@ class Tracker_DateReminderRenderer
             $people = $request->get('reminder_notified');
             if ($people) {
                 foreach ($people as $value) {
-                    if ($value[0] == "r") {
+                    if ($value[0] == 'r') {
                         $roles[] = substr($value, 2);
                     } else {
                         $ugroups[] = substr($value, 2);

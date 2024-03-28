@@ -40,7 +40,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         if ($this->_not_monitored_jobs === false) {
             $this->_not_monitored_jobs = [];
         } else {
-            $this->_not_monitored_jobs = explode(",", $this->_not_monitored_jobs);
+            $this->_not_monitored_jobs = explode(',', $this->_not_monitored_jobs);
         }
         $this->factory     = $factory;
         $this->job_builder = $job_builder;
@@ -76,7 +76,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
 
             $this->_not_monitored_jobs = $not_monitored_jobs;
 
-            user_set_preference('plugin_hudson_my_not_monitored_jobs', implode(",", $this->_not_monitored_jobs));
+            user_set_preference('plugin_hudson_my_not_monitored_jobs', implode(',', $this->_not_monitored_jobs));
         }
         return true;
     }

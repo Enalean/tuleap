@@ -22,7 +22,7 @@ class b201702161651_create_table_to_notify_ugroup extends \Tuleap\ForgeUpgrade\B
 {
     public function description()
     {
-        return "Add table to store the ugroup to notify after a post receive event";
+        return 'Add table to store the ugroup to notify after a post receive event';
     }
 
     public function preUp()
@@ -32,11 +32,11 @@ class b201702161651_create_table_to_notify_ugroup extends \Tuleap\ForgeUpgrade\B
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_post_receive_notification_ugroup (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_post_receive_notification_ugroup (
                     repository_id INT(10) UNSIGNED NOT NULL,
                     ugroup_id INT(11) NOT NULL,
                     PRIMARY KEY (repository_id, ugroup_id)
-                )";
+                )';
 
         $this->db->createTable('plugin_git_post_receive_notification_ugroup', $sql);
     }

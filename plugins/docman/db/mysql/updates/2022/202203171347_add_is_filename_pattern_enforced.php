@@ -60,9 +60,9 @@ final class b202203171347_add_is_filename_pattern_enforced extends \Tuleap\Forge
             return;
         }
 
-        $sql = "ALTER TABLE plugin_docman_project_settings
+        $sql = 'ALTER TABLE plugin_docman_project_settings
                 ADD COLUMN is_filename_pattern_enforced TINYINT(1) DEFAULT 0
-                AFTER filename_pattern";
+                AFTER filename_pattern';
 
         if ($this->api->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(

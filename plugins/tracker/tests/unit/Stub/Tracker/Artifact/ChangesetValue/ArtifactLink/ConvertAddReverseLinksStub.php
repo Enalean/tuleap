@@ -61,6 +61,6 @@ final class ConvertAddReverseLinksStub implements ConvertAddReverseLinks
             return $this->result;
         }
 
-        throw new \Exception("Unexpected call to convertAddReverseLinks");
+        throw new \Exception('Unexpected call to convertAddReverseLinks');
     }
 }

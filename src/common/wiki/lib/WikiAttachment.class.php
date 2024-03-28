@@ -194,9 +194,9 @@ class WikiAttachment /* implements UGroupPermission */
      * @access public
      * @param  string $name File name
      */
-    public function setFilename($name = "")
+    public function setFilename($name = '')
     {
-        if (preg_match("/[^._a-zA-Z0-9-\(\) &]/", $name)) {
+        if (preg_match('/[^._a-zA-Z0-9-\(\) &]/', $name)) {
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_alpha', [$name]), E_USER_ERROR);
         }
 
@@ -247,7 +247,7 @@ class WikiAttachment /* implements UGroupPermission */
         }
     }
 
-    public function setFile($basedir = "")
+    public function setFile($basedir = '')
     {
     }
 
@@ -286,7 +286,7 @@ class WikiAttachment /* implements UGroupPermission */
      * @access public
      * @param  string $uri Uri to access to attachment
      */
-    public function setUri($uri = "")
+    public function setUri($uri = '')
     {
         $uriExp = explode('/', $uri);
 

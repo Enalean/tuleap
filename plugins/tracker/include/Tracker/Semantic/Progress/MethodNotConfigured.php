@@ -50,7 +50,7 @@ class MethodNotConfigured implements IComputeProgression
 
     public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult
     {
-        return new ProgressionResult(null, "");
+        return new ProgressionResult(null, '');
     }
 
     public function isConfiguredAndValid(): bool

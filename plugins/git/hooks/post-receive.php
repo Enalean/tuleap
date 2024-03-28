@@ -150,7 +150,7 @@ while ($count <= COUNT_THRESHOLD && $line = fgets(STDIN)) {
 }
 
 if ($count >= COUNT_THRESHOLD) {
-    echo "*** info: More than " . COUNT_THRESHOLD . " references in push.\n";
+    echo '*** info: More than ' . COUNT_THRESHOLD . " references in push.\n";
     echo "*** info: further analysis skipped: email, reference extraction,\n";
     echo "*** info: trigger of continuous integration...\n";
 }

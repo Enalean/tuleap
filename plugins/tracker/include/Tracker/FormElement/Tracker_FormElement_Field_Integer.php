@@ -56,8 +56,8 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
                             " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ? )
                              INNER JOIN tracker_changeset_value_int AS $b ON (
                                 $b.changeset_value_id = $a.id
-                                AND " . $match_expression->sql . "
-                             ) ",
+                                AND " . $match_expression->sql . '
+                             ) ',
                             [
                                 $this->id,
                                 ...$match_expression->parameters,
@@ -91,7 +91,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
 
         return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN tracker_changeset_value_int AS $R2 ON ($R2.changeset_value_id = $R1.id)
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
+                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . ' )';
     }
 
     protected function buildMatchExpression(string $field_name, $criteria_value): Option

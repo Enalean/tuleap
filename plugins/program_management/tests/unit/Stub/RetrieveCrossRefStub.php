@@ -34,12 +34,12 @@ final class RetrieveCrossRefStub implements RetrieveCrossRef
 
     public static function withDefault(): self
     {
-        return new self("art #1");
+        return new self('art #1');
     }
 
     public static function withValues(string $tracker_shortname, int $id): self
     {
-        return new self($tracker_shortname . " #" . $id);
+        return new self($tracker_shortname . ' #' . $id);
     }
 
     public function getXRef(TimeboxIdentifier $timebox_identifier): string

@@ -51,10 +51,10 @@ class FRSRouter
         $action = $request->get('action');
 
         switch ($action) {
-            case "edit-permissions":
+            case 'edit-permissions':
                 $this->useDefaultRoute($project, $user);
                 break;
-            case "admin-frs-admins":
+            case 'admin-frs-admins':
                 $admin_ugroups_ids  = $request->get('permission_frs_admins');
                 $reader_ugroups_ids = $request->get('permission_frs_readers');
                 if (! $admin_ugroups_ids) {

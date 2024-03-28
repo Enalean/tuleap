@@ -30,20 +30,20 @@ class WikiPlugin_PrevNext extends WikiPlugin
 {
     public function getName()
     {
-        return _("PrevNext");
+        return _('PrevNext');
     }
 
     public function getDescription()
     {
-        return sprintf(_("Easy navigation buttons for %s"), '[pagename]');
+        return sprintf(_('Easy navigation buttons for %s'), '[pagename]');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.4 $"
+            '$Revision: 1.4 $'
         );
     }
 
@@ -68,13 +68,13 @@ class WikiPlugin_PrevNext extends WikiPlugin
     {
         $args = $this->getArgs($argstr, $request);
         extract($args);
-        $directions =  ['first'    => _("First"),
-            'prev'     => _("Previous"),
-            'next'     => _("Next"),
-            'last'     => _("Last"),
-            'up'       => _("Up"),
-            'contents'  => _("Contents"),
-            'index'    => _("Index"),
+        $directions =  ['first'    => _('First'),
+            'prev'     => _('Previous'),
+            'next'     => _('Next'),
+            'last'     => _('Last'),
+            'up'       => _('Up'),
+            'contents'  => _('Contents'),
+            'index'    => _('Index'),
         ];
         if ($order) { // reorder the buttons: comma-delimited
             $new_directions = [];
@@ -90,9 +90,9 @@ class WikiPlugin_PrevNext extends WikiPlugin
         $links = HTML();
         if ($style == 'text') {
             if (! $sep) {
-                $sep = " | "; // force some kind of separator
+                $sep = ' | '; // force some kind of separator
             }
-            $links->pushcontent(" [ ");
+            $links->pushcontent(' [ ');
         }
         $last_is_text  = false;
         $this_is_first = true;
@@ -143,7 +143,7 @@ class WikiPlugin_PrevNext extends WikiPlugin
             }
         }
         if ($style == 'text') {
-            $links->pushcontent(" ] ");
+            $links->pushcontent(' ] ');
         }
         return $links;
     }

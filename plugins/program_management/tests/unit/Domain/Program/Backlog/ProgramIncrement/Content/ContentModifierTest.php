@@ -181,13 +181,13 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getFeatureElementToOrderRepresentation(
         int $id,
         int $compared_to_id,
-        string $direction = "before",
+        string $direction = 'before',
     ): FeaturesToReorder {
         $feature_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([$id], $direction, $compared_to_id);
 
         $reorder_proxy = FeaturesToReorderProxy::buildFromRESTRepresentation($feature_to_order);
         if (! $reorder_proxy) {
-            throw new \LogicException("Reorder proxy is not defined");
+            throw new \LogicException('Reorder proxy is not defined');
         }
 
         return $reorder_proxy;
@@ -246,7 +246,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 ProgramIdentifier $program,
             ): void {
                 if ($this->is_called) {
-                    assertTrue($context_id === "12");
+                    assertTrue($context_id === '12');
                     assertTrue($program->getId() === $this->expected_program);
                 }
             }

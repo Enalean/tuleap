@@ -42,7 +42,7 @@ final class SystemEventRunner implements SystemEventRunnerInterface
     {
         // Check we have permissions to create project and run system events
         if (posix_geteuid() !== 0) {
-            throw new Project_Creation_Exception("You need to be root to create a project for import");
+            throw new Project_Creation_Exception('You need to be root to create a project for import');
         }
     }
 

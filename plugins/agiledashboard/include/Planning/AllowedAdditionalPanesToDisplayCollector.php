@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class AllowedAdditionalPanesToDisplayCollector implements Dispatchable
 {
-    public const NAME = "allowedAdditionalPanesToDisplayCollector";
+    public const NAME = 'allowedAdditionalPanesToDisplayCollector';
 
     /**
      * @var string[]

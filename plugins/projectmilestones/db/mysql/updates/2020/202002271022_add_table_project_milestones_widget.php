@@ -34,10 +34,10 @@ final class b202002271022_add_table_project_milestones_widget extends ForgeUpgra
 
     public function up(): void
     {
-        $sql = "CREATE TABLE plugin_projectmilestones_widget (
+        $sql = 'CREATE TABLE plugin_projectmilestones_widget (
                 id INT(11) AUTO_INCREMENT NOT NULL PRIMARY KEY,
                 group_id INT(11)
-                ) ENGINE=InnoDB;";
+                ) ENGINE=InnoDB;';
 
         $this->db->createTable('plugin_projectmilestones_widget', $sql);
 
@@ -55,7 +55,7 @@ final class b202002271022_add_table_project_milestones_widget extends ForgeUpgra
         $result = $this->db->dbh->query($sql);
 
         if ($result === false) {
-            $this->rollBackOnError("An error occured while trying to select milestone widgets.");
+            $this->rollBackOnError('An error occured while trying to select milestone widgets.');
         }
 
         $this->updateExistingWidget($result);
@@ -79,13 +79,13 @@ final class b202002271022_add_table_project_milestones_widget extends ForgeUpgra
             $new_content = $this->db->dbh->lastInsertId();
 
             if ($new_content === false) {
-                $this->rollBackOnError("An error occured while trying to insert new project milestone widgets.");
+                $this->rollBackOnError('An error occured while trying to insert new project milestone widgets.');
             }
 
-            $response = $statement->execute([$new_content, $widget["id"]]);
+            $response = $statement->execute([$new_content, $widget['id']]);
 
             if ($response === false) {
-                $this->rollBackOnError("An error occured while trying to updates widgets.");
+                $this->rollBackOnError('An error occured while trying to updates widgets.');
             }
         }
     }

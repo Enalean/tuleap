@@ -49,7 +49,7 @@ final class AdditionalButtonLinkPresenter
         $this->id                = $id ?: '';
         $this->data              = $data ?: [];
         $this->data_test         = $data_test;
-        $this->disabled_messages = implode(", ", $disabled_messages);
+        $this->disabled_messages = implode(', ', $disabled_messages);
         $this->is_disabled       = count($disabled_messages) > 0;
     }
 }

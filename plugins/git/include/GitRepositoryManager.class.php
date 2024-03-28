@@ -398,7 +398,7 @@ class GitRepositoryManager
     public function purgeArchivedRepositories(\Psr\Log\LoggerInterface $logger)
     {
         if (! ForgeConfig::exists('sys_file_deletion_delay')) {
-            $logger->warning("Purge of archived Gitolite repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
+            $logger->warning('Purge of archived Gitolite repositories is disabled: sys_file_deletion_delay is missing in local.inc file');
             return;
         }
         $retention_period      = ForgeConfig::getInt('sys_file_deletion_delay');
@@ -434,7 +434,7 @@ class GitRepositoryManager
         $retention_period      = ForgeConfig::getInt('sys_file_deletion_delay');
         $deleted_repositories  = $this->repository_factory->getDeletedRepositoriesByProjectId($project_id, $retention_period);
         foreach ($deleted_repositories as $repository) {
-            $archive = realpath($this->backup_directory . '/' . $repository->getBackupPath() . ".tar.gz");
+            $archive = realpath($this->backup_directory . '/' . $repository->getBackupPath() . '.tar.gz');
             if (file_exists($archive)) {
                 array_push($archived_repositories, $repository);
             }

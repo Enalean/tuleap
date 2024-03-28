@@ -69,12 +69,12 @@ final class OwnerRequestHandler extends DispatchablePSR15Compatible implements D
             $this->project_access_checker->checkUserCanAccessProject($current_user, $project);
 
             $request_params = $request->getQueryParams();
-            if (! isset($request_params["name"]) || $request_params["name"] === '') {
+            if (! isset($request_params['name']) || $request_params['name'] === '') {
                 return $this->response_factory->createResponse(400)->withHeader('Content-Type', 'text/plain')->withBody(
                     $this->stream_factory->createStream("Bad request: The query parameter 'name' is missing or empty")
                 );
             }
-            $name_to_search = $request_params["name"];
+            $name_to_search = $request_params['name'];
 
             $project_document_owners = $this->owner_retriever->retrieveProjectDocumentOwnersForAutocomplete($project, $name_to_search);
 

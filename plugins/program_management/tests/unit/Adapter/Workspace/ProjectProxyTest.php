@@ -29,7 +29,7 @@ final class ProjectProxyTest extends TestCase
 {
     public function testItBuildsPrimitive(): void
     {
-        $project = new \Project(['group_id' => 101, 'group_name' => "My project", "unix_group_name" => "project", 'icon_codepoint' => '"\u26f0\ufe0f"']);
+        $project = new \Project(['group_id' => 101, 'group_name' => 'My project', 'unix_group_name' => 'project', 'icon_codepoint' => '"\u26f0\ufe0f"']);
         $proxy   = ProjectProxy::buildFromProject($project);
 
         self::assertEquals($project->getID(), $proxy->getId());

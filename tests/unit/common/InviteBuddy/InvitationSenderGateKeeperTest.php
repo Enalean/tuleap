@@ -54,7 +54,7 @@ final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
-        $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ["john@example.com", "doe@example.com"]);
+        $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ['john@example.com', 'doe@example.com']);
     }
 
     public function testItRaisesAnExceptionIfNoEmailIsGiven(): void
@@ -72,7 +72,7 @@ final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
-        $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ["john@example.com", "whatever", "doe@example.com"]);
+        $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ['john@example.com', 'whatever', 'doe@example.com']);
     }
 
     public function testItRaisesAnExceptionIfUserReachedLimit(): void
@@ -84,7 +84,7 @@ final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
-        $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ["john@example.com", "doe@example.com"]);
+        $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ['john@example.com', 'doe@example.com']);
     }
 
     public function testItDoesNotRaiseAnExceptionIfEverythingIsOk(): void
@@ -92,6 +92,6 @@ final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(true);
         $this->limit_checker->expects(self::once())->method('checkForNewInvitations');
 
-        $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ["john@example.com", "doe@example.com"]);
+        $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ['john@example.com', 'doe@example.com']);
     }
 }

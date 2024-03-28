@@ -50,7 +50,7 @@ class HudsonTestResult
             throw new HudsonJobURLMalformedException(sprintf(dgettext('tuleap-hudson', 'Wrong Job URL: %1$s'), $hudson_job_url));
         }
 
-        $this->hudson_test_result_url = $hudson_job_url . "/lastBuild/testReport/api/xml/";
+        $this->hudson_test_result_url = $hudson_job_url . '/lastBuild/testReport/api/xml/';
         $this->http_client            = $http_client;
         $this->request_factory        = $request_factory;
 

@@ -49,13 +49,13 @@ class UserGroupQueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testParseParameterWithUserSystemGroupReturnsRepresentationWithUserSystemGroup()
     {
-        $representation = $this->parser->parse("{\"with_system_user_groups\": true}");
+        $representation = $this->parser->parse('{"with_system_user_groups": true}');
         $this->assertTrue($representation->isWithSystemUserGroups());
     }
 
     public function testParseParameterWithoutUserSystemGroupReturnsRepresentationWithoutUserSystemGroup()
     {
-        $representation = $this->parser->parse("{\"with_system_user_groups\": false}");
+        $representation = $this->parser->parse('{"with_system_user_groups": false}');
         $this->assertFalse($representation->isWithSystemUserGroups());
     }
 
@@ -63,7 +63,7 @@ class UserGroupQueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(InvalidJsonException::class);
 
-        $this->parser->parse("not_json");
+        $this->parser->parse('not_json');
     }
 
     public function testParseJsonParameterWithoutMandatoryAttributeThrows400()
@@ -71,6 +71,6 @@ class UserGroupQueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
 
-        $this->parser->parse("{\"invalid_attribute\": false}");
+        $this->parser->parse('{"invalid_attribute": false}');
     }
 }

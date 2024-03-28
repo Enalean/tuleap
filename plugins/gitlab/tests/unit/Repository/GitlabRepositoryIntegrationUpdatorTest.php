@@ -70,10 +70,10 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
 
         $user = new PFUser(['language_id' => 'en']);
 
-        $this->gitlab_repository_factory->method("getIntegrationById")->with(1)->willReturn(null);
+        $this->gitlab_repository_factory->method('getIntegrationById')->with(1)->willReturn(null);
 
         $this->gitlab_repository_dao->expects($this->never())->method(
-            "updateGitlabRepositoryIntegrationAllowArtifactClosureValue"
+            'updateGitlabRepositoryIntegrationAllowArtifactClosureValue'
         );
         $this->expectException(GitlabRepositoryIntegrationNotFoundException::class);
 
@@ -89,22 +89,22 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
         $gitlab_repository = new GitlabRepositoryIntegration(
             1,
             12,
-            "such gitlab ",
-            "",
-            "https://example.com",
+            'such gitlab ',
+            '',
+            'https://example.com',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
         );
 
-        $this->gitlab_repository_factory->method("getIntegrationById")->with(1)->willReturn($gitlab_repository);
-        $this->git_permission_manager->method("userIsGitAdmin")->with(
+        $this->gitlab_repository_factory->method('getIntegrationById')->with(1)->willReturn($gitlab_repository);
+        $this->git_permission_manager->method('userIsGitAdmin')->with(
             $user,
             $gitlab_repository->getProject()
         )->willReturn(false);
 
         $this->gitlab_repository_dao->expects($this->never())->method(
-            "updateGitlabRepositoryIntegrationAllowArtifactClosureValue"
+            'updateGitlabRepositoryIntegrationAllowArtifactClosureValue'
         );
         $this->expectException(GitUserNotAdminException::class);
 
@@ -120,21 +120,21 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
         $gitlab_repository = new GitlabRepositoryIntegration(
             1,
             12,
-            "such gitlab ",
-            "",
-            "https://example.com",
+            'such gitlab ',
+            '',
+            'https://example.com',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
         );
 
-        $this->gitlab_repository_factory->method("getIntegrationById")->with(1)->willReturn($gitlab_repository);
-        $this->git_permission_manager->method("userIsGitAdmin")->with(
+        $this->gitlab_repository_factory->method('getIntegrationById')->with(1)->willReturn($gitlab_repository);
+        $this->git_permission_manager->method('userIsGitAdmin')->with(
             $user,
             $gitlab_repository->getProject()
         )->willReturn(true);
 
-        $this->gitlab_repository_dao->expects($this->once())->method("updateGitlabRepositoryIntegrationAllowArtifactClosureValue");
+        $this->gitlab_repository_dao->expects($this->once())->method('updateGitlabRepositoryIntegrationAllowArtifactClosureValue');
 
         $this->updator->updateTuleapArtifactClosureOfAGitlabIntegration($integration_id, true, $user);
     }

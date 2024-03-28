@@ -22,6 +22,6 @@ class Tracker_Artifact_MailGateway_MultipleUsersExistException extends Tracker_E
 {
     public function __construct()
     {
-        parent::__construct("Could not authenticate the user, multiple users match");
+        parent::__construct('Could not authenticate the user, multiple users match');
     }
 }

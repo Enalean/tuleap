@@ -69,9 +69,9 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
         $this->tracker_builder = new TrackerDatabaseBuilder($db);
 
         $this->project_id             = (int) $core_builder->buildProject()->getID();
-        $this->release_tracker_id     = $this->tracker_builder->buildTracker($this->project_id, "Release")->getId();
-        $this->sprint_tracker_id      = $this->tracker_builder->buildTracker($this->project_id, "Sprint")->getId();
-        $this->other_tracker_id       = $this->tracker_builder->buildTracker($this->project_id, "Other")->getId();
+        $this->release_tracker_id     = $this->tracker_builder->buildTracker($this->project_id, 'Release')->getId();
+        $this->sprint_tracker_id      = $this->tracker_builder->buildTracker($this->project_id, 'Sprint')->getId();
+        $this->other_tracker_id       = $this->tracker_builder->buildTracker($this->project_id, 'Other')->getId();
         $this->list_field_id          = $this->tracker_builder->buildStaticListField($this->sprint_tracker_id, 'list_field', 'sb');
         $this->artifact_link_field_id = $this->tracker_builder->buildArtifactLinkField($this->release_tracker_id);
         $this->release_status_values  = $this->tracker_builder->buildOpenAndClosedValuesForField($this->list_field_id, $this->release_tracker_id, ['Open'], ['Closed']);
@@ -294,7 +294,7 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
     {
         $this->milestone_id           = $this->tracker_builder->buildArtifact($this->release_tracker_id);
         $this->milestone_changeset_id = $this->tracker_builder->buildLastChangeset($this->milestone_id);
-        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $this->milestone_changeset_id, $this->release_status_values["open"][0]);
+        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $this->milestone_changeset_id, $this->release_status_values['open'][0]);
     }
 
     private function createMilestoneWithOpenSubMilestone(): void
@@ -310,7 +310,7 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
         $this->sprint_id                = $this->tracker_builder->buildArtifact($this->sprint_tracker_id);
         $this->sprint_last_changeset_id = $this->tracker_builder->buildLastChangeset($this->sprint_id);
 
-        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $this->sprint_last_changeset_id, $this->sprint_status_values["open"][0]);
+        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $this->sprint_last_changeset_id, $this->sprint_status_values['open'][0]);
         $this->tracker_builder->buildArtifactLinkValue($this->project_id, $this->sprint_id, $this->milestone_changeset_id, $this->artifact_link_field_id, '_is_child');
     }
 
@@ -320,7 +320,7 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
 
         $this->sprint_id                 = $this->tracker_builder->buildArtifact($this->sprint_tracker_id);
         $closed_sprint_last_changeset_id = $this->tracker_builder->buildLastChangeset($this->sprint_id);
-        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $closed_sprint_last_changeset_id, $this->sprint_status_values["closed"][0]);
+        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $closed_sprint_last_changeset_id, $this->sprint_status_values['closed'][0]);
 
         $this->tracker_builder->buildArtifactLinkValue($this->project_id, $this->sprint_id, $this->milestone_changeset_id, $this->artifact_link_field_id, '_is_child');
     }
@@ -329,7 +329,7 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
     {
         $this->milestone_id           = $this->tracker_builder->buildArtifact($this->release_tracker_id);
         $this->milestone_changeset_id = $this->tracker_builder->buildLastChangeset($this->milestone_id);
-        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $this->milestone_changeset_id, $this->release_status_values["closed"][0]);
+        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $this->milestone_changeset_id, $this->release_status_values['closed'][0]);
     }
 
     private function createMilestoneOutOfPlanning(): void
@@ -352,7 +352,7 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
             'tracker',
             [
                 'group_id'      => $this->project_id,
-                'name'          => "deleted",
+                'name'          => 'deleted',
                 'status'        => 'A',
                 'deletion_date' => '12234567890',
             ]

@@ -25,8 +25,8 @@ $ath->adminHeader(['title' => $Language->getText('tracker_admin_field_usage', 't
 ]);
 
 $hp = Codendi_HTMLPurifier::instance();
-echo "<H2>" . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . "&atid=" . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>'" .
-$Language->getText('tracker_admin_field_values_details', 'manage_for', $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML)) . "</H2>";
+echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>'" .
+$Language->getText('tracker_admin_field_values_details', 'manage_for', $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML)) . '</H2>';
 
 if (! $field->isSelectBox() && ! $field->isMultiSelectBox()) {
     $ath->displayDefaultValueForm($field_id, $field->getDefaultValue());
@@ -39,9 +39,9 @@ if (! $field->isSelectBox() && ! $field->isMultiSelectBox()) {
         $ath->displayFieldValuesList($field_id);
         $ath->displayDefaultValueForm($field_id, $field->getDefaultValue());
      // For severity field, we don't display the Bind form or the Create Form
-        if (($field->getName() != "severity" && $field->getName() != "status_id") || user_is_super_user()) {
+        if (($field->getName() != 'severity' && $field->getName() != 'status_id') || user_is_super_user()) {
             echo '<hr>';
-            $ath->displayFieldValueForm("value_create", $field_id);
+            $ath->displayFieldValueForm('value_create', $field_id);
             $ath->displayValueFunctionForm($field_id, null, $Language->getText('global', 'or'));
         }
     }

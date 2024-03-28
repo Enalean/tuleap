@@ -35,20 +35,20 @@ class WikiPlugin_AllUsers extends WikiPlugin
 {
     public function getName()
     {
-        return _("AllUsers");
+        return _('AllUsers');
     }
 
     public function getDescription()
     {
-        return _("List all once authenticated users.");
+        return _('List all once authenticated users.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.18 $"
+            '$Revision: 1.18 $'
         );
     }
 
@@ -89,7 +89,7 @@ class WikiPlugin_AllUsers extends WikiPlugin
         // deleted pages show up as version 0.
         $pagelist = new PageList($info, $exclude, $args);
         if (! $noheader) {
-            $pagelist->setCaption(_("Authenticated users on this wiki (%d total):"));
+            $pagelist->setCaption(_('Authenticated users on this wiki (%d total):'));
         }
         if ($include_empty and empty($info)) {
             $pagelist->_addColumn('version');
@@ -116,7 +116,7 @@ class WikiPlugin_AllUsers extends WikiPlugin
         if ($debug) {
             return HTML(
                 $pagelist,
-                HTML::p(fmt("Elapsed time: %s s", $timer->getStats()))
+                HTML::p(fmt('Elapsed time: %s s', $timer->getStats()))
             );
         } else {
             return $pagelist;

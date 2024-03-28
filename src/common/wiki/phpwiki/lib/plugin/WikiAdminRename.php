@@ -35,20 +35,20 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
 {
     public function getName()
     {
-        return _("WikiAdminRename");
+        return _('WikiAdminRename');
     }
 
     public function getDescription()
     {
-        return _("Rename selected pages");
+        return _('Rename selected pages');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.26 $"
+            '$Revision: 1.26 $'
         );
     }
 
@@ -92,7 +92,7 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
             ) {
                 if ($dbi->isWikiPage($newname)) {
                     $ul->pushContent(HTML::li(fmt(
-                        "Page %s already exists. Ignored.",
+                        'Page %s already exists. Ignored.',
                         WikiLink($newname)
                     )));
                 } elseif (! mayAccessPage('change', $name)) {
@@ -126,18 +126,18 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
         if ($count) {
             $dbi->touch();
             return HTML($ul, HTML::p(fmt(
-                "%s pages have been permanently renamed.",
+                '%s pages have been permanently renamed.',
                 $count
             )));
         } else {
-            return HTML($ul, HTML::p(fmt("No pages renamed.")));
+            return HTML($ul, HTML::p(fmt('No pages renamed.')));
         }
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
         if ($request->getArg('action') != 'browse') {
-            if ($request->getArg('action') != _("PhpWikiAdministration/Rename")) {
+            if ($request->getArg('action') != _('PhpWikiAdministration/Rename')) {
                 return $this->disabled("(action != 'browse')");
             }
         }
@@ -163,7 +163,7 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
             // without individual PagePermissions:
             if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
-                $this->disabled("! user->isAdmin");
+                $this->disabled('! user->isAdmin');
             }
             // DONE: error message if not allowed.
             if ($post_args['action'] == 'verify') {
@@ -191,14 +191,14 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
             $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit'], $args['exclude']);
         }
         if ($next_action == 'verify') {
-            $args['info'] = "checkbox,pagename,renamed_pagename";
+            $args['info'] = 'checkbox,pagename,renamed_pagename';
         }
         $pagelist = new PageList_Selectable(
             $args['info'],
             $args['exclude'],
             ['types' =>
                    ['renamed_pagename'
-                         => new _PageList_Column_renamed_pagename('rename', _("Rename to")),
+                         => new _PageList_Column_renamed_pagename('rename', _('Rename to')),
                    ],
             ]
         );
@@ -206,16 +206,16 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
 
         $header = HTML::p();
         if ($next_action == 'verify') {
-            $button_label = _("Yes");
+            $button_label = _('Yes');
             $header->pushContent(
                 HTML::p(HTML::strong(
-                    _("Are you sure you want to permanently rename the selected files?")
+                    _('Are you sure you want to permanently rename the selected files?')
                 ))
             );
             $header = $this->renameForm($header, $post_args);
         } else {
-            $button_label = _("Rename selected pages");
-            $header->pushContent(HTML::p(_("Select the pages to rename:")));
+            $button_label = _('Rename selected pages');
+            $header->pushContent(HTML::p(_('Select the pages to rename:')));
             if (! $post_args and count($pages) == 1) {
                 list($post_args['from'],) = array_keys($pages);
                 $post_args['to']          = $post_args['from'];
@@ -225,7 +225,7 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
 
         $buttons = HTML::p(
             Button('submit:admin_rename[rename]', $button_label, 'wikiadmin'),
-            Button('submit:admin_rename[cancel]', _("Cancel"), 'button')
+            Button('submit:admin_rename[cancel]', _('Cancel'), 'button')
         );
 
         return HTML::form(
@@ -261,21 +261,21 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
 
     public function renameForm(&$header, $post_args)
     {
-        $header->pushContent(_("Rename") . " " . _("from") . ': ');
+        $header->pushContent(_('Rename') . ' ' . _('from') . ': ');
         $header->pushContent(HTML::input(['name' => 'admin_rename[from]',
             'value' => $post_args['from'],
         ]));
-        $header->pushContent(' ' . _("to") . ': ');
+        $header->pushContent(' ' . _('to') . ': ');
         $header->pushContent(HTML::input(['name' => 'admin_rename[to]',
             'value' => $post_args['to'],
         ]));
-        $header->pushContent($this->checkBox($post_args, 'regex', _("Regex?")));
-        $header->pushContent($this->checkBox($post_args, 'icase', _("Case insensitive?")));
+        $header->pushContent($this->checkBox($post_args, 'regex', _('Regex?')));
+        $header->pushContent($this->checkBox($post_args, 'icase', _('Case insensitive?')));
         $header->pushContent(HTML::br());
         $header->pushContent($this->checkBox(
             $post_args,
             'updatelinks',
-            _("Change pagename in all linked pages also?")
+            _('Change pagename in all linked pages also?')
         ));
         $header->pushContent(HTML::p());
         return $header;
@@ -302,14 +302,14 @@ class _PageList_Column_renamed_pagename extends _PageList_Column
             $post_args['to'],
             $options
         );
-        $div       = HTML::div(" => ", HTML::input(['type' => 'text',
+        $div       = HTML::div(' => ', HTML::input(['type' => 'text',
             'name' => 'rename[]',
             'value' => $value,
         ]));
         $new_page  = $request->getPage($value);
         if ($new_page->exists()) {
             $div->setAttr('class', 'error');
-            $div->setAttr('title', _("This page already exists"));
+            $div->setAttr('title', _('This page already exists'));
         }
         return $div;
     }

@@ -56,20 +56,20 @@ final class ArtifactDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $project = ProjectTestBuilder::aProject()->withId(104)->build();
-        $tracker = TrackerTestBuilder::aTracker()->withName("My tracker name")->withProject($project)->build();
+        $tracker = TrackerTestBuilder::aTracker()->withName('My tracker name')->withProject($project)->build();
 
         $artifact = ArtifactTestBuilder::anArtifact($artifact_id)->inTracker($tracker)->build();
         $user     = UserTestBuilder::anActiveUser()->withId(110)->build();
 
-        $dao->shouldReceive("startTransaction");
-        $pending_artifact_removal_dao->shouldReceive("addArtifactToPendingRemoval")->withArgs([$artifact_id]);
-        $dao->shouldReceive("delete")->withArgs([$artifact_id]);
-        $dao->shouldReceive("commit");
+        $dao->shouldReceive('startTransaction');
+        $pending_artifact_removal_dao->shouldReceive('addArtifactToPendingRemoval')->withArgs([$artifact_id]);
+        $dao->shouldReceive('delete')->withArgs([$artifact_id]);
+        $dao->shouldReceive('commit');
 
         $context = DeletionContext::regularDeletion((int) $project->getID());
-        $artifact_runnner->shouldReceive("executeArchiveAndArtifactDeletion")->withArgs([$artifact, $user, $context]);
+        $artifact_runnner->shouldReceive('executeArchiveAndArtifactDeletion')->withArgs([$artifact, $user, $context]);
 
-        $project_history_dao->shouldReceive("groupAddHistory");
+        $project_history_dao->shouldReceive('groupAddHistory');
 
         $event_dispatcher->shouldReceive('dispatch')->with(ArtifactDeleted::class)->once();
 

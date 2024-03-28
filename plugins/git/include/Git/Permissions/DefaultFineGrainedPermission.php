@@ -97,7 +97,7 @@ class DefaultFineGrainedPermission
     public function getPatternWithoutPrefix()
     {
         $matches = [];
-        preg_match("/^refs\/(?:heads|tags)\/(?P<pattern>.*)$/", $this->pattern, $matches);
+        preg_match('/^refs\/(?:heads|tags)\/(?P<pattern>.*)$/', $this->pattern, $matches);
 
         if (isset($matches['pattern'])) {
             return $matches['pattern'];

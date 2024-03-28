@@ -45,8 +45,8 @@ class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $presenters = $this->builder->build($references);
         self::assertCount(1, $presenters);
-        self::assertEquals("TULEAP-" . 123, $presenters[0]->label);
-        self::assertEquals("https://example.com/plugins/tracker/?aid=123", $presenters[0]->url);
+        self::assertEquals('TULEAP-' . 123, $presenters[0]->label);
+        self::assertEquals('https://example.com/plugins/tracker/?aid=123', $presenters[0]->url);
     }
 
     public function testItReturnsPresenterWithMultipleReferences(): void
@@ -55,9 +55,9 @@ class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $presenters = $this->builder->build($references);
         self::assertCount(2, $presenters);
-        self::assertEquals("TULEAP-" . 123, $presenters[0]->label);
-        self::assertEquals("https://example.com/plugins/tracker/?aid=123", $presenters[0]->url);
-        self::assertEquals("TULEAP-" . 59, $presenters[1]->label);
-        self::assertEquals("https://example.com/plugins/tracker/?aid=59", $presenters[1]->url);
+        self::assertEquals('TULEAP-' . 123, $presenters[0]->label);
+        self::assertEquals('https://example.com/plugins/tracker/?aid=123', $presenters[0]->url);
+        self::assertEquals('TULEAP-' . 59, $presenters[1]->label);
+        self::assertEquals('https://example.com/plugins/tracker/?aid=59', $presenters[1]->url);
     }
 }

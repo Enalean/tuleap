@@ -36,21 +36,21 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
 {
     public function getName()
     {
-        return _("ExternalSearch");
+        return _('ExternalSearch');
     }
 
     public function getDescription()
     {
-        return _("Redirects to an external web site based on form input");
+        return _('Redirects to an external web site based on form input');
         //fixme: better description
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.12 $"
+            '$Revision: 1.12 $'
         );
     }
 
@@ -103,7 +103,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
                 $this->_url .= $s;
             }
             if ($debug) {
-                trigger_error("redirect url: " . $this->_url);
+                trigger_error('redirect url: ' . $this->_url);
             } else {
                 $request->redirect($this->_url); //no return!
             }
@@ -128,7 +128,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
             'name'  => 'url',
             'value' => $this->_url,
         ]));
-        if (! empty($args["useimage"])) {
+        if (! empty($args['useimage'])) {
             //FIXME: This does not work with Gecko
             $button = HTML::img(['src' => $useimage, 'alt' => 'imagebutton']);
             if (! empty($width)) {

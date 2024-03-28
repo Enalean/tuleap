@@ -139,7 +139,7 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
         $expiry_date = 0;
         if (
             $request->exist('form_expiry') && $request->get('form_expiry') != '' && ! preg_match(
-                "/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/",
+                '/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/',
                 $request->get('form_expiry')
             )
         ) {
@@ -158,7 +158,7 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
         $vDate = new Valid_String();
         $vDate->required();
         if ($request->exist('form_expiry') && $vDate->validate($request->get('form_expiry'))) {
-            $date_list        = preg_split("/-/D", $request->get('form_expiry'), 3);
+            $date_list        = preg_split('/-/D', $request->get('form_expiry'), 3);
             $unix_expiry_time = mktime(0, 0, 0, (int) $date_list[1], (int) $date_list[2], (int) $date_list[0]);
             $expiry_date      = $unix_expiry_time;
         }

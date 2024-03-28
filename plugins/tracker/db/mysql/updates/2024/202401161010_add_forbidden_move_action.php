@@ -25,13 +25,13 @@ final class b202401161010_add_forbidden_move_action extends \Tuleap\ForgeUpgrade
 {
     public function description(): string
     {
-        return "Add tracker forbidden move action table";
+        return 'Add tracker forbidden move action table';
     }
 
     public function up(): void
     {
         $this->api->createTable(
-            "plugin_tracker_forbidden_move_action",
+            'plugin_tracker_forbidden_move_action',
             <<<EOS
             CREATE TABLE IF NOT EXISTS plugin_tracker_forbidden_move_action(
                 tracker_id INT(11) PRIMARY KEY

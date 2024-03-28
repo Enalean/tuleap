@@ -41,10 +41,10 @@ class ProjectAccessSuspendedController
     {
         $layout = $this->theme_manager->getBurningParrot($user);
         if ($layout === null) {
-            throw new \Exception("Could not load BurningParrot theme");
+            throw new \Exception('Could not load BurningParrot theme');
         }
 
-        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_("Project access error")));
+        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_('Project access error')));
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('codendi_dir') . '/src/templates/error/'

@@ -32,9 +32,9 @@ final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements SearchFil
      */
     public function searchFileNamePatternFromProjectId(int $project_id): ?array
     {
-        $sql = "SELECT filename_pattern, is_filename_pattern_enforced
+        $sql = 'SELECT filename_pattern, is_filename_pattern_enforced
                 FROM plugin_docman_project_settings
-                WHERE group_id = ?";
+                WHERE group_id = ?';
 
         return $this->getDB()->row($sql, $project_id);
     }
@@ -56,7 +56,7 @@ final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements SearchFil
      */
     public function searchByProjectId(int $project_id): ?array
     {
-        $sql = "SELECT forbid_writers_to_update, forbid_writers_to_delete FROM plugin_docman_project_settings WHERE group_id = ?";
+        $sql = 'SELECT forbid_writers_to_update, forbid_writers_to_delete FROM plugin_docman_project_settings WHERE group_id = ?';
 
         return $this->getDB()->row($sql, $project_id);
     }

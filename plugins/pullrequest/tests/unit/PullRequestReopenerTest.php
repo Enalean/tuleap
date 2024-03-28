@@ -116,7 +116,7 @@ final class PullRequestReopenerTest extends TestCase
             [1, null],
         ]);
 
-        $this->git_exec_factory->method("getGitExec")->willReturn($this->createMock(GitExec::class));
+        $this->git_exec_factory->method('getGitExec')->willReturn($this->createMock(GitExec::class));
 
         $this->reopener->reopen(
             $this->buildAnAbandonedPullRequest(),
@@ -135,7 +135,7 @@ final class PullRequestReopenerTest extends TestCase
 
         $source_git_exec      = $this->createMock(GitExec::class);
         $destination_git_exec = $this->createMock(GitExec::class);
-        $this->git_exec_factory->method("getGitExec")->willReturnMap([
+        $this->git_exec_factory->method('getGitExec')->willReturnMap([
             [$source_repository, $source_git_exec],
             [$destination_repository, $destination_git_exec],
         ]);
@@ -166,7 +166,7 @@ final class PullRequestReopenerTest extends TestCase
 
         $source_git_exec      = $this->createMock(GitExec::class);
         $destination_git_exec = $this->createMock(GitExec::class);
-        $this->git_exec_factory->method("getGitExec")->willReturnMap([
+        $this->git_exec_factory->method('getGitExec')->willReturnMap([
             [$source_repository, $source_git_exec],
             [$destination_repository, $destination_git_exec],
         ]);
@@ -195,7 +195,7 @@ final class PullRequestReopenerTest extends TestCase
 
         $source_git_exec      = $this->createMock(GitExec::class);
         $destination_git_exec = $this->createMock(GitExec::class);
-        $this->git_exec_factory->method("getGitExec")->willReturnMap([
+        $this->git_exec_factory->method('getGitExec')->willReturnMap([
             [$source_repository, $source_git_exec],
             [$destination_repository, $destination_git_exec],
         ]);
@@ -223,7 +223,7 @@ final class PullRequestReopenerTest extends TestCase
 
         $source_git_exec      = $this->createMock(GitExec::class);
         $destination_git_exec = $this->createMock(GitExec::class);
-        $this->git_exec_factory->method("getGitExec")->willReturnMap([
+        $this->git_exec_factory->method('getGitExec')->willReturnMap([
             [$source_repository, $source_git_exec],
             [$destination_repository, $destination_git_exec],
         ]);
@@ -254,7 +254,7 @@ final class PullRequestReopenerTest extends TestCase
 
         $source_git_exec      = $this->createMock(GitExec::class);
         $destination_git_exec = $this->createMock(GitExec::class);
-        $this->git_exec_factory->method("getGitExec")->willReturnMap([
+        $this->git_exec_factory->method('getGitExec')->willReturnMap([
             [$source_repository, $source_git_exec],
             [$destination_repository, $destination_git_exec],
         ]);

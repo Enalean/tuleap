@@ -436,7 +436,7 @@ class RadarPlot
     public $legendcsimtarget = '';
     public $legendcsimalt    = '';
     public $csimtargets      = []; // Array of targets for CSIM
-    public $csimareas        = "";   // Resultant CSIM area tags
+    public $csimareas        = '';   // Resultant CSIM area tags
     public $csimalts         = null;   // ALT:s for corresponding target
     private $data            = [];
     private $fill            = false;
@@ -605,7 +605,7 @@ class RadarGraph extends Graph
     private $len;
     private $axis_title = null;
 
-    public function __construct($width = 300, $height = 200, $cachedName = "", $timeout = 0, $inline = 1)
+    public function __construct($width = 300, $height = 200, $cachedName = '', $timeout = 0, $inline = 1)
     {
         parent::__construct($width, $height, $cachedName, $timeout, $inline);
         $this->posx = $width / 2;

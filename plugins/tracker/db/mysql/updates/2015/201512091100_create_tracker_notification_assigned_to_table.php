@@ -30,9 +30,9 @@ class b201512091100_create_tracker_notification_assigned_to_table extends \Tulea
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_tracker_notification_assigned_to (
+        $sql = 'CREATE TABLE plugin_tracker_notification_assigned_to (
                     project_id INT(11) NOT NULL PRIMARY KEY
-                ) ENGINE=InnoDB;";
+                ) ENGINE=InnoDB;';
 
         $this->db->createTable('plugin_tracker_notification_assigned_to', $sql);
     }

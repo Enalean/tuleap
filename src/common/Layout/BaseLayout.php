@@ -60,7 +60,7 @@ use Widget_Static;
 
 abstract class BaseLayout extends Response
 {
-    #[FeatureFlagConfigKey("Feature flag to show a footer on some pages. ⚠️ The footer will soon be removed definitively.")]
+    #[FeatureFlagConfigKey('Feature flag to show a footer on some pages. ⚠️ The footer will soon be removed definitively.')]
     public const FEATURE_FLAG_SHOW_FOOTER = 'show_footer';
 
     /**
@@ -456,7 +456,7 @@ abstract class BaseLayout extends Response
         $this->addCSSAsset(
             new CssAssetWithoutVariantDeclinaisons(
                 new \Tuleap\Layout\IncludeCoreAssets(),
-                "project-background/" . $background->getIdentifier()
+                'project-background/' . $background->getIdentifier()
             )
         );
     }

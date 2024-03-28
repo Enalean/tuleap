@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetReleaseNotesLink implements Dispatchable
 {
-    public const NAME = "getReleaseNotesLink";
+    public const NAME = 'getReleaseNotesLink';
 
     private $url;
 

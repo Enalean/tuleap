@@ -50,7 +50,7 @@ final class UserSettingsController implements DispatchableWithRequest
         $this->template_renderer->renderToPage(
             'moderation',
             new UserSettingsPresenter(
-                new \CSRFSynchronizerToken("/admin/user-settings/"),
+                new \CSRFSynchronizerToken('/admin/user-settings/'),
             )
         );
         $this->admin_page_renderer->footer();

@@ -33,10 +33,10 @@ final class ColumnFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $bind   = $this->createMock(\Tracker_FormElement_Field_List_Bind::class);
 
         $field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $field->method("getBind")->willReturn($bind);
-        $field->method("isNone")->willReturn(false);
-        $field->method("getDecorators")->willReturn([]);
-        $bind->method("getValue")->willThrowException(new \Tracker_FormElement_InvalidFieldValueException());
+        $field->method('getBind')->willReturn($bind);
+        $field->method('isNone')->willReturn(false);
+        $field->method('getDecorators')->willReturn([]);
+        $bind->method('getValue')->willThrowException(new \Tracker_FormElement_InvalidFieldValueException());
 
         $dao            = $this->createMock(\Cardwall_OnTop_ColumnDao::class);
         $column_factory = new \Cardwall_OnTop_Config_ColumnFactory($dao);

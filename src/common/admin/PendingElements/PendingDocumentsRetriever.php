@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 class PendingDocumentsRetriever implements Dispatchable
 {
-    public const NAME = "pendingDocumentsRetriever";
+    public const NAME = 'pendingDocumentsRetriever';
     /**
      * @var Project
      * @psalm-readonly

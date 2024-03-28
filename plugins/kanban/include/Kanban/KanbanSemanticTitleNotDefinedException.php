@@ -23,6 +23,6 @@ final class KanbanSemanticTitleNotDefinedException extends \Exception
 {
     public function __construct()
     {
-        parent::__construct("Semantic title is not defined for the tracker used by kanban");
+        parent::__construct('Semantic title is not defined for the tracker used by kanban');
     }
 }

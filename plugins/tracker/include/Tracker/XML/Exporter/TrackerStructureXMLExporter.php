@@ -39,7 +39,7 @@ use WorkflowFactory;
 
 final class TrackerStructureXMLExporter
 {
-    private const TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML          = "0";
+    private const TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML          = '0';
     private const TRACKER_SHOULD_SEND_EVENT_IN_NOTIFICATION_EXPORT_XML = '1';
 
     public function __construct(

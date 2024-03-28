@@ -199,7 +199,7 @@ class Tracker_Action_UpdateArtifact
             $artifact->getTracker()->hasFormElementWithNameAndType($remaining_effort_field->getName(), ['computed'])
             && $remaining_effort_field->isArtifactValueAutocomputed($artifact)
         ) {
-            $remaining_effort .= " (" . dgettext('tuleap-tracker', 'autocomputed') . ")";
+            $remaining_effort .= ' (' . dgettext('tuleap-tracker', 'autocomputed') . ')';
         }
 
         return $remaining_effort;

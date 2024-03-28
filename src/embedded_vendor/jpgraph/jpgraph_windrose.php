@@ -1301,7 +1301,7 @@ class WindrosePlot
         }
 
         if (__DEBUG) {
-            $dblImg->SetColor("red");
+            $dblImg->SetColor('red');
             $dblImg->Circle($xc, $yc, $lr + $r);
         }
 
@@ -1601,7 +1601,7 @@ class WindroseGraph extends Graph
 {
     public $plots = [];
 
-    public function __construct($width = 300, $height = 200, $cachedName = "", $timeout = 0, $inline = 1)
+    public function __construct($width = 300, $height = 200, $cachedName = '', $timeout = 0, $inline = 1)
     {
         parent::__construct($width, $height, $cachedName, $timeout, $inline);
         $this->SetColor('white');
@@ -1666,7 +1666,7 @@ class WindroseGraph extends Graph
     }
 
     // Method description
-    public function Stroke($aStrokeFileName = "")
+    public function Stroke($aStrokeFileName = '')
     {
         // If the filename is the predefined value = '_csim_special_'
         // we assume that the call to stroke only needs to do enough
@@ -1683,7 +1683,7 @@ class WindroseGraph extends Graph
         // CSIM without storing an image to disk GetCSIM must call Stroke.
         $this->iHasStroked = true;
 
-        if ($this->background_image != "" || $this->background_cflag != "") {
+        if ($this->background_image != '' || $this->background_cflag != '') {
             $this->StrokeFrameBackground();
         } else {
             $this->StrokeFrame();

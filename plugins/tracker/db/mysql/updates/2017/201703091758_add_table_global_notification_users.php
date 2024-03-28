@@ -20,7 +20,7 @@ class b201703091758_add_table_global_notification_users extends \Tuleap\ForgeUpg
 {
     public function description()
     {
-        return "Add table to store the user to notify after an artifact update";
+        return 'Add table to store the user to notify after an artifact update';
     }
 
     public function preUp()
@@ -30,11 +30,11 @@ class b201703091758_add_table_global_notification_users extends \Tuleap\ForgeUpg
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_global_notification_users (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_global_notification_users (
                 notification_id INT(11) UNSIGNED NOT NULL,
                 user_id INT(11) NOT NULL,
                 PRIMARY KEY (notification_id, user_id)
-            ) ENGINE=InnoDB;";
+            ) ENGINE=InnoDB;';
 
         $this->db->createTable('tracker_global_notification_users', $sql);
     }

@@ -47,10 +47,10 @@ EOT;
      */
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_mediawiki_admin_options (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_mediawiki_admin_options (
                 project_id INT(11) UNSIGNED PRIMARY KEY,
                 enable_compatibility_view BOOLEAN DEFAULT 0
-            ) ENGINE=InnoDB";
+            ) ENGINE=InnoDB';
 
         $this->execDB($sql, 'An error occured while adding plugin_mediawiki_admin_options table: ');
     }

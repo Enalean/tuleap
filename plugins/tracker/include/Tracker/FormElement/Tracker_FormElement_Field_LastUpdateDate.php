@@ -76,7 +76,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function getQuerySelect(): string
     {
         //Last update date is stored in the changeset (the date of the changeset)
-        return "c.submitted_on AS " . $this->getQuerySelectName();
+        return 'c.submitted_on AS ' . $this->getQuerySelectName();
     }
 
     public function getQueryFrom()

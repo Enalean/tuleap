@@ -36,7 +36,7 @@ final class FaultMapperTest extends TestCase
     {
         yield 'Artifact does not exists' => [ArtifactDoesNotExistFault::build(10), 400];
         yield 'Artifact link field does not exist' => [ArtifactLinkFieldDoesNotExistFault::build(15), 400];
-        yield 'Semantic is not supported' => [SemanticNotSupportedFault::fromSemanticName("status"), 400];
+        yield 'Semantic is not supported' => [SemanticNotSupportedFault::fromSemanticName('status'), 400];
         yield 'Default to error 500 for unknown Fault' => [Fault::fromMessage('Unmapped fault'), 500];
     }
 

@@ -41,12 +41,12 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
             {
                 $this->called++;
 
-                assertEquals("/rest/agile/1.0/board/1/backlog?jql=issuetype+not+in+subtaskIssueTypes%28%29&startAt=0", $url);
+                assertEquals('/rest/agile/1.0/board/1/backlog?jql=issuetype+not+in+subtaskIssueTypes%28%29&startAt=0', $url);
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "issues"     => [],
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'issues'     => [],
                 ];
             }
         };
@@ -73,10 +73,10 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                 assertEquals('/rest/agile/1.0/board/1/backlog?jql=issuetype+not+in+subtaskIssueTypes%28%29&startAt=0', $url);
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "total"      => 0,
-                    "issues"     => [],
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'total'      => 0,
+                    'issues'     => [],
                 ];
             }
         };
@@ -99,10 +99,10 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                 $this->called++;
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "total"      => 0,
-                    "issues"     => [],
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'total'      => 0,
+                    'issues'     => [],
                 ];
             }
         };
@@ -126,15 +126,15 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                 $this->called++;
 
                 return [
-                    "maxResults" => 50,
-                    "startAt"    => 0,
-                    "total"      => 1,
-                    "issues"     => [
+                    'maxResults' => 50,
+                    'startAt'    => 0,
+                    'total'      => 1,
+                    'issues'     => [
                         [
-                            "expand" => "operations,versionedRepresentations,editmeta,changelog,renderedFields",
-                            "id"     => "10000",
-                            "self"   => "https://jira.example.com/rest/agile/1.0/issue/10000",
-                            "key"    => "SP-1",
+                            'expand' => 'operations,versionedRepresentations,editmeta,changelog,renderedFields',
+                            'id'     => '10000',
+                            'self'   => 'https://jira.example.com/rest/agile/1.0/issue/10000',
+                            'key'    => 'SP-1',
                         ],
                     ],
                 ];
@@ -148,7 +148,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         self::assertEquals(1, $client->called);
         self::assertEquals(
             [
-                new BacklogIssueRepresentation(10000, "SP-1"),
+                new BacklogIssueRepresentation(10000, 'SP-1'),
             ],
             $backlog_issues
         );
@@ -165,15 +165,15 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                 if ($this->called === 0) {
                     $this->called++;
                     return [
-                        "maxResults" => 50,
-                        "startAt"    => 0,
-                        "total"      => 2,
-                        "issues"     => [
+                        'maxResults' => 50,
+                        'startAt'    => 0,
+                        'total'      => 2,
+                        'issues'     => [
                             [
-                                "expand" => "operations,versionedRepresentations,editmeta,changelog,renderedFields",
-                                "id"     => "10000",
-                                "self"   => "https://jira.example.com/rest/agile/1.0/issue/10000",
-                                "key"    => "SP-1",
+                                'expand' => 'operations,versionedRepresentations,editmeta,changelog,renderedFields',
+                                'id'     => '10000',
+                                'self'   => 'https://jira.example.com/rest/agile/1.0/issue/10000',
+                                'key'    => 'SP-1',
                             ],
                         ],
                     ];
@@ -182,21 +182,21 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                     assertEquals('/rest/agile/1.0/board/1/backlog?jql=issuetype+not+in+subtaskIssueTypes%28%29&startAt=1', $url);
                     $this->called++;
                     return [
-                        "maxResults" => 50,
-                        "startAt"    => 1,
-                        "total"      => 2,
-                        "issues"     => [
+                        'maxResults' => 50,
+                        'startAt'    => 1,
+                        'total'      => 2,
+                        'issues'     => [
                             [
-                                "expand" => "operations,versionedRepresentations,editmeta,changelog,renderedFields",
-                                "id"     => "10001",
-                                "self"   => "https://jira.example.com/rest/agile/1.0/issue/10001",
-                                "key"    => "SP-2",
+                                'expand' => 'operations,versionedRepresentations,editmeta,changelog,renderedFields',
+                                'id'     => '10001',
+                                'self'   => 'https://jira.example.com/rest/agile/1.0/issue/10001',
+                                'key'    => 'SP-2',
                             ],
                         ],
                     ];
                 }
 
-                throw new RuntimeException("Must not happen");
+                throw new RuntimeException('Must not happen');
             }
         };
 
@@ -207,8 +207,8 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         self::assertEquals(2, $client->called);
         self::assertEquals(
             [
-                new BacklogIssueRepresentation(10000, "SP-1"),
-                new BacklogIssueRepresentation(10001, "SP-2"),
+                new BacklogIssueRepresentation(10000, 'SP-1'),
+                new BacklogIssueRepresentation(10001, 'SP-2'),
             ],
             $backlog_issues
         );

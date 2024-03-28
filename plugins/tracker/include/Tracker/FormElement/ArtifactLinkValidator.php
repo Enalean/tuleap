@@ -118,7 +118,7 @@ class ArtifactLinkValidator
     private function isArtifactIdDefined(Tracker_FormElement_Field_ArtifactLink $field, string $artifact_id): bool
     {
         $artifact_id = trim($artifact_id);
-        if ($artifact_id === "") {
+        if ($artifact_id === '') {
             $GLOBALS['Response']->addFeedback(
                 'error',
                 sprintf(dgettext('tuleap-tracker', '%1$s: %2$s is not an artifact id.'), $field->getLabel(), $artifact_id)

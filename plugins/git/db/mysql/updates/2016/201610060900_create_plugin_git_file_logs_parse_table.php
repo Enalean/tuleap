@@ -29,11 +29,11 @@ class b201610060900_create_plugin_git_file_logs_parse_table extends \Tuleap\Forg
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_git_file_logs_parse (
+        $sql = 'CREATE TABLE plugin_git_file_logs_parse (
                   file_name VARCHAR(255) NOT NULL,
                   end_line INT(11),
                   PRIMARY KEY (file_name)
-                )";
+                )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

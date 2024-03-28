@@ -39,7 +39,7 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
     {
         if ($this->_group !== \false) {
             if (! $this->_line) {
-                $this->_line = "";
+                $this->_line = '';
             }
             if ($this->_tag) {
                 $this->_line .= '<' . $this->_tag . '>';
@@ -59,7 +59,7 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
         if ($this->_line) {
             $this->_lines[] = $this->_line;
         }
-        $this->_line = "";
+        $this->_line = '';
     }
 
     public function addWords($words, $tag = '')
@@ -73,7 +73,7 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
                 continue;
             }
             if ($word[0] == "\n") {
-                $this->_group = ((string) $this->_group) . " ";
+                $this->_group = ((string) $this->_group) . ' ';
                 $this->_flushLine($tag);
                 $word = \substr($word, 1);
             }

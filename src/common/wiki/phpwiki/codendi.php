@@ -30,7 +30,7 @@ function codendi_main()
     validateSessionPath();
 
     global $request;
-    if ((DEBUG & _DEBUG_APD) and extension_loaded("apd")) {
+    if ((DEBUG & _DEBUG_APD) and extension_loaded('apd')) {
         apd_set_session_trace(9);
     }
 
@@ -104,6 +104,6 @@ function codendi_main()
     $request->finish();
 }
 
-include_once(PHPWIKI_DIR . "/lib/main.php");
+include_once(PHPWIKI_DIR . '/lib/main.php');
 
 codendi_main();

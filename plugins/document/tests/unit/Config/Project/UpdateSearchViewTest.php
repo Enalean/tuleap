@@ -64,7 +64,7 @@ final class UpdateSearchViewTest extends TestCase
                     public function saveColumns(int $project_id, array $columns): void
                     {
                         assertEquals(101, $project_id);
-                        assertEquals(["title", "status"], $columns);
+                        assertEquals(['title', 'status'], $columns);
                         $this->assertions->columns = true;
                     }
                 },
@@ -76,7 +76,7 @@ final class UpdateSearchViewTest extends TestCase
                     public function saveCriteria(int $project_id, array $criteria): void
                     {
                         assertEquals(101, $project_id);
-                        assertEquals(["title", "description"], $criteria);
+                        assertEquals(['title', 'description'], $criteria);
                         $this->assertions->criteria = true;
                     }
                 },
@@ -89,8 +89,8 @@ final class UpdateSearchViewTest extends TestCase
         try {
             $update->process(
                 HTTPRequestBuilder::get()
-                    ->withParam('criteria', ["title", "description"])
-                    ->withParam('columns', ["title", "status"])
+                    ->withParam('criteria', ['title', 'description'])
+                    ->withParam('columns', ['title', 'status'])
                     ->build(),
                 LayoutBuilder::buildWithInspector($layout_inspector),
                 ['project_name' => 'acme']
@@ -164,8 +164,8 @@ final class UpdateSearchViewTest extends TestCase
 
         $update->process(
             HTTPRequestBuilder::get()
-                ->withParam('criteria', ["title", "description"])
-                ->withParam('columns', ["title", "status"])
+                ->withParam('criteria', ['title', 'description'])
+                ->withParam('columns', ['title', 'status'])
                 ->build(),
             LayoutBuilder::build(),
             ['project_name' => 'acme']
@@ -221,8 +221,8 @@ final class UpdateSearchViewTest extends TestCase
         try {
             $update->process(
                 HTTPRequestBuilder::get()
-                    ->withParam('criteria', ["title", "description"])
-                    ->withParam('columns', "warez")
+                    ->withParam('criteria', ['title', 'description'])
+                    ->withParam('columns', 'warez')
                     ->build(),
                 LayoutBuilder::buildWithInspector($layout_inspector),
                 ['project_name' => 'acme']
@@ -289,8 +289,8 @@ final class UpdateSearchViewTest extends TestCase
         try {
             $update->process(
                 HTTPRequestBuilder::get()
-                    ->withParam('criteria', "warez")
-                    ->withParam('columns', ["title", "description"])
+                    ->withParam('criteria', 'warez')
+                    ->withParam('columns', ['title', 'description'])
                     ->build(),
                 LayoutBuilder::buildWithInspector($layout_inspector),
                 ['project_name' => 'acme']

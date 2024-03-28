@@ -168,7 +168,7 @@ class KanbanItemDao extends DataAccessObject
 
     public function getOpenItemIds(int $tracker_id): array
     {
-        $sql = "SELECT A.id
+        $sql = 'SELECT A.id
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = ?)
                     INNER JOIN (
@@ -180,14 +180,14 @@ class KanbanItemDao extends DataAccessObject
                     ) ON (A.last_changeset_id = CV2.changeset_id)
                     INNER JOIN tracker_artifact_priority_rank AS P ON (P.artifact_id = A.id)
                 WHERE CVL.bindvalue_id IN (open_value_id)
-                ORDER BY P.rank";
+                ORDER BY P.rank';
 
         return $this->getDB()->run($sql, $tracker_id, $tracker_id);
     }
 
     public function searchTimeInfoForItem(int $tracker_id, int $item_id): array
     {
-        $sql = "SELECT CVL.bindvalue_id AS column_id, MAX(C.submitted_on) AS submitted_on
+        $sql = 'SELECT CVL.bindvalue_id AS column_id, MAX(C.submitted_on) AS submitted_on
                 FROM tracker_artifact AS A
                     INNER JOIN tracker_changeset AS C ON (C.artifact_id = A.id)
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = ?)
@@ -202,7 +202,7 @@ class KanbanItemDao extends DataAccessObject
                     AND CV.has_changed = 1
                     AND CVL.bindvalue_id <> 100
                     AND CVL.bindvalue_id IS NOT NULL
-                GROUP BY CVL.bindvalue_id";
+                GROUP BY CVL.bindvalue_id';
 
         return $this->getDB()->run($sql, $tracker_id, $tracker_id, $item_id);
     }

@@ -34,7 +34,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class RedirectToProgramManagementProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_SHORTNAME = "my_project";
+    private const PROJECT_SHORTNAME = 'my_project';
 
     private ProgramRedirectionParameters $program_redirection_parameters;
     private ProjectReference $project;
@@ -47,9 +47,9 @@ final class RedirectToProgramManagementProcessorTest extends \Tuleap\Test\PHPUni
         $this->redirect                       = new Tracker_Artifact_Redirect();
         $this->project                        = ProjectReferenceStub::withValues(
             1,
-            "Project",
+            'Project',
             self::PROJECT_SHORTNAME,
-            ""
+            ''
         );
         $this->event                          = RedirectUserAfterArtifactCreationOrUpdateEventProxy::fromEvent(
             new RedirectAfterArtifactCreationOrUpdateEvent(

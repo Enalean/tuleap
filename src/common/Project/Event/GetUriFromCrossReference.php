@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetUriFromCrossReference implements Dispatchable
 {
-    public const NAME = "getUriFromCrossReference";
+    public const NAME = 'getUriFromCrossReference';
 
     /**
      * @var int

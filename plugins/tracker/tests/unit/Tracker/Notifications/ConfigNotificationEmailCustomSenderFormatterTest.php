@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\Notifications;
 
 class ConfigNotificationEmailCustomSenderFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public const FIELD1_DATA = "123456";
-    public const FIELD2_DATA = "abcdef";
+    public const FIELD1_DATA = '123456';
+    public const FIELD2_DATA = 'abcdef';
     public const FORMAT_DATA = '%field1';
     public const NO_SLUGIFY  = '@ slugify.';
     public const SLUGIFY     = 'at slugify';
@@ -46,7 +46,7 @@ class ConfigNotificationEmailCustomSenderFormatterTest extends \Tuleap\Test\PHPU
 
     public function testReturnsInputStringIfNoFormattingFound()
     {
-        $input = "This String has no formatting";
+        $input = 'This String has no formatting';
         $this->assertEquals($input, $this->formatter->formatString($input));
     }
 
@@ -74,7 +74,7 @@ class ConfigNotificationEmailCustomSenderFormatterTest extends \Tuleap\Test\PHPU
     {
         $input    = '%format';
         $expected = self::FORMAT_DATA;
-        $this->assertEquals("field1", $this->formatter->formatString($input));
+        $this->assertEquals('field1', $this->formatter->formatString($input));
     }
 
     public function testDoesSlugify()

@@ -32,9 +32,9 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         if ($date === null || ! str_contains($date, ' ')) {
             return '(0=1)';
         }
-        $dateList              = explode(" ", $date, 2);
-        $interval['dateStart'] = trim($dateList[0] . " 00:00:00");
-        $interval['dateEnd']   = trim($dateList[0] . " 23:59:59");
+        $dateList              = explode(' ', $date, 2);
+        $interval['dateStart'] = trim($dateList[0] . ' 00:00:00');
+        $interval['dateEnd']   = trim($dateList[0] . ' 23:59:59');
 
         $statement = ' ( date > ' . $this->da->quoteSmart($interval['dateStart']) .
             ' AND date < ' . $this->da->quoteSmart($interval['dateEnd']) . ' ) ';

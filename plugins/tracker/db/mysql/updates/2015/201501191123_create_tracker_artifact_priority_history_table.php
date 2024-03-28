@@ -30,13 +30,13 @@ class b201501191123_create_tracker_artifact_priority_history_table extends \Tule
 
     public function up()
     {
-        $sql = "CREATE TABLE tracker_artifact_priority_history(
+        $sql = 'CREATE TABLE tracker_artifact_priority_history(
                     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     artifact_id_higher INT(11) NULL,
                     artifact_id_lower INT(11) NULL,
                     prioritized_by INT(11) NOT NULL,
                     prioritized_on INT(11) NOT NULL
-                ) ENGINE=InnoDB;";
+                ) ENGINE=InnoDB;';
 
         $this->db->createTable('tracker_artifact_priority_history', $sql);
     }

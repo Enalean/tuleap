@@ -45,19 +45,19 @@ final class DryRunMoverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->source_tracker = TrackerTestBuilder::aTracker()->withName("Source tracker")->build();
-        $this->target_tracker = TrackerTestBuilder::aTracker()->withName("Target tracker")->build();
+        $this->source_tracker = TrackerTestBuilder::aTracker()->withName('Source tracker')->build();
+        $this->target_tracker = TrackerTestBuilder::aTracker()->withName('Target tracker')->build();
         $this->artifact       = ArtifactTestBuilder::anArtifact(12)->build();
         $this->user           = UserTestBuilder::anActiveUser()->build();
     }
 
     public function testItPerformsTheDuckTypedBasedDryRunWhenFeatureFlagIsDisabled(): void
     {
-        $source_title_field = StringFieldBuilder::aStringField(102)->withName("title")->build();
-        $target_title_field = StringFieldBuilder::aStringField(202)->withName("title")->build();
+        $source_title_field = StringFieldBuilder::aStringField(102)->withName('title')->build();
+        $target_title_field = StringFieldBuilder::aStringField(202)->withName('title')->build();
 
         $migrated_fields     = [$source_title_field];
-        $not_migrated_fields = [StringFieldBuilder::aStringField(103)->withName("summary")->build()];
+        $not_migrated_fields = [StringFieldBuilder::aStringField(103)->withName('summary')->build()];
         $mapping_fields      = [
             FieldMapping::fromFields(
                 $source_title_field,

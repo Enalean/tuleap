@@ -35,11 +35,11 @@ class b201911071703_add_default_frs_agreement_table extends ForgeUpgrade_Bucket 
 
     public function up(): void
     {
-        $sql = "CREATE TABLE frs_download_agreement_default (
+        $sql = 'CREATE TABLE frs_download_agreement_default (
             project_id int(11) NOT NULL,
             agreement_id INT(11) NOT NULL,
             PRIMARY KEY (project_id)
-        )";
+        )';
         $this->db->createTable('frs_download_agreement_default', $sql);
     }
 }

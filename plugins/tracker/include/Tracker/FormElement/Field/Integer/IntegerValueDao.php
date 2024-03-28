@@ -35,8 +35,8 @@ class IntegerValueDao extends NumericFieldValueDao
     public function create($changeset_value_id, $value)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
-        if ($value === "") {
-            $value = "NULL";
+        if ($value === '') {
+            $value = 'NULL';
         } else {
             $value = $this->da->escapeInt($value);
         }
@@ -53,7 +53,7 @@ class IntegerValueDao extends NumericFieldValueDao
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
                  VALUES
-                  ( " . implode(' , NULL ),' . "\n" . ' ( ', array_map(fn (int $value): string => $this->da->escapeInt($value), $changeset_value_ids)) . ", NULL)";
+                  ( " . implode(' , NULL ),' . "\n" . ' ( ', array_map(fn (int $value): string => $this->da->escapeInt($value), $changeset_value_ids)) . ', NULL)';
         return $this->update($sql);
     }
 

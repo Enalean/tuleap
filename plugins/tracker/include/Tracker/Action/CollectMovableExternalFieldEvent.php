@@ -26,13 +26,13 @@ use Tuleap\Event\Dispatchable;
 
 final class CollectMovableExternalFieldEvent implements Dispatchable
 {
-    public const NAME = "collectMovableExternalFieldEvent";
+    public const NAME = 'collectMovableExternalFieldEvent';
 
-    private const FIELD_FULLY_MIGRATEABLE     = "fully_migrateable";
-    private const FIELD_PARTIALLY_MIGRATEABLE = "partially_migrateable";
-    private const FIELD_NOT_MIGRATEABLE       = "not_migrateable";
+    private const FIELD_FULLY_MIGRATEABLE     = 'fully_migrateable';
+    private const FIELD_PARTIALLY_MIGRATEABLE = 'partially_migrateable';
+    private const FIELD_NOT_MIGRATEABLE       = 'not_migrateable';
 
-    private string $migration_state = "";
+    private string $migration_state = '';
 
     public function __construct(
         private readonly \Tracker_FormElement_Field $source_field,

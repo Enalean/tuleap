@@ -65,7 +65,7 @@ if (user_isloggedin()) {
                 //if news is declared as private, force the $promote_news to '0' value (not to be promoted)
                 $promote_news = $request->get('promote_news');
                 if ($promote_news == '3' && $request->get('private_news')) {
-                    $promote_news = "0";
+                    $promote_news = '0';
                 }
 
                 news_submit($group_id, $request->get('summary'), $request->get('details'), $request->get('private_news'), $request->get('send_news_to'), $promote_news);

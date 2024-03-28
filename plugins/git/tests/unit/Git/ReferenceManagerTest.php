@@ -136,8 +136,8 @@ class Git_ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $reference     = \Mockery::spy(\Reference::class);
         $reference_row = [
-            "id" => 33,
-            "keyword" => "git_tag",
+            'id' => 33,
+            'keyword' => 'git_tag',
         ];
 
         $this->reference_dao->shouldReceive('searchExistingProjectReference')

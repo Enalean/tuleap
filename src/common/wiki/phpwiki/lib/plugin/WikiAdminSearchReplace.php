@@ -35,20 +35,20 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
 {
     public function getName()
     {
-        return _("WikiAdminSearchReplace");
+        return _('WikiAdminSearchReplace');
     }
 
     public function getDescription()
     {
-        return _("Search and replace text in selected wiki pages.");
+        return _('Search and replace text in selected wiki pages.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.19 $"
+            '$Revision: 1.19 $'
         );
     }
 
@@ -83,7 +83,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
             }
             if ($text != $newtext) {
                 $meta            = $current->_data;
-                $meta['summary'] = sprintf(_("WikiAdminSearchReplace %s by %s"), $from, $to);
+                $meta['summary'] = sprintf(_('WikiAdminSearchReplace %s by %s'), $from, $to);
                 return $page->save($newtext, $version + 1, $meta);
             }
         }
@@ -93,7 +93,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
     public function searchReplacePages(&$dbi, &$request, $pages, $from, $to)
     {
         if (empty($from)) {
-            return HTML::p(HTML::strong(fmt("Error: Empty search string.")));
+            return HTML::p(HTML::strong(fmt('Error: Empty search string.')));
         }
         $ul         = HTML::ul();
         $count      = 0;
@@ -118,12 +118,12 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
             $dbi->touch();
             return HTML(
                 $ul,
-                HTML::p(fmt("%s pages changed.", $count))
+                HTML::p(fmt('%s pages changed.', $count))
             );
         } else {
             return HTML(
                 $ul,
-                HTML::p(fmt("No pages changed."))
+                HTML::p(fmt('No pages changed.'))
             );
         }
     }
@@ -158,7 +158,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
             // without individual PagePermissions:
             if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
-                $this->disabled("! user->isAdmin");
+                $this->disabled('! user->isAdmin');
             }
 
             if ($post_args['action'] == 'verify' and ! empty($post_args['from'])) {
@@ -181,7 +181,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         }
 
         if ($next_action == 'verify') {
-            $args['info'] = "checkbox,pagename,hi_content";
+            $args['info'] = 'checkbox,pagename,hi_content';
         }
         $pagelist = new PageList_Selectable(
             $args['info'],
@@ -191,7 +191,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
                 ['types' =>
                                                    [
                                                        'hi_content' // with highlighted search for SearchReplace
-                => new _PageList_Column_content('rev:hi_content', _("Content")),
+                => new _PageList_Column_content('rev:hi_content', _('Content')),
                                                    ],
                 ]
             )
@@ -202,26 +202,26 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         $header = HTML::p();
         if (empty($post_args['from'])) {
             $header->pushContent(
-                HTML::p(HTML::em(_("Warning: The search string cannot be empty!")))
+                HTML::p(HTML::em(_('Warning: The search string cannot be empty!')))
             );
         }
         if ($next_action == 'verify') {
-            $button_label = _("Yes");
+            $button_label = _('Yes');
             $header->pushContent(
                 HTML::p(HTML::strong(
-                    _("Are you sure you want to permanently search & replace text in the selected files?")
+                    _('Are you sure you want to permanently search & replace text in the selected files?')
                 ))
             );
             $this->replaceForm($header, $post_args);
         } else {
-            $button_label = _("Search & Replace");
+            $button_label = _('Search & Replace');
             $this->replaceForm($header, $post_args);
-            $header->pushContent(HTML::p(_("Select the pages to search:")));
+            $header->pushContent(HTML::p(_('Select the pages to search:')));
         }
 
         $buttons = HTML::p(
             Button('submit:admin_replace[rename]', $button_label, 'wikiadmin'),
-            Button('submit:admin_replace[cancel]', _("Cancel"), 'button')
+            Button('submit:admin_replace[cancel]', _('Cancel'), 'button')
         );
 
         return HTML::form(
@@ -248,15 +248,15 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         $header->pushContent(
             HTML::div(
                 ['class' => 'hint'],
-                _("Replace all occurences of the given string in the content of all pages.")
+                _('Replace all occurences of the given string in the content of all pages.')
             ),
             HTML::br()
         );
-        $header->pushContent(_("Replace: "));
+        $header->pushContent(_('Replace: '));
         $header->pushContent(HTML::input(['name' => 'admin_replace[from]',
             'value' => $post_args['from'],
         ]));
-        $header->pushContent(' ' . _("by") . ': ');
+        $header->pushContent(' ' . _('by') . ': ');
         $header->pushContent(HTML::input(['name' => 'admin_replace[to]',
             'value' => $post_args['to'],
         ]));
@@ -267,7 +267,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         if (! empty($post_args['case_exact'])) {
             $checkbox->setAttr('checked', 'checked');
         }
-        $header->pushContent(HTML::br(), $checkbox, " ", _("case-exact"));
+        $header->pushContent(HTML::br(), $checkbox, ' ', _('case-exact'));
         $checkbox_re = HTML::input(['type' => 'checkbox',
             'name' => 'admin_replace[regex]',
                                          //'disabled' => 'disabled',
@@ -278,8 +278,8 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         }
         $header->pushContent(HTML::br(), HTML::span(//array('style'=>'color: #aaa'),
             $checkbox_re,
-            " ",
-            _("regex")
+            ' ',
+            _('regex')
         ));
         $header->pushContent(HTML::br());
         return $header;

@@ -400,7 +400,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
 
         self::assertStringEqualsFile($fixture_path . '/tracker.xml', self::getTidyXML($tracker_xml));
 
-        $dom         = new DOMDocument("1.0", "UTF-8");
+        $dom         = new DOMDocument('1.0', 'UTF-8');
         $dom_element = $dom->importNode(dom_import_simplexml($tracker_xml), true);
         $dom->appendChild($dom_element);
         self::assertTrue($dom->relaxNGValidateSource(\file_get_contents(__DIR__ . '/../../../../../../resources/tracker.rng')));

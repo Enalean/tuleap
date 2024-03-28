@@ -24,6 +24,6 @@ final class KanbanSemanticStatusNotDefinedException extends \Exception
 {
     public function __construct()
     {
-        parent::__construct("Semantic status is not defined for the tracker used by kanban");
+        parent::__construct('Semantic status is not defined for the tracker used by kanban');
     }
 }

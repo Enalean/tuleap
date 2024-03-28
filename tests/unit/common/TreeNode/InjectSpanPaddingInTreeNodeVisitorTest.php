@@ -43,11 +43,11 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding
         $given = $this->givenAParentWithOneChildTreeNode();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" indent last-left tree indent minus-tree");
+        $pattern    = $this->getPatternSuite(' indent last-left tree indent minus-tree');
         $givenChild = $given->getChild(0);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content child"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content child'));
     }
 
     public function testItShouldSetDataToSecondChildThatMatchesBlankBlankLastLeftLastRight(): void
@@ -55,7 +55,7 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding
         $given = $this->givenAParentWithOneChildTreeNode();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" blank blank indent last-left indent last-right");
+        $pattern    = $this->getPatternSuite(' blank blank indent last-left indent last-right');
         $givenChild = $given->getChild(0)->getChild(0);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);

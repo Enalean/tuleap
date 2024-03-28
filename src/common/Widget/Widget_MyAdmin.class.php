@@ -85,7 +85,7 @@ class Widget_MyAdmin extends Widget
         $row             = db_fetch_array();
         $validated_users = $row['count'];
 
-        $sql          = "SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3";
+        $sql          = 'SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3';
         $result       = db_query($sql);
         $pending_news = 0;
         $rows         = db_numrows($result);
@@ -103,7 +103,7 @@ class Widget_MyAdmin extends Widget
         $i              = 0;
         $html_my_admin .= $this->_get_admin_row(
             $i++,
-            sprintf(_('Users in <a href="%1$s"><B>P</B> (pending) status</a>'), "/admin/approve_pending_users.php?page=pending"),
+            sprintf(_('Users in <a href="%1$s"><B>P</B> (pending) status</a>'), '/admin/approve_pending_users.php?page=pending'),
             $pending_users,
             $this->_get_color($pending_users)
         );
@@ -111,7 +111,7 @@ class Widget_MyAdmin extends Widget
         if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1) {
             $html_my_admin .= $this->_get_admin_row(
                 $i++,
-                sprintf(_('Validated users <a href="%1$s"><B>pending email activation</B></a>'), "/admin/approve_pending_users.php?page=validated"),
+                sprintf(_('Validated users <a href="%1$s"><B>pending email activation</B></a>'), '/admin/approve_pending_users.php?page=validated'),
                 $validated_users,
                 $this->_get_color($validated_users)
             );
@@ -150,7 +150,7 @@ class Widget_MyAdmin extends Widget
 
         return $this->_get_admin_row(
             $i++,
-            sprintf(_('Projects in <a href="%1$s"><B>P</B> (pending) status</A>'), "/admin/approve-pending.php"),
+            sprintf(_('Projects in <a href="%1$s"><B>P</B> (pending) status</A>'), '/admin/approve-pending.php'),
             $pending_projects,
             $this->_get_color($pending_projects)
         );

@@ -158,7 +158,7 @@ class MetadataRepresentationBuilder
             case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                 return 'list';
             default:
-                throw new UnknownMetadataException("Metadata type: " . $type . " unknown");
+                throw new UnknownMetadataException('Metadata type: ' . $type . ' unknown');
         }
     }
 }

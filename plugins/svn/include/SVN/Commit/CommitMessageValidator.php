@@ -67,7 +67,7 @@ class CommitMessageValidator
         if (ForgeConfig::get('sys_allow_empty_svn_commit_message')) {
             return;
         }
-        if ($commit_info->getCommitMessage() === "") {
+        if ($commit_info->getCommitMessage() === '') {
             throw new EmptyCommitMessageException();
         }
     }

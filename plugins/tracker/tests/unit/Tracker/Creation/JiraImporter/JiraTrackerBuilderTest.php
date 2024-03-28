@@ -34,10 +34,10 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wrapper = new class extends JiraCloudClientStub {
             public array $urls = [
-                ClientWrapper::JIRA_CORE_BASE_URL . "/project/IE" => [
-                    "issueTypes" => [
-                        ["id" => "epic", "name" => "Epics", "subtask" => false],
-                        ["id" => "issue", "name" => "Issues", "subtask" => false],
+                ClientWrapper::JIRA_CORE_BASE_URL . '/project/IE' => [
+                    'issueTypes' => [
+                        ['id' => 'epic', 'name' => 'Epics', 'subtask' => false],
+                        ['id' => 'issue', 'name' => 'Issues', 'subtask' => false],
                     ],
                 ],
             ];
@@ -48,12 +48,12 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertCount(2, $result);
 
-        $this->assertSame("epic", $result[0]->getId());
-        $this->assertSame("Epics", $result[0]->getName());
+        $this->assertSame('epic', $result[0]->getId());
+        $this->assertSame('Epics', $result[0]->getName());
         $this->assertSame(['id' => 'epic', 'name' => 'Epics'], $result[0]->toArray());
 
-        $this->assertSame("issue", $result[1]->getId());
-        $this->assertSame("Issues", $result[1]->getName());
+        $this->assertSame('issue', $result[1]->getId());
+        $this->assertSame('Issues', $result[1]->getName());
         $this->assertSame(['id' => 'issue', 'name' => 'Issues'], $result[1]->toArray());
     }
 
@@ -61,10 +61,10 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wrapper = new class extends JiraCloudClientStub {
             public array $urls = [
-                ClientWrapper::JIRA_CORE_BASE_URL . "/project/IE" => [
-                    "issueTypes" => [
-                        ["id" => "epic", "ezezezez" => "Epics"],
-                        ["id" => "issue", "name" => "Issues"],
+                ClientWrapper::JIRA_CORE_BASE_URL . '/project/IE' => [
+                    'issueTypes' => [
+                        ['id' => 'epic', 'ezezezez' => 'Epics'],
+                        ['id' => 'issue', 'name' => 'Issues'],
                     ],
                 ],
             ];
@@ -73,7 +73,7 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(\LogicException::class);
 
         $builder = new JiraTrackerBuilder();
-        $builder->buildFromProjectKey($wrapper, "IE");
+        $builder->buildFromProjectKey($wrapper, 'IE');
     }
 
     public function testItBuildOneIssueType(): void
@@ -81,14 +81,14 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $wrapper = new class extends JiraCloudClientStub {
             public array $urls = [
                 ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015' => [
-                    "self" => "https://jira.example.com/rest/api/3/issuetype/10015",
-                    "id" => "10015",
-                    "description" => "",
-                    "iconUrl" => "https:/jira.example.com/secure/viewavatar?size=medium&avatarId=10300&avatarType=issuetype",
-                    "name" => "Activities-from-Jira",
-                    "untranslatedName" => "Activities-from-Jira",
-                    "subtask" => false,
-                    "avatarId" => 10300,
+                    'self' => 'https://jira.example.com/rest/api/3/issuetype/10015',
+                    'id' => '10015',
+                    'description' => '',
+                    'iconUrl' => 'https:/jira.example.com/secure/viewavatar?size=medium&avatarId=10300&avatarType=issuetype',
+                    'name' => 'Activities-from-Jira',
+                    'untranslatedName' => 'Activities-from-Jira',
+                    'subtask' => false,
+                    'avatarId' => 10300,
                 ],
             ];
         };

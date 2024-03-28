@@ -20,7 +20,7 @@ class b201506031658_enlarge_your_tinyint extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Enlarge your tinyint (svn_commit_to_tag_denied)";
+        return 'Enlarge your tinyint (svn_commit_to_tag_denied)';
     }
 
     public function preUp()
@@ -30,8 +30,8 @@ class b201506031658_enlarge_your_tinyint extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "ALTER TABLE `groups`
-                MODIFY svn_commit_to_tag_denied INT(1) NOT NULL DEFAULT 0";
+        $sql = 'ALTER TABLE `groups`
+                MODIFY svn_commit_to_tag_denied INT(1) NOT NULL DEFAULT 0';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while enlarging svn_commit_to_tag_denied.');

@@ -82,8 +82,8 @@ final class ImmutableTagCommitValidator implements PathValidator
             (?:U|D)\s+$immutable_path_regexp            # U  moduleA/tags/v1
                                                         # U  moduleA/tags/v1/toto
             |
-            A\s+" . $immutable_path_regexp . "/[^/]+/[^/]+  # A  moduleA/tags/v1/toto
-            )%x";
+            A\s+" . $immutable_path_regexp . '/[^/]+/[^/]+  # A  moduleA/tags/v1/toto
+            )%x';
 
         if (preg_match($pattern, $path)) {
             return ! $this->isCommitDoneOnWhitelistElement($immutable_tag, $path);
@@ -124,7 +124,7 @@ final class ImmutableTagCommitValidator implements PathValidator
         $immutable_path = trim($immutable_path, '/');
         $immutable_path = preg_quote($immutable_path, '%');
         $immutable_path = str_replace('\*', '[^/]+', $immutable_path);
-        $immutable_path = str_replace(" ", "\s", $immutable_path);
+        $immutable_path = str_replace(' ', '\s', $immutable_path);
 
         return $immutable_path;
     }

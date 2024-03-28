@@ -31,8 +31,8 @@ use XML_RNGValidator;
 
 class KanbanXMLExporter
 {
-    private const NODE_KANBAN_LST = "kanban_list";
-    private const NODE_KANBAN     = "kanban";
+    private const NODE_KANBAN_LST = 'kanban_list';
+    private const NODE_KANBAN     = 'kanban';
 
     public const TRACKER_ID_PREFIX = 'T';
     public const KANBAN_ID_PREFIX  = 'K';
@@ -56,7 +56,7 @@ class KanbanXMLExporter
 
         $kanban_list_node = $agiledashboard_node->addChild(self::NODE_KANBAN_LST);
         if ($kanban_list_node === null) {
-            throw new \Exception("Unable to create kanban_list node");
+            throw new \Exception('Unable to create kanban_list node');
         }
 
         $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds((int) $project->getID());
@@ -69,7 +69,7 @@ class KanbanXMLExporter
 
             $kanban_node = $kanban_list_node->addChild(self::NODE_KANBAN);
             if ($kanban_node === null) {
-                throw new \Exception("Unable to create kanban node");
+                throw new \Exception('Unable to create kanban node');
             }
             $kanban_node->addAttribute('tracker_id', $this->getFormattedTrackerId($tracker_id));
             $kanban_node->addAttribute('name', $kanban->getName());

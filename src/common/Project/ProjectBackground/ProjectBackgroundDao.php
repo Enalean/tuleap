@@ -29,7 +29,7 @@ class ProjectBackgroundDao extends DataAccessObject
     public function getBackground(int $project_id): ?string
     {
         return $this->getDB()->cell(
-            "SELECT background FROM project_background WHERE project_id = ?",
+            'SELECT background FROM project_background WHERE project_id = ?',
             $project_id
         ) ?: null;
     }

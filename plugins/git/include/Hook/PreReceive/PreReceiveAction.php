@@ -82,7 +82,7 @@ final class PreReceiveAction
         }
 
         $this->logger->debug("[pre-receive] Monitoring updated refs for: '$repository_path'");
-        $guest_dir_path = "/repo-git-" . random_int(1000, 9999);
+        $guest_dir_path = '/repo-git-' . random_int(1000, 9999);
         return PreReceiveHookData::fromRawStdinHook($input_data, $repository_path, $guest_dir_path, $this->logger)
             ->map(
                 fn (PreReceiveHookData $hook_data): PreReceiveHookDataWithoutTechnicalReference => PreReceiveHookDataWithoutTechnicalReference::fromHookData($hook_data, $this->event_dispatcher, $this->logger)
@@ -132,7 +132,7 @@ final class PreReceiveAction
             function (Fault $wasm_call_fault): Err {
                 Fault::writeToLogger($wasm_call_fault, $this->logger, LogLevel::WARNING);
                 return Result::err(
-                    Fault::fromMessage("An error has occurred while running the pre-receive hook, please contact your administrator for more information")
+                    Fault::fromMessage('An error has occurred while running the pre-receive hook, please contact your administrator for more information')
                 );
             }
         )->andThen(

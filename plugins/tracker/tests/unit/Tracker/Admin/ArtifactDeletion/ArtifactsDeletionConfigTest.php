@@ -41,8 +41,8 @@ final class ArtifactsDeletionConfigTest extends TestCase
      */
     public function testItRetrievesDeletionLimitAndCachesIt(int $limit): void
     {
-        $this->dao->expects(self::once())->method("searchDeletableArtifactsLimit")
-            ->willReturn([["value" => $limit]]);
+        $this->dao->expects(self::once())->method('searchDeletableArtifactsLimit')
+            ->willReturn([['value' => $limit]]);
         self::assertSame($limit, $this->config->getArtifactsDeletionLimit());
         // method is called twice to test that db is only called once and cache is effective
         self::assertSame($limit, $this->config->getArtifactsDeletionLimit());

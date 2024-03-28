@@ -41,8 +41,8 @@ final class AppendFieldsFromCreateMetaAPI implements AppendFieldsFromCreate
      */
     public function appendFromCreate(array $fields_by_id, string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
     {
-        $meta_url = ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta?projectKeys=" . urlencode($jira_project_key) .
-            "&issuetypeIds=" . urlencode($jira_issue_type_id) . "&expand=projects.issuetypes.fields";
+        $meta_url = ClientWrapper::JIRA_CORE_BASE_URL . '/issue/createmeta?projectKeys=' . urlencode($jira_project_key) .
+            '&issuetypeIds=' . urlencode($jira_issue_type_id) . '&expand=projects.issuetypes.fields';
 
         $this->logger->debug('GET ' . $meta_url);
         $project_meta_content = $this->wrapper->getUrl($meta_url);

@@ -34,7 +34,7 @@ final class BurnupTestBuilder
             null,
             'burnup',
             'A burnup',
-            "Progression of closed elements",
+            'Progression of closed elements',
             true,
             null,
             null,

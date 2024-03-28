@@ -41,15 +41,15 @@ class PrivateCommentArtifactTest extends TrackerBase
         $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifact_changesets);
-        $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
-        $this->assertEquals('Lorem ipsum', $artifact_changesets[1]["last_comment"]['body']);
-        $this->assertCount(2, $artifact_changesets[1]["last_comment"]['ugroups']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['label']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['short_name']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['label']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['short_name']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['key']);
+        $this->assertEquals('', $artifact_changesets[0]['last_comment']['body']);
+        $this->assertEquals('Lorem ipsum', $artifact_changesets[1]['last_comment']['body']);
+        $this->assertCount(2, $artifact_changesets[1]['last_comment']['ugroups']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['label']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['short_name']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['key']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][1]['label']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][1]['short_name']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][1]['key']);
     }
 
     public function testTrackerAdminCanSeePrivateComment(): void
@@ -64,15 +64,15 @@ class PrivateCommentArtifactTest extends TrackerBase
         $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifact_changesets);
-        $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
-        $this->assertEquals('Lorem ipsum', $artifact_changesets[1]["last_comment"]['body']);
-        $this->assertCount(2, $artifact_changesets[1]["last_comment"]['ugroups']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['label']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['short_name']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['label']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['short_name']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['key']);
+        $this->assertEquals('', $artifact_changesets[0]['last_comment']['body']);
+        $this->assertEquals('Lorem ipsum', $artifact_changesets[1]['last_comment']['body']);
+        $this->assertCount(2, $artifact_changesets[1]['last_comment']['ugroups']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['label']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['short_name']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['key']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][1]['label']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][1]['short_name']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][1]['key']);
     }
 
     public function testSiteAdminCanSeePrivateComment(): void
@@ -87,15 +87,15 @@ class PrivateCommentArtifactTest extends TrackerBase
         $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifact_changesets);
-        $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
-        $this->assertEquals('Lorem ipsum', $artifact_changesets[1]["last_comment"]['body']);
-        $this->assertCount(2, $artifact_changesets[1]["last_comment"]['ugroups']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['label']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['short_name']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['label']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['short_name']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['key']);
+        $this->assertEquals('', $artifact_changesets[0]['last_comment']['body']);
+        $this->assertEquals('Lorem ipsum', $artifact_changesets[1]['last_comment']['body']);
+        $this->assertCount(2, $artifact_changesets[1]['last_comment']['ugroups']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['label']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['short_name']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['key']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][1]['label']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][1]['short_name']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][1]['key']);
     }
 
     public function testMembersOfUgroupCanSeeCommentAndOnlyItsUgroup(): void
@@ -110,12 +110,12 @@ class PrivateCommentArtifactTest extends TrackerBase
         $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifact_changesets);
-        $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
-        $this->assertEquals('Lorem ipsum', $artifact_changesets[1]["last_comment"]['body']);
-        $this->assertCount(1, $artifact_changesets[1]["last_comment"]['ugroups']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['label']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['short_name']);
-        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
+        $this->assertEquals('', $artifact_changesets[0]['last_comment']['body']);
+        $this->assertEquals('Lorem ipsum', $artifact_changesets[1]['last_comment']['body']);
+        $this->assertCount(1, $artifact_changesets[1]['last_comment']['ugroups']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['label']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['short_name']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]['last_comment']['ugroups'][0]['key']);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
@@ -127,12 +127,12 @@ class PrivateCommentArtifactTest extends TrackerBase
         $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifact_changesets);
-        $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
-        $this->assertEquals('Lorem ipsum', $artifact_changesets[1]["last_comment"]['body']);
-        $this->assertCount(1, $artifact_changesets[1]["last_comment"]['ugroups']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][0]['label']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][0]['short_name']);
-        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
+        $this->assertEquals('', $artifact_changesets[0]['last_comment']['body']);
+        $this->assertEquals('Lorem ipsum', $artifact_changesets[1]['last_comment']['body']);
+        $this->assertCount(1, $artifact_changesets[1]['last_comment']['ugroups']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][0]['label']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][0]['short_name']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]['last_comment']['ugroups'][0]['key']);
     }
 
     public function testMemberNotInUgroupCanNotSeePrivateComment(): void
@@ -162,56 +162,56 @@ class PrivateCommentArtifactTest extends TrackerBase
 
         $this->assertCount(7, $artifact_changesets);
 
-        self::assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
-        $artifact_changesets_values = $artifact_changesets[0]["values"];
+        self::assertEquals('', $artifact_changesets[0]['last_comment']['body']);
+        $artifact_changesets_values = $artifact_changesets[0]['values'];
         self::assertCount(2, $artifact_changesets_values);
         self::assertEquals('Summary', $artifact_changesets_values[0]['label']);
         self::assertEquals('I submitted this one', $artifact_changesets_values[0]['value']);
         self::assertEquals('Hidden field', $artifact_changesets_values[1]['label']);
         self::assertEquals("I submitted this one too but it's hidden", $artifact_changesets_values[1]['value']);
 
-        self::assertEquals('This comment is shown with change', $artifact_changesets[1]["last_comment"]['body']);
-        $artifact_changesets_values = $artifact_changesets[1]["values"];
+        self::assertEquals('This comment is shown with change', $artifact_changesets[1]['last_comment']['body']);
+        $artifact_changesets_values = $artifact_changesets[1]['values'];
         self::assertCount(2, $artifact_changesets_values);
         self::assertEquals('Summary', $artifact_changesets_values[0]['label']);
         self::assertEquals('I updated this one', $artifact_changesets_values[0]['value']);
         self::assertEquals('Hidden field', $artifact_changesets_values[1]['label']);
         self::assertEquals("I submitted this one too but it's hidden", $artifact_changesets_values[1]['value']);
 
-        self::assertEquals('This comment is not shown to member and its change too', $artifact_changesets[2]["last_comment"]['body']);
-        $artifact_changesets_values = $artifact_changesets[2]["values"];
+        self::assertEquals('This comment is not shown to member and its change too', $artifact_changesets[2]['last_comment']['body']);
+        $artifact_changesets_values = $artifact_changesets[2]['values'];
         self::assertCount(2, $artifact_changesets_values);
         self::assertEquals('Summary', $artifact_changesets_values[0]['label']);
         self::assertEquals('I updated this one', $artifact_changesets_values[0]['value']);
         self::assertEquals('Hidden field', $artifact_changesets_values[1]['label']);
         self::assertEquals('This is not seen by member', $artifact_changesets_values[1]['value']);
 
-        self::assertEquals('This comment is alone and is not shown', $artifact_changesets[3]["last_comment"]['body']);
-        $artifact_changesets_values = $artifact_changesets[3]["values"];
+        self::assertEquals('This comment is alone and is not shown', $artifact_changesets[3]['last_comment']['body']);
+        $artifact_changesets_values = $artifact_changesets[3]['values'];
         self::assertCount(2, $artifact_changesets_values);
         self::assertEquals('Summary', $artifact_changesets_values[0]['label']);
         self::assertEquals('I updated this one', $artifact_changesets_values[0]['value']);
         self::assertEquals('Hidden field', $artifact_changesets_values[1]['label']);
         self::assertEquals('This is not seen by member', $artifact_changesets_values[1]['value']);
 
-        self::assertEquals('This comment is shown to everybody but not changes for member', $artifact_changesets[4]["last_comment"]['body']);
-        $artifact_changesets_values = $artifact_changesets[4]["values"];
+        self::assertEquals('This comment is shown to everybody but not changes for member', $artifact_changesets[4]['last_comment']['body']);
+        $artifact_changesets_values = $artifact_changesets[4]['values'];
         self::assertCount(2, $artifact_changesets_values);
         self::assertEquals('Summary', $artifact_changesets_values[0]['label']);
         self::assertEquals('I updated this one', $artifact_changesets_values[0]['value']);
         self::assertEquals('Hidden field', $artifact_changesets_values[1]['label']);
         self::assertEquals('This is updated but not seen by member', $artifact_changesets_values[1]['value']);
 
-        self::assertEquals('This is a public comment alone', $artifact_changesets[5]["last_comment"]['body']);
-        $artifact_changesets_values = $artifact_changesets[5]["values"];
+        self::assertEquals('This is a public comment alone', $artifact_changesets[5]['last_comment']['body']);
+        $artifact_changesets_values = $artifact_changesets[5]['values'];
         self::assertCount(2, $artifact_changesets_values);
         self::assertEquals('Summary', $artifact_changesets_values[0]['label']);
         self::assertEquals('I updated this one', $artifact_changesets_values[0]['value']);
         self::assertEquals('Hidden field', $artifact_changesets_values[1]['label']);
         self::assertEquals('This is updated but not seen by member', $artifact_changesets_values[1]['value']);
 
-        self::assertEquals('There is only a private comment', $artifact_changesets[6]["last_comment"]['body']);
-        $artifact_changesets_values = $artifact_changesets[6]["values"];
+        self::assertEquals('There is only a private comment', $artifact_changesets[6]['last_comment']['body']);
+        $artifact_changesets_values = $artifact_changesets[6]['values'];
         self::assertCount(2, $artifact_changesets_values);
         self::assertEquals('Summary', $artifact_changesets_values[0]['label']);
         self::assertEquals('I updated this one', $artifact_changesets_values[0]['value']);
@@ -236,28 +236,28 @@ class PrivateCommentArtifactTest extends TrackerBase
 
         self::assertCount(4, $artifact_changesets);
 
-        self::assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
-        self::assertCount(1, $artifact_changesets[0]["values"]);
-        self::assertEquals('Summary', $artifact_changesets[0]["values"][0]['label']);
-        self::assertEquals('I submitted this one', $artifact_changesets[0]["values"][0]['value']);
+        self::assertEquals('', $artifact_changesets[0]['last_comment']['body']);
+        self::assertCount(1, $artifact_changesets[0]['values']);
+        self::assertEquals('Summary', $artifact_changesets[0]['values'][0]['label']);
+        self::assertEquals('I submitted this one', $artifact_changesets[0]['values'][0]['value']);
         $changeset_ids[] = $artifact_changesets[0]['id'];
 
-        self::assertEquals('This comment is shown with change', $artifact_changesets[1]["last_comment"]['body']);
-        self::assertCount(1, $artifact_changesets[1]["values"]);
-        self::assertEquals('Summary', $artifact_changesets[1]["values"][0]['label']);
-        self::assertEquals('I updated this one', $artifact_changesets[1]["values"][0]['value']);
+        self::assertEquals('This comment is shown with change', $artifact_changesets[1]['last_comment']['body']);
+        self::assertCount(1, $artifact_changesets[1]['values']);
+        self::assertEquals('Summary', $artifact_changesets[1]['values'][0]['label']);
+        self::assertEquals('I updated this one', $artifact_changesets[1]['values'][0]['value']);
         $changeset_ids[] = $artifact_changesets[1]['id'];
 
-        self::assertEquals('This comment is shown to everybody but not changes for member', $artifact_changesets[2]["last_comment"]['body']);
-        self::assertCount(1, $artifact_changesets[2]["values"]);
-        self::assertEquals('Summary', $artifact_changesets[2]["values"][0]['label']);
-        self::assertEquals('I updated this one', $artifact_changesets[2]["values"][0]['value']);
+        self::assertEquals('This comment is shown to everybody but not changes for member', $artifact_changesets[2]['last_comment']['body']);
+        self::assertCount(1, $artifact_changesets[2]['values']);
+        self::assertEquals('Summary', $artifact_changesets[2]['values'][0]['label']);
+        self::assertEquals('I updated this one', $artifact_changesets[2]['values'][0]['value']);
         $changeset_ids[] = $artifact_changesets[2]['id'];
 
-        self::assertEquals('This is a public comment alone', $artifact_changesets[3]["last_comment"]['body']);
-        self::assertCount(1, $artifact_changesets[3]["values"]);
-        self::assertEquals('Summary', $artifact_changesets[3]["values"][0]['label']);
-        self::assertEquals('I updated this one', $artifact_changesets[3]["values"][0]['value']);
+        self::assertEquals('This is a public comment alone', $artifact_changesets[3]['last_comment']['body']);
+        self::assertCount(1, $artifact_changesets[3]['values']);
+        self::assertEquals('Summary', $artifact_changesets[3]['values'][0]['label']);
+        self::assertEquals('I updated this one', $artifact_changesets[3]['values'][0]['value']);
         $changeset_ids[] = $artifact_changesets[3]['id'];
 
         return $changeset_ids;

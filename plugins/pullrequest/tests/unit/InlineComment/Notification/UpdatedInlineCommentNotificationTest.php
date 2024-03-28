@@ -48,13 +48,13 @@ final class UpdatedInlineCommentNotificationTest extends TestCase
     protected function setUp(): void
     {
         $this->owner_user   = UserTestBuilder::buildWithId(103);
-        $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(14)->withTitle("PR title")->build();
+        $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(14)->withTitle('PR title')->build();
     }
 
     public function testUpdatedInlineCommentNotificationCanBeBuilt(): void
     {
         $notification = $this->buildNotification(
-            InlineCommentTestBuilder::aTextComment("Foo comment")->onFile('path/to/file')->build(),
+            InlineCommentTestBuilder::aTextComment('Foo comment')->onFile('path/to/file')->build(),
             FormatNotificationContentStub::withDefault(),
         );
 
@@ -87,8 +87,8 @@ final class UpdatedInlineCommentNotificationTest extends TestCase
     public function testUpdatedInlineCommentInMarkdownNotificationCanBeBuilt(): void
     {
         $notification = $this->buildNotification(
-            InlineCommentTestBuilder::aMarkdownComment("**Foo comment**")->onFile('path/to/file')->build(),
-            FormatNotificationContentStub::withFormattedContent("<em>Foo comment</em>"),
+            InlineCommentTestBuilder::aMarkdownComment('**Foo comment**')->onFile('path/to/file')->build(),
+            FormatNotificationContentStub::withFormattedContent('<em>Foo comment</em>'),
         );
 
         self::assertEqualsCanonicalizing([$this->owner_user], $notification->getRecipients());

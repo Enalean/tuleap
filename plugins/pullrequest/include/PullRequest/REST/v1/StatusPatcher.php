@@ -128,7 +128,7 @@ class StatusPatcher
                 if ($pull_request->getStatus() !== PullRequest::STATUS_ABANDONED) {
                     throw new RestException(
                         400,
-                        "Only an abandoned pull request can be reopened."
+                        'Only an abandoned pull request can be reopened.'
                     );
                 }
 
@@ -167,7 +167,7 @@ class StatusPatcher
         $repository = $this->git_repository_factory->getRepositoryById($repository_id);
 
         if (! $repository) {
-            throw new RestException(404, "Git repository not found");
+            throw new RestException(404, 'Git repository not found');
         }
 
         return $repository;

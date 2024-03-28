@@ -74,7 +74,7 @@ class ProjectCrossTrackerSearch extends Widget
 
     public function getIcon()
     {
-        return "fa-list-ul";
+        return 'fa-list-ul';
     }
 
     public function getTitle()
@@ -162,7 +162,7 @@ class ProjectCrossTrackerSearch extends Widget
     public function getJavascriptAssets(): array
     {
         return [
-            new JavascriptViteAsset($this->getAssets(), "src/index.ts"),
+            new JavascriptViteAsset($this->getAssets(), 'src/index.ts'),
         ];
     }
 

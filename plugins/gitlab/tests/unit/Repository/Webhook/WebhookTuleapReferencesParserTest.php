@@ -211,7 +211,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItRetrievesEachTheTuleapReferenceAndTheCloseKeywordResolvesIfTheCloseKeywordIsGiven(string $accepted_boundary): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences(
-            "vroom resolve TULEAP-15 and resolvesTULEAP-987 (not found) Resolves tuleap-36 resolves" . $accepted_boundary . "tuleAp-88] (resolves [tuleap-68 vroom"
+            'vroom resolve TULEAP-15 and resolvesTULEAP-987 (not found) Resolves tuleap-36 resolves' . $accepted_boundary . 'tuleAp-88] (resolves [tuleap-68 vroom'
         );
 
         $references = $references_collection->getTuleapReferences();
@@ -279,7 +279,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItRetrievesEachTheTuleapReferenceAndTheCloseKeywordClosesIfTheCloseKeywordIsGiven(string $accepted_boundary): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences(
-            "vroom close TULEAP-15 and closesTULEAP-987 (not found) Closes tuleap-36 closes" . $accepted_boundary . "tuleAp-88] (closes [tuleap-68 vroom"
+            'vroom close TULEAP-15 and closesTULEAP-987 (not found) Closes tuleap-36 closes' . $accepted_boundary . 'tuleAp-88] (closes [tuleap-68 vroom'
         );
 
         $references = $references_collection->getTuleapReferences();
@@ -347,7 +347,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItRetrievesEachTheTuleapReferenceAndTheCloseKeywordFixesIfTheCloseKeywordIsGiven(string $accepted_boundary): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences(
-            "vroom fix TULEAP-15 and fixesTULEAP-987 (not found) Fixes tuleap-36 fixes" . $accepted_boundary . "tuleAp-88] (fixes [tuleap-68 vroom"
+            'vroom fix TULEAP-15 and fixesTULEAP-987 (not found) Fixes tuleap-36 fixes' . $accepted_boundary . 'tuleAp-88] (fixes [tuleap-68 vroom'
         );
 
         $references = $references_collection->getTuleapReferences();
@@ -416,7 +416,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         string $accepted_boundary,
     ): void {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences(
-            "vroom implement TULEAP-15 and implementsTULEAP-987 (not found) Implements tuleap-36 implements" . $accepted_boundary . "tuleAp-88] (implements [tuleap-68 vroom"
+            'vroom implement TULEAP-15 and implementsTULEAP-987 (not found) Implements tuleap-36 implements' . $accepted_boundary . 'tuleAp-88] (implements [tuleap-68 vroom'
         );
 
         $references = $references_collection->getTuleapReferences();
@@ -439,7 +439,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItRetrievesEachTheTuleapReferenceAndTheCloseKeywordsWhenMixed(): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences(
-            "vroom close TULEAP-15 and closes tuleap-36 and resolved tuleap-68 and fixing TuLeap-85 and implemented TULEAP-87 vroom"
+            'vroom close TULEAP-15 and closes tuleap-36 and resolved tuleap-68 and fixing TuLeap-85 and implemented TULEAP-87 vroom'
         );
 
         $references = $references_collection->getTuleapReferences();

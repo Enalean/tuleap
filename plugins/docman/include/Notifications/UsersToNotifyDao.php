@@ -26,15 +26,15 @@ class UsersToNotifyDao extends DataAccessObject
 {
     public function searchDocmanMonitoredItems($project_id, $user_id)
     {
-        $sql = "SELECT n.user_id, n.item_id, n.type " .
-               " FROM plugin_docman_notifications AS n " .
-               " JOIN plugin_docman_item AS i " .
-               " ON n.item_id = i.item_id " .
-               " WHERE i.group_id = " . $this->da->quoteSmart($project_id);
+        $sql = 'SELECT n.user_id, n.item_id, n.type ' .
+               ' FROM plugin_docman_notifications AS n ' .
+               ' JOIN plugin_docman_item AS i ' .
+               ' ON n.item_id = i.item_id ' .
+               ' WHERE i.group_id = ' . $this->da->quoteSmart($project_id);
         if ($user_id) {
-            $sql .= " AND n.user_id = " . $this->da->quoteSmart($user_id);
+            $sql .= ' AND n.user_id = ' . $this->da->quoteSmart($user_id);
         }
-        $sql .= " ORDER BY user_id";
+        $sql .= ' ORDER BY user_id';
         return $this->retrieve($sql);
     }
 
@@ -44,7 +44,7 @@ class UsersToNotifyDao extends DataAccessObject
     public function search($user_id, $item_id, $type)
     {
         $sql = sprintf(
-            "SELECT * FROM plugin_docman_notifications WHERE user_id = %s AND item_id = %s AND type = %s",
+            'SELECT * FROM plugin_docman_notifications WHERE user_id = %s AND item_id = %s AND type = %s',
             $this->da->escapeInt($user_id),
             $this->da->escapeInt($item_id),
             $this->da->quoteSmart($type)
@@ -58,7 +58,7 @@ class UsersToNotifyDao extends DataAccessObject
     public function searchUserIdByObjectIdAndType($item_id, $type)
     {
         $sql = sprintf(
-            "SELECT * FROM plugin_docman_notifications WHERE item_id = %s AND type = %s",
+            'SELECT * FROM plugin_docman_notifications WHERE item_id = %s AND type = %s',
             $this->da->escapeInt($item_id),
             $this->da->quoteSmart($type)
         );
@@ -71,7 +71,7 @@ class UsersToNotifyDao extends DataAccessObject
     public function create($user_id, $item_id, $type)
     {
         $sql = sprintf(
-            "INSERT INTO plugin_docman_notifications (user_id, item_id, type) VALUES (%s, %s, %s)",
+            'INSERT INTO plugin_docman_notifications (user_id, item_id, type) VALUES (%s, %s, %s)',
             $this->da->escapeInt($user_id),
             $this->da->escapeInt($item_id),
             $this->da->quoteSmart($type)
@@ -85,7 +85,7 @@ class UsersToNotifyDao extends DataAccessObject
     public function delete($user_id, $item_id, $type)
     {
         $sql = sprintf(
-            "DELETE FROM plugin_docman_notifications WHERE user_id = %s AND item_id = %s AND type = %s",
+            'DELETE FROM plugin_docman_notifications WHERE user_id = %s AND item_id = %s AND type = %s',
             $this->da->escapeInt($user_id),
             $this->da->escapeInt($item_id),
             $this->da->quoteSmart($type)

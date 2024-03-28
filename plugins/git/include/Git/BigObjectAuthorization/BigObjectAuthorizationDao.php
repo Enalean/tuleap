@@ -27,10 +27,10 @@ class BigObjectAuthorizationDao extends \Tuleap\DB\DataAccessObject
     public function authorizeProject($project_id)
     {
         $this->getDB()->run(
-            "INSERT INTO plugin_git_big_object_authorized_project
+            'INSERT INTO plugin_git_big_object_authorized_project
             VALUES (?)
             ON DUPLICATE KEY UPDATE
-            project_id=project_id",
+            project_id=project_id',
             $project_id
         );
     }
@@ -60,8 +60,8 @@ class BigObjectAuthorizationDao extends \Tuleap\DB\DataAccessObject
     public function getAuthorizedProjects()
     {
         return $this->getDB()->column(
-            "SELECT project_id
-            FROM plugin_git_big_object_authorized_project"
+            'SELECT project_id
+            FROM plugin_git_big_object_authorized_project'
         );
     }
 }

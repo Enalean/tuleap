@@ -270,7 +270,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         if ($this->areWeTryingToUpdateAnExistingStepDefinition($artifact)) {
             return StepDefinitionDataConverter::convertStepDefinitionFromRESTUpdateFormatToDBCompatibleFormat($value['value']);
         }
-        return StepDefinitionDataConverter::convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat($value["value"]);
+        return StepDefinitionDataConverter::convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat($value['value']);
     }
 
     /**

@@ -32,10 +32,10 @@ class b201910191514_purge_logs_for_delete_webhooks extends ForgeUpgrade_Bucket /
 
     public function up(): void
     {
-        $sql = "DELETE plugin_git_webhook_log
+        $sql = 'DELETE plugin_git_webhook_log
                 FROM plugin_git_webhook_log
                     LEFT JOIN plugin_git_webhook_url ON (plugin_git_webhook_log.webhook_id = plugin_git_webhook_url.id)
-                WHERE plugin_git_webhook_url.id IS NULL";
+                WHERE plugin_git_webhook_url.id IS NULL';
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {

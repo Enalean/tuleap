@@ -50,7 +50,7 @@ final class TimetrackingDatesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $date       = new DateTime();
         $end_date   = $date->format('Y-m-d');
-        $start_date = $date->modify("-1 month")->format('Y-m-d');
+        $start_date = $date->modify('-1 month')->format('Y-m-d');
 
         $result = $this->dates_extractor->getDatesFromRoute(null);
 
@@ -62,9 +62,9 @@ final class TimetrackingDatesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $date       = new DateTime();
         $end_date   = $date->format('Y-m-d');
-        $start_date = $date->modify("-1 month")->format('Y-m-d');
+        $start_date = $date->modify('-1 month')->format('Y-m-d');
 
-        $query = json_encode(["trackers_id" => [1, 2, 3]]);
+        $query = json_encode(['trackers_id' => [1, 2, 3]]);
 
         $result = $this->dates_extractor->getDatesFromRoute($query);
         self::assertEquals($end_date, $result->getEndDate()->format('Y-m-d'));
@@ -73,16 +73,16 @@ final class TimetrackingDatesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testWhenStartDateIsProvidedByUserThenItReturnsTheUserStartDate(): void
     {
-        $query = json_encode(["start_date" => "2010-03-01T00:00:00+01", "end_date"   => "2019-03-21T00:00:00+01"]);
+        $query = json_encode(['start_date' => '2010-03-01T00:00:00+01', 'end_date'   => '2019-03-21T00:00:00+01']);
 
         $result = $this->dates_extractor->getDatesFromRoute($query);
-        self::assertEquals("2010-03-01T00:00:00+01:00", $result->getStartDate()->format(\DateTimeInterface::ATOM));
-        self::assertEquals("2019-03-21T00:00:00+01:00", $result->getEndDate()->format(\DateTimeInterface::ATOM));
+        self::assertEquals('2010-03-01T00:00:00+01:00', $result->getStartDate()->format(\DateTimeInterface::ATOM));
+        self::assertEquals('2019-03-21T00:00:00+01:00', $result->getEndDate()->format(\DateTimeInterface::ATOM));
     }
 
     public function testItThrowsAnExceptionWhenDatesAreNotCorrectlyFormated(): void
     {
-        $query = json_encode(["end_date" => "2019-03-21T00:00:00+01"]);
+        $query = json_encode(['end_date' => '2019-03-21T00:00:00+01']);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);

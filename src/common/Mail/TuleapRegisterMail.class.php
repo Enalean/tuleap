@@ -49,14 +49,14 @@ class TuleapRegisterMail
         return $this->locale_switcher->setLocaleForSpecificExecutionContext(
             $user->getLocale(),
             function () use ($user, $login, $confirm_hash, $base_url, $from, $to, $presenter_role): Codendi_Mail {
-                if ($presenter_role === "user") {
+                if ($presenter_role === 'user') {
                     $subject = $user->getLanguage()->getText('include_proj_email', 'account_register', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
                     include($user->getLanguage()->getContent('include/new_user_email'));
-                } elseif ($presenter_role === "admin") {
+                } elseif ($presenter_role === 'admin') {
                     $subject = sprintf(_('Welcome to %1$s!'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
                     include($user->getLanguage()->getContent('account/new_account_email'));
-                } elseif ($presenter_role === "admin-notification") {
-                    $redirect_url = $base_url . "/admin/approve_pending_users.php?page=pending";
+                } elseif ($presenter_role === 'admin-notification') {
+                    $redirect_url = $base_url . '/admin/approve_pending_users.php?page=pending';
                     $subject      = sprintf(_('New User Registered: %1$s'), $login);
                     $message      = $this->createNotificationMessageText($login, $redirect_url);
                 } else {
@@ -141,10 +141,10 @@ class TuleapRegisterMail
         $message = _('Account creation!') . "\n\n"
            . sprintf(_('A new user has just registered on %1$s.
 
-User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . " "
+User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . ' '
            . $login . _('.') . "\n\n"
            . _('Please click on the following URL to approve the registration:') . "\n\n"
-           . "<" . $redirect_url . ">\n\n"
+           . '<' . $redirect_url . ">\n\n"
            . _('Thanks!') . "\n\n"
            . sprintf(_('- The team at %1$s.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . "\n\n";
 

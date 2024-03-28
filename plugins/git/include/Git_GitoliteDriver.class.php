@@ -64,8 +64,8 @@ class Git_GitoliteDriver
         Git::PERM_WPLUS => ' RW+',
     ];
 
-    public const OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
-    public const NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
+    public const OLD_AUTHORIZED_KEYS_PATH = '/usr/com/gitolite/.ssh/authorized_keys';
+    public const NEW_AUTHORIZED_KEYS_PATH = '/var/lib/gitolite/.ssh/authorized_keys';
 
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
@@ -376,8 +376,8 @@ class Git_GitoliteDriver
         $archive = $this->getBackupPath($repository, $backup_directory);
         if (is_file($archive)) {
             if (! unlink($archive)) {
-                $this->logger->error("Unable to delete archived Gitolite repository: " . $archive);
-                throw new GitDriverErrorException("Unable to purge archived Gitolite repository: " . $archive);
+                $this->logger->error('Unable to delete archived Gitolite repository: ' . $archive);
+                throw new GitDriverErrorException('Unable to purge archived Gitolite repository: ' . $archive);
             } else {
                 $this->logger->info('Purge of Gitolite repository: ' . $repository->getName() . ' terminated');
             }

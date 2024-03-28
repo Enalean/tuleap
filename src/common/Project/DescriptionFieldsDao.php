@@ -30,17 +30,17 @@ class DescriptionFieldsDao extends DataAccessObject
      */
     public function searchAll(): array
     {
-        $sql = "SELECT * FROM group_desc ORDER BY desc_rank";
+        $sql = 'SELECT * FROM group_desc ORDER BY desc_rank';
 
         return $this->getDB()->run($sql);
     }
 
     public function isFieldExisting(int $field_id, string $field_name): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM group_desc
                 WHERE group_desc_id = ?
-                    AND desc_name = ?";
+                    AND desc_name = ?';
 
         $rows = $this->getDB()->run($sql, $field_id, $field_name);
 
@@ -49,7 +49,7 @@ class DescriptionFieldsDao extends DataAccessObject
 
     public function searchFieldsWithPagination(int $limit, int $offset): array
     {
-        $sql = "SELECT * FROM group_desc ORDER BY desc_rank LIMIT ? OFFSET ?";
+        $sql = 'SELECT * FROM group_desc ORDER BY desc_rank LIMIT ? OFFSET ?';
 
         return $this->getDB()->run($sql, $limit, $offset);
     }

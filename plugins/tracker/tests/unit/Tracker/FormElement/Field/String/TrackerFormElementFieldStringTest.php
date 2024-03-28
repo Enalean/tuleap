@@ -84,7 +84,7 @@ class TrackerFormElementFieldStringTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->string->shouldReceive('getRuleNoCr')->andReturns($this->rule_nocr);
         $this->string->shouldReceive('getProperty')->andReturns(null);
 
-        $this->assertTrue($this->string->isValid($this->artifact, "Du texte"));
+        $this->assertTrue($this->string->isValid($this->artifact, 'Du texte'));
     }
 
     public function testIsValidCr()

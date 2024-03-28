@@ -147,7 +147,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
      */
     public function getChartType()
     {
-        return "burndown";
+        return 'burndown';
     }
 
     /**

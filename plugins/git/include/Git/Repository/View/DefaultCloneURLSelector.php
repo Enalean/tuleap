@@ -62,6 +62,6 @@ class DefaultCloneURLSelector
 
     private function getDefaultLabel(string $label)
     {
-        return sprintf(dgettext("tuleap-git", "%s (Default)"), $label);
+        return sprintf(dgettext('tuleap-git', '%s (Default)'), $label);
     }
 }

@@ -34,10 +34,10 @@ class b202011021100_add_platform_banner_table extends ForgeUpgrade_Bucket // @co
 
     public function up()
     {
-        $sql = "CREATE TABLE platform_banner (
+        $sql = 'CREATE TABLE platform_banner (
             message text,
             importance VARCHAR(8)
-        )";
+        )';
         $this->db->createTable('platform_banner', $sql);
     }
 }

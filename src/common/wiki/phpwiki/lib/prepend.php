@@ -39,8 +39,8 @@ unset($k);
 // unless your browser supports cookies.)
 @ini_set('session.use_trans_sid', 0);
 
-if (defined('DEBUG') and (DEBUG & 8) and extension_loaded("xdebug")) {
-    xdebug_start_trace("trace"); // on Dbgp protocol add 2
+if (defined('DEBUG') and (DEBUG & 8) and extension_loaded('xdebug')) {
+    xdebug_start_trace('trace'); // on Dbgp protocol add 2
     xdebug_enable();
 }
 
@@ -80,11 +80,11 @@ class DebugTimer
     {
         if (! isset($this->_times)) {
             // posix_times() not available.
-            return sprintf("real: %.3f", $this->getTime('real'));
+            return sprintf('real: %.3f', $this->getTime('real'));
         }
         $now = posix_times();
         return sprintf(
-            "real: %.3f, user: %.3f, sys: %.3f",
+            'real: %.3f, user: %.3f, sys: %.3f',
             $this->getTime('real'),
             $this->getTime('utime', $now),
             $this->getTime('stime', $now)
@@ -100,7 +100,7 @@ class DebugTimer
 
     public function microtime()
     {
-        list($usec, $sec) = explode(" ", microtime());
+        list($usec, $sec) = explode(' ', microtime());
         return ((float) $usec + (float) $sec);
     }
 }
@@ -123,7 +123,7 @@ function ExitWiki($errormsg = false)
     global $request;
     static $in_exit = 0;
 
-    if (is_object($request) and method_exists($request, "finish")) {
+    if (is_object($request) and method_exists($request, 'finish')) {
         $request->finish($errormsg); // NORETURN
     }
 

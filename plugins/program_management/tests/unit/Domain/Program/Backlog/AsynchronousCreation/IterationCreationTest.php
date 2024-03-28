@@ -196,7 +196,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         if (! $event) {
-            throw new \RuntimeException("Event is null");
+            throw new \RuntimeException('Event is null');
         }
 
         $creation = IterationCreation::fromProgramIncrementCreation(

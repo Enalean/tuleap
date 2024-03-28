@@ -43,7 +43,7 @@ class SVNAccessFileSectionParser
     /**
      * Pattern used to find a line defining permission on group
      */
-    private const GROUPNAME_PATTERN = "([a-zA-Z0-9_-]+)";
+    private const GROUPNAME_PATTERN = '([a-zA-Z0-9_-]+)';
 
     /**
      * New name of the renamed group

@@ -38,7 +38,7 @@ class TrackerFormElementJsonTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->form_element = Mockery::mock(Tracker_FormElement_Field_String::class)->makePartial();
         $this->form_element->setId(300);
-        $this->form_element->shouldReceive('getLabel')->andReturn("My field");
+        $this->form_element->shouldReceive('getLabel')->andReturn('My field');
         $this->form_element->shouldReceive('getName')->andReturn('my_field');
     }
 

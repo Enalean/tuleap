@@ -34,7 +34,7 @@ class StatusChangedRedirectURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         assertSame(
-            "/plugins/testmanagement/?group_id=101#!/campaigns/1234",
+            '/plugins/testmanagement/?group_id=101#!/campaigns/1234',
             StatusChangedRedirectURLBuilder::buildRedirectURL(
                 $request,
                 $project,
@@ -46,11 +46,11 @@ class StatusChangedRedirectURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsRedirectToCampaignwithMilestoneURL(): void
     {
         $request = new HTTPRequest();
-        $request->set("milestone_id", "3");
+        $request->set('milestone_id', '3');
         $project = ProjectTestBuilder::aProject()->build();
 
         assertSame(
-            "/plugins/testmanagement/?group_id=101&milestone_id=3#!/campaigns/1234",
+            '/plugins/testmanagement/?group_id=101&milestone_id=3#!/campaigns/1234',
             StatusChangedRedirectURLBuilder::buildRedirectURL(
                 $request,
                 $project,

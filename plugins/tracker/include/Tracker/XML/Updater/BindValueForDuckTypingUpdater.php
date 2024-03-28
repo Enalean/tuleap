@@ -71,9 +71,9 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
         foreach (array_unique($destinations_values_ids) as $value_id) {
             $this->cdata_factory->insertWithAttributes(
                 $changeset_xml->field_change[$index],
-                "value",
+                'value',
                 (string) $value_id,
-                ['format' => "id"]
+                ['format' => 'id']
             );
         }
     }

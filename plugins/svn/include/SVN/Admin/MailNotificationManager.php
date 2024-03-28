@@ -116,13 +116,13 @@ class MailNotificationManager
 
     private function logActionWithSnapshot(Repository $repository, $action_name)
     {
-        $message = "Repository: " . $repository->getName() . PHP_EOL;
+        $message = 'Repository: ' . $repository->getName() . PHP_EOL;
 
         foreach ($this->getByRepository($repository) as $email_notification) {
-            $message .= "Path: " . $email_notification->getPath() . PHP_EOL .
-                "Emails: " . $email_notification->getNotifiedMailsAsString() . PHP_EOL .
-                "Users: " . $email_notification->getNotifiedUsersAsString() . PHP_EOL .
-                "User groups: " . $email_notification->getNotifiedUserGroupsAsString() . PHP_EOL;
+            $message .= 'Path: ' . $email_notification->getPath() . PHP_EOL .
+                'Emails: ' . $email_notification->getNotifiedMailsAsString() . PHP_EOL .
+                'Users: ' . $email_notification->getNotifiedUsersAsString() . PHP_EOL .
+                'User groups: ' . $email_notification->getNotifiedUserGroupsAsString() . PHP_EOL;
         }
 
         $this->project_history_dao->groupAddHistory(

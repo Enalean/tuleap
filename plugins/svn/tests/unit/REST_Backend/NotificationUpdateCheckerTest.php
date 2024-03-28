@@ -75,8 +75,8 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
-                ["foo@example.com", "bar@example.com"],
+                '/tags',
+                ['foo@example.com', 'bar@example.com'],
                 [],
                 []
             ),
@@ -95,8 +95,8 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
-                ["foo@example.com", "bar@example.com"],
+                '/tags',
+                ['foo@example.com', 'bar@example.com'],
                 [],
                 []
             ),
@@ -116,16 +116,16 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
-                ["foo@example.com", "bar@example.com"],
+                '/tags',
+                ['foo@example.com', 'bar@example.com'],
                 [],
                 []
             ),
             new MailNotification(
                 1,
                 $this->repository,
-                "/trunk",
-                ["foo@example.com"],
+                '/trunk',
+                ['foo@example.com'],
                 [],
                 []
             ),
@@ -135,8 +135,8 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
-                ["foo@example.com", "bar@example.com"],
+                '/tags',
+                ['foo@example.com', 'bar@example.com'],
                 [],
                 []
             ),
@@ -155,8 +155,8 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
-                ["foo@example.com", "bar@example.com"],
+                '/tags',
+                ['foo@example.com', 'bar@example.com'],
                 [],
                 []
             ),
@@ -166,8 +166,8 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
-                ["foo@example.com"],
+                '/tags',
+                ['foo@example.com'],
                 [],
                 []
             ),
@@ -176,10 +176,10 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mail_notification_manager->method('getByRepository')->willReturn($all_old_notifications);
         $this->emails_to_be_notified_retriever->method('getNotificationsForPath')
-            ->with($this->repository, "/tags")
+            ->with($this->repository, '/tags')
             ->willReturn($old_notifications);
         $this->mail_notification_manager->method('isAnExistingPath')
-            ->with($this->repository, 0, "/tags")
+            ->with($this->repository, 0, '/tags')
             ->willReturn(true);
 
         self::assertTrue(
@@ -193,8 +193,8 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
-                ["bar@example.com", "foo@example.com"],
+                '/tags',
+                ['bar@example.com', 'foo@example.com'],
                 [],
                 []
             ),
@@ -204,8 +204,8 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
-                ["foo@example.com", "bar@example.com"],
+                '/tags',
+                ['foo@example.com', 'bar@example.com'],
                 [],
                 []
             ),
@@ -214,10 +214,10 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mail_notification_manager->method('getByRepository')->willReturn($all_old_notifications);
         $this->emails_to_be_notified_retriever->method('getNotificationsForPath')
-            ->with($this->repository, "/tags")
+            ->with($this->repository, '/tags')
             ->willReturn($old_notifications);
         $this->mail_notification_manager->method('isAnExistingPath')
-            ->with($this->repository, 0, "/tags")
+            ->with($this->repository, 0, '/tags')
             ->willReturn(true);
 
         self::assertFalse(
@@ -231,7 +231,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
+                '/tags',
                 [],
                 [],
                 [$this->user_103]
@@ -242,7 +242,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
+                '/tags',
                 [],
                 [],
                 []
@@ -252,10 +252,10 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mail_notification_manager->method('getByRepository')->willReturn($all_old_notifications);
         $this->emails_to_be_notified_retriever->method('getNotificationsForPath')
-            ->with($this->repository, "/tags")
+            ->with($this->repository, '/tags')
             ->willReturn($old_notifications);
         $this->mail_notification_manager->method('isAnExistingPath')
-            ->with($this->repository, 0, "/tags")
+            ->with($this->repository, 0, '/tags')
             ->willReturn(true);
 
         self::assertTrue(
@@ -269,7 +269,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
+                '/tags',
                 [],
                 [$this->user_102, $this->user_103],
                 []
@@ -280,7 +280,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
+                '/tags',
                 [],
                 [$this->user_102],
                 []
@@ -290,10 +290,10 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mail_notification_manager->method('getByRepository')->willReturn($all_old_notifications);
         $this->emails_to_be_notified_retriever->method('getNotificationsForPath')
-            ->with($this->repository, "/tags")
+            ->with($this->repository, '/tags')
             ->willReturn($old_notifications);
         $this->mail_notification_manager->method('isAnExistingPath')
-            ->with($this->repository, 0, "/tags")
+            ->with($this->repository, 0, '/tags')
             ->willReturn(true);
 
         self::assertTrue(
@@ -307,7 +307,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
+                '/tags',
                 [],
                 [$this->user_102, $this->user_103],
                 []
@@ -318,7 +318,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
+                '/tags',
                 [],
                 [$this->user_102, $this->user_103],
                 []
@@ -328,10 +328,10 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mail_notification_manager->method('getByRepository')->willReturn($all_old_notifications);
         $this->emails_to_be_notified_retriever->method('getNotificationsForPath')
-            ->with($this->repository, "/tags")
+            ->with($this->repository, '/tags')
             ->willReturn($old_notifications);
         $this->mail_notification_manager->method('isAnExistingPath')
-            ->with($this->repository, 0, "/tags")
+            ->with($this->repository, 0, '/tags')
             ->willReturn(true);
 
         self::assertFalse(
@@ -345,7 +345,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
+                '/tags',
                 [],
                 [],
                 [$this->user_group_project_member, $this->user_group_101]
@@ -356,7 +356,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
+                '/tags',
                 [],
                 [],
                 [$this->user_group_project_member]
@@ -365,11 +365,11 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $old_notifications     = $all_old_notifications;
 
         $this->mail_notification_manager->method('getByRepository')->willReturn($all_old_notifications);
-        $this->emails_to_be_notified_retriever->method('getNotificationsForPath')->with($this->repository, "/tags")->willReturn(
+        $this->emails_to_be_notified_retriever->method('getNotificationsForPath')->with($this->repository, '/tags')->willReturn(
             $old_notifications
         );
         $this->mail_notification_manager->method('isAnExistingPath')
-            ->with($this->repository, 0, "/tags")
+            ->with($this->repository, 0, '/tags')
             ->willReturn(true);
 
         self::assertTrue(
@@ -383,7 +383,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
+                '/tags',
                 [],
                 [],
                 [$this->user_group_project_member, $this->user_group_101]
@@ -394,7 +394,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new MailNotification(
                 1,
                 $this->repository,
-                "/tags",
+                '/tags',
                 [],
                 [],
                 [$this->user_group_project_member, $this->user_group_101]
@@ -404,10 +404,10 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mail_notification_manager->method('getByRepository')->willReturn($all_old_notifications);
         $this->emails_to_be_notified_retriever->method('getNotificationsForPath')
-            ->with($this->repository, "/tags")
+            ->with($this->repository, '/tags')
             ->willReturn($old_notifications);
         $this->mail_notification_manager->method('isAnExistingPath')
-            ->with($this->repository, 0, "/tags")
+            ->with($this->repository, 0, '/tags')
             ->willReturn(true);
 
         self::assertFalse(

@@ -119,8 +119,8 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsSVNAccessFile(): void
     {
-        $expected_access_file = "[/tags]
-@members = r";
+        $expected_access_file = '[/tags]
+@members = r';
 
         $this->zip->method('isADirectory')->willReturn(false);
         $this->zip->expects(self::once())->method('addFile');
@@ -134,7 +134,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         foreach ($this->xml_tree->svn as $exported_xml) {
             $repository = $exported_xml->repository;
 
-            self::assertEquals($expected_access_file, (string) $repository->{"access-file"});
+            self::assertEquals($expected_access_file, (string) $repository->{'access-file'});
         }
     }
 

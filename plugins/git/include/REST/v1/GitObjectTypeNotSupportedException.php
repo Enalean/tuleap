@@ -29,6 +29,6 @@ class GitObjectTypeNotSupportedException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("Only Blob and Tree are supported");
+        parent::__construct('Only Blob and Tree are supported');
     }
 }

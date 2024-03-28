@@ -43,12 +43,12 @@ class ChildrenRequiredTrackerCollection
 
         if ($children_tracker->isVelocitySemanticMissing()) {
             $this->children_misconfigured_trackers[] = [
-                "name"        => $children_tracker->getTracker()->getName(),
-                "tracker_url" => TRACKER_BASE_URL . "?" . http_build_query(
+                'name'        => $children_tracker->getTracker()->getName(),
+                'tracker_url' => TRACKER_BASE_URL . '?' . http_build_query(
                     [
-                        "tracker"  => $children_tracker->getTracker()->getId(),
-                        "func"     => "admin-semantic",
-                        "semantic" => "velocity",
+                        'tracker'  => $children_tracker->getTracker()->getId(),
+                        'func'     => 'admin-semantic',
+                        'semantic' => 'velocity',
                     ]
                 ),
             ];

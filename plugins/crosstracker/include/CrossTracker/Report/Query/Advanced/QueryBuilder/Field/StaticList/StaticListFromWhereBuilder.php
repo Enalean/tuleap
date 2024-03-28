@@ -116,7 +116,7 @@ final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
             return new ParametrizedListFromWhere(
                 self::OPENLIST_FROM,
                 self::LIST_FROM,
-                "IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)",
+                'IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)',
                 "$filter_alias.artifact_id IS NOT NULL",
                 [Tracker_FormElement_Field_List::NONE_VALUE]
             );
@@ -125,7 +125,7 @@ final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,
             self::LIST_FROM,
-            "tflbsv1.label = ? OR tfov.label = ? OR tflbsv2.label = ?",
+            'tflbsv1.label = ? OR tfov.label = ? OR tflbsv2.label = ?',
             "$filter_alias.artifact_id IS NOT NULL",
             [$value, $value, $value]
         );
@@ -141,7 +141,7 @@ final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
             return new ParametrizedListFromWhere(
                 self::OPENLIST_FROM,
                 self::LIST_FROM,
-                "IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)",
+                'IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)',
                 "$filter_alias.artifact_id IS NULL",
                 [Tracker_FormElement_Field_List::NONE_VALUE]
             );
@@ -150,7 +150,7 @@ final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,
             self::LIST_FROM,
-            "tflbsv1.label = ? OR tfov.label = ? OR tflbsv2.label = ?",
+            'tflbsv1.label = ? OR tfov.label = ? OR tflbsv2.label = ?',
             "$filter_alias.artifact_id IS NULL",
             [$value, $value, $value]
         );
@@ -175,9 +175,9 @@ final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
         InValueWrapper $wrapper,
     ): ParametrizedListFromWhere {
         $values            = array_map(static fn(SimpleValueWrapper $value_wrapper) => $value_wrapper->getValue(), $wrapper->getValueWrappers());
-        $tflbsv1_statement = EasyStatement::open()->in("tflbsv1.label IN (?*)", $values);
-        $tflbsv2_statement = EasyStatement::open()->in("tflbsv2.label IN (?*)", $values);
-        $tfov_statement    = EasyStatement::open()->in("tfov.label IN (?*)", $values);
+        $tflbsv1_statement = EasyStatement::open()->in('tflbsv1.label IN (?*)', $values);
+        $tflbsv2_statement = EasyStatement::open()->in('tflbsv2.label IN (?*)', $values);
+        $tfov_statement    = EasyStatement::open()->in('tfov.label IN (?*)', $values);
 
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,
@@ -197,9 +197,9 @@ final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
         InValueWrapper $wrapper,
     ): ParametrizedListFromWhere {
         $values            = array_map(static fn(SimpleValueWrapper $value_wrapper) => $value_wrapper->getValue(), $wrapper->getValueWrappers());
-        $tflbsv1_statement = EasyStatement::open()->in("tflbsv1.label IN (?*)", $values);
-        $tflbsv2_statement = EasyStatement::open()->in("tflbsv2.label IN (?*)", $values);
-        $tfov_statement    = EasyStatement::open()->in("tfov.label IN (?*)", $values);
+        $tflbsv1_statement = EasyStatement::open()->in('tflbsv1.label IN (?*)', $values);
+        $tflbsv2_statement = EasyStatement::open()->in('tflbsv2.label IN (?*)', $values);
+        $tfov_statement    = EasyStatement::open()->in('tfov.label IN (?*)', $values);
 
         return new ParametrizedListFromWhere(
             self::OPENLIST_FROM,

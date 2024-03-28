@@ -88,15 +88,15 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         $project = $this->getProject($variables);
         if (! $project->usesService(ProgramService::SERVICE_SHORTNAME)) {
             throw new NotFoundException(
-                dgettext("tuleap-program_management", "Program management service is disabled.")
+                dgettext('tuleap-program_management', 'Program management service is disabled.')
             );
         }
 
         if ($this->verify_is_team->isATeam((int) $project->getID())) {
             throw new ForbiddenException(
                 dgettext(
-                    "tuleap-program_management",
-                    "Project is defined as a Team project. It can not be used as a Program."
+                    'tuleap-program_management',
+                    'Project is defined as a Team project. It can not be used as a Program.'
                 )
             );
         }
@@ -133,7 +133,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
     private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project): void
     {
         $layout->header(
-            HeaderConfigurationBuilder::get(dgettext('tuleap-program_management', "Program"))
+            HeaderConfigurationBuilder::get(dgettext('tuleap-program_management', 'Program'))
                 ->inProjectNotInBreadcrumbs($project, ProgramService::SERVICE_SHORTNAME)
                 ->withBodyClass(['has-sidebar-with-pinned-header'])
                 ->build()

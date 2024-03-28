@@ -36,7 +36,7 @@ final class ProgramIncrementTrackerIdentifierBuilder
         );
 
         if (! $program_increment_tracker_identifier) {
-            throw new \LogicException("Program incrmeent tracker identifier have not been created");
+            throw new \LogicException('Program incrmeent tracker identifier have not been created');
         }
 
         return $program_increment_tracker_identifier;

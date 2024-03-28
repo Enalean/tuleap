@@ -33,7 +33,7 @@ final class b202203101725_add_writers_allowed_to_delete extends \Tuleap\ForgeUpg
             return;
         }
 
-        $sql = "ALTER TABLE plugin_docman_project_settings ADD COLUMN forbid_writers_to_delete TINYINT(1) DEFAULT 0";
+        $sql = 'ALTER TABLE plugin_docman_project_settings ADD COLUMN forbid_writers_to_delete TINYINT(1) DEFAULT 0';
 
         if ($this->api->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(

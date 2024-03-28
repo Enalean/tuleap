@@ -37,7 +37,7 @@ class WikiPlugin_NoCache extends WikiPlugin
 {
     public function getName()
     {
-        return _("NoCache");
+        return _('NoCache');
     }
 
     public function getDescription()
@@ -48,9 +48,9 @@ class WikiPlugin_NoCache extends WikiPlugin
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.3 $"
+            '$Revision: 1.3 $'
         );
     }
 

@@ -63,7 +63,7 @@ final class CommentPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user->shouldReceive('getPreference');
         $this->user->shouldReceive('getLocale');
 
-        $this->comment = $this->buildComment("My body");
+        $this->comment = $this->buildComment('My body');
 
         $this->user_helper = \Mockery::spy(\UserHelper::class);
 
@@ -77,7 +77,7 @@ final class CommentPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetNullIfCommentIsEmpty(): void
     {
-        $this->comment = $this->buildComment("");
+        $this->comment = $this->buildComment('');
         $presenter     = $this->builder->getCommentPresenter($this->comment, $this->user);
         $this->assertNull($presenter);
     }

@@ -55,7 +55,7 @@ final class MercureJWTController extends DispatchablePSR15Compatible
         if (! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
             return $this->response_factory->createResponse(404);
         }
-        $id = (int) $request->getAttribute("kanban_id");
+        $id = (int) $request->getAttribute('kanban_id');
         try {
             $this->kanban_factory->getKanban($this->user_provider->getCurrentUser(), $id);
         } catch (KanbanCannotAccessException | \Tuleap\Kanban\KanbanNotFoundException $e) {

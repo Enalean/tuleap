@@ -60,7 +60,7 @@ final class Codendi_RequestTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         // and might want to manually set the group_id parameter so that
         // subsequent queries to request return the right project
         // and not the project in error
-        $request->params['group_id'] = "123";
+        $request->params['group_id'] = '123';
         self::assertEquals($project, $request->getProject());
     }
 }

@@ -169,7 +169,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         $condition_1->method('isUserAllowedToSeeTransition')->willReturn(true);
         $condition_2->method('isUserAllowedToSeeTransition')->willReturn(false);
 
-        $this->condition_factory->expects(self::exactly(2))->method("getPermissionsCondition")
+        $this->condition_factory->expects(self::exactly(2))->method('getPermissionsCondition')
             ->willReturnCallback(
                 fn (Transition $transition): \Workflow_Transition_Condition_Permissions => match ($transition) {
                     $transition_1 => $condition_1,
@@ -207,28 +207,28 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
     {
         $this->test_value_1        = new \Tracker_FormElement_Field_List_Bind_StaticValue(
             self::FIRST_VALUE_ID,
-            "value test 1",
+            'value test 1',
             'description',
             12,
             0
         );
         $this->test_value_2        = new \Tracker_FormElement_Field_List_Bind_StaticValue(
             self::SECOND_VALUE_ID,
-            "value test 2",
+            'value test 2',
             'description',
             12,
             0
         );
         $this->test_value_3        = new \Tracker_FormElement_Field_List_Bind_StaticValue(
             self::THIRD_VALUE_ID,
-            "value test 3",
+            'value test 3',
             'description',
             12,
             0
         );
         $this->value_from_artifact = new \Tracker_FormElement_Field_List_Bind_StaticValue(
             self::ORIGINAL_FIELD_CHANGED_VALUE_ID,
-            "value from artifact",
+            'value from artifact',
             'description',
             12,
             0

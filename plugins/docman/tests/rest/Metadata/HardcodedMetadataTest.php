@@ -81,7 +81,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/folders")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . '/folders')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -107,7 +107,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/folders")->withBody($this->stream_factory->createStream($query)),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . '/folders')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -133,7 +133,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/empties")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . '/empties')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -159,7 +159,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/empties")->withBody($this->stream_factory->createStream($query)),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . '/empties')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -187,7 +187,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/embedded_files")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . '/embedded_files')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -215,7 +215,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/embedded_files")->withBody($this->stream_factory->createStream($query)),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . '/embedded_files')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -241,7 +241,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/links")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/links')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -267,7 +267,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/links")->withBody($this->stream_factory->createStream($query)),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/links')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -293,7 +293,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/wikis")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -319,7 +319,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/wikis")->withBody($this->stream_factory->createStream($query)),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -414,11 +414,11 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/files")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("YYYY-MM-DD", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('YYYY-MM-DD', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
     }
 
     /**
@@ -438,7 +438,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/files")->withBody($this->stream_factory->createStream($query)),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 

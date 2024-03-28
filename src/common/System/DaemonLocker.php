@@ -47,7 +47,7 @@ class DaemonLocker
                     case PCNTL_EPERM:
                         throw new DaemonLockerException("Application already running with pid $pid (EPERM)");
                     default:
-                        throw new DaemonLockerException("Application already running with pid $pid (" . posix_get_last_error() . ", " . posix_strerror(posix_get_last_error()) . ")\n");
+                        throw new DaemonLockerException("Application already running with pid $pid (" . posix_get_last_error() . ', ' . posix_strerror(posix_get_last_error()) . ")\n");
                 }
             }
         }

@@ -56,14 +56,14 @@ class EditBotController implements DispatchableWithRequest
 
         $project_id = $bot->getProjectId();
         if ($project_id === null) {
-            $layout->addFeedback(Feedback::ERROR, "System bots cannot be deleted this way.");
-            $layout->redirect("/");
+            $layout->addFeedback(Feedback::ERROR, 'System bots cannot be deleted this way.');
+            $layout->redirect('/');
         }
 
         $user = $request->getCurrentUser();
         if (! $user->isAdmin($project_id)) {
             throw new ForbiddenException(
-                "User is not project administrator."
+                'User is not project administrator.'
             );
         }
 
@@ -74,7 +74,7 @@ class EditBotController implements DispatchableWithRequest
         if ($bot_name === false) {
             $layout->addFeedback(
                 Feedback::ERROR,
-                "Request is not well formed, missing bot_name"
+                'Request is not well formed, missing bot_name'
             );
             $this->redirectToBotProjectAdmin($layout, $project_id);
         }
@@ -83,7 +83,7 @@ class EditBotController implements DispatchableWithRequest
         if ($bot_name === false) {
             $layout->addFeedback(
                 Feedback::ERROR,
-                "Request is not well formed, missing webhook_url"
+                'Request is not well formed, missing webhook_url'
             );
             $this->redirectToBotProjectAdmin($layout, $project_id);
         }
@@ -92,7 +92,7 @@ class EditBotController implements DispatchableWithRequest
         if ($bot_name === false) {
             $layout->addFeedback(
                 Feedback::ERROR,
-                "Request is not well formed, missing avatar_url"
+                'Request is not well formed, missing avatar_url'
             );
             $this->redirectToBotProjectAdmin($layout, $project_id);
         }

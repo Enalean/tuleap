@@ -54,10 +54,10 @@ class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->done_value     = new Tracker_FormElement_Field_List_Bind_StaticValue(3, 'done', '', 3, false);
         $this->hidden_value   = new Tracker_FormElement_Field_List_Bind_StaticValue(4, 'hidden', '', 4, true);
 
-        $this->xml_to_do_value    = new Tracker_FormElement_Field_List_Bind_StaticValue("F1", 'todo', '', 1, false);
-        $this->xml_on_going_value = new Tracker_FormElement_Field_List_Bind_StaticValue("F2", 'on-going', '', 2, false);
-        $this->xml_done_value     = new Tracker_FormElement_Field_List_Bind_StaticValue("F3", 'done', '', 3, false);
-        $this->xml_hidden_value   = new Tracker_FormElement_Field_List_Bind_StaticValue("F4", 'hidden', '', 4, true);
+        $this->xml_to_do_value    = new Tracker_FormElement_Field_List_Bind_StaticValue('F1', 'todo', '', 1, false);
+        $this->xml_on_going_value = new Tracker_FormElement_Field_List_Bind_StaticValue('F2', 'on-going', '', 2, false);
+        $this->xml_done_value     = new Tracker_FormElement_Field_List_Bind_StaticValue('F3', 'done', '', 3, false);
+        $this->xml_hidden_value   = new Tracker_FormElement_Field_List_Bind_StaticValue('F4', 'hidden', '', 4, true);
 
         $this->semantic_status = Mockery::spy(Tracker_Semantic_Status::class);
         $this->semantic_status->shouldReceive('getOpenValues')->andReturn([

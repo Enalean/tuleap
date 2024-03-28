@@ -44,11 +44,11 @@ class CommentXMLValueEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'accountId' => 'e12ds5123sw',
             ]),
             new DateTimeImmutable(),
-            "<p>Comment 01</p>"
+            '<p>Comment 01</p>'
         );
 
         $this->assertSame(
-            "userO1 said: <br/><br/><p>Comment 01</p>",
+            'userO1 said: <br/><br/><p>Comment 01</p>',
             $enhancer->getEnhancedValueWithCommentWriterInformation($comment, $commenter)
         );
     }
@@ -70,11 +70,11 @@ class CommentXMLValueEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment = new JiraCloudComment(
             $update_author,
             new DateTimeImmutable(),
-            "<p>Comment 01</p>"
+            '<p>Comment 01</p>'
         );
 
         $this->assertSame(
-            "<p>Comment 01</p>",
+            '<p>Comment 01</p>',
             $enhancer->getEnhancedValueWithCommentWriterInformation($comment, $commenter)
         );
     }

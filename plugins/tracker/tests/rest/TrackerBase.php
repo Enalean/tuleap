@@ -277,7 +277,7 @@ class TrackerBase extends RestBase
         }
 
         $found_transition = null;
-        foreach ($tracker["workflow"]["transitions"] as $transition) {
+        foreach ($tracker['workflow']['transitions'] as $transition) {
             if ($transition['from_id'] === $from_value_id && $transition['to_id'] === $to_value_id) {
                 $found_transition = $transition;
                 break;

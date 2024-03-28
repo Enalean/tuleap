@@ -99,7 +99,7 @@ final class ProgramIncrementsPlanner implements PlanProgramIncrements
             $creation
         );
         foreach ($iterations_to_create as $iteration_to_create) {
-            $this->logger->debug(sprintf("Create iteration #%d for program increment #%d", $iteration_to_create->getIteration()->getId(), $iteration_to_create->getProgramIncrement()->getId()));
+            $this->logger->debug(sprintf('Create iteration #%d for program increment #%d', $iteration_to_create->getIteration()->getId(), $iteration_to_create->getProgramIncrement()->getId()));
             $this->process_iteration_creation->processCreationForTeams($iteration_to_create, $teams);
         }
 

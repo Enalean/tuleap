@@ -55,13 +55,13 @@ final class InitialEffortSemanticAdminPresenterBuilderTest extends TestCase
         $initial_effort_semantic = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
         $initial_effort_semantic->method('getTracker')->willReturn($this->tracker);
         $initial_effort_semantic->method('getFieldId')->willReturn($field_id);
-        $initial_effort_semantic->method('getLabel')->willReturn("Initial effort");
-        $initial_effort_semantic->method('getUrl')->willReturn("/func=admin-semantic&semantic=initial_effort");
+        $initial_effort_semantic->method('getLabel')->willReturn('Initial effort');
+        $initial_effort_semantic->method('getUrl')->willReturn('/func=admin-semantic&semantic=initial_effort');
 
         $this->possible_fields_retriever->method('getPossibleFieldsForInitialEffort')->willReturn(
             [
-                $this->getFieldWithLabel(1, "field_a"),
-                $this->getFieldWithLabel(2, "field_b"),
+                $this->getFieldWithLabel(1, 'field_a'),
+                $this->getFieldWithLabel(2, 'field_b'),
             ]
         );
         $presenter = $this->builder->build($initial_effort_semantic, $this->csrf_token);
@@ -71,12 +71,12 @@ final class InitialEffortSemanticAdminPresenterBuilderTest extends TestCase
                 TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&func=admin-semantic',
                 PossibleFieldsPresenter::buildFromTrackerFieldList(
                     [
-                        $this->getFieldWithLabel(1, "field_a"),
-                        $this->getFieldWithLabel(2, "field_b"),
+                        $this->getFieldWithLabel(1, 'field_a'),
+                        $this->getFieldWithLabel(2, 'field_b'),
                     ],
                     $initial_effort_semantic
                 ),
-                "/func=admin-semantic&semantic=initial_effort",
+                '/func=admin-semantic&semantic=initial_effort',
                 true
             ),
             $presenter

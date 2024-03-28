@@ -60,27 +60,27 @@ final class BoundDecoratorEditorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItHasSpecificEditForLegacyColor(): void
     {
         $this->bind_decorator_dao->shouldReceive('updateColor')->with(1024, 255, 255, 255)->once();
-        $this->bound_decorator_editor->update($this->field, 1024, "#FFFFFF", false);
+        $this->bound_decorator_editor->update($this->field, 1024, '#FFFFFF', false);
     }
 
     public function testItHasSpecificEditForNoneLegacyColor(): void
     {
         $this->bind_decorator_dao->shouldReceive('updateNoneLegacyColor')
             ->with($this->field_id, 255, 255, 255)->once();
-        $this->bound_decorator_editor->update($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, "#FFFFFF", false);
+        $this->bound_decorator_editor->update($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, '#FFFFFF', false);
     }
 
     public function testItHasSpecificEditForTlpColor(): void
     {
-        $this->bind_decorator_dao->shouldReceive('updateTlpColor')->with(1024, "peggy-pink")->once();
-        $this->bound_decorator_editor->update($this->field, 1024, "peggy-pink", false);
+        $this->bind_decorator_dao->shouldReceive('updateTlpColor')->with(1024, 'peggy-pink')->once();
+        $this->bound_decorator_editor->update($this->field, 1024, 'peggy-pink', false);
     }
 
     public function testItHasSpecificEditForNoneTlpColor(): void
     {
         $this->bind_decorator_dao->shouldReceive('updateNoneTlpColor')
-            ->with($this->field_id, "peggy-pink")->once();
-        $this->bound_decorator_editor->update($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, "peggy-pink", false);
+            ->with($this->field_id, 'peggy-pink')->once();
+        $this->bound_decorator_editor->update($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, 'peggy-pink', false);
     }
 
     public function testItDeleteExistingNoneColorWhenFieldIsRequired(): void
@@ -90,7 +90,7 @@ final class BoundDecoratorEditorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->bound_decorator_editor->update(
             $this->field,
             \Tracker_FormElement_Field_List::NONE_VALUE,
-            "#FFFFFF",
+            '#FFFFFF',
             true
         );
     }

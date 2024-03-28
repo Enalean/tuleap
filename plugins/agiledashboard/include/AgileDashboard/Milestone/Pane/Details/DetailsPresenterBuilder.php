@@ -128,9 +128,9 @@ class DetailsPresenterBuilder
     private function getSolveInconsistenciesUrl(Planning_Milestone $milestone, $redirect_to_self)
     {
         return AGILEDASHBOARD_BASE_URL .
-            "/?group_id=" . $milestone->getGroupId() .
-            "&aid=" . $milestone->getArtifactId() .
-            "&action=solve-inconsistencies" .
-            "&" . $redirect_to_self;
+            '/?group_id=' . $milestone->getGroupId() .
+            '&aid=' . $milestone->getArtifactId() .
+            '&action=solve-inconsistencies' .
+            '&' . $redirect_to_self;
     }
 }

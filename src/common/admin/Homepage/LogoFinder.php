@@ -52,15 +52,15 @@ class Admin_Homepage_LogoFinder
         }
 
         $path = self::getCustomPath();
-        $logger->debug(sprintf("Restore ownership and permissions on %s", $path));
+        $logger->debug(sprintf('Restore ownership and permissions on %s', $path));
         if (! chown($path, \ForgeConfig::getApplicationUserLogin())) {
-            $logger->warning(sprintf("Impossible to chown %s to %s", $path, \ForgeConfig::getApplicationUserLogin()));
+            $logger->warning(sprintf('Impossible to chown %s to %s', $path, \ForgeConfig::getApplicationUserLogin()));
         }
         if (! chgrp($path, \ForgeConfig::getApplicationUserLogin())) {
-            $logger->warning(sprintf("Impossible to chgrp %s to %s", $path, \ForgeConfig::getApplicationUserLogin()));
+            $logger->warning(sprintf('Impossible to chgrp %s to %s', $path, \ForgeConfig::getApplicationUserLogin()));
         }
         if (! chmod($path, 0644)) {
-            $logger->warning(sprintf("Impossible to chmod %s", $path));
+            $logger->warning(sprintf('Impossible to chmod %s', $path));
         }
     }
 }

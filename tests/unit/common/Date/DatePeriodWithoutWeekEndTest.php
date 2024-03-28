@@ -355,14 +355,14 @@ class DatePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItProcessesPositiveDurationAsStringValue(): void
     {
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, "1");
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, '1');
 
         self::assertSame($this->following_week_day_timestamp, $date_period->getEndDate());
     }
 
     public function testItProcessesFloatDurationAsStringValue(): void
     {
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, "0.21");
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, '0.21');
 
         self::assertSame($this->following_week_day_timestamp, $date_period->getEndDate());
     }

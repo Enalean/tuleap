@@ -43,17 +43,17 @@ class Tracker_Artifact_ChangesetValue_DateTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testDates(): void
     {
-        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1221221466])->andReturn("12/09/2008");
+        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1221221466])->andReturn('12/09/2008');
         $date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $this->assertEquals(1221221466, $date->getTimestamp());
-        $this->assertEquals("12/09/2008", $date->getDate());
+        $this->assertEquals('12/09/2008', $date->getDate());
 
-        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1221221467])->andReturn("2008-09-12");
+        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1221221467])->andReturn('2008-09-12');
         $date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221467);
         $this->assertEquals(1221221467, $date->getTimestamp());
-        $this->assertEquals("2008-09-12", $date->getDate());
+        $this->assertEquals('2008-09-12', $date->getDate());
 
-        $this->assertEquals("2008-09-12", $date->getValue());
+        $this->assertEquals('2008-09-12', $date->getValue());
 
         $null_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
         $this->assertNull($null_date->getTimestamp());
@@ -62,8 +62,8 @@ class Tracker_Artifact_ChangesetValue_DateTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testNoDiff(): void
     {
-        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1221221466])->andReturn("2008-09-12");
-        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1234567890])->andReturn("2009-02-14");
+        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1221221466])->andReturn('2008-09-12');
+        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1234567890])->andReturn('2009-02-14');
 
         $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
@@ -73,8 +73,8 @@ class Tracker_Artifact_ChangesetValue_DateTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testDiffBetween2dates(): void
     {
-        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1221221466])->andReturn("2008-09-12");
-        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1234567890])->andReturn("2009-02-14");
+        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1221221466])->andReturn('2008-09-12');
+        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1234567890])->andReturn('2009-02-14');
 
         $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
@@ -84,8 +84,8 @@ class Tracker_Artifact_ChangesetValue_DateTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testDiffDateSet(): void
     {
-        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1221221466])->andReturn("2008-09-12");
-        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1234567890])->andReturn("2009-02-14");
+        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1221221466])->andReturn('2008-09-12');
+        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1234567890])->andReturn('2009-02-14');
 
         $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 0);
         $new_date      = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
@@ -94,7 +94,7 @@ class Tracker_Artifact_ChangesetValue_DateTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testDiffDateCleared(): void
     {
-        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1234567890])->andReturn("2009-02-14");
+        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1234567890])->andReturn('2009-02-14');
 
         $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
         $new_date      = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
@@ -103,7 +103,7 @@ class Tracker_Artifact_ChangesetValue_DateTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testDiffDateDidNotChanged(): void
     {
-        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1234567890])->andReturn("2009-02-14");
+        $this->field->shouldReceive('formatDateForDisplay')->withArgs([1234567890])->andReturn('2009-02-14');
 
         $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
         $new_date      = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);

@@ -138,9 +138,9 @@ class DocmanWithMetadataActivatedDataBuilder
     {
         $text_metadata = new \Docman_Metadata();
 
-        $text_metadata->setName("text metadata");
+        $text_metadata->setName('text metadata');
         $text_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $text_metadata->setDescription("");
+        $text_metadata->setDescription('');
         $text_metadata->setIsRequired(false);
         $text_metadata->setIsEmptyAllowed(false);
         $text_metadata->setIsMultipleValuesAllowed(false);
@@ -153,9 +153,9 @@ class DocmanWithMetadataActivatedDataBuilder
 
         $custom_metadata = new \Docman_Metadata();
 
-        $custom_metadata->setName("list metadata");
+        $custom_metadata->setName('list metadata');
         $custom_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $custom_metadata->setDescription("");
+        $custom_metadata->setDescription('');
         $custom_metadata->setIsRequired(false);
         $custom_metadata->setIsEmptyAllowed(true);
         $custom_metadata->setIsMultipleValuesAllowed(false);
@@ -169,14 +169,14 @@ class DocmanWithMetadataActivatedDataBuilder
         $love_factory = new \Docman_MetadataListOfValuesElementFactory($list_id);
 
         $value = new \Docman_MetadataListOfValuesElement();
-        $value->setName("value 1");
+        $value->setName('value 1');
 
         $value_two = new \Docman_MetadataListOfValuesElement();
-        $value_two->setName("value 2");
+        $value_two->setName('value 2');
 
         $value_three = new \Docman_MetadataListOfValuesElement();
-        $value_three->setName("value 3");
-        $value_three->setStatus("D");
+        $value_three->setName('value 3');
+        $value_three->setStatus('D');
 
         $love_factory->create($value);
         $love_factory->create($value_two);
@@ -184,9 +184,9 @@ class DocmanWithMetadataActivatedDataBuilder
 
         $custom_metadata = new \Docman_Metadata();
 
-        $custom_metadata->setName("other list metadata");
+        $custom_metadata->setName('other list metadata');
         $custom_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $custom_metadata->setDescription("");
+        $custom_metadata->setDescription('');
         $custom_metadata->setIsRequired(false);
         $custom_metadata->setIsEmptyAllowed(true);
         $custom_metadata->setIsMultipleValuesAllowed(true);
@@ -200,10 +200,10 @@ class DocmanWithMetadataActivatedDataBuilder
         $love_factory = new \Docman_MetadataListOfValuesElementFactory($list_id);
 
         $list_value = new \Docman_MetadataListOfValuesElement();
-        $list_value->setName("list A");
+        $list_value->setName('list A');
 
         $list_value_two = new \Docman_MetadataListOfValuesElement();
-        $list_value_two->setName("list B");
+        $list_value_two->setName('list B');
 
         $love_factory->create($list_value);
         $love_factory->create($list_value_two);

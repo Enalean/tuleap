@@ -125,7 +125,7 @@ class NavigationPermissionsDropdownPresenterBuilder
         array_unshift(
             $quick_links,
             new NavigationDropdownTitlePresenter(
-                _("Service permissions")
+                _('Service permissions')
             )
         );
 

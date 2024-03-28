@@ -381,7 +381,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                 $row          = $ugroup_dao->searchByUGroupId($perm)->getRow();
                 $perms_name[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']);
             }
-            $html .= implode(",", $perms_name);
+            $html .= implode(',', $perms_name);
         }
         return $html;
     }
@@ -407,7 +407,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $b = 'B_' . $this->id;
 
         $criteria_value = $this->getCriteriaValue($criteria);
-        if ($criteria_value && count($criteria_value) === 1 && array_key_exists("100", $criteria_value)) {
+        if ($criteria_value && count($criteria_value) === 1 && array_key_exists('100', $criteria_value)) {
             $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ?)
                       INNER JOIN tracker_artifact AS $b ON ($b.last_changeset_id = $a.changeset_id AND
                         $b.use_artifact_permissions = 0) ";
@@ -508,7 +508,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $user_groups = $this->getAllUserGroups();
 
         if (! $user_groups) {
-            $html .= "<p><b>" . $GLOBALS['Language']->getText('global', 'error') . "</b>: " . $GLOBALS['Language']->getText('project_admin_permissions', 'perm_type_not_def', '');
+            $html .= '<p><b>' . $GLOBALS['Language']->getText('global', 'error') . '</b>: ' . $GLOBALS['Language']->getText('project_admin_permissions', 'perm_type_not_def', '');
             return $html;
         }
 
@@ -574,7 +574,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             }
         }
 
-        $sql = "SELECT * FROM ugroup WHERE group_id=" . db_ei($this->getTracker()->getGroupId()) . " OR ugroup_id IN (" . $predefined_ugroups . ") ORDER BY ugroup_id";
+        $sql = 'SELECT * FROM ugroup WHERE group_id=' . db_ei($this->getTracker()->getGroupId()) . ' OR ugroup_id IN (' . $predefined_ugroups . ') ORDER BY ugroup_id';
         $res = db_query($sql);
 
         while ($row = db_fetch_array($res)) {

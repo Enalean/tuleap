@@ -22,20 +22,20 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
 {
     public function getName()
     {
-        return _("Archives");
+        return _('Archives');
     }
 
     public function getDescription()
     {
-        return _("List blog months links for the current or ADMIN user");
+        return _('List blog months links for the current or ADMIN user');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.5 $"
+            '$Revision: 1.5 $'
         );
     }
 
@@ -87,7 +87,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
         $sp = HTML::Raw('&middot; ');
         if (! empty($args['month'])) {
             $prefix = $parent . $this->_blogPrefix('wikiblog') . SUBPAGE_SEPARATOR . $args['month'];
-            $pages  = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
+            $pages  = $dbi->titleSearch(new TextSearchQuery('^' . $prefix, true, 'posix'));
             $html   = HTML::ul();
             while ($page = $pages->next()) {
                 $rev = $page->getCurrentRevision(false);
@@ -99,7 +99,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
             }
             if (! $args['noheader']) {
                 return HTML(
-                    HTML::h3(sprintf(_("Blog Entries for %s:"), $this->_monthTitle($args['month']))),
+                    HTML::h3(sprintf(_('Blog Entries for %s:'), $this->_monthTitle($args['month']))),
                     $html
                 );
             } else {
@@ -110,10 +110,10 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
         $blogs = $this->findBlogs($dbi, $args['user'], 'wikiblog');
         if ($blogs) {
             if (! $basepage) {
-                $basepage = _("BlogArchives");
+                $basepage = _('BlogArchives');
             }
             $html = HTML::ul();
-            usort($blogs, ["WikiPlugin_WikiBlog", "cmp"]);
+            usort($blogs, ['WikiPlugin_WikiBlog', 'cmp']);
             if ($args['order'] == 'reverse') {
                 $blogs = array_reverse($blogs);
             }
@@ -141,11 +141,11 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
                     ['href' => $m['link'],
                         'class' => 'named-wiki',
                     ],
-                    $m['title'] . " (" . $m['num'] . ")"
+                    $m['title'] . ' (' . $m['num'] . ')'
                 )));
             }
             if (! $args['noheader']) {
-                return HTML(HTML::h3(_("Blog Archives:")), $html);
+                return HTML(HTML::h3(_('Blog Archives:')), $html);
             } else {
                 return $html;
             }
@@ -164,7 +164,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
             $args['limit'] = 10;
         }
         $args['noheader'] = 1;
-        return $this->makeBox(_("Archives"), $this->run($request->_dbi, $args, $request, $basepage));
+        return $this->makeBox(_('Archives'), $this->run($request->_dbi, $args, $request, $basepage));
     }
 }
 

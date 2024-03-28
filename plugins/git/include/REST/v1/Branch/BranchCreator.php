@@ -32,7 +32,7 @@ use Tuleap\REST\I18NRestException;
 
 class BranchCreator
 {
-    private const BRANCH_PREFIX = "refs/heads/";
+    private const BRANCH_PREFIX = 'refs/heads/';
 
     public function __construct(
         private \Git_Exec $git_exec,
@@ -52,7 +52,7 @@ class BranchCreator
             throw new I18NRestException(
                 400,
                 sprintf(
-                    dgettext("tuleap-git", "The branch name %s is not a valid branch name"),
+                    dgettext('tuleap-git', 'The branch name %s is not a valid branch name'),
                     $representation->branch_name
                 )
             );
@@ -62,7 +62,7 @@ class BranchCreator
             throw new I18NRestException(
                 403,
                 sprintf(
-                    dgettext("tuleap-git", "You are not allowed to create the branch %s in repository %s"),
+                    dgettext('tuleap-git', 'You are not allowed to create the branch %s in repository %s'),
                     $representation->branch_name,
                     $repository->getName()
                 )
@@ -74,7 +74,7 @@ class BranchCreator
             throw new I18NRestException(
                 400,
                 sprintf(
-                    dgettext("tuleap-git", "The branch %s already exists in the repository %s"),
+                    dgettext('tuleap-git', 'The branch %s already exists in the repository %s'),
                     $representation->branch_name,
                     $repository->getName()
                 )
@@ -87,7 +87,7 @@ class BranchCreator
             throw new I18NRestException(
                 400,
                 sprintf(
-                    dgettext("tuleap-git", "The object %s does not exist in the repository %s"),
+                    dgettext('tuleap-git', 'The object %s does not exist in the repository %s'),
                     $representation->reference,
                     $repository->getName()
                 )
@@ -101,7 +101,7 @@ class BranchCreator
             throw new I18NRestException(
                 400,
                 sprintf(
-                    dgettext("tuleap-git", "The object %s is neither a branch nor a commit in repository %s."),
+                    dgettext('tuleap-git', 'The object %s is neither a branch nor a commit in repository %s.'),
                     $representation->reference,
                     $repository->getName()
                 )
@@ -118,7 +118,7 @@ class BranchCreator
             throw new I18NRestException(
                 500,
                 sprintf(
-                    dgettext("tuleap-git", "An error occurred while creating the branch: %s"),
+                    dgettext('tuleap-git', 'An error occurred while creating the branch: %s'),
                     $exception->getMessage()
                 )
             );

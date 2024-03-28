@@ -47,7 +47,7 @@ class Tracker_Chart_BurndownView extends Tracker_Chart_Burndown
         date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 
         $graph = new Chart($this->width, $this->height);
-        $graph->SetScale("datlin");
+        $graph->SetScale('datlin');
 
         $graph->title->Set($this->title);
         $graph->subtitle->Set($this->description);

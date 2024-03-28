@@ -207,11 +207,11 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
 
     public function deleteProject()
     {
-        echo "Delete deleted-project";
+        echo 'Delete deleted-project';
 
         $project_manager = ProjectManager::instance();
 
-        $project = $project_manager->getProjectByUnixName("deleted-project");
+        $project = $project_manager->getProjectByUnixName('deleted-project');
         $project_manager->updateStatus($project, PROJECT::STATUS_DELETED);
 
         return $this;
@@ -219,19 +219,19 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
 
     public function markProjectsAsTemplate()
     {
-        echo "Mark public-template and private-template as template";
+        echo 'Mark public-template and private-template as template';
 
         $project_manager  = ProjectManager::instance();
-        $public_template  = $project_manager->getProjectByUnixName("public-template");
-        $private_template = $project_manager->getProjectByUnixName("private-template");
+        $public_template  = $project_manager->getProjectByUnixName('public-template');
+        $private_template = $project_manager->getProjectByUnixName('private-template');
 
         $project_edit_dao = new ProjectEditDao();
         if ($public_template) {
-            $project_edit_dao->updateProjectStatusAndType("A", TemplateSingleton::TEMPLATE, $public_template->getID());
+            $project_edit_dao->updateProjectStatusAndType('A', TemplateSingleton::TEMPLATE, $public_template->getID());
         }
 
         if ($private_template) {
-            $project_edit_dao->updateProjectStatusAndType("A", TemplateSingleton::TEMPLATE, $private_template->getID());
+            $project_edit_dao->updateProjectStatusAndType('A', TemplateSingleton::TEMPLATE, $private_template->getID());
         }
 
         return $this;
@@ -241,17 +241,17 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     {
         $project_fields_dao  = new ProjectFieldsDao();
         $project_details_dao = new ProjectDetailsDAO();
-        $project_fields_dao->createProjectField("Test Rest", "Field for test rest", 2, "text", 0);
-        $project_details_dao->createGroupDescription(self::DEFAULT_TEMPLATE_PROJECT_ID, 1, "Admin test");
+        $project_fields_dao->createProjectField('Test Rest', 'Field for test rest', 2, 'text', 0);
+        $project_details_dao->createGroupDescription(self::DEFAULT_TEMPLATE_PROJECT_ID, 1, 'Admin test');
     }
 
     public function suspendProject()
     {
-        echo "Suspend supended-project";
+        echo 'Suspend supended-project';
 
         $project_manager = ProjectManager::instance();
 
-        $project = $project_manager->getProjectByUnixName("suspended-project");
+        $project = $project_manager->getProjectByUnixName('suspended-project');
         $project_manager->updateStatus($project, PROJECT::STATUS_SUSPENDED);
 
         return $this;

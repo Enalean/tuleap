@@ -114,18 +114,18 @@ class ReferenceAdministrationViews extends Views
 <tr><td><a href="#" title="' . _('If the reference pattern is specific to one service, select it here') . '">' . _('Bound to service') . '</a>:</td>
 <td>';
 // Get list of services
-            $result          = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY `rank`");
+            $result          = db_query('SELECT * FROM service WHERE group_id=100 ORDER BY `rank`');
             $serv_label      = [];
             $serv_short_name = [];
             while ($serv = db_fetch_array($result)) {
                 $label = $serv['label'];
-                if ($label == "service_" . $serv['short_name'] . "_lbl_key") {
+                if ($label == 'service_' . $serv['short_name'] . '_lbl_key') {
                     $label = $GLOBALS['Language']->getOverridableText('project_admin_editservice', $label);
                 }
                 $serv_short_name[] = $serv['short_name'];
                 $serv_label[]      = $label;
             }
-            echo html_build_select_box_from_arrays($serv_short_name, $serv_label, "service_short_name");
+            echo html_build_select_box_from_arrays($serv_short_name, $serv_label, 'service_short_name');
             echo '</td></tr>';
             echo '
 <tr><td><a href="#" title="' . _('Scope of the reference pattern: project only or system-wide') . '">' . _('Scope') . ':</a></td>
@@ -197,7 +197,7 @@ class ReferenceAdministrationViews extends Views
         );
         $ro = ! $can_be_edited || ($ref->isSystemReference() && $ref->getGroupId() != 100);
         if ($ro) {
-            $star = "";
+            $star = '';
         }
 
         echo '
@@ -222,7 +222,7 @@ class ReferenceAdministrationViews extends Views
 <tr><td><a href="#" title="' . _('This description will be displayed in a tooltip above reference.') . '">' . _('Description') . '</a>:&nbsp;</td>
 <td>';
         if ($ro) {
-            if ($ref->getDescription() == "reference_" . $ref->getKeyWord() . "_desc_key") {
+            if ($ref->getDescription() == 'reference_' . $ref->getKeyWord() . '_desc_key') {
                 echo $purifier->purify($GLOBALS['Language']->getOverridableText('project_reference', $ref->getDescription()));
             } else {
                 echo $purifier->purify($ref->getDescription());
@@ -266,12 +266,12 @@ class ReferenceAdministrationViews extends Views
 <tr><td><a href="#" title="' . _('If the reference pattern is specific to one service, select it here') . '">' . _('Bound to service') . '</a>:</td>
 <td>';
             // Get list of services
-            $result          = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY `rank`");
+            $result          = db_query('SELECT * FROM service WHERE group_id=100 ORDER BY `rank`');
             $serv_label      = [];
             $serv_short_name = [];
             while ($serv = db_fetch_array($result)) {
                 $label = $serv['label'];
-                if ($label == "service_" . $serv['short_name'] . "_lbl_key") {
+                if ($label == 'service_' . $serv['short_name'] . '_lbl_key') {
                     $label = $GLOBALS['Language']->getOverridableText('project_admin_editservice', $label);
                 }
                 $serv_short_name[] = $serv['short_name'];
@@ -280,7 +280,7 @@ class ReferenceAdministrationViews extends Views
             if ($ro) {
                 echo $purifier->purify($ref->getServiceShortName());
             } else {
-                echo html_build_select_box_from_arrays($serv_short_name, $serv_label, "service_short_name", $ref->getServiceShortName());
+                echo html_build_select_box_from_arrays($serv_short_name, $serv_label, 'service_short_name', $ref->getServiceShortName());
             }
             echo '</td></tr>';
             echo '
@@ -289,7 +289,7 @@ class ReferenceAdministrationViews extends Views
         }
         echo '
 <tr><td><a href="#" title="' . _('Automatically extract this keyword?') . '">' . _('Enabled') . ':</a> </td>
-<td><input type="CHECKBOX" NAME="is_used" VALUE="1"' . ($ref->isActive() ? " CHECKED" : '') . '></td></tr>';
+<td><input type="CHECKBOX" NAME="is_used" VALUE="1"' . ($ref->isActive() ? ' CHECKED' : '') . '></td></tr>';
         if ($su) {
             echo '<tr><td><a href="#" title="' . _('Force reference pattern creation') . '">'
                       . _('Bypass filters <em>(Site administrators only)</em>:') . '</a> </td>

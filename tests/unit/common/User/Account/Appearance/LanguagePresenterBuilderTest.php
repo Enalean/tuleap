@@ -45,7 +45,7 @@ final class LanguagePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn('fr_FR');
 
         $builder           = new LanguagePresenterBuilder($factory, new LocaleSwitcher());
-        $beta_warning_text = "Work in progress, you might find untranslated strings.";
+        $beta_warning_text = 'Work in progress, you might find untranslated strings.';
         self::assertEquals(
             [
                 new LanguagePresenter('en_US', 'English', false, true, $beta_warning_text),

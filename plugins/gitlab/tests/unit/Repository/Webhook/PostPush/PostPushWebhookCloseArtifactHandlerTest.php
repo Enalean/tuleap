@@ -153,9 +153,9 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $gitlab_integration = new GitlabRepositoryIntegration(
             self::GITLAB_INTEGRATION_ID,
             self::GITLAB_REPOSITORY_ID,
-            "MyRepo",
-            "",
-            "https://example",
+            'MyRepo',
+            '',
+            'https://example',
             new DateTimeImmutable(),
             $this->project,
             false
@@ -222,7 +222,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->handleArtifactClosure();
 
         self::assertNull($this->changeset_creator->getNewChangeset());
-        $this->assertTrue($this->logger->hasError("|  |  |_ Artifact #123 not found"));
+        $this->assertTrue($this->logger->hasError('|  |  |_ Artifact #123 not found'));
     }
 
     public function testItDoesNothingIfRepositoryIsNotIntegratedInProjectOfArtifact(): void
@@ -238,10 +238,10 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         self::assertNull($this->changeset_creator->getNewChangeset());
         $this->assertTrue(
             $this->logger->hasWarning(
-                "|  |  |_ Artifact #123 cannot be closed. " .
-                "Either this artifact is not in a project where the GitLab repository is integrated in " .
-                "or the artifact closure action is not enabled. " .
-                "Skipping."
+                '|  |  |_ Artifact #123 cannot be closed. ' .
+                'Either this artifact is not in a project where the GitLab repository is integrated in ' .
+                'or the artifact closure action is not enabled. ' .
+                'Skipping.'
             )
         );
     }
@@ -272,7 +272,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         self::assertNull($this->changeset_creator->getNewChangeset());
         $this->assertTrue(
             $this->logger->hasWarning(
-                "|  |  |_ Artifact #123 cannot be closed because no token found for integration. Skipping."
+                '|  |  |_ Artifact #123 cannot be closed because no token found for integration. Skipping.'
             )
         );
     }
@@ -292,11 +292,11 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->willReturn(
                 new GitlabProject(
                     self::GITLAB_REPOSITORY_ID,
-                    "",
-                    "https://example/MyRepo",
-                    "MyRepo",
+                    '',
+                    'https://example/MyRepo',
+                    'MyRepo',
                     new DateTimeImmutable(),
-                    "main"
+                    'main'
                 )
             );
 
@@ -399,7 +399,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
         $this->assertTrue(
             $this->logger->hasError(
-                "|  |  |_ Artifact #123 cannot be closed. No possible value found regarding your configuration. Please check your transition and field dependencies."
+                '|  |  |_ Artifact #123 cannot be closed. No possible value found regarding your configuration. Please check your transition and field dependencies.'
             )
         );
     }
@@ -442,9 +442,9 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->willReturn(
                 new GitlabProject(
                     self::GITLAB_REPOSITORY_ID,
-                    "",
-                    "https://example/MyRepo",
-                    "MyRepo",
+                    '',
+                    'https://example/MyRepo',
+                    'MyRepo',
                     new DateTimeImmutable(),
                     self::MASTER_BRANCH_NAME
                 )

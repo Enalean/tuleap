@@ -78,7 +78,7 @@ final class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesHookConfig(): void
     {
-        $this->repository->method('getName')->willReturn("repo name");
+        $this->repository->method('getName')->willReturn('repo name');
 
         $this->hook_config_checker->method('hasConfigurationChanged')->willReturn(true);
 

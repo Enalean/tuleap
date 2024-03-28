@@ -32,7 +32,7 @@ final class OutboundHTTPRequestProxy
 {
     #[ConfigKey('Proxy used by outbound HTTP requests')]
     #[ConfigKeyString('')]
-    public const PROXY = "sys_proxy";
+    public const PROXY = 'sys_proxy';
 
     #[ConfigKey('Bypass SSRF filtering proxy (smokescreen). Only use in case of emergency.')]
     #[ConfigKeyString(self::FILTERING_PROXY_ENABLED)]

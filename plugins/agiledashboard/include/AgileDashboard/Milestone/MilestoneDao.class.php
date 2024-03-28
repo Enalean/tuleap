@@ -187,15 +187,15 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         $built_sql            = $this->getPaginationAndStatusStatements($request);
         $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.*
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS submilestones.*
                 FROM tracker_artifact AS submilestones
-                    " . $built_sql['from_statement'] . "
+                    ' . $built_sql['from_statement'] . "
 
                 WHERE submilestones.tracker_id = $milestone_tracker_id
-                  AND  " . $built_sql['where_status_statement'] . "
+                  AND  " . $built_sql['where_status_statement'] . '
 
-                ORDER BY submilestones.id " . $built_sql['order'] . "
-                " . $built_sql['limit_statement'];
+                ORDER BY submilestones.id ' . $built_sql['order'] . '
+                ' . $built_sql['limit_statement'];
 
         return $this->retrieve($sql);
     }
@@ -205,8 +205,8 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
      */
     private function getStatusStatements(ISearchOnStatus $criterion, string $alias_name): array
     {
-        $from_status_statement  = "";
-        $where_status_statement = "1";
+        $from_status_statement  = '';
+        $where_status_statement = '1';
         if ($criterion->shouldRetrieveOpenMilestones() && $criterion->shouldRetrieveClosedMilestones()) {
             // search all milestones.
             // no need to filter
@@ -219,11 +219,11 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
                         INNER JOIN tracker_changeset_value AS CV3 ON (SS.field_id = CV3.field_id)
                         INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
                     ) ON ($alias_name.tracker_id = SS.tracker_id AND C.id = CV3.changeset_id)";
-                $where_status_statement = "(
+                $where_status_statement = '(
                         SS.field_id IS NULL -- Use the status semantic only if it is defined
                         OR
                         CVL2.bindvalue_id = SS.open_value_id
-                     )";
+                     )';
             }
             if ($criterion->shouldRetrieveClosedMilestones()) {
                 $from_status_statement  = "
@@ -243,7 +243,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
                         AND open_values.tracker_id = $alias_name.tracker_id
                         AND cvs.field_id = open_values.field_id
                     )";
-                $where_status_statement = "open_values.open_value_id IS NULL";
+                $where_status_statement = 'open_values.open_value_id IS NULL';
             }
         }
 

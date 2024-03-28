@@ -48,7 +48,7 @@ class Docman_MetadataHtmlObsolescence extends \Docman_MetadataHtml
             $selected = $this->md->getDefaultValue();
         } else {
             if ($selected != 0) {
-                $selectedInput = \date("Y-n-j", $selected);
+                $selectedInput = \date('Y-n-j', $selected);
                 $selected      = 100;
             }
         }

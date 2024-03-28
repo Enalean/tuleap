@@ -38,7 +38,7 @@ class AccountCreationFeedbackEmailNotifier
         $mail->setTo($from_user->getEmail());
         $mail->setSubject(_('Invitation complete!'));
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates/invite_buddy");
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/invite_buddy');
 
         $presenter = [
             'user' => \UserHelper::instance()->getDisplayNameFromUser($just_created_user),

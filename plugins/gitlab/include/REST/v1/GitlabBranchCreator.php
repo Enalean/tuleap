@@ -73,7 +73,7 @@ class GitlabBranchCreator
         );
 
         if ($artifact === null) {
-            throw new RestException(404, "Artifact not found");
+            throw new RestException(404, 'Artifact not found');
         }
 
         $project    = $artifact->getTracker()->getProject();
@@ -98,18 +98,18 @@ class GitlabBranchCreator
         if (
             (int) $integration->getProject()->getID() !== (int) $artifact->getTracker()->getGroupId()
         ) {
-            throw new RestException(400, "GitLab integration and artifact must be in the same project");
+            throw new RestException(400, 'GitLab integration and artifact must be in the same project');
         }
 
         $credentials = $this->credentials_retriever->getCredentials($integration);
         if ($credentials === null) {
-            throw new RestException(400, "Integration is not configured");
+            throw new RestException(400, 'Integration is not configured');
         }
 
         $branch_name = $this->branch_name_creator_from_artifact->getFullBranchName($artifact, $integration);
         try {
             $url = "/projects/{$integration->getGitlabRepositoryId()}/repository/branches?branch=" .
-                urlencode($branch_name) . "&ref=" . urlencode($gitlab_branch->reference);
+                urlencode($branch_name) . '&ref=' . urlencode($gitlab_branch->reference);
 
             $this->gitlab_api_client->postUrl(
                 $credentials,
@@ -117,30 +117,30 @@ class GitlabBranchCreator
                 []
             );
         } catch (GitlabRequestException $exception) {
-            if (stripos($exception->getMessage(), "invalid reference name")) {
+            if (stripos($exception->getMessage(), 'invalid reference name')) {
                 throw new I18NRestException(
                     $exception->getErrorCode(),
-                    sprintf(dgettext('tuleap-gitlab', "The reference %s does not seem to exist on %s "), $gitlab_branch->reference, $integration->getName())
+                    sprintf(dgettext('tuleap-gitlab', 'The reference %s does not seem to exist on %s '), $gitlab_branch->reference, $integration->getName())
                 );
             }
 
-            if (stripos($exception->getMessage(), "branch already exists")) {
+            if (stripos($exception->getMessage(), 'branch already exists')) {
                 throw new I18NRestException(
                     $exception->getErrorCode(),
-                    sprintf(dgettext('tuleap-gitlab', "The branch %s already exists on %s "), $branch_name, $integration->getName())
+                    sprintf(dgettext('tuleap-gitlab', 'The branch %s already exists on %s '), $branch_name, $integration->getName())
                 );
             }
 
-            if (stripos($exception->getMessage(), "Repository Not Found")) {
+            if (stripos($exception->getMessage(), 'Repository Not Found')) {
                 throw new I18NRestException(
                     $exception->getErrorCode(),
-                    sprintf(dgettext('tuleap-gitlab', "The repository %s is not found on GitLab server"), $integration->getName())
+                    sprintf(dgettext('tuleap-gitlab', 'The repository %s is not found on GitLab server'), $integration->getName())
                 );
             }
 
             throw new RestException(
                 $exception->getErrorCode(),
-                sprintf(dgettext('tuleap-gitlab', "An error occurred while creating the branch on GitLab: %s"), $exception->getMessage())
+                sprintf(dgettext('tuleap-gitlab', 'An error occurred while creating the branch on GitLab: %s'), $exception->getMessage())
             );
         } catch (GitlabResponseAPIException $exception) {
             throw new RestException(500, $exception->getMessage());

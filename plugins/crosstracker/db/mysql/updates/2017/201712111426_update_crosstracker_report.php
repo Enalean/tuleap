@@ -22,7 +22,7 @@ class b201712111426_update_crosstracker_report extends \Tuleap\ForgeUpgrade\Buck
 {
     public function description()
     {
-        return "Update cross tracker report table and adds expert_query to it";
+        return 'Update cross tracker report table and adds expert_query to it';
     }
 
     public function preUp()

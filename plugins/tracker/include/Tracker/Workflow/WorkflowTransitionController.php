@@ -59,7 +59,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['tracker_id']);
         if (! $tracker) {
-            throw new NotFoundException(dgettext('tuleap-tracker', "Tracker does not exist"));
+            throw new NotFoundException(dgettext('tuleap-tracker', 'Tracker does not exist'));
         }
 
         $current_user = $request->getCurrentUser();

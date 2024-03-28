@@ -77,13 +77,13 @@ class GetTrackersQueryChecker
         }
 
         if (! $is_query_valid) {
-            $possible_criteria = implode(", ", $additional_criteria->getCriteria());
+            $possible_criteria = implode(', ', $additional_criteria->getCriteria());
             if (! empty($possible_criteria)) {
-                $possible_criteria = ", " . $possible_criteria;
+                $possible_criteria = ', ' . $possible_criteria;
             }
             throw new RestException(
                 400,
-                "You can only search on 'is_tracker_admin': true" . $possible_criteria . ". If the query is valid, your plugin is maybe not installed."
+                "You can only search on 'is_tracker_admin': true" . $possible_criteria . '. If the query is valid, your plugin is maybe not installed.'
             );
         }
     }

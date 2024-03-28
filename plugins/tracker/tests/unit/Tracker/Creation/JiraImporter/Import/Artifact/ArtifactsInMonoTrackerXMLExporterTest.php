@@ -211,12 +211,12 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         );
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
-                "jira_issue_url",
+                'jira_issue_url',
                 'Link to original issue',
                 null,
-                "Fjira_issue_url",
-                "jira_issue_url",
-                "string",
+                'Fjira_issue_url',
+                'jira_issue_url',
+                'string',
             ),
         );
         $jira_project_id = 'project';
@@ -323,12 +323,12 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         );
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
-                "jira_issue_url",
-                "Link to original issue",
+                'jira_issue_url',
+                'Link to original issue',
                 null,
-                "Fjira_issue_url",
-                "jira_issue_url",
-                "string",
+                'Fjira_issue_url',
+                'jira_issue_url',
+                'string',
             ),
         );
         $jira_project_id = 'project';
@@ -454,12 +454,12 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         );
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
-                "jira_issue_url",
-                "Link to original issue",
+                'jira_issue_url',
+                'Link to original issue',
                 null,
-                "Fjira_issue_url",
-                "jira_issue_url",
-                "string",
+                'Fjira_issue_url',
+                'jira_issue_url',
+                'string',
             ),
         );
         $jira_project_id = 'project';
@@ -566,7 +566,7 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         self::assertCount(1, $artifacts_node->children());
 
         $artifact_node_01 = $artifacts_node->artifact[0];
-        self::assertSame("10042", (string) $artifact_node_01['id']);
+        self::assertSame('10042', (string) $artifact_node_01['id']);
         self::assertNotNull($artifact_node_01->submitted_on);
         self::assertNotNull($artifact_node_01->submitted_by);
         self::assertNotNull($artifact_node_01->comments);
@@ -574,28 +574,28 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
 
         self::assertCount(1, $issue_collection->getIssueRepresentationCollection());
 
-        self::assertTrue($this->logger->hasDebugThatMatches("/has already be exported, no need to export it again/"));
+        self::assertTrue($this->logger->hasDebugThatMatches('/has already be exported, no need to export it again/'));
     }
 
     private function mockChangelogForKey01(): void
     {
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/changelog?startAt=0'] = [
-            "maxResults" => 100,
-            "startAt"    => 0,
-            "total"      => 0,
-            "isLast"     => true,
-            "values"     => [],
+            'maxResults' => 100,
+            'startAt'    => 0,
+            'total'      => 0,
+            'isLast'     => true,
+            'values'     => [],
         ];
     }
 
     private function mockChangelogForKey02(): void
     {
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/changelog?startAt=0'] = [
-            "maxResults" => 100,
-            "startAt"    => 0,
-            "total"      => 0,
-            "isLast"     => true,
-            "values"     => [],
+            'maxResults' => 100,
+            'startAt'    => 0,
+            'total'      => 0,
+            'isLast'     => true,
+            'values'     => [],
         ];
     }
 
@@ -606,7 +606,7 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         self::assertCount(2, $artifacts_node->children());
 
         $artifact_node_01 = $artifacts_node->artifact[0];
-        self::assertSame("10042", (string) $artifact_node_01['id']);
+        self::assertSame('10042', (string) $artifact_node_01['id']);
         self::assertNotNull($artifact_node_01->submitted_on);
         self::assertNotNull($artifact_node_01->submitted_by);
         self::assertNotNull($artifact_node_01->comments);
@@ -617,11 +617,11 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         self::assertNotNull($artifact_node_01_field_changes_changeset_01);
         self::assertCount(2, $artifact_node_01_field_changes_changeset_01);
 
-        self::assertSame("summary01", (string) $artifact_node_01_field_changes_changeset_01[0]->value);
-        self::assertSame("URLinstance/browse/key01", (string) $artifact_node_01_field_changes_changeset_01[1]->value);
+        self::assertSame('summary01', (string) $artifact_node_01_field_changes_changeset_01[0]->value);
+        self::assertSame('URLinstance/browse/key01', (string) $artifact_node_01_field_changes_changeset_01[1]->value);
 
         $artifact_node_02 = $artifacts_node->artifact[1];
-        self::assertSame("10043", (string) $artifact_node_02['id']);
+        self::assertSame('10043', (string) $artifact_node_02['id']);
         self::assertNotNull($artifact_node_02->submitted_on);
         self::assertNotNull($artifact_node_02->submitted_by);
         self::assertNotNull($artifact_node_02->comments);
@@ -632,8 +632,8 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         self::assertNotNull($artifact_node_02_field_changes_changeset_01);
         self::assertCount(2, $artifact_node_02_field_changes_changeset_01);
 
-        self::assertSame("summary02", (string) $artifact_node_02_field_changes_changeset_01[0]->value);
-        self::assertSame("URLinstance/browse/key02", (string) $artifact_node_02_field_changes_changeset_01[1]->value);
+        self::assertSame('summary02', (string) $artifact_node_02_field_changes_changeset_01[0]->value);
+        self::assertSame('URLinstance/browse/key02', (string) $artifact_node_02_field_changes_changeset_01[1]->value);
     }
 
     private function buildForgeUser(): \PFUser

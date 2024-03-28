@@ -20,7 +20,7 @@ class b201510141100_add_plugin_tracker_config extends \Tuleap\ForgeUpgrade\Bucke
 {
     public function description()
     {
-        return "Add table to store plugin tracker configuration";
+        return 'Add table to store plugin tracker configuration';
     }
 
     public function preUp()

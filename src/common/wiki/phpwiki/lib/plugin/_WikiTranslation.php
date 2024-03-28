@@ -45,82 +45,82 @@ rcs_id('$Id: _WikiTranslation.php,v 1.17 2005/09/10 11:31:16 rurban Exp $');
 
 /* Container for untranslated pagenames. Needed to show up in locale/po/phpwiki.pot */
 $pgsrc_container =
-    _("AddCommentPlugin")  . ',' .
-    _("AddingPages")  . ',' .
-    _("AllPagesCreatedByMe")  . ',' .
-    _("AllPagesLastEditedByMe")  . ',' .
-    _("AllPagesOwnedByMe")  . ',' .
-    _("AuthorHistoryPlugin") . ',' .
-    _("BackLinks") . ',' .
-    _("CalendarListPlugin") . ',' .
-    _("CalendarPlugin") . ',' .
-    _("CategoryCategory")  . ',' .
-    _("CategoryHomePages")  . ',' .
-    _("CommentPlugin")  . ',' .
-    _("CreateTocPlugin")  . ',' .
-    _("DebugInfo") . ',' .
-    _("EditMetaData") . ',' .
-    _("EditMetaDataPlugin") . ',' .
-    _("ExternalSearchPlugin") . ',' .
-    _("FindPage") . ',' .
-    _("FoafViewerPlugin") . ',' .
-    _("FrameIncludePlugin") . ',' .
-    _("FullRecentChanges") . ',' .
-    _("HelloWorldPlugin") . ',' .
-    _("HomePageAlias") . ',' .
-    _("IncludePagePlugin") . ',' .
-    _("InterWiki") . ',' .
-    _("LinkIcons") . ',' .
-    _("MagicPhpWikiURLs") . ',' .
-    _("MoreAboutMechanics") . ',' .
-    _("NewMarkupTestPage") . ',' .
-    _("OldMarkupTestPage") . ',' .
-    _("OldStyleTablePlugin") . ',' .
+    _('AddCommentPlugin')  . ',' .
+    _('AddingPages')  . ',' .
+    _('AllPagesCreatedByMe')  . ',' .
+    _('AllPagesLastEditedByMe')  . ',' .
+    _('AllPagesOwnedByMe')  . ',' .
+    _('AuthorHistoryPlugin') . ',' .
+    _('BackLinks') . ',' .
+    _('CalendarListPlugin') . ',' .
+    _('CalendarPlugin') . ',' .
+    _('CategoryCategory')  . ',' .
+    _('CategoryHomePages')  . ',' .
+    _('CommentPlugin')  . ',' .
+    _('CreateTocPlugin')  . ',' .
+    _('DebugInfo') . ',' .
+    _('EditMetaData') . ',' .
+    _('EditMetaDataPlugin') . ',' .
+    _('ExternalSearchPlugin') . ',' .
+    _('FindPage') . ',' .
+    _('FoafViewerPlugin') . ',' .
+    _('FrameIncludePlugin') . ',' .
+    _('FullRecentChanges') . ',' .
+    _('HelloWorldPlugin') . ',' .
+    _('HomePageAlias') . ',' .
+    _('IncludePagePlugin') . ',' .
+    _('InterWiki') . ',' .
+    _('LinkIcons') . ',' .
+    _('MagicPhpWikiURLs') . ',' .
+    _('MoreAboutMechanics') . ',' .
+    _('NewMarkupTestPage') . ',' .
+    _('OldMarkupTestPage') . ',' .
+    _('OldStyleTablePlugin') . ',' .
 //  _("PageDump") .','.
-    _("PageGroupTest") . ',' .
-    _("PageGroupTest/Four") . ',' .
-    _("PageGroupTest/One") . ',' .
-    _("PageGroupTest/Three") . ',' .
-    _("PageGroupTest/Two") . ',' .
-    _("PgsrcTranslation") . ',' .
-    _("PhotoAlbumPlugin") . ',' .
-    _("PhpHighlightPlugin") . ',' .
-    _("PhpWeatherPlugin") . ',' .
-    _("PhpWiki") . ',' .
-    _("PhpWikiAdministration/Chmod") . ',' .
-    _("PhpWikiAdministration/Chown") . ',' .
-    _("PhpWikiAdministration/Remove") . ',' .
-    _("PhpWikiAdministration/Rename") . ',' .
-    _("PhpWikiAdministration/Replace") . ',' .
-    _("PhpWikiAdministration/SetAcl") . ',' .
-    _("PhpWikiDocumentation") . ',' .
-    _("PloticusPlugin") . ',' .
-    _("PgsrcTranslation") . ',' .
-    _("PgsrcTranslation/de") . ',' .
-    _("PgsrcTranslation/fr") . ',' .
-    _("PgsrcTranslation/it") . ',' .
-    _("PgsrcTranslation/es") . ',' .
-    _("PgsrcTranslation/nl") . ',' .
-    _("PgsrcTranslation/sv") . ',' .
-    _("PgsrcTranslation/ja") . ',' .
-    _("PgsrcTranslation/zh") . ',' .
-    _("RawHtmlPlugin") . ',' .
-    _("RecentVisitors") . ',' .
-    _("RedirectToPlugin") . ',' .
-    _("ReleaseNotes") . ',' .
-    _("RichTablePlugin") . ',' .
+    _('PageGroupTest') . ',' .
+    _('PageGroupTest/Four') . ',' .
+    _('PageGroupTest/One') . ',' .
+    _('PageGroupTest/Three') . ',' .
+    _('PageGroupTest/Two') . ',' .
+    _('PgsrcTranslation') . ',' .
+    _('PhotoAlbumPlugin') . ',' .
+    _('PhpHighlightPlugin') . ',' .
+    _('PhpWeatherPlugin') . ',' .
+    _('PhpWiki') . ',' .
+    _('PhpWikiAdministration/Chmod') . ',' .
+    _('PhpWikiAdministration/Chown') . ',' .
+    _('PhpWikiAdministration/Remove') . ',' .
+    _('PhpWikiAdministration/Rename') . ',' .
+    _('PhpWikiAdministration/Replace') . ',' .
+    _('PhpWikiAdministration/SetAcl') . ',' .
+    _('PhpWikiDocumentation') . ',' .
+    _('PloticusPlugin') . ',' .
+    _('PgsrcTranslation') . ',' .
+    _('PgsrcTranslation/de') . ',' .
+    _('PgsrcTranslation/fr') . ',' .
+    _('PgsrcTranslation/it') . ',' .
+    _('PgsrcTranslation/es') . ',' .
+    _('PgsrcTranslation/nl') . ',' .
+    _('PgsrcTranslation/sv') . ',' .
+    _('PgsrcTranslation/ja') . ',' .
+    _('PgsrcTranslation/zh') . ',' .
+    _('RawHtmlPlugin') . ',' .
+    _('RecentVisitors') . ',' .
+    _('RedirectToPlugin') . ',' .
+    _('ReleaseNotes') . ',' .
+    _('RichTablePlugin') . ',' .
 //    _("SpellCheck") .','.
-    _("SteveWainstead") . ',' .
-    _("SystemInfoPlugin") . ',' .
-    _("TranscludePlugin") . ',' .
-    _("TranslateText") . ',' .
-    _("UnfoldSubpagesPlugin") . ',' .
-    _("UpLoad") . ',' .
-    _("UpLoadPlugin") . ',' .
-    _("WabiSabi") . ',' .
-    _("WikiBlogPlugin") . ',' .
-    _("WikiPlugin") . ',' .
-    _("WikiWikiWeb");
+    _('SteveWainstead') . ',' .
+    _('SystemInfoPlugin') . ',' .
+    _('TranscludePlugin') . ',' .
+    _('TranslateText') . ',' .
+    _('UnfoldSubpagesPlugin') . ',' .
+    _('UpLoad') . ',' .
+    _('UpLoadPlugin') . ',' .
+    _('WabiSabi') . ',' .
+    _('WikiBlogPlugin') . ',' .
+    _('WikiPlugin') . ',' .
+    _('WikiWikiWeb');
 
 require_once('lib/PageList.php');
 
@@ -128,20 +128,20 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
 {
     public function getName()
     {
-        return _("_WikiTranslation");
+        return _('_WikiTranslation');
     }
 
     public function getDescription()
     {
-        return _("Show translations of various words or pages");
+        return _('Show translations of various words or pages');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.17 $"
+            '$Revision: 1.17 $'
         );
     }
 
@@ -177,7 +177,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
         if ($lang == 'en') {
             // Hack alert! we need hash for stepping through it, even if it's
             // in the wrong language
-            include(FindFile("locale/de/LC_MESSAGES/phpwiki.php", 0, 'reinit'));
+            include(FindFile('locale/de/LC_MESSAGES/phpwiki.php', 0, 'reinit'));
             foreach ($locale as $en => $de) {
                 $locale[$en] = $en;
             }
@@ -328,21 +328,21 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
                 $url = '';
                 // google can only translate from english and french
                 if (in_array($from_lang, ['en', 'fr'])) {
-                    $url  = "http://translate.google.com/translate";
-                    $url .= "?langpair=" . urlencode($from_lang . "|" . $to_lang);
-                    $url .= "&u=" . urlencode(WikiURL($pagename, false, true));
+                    $url  = 'http://translate.google.com/translate';
+                    $url .= '?langpair=' . urlencode($from_lang . '|' . $to_lang);
+                    $url .= '&u=' . urlencode(WikiURL($pagename, false, true));
                 }
                 // redirect or transclude?
                 if ($url) {
                     return $request->redirect($url);
                 }
                 return HTML(fmt(
-                    "TODO: Google can only translate from english and french. Find a translation service for %s to language %s",
+                    'TODO: Google can only translate from english and french. Find a translation service for %s to language %s',
                     WikiURL($pagename, false, true),
                     $to_lang
                 ));
             } else {
-                return $this->error(fmt("%s is empty", $pagename));
+                return $this->error(fmt('%s is empty', $pagename));
             }
         }
 
@@ -426,8 +426,8 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
             case 'buttons':
                 $buttons = $GLOBALS['AllActionPages'];
                 $fileset = new fileSet(
-                    FindFile("themes/MacOSX/buttons/en"),
-                    "*.png"
+                    FindFile('themes/MacOSX/buttons/en'),
+                    '*.png'
                 );
                 foreach ($fileset->getFiles() as $file) {
                     $b = urldecode(substr($file, 0, -4));
@@ -503,7 +503,7 @@ class _PageList_Column_customlang extends _PageList_Column
                 ]);
                 $button = $WikiTheme->makeButton('T', $url);
                 $button->addTooltip(sprintf(
-                    _("Define the translation for %s in %s"),
+                    _('Define the translation for %s in %s'),
                     $trans,
                     $this->_field
                 ));

@@ -115,8 +115,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject
 
     private function reorderRenderer($tv5_id)
     {
-        $this->update("SET @counter = 0");
-        $this->update("SET @previous = NULL");
+        $this->update('SET @counter = 0');
+        $this->update('SET @previous = NULL');
 
         $sql = "UPDATE tracker_report_renderer
                     INNER JOIN (SELECT @counter := IF(@previous = report_id, @counter + 1, 1) AS new_rank,

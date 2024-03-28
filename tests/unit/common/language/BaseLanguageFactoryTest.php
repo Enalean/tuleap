@@ -37,7 +37,7 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->supportedLanguages = ForgeConfig::get('sys_supported_languages');
-        $this->oldLocale          = setlocale(LC_ALL, "0");
+        $this->oldLocale          = setlocale(LC_ALL, '0');
         setlocale(LC_ALL, 'fr_FR');
         ForgeConfig::set('tmp_dir', $this->getTmpDir() . '/tuleap_cache');
         ForgeConfig::set('sys_custom_incdir', $this->getTmpDir());

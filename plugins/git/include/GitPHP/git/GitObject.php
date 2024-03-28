@@ -121,7 +121,7 @@ abstract class GitObject
     protected function SetHash($hash) // @codingStandardsIgnoreLine
     {
         if (! (preg_match('/[0-9a-f]{40}/i', $hash))) {
-            throw new \Exception(sprintf(dgettext("gitphp", 'Invalid hash %1$s'), $hash));
+            throw new \Exception(sprintf(dgettext('gitphp', 'Invalid hash %1$s'), $hash));
         }
         $this->hash = $hash;
     }

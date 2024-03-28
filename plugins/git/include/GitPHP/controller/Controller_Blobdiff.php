@@ -33,7 +33,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
     {
         parent::__construct();
         if (! $this->project) {
-            throw new MessageException(dgettext("gitphp", 'Project is required'), true);
+            throw new MessageException(dgettext('gitphp', 'Project is required'), true);
         }
     }
 
@@ -66,7 +66,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
-            return dgettext("gitphp", 'blobdiff');
+            return dgettext('gitphp', 'blobdiff');
         }
         return 'blobdiff';
     }

@@ -58,7 +58,7 @@ class PostPushWebhookActionBranchHandler
         try {
             $branch_name = WebhookDataBranchNameExtractor::extractBranchName($webhook_data->getReference());
         } catch (EmptyBranchNameException $exception) {
-            $this->logger->error("Branch name is empty.");
+            $this->logger->error('Branch name is empty.');
             return;
         }
 
@@ -67,18 +67,18 @@ class PostPushWebhookActionBranchHandler
         );
 
         if ($tuleap_reference === null) {
-            $this->logger->info("No Tuleap reference found in branch name " . $branch_name);
+            $this->logger->info('No Tuleap reference found in branch name ' . $branch_name);
             return;
         }
 
-        $this->logger->info("A Tuleap reference found in branch name " . $branch_name);
-        $this->logger->info("|_ Reference to Tuleap artifact #" . $tuleap_reference->getId() . " found.");
+        $this->logger->info('A Tuleap reference found in branch name ' . $branch_name);
+        $this->logger->info('|_ Reference to Tuleap artifact #' . $tuleap_reference->getId() . ' found.');
 
         try {
             $external_reference = $this->tuleap_reference_retriever->retrieveTuleapReference($tuleap_reference->getId());
 
             $this->logger->info(
-                "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " found, cross-reference will be added in project the GitLab repository is integrated in."
+                '|  |_ Tuleap artifact #' . $tuleap_reference->getId() . ' found, cross-reference will be added in project the GitLab repository is integrated in.'
             );
 
             $cross_reference = $this->buildCrossReference(
@@ -147,7 +147,7 @@ class PostPushWebhookActionBranchHandler
         DateTimeImmutable $webhook_reception_date,
     ): void {
         $this->logger->info(
-            "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " already references branch $branch_name. Updating the SHA1 and last push date."
+            '|  |_ Tuleap artifact #' . $tuleap_reference->getId() . " already references branch $branch_name. Updating the SHA1 and last push date."
         );
 
         $this->branch_info_dao->updateGitlabBranchInformation(

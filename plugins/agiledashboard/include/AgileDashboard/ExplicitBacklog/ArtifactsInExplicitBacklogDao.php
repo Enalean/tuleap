@@ -39,38 +39,38 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
 
     public function getTopBacklogItemsForProjectSortedByRank(int $project_id, int $limit, int $offset)
     {
-        $sql = "SELECT SQL_CALC_FOUND_ROWS plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id
                 FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
                 INNER JOIN tracker_artifact_priority_rank
                     ON plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id = tracker_artifact_priority_rank.artifact_id
                 WHERE project_id = ?
                 ORDER BY tracker_artifact_priority_rank.`rank`
                 LIMIT ?
-                OFFSET ?";
+                OFFSET ?';
 
         return $this->getDB()->run($sql, $project_id, $limit, $offset);
     }
 
     public function getAllTopBacklogItemsForProjectSortedByRank(int $project_id)
     {
-        $sql = "SELECT SQL_CALC_FOUND_ROWS plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id
                 FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
                 INNER JOIN tracker_artifact_priority_rank
                     ON plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id = tracker_artifact_priority_rank.artifact_id
                 WHERE project_id = ?
-                ORDER BY tracker_artifact_priority_rank.`rank`";
+                ORDER BY tracker_artifact_priority_rank.`rank`';
 
         return $this->getDB()->run($sql, $project_id);
     }
 
     public function getAllArtifactNotInTopBacklogInTracker(int $tracker_id)
     {
-        $sql = "SELECT tracker_artifact.id as artifact_id
+        $sql = 'SELECT tracker_artifact.id as artifact_id
                 FROM tracker_artifact
                 LEFT JOIN plugin_agiledashboard_planning_artifacts_explicit_backlog
                     ON (tracker_artifact.id = plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id)
                 WHERE tracker_artifact.tracker_id = ?
-                AND plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id IS NULL";
+                AND plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id IS NULL';
 
         return $this->getDB()->run($sql, $tracker_id);
     }
@@ -136,10 +136,10 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
 
     public function isArtifactInTopBacklogOfProject(int $artifact_id, int $project_id): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
                 WHERE artifact_id = ?
-                    AND project_id = ?";
+                    AND project_id = ?';
 
         $rows = $this->getDB()->run($sql, $artifact_id, $project_id);
 
@@ -148,9 +148,9 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
 
     public function getNumberOfItemsInExplicitBacklog(int $project_id): int
     {
-        $sql = "SELECT count(*)
+        $sql = 'SELECT count(*)
                 FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         return $this->getDB()->single($sql, [$project_id]);
     }

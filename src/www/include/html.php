@@ -42,7 +42,7 @@ function html_image($src, $args, $display = 1)
 
     // ## insert a border tag if there isn't one
     if (! isset($args['border']) || ! $args['border']) {
-        $return .= (" border=0");
+        $return .= (' border=0');
     }
 
     // ## if no height AND no width tag, insert em both
@@ -282,10 +282,10 @@ function html_build_select_box_from_arrays(
     if ($show_any) {
         if (is_array($checked_val)) {
             if (in_array(0, $checked_val)) {
-                $selected         = "SELECTED";
+                $selected         = 'SELECTED';
                 $isAValueSelected = true;
             } else {
-                $selected = "";
+                $selected = '';
             }
         } else {
             $selected = ( $checked_val == 0 ? 'SELECTED' : '');
@@ -300,10 +300,10 @@ function html_build_select_box_from_arrays(
     if ($show_100) {
         if (is_array($checked_val)) {
             if (in_array(100, $checked_val)) {
-                $selected         = "SELECTED";
+                $selected         = 'SELECTED';
                 $isAValueSelected = true;
             } else {
-                $selected = "";
+                $selected = '';
             }
         } else {
             $selected = ( $checked_val == 100 ? 'SELECTED' : '');
@@ -354,7 +354,7 @@ function html_build_select_box_from_arrays(
 function html_build_select_box(
     $result,
     $name,
-    $checked_val = "xzxz",
+    $checked_val = 'xzxz',
     $show_100 = true,
     $text_100 = '',
     $show_any = false,
@@ -563,7 +563,7 @@ function site_project_header(Project $project, HeaderConfiguration|array $params
     if (is_array($params)) {
         $params['project'] = $project;
     } elseif ($params->in_project === null) {
-        throw new Exception("site_project_header is supposed to be called in a project context");
+        throw new Exception('site_project_header is supposed to be called in a project context');
     }
 
     $is_asking_for_printer_version = is_array($params) && isset($params['pv']) && $params['pv']
@@ -600,7 +600,7 @@ function html_trash_link($link, $warn, $alt)
 {
     $purifier = Codendi_HTMLPurifier::instance();
     return '<a data-test="html_trash_link" href="' . $link . '" onClick="return confirm(\'' . $purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">' .
-        '<img src="' . util_get_image_theme("ic/trash.png") . '" ' . 'height="16" width="16" border="0" alt="' . $purifier->purify($alt) . '" title="' . $purifier->purify($alt) . '">' .
+        '<img src="' . util_get_image_theme('ic/trash.png') . '" ' . 'height="16" width="16" border="0" alt="' . $purifier->purify($alt) . '" title="' . $purifier->purify($alt) . '">' .
         '</a>';
 }
 

@@ -69,7 +69,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         } elseif ($element instanceof Tracker_FormElement_Shared) {
             $this->visitShared($element);
         } else {
-            throw new Exception("Cannot visit unknown type");
+            throw new Exception('Cannot visit unknown type');
         }
     }
 

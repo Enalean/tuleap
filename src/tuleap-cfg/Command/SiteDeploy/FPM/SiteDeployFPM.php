@@ -174,7 +174,7 @@ final class SiteDeployFPM
 
         $this->createMissingDirectories();
 
-        $this->logger->info("Configuration done!");
+        $this->logger->info('Configuration done!');
     }
 
     private function getConfigurationFilesToDeploy(): array
@@ -259,7 +259,7 @@ final class SiteDeployFPM
     private function createMissingDirectories(): void
     {
         if (! is_dir($this->temp_base_directory . '/tuleap_cache/php/session')) {
-            $this->logger->info("Create temporary directories");
+            $this->logger->info('Create temporary directories');
             $this->createDirectoryForAppUser($this->temp_base_directory . '/tuleap_cache');
             $this->createDirectoryForAppUser($this->temp_base_directory . '/tuleap_cache/php');
             $this->createDirectoryForAppUser($this->temp_base_directory . '/tuleap_cache/php/session');

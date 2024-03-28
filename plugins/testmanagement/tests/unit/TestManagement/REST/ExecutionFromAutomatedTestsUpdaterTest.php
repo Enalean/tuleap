@@ -101,7 +101,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
         $execution_1    = Mockery::mock(Artifact::class);
 
         $extracted_test->shouldReceive('getTime')->andReturn(5);
-        $extracted_test->shouldReceive('getStatus')->andReturn("passed");
+        $extracted_test->shouldReceive('getStatus')->andReturn('passed');
         $extracted_test
             ->shouldReceive('getResult')
             ->andReturn(
@@ -168,7 +168,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
         $execution_2      = Mockery::mock(Artifact::class);
 
         $extracted_test_1->shouldReceive('getTime')->andReturn(5);
-        $extracted_test_1->shouldReceive('getStatus')->andReturn("passed");
+        $extracted_test_1->shouldReceive('getStatus')->andReturn('passed');
         $extracted_test_1
             ->shouldReceive('getResult')
             ->andReturn(
@@ -176,7 +176,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
             );
 
         $extracted_test_2->shouldReceive('getTime')->andReturn(9);
-        $extracted_test_2->shouldReceive('getStatus')->andReturn("failed");
+        $extracted_test_2->shouldReceive('getStatus')->andReturn('failed');
         $extracted_test_2
             ->shouldReceive('getResult')
             ->andReturn(

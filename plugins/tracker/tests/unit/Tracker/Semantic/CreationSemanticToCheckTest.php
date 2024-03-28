@@ -30,7 +30,7 @@ final class CreationSemanticToCheckTest extends TestCase
 {
     public function testItReturnsAnErrorIfTheCurrentSemanticIsNotSupported(): void
     {
-        $current_semantic = "hoho";
+        $current_semantic = 'hoho';
         $result           = CreationSemanticToCheck::fromREST($current_semantic);
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(SemanticNotSupportedFault::class, $result->error);
@@ -38,7 +38,7 @@ final class CreationSemanticToCheckTest extends TestCase
 
     public function testItReturnsTheObjectIfTheCurrentSemanticIsSupported(): void
     {
-        $current_semantic = "title";
+        $current_semantic = 'title';
         $result           = CreationSemanticToCheck::fromREST($current_semantic);
         self::assertTrue(Result::isOk($result));
         self::assertSame(Tracker_Semantic_Title::NAME, $result->value->semantic_to_check);
@@ -46,7 +46,7 @@ final class CreationSemanticToCheckTest extends TestCase
 
     public function testItReturnsTrueIfTheCurrentSemanticIsTheSemanticTitle(): void
     {
-        $current_semantic = "title";
+        $current_semantic = 'title';
         $result           = CreationSemanticToCheck::fromREST($current_semantic);
         self::assertTrue($result->value->isSemanticTitle());
     }

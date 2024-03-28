@@ -40,7 +40,7 @@ final class ProjectResourceTest extends \RestBase
     {
         $program_id = $this->getProgramProjectId();
 
-        $team_definition = json_encode(["team_ids" => []]);
+        $team_definition = json_encode(['team_ids' => []]);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'projects/' . $program_id . '/program_teams')->withBody($this->stream_factory->createStream($team_definition))
@@ -54,7 +54,7 @@ final class ProjectResourceTest extends \RestBase
         $program_id = $this->getProgramProjectId();
         $team_id    = $this->getTeamProjectId();
 
-        $team_definition = json_encode(["team_ids" => [$team_id]]);
+        $team_definition = json_encode(['team_ids' => [$team_id]]);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'projects/' . $program_id . '/program_teams')->withBody($this->stream_factory->createStream($team_definition)),
@@ -73,9 +73,9 @@ final class ProjectResourceTest extends \RestBase
 
         $plan_definition = json_encode(
             [
-                "program_increment_tracker_id" => $this->tracker_ids[$project_id]['pi'],
-                "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
-                "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
+                'program_increment_tracker_id' => $this->tracker_ids[$project_id]['pi'],
+                'plannable_tracker_ids' => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
+                'permissions' => ['can_prioritize_features' => ["${project_id}_4"]],
             ]
         );
 
@@ -96,11 +96,11 @@ final class ProjectResourceTest extends \RestBase
 
         $plan_definition = json_encode(
             [
-                "program_increment_tracker_id" => $this->tracker_ids[$project_id]['pi'],
-                "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
-                "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
-                "custom_label" => "Custom Program Increments",
-                "custom_sub_label" => "program increment",
+                'program_increment_tracker_id' => $this->tracker_ids[$project_id]['pi'],
+                'plannable_tracker_ids' => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
+                'permissions' => ['can_prioritize_features' => ["${project_id}_4"]],
+                'custom_label' => 'Custom Program Increments',
+                'custom_sub_label' => 'program increment',
             ]
         );
 
@@ -121,10 +121,10 @@ final class ProjectResourceTest extends \RestBase
 
         $plan_definition = json_encode(
             [
-                "program_increment_tracker_id" => $this->tracker_ids[$project_id]['pi'],
-                "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
-                "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
-                "iteration" => ["iteration_tracker_id" => $this->tracker_ids[$project_id]['iteration']],
+                'program_increment_tracker_id' => $this->tracker_ids[$project_id]['pi'],
+                'plannable_tracker_ids' => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
+                'permissions' => ['can_prioritize_features' => ["${project_id}_4"]],
+                'iteration' => ['iteration_tracker_id' => $this->tracker_ids[$project_id]['iteration']],
             ]
         );
 
@@ -145,10 +145,10 @@ final class ProjectResourceTest extends \RestBase
 
         $plan_definition = json_encode(
             [
-                "program_increment_tracker_id" => $this->tracker_ids[$project_id]['pi'],
-                "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
-                "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
-                "iteration" => ["iteration_tracker_id" => $this->tracker_ids[$project_id]['iteration'], "iteration_label" => "My Iterations", "iteration_sub_label" => "iteration"],
+                'program_increment_tracker_id' => $this->tracker_ids[$project_id]['pi'],
+                'plannable_tracker_ids' => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
+                'permissions' => ['can_prioritize_features' => ["${project_id}_4"]],
+                'iteration' => ['iteration_tracker_id' => $this->tracker_ids[$project_id]['iteration'], 'iteration_label' => 'My Iterations', 'iteration_sub_label' => 'iteration'],
             ]
         );
 
@@ -192,11 +192,11 @@ final class ProjectResourceTest extends \RestBase
         );
 
         $iteration = [
-            "title" => "iteration",
-            "status" => "On Going",
-            "start_date" => "2021-06-14T00:00:00+02:00",
-            "end_date" => "2021-07-01T00:00:00+02:00",
-            "user_can_update" => true,
+            'title' => 'iteration',
+            'status' => 'On Going',
+            'start_date' => '2021-06-14T00:00:00+02:00',
+            'end_date' => '2021-07-01T00:00:00+02:00',
+            'user_can_update' => true,
         ];
 
         self::assertEquals(200, $response->getStatusCode());
@@ -253,7 +253,7 @@ final class ProjectResourceTest extends \RestBase
 
         // Add bug in program increment
         $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id]], $program_increment['artifact_link_id']);
-        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, "id", (string) $bug_id);
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, 'id', (string) $bug_id);
 
         // Remove bug from program increment and add it in program backlog because
         // parameter `remove_from_program_increment_to_add_to_the_backlog` is true
@@ -288,12 +288,12 @@ final class ProjectResourceTest extends \RestBase
 
         // Add bug in program increment
         $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id]], $program_increment['artifact_link_id']);
-        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, "id", (string) $bug_id);
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, 'id', (string) $bug_id);
 
         // Bug is not removed from program increment because
         // parameter `remove_from_program_increment_to_add_to_the_backlog` is false
         $this->patchTopBacklog($project_id, [$bug_id], [], false);
-        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, "id", (string) $bug_id);
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, 'id', (string) $bug_id);
         self::assertEmpty($this->getTopBacklogContent($project_id));
     }
 
@@ -322,7 +322,7 @@ final class ProjectResourceTest extends \RestBase
         );
 
         // Check program increment has features
-        $this->checkGetFirstElementOfProgramIncrement($program_increment['id'], "id", (string) $featureA['id']);
+        $this->checkGetFirstElementOfProgramIncrement($program_increment['id'], 'id', (string) $featureA['id']);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'projects/' . urlencode((string) $project_id) . '/program_backlog')->withBody($this->stream_factory->createStream(json_encode(
@@ -334,7 +334,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertStringContainsString('The feature with id #' . $featureA['id'] . ' cannot be unplanned because some linked user stories are planned in Teams project.', $response->getBody()->getContents());
 
         // Check program increment has still feature with planned US
-        $this->checkGetFirstElementOfProgramIncrement($program_increment['id'], "id", (string) $featureA['id']);
+        $this->checkGetFirstElementOfProgramIncrement($program_increment['id'], 'id', (string) $featureA['id']);
 
         return $program_increment['id'];
     }
@@ -376,8 +376,8 @@ final class ProjectResourceTest extends \RestBase
         // Add bug_2 in program increment
         $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id_2]], $program_increment['artifact_link_id']);
 
-        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, "title", 'My other artifact for top backlog manipulation');
-        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, "id", (string) $bug_id_2);
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, 'title', 'My other artifact for top backlog manipulation');
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, 'id', (string) $bug_id_2);
 
         // Remove bug from program increment and add it in program backlog after bug_1
         $this->patchTopBacklog(
@@ -385,7 +385,7 @@ final class ProjectResourceTest extends \RestBase
             [$bug_id_2],
             [],
             true,
-            ['ids' => [$bug_id_2], 'direction' => "after", 'compared_to' => $bug_id_1]
+            ['ids' => [$bug_id_2], 'direction' => 'after', 'compared_to' => $bug_id_1]
         );
 
         $this->checkGetEmptyProgramIncrementContent($program_increment_id);
@@ -402,7 +402,7 @@ final class ProjectResourceTest extends \RestBase
             [],
             [],
             false,
-            ["ids" => [$bug_id_1], "direction" => "after", "compared_to" => $bug_id_2]
+            ['ids' => [$bug_id_1], 'direction' => 'after', 'compared_to' => $bug_id_2]
         );
 
         $backlog_content = $this->getTopBacklogContent($project_id);
@@ -577,17 +577,17 @@ final class ProjectResourceTest extends \RestBase
 
         $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id_1], ['id' => $bug_id_2]], $program_increment['artifact_link_id']);
 
-        $this->patchProgramIncrementContent($program_increment_id, null, ["ids" => [$bug_id_2], "direction" => "after", "compared_to" => $bug_id_1]);
+        $this->patchProgramIncrementContent($program_increment_id, null, ['ids' => [$bug_id_2], 'direction' => 'after', 'compared_to' => $bug_id_1]);
 
         // Check featureB have been moved after featureA
-        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 0, "id", (string) $bug_id_1);
-        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 1, "id", (string) $bug_id_2);
+        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 0, 'id', (string) $bug_id_1);
+        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 1, 'id', (string) $bug_id_2);
 
-        $this->patchProgramIncrementContent($program_increment_id, null, ["ids" => [$bug_id_2], "direction" => "before", "compared_to" => $bug_id_1]);
+        $this->patchProgramIncrementContent($program_increment_id, null, ['ids' => [$bug_id_2], 'direction' => 'before', 'compared_to' => $bug_id_1]);
 
         // Check feature have been reordered
-        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 0, "id", (string) $bug_id_2);
-        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 1, "id", (string) $bug_id_1);
+        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 0, 'id', (string) $bug_id_2);
+        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 1, 'id', (string) $bug_id_1);
     }
 
     private function checkGetEmptyProgramIncrementContent(int $program_id): void
@@ -740,7 +740,7 @@ final class ProjectResourceTest extends \RestBase
             return [
                 'add'    => self::formatTopBacklogElementChange($to_add),
                 'remove' => self::formatTopBacklogElementChange($to_remove),
-                "remove_from_program_increment_to_add_to_the_backlog" => $remove_program_increment_link,
+                'remove_from_program_increment_to_add_to_the_backlog' => $remove_program_increment_link,
                 'order'  => $order,
             ];
         }
@@ -748,13 +748,13 @@ final class ProjectResourceTest extends \RestBase
         return [
             'add'    => self::formatTopBacklogElementChange($to_add),
             'remove' => self::formatTopBacklogElementChange($to_remove),
-            "remove_from_program_increment_to_add_to_the_backlog" => $remove_program_increment_link,
+            'remove_from_program_increment_to_add_to_the_backlog' => $remove_program_increment_link,
         ];
     }
 
     private function linkSprintToRelease(int $release_id, int $sprint_id): void
     {
-        $values   = ["add"  => [["id" => $sprint_id]]];
+        $values   = ['add'  => [['id' => $sprint_id]]];
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'milestones/' . urlencode((string) $release_id) . '/milestones')->withBody($this->stream_factory->createStream(json_encode($values, JSON_THROW_ON_ERROR)))
         );
@@ -764,8 +764,8 @@ final class ProjectResourceTest extends \RestBase
     private function updateArtifactLinks(int $artifact_id, array $links, int $artifact_field_id): void
     {
         $values = [
-            "values"  => [["field_id" => $artifact_field_id, 'links' => $links]],
-            "comment" => ["body" => "", "format" => "text"],
+            'values'  => [['field_id' => $artifact_field_id, 'links' => $links]],
+            'comment' => ['body' => '', 'format' => 'text'],
         ];
 
         $response = $this->getResponse(
@@ -778,8 +778,8 @@ final class ProjectResourceTest extends \RestBase
     private function updateParentArtifact(int $artifact_id, int $parent_id, int $artifact_field_id): void
     {
         $values = [
-            "values"  => [["field_id" => $artifact_field_id, 'links' => [], 'parent' => ['id' => $parent_id]]],
-            "comment" => ["body" => "", "format" => "text"],
+            'values'  => [['field_id' => $artifact_field_id, 'links' => [], 'parent' => ['id' => $parent_id]]],
+            'comment' => ['body' => '', 'format' => 'text'],
         ];
 
         $response = $this->getResponse(
@@ -819,7 +819,7 @@ final class ProjectResourceTest extends \RestBase
     private function getArtifactLinkFieldId(array $field_list): ?int
     {
         foreach ($field_list as $field) {
-            if ($field['type'] === "art_link") {
+            if ($field['type'] === 'art_link') {
                 return (int) $field['field_id'];
             }
         }

@@ -120,7 +120,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
                 ['action' => 'confirmDelete', 'id' => $this->item->getId()]
             );
 
-            $data_test = "delete-item-" . $this->item->getId();
+            $data_test = 'delete-item-' . $this->item->getId();
             if ($this->item instanceof \Docman_Folder) {
                 $content .= sprintf(
                     dgettext(

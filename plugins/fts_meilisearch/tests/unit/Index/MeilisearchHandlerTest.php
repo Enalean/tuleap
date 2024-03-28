@@ -160,13 +160,13 @@ final class MeilisearchHandlerTest extends TestCase
                             [
                                 'id'         => 1,
                                 '_formatted' => [
-                                    'content' => "... excerpt ...",
+                                    'content' => '... excerpt ...',
                                 ],
                             ],
                             [
                                 'id'         => 2,
                                 '_formatted' => [
-                                    'content' => "... another excerpt ...",
+                                    'content' => '... another excerpt ...',
                                 ],
                             ],
                         ],
@@ -180,8 +180,8 @@ final class MeilisearchHandlerTest extends TestCase
             );
 
         $found_items = [
-            new IndexedItemFound('type', ['A' => '1'], "... excerpt ..."),
-            new IndexedItemFound('type', ['A' => '2'], "... another excerpt ..."),
+            new IndexedItemFound('type', ['A' => '1'], '... excerpt ...'),
+            new IndexedItemFound('type', ['A' => '2'], '... another excerpt ...'),
         ];
         $this->metadata_dao->method('searchMatchingResultsByItemIDs')->willReturn($found_items);
 

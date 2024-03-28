@@ -174,7 +174,7 @@ class DocmanItemCreator
         ?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_representation,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($title, $parent_item->getId())) {
-            throw new RestException(400, "A file with same title already exists in the given folder.");
+            throw new RestException(400, 'A file with same title already exists in the given folder.');
         }
 
         $status_id = $this->status_mapper->getItemStatusWithParentInheritance($parent_item, $status);
@@ -232,7 +232,7 @@ class DocmanItemCreator
         Project $project,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingFolder($representation->title, $parent_item->getId())) {
-            throw new RestException(400, "A folder with same title already exists in the given folder.");
+            throw new RestException(400, 'A folder with same title already exists in the given folder.');
         }
 
         $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(
@@ -272,7 +272,7 @@ class DocmanItemCreator
         Project $project,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
-            throw new RestException(400, "A document with same title already exists in the given folder.");
+            throw new RestException(400, 'A document with same title already exists in the given folder.');
         }
 
         $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(
@@ -319,7 +319,7 @@ class DocmanItemCreator
         Project $project,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
-            throw new RestException(400, "A document with same title already exists in the given folder.");
+            throw new RestException(400, 'A document with same title already exists in the given folder.');
         }
 
         $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(
@@ -373,7 +373,7 @@ class DocmanItemCreator
         Project $project,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
-            throw new RestException(400, "A document with same title already exists in the given folder.");
+            throw new RestException(400, 'A document with same title already exists in the given folder.');
         }
 
         $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(
@@ -420,7 +420,7 @@ class DocmanItemCreator
         Project $project,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
-            throw new RestException(400, "A document with same title already exists in the given folder.");
+            throw new RestException(400, 'A document with same title already exists in the given folder.');
         }
 
         $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(

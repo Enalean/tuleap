@@ -48,7 +48,7 @@ class BotFactoryTest extends TestCase
             ->willReturn(true);
 
         $this->expectException(BotAlreadyExistException::class);
-        $this->bot_factory->save("testbot", "https://test.example.com", "", null);
+        $this->bot_factory->save('testbot', 'https://test.example.com', '', null);
     }
 
     public function testItThrowsAnExceptionIfAProjectBotAlreadyExists(): void
@@ -59,17 +59,17 @@ class BotFactoryTest extends TestCase
             ->willReturn(true);
 
         $this->expectException(BotAlreadyExistException::class);
-        $this->bot_factory->save("testbot", "https://test.example.com", "", 101);
+        $this->bot_factory->save('testbot', 'https://test.example.com', '', 101);
     }
 
     public function testItThrowsAnExceptionIfUpdateEndsUpCreatingAnAlreadyExistingBot(): void
     {
         $bot_to_be_updated = [
-            "id" => 10,
-            "name" => "testbot",
-            "webhook_url" => "https://test.example.com",
-            "avatar_url" => "",
-            "project_id" => 101,
+            'id' => 10,
+            'name' => 'testbot',
+            'webhook_url' => 'https://test.example.com',
+            'avatar_url' => '',
+            'project_id' => 101,
         ];
 
         $this->bot_dao
@@ -84,17 +84,17 @@ class BotFactoryTest extends TestCase
             ->willReturn($bot_to_be_updated);
 
         $this->expectException(BotAlreadyExistException::class);
-        $this->bot_factory->update("testbot", "https://test.example.com", "https://added.avatar.example.com", 10);
+        $this->bot_factory->update('testbot', 'https://test.example.com', 'https://added.avatar.example.com', 10);
     }
 
     public function testItDoesNotThrowAnExceptionIfUpdateChangesTheAvatar(): void
     {
         $bot_to_be_updated = [
-            "id" => 10,
-            "name" => "testbot",
-            "webhook_url" => "https://test.example.com",
-            "avatar_url" => "",
-            "project_id" => 101,
+            'id' => 10,
+            'name' => 'testbot',
+            'webhook_url' => 'https://test.example.com',
+            'avatar_url' => '',
+            'project_id' => 101,
         ];
 
         $this->bot_dao
@@ -113,17 +113,17 @@ class BotFactoryTest extends TestCase
             ->method('updateBot')
             ->willReturn(true);
 
-        $this->bot_factory->update("testbot", "https://test.example.com", "https://added.avatar.example.com", 10);
+        $this->bot_factory->update('testbot', 'https://test.example.com', 'https://added.avatar.example.com', 10);
     }
 
     public function testItThrowsAnExceptionIfTheUpdateIsNotChangingAnything(): void
     {
         $bot_to_be_updated = [
-            "id" => 10,
-            "name" => "testbot",
-            "webhook_url" => "https://test.example.com",
-            "avatar_url" => "https://already.added.avatar.example.com",
-            "project_id" => 101,
+            'id' => 10,
+            'name' => 'testbot',
+            'webhook_url' => 'https://test.example.com',
+            'avatar_url' => 'https://already.added.avatar.example.com',
+            'project_id' => 101,
         ];
 
         $this->bot_dao
@@ -133,6 +133,6 @@ class BotFactoryTest extends TestCase
             ->willReturn($bot_to_be_updated);
 
         $this->expectException(EmptyUpdateException::class);
-        $this->bot_factory->update("testbot", "https://test.example.com", "https://already.added.avatar.example.com", 10);
+        $this->bot_factory->update('testbot', 'https://test.example.com', 'https://already.added.avatar.example.com', 10);
     }
 }

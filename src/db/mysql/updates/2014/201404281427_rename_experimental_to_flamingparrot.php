@@ -23,7 +23,7 @@ class b201404281427_rename_experimental_to_flamingparrot extends \Tuleap\ForgeUp
 {
     public function description()
     {
-        return "Rename Experimental to FlamingParrot";
+        return 'Rename Experimental to FlamingParrot';
     }
 
     public function preUp()

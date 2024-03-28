@@ -37,7 +37,7 @@ class UpdateVisibilityCheckerTest extends TestCase
 
     public function testVisibilitySwitchIsAllowedIfPlatformDoesNotAllowRestrictedUsers(): void
     {
-        ForgeConfig::set(ForgeAccess::CONFIG, "whatever");
+        ForgeConfig::set(ForgeAccess::CONFIG, 'whatever');
         $project = ProjectTestBuilder::aProject()->build();
 
         self::assertTrue(
@@ -105,7 +105,7 @@ class UpdateVisibilityCheckerTest extends TestCase
                 {
                     $event = new UpdateVisibilityIsAllowedEvent(ProjectTestBuilder::aProject()->build());
                     $event->setUpdateVisibilityStatus(
-                        UpdateVisibilityStatus::buildStatusSwitchIsNotAllowed(""),
+                        UpdateVisibilityStatus::buildStatusSwitchIsNotAllowed(''),
                     );
 
                     return $event;

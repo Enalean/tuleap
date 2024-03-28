@@ -58,7 +58,7 @@ final class CreateKanbanController extends DispatchablePSR15Compatible
 
         $body = $request->getParsedBody();
         if (! is_array($body)) {
-            throw new \LogicException("Expected body to be an associative array");
+            throw new \LogicException('Expected body to be an associative array');
         }
 
         if (! isset($body['kanban-name']) || empty($body['kanban-name'])) {

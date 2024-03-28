@@ -642,8 +642,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $method->setAccessible(true);
 
         $field    = $this->getDateField();
-        $fragment = $method->invokeArgs($field, [$is_advanced, "=", $from, $to, $column]);
-        $this->assertEquals("my_date_column BETWEEN ? AND ?", $fragment->sql);
+        $fragment = $method->invokeArgs($field, [$is_advanced, '=', $from, $to, $column]);
+        $this->assertEquals('my_date_column BETWEEN ? AND ?', $fragment->sql);
         $this->assertEquals([$from, $to + 86400 - 1], $fragment->parameters);
     }
 
@@ -658,8 +658,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
-        $fragment = $method->invokeArgs($field, [$is_advanced, "=", null, $to, $column]);
-        $this->assertEquals("my_date_column <= ?", $fragment->sql);
+        $fragment = $method->invokeArgs($field, [$is_advanced, '=', null, $to, $column]);
+        $this->assertEquals('my_date_column <= ?', $fragment->sql);
         $this->assertEquals([$to + 86400 - 1], $fragment->parameters);
     }
 
@@ -675,8 +675,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
-        $fragment = $method->invokeArgs($field, [$is_advanced, "=", $from, $to, $column]);
-        $this->assertEquals("my_date_column BETWEEN ? AND ?", $fragment->sql);
+        $fragment = $method->invokeArgs($field, [$is_advanced, '=', $from, $to, $column]);
+        $this->assertEquals('my_date_column BETWEEN ? AND ?', $fragment->sql);
         $this->assertEquals([$to, $to + 86400 - 1], $fragment->parameters);
     }
 
@@ -692,8 +692,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
-        $fragment = $method->invokeArgs($field, [$is_advanced, "<", $from, $to, $column]);
-        $this->assertEquals("my_date_column < ?", $fragment->sql);
+        $fragment = $method->invokeArgs($field, [$is_advanced, '<', $from, $to, $column]);
+        $this->assertEquals('my_date_column < ?', $fragment->sql);
         $this->assertEquals([$to], $fragment->parameters);
     }
 
@@ -709,8 +709,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
-        $fragment = $method->invokeArgs($field, [$is_advanced, ">", $from, $to, $column]);
-        $this->assertEquals("my_date_column > ?", $fragment->sql);
+        $fragment = $method->invokeArgs($field, [$is_advanced, '>', $from, $to, $column]);
+        $this->assertEquals('my_date_column > ?', $fragment->sql);
         $this->assertEquals([$to + 86400 - 1], $fragment->parameters);
     }
 

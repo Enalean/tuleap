@@ -22,7 +22,7 @@ class b201711301606_add_kanban_tracker_reports_table extends \Tuleap\ForgeUpgrad
 {
     public function description()
     {
-        return "Add table to store the the tracker reports usable to filter a Kanban";
+        return 'Add table to store the the tracker reports usable to filter a Kanban';
     }
 
     public function preUp()
@@ -32,12 +32,12 @@ class b201711301606_add_kanban_tracker_reports_table extends \Tuleap\ForgeUpgrad
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_agiledashboard_kanban_tracker_reports (
+        $sql = 'CREATE TABLE plugin_agiledashboard_kanban_tracker_reports (
                   kanban_id INT(11) NOT NULL,
                   report_id INT(11) NOT NULL,
                   PRIMARY KEY(kanban_id, report_id),
                   INDEX kanban_tracker_reports_report_idx(report_id)
-                ) ENGINE=InnoDB;";
+                ) ENGINE=InnoDB;';
 
         $this->db->createTable('plugin_agiledashboard_kanban_tracker_reports', $sql);
     }

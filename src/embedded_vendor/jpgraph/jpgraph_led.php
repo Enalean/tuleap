@@ -132,8 +132,8 @@ class DigitalLED74
         "\t" => [8,8,8,0,0,0,0], //show hi-stick - that need for simulate rus 'У'
         "\r" => [8,8,8,8,8,8,8], //vertical line - that need for simulate 'M', 'W' and rus 'М','Ш' ,'Щ'
         "\n" => [15,15,15,15,15,15,15], //fill up - that need for simulate rus 'Ж'
-        "Ґ" => [10,5,10,5,10,5,10], //chess
-        "µ" => [15,0,15,0,15,0,15], //4 horizontal lines
+        'Ґ' => [10,5,10,5,10,5,10], //chess
+        'µ' => [15,0,15,0,15,0,15], //4 horizontal lines
             // latin
         'A' => [6,9,9,15,9,9,9],
         'B' => [14,9,9,14,9,9,14],

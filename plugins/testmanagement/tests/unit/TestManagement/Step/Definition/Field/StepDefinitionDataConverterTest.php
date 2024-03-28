@@ -32,27 +32,27 @@ final class StepDefinitionDataConverterTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $steps = [
             [
-                "description"             => "some description",
-                "description_format"      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                "expected_results"        => "some results",
-                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                'description'             => 'some description',
+                'description_format'      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                'expected_results'        => 'some results',
+                'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ],
             [
-                "description"             => "description step 2",
-                "description_format"      => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
-                "expected_results"        => "some results of step 2",
-                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+                'description'             => 'description step 2',
+                'description_format'      => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+                'expected_results'        => 'some results of step 2',
+                'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
             ],
         ];
 
         $expected_converted_steps = [
-            "description"             => ["some description", "description step 2"],
-            "description_format"      => [
+            'description'             => ['some description', 'description step 2'],
+            'description_format'      => [
                 Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                 Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
             ],
-            "expected_results"        => ["some results", "some results of step 2"],
-            "expected_results_format" => [
+            'expected_results'        => ['some results', 'some results of step 2'],
+            'expected_results_format' => [
                 Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                 Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
             ],
@@ -68,29 +68,29 @@ final class StepDefinitionDataConverterTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $steps = [
             [
-                "description"             => "some description",
-                "description_format"      => 'commonmark',
-                "expected_results"        => "some results",
-                "expected_results_format" => 'commonmark',
-                "rank" => 2,
+                'description'             => 'some description',
+                'description_format'      => 'commonmark',
+                'expected_results'        => 'some results',
+                'expected_results_format' => 'commonmark',
+                'rank' => 2,
             ],
             [
-                "description"             => "description step 2",
-                "description_format"      => 'html',
-                "expected_results"        => "some results of step 2",
-                "expected_results_format" => 'html',
-                "rank" => 1,
+                'description'             => 'description step 2',
+                'description_format'      => 'html',
+                'expected_results'        => 'some results of step 2',
+                'expected_results_format' => 'html',
+                'rank' => 1,
             ],
         ];
 
         $expected_converted_steps = [
-            "description"             => ["description step 2", "some description"],
-            "description_format"      => [
+            'description'             => ['description step 2', 'some description'],
+            'description_format'      => [
                 'html',
                 'commonmark',
             ],
-            "expected_results"        => ["some results of step 2", "some results"],
-            "expected_results_format" => [
+            'expected_results'        => ['some results of step 2', 'some results'],
+            'expected_results_format' => [
                 'html',
                 'commonmark',
             ],

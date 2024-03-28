@@ -93,7 +93,7 @@ class ItemStatusMapper
     public function getItemStatusFromItemStatusNumber(int $status_int): string
     {
         if (! isset(self::LEGACY_ITEM_STATUS_ARRAY_MAP[$status_int])) {
-            return "";
+            return '';
         }
         $status_string = self::LEGACY_ITEM_STATUS_ARRAY_MAP[$status_int];
 
@@ -111,7 +111,7 @@ class ItemStatusMapper
     private function checkStatusIsAvailable(?string $status_string): void
     {
         $metadata_usage = $this->docman_settings_bo->getMetadataUsage('status');
-        if (! ($metadata_usage === "1") && ($status_string !== self::ITEM_STATUS_NONE)) {
+        if (! ($metadata_usage === '1') && ($status_string !== self::ITEM_STATUS_NONE)) {
             throw HardCodedMetadataException::itemStatusNotAvailable();
         }
     }

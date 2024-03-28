@@ -141,8 +141,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     public const NOTIFICATIONS_LEVEL_DISABLED_LABEL      = 'notifications_level_disabled';
     public const NOTIFICATIONS_LEVEL_STATUS_CHANGE_LABEL = 'notifications_level_status_change';
 
-    public const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
-    public const TYPE_FIELD_NAME             = "type";
+    public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+    public const TYPE_FIELD_NAME             = 'type';
     public const NO_PARENT                   = null;
 
     // The limit to 25 char is due to cross references
@@ -274,7 +274,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function __toString(): string
     {
-        return "Tracker #" . $this->id;
+        return 'Tracker #' . $this->id;
     }
 
     /**
@@ -1218,7 +1218,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             if ($this->userCanSubmitArtifact($this->getUserManager()->getCurrentUser())) {
                 $link_presenter_builder                         = new TrackerNewDropdownLinkPresenterBuilder();
                 $params['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
-                    sprintf(dgettext("tuleap-tracker", "%s tracker"), $this->getItemName()),
+                    sprintf(dgettext('tuleap-tracker', '%s tracker'), $this->getItemName()),
                     [
                         $link_presenter_builder->build($this),
                     ],
@@ -1238,7 +1238,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
                 $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/artifact');
                 $renderer->renderToPage(
-                    "create-by-mail-modal-info",
+                    'create-by-mail-modal-info',
                     [
                         'email' => $this->getInsecureCreationEmailAddress(),
                     ]
@@ -1294,7 +1294,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 dgettext('tuleap-tracker', 'Administration'),
                 $this->getAdministrationUrl(),
             );
-            $admin_breadcrumb->setDataAttribute("test", "link-to-current-tracker-administration");
+            $admin_breadcrumb->setDataAttribute('test', 'link-to-current-tracker-administration');
 
             $admin_sections[] = new SubItemsSection(
                 '',
@@ -1360,7 +1360,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     private function getAdminHeaderPresenter(string $current_item): HeaderPresenter
     {
         $items            = [];
-        $event_parameters = ["items" => &$items, "tracker_id" => $this->id];
+        $event_parameters = ['items' => &$items, 'tracker_id' => $this->id];
         EventManager::instance()->processEvent(self::TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
 
         $workflow_menu_presenter_builder = new WorkflowMenuPresenterBuilder(EventManager::instance());
@@ -1566,7 +1566,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 'url'   => '#', //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
             ],
         ];
-        $this->displayHeader($layout, $this->name, $breadcrumbs, ["body_class" => ["widgetable"]]);
+        $this->displayHeader($layout, $this->name, $breadcrumbs, ['body_class' => ['widgetable']]);
 
         $event = new TrackerMasschangeGetExternalActionsEvent($this, $user);
         EventManager::instance()->processEvent($event);
@@ -2188,16 +2188,16 @@ class Tracker implements Tracker_Dispatchable_Interface
             $current_user = UserManager::instance()->getCurrentUser();
         }
 
-        $separator                 = ",";   // by default, comma.
+        $separator                 = ',';   // by default, comma.
         $separator_csv_export_pref = $current_user->getPreference('user_csv_separator');
         switch ($separator_csv_export_pref) {
-            case "comma":
+            case 'comma':
                 $separator = ',';
                 break;
-            case "semicolon":
+            case 'semicolon':
                 $separator = ';';
                 break;
-            case "tab":
+            case 'tab':
                 $separator = chr(9);
                 break;
         }
@@ -2211,7 +2211,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
         $dateformat_csv_export_pref = $current_user->getPreference('user_csv_dateformat');
         if ($dateformat_csv_export_pref === false) {
-            $dateformat_csv_export_pref = "month_day_year"; // by default, mm/dd/yyyy
+            $dateformat_csv_export_pref = 'month_day_year'; // by default, mm/dd/yyyy
         }
         return $dateformat_csv_export_pref;
     }
@@ -2493,7 +2493,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
                     if (! $field) {
                         $column_name = $field_name;
-                        $field_name  = explode(" ", $field_name);
+                        $field_name  = explode(' ', $field_name);
                         $field       = $fef->getUsedFieldByName($this->getId(), $field_name[0]);
                     }
 
@@ -2713,7 +2713,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                             $GLOBALS['Response']->addFeedback(
                                 Feedback::ERROR,
                                 sprintf(
-                                    dgettext('tuleap-tracker', "Artifact (%s) does not belong to this tracker."),
+                                    dgettext('tuleap-tracker', 'Artifact (%s) does not belong to this tracker.'),
                                     $artifact->getId()
                                 )
                             );

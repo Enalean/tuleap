@@ -66,7 +66,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $one_recipient_sender,
             $this->createMock(ProjectMemberAdder::class),
         );
-        $sender->send($current_user, ["john@example.com"], null, null, null);
+        $sender->send($current_user, ['john@example.com'], null, null, null);
         self::assertTrue($one_recipient_sender->hasBeenCalled());
     }
 
@@ -93,7 +93,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $one_recipient_sender,
             $this->createMock(ProjectMemberAdder::class),
         );
-        $sender->send($current_user, ["john@example.com"], null, null, null);
+        $sender->send($current_user, ['john@example.com'], null, null, null);
         self::assertFalse($one_recipient_sender->hasBeenCalled());
     }
 
@@ -124,7 +124,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEmpty(
             $sender
-                ->send($current_user, ["john@example.com", "doe@example.com"], null, "A custom message", null)
+                ->send($current_user, ['john@example.com', 'doe@example.com'], null, 'A custom message', null)
                 ->failures
         );
 
@@ -185,7 +185,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $sent_invitation_result = $sender
-            ->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null);
+            ->send($current_user, ['john@example.com', 'doe@example.com'], $project, 'A custom message', null);
 
         self::assertEmpty($sent_invitation_result->failures);
         self::assertEquals([$known_user], $sent_invitation_result->known_users_added_to_project_members);
@@ -241,7 +241,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $sent_invitation_result = $sender
-            ->send($current_user, ["doe@example.com"], $project, "A custom message", null);
+            ->send($current_user, ['doe@example.com'], $project, 'A custom message', null);
 
         self::assertEquals([$known_user], $sent_invitation_result->known_users_not_alive);
         self::assertFalse($one_recipient_sender->hasBeenCalled());
@@ -287,7 +287,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $sent_invitation_result = $sender
-            ->send($current_user, ["doe@example.com"], $project, "A custom message", null);
+            ->send($current_user, ['doe@example.com'], $project, 'A custom message', null);
 
         self::assertEquals([$known_user], $sent_invitation_result->known_users_are_restricted);
         self::assertFalse($one_recipient_sender->hasBeenCalled());
@@ -322,7 +322,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $one_recipient_sender,
             $this->createMock(ProjectMemberAdder::class),
         );
-        $sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null);
+        $sender->send($current_user, ['john@example.com', 'doe@example.com'], $project, 'A custom message', null);
         self::assertFalse($one_recipient_sender->hasBeenCalled());
     }
 
@@ -347,7 +347,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertEmpty(
             $sender
-                ->send($current_user, ["", null, "doe@example.com"], null, null, null)
+                ->send($current_user, ['', null, 'doe@example.com'], null, null, null)
                 ->failures
         );
 
@@ -380,9 +380,9 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                 ?\PFUser $resent_from_user,
             ): Ok|Err => match (true) {
                 $current_user === $from_user && $custom_message === null &&
-                    $recipient->user === null && $recipient->email === "john@example.com" => Result::err(Fault::fromMessage("Unable to send invitation from user #123 to john@example.com")),
+                    $recipient->user === null && $recipient->email === 'john@example.com' => Result::err(Fault::fromMessage('Unable to send invitation from user #123 to john@example.com')),
                 $current_user === $from_user && $custom_message === null &&
-                    $recipient->user === null && $recipient->email === "doe@example.com" => Result::ok(true),
+                    $recipient->user === null && $recipient->email === 'doe@example.com' => Result::ok(true),
             }
         );
 
@@ -397,13 +397,13 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertEquals(
-            ["john@example.com"],
+            ['john@example.com'],
             $sender
-                ->send($current_user, ["john@example.com", "doe@example.com"], null, null, null)
+                ->send($current_user, ['john@example.com', 'doe@example.com'], null, null, null)
                 ->failures
         );
         self::assertTrue(
-            $logger->hasError("Unable to send invitation from user #123 to john@example.com")
+            $logger->hasError('Unable to send invitation from user #123 to john@example.com')
         );
         self::assertCount(2, $one_recipient_sender->getCalls());
     }
@@ -442,7 +442,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(
             [$known_user],
             $sender
-                ->send($current_user, ["doe@example.com"], $project, null, null)
+                ->send($current_user, ['doe@example.com'], $project, null, null)
                 ->already_project_members
         );
         self::assertFalse($one_recipient_sender->hasBeenCalled());
@@ -470,9 +470,9 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                 ?\PFUser $resent_from_user,
             ): Ok|Err => match (true) {
                 $current_user === $from_user && $custom_message === null &&
-                $recipient->user === null && $recipient->email === "john@example.com" => Result::err(Fault::fromMessage("Unable to send invitation from user #123 to john@example.com")),
+                $recipient->user === null && $recipient->email === 'john@example.com' => Result::err(Fault::fromMessage('Unable to send invitation from user #123 to john@example.com')),
                 $current_user === $from_user && $custom_message === null &&
-                $recipient->user === null && $recipient->email === "doe@example.com" => Result::err(Fault::fromMessage("Unable to send invitation from user #123 to doe@example.com")),
+                $recipient->user === null && $recipient->email === 'doe@example.com' => Result::err(Fault::fromMessage('Unable to send invitation from user #123 to doe@example.com')),
             }
         );
 
@@ -485,13 +485,13 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $one_recipient_sender,
             $this->createMock(ProjectMemberAdder::class),
         );
-        $sender->send($current_user, ["john@example.com", "doe@example.com"], null, null, null);
+        $sender->send($current_user, ['john@example.com', 'doe@example.com'], null, null, null);
 
         self::assertTrue(
-            $logger->hasError("Unable to send invitation from user #123 to john@example.com")
+            $logger->hasError('Unable to send invitation from user #123 to john@example.com')
         );
         self::assertTrue(
-            $logger->hasError("Unable to send invitation from user #123 to doe@example.com")
+            $logger->hasError('Unable to send invitation from user #123 to doe@example.com')
         );
         self::assertCount(2, $one_recipient_sender->getCalls());
     }

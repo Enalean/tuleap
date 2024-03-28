@@ -47,7 +47,7 @@ final class ProgramIncrementUpdateBuilder
         );
 
         if (! $program_increment_update) {
-            throw new \LogicException("ProgramIncrementUpdate have not been created");
+            throw new \LogicException('ProgramIncrementUpdate have not been created');
         }
 
         return $program_increment_update;

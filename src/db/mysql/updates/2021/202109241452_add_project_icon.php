@@ -31,11 +31,11 @@ final class b202109241452_add_project_icon extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up(): void
     {
-        if ($this->api->columnNameExists("groups", "icon_codepoint")) {
+        if ($this->api->columnNameExists('groups', 'icon_codepoint')) {
             return;
         }
 
-        $sql = "ALTER TABLE `groups` ADD COLUMN icon_codepoint VARCHAR(255) DEFAULT NULL";
+        $sql = 'ALTER TABLE `groups` ADD COLUMN icon_codepoint VARCHAR(255) DEFAULT NULL';
          $this->api->dbh->exec($sql);
     }
 }

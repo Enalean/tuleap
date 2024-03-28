@@ -35,7 +35,7 @@ class b201910081629_add_index_on_system_events extends ForgeUpgrade_Bucket // @c
 
     public function up()
     {
-        $sql = "ALTER TABLE system_event ADD INDEX idx_status(status)";
+        $sql = 'ALTER TABLE system_event ADD INDEX idx_status(status)';
 
         $res = $this->db->dbh->exec($sql);
 

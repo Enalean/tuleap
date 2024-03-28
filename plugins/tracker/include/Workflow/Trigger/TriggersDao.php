@@ -32,24 +32,24 @@ class TriggersDao extends DataAccessObject
 
     private function isTrackerTargetOfTriggers(int $tracker_id): bool
     {
-        $sql = " SELECT COUNT(*)
+        $sql = ' SELECT COUNT(*)
                 FROM tracker_workflow_trigger_rule_trg_field_static_value
                 INNER JOIN tracker_field_list_bind_static_value ON tracker_workflow_trigger_rule_trg_field_static_value.value_id = tracker_field_list_bind_static_value.id
                 INNER JOIN tracker_field ON tracker_field.id = tracker_field_list_bind_static_value.field_id
                 INNER JOIN tracker ON tracker.id = tracker_field.tracker_id
-                WHERE tracker_field.tracker_id = ? AND tracker.deletion_date IS NULL";
+                WHERE tracker_field.tracker_id = ? AND tracker.deletion_date IS NULL';
 
         return $this->getDB()->single($sql, [$tracker_id]) > 0;
     }
 
     private function isTrackerSourceOfTriggers(int $tracker_id): bool
     {
-        $sql = "SELECT COUNT(*)
+        $sql = 'SELECT COUNT(*)
                 FROM tracker_workflow_trigger_rule_static_value
                 INNER JOIN tracker_field_list_bind_static_value ON tracker_workflow_trigger_rule_static_value.value_id = tracker_field_list_bind_static_value.id
                 INNER JOIN tracker_field ON tracker_field.id = tracker_field_list_bind_static_value.field_id
                 INNER JOIN tracker ON tracker.id = tracker_field.tracker_id
-                WHERE tracker_field.tracker_id = ? AND tracker.deletion_date IS NULL";
+                WHERE tracker_field.tracker_id = ? AND tracker.deletion_date IS NULL';
 
         return $this->getDB()->single($sql, [$tracker_id]) > 0;
     }

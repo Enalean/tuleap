@@ -41,7 +41,7 @@ final class ProgramUserGroupTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(ProgramUserGroupDoesNotExistException::class);
         ProgramUserGroup::buildProgramUserGroup(
             RetrieveProgramUserGroupStub::withNotValidUserGroup(),
-            "123",
+            '123',
             $this->program
         );
     }
@@ -50,7 +50,7 @@ final class ProgramUserGroupTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $group = ProgramUserGroup::buildProgramUserGroup(
             RetrieveProgramUserGroupStub::withValidUserGroups(123),
-            "123",
+            '123',
             $this->program
         );
         self::assertEquals(123, $group->getId());

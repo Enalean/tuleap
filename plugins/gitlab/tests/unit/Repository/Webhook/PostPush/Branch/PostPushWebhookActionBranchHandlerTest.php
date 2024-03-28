@@ -97,17 +97,17 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             'push',
             123654,
             'https://example.com/root/repo01',
-            "3cffabe5",
-            "refs/heads/dev_TULEAP-123",
+            '3cffabe5',
+            'refs/heads/dev_TULEAP-123',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'A commit with three references, two bad, one good',
                     'A commit with three references: TULEAP-666 TULEAP-777 TULEAP-123',
-                    "master",
+                    'master',
                     1608110510,
-                    "john-snow@example.com",
-                    "John Snow"
+                    'john-snow@example.com',
+                    'John Snow'
                 ),
             ]
         );
@@ -170,17 +170,17 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             'push',
             123654,
             'https://example.com/root/repo01',
-            "3cffabe5",
-            "",
+            '3cffabe5',
+            '',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'A commit with three references, two bad, one good',
                     'A commit with three references: TULEAP-666 TULEAP-777 TULEAP-123',
-                    "master",
+                    'master',
                     1608110510,
-                    "john-snow@example.com",
-                    "John Snow"
+                    'john-snow@example.com',
+                    'John Snow'
                 ),
             ]
         );
@@ -225,17 +225,17 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             'push',
             123654,
             'https://example.com/root/repo01',
-            "3cffabe5",
-            "refs/heads/dev",
+            '3cffabe5',
+            'refs/heads/dev',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'A commit with three references, two bad, one good',
                     'A commit with three references: TULEAP-666 TULEAP-777 TULEAP-123',
-                    "master",
+                    'master',
                     1608110510,
-                    "john-snow@example.com",
-                    "John Snow"
+                    'john-snow@example.com',
+                    'John Snow'
                 ),
             ]
         );
@@ -280,17 +280,17 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             'push',
             123654,
             'https://example.com/root/repo01',
-            "3cffabe5",
-            "refs/heads/dev_TULEAP-123",
+            '3cffabe5',
+            'refs/heads/dev_TULEAP-123',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'A commit with three references, two bad, one good',
                     'A commit with three references: TULEAP-666 TULEAP-777 TULEAP-123',
-                    "master",
+                    'master',
                     1608110510,
-                    "john-snow@example.com",
-                    "John Snow"
+                    'john-snow@example.com',
+                    'John Snow'
                 ),
             ]
         );
@@ -340,17 +340,17 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             'push',
             123654,
             'https://example.com/root/repo01',
-            "3cffabe5",
-            "refs/heads/dev_TULEAP-123",
+            '3cffabe5',
+            'refs/heads/dev_TULEAP-123',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'A commit with three references, two bad, one good',
                     'A commit with three references: TULEAP-666 TULEAP-777 TULEAP-123',
-                    "master",
+                    'master',
                     1608110510,
-                    "john-snow@example.com",
-                    "John Snow"
+                    'john-snow@example.com',
+                    'John Snow'
                 ),
             ]
         );
@@ -414,16 +414,16 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             123654,
             'https://example.com/root/repo01',
             null,
-            "refs/heads/dev_TULEAP-123",
+            'refs/heads/dev_TULEAP-123',
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'A commit with three references, two bad, one good',
                     'A commit with three references: TULEAP-666 TULEAP-777 TULEAP-123',
-                    "master",
+                    'master',
                     1608110510,
-                    "john-snow@example.com",
-                    "John Snow"
+                    'john-snow@example.com',
+                    'John Snow'
                 ),
             ]
         );

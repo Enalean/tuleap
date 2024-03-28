@@ -58,7 +58,7 @@ final class PluginUpdateHookCommandTest extends TestCase
         $event_dispatcher = new class implements EventDispatcherInterface {
             public function dispatch(object $event): object
             {
-                throw new \Exception("Something bad");
+                throw new \Exception('Something bad');
             }
         };
 

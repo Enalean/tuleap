@@ -31,6 +31,6 @@ final class XMLExportMediawikiServiceNotUsedFault extends Fault
 {
     public static function buildForXMLExportLogger(): Fault
     {
-        return new self("MediaWiki service is not used in project. Skipping.");
+        return new self('MediaWiki service is not used in project. Skipping.');
     }
 }

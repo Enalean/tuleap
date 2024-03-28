@@ -197,9 +197,9 @@ class FieldDao extends DataAccessObject
                 WHERE tracker_id = $tracker_id
                   AND formElement_type $type_stm";
         if ($used) {
-            $sql .= " AND use_it = 1";
+            $sql .= ' AND use_it = 1';
         }
-        $sql .= " ORDER BY `rank`";
+        $sql .= ' ORDER BY `rank`';
         return $this->retrieve($sql);
     }
 
@@ -227,9 +227,9 @@ class FieldDao extends DataAccessObject
     public function searchAssignedToFieldIdByArtifactTrackerId($TrackerId)
     {
         $sql = sprintf(
-            " SELECT field_id " .
-            " FROM tracker_field " .
-            " WHERE group_artifact_id = %s " .
+            ' SELECT field_id ' .
+            ' FROM tracker_field ' .
+            ' WHERE group_artifact_id = %s ' .
             "   AND (field_name = 'assigned_to' OR field_name = 'multi_assigned_to') ",
             $TrackerId
         );
@@ -325,18 +325,18 @@ class FieldDao extends DataAccessObject
             (int) $field->tracker_id
         );
 
-        $sql = "UPDATE tracker_field
-                SET parent_id         = " . $this->da->escapeInt($field->parent_id) . ",
-                    label             = " . $this->da->quoteSmart($field->label) . ",
-                    name              = " . $this->da->quoteSmart($field->name) . ",
-                    description       = " . $this->da->quoteSmart($field->description) . ",
-                    scope             = " . $this->da->quoteSmart($field->scope) . ",
-                    required          = " . $this->da->escapeInt($field->required ? 1 : 0) . ",
-                    notifications     = " . ($field->notifications ? 1 : "NULL") . ",
-                    use_it            = " . $this->da->escapeInt($field->use_it ? 1 : 0) . ",
-                    `rank`            = " . $this->da->escapeInt($rank) . ",
-                    original_field_id = " . $this->da->escapeInt($field->getOriginalFieldId()) . "
-                WHERE id = " . $this->da->escapeInt($field->id);
+        $sql = 'UPDATE tracker_field
+                SET parent_id         = ' . $this->da->escapeInt($field->parent_id) . ',
+                    label             = ' . $this->da->quoteSmart($field->label) . ',
+                    name              = ' . $this->da->quoteSmart($field->name) . ',
+                    description       = ' . $this->da->quoteSmart($field->description) . ',
+                    scope             = ' . $this->da->quoteSmart($field->scope) . ',
+                    required          = ' . $this->da->escapeInt($field->required ? 1 : 0) . ',
+                    notifications     = ' . ($field->notifications ? 1 : 'NULL') . ',
+                    use_it            = ' . $this->da->escapeInt($field->use_it ? 1 : 0) . ',
+                    `rank`            = ' . $this->da->escapeInt($rank) . ',
+                    original_field_id = ' . $this->da->escapeInt($field->getOriginalFieldId()) . '
+                WHERE id = ' . $this->da->escapeInt($field->id);
         if ($this->update($sql)) {
             $field->rank = $rank;
             return true;
@@ -346,9 +346,9 @@ class FieldDao extends DataAccessObject
 
     public function setType($field, $type)
     {
-        $sql = "UPDATE tracker_field
-                SET formElement_type = " . $this->da->quoteSmart($type) . "
-                WHERE id = " . $this->da->escapeInt($field->id);
+        $sql = 'UPDATE tracker_field
+                SET formElement_type = ' . $this->da->quoteSmart($type) . '
+                WHERE id = ' . $this->da->escapeInt($field->id);
         if ($this->update($sql)) {
             return true;
         }
@@ -357,8 +357,8 @@ class FieldDao extends DataAccessObject
 
     public function delete($field)
     {
-        $sql = "DELETE FROM tracker_field
-                WHERE id = " . $this->da->escapeInt($field->id);
+        $sql = 'DELETE FROM tracker_field
+                WHERE id = ' . $this->da->escapeInt($field->id);
         return $this->update($sql);
     }
 
@@ -534,7 +534,7 @@ class FieldDao extends DataAccessObject
         $use_it        = $this->da->escapeInt($use_it);
         $scope         = $this->da->quoteSmart($scope);
         $required      = $this->da->escapeInt($required);
-        $notifications = ($notifications ? 1 : "NULL");
+        $notifications = ($notifications ? 1 : 'NULL');
         if ($force_absolute_ranking) {
             $rank = (int) $rank;
         } else {
@@ -552,7 +552,7 @@ class FieldDao extends DataAccessObject
         }
         $original_field_id = $this->da->escapeInt($original_field_id);
 
-        $sql = "INSERT INTO tracker_field (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, `rank`, notifications, original_field_id) ";
+        $sql = 'INSERT INTO tracker_field (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, `rank`, notifications, original_field_id) ';
         if ($name) {
             $name = $this->da->quoteSmart($name);
             $sql .= "

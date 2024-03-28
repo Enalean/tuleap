@@ -42,7 +42,7 @@ class DateCriterionValueJson implements CriterionValueJson
         bool $is_advanced,
     ) {
         $this->criterion_name           = $criterion_name;
-        $this->criterion_type           = "date";
+        $this->criterion_type           = 'date';
         $this->criterion_from_value     = $criterion_from_value;
         $this->criterion_to_value       = $criterion_to_value;
         $this->criterion_value_operator = $criterion_value_operator;

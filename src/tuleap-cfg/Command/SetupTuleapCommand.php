@@ -78,34 +78,34 @@ final class SetupTuleapCommand extends Command
         $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
 
         $local_inc = $this->base_directory . '/etc/tuleap/conf/local.inc';
-        $logger->info(sprintf("Write initial configuration in %s", $local_inc));
+        $logger->info(sprintf('Write initial configuration in %s', $local_inc));
         if (file_exists($local_inc)) {
             if (! $force) {
-                $logger->info(sprintf("%s already exists, skip configuration", $local_inc));
+                $logger->info(sprintf('%s already exists, skip configuration', $local_inc));
                 return 0;
             }
             $backup = $this->base_directory . '/etc/tuleap/conf/local.inc.' . date('Y-m-d_H-i-s');
-            $logger->info(sprintf("%s already exists, backup as %s before overwrite", $local_inc, $backup));
+            $logger->info(sprintf('%s already exists, backup as %s before overwrite', $local_inc, $backup));
             rename($local_inc, $backup);
         }
 
         $forge_upgrade_callback = $this->forge_upgrade_provider;
         \ForgeConfig::wrapWithCleanConfig(function () use ($forge_upgrade_callback, $logger, $fqdn) {
-            $logger->info("Configure local.inc");
+            $logger->info('Configure local.inc');
             \ForgeConfig::loadForInitialSetup($fqdn);
             (new SetupTuleap($this->base_directory))->setup();
 
-            $logger->info("Register buckets in forgeupgrade");
+            $logger->info('Register buckets in forgeupgrade');
             $forge_upgrade_callback($logger)->recordOnlyCore();
         });
 
         \ForgeConfig::loadInSequence();
 
-        $logger->info("Generate Secret");
+        $logger->info('Generate Secret');
         $this->secret_key_file->initAndGetEncryptionKeyPath();
         $this->secret_key_file->restoreOwnership($logger);
 
-        $logger->info("Install and activate tracker plugin");
+        $logger->info('Install and activate tracker plugin');
         $this->process_factory->getProcessWithoutTimeout([
             '/usr/bin/sudo',
             '-u',
@@ -115,7 +115,7 @@ final class SetupTuleapCommand extends Command
             'tracker',
         ])->mustRun();
 
-        $logger->info("Redeploy configuration");
+        $logger->info('Redeploy configuration');
         $site_deploy = [
             __DIR__ . '/../tuleap-cfg.php',
             'site-deploy',
@@ -127,7 +127,7 @@ final class SetupTuleapCommand extends Command
         }
         $this->process_factory->getProcessWithoutTimeout($site_deploy)->mustRun();
 
-        $logger->info("Enable and start systemd timers and services");
+        $logger->info('Enable and start systemd timers and services');
         $this->process_factory->getProcessWithoutTimeout(
             array_merge([__DIR__ . '/../tuleap-cfg.php', 'systemctl', 'enable'], self::SYSTEMD_UNITS)
         )->mustRun();

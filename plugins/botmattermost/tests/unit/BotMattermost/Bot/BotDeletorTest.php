@@ -54,7 +54,7 @@ final class BotDeletorTest extends TestCase
 
     public function testItDeletesABot(): void
     {
-        $bot = new Bot(1, "bot", "", "", 101);
+        $bot = new Bot(1, 'bot', '', '', 101);
 
         $this->bot_factory
             ->expects(self::once())
@@ -71,7 +71,7 @@ final class BotDeletorTest extends TestCase
 
     public function testItStopsDeletionIfAnErrorOccured(): void
     {
-        $bot = new Bot(1, "bot", "", "", 101);
+        $bot = new Bot(1, 'bot', '', '', 101);
 
         $this->bot_factory
             ->expects(self::once())

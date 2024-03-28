@@ -35,7 +35,7 @@ class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsNullWhenWorkerEventIsNotForTeamSync(): void
     {
         $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => "a.random.event",
+            'event_name' => 'a.random.event',
             'payload'    => [],
         ]);
 
@@ -60,7 +60,7 @@ class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertNull($event);
-        self::assertTrue($this->logger->hasWarningThatContains("malformed, ignoring"));
+        self::assertTrue($this->logger->hasWarningThatContains('malformed, ignoring'));
     }
 
     public function testItBuildsFromWorkerEvent(): void

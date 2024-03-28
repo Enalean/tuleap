@@ -87,17 +87,17 @@ final class LinkedArtifactsTest extends TrackerBase
             [
                 'values' => [
                     [
-                        "field_id" => $field_id,
-                        "all_links" => [
+                        'field_id' => $field_id,
+                        'all_links' => [
                             [
-                                "id"        => $artifact_id_2,
-                                "direction" => "reverse",
-                                "type"      => "",
+                                'id'        => $artifact_id_2,
+                                'direction' => 'reverse',
+                                'type'      => '',
                             ],
                             [
-                                "id"        => $artifact_id_3,
-                                "direction" => "reverse",
-                                "type"      => "",
+                                'id'        => $artifact_id_3,
+                                'direction' => 'reverse',
+                                'type'      => '',
                             ],
                         ],
                     ],
@@ -119,12 +119,12 @@ final class LinkedArtifactsTest extends TrackerBase
             [
                 'values' => [
                     [
-                        "field_id"  => $field_id,
-                        "all_links" => [
+                        'field_id'  => $field_id,
+                        'all_links' => [
                             [
-                                "id"        => $artifact_id_2,
-                                "direction" => "reverse",
-                                "type"      => "_is_child",
+                                'id'        => $artifact_id_2,
+                                'direction' => 'reverse',
+                                'type'      => '_is_child',
                             ],
                         ],
                     ],
@@ -139,7 +139,7 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertReverseLinkExist($artifact_id_2, $artifact_id_1, "_is_child");
+        $this->assertReverseLinkExist($artifact_id_2, $artifact_id_1, '_is_child');
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward')
@@ -149,7 +149,7 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $linked_artifacts_collection = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEmpty($linked_artifacts_collection["collection"]);
+        $this->assertEmpty($linked_artifacts_collection['collection']);
     }
 
     public function testPOSTArtifacts(): void
@@ -171,22 +171,22 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $body = json_encode(
             [
-                "tracker" => [
-                    "id" => $tracker_id,
+                'tracker' => [
+                    'id' => $tracker_id,
                 ],
                 'values' => [
                     [
-                        "field_id" => $field_id,
-                        "all_links" => [
+                        'field_id' => $field_id,
+                        'all_links' => [
                             [
-                                "id" => $artifact_id_1,
-                                "direction" => "forward",
-                                "type" => "",
+                                'id' => $artifact_id_1,
+                                'direction' => 'forward',
+                                'type' => '',
                             ],
                             [
-                                "id" => $artifact_id_2,
-                                "direction" => "reverse",
-                                "type" => "",
+                                'id' => $artifact_id_2,
+                                'direction' => 'reverse',
+                                'type' => '',
                             ],
                         ],
                     ],
@@ -200,14 +200,14 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', "artifacts")->withBody($this->stream_factory->createStream($body))
+            $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertReverseLinkExist($json['id'], $artifact_id_1, "");
-        $this->assertReverseLinkExist($artifact_id_2, $json['id'], "");
+        $this->assertReverseLinkExist($json['id'], $artifact_id_1, '');
+        $this->assertReverseLinkExist($artifact_id_2, $json['id'], '');
     }
 
     private function assertReverseLinkExist(int $source_artifact_id, int $artifact_id, ?string $expected_type): void
@@ -222,8 +222,8 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $linked_artifacts_collection = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertNotEmpty($linked_artifacts_collection["collection"]);
-        $this->assertEquals($artifact_id, $linked_artifacts_collection["collection"][0]["id"]);
+        $this->assertNotEmpty($linked_artifacts_collection['collection']);
+        $this->assertEquals($artifact_id, $linked_artifacts_collection['collection'][0]['id']);
     }
 
     private function createArtifact(int $tracker_id, int $art_link_field_id, int $status_field_id, int ...$linked_artifacts): int
@@ -282,6 +282,6 @@ final class LinkedArtifactsTest extends TrackerBase
         }
 
         $this->assertEqualsCanonicalizing([$artifact_id_1, $artifact_id_2], $linked_artifacts_id);
-        $this->assertEqualsCanonicalizing(["To be done", "To be done"], $linked_artifacts_status);
+        $this->assertEqualsCanonicalizing(['To be done', 'To be done'], $linked_artifacts_status);
     }
 }

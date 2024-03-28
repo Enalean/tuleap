@@ -46,7 +46,7 @@ class SwitchToOldUiTest extends TestCase
         $user    = UserTestBuilder::anActiveUser()->build();
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        \ForgeConfig::setFeatureFlag(SwitchToOldUi::FEATURE_FLAG, "102,103,1010");
+        \ForgeConfig::setFeatureFlag(SwitchToOldUi::FEATURE_FLAG, '102,103,1010');
 
         self::assertFalse(
             SwitchToOldUi::isAllowed($user, $project)
@@ -58,7 +58,7 @@ class SwitchToOldUiTest extends TestCase
         $user    = UserTestBuilder::anActiveUser()->build();
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        \ForgeConfig::setFeatureFlag(SwitchToOldUi::FEATURE_FLAG, "102,101,103");
+        \ForgeConfig::setFeatureFlag(SwitchToOldUi::FEATURE_FLAG, '102,101,103');
 
         self::assertTrue(
             SwitchToOldUi::isAllowed($user, $project)
@@ -70,7 +70,7 @@ class SwitchToOldUiTest extends TestCase
         $user    = UserTestBuilder::anAnonymousUser()->build();
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        \ForgeConfig::setFeatureFlag(SwitchToOldUi::FEATURE_FLAG, "102,101,103");
+        \ForgeConfig::setFeatureFlag(SwitchToOldUi::FEATURE_FLAG, '102,101,103');
 
         self::assertFalse(
             SwitchToOldUi::isAllowed($user, $project)

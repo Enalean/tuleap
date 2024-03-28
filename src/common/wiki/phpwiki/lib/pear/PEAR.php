@@ -25,7 +25,7 @@ define('PEAR_ERROR_DIE', 8);
 define('PEAR_ERROR_CALLBACK', 16);
 define('PEAR_ERROR_EXCEPTION', 32);
 define('PEAR_ZE2', (function_exists('version_compare') &&
-                    version_compare(zend_version(), "2-dev", "ge")));
+                    version_compare(zend_version(), '2-dev', 'ge')));
 
 if (substr(PHP_OS, 0, 3) == 'WIN') {
     define('OS_WINDOWS', true);
@@ -308,12 +308,12 @@ class PEAR
                 ) {
                     $setoptions = $options;
                 } else {
-                    trigger_error("invalid error callback", E_USER_WARNING);
+                    trigger_error('invalid error callback', E_USER_WARNING);
                 }
                 break;
 
             default:
-                trigger_error("invalid error mode", E_USER_WARNING);
+                trigger_error('invalid error mode', E_USER_WARNING);
                 break;
         }
     }
@@ -414,17 +414,17 @@ class PEAR
                     $deleted = false;
                 }
             }
-            return $deleted ? true : self::raiseError("The expected error you submitted does not exist"); // IMPROVE ME
+            return $deleted ? true : self::raiseError('The expected error you submitted does not exist'); // IMPROVE ME
         } elseif (! empty($error_code)) {
             // $error_code comes alone, trying to unset it
             if ($this->_checkDelExpect($error_code)) {
                 return true;
             } else {
-                return self::raiseError("The expected error you submitted does not exist"); // IMPROVE ME
+                return self::raiseError('The expected error you submitted does not exist'); // IMPROVE ME
             }
         } else {
             // $error_code is empty
-            return self::raiseError("The expected error you submitted is empty"); // IMPROVE ME
+            return self::raiseError('The expected error you submitted is empty'); // IMPROVE ME
         }
     }
 
@@ -486,7 +486,7 @@ class PEAR
 
         if (isset($this) && isset($this->_expected_errors) && sizeof($this->_expected_errors) > 0 && sizeof($exp = end($this->_expected_errors))) {
             if (
-                $exp[0] == "*" ||
+                $exp[0] == '*' ||
                 (is_int(reset($exp)) && in_array($code, $exp)) ||
                 (is_string(reset($exp)) && in_array($message, $exp))
             ) {
@@ -698,7 +698,7 @@ class PEAR_Error
         $options = null,
         $userinfo = null,
     ) {
-        if (function_exists("debug_backtrace")) {
+        if (function_exists('debug_backtrace')) {
             $this->backtrace = debug_backtrace();
         }
         if ($mode === null) {
@@ -720,7 +720,7 @@ class PEAR_Error
         }
         if ($this->mode & PEAR_ERROR_PRINT) {
             if (is_null($options) || is_int($options)) {
-                $format = "%s";
+                $format = '%s';
             } else {
                 $format = $options;
             }
@@ -732,7 +732,7 @@ class PEAR_Error
         if ($this->mode & PEAR_ERROR_DIE) {
             $msg = $this->getMessage();
             if (is_null($options) || is_int($options)) {
-                $format = "%s";
+                $format = '%s';
                 if (substr($msg, -1) != "\n") {
                     $msg .= "\n";
                 }
@@ -942,7 +942,7 @@ class PEAR_Error
             static::class,
             $this->message,
             $this->code,
-            implode("|", $modes),
+            implode('|', $modes),
             $levels[$this->level],
             $this->error_message_prefix,
             $this->userinfo
@@ -952,7 +952,7 @@ class PEAR_Error
     // }}}
 }
 
-register_shutdown_function("_PEAR_call_destructors");
+register_shutdown_function('_PEAR_call_destructors');
 
 /*
  * Local Variables:

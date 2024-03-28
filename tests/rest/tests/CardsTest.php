@@ -34,7 +34,7 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function testPUTCardsWithId()
     {
         $card_id        = REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1];
-        $test_label     = "Ieatlaughingcow";
+        $test_label     = 'Ieatlaughingcow';
         $test_column_id = 2;
 
         // Keep original values

@@ -343,10 +343,10 @@ class Tracker_Artifact_Changeset_Comment
         if (! empty($this->body)) {
             if ($this->parent_id && ! trim($this->body)) {
                 $comment =
-                '<em>' . dgettext('tuleap-tracker', "Comment has been cleared") . '</em>';
+                '<em>' . dgettext('tuleap-tracker', 'Comment has been cleared') . '</em>';
             } else {
                 if ($this->parent_id) {
-                    $comment .= "<em>" . dgettext('tuleap-tracker', "Updated comment:") . "</em><br><br>";
+                    $comment .= '<em>' . dgettext('tuleap-tracker', 'Updated comment:') . '</em><br><br>';
                 }
                 $comment .= $this->getPurifiedBodyForHTML();
             }
@@ -420,7 +420,7 @@ class Tracker_Artifact_Changeset_Comment
         $private_ugroups = $comment_node->addChild('private_ugroups');
         foreach ($ugroups_can_see_comment as $ugroup) {
             $cdata = new XML_SimpleXMLCDATAFactory();
-            $cdata->insert($private_ugroups, "ugroup", $ugroup->getNormalizedName());
+            $cdata->insert($private_ugroups, 'ugroup', $ugroup->getNormalizedName());
         }
     }
 

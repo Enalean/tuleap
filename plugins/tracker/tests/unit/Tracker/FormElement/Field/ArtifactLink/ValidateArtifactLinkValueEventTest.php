@@ -45,7 +45,7 @@ final class ValidateArtifactLinkValueEventTest extends TestCase
     public function testItBuildsTheEventWithOnlyUpdatedLinksIfNoLinksDeleted(): void
     {
         $values = [
-            "types" => [self::FIRST_ARTIFACT_ID => "", self::SECOND_ARTIFACT_ID => "_is_child"],
+            'types' => [self::FIRST_ARTIFACT_ID => '', self::SECOND_ARTIFACT_ID => '_is_child'],
         ];
 
         $event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
@@ -55,7 +55,7 @@ final class ValidateArtifactLinkValueEventTest extends TestCase
 
         self::assertEmpty($event->getSubmittedLinksForDeletion());
         self::assertEqualsCanonicalizing(
-            [self::FIRST_ARTIFACT_ID => "", self::SECOND_ARTIFACT_ID => "_is_child"],
+            [self::FIRST_ARTIFACT_ID => '', self::SECOND_ARTIFACT_ID => '_is_child'],
             $event->getSubmittedLinksWithTypes(),
         );
     }
@@ -63,7 +63,7 @@ final class ValidateArtifactLinkValueEventTest extends TestCase
     public function testItBuildsTheEventWithOnlyDeletedLinks(): void
     {
         $values = [
-            "removed_values" => [
+            'removed_values' => [
                 self::FIRST_ARTIFACT_ID => [self::FIRST_ARTIFACT_ID],
                 self::SECOND_ARTIFACT_ID => [self::SECOND_ARTIFACT_ID],
             ],
@@ -84,8 +84,8 @@ final class ValidateArtifactLinkValueEventTest extends TestCase
     public function testItBuildsTheEventWithDeletedAndUpdatedLinks(): void
     {
         $values = [
-            "removed_values" => [self::FIRST_ARTIFACT_ID => [self::FIRST_ARTIFACT_ID]],
-            "types" => [self::SECOND_ARTIFACT_ID => "_is_child"],
+            'removed_values' => [self::FIRST_ARTIFACT_ID => [self::FIRST_ARTIFACT_ID]],
+            'types' => [self::SECOND_ARTIFACT_ID => '_is_child'],
         ];
 
         $event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
@@ -94,7 +94,7 @@ final class ValidateArtifactLinkValueEventTest extends TestCase
         );
 
         self::assertEqualsCanonicalizing(
-            [self::SECOND_ARTIFACT_ID => "_is_child"],
+            [self::SECOND_ARTIFACT_ID => '_is_child'],
             $event->getSubmittedLinksWithTypes(),
         );
         self::assertEqualsCanonicalizing(

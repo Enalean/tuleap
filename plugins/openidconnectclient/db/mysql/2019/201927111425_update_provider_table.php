@@ -32,16 +32,16 @@ class b201927111425_update_provider_table extends ForgeUpgrade_Bucket // phpcs:i
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_openidconnectclient_provider_generic (
+        $sql = 'CREATE TABLE plugin_openidconnectclient_provider_generic (
                     provider_id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
                     authorization_endpoint TEXT NOT NULL,
                     token_endpoint TEXT NOT NULL,
-                    user_info_endpoint TEXT NOT NULL)";
+                    user_info_endpoint TEXT NOT NULL)';
 
         $this->db->createTable('plugin_openidconnectclient_provider_generic', $sql);
 
-        $sql = "INSERT INTO plugin_openidconnectclient_provider_generic (provider_id, authorization_endpoint, token_endpoint, user_info_endpoint)
-                 SELECT id, authorization_endpoint, token_endpoint, user_info_endpoint FROM plugin_openidconnectclient_provider";
+        $sql = 'INSERT INTO plugin_openidconnectclient_provider_generic (provider_id, authorization_endpoint, token_endpoint, user_info_endpoint)
+                 SELECT id, authorization_endpoint, token_endpoint, user_info_endpoint FROM plugin_openidconnectclient_provider';
 
         $this->db->dbh->query($sql);
     }

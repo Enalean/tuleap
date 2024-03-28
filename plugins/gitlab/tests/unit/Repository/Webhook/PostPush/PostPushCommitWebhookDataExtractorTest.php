@@ -43,7 +43,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItThrowsAnExceptionIfCommitsKeyIsMissing(): void
     {
         $this->expectException(MissingKeyException::class);
-        $this->expectExceptionMessage("key commits is missing");
+        $this->expectExceptionMessage('key commits is missing');
 
         $webhook_content = [
             'ref' => 'master',
@@ -58,7 +58,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $webhook_content = [
             'commits' => [
-                ['message' => "commit 01"],
+                ['message' => 'commit 01'],
             ],
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
@@ -72,7 +72,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
         $webhook_content = [
             'ref' => 'master',
             'commits' => [
-                ['message' => "commit 01"],
+                ['message' => 'commit 01'],
             ],
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
@@ -87,7 +87,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
             'ref' => 'master',
             'commits' => [
                 [
-                    'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
+                    'id' => 'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'message' => 'commit 01',
                 ],
             ],
@@ -104,7 +104,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
             'ref' => 'master',
             'commits' => [
                 [
-                    'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
+                    'id' => 'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'title' => 'commit 01',
                 ],
             ],
@@ -115,18 +115,18 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItThrowsAnExceptionWhenCommitDateKeyIsMissing(): void
     {
         $this->expectException(MissingKeyException::class);
-        $this->expectExceptionMessage("key timestamp is missing");
+        $this->expectExceptionMessage('key timestamp is missing');
 
         $webhook_content = [
             'ref' => 'master',
             'commits' => [
                 [
-                    'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
+                    'id' => 'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'title' => 'commit 01',
-                    'message' => "commit 01",
+                    'message' => 'commit 01',
                     'author' => [
-                        'name' => "John Snow",
-                        'email' => "john-snow@example.com",
+                        'name' => 'John Snow',
+                        'email' => 'john-snow@example.com',
                     ],
                 ],
             ],
@@ -137,16 +137,16 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItThrowsAnExceptionWhenCommitAuthorKeyIsMissing(): void
     {
         $this->expectException(MissingKeyException::class);
-        $this->expectExceptionMessage("key author is missing");
+        $this->expectExceptionMessage('key author is missing');
 
         $webhook_content = [
             'ref' => 'master',
             'commits' => [
                 [
-                    'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
+                    'id' => 'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'title' => 'commit 01',
-                    'message' => "commit 01",
-                    'timestamp' => "2020-12-16T10:21:50+01:00",
+                    'message' => 'commit 01',
+                    'timestamp' => '2020-12-16T10:21:50+01:00',
                 ],
             ],
         ];
@@ -156,16 +156,16 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItThrowsAnExceptionWhenCommitAuthorNameKeyIsMissing(): void
     {
         $this->expectException(MissingKeyException::class);
-        $this->expectExceptionMessage("key name in author is missing");
+        $this->expectExceptionMessage('key name in author is missing');
 
         $webhook_content = [
             'ref' => 'master',
             'commits' => [
                 [
-                    'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
+                    'id' => 'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'title' => 'commit 01',
-                    'message' => "commit 01",
-                    'timestamp' => "2020-12-16T10:21:50+01:00",
+                    'message' => 'commit 01',
+                    'timestamp' => '2020-12-16T10:21:50+01:00',
                     'author' => [
                         'email' => 'john-snow@example.com',
                     ],
@@ -178,18 +178,18 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItThrowsAnExceptionWhenCommitAuthorEmailKeyIsMissing(): void
     {
         $this->expectException(MissingKeyException::class);
-        $this->expectExceptionMessage("key email in author is missing");
+        $this->expectExceptionMessage('key email in author is missing');
 
         $webhook_content = [
             'ref' => 'master',
             'commits' => [
                 [
-                    'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
+                    'id' => 'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'title' => 'commit 01',
-                    'message' => "commit 01",
-                    'timestamp' => "2020-12-16T10:21:50+01:00",
+                    'message' => 'commit 01',
+                    'timestamp' => '2020-12-16T10:21:50+01:00',
                     'author' => [
-                        'name' => "John Snow",
+                        'name' => 'John Snow',
                     ],
                 ],
             ],
@@ -229,19 +229,19 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertCount(2, $commits_data);
 
         $first_commit = $commits_data[0];
-        self::assertSame("feff4ced04b237abb8b4a50b4160099313152c3c", $first_commit->getSha1());
-        self::assertSame("commit 01", $first_commit->getTitle());
-        self::assertSame("commit 01", $first_commit->getMessage());
-        self::assertSame("master", $first_commit->getBranchName());
+        self::assertSame('feff4ced04b237abb8b4a50b4160099313152c3c', $first_commit->getSha1());
+        self::assertSame('commit 01', $first_commit->getTitle());
+        self::assertSame('commit 01', $first_commit->getMessage());
+        self::assertSame('master', $first_commit->getBranchName());
         self::assertSame(1608110510, $first_commit->getCommitDate());
         self::assertSame('John Snow', $first_commit->getAuthorName());
         self::assertSame('john-snow@example.com', $first_commit->getAuthorEmail());
 
         $second_commit = $commits_data[1];
-        self::assertSame("08596fb6360bcc951a06471c616f8bc77800d4f4", $second_commit->getSha1());
-        self::assertSame("commit 02", $second_commit->getTitle());
-        self::assertSame("commit 02", $second_commit->getMessage());
-        self::assertSame("master", $first_commit->getBranchName());
+        self::assertSame('08596fb6360bcc951a06471c616f8bc77800d4f4', $second_commit->getSha1());
+        self::assertSame('commit 02', $second_commit->getTitle());
+        self::assertSame('commit 02', $second_commit->getMessage());
+        self::assertSame('master', $first_commit->getBranchName());
         self::assertSame(1608110510, $second_commit->getCommitDate());
         self::assertSame('The Night King', $second_commit->getAuthorName());
         self::assertSame('the-night-king@example.com', $second_commit->getAuthorEmail());

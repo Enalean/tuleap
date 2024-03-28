@@ -37,7 +37,7 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject
         $value_id            = $this->da->escapeInt($value_id);
         $column_id           = $this->da->escapeInt($column_id);
         if ($field_id === null) {
-            $field_id = " NULL ";
+            $field_id = ' NULL ';
         } else {
             $field_id = $this->da->escapeInt($field_id);
         }

@@ -53,9 +53,9 @@ final class QueryDao extends DataAccessObject
         $user_is_admin   = $this->userIsAdmin($user, $project_id, $permissions, $ugroups);
 
         $from_where = new ParametrizedFromWhere(
-            "tracker_artifact AS artifact
-                 INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)",
-            "artifact.tracker_id = ?",
+            'tracker_artifact AS artifact
+                 INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)',
+            'artifact.tracker_id = ?',
             [],
             [$tracker_id]
         );
@@ -100,7 +100,7 @@ final class QueryDao extends DataAccessObject
         } else {
             // GROUP CONCAT is meant to be used on very large dataset
             // we should move the group_concat_max_len to upper limit
-            $this->getDB()->run("SET SESSION group_concat_max_len = 134217728");
+            $this->getDB()->run('SET SESSION group_concat_max_len = 134217728');
 
             $queries    = [];
             $parameters = [];
@@ -109,8 +109,8 @@ final class QueryDao extends DataAccessObject
                 $parameters = array_merge($parameters, $sql->getParameters());
             }
 
-            $sql  = " SELECT id, last_changeset_id";
-            $sql .= " FROM (" . implode(' UNION ', $queries) . ") AS R GROUP BY id, last_changeset_id";
+            $sql  = ' SELECT id, last_changeset_id';
+            $sql .= ' FROM (' . implode(' UNION ', $queries) . ') AS R GROUP BY id, last_changeset_id';
 
             try {
                 $max_artifacts_in_report = ForgeConfig::getInt(Tracker_ReportDao::MAX_ARTIFACTS_IN_REPORT);
@@ -162,10 +162,10 @@ final class QueryDao extends DataAccessObject
         $in = EasyStatement::open()->in('?*', $ugroups);
 
         return new ParametrizedFromWhere(
-            " LEFT JOIN permissions
+            ' LEFT JOIN permissions
                   ON (permissions.object_id = CAST(c.artifact_id AS CHAR CHARACTER SET utf8)
                       AND permissions.permission_type = ?)
-                ",
+                ',
             " (artifact.use_artifact_permissions = 0 OR permissions.ugroup_id IN ($in)) ",
             [Artifact::PERMISSION_ACCESS],
             $in->values(),
@@ -193,7 +193,7 @@ final class QueryDao extends DataAccessObject
             || $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups)
             || $this->submitterOnlyApplies($user_is_admin, $permissions, $ugroups)
         ) {
-            $sqls[] = new ParametrizedQuery("SELECT c.artifact_id AS id, c.id AS last_changeset_id ", $from_where);
+            $sqls[] = new ParametrizedQuery('SELECT c.artifact_id AS id, c.id AS last_changeset_id ', $from_where);
         } else {
             $sqls = $this->getSqlFragmentsAccordinglyToAssigneeOrSubmitterAccessPermissions(
                 $from_where,
@@ -215,16 +215,16 @@ final class QueryDao extends DataAccessObject
         ParametrizedFrom $join_user_constraint,
     ): ParametrizedQuery {
         return new ParametrizedQuery(
-            "SELECT c.artifact_id AS id, c.id AS last_changeset_id",
+            'SELECT c.artifact_id AS id, c.id AS last_changeset_id',
             new ParametrizedAndFromWhere(
                 $from_where,
                 new ParametrizedAndFromWhere(
                     new ParametrizedFromWhere(
-                        "INNER JOIN tracker_changeset_value AS tcv ON (
+                        'INNER JOIN tracker_changeset_value AS tcv ON (
                             tcv.field_id = ?
                             AND tcv.changeset_id = c.id)
                           INNER JOIN tracker_changeset_value_list AS tcvl ON (
-                            tcvl.changeset_value_id = tcv.id)",
+                            tcvl.changeset_value_id = tcv.id)',
                         '',
                         [$contributor_field_id],
                         [],

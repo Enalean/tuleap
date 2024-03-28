@@ -91,7 +91,7 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'https://example.com/root/project01',
             'root/project01',
             new DateTimeImmutable(),
-            "main"
+            'main'
         );
 
         $this->project = ProjectTestBuilder::aProject()->build();

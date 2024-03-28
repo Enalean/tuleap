@@ -28,7 +28,7 @@ use Tuleap\Project\ProjectAccessChecker;
 
 class CrossReferenceByNatureOrganizer implements Dispatchable
 {
-    public const NAME = "crossReferenceByNatureOrganizer";
+    public const NAME = 'crossReferenceByNatureOrganizer';
 
     /**
      * @var CrossReferencePresenter[]

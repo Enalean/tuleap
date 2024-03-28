@@ -20,8 +20,8 @@
 
 class Mediawiki_Migration_MediawikiMigrator
 {
-    public const PATH_TO_EXECUTION_SCRIPT = "/plugins/mediawiki/bin/migrate_to_123.php";
-    public const PATH_TO_LOCALSETTINGS    = "/plugins/mediawiki/www/LocalSettings.php";
+    public const PATH_TO_EXECUTION_SCRIPT = '/plugins/mediawiki/bin/migrate_to_123.php';
+    public const PATH_TO_LOCALSETTINGS    = '/plugins/mediawiki/www/LocalSettings.php';
 
     /**
      * @throws System_Command_CommandException
@@ -39,6 +39,6 @@ class Mediawiki_Migration_MediawikiMigrator
 
     private function getCommandToExecute(Project $project)
     {
-        return ForgeConfig::get('codendi_dir') . self::PATH_TO_EXECUTION_SCRIPT . " " . escapeshellarg($project->getUnixName()) . " --conf " . ForgeConfig::get('codendi_dir') . self::PATH_TO_LOCALSETTINGS . " --quick";
+        return ForgeConfig::get('codendi_dir') . self::PATH_TO_EXECUTION_SCRIPT . ' ' . escapeshellarg($project->getUnixName()) . ' --conf ' . ForgeConfig::get('codendi_dir') . self::PATH_TO_LOCALSETTINGS . ' --quick';
     }
 }

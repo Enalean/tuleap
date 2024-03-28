@@ -298,7 +298,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             '14a9b6c0c0c965977cf2af2199f93df82afcdea3',
             1608555618,
             'Increase blankets stocks for winter',
-            "master",
+            'master',
             'John Snow',
             'john-snow@the-wall.com',
         );
@@ -307,7 +307,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'be35d127acb88876ee4fdbf02188d372dc61e98d',
             1608555618,
             'Increase hot chocolate stocks for winter',
-            "master",
+            'master',
             'Samwell Tarly',
             'samwell-tarly@the-wall.com',
         );
@@ -434,8 +434,8 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->user_helper->expects(self::never())->method('getDisplayNameFromUser');
 
         $user = $this->createStub(PFUser::class);
-        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
-        $user->method('getLocale')->willReturn("en_US");
+        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $user->method('getLocale')->willReturn('en_US');
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
@@ -538,8 +538,8 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
 
         $user = $this->createStub(PFUser::class);
-        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
-        $user->method('getLocale')->willReturn("en_US");
+        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $user->method('getLocale')->willReturn('en_US');
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
@@ -608,8 +608,8 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->method('getDisplayNameFromUser');
 
         $user = $this->createStub(PFUser::class);
-        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
-        $user->method('getLocale')->willReturn("en_US");
+        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $user->method('getLocale')->willReturn('en_US');
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
@@ -677,8 +677,8 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->method('getDisplayNameFromUser');
 
         $user = $this->createStub(PFUser::class);
-        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
-        $user->method('getLocale')->willReturn("en_US");
+        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $user->method('getLocale')->willReturn('en_US');
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
@@ -713,7 +713,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         );
 
         $this->tag_reference_dao->method('getAllTagsSplitValuesInProject')->willReturn(
-            ['repository_name' => 'root/project01', "tag_name" => 'v1.0.2'],
+            ['repository_name' => 'root/project01', 'tag_name' => 'v1.0.2'],
         );
 
         $this->repository_integration_factory
@@ -724,13 +724,13 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $gitlab_tag = new GitlabTag(
             'sha1',
             'v1.0.2',
-            "This is the tag message"
+            'This is the tag message'
         );
 
         $this->gitlab_tag_factory
             ->expects(self::once())
             ->method('getGitlabTagInRepositoryWithTagName')
-            ->with($integration, "v1.0.2")
+            ->with($integration, 'v1.0.2')
             ->willReturn($gitlab_tag);
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
@@ -782,12 +782,12 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         );
 
         $this->branch_reference_dao->method('getAllBranchesSplitValuesInProject')->willReturn(
-            ['repository_name' => 'root/project01', "branch_name" => 'dev'],
+            ['repository_name' => 'root/project01', 'branch_name' => 'dev'],
         );
 
         $this->gitlab_branch_factory->expects(self::once())
             ->method('getGitlabBranchInRepositoryWithBranchName')
-            ->with($integration, "dev")
+            ->with($integration, 'dev')
             ->willReturn($gitlab_branch);
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
@@ -797,8 +797,8 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->build();
 
         $user = $this->createStub(PFUser::class);
-        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
-        $user->method('getLocale')->willReturn("en_US");
+        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $user->method('getLocale')->willReturn('en_US');
 
         $this->gitlab_branch_cross_reference_enhancer->expects(self::once())
             ->method('getCrossReferencePresenterWithBranchInformation')
@@ -848,7 +848,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             '14a9b6c0c0c965977cf2af2199f93df82afcdea3',
             1608555618,
             'Increase blankets stocks for winter',
-            "master",
+            'master',
             'John Snow',
             'john-snow@the-wall.com',
         );

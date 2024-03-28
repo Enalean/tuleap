@@ -57,7 +57,7 @@ final class GroupTest extends TestBase
 
     public function testPatchGitlabGroupLinkToUpdateCreateBranchPrefix(): void
     {
-        $patch_body = json_encode(['create_branch_prefix' => "dev-"]);
+        $patch_body = json_encode(['create_branch_prefix' => 'dev-']);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'gitlab_groups/' . urlencode($this->gitlab_group_id))
@@ -66,7 +66,7 @@ final class GroupTest extends TestBase
         self::assertSame(200, $response->getStatusCode());
 
         $gitlab_group_after_patch = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        self::assertSame("dev-", $gitlab_group_after_patch["create_branch_prefix"]);
+        self::assertSame('dev-', $gitlab_group_after_patch['create_branch_prefix']);
     }
 
     public function testPatchGitlabGroupLinkToUpdateArtifactClosure(): void

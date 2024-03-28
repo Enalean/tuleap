@@ -84,11 +84,11 @@ final class ArtifactLinkTypeConverterTest extends TestCase
             ],
             'it transforms link types that do not match the expected pattern' => [
                 'jira_json' =>                             [
-                    "id"      => "10000",
-                    "name"    => "Problem/Incident",
-                    "inward"  => "is caused by",
-                    "outward" => "causes",
-                    "self"    => "https://jira.example.com/rest/api/3/issueLinkType/10000",
+                    'id'      => '10000',
+                    'name'    => 'Problem/Incident',
+                    'inward'  => 'is caused by',
+                    'outward' => 'causes',
+                    'self'    => 'https://jira.example.com/rest/api/3/issueLinkType/10000',
                 ],
                 'types' => [],
                 'tests' => function (?TypePresenter $type) {
@@ -155,11 +155,11 @@ final class ArtifactLinkTypeConverterTest extends TestCase
             ],
             'it transforms link types that do not match the expected pattern' => [
                 'jira_json' =>                             [
-                    "id"      => "10000",
-                    "name"    => "Problem/Incident",
-                    "inward"  => "is caused by",
-                    "outward" => "causes",
-                    "self"    => "https://jira.example.com/rest/api/3/issueLinkType/10000",
+                    'id'      => '10000',
+                    'name'    => 'Problem/Incident',
+                    'inward'  => 'is caused by',
+                    'outward' => 'causes',
+                    'self'    => 'https://jira.example.com/rest/api/3/issueLinkType/10000',
                 ],
                 'types' => [TypePresenter::buildVisibleType('Problem_Incident', 'causes', 'is caused by')],
                 'tests' => function (?TypePresenter $type) {
@@ -170,7 +170,7 @@ final class ArtifactLinkTypeConverterTest extends TestCase
             ],
             'it do not transform type that were injected to recreate parent/child relationship out of epic/issues links' => [
                 'jira_json' =>                             [
-                    "name"    => GetExistingArtifactLinkTypes::FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN,
+                    'name'    => GetExistingArtifactLinkTypes::FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN,
                 ],
                 'types' => [TypePresenter::buildVisibleType(\Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD, 'Child', 'Parent')],
                 'tests' => function (?TypePresenter $type) {

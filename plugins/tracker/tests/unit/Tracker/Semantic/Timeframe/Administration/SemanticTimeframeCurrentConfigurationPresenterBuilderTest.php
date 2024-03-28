@@ -111,8 +111,8 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
 
     public function testItBuildsAPresenterWithAListOfTrackerImplyingTheirSemanticsTimeframe(): void
     {
-        $this->start_date_field->expects(self::once())->method('getLabel')->willReturn("Start date");
-        $this->duration_field->expects(self::once())->method('getLabel')->willReturn("Duration");
+        $this->start_date_field->expects(self::once())->method('getLabel')->willReturn('Start date');
+        $this->duration_field->expects(self::once())->method('getLabel')->willReturn('Duration');
 
         $this->current_tracker->expects(self::any())->method('getId')->willReturn(self::CURRENT_TRACKER_ID);
 

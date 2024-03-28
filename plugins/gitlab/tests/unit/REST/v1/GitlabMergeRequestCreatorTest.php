@@ -127,11 +127,11 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             ->willReturn(
                 new GitlabProject(
                     18,
-                    "desc",
-                    "web_url",
-                    "path_with_namespace",
+                    'desc',
+                    'web_url',
+                    'path_with_namespace',
                     new DateTimeImmutable(),
-                    "default_branch_name"
+                    'default_branch_name'
                 )
             );
 
@@ -140,7 +140,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=Draft%3A+TULEAP-123+art+title",
+                '/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=Draft%3A+TULEAP-123+art+title',
                 []
             );
 
@@ -367,17 +367,17 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             [
                 new GitlabRequestException(
                     500,
-                    "Error"
+                    'Error'
                 ),
             ],
             [
                 new GitlabRequestException(
                     400,
-                    "403 Forbidden (Forbidden)"
+                    '403 Forbidden (Forbidden)'
                 ),
             ],
             [
-                new GitlabResponseAPIException("Error"),
+                new GitlabResponseAPIException('Error'),
             ],
         ];
     }
@@ -423,7 +423,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=Draft%3A+TULEAP-123+art+title",
+                '/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=Draft%3A+TULEAP-123+art+title',
                 []
             )
             ->willThrowException($exception);
@@ -448,11 +448,11 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             [
                 new GitlabRequestException(
                     400,
-                    "Bad request"
+                    'Bad request'
                 ),
             ],
             [
-                new GitlabResponseAPIException("Bad request"),
+                new GitlabResponseAPIException('Bad request'),
             ],
         ];
     }
@@ -462,7 +462,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
         return GitlabMergeRequestPOSTRepresentation::build(
             1,
             123,
-            "TULEAP-123_main"
+            'TULEAP-123_main'
         );
     }
 
@@ -486,9 +486,9 @@ final class GitlabMergeRequestCreatorTest extends TestCase
         $integration = new GitlabRepositoryIntegration(
             1,
             23,
-            "root/project01",
-            "",
-            "https://example.com",
+            'root/project01',
+            '',
+            'https://example.com',
             new DateTimeImmutable(),
             $project_integration,
             false
@@ -506,9 +506,9 @@ final class GitlabMergeRequestCreatorTest extends TestCase
         $integration = new GitlabRepositoryIntegration(
             1,
             23,
-            "root/project01",
-            "",
-            "https://example.com",
+            'root/project01',
+            '',
+            'https://example.com',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
@@ -527,11 +527,11 @@ final class GitlabMergeRequestCreatorTest extends TestCase
     {
         return new GitlabProject(
             18,
-            "desc",
-            "web_url",
-            "path_with_namespace",
+            'desc',
+            'web_url',
+            'path_with_namespace',
             new DateTimeImmutable(),
-            "default_branch_name"
+            'default_branch_name'
         );
     }
 }

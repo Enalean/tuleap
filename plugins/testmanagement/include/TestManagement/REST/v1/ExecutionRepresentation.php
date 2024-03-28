@@ -35,7 +35,7 @@ class ExecutionRepresentation
     public const FIELD_RESULTS        = 'results';
     public const FIELD_ASSIGNED_TO    = 'assigned_to';
     public const FIELD_STATUS         = 'status';
-    public const FIELD_ARTIFACT_LINKS = "artifact_links";
+    public const FIELD_ARTIFACT_LINKS = 'artifact_links';
     public const FIELD_TIME           = 'time';
     public const FIELD_STEPS_RESULTS  = 'steps_results';
 

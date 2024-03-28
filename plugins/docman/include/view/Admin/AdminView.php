@@ -48,7 +48,7 @@ abstract class AdminView
             throw new NotFoundException();
         }
 
-        $default_url = $params['default_url'] ?? "";
+        $default_url = $params['default_url'] ?? '';
 
         $this->displayForProject(
             $project,
@@ -264,7 +264,7 @@ abstract class AdminView
     {
         $tab = [
             [
-                'id' => "legacy-view",
+                'id' => 'legacy-view',
                 'title' => \Docman_View_Admin_View::getTabTitle(),
                 'description' => \Docman_View_Admin_View::getTabDescription(),
                 'url' => DocmanViewURLBuilder::buildUrl(
@@ -274,7 +274,7 @@ abstract class AdminView
                 ),
             ],
             [
-                'id' => "filename-pattern",
+                'id' => 'filename-pattern',
                 'title' => Docman_View_Admin_FilenamePattern::getTabTitle(),
                 'description' => Docman_View_Admin_FilenamePattern::getTabDescription(),
                 'url' => DocmanViewURLBuilder::buildUrl(

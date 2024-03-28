@@ -104,11 +104,11 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"            => 1,
-                        "name"          => "Persisted baseline",
-                        "artifact_id"   => 10,
-                        "user_id"       => 22,
-                        "snapshot_date" => 1553176023,
+                        'id'            => 1,
+                        'name'          => 'Persisted baseline',
+                        'artifact_id'   => 10,
+                        'user_id'       => 22,
+                        'snapshot_date' => 1553176023,
                     ],
                 ]
             );
@@ -122,7 +122,7 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_baseline = new Baseline(
             1,
-            "Persisted baseline",
+            'Persisted baseline',
             $artifact,
             $date,
             UserProxy::fromUser($user),
@@ -166,11 +166,11 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"            => 1,
-                        "name"          => "Persisted baseline",
-                        "artifact_id"   => 10,
-                        "user_id"       => 22,
-                        "snapshot_date" => 1553176023,
+                        'id'            => 1,
+                        'name'          => 'Persisted baseline',
+                        'artifact_id'   => 10,
+                        'user_id'       => 22,
+                        'snapshot_date' => 1553176023,
                     ],
                 ]
             );
@@ -204,11 +204,11 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"            => 1,
-                        "name"          => "Persisted baseline",
-                        "artifact_id"   => 10,
-                        "user_id"       => 22,
-                        "snapshot_date" => 1553176023,
+                        'id'            => 1,
+                        'name'          => 'Persisted baseline',
+                        'artifact_id'   => 10,
+                        'user_id'       => 22,
+                        'snapshot_date' => 1553176023,
                     ],
                 ]
             );
@@ -241,11 +241,11 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"            => 1,
-                        "name"          => "Persisted baseline",
-                        "artifact_id"   => 10,
-                        "user_id"       => 22,
-                        "snapshot_date" => 1553176023,
+                        'id'            => 1,
+                        'name'          => 'Persisted baseline',
+                        'artifact_id'   => 10,
+                        'user_id'       => 22,
+                        'snapshot_date' => 1553176023,
                     ],
                 ]
             );
@@ -260,7 +260,7 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_baselines = [
             new Baseline(
                 1,
-                "Persisted baseline",
+                'Persisted baseline',
                 $artifact,
                 $date,
                 UserProxy::fromUser($user),
@@ -291,11 +291,11 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"            => 1,
-                        "name"          => "Persisted baseline",
-                        "artifact_id"   => 10,
-                        "user_id"       => 22,
-                        "snapshot_date" => 1553176023,
+                        'id'            => 1,
+                        'name'          => 'Persisted baseline',
+                        'artifact_id'   => 10,
+                        'user_id'       => 22,
+                        'snapshot_date' => 1553176023,
                     ],
                 ]
             );

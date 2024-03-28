@@ -47,11 +47,11 @@ EOT;
      */
     public function up()
     {
-        $sql = "DROP INDEX project_id_idx ON plugin_mediawiki_database";
+        $sql = 'DROP INDEX project_id_idx ON plugin_mediawiki_database';
 
         $this->execDB($sql, 'An error occured while attempting to delete index project_id_idx from plugin_mediawiki_database');
 
-        $sql = "ALTER TABLE plugin_mediawiki_database ADD PRIMARY KEY(project_id)";
+        $sql = 'ALTER TABLE plugin_mediawiki_database ADD PRIMARY KEY(project_id)';
 
         $this->execDB($sql, 'An error occured while attempting to add a primary key to plugin_mediawiki_database');
 

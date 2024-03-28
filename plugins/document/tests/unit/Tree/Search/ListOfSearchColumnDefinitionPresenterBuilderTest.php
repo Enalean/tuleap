@@ -52,15 +52,15 @@ final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
                 public function searchByProjectId(int $project_id): array
                 {
                     return [
-                        "title",
-                        "id",
-                        "description",
-                        "owner",
-                        "update_date",
-                        "create_date",
-                        "status",
-                        "obsolescence_date",
-                        "location",
+                        'title',
+                        'id',
+                        'description',
+                        'owner',
+                        'update_date',
+                        'create_date',
+                        'status',
+                        'obsolescence_date',
+                        'location',
                     ];
                 }
             }
@@ -69,15 +69,15 @@ final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
 
         self::assertEquals(
             [
-                "id",
-                "title",
-                "description",
-                "owner",
-                "update_date",
-                "create_date",
-                "status",
-                "obsolescence_date",
-                "location",
+                'id',
+                'title',
+                'description',
+                'owner',
+                'update_date',
+                'create_date',
+                'status',
+                'obsolescence_date',
+                'location',
             ],
             array_map(
                 static fn(SearchColumnDefinitionPresenter $column): string => $column->name,
@@ -109,8 +109,8 @@ final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
                 public function searchByProjectId(int $project_id): array
                 {
                     return [
-                        "update_date",
-                        "create_date",
+                        'update_date',
+                        'create_date',
                     ];
                 }
             }
@@ -119,10 +119,10 @@ final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
 
         self::assertEquals(
             [
-                "id",
-                "title",
-                "update_date",
-                "create_date",
+                'id',
+                'title',
+                'update_date',
+                'create_date',
             ],
             array_map(
                 static fn(SearchColumnDefinitionPresenter $column): string => $column->name,
@@ -161,16 +161,16 @@ final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
 
         self::assertEquals(
             [
-                "id",
-                "title",
-                "description",
-                "owner",
-                "update_date",
-                "create_date",
-                "status",
-                "obsolescence_date",
-                "location",
-                "filename",
+                'id',
+                'title',
+                'description',
+                'owner',
+                'update_date',
+                'create_date',
+                'status',
+                'obsolescence_date',
+                'location',
+                'filename',
             ],
             array_map(
                 static fn(SearchColumnDefinitionPresenter $column): string => $column->name,

@@ -53,14 +53,14 @@ class LockListRequest implements GitLfsHTTPOperation
     public static function buildFromHTTPRequest(\HTTPRequest $request): LockListRequest
     {
         $reference = null;
-        $refspec   = $request->get("refspec") ?: null;
+        $refspec   = $request->get('refspec') ?: null;
 
         if ($refspec !== null) {
             $reference = new RequestReference($refspec);
         }
         return new self(
-            $request->get("id") ?: null,
-            $request->get("path") ?: null,
+            $request->get('id') ?: null,
+            $request->get('path') ?: null,
             $reference
         );
     }

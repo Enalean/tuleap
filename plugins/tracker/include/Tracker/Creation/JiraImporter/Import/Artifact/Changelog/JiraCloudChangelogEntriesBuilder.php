@@ -43,21 +43,21 @@ final class JiraCloudChangelogEntriesBuilder implements ChangelogEntriesBuilder
      */
     public function buildEntriesCollectionForIssue(string $jira_issue_key): array
     {
-        $this->logger->debug("  Start build changelog entries collection ...");
+        $this->logger->debug('  Start build changelog entries collection ...');
 
         $changelog_entries = [];
 
         $iterator = JiraCollectionBuilder::iterateUntilTotal(
             $this->jira_client,
             $this->logger,
-            ClientWrapper::JIRA_CORE_BASE_URL . "/issue/" . urlencode($jira_issue_key) . "/changelog",
+            ClientWrapper::JIRA_CORE_BASE_URL . '/issue/' . urlencode($jira_issue_key) . '/changelog',
             'values',
         );
         foreach ($iterator as $value) {
             $changelog_entries[] = JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($value);
         }
 
-        $this->logger->debug("  Changelog entries built with success");
+        $this->logger->debug('  Changelog entries built with success');
 
         return $changelog_entries;
     }

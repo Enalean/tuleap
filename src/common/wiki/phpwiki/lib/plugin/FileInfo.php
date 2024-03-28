@@ -37,20 +37,20 @@ class WikiPlugin_FileInfo extends WikiPlugin
 {
     public function getName()
     {
-        return _("FileInfo");
+        return _('FileInfo');
     }
 
     public function getDescription()
     {
-        return _("Display file information like version,size,date,... of uploaded files.");
+        return _('Display file information like version,size,date,... of uploaded files.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.4 $"
+            '$Revision: 1.4 $'
         );
     }
 
@@ -87,7 +87,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
             $isuploaded = 1;
         }
         $s     = [];
-        $modes = explode(",", $display);
+        $modes = explode(',', $display);
         foreach ($modes as $mode) {
             switch ($mode) {
                 case 'version':
@@ -100,7 +100,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
                     $s[] = $this->phonysize(filesize($file));
                     break;
                 case 'date':
-                    $s[] = strftime("%x %X", filemtime($file));
+                    $s[] = strftime('%x %X', filemtime($file));
                     break;
                 case 'mtime':
                     $s[] = filemtime($file);
@@ -122,13 +122,13 @@ class WikiPlugin_FileInfo extends WikiPlugin
                     break;
                 case 'link':
                     if ($isuploaded) {
-                              $s[] = "[Upload:" . basename($file) . "]";
+                              $s[] = '[Upload:' . basename($file) . ']';
                     } else {
-                                $s[] = "[" . basename($file) . "]";
+                                $s[] = '[' . basename($file) . ']';
                     }
                     break;
                 default:
-                    return $this->error(sprintf(_("Unsupported argument: %s=%s"), 'display', $mode));
+                    return $this->error(sprintf(_('Unsupported argument: %s=%s'), 'display', $mode));
                 break;
             }
         }
@@ -136,14 +136,14 @@ class WikiPlugin_FileInfo extends WikiPlugin
         if (! $format) {
             $format = '';
             foreach ($s as $x) {
-                $format .= " %s";
+                $format .= ' %s';
             }
         }
         array_unshift($s, $format);
     // $x, array($i,$j) => sprintf($x, $i, $j)
-        $result = call_user_func_array("sprintf", $s);
+        $result = call_user_func_array('sprintf', $s);
         if (in_array('link', $modes)) {
-            require_once("lib/InlineParser.php");
+            require_once('lib/InlineParser.php');
             return TransformInline($result);
         } else {
             return $result;
@@ -202,7 +202,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
     public function exeversion($file)
     {
         if (! isWindows()) {
-            return "?";
+            return '?';
         }
         if (function_exists('res_list_type') or loadPhpExtension('win32std')) {
             return $this->exeversion_resopen($file);
@@ -216,7 +216,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
     {
         $path   = realpath($file);
         $result = `showver $path`;
-        return "?";
+        return '?';
     }
 
     // Read "RT_VERSION/VERSIONINFO" exe/dll resource info for MSWin32 binaries
@@ -269,10 +269,10 @@ class WikiPlugin_FileInfo extends WikiPlugin
             if ($v) {
                 return "$v";
             } else {
-                return "";
+                return '';
             }
         } else {
-            return "";
+            return '';
         }
     }
 }

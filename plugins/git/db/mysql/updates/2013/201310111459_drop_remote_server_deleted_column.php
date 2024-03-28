@@ -47,8 +47,8 @@ EOT;
      */
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git
-                DROP COLUMN remote_project_deleted";
+        $sql = 'ALTER TABLE plugin_git
+                DROP COLUMN remote_project_deleted';
         $this->execDB($sql, 'An error occured while droppin remote_project_deleted column from plugin_git table, ');
     }
 

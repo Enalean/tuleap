@@ -28,7 +28,7 @@ use Workflow;
 
 class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
 {
-    public const POSTACTION_TYPE = "frozen_fields";
+    public const POSTACTION_TYPE = 'frozen_fields';
 
     public function accept(array $json): bool
     {
@@ -55,14 +55,14 @@ class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
         if (! is_array($json['field_ids'])) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-tracker', "Bad field_ids attribute format: array of integer expected.")
+                dgettext('tuleap-tracker', 'Bad field_ids attribute format: array of integer expected.')
             );
         }
 
         if (count($json['field_ids']) === 0) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-tracker', "field_ids attribute must not be empty.")
+                dgettext('tuleap-tracker', 'field_ids attribute must not be empty.')
             );
         }
 
@@ -70,7 +70,7 @@ class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
             if (! is_int($field_id)) {
                 throw new I18NRestException(
                     400,
-                    dgettext('tuleap-tracker', "Bad field_ids attribute format: array of integer expected.")
+                    dgettext('tuleap-tracker', 'Bad field_ids attribute format: array of integer expected.')
                 );
             }
         }

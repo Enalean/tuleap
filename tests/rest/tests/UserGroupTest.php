@@ -78,7 +78,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
 
     public function testGETIdThrowsA404IfUserGroupIdDoesNotExist()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', "user_groups/$this->project_private_id" . "_999"));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', "user_groups/$this->project_private_id" . '_999'));
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
@@ -287,7 +287,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     {
         $put_resource = json_encode(
             [
-                "user_references" => [
+                'user_references' => [
                     ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
                     ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME]],
                 ],
@@ -315,7 +315,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     public function testPutUsersInProjectMembersAddsMembers()
     {
         $put_resource = json_encode([
-            "user_references" => [
+            'user_references' => [
                 ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
                 ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME]],
             ],
@@ -342,8 +342,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $response_get_json = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(count($response_get_json), 2);
-        $this->assertEquals($response_get_json[0]["id"], 102);
-        $this->assertEquals($response_get_json[1]["id"], 105);
+        $this->assertEquals($response_get_json[0]['id'], 102);
+        $this->assertEquals($response_get_json[1]['id'], 105);
 
         $this->restoreProjectMembersToAvoidBreakingOtherTests();
     }
@@ -471,8 +471,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $response_get_json = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(count($response_get_json), 2);
-        $this->assertEquals($response_get_json[0]["id"], 102);
-        $this->assertEquals($response_get_json[1]["id"], 104);
+        $this->assertEquals($response_get_json[0]['id'], 102);
+        $this->assertEquals($response_get_json[1]['id'], 104);
     }
 
     /**
@@ -508,8 +508,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $response_get_json = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(count($response_get_json), 2);
-        $this->assertEquals($response_get_json[0]["id"], 103);
-        $this->assertEquals($response_get_json[1]["id"], 104);
+        $this->assertEquals($response_get_json[0]['id'], 103);
+        $this->assertEquals($response_get_json[1]['id'], 104);
     }
 
     /**
@@ -574,9 +574,9 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $response_get_json = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(count($response_get_json), 3);
-        $this->assertEquals($response_get_json[0]["id"], 102);
-        $this->assertEquals($response_get_json[1]["id"], 103);
-        $this->assertEquals($response_get_json[2]["id"], 104);
+        $this->assertEquals($response_get_json[0]['id'], 102);
+        $this->assertEquals($response_get_json[1]['id'], 103);
+        $this->assertEquals($response_get_json[2]['id'], 104);
     }
 
     /**
@@ -767,7 +767,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $members                  = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $user_4_is_project_member = false;
         foreach ($members as $member) {
-            if ($member["username"] === REST_TestDataBuilder::TEST_USER_4_NAME) {
+            if ($member['username'] === REST_TestDataBuilder::TEST_USER_4_NAME) {
                 $user_4_is_project_member = true;
             }
         }
@@ -775,7 +775,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertTrue(
             $user_4_is_project_member,
             sprintf(
-                "Expected to find user %s in the project members of project %s.",
+                'Expected to find user %s in the project members of project %s.',
                 REST_TestDataBuilder::TEST_USER_4_NAME,
                 REST_TestDataBuilder::PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME
             )
@@ -788,13 +788,13 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     private function findDeveloppers(array $user_groups): array
     {
         foreach ($user_groups as $user_group) {
-            if ($user_group["short_name"] === REST_TestDataBuilder::STATIC_PUBLIC_WITH_MEMBERSHIP_UGROUP_DEVS_LABEL) {
+            if ($user_group['short_name'] === REST_TestDataBuilder::STATIC_PUBLIC_WITH_MEMBERSHIP_UGROUP_DEVS_LABEL) {
                 return $user_group;
             }
         }
         throw new Exception(
             sprintf(
-                "Could not find the %s user group in project %s",
+                'Could not find the %s user group in project %s',
                 REST_TestDataBuilder::STATIC_PUBLIC_WITH_MEMBERSHIP_UGROUP_DEVS_LABEL,
                 REST_TestDataBuilder::PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME
             )

@@ -37,20 +37,20 @@ class WikiPlugin_CreatePage extends WikiPlugin
 {
     public function getName()
     {
-        return _("CreatePage");
+        return _('CreatePage');
     }
 
     public function getDescription()
     {
-        return _("Create a Wiki page by the provided name.");
+        return _('Create a Wiki page by the provided name.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.7 $"
+            '$Revision: 1.7 $'
         );
     }
 
@@ -99,7 +99,7 @@ class WikiPlugin_CreatePage extends WikiPlugin
             $current = $page->getCurrentRevision();
             $version = $current->getVersion();
             if ($version and ! $overwrite) {
-                return $this->error(fmt("%s already exists", WikiLink($s)));
+                return $this->error(fmt('%s already exists', WikiLink($s)));
             } else {
                 $user = $request->getUser();
                 $meta = ['markup' => 2.0,
@@ -111,13 +111,13 @@ class WikiPlugin_CreatePage extends WikiPlugin
                     $initial_content = $currenttmpl->getPackedContent();
                     $meta['markup']  = $currenttmpl->_data['markup'];
                 }
-                $meta['summary'] = _("Created by CreatePage");
+                $meta['summary'] = _('Created by CreatePage');
                 // expand variables in $initial_content
                 if (preg_match('/%%\w+%%/', $initial_content)) {
                     $var = [];
                     if (! empty($vars)) {
-                        foreach (preg_split("/&/D", $vars) as $pair) {
-                            list($key,$val) = preg_split("/=/D", $pair);
+                        foreach (preg_split('/&/D', $vars) as $pair) {
+                            list($key,$val) = preg_split('/=/D', $pair);
                             $var[$key]      = $val;
                         }
                     }

@@ -21,7 +21,7 @@ namespace Tuleap\User\REST\v1;
 
 class UserMembershipRepresentation
 {
-    public const ROUTE = "users_memberships";
+    public const ROUTE = 'users_memberships';
 
     /**
      * @var string {@type string}

@@ -40,7 +40,7 @@ class RSS
         $image_elements     = ['title', 'description', 'link', 'url', 'width', 'height'];
         $textinput_elements = ['title', 'description', 'link', 'name'];
         $item_elements      = ['title', 'description', 'link', 'dc:creator', 'pubDate', 'guid'];
-        header("Content-Type: text/xml");
+        header('Content-Type: text/xml');
         echo '<?xml version="1.0"  encoding="UTF-8" ?>' . "\n";
         echo '<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">';
         echo '<channel>';

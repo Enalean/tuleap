@@ -35,7 +35,7 @@ final class b202104271611_create_plugin_gitlab_tag_info_table extends \Tuleap\Fo
 
     public function up(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS plugin_gitlab_tag_info (
                 id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 repository_id INT(11) NOT NULL,
@@ -44,12 +44,12 @@ final class b202104271611_create_plugin_gitlab_tag_info_table extends \Tuleap\Fo
                 tag_message TEXT NOT NULL,
                 INDEX idx_tag(repository_id, tag_name(10))
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_gitlab_tag_info', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_tag_info')) {
-            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException("Table plugin_gitlab_tag_info has not been created in database");
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Table plugin_gitlab_tag_info has not been created in database');
         }
     }
 }

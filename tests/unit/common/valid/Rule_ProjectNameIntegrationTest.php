@@ -48,8 +48,8 @@ final class Rule_ProjectNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCas
             ['test1', true],
         ]);
 
-        self::assertTrue($r->isValid("group-test"));
-        self::assertTrue($r->isValid("test"));
-        self::assertTrue($r->isValid("test1"));
+        self::assertTrue($r->isValid('group-test'));
+        self::assertTrue($r->isValid('test'));
+        self::assertTrue($r->isValid('test1'));
     }
 }

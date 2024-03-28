@@ -27,10 +27,10 @@ class GitlabRepositoryProjectDao extends DataAccessObject
 {
     public function isGitlabRepositoryIntegratedInProject(int $integration_id, int $project_id): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_gitlab_repository_integration
                 WHERE id = ?
-                    AND project_id = ?";
+                    AND project_id = ?';
 
         $rows = $this->getDB()->run($sql, $integration_id, $project_id);
 
@@ -39,11 +39,11 @@ class GitlabRepositoryProjectDao extends DataAccessObject
 
     public function isArtifactClosureActionEnabledForRepositoryInProject(int $integration_id, int $project_id): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_gitlab_repository_integration
                 WHERE id = ?
                     AND project_id = ?
-                    AND allow_artifact_closure = 1";
+                    AND allow_artifact_closure = 1';
 
         $rows = $this->getDB()->run($sql, $integration_id, $project_id);
 

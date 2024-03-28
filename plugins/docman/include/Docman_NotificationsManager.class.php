@@ -306,7 +306,7 @@ class Docman_NotificationsManager
                 break;
             case self::MESSAGE_WIKI_NEWVERSION:
                 $msg .= sprintf(
-                    dgettext('tuleap-docman', "New version of %s wiki page was created by %s."),
+                    dgettext('tuleap-docman', 'New version of %s wiki page was created by %s.'),
                     $params['wiki_page'],
                     $user->getRealName()
                 ) . "\n";
@@ -411,12 +411,12 @@ class Docman_NotificationsManager
         $message  = "\n\n--------------------------------------------------------------------\n";
         $message .= dgettext(
             'tuleap-docman',
-            "You are receiving this message because you are monitoring this item."
+            'You are receiving this message because you are monitoring this item.'
         );
         $message .= "\n";
         $message .= dgettext(
             'tuleap-docman',
-            "To stop monitoring, please visit:"
+            'To stop monitoring, please visit:'
         );
         $message .= "\n";
         $message .= $this->getUrlProvider()->getNotificationLinkUrl($monitored_item);

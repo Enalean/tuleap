@@ -29,20 +29,20 @@ class AttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsAnAttachmentFromIssueRESTResponseAPI(): void
     {
         $response = [
-            "id" => "10001",
-            "filename" => "file01.png",
-            "mimeType" => "image/png",
-            "created" => "2020-03-25T14:10:10.823+0100",
-            "content" => "URL/file01.png",
-            "size"    => "30",
+            'id' => '10001',
+            'filename' => 'file01.png',
+            'mimeType' => 'image/png',
+            'created' => '2020-03-25T14:10:10.823+0100',
+            'content' => 'URL/file01.png',
+            'size'    => '30',
         ];
 
         $attachment = Attachment::buildFromIssueAPIResponse($response);
 
         $this->assertSame(10001, $attachment->getId());
-        $this->assertSame("file01.png", $attachment->getFilename());
-        $this->assertSame("image/png", $attachment->getMimeType());
-        $this->assertSame("URL/file01.png", $attachment->getContentUrl());
+        $this->assertSame('file01.png', $attachment->getFilename());
+        $this->assertSame('image/png', $attachment->getMimeType());
+        $this->assertSame('URL/file01.png', $attachment->getContentUrl());
         $this->assertSame(30, $attachment->getSize());
     }
 }

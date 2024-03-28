@@ -97,7 +97,7 @@ class WikiService extends Controler
                 $GLOBALS['Language']->getText(
                     'wiki_wikiservice',
                     'acces_denied_whole',
-                    session_make_url("/project/memberlist.php?group_id=" . $this->gid)
+                    session_make_url('/project/memberlist.php?group_id=' . $this->gid)
                 ),
                 CODENDI_PURIFIER_DISABLED
             );
@@ -113,7 +113,7 @@ class WikiService extends Controler
                     $GLOBALS['Language']->getText(
                         'wiki_wikiservice',
                         'acces_denied_page',
-                        session_make_url("/project/memberlist.php?group_id=" . $this->gid)
+                        session_make_url('/project/memberlist.php?group_id=' . $this->gid)
                     ),
                     CODENDI_PURIFIER_DISABLED
                 );

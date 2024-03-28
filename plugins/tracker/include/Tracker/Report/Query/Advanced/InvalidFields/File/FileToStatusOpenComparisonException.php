@@ -27,7 +27,7 @@ final class FileToStatusOpenComparisonException extends InvalidFieldException
     public function __construct(Tracker_FormElement_Field $field)
     {
         $message = sprintf(
-            dgettext("tuleap-tracker", "The file field '%s' cannot be compared to OPEN()."),
+            dgettext('tuleap-tracker', "The file field '%s' cannot be compared to OPEN()."),
             $field->getName()
         );
         parent::__construct($message);

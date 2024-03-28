@@ -52,7 +52,7 @@ final class CardSemanticExporterTest extends TestCase
         self::assertCount(1, $semantics_node->semantic);
 
         $semantic_card_node = $semantics_node->semantic[0];
-        self::assertSame("plugin_cardwall_card_fields", (string) $semantic_card_node['type']);
-        self::assertSame("Fassignee", (string) $semantic_card_node->field['REF']);
+        self::assertSame('plugin_cardwall_card_fields', (string) $semantic_card_node['type']);
+        self::assertSame('Fassignee', (string) $semantic_card_node->field['REF']);
     }
 }

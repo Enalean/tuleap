@@ -196,7 +196,7 @@ class ProjectTrackersResource extends AuthenticatedResource
             FaultMapper::mapToRestException(...)
         );
 
-        if (empty($json_query) || isset($json_query["is_tracker_admin"])) {
+        if (empty($json_query) || isset($json_query['is_tracker_admin'])) {
             $representation_builder     = new TrackerRepresentationBuilder($builder, $cannot_create_reasons);
             $project_trackers_retriever = new ProjectTrackersRetriever(
                 TrackerFactory::instance(),

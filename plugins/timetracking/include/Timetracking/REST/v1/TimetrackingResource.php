@@ -220,7 +220,7 @@ class TimetrackingResource extends AuthenticatedResource
         $time         = $this->time_retriever->getTimeByIdForUser($current_user, $id);
 
         if (! $time) {
-            throw new RestException(404, dgettext('tuleap-timetracking', "This time does not exist"));
+            throw new RestException(404, dgettext('tuleap-timetracking', 'This time does not exist'));
         }
         $artifact = $this->getArtifact($current_user, $time->getArtifactId());
 
@@ -292,7 +292,7 @@ class TimetrackingResource extends AuthenticatedResource
     {
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactByIdUserCanView($user, $artifact_id);
         if (! $artifact) {
-            throw new RestException(404, dgettext('tuleap-timetracking', "This artifact does not exist"));
+            throw new RestException(404, dgettext('tuleap-timetracking', 'This artifact does not exist'));
         }
         return $artifact;
     }
@@ -301,7 +301,7 @@ class TimetrackingResource extends AuthenticatedResource
     {
         $time = $this->time_retriever->getTimeByIdForUser($user, $time_id);
         if (! $time) {
-            throw new RestException(404, dgettext('tuleap-timetracking', "This time does not exist"));
+            throw new RestException(404, dgettext('tuleap-timetracking', 'This time does not exist'));
         }
         return $time;
     }

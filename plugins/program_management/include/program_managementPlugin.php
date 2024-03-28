@@ -445,7 +445,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $project_manager,
             new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
             $this->getProgramAdapter(),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
             $this->getVisibleProgramIncrementTrackerRetriever($retrieve_user),
             $program_increments_dao,
             new TeamDao(),
@@ -662,7 +662,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
         return new DisplayPlanIterationsController(
             ProjectManager::instance(),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
             $program_adapter,
             new ProgramFlagsBuilder(
                 new \Tuleap\Project\Flags\ProjectFlagsBuilder(new ProjectFlagsDao()),

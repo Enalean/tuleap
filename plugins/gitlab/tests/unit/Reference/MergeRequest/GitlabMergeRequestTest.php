@@ -27,8 +27,8 @@ class GitlabMergeRequestTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnsFalseIfAuthorNameIsNull(): void
     {
         $merge_request = new GitlabMergeRequest(
-            "My Title",
-            "open",
+            'My Title',
+            'open',
             new \DateTimeImmutable(),
             null,
             null
@@ -40,10 +40,10 @@ class GitlabMergeRequestTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnsTrueIfAuthorNameIsNotEmptyToAvoidARateLimitOnAPI(): void
     {
         $merge_request = new GitlabMergeRequest(
-            "My Title",
-            "open",
+            'My Title',
+            'open',
             new \DateTimeImmutable(),
-            "John",
+            'John',
             null
         );
 

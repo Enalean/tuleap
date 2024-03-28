@@ -48,7 +48,7 @@ rcs_id('$Id: upgrade.php,v 1.47 2005/02/27 19:13:27 rurban Exp $');
  *
  * @author: Reini Urban
  */
-require_once("lib/loadsave.php");
+require_once('lib/loadsave.php');
 
 /**
  * TODO: check for the pgsrc_version number, not the revision mtime only
@@ -61,12 +61,12 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
         // check mtime: update automatically if pgsrc is newer
         $rev        = $page->getCurrentRevision();
         $page_mtime = $rev->get('mtime');
-        $data       = implode("", file($path . "/" . $filename));
+        $data       = implode('', file($path . '/' . $filename));
         if (($parts = ParseMimeifiedPages($data))) {
             usort($parts, 'SortByPageVersion');
             reset($parts);
             $pageinfo  = $parts[0];
-            $stat      = stat($path . "/" . $filename);
+            $stat      = stat($path . '/' . $filename);
             $new_mtime = @$pageinfo['versiondata']['mtime'];
             if (! $new_mtime) {
                 $new_mtime = @$pageinfo['versiondata']['lastmodified'];
@@ -78,10 +78,10 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
                 $new_mtime = $stat[9];
             }
             if ($new_mtime > $page_mtime) {
-                echo "$path/$pagename: ",_("newer than the existing page."),
-                    _(" replace "),"($new_mtime &gt; $page_mtime)","<br />\n";
+                echo "$path/$pagename: ",_('newer than the existing page.'),
+                    _(' replace '),"($new_mtime &gt; $page_mtime)","<br />\n";
                 if (! $checkonly) {
-                    LoadAny($request, $path . "/" . $filename);
+                    LoadAny($request, $path . '/' . $filename);
                 }
                 echo "<br />\n";
             } else {
@@ -89,13 +89,13 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
                     _(" skipped"),".<br />\n";*/
             }
         } else {
-            echo "$path/$pagename: ",("unknown format."),
-                    _(" skipped"),".<br />\n";
+            echo "$path/$pagename: ",('unknown format.'),
+                    _(' skipped'),".<br />\n";
         }
     } else {
-        echo sprintf(_("%s does not exist"), $pagename),"<br />\n";
+        echo sprintf(_('%s does not exist'), $pagename),"<br />\n";
         if (! $checkonly) {
-            LoadAny($request, $path . "/" . $filename);
+            LoadAny($request, $path . '/' . $filename);
         }
         echo "<br />\n";
     }
@@ -106,17 +106,17 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
  */
 function isActionPage($filename)
 {
-    static $special = ["DebugInfo"     => "_BackendInfo",
-        "PhpWikiRecentChanges" => "RssFeed",
-        "ProjectSummary"      => "RssFeed",
-        "RecentReleases"      => "RssFeed",
-        "InterWikiMap"      => "InterWikiMap",
+    static $special = ['DebugInfo'     => '_BackendInfo',
+        'PhpWikiRecentChanges' => 'RssFeed',
+        'ProjectSummary'      => 'RssFeed',
+        'RecentReleases'      => 'RssFeed',
+        'InterWikiMap'      => 'InterWikiMap',
     ];
-    $base           = preg_replace("/\..{1,4}$/", "", basename($filename));
+    $base           = preg_replace('/\..{1,4}$/', '', basename($filename));
     if (isset($special[$base])) {
         return $special[$base];
     }
-    if (FindFile("lib/plugin/" . $base . ".php", true)) {
+    if (FindFile('lib/plugin/' . $base . '.php', true)) {
         return $base;
     } else {
         return false;
@@ -125,7 +125,7 @@ function isActionPage($filename)
 
 function CheckActionPageUpdate(&$request, $checkonly = false)
 {
-    echo "<h3>",_("check for necessary ActionPage updates"),"</h3>\n";
+    echo '<h3>',_('check for necessary ActionPage updates'),"</h3>\n";
     $dbi   = $request->getDbh();
     $path  = FindFile('codendipgsrc');
     $pgsrc = new fileSet($path);
@@ -170,7 +170,7 @@ function CheckActionPageUpdate(&$request, $checkonly = false)
 // see loadsave.php for saving new pages.
 function CheckPgsrcUpdate(&$request, $checkonly = false)
 {
-    echo "<h3>",_("check for necessary pgsrc updates"),"</h3>\n";
+    echo '<h3>',_('check for necessary pgsrc updates'),"</h3>\n";
     $dbi   = $request->getDbh();
     $path  = FindLocalizedFile(WIKI_PGSRC);
     $pgsrc = new fileSet($path);
@@ -185,16 +185,16 @@ function CheckPgsrcUpdate(&$request, $checkonly = false)
         if (defined(HOME_PAGE)) {
             if ($pagename == HOME_PAGE) {
                 $isHomePage = true;
-            } elseif ($pagename == _("HomePage")) {
+            } elseif ($pagename == _('HomePage')) {
                 $isHomePage = true;
             }
         }
-        if ($pagename == "HomePage") {
+        if ($pagename == 'HomePage') {
             $isHomePage = true;
         }
         if ($isHomePage) {
-            echo "$path/$pagename: ",_("always skip the HomePage."),
-                _(" skipped"),".<br />\n";
+            echo "$path/$pagename: ",_('always skip the HomePage.'),
+                _(' skipped'),".<br />\n";
             $isHomePage = false;
             continue;
         }
@@ -207,13 +207,13 @@ function CheckPgsrcUpdate(&$request, $checkonly = false)
 
 function fixConfigIni($match, $new)
 {
-    $file  = FindFile("config/config.ini");
+    $file  = FindFile('config/config.ini');
     $found = false;
     if (is_writable($file)) {
-        $in  = fopen($file, "rb");
-        $out = fopen($tmp = tempnam(FindFile("uploads"), "cfg"), "wb");
+        $in  = fopen($file, 'rb');
+        $out = fopen($tmp = tempnam(FindFile('uploads'), 'cfg'), 'wb');
         if (isWindows()) {
-            $tmp = str_replace("/", "\\", $tmp);
+            $tmp = str_replace('/', '\\', $tmp);
         }
         while ($s = fgets($in)) {
             if (preg_match($match, $s)) {
@@ -225,49 +225,49 @@ function fixConfigIni($match, $new)
         fclose($in);
         fclose($out);
         if (! $found) {
-            echo " <b><font color=\"red\">",_("FAILED"),"</font></b>: ",
-                sprintf(_("%s not found"), $match);
+            echo ' <b><font color="red">',_('FAILED'),'</font></b>: ',
+                sprintf(_('%s not found'), $match);
             unlink($out);
         } else {
             @unlink("$file.bak");
             @rename($file, "$file.bak");
             if (rename($tmp, $file)) {
-                echo " <b>",_("FIXED"),"</b>";
+                echo ' <b>',_('FIXED'),'</b>';
             } else {
-                echo " <b>",_("FAILED"),"</b>: ";
+                echo ' <b>',_('FAILED'),'</b>: ';
                 sprintf(_("couldn't move %s to %s"), $tmp, $file);
                 return false;
             }
         }
         return $found;
     } else {
-        echo " <b><font color=\"red\">",_("FAILED"),"</font></b>: ",
-            sprintf(_("%s is not writable"), $file);
+        echo ' <b><font color="red">',_('FAILED'),'</font></b>: ',
+            sprintf(_('%s is not writable'), $file);
         return false;
     }
 }
 
 function CheckConfigUpdate(&$request)
 {
-    echo "<h3>",_("check for necessary config updates"),"</h3>\n";
-    echo _("check for old CACHE_CONTROL = NONE")," ... ";
+    echo '<h3>',_('check for necessary config updates'),"</h3>\n";
+    echo _('check for old CACHE_CONTROL = NONE'),' ... ';
     if (defined('CACHE_CONTROL') and CACHE_CONTROL == '') {
-        echo "<br />&nbsp;&nbsp;",
+        echo '<br />&nbsp;&nbsp;',
             _("CACHE_CONTROL is set to 'NONE', and must be changed to 'NO_CACHE'"),
-            " ...";
-        fixConfigIni("/^\s*CACHE_CONTROL\s*=\s*NONE/", "CACHE_CONTROL = NO_CACHE");
+            ' ...';
+        fixConfigIni('/^\s*CACHE_CONTROL\s*=\s*NONE/', 'CACHE_CONTROL = NO_CACHE');
     } else {
-        echo _("OK");
+        echo _('OK');
     }
     echo "<br />\n";
-    echo _("check for GROUP_METHOD = NONE")," ... ";
+    echo _('check for GROUP_METHOD = NONE'),' ... ';
     if (defined('GROUP_METHOD') and GROUP_METHOD == '') {
-        echo "<br />&nbsp;&nbsp;",
-            _("GROUP_METHOD is set to NONE, and must be changed to \"NONE\""),
-            " ...";
-        fixConfigIni("/^\s*GROUP_METHOD\s*=\s*NONE/", "GROUP_METHOD = \"NONE\"");
+        echo '<br />&nbsp;&nbsp;',
+            _('GROUP_METHOD is set to NONE, and must be changed to "NONE"'),
+            ' ...';
+        fixConfigIni('/^\s*GROUP_METHOD\s*=\s*NONE/', 'GROUP_METHOD = "NONE"');
     } else {
-        echo _("OK");
+        echo _('OK');
     }
     echo "<br />\n";
 }
@@ -301,14 +301,14 @@ function DoUpgrade($request)
         $request->finish(
             HTML::div(
                 ['class' => 'disabled-plugin'],
-                fmt("Upgrade disabled: user != isAdmin")
+                fmt('Upgrade disabled: user != isAdmin')
             )
         );
         return;
     }
 
     //print("<br>This action is blocked by administrator. Sorry for the inconvenience !<br>");
-    exit("<br>This action is blocked by administrator. Sorry for the inconvenience !<br>");
+    exit('<br>This action is blocked by administrator. Sorry for the inconvenience !<br>');
 }
 
 

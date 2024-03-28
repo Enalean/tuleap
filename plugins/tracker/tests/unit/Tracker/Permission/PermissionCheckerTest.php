@@ -635,7 +635,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
         // $submitter, $u_sub should have the right to see it.
         // $other, $assignee, $u_ass and $u should not have the right to see it
 
-        $permissions = ["PLUGIN_TRACKER_ACCESS_SUBMITTER" => [0 => $ugroup_sub]];
+        $permissions = ['PLUGIN_TRACKER_ACCESS_SUBMITTER' => [0 => $ugroup_sub]];
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
@@ -672,7 +672,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
         // $artifact_assignee has been submitted by $u and assigned to $assignee
         // $assignee and $u_ass should have the right to see it.
         // $other, $submitter, $u_sub and $u should not have the right to see it
-        $permissions = ["PLUGIN_TRACKER_ACCESS_ASSIGNEE" => [0 => $ugroup_ass]];
+        $permissions = ['PLUGIN_TRACKER_ACCESS_ASSIGNEE' => [0 => $ugroup_ass]];
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
         $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);
@@ -704,8 +704,8 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
         // $artifact_subass has been submitted by $submitter and assigned to $assignee
         // $assignee, $u_ass, $submitter, $u_sub should have the right to see it.
         // $other and $u should not have the right to see it
-        $permissions = ["PLUGIN_TRACKER_ACCESS_ASSIGNEE"  => [0 => $ugroup_ass],
-            "PLUGIN_TRACKER_ACCESS_SUBMITTER" => [0 => $ugroup_sub],
+        $permissions = ['PLUGIN_TRACKER_ACCESS_ASSIGNEE'  => [0 => $ugroup_ass],
+            'PLUGIN_TRACKER_ACCESS_SUBMITTER' => [0 => $ugroup_sub],
         ];
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
@@ -773,7 +773,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
         // $artifact_subass has been submitted by $submitter and assigned to $assignee
         // $u should have the right to see it.
         // $other, $submitter and assigned should not have the right to see it
-        $permissions = ["PLUGIN_TRACKER_ACCESS_FULL" => [0 => $ugroup_ful]];
+        $permissions = ['PLUGIN_TRACKER_ACCESS_FULL' => [0 => $ugroup_ful]];
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
         $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);

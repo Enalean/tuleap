@@ -33,7 +33,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
     {
         parent::__construct();
         if (! $this->project) {
-            throw new MessageException(dgettext("gitphp", 'Project is required'), true);
+            throw new MessageException(dgettext('gitphp', 'Project is required'), true);
         }
     }
 
@@ -69,7 +69,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
-            return dgettext("gitphp", 'commitdiff');
+            return dgettext('gitphp', 'commitdiff');
         }
         return 'commitdiff';
     }
@@ -133,7 +133,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
         $this->tpl->assign('commit', $commit);
 
         if (isset($this->params['hashparent'])) {
-            $this->tpl->assign("hashparent", $this->params['hashparent']);
+            $this->tpl->assign('hashparent', $this->params['hashparent']);
         }
 
         if (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true)) {

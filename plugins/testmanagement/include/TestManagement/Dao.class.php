@@ -39,10 +39,10 @@ class Dao extends DataAccessObject
 
     public function countTestsExecutionsArtifacts(): int
     {
-        $sql  = "SELECT count(*) AS nb
+        $sql  = 'SELECT count(*) AS nb
                 FROM plugin_testmanagement
                 INNER JOIN tracker_artifact
-                    ON plugin_testmanagement.test_execution_tracker_id = tracker_artifact.tracker_id";
+                    ON plugin_testmanagement.test_execution_tracker_id = tracker_artifact.tracker_id';
         $rows = $this->retrieve($sql);
         if (! $rows) {
             return 0;
@@ -81,7 +81,7 @@ class Dao extends DataAccessObject
         $campaign_tracker_id        = $this->da->escapeInt($campaign_tracker_id);
         $test_definition_tracker_id = $this->da->escapeInt($test_definition_tracker_id);
         $test_execution_tracker_id  = $this->da->escapeInt($test_execution_tracker_id);
-        $issue_tracker_id           = $issue_tracker_id ? $this->da->escapeInt($issue_tracker_id) : "null";
+        $issue_tracker_id           = $issue_tracker_id ? $this->da->escapeInt($issue_tracker_id) : 'null';
 
         $sql = "REPLACE INTO plugin_testmanagement (project_id, campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id, issue_tracker_id)
                 VALUES ($project_id, $campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id, $issue_tracker_id)";

@@ -51,7 +51,7 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request = Mockery::mock(\HTTPRequest::class);
         $this->project = Mockery::mock(Project::class);
 
-        $this->request->shouldReceive("getProject")->andReturn($this->project);
+        $this->request->shouldReceive('getProject')->andReturn($this->project);
     }
 
     public function testItShouldDoNothingIfUserIsAnonymous(): void
@@ -60,7 +60,7 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $root_folder_id = 3;
         $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
-        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
+        $this->request->shouldReceive('exist')->with('action')->andReturn(false);
         $this->user->shouldReceive('isAnonymous')->andReturn(true);
 
         $redirector->checkAndStoreIfUserHasToBeenRedirected();
@@ -73,7 +73,7 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $root_folder_id = 3;
         $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
-        $this->request->shouldReceive("exist")->with("action")->andReturn(true);
+        $this->request->shouldReceive('exist')->with('action')->andReturn(true);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
         $redirector->checkAndStoreIfUserHasToBeenRedirected();
@@ -86,8 +86,8 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $root_folder_id = 3;
         $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
-        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
-        $this->request->shouldReceive("exist")->with("group_id")->andReturn(false);
+        $this->request->shouldReceive('exist')->with('action')->andReturn(false);
+        $this->request->shouldReceive('exist')->with('group_id')->andReturn(false);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
         $redirector->checkAndStoreIfUserHasToBeenRedirected();
@@ -100,18 +100,18 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $root_folder_id = 3;
         $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
-        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
-        $this->request->shouldReceive("exist")->with("group_id")->andReturn(102);
-        $this->request->shouldReceive("exist")->with("id")->andReturn($folder_id);
-        $this->request->shouldReceive("get")->with("id")->andReturn($folder_id);
+        $this->request->shouldReceive('exist')->with('action')->andReturn(false);
+        $this->request->shouldReceive('exist')->with('group_id')->andReturn(102);
+        $this->request->shouldReceive('exist')->with('id')->andReturn($folder_id);
+        $this->request->shouldReceive('get')->with('id')->andReturn($folder_id);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
-        $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn("project-short-name");
+        $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn('project-short-name');
 
         $redirector->checkAndStoreIfUserHasToBeenRedirected();
 
         $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
-        $this->assertEquals("/plugins/document/project-short-name/preview/10", $redirector->getUrlRedirection());
+        $this->assertEquals('/plugins/document/project-short-name/preview/10', $redirector->getUrlRedirection());
     }
 
     public function testItShouldStoreDocumentIdAndRedirectToRootWhenUrlIsForAccessingRootDocument(): void
@@ -120,17 +120,17 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $root_folder_id = 3;
         $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
-        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
-        $this->request->shouldReceive("exist")->with("group_id")->andReturn(102);
-        $this->request->shouldReceive("exist")->with("id")->andReturn($root_folder_id);
-        $this->request->shouldReceive("get")->with("id")->andReturn($root_folder_id);
+        $this->request->shouldReceive('exist')->with('action')->andReturn(false);
+        $this->request->shouldReceive('exist')->with('group_id')->andReturn(102);
+        $this->request->shouldReceive('exist')->with('id')->andReturn($root_folder_id);
+        $this->request->shouldReceive('get')->with('id')->andReturn($root_folder_id);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
-        $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn("project-short-name");
+        $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn('project-short-name');
 
         $redirector->checkAndStoreIfUserHasToBeenRedirected();
 
         $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
-        $this->assertEquals("/plugins/document/project-short-name/", $redirector->getUrlRedirection());
+        $this->assertEquals('/plugins/document/project-short-name/', $redirector->getUrlRedirection());
     }
 }

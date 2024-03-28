@@ -22,7 +22,7 @@ class b201804131646_add_execution_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Create plugin_testmanagement_execution table";
+        return 'Create plugin_testmanagement_execution table';
     }
 
     public function preUp()
@@ -32,10 +32,10 @@ class b201804131646_add_execution_table extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql    = "CREATE TABLE IF NOT EXISTS plugin_testmanagement_execution(
+        $sql    = 'CREATE TABLE IF NOT EXISTS plugin_testmanagement_execution(
             execution_artifact_id INT(11) NOT NULL PRIMARY KEY,
             definition_changeset_id INT(11) NOT NULL
-        )";
+        )';
         $result = $this->db->createTable('plugin_testmanagement_execution', $sql);
 
         if ($result === false) {

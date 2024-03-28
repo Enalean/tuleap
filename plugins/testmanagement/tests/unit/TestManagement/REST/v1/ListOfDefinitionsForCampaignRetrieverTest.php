@@ -82,16 +82,16 @@ class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
         $this->user = Mockery::mock(\PFUser::class);
 
         $this->campaign_artifact = Mockery::mock(Artifact::class);
-        $this->campaign_artifact->shouldReceive("getId")->andReturn(12);
+        $this->campaign_artifact->shouldReceive('getId')->andReturn(12);
 
         $this->execution1 = Mockery::mock(Artifact::class);
         $this->execution2 = Mockery::mock(Artifact::class);
         $this->execution3 = Mockery::mock(Artifact::class);
 
         $this->def1 = Mockery::mock(Artifact::class);
-        $this->def1->shouldReceive("getId")->andReturn(42);
+        $this->def1->shouldReceive('getId')->andReturn(42);
         $this->def2 = Mockery::mock(Artifact::class);
-        $this->def2->shouldReceive("getId")->andReturn(43);
+        $this->def2->shouldReceive('getId')->andReturn(43);
 
         $this->artifact_dao         = Mockery::mock(ArtifactDao::class);
         $this->artifact_factory     = Mockery::mock(Tracker_ArtifactFactory::class);
@@ -107,7 +107,7 @@ class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testGetDefinitionListForCampaign(): void
     {
-        $this->artifact_dao->shouldReceive("searchExecutionArtifactsForCampaign")
+        $this->artifact_dao->shouldReceive('searchExecutionArtifactsForCampaign')
             ->with(12, 666)
             ->andReturn([
                 ['id' => 1],
@@ -115,15 +115,15 @@ class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
                 ['id' => 3],
             ]);
 
-        $this->artifact_factory->shouldReceive("getInstanceFromRow")->with(['id' => 1])->andReturn($this->execution1);
-        $this->artifact_factory->shouldReceive("getInstanceFromRow")->with(['id' => 2])->andReturn($this->execution2);
-        $this->artifact_factory->shouldReceive("getInstanceFromRow")->with(['id' => 3])->andReturn($this->execution3);
+        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with(['id' => 1])->andReturn($this->execution1);
+        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with(['id' => 2])->andReturn($this->execution2);
+        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with(['id' => 3])->andReturn($this->execution3);
 
-        $this->definition_retriever->shouldReceive("getDefinitionRepresentationForExecution")
+        $this->definition_retriever->shouldReceive('getDefinitionRepresentationForExecution')
             ->withArgs([$this->user, $this->execution1])->andReturn($this->def1);
-        $this->definition_retriever->shouldReceive("getDefinitionRepresentationForExecution")
+        $this->definition_retriever->shouldReceive('getDefinitionRepresentationForExecution')
             ->withArgs([$this->user, $this->execution2])->andReturn($this->def2);
-        $this->definition_retriever->shouldReceive("getDefinitionRepresentationForExecution")
+        $this->definition_retriever->shouldReceive('getDefinitionRepresentationForExecution')
             ->withArgs([$this->user, $this->execution3])->andThrow(Mockery::mock(DefinitionNotFoundException::class));
 
         $result = $this->list_of_definition_retriever->getDefinitionListForCampaign(
@@ -132,6 +132,6 @@ class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
             666
         );
 
-        $this->assertEquals(["42" => $this->def1, "43" => $this->def2], $result);
+        $this->assertEquals(['42' => $this->def1, '43' => $this->def2], $result);
     }
 }

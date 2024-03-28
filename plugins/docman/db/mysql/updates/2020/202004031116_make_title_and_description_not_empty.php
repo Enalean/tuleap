@@ -34,7 +34,7 @@ class b202004031116_make_title_and_description_not_empty extends ForgeUpgrade_Bu
 
     public function up(): void
     {
-        $sql = "alter table plugin_docman_item modify title text not null";
+        $sql = 'alter table plugin_docman_item modify title text not null';
         $this->db->alterTable(
             'plugin_docman_item',
             'tuleap',
@@ -42,7 +42,7 @@ class b202004031116_make_title_and_description_not_empty extends ForgeUpgrade_Bu
             $sql
         );
 
-        $sql = "alter table plugin_docman_item modify description text not null";
+        $sql = 'alter table plugin_docman_item modify description text not null';
         $this->db->alterTable(
             'plugin_docman_item',
             'tuleap',

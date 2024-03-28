@@ -59,21 +59,21 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
         $integration = new GitlabRepositoryIntegration(
             1,
             12587,
-            "root/repo01",
-            "",
-            "https://example.com/root/repo01",
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
-            "Tag Push Event",
+            'Tag Push Event',
             12587,
-            "https://example.com",
-            "refs/tags/v1.0.2",
-            "before",
-            "0000000000000000000000000000000000000000",
+            'https://example.com',
+            'refs/tags/v1.0.2',
+            'before',
+            '0000000000000000000000000000000000000000',
         );
 
         $this->push_webhook_create_action->expects(self::never())->method('createTagReferences');
@@ -97,21 +97,21 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
         $integration = new GitlabRepositoryIntegration(
             1,
             12587,
-            "root/repo01",
-            "",
-            "https://example.com/root/repo01",
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
-            "Tag Push Event",
+            'Tag Push Event',
             12587,
-            "https://example.com",
-            "refs/tags/v1.0.2",
-            "0000000000000000000000000000000000000000",
-            "after"
+            'https://example.com',
+            'refs/tags/v1.0.2',
+            '0000000000000000000000000000000000000000',
+            'after'
         );
 
         $this->push_webhook_create_action
@@ -135,21 +135,21 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
         $integration = new GitlabRepositoryIntegration(
             1,
             12587,
-            "root/repo01",
-            "",
-            "https://example.com/root/repo01",
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
-            "Tag Push Event",
+            'Tag Push Event',
             12587,
-            "https://example.com",
-            "refs/tags/v1.0.2",
-            "before",
-            "after"
+            'https://example.com',
+            'refs/tags/v1.0.2',
+            'before',
+            'after'
         );
 
         $this->push_webhook_delete_action

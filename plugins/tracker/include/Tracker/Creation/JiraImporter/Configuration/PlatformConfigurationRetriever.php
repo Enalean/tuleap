@@ -41,7 +41,7 @@ class PlatformConfigurationRetriever
 
     public function getJiraPlatformConfiguration(JiraClient $wrapper, LoggerInterface $logger): PlatformConfiguration
     {
-        $logger->debug("Get Jira platform configurations.");
+        $logger->debug('Get Jira platform configurations.');
         $platform_configuration = new PlatformConfiguration();
         $this->event_dispatcher->dispatch(
             new PlatformConfigurationForExternalPluginsEvent($wrapper, $platform_configuration, $logger)

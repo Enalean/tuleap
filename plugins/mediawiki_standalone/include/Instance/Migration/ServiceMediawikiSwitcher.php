@@ -41,7 +41,7 @@ final class ServiceMediawikiSwitcher implements SwitchMediawikiService
         if (count($results) > 0) {
             $legacy = $results->current();
 
-            $this->logger->info("Deactivating legacy MediaWiki service");
+            $this->logger->info('Deactivating legacy MediaWiki service');
             $this->service_dao->updateServiceUsageByShortName(
                 (int) $project->getID(),
                 MigrateInstance::MEDIAWIKI_123_SERVICE_NAME,
@@ -56,7 +56,7 @@ final class ServiceMediawikiSwitcher implements SwitchMediawikiService
         if (count($results) > 0) {
             $standalone = $results->current();
             if ($legacy) {
-                $this->logger->info("Adjusting rank of MediaWiki Standalone service to map the one of legacy MediaWiki service");
+                $this->logger->info('Adjusting rank of MediaWiki Standalone service to map the one of legacy MediaWiki service');
                 $this->service_dao->saveBasicInformation(
                     $standalone['service_id'],
                     $standalone['label'],
@@ -68,10 +68,10 @@ final class ServiceMediawikiSwitcher implements SwitchMediawikiService
                     $standalone['is_in_new_tab'],
                 );
             }
-            $this->logger->info("Activating MediaWiki Standalone service");
+            $this->logger->info('Activating MediaWiki Standalone service');
             $this->service_dao->updateServiceUsageByServiceID((int) $project->getID(), $standalone['service_id'], 1);
         } else {
-            $this->logger->info("Creating MediaWiki Standalone service");
+            $this->logger->info('Creating MediaWiki Standalone service');
             $this->service_dao->create(
                 (int) $project->getID(),
                 'label',

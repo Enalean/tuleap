@@ -133,6 +133,6 @@ final class KanbanPresenter
         $this->kanban_url                        = '/kanban/' . urlencode((string) $kanban->getId());
         $this->kanban_homepage_url               = KanbanServiceHomepageUrlBuilder::getUrl($project);
         $this->user_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
-        $this->mercure_enabled                   = ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY) === "1";
+        $this->mercure_enabled                   = ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY) === '1';
     }
 }

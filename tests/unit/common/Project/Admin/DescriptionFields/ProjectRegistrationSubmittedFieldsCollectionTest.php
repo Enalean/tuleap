@@ -35,11 +35,11 @@ final class ProjectRegistrationSubmittedFieldsCollectionTest extends TestCase
         $representation->fields = [
             FieldsPostRepresentation::build(
                 1,
-                "field 01"
+                'field 01'
             ),
             FieldsPostRepresentation::build(
                 2,
-                "field 02"
+                'field 02'
             ),
         ];
 
@@ -49,10 +49,10 @@ final class ProjectRegistrationSubmittedFieldsCollectionTest extends TestCase
         self::assertCount(2, $collection->getSubmittedFields());
 
         self::assertSame(1, $collection->getSubmittedFields()[0]->getFieldId());
-        self::assertSame("field 01", $collection->getSubmittedFields()[0]->getFieldValue());
+        self::assertSame('field 01', $collection->getSubmittedFields()[0]->getFieldValue());
 
         self::assertSame(2, $collection->getSubmittedFields()[1]->getFieldId());
-        self::assertSame("field 02", $collection->getSubmittedFields()[1]->getFieldValue());
+        self::assertSame('field 02', $collection->getSubmittedFields()[1]->getFieldValue());
     }
 
     public function testItBuildsACollectionFromArray(): void
@@ -66,9 +66,9 @@ final class ProjectRegistrationSubmittedFieldsCollectionTest extends TestCase
         self::assertCount(2, $collection->getSubmittedFields());
 
         self::assertSame(1, $collection->getSubmittedFields()[0]->getFieldId());
-        self::assertSame("field 01", $collection->getSubmittedFields()[0]->getFieldValue());
+        self::assertSame('field 01', $collection->getSubmittedFields()[0]->getFieldValue());
 
         self::assertSame(2, $collection->getSubmittedFields()[1]->getFieldId());
-        self::assertSame("field 02", $collection->getSubmittedFields()[1]->getFieldValue());
+        self::assertSame('field 02', $collection->getSubmittedFields()[1]->getFieldValue());
     }
 }

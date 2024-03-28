@@ -159,7 +159,7 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever, Servic
         ProjectManager::instance()->clearProjectFromCache($project->getID());
 
         $reference_manager = ReferenceManager::instance();
-        $reference_manager->updateReferenceForService($project->getID(), $short_name, ($is_used ? "1" : "0"));
+        $reference_manager->updateReferenceForService($project->getID(), $short_name, ($is_used ? '1' : '0'));
 
         $event_manager = EventManager::instance();
         $event_manager->processEvent(

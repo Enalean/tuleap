@@ -103,7 +103,7 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
     public function getIncrementsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int
     {
         if ($this->source_tracker_id === null || $this->will_extraction_fail) {
-            throw new CannotFindSourceTrackerUsingXmlReference("T1234");
+            throw new CannotFindSourceTrackerUsingXmlReference('T1234');
         }
 
         return $this->source_tracker_id;
@@ -121,7 +121,7 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
     public function getUgroupsIdsThatCanPrioritizeIncrements(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array
     {
         if ($this->ugroups_that_can_prioritize === null || $this->will_extraction_fail) {
-            throw new CannotFindUserGroupInProjectException("Metallica");
+            throw new CannotFindUserGroupInProjectException('Metallica');
         }
 
         return $this->ugroups_that_can_prioritize;
@@ -145,7 +145,7 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
     public function getIterationsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): ?int
     {
         if ($this->will_extraction_fail) {
-            throw new CannotFindSourceTrackerUsingXmlReference("T1234");
+            throw new CannotFindSourceTrackerUsingXmlReference('T1234');
         }
 
         return $this->iterations_source_tracker_id;

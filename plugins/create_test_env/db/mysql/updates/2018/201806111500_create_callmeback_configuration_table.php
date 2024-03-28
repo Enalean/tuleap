@@ -41,10 +41,10 @@ class b201806111500_create_callmeback_configuration_table extends ForgeUpgrade_B
 
     private function createCallMeBackEmailTable()
     {
-        $sql = "CREATE TABLE plugin_callmeback_email (
+        $sql = 'CREATE TABLE plugin_callmeback_email (
           email_to varchar(255) NOT NULL,
           PRIMARY KEY (email_to)
-        ) ENGINE=InnoDB;";
+        ) ENGINE=InnoDB;';
 
         $result = $this->db->createTable('plugin_callmeback_email', $sql);
 
@@ -55,11 +55,11 @@ class b201806111500_create_callmeback_configuration_table extends ForgeUpgrade_B
 
     private function createCallMeBackMessagesTable()
     {
-        $sql = "CREATE TABLE plugin_callmeback_messages (
+        $sql = 'CREATE TABLE plugin_callmeback_messages (
           language_id varchar(10) NOT NULL,
           message varchar(255),
           PRIMARY KEY (language_id)
-        ) ENGINE=InnoDB;";
+        ) ENGINE=InnoDB;';
 
         $result = $this->db->createTable('plugin_callmeback_messages', $sql);
 

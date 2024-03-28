@@ -261,7 +261,7 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $commit_rules       = [];
         $immutable_tag      = new ImmutableTag($this->repository, '', '');
-        $access_file        = "";
+        $access_file        = '';
         $mail_notifications = [];
         $settings           = new Settings(
             $commit_rules,

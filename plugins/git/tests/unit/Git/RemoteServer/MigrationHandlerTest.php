@@ -97,7 +97,7 @@ class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
 
         $remote_server_id   = 1;
-        $gerrit_template_id = "none";
+        $gerrit_template_id = 'none';
 
         $this->expectException('Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException');
         $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->never();
@@ -111,7 +111,7 @@ class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
 
         $remote_server_id   = 1;
-        $gerrit_template_id = "none";
+        $gerrit_template_id = 'none';
 
         $this->project_creator_status->shouldReceive('getStatus')->andReturns('QUEUE');
 
@@ -128,7 +128,7 @@ class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
 
         $remote_server_id   = 1;
-        $gerrit_template_id = "none";
+        $gerrit_template_id = 'none';
 
         $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
         $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([]);
@@ -148,7 +148,7 @@ class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
 
         $remote_server_id   = 1;
-        $gerrit_template_id = "none";
+        $gerrit_template_id = 'none';
 
         $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
         $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([]);
@@ -168,7 +168,7 @@ class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
 
         $remote_server_id   = 1;
-        $gerrit_template_id = "none";
+        $gerrit_template_id = 'none';
 
         $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
         $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([1 => $this->server]);
@@ -185,7 +185,7 @@ class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
 
         $remote_server_id   = 1;
-        $gerrit_template_id = "none";
+        $gerrit_template_id = 'none';
 
         $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
         $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([1 => $this->server]);
@@ -199,7 +199,7 @@ class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $repository         = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
         $remote_server_id   = 1;
-        $gerrit_template_id = "none";
+        $gerrit_template_id = 'none';
 
         $this->server_factory->shouldReceive('getServerById')->andThrows(new Git_RemoteServer_NotFoundException($remote_server_id));
 

@@ -171,7 +171,7 @@ final class TrackerStructureXMLExporterTest extends TestCase
         );
 
         $attributes = $xml->attributes();
-        self::assertEquals("0", (string) $attributes['parent_id']);
+        self::assertEquals('0', (string) $attributes['parent_id']);
     }
 
     public function testItExportsTheParentId(): void
@@ -206,7 +206,7 @@ final class TrackerStructureXMLExporterTest extends TestCase
         );
 
         $attributes = $xml->attributes();
-        self::assertEquals("T9001", (string) $attributes['parent_id']);
+        self::assertEquals('T9001', (string) $attributes['parent_id']);
     }
 
     public function testItExportsTheTrackerColor(): void
@@ -348,7 +348,7 @@ final class TrackerStructureXMLExporterTest extends TestCase
 
         $attributes = $xml->attributes();
         self::assertTrue(isset($attributes['use_private_comments']));
-        self::assertEquals("0", (string) $attributes['use_private_comments']);
+        self::assertEquals('0', (string) $attributes['use_private_comments']);
     }
 
     public function testItDoesNotExportCalendarEventConfig(): void
@@ -419,7 +419,7 @@ final class TrackerStructureXMLExporterTest extends TestCase
 
         $attributes = $xml->attributes();
         self::assertTrue(isset($attributes['should_send_event_in_notification']));
-        self::assertSame("1", (string) $attributes['should_send_event_in_notification']);
+        self::assertSame('1', (string) $attributes['should_send_event_in_notification']);
     }
 
     public function testItExportsAllowedMoveAction(): void
@@ -455,7 +455,7 @@ final class TrackerStructureXMLExporterTest extends TestCase
 
         $attributes = $xml->attributes();
         self::assertTrue(isset($attributes['enable_move_artifacts']));
-        self::assertSame("1", (string) $attributes['enable_move_artifacts']);
+        self::assertSame('1', (string) $attributes['enable_move_artifacts']);
     }
 
     private function buildTrackerStructureXMLExporter(

@@ -23,7 +23,7 @@
 
   /** This script will destroy a mediawiki instance of a specific project.     */
 if ($argc < 2) {
-    echo "Usage " . $argv[0] . " <project>\n";
+    echo 'Usage ' . $argv[0] . " <project>\n";
     exit(0);
 }
 
@@ -44,7 +44,7 @@ foreach ($argv as $project) {
     }
 
     $schema = "plugin_mediawiki_$project";
-    strtr($schema, "-", "_");
+    strtr($schema, '-', '_');
     echo "  Dropping database schema $schema.\n";
     $res = db_query_params("DROP SCHEMA $schema CASCADE", []);
     if (! $res) {

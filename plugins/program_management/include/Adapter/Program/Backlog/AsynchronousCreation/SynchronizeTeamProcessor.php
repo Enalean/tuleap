@@ -54,7 +54,7 @@ final class SynchronizeTeamProcessor implements ProcessTeamSynchronization
     {
         $this->logger->debug(
             sprintf(
-                "Team %d of Program %d needs PI and Iterations synchronization",
+                'Team %d of Program %d needs PI and Iterations synchronization',
                 $event->getTeamId(),
                 $event->getProgramId(),
             )
@@ -65,7 +65,7 @@ final class SynchronizeTeamProcessor implements ProcessTeamSynchronization
             $this->store_error_has_occurred->storeErrorHasOccurred($event->getProgramId(), $event->getTeamId());
             $this->logger->error(
                 sprintf(
-                    "User %d not found, exiting...",
+                    'User %d not found, exiting...',
                     $event->getUserId()
                 )
             );
@@ -81,7 +81,7 @@ final class SynchronizeTeamProcessor implements ProcessTeamSynchronization
             $this->clearPendingTeamSynchronization($event, $user_identifier);
         } catch (\Exception $exception) {
             $this->store_error_has_occurred->storeErrorHasOccurred($event->getProgramId(), $event->getTeamId());
-            $this->logger->error("Unable to synchronize team an error has occurred : ", ['exception' => $exception]);
+            $this->logger->error('Unable to synchronize team an error has occurred : ', ['exception' => $exception]);
         }
     }
 

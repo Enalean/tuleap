@@ -82,7 +82,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $this->data_array = $param;
         } elseif (intval($param) > 0) {
             $this->group_id  = (int) $param; // TODO db_es()?
-            $this->db_result = db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($this->group_id));
+            $this->db_result = db_query('SELECT * FROM `groups` WHERE group_id=' . db_ei($this->group_id));
             if (db_numrows($this->db_result) < 1) {
              //function in class we extended
                 $this->setError($GLOBALS['Language']->getText('include_group', 'g_not_found'));

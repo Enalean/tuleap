@@ -36,7 +36,7 @@ final class b202109291736_correct_request_method_to_allow_patch extends \Tuleap\
     private function alterUserlogRequestMethod(): void
     {
         $this->api->dbh->exec(
-            "ALTER TABLE plugin_userlog_request MODIFY http_request_method VARCHAR(7)"
+            'ALTER TABLE plugin_userlog_request MODIFY http_request_method VARCHAR(7)'
         );
     }
 }

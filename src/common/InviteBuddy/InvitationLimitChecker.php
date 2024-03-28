@@ -53,8 +53,8 @@ class InvitationLimitChecker
             if ($already_sent_invitations === 0 || $nb_left === 0) {
                 $message = \sprintf(
                     ngettext(
-                        "You are trying to send %s invitation, but the maximum is %s per day.",
-                        "You are trying to send %s invitations, but the maximum is %s per day.",
+                        'You are trying to send %s invitation, but the maximum is %s per day.',
+                        'You are trying to send %s invitations, but the maximum is %s per day.',
                         $nb_invitation_to_send,
                     ),
                     $nb_invitation_to_send,
@@ -63,21 +63,21 @@ class InvitationLimitChecker
             } else {
                 $message = \sprintf(
                     ngettext(
-                        "You are trying to send %s invitation.",
-                        "You are trying to send %s invitations.",
+                        'You are trying to send %s invitation.',
+                        'You are trying to send %s invitations.',
                         $nb_invitation_to_send
                     ),
                     $nb_invitation_to_send
-                ) . " " .
+                ) . ' ' .
                     \sprintf(
-                        _("The maximum number of invitations per day is %s."),
+                        _('The maximum number of invitations per day is %s.'),
                         $invitation_limit
                     )
-                    . " " .
+                    . ' ' .
                     \sprintf(
                         ngettext(
-                            "You can only send %s more invitation.",
-                            "You can only send %s more invitations.",
+                            'You can only send %s more invitation.',
+                            'You can only send %s more invitations.',
                             $nb_left
                         ),
                         $nb_left

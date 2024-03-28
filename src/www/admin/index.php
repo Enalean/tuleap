@@ -111,7 +111,7 @@ function stats_getactiveusers($since)
         $row_count = db_fetch_array($res_count);
         return $row_count['count'];
     } else {
-        return "error";
+        return 'error';
     }
 }
 

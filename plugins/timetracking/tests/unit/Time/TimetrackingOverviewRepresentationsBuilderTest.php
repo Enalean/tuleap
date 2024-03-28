@@ -103,7 +103,7 @@ final class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\
             $this->user,
             $this->tracker
         )->willReturn(true);
-        $this->admin_dao->method("foundRows")->willReturn(1);
+        $this->admin_dao->method('foundRows')->willReturn(1);
         $this->admin_dao->method('getProjectTrackersWithEnabledTimetracking')->willReturn(
             [
                 ['tracker_id' => 16],
@@ -120,8 +120,8 @@ final class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\
             0
         );
 
-        self::assertEquals($this->tracker->getId(), $result["trackers"][0]->id);
-        self::assertEquals(1, $result["total_trackers"]);
+        self::assertEquals($this->tracker->getId(), $result['trackers'][0]->id);
+        self::assertEquals(1, $result['total_trackers']);
     }
 
     public function testGetTrackersFullRepresentationWithTimetracking(): void
@@ -143,7 +143,7 @@ final class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\
             $this->tracker
         )->willReturn(true);
 
-        $this->admin_dao->method("foundRows")->willReturn(1);
+        $this->admin_dao->method('foundRows')->willReturn(1);
         $this->admin_dao->method('getProjectTrackersWithEnabledTimetracking')->willReturn(
             [
                 ['tracker_id' => 16],
@@ -164,7 +164,7 @@ final class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\
             0
         );
 
-        self::assertEquals($tracker_representation->id, $result["trackers"][0]->id);
-        self::assertEquals(1, $result["total_trackers"]);
+        self::assertEquals($tracker_representation->id, $result['trackers'][0]->id);
+        self::assertEquals(1, $result['total_trackers']);
     }
 }

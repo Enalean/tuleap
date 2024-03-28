@@ -35,7 +35,7 @@ final class TitleFieldHasIncorrectTypeException extends \Exception implements Fi
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
-                "The title field with id #%d in tracker #%d has an incorrect type, it must be a string type"
+                'The title field with id #%d in tracker #%d has an incorrect type, it must be a string type'
             ),
             $field_id,
             $tracker_id

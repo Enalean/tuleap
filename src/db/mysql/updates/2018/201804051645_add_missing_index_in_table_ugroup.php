@@ -32,7 +32,7 @@ class b201804051645_add_missing_index_in_table_ugroup extends ForgeUpgrade_Bucke
 
     public function up()
     {
-        $sql = "ALTER TABLE ugroup ADD INDEX idx_ugroup_project_id(group_id)";
+        $sql = 'ALTER TABLE ugroup ADD INDEX idx_ugroup_project_id(group_id)';
 
         $this->db->addIndex('ugroup', 'idx_ugroup_project_id', $sql);
     }

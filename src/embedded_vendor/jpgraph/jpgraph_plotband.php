@@ -9,14 +9,14 @@
 //========================================================================
 
 // Constants for types of static bands in plot area
-define("BAND_RDIAG", 1); // Right diagonal lines
-define("BAND_LDIAG", 2); // Left diagonal lines
-define("BAND_SOLID", 3); // Solid one color
-define("BAND_VLINE", 4); // Vertical lines
-define("BAND_HLINE", 5);  // Horizontal lines
-define("BAND_3DPLANE", 6);  // "3D" Plane
-define("BAND_HVCROSS", 7);  // Vertical/Hor crosses
-define("BAND_DIAGCROSS", 8); // Diagonal crosses
+define('BAND_RDIAG', 1); // Right diagonal lines
+define('BAND_LDIAG', 2); // Left diagonal lines
+define('BAND_SOLID', 3); // Solid one color
+define('BAND_VLINE', 4); // Vertical lines
+define('BAND_HLINE', 5);  // Horizontal lines
+define('BAND_3DPLANE', 6);  // "3D" Plane
+define('BAND_HVCROSS', 7);  // Vertical/Hor crosses
+define('BAND_DIAGCROSS', 8); // Diagonal crosses
 
 
 // Utility class to hold coordinates for a rectangle
@@ -119,7 +119,7 @@ class RectPattern
 //=====================================================================
 class RectPatternSolid extends RectPattern
 {
-    public function __construct($aColor = "black", $aWeight = 1)
+    public function __construct($aColor = 'black', $aWeight = 1)
     {
         parent::__construct($aColor, $aWeight);
     }
@@ -142,7 +142,7 @@ class RectPatternSolid extends RectPattern
 //=====================================================================
 class RectPatternHor extends RectPattern
 {
-    public function __construct($aColor = "black", $aWeight = 1, $aLineSpacing = 7)
+    public function __construct($aColor = 'black', $aWeight = 1, $aLineSpacing = 7)
     {
         parent::__construct($aColor, $aWeight);
         $this->linespacing = $aLineSpacing;
@@ -166,7 +166,7 @@ class RectPatternHor extends RectPattern
 //=====================================================================
 class RectPatternVert extends RectPattern
 {
-    public function __construct($aColor = "black", $aWeight = 1, $aLineSpacing = 7)
+    public function __construct($aColor = 'black', $aWeight = 1, $aLineSpacing = 7)
     {
         parent::__construct($aColor, $aWeight);
         $this->linespacing = $aLineSpacing;
@@ -193,7 +193,7 @@ class RectPatternVert extends RectPattern
 //=====================================================================
 class RectPatternRDiag extends RectPattern
 {
-    public function __construct($aColor = "black", $aWeight = 1, $aLineSpacing = 12)
+    public function __construct($aColor = 'black', $aWeight = 1, $aLineSpacing = 12)
     {
         parent::__construct($aColor, $aWeight);
         $this->linespacing = $aLineSpacing;
@@ -263,7 +263,7 @@ class RectPatternRDiag extends RectPattern
 //=====================================================================
 class RectPatternLDiag extends RectPattern
 {
-    public function __construct($aColor = "black", $aWeight = 1, $aLineSpacing = 12)
+    public function __construct($aColor = 'black', $aWeight = 1, $aLineSpacing = 12)
     {
         $this->linespacing = $aLineSpacing;
         parent::__construct($aColor, $aWeight);
@@ -334,7 +334,7 @@ class RectPattern3DPlane extends RectPattern
     // top of the band. Specifies how fast the lines
     // converge.
 
-    public function __construct($aColor = "black", $aWeight = 1)
+    public function __construct($aColor = 'black', $aWeight = 1)
     {
         parent::__construct($aColor, $aWeight);
         $this->SetDensity(10);  // Slightly larger default
@@ -454,7 +454,7 @@ class RectPatternCross extends RectPattern
 {
     private $vert = null;
     private $hor  = null;
-    public function __construct($aColor = "black", $aWeight = 1)
+    public function __construct($aColor = 'black', $aWeight = 1)
     {
         parent::__construct($aColor, $aWeight);
         $this->vert = new RectPatternVert($aColor, $aWeight);
@@ -496,7 +496,7 @@ class RectPatternDiagCross extends RectPattern
 {
     private $left  = null;
     private $right = null;
-    public function __construct($aColor = "black", $aWeight = 1)
+    public function __construct($aColor = 'black', $aWeight = 1)
     {
         parent::__construct($aColor, $aWeight);
         $this->right = new RectPatternRDiag($aColor, $aWeight);
@@ -590,7 +590,7 @@ class PlotBand
     private $min;
     private $max;
 
-    public function __construct($aDir, $aPattern, $aMin, $aMax, $aColor = "black", $aWeight = 1, $aDepth = DEPTH_BACK)
+    public function __construct($aDir, $aPattern, $aMin, $aMax, $aColor = 'black', $aWeight = 1, $aDepth = DEPTH_BACK)
     {
         $f           =  new RectPatternFactory();
         $this->prect = $f->Create($aPattern, $aColor, $aWeight);

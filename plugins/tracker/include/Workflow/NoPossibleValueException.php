@@ -31,7 +31,7 @@ final class NoPossibleValueException extends Exception
         parent::__construct(
             dgettext(
                 'plugin-tracker',
-                "No possible value found regarding your configuration. Please check your transition and field dependencies."
+                'No possible value found regarding your configuration. Please check your transition and field dependencies.'
             )
         );
     }

@@ -167,7 +167,7 @@ class NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
     * @param msg  message to display if the test fail
     */
     //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    protected function _runTest($dr, $br, $cr, $lb, $lc, $ld, $res, $msg = "%s"): void
+    protected function _runTest($dr, $br, $cr, $lb, $lc, $ld, $res, $msg = '%s'): void
     {
         $msg = "[$dr, $br, $cr, $lb, $lc, $ld, $res] " . $msg;
 

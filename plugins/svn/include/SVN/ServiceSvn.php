@@ -167,8 +167,8 @@ class ServiceSvn extends Service
 
         $repository_list_breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
-                dgettext("tuleap-svn", "Repository list"),
-                SVN_BASE_URL . "/?group_id=" . $request->getProject()->getId()
+                dgettext('tuleap-svn', 'Repository list'),
+                SVN_BASE_URL . '/?group_id=' . $request->getProject()->getId()
             )
         );
         if ($this->getPermissionsManager()->isAdmin($request->getProject(), $request->getCurrentUser())) {

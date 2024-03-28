@@ -24,11 +24,11 @@ $logger   = new Log_ConsoleLogger();
 $purifier = Codendi_HTMLPurifier::instance();
 $dao      = new DataAccessObject();
 
-$sql = "SELECT id, body, body_format
+$sql = 'SELECT id, body, body_format
                 FROM tracker_changeset_comment AS comment
                     LEFT JOIN tracker_changeset_comment_fulltext AS stripped
                     ON (comment.id = stripped.comment_id)
-                WHERE stripped.comment_id IS NULL";
+                WHERE stripped.comment_id IS NULL';
 
 $results = $dao->retrieve($sql);
 $nb      = count($results);
@@ -53,4 +53,4 @@ foreach ($dao->retrieve($sql) as $row) {
     ++$i;
 }
 fwrite(STDERR, "\n");
-$logger->info("done");
+$logger->info('done');

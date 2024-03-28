@@ -79,7 +79,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
             } else {
                 $id_to_search = $ids_to_search[0] ?? null;
                 return Option::fromValue(
-                    new ParametrizedSQLFragment("artifact.submitted_by = ?", [$id_to_search])
+                    new ParametrizedSQLFragment('artifact.submitted_by = ?', [$id_to_search])
                 );
             }
         }
@@ -89,7 +89,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     public function getQuerySelect(): string
     {
         // SubmittedOn is stored in the artifact
-        return "a.submitted_by AS " . $this->getQuerySelectName();
+        return 'a.submitted_by AS ' . $this->getQuerySelectName();
     }
 
     public function getQueryFrom()

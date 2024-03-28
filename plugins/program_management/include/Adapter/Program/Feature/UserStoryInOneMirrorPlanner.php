@@ -53,7 +53,7 @@ final class UserStoryInOneMirrorPlanner implements PlanUserStoryInOneMirror
         FeaturePlanChange $feature_plan_change,
         UserIdentifier $user_identifier,
     ): void {
-        $this->logger->info(sprintf("Found mirrored PI %d", $mirrored_program_increment->getId()));
+        $this->logger->info(sprintf('Found mirrored PI %d', $mirrored_program_increment->getId()));
         $mirror_artifact = $this->artifact_retriever->getNonNullArtifact($mirrored_program_increment);
 
         $user                = $this->retrieve_user->getUserWithId($user_identifier);
@@ -61,7 +61,7 @@ final class UserStoryInOneMirrorPlanner implements PlanUserStoryInOneMirror
         if (! $field_artifact_link) {
             $this->logger->info(
                 sprintf(
-                    "Mirrored PI %d does not have an artifact link field",
+                    'Mirrored PI %d does not have an artifact link field',
                     $mirrored_program_increment->getId()
                 )
             );
@@ -78,7 +78,7 @@ final class UserStoryInOneMirrorPlanner implements PlanUserStoryInOneMirror
             $team_id = $mirror_artifact->getTracker()->getGroupId();
             $this->logger->debug(
                 sprintf(
-                    "Change in PI #%d trying to add a changeset to the mirrored PI #%d in team project #%d",
+                    'Change in PI #%d trying to add a changeset to the mirrored PI #%d in team project #%d',
                     $program_increment->getId(),
                     $mirror_artifact->getId(),
                     $team_id

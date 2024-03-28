@@ -34,12 +34,12 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_repository_fine_grained_permissions (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_repository_fine_grained_permissions (
                     id int(11) UNSIGNED PRIMARY KEY auto_increment,
                     repository_id int(10) unsigned NOT NULL,
                     pattern VARCHAR(255) NOT NULL,
                     INDEX idx_repository_fine_grained_permissions(repository_id, pattern(15))
-                )";
+                )';
 
         $this->db->createTable('plugin_git_repository_fine_grained_permissions', $sql);
     }

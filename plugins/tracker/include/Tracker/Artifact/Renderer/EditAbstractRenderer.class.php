@@ -61,7 +61,7 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
 
     private function fetchArtifactInformations(Artifact $artifact): string
     {
-        $html          = "";
+        $html          = '';
         $html_purifier = Codendi_HTMLPurifier::instance();
         $artifact_id   = $html_purifier->purify($artifact->getId());
         $changeset_id  = $html_purifier->purify($artifact->getLastChangeset()?->getId());

@@ -37,7 +37,7 @@ class UserListSearchFieldsPresenter
         $this->name       = $name;
         $this->name_label = $GLOBALS['Language']->getText('admin_userlist', 'filter_name');
 
-        $this->status_label  = $GLOBALS['Language']->getText("admin_userlist", "status");
+        $this->status_label  = $GLOBALS['Language']->getText('admin_userlist', 'status');
         $this->status_values = $this->getListOfStatusValuePresenter($status_values);
 
         $this->title  = $GLOBALS['Language']->getText('global', 'search_title');
@@ -47,14 +47,14 @@ class UserListSearchFieldsPresenter
     private function getListOfStatusValuePresenter($status_values)
     {
         return [
-            $this->getStatusValuePresenter(self::$ANY, $status_values, $GLOBALS['Language']->getText("admin_userlist", "any")),
-            $this->getStatusValuePresenter(PFUser::STATUS_ACTIVE, $status_values, $GLOBALS['Language']->getText("admin_userlist", "active")),
-            $this->getStatusValuePresenter(PFUser::STATUS_RESTRICTED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "restricted")),
-            $this->getStatusValuePresenter(PFUser::STATUS_DELETED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "deleted")),
-            $this->getStatusValuePresenter(PFUser::STATUS_SUSPENDED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "suspended")),
-            $this->getStatusValuePresenter(PFUser::STATUS_PENDING, $status_values, $GLOBALS['Language']->getText("admin_userlist", "pending")),
-            $this->getStatusValuePresenter(PFUser::STATUS_VALIDATED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "validated")),
-            $this->getStatusValuePresenter(PFUser::STATUS_VALIDATED_RESTRICTED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "validated_restricted")),
+            $this->getStatusValuePresenter(self::$ANY, $status_values, $GLOBALS['Language']->getText('admin_userlist', 'any')),
+            $this->getStatusValuePresenter(PFUser::STATUS_ACTIVE, $status_values, $GLOBALS['Language']->getText('admin_userlist', 'active')),
+            $this->getStatusValuePresenter(PFUser::STATUS_RESTRICTED, $status_values, $GLOBALS['Language']->getText('admin_userlist', 'restricted')),
+            $this->getStatusValuePresenter(PFUser::STATUS_DELETED, $status_values, $GLOBALS['Language']->getText('admin_userlist', 'deleted')),
+            $this->getStatusValuePresenter(PFUser::STATUS_SUSPENDED, $status_values, $GLOBALS['Language']->getText('admin_userlist', 'suspended')),
+            $this->getStatusValuePresenter(PFUser::STATUS_PENDING, $status_values, $GLOBALS['Language']->getText('admin_userlist', 'pending')),
+            $this->getStatusValuePresenter(PFUser::STATUS_VALIDATED, $status_values, $GLOBALS['Language']->getText('admin_userlist', 'validated')),
+            $this->getStatusValuePresenter(PFUser::STATUS_VALIDATED_RESTRICTED, $status_values, $GLOBALS['Language']->getText('admin_userlist', 'validated_restricted')),
         ];
     }
 

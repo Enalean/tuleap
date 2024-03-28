@@ -42,7 +42,7 @@ class UploadedLinksRequestFormatter
 
         if ($request->get('uploaded-link')) {
             foreach ($request->get('uploaded-link') as $key => $link) {
-                if ($link === "" && $release_links_name[$key] === "") {
+                if ($link === '' && $release_links_name[$key] === '') {
                     continue;
                 }
 
@@ -55,8 +55,8 @@ class UploadedLinksRequestFormatter
                 }
 
                 $uploaded_links[] = [
-                    "link" => $link,
-                    "name" => $release_links_name[$key],
+                    'link' => $link,
+                    'name' => $release_links_name[$key],
                 ];
             }
         }

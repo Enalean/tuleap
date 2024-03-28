@@ -76,7 +76,7 @@ class ProjectVisibilityPresenter
         );
 
         $this->project_visibility_label = _('Project visibility');
-        $this->accept_tos_message       = _("Please accept term of service");
+        $this->accept_tos_message       = _('Please accept term of service');
 
         $this->options = $project_visibility_options_generator->generateVisibilityOptions(
             $this->platform_allows_restricted,

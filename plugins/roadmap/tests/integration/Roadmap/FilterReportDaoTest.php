@@ -30,11 +30,11 @@ final class FilterReportDaoTest extends TestIntegrationTestCase
     public function testSaveReportId(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)");
-        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (344, 666, null)");
-        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)");
-        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (1001, 666, 101)");
-        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (1002, 777, null)");
+        $db->run('INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)');
+        $db->run('INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (344, 666, null)');
+        $db->run('INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)');
+        $db->run('INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (1001, 666, 101)');
+        $db->run('INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (1002, 777, null)');
 
         $dao                 = new FilterReportDao();
         $non_existing_report = 111;
@@ -59,7 +59,7 @@ final class FilterReportDaoTest extends TestIntegrationTestCase
     private function getSavedReportId(int $widget_id): int|false
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        return $db->cell("SELECT report_id FROM plugin_roadmap_widget_filter WHERE widget_id = ?", $widget_id);
+        return $db->cell('SELECT report_id FROM plugin_roadmap_widget_filter WHERE widget_id = ?', $widget_id);
     }
 
     public function testGetReportIdToFilterArtifactsReturnsNullIfNoReportIsSavedForWidget(): void
@@ -72,8 +72,8 @@ final class FilterReportDaoTest extends TestIntegrationTestCase
     public function testGetReportIdToFilterArtifactsReturnsTheReportIdSavedForWidget(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)");
-        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)");
+        $db->run('INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)');
+        $db->run('INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)');
 
         $dao = new FilterReportDao();
         $dao->saveReportId(123, 979);
@@ -84,8 +84,8 @@ final class FilterReportDaoTest extends TestIntegrationTestCase
     public function testGetReportIdToFilterArtifactsReturnsNullWhenReportIsNotForSelectedTracker(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)");
-        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 111, null)");
+        $db->run('INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)');
+        $db->run('INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 111, null)');
 
         $dao = new FilterReportDao();
         $dao->saveReportId(123, 979);
@@ -96,8 +96,8 @@ final class FilterReportDaoTest extends TestIntegrationTestCase
     public function testGetReportIdToFilterArtifactsReturnsNullWhenReportIsAPersonalOne(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)");
-        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, 101)");
+        $db->run('INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)');
+        $db->run('INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, 101)');
 
         $dao = new FilterReportDao();
         $dao->saveReportId(123, 979);
@@ -108,9 +108,9 @@ final class FilterReportDaoTest extends TestIntegrationTestCase
     public function testGetReportIdToFilterArtifactsReturnsNullIfWidgetIsConfiguredForMoreThanOneTracker(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)");
-        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 667)");
-        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)");
+        $db->run('INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)');
+        $db->run('INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 667)');
+        $db->run('INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)');
 
         $dao = new FilterReportDao();
         $dao->saveReportId(123, 979);
@@ -121,9 +121,9 @@ final class FilterReportDaoTest extends TestIntegrationTestCase
     public function testDeletionByReport(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)");
-        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (124, 666)");
-        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)");
+        $db->run('INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)');
+        $db->run('INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (124, 666)');
+        $db->run('INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)');
 
         $dao = new FilterReportDao();
         $dao->saveReportId(123, 979);
@@ -141,8 +141,8 @@ final class FilterReportDaoTest extends TestIntegrationTestCase
     public function testDeletionByWidget(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)");
-        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)");
+        $db->run('INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)');
+        $db->run('INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)');
 
         $dao = new FilterReportDao();
         $dao->saveReportId(123, 979);

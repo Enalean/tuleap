@@ -113,7 +113,7 @@ final class GETHandler
                 );
                 $collection[] = $pull_request_representation;
             } else {
-                $this->logger->debug("Repository source or destination not found for pull-request " . $pull_request->getId());
+                $this->logger->debug('Repository source or destination not found for pull-request ' . $pull_request->getId());
             }
         }
 

@@ -57,10 +57,10 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
                           DATE_FORMAT(FROM_UNIXTIME(c.submitted_on), '%Y%m%d') as day,
                           cvi.value
                         FROM tracker_changeset AS c
-                          INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = " . db_ei($effort_field_id) . ")
-                          INNER JOIN tracker_changeset_value_" . db_es($type) . " AS cvi ON(cvi.changeset_value_id = cv.id)
-                        WHERE c.artifact_id IN  (" . db_ei_implode($artifact_ids) . ")
-                        ORDER BY day, cvi.changeset_value_id DESC";
+                          INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = " . db_ei($effort_field_id) . ')
+                          INNER JOIN tracker_changeset_value_' . db_es($type) . ' AS cvi ON(cvi.changeset_value_id = cv.id)
+                        WHERE c.artifact_id IN  (' . db_ei_implode($artifact_ids) . ')
+                        ORDER BY day, cvi.changeset_value_id DESC';
 
         return new GraphOnTrackersV5_Burndown_Data(db_query($sql), $artifact_ids, $date_period);
     }

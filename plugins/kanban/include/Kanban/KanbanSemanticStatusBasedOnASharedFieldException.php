@@ -23,6 +23,6 @@ final class KanbanSemanticStatusBasedOnASharedFieldException extends \Exception
 {
     public function __construct()
     {
-        parent::__construct("The list field defined as semantic status is based on a shared field");
+        parent::__construct('The list field defined as semantic status is based on a shared field');
     }
 }

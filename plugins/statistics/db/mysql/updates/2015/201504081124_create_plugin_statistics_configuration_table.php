@@ -38,13 +38,13 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_statistics_configuration (
+        $sql = 'CREATE TABLE plugin_statistics_configuration (
                     daily_purge_is_activated TINYINT(1) NOT NULL
-                ) ENGINE = InnoDB";
+                ) ENGINE = InnoDB';
 
         $this->db->createTable('plugin_statistics_configuration', $sql);
 
-        $sql = "INSERT INTO plugin_statistics_configuration (daily_purge_is_activated) VALUE (0)";
+        $sql = 'INSERT INTO plugin_statistics_configuration (daily_purge_is_activated) VALUE (0)';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

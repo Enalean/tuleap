@@ -62,7 +62,7 @@ class GitlabMergeRequestCreator
         );
 
         if ($artifact === null) {
-            throw new RestException(404, "Artifact not found");
+            throw new RestException(404, 'Artifact not found');
         }
 
         $project    = $artifact->getTracker()->getProject();
@@ -87,12 +87,12 @@ class GitlabMergeRequestCreator
         if (
             (int) $integration->getProject()->getID() !== (int) $artifact->getTracker()->getGroupId()
         ) {
-            throw new RestException(400, "GitLab integration and artifact must be in the same project");
+            throw new RestException(400, 'GitLab integration and artifact must be in the same project');
         }
 
         $credentials = $this->credentials_retriever->getCredentials($integration);
         if ($credentials === null) {
-            throw new RestException(400, "Integration is not configured");
+            throw new RestException(400, 'Integration is not configured');
         }
 
         try {
@@ -108,9 +108,9 @@ class GitlabMergeRequestCreator
         $merge_request_title = $this->merge_request_title_creator_from_artifact->getMergeRequestTitle($artifact);
 
         try {
-            $url = "/projects/" . urlencode((string) $integration->getGitlabRepositoryId()) . "/merge_requests?id=" . urlencode((string) $gitlab_merge_request->gitlab_integration_id)
-                . "&source_branch=" . urlencode($gitlab_merge_request->source_branch) . "&target_branch=" . urlencode($default_branch_name)
-                . "&title=" . urlencode($merge_request_title);
+            $url = '/projects/' . urlencode((string) $integration->getGitlabRepositoryId()) . '/merge_requests?id=' . urlencode((string) $gitlab_merge_request->gitlab_integration_id)
+                . '&source_branch=' . urlencode($gitlab_merge_request->source_branch) . '&target_branch=' . urlencode($default_branch_name)
+                . '&title=' . urlencode($merge_request_title);
 
             $this->gitlab_api_client->postUrl(
                 $credentials,
@@ -118,16 +118,16 @@ class GitlabMergeRequestCreator
                 []
             );
         } catch (GitlabRequestException $exception) {
-            if (stripos($exception->getMessage(), "Forbidden")) {
+            if (stripos($exception->getMessage(), 'Forbidden')) {
                 throw new I18NRestException(
                     $exception->getErrorCode(),
-                    sprintf(dgettext('tuleap-gitlab', "Forbidden, please check that you have merge permission on repository %s"), $integration->getName())
+                    sprintf(dgettext('tuleap-gitlab', 'Forbidden, please check that you have merge permission on repository %s'), $integration->getName())
                 );
             }
 
             throw new RestException(
                 $exception->getErrorCode(),
-                sprintf(dgettext('tuleap-gitlab', "An error occurred while creating the merge request on GitLab: %s"), $exception->getMessage())
+                sprintf(dgettext('tuleap-gitlab', 'An error occurred while creating the merge request on GitLab: %s'), $exception->getMessage())
             );
         } catch (GitlabResponseAPIException $exception) {
             throw new RestException(500, $exception->getMessage());

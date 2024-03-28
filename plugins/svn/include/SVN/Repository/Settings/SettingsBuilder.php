@@ -54,7 +54,7 @@ class SettingsBuilder
     ): Ok|Err {
         $commit_rules            = [];
         $immutable_tag           = $this->immutable_tag_factory->getEmpty($repository);
-        $access_file             = "";
+        $access_file             = '';
         $mail_notification       = [];
         $has_default_permissions = true;
 

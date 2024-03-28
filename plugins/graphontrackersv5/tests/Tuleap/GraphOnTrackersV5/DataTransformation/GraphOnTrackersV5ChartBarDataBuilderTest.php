@@ -70,8 +70,8 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
         $this->builder->expects($this->once())->method('getFieldGroupId')->will($this->returnValue(10));
         $this->builder->expects($this->once())->method('getFieldBaseId')->will($this->returnValue(10));
 
-        $this->builder->expects($this->atLeast(2))->method('getArtifactIds')->will($this->returnValue("1,2,3"));
-        $this->builder->expects($this->once())->method('getArtifactsLastChangesetIds')->will($this->returnValue("100,200,300"));
+        $this->builder->expects($this->atLeast(2))->method('getArtifactIds')->will($this->returnValue('1,2,3'));
+        $this->builder->expects($this->once())->method('getArtifactsLastChangesetIds')->will($this->returnValue('100,200,300'));
 
         $this->builder->expects($this->once())->method('getQueryResult')->will($this->returnValue([
             ['nb' => 10, 'source_field' => 130, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
@@ -99,8 +99,8 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
 
         $this->builder->expects($this->atLeast(2))->method('getFieldGroupId')->will($this->returnValue(10));
         $this->builder->expects($this->once())->method('getFieldBaseId')->will($this->returnValue(20));
-        $this->builder->expects($this->atLeast(2))->method('getArtifactIds')->will($this->returnValue("1,2,3"));
-        $this->builder->expects($this->once())->method('getArtifactsLastChangesetIds')->will($this->returnValue("100,200,300"));
+        $this->builder->expects($this->atLeast(2))->method('getArtifactIds')->will($this->returnValue('1,2,3'));
+        $this->builder->expects($this->once())->method('getArtifactsLastChangesetIds')->will($this->returnValue('100,200,300'));
 
         $this->builder->expects($this->once())->method('getQueryResult')->will($this->returnValue([
             ['nb' => 10, 'source_field' => 130, 'group_field' => null, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
@@ -111,7 +111,7 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
         $this->builder->buildProperties($engine);
 
         $expected_data  = [130 => ['' => 10, 432 => 3], 131 => [431 => 5]];
-        $expected_xaxis = [431 => "Abc", 432 => "Def", '' => null];
+        $expected_xaxis = [431 => 'Abc', 432 => 'Def', '' => null];
         self::assertEquals($expected_data, $engine->data);
         self::assertEquals($expected_xaxis, $engine->xaxis);
     }

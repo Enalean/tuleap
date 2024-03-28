@@ -36,7 +36,7 @@ final class EventOrganizerRetriever implements RetrieveEventOrganizer
     {
         $parse_result = mailparse_rfc822_parse_addresses(\ForgeConfig::get(ConfigurationVariables::NOREPLY));
         if (empty($parse_result)) {
-            $logger->debug("EventOrganizerRetriever::retrieveEventOrganizer -> has not found noreply address");
+            $logger->debug('EventOrganizerRetriever::retrieveEventOrganizer -> has not found noreply address');
             return Result::ok($calendar_event_data);
         }
 

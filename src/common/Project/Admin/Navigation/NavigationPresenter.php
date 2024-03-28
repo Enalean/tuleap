@@ -43,7 +43,7 @@ class NavigationPresenter implements Dispatchable
 
     public function __construct(array $entries, Project $project)
     {
-        $this->admin_section_title = _("Project administration");
+        $this->admin_section_title = _('Project administration');
         $this->entries             = $entries;
         $this->project             = $project;
     }

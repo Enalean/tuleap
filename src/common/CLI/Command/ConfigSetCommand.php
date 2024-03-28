@@ -89,7 +89,7 @@ class ConfigSetCommand extends Command
                 OutputFormatter::escape($value),
             ),
             sprintf(
-                "%s has been successfully updated",
+                '%s has been successfully updated',
                 OutputFormatter::escape($key)
             ),
         );

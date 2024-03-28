@@ -50,7 +50,7 @@ EOT;
      */
     public function up()
     {
-        $sql = "alter table plugin_git_remote_servers MODIFY http_port INT(11) UNSIGNED DEFAULT 80";
+        $sql = 'alter table plugin_git_remote_servers MODIFY http_port INT(11) UNSIGNED DEFAULT 80';
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {

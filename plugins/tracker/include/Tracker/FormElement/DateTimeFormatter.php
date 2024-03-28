@@ -84,7 +84,7 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
     protected function getDatePicker($value, array $errors)
     {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
-            "tracker_admin_field_" . $this->field->getId(),
+            'tracker_admin_field_' . $this->field->getId(),
             'artifact[' . $this->field->getId() . ']',
             $value,
             [],

@@ -43,20 +43,20 @@ class WikiPlugin_EditMetaData extends WikiPlugin
 {
     public function getName()
     {
-        return _("EditMetaData");
+        return _('EditMetaData');
     }
 
     public function getDescription()
     {
-        return sprintf(_("Edit metadata for %s"), '[pagename]');
+        return sprintf(_('Edit metadata for %s'), '[pagename]');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.11 $"
+            '$Revision: 1.11 $'
         );
     }
 
@@ -115,7 +115,7 @@ class WikiPlugin_EditMetaData extends WikiPlugin
         $html = HTML();
 
         $html->pushContent(fmt(
-            "Existing page-level metadata for %s:",
+            'Existing page-level metadata for %s:',
             $page
         ));
         $dl = HTML::dl();
@@ -157,7 +157,7 @@ class WikiPlugin_EditMetaData extends WikiPlugin
             $instructions = _("Add or change a page-level metadata 'key=>value' pair. Note that you can remove a key by leaving the value-box empty.");
             $keyfield     = HTML::input(['name' => 'metafield'], '');
             $valfield     = HTML::input(['name' => 'metavalue'], '');
-            $button       = Button('submit:metaedit', _("Submit"), false);
+            $button       = Button('submit:metaedit', _('Submit'), false);
             $form         = HTML::form(
                 ['action' => $action,
                     'method' => 'post',
@@ -175,7 +175,7 @@ class WikiPlugin_EditMetaData extends WikiPlugin
 
             $html->pushContent(HTML::br(), $form);
         } else {
-            $html->pushContent(HTML::em(_("Requires WikiAdmin privileges to edit.")));
+            $html->pushContent(HTML::em(_('Requires WikiAdmin privileges to edit.')));
         }
         return $html;
     }

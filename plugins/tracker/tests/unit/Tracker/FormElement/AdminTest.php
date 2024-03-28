@@ -26,8 +26,8 @@ final class Tracker_FormElement_View_AdminTest extends \Tuleap\Test\PHPUnit\Test
     {
         $admin  = $this->givenAnAdminWithOriginalProjectAndTracker('Tuleap', 'Bugs');
         $result = $admin->fetchCustomHelpForShared();
-        $this->assertMatchesRegularExpression("%Bugs%", $result);
-        $this->assertMatchesRegularExpression("%Tuleap%", $result);
+        $this->assertMatchesRegularExpression('%Bugs%', $result);
+        $this->assertMatchesRegularExpression('%Tuleap%', $result);
         $this->assertMatchesRegularExpression('%<a href="' . TRACKER_BASE_URL . '/\?tracker=101&func=admin-formElement-update&formElement=666"%', $result);
     }
 

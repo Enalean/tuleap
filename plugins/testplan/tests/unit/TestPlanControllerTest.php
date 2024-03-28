@@ -247,7 +247,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone = $this->createMock(\Planning_ArtifactMilestone::class);
         $milestone->method('getProject')->willReturn($my_project);
         $milestone->method('getArtifact')->willReturn($this->createMock(\Tuleap\Tracker\Artifact\Artifact::class));
-        $milestone->method('getArtifactTitle')->willReturn("Title");
+        $milestone->method('getArtifactTitle')->willReturn('Title');
         $milestone->method('getPromotedMilestoneId')->willReturn('myid');
 
         $this->milestone_factory

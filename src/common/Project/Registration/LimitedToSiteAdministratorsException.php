@@ -27,11 +27,11 @@ class LimitedToSiteAdministratorsException extends RegistrationForbiddenExceptio
 {
     public function __construct()
     {
-        parent::__construct("Only site administrators can create projects.");
+        parent::__construct('Only site administrators can create projects.');
     }
 
     public function getI18NMessage(): string
     {
-        return dgettext("tuleap-core", "Only site administrators can create projects.");
+        return dgettext('tuleap-core', 'Only site administrators can create projects.');
     }
 }

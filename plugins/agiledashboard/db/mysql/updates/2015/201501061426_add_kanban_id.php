@@ -38,8 +38,8 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_agiledashboard_kanban_configuration
-                DROP primary key";
+        $sql = 'ALTER TABLE plugin_agiledashboard_kanban_configuration
+                DROP primary key';
 
         $res = $this->db->dbh->exec($sql);
 
@@ -47,16 +47,16 @@ EOT;
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while removing primary key in table plugin_agiledashboard_kanban_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
-        $sql = "ALTER TABLE plugin_agiledashboard_kanban_configuration
-                ADD id INT(11) AUTO_INCREMENT PRIMARY KEY";
+        $sql = 'ALTER TABLE plugin_agiledashboard_kanban_configuration
+                ADD id INT(11) AUTO_INCREMENT PRIMARY KEY';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column id in table plugin_agiledashboard_kanban_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
-        $sql = "ALTER TABLE plugin_agiledashboard_kanban_configuration
-                MODIFY COLUMN tracker_id INT(11) NOT NULL";
+        $sql = 'ALTER TABLE plugin_agiledashboard_kanban_configuration
+                MODIFY COLUMN tracker_id INT(11) NOT NULL';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

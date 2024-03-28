@@ -271,7 +271,7 @@ class Docman_ReportHtml
 
         $html .= $this->getReportSelector($params['item']);
 
-        $toggleIc = '<img src="' . util_get_image_theme("ic/toggle_minus.png") . '" id="docman_toggle_filters" data-test="docman_report_search">';
+        $toggleIc = '<img src="' . util_get_image_theme('ic/toggle_minus.png') . '" id="docman_toggle_filters" data-test="docman_report_search">';
         $toggle   = '<a href="#" title="' . dgettext('tuleap-docman', 'Toggle search criteria selection') . '">' . $toggleIc . '</a>';
         $title    = dgettext('tuleap-docman', 'Search');
 

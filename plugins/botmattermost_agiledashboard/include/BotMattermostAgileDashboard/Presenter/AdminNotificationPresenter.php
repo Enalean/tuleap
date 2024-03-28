@@ -127,7 +127,7 @@ class AdminNotificationPresenter
         $this->any_configured_notification_tips = dgettext('tuleap-botmattermost_agiledashboard', 'To begin, click on add notification button below.');
         $this->empty_channel_list               = dgettext('tuleap-botmattermost_agiledashboard', 'No channel selected, the channel defined at the webhook creation will be used as default');
 
-        $this->time_format_regexp = "^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$";
+        $this->time_format_regexp = '^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$';
         $this->time_input_title   = dgettext('tuleap-botmattermost_agiledashboard', 'Time format: "hh:mm"');
     }
 }

@@ -33,7 +33,7 @@ final class b202202141115_add_filename_pattern extends \Tuleap\ForgeUpgrade\Buck
             return;
         }
 
-        $sql = "ALTER TABLE plugin_docman_project_settings ADD COLUMN filename_pattern VARCHAR(255) DEFAULT NULL";
+        $sql = 'ALTER TABLE plugin_docman_project_settings ADD COLUMN filename_pattern VARCHAR(255) DEFAULT NULL';
 
         if ($this->api->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(

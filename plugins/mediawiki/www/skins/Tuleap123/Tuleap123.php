@@ -198,8 +198,8 @@ class Tuleap123Template extends BaseTemplate
 </div><!-- end of the left (by default at least) column -->
 <div class="visualClear"></div>
         <?php
-        $validFooterIcons = $this->getFooterIcons("icononly");
-        $validFooterLinks = $this->getFooterLinks("flat"); // Additional footer links
+        $validFooterIcons = $this->getFooterIcons('icononly');
+        $validFooterLinks = $this->getFooterLinks('flat'); // Additional footer links
 
         if (count($validFooterIcons) + count($validFooterLinks) > 0) { ?>
 <div id="footer" role="contentinfo"<?php $this->html('userlangattributes') ?>>
@@ -350,12 +350,12 @@ class Tuleap123Template extends BaseTemplate
         <div id="searchBody" class="pBody">
             <form action="<?php $this->text('wgScript') ?>" id="searchform">
                 <input type='hidden' name="title" value="<?php $this->text('searchtitle') ?>"/>
-        <?php echo $this->makeSearchInput(["id" => "searchInput"]); ?>
+        <?php echo $this->makeSearchInput(['id' => 'searchInput']); ?>
 
-        <?php echo $this->makeSearchButton("go", ["id" => "searchGoButton", "class" => "searchButton"]);
+        <?php echo $this->makeSearchButton('go', ['id' => 'searchGoButton', 'class' => 'searchButton']);
         if ($wgUseTwoButtonsSearchForm) {
             ?>&#160;
-            <?php echo $this->makeSearchButton("fulltext", ["id" => "mw-searchButton", "class" => "searchButton"]);
+            <?php echo $this->makeSearchButton('fulltext', ['id' => 'mw-searchButton', 'class' => 'searchButton']);
         } else { ?>
                 <div><a href="<?php $this->text('searchaction') ?>" rel="search"><?php $this->msg('powersearch-legend') ?></a></div><?php
         } ?>

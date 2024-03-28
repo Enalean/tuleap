@@ -188,7 +188,7 @@ class ProjectResource
     {
         $this->checkQuery($query);
         $current_user = $this->user_manager->getCurrentUser();
-        if ($representation === "minimal") {
+        if ($representation === 'minimal') {
             return $this->timetracking_overview_builder->getTrackersMinimalRepresentationsWithTimetracking(
                 $current_user,
                 $project,

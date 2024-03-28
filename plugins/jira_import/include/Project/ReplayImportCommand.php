@@ -83,7 +83,7 @@ final class ReplayImportCommand extends Command
         try {
             $jira_client = JiraClientReplayBuilder::buildReplayClientWithCommandOptions(
                 $input->getOption('server-flavor'),
-                $input->getOption("server-major-version"),
+                $input->getOption('server-major-version'),
                 $input->getOption('path'),
             );
 
@@ -126,7 +126,7 @@ final class ReplayImportCommand extends Command
                     $user
                 );
 
-                $output->writeln("Import successful");
+                $output->writeln('Import successful');
             } else {
                 return $this->createProject($generated_xml, $logger)
                     ->match(

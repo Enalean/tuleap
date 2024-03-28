@@ -73,7 +73,7 @@ final class ArtifactTestBuilder
         $this->id      = $id;
         $this->tracker = TrackerTestBuilder::aTracker()
             ->withId(101)
-            ->withName("bug")
+            ->withName('bug')
             ->withColor(TrackerColor::fromName('fiesta-red'))
             ->build();
     }

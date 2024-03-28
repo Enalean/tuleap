@@ -32,13 +32,13 @@ $res_count     = db_query("SELECT COUNT(DISTINCT user.email) FROM user WHERE ( s
 $count_sf      = db_result($res_count, 0, null);
 $res_count     = db_query("SELECT COUNT(DISTINCT user.email) FROM user WHERE ( status='A' OR status='R' )");
 $count_all     = db_result($res_count, 0, null);
-$res_count     = db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE "
+$res_count     = db_query('SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE '
     . "user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) AND user_group.admin_flags='A'");
 $count_admin   = db_result($res_count, 0, null);
-$res_count     = db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE "
+$res_count     = db_query('SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE '
     . "user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' )");
 $count_devel   = db_result($res_count, 0, null);
-$res_count     = db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE "
+$res_count     = db_query('SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE '
     . "user.user_id=user_group.user_id AND( user.status='A' OR user.status='R' ) AND user_group.group_id=1");
 $count_sfadmin = db_result($res_count, 0, null);
 
@@ -83,7 +83,7 @@ $recipients = [
 
 $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
-$GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL("ckeditor.js"));
+$GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
 $site_admin_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
 $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($site_admin_assets, 'site-admin-mass-emailing.js'));

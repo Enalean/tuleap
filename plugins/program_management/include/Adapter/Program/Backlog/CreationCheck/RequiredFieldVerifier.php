@@ -49,7 +49,7 @@ final class RequiredFieldVerifier implements VerifyRequiredFieldsLimitedToSynchr
         foreach ($trackers->getTrackers() as $program_increment_tracker) {
             $full_tracker = $this->tracker_factory->getTrackerById($program_increment_tracker->getId());
             if (! $full_tracker) {
-                throw new \RuntimeException("Tracker with id #" . $program_increment_tracker->getId() . " is not found.");
+                throw new \RuntimeException('Tracker with id #' . $program_increment_tracker->getId() . ' is not found.');
             }
             foreach ($full_tracker->getFormElementFields() as $field) {
                 if ($field->isRequired() && ! $field_collection->isFieldIdSynchronized($field->getId())) {

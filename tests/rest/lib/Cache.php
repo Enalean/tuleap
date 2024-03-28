@@ -127,7 +127,7 @@ class Cache
 
     public function setUserId($user)
     {
-        $this->user_ids[$user["username"]] = $user["id"];
+        $this->user_ids[$user['username']] = $user['id'];
     }
 
     public function getUserIds()

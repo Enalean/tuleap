@@ -148,7 +148,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
 
     public function loadContent($id)
     {
-        $sql = "SELECT * FROM widget_image WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
+        $sql = 'SELECT * FROM widget_image WHERE owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data              = db_fetch_array($res);
@@ -199,7 +199,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
             }
 
             if ($url || $title) {
-                $sql  = "UPDATE widget_image SET " . $title . ", " . $url . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($request->get('content_id'));
+                $sql  = 'UPDATE widget_image SET ' . $title . ', ' . $url . ' WHERE owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($request->get('content_id'));
                 $res  = db_query($sql);
                 $done = true;
             }

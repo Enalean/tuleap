@@ -57,7 +57,7 @@ if ($action == 'activate') {
     $csrf_token->check();
     $groups = [];
     if ($request->exist('list_of_groups')) {
-        $groups = array_filter(array_map('intval', explode(",", $request->get('list_of_groups'))));
+        $groups = array_filter(array_map('intval', explode(',', $request->get('list_of_groups'))));
     }
     foreach ($groups as $group_id) {
         $project = $project_manager->getProject($group_id);

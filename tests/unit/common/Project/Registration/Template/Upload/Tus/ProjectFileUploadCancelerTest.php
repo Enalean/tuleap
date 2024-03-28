@@ -47,7 +47,7 @@ final class ProjectFileUploadCancelerTest extends TestCase
 
     public function testFileBeingUploadedIsCleanedWhenTheUploadIsCancelled(): void
     {
-        $file_information = new FileBeingUploadedInformation(15, "MX-5", 996, 0);
+        $file_information = new FileBeingUploadedInformation(15, 'MX-5', 996, 0);
         $item_path        = $this->path_allocator->getPathForItemBeingUploaded($file_information);
 
         mkdir(dirname($item_path), 0777, true);
@@ -61,7 +61,7 @@ final class ProjectFileUploadCancelerTest extends TestCase
 
     public function testCancellingAnUploadThatHasNotYetStartedDoesNotGiveAWarning(): void
     {
-        $file_information = new FileBeingUploadedInformation(15, "MX-5", 996, 0);
+        $file_information = new FileBeingUploadedInformation(15, 'MX-5', 996, 0);
         $item_path        = $this->path_allocator->getPathForItemBeingUploaded($file_information);
 
         self::assertFileDoesNotExist($item_path);

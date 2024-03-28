@@ -40,11 +40,11 @@ final class ForSubmittedBy implements ListReadOnlyConditionBuilder
     {
         $value = $values[0];
         if ($value === '') {
-            return new ParametrizedSQLFragment("0", []);
+            return new ParametrizedSQLFragment('0', []);
         }
 
         $user      = $this->user_manager->getUserByUserName($value);
-        $condition = "artifact.submitted_by = ?";
+        $condition = 'artifact.submitted_by = ?';
 
         return new ParametrizedSQLFragment($condition, [$user->getId()]);
     }

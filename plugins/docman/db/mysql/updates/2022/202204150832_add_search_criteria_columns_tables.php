@@ -25,7 +25,7 @@ final class b202204150832_add_search_criteria_columns_tables extends \Tuleap\For
 {
     public function description(): string
     {
-        return "Add plugin_document_search_criteria and plugin_document_search_columns tables";
+        return 'Add plugin_document_search_criteria and plugin_document_search_columns tables';
     }
 
     public function up(): void

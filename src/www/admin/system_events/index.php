@@ -63,7 +63,7 @@ $all_status      = [
 ];
 $filter_status   = $all_status;
 if (is_array($selected_status)) {
-    if (in_array("0", $selected_status) || $selected_status === $all_status) {
+    if (in_array('0', $selected_status) || $selected_status === $all_status) {
         $selected_status = [];
     } else {
         $filter_status = array_intersect($selected_status, $filter_status);

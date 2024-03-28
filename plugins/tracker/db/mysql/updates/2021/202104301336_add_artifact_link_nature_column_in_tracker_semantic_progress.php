@@ -35,7 +35,7 @@ class b202104301336_add_artifact_link_nature_column_in_tracker_semantic_progress
 
     public function up(): void
     {
-        $sql = "ALTER TABLE tracker_semantic_progress ADD artifact_link_type TEXT NULL";
+        $sql = 'ALTER TABLE tracker_semantic_progress ADD artifact_link_type TEXT NULL';
         $this->db->alterTable(
             'tracker_semantic_progress',
             'tuleap',

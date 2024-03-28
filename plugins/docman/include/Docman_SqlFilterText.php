@@ -37,7 +37,7 @@ class Docman_SqlFilterText extends \Docman_SqlFilter
             if ($searchType['like']) {
                 $stmt[] = $this->field . ' LIKE ' . $searchType['pattern'];
             } else {
-                $stmt[] = "MATCH (" . $this->field . ") AGAINST ('" . \db_es($qv) . "' " . \Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ")";
+                $stmt[] = 'MATCH (' . $this->field . ") AGAINST ('" . \db_es($qv) . "' " . \Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ')';
             }
         }
         return $stmt;

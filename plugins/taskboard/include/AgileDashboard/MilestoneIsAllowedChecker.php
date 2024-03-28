@@ -86,20 +86,20 @@ class MilestoneIsAllowedChecker
         ) {
             throw new MilestoneIsNotAllowedException(
                 sprintf(
-                    dgettext('tuleap-taskboard', "Taskboard is not activated in project %s."),
+                    dgettext('tuleap-taskboard', 'Taskboard is not activated in project %s.'),
                     $milestone->getProject()->getPublicName()
                 )
             );
         }
 
         if (! $this->cardwall_on_top_dao->isEnabled($milestone->getTrackerId())) {
-            throw new MilestoneIsNotAllowedException(dgettext('tuleap-taskboard', "Taskboard not found."));
+            throw new MilestoneIsNotAllowedException(dgettext('tuleap-taskboard', 'Taskboard not found.'));
         }
 
         if (! $this->taskboard_usage->isTaskboardAllowed($milestone->getProject())) {
             throw new MilestoneIsNotAllowedException(
                 sprintf(
-                    dgettext('tuleap-taskboard', "Taskboard is not activated in project %s."),
+                    dgettext('tuleap-taskboard', 'Taskboard is not activated in project %s.'),
                     $milestone->getProject()->getPublicName()
                 )
             );

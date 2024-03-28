@@ -34,7 +34,7 @@ use UserManager;
 
 abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private string $savepoint_id = "";
+    private string $savepoint_id = '';
 
     /**
      * @before
@@ -52,10 +52,10 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set(DBConfig::CONF_DBPASSWORD, $stored_db_password);
         \ForgeConfig::set(DBConfig::CONF_DBNAME, $stored_db_name);
 
-        $this->savepoint_id = "save" . random_int(0, 99999999999);
+        $this->savepoint_id = 'save' . random_int(0, 99999999999);
         $db                 = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->beginTransaction();
-        $db->run("SAVEPOINT " . $this->savepoint_id);
+        $db->run('SAVEPOINT ' . $this->savepoint_id);
     }
 
     /**
@@ -65,7 +65,7 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::tearDown();
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("ROLLBACK TO " . $this->savepoint_id);
+        $db->run('ROLLBACK TO ' . $this->savepoint_id);
         $db->rollBack();
 
         ProjectManager::clearInstance();

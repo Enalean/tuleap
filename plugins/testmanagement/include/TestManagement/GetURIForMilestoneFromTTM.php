@@ -38,7 +38,7 @@ class GetURIForMilestoneFromTTM implements Dispatchable
     /**
      * @var string
      */
-    private $uri = "";
+    private $uri = '';
     /**
      * @var \PFUser
      */

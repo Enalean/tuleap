@@ -29,11 +29,11 @@ $console    = new Log_ConsoleLogger();
 $logger     = \BackendLogger::getDefaultLogger(GitPlugin::LOG_IDENTIFIER);
 $broker_log = new BrokerLogger([$logger, $console]);
 
-$broker_log->info("Starting transfer from plugin_git_full_history to plugin_git_log_read_daily");
+$broker_log->info('Starting transfer from plugin_git_full_history to plugin_git_log_read_daily');
 
 $transfer = new \Tuleap\Git\Gitolite\GitoliteFullLogsToAggregatedLogs($broker_log);
 $transfer->convert();
 
-$broker_log->info("Logs parsed with success.");
+$broker_log->info('Logs parsed with success.');
 
 exit(1);

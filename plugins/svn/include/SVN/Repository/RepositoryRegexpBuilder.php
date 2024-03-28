@@ -30,13 +30,13 @@ class RepositoryRegexpBuilder
         // Path: '/trunk/src/common/' =>
         // Regex: '^(/(trunk|\\*))$|^(/(trunk|\\*)/)$|^(/(trunk|\\*)/(src|\\*))$|^(/(trunk|\\*)/(src|\\*)/)$|^(/(trunk|\\*)/(src|\\*)/(common|\\*))$|^(/(trunk|\\*)/(src|\\*)/(common|\\*)/)$'
         $list_repositories = explode('/', $path);
-        $star_operator     = "\\*";
+        $star_operator     = '\\*';
 
-        $root            = "/";
+        $root            = '/';
         $pattern_matcher = '';
         $pattern_builder = '';
         foreach ($list_repositories as $dir_val) {
-            if ($dir_val !== "") {
+            if ($dir_val !== '') {
                 $pattern_builder .= $root . '(' . $data_access->escapeLikeValue($dir_val) . '|' . $star_operator . ')';
 
                 if ($pattern_matcher !== '') {

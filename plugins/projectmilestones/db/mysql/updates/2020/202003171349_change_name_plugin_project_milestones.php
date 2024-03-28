@@ -41,7 +41,7 @@ final class b202003171349_change_name_plugin_project_milestones extends ForgeUpg
         $result = $this->db->dbh->query($sql);
 
         if ($result === false) {
-            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException("An error occured while trying to select milestone widgets.");
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while trying to select milestone widgets.');
         }
     }
 }

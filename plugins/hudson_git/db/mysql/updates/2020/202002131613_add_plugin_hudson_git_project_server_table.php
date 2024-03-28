@@ -24,7 +24,7 @@ class b202002131613_add_plugin_hudson_git_project_server_table extends ForgeUpgr
 {
     public function description()
     {
-        return "Add plugin_hudson_git_project_server table";
+        return 'Add plugin_hudson_git_project_server table';
     }
 
     public function preUp()

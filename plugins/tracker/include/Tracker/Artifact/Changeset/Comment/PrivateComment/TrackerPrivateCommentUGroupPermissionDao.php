@@ -31,21 +31,21 @@ class TrackerPrivateCommentUGroupPermissionDao extends DataAccessObject
      */
     public function getUgroupIdsOfPrivateComment(int $comment_id): array
     {
-        $sql = "SELECT ugroup_id FROM plugin_tracker_private_comment_permission
-                WHERE comment_id = ?";
+        $sql = 'SELECT ugroup_id FROM plugin_tracker_private_comment_permission
+                WHERE comment_id = ?';
 
         return $this->getDB()->column($sql, [$comment_id]);
     }
 
     public function insertUGroupPermissionOnPrivateComment(int $comment_id, int $ugroup_id): void
     {
-        $sql = "INSERT INTO plugin_tracker_private_comment_permission (comment_id, ugroup_id) VALUES (?, ?);";
+        $sql = 'INSERT INTO plugin_tracker_private_comment_permission (comment_id, ugroup_id) VALUES (?, ?);';
 
         $this->getDB()->run($sql, $comment_id, $ugroup_id);
     }
 
     public function deleteUgroupPermissionForPrivateComment(int $ugroup_id): void
     {
-        $this->getDB()->delete("plugin_tracker_private_comment_permission", ["ugroup_id" => $ugroup_id]);
+        $this->getDB()->delete('plugin_tracker_private_comment_permission', ['ugroup_id' => $ugroup_id]);
     }
 }

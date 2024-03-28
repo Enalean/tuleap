@@ -162,7 +162,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user
         )->match(
             function () {
-                self::fail("No project should be created if no template");
+                self::fail('No project should be created if no template');
             },
             function (Fault $fault) {
                 self::assertInstanceOf(NoTemplateProvidedFault::class, $fault);
@@ -248,10 +248,10 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $service1 = $this->createMock(Service::class);
-        $service1->method('getShortName')->willReturn("summary");
+        $service1->method('getShortName')->willReturn('summary');
         $service1->method('getId')->willReturn(12);
         $service2 = $this->createMock(Service::class);
-        $service2->method('getShortName')->willReturn("admin");
+        $service2->method('getShortName')->willReturn('admin');
         $service2->method('getId')->willReturn(13);
         $service3 = $this->createMock(Service::class);
         $service3->method('getShortName')->willReturn(\AgileDashboardPlugin::PLUGIN_SHORTNAME);
@@ -273,8 +273,8 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->method('addServiceByName');
         $this->retriever->method('getAvailableServices')->willReturn(
             [
-                "summary"                               => true,
-                "admin"                                 => true,
+                'summary'                               => true,
+                'admin'                                 => true,
                 \AgileDashboardPlugin::PLUGIN_SHORTNAME => true,
                 \trackerPlugin::SERVICE_SHORTNAME       => true,
             ]
@@ -314,7 +314,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::assertSame($new_project, $project->getProject());
             },
             function () {
-                self::fail("Unexpected fault");
+                self::fail('Unexpected fault');
             }
         );
     }
@@ -329,7 +329,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_post_representation->description      = 'foo';
         $this->project_post_representation->is_public        = false;
         $this->project_post_representation->allow_restricted = false;
-        $this->project_post_representation->from_archive     = new ProjectFilePOSTRepresentation("test.zip", 123);
+        $this->project_post_representation->from_archive     = new ProjectFilePOSTRepresentation('test.zip', 123);
 
         $project_creation_data = new ProjectCreationData(
             new DefaultProjectVisibilityRetriever(),
@@ -350,11 +350,11 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         )->match(
             function (PostProjectCreated $project) {
                 self::assertSame(1001, $project->getProjectFromArchiveRepresentation()->id);
-                self::assertSame("projects/1001", $project->getProjectFromArchiveRepresentation()->uri);
-                self::assertSame("/uploads/project/file/1", $project->getProjectFromArchiveRepresentation()->upload_href);
+                self::assertSame('projects/1001', $project->getProjectFromArchiveRepresentation()->uri);
+                self::assertSame('/uploads/project/file/1', $project->getProjectFromArchiveRepresentation()->upload_href);
             },
             function () {
-                self::fail("Unexpected fault");
+                self::fail('Unexpected fault');
             }
         );
     }
@@ -368,7 +368,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_post_representation->description      = 'foo';
         $this->project_post_representation->is_public        = false;
         $this->project_post_representation->allow_restricted = false;
-        $this->project_post_representation->from_archive     = new ProjectFilePOSTRepresentation("test.zip", 123);
+        $this->project_post_representation->from_archive     = new ProjectFilePOSTRepresentation('test.zip', 123);
 
         $project_creation_data = new ProjectCreationData(
             new DefaultProjectVisibilityRetriever(),
@@ -381,10 +381,10 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user
         )->match(
             function (PostProjectCreated $project) {
-                self::assertSame("/uploads/project/file/1", $project->getProjectFromArchiveRepresentation()->upload_href);
+                self::assertSame('/uploads/project/file/1', $project->getProjectFromArchiveRepresentation()->upload_href);
             },
             function (Fault $fault) {
-                self::assertStringContainsString("Restricted users cannot create projects.", (string) $fault);
+                self::assertStringContainsString('Restricted users cannot create projects.', (string) $fault);
             }
         );
     }

@@ -33,7 +33,7 @@ class b201910161558_add_index_tracker_priority_rank extends ForgeUpgrade_Bucket 
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_artifact_priority_rank ADD INDEX idx_rank(`rank`)";
+        $sql = 'ALTER TABLE tracker_artifact_priority_rank ADD INDEX idx_rank(`rank`)';
 
         $this->db->addIndex('tracker_artifact_priority_rank', 'idx_rank', $sql);
     }

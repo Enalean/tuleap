@@ -73,7 +73,7 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
-            return dgettext("gitphp", 'snapshot');
+            return dgettext('gitphp', 'snapshot');
         }
         return 'snapshot';
     }

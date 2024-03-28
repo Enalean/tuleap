@@ -42,14 +42,14 @@ class SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG extends SystemEvent
         $project_id = $this->getProjectIdFromParameters();
 
         if (! $project_id) {
-            $this->error("Missing project_id parameter");
+            $this->error('Missing project_id parameter');
             return false;
         }
 
         $project = $this->project_manager->getProject($project_id);
 
         if (! $project) {
-            $this->error("Project does not exist");
+            $this->error('Project does not exist');
             return false;
         }
 

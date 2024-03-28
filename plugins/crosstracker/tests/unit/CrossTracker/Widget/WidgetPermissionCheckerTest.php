@@ -47,7 +47,7 @@ final class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueForUserCheckingItsOwnWidget(): void
     {
-        $this->cross_tracker_dao->method("searchCrossTrackerWidgetByCrossTrackerReportId")->willReturn(
+        $this->cross_tracker_dao->method('searchCrossTrackerWidgetByCrossTrackerReportId')->willReturn(
             [
                 'dashboard_type' => UserDashboardController::DASHBOARD_TYPE,
                 'user_id'        => 101,
@@ -61,7 +61,7 @@ final class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseForUserCheckingAnOtherUserWidget(): void
     {
-        $this->cross_tracker_dao->method("searchCrossTrackerWidgetByCrossTrackerReportId")->willReturn(
+        $this->cross_tracker_dao->method('searchCrossTrackerWidgetByCrossTrackerReportId')->willReturn(
             [
                 'dashboard_type' => UserDashboardController::DASHBOARD_TYPE,
                 'user_id'        => 101,
@@ -75,14 +75,14 @@ final class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueForProjectWidgetWhenUserIsAdmin(): void
     {
-        $this->cross_tracker_dao->method("searchCrossTrackerWidgetByCrossTrackerReportId")->willReturn(
+        $this->cross_tracker_dao->method('searchCrossTrackerWidgetByCrossTrackerReportId')->willReturn(
             [
                 'dashboard_type' => ProjectDashboardController::DASHBOARD_TYPE,
                 'project_id'     => 101,
             ]
         );
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
-        $this->project_manager->method("getProject")->willReturn($project);
+        $this->project_manager->method('getProject')->willReturn($project);
 
         $user = $this->createMock(PFUser::class);
         $user->method('isAdmin')->willReturn(true);
@@ -92,14 +92,14 @@ final class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseForProjectWidgetWhenUserIsNotAdmin(): void
     {
-        $this->cross_tracker_dao->method("searchCrossTrackerWidgetByCrossTrackerReportId")->willReturn(
+        $this->cross_tracker_dao->method('searchCrossTrackerWidgetByCrossTrackerReportId')->willReturn(
             [
                 'dashboard_type' => ProjectDashboardController::DASHBOARD_TYPE,
                 'project_id'     => 101,
             ]
         );
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
-        $this->project_manager->method("getProject")->willReturn($project);
+        $this->project_manager->method('getProject')->willReturn($project);
 
         $user = $this->createMock(PFUser::class);
         $user->method('isAdmin')->willReturn(false);
@@ -109,7 +109,7 @@ final class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseInOtherCase(): void
     {
-        $this->cross_tracker_dao->method("searchCrossTrackerWidgetByCrossTrackerReportId")->willReturn([]);
+        $this->cross_tracker_dao->method('searchCrossTrackerWidgetByCrossTrackerReportId')->willReturn([]);
         $user = $this->createMock(PFUser::class);
         self::assertFalse($this->permission_checker->isUserWidgetAdmin($user, 1));
     }

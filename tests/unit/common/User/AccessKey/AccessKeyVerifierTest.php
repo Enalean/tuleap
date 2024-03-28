@@ -179,7 +179,7 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 'verifier' => 'valid',
                 'last_usage' => 1538408328,
                 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION,
-                'expiration_date' => (new DateTimeImmutable("yesterday"))->getTimestamp(),
+                'expiration_date' => (new DateTimeImmutable('yesterday'))->getTimestamp(),
             ]
         );
 

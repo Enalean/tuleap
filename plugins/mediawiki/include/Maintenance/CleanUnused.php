@@ -88,12 +88,12 @@ class CleanUnused
                 false
             );
         }
-        $this->logger->info("Purge Completed");
+        $this->logger->info('Purge Completed');
     }
 
     public function purge($dry_run, array $projects_forced, bool $force_all, ?int $limit)
     {
-        $this->logger->info("Start purge");
+        $this->logger->info('Start purge');
 
         if (! empty($projects_forced) && ! $force_all) {
             $this->purgeUsedServicesEmptyWiki($dry_run, $projects_forced);
@@ -105,7 +105,7 @@ class CleanUnused
 
         $this->purgeUnusedService($dry_run, $projects_forced);
         $this->purgeOrphanDatabases($dry_run);
-        $this->logger->info("Purge completed");
+        $this->logger->info('Purge completed');
         $this->logger->info("{$this->dao->getDeletedDatabasesCount()} database(s) deleted");
         $this->logger->info("{$this->dao->getDeletedTablesCount()} table(s) deleted in central DB");
         $this->logger->info("{$this->dir_deleted} directories deleted");
@@ -113,19 +113,19 @@ class CleanUnused
 
     private function purgeDeletedProjects($dry_run)
     {
-        $this->logger->info("Start purge of deleted projects");
+        $this->logger->info('Start purge of deleted projects');
         foreach ($this->dao->getDeletionCandidates() as $row) {
             $project = $this->project_manager->getProject($row['project_id']);
             if ($project) {
                 $this->purgeOneProject($project, $row, $dry_run);
             }
         }
-        $this->logger->info("Purge of deleted projects completed");
+        $this->logger->info('Purge of deleted projects completed');
     }
 
     private function purgeUnusedService($dry_run, array $projects_forced)
     {
-        $this->logger->info("Start purge of unused services");
+        $this->logger->info('Start purge of unused services');
         foreach ($this->dao->getMediawikiDatabaseInUnusedServices() as $row) {
             $project = $this->project_manager->getProject($row['project_id']);
             if ($project && ($this->isEmpty($project) || $this->isForced($project, $projects_forced))) {
@@ -134,12 +134,12 @@ class CleanUnused
                 $this->logger->warning("Project {$project->getUnixName()} ({$project->getID()}) has mediawiki content but service is desactivated. You should check with project admins");
             }
         }
-        $this->logger->info("Purge of unused services completed");
+        $this->logger->info('Purge of unused services completed');
     }
 
     private function purgeUsedServicesEmptyWiki($dry_run, array $projects_forced)
     {
-        $this->logger->info("Start purge of used but empty mediawiki");
+        $this->logger->info('Start purge of used but empty mediawiki');
         foreach ($this->dao->getMediawikiDatabasesInUsedServices() as $row) {
             $project = $this->project_manager->getProject($row['project_id']);
             if ($project && $this->isEmpty($project)) {
@@ -151,7 +151,7 @@ class CleanUnused
                 }
             }
         }
-        $this->logger->info("End of purge of used but empty mediawiki");
+        $this->logger->info('End of purge of used but empty mediawiki');
     }
 
     private function purgeUsedServicesEmptyWikiForAllProjectsExceptTemplate(bool $dry_run, ?int $limit): void
@@ -159,7 +159,7 @@ class CleanUnused
         if ($limit !== null) {
             $this->logger->info("Start purge of $limit used but empty mediawiki on projects which are not defined as template");
         } else {
-            $this->logger->info("Start purge of used but empty mediawiki on projects which are not defined as template");
+            $this->logger->info('Start purge of used but empty mediawiki on projects which are not defined as template');
         }
         foreach ($this->dao->getMediawikiDatabasesInUsedServices($limit) as $row) {
             $project = $this->project_manager->getProject($row['project_id']);
@@ -172,7 +172,7 @@ class CleanUnused
                 }
             }
         }
-        $this->logger->info("End of purge of used but empty mediawiki on projects which are not defined as template");
+        $this->logger->info('End of purge of used but empty mediawiki on projects which are not defined as template');
     }
 
     private function isEmpty(Project $project)
@@ -191,14 +191,14 @@ class CleanUnused
 
     private function purgeOneProject(Project $project, array $row, $dry_run)
     {
-        $this->logger->info("Found candidate " . $row['database_name']);
+        $this->logger->info('Found candidate ' . $row['database_name']);
         $this->dao->purge($row, $dry_run);
         $this->deleteDirectory($project, $dry_run);
     }
 
     private function deleteDirectory(Project $project, $dry_run)
     {
-        $this->logger->info("Delete data dir");
+        $this->logger->info('Delete data dir');
         $path = $this->data_dir->getMediawikiDir($project);
         if (is_dir($path)) {
             $this->logger->info("Data dir found $path, remove it");
@@ -207,13 +207,13 @@ class CleanUnused
                 rmdir($path);
             }
             $this->dir_deleted++;
-            $this->logger->info("Data dir removed");
+            $this->logger->info('Data dir removed');
         }
     }
 
     private function purgeOrphanDatabases($dry_run)
     {
-        $this->logger->info("Start purge of orphan bases");
+        $this->logger->info('Start purge of orphan bases');
         foreach ($this->dao->getAllMediawikiBasesNotReferenced() as $row) {
             if ($this->dao->isDBEmpty($row['name'])) {
                 $this->dao->dropDatabase($row['name'], $dry_run);
@@ -229,6 +229,6 @@ class CleanUnused
                 }
             }
         }
-        $this->logger->info("End purge of orphan bases");
+        $this->logger->info('End purge of orphan bases');
     }
 }

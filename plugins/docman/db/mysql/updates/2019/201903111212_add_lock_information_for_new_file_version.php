@@ -34,7 +34,7 @@ class b201903111212_add_lock_information_for_new_file_version extends ForgeUpgra
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_docman_new_version_upload ADD COLUMN is_file_locked BOOL NOT NULL DEFAULT false";
+        $sql = 'ALTER TABLE plugin_docman_new_version_upload ADD COLUMN is_file_locked BOOL NOT NULL DEFAULT false';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

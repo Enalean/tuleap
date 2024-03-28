@@ -25,10 +25,10 @@ require_once('HTML_Element_Input_Text.class.php');
  */
 class HTML_Element_Input_Date extends HTML_Element_Input_Text
 {
-    public function __construct($label, $name, $value, $desc = "")
+    public function __construct($label, $name, $value, $desc = '')
     {
         //provide a readable date
-        $value = ($value != 0 ? date("Y-m-d", $value) : '');
+        $value = ($value != 0 ? date('Y-m-d', $value) : '');
 
         parent::__construct($label, $name, $value, 10, $desc);
         $this->params['maxlength'] = 10;

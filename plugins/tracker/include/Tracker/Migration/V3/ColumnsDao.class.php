@@ -31,10 +31,10 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
 
     private function sayIfAFieldNeedTwoColumnsOrIsOnTheLeftOrOnTheRight($tv5_id)
     {
-        $this->update("SET @counter  = 0");
-        $this->update("SET @previous = NULL");
-        $this->update("SET @two_cols = 0");
-        $this->update("SET @gcounter = 0");
+        $this->update('SET @counter  = 0');
+        $this->update('SET @previous = NULL');
+        $this->update('SET @two_cols = 0');
+        $this->update('SET @gcounter = 0');
         $sql = "INSERT INTO temp_tracker_field_$tv5_id (id, parent_id, pos, global_rank)
                 SELECT R1.id, R1.parent_id, IF(R1.need_two_cols, '2', IF(R1.position % 2, 'L', 'R')) as pos, R1.global_rank
                 FROM (

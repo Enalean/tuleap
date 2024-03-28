@@ -71,7 +71,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     public function initiateSession()
     {
         $this->report_session = new Tracker_Report_Session($this->report->id);
-        $this->report_session->changeSessionNamespace("renderers");
+        $this->report_session->changeSessionNamespace('renderers');
         $this->report_session->set("{$this->id}.chunksz", $this->chunksz);
         $this->report_session->set("{$this->id}.multisort", $this->multisort);
     }
@@ -1655,7 +1655,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $changeset_ids = $this->getLegacyDataAccess()->escapeIntImplode(explode(',', $matching_ids['last_changeset_id']));
 
-        $where = " WHERE c.id IN (" . $changeset_ids . ") ";
+        $where = ' WHERE c.id IN (' . $changeset_ids . ') ';
         if ($aggregates) {
             $ordering = false;
         } else {
@@ -1733,11 +1733,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if (isset($aggregates[$column['field']->getId()])) {
                         if ($a = $column['field']->getQuerySelectAggregate($aggregates[$column['field']->getId()])) {
                             foreach ($a['separate_queries'] as $sel) {
-                                $queries_aggregates_group_by[$column['field']->getName() . '_' . $sel['function']] = "SELECT " .
+                                $queries_aggregates_group_by[$column['field']->getName() . '_' . $sel['function']] = 'SELECT ' .
                                     $sel['select'] .
                                     $from . ' ' . $column['field']->getQueryFromAggregate() .
                                     $where .
-                                    ($sel['group_by'] ? " GROUP BY " . $sel['group_by'] : '');
+                                    ($sel['group_by'] ? ' GROUP BY ' . $sel['group_by'] : '');
                             }
                         }
                     }
@@ -1759,7 +1759,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     $order[] = $s['field']->getQueryOrderby() . ' ' . ($s['is_desc'] ? 'DESC' : 'ASC');
                 }
                 if (! empty($order)) {
-                    $queries[0] .= " ORDER BY " . implode(', ', $order);
+                    $queries[0] .= ' ORDER BY ' . implode(', ', $order);
                 }
             }
         } else {
@@ -1924,7 +1924,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             //Reset sort
             if (isset($renderer_parameters['resetsort'])) {
                 //Drop existing sort
-                $this->report_session->remove("{$this->id}", "sort");
+                $this->report_session->remove("{$this->id}", 'sort');
                 $this->report_session->setHasChanged();
             }
 
@@ -2198,7 +2198,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             if (! $type) {
                 $type = dgettext('tuleap-tracker', 'No type');
             }
-            $title .= " (" . $type . ")";
+            $title .= ' (' . $type . ')';
         }
 
         return $title;
@@ -2215,7 +2215,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if (! $type) {
                         $type = dgettext('tuleap-tracker', 'No type');
                     }
-                    $head[] = $title . " (" . $type . ")";
+                    $head[] = $title . ' (' . $type . ')';
                 }
             } else {
                 $head[] = $title;
@@ -2348,17 +2348,17 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $lines[] = $line;
             }
 
-            $separator                 = ",";   // by default, comma.
+            $separator                 = ',';   // by default, comma.
             $user                      = UserManager::instance()->getCurrentUser();
             $separator_csv_export_pref = $user->getPreference('user_csv_separator');
             switch ($separator_csv_export_pref) {
-                case "comma":
+                case 'comma':
                     $separator = ',';
                     break;
-                case "semicolon":
+                case 'semicolon':
                     $separator = ';';
                     break;
-                case "tab":
+                case 'tab':
                     $separator = chr(9);
                     break;
             }
@@ -2367,7 +2367,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $file_name = str_replace(' ', '_', 'artifact_' . $this->report->getTracker()->getItemName());
             header('Content-Disposition: filename=' . $http->purify($file_name) . '_' . $this->report->getTracker()->getProject()->getUnixName() . '.csv');
             header('Content-type: text/csv');
-            $csv_file = fopen("php://output", "a");
+            $csv_file = fopen('php://output', 'a');
             $this->addBOMToCSVContent($csv_file);
             foreach ($lines as $line) {
                 fputcsv($csv_file, $line, $separator, '"');
@@ -2707,15 +2707,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         if (! empty($additional_select) && $can_be_sorted) {
             $select .= ', ' . implode(',', $additional_select);
-            $from   .= implode("", $additional_from);
+            $from   .= implode('', $additional_from);
         }
 
         $query = $select . $from . $where;
-        $limit = " LIMIT ?, ?";
+        $limit = ' LIMIT ?, ?';
 
 
         if (! empty($order)) {
-            $query .= " ORDER BY " . implode(', ', $order);
+            $query .= ' ORDER BY ' . implode(', ', $order);
         }
 
         $query .= $limit;
@@ -2723,12 +2723,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $results = $dao->safeQuery($query, [$offset, $this->chunksz]);
 
         $matching_ids_from_result                      = [];
-        $matching_ids_from_result["last_changeset_id"] = "";
-        $matching_ids_from_result["id"]                = "";
+        $matching_ids_from_result['last_changeset_id'] = '';
+        $matching_ids_from_result['id']                = '';
 
         if ($results && is_array($results)) {
-            $matching_ids_from_result["last_changeset_id"] = implode(',', array_column($results, 'changeset_id'));
-            $matching_ids_from_result["id"]                = implode(',', array_column($results, 'id'));
+            $matching_ids_from_result['last_changeset_id'] = implode(',', array_column($results, 'changeset_id'));
+            $matching_ids_from_result['id']                = implode(',', array_column($results, 'id'));
         }
 
         return $matching_ids_from_result;
@@ -2736,7 +2736,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     private function getBaseQueryFrom(): string
     {
-        return " FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) ";
+        return ' FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) ';
     }
 
     /**
@@ -2745,9 +2745,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     private function getBaseQuerySelect($aggregates): string
     {
         if ($aggregates) {
-            $select = " SELECT 1 ";
+            $select = ' SELECT 1 ';
         } else {
-            $select = " SELECT a.id AS id, c.id AS changeset_id ";
+            $select = ' SELECT a.id AS id, c.id AS changeset_id ';
         }
         return $select;
     }

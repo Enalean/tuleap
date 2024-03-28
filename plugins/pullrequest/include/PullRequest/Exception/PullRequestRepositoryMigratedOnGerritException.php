@@ -26,6 +26,6 @@ class PullRequestRepositoryMigratedOnGerritException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("The destination repository is migrated on Gerrit. The Pull Request cannot be created.");
+        parent::__construct('The destination repository is migrated on Gerrit. The Pull Request cannot be created.');
     }
 }

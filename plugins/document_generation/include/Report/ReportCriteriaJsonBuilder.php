@@ -107,8 +107,8 @@ class ReportCriteriaJsonBuilder
 
         if (
             ! is_array($criterion_value) ||
-            ! array_key_exists("from_date", $criterion_value) ||
-            ! array_key_exists("to_date", $criterion_value)
+            ! array_key_exists('from_date', $criterion_value) ||
+            ! array_key_exists('to_date', $criterion_value)
         ) {
             return null;
         }

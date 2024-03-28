@@ -33,7 +33,7 @@ final class b202202141115_add_writers_allowed_to_update extends \Tuleap\ForgeUpg
             return;
         }
 
-        $sql = "ALTER TABLE plugin_docman_project_settings ADD COLUMN forbid_writers_to_update TINYINT(1) DEFAULT 0";
+        $sql = 'ALTER TABLE plugin_docman_project_settings ADD COLUMN forbid_writers_to_update TINYINT(1) DEFAULT 0';
 
         if ($this->api->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(

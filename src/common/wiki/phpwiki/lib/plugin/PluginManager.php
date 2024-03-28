@@ -29,20 +29,20 @@ class WikiPlugin_PluginManager extends WikiPlugin
 {
     public function getName()
     {
-        return _("PluginManager");
+        return _('PluginManager');
     }
 
     public function getDescription()
     {
-        return _("Description: Provides a list of plugins on this wiki.");
+        return _('Description: Provides a list of plugins on this wiki.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.19 $"
+            '$Revision: 1.19 $'
         );
     }
 
@@ -59,9 +59,9 @@ class WikiPlugin_PluginManager extends WikiPlugin
         $this->_generatePageheader($info, $h);
 
         if (! REQUIRE_ADMIN || $request->_user->isadmin()) {
-            $h->pushContent(HTML::h2(_("Plugins")));
+            $h->pushContent(HTML::h2(_('Plugins')));
 
-            $table = HTML::table(['class' => "pagelist"]);
+            $table = HTML::table(['class' => 'pagelist']);
             $this->_generateColgroups($info, $table);
             $this->_generateColheadings($info, $table);
             $this->_generateTableBody($info, $dbi, $request, $table);
@@ -70,8 +70,8 @@ class WikiPlugin_PluginManager extends WikiPlugin
             //$h->pushContent(HTML::h2(_("Disabled Plugins")));
         } else {
             $h->pushContent(fmt(
-                "You must be an administrator to %s.",
-                _("use this plugin")
+                'You must be an administrator to %s.',
+                _('use this plugin')
             ));
         }
         return $h;
@@ -101,9 +101,9 @@ class WikiPlugin_PluginManager extends WikiPlugin
     {
         // table headings
         $tr       = HTML::tr();
-        $headings = [_("Plugin"), _("Version"), _("Description")];
+        $headings = [_('Plugin'), _('Version'), _('Description')];
         if ($info == 'args') {
-            $headings[] = _("Arguments");
+            $headings[] = _('Arguments');
         }
         foreach ($headings as $title) {
             $tr->pushContent(HTML::td($title));
@@ -129,7 +129,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
         $w = new WikiPluginLoader();
         foreach ($plugins as $pluginName) {
             // instantiate a plugin
-            $pluginName      = str_replace(".php", "", $pluginName);
+            $pluginName      = str_replace('.php', '', $pluginName);
             $temppluginclass = "<? plugin $pluginName ?>"; // hackish
             $p               = $w->getPlugin($pluginName, false); // second arg?
             // trap php files which aren't WikiPlugin~s
@@ -138,8 +138,8 @@ class WikiPlugin_PluginManager extends WikiPlugin
                 // plugin dir from non-admins.
                 if ($request->_user->isAdmin()) {
                     trigger_error(sprintf(
-                        _("%s does not appear to be a WikiPlugin."),
-                        $pluginName . ".php"
+                        _('%s does not appear to be a WikiPlugin.'),
+                        $pluginName . '.php'
                     ));
                 }
                 continue; // skip this non WikiPlugin file
@@ -152,13 +152,13 @@ class WikiPlugin_PluginManager extends WikiPlugin
             // This section was largely improved by Pierrick Meignen:
             // make a link if an actionpage exists
             $pluginNamelink    = $pluginName;
-            $pluginDocPageName = $pluginName . "Plugin";
+            $pluginDocPageName = $pluginName . 'Plugin';
 
             $pluginDocPageNamelink      = false;
             $localizedPluginName        = '';
             $localizedPluginDocPageName = '';
 
-            if ($GLOBALS['LANG'] != "en") {
+            if ($GLOBALS['LANG'] != 'en') {
                 if (_($pluginName) != $pluginName) {
                     $localizedPluginName = _($pluginName);
                 }

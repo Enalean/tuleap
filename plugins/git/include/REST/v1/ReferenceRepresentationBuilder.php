@@ -46,9 +46,9 @@ class ReferenceRepresentationBuilder
             foreach ($references_list as $reference) {
                 $reference_representation_list[] =
                 match ($direction) {
-                    "target" => ReferenceRepresentation::outReferenceRepresentation($reference["ref"], $reference["url"]),
-                    "source" => ReferenceRepresentation::inReferenceRepresentation($reference["ref"], $reference["url"]),
-                    "both"   => ReferenceRepresentation::bothReferenceRepresentation($reference["ref"], $reference["url"]),
+                    'target' => ReferenceRepresentation::outReferenceRepresentation($reference['ref'], $reference['url']),
+                    'source' => ReferenceRepresentation::inReferenceRepresentation($reference['ref'], $reference['url']),
+                    'both'   => ReferenceRepresentation::bothReferenceRepresentation($reference['ref'], $reference['url']),
                 };
             }
         }

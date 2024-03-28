@@ -38,8 +38,8 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE `plugin_botmattermost_bot`
-            ADD avatar_url varchar(255) NOT NULL";
+        $sql = 'ALTER TABLE `plugin_botmattermost_bot`
+            ADD avatar_url varchar(255) NOT NULL';
 
         $res = $this->db->dbh->exec($sql);
 

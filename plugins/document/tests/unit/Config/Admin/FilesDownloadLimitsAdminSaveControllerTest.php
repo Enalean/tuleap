@@ -65,8 +65,8 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
-            ->withParam('max-archive-size', "2000")
-            ->withParam('warning-threshold', "25")
+            ->withParam('max-archive-size', '2000')
+            ->withParam('warning-threshold', '25')
             ->build();
 
         $this->token->expects(self::once())->method('check');
@@ -108,7 +108,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withParam('max-archive-size', 'not-valid')
-            ->withParam('warning-threshold', "25")
+            ->withParam('warning-threshold', '25')
             ->build();
 
         $this->token->expects(self::once())->method('check');
@@ -144,7 +144,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
-            ->withParam('max-archive-size', "2000")
+            ->withParam('max-archive-size', '2000')
             ->withParam('warning-threshold', 'not-valid')
             ->build();
 

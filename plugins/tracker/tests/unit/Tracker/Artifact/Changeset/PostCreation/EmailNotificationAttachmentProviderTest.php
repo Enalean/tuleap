@@ -42,7 +42,7 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->changeset = ChangesetTestBuilder::aChangeset("1001")->build();
+        $this->changeset = ChangesetTestBuilder::aChangeset('1001')->build();
         $this->recipient = UserTestBuilder::buildWithDefaults();
         $this->logger    = new TestLogger();
     }

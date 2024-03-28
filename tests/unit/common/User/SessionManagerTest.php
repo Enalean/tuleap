@@ -145,7 +145,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user    = UserTestBuilder::aUser()->build();
         $request = $this->createMock(\HTTPRequest::class);
 
-        $this->random_number_generator->method('getNumber')->willReturn("1");
+        $this->random_number_generator->method('getNumber')->willReturn('1');
 
         $this->expectException(\Tuleap\User\SessionNotCreatedException::class);
 

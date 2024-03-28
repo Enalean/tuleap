@@ -51,7 +51,7 @@ class CreateTestUser
         $login = trim($login);
         $valid = new \Valid_UserNameFormat();
         if (! $valid->validate($login)) {
-            throw new Exception\InvalidLoginException("Submitted login is not valid");
+            throw new Exception\InvalidLoginException('Submitted login is not valid');
         }
         $this->login = $login;
     }
@@ -108,7 +108,7 @@ class CreateTestUser
     {
         $user_dao = new \UserDao();
         if (count($user_dao->searchByEmail($this->email)) != 0) {
-            throw new Exception\EmailNotUniqueException("Email already exists, cannot re-create account.");
+            throw new Exception\EmailNotUniqueException('Email already exists, cannot re-create account.');
         }
     }
 }

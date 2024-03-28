@@ -62,12 +62,12 @@ class TextDiffRetriever implements DispatchableWithRequest
 
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
         if (! $artifact) {
-            throw new NotFoundException(dgettext("tuleap-tracker", 'Artifact is not found or not accessible by user.'));
+            throw new NotFoundException(dgettext('tuleap-tracker', 'Artifact is not found or not accessible by user.'));
         }
 
         $user = $request->getCurrentUser();
         if (! $artifact->userCanView($user)) {
-            throw new NotFoundException(dgettext("tuleap-tracker", 'Artifact is not found or not accessible by user.'));
+            throw new NotFoundException(dgettext('tuleap-tracker', 'Artifact is not found or not accessible by user.'));
         }
 
         $changesets_for_diff = $this->changesets_for_diff_retriever->retrieveChangesets(
@@ -86,14 +86,14 @@ class TextDiffRetriever implements DispatchableWithRequest
 
         $previous_changeset = $changesets_for_diff->getPreviousChangeset();
         if (! $previous_changeset) {
-            $layout->sendJSON("");
+            $layout->sendJSON('');
             return;
         }
 
         $previous_changeset_value = $previous_changeset->getValue($field);
 
         if (! $previous_changeset_value || ! $previous_changeset_value instanceof Tracker_Artifact_ChangesetValue_Text) {
-            $layout->sendJSON("");
+            $layout->sendJSON('');
             return;
         }
 

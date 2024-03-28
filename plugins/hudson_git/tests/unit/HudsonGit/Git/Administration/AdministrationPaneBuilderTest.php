@@ -41,7 +41,7 @@ final class AdministrationPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals('Jenkins', $pane->getPaneName());
         self::assertStringContainsString(
-            "/test/administration/jenkins",
+            '/test/administration/jenkins',
             $pane->getUrl()
         );
         self::assertFalse($pane->isActive());
@@ -53,7 +53,7 @@ final class AdministrationPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals('Jenkins', $pane->getPaneName());
         self::assertStringContainsString(
-            "/test/administration/jenkins",
+            '/test/administration/jenkins',
             $pane->getUrl()
         );
         self::assertTrue($pane->isActive());

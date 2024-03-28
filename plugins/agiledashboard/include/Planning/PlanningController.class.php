@@ -221,10 +221,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $xml_importer = ProjectXMLImporter::build(new XMLImportHelper(UserManager::instance()), \ProjectCreator::buildSelfByPassValidation());
 
         try {
-            $xml_importer->collectBlockingErrorsWithoutImporting($this->group_id, $_FILES["template_file"]["tmp_name"])
+            $xml_importer->collectBlockingErrorsWithoutImporting($this->group_id, $_FILES['template_file']['tmp_name'])
                 ->andThen(function () use ($xml_importer): Ok|Err {
                     $config = new ImportConfig();
-                    return $xml_importer->import($config, $this->group_id, $_FILES["template_file"]["tmp_name"]);
+                    return $xml_importer->import($config, $this->group_id, $_FILES['template_file']['tmp_name']);
                 })
                 ->match(
                     function (): void {
@@ -531,10 +531,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $burnup_fields = $this->tracker_form_element_factory->getFormElementsByType($planning_tracker, Burnup::TYPE);
 
         if ($burnup_fields && $burnup_fields[0]->isUsed()) {
-            $semantic_url = TRACKER_BASE_URL . "?" . http_build_query(
+            $semantic_url = TRACKER_BASE_URL . '?' . http_build_query(
                 [
-                    "tracker" => $planning_tracker->getId(),
-                    "func"    => "admin-formElements",
+                    'tracker' => $planning_tracker->getId(),
+                    'func'    => 'admin-formElements',
                 ]
             );
 

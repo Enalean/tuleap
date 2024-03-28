@@ -55,7 +55,7 @@ final class OAuth2ConsentRequiredResponseBuilder implements ConsentRequiredRespo
             ->withHeader(
                 'Content-Security-Policy',
                 "default-src 'report-sample'; base-uri 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'report-sample'; style-src 'self' 'report-sample'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self';"
-                . "form-action 'self' " . $redirect_uri . ";"
+                . "form-action 'self' " . $redirect_uri . ';'
                 . "frame-ancestors 'none'; block-all-mixed-content; report-uri /csp-violation;"
             );
     }

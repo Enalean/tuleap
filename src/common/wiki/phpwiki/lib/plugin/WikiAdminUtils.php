@@ -34,20 +34,20 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
 {
     public function getName()
     {
-        return _("WikiAdminUtils");
+        return _('WikiAdminUtils');
     }
 
     public function getDescription()
     {
-        return _("Miscellaneous utility functions for the Administrator.");
+        return _('Miscellaneous utility functions for the Administrator.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.18 $"
+            '$Revision: 1.18 $'
         );
     }
 
@@ -65,10 +65,10 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         extract($args);
 
         if (! $action) {
-            $this->error("No action specified");
+            $this->error('No action specified');
         }
         if (! ($default_label = $this->_getLabel($action))) {
-            $this->error("Bad action");
+            $this->error('Bad action');
         }
         if ($request->getArg('action') != 'browse') {
             return $this->disabled("(action != 'browse')");
@@ -80,7 +80,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
             $user = $request->getUser();
             if (! $user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
-                return $this->error(_("You must be an administrator to use this plugin."));
+                return $this->error(_('You must be an administrator to use this plugin.'));
             }
             return $this->do_action($request, $posted);
         }
@@ -111,25 +111,25 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
     {
         $method = strtolower('_do_' . str_replace('-', '_', $args['action']));
         if (! method_exists($this, $method)) {
-            return $this->error("Bad action");
+            return $this->error('Bad action');
         }
 
         $message = call_user_func([&$this, $method], $request, $args);
 
         // display as seperate page or as alert?
         $alert = new Alert(
-            _("WikiAdminUtils says:"),
+            _('WikiAdminUtils says:'),
             $message,
-            [_("Okay") => $args['return_url']]
+            [_('Okay') => $args['return_url']]
         );
         $alert->show();         // noreturn
     }
 
     public function _getLabel($action)
     {
-        $labels = ['purge-cache' => _("Purge Markup Cache"),
-            'purge-bad-pagenames' => _("Purge all Pages With Invalid Names"),
-            'purge-empty-state-pages' => _("Purge all empty, unreferenced Pages"),
+        $labels = ['purge-cache' => _('Purge Markup Cache'),
+            'purge-bad-pagenames' => _('Purge all Pages With Invalid Names'),
+            'purge-empty-state-pages' => _('Purge all empty, unreferenced Pages'),
         ];
         return @$labels[$action];
     }
@@ -141,7 +141,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         while (($page = $pages->next())) {
             $page->set('_cached_html', false);
         }
-        return _("Markup cache purged!");
+        return _('Markup cache purged!');
     }
 
     public function _do_purge_bad_pagenames(&$request, $args)
@@ -162,10 +162,10 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         }
         $pages->free();
         if (! $count) {
-            return _("No pages with bad names had to be deleted.");
+            return _('No pages with bad names had to be deleted.');
         } else {
             return HTML(
-                fmt("Deleted %s pages with invalid names:", $count),
+                fmt('Deleted %s pages with invalid names:', $count),
                 HTML::div(['align' => 'left'], $list)
             );
         }
@@ -188,9 +188,9 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
                     continue;
                 }
                 if ($dbi->purgePage($pagename)) {
-                    $list->pushContent(HTML::li($pagename . ' ' . _("[purged]")));
+                    $list->pushContent(HTML::li($pagename . ' ' . _('[purged]')));
                 } else {
-                    $list->pushContent(HTML::li($pagename . ' ' . _("[not purgable]")));
+                    $list->pushContent(HTML::li($pagename . ' ' . _('[not purgable]')));
                     $notpurgable++;
                 }
                 $count++;
@@ -198,14 +198,14 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         }
         $pages->free();
         if (! $count) {
-            return _("No empty, unreferenced pages were found.");
+            return _('No empty, unreferenced pages were found.');
         } else {
             return HTML(
-                fmt("Deleted %s unreferenced pages:", $count),
+                fmt('Deleted %s unreferenced pages:', $count),
                 HTML::div(['align' => 'left'], $list),
                 ($notpurgable ?
                 fmt(
-                    "The %d not-purgable pages/links are links in some page(s). You might want to edit them.",
+                    'The %d not-purgable pages/links are links in some page(s). You might want to edit them.',
                     $notpurgable
                 )
                 : '')
@@ -215,7 +215,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
 
     public function _do_convert_cached_html(&$request, $args)
     {
-        return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
+        return $this->disabled('This action is blocked by administrator. Sorry for the inconvenience !');
     }
 
 
@@ -223,20 +223,20 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
     //      Too many options.
     public function _do_access_restrictions(&$request, &$args)
     {
-        return _("Sorry. Access Restrictions not yet implemented");
+        return _('Sorry. Access Restrictions not yet implemented');
     }
 
     // pagelist with enable/disable button
     public function _do_email_verification(&$request, &$args)
     {
-        return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
+        return $this->disabled('This action is blocked by administrator. Sorry for the inconvenience !');
         $dbi      = $request->getDbh();
         $pagelist = new PageList('pagename', 0, $args);
         //$args['return_url'] = 'action=email-verification-verified';
-        $email                = new _PageList_Column_email('email', _("E-Mail"), 'left');
+        $email                = new _PageList_Column_email('email', _('E-Mail'), 'left');
         $emailVerified        = new _PageList_Column_emailVerified(
             'emailVerified',
-            _("Verification Status"),
+            _('Verification Status'),
             'center'
         );
         $pagelist->_columns[] = $email;
@@ -300,18 +300,18 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
                 HTML::p(
                     Button(
                         'submit:',
-                        _("Change Verification Status"),
+                        _('Change Verification Status'),
                         'wikiadmin'
                     ),
                     HTML::Raw('&nbsp;'),
-                    Button('cancel', _("Cancel"))
+                    Button('cancel', _('Cancel'))
                 )
             );
         }
     }
 }
 
-require_once("lib/PageList.php");
+require_once('lib/PageList.php');
 
 class _PageList_Column_email extends _PageList_Column
 {

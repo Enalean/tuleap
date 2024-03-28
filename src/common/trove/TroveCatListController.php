@@ -70,13 +70,13 @@ class TroveCatListController implements DispatchableWithRequest
         $csrf_token->check();
 
         switch ($request->get('action')) {
-            case "update":
+            case 'update':
                 $this->update($request);
                 break;
-            case "add":
+            case 'add':
                 $this->add($request);
                 break;
-            case "delete":
+            case 'delete':
                 $this->delete($request);
                 break;
         }
@@ -244,8 +244,8 @@ class TroveCatListController implements DispatchableWithRequest
             'display'      => $display,
             'mandatory'    => $this->isMandatory($display, $request->get('is-mandatory')),
             'trove_cat_id' => $request->get('id'),
-            'fullpath'     => (isset($trove_cat_list['hierarchy'])) ? $trove_cat_list['hierarchy'] .  " :: " . $request->get('fullname') : $request->get('fullname'),
-            'fullpath_ids' => (isset($trove_cat_list['hierarchy_id'])) ? $trove_cat_list['hierarchy_id'] . " :: "  . $trove_cat_id : $trove_cat_id,
+            'fullpath'     => (isset($trove_cat_list['hierarchy'])) ? $trove_cat_list['hierarchy'] .  ' :: ' . $request->get('fullname') : $request->get('fullname'),
+            'fullpath_ids' => (isset($trove_cat_list['hierarchy_id'])) ? $trove_cat_list['hierarchy_id'] . ' :: '  . $trove_cat_id : $trove_cat_id,
             'root_parent'  => (int) $ids[0],
             'nb_max_values' => $nb_max_values,
             'is_project_flag' => $is_project_flag,
@@ -288,16 +288,16 @@ class TroveCatListController implements DispatchableWithRequest
      */
     private function isProjectFlag(HTTPRequest $request, $nb_max_values)
     {
-        $is_project_flag = $request->get('is-project-flag') === "1";
+        $is_project_flag = $request->get('is-project-flag') === '1';
         if ($is_project_flag) {
-            if ($request->get('parent') !== "0") {
-                throw new \Exception("Only top categories can be marked as project flag.");
+            if ($request->get('parent') !== '0') {
+                throw new \Exception('Only top categories can be marked as project flag.');
             }
 
             $this->checkNbOfExistingProjectFlags($request);
 
             if ($nb_max_values !== 1) {
-                throw new \Exception("Only categories with nb max values = 1 can be marked as project flag.");
+                throw new \Exception('Only categories with nb max values = 1 can be marked as project flag.');
             }
         }
 
@@ -330,7 +330,7 @@ class TroveCatListController implements DispatchableWithRequest
             }
         }
         if ($nb_of_other_categories_flagged_as_project_flag >= 2) {
-            throw new \Exception("Up to 2 categories can be used as flag.");
+            throw new \Exception('Up to 2 categories can be used as flag.');
         }
     }
 }

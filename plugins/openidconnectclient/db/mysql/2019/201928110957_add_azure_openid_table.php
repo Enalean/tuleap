@@ -32,9 +32,9 @@ class b201928110957_add_azure_openid_table extends ForgeUpgrade_Bucket // phpcs:
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_openidconnectclient_provider_azure_ad (
+        $sql = 'CREATE TABLE plugin_openidconnectclient_provider_azure_ad (
                     provider_id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
-                    tenant_id TEXT NOT NULL);";
+                    tenant_id TEXT NOT NULL);';
 
         $this->db->createTable('plugin_openidconnectclient_provider_azure_ad', $sql);
     }

@@ -32,19 +32,19 @@ class ArtifactsDeletionConfigDAO extends DataAccessObject
 
     public function searchDeletableArtifactsLimit()
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_tracker_config
                 WHERE name = ?
-        ";
+        ';
 
         return $this->getDB()->run($sql, self::CONFIG_NAME);
     }
 
     public function updateDeletableArtifactsLimit($new_artifacts_limit)
     {
-        $sql = "REPLACE INTO plugin_tracker_config (name, value)
+        $sql = 'REPLACE INTO plugin_tracker_config (name, value)
                 VALUES (?, ?)
-        ";
+        ';
 
         return $this->getDB()->run($sql, self::CONFIG_NAME, $new_artifacts_limit);
     }

@@ -224,17 +224,17 @@ class ProjectDetailsController
             $this->updateProjectVisibility($request->getCurrentUser(), $request->getProject(), $request);
             $this->updateTruncatedMails($request->getCurrentUser(), $request->getProject(), $request);
         } catch (DataAccessException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed"));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Update failed'));
         } catch (CannotUpdateProjectHierarchyException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed"));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Update failed'));
         } catch (Project_HierarchyManagerAncestorIsSelfException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("A project cannot be its own parent."));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('A project cannot be its own parent.'));
         } catch (Project_HierarchyManagerAlreadyAncestorException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("These projects are already related."));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('These projects are already related.'));
         } catch (InvalidProjectIconException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed: invalid project icon selected"));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Update failed: invalid project icon selected'));
         } catch (JsonException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed: icon conversion error"));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Update failed: icon conversion error'));
         }
     }
 
@@ -276,7 +276,7 @@ class ProjectDetailsController
         $description_fields = $this->description_fields_factory->getAllDescriptionFields();
 
         for ($i = 0; $i < sizeof($description_fields); $i++) {
-            $current_form = trim($request->get("form_" . $description_fields[$i]["group_desc_id"]));
+            $current_form = trim($request->get('form_' . $description_fields[$i]['group_desc_id']));
 
             if (($description_fields[$i]['desc_required'] == 1) && (! $current_form)) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Missing Information. PLEASE fill in all required information.'));
@@ -302,7 +302,7 @@ class ProjectDetailsController
         $previous_values = [];
 
         foreach ($description_fields as $description_field_id => $description_field) {
-            $current_form = trim($request->get("form_" . $description_field_id));
+            $current_form = trim($request->get('form_' . $description_field_id));
 
             if (array_key_exists($description_field_id, $description_fields_values)) {
                 $previous_values[$description_field_id] = $description_fields_values[$description_field_id]['value'];
@@ -336,7 +336,7 @@ class ProjectDetailsController
                     throw new CannotUpdateProjectHierarchyException();
                 }
             } else {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("The given parent project does not exist or you are not its administrator."));
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('The given parent project does not exist or you are not its administrator.'));
                 throw new CannotUpdateProjectHierarchyException();
             }
         }
@@ -384,16 +384,16 @@ class ProjectDetailsController
                 $field_value = $description_fields_values[$description_field_id]['value'];
             }
 
-            $translated_field_description = DescriptionFieldLabelBuilder::getFieldTranslatedDescription($description_field["desc_description"]);
+            $translated_field_description = DescriptionFieldLabelBuilder::getFieldTranslatedDescription($description_field['desc_description']);
             $purified_field_description   = Codendi_HTMLPurifier::instance()->purify($translated_field_description, CODENDI_PURIFIER_LIGHT);
 
             $description_fields_representations[] = [
-                'field_name'                 => "form_" . $description_field["group_desc_id"],
+                'field_name'                 => 'form_' . $description_field['group_desc_id'],
                 'field_value'                => $field_value,
-                'field_label'                => DescriptionFieldLabelBuilder::getFieldTranslatedName($description_field["desc_name"]),
-                'field_description_required' => $description_field["desc_required"],
-                'is_field_line_typed'        => $description_field["desc_type"] === 'line',
-                'is_field_text_typed'        => $description_field["desc_type"] === 'text',
+                'field_label'                => DescriptionFieldLabelBuilder::getFieldTranslatedName($description_field['desc_name']),
+                'field_description_required' => $description_field['desc_required'],
+                'is_field_line_typed'        => $description_field['desc_type'] === 'line',
+                'is_field_text_typed'        => $description_field['desc_type'] === 'text',
                 'purified_field_description' => $purified_field_description,
             ];
         }
@@ -528,7 +528,7 @@ class ProjectDetailsController
                         );
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Please accept term of service"));
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Please accept term of service'));
                 }
             }
         }

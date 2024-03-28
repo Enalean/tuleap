@@ -82,8 +82,8 @@ class FieldDataBuilder
 
         if ($id) {
             return [
-                "id"   => $id,
-                "type" => $type,
+                'id'   => $id,
+                'type' => $type,
             ];
         }
 

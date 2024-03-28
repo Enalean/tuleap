@@ -31,15 +31,15 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
-$fd       = fopen("php://stdin", "r");
-$raw_mail = "";
+$fd       = fopen('php://stdin', 'r');
+$raw_mail = '';
 while (! feof($fd)) {
     $raw_mail .= fread($fd, 1024);
 }
 fclose($fd);
 
 $logger = BackendLogger::getDefaultLogger();
-$logger->info("Entering email gateway");
+$logger->info('Entering email gateway');
 
 $recipient_factory                 = Tracker_Artifact_MailGateway_RecipientFactory::build();
 $tracker_config                    = new MailGatewayConfig(new MailGatewayConfigDao());
@@ -94,4 +94,4 @@ try {
 } catch (Exception $e) {
     $logger->error($e->getMessage());
 }
-$logger->info("End email gateway");
+$logger->info('End email gateway');

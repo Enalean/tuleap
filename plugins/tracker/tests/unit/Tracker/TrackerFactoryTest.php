@@ -44,8 +44,8 @@ class TrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCollectErrors(): void
     {
         $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive("getName")->andReturn("Tracker name");
-        $tracker->shouldReceive("getItemName")->andReturn("Item name");
+        $tracker->shouldReceive('getName')->andReturn('Tracker name');
+        $tracker->shouldReceive('getItemName')->andReturn('Item name');
         $trackers = [
             $tracker,
         ];
@@ -56,14 +56,14 @@ class TrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo($trackers, 101);
 
-        $this->assertEquals(["Tracker name"], $result);
+        $this->assertEquals(['Tracker name'], $result);
     }
 
     public function testItDoesNotHaveErrorIfEverythingIsValid(): void
     {
         $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive("getName")->andReturn("Tracker name");
-        $tracker->shouldReceive("getItemName")->andReturn("Item name");
+        $tracker->shouldReceive('getName')->andReturn('Tracker name');
+        $tracker->shouldReceive('getItemName')->andReturn('Item name');
         $trackers = [
             $tracker,
         ];

@@ -120,13 +120,13 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker1->shouldReceive('getXMLId');
         $this->tracker2->shouldReceive('getXMLId');
 
-        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->twice();
+        $this->external_field_extractor->shouldReceive('extractExternalFieldsFromTracker')->twice();
 
         $type = new TypePresenter('fixed_in', '', '', true);
 
         $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
 
-        $this->event_manager->method("dispatch");
+        $this->event_manager->method('dispatch');
 
         $this->xml_export->exportToXMl(
             $project,
@@ -150,13 +150,13 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker1->shouldReceive('getXMLId');
         $this->tracker2->shouldNotReceive('getXMLId');
 
-        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->once();
+        $this->external_field_extractor->shouldReceive('extractExternalFieldsFromTracker')->once();
 
         $type = new TypePresenter('fixed_in', '', '', true);
 
         $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
 
-        $this->event_manager->method("dispatch");
+        $this->event_manager->method('dispatch');
 
         $this->xml_export->exportToXMl(
             $project,
@@ -177,7 +177,7 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker1->shouldReceive('exportToXMLInProjectExportContext')->once();
         $this->tracker_artifact_XMLexport->shouldReceive('export')->once();
 
-        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->once();
+        $this->external_field_extractor->shouldReceive('extractExternalFieldsFromTracker')->once();
 
         $archive = Mockery::mock(ArchiveInterface::class);
 
@@ -199,14 +199,14 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker1->shouldReceive('getXMLId');
         $this->tracker2->shouldReceive('getXMLId');
 
-        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->twice();
+        $this->external_field_extractor->shouldReceive('extractExternalFieldsFromTracker')->twice();
         $this->tracker_artifact_XMLexport->shouldReceive('export')->times(2);
 
         $type = new TypePresenter('fixed_in', '', '', true);
 
         $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
 
-        $this->event_manager->method("processEvent");
+        $this->event_manager->method('processEvent');
 
         $this->xml_export->exportToXmlFull(
             $project,

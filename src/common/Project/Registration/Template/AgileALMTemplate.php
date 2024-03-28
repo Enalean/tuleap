@@ -94,7 +94,7 @@ class AgileALMTemplate implements TuleapTemplate
 
             $testmanagment_file = \ForgeConfig::getCacheDir() . '/agile_alm_template/testmanagement.xml';
             if (! copy(self::TEST_MANAGEMENT_XML, $testmanagment_file)) {
-                throw new \RuntimeException("Can not copy TTM file for tuleap template import");
+                throw new \RuntimeException('Can not copy TTM file for tuleap template import');
             }
         }
         return $this->xml_path;

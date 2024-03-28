@@ -33,7 +33,7 @@ final class ServiceRepresentationTest extends TestCase
      */
     public function testItBuildsTheRepresentationOfCustomService(): void
     {
-        $service_url    = "https://example.com";
+        $service_url    = 'https://example.com';
         $service        = ServiceBuilder::aProjectDefinedService(ProjectTestBuilder::aProject()->build())->withUrl(
             $service_url
         )->build();
@@ -41,7 +41,7 @@ final class ServiceRepresentationTest extends TestCase
             $service
         );
         self::assertSame(102, $representation->id);
-        self::assertSame(ServiceRepresentation::ROUTE . "/102", $representation->uri);
+        self::assertSame(ServiceRepresentation::ROUTE . '/102', $representation->uri);
         self::assertSame($service_url, $representation->service_url);
         self::assertTrue($representation->is_custom);
     }
@@ -51,7 +51,7 @@ final class ServiceRepresentationTest extends TestCase
      */
     public function testItBuildsTheRepresentationOfSystemService(): void
     {
-        $service_url    = "https://example.com";
+        $service_url    = 'https://example.com';
         $service        = ServiceBuilder::aSystemService(ProjectTestBuilder::aProject()->build())->withUrl(
             $service_url
         )->build();
@@ -59,7 +59,7 @@ final class ServiceRepresentationTest extends TestCase
             $service
         );
         self::assertSame(102, $representation->id);
-        self::assertSame(ServiceRepresentation::ROUTE . "/102", $representation->uri);
+        self::assertSame(ServiceRepresentation::ROUTE . '/102', $representation->uri);
         self::assertSame($service_url, $representation->service_url);
         self::assertFalse($representation->is_custom);
     }

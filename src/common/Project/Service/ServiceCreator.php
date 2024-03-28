@@ -100,7 +100,7 @@ class ServiceCreator
         $link   = $this->replaceProtocolAndDomainInLink($link);
         $nbproj = 1;
 
-        $sql     = "SELECT group_id FROM `groups` WHERE group_id!=100";
+        $sql     = 'SELECT group_id FROM `groups` WHERE group_id!=100';
         $result1 = db_query($sql);
         while ($arr = db_fetch_array($result1)) {
             $my_group_id = $arr['group_id'];

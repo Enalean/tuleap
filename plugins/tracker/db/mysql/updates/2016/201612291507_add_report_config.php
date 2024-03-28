@@ -20,7 +20,7 @@ class b201612291507_add_report_config extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Adding report expert query limit in database";
+        return 'Adding report expert query limit in database';
     }
 
     public function preUp()
@@ -36,12 +36,12 @@ class b201612291507_add_report_config extends \Tuleap\ForgeUpgrade\Bucket
 
     private function createTable()
     {
-        $sql = "
+        $sql = '
             DROP TABLE IF EXISTS tracker_report_config;
             CREATE TABLE tracker_report_config (
                 query_limit INT(1) NOT NULL DEFAULT 15
             )
-        ";
+        ';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -53,10 +53,10 @@ class b201612291507_add_report_config extends \Tuleap\ForgeUpgrade\Bucket
 
     private function initQueryLimit()
     {
-        $sql = "
+        $sql = '
             INSERT INTO tracker_report_config
             VALUES (15)
-        ";
+        ';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

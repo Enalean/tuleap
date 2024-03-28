@@ -82,7 +82,7 @@ class ReleaseNoteManager
             return $actual_version_link;
         }
 
-        if ($release_note_link_row["tuleap_version"] !== $extracted_tuleap_version) {
+        if ($release_note_link_row['tuleap_version'] !== $extracted_tuleap_version) {
             $this->transaction_executor->execute(
                 function () use ($actual_version_link, $extracted_tuleap_version) {
                     $this->release_note_dao->updateReleaseNoteLink(null, $extracted_tuleap_version);
@@ -93,10 +93,10 @@ class ReleaseNoteManager
             return $actual_version_link;
         }
 
-        if ($release_note_link_row["actual_link"] === "" || $release_note_link_row["actual_link"] === null) {
+        if ($release_note_link_row['actual_link'] === '' || $release_note_link_row['actual_link'] === null) {
             return $actual_version_link;
         }
 
-        return $release_note_link_row["actual_link"];
+        return $release_note_link_row['actual_link'];
     }
 }

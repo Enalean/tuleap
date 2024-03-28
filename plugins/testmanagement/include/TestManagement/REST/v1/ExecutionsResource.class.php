@@ -477,7 +477,7 @@ class ExecutionsResource
             if (! empty($values)) {
                 $artifact_reference = $creator->create($user, $tracker_reference, $values, true);
             } else {
-                throw new RestException(400, "No valid data are provided");
+                throw new RestException(400, 'No valid data are provided');
             }
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());

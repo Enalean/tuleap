@@ -53,7 +53,7 @@ class NavigationTabPresenterBuilder
         return new TabPresenter(
             $is_selected,
             $this->url_builder->getPullRequestDashboardUrl($repository),
-            dgettext('tuleap-pullrequest', "Pull requests"),
+            dgettext('tuleap-pullrequest', 'Pull requests'),
             self::TAB_PULLREQUEST,
             true,
             $nb_pull_requests,

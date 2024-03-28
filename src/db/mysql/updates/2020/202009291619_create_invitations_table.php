@@ -35,7 +35,7 @@ final class b202009291619_create_invitations_table extends \Tuleap\ForgeUpgrade\
 
     public function up(): void
     {
-        $sql = "CREATE TABLE invitations(
+        $sql = 'CREATE TABLE invitations(
             id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             created_on INT(11) NOT NULL,
             from_user_id INT(11) NOT NULL,
@@ -44,7 +44,7 @@ final class b202009291619_create_invitations_table extends \Tuleap\ForgeUpgrade\
             custom_message TEXT NULL,
             status VARCHAR(10),
             INDEX idx(created_on, from_user_id)
-        ) ENGINE=InnoDB";
+        ) ENGINE=InnoDB';
 
         $this->db->createTable('invitations', $sql);
     }

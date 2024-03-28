@@ -123,7 +123,7 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
     {
         $is_starting_with_alphanumeric_character = ctype_alnum($val[0]);
         if (! $is_starting_with_alphanumeric_character) {
-            $this->error = _("Short name must start with an alphanumeric character.");
+            $this->error = _('Short name must start with an alphanumeric character.');
         }
 
         return $is_starting_with_alphanumeric_character;

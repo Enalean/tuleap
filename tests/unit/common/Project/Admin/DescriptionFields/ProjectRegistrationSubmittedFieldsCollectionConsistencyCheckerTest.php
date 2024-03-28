@@ -50,7 +50,7 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
     {
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             [
-                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"],
+                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => 'field_name'],
             ]
         );
 
@@ -70,7 +70,7 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
     {
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             [
-                ['group_desc_id' => 1, 'desc_required' => false, 'desc_name' => "field_name"],
+                ['group_desc_id' => 1, 'desc_required' => false, 'desc_name' => 'field_name'],
             ]
         );
 
@@ -90,7 +90,7 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
     {
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             [
-                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"],
+                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => 'field_name'],
             ]
         );
 
@@ -114,8 +114,8 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
     {
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             [
-                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"],
-                ['group_desc_id' => 2, 'desc_required' => false, 'desc_name' => "other_field_name"],
+                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => 'field_name'],
+                ['group_desc_id' => 2, 'desc_required' => false, 'desc_name' => 'other_field_name'],
             ]
         );
 

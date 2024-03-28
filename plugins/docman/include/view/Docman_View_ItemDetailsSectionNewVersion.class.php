@@ -71,12 +71,12 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
 
     public function visitFolder($item, $params = [])
     {
-        return "";
+        return '';
     }
 
     public function visitDocument($item, $params = [])
     {
-        return "";
+        return '';
     }
 
     public function visitWiki($item, $params = [])
@@ -108,7 +108,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $retriever = new VersionOngoingUploadRetriever(new DocumentOnGoingVersionToUploadDAO());
 
         if ($retriever->isThereAlreadyAnUploadOngoing($item, new DateTimeImmutable())) {
-            $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
+            $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
             return $renderer->renderToString(
                 'document_file_upload_on_going_error',
                 []

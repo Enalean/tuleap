@@ -36,7 +36,7 @@ final class b202208231630_add_group_tables extends \Tuleap\ForgeUpgrade\Bucket
 
     private function createGitlabGroupTable(): void
     {
-        $sql = "
+        $sql = '
                 CREATE TABLE IF NOT EXISTS plugin_gitlab_group (
                     id                     INT(11)      NOT NULL PRIMARY KEY AUTO_INCREMENT,
                     gitlab_group_id        INT(11)      NOT NULL,
@@ -49,30 +49,30 @@ final class b202208231630_add_group_tables extends \Tuleap\ForgeUpgrade\Bucket
                     prefix_branch_name     VARCHAR(255)          DEFAULT NULL,
                     UNIQUE(gitlab_group_id)
                 ) ENGINE = InnoDB;
-        ";
+        ';
         $this->api->createTable('plugin_gitlab_group', $sql);
 
         if (! $this->api->tableNameExists('plugin_gitlab_group')) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
-                "Table plugin_gitlab_group has not been created in database"
+                'Table plugin_gitlab_group has not been created in database'
             );
         }
     }
 
     private function createGitlabGroupTokenTable(): void
     {
-        $sql = "
+        $sql = '
                 CREATE TABLE IF NOT EXISTS plugin_gitlab_group_token (
                 group_id INT(11) NOT NULL PRIMARY KEY,
                 token BLOB NOT NULL
             ) ENGINE = InnoDB;
-        ";
+        ';
 
         $this->api->createTable('plugin_gitlab_group_token', $sql);
 
         if (! $this->api->tableNameExists('plugin_gitlab_group_token')) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
-                "Table plugin_gitlab_group_token has not been created in database"
+                'Table plugin_gitlab_group_token has not been created in database'
             );
         }
     }

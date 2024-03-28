@@ -47,7 +47,7 @@ class Chart_GanttBar
     *
     * @return void
     */
-    public function __construct($aPos, $aLabel, $aStart, $aEnd, $aCaption = "", $aHeightFactor = 0.6)
+    public function __construct($aPos, $aLabel, $aStart, $aEnd, $aCaption = '', $aHeightFactor = 0.6)
     {
         $this->jpgraph_instance = new GanttBar($aPos, $aLabel, $aStart, $aEnd, $aCaption, $aHeightFactor);
 

@@ -149,16 +149,16 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
                 $dar_item_3,
             ]
         );
-        $this->dao->shouldReceive("foundRows")->andReturn(3);
+        $this->dao->shouldReceive('foundRows')->andReturn(3);
 
         $docman_item1 = new \Docman_Folder($dar_item_1);
         $docman_item3 = new \Docman_File($dar_item_3);
 
-        $this->item_factory->shouldReceive("getItemFromRow")->andReturn($docman_item1, $docman_item3);
+        $this->item_factory->shouldReceive('getItemFromRow')->andReturn($docman_item1, $docman_item3);
 
-        $this->permission_manager->shouldReceive("userCanRead")->withArgs([$user, 1])->andReturns(true);
-        $this->permission_manager->shouldReceive("userCanRead")->withArgs([$user, 2])->andReturns(false);
-        $this->permission_manager->shouldReceive("userCanRead")->withArgs([$user, 3])->andReturns(true);
+        $this->permission_manager->shouldReceive('userCanRead')->withArgs([$user, 1])->andReturns(true);
+        $this->permission_manager->shouldReceive('userCanRead')->withArgs([$user, 2])->andReturns(false);
+        $this->permission_manager->shouldReceive('userCanRead')->withArgs([$user, 3])->andReturns(true);
 
         $this->permission_manager->shouldReceive('userCanManage')
             ->withArgs([$user, 1])
@@ -189,7 +189,7 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
                     'processed value',
                     [],
                     true,
-                    "name"
+                    'name'
                 ),
             ],
             false,
@@ -343,7 +343,7 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
                     'processed value',
                     [],
                     true,
-                    "name"
+                    'name'
                 ),
             ],
             false,

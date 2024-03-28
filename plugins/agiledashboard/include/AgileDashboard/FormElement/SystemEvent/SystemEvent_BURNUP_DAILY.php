@@ -105,7 +105,7 @@ final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgno
                 $yesterday < $burnup_timeperiod_start_day_timestamp
             ) {
                 $this->logger->debug(
-                    "Today is not in time period for artifact #" . $burnup['id'] . ', skipping.'
+                    'Today is not in time period for artifact #' . $burnup['id'] . ', skipping.'
                 );
 
                 continue;
@@ -116,7 +116,7 @@ final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgno
             if ($burnup_period->getEndDate() >= $yesterday && $planning_infos) {
                 $backlog_trackers_ids = $this->planning_factory->getBacklogTrackersIds($planning_infos['id']);
                 $this->logger->debug(
-                    "Calculating burnup for artifact #" . $burnup['id'] . ' at ' . date('Y-m-d H:i:s', $yesterday)
+                    'Calculating burnup for artifact #' . $burnup['id'] . ' at ' . date('Y-m-d H:i:s', $yesterday)
                 );
 
                 $effort       = $this->burnup_calculator->getValue($burnup['id'], $yesterday, $backlog_trackers_ids);
@@ -148,7 +148,7 @@ final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgno
                     (int) $closed_subelements
                 );
 
-                $this->logger->debug("End calculs for artifact #" . $burnup['id']);
+                $this->logger->debug('End calculs for artifact #' . $burnup['id']);
             }
         }
     }

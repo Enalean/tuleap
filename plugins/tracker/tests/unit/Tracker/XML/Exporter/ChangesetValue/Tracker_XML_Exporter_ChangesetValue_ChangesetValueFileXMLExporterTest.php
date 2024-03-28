@@ -89,7 +89,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
             101,
             '',
             'document.txt',
-            "2",
+            '2',
             'text/plain'
         );
         $file_2 = new Tracker_FileInfo(
@@ -98,7 +98,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
             102,
             '',
             'landscape.png',
-            "256",
+            '256',
             'image/png'
         );
         $this->changeset_value->shouldReceive('getFiles')->andReturn([$file_1, $file_2]);

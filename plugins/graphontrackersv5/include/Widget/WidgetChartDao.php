@@ -31,11 +31,11 @@ class WidgetChartDao extends DataAccessObject
      */
     public function searchContent(int $owner_id, string $owner_type, int $id): ?array
     {
-        $sql = "SELECT title, chart_id
+        $sql = 'SELECT title, chart_id
                 FROM plugin_graphontrackersv5_widget_chart
                 WHERE id = ?
                   AND owner_id = ?
-                  AND owner_type = ?";
+                  AND owner_type = ?';
 
         return $this->getDB()->row($sql, $id, $owner_id, $owner_type);
     }

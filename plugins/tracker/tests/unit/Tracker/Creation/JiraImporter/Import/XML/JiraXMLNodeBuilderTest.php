@@ -40,7 +40,7 @@ final class JiraXMLNodeBuilderTest extends TestCase
 
         $appended_tracker_node = $trackers_node->tracker[0];
         self::assertNotNull($appended_tracker_node);
-        self::assertSame("1", (string) $appended_tracker_node["id"]);
+        self::assertSame('1', (string) $appended_tracker_node['id']);
     }
 
     public function testItBuildsProjectSimpleXmlElement(): void
@@ -49,7 +49,7 @@ final class JiraXMLNodeBuilderTest extends TestCase
 
         $project_node = JiraXMLNodeBuilder::buildProjectSimpleXmlElement($tracker_node);
 
-        self::assertSame("project", $project_node->getName());
+        self::assertSame('project', $project_node->getName());
 
         self::assertNotNull($project_node->trackers);
         $built_trackers_node = $project_node->trackers[0];
@@ -58,15 +58,15 @@ final class JiraXMLNodeBuilderTest extends TestCase
         self::assertNotNull($built_trackers_node->tracker);
         $appended_tracker_node = $built_trackers_node->tracker[0];
         self::assertNotNull($appended_tracker_node);
-        self::assertSame("1", (string) $appended_tracker_node["id"]);
+        self::assertSame('1', (string) $appended_tracker_node['id']);
     }
 
     public function testItBuildsTrackerXMLNode(): void
     {
-        $xml_tracker = (new XMLTracker("1", "test"))->withName("Test tracker");
+        $xml_tracker = (new XMLTracker('1', 'test'))->withName('Test tracker');
 
-        $field = XMLStringField::fromTrackerAndName($xml_tracker, "field")
-            ->withLabel("field")
+        $field = XMLStringField::fromTrackerAndName($xml_tracker, 'field')
+            ->withLabel('field')
             ->withRank(1)
             ->withPermissions(new ReadPermission('UGROUP_ANONYMOUS'));
 
@@ -78,14 +78,14 @@ final class JiraXMLNodeBuilderTest extends TestCase
             new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker><reports></reports></tracker>'),
         );
 
-        self::assertSame("tracker", $tracker_node->getName());
-        self::assertSame("1", (string) $tracker_node['id']);
+        self::assertSame('tracker', $tracker_node->getName());
+        self::assertSame('1', (string) $tracker_node['id']);
 
         self::assertNotNull($tracker_node->name);
-        self::assertSame("Test tracker", (string) $tracker_node->name);
+        self::assertSame('Test tracker', (string) $tracker_node->name);
 
         self::assertNotNull($tracker_node->item_name);
-        self::assertSame("test", (string) $tracker_node->item_name);
+        self::assertSame('test', (string) $tracker_node->item_name);
 
         self::assertNotNull($tracker_node->formElements);
         $built_form_elements_node = $tracker_node->formElements[0];

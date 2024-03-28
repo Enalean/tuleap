@@ -29,25 +29,25 @@ final class BannerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao = $this->createMock(BannerDao::class);
         $dao->expects(self::once())
             ->method('addBanner')
-            ->with("The message", "critical", null);
+            ->with('The message', 'critical', null);
 
         $banner_creator = new BannerCreator($dao);
 
-        $banner_creator->addBanner("The message", "critical", null, new \DateTimeImmutable('@1'));
+        $banner_creator->addBanner('The message', 'critical', null, new \DateTimeImmutable('@1'));
     }
 
     public function testBannerWithAnExpirationDateIsCreated(): void
     {
-        $expiration_date = new \DateTimeImmutable("@2");
+        $expiration_date = new \DateTimeImmutable('@2');
 
         $dao = $this->createMock(BannerDao::class);
         $dao->expects(self::once())
             ->method('addBanner')
-            ->with("The message", "critical", $expiration_date);
+            ->with('The message', 'critical', $expiration_date);
 
         $banner_creator = new BannerCreator($dao);
 
-        $banner_creator->addBanner("The message", "critical", $expiration_date, new \DateTimeImmutable('@1'));
+        $banner_creator->addBanner('The message', 'critical', $expiration_date, new \DateTimeImmutable('@1'));
     }
 
     public function testBannerWithAnExpirationDateInThePastIsRejected(): void
@@ -56,6 +56,6 @@ final class BannerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(CannotCreateAnAlreadyExpiredBannerException::class);
 
-        $banner_creator->addBanner("The message", "critical", new \DateTimeImmutable('@2'), new \DateTimeImmutable('@10'));
+        $banner_creator->addBanner('The message', 'critical', new \DateTimeImmutable('@2'), new \DateTimeImmutable('@10'));
     }
 }

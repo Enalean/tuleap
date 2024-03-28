@@ -280,13 +280,13 @@ final class EmailNotificationTask implements PostCreationTask
 
         if ($this->mail_gateway_config->isTokenBasedEmailgatewayEnabled()) {
             return [
-                "name" => "Reply-to",
-                "value" => $artifact->getTokenBasedEmailAddress(),
+                'name' => 'Reply-to',
+                'value' => $artifact->getTokenBasedEmailAddress(),
             ];
         } elseif ($artifactbymail->canUpdateArtifactInInsecureMode($artifact->getTracker())) {
             return [
-                "name" => "Reply-to",
-                "value" => $artifact->getInsecureEmailAddress(),
+                'name' => 'Reply-to',
+                'value' => $artifact->getInsecureEmailAddress(),
             ];
         }
     }

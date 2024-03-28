@@ -28,7 +28,7 @@ use Exception;
 
 class ArtifactsDeletionLimitReachedException extends Exception
 {
-    public const MESSAGE = "The limit of artifacts deletions has been reached for the previous 24 hours.";
+    public const MESSAGE = 'The limit of artifacts deletions has been reached for the previous 24 hours.';
 
     public function __construct()
     {

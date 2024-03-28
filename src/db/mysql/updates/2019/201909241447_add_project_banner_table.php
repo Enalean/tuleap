@@ -34,10 +34,10 @@ class b201909241447_add_project_banner_table extends ForgeUpgrade_Bucket // @cod
 
     public function up()
     {
-        $sql = "CREATE TABLE project_banner (
+        $sql = 'CREATE TABLE project_banner (
             project_id INT(11) NOT NULL PRIMARY KEY,
             message text
-        )";
+        )';
 
         $res = $this->db->dbh->exec($sql);
 

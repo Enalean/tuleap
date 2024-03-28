@@ -230,7 +230,7 @@ class DataAccessObject
     {
         $trace = debug_backtrace();
         $i     = isset($trace[1]) ? 1 : 0;
-        return $dar->isError() . ' ==> ' . $sql . " @@ " . $trace[$i]['file'] . ' at line ' . $trace[$i]['line'];
+        return $dar->isError() . ' ==> ' . $sql . ' @@ ' . $trace[$i]['file'] . ' at line ' . $trace[$i]['line'];
     }
 
     /**
@@ -461,7 +461,7 @@ class DataAccessObject
      */
     public function foundRows()
     {
-        $sql = "SELECT FOUND_ROWS() as nb";
+        $sql = 'SELECT FOUND_ROWS() as nb';
         $dar = $this->retrieve($sql);
         if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
@@ -483,7 +483,7 @@ class DataAccessObject
      */
     public function setGroupConcatLimit()
     {
-        $this->retrieve("SET SESSION group_concat_max_len = 134217728");
+        $this->retrieve('SET SESSION group_concat_max_len = 134217728');
     }
 
     /**

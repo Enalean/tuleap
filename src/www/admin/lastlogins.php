@@ -32,12 +32,12 @@ $request->checkUserIsSuperUser();
 $include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
 $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include_assets, 'site-admin-most-recent-logins.js'));
 
-$res_logins = db_query("SELECT session.user_id AS user_id,"
-    . "session.ip_addr AS ip_addr,"
-    . "session.time AS time,"
-    . "user.user_name AS user_name FROM session,user "
-    . "WHERE session.user_id=user.user_id AND "
-    . "session.user_id>0 AND session.time>0 ORDER BY session.time DESC LIMIT 5000");
+$res_logins = db_query('SELECT session.user_id AS user_id,'
+    . 'session.ip_addr AS ip_addr,'
+    . 'session.time AS time,'
+    . 'user.user_name AS user_name FROM session,user '
+    . 'WHERE session.user_id=user.user_id AND '
+    . 'session.user_id>0 AND session.time>0 ORDER BY session.time DESC LIMIT 5000');
 
 $most_recent_login_presenters = [];
 

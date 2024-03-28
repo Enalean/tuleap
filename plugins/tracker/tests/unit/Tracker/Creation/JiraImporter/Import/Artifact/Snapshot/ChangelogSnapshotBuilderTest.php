@@ -61,16 +61,16 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 new Attachment(
                     10007,
-                    "file01.png",
-                    "image/png",
-                    "URL",
+                    'file01.png',
+                    'image/png',
+                    'URL',
                     30
                 ),
                 new Attachment(
                     10008,
-                    "file02.gif",
-                    "image/gif",
-                    "URL2",
+                    'file02.gif',
+                    'image/gif',
+                    'URL2',
                     3056
                 ),
             ]
@@ -94,7 +94,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(8, $snapshot->getAllFieldsSnapshot());
 
         $this->assertNull($snapshot->getFieldInSnapshot('environment'));
-        $this->assertSame("9", $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
+        $this->assertSame('9', $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
         $this->assertSame(
             [
                 ['id' => '10009'],
@@ -104,17 +104,17 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertSame(
-            "*aaaaaaaaa*",
+            '*aaaaaaaaa*',
             $snapshot->getFieldInSnapshot('description')->getValue()
         );
 
         $this->assertSame(
-            "<p>aaaaaaaaa</p>",
+            '<p>aaaaaaaaa</p>',
             $snapshot->getFieldInSnapshot('description')->getRenderedValue()
         );
 
         $this->assertSame(
-            "*def*",
+            '*def*',
             $snapshot->getFieldInSnapshot('textfield')->getValue()
         );
 
@@ -126,7 +126,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertSame(
-            "2020-03-25",
+            '2020-03-25',
             $snapshot->getFieldInSnapshot('datepicker')->getValue()
         );
 
@@ -155,44 +155,44 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new Snapshot(
             $user,
-            new DateTimeImmutable("2020-03-25T14:10:10.823+0100"),
+            new DateTimeImmutable('2020-03-25T14:10:10.823+0100'),
             [
                 new FieldSnapshot(
                     new ScalarFieldMapping(
-                        "description",
-                        "Description",
+                        'description',
+                        'Description',
                         null,
-                        "Fdescription",
-                        "description",
-                        "text",
+                        'Fdescription',
+                        'description',
+                        'text',
                     ),
-                    "*aaaaaaaaa*",
-                    "<p>aaaaaaaaa</p>"
+                    '*aaaaaaaaa*',
+                    '<p>aaaaaaaaa</p>'
                 ),
                 new FieldSnapshot(
                     new ScalarFieldMapping(
-                        "textfield",
-                        "Text Field",
+                        'textfield',
+                        'Text Field',
                         null,
-                        "Ftextfield",
-                        "textfield",
-                        "text",
+                        'Ftextfield',
+                        'textfield',
+                        'text',
                     ),
-                    "*text area v2*",
-                    "<p>text area v2</p>"
+                    '*text area v2*',
+                    '<p>text area v2</p>'
                 ),
                 new FieldSnapshot(
                     new ScalarFieldMapping(
-                        "attachment",
-                        "Attachment",
+                        'attachment',
+                        'Attachment',
                         null,
-                        "Fattachment",
-                        "attachments",
-                        "file",
+                        'Fattachment',
+                        'attachments',
+                        'file',
                     ),
                     [
                         [
-                            'id' => "10007",
+                            'id' => '10007',
                         ],
                     ],
                     null
@@ -284,121 +284,121 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
             [
-                "id" => "100",
-                "created" => "2020-03-25T14:10:10.823+0100",
-                "items" => [
+                'id' => '100',
+                'created' => '2020-03-25T14:10:10.823+0100',
+                'items' => [
                     0 => [
-                        "fieldId"    => "customfield_10036",
-                        "from"       => null,
-                        "fromString" => null,
-                        "to"         => null,
-                        "toString"   => "9",
+                        'fieldId'    => 'customfield_10036',
+                        'from'       => null,
+                        'fromString' => null,
+                        'to'         => null,
+                        'toString'   => '9',
                     ],
                     1 => [
-                        "fieldId"    => "customfield_10040",
-                        "from"       => "[10009]",
-                        "fromString" => "mulit1",
-                        "to"         => "[10009, 10010]",
-                        "toString"   => "mulit1,multi2",
+                        'fieldId'    => 'customfield_10040',
+                        'from'       => '[10009]',
+                        'fromString' => 'mulit1',
+                        'to'         => '[10009, 10010]',
+                        'toString'   => 'mulit1,multi2',
                     ],
                     2 => [
-                        "fieldId"    => "environment",
-                        "from"       => null,
-                        "fromString" => "\r\n----\r\n",
-                        "to"         => null,
-                        "toString"   => "----\r\n",
+                        'fieldId'    => 'environment',
+                        'from'       => null,
+                        'fromString' => "\r\n----\r\n",
+                        'to'         => null,
+                        'toString'   => "----\r\n",
                     ],
                     3 => [
-                        "fieldId"    => "description",
-                        "from"       => null,
-                        "fromString" => "aaaaaaaaaaa",
-                        "to"         => '{"id":"ari:cloud:jira:d63a8014-ba58-4b58-b22d-eb1d85d56f3d:issuefieldvalue/10006/description","version":"1"}',
-                        "toString"   => "*aaaaaaaaa*",
+                        'fieldId'    => 'description',
+                        'from'       => null,
+                        'fromString' => 'aaaaaaaaaaa',
+                        'to'         => '{"id":"ari:cloud:jira:d63a8014-ba58-4b58-b22d-eb1d85d56f3d:issuefieldvalue/10006/description","version":"1"}',
+                        'toString'   => '*aaaaaaaaa*',
                     ],
                     4 => [
-                        "fieldId"    => "textfield",
-                        "from"       => null,
-                        "fromString" => "abc",
-                        "to"         => null,
-                        "toString"   => "*def*",
+                        'fieldId'    => 'textfield',
+                        'from'       => null,
+                        'fromString' => 'abc',
+                        'to'         => null,
+                        'toString'   => '*def*',
                     ],
                     5 => [
-                        "fieldId"    => "attachment",
-                        "from"       => null,
-                        "fromString" => null,
-                        "to"         => "10008",
-                        "toString"   => "file02.gif",
+                        'fieldId'    => 'attachment',
+                        'from'       => null,
+                        'fromString' => null,
+                        'to'         => '10008',
+                        'toString'   => 'file02.gif',
                     ],
                     6 => [
 
-                        "fieldId"    => "datepicker",
-                        "from"       => null,
-                        "fromString" => null,
-                        "to"         => "2020-03-25",
-                        "toString"   => "25/Mar/20",
+                        'fieldId'    => 'datepicker',
+                        'from'       => null,
+                        'fromString' => null,
+                        'to'         => '2020-03-25',
+                        'toString'   => '25/Mar/20',
                     ],
                     7 => [
-                        "fieldId"    => "assignee",
-                        "from"       => null,
-                        "fromString" => null,
-                        "to"         => "e8a7dbae5",
-                        "toString"   => "John Doe",
+                        'fieldId'    => 'assignee',
+                        'from'       => null,
+                        'fromString' => null,
+                        'to'         => 'e8a7dbae5',
+                        'toString'   => 'John Doe',
                     ],
                     8 => [
-                        "fieldId"    => "homies",
-                        "from"       => null,
-                        "fromString" => null,
-                        "to"         => "[e8a7dbae5, a7e8b9c5]",
-                        "toString"   => "[John Doe, Mysterio]",
+                        'fieldId'    => 'homies',
+                        'from'       => null,
+                        'fromString' => null,
+                        'to'         => '[e8a7dbae5, a7e8b9c5]',
+                        'toString'   => '[John Doe, Mysterio]',
                     ],
                     9 => [
-                        "fieldId"    => "versions",
-                        "from"       => null,
-                        "fromString" => null,
-                        "to"         => "10003",
-                        "toString"   => "Release 1.0",
+                        'fieldId'    => 'versions',
+                        'from'       => null,
+                        'fromString' => null,
+                        'to'         => '10003',
+                        'toString'   => 'Release 1.0',
                     ],
                     10 => [
-                        "fieldId"    => "fixVersions",
-                        "from"       => null,
-                        "fromString" => null,
-                        "to"         => "10013",
-                        "toString"   => "Release 2.0",
+                        'fieldId'    => 'fixVersions',
+                        'from'       => null,
+                        'fromString' => null,
+                        'to'         => '10013',
+                        'toString'   => 'Release 2.0',
                     ],
                     11 => [
                         [
-                            "fieldId"    => "components",
-                            "from"       => null,
-                            "fromString" => null,
-                            "to"         => "10000",
-                            "toString"   => "Comp 01",
+                            'fieldId'    => 'components',
+                            'from'       => null,
+                            'fromString' => null,
+                            'to'         => '10000',
+                            'toString'   => 'Comp 01',
                         ],
                     ],
                     12 => [
                         [
-                            "fieldId"    => "customfield_10100",
-                            "from"       => null,
-                            "fromString" => null,
-                            "to"         => "10020",
-                            "toString"   => "[v1]",
+                            'fieldId'    => 'customfield_10100',
+                            'from'       => null,
+                            'fromString' => null,
+                            'to'         => '10020',
+                            'toString'   => '[v1]',
                         ],
                     ],
                     13 => [
                         [
-                            "fieldId"    => "customfield_10101",
-                            "from"       => null,
-                            "fromString" => null,
-                            "to"         => "10020",
-                            "toString"   => "[v1]",
+                            'fieldId'    => 'customfield_10101',
+                            'from'       => null,
+                            'fromString' => null,
+                            'to'         => '10020',
+                            'toString'   => '[v1]',
                         ],
                     ],
                     13 => [
                         [
-                            "fieldId"    => "customfield_10102",
-                            "from"       => null,
-                            "fromString" => null,
-                            "to"         => "10030",
-                            "toString"   => "[test1]",
+                            'fieldId'    => 'customfield_10102',
+                            'from'       => null,
+                            'fromString' => null,
+                            'to'         => '10030',
+                            'toString'   => '[test1]',
                         ],
                     ],
                 ],
@@ -416,100 +416,100 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection = new FieldMappingCollection();
         $collection->addMapping(
             new ScalarFieldMapping(
-                "customfield_10036",
-                "Field 01",
+                'customfield_10036',
+                'Field 01',
                 null,
-                "Fcustomfield_10036",
-                "customfield_10036",
-                "float",
+                'Fcustomfield_10036',
+                'customfield_10036',
+                'float',
             )
         );
         $collection->addMapping(
             new ListFieldMapping(
-                "status",
-                "status",
+                'status',
+                'status',
                 null,
-                "Fstatus",
-                "status",
-                "sb",
+                'Fstatus',
+                'status',
+                'sb',
                 \Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 [],
             )
         );
         $collection->addMapping(
             new ListFieldMapping(
-                "customfield_10040",
-                "customfield_10040",
+                'customfield_10040',
+                'customfield_10040',
                 null,
-                "Fcustomfield_10040",
-                "Field 02",
-                "msb",
+                'Fcustomfield_10040',
+                'Field 02',
+                'msb',
                 \Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 []
             ),
         );
         $collection->addMapping(
             new ScalarFieldMapping(
-                "description",
-                "Description",
+                'description',
+                'Description',
                 null,
-                "Fdescription",
-                "description",
-                "text",
+                'Fdescription',
+                'description',
+                'text',
             )
         );
         $collection->addMapping(
             new ScalarFieldMapping(
-                "textfield",
-                "Text Field",
+                'textfield',
+                'Text Field',
                 null,
-                "Ftextfield",
-                "textfield",
-                "text",
+                'Ftextfield',
+                'textfield',
+                'text',
             )
         );
         $collection->addMapping(
             new ScalarFieldMapping(
-                "attachment",
-                "Attachment",
+                'attachment',
+                'Attachment',
                 null,
-                "Fattachment",
-                "attachments",
-                "file",
+                'Fattachment',
+                'attachments',
+                'file',
             )
         );
         $collection->addMapping(
             new ListFieldMapping(
-                "assignee",
-                "Assignee",
+                'assignee',
+                'Assignee',
                 null,
-                "Fassignee",
-                "assignee",
-                "sb",
+                'Fassignee',
+                'assignee',
+                'sb',
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE,
                 [],
             )
         );
         $collection->addMapping(
             new ListFieldMapping(
-                "homies",
-                "Homies",
+                'homies',
+                'Homies',
                 null,
-                "Fhomies",
-                "homies",
-                "msb",
+                'Fhomies',
+                'homies',
+                'msb',
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE,
                 [],
             )
         );
         $collection->addMapping(
             new ScalarFieldMapping(
-                "datepicker",
-                "Date Picker",
+                'datepicker',
+                'Date Picker',
                 null,
-                "Fdatepicker",
-                "patepicker",
-                "date",
+                'Fdatepicker',
+                'patepicker',
+                'date',
             ),
         );
 
@@ -570,8 +570,8 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'customfield_10100',
             'Multi versions',
             'com.atlassian.jira.plugin.system.customfieldtypes:multiversion',
-            "Fcustomfield_10100",
-            "customfield_10100",
+            'Fcustomfield_10100',
+            'customfield_10100',
             \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
             \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
@@ -584,8 +584,8 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'customfield_10101',
             'Version',
             'com.atlassian.jira.plugin.system.customfieldtypes:version',
-            "Fcustomfield_10101",
-            "customfield_10101",
+            'Fcustomfield_10101',
+            'customfield_10101',
             \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
             \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
@@ -598,8 +598,8 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'customfield_10102',
             'Multi Checkboxes',
             'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes',
-            "Fcustomfield_10102",
-            "customfield_10102",
+            'Fcustomfield_10102',
+            'customfield_10102',
             \Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE,
             \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],

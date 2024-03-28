@@ -22,10 +22,10 @@ namespace Tuleap\SVN\Repository\Exception;
 
 class RepositoryNameIsInvalidException extends \Exception
 {
-    public function __construct($message = "")
+    public function __construct($message = '')
     {
         if (! $message) {
-            $message = "Repository name is invalid.  Must start by a letter, have a length of 3 characters minimum, only - _ . specials characters are allowed.";
+            $message = 'Repository name is invalid.  Must start by a letter, have a length of 3 characters minimum, only - _ . specials characters are allowed.';
         }
 
         parent::__construct($message);

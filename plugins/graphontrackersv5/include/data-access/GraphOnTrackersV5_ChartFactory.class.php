@@ -63,7 +63,7 @@ class GraphOnTrackersV5_ChartFactory
                 $this->report_session = new Tracker_Report_Session($renderer->report->id);
                 $this->report_session->changeSessionNamespace("renderers.{$renderer->id}");
 
-                $charts_data = $this->report_session->get("charts");
+                $charts_data = $this->report_session->get('charts');
             }
             //do we have charts in session?
             if (empty($charts_data)) {
@@ -74,7 +74,7 @@ class GraphOnTrackersV5_ChartFactory
             } else {
                 uasort($charts_data, [$this, 'sortArrayByRank']);
                 if ($store_in_session) {
-                    $this->report_session->set("charts", $charts_data);
+                    $this->report_session->set('charts', $charts_data);
                 }
             }
             if ($charts_data) {

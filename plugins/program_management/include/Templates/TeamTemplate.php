@@ -99,12 +99,12 @@ final class TeamTemplate implements CategorisedTemplate
             $this->xml_path = $base_dir . '/project.xml';
 
             if (! copy(self::PROGRAM_XML, $this->xml_path)) {
-                throw new \RuntimeException("Can not copy Team file for tuleap template import");
+                throw new \RuntimeException('Can not copy Team file for tuleap template import');
             }
 
             $testmanagment_file = $base_dir . '/testmanagement.xml';
             if (! copy(self::TTM_XML, $testmanagment_file)) {
-                throw new \RuntimeException("Can not copy TTM file for tuleap template import");
+                throw new \RuntimeException('Can not copy TTM file for tuleap template import');
             }
         }
 

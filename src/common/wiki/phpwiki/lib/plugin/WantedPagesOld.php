@@ -29,27 +29,27 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
 {
     public function getName()
     {
-        return _("WantedPages");
+        return _('WantedPages');
     }
 
     public function getDescription()
     {
-        return _("Lists referenced page names which do not exist yet.");
+        return _('Lists referenced page names which do not exist yet.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.1 $"
+            '$Revision: 1.1 $'
         );
     }
 
     public function getDefaultArguments()
     {
         return ['noheader' => false,
-            'exclude'  => _("PgsrcTranslation"),
+            'exclude'  => _('PgsrcTranslation'),
             'page'     => '[pagename]',
             'sortby'   => false,
             'limit'    => 50,
@@ -71,8 +71,8 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
             }
         }
 
-        if ($page == _("WantedPages")) {
-            $page = "";
+        if ($page == _('WantedPages')) {
+            $page = '';
         }
 
         // The PageList class can't handle the 'count' column needed
@@ -87,7 +87,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
             $allpages_iter = $dbi->getAllPages($include_empty, $sortby, $limit);
             while ($page_handle = $allpages_iter->next()) {
                 $name = $page_handle->getName();
-                if ($name == _("InterWikiMap")) {
+                if ($name == _('InterWikiMap')) {
                     continue;
                 }
                 if (! in_array($name, $exclude)) {
@@ -109,7 +109,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
 
         $this->_rows           = HTML();
         $caption               = false;
-        $this->_messageIfEmpty = _("<none>");
+        $this->_messageIfEmpty = _('<none>');
 
         if ($page) {
             // link count always seems to be 1 for a single page so
@@ -126,14 +126,14 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
                 }
                 $c       = count($this->pagelist);
                 $caption = fmt(
-                    "Wanted Pages for %s (%d total):",
+                    'Wanted Pages for %s (%d total):',
                     $pagelink,
                     $c
                 );
             }
             return $this->_generateList($caption);
         } else {
-            $spacer = new RawXml("&nbsp;&nbsp;&nbsp;&nbsp;");
+            $spacer = new RawXml('&nbsp;&nbsp;&nbsp;&nbsp;');
             // Clicking on the number in the links column does a
             // FullTextSearch for the citations of the WantedPage
             // link.
@@ -149,7 +149,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
                     Button(
                         ['s' => $searchkey],
                         $val,
-                        _("FullTextSearch")
+                        _('FullTextSearch')
                     ),
                     // Alternatively, get BackLinks
                                          // instead.
@@ -170,11 +170,11 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
             $c = count($this->pagelist);
             if (! $noheader) {
                 $caption = sprintf(
-                    _("Wanted Pages in this wiki (%d total):"),
+                    _('Wanted Pages in this wiki (%d total):'),
                     $c
                 );
             }
-            $this->_columns = [_("Count"), _("Page Name")];
+            $this->_columns = [_('Count'), _('Page Name')];
             if ($c > 0) {
                 return $this->_generateTable($caption);
             } else {
@@ -199,7 +199,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
             }
 
             $row    = HTML::tr();
-            $spacer = new RawXml("&nbsp;&nbsp;&nbsp;&nbsp;");
+            $spacer = new RawXml('&nbsp;&nbsp;&nbsp;&nbsp;');
             foreach ($this->_columns as $col_heading) {
                 $row->pushContent(HTML::td(HTML(
                     $spacer,
@@ -209,8 +209,8 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
             }
             // Table summary for non-visual browsers.
             $table->setAttr('summary', sprintf(
-                _("Columns: %s."),
-                implode(", ", $table_summary)
+                _('Columns: %s.'),
+                implode(', ', $table_summary)
             ));
 
             $table->pushContent(

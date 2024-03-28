@@ -137,6 +137,6 @@ final class CallbackNoBufferStream implements StreamInterface
      */
     private function throwExceptionOnDirectIOOperations(): void
     {
-        throw new \RuntimeException("Direct I/O operations are not accepted by this stream interface implementation");
+        throw new \RuntimeException('Direct I/O operations are not accepted by this stream interface implementation');
     }
 }

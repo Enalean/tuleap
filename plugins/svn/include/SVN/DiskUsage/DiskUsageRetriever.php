@@ -83,19 +83,19 @@ class DiskUsageRetriever
      */
     public function getDiskUsageForProject(Project $project)
     {
-        $this->logger->info("Collecting statistics for project " . $project->getUnixName());
-        $yesterday = new DateTime("yesterday midnight");
+        $this->logger->info('Collecting statistics for project ' . $project->getUnixName());
+        $yesterday = new DateTime('yesterday midnight');
 
         if (
             ! $this->hasRepositoriesUpdatedAfterGivenDate($project, $yesterday->getTimestamp())
             && $this->disk_usage_dao->hasRepositories($project->getID())
         ) {
-            $this->logger->info("No new commit made on this project since yesterday, duplicate value from DB.");
+            $this->logger->info('No new commit made on this project since yesterday, duplicate value from DB.');
 
             return $this->getLastSizeForProject($project);
         }
 
-        $this->logger->info("Project has new commit, collecting disk size data.");
+        $this->logger->info('Project has new commit, collecting disk size data.');
         $repositories  = $this->repository_manager->getRepositoriesInProject($project);
         $svn_disk_size = 0;
 

@@ -31,7 +31,7 @@ final class ProjectInvalidFullNameException extends \RuntimeException implements
 
         parent::__construct(
             sprintf(
-                "Project fullname is invalid. The reason is: %s",
+                'Project fullname is invalid. The reason is: %s',
                 $details
             )
         );
@@ -40,7 +40,7 @@ final class ProjectInvalidFullNameException extends \RuntimeException implements
     public function getI18NMessage(): string
     {
         return sprintf(
-            dgettext("tuleap-core", "Project fullname is invalid. The reason is: %s"),
+            dgettext('tuleap-core', 'Project fullname is invalid. The reason is: %s'),
             $this->details
         );
     }

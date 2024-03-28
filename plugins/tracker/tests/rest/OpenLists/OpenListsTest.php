@@ -48,13 +48,13 @@ final class OpenListsTest extends TrackerBase
                 $nb_assertion++;
             } elseif ($field_values['label'] === 'UserOpenList') {
                 self::assertEqualsCanonicalizing(
-                    ["Test User 1 (rest_api_tester_1)"],
+                    ['Test User 1 (rest_api_tester_1)'],
                     $field_values['bind_value_ids'],
                 );
                 $nb_assertion++;
             } elseif ($field_values['label'] === 'UGroupOpenList') {
                 self::assertEqualsCanonicalizing(
-                    ["Project members"],
+                    ['Project members'],
                     $field_values['bind_value_ids'],
                 );
                 $nb_assertion++;
@@ -62,7 +62,7 @@ final class OpenListsTest extends TrackerBase
         }
 
         if ($nb_assertion < 3) {
-            self::fail("Not all open list fields have been checked.");
+            self::fail('Not all open list fields have been checked.');
         }
     }
 }

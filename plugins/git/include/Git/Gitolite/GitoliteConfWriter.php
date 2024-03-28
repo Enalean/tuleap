@@ -20,7 +20,7 @@
 
 class Git_Gitolite_GitoliteConfWriter
 {
-    public const GITOLITE_CONF_FILE = "conf/gitolite.conf";
+    public const GITOLITE_CONF_FILE = 'conf/gitolite.conf';
 
     /** @var Git_Gitolite_GitoliteRCReader */
     private $gitoliterc_reader;
@@ -116,13 +116,13 @@ class Git_Gitolite_GitoliteConfWriter
         Git_Gitolite_GitModifications $git_modifications,
         $config_file_content,
     ) {
-        $this->logger->debug("Get Project Permission Conf File: " . $project->getUnixName() . "...");
+        $this->logger->debug('Get Project Permission Conf File: ' . $project->getUnixName() . '...');
         $config_file = $this->getProjectPermissionConfFile($project);
-        $this->logger->debug("Get Project Permission Conf File: " . $project->getUnixName() . ": done");
+        $this->logger->debug('Get Project Permission Conf File: ' . $project->getUnixName() . ': done');
 
-        $this->logger->debug("Write Git config: " . $project->getUnixName() . "...");
+        $this->logger->debug('Write Git config: ' . $project->getUnixName() . '...');
         $this->writeGitConfig($config_file, $config_file_content, $git_modifications);
-        $this->logger->debug("Write Git config: " . $project->getUnixName() . ": done");
+        $this->logger->debug('Write Git config: ' . $project->getUnixName() . ': done');
     }
 
     private function getProjectPermissionConfFile(Project $project)
@@ -179,7 +179,7 @@ class Git_Gitolite_GitoliteConfWriter
 
         $dest = preg_replace('`(^|\n)repo ' . preg_quote($old_name, '`') . '/`', '$1repo ' . $new_name . '/', $orig);
         $dest = str_replace('@' . $old_name . '_project_', '@' . $new_name . '_project_', $dest);
-        $dest = preg_replace("%" . preg_quote($old_name, '%') . "/(.*) = \"%", "$new_name/$1 = \"", $dest);
+        $dest = preg_replace('%' . preg_quote($old_name, '%') . '/(.*) = "%', "$new_name/$1 = \"", $dest);
         file_put_contents($project_file_path, $dest);
     }
 

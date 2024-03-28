@@ -28,7 +28,7 @@ namespace Tuleap\Project\ProjectBackground;
  */
 class ProjectBackground
 {
-    private const NO_BACKGROUND_IDENTIFIER = "0";
+    private const NO_BACKGROUND_IDENTIFIER = '0';
 
     /**
      * @var string

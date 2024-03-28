@@ -27,7 +27,7 @@ use Tuleap\ServerHostname;
 
 final class AzureADProvider implements Provider
 {
-    private const BASE_AZURE_URL = "https://login.microsoftonline.com/";
+    private const BASE_AZURE_URL = 'https://login.microsoftonline.com/';
 
     /**
      * @var int
@@ -110,17 +110,17 @@ final class AzureADProvider implements Provider
 
     public function getAuthorizationEndpoint(): string
     {
-        return self::BASE_AZURE_URL . urlencode($this->acceptable_tenant_for_authentication_configuration->getValueForAuthenticationFlow()) . "/oauth2/v2.0/authorize";
+        return self::BASE_AZURE_URL . urlencode($this->acceptable_tenant_for_authentication_configuration->getValueForAuthenticationFlow()) . '/oauth2/v2.0/authorize';
     }
 
     public function getTokenEndpoint(): string
     {
-        return self::BASE_AZURE_URL . urlencode($this->acceptable_tenant_for_authentication_configuration->getValueForAuthenticationFlow()) . "/oauth2/v2.0/token";
+        return self::BASE_AZURE_URL . urlencode($this->acceptable_tenant_for_authentication_configuration->getValueForAuthenticationFlow()) . '/oauth2/v2.0/token';
     }
 
     public function getUserInfoEndpoint(): string
     {
-        return "https://graph.microsoft.com/oidc/userinfo";
+        return 'https://graph.microsoft.com/oidc/userinfo';
     }
 
     public function getJWKSEndpoint(): ?string

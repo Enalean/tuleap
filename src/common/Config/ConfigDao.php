@@ -29,14 +29,14 @@ class ConfigDao extends DataAccessObject
      */
     public function searchAll(): array
     {
-        $sql = "SELECT * FROM forgeconfig";
+        $sql = 'SELECT * FROM forgeconfig';
 
         return $this->getDB()->run($sql);
     }
 
     public function save(string $name, string $value): void
     {
-        $sql = "REPLACE INTO forgeconfig (name, value) VALUES (?, ?)";
+        $sql = 'REPLACE INTO forgeconfig (name, value) VALUES (?, ?)';
 
         $this->getDB()->safeQuery($sql, [$name, $value]);
     }

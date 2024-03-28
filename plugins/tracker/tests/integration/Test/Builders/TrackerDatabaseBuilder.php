@@ -45,7 +45,7 @@ final class TrackerDatabaseBuilder
         );
         $tracker    = $factory->getTrackerById($tracker_id);
         if (! $tracker) {
-            throw new \Exception("tracker not found");
+            throw new \Exception('tracker not found');
         }
 
         return $tracker;
@@ -57,11 +57,11 @@ final class TrackerDatabaseBuilder
             'tracker_field',
             [
                 'tracker_id'       => $tracker_id,
-                'formElement_type' => "int",
+                'formElement_type' => 'int',
                 'name'             => $name,
                 'label'            => $name,
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
 
@@ -81,11 +81,11 @@ final class TrackerDatabaseBuilder
             'tracker_field',
             [
                 'tracker_id'       => $tracker_id,
-                'formElement_type' => "float",
+                'formElement_type' => 'float',
                 'name'             => $name,
                 'label'            => $name,
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
 
@@ -105,11 +105,11 @@ final class TrackerDatabaseBuilder
             'tracker_field',
             [
                 'tracker_id'       => $tracker_id,
-                'formElement_type' => "computed",
+                'formElement_type' => 'computed',
                 'name'             => $name,
                 'label'            => $name,
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
 
@@ -129,11 +129,11 @@ final class TrackerDatabaseBuilder
             'tracker_field',
             [
                 'tracker_id'       => $tracker_id,
-                'formElement_type' => "text",
+                'formElement_type' => 'text',
                 'name'             => $name,
                 'label'            => $name,
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
 
@@ -153,11 +153,11 @@ final class TrackerDatabaseBuilder
             'tracker_field',
             [
                 'tracker_id'       => $tracker_id,
-                'formElement_type' => "string",
+                'formElement_type' => 'string',
                 'name'             => $name,
                 'label'            => $name,
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
 
@@ -177,11 +177,11 @@ final class TrackerDatabaseBuilder
             'tracker_field',
             [
                 'tracker_id'       => $tracker_id,
-                'formElement_type' => "date",
+                'formElement_type' => 'date',
                 'name'             => $name,
                 'label'            => $name,
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
 
@@ -206,7 +206,7 @@ final class TrackerDatabaseBuilder
                 'name'             => 'submitted_on',
                 'label'            => 'Submitted On',
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
     }
@@ -221,7 +221,7 @@ final class TrackerDatabaseBuilder
                 'name'             => 'last_update',
                 'label'            => 'Last Update',
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
     }
@@ -236,7 +236,7 @@ final class TrackerDatabaseBuilder
                 'name'             => 'submitted_by',
                 'label'            => 'Submitted By',
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
     }
@@ -251,7 +251,7 @@ final class TrackerDatabaseBuilder
                 'name'             => 'last_update_by',
                 'label'            => 'Last Update By',
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
     }
@@ -554,7 +554,7 @@ final class TrackerDatabaseBuilder
             );
         }
 
-        return ["open" => $open_value_id_list, "closed" => $closed_value_id_list];
+        return ['open' => $open_value_id_list, 'closed' => $closed_value_id_list];
     }
 
     public function buildArtifactLinkField(int $tracker_id): int
@@ -567,7 +567,7 @@ final class TrackerDatabaseBuilder
                 'name'             => 'artlink',
                 'label'            => 'artlink',
                 'use_it'           => true,
-                'scope'            => "P",
+                'scope'            => 'P',
             ]
         );
     }

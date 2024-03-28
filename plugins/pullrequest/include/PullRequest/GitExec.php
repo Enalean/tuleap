@@ -104,7 +104,7 @@ class GitExec extends Git_Exec
         $reference = escapeshellarg($reference);
 
         $this->setLocalCommiter($user->getRealName(), $user->getEmail());
-        return $this->gitCmdWithOutput("merge --no-edit -- " . $reference, $output);
+        return $this->gitCmdWithOutput('merge --no-edit -- ' . $reference, $output);
     }
 
     public function fastForwardMergeOnly($reference)

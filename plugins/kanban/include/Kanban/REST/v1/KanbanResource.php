@@ -1491,13 +1491,13 @@ final class KanbanResource extends AuthenticatedResource
         $report = $this->report_factory->getReportById($tracker_report_id, $user->getId(), false);
 
         if ($report === null) {
-            throw new RestException(404, "The report was not found");
+            throw new RestException(404, 'The report was not found');
         }
         if ($report->getTracker()->getId() !== $kanban->getTrackerId()) {
-            throw new RestException(400, "The provided report does not belong to the kanban tracker");
+            throw new RestException(400, 'The provided report does not belong to the kanban tracker');
         }
         if (! $report->isPublic()) {
-            throw new RestException(400, "Personnal tracker reports cannot be used");
+            throw new RestException(400, 'Personnal tracker reports cannot be used');
         }
 
         return $report;
@@ -1563,7 +1563,7 @@ final class KanbanResource extends AuthenticatedResource
         } catch (KanbanUserNotAdminException $exception) {
             throw new RestException(403, "You can't administrate this Kanban");
         } catch (Exception $exception) {
-            throw new RestException(500, "An error occured while saving reports for Kanban");
+            throw new RestException(500, 'An error occured while saving reports for Kanban');
         }
     }
 

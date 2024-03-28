@@ -91,17 +91,17 @@ final class ListToEmptyStringTermException extends InvalidFieldException impleme
 
     public function visitInComparison(InComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The list field '%s' cannot be compared to the empty string with IN() operator.");
+        return dgettext('tuleap-tracker', "The list field '%s' cannot be compared to the empty string with IN() operator.");
     }
 
     public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The list field '%s' cannot be compared to the empty string with NOT IN() operator.");
+        return dgettext('tuleap-tracker', "The list field '%s' cannot be compared to the empty string with NOT IN() operator.");
     }
 
     public function visitParenthesis(Parenthesis $parenthesis, $parameters)
     {
-        throw new RuntimeException("We should not end up here.");
+        throw new RuntimeException('We should not end up here.');
     }
 
     public function visitWithReverseLink(WithReverseLink $condition, $parameters)

@@ -92,17 +92,17 @@ class LDAP_UserSync
         $modified = false;
 
         if (($lr->getCommonName() !== null) && ($user->getRealName() != $lr->getCommonName())) {
-            $this->logger?->info("[LDAP default sync] Not matching Real Name between LDAP and DB for user #" . $user->getId());
-            $this->logger?->info("DB Real Name: " . $user->getRealName());
-            $this->logger?->info("LDAP Real Name: " . $lr->getCommonName());
+            $this->logger?->info('[LDAP default sync] Not matching Real Name between LDAP and DB for user #' . $user->getId());
+            $this->logger?->info('DB Real Name: ' . $user->getRealName());
+            $this->logger?->info('LDAP Real Name: ' . $lr->getCommonName());
             $user->setRealName($this->getCommonName($lr));
             $modified = true;
         }
 
         if (($lr->getEmail() !== null) && ($user->getEmail() != $lr->getEmail())) {
-            $this->logger?->info("[LDAP default sync] Not matching Email between LDAP and DB for user #" . $user->getId());
-            $this->logger?->info("DB email: " . $user->getEmail());
-            $this->logger?->info("LDAP email: " . $lr->getEmail());
+            $this->logger?->info('[LDAP default sync] Not matching Email between LDAP and DB for user #' . $user->getId());
+            $this->logger?->info('DB email: ' . $user->getEmail());
+            $this->logger?->info('LDAP email: ' . $lr->getEmail());
             $user->setEmail($lr->getEmail());
             $modified = true;
         }

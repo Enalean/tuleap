@@ -24,7 +24,7 @@ class b202003021509_add_and_populate_polling_url_tables extends ForgeUpgrade_Buc
 {
     public function description()
     {
-        return "Add id in plugin_hudson_git_project_server table";
+        return 'Add id in plugin_hudson_git_project_server table';
     }
 
     public function preUp()
@@ -44,76 +44,76 @@ class b202003021509_add_and_populate_polling_url_tables extends ForgeUpgrade_Buc
 
     private function createRepositoryTable(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE plugin_hudson_git_job_polling_url (
                job_id  int(11) UNSIGNED NOT NULL PRIMARY KEY,
                job_url text NOT NULL
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_hudson_git_job_polling_url', $sql);
     }
 
     private function createProjectTable(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE plugin_hudson_git_project_server_job_polling_url (
                job_id int(11) UNSIGNED NOT NULL PRIMARY KEY,
                job_url text NOT NULL
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_hudson_git_project_server_job_polling_url', $sql);
     }
 
     private function populateRepositoryTable(): void
     {
-        $sql = "
+        $sql = '
             INSERT INTO plugin_hudson_git_job_polling_url (job_id, job_url)
             SELECT id, job_url
             FROM plugin_hudson_git_job;
-        ";
+        ';
 
         if ($this->db->dbh->exec($sql) === false) {
             $this->rollBackOnError(
-                "An error occured while populating plugin_hudson_git_job_polling_url table."
+                'An error occured while populating plugin_hudson_git_job_polling_url table.'
             );
         }
     }
 
     private function populateProjectTable(): void
     {
-        $sql = "
+        $sql = '
             INSERT INTO plugin_hudson_git_project_server_job_polling_url (job_id, job_url)
             SELECT id, job_url
             FROM plugin_hudson_git_project_server_job;
-        ";
+        ';
 
         if ($this->db->dbh->exec($sql) === false) {
             $this->rollBackOnError(
-                "An error occured while populating plugin_hudson_git_project_server_job_polling_url table."
+                'An error occured while populating plugin_hudson_git_project_server_job_polling_url table.'
             );
         }
     }
 
     private function dropOldColumnForProject(): void
     {
-        $sql = "ALTER TABLE plugin_hudson_git_project_server_job DROP COLUMN job_url;";
+        $sql = 'ALTER TABLE plugin_hudson_git_project_server_job DROP COLUMN job_url;';
 
         if ($this->db->dbh->exec($sql) === false) {
             $this->rollBackOnError(
-                "An error occured while removing job_url from plugin_hudson_git_project_server_job table."
+                'An error occured while removing job_url from plugin_hudson_git_project_server_job table.'
             );
         }
     }
 
     private function dropOldColumnForRepository(): void
     {
-        $sql = "ALTER TABLE plugin_hudson_git_job DROP COLUMN job_url;";
+        $sql = 'ALTER TABLE plugin_hudson_git_job DROP COLUMN job_url;';
 
         if ($this->db->dbh->exec($sql) === false) {
             $this->rollBackOnError(
-                "An error occured while removing job_url from plugin_hudson_git_job table."
+                'An error occured while removing job_url from plugin_hudson_git_job table.'
             );
         }
     }

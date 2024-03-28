@@ -23,9 +23,9 @@
  * The run-time code has been moved to lib/IniConfig.php:fix_configs()
  */
 
-if (! defined("LC_ALL")) {
-    define("LC_ALL", 0);
-    define("LC_CTYPE", 2);
+if (! defined('LC_ALL')) {
+    define('LC_ALL', 0);
+    define('LC_CTYPE', 2);
 }
 // debug flags:
 define('_DEBUG_VERBOSE', 1); // verbose msgs and add validator links on footer
@@ -79,9 +79,9 @@ function browserDetect($match)
 // returns a similar number for Netscape/Mozilla (gecko=5.0)/IE/Opera features.
 function browserVersion()
 {
-    if (strstr(browserAgent(), "Mozilla/4.0 (compatible; MSIE")) {
+    if (strstr(browserAgent(), 'Mozilla/4.0 (compatible; MSIE')) {
         return (float) substr(browserAgent(), 30);
-    } elseif (strstr(browserAgent(), "Mozilla/5.0 (compatible; Konqueror/")) {
+    } elseif (strstr(browserAgent(), 'Mozilla/5.0 (compatible; Konqueror/')) {
         return (float) substr(browserAgent(), 36);
     } else {
         return (float) substr(browserAgent(), 8);
@@ -125,7 +125,7 @@ function guessing_lang($languages = false)
 {
     if (! $languages) {
         // make this faster
-        $languages = ["en", "de", "es", "fr", "it", "ja", "zh", "nl", "sv"];
+        $languages = ['en', 'de', 'es', 'fr', 'it', 'ja', 'zh', 'nl', 'sv'];
         // ignore possible "_<territory>" and codeset "ja.utf8"
         /*
         require_once("lib/Theme.php");
@@ -153,17 +153,17 @@ function guessing_lang($languages = false)
 
     if ($accept) {
         $lang_list = [];
-        $list      = explode(",", $accept);
+        $list      = explode(',', $accept);
         for ($i = 0; $i < count($list); $i++) {
-            $pos = strchr($list[$i], ";");
+            $pos = strchr($list[$i], ';');
             if ($pos === false) {
                 // No Q it is only a locale...
                 $lang_list[$list[$i]] = 100;
             } else {
                 // Has a Q rating
-                $q               = explode(";", $list[$i]);
+                $q               = explode(';', $list[$i]);
                 $loc             = $q[0];
-                $q               = explode("=", $q[1]);
+                $q               = explode('=', $q[1]);
                 $lang_list[$loc] = $q[1] * 100;
             }
         }
@@ -186,7 +186,7 @@ function guessing_lang($languages = false)
                     }
                 }
             }
-            if ($pos = strchr($lang, "-") and in_array(substr($lang, 0, $pos), $languages)) {
+            if ($pos = strchr($lang, '-') and in_array(substr($lang, 0, $pos), $languages)) {
                 return substr($lang, 0, $pos);
             }
         }
@@ -258,7 +258,7 @@ function guessing_setlocale($category, $locale)
         if ($res = setlocale($category, $try)) {
             return $res;
         }
-        foreach ([".", '@', '_'] as $sep) {
+        foreach (['.', '@', '_'] as $sep) {
             if ($i = strpos($try, $sep)) {
                 $try = substr($try, 0, $i);
                 if (($res = setlocale($category, $try))) {
@@ -365,12 +365,12 @@ function safe_wordwrap($str, $width = 80, $break = "\n", $cut = false)
 function getUploadFilePath()
 {
     return defined('PHPWIKI_DIR')
-        ? PHPWIKI_DIR . "/uploads/"
-        : realpath(dirname(__FILE__) . "/../uploads/");
+        ? PHPWIKI_DIR . '/uploads/'
+        : realpath(dirname(__FILE__) . '/../uploads/');
 }
 function getUploadDataPath()
 {
-    return SERVER_URL . ((substr(DATA_PATH, 0, 1) == '/') ? '' : "/") . DATA_PATH . '/uploads/' . GROUP_ID . '/';
+    return SERVER_URL . ((substr(DATA_PATH, 0, 1) == '/') ? '' : '/') . DATA_PATH . '/uploads/' . GROUP_ID . '/';
 }
 
 // $Log: config.php,v $

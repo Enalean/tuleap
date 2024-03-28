@@ -24,6 +24,6 @@ namespace Tuleap\PullRequest\Criterion;
 
 enum PullRequestSortOrder: string
 {
-    case ASCENDING  = "asc";
-    case DESCENDING = "desc";
+    case ASCENDING  = 'asc';
+    case DESCENDING = 'desc';
 }

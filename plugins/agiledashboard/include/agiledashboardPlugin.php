@@ -843,7 +843,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function statisticsServiceUsage(StatisticsServiceUsage $event): void
     {
         $dao = new AgileDashboard_Dao();
-        $event->csv_exporter->buildDatas($dao->getProjectsWithADActivated(), "Backlog activated");
+        $event->csv_exporter->buildDatas($dao->getProjectsWithADActivated(), 'Backlog activated');
     }
 
     /**
@@ -1075,7 +1075,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         SystemEventManager::instance()->createEvent(
             SystemEvent_BURNUP_DAILY::class,
-            "",
+            '',
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP
         );
@@ -1184,7 +1184,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
         $ugroup_manager = new UGroupManager();
         $ugroup         = $ugroup_manager->getUGroup($project, $ugroup_id);
-        $ugroup_name    = ($ugroup) ? $ugroup->getTranslatedName() : "";
+        $ugroup_name    = ($ugroup) ? $ugroup->getTranslatedName() : '';
 
         $template_factory      = TemplateRendererFactory::build();
         $admin_permission_pane = $template_factory
@@ -1192,9 +1192,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             ->renderToString(
                 'project-admin-permission-per-group',
                 [
-                    "ugroup_id"            => $ugroup_id,
-                    "project_id"           => $project->getID(),
-                    "selected_ugroup_name" => $ugroup_name,
+                    'ugroup_id'            => $ugroup_id,
+                    'project_id'           => $project->getID(),
+                    'selected_ugroup_name' => $ugroup_name,
                 ]
             );
 

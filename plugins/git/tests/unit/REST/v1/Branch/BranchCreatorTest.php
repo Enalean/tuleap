@@ -66,27 +66,27 @@ final class BranchCreatorTest extends TestCase
         );
 
         $this->git_exec->method('getAllBranchesSortedByCreationDate')->willReturn([
-            "main",
-            "existing_branch_01",
+            'main',
+            'existing_branch_01',
         ]);
 
         $this->git_exec->method('getObjectType')->willReturnMap([
-            ["main", "commit"],
-            ["tag01", "tag"],
+            ['main', 'commit'],
+            ['tag01', 'tag'],
         ]);
     }
 
     public function testItAsksToCreateABranch(): void
     {
         $this->branch_creation_executor->expects(self::once())
-            ->method("createNewBranch");
+            ->method('createNewBranch');
 
         $this->creator->createBranch(
             $this->buildMockUserWithPermissions(),
             $this->buildMockGitRepository(),
             GitBranchPOSTRepresentation::build(
-                "new_branch",
-                "main"
+                'new_branch',
+                'main'
             )
         );
     }
@@ -94,7 +94,7 @@ final class BranchCreatorTest extends TestCase
     public function testItThrowsAnExceptionIfUserCannotWriteInRepository(): void
     {
         $this->branch_creation_executor->expects(self::never())
-            ->method("createNewBranch");
+            ->method('createNewBranch');
 
         $this->expectException(I18NRestException::class);
 
@@ -102,8 +102,8 @@ final class BranchCreatorTest extends TestCase
             $this->buildMockUserWithoutPermissions(),
             $this->buildMockGitRepository(),
             GitBranchPOSTRepresentation::build(
-                "new_branch",
-                "main"
+                'new_branch',
+                'main'
             )
         );
     }
@@ -111,7 +111,7 @@ final class BranchCreatorTest extends TestCase
     public function testItThrowsAnExceptionIfBranchNameIsNotValid(): void
     {
         $this->branch_creation_executor->expects(self::never())
-            ->method("createNewBranch");
+            ->method('createNewBranch');
 
         $this->expectException(I18NRestException::class);
 
@@ -119,8 +119,8 @@ final class BranchCreatorTest extends TestCase
             $this->buildMockUserWithPermissions(),
             $this->buildMockGitRepository(),
             GitBranchPOSTRepresentation::build(
-                "new~branch",
-                "main"
+                'new~branch',
+                'main'
             )
         );
     }
@@ -128,7 +128,7 @@ final class BranchCreatorTest extends TestCase
     public function testItThrowsAnExceptionIfBranchWillBeCreatedFromATag(): void
     {
         $this->branch_creation_executor->expects(self::never())
-            ->method("createNewBranch");
+            ->method('createNewBranch');
 
         $this->expectException(I18NRestException::class);
 
@@ -136,8 +136,8 @@ final class BranchCreatorTest extends TestCase
             $this->buildMockUserWithPermissions(),
             $this->buildMockGitRepository(),
             GitBranchPOSTRepresentation::build(
-                "new_branch",
-                "tag01"
+                'new_branch',
+                'tag01'
             )
         );
     }
@@ -145,7 +145,7 @@ final class BranchCreatorTest extends TestCase
     public function testItThrowsAnExceptionIfBranchAlreadyExists(): void
     {
         $this->branch_creation_executor->expects(self::never())
-            ->method("createNewBranch");
+            ->method('createNewBranch');
 
         $this->expectException(I18NRestException::class);
 
@@ -153,8 +153,8 @@ final class BranchCreatorTest extends TestCase
             $this->buildMockUserWithPermissions(),
             $this->buildMockGitRepository(),
             GitBranchPOSTRepresentation::build(
-                "existing_branch_01",
-                "main"
+                'existing_branch_01',
+                'main'
             )
         );
     }
@@ -162,10 +162,10 @@ final class BranchCreatorTest extends TestCase
     public function testItThrowsAnExceptionIfReferenceDoesNotExistInRepository(): void
     {
         $this->branch_creation_executor->expects(self::never())
-            ->method("createNewBranch");
+            ->method('createNewBranch');
 
-        $this->git_exec->method('getObjectType')->with("0")->willThrowException(
-            new Git_Command_Exception("cmd", [], 128)
+        $this->git_exec->method('getObjectType')->with('0')->willThrowException(
+            new Git_Command_Exception('cmd', [], 128)
         );
 
         $this->expectException(I18NRestException::class);
@@ -174,8 +174,8 @@ final class BranchCreatorTest extends TestCase
             $this->buildMockUserWithPermissions(),
             $this->buildMockGitRepository(),
             GitBranchPOSTRepresentation::build(
-                "new_branch",
-                "0"
+                'new_branch',
+                '0'
             )
         );
     }
@@ -183,9 +183,9 @@ final class BranchCreatorTest extends TestCase
     public function testItThrowsAnExceptionIfGitCommandFailed(): void
     {
         $this->branch_creation_executor->expects(self::once())
-            ->method("createNewBranch")
+            ->method('createNewBranch')
             ->willThrowException(
-                new CannotCreateNewBranchException("")
+                new CannotCreateNewBranchException('')
             );
 
         $this->expectException(I18NRestException::class);
@@ -194,8 +194,8 @@ final class BranchCreatorTest extends TestCase
             $this->buildMockUserWithPermissions(),
             $this->buildMockGitRepository(),
             GitBranchPOSTRepresentation::build(
-                "new_branch",
-                "main"
+                'new_branch',
+                'main'
             )
         );
     }
@@ -221,7 +221,7 @@ final class BranchCreatorTest extends TestCase
         $repository = $this->createMock(\GitRepository::class);
         $repository->method('getId')->willReturn(self::REPO_ID);
         $repository->method('getProjectId')->willReturn(self::PROJECT_ID);
-        $repository->method('getName')->willReturn("repo01");
+        $repository->method('getName')->willReturn('repo01');
 
         return $repository;
     }

@@ -57,19 +57,19 @@ class CrossReferenceByNaturePresenterBuilder
 
         if ($cross_reference_collection->getCrossReferencesBoth() !== []) {
             $cross_ref_list_array[] = $this->link_list_builder->buildForBoth(
-                $this->link_presenter_collection_builder->build($cross_reference_collection->getCrossReferencesBoth(), "both", $display_params)
+                $this->link_presenter_collection_builder->build($cross_reference_collection->getCrossReferencesBoth(), 'both', $display_params)
             );
         }
 
         if ($cross_reference_collection->getCrossReferencesTarget() !== []) {
             $cross_ref_list_array[] = $this->link_list_builder->buildForTarget(
-                $this->link_presenter_collection_builder->build($cross_reference_collection->getCrossReferencesTarget(), "target", $display_params)
+                $this->link_presenter_collection_builder->build($cross_reference_collection->getCrossReferencesTarget(), 'target', $display_params)
             );
         }
 
         if ($cross_reference_collection->getCrossReferencesSource() !== []) {
             $cross_ref_list_array[] = $this->link_list_builder->buildForSource(
-                $this->link_presenter_collection_builder->build($cross_reference_collection->getCrossReferencesSource(), "source", $display_params)
+                $this->link_presenter_collection_builder->build($cross_reference_collection->getCrossReferencesSource(), 'source', $display_params)
             );
         }
 

@@ -42,7 +42,7 @@ final class CreationMetadataValidatorTest extends TestCase
     public function testMetadataIsInvalidWhenPropertyNameIsEmpty(): void
     {
         $feedback = ResponseFeedbackWrapperStub::buildWithNoPredefinedLevel();
-        $name     = "";
+        $name     = '';
 
         self::assertFalse($this->validator->validateNewMetadata($name, $feedback));
         self::assertEquals('error', $feedback->getLevel());
@@ -51,7 +51,7 @@ final class CreationMetadataValidatorTest extends TestCase
     public function testMetadataIsInvalidWhenPropertyIsAlreadyCreatedWithTheSameName(): void
     {
         $feedback = ResponseFeedbackWrapperStub::buildWithNoPredefinedLevel();
-        $name     = "existing";
+        $name     = 'existing';
         $this->factory->method('findByName')->willReturn(new \ArrayIterator(['name' => $name]));
 
         self::assertFalse($this->validator->validateNewMetadata($name, $feedback));
@@ -61,10 +61,10 @@ final class CreationMetadataValidatorTest extends TestCase
     public function testMetadataIsValid(): void
     {
         $feedback = ResponseFeedbackWrapperStub::buildWithNoPredefinedLevel();
-        $name     = "My metadata";
+        $name     = 'My metadata';
         $this->factory->method('findByName')->willReturn(new \ArrayIterator());
 
         self::assertTrue($this->validator->validateNewMetadata($name, $feedback));
-        self::assertEquals("", $feedback->getLevel());
+        self::assertEquals('', $feedback->getLevel());
     }
 }

@@ -50,7 +50,7 @@ final class PullRequestInfoUpdater
             $this->pull_request_is_mergeable_checker->checkUserCanMerge($pull_request, $user);
         }
 
-        if ($body->title !== null && trim($body->title) === "") {
+        if ($body->title !== null && trim($body->title) === '') {
             throw new RestException(400, 'Title cannot be empty');
         }
 

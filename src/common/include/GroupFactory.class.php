@@ -96,11 +96,11 @@ class GroupFactory
 
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
 
-        $sql = "SELECT g.group_id,g.group_name " .
-        "FROM `groups` AS g, user_group ug " .
+        $sql = 'SELECT g.group_id,g.group_name ' .
+        'FROM `groups` AS g, user_group ug ' .
         "WHERE g.group_id <> 100 AND g.status = 'A' AND g.group_id = ug.group_id " .
-        "AND ug.user_id=" . $db_escaped_user_id . " " .
-        "ORDER BY g.group_name ASC";
+        'AND ug.user_id=' . $db_escaped_user_id . ' ' .
+        'ORDER BY g.group_name ASC';
 
      //echo $sql;
 

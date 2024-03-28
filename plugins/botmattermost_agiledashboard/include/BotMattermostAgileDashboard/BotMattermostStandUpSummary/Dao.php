@@ -32,9 +32,9 @@ class Dao extends DataAccessObject
      */
     public function searchBotNotification(int $project_id): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_botmattermost_agiledashboard_notification
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         return $this->getDB()->row($sql, $project_id);
     }
@@ -44,21 +44,21 @@ class Dao extends DataAccessObject
      */
     public function searchChannels(int $notification_id): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_botmattermost_agiledashboard_notification_channel
-                WHERE notification_id = ?";
+                WHERE notification_id = ?';
 
         return $this->getDB()->run($sql, $notification_id);
     }
 
     public function searchAgileDashboardBotsForSummary(): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_botmattermost_bot
                 INNER JOIN plugin_botmattermost_agiledashboard_notification
                 ON plugin_botmattermost_bot.id = plugin_botmattermost_agiledashboard_notification.bot_id
                 WHERE SUBTIME(CURRENT_TIME(), ?) < send_time
-                  AND send_time <= CURRENT_TIME()";
+                  AND send_time <= CURRENT_TIME()';
 
         return $this->getDB()->run($sql, self::SEND_TIME_INTERVAL);
     }
@@ -109,11 +109,11 @@ class Dao extends DataAccessObject
         try {
             $bot_id = (int) $bot->getId();
 
-            $sql = "DELETE notification, channel
+            $sql = 'DELETE notification, channel
                 FROM plugin_botmattermost_agiledashboard_notification AS notification
                 INNER JOIN plugin_botmattermost_agiledashboard_notification_channel AS channel
                   ON notification.id = channel.notification_id
-                WHERE bot_id = ?";
+                WHERE bot_id = ?';
 
             $this->getDB()->run($sql, $bot_id);
         } catch (\PDOException $ex) {
@@ -137,9 +137,9 @@ class Dao extends DataAccessObject
 
     private function searchNotificationId(int $project_id): ?array
     {
-        $sql = "SELECT id
+        $sql = 'SELECT id
                 FROM plugin_botmattermost_agiledashboard_notification
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         return $this->getDB()->row($sql, $project_id);
     }

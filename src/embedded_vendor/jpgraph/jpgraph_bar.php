@@ -30,7 +30,7 @@ DEFINE('PATTERN_STRIPE2', 10);
 class BarPlot extends Plot
 {
     public $fill                = false;
-    public $fill_color          = "lightblue"; // Default is to fill with light blue
+    public $fill_color          = 'lightblue'; // Default is to fill with light blue
     public $iPattern            = -1;
     public $iPatternDensity     = 80;
     public $iPatternColor       = 'black';
@@ -43,9 +43,9 @@ class BarPlot extends Plot
     protected $width            = 0.4; // in percent of major ticks
     protected $abswidth         = -1; // Width in absolute pixels
     protected $ybase            = 0; // Bars start at 0
-    protected $align            = "center";
+    protected $align            = 'center';
     protected $bar_shadow       = false;
-    protected $bar_shadow_color = "black";
+    protected $bar_shadow_color = 'black';
     protected $bar_shadow_hsize = 3;
     protected $bar_shadow_vsize = 3;
     protected $bar_3d           = false;
@@ -64,7 +64,7 @@ class BarPlot extends Plot
     // PUBLIC METHODS
 
     // Set a drop shadow for the bar (or rather an "up-right" shadow)
-    public function SetShadow($aColor = "black", $aHSize = 3, $aVSize = 3, $aShow = true)
+    public function SetShadow($aColor = 'black', $aHSize = 3, $aVSize = 3, $aShow = true)
     {
         $this->bar_shadow       = $aShow;
         $this->bar_shadow_color = $aColor;
@@ -113,19 +113,19 @@ class BarPlot extends Plot
 
     public function Legend($graph)
     {
-        if ($this->grad && $this->legend != "" && ! $this->fill) {
+        if ($this->grad && $this->legend != '' && ! $this->fill) {
             $color = [$this->grad_fromcolor, $this->grad_tocolor];
             // In order to differentiate between gradients and cooors specified as an RGB triple
             $graph->legend->Add(
                 $this->legend,
                 $color,
-                "",
+                '',
                 -$this->grad_style,
                 $this->legendcsimtarget,
                 $this->legendcsimalt,
                 $this->legendcsimwintarget
             );
-        } elseif ($this->legend != "" && ($this->iPattern > -1 || is_array($this->iPattern))) {
+        } elseif ($this->legend != '' && ($this->iPattern > -1 || is_array($this->iPattern))) {
             if (is_array($this->iPattern)) {
                 $p1 = $this->RotatePattern($this->iPattern[0], $graph->img->a == 90);
                 $p2 = $this->iPatternColor[0];
@@ -143,18 +143,18 @@ class BarPlot extends Plot
             $graph->legend->Add(
                 $this->legend,
                 $color,
-                "",
+                '',
                 -101,
                 $this->legendcsimtarget,
                 $this->legendcsimalt,
                 $this->legendcsimwintarget
             );
-        } elseif ($this->fill_color && $this->legend != "") {
+        } elseif ($this->fill_color && $this->legend != '') {
             if (is_array($this->fill_color)) {
                 $graph->legend->Add(
                     $this->legend,
                     $this->fill_color[0],
-                    "",
+                    '',
                     0,
                     $this->legendcsimtarget,
                     $this->legendcsimalt,
@@ -164,7 +164,7 @@ class BarPlot extends Plot
                 $graph->legend->Add(
                     $this->legend,
                     $this->fill_color,
-                    "",
+                    '',
                     0,
                     $this->legendcsimtarget,
                     $this->legendcsimalt,
@@ -182,13 +182,13 @@ class BarPlot extends Plot
         // If we are using a log Y-scale we want the base to be at the
         // minimum Y-value unless the user have specifically set some other
         // value than the default.
-        if (substr($graph->axtype, -3, 3) == "log" && $this->ybase == 0) {
+        if (substr($graph->axtype, -3, 3) == 'log' && $this->ybase == 0) {
             $this->ybase = $graph->yaxis->scale->GetMinVal();
         }
 
         // For a "text" X-axis scale we will adjust the
         // display of the bars a little bit.
-        if (substr($graph->axtype, 0, 3) == "tex") {
+        if (substr($graph->axtype, 0, 3) == 'tex') {
             // Position the ticks between the bars
             $graph->xaxis->scale->ticks->SetXLabelOffset(0.5, 0);
 
@@ -196,9 +196,9 @@ class BarPlot extends Plot
             if ($this->abswidth > -1) {
                 $graph->SetTextScaleAbsCenterOff($this->abswidth);
             } else {
-                if ($this->align == "center") {
+                if ($this->align == 'center') {
                     $graph->SetTextScaleOff(0.5 - $this->width / 2);
-                } elseif ($this->align == "right") {
+                } elseif ($this->align == 'right') {
                     $graph->SetTextScaleOff(1 - $this->width);
                 }
             }
@@ -712,16 +712,16 @@ class BarPlot extends Plot
             }
             // Create the client side image map
             $rpts      = $img->ArrRotate($pts);
-            $csimcoord = round($rpts[0]) . ", " . round($rpts[1]);
+            $csimcoord = round($rpts[0]) . ', ' . round($rpts[1]);
             for ($j = 1; $j < 4; ++$j) {
-                $csimcoord .= ", " . round($rpts[2 * $j]) . ", " . round($rpts[2 * $j + 1]);
+                $csimcoord .= ', ' . round($rpts[2 * $j]) . ', ' . round($rpts[2 * $j + 1]);
             }
             if (! empty($this->csimtargets[$i])) {
                 $this->csimareas .= '<area shape="poly" coords="' . $csimcoord . '" ';
-                $this->csimareas .= " href=\"" . htmlentities($this->csimtargets[$i]) . "\"";
+                $this->csimareas .= ' href="' . htmlentities($this->csimtargets[$i]) . '"';
 
                 if (! empty($this->csimwintargets[$i])) {
-                    $this->csimareas .= " target=\"" . $this->csimwintargets[$i] . "\" ";
+                    $this->csimareas .= ' target="' . $this->csimwintargets[$i] . '" ';
                 }
 
                 $sval = '';
@@ -1166,16 +1166,16 @@ class AccBarPlot extends BarPlot
                 if ($i < count($this->plots[$j]->csimtargets)) {
                     // Create the client side image map
                     $rpts      = $img->ArrRotate($pts);
-                    $csimcoord = round($rpts[0]) . ", " . round($rpts[1]);
+                    $csimcoord = round($rpts[0]) . ', ' . round($rpts[1]);
                     for ($k = 1; $k < 4; ++$k) {
-                        $csimcoord .= ", " . round($rpts[2 * $k]) . ", " . round($rpts[2 * $k + 1]);
+                        $csimcoord .= ', ' . round($rpts[2 * $k]) . ', ' . round($rpts[2 * $k + 1]);
                     }
                     if (! empty($this->plots[$j]->csimtargets[$i])) {
                         $this->csimareas .= '<area shape="poly" coords="' . $csimcoord . '" ';
-                        $this->csimareas .= " href=\"" . $this->plots[$j]->csimtargets[$i] . "\" ";
+                        $this->csimareas .= ' href="' . $this->plots[$j]->csimtargets[$i] . '" ';
 
                         if (! empty($this->plots[$j]->csimwintargets[$i])) {
-                            $this->csimareas .= " target=\"" . $this->plots[$j]->csimwintargets[$i] . "\" ";
+                            $this->csimareas .= ' target="' . $this->plots[$j]->csimwintargets[$i] . '" ';
                         }
 
                         $sval = '';
@@ -1238,7 +1238,7 @@ class AccBarPlot extends BarPlot
                     }
                     $accy += $this->plots[$j]->coords[0][$i];
                     if ($this->plots[$j]->valuepos == 'center') {
-                        $this->plots[$j]->value->SetAlign("center", "center");
+                        $this->plots[$j]->value->SetAlign('center', 'center');
                         $this->plots[$j]->value->SetMargin(0);
                     } elseif ($this->plots[$j]->valuepos == 'bottom') {
                         $this->plots[$j]->value->SetAlign('center', 'bottom');
@@ -1259,7 +1259,7 @@ class AccBarPlot extends BarPlot
                         $y = $accyt - ($accyt - $yt);
                     }
                     if ($this->plots[$j]->valuepos == 'center') {
-                        $this->plots[$j]->value->SetAlign("center", "center");
+                        $this->plots[$j]->value->SetAlign('center', 'center');
                         $this->plots[$j]->value->SetMargin(0);
                     } elseif ($this->plots[$j]->valuepos == 'bottom') {
                         $this->plots[$j]->value->SetAlign('center', $j == 0 ? 'bottom' : 'top');

@@ -87,7 +87,7 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
             \Feedback::INFO,
             $this->stringContains('create')
         );
-        $increment_id = "100";
+        $increment_id = '100';
         $this->proxy->injectAndInformUserAboutCreatingIteration(
             IterationRedirectionParametersStub::withValues(
                 IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,
@@ -105,13 +105,13 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
         );
         self::assertSame(
             $increment_id,
-            $this->redirect->query_parameters["link-artifact-id"]
+            $this->redirect->query_parameters['link-artifact-id']
         );
         self::assertSame(
             \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
-            $this->redirect->query_parameters["link-type"]
+            $this->redirect->query_parameters['link-type']
         );
-        self::assertSame("true", $this->redirect->query_parameters["immediate"]);
+        self::assertSame('true', $this->redirect->query_parameters['immediate']);
     }
 
     public function testItInjectsAndInformsUserAboutUpdatingIteration(): void
@@ -120,7 +120,7 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
             \Feedback::INFO,
             $this->stringContains('update')
         );
-        $increment_id = "100";
+        $increment_id = '100';
         $this->proxy->injectAndInformUserAboutUpdatingIteration(
             IterationRedirectionParametersStub::withValues(
                 IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,

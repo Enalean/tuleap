@@ -53,31 +53,31 @@ class GetTrackersQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotRaiseAnExceptionForCriterionProvidedByPlugin()
     {
-        $this->event_manager->shouldReceive("processEvent")->with(
+        $this->event_manager->shouldReceive('processEvent')->with(
             \Mockery::on(
                 function (GetAdditionalCriteria $event) {
-                    $event->addCriteria("with_whatever", "'with_whatever': true");
+                    $event->addCriteria('with_whatever', "'with_whatever': true");
                     return true;
                 }
             )
         );
 
-        $json_query = ["with_whatever" => true];
+        $json_query = ['with_whatever' => true];
         $this->assertNull($this->checker->checkQuery($json_query, false));
     }
 
     public function testItRaiseAnExceptionForCriterionProvidedByPlugin()
     {
-        $this->event_manager->shouldReceive("processEvent")->with(
+        $this->event_manager->shouldReceive('processEvent')->with(
             \Mockery::on(
                 function (GetAdditionalCriteria $event) {
-                    $event->addCriteria("with_whatever", "'with_whatever': true");
+                    $event->addCriteria('with_whatever', "'with_whatever': true");
                     return true;
                 }
             )
         );
 
-        $json_query = ["whatever" => true];
+        $json_query = ['whatever' => true];
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -87,8 +87,8 @@ class GetTrackersQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testYouAreNotAdministratorOfAtLeastOneTrackerIsNotSupported()
     {
-        $this->event_manager->shouldReceive("processEvent");
-        $json_query = ["is_tracker_admin" => false];
+        $this->event_manager->shouldReceive('processEvent');
+        $json_query = ['is_tracker_admin' => false];
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -98,8 +98,8 @@ class GetTrackersQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItPassesWhenIsTrackerAdminIsValid()
     {
-        $this->event_manager->shouldReceive("processEvent");
-        $json_query = ["is_tracker_admin" => true];
+        $this->event_manager->shouldReceive('processEvent');
+        $json_query = ['is_tracker_admin' => true];
         $this->assertNull($this->checker->checkQuery($json_query));
     }
 }

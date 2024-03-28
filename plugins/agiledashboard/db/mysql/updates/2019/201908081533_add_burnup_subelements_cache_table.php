@@ -22,7 +22,7 @@ class b201908081533_add_burnup_subelements_cache_table extends ForgeUpgrade_Buck
 {
     public function description()
     {
-        return "Add burnup subelements cache table";
+        return 'Add burnup subelements cache table';
     }
 
     public function preUp()
@@ -32,7 +32,7 @@ class b201908081533_add_burnup_subelements_cache_table extends ForgeUpgrade_Buck
 
     public function up()
     {
-        $sql = "
+        $sql = '
             CREATE TABLE plugin_agiledashboard_tracker_field_burnup_cache_subelements (
               artifact_id  INT(11) NOT NULL,
               timestamp    INT(11) NOT NULL,
@@ -40,7 +40,7 @@ class b201908081533_add_burnup_subelements_cache_table extends ForgeUpgrade_Buck
               closed_subelements  INT(11) NULL,
               UNIQUE KEY time_at_field (artifact_id, timestamp)
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_agiledashboard_tracker_field_burnup_cache_subelements', $sql);
     }

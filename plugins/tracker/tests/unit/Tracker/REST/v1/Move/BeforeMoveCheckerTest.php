@@ -60,7 +60,7 @@ final class BeforeMoveCheckerTest extends TestCase
         $this->user    = UserTestBuilder::aUser()->build();
 
         $this->project_status_verificator->expects(self::atLeast(1))
-            ->method("checkProjectStatusAllowsAllUsersToAccessIt")->with($this->project);
+            ->method('checkProjectStatusAllowsAllUsersToAccessIt')->with($this->project);
     }
 
     public function testItDoesNotThrowIfEverythingIsOK(): void
@@ -69,12 +69,12 @@ final class BeforeMoveCheckerTest extends TestCase
         $artifact       = $this->createStub(Artifact::class);
         $artifact->method('getTracker')->willReturn($source_tracker);
         $event = new MoveArtifactActionAllowedByPluginRetriever($artifact, $this->user);
-        $source_tracker->method("getId")->willReturn(1);
+        $source_tracker->method('getId')->willReturn(1);
         $target_tracker = $this->getTrackerUserIsAdmin(888);
         $target_tracker->method('isDeleted')->willReturn(false);
-        $target_tracker->method("getId")->willReturn(2);
+        $target_tracker->method('getId')->willReturn(2);
         $this->event_manager->method('processEvent');
-        $this->move_dao->method("isMoveActionAllowedInTracker")->willReturn(true);
+        $this->move_dao->method('isMoveActionAllowedInTracker')->willReturn(true);
 
         $this->before_move_checker->check($source_tracker, $target_tracker, $this->user, $artifact, $event);
     }
@@ -87,7 +87,7 @@ final class BeforeMoveCheckerTest extends TestCase
         $event          = new MoveArtifactActionAllowedByPluginRetriever($artifact, $this->user);
         $target_tracker = $this->getTrackerUserIsAdmin(888);
         $target_tracker->method('isDeleted')->willReturn(true);
-        $this->move_dao->method("isMoveActionAllowedInTracker")->willReturn(true);
+        $this->move_dao->method('isMoveActionAllowedInTracker')->willReturn(true);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
@@ -102,7 +102,7 @@ final class BeforeMoveCheckerTest extends TestCase
         $event          = new MoveArtifactActionAllowedByPluginRetriever($artifact, $this->user);
         $target_tracker = $this->getTrackerUserIsAdmin(888);
         $target_tracker->method('isDeleted')->willReturn(false);
-        $this->move_dao->method("isMoveActionAllowedInTracker")->willReturn(false);
+        $this->move_dao->method('isMoveActionAllowedInTracker')->willReturn(false);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -118,7 +118,7 @@ final class BeforeMoveCheckerTest extends TestCase
         $event          = new MoveArtifactActionAllowedByPluginRetriever($artifact, $this->user);
         $target_tracker = $this->getTrackerUserIsAdmin(888);
         $target_tracker->method('isDeleted')->willReturn(false);
-        $this->move_dao->method("isMoveActionAllowedInTracker")->willReturn(true);
+        $this->move_dao->method('isMoveActionAllowedInTracker')->willReturn(true);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -133,7 +133,7 @@ final class BeforeMoveCheckerTest extends TestCase
         $event          = new MoveArtifactActionAllowedByPluginRetriever($artifact, $this->user);
         $target_tracker = $this->getTrackerUserIsMereMortal(888);
         $target_tracker->method('isDeleted')->willReturn(false);
-        $this->move_dao->method("isMoveActionAllowedInTracker")->willReturn(true);
+        $this->move_dao->method('isMoveActionAllowedInTracker')->willReturn(true);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -146,11 +146,11 @@ final class BeforeMoveCheckerTest extends TestCase
         $artifact       = $this->createStub(Artifact::class);
         $artifact->method('getTracker')->willReturn($source_tracker);
         $event = new MoveArtifactActionAllowedByPluginRetriever($artifact, $this->user);
-        $source_tracker->method("getId")->willReturn(1);
+        $source_tracker->method('getId')->willReturn(1);
         $target_tracker = $this->getTrackerUserIsAdmin(999);
         $target_tracker->method('isDeleted')->willReturn(false);
-        $target_tracker->method("getId")->willReturn(1);
-        $this->move_dao->method("isMoveActionAllowedInTracker")->willReturn(true);
+        $target_tracker->method('getId')->willReturn(1);
+        $this->move_dao->method('isMoveActionAllowedInTracker')->willReturn(true);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -160,18 +160,18 @@ final class BeforeMoveCheckerTest extends TestCase
 
     public function testIThrowsWhenAnExternalPluginForbidTheMove(): void
     {
-        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
+        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', '1');
 
         $source_tracker = $this->getTrackerUserIsAdmin(999);
         $artifact       = $this->createStub(Artifact::class);
         $artifact->method('getTracker')->willReturn($source_tracker);
         $event = new MoveArtifactActionAllowedByPluginRetriever($artifact, $this->user);
-        $source_tracker->method("getId")->willReturn(1);
+        $source_tracker->method('getId')->willReturn(1);
         $target_tracker = $this->getTrackerUserIsAdmin(888);
         $target_tracker->method('isDeleted')->willReturn(false);
-        $target_tracker->method("getId")->willReturn(2);
+        $target_tracker->method('getId')->willReturn(2);
         $this->event_manager->method('processEvent');
-        $this->move_dao->method("isMoveActionAllowedInTracker")->willReturn(true);
+        $this->move_dao->method('isMoveActionAllowedInTracker')->willReturn(true);
 
         $event->setCanNotBeMoveDueToExternalPlugin('You shall not pass');
         $this->expectException(RestException::class);
@@ -183,10 +183,10 @@ final class BeforeMoveCheckerTest extends TestCase
     public function getTrackerUserIsAdmin(int $tracker_id): \Tracker&\PHPUnit\Framework\MockObject\Stub
     {
         $tracker = $this->createStub(\Tracker::class);
-        $tracker->method("getProject")->willReturn($this->project);
-        $tracker->method("userIsAdmin")->willReturn(true);
-        $tracker->method("getId")->willReturn($tracker_id);
-        $tracker->method("getName")->willReturn('tracker01');
+        $tracker->method('getProject')->willReturn($this->project);
+        $tracker->method('userIsAdmin')->willReturn(true);
+        $tracker->method('getId')->willReturn($tracker_id);
+        $tracker->method('getName')->willReturn('tracker01');
 
         return $tracker;
     }
@@ -194,9 +194,9 @@ final class BeforeMoveCheckerTest extends TestCase
     public function getTrackerUserIsMereMortal(int $tracker_id): \Tracker&\PHPUnit\Framework\MockObject\Stub
     {
         $tracker = $this->createStub(\Tracker::class);
-        $tracker->method("getProject")->willReturn($this->project);
-        $tracker->method("userIsAdmin")->willReturn(false);
-        $tracker->method("getId")->willReturn($tracker_id);
+        $tracker->method('getProject')->willReturn($this->project);
+        $tracker->method('userIsAdmin')->willReturn(false);
+        $tracker->method('getId')->willReturn($tracker_id);
 
         return $tracker;
     }

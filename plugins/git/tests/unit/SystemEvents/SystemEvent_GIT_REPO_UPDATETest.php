@@ -140,7 +140,7 @@ final class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCas
         $this->backend->shouldReceive('updateRepoConf')->andReturn(true);
         $this->default_branch_update_executor->setCallbackOnSetDefaultBranch(
             function (): void {
-                throw new CannotExecuteDefaultBranchUpdateException("Something wrong happened");
+                throw new CannotExecuteDefaultBranchUpdateException('Something wrong happened');
             }
         );
 

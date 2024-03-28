@@ -51,7 +51,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnFalse();
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
-        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100, 101], [], "");
+        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100, 101], [], '');
 
         $expected[$this->artifact_link_field->getId()] = [
             'new_values'     => '100,101',
@@ -65,7 +65,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnFalse();
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
-        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [], [200, 201], "");
+        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [], [200, 201], '');
 
         $expected[$this->artifact_link_field->getId()] = [
             'new_values'     => '',
@@ -79,7 +79,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnFalse();
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
-        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100], [], "legacy_type");
+        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100], [], 'legacy_type');
 
         $expected[$this->artifact_link_field->getId()] = [
             'new_values'     => '100',
@@ -93,13 +93,13 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnTrue();
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
-        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100], [], "used_type");
+        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100], [], 'used_type');
 
         $expected[$this->artifact_link_field->getId()]               = [
             'new_values'     => '100',
             'removed_values' => [],
         ];
-        $expected[$this->artifact_link_field->getId()]['types'][100] = "used_type";
+        $expected[$this->artifact_link_field->getId()]['types'][100] = 'used_type';
 
         self::assertEquals($expected, $formatted_value);
     }

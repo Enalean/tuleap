@@ -46,45 +46,45 @@ final class NatureValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(InvalidTypeParameterException::class);
 
-        $this->validator->checkShortname("_fixed_in");
+        $this->validator->checkShortname('_fixed_in');
     }
 
     public function testItThrowsAnExceptionIfShortnameIsEmpty(): void
     {
         $this->expectException(InvalidTypeParameterException::class);
 
-        $this->validator->checkShortname("");
+        $this->validator->checkShortname('');
     }
 
     public function testItThrowsAnExceptionIfForwardLabelIsEmpty(): void
     {
         $this->expectException(InvalidTypeParameterException::class);
 
-        $this->validator->checkForwardLabel("");
+        $this->validator->checkForwardLabel('');
     }
 
     public function testItThrowsAnExceptionIfSReverseLabelIsEmpty(): void
     {
         $this->expectException(InvalidTypeParameterException::class);
 
-        $this->validator->checkReverseLabel("");
+        $this->validator->checkReverseLabel('');
     }
 
     public function testItDoesNotComplainIfShortnameIsValid(): void
     {
-        $this->validator->checkShortname("fixed_in");
+        $this->validator->checkShortname('fixed_in');
         $this->addToAssertionCount(1);
     }
 
     public function testItDoesNothComplainIfForwardLabelIsValid(): void
     {
-        $this->validator->checkForwardLabel("Fixed In");
+        $this->validator->checkForwardLabel('Fixed In');
         $this->addToAssertionCount(1);
     }
 
     public function testItDoesNothComplainIfReverseLabelIsValid(): void
     {
-        $this->validator->checkReverseLabel("Fixed");
+        $this->validator->checkReverseLabel('Fixed');
         $this->addToAssertionCount(1);
     }
 

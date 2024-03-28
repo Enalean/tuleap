@@ -212,7 +212,7 @@ class LdapPlugin extends Plugin
             if ($ldap->getErrno() == LDAP::ERR_SIZELIMIT) {
                 $params['has_more'] = true;
                 if (! $params['json_format']) {
-                    $params['userList'][] = "<strong>...</strong>";
+                    $params['userList'][] = '<strong>...</strong>';
                 }
             }
         }
@@ -253,7 +253,7 @@ class LdapPlugin extends Plugin
             } catch (LDAP_UserNotFoundException $exception) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             } catch (LDAP_AuthenticationFailedException $exception) {
-                $this->getLogger()->info("[LDAP] User " . $event->getLoginName() . " failed to authenticate");
+                $this->getLogger()->info('[LDAP] User ' . $event->getLoginName() . ' failed to authenticate');
             }
         }
     }
@@ -282,7 +282,7 @@ class LdapPlugin extends Plugin
         if ($this->isLdapAuthType()) {
             $ldapUserDao = new UserDao();
             if (! $ldapUserDao->alreadyLoggedInOnce((int) $event->user->getId())) {
-                $return_to_arg = "";
+                $return_to_arg = '';
                 if ($event->getReturnTo()) {
                     $return_to_arg = '?return_to=' . urlencode($event->getReturnTo());
                     if ($event->is_pv2) {
@@ -303,7 +303,7 @@ class LdapPlugin extends Plugin
             if ($event->user->getLdapId() != null) {
                 $this->getLogger()->info(
                     sprintf(
-                        "User %s was found in LDAP but LDAP authentication failed. No fallback on local login.",
+                        'User %s was found in LDAP but LDAP authentication failed. No fallback on local login.',
                         $event->user->getUserName(),
                     )
                 );
@@ -320,7 +320,7 @@ class LdapPlugin extends Plugin
             if ($event->user->getLdapId() !== null) {
                 $this->getLogger()->info(
                     sprintf(
-                        "User %s was found in LDAP but LDAP authentication failed. No fallback on SVN login.",
+                        'User %s was found in LDAP but LDAP authentication failed. No fallback on SVN login.',
                         $event->user->getUserName(),
                     )
                 );
@@ -350,11 +350,11 @@ class LdapPlugin extends Plugin
         if ($this->isLDAPUserManagementEnabled()) {
             $ldap = $this->getLdap();
 
-            if (preg_match("/^\d+$/", $params["ident"])) {
-                $params["user"] = $this->getUserManager()->getUserById((int) $params["ident"]);
+            if (preg_match('/^\d+$/', $params['ident'])) {
+                $params['user'] = $this->getUserManager()->getUserById((int) $params['ident']);
             }
 
-            if ($params["user"] !== null) {
+            if ($params['user'] !== null) {
                 return;
             }
             // First, test if its provided by autocompleter: "Common Name (login name)"
@@ -712,8 +712,8 @@ class LdapPlugin extends Plugin
             $mustache_renderer = TemplateRendererFactory::build()->getRenderer(LDAP_TEMPLATE_DIR);
 
             $action_label = ($ldap_group)
-                ? sprintf(dgettext('tuleap-ldap', "Update directory group binding (%s)"), $display_name)
-                : dgettext('tuleap-ldap', "Set directory group binding");
+                ? sprintf(dgettext('tuleap-ldap', 'Update directory group binding (%s)'), $display_name)
+                : dgettext('tuleap-ldap', 'Set directory group binding');
 
             $modal_button = $mustache_renderer->renderToString(
                 'project-members-ldap-link-modal-button',
@@ -850,7 +850,7 @@ class LdapPlugin extends Plugin
             $ldapQuery->syncAll();
 
             $retentionPeriod = $this->getLdap()->getLDAPParam('daily_sync_retention_period');
-            if ($retentionPeriod != null && $retentionPeriod != "") {
+            if ($retentionPeriod != null && $retentionPeriod != '') {
                 $ldapCleanUpManager = new LDAP_CleanUpManager(
                     $this->getUserRemover(),
                     $retentionPeriod
@@ -904,7 +904,7 @@ class LdapPlugin extends Plugin
             foreach ($non_unique_user_names as $non_unique_user_name) {
                 $user_names[] = $non_unique_user_name['user_name'];
             }
-            $message .= "\"$non_unique_uid\" (" . implode(', ', $user_names) . ")" . PHP_EOL;
+            $message .= "\"$non_unique_uid\" (" . implode(', ', $user_names) . ')' . PHP_EOL;
         }
 
         $message .= 'This might lead to some SVN misbehaviours for concerned users';

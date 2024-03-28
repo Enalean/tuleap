@@ -29,6 +29,6 @@ class RemoveNotAvailableInClassicBacklogModeException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("The remove option is only available for projects using the explicit backlog management.");
+        parent::__construct('The remove option is only available for projects using the explicit backlog management.');
     }
 }

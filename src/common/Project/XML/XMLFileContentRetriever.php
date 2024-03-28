@@ -39,7 +39,7 @@ class XMLFileContentRetriever
     {
         $xml_contents = file_get_contents($file_path);
         if ($xml_contents === false) {
-            return Result::err(Fault::fromMessage("Got unexpected failure while loading xml file"));
+            return Result::err(Fault::fromMessage('Got unexpected failure while loading xml file'));
         }
 
         return $this->getSimpleXMLElementFromString($xml_contents);
@@ -63,7 +63,7 @@ class XMLFileContentRetriever
                     $xml = simplexml_load_string($file_contents, 'SimpleXMLElement', $this->getLibXMLOptions());
 
                     if ($xml === false) {
-                        return Result::err(Fault::fromMessage("Got unexpected failure while loading XML content"));
+                        return Result::err(Fault::fromMessage('Got unexpected failure while loading XML content'));
                     }
 
                     return Result::ok($xml);

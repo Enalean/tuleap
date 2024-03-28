@@ -120,19 +120,19 @@ final class AddLDAPUserCommand extends Command
 
         $user_dn = 'uid=' . ldap_escape($login) . ',' . \ForgeConfig::get('sys_ldap_people_dn');
         $info    = [
-            "employeeNumber" => $employee_number,
-            "cn"             => $real_name,
-            "sn"             => $real_name,
-            "displayName"    => $real_name,
-            "mail"           => $email,
-            "uid"            => $login,
+            'employeeNumber' => $employee_number,
+            'cn'             => $real_name,
+            'sn'             => $real_name,
+            'displayName'    => $real_name,
+            'mail'           => $email,
+            'uid'            => $login,
             'gidNumber'      => $gid_number,
             'uidNumber'      => $uid_number,
             'homeDirectory'  => '/home/' . $login,
             'userPassword'   => $this->getEncryptedPassword($password),
-            "objectclass"    => [
-                "posixAccount",
-                "inetOrgPerson",
+            'objectclass'    => [
+                'posixAccount',
+                'inetOrgPerson',
             ],
         ];
 

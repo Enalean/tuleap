@@ -61,7 +61,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
 
         $this->tracker = TrackerTestBuilder::aTracker()
             ->withId(101)
-            ->withName("bug")
+            ->withName('bug')
             ->withColor(TrackerColor::fromName('fiesta-red'))
             ->build();
 

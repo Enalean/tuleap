@@ -32,7 +32,7 @@ class b201309191741_remove_burndown_field_table extends \Tuleap\ForgeUpgrade\Buc
 
     public function up()
     {
-        $sql = "DROP TABLE IF EXISTS tracker_field_burndown;";
+        $sql = 'DROP TABLE IF EXISTS tracker_field_burndown;';
         $this->db->dropTable('tracker_field_burndown', $sql);
     }
 

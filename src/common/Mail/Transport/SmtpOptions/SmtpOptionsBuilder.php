@@ -27,7 +27,7 @@ use Tuleap\Mail\Transport\MailTransportBuilder;
 
 class SmtpOptionsBuilder
 {
-    private const PORT_SEPARATOR = ":";
+    private const PORT_SEPARATOR = ':';
 
     /**
      * @psalm-param non-empty-string $relay_host_config

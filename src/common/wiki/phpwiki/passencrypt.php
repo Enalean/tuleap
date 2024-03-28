@@ -51,7 +51,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 function rand_ascii($length = 1)
 {
-    $s = "";
+    $s = '';
     for ($i = 1; $i <= $length; $i++) {
         // return only typeable 7 bit ascii, avoid quotes
         $s .= chr(random_int(40, 126));
@@ -68,7 +68,7 @@ function random_good_password($minlength = 5, $maxlength = 8)
 {
     $newpass = '';
     // assume ASCII ordering (not valid on EBCDIC systems!)
-    $valid_chars = "!#%&+-.0123456789=@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+    $valid_chars = '!#%&+-.0123456789=@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
     $start       = ord($valid_chars);
     $end         = ord(substr($valid_chars, -1));
     $length      = random_int($minlength, $maxlength);
@@ -77,7 +77,7 @@ function random_good_password($minlength = 5, $maxlength = 8)
         if (! strrpos($valid_chars, $newchar)) {
             continue; // skip holes
         }
-        $newpass .= sprintf("%c", $newchar);
+        $newpass .= sprintf('%c', $newchar);
         $length--;
     }
     return $newpass;
@@ -105,7 +105,7 @@ if (! empty($posted['create'])) {
 }
 
 if (
-    ($posted['password'] != "")
+    ($posted['password'] != '')
     && ($posted['password'] == $posted['password2'])
 ) {
     $password = $posted['password'];
@@ -129,7 +129,7 @@ if (
     echo "<p>The encrypted password is:<br />\n<br />&nbsp;&nbsp;&nbsp;\n<tt><strong>",
          htmlentities($encrypted_password),"</strong></tt></p>\n";
     echo "<hr />\n";
-} elseif ($posted['password'] != "") {
+} elseif ($posted['password'] != '') {
     echo "The passwords did not match. Please try again.<br />\n";
 }
 if (empty($REQUEST_URI)) {

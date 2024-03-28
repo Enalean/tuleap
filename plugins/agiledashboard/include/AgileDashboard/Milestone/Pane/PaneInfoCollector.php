@@ -31,7 +31,7 @@ use Tuleap\Tracker\Milestone\PaneInfo;
 
 class PaneInfoCollector implements Dispatchable
 {
-    public const NAME = "agiledashboardEventAdditionalPanesOnMilestone";
+    public const NAME = 'agiledashboardEventAdditionalPanesOnMilestone';
 
     /**
      * @var PaneInfo[]

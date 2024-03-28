@@ -35,8 +35,8 @@ use Tuleap\NeverThrow\Fault;
 #[ConfigKeyCategory('Git')]
 final class PreReceiveCommand extends Command
 {
-    #[FeatureFlagConfigKey("Feature flag to ignore specific git repositories by the git:pre-receive command")]
-    #[ConfigKeyString("")]
+    #[FeatureFlagConfigKey('Feature flag to ignore specific git repositories by the git:pre-receive command')]
+    #[ConfigKeyString('')]
     public const FEATURE_FLAG_KEY = 'pre_receive_ignored_repos_ids';
 
     public const NAME = 'git:pre-receive';

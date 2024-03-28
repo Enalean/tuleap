@@ -37,11 +37,11 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_agiledashboard_semantic_initial_effort (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_agiledashboard_semantic_initial_effort (
                     tracker_id INT(11) NOT NULL PRIMARY KEY,
                     field_id INT(11) NOT NULL,
                     INDEX field_id_idx(field_id)
-                )";
+                )';
         $this->db->createTable('plugin_agiledashboard_semantic_initial_effort', $sql);
     }
 

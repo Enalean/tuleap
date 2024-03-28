@@ -116,7 +116,7 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
         $post_action->shouldReceive('getFormElementFactory')->andReturns($this->factory);
 
         $post_action->before($fields_data, $this->current_user);
-        $this->assertEquals("date-of-today", $fields_data[$field_id]);
+        $this->assertEquals('date-of-today', $fields_data[$field_id]);
     }
 
     public function testBeforeShouldBypassAndClearTheDate(): void

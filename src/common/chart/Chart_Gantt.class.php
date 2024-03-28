@@ -41,7 +41,7 @@ class Chart_Gantt extends Chart
     *
     * @return void
     */
-    public function __construct($aWidth = 0, $aHeight = 0, $aCachedName = "", $aTimeOut = 0, $aInline = true)
+    public function __construct($aWidth = 0, $aHeight = 0, $aCachedName = '', $aTimeOut = 0, $aInline = true)
     {
         parent::__construct($aWidth, $aHeight, $aCachedName, $aTimeOut, $aInline);
 

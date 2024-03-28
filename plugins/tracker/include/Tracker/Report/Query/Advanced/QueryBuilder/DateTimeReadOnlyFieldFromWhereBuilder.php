@@ -63,7 +63,7 @@ final class DateTimeReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuild
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         if (! ($parameters->field instanceof \Tracker_FormElement_Field_Date)) {
-            throw new \Exception("Field is not a date");
+            throw new \Exception('Field is not a date');
         }
 
         if ($parameters->field->isTimeDisplayed() === true) {
@@ -77,12 +77,12 @@ final class DateTimeReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuild
     {
         $min = $value_wrapper->getMinValue()->accept($this, $parameters);
         if (is_array($min)) {
-            throw new \Exception("Unsupported between value");
+            throw new \Exception('Unsupported between value');
         }
 
         $max = $value_wrapper->getMaxValue()->accept($this, $parameters);
         if (is_array($max)) {
-            throw new \Exception("Unsupported between value");
+            throw new \Exception('Unsupported between value');
         }
 
         return [

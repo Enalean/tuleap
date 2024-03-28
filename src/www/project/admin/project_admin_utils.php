@@ -149,18 +149,18 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
         // catalog then display the msg has is because this is very
         // likely a legacy message (pre-localization version)
         $arr_args = '';
-        if (strpos($field, " %% ") !== false) {
-            [$msg_key, $args] = explode(" %% ", $field);
+        if (strpos($field, ' %% ') !== false) {
+            [$msg_key, $args] = explode(' %% ', $field);
             if ($args) {
                 $arr_args = explode('||', $args);
             }
         } else {
             $msg_key  = $field;
-            $arr_args = "";
+            $arr_args = '';
         }
         $event = EventManager::instance()->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($msg_key));
         $msg   = $event->getLabel() ?? $Language->getOverridableText('project_admin_utils', $msg_key, $arr_args);
-        if (! (strpos($msg, "*** Unkown msg") === false)) {
+        if (! (strpos($msg, '*** Unkown msg') === false)) {
             $msg = $field;
         }
 
@@ -169,8 +169,8 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
         }
         $val = $row['old_value'];
         //Translate dynamic ugroup name for permission entries
-        if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_") || strstr($msg_key, "membership_request_updated")) {
-            $ugroupList = explode(",", $val);
+        if (strstr($msg_key, 'perm_granted_for_') || strstr($msg_key, 'perm_reset_for_') || strstr($msg_key, 'membership_request_updated')) {
+            $ugroupList = explode(',', $val);
             $val        = '';
             foreach ($ugroupList as $ugroup) {
                 if ($val !== '') {
@@ -178,7 +178,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
                 }
                 $val .= \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayName((string) $ugroup);
             }
-        } elseif ($msg_key == "group_type") {
+        } elseif ($msg_key == 'group_type') {
             $template = TemplateSingleton::instance();
             $val      = $template->getLabel($val);
         }
@@ -229,7 +229,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     global $Language;
 
     $old_value = $value;
-    if (stristr($old_value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
+    if (stristr($old_value, $GLOBALS['Language']->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
         $old_value = 'ugroup_anonymous_users_name_key';
     }
     $start_date = null;
@@ -258,7 +258,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     );
 
     if (isset($subEventsBox)) {
-        $subEventsString  = implode(",", array_keys($subEventsBox));
+        $subEventsString  = implode(',', array_keys($subEventsBox));
         $forwardSubEvents = '&event=' . $event . '&subEventsBox=' . $subEventsString;
     } else {
         $forwardSubEvents = '&event=' . $event;
@@ -268,12 +268,12 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
 
     //Event select Box
     $events = [
-        'any'              => $GLOBALS["Language"]->getText('global', 'any'),
-        'event_permission' => $GLOBALS["Language"]->getText("project_admin_utils", "event_permission"),
-        'event_project'    => $GLOBALS["Language"]->getText("project_admin_utils", "event_project"),
-        'event_user'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
-        'event_ug'         => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug"),
-        'event_others'     => $GLOBALS["Language"]->getText("project_admin_utils", "event_others"),
+        'any'              => $GLOBALS['Language']->getText('global', 'any'),
+        'event_permission' => $GLOBALS['Language']->getText('project_admin_utils', 'event_permission'),
+        'event_project'    => $GLOBALS['Language']->getText('project_admin_utils', 'event_project'),
+        'event_user'       => $GLOBALS['Language']->getText('project_admin_utils', 'event_user'),
+        'event_ug'         => $GLOBALS['Language']->getText('project_admin_utils', 'event_ug'),
+        'event_others'     => $GLOBALS['Language']->getText('project_admin_utils', 'event_others'),
     ];
 
     $select = new HTML_Element_Selectbox('', 'events_box', '');
@@ -321,7 +321,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     }
 
     if (isset($subEventsString)) {
-        $selectedSubEvents = explode(",", $subEventsString);
+        $selectedSubEvents = explode(',', $subEventsString);
         foreach ($selectedSubEvents as $element) {
             $subEventsBox[] = $element;
         }
@@ -343,7 +343,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     }
 
     $js = "new UserAutoCompleter('by', '" . util_get_dir_image_theme() . "', true);
-           new ProjectHistory(" . json_encode($translated_events) . ", " . json_encode($translated_selected_sub_events) . ");";
+           new ProjectHistory(" . json_encode($translated_events) . ', ' . json_encode($translated_selected_sub_events) . ');';
 
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
     $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
@@ -380,7 +380,7 @@ function export_grouphistory($group_id, $event = null, $subEventsBox = null, $va
     echo build_csv_header($col_list, $documents_title) . $eol;
 
     $old_value = $value;
-    if (stristr($old_value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
+    if (stristr($old_value, $GLOBALS['Language']->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
         $old_value = 'ugroup_anonymous_users_name_key';
     }
     $start_date = null;

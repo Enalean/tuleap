@@ -40,20 +40,20 @@ class WikiPlugin_RdfDefinition extends WikiPlugin
 {
     public function getName()
     {
-        return _("RdfDefinition");
+        return _('RdfDefinition');
     }
 
     public function getDescription()
     {
-        return _("Define the RDF vocabulary for a wiki subset.");
+        return _('Define the RDF vocabulary for a wiki subset.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.6 $"
+            '$Revision: 1.6 $'
         );
     }
 

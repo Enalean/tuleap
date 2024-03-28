@@ -96,7 +96,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     global $Language;
     $sys_news_group = ForgeConfig::get('sys_news_group');
 
-    $return = "";
+    $return = '';
     if (! $group_id) {
         $group_id = $sys_news_group;
     }
@@ -106,7 +106,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     */
 
     if ($group_id != $sys_news_group) {
-        $wclause = "news_bytes.group_id = " . db_ei($group_id) . " AND news_bytes.is_approved < 4";
+        $wclause = 'news_bytes.group_id = ' . db_ei($group_id) . ' AND news_bytes.is_approved < 4';
     } else {
         $wclause = 'news_bytes.is_approved = 1';
     }
@@ -241,10 +241,10 @@ function get_news_name($id)
     /*
         Takes an ID and returns the corresponding forum name
     */
-    $sql    = "SELECT summary FROM news_bytes WHERE id=" . db_ei($id);
+    $sql    = 'SELECT summary FROM news_bytes WHERE id=' . db_ei($id);
     $result = db_query($sql);
     if (! $result || db_numrows($result) < 1) {
-        return "Not Found";
+        return 'Not Found';
     } else {
         return db_result($result, 0, 'summary');
     }
@@ -255,10 +255,10 @@ function get_news_name_from_forum_id($id)
     /*
         Takes an ID and returns the corresponding forum name
     */
-    $sql    = "SELECT summary FROM news_bytes WHERE forum_id=" . db_ei($id);
+    $sql    = 'SELECT summary FROM news_bytes WHERE forum_id=' . db_ei($id);
     $result = db_query($sql);
     if (! $result || db_numrows($result) < 1) {
-        return "Not Found";
+        return 'Not Found';
     } else {
         return db_result($result, 0, 'summary');
     }
@@ -272,8 +272,8 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
 
     $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
     $new_id             = forum_create_forum(ForgeConfig::get('sys_news_group'), $summary, 1, 0, '', $need_feedback = false);
-    $sql                = "INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details)
-          VALUES (" . db_ei($group_id) . ", '" . $db_escaped_user_id . "', " . db_ei($promote_news) . ", '" . time() . "',
+    $sql                = 'INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details)
+          VALUES (' . db_ei($group_id) . ", '" . $db_escaped_user_id . "', " . db_ei($promote_news) . ", '" . time() . "',
                  '$new_id', '" . db_es($summary) . "', '" . db_es($details) . "')";
     $result             = db_query($sql);
 
@@ -312,7 +312,7 @@ function news_check_permission($forum_id, $group_id)
 
     if ($group_id == ForgeConfig::get('sys_news_group')) {
         //search for the real group_id of the news
-        $sql = "SELECT g.access FROM news_bytes AS n INNER JOIN `groups` AS g USING(group_id) WHERE n.forum_id = " . db_ei($forum_id);
+        $sql = 'SELECT g.access FROM news_bytes AS n INNER JOIN `groups` AS g USING(group_id) WHERE n.forum_id = ' . db_ei($forum_id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $row = db_fetch_array($res);
@@ -400,7 +400,7 @@ function news_notify_promotion_request($group_id, $news_bytes_id, $summary, $det
     $body .= $Language->getText('news_utils', 'news_request_mail_summary', [$summary]) . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_details', [$details]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_approve_link') . ForgeConfig::get('sys_lf');
-    $body .= \Tuleap\ServerHostname::HTTPSUrl() . "/news/admin/?approve=1&id=" . $news_bytes_id . ForgeConfig::get('sys_lf');
+    $body .= \Tuleap\ServerHostname::HTTPSUrl() . '/news/admin/?approve=1&id=' . $news_bytes_id . ForgeConfig::get('sys_lf');
     $mail->setBodyText($body);
 
     $is_sent = $mail->send();

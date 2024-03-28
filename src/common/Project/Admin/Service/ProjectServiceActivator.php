@@ -160,8 +160,8 @@ class ProjectServiceActivator
 
             $short_name = $service->getShortName();
 
-            $icon = "";
-            if ($short_name !== "summary") {
+            $icon = '';
+            if ($short_name !== 'summary') {
                 $icon = $service->getIcon();
             }
 
@@ -187,7 +187,7 @@ class ProjectServiceActivator
                 $service->isOpenedInNewTab()
             );
 
-            if ($short_name !== "") {
+            if ($short_name !== '') {
                 $this->reference_manager->addSystemReferencesForService(
                     (int) $data->getBuiltFromTemplateProject()->getProject()->getID(),
                     $created_project_id,

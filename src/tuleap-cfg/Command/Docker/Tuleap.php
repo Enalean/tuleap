@@ -82,7 +82,7 @@ final class Tuleap
                 throw new \RuntimeException(sprintf('No variable named `%s` found in environment', DBConfig::CONF_DBPASSWORD));
             }
 
-            $output->writeln("Setup database");
+            $output->writeln('Setup database');
             $this->database_configurator
                 ->setupDatabase(
                     $output,
@@ -94,24 +94,24 @@ final class Tuleap
                     ->withTuleapFQDN($fqdn)
                 );
 
-            $output->writeln("Configure local.inc");
+            $output->writeln('Configure local.inc');
             (new SetupTuleap())->setup();
         });
 
         \ForgeConfig::loadInSequence();
-        $output->writeln("Register buckets in forgeupgrade");
+        $output->writeln('Register buckets in forgeupgrade');
         $forge_upgrade = new ForgeUpgrade(
             DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
             new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]),
         );
         $forge_upgrade->recordOnlyCore();
 
-        $output->writeln("Generate platform secret");
+        $output->writeln('Generate platform secret');
         $secret_key = new \Tuleap\Cryptography\SecretKeyFileOnFileSystem();
         $secret_key->initAndGetEncryptionKeyPath();
         $secret_key->restoreOwnership(new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]));
 
-        $output->writeln("Start SSH daemon for initial setup (git)");
+        $output->writeln('Start SSH daemon for initial setup (git)');
         $ssh_daemon = new SSHDaemon($this->process_factory);
         $ssh_daemon->startDaemon($output);
 

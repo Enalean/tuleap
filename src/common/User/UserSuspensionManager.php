@@ -39,12 +39,12 @@ use UserManager;
 
 class UserSuspensionManager
 {
-    #[ConfigKey("Send an email X number of days before an inactive user will be suspended")]
+    #[ConfigKey('Send an email X number of days before an inactive user will be suspended')]
     public const CONFIG_NOTIFICATION_DELAY = 'sys_suspend_inactive_accounts_notification_delay';
-    #[ConfigKey("Toggle activation of notification of inactive accounts")]
+    #[ConfigKey('Toggle activation of notification of inactive accounts')]
     public const CONFIG_INACTIVE_EMAIL     = 'sys_suspend_send_account_suspension_email';
     public const CONFIG_INACTIVE_DELAY     = 'sys_suspend_inactive_accounts_delay';
-    public const ONE_DAY_INTERVAL          = "PT23H59M59S";
+    public const ONE_DAY_INTERVAL          = 'PT23H59M59S';
 
     /**
      * @var MailPresenterFactory
@@ -123,11 +123,11 @@ class UserSuspensionManager
 
             if ($users) {
                 $this->logger->info(
-                    "Sending the suspension notification to the following users (ID): " .
-                    implode(", ", $users)
+                    'Sending the suspension notification to the following users (ID): ' .
+                    implode(', ', $users)
                 );
             } else {
-                $this->logger->info("No users to notify (suspension notification).");
+                $this->logger->info('No users to notify (suspension notification).');
             }
 
             foreach ($idle_users as $idle_user) {
@@ -153,16 +153,16 @@ class UserSuspensionManager
     {
         if ($this->sendNotificationMail($user, $last_access_date, $suspension_date, $language)) {
             $this->logger->info(
-                "Suspension notification is sent to user: ID=" .
-                $user->getId() . " username=" . $user->getUserName() .
-                " email=" . $user->getEmail() . " last_access_date=" .
+                'Suspension notification is sent to user: ID=' .
+                $user->getId() . ' username=' . $user->getUserName() .
+                ' email=' . $user->getEmail() . ' last_access_date=' .
                 date('Y-m-d\TH:i:sO', $idle_user['last_access_date'])
             );
         } else {
             $this->logger->error(
-                "Unable to send suspension notification to user: ID=" .
-                $user->getId() . " username=" . $user->getUserName() .
-                " email=" . $user->getEmail()
+                'Unable to send suspension notification to user: ID=' .
+                $user->getId() . ' username=' . $user->getUserName() .
+                ' email=' . $user->getEmail()
             );
         }
     }
@@ -193,8 +193,8 @@ class UserSuspensionManager
         $start_date = $this->getLastAccessDate($notification_delay, $inactive_delay, $date);
         $end_date   = $start_date->modify('+23hours 59 minutes 59 seconds');
         $this->logger->info(
-            "Idle accounts: querying users that last accessed " . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) .
-            " between " . $start_date->format('Y-m-d\TH:i:sO') . " and " . $end_date->format('Y-m-d\TH:i:sO')
+            'Idle accounts: querying users that last accessed ' . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) .
+            ' between ' . $start_date->format('Y-m-d\TH:i:sO') . ' and ' . $end_date->format('Y-m-d\TH:i:sO')
         );
         return $this->dao->getIdleAccounts($start_date, $end_date);
     }
@@ -324,11 +324,11 @@ class UserSuspensionManager
 
             if ($users) {
                 $this->logger->info(
-                    "Suspension-day email: sending the email to the following users (ID): " .
-                    implode(", ", $users)
+                    'Suspension-day email: sending the email to the following users (ID): ' .
+                    implode(', ', $users)
                 );
             } else {
-                $this->logger->info("No users to notify (suspension-day notification).");
+                $this->logger->info('No users to notify (suspension-day notification).');
             }
 
             foreach ($inactive_users as $inactive_user) {
@@ -362,16 +362,16 @@ class UserSuspensionManager
     {
         if ($this->sendSuspensionMail($user, $last_access_date, $language)) {
             $this->logger->info(
-                "Suspension email is sent to user: ID=" .
-                $user->getId() . " username=" . $user->getUserName() .
-                " email=" . $user->getEmail() . " last_access_date=" .
+                'Suspension email is sent to user: ID=' .
+                $user->getId() . ' username=' . $user->getUserName() .
+                ' email=' . $user->getEmail() . ' last_access_date=' .
                 $last_access_date->format('Y-m-d\TH:i:sO')
             );
         } else {
             $this->logger->error(
-                "Unable to send suspension email to user: ID=" .
-                $user->getId() . " username=" . $user->getUserName() .
-                " email=" . $user->getEmail()
+                'Unable to send suspension email to user: ID=' .
+                $user->getId() . ' username=' . $user->getUserName() .
+                ' email=' . $user->getEmail()
             );
         }
     }
@@ -390,13 +390,13 @@ class UserSuspensionManager
     private function getInactiveAccounts(DateTimeImmutable $date): array
     {
         $last_valid_access_end   = $date->sub(
-            new DateInterval("P" . ForgeConfig::get('sys_suspend_inactive_accounts_delay') . "D")
+            new DateInterval('P' . ForgeConfig::get('sys_suspend_inactive_accounts_delay') . 'D')
         );
         $last_valid_access_start = $last_valid_access_end->sub(new DateInterval(self::ONE_DAY_INTERVAL));
 
         $this->logger->info(
-            "Inactive accounts: querying users that last accessed " . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) .
-            " between  " . $last_valid_access_start->format('Y-m-d\TH:i:sO') . "and " .
+            'Inactive accounts: querying users that last accessed ' . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) .
+            ' between  ' . $last_valid_access_start->format('Y-m-d\TH:i:sO') . 'and ' .
             $last_valid_access_end->format('Y-m-d\TH:i:sO')
         );
         return $this->dao->getUsersWithoutConnectionOrAccessBetweenDates($last_valid_access_start, $last_valid_access_end);

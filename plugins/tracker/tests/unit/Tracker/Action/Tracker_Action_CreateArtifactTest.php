@@ -153,7 +153,7 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $tracker_id   = 73;
         $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
-        $this->assertUriHasArgument($redirect_uri->toUrl(), "func", 'new-artifact');
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'func', 'new-artifact');
     }
 
     private function getRedirectUrlFor(array $request_data, ?int $tracker_id, ?int $artifact_id): Tracker_Artifact_Redirect
@@ -177,8 +177,8 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
         self::assertNotEmpty($this->redirect->query_parameters);
-        self::assertArrayHasKey("func", $this->redirect->query_parameters);
-        self::assertArrayHasKey("tracker", $this->redirect->query_parameters);
+        self::assertArrayHasKey('func', $this->redirect->query_parameters);
+        self::assertArrayHasKey('tracker', $this->redirect->query_parameters);
     }
 
     public function testItDoesntRedirectWhenNewArtifactAlreadyHasAParent(): void

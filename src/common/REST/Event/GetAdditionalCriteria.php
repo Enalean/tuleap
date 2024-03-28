@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetAdditionalCriteria implements Dispatchable
 {
-    public const NAME = "getAdditionalCriteria";
+    public const NAME = 'getAdditionalCriteria';
 
     /**
      * @var string[]

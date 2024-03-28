@@ -52,7 +52,7 @@ EOT;
                     real_name varbinary(32) NOT NULL DEFAULT '',
                     INDEX idx_mw_group_name (mw_group_name)
                 )";
-        $this->execDB($sql, "Cannot create table");
+        $this->execDB($sql, 'Cannot create table');
 
         $sql = "INSERT INTO plugin_mediawiki_tuleap_mwgroups(mw_group_name, real_name)
                 VALUES
@@ -63,7 +63,7 @@ EOT;
                     ('bot', 'bot'),
                     ('sysop', 'sysop'),
                     ('bureaucrat', 'bureaucrat')";
-        $this->execDB($sql, "Cannot init table");
+        $this->execDB($sql, 'Cannot init table');
     }
 
     private function execDB($sql, $message)

@@ -52,7 +52,7 @@ class PostFileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $version_importer = Mockery::mock(VersionImporter::class);
         $logger           = Mockery::mock(LoggerInterface::class);
 
-        $logger->shouldReceive('debug')->with("└ Importing version #1")->once();
+        $logger->shouldReceive('debug')->with('└ Importing version #1')->once();
         $version_importer
             ->shouldReceive('import')
             ->with(
@@ -65,7 +65,7 @@ class PostFileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 1
             )->once()
             ->ordered();
-        $logger->shouldReceive('debug')->with("└ Importing version #2")->once();
+        $logger->shouldReceive('debug')->with('└ Importing version #2')->once();
         $version_importer
             ->shouldReceive('import')
             ->with(

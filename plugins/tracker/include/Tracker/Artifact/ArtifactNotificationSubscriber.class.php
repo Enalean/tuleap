@@ -119,8 +119,8 @@ class Tracker_ArtifactNotificationSubscriber
 
     private function sendAjaxResponse($unsubscribe, $message)
     {
-        $response["notification"] = ! $unsubscribe;
-        $response["message"]      = $message;
+        $response['notification'] = ! $unsubscribe;
+        $response['message']      = $message;
         $GLOBALS['Response']->sendJSON($response);
     }
 }

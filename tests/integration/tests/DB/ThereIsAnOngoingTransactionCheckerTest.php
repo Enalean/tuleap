@@ -65,7 +65,7 @@ final class ThereIsAnOngoingTransactionCheckerTest extends TestCase
         $checker = new ThereIsAnOngoingTransactionChecker();
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->tryFlatTransaction(static fn (): mixed => $db->run("SELECT 1"));
+        $db->tryFlatTransaction(static fn (): mixed => $db->run('SELECT 1'));
         $checker->checkNoOngoingTransaction();
     }
 }

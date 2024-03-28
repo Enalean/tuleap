@@ -189,7 +189,7 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
             $xml_import = $this->getXMLImporter();
 
             $xml                = \simplexml_load_string(\file_get_contents($xml_file_path));
-            $xml_file_path      = "";
+            $xml_file_path      = '';
             $xml_field_mapping  = new TrackerXmlFieldsMapping_InSamePlatform();
             $url_mapping        = new CreatedFileURLMapping();
             $date               = new DateTimeImmutable();
@@ -226,7 +226,7 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
     {
         $this->logger->info('--> Export TV3 data ');
         $xml_path = $this->generateTemporaryPath();
-        $xml      = new DOMDocument("1.0", "UTF8");
+        $xml      = new DOMDocument('1.0', 'UTF8');
 
         $dao                 = new ArtifactXMLExporterDao();
         $node_helper         = new ArtifactXMLNodeHelper($xml);

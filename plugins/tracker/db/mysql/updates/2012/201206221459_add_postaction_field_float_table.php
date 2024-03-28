@@ -32,14 +32,14 @@ class b201206221459_add_postaction_field_float_table extends \Tuleap\ForgeUpgrad
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
                     id            INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     transition_id INT(11) NOT NULL,
                     field_id      INT(11) UNSIGNED DEFAULT NULL,
                     value         FLOAT(10,4) DEFAULT NULL,
                     
                     INDEX idx_wf_transition_id (transition_id)
-                );";
+                );';
         $this->db->createTable('tracker_workflow_transition_postactions_field_float', $sql);
     }
 

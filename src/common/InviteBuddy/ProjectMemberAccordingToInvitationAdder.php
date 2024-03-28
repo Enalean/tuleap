@@ -95,7 +95,7 @@ final class ProjectMemberAccordingToInvitationAdder implements AddUserToProjectA
             );
         } catch (UserIsNotActiveOrRestrictedException $e) {
             $this->logger->error(
-                "Unable to add non active nor restricted user to project. This should not happen.",
+                'Unable to add non active nor restricted user to project. This should not happen.',
                 ['exception' => $e]
             );
         } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted) {
@@ -112,11 +112,11 @@ final class ProjectMemberAccordingToInvitationAdder implements AddUserToProjectA
             // but we don't need to do anything. This is fine.
         } catch (NoEmailForUserException $e) {
             $this->logger->error(
-                "User that have been invited by email does not have an email. This should not happen.",
+                'User that have been invited by email does not have an email. This should not happen.',
                 ['exception' => $e]
             );
         } catch (\Exception $e) {
-            $this->logger->error("Got an unexpected error while adding an invited user to a project", ['exception' => $e]);
+            $this->logger->error('Got an unexpected error while adding an invited user to a project', ['exception' => $e]);
             throw $e;
         }
     }

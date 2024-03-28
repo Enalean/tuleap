@@ -92,7 +92,7 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->backend->method('system')->willReturn(true);
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
-        self::assertStringContainsString('codendi-contact', $aliases, "Codendi-wide aliases not set");
+        self::assertStringContainsString('codendi-contact', $aliases, 'Codendi-wide aliases not set');
     }
 
     public function testItGeneratesUserAliasesGivenByPlugins(): void
@@ -100,6 +100,6 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->backend->method('system')->willReturn(true);
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
-        self::assertStringContainsString('"forge__tracker":', $aliases, "Alias of plugins not set");
+        self::assertStringContainsString('"forge__tracker":', $aliases, 'Alias of plugins not set');
     }
 }

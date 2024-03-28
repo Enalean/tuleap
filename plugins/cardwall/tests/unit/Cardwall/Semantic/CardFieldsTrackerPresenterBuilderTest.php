@@ -82,7 +82,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
                 ['id' => 100, 'name' => 'selectbox', 'is_selected' => false],
             ],
             false,
-            ""
+            ''
         );
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
@@ -107,7 +107,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $tracker                    = TrackerTestBuilder::aTracker()->withId(36)->build();
         $background_color_presenter = $this->builder->build($tracker_fields, $tracker);
 
-        $export_formatted_field_values = new BackgroundColorSelectorPresenter([], false, "");
+        $export_formatted_field_values = new BackgroundColorSelectorPresenter([], false, '');
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
     }
@@ -130,7 +130,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $export_formatted_field_values = new BackgroundColorSelectorPresenter(
             [],
             false,
-            ""
+            ''
         );
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
@@ -159,7 +159,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
                 ['id' => 101, 'name' => 'selectbox', 'is_selected' => false],
             ],
             false,
-            ""
+            ''
         );
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
@@ -183,7 +183,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $tracker                    = TrackerTestBuilder::aTracker()->withId(36)->build();
         $background_color_presenter = $this->builder->build($tracker_fields, $tracker);
 
-        $export_formatted_field_values = new BackgroundColorSelectorPresenter([], false, "");
+        $export_formatted_field_values = new BackgroundColorSelectorPresenter([], false, '');
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
     }

@@ -21,8 +21,8 @@ along with PhpWiki; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-require_once("lib/TextSearchQuery.php");
-require_once("lib/PageList.php");
+require_once('lib/TextSearchQuery.php');
+require_once('lib/PageList.php');
 
 /** When someone is referred from a search engine like Google, Yahoo
  * or our own fulltextsearch, the terms they search for are highlighted.
@@ -35,20 +35,20 @@ class WikiPlugin_SearchHighlight extends WikiPlugin
 {
     public function getName()
     {
-        return _("SearchHighlight");
+        return _('SearchHighlight');
     }
 
     public function getDescription()
     {
-        return _("Hilight referred search terms.");
+        return _('Hilight referred search terms.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.1 $"
+            '$Revision: 1.1 $'
         );
     }
 

@@ -34,7 +34,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git_mirrors ADD hostname VARCHAR(255) NULL";
+        $sql = 'ALTER TABLE plugin_git_mirrors ADD hostname VARCHAR(255) NULL';
 
         $res = $this->db->dbh->exec($sql);
 

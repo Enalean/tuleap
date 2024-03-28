@@ -130,7 +130,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
             return $this->path;
         }
 
-        return $_GET['f'] . "/" . $this->path;
+        return $_GET['f'] . '/' . $this->path;
     }
 
     /**

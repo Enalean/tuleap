@@ -68,13 +68,13 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
 
         $first_column = $columns[0];
         $this->assertEquals($first_column['id'], 1);
-        $this->assertEquals($first_column['label'], "To be done");
-        $this->assertEquals($first_column['color'], "#F8F8F8");
+        $this->assertEquals($first_column['label'], 'To be done');
+        $this->assertEquals($first_column['color'], '#F8F8F8');
 
         $third_column = $columns[2];
         $this->assertEquals($third_column['id'], 3);
-        $this->assertEquals($third_column['label'], "Review");
-        $this->assertEquals($third_column['color'], "#F8F8F8");
+        $this->assertEquals($third_column['label'], 'Review');
+        $this->assertEquals($third_column['color'], '#F8F8F8');
 
         $this->assertArrayHasKey('swimlanes', $cardwall);
         $swimlanes = $cardwall['swimlanes'];
@@ -84,12 +84,12 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
 
         $first_swimlane_card = $first_swimlane['cards'][0];
         $this->assertEquals(REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1], $first_swimlane_card['id']);
-        $this->assertEquals("Believe", $first_swimlane_card['label']);
-        $this->assertEquals("cards/" . REST_TestDataBuilder::PLANNING_ID . "_" . $this->story_artifact_ids[1], $first_swimlane_card['uri']);
+        $this->assertEquals('Believe', $first_swimlane_card['label']);
+        $this->assertEquals('cards/' . REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1], $first_swimlane_card['uri']);
         $this->assertEquals(REST_TestDataBuilder::PLANNING_ID, $first_swimlane_card['planning_id']);
-        $this->assertEquals("Open", $first_swimlane_card['status']);
+        $this->assertEquals('Open', $first_swimlane_card['status']);
         $this->assertEquals(null, $first_swimlane_card['accent_color']);
-        $this->assertEquals("2", $first_swimlane_card['column_id']);
+        $this->assertEquals('2', $first_swimlane_card['column_id']);
         $this->assertEquals([1, 2, 4], $first_swimlane_card['allowed_column_ids']);
         $this->assertEquals([], $first_swimlane_card['values']);
 
@@ -99,7 +99,7 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
 
         $first_swimlane_card_artifact_reference = $first_swimlane_card['artifact'];
         $this->assertEquals($this->story_artifact_ids[1], $first_swimlane_card_artifact_reference['id']);
-        $this->assertEquals("artifacts/" . $this->story_artifact_ids[1], $first_swimlane_card_artifact_reference['uri']);
+        $this->assertEquals('artifacts/' . $this->story_artifact_ids[1], $first_swimlane_card_artifact_reference['uri']);
 
         $first_swimlane_card_artifact_tracker_reference = $first_swimlane_card_artifact_reference['tracker'];
         $this->assertEquals($this->user_stories_tracker_id, $first_swimlane_card_artifact_tracker_reference['id']);

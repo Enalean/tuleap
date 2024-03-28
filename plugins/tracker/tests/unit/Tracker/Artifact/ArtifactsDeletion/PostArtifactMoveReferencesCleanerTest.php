@@ -85,10 +85,10 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
 
     public function testItDeletesReferencesAndResetsReverseLinksTypesWhenArtifactIsChildOfAnotherOneInAnotherProject(): void
     {
-        $this->cross_references_manager->expects(self::once())->method("deleteReferencesWhenArtifactIsSource")->with($this->moved_artifact);
-        $this->cross_references_manager->expects(self::once())->method("updateReferencesWhenArtifactIsInTarget")->with($this->moved_artifact);
+        $this->cross_references_manager->expects(self::once())->method('deleteReferencesWhenArtifactIsSource')->with($this->moved_artifact);
+        $this->cross_references_manager->expects(self::once())->method('updateReferencesWhenArtifactIsInTarget')->with($this->moved_artifact);
 
-        $this->artifact_linker->expects(self::exactly(2))->method("linkArtifact")->withConsecutive(
+        $this->artifact_linker->expects(self::exactly(2))->method('linkArtifact')->withConsecutive(
             [
                 $this->first_parent,
                 CollectionOfForwardLinks::fromReverseLink(
@@ -127,10 +127,10 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
 
     public function testItOnlyDeletesReferencesWhenArtifactHasBeenMovedIntoATrackerOfTheSameProject(): void
     {
-        $this->cross_references_manager->expects(self::once())->method("deleteReferencesWhenArtifactIsSource");
-        $this->cross_references_manager->expects(self::never())->method("updateReferencesWhenArtifactIsInTarget");
+        $this->cross_references_manager->expects(self::once())->method('deleteReferencesWhenArtifactIsSource');
+        $this->cross_references_manager->expects(self::never())->method('updateReferencesWhenArtifactIsInTarget');
 
-        $this->artifact_linker->expects(self::never())->method("linkArtifact");
+        $this->artifact_linker->expects(self::never())->method('linkArtifact');
 
         $cleaner = new PostArtifactMoveReferencesCleaner(
             $this->cross_references_manager,

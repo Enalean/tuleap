@@ -358,7 +358,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             $user                       = new \PFUser($member);
             $member['avatar_url']       = $user->getAvatarUrl();
             $member['ugroups']          = $this->getUGroupsPresenters($project, $member);
-            $member['profile_page_url'] = "/users/" . urlencode($member['user_name']) .  "/";
+            $member['profile_page_url'] = '/users/' . urlencode($member['user_name']) .  '/';
             $member['is_project_admin'] = $member['admin_flags'] === UserPermissionsDao::PROJECT_ADMIN_FLAG;
             $member['username_display'] = $this->user_helper->getDisplayName(
                 $member['user_name'],

@@ -85,7 +85,7 @@ final class PendingSynchronizationDao extends DataAccessObject implements Verify
 
     public function dailyClean(int $timestamp): void
     {
-        $sql = "DELETE FROM plugin_program_management_team_synchronizations_pending WHERE timestamp < ?";
+        $sql = 'DELETE FROM plugin_program_management_team_synchronizations_pending WHERE timestamp < ?';
 
         $this->getDB()->run($sql, $timestamp);
     }

@@ -113,7 +113,7 @@ class StatisticsPlugin extends Plugin
     {
         $request = HTTPRequest::instance();
         if ($request->get('project_over_quota')) {
-            $GLOBALS['Response']->redirect("/plugins/statistics/project_over_quota.php");
+            $GLOBALS['Response']->redirect('/plugins/statistics/project_over_quota.php');
         }
     }
 
@@ -177,7 +177,7 @@ class StatisticsPlugin extends Plugin
                 $this->getPluginPath() . '/project_stat.php?' . http_build_query(
                     ['group_id' => $presenter->getProjectId()]
                 ),
-                "statistics-disk-usage"
+                'statistics-disk-usage'
             )
         );
     }

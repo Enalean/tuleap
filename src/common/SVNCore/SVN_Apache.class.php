@@ -32,10 +32,10 @@ class SVN_Apache
     public function getConf(ApacheConfRepository $repository): string
     {
         $conf  = '';
-        $conf .= "<Location " . $repository->getURLPath() . ">\n";
+        $conf .= '<Location ' . $repository->getURLPath() . ">\n";
         $conf .= "    DAV svn\n";
-        $conf .= "    SVNPath " . $repository->getFilesystemPath() . "\n";
-        $conf .= "    AuthzSVNAccessFile " . $repository->getFilesystemPath() . "/.SVNAccessFile\n";
+        $conf .= '    SVNPath ' . $repository->getFilesystemPath() . "\n";
+        $conf .= '    AuthzSVNAccessFile ' . $repository->getFilesystemPath() . "/.SVNAccessFile\n";
         // The authentication is managed by nginx but we need to "register" the current user so it can be validated
         // against the SVNAccessFile
         $conf .= "    Require valid-user\n";

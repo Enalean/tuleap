@@ -69,12 +69,12 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
 {
     public function getName()
     {
-        return _("SyntaxHighlighter");
+        return _('SyntaxHighlighter');
     }
 
     public function getDescription()
     {
-        return _("Source code syntax highlighter (via http://www.andre-simon.de)");
+        return _('Source code syntax highlighter (via http://www.andre-simon.de)');
     }
 
     public function managesValidators()
@@ -85,9 +85,9 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.7 $"
+            '$Revision: 1.7 $'
         );
     }
 
@@ -110,9 +110,9 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
     private function filterThroughCmd($input, $commandLine)
     {
         $descriptorspec = [
-            0 => ["pipe", "r"],  // stdin is a pipe that the child will read from
-            1 => ["pipe", "w"],  // stdout is a pipe that the child will write to
-            2 => ["pipe", "w"],  // stdout is a pipe that the child will write to
+            0 => ['pipe', 'r'],  // stdin is a pipe that the child will read from
+            1 => ['pipe', 'w'],  // stdout is a pipe that the child will write to
+            2 => ['pipe', 'w'],  // stdout is a pipe that the child will write to
         ];
 
         $process = proc_open("$commandLine", $descriptorspec, $pipes);
@@ -123,7 +123,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
             // 2 => readable  handle connected to child stderr
             fwrite($pipes[0], $input);
             fclose($pipes[0]);
-            $buf = "";
+            $buf = '';
             while (! feof($pipes[1])) {
                 $buf .= fgets($pipes[1], 1024);
             }
@@ -148,18 +148,18 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
         extract($this->getArgs($argstr, $request));
         $source = $this->source;
         if (empty($syntax)) {
-            return $this->error(_("Syntax language not specified."));
+            return $this->error(_('Syntax language not specified.'));
         }
         if (! empty($source)) {
-            $args = "";
+            $args = '';
             if (defined('HIGHLIGHT_DATA_DIR')) {
-                $args .= " --data-dir " . escapeshellarg(HIGHLIGHT_DATA_DIR);
+                $args .= ' --data-dir ' . escapeshellarg(HIGHLIGHT_DATA_DIR);
             }
             if ($number != 0) {
-                $args .= " -l";
+                $args .= ' -l';
             }
             if ($wrap != 0) {
-                $args .= " -V";
+                $args .= ' -V';
             }
             $html = HTML();
 
@@ -177,7 +177,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
             $css = $GLOBALS['WikiTheme']->_CSSlink('', 'highlight.css', '');
             return HTML($css, $html);
         } else {
-            return $this->error(fmt("empty source"));
+            return $this->error(fmt('empty source'));
         }
     }
 }

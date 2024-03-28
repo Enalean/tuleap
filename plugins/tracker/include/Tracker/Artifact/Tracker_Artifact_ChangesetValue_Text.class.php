@@ -216,9 +216,9 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     public function fetchDiff(array $previous, array $next, string $format): string
     {
         if ($previous === $next) {
-            return "";
+            return '';
         }
-        return $this->fetchDiffInFollowUp("");
+        return $this->fetchDiffInFollowUp('');
     }
 
     protected function fetchDiffInFollowUp(string $formated_diff): string
@@ -227,7 +227,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
         $field = $this->getField();
         if (! $field instanceof Tracker_FormElement_Field_Text) {
-            throw new LogicException("Field " . $field->getId() . " is not a text field");
+            throw new LogicException('Field ' . $field->getId() . ' is not a text field');
         }
 
         $presenter = new FollowUpPresenter(

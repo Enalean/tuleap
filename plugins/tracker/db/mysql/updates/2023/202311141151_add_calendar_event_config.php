@@ -25,13 +25,13 @@ final class b202311141151_add_calendar_event_config extends \Tuleap\ForgeUpgrade
 {
     public function description(): string
     {
-        return "Add calendar event config table";
+        return 'Add calendar event config table';
     }
 
     public function up(): void
     {
         $this->api->createTable(
-            "plugin_tracker_calendar_event_config",
+            'plugin_tracker_calendar_event_config',
             <<<EOS
             CREATE TABLE plugin_tracker_calendar_event_config(
                 tracker_id INT(11) PRIMARY KEY,

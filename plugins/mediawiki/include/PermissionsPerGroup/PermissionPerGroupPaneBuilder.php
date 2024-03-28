@@ -226,9 +226,9 @@ class PermissionPerGroupPaneBuilder
 
     private function getGlobalAdminLink(Project $project)
     {
-        return MEDIAWIKI_BASE_URL . "/forge_admin.php?" . http_build_query(
+        return MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query(
             [
-                "group_id" => $project->getID(),
+                'group_id' => $project->getID(),
             ]
         );
     }

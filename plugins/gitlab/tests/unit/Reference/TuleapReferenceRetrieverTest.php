@@ -77,7 +77,7 @@ class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'get_artifact_reference_group_id',
                 $this->callback(function (array $params) {
                     $params['artifact_id'] = 100;
-                    $params['group_id']    = "101";
+                    $params['group_id']    = '101';
                     return true;
                 })
             );
@@ -99,7 +99,7 @@ class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'get_artifact_reference_group_id',
                 $this->callback(function (array $params) {
                     $params['artifact_id'] = 100;
-                    $params['group_id']    = "102";
+                    $params['group_id']    = '102';
                     return true;
                 })
             );

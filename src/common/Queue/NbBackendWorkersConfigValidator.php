@@ -46,7 +46,7 @@ final class NbBackendWorkersConfigValidator implements ValueValidator
     public function checkIsValid(string $value): void
     {
         if ((int) $value < 0) {
-            throw new InvalidConfigKeyValueException("Nb backend workers cannot be a negative number");
+            throw new InvalidConfigKeyValueException('Nb backend workers cannot be a negative number');
         }
 
         if ((int) $value > 0) {
@@ -63,7 +63,7 @@ final class NbBackendWorkersConfigValidator implements ValueValidator
         }
 
         if (count($plugins_that_need_workers) > 0) {
-            throw new InvalidConfigKeyValueException("Nb backend workers cannot be 0, the following plugins need workers: " . implode(', ', $plugins_that_need_workers));
+            throw new InvalidConfigKeyValueException('Nb backend workers cannot be 0, the following plugins need workers: ' . implode(', ', $plugins_that_need_workers));
         }
     }
 }

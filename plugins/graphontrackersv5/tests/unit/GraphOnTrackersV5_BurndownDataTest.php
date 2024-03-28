@@ -119,11 +119,11 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
         $burndown_values = $burndown->getComputedData();
         $expected_values = [
             (new \DateTimeImmutable())->format('D d') => null,
-            (new \DateTimeImmutable("+1 day"))->format('D d') => null,
-            (new \DateTimeImmutable("+2 day"))->format('D d') => null,
-            (new \DateTimeImmutable("+3 day"))->format('D d') => null,
-            (new \DateTimeImmutable("+4 day"))->format('D d') => null,
-            (new \DateTimeImmutable("+5 day"))->format('D d') => null,
+            (new \DateTimeImmutable('+1 day'))->format('D d') => null,
+            (new \DateTimeImmutable('+2 day'))->format('D d') => null,
+            (new \DateTimeImmutable('+3 day'))->format('D d') => null,
+            (new \DateTimeImmutable('+4 day'))->format('D d') => null,
+            (new \DateTimeImmutable('+5 day'))->format('D d') => null,
         ];
 
         self::assertEquals($expected_values, $burndown_values);
@@ -251,7 +251,7 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
     public function testItShouldAddPreviousValuesWhenStartDateIsToday(): void
     {
         $start_date = time();
-        $yesterday  = (new \DateTimeImmutable("-1 day"))->format('Ymd');
+        $yesterday  = (new \DateTimeImmutable('-1 day'))->format('Ymd');
 
         $remaining_efforts = [
             $yesterday => [
@@ -270,11 +270,11 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
         $burndown_values = $burndown->getComputedData();
         $expected_values = [
             (new \DateTimeImmutable())->format('D d') => [30],
-            (new \DateTimeImmutable("+1 day"))->format('D d') => null,
-            (new \DateTimeImmutable("+2 day"))->format('D d') => null,
-            (new \DateTimeImmutable("+3 day"))->format('D d') => null,
-            (new \DateTimeImmutable("+4 day"))->format('D d') => null,
-            (new \DateTimeImmutable("+5 day"))->format('D d') => null,
+            (new \DateTimeImmutable('+1 day'))->format('D d') => null,
+            (new \DateTimeImmutable('+2 day'))->format('D d') => null,
+            (new \DateTimeImmutable('+3 day'))->format('D d') => null,
+            (new \DateTimeImmutable('+4 day'))->format('D d') => null,
+            (new \DateTimeImmutable('+5 day'))->format('D d') => null,
         ];
 
         self::assertEquals($expected_values, $burndown_values);

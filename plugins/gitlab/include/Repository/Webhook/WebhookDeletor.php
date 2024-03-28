@@ -74,7 +74,7 @@ class WebhookDeletor
             return;
         }
 
-        $this->logger->info("Deleting previous hook for " . $gitlab_repository_integration->getGitlabRepositoryUrl());
+        $this->logger->info('Deleting previous hook for ' . $gitlab_repository_integration->getGitlabRepositoryUrl());
 
         $gitlab_repository_id = $gitlab_repository_integration->getGitlabRepositoryId();
         try {
@@ -86,15 +86,15 @@ class WebhookDeletor
 
             if ($this->dao->isIntegrationWebhookUsedByIntegrations($previous_webhook_id)) {
                 $this->logger->warning(
-                    "The webhook is used by another integrations (it may come from old integration). " .
-                    "It will be deleted on GitLab side and configuration must be regenerated for these integrations."
+                    'The webhook is used by another integrations (it may come from old integration). ' .
+                    'It will be deleted on GitLab side and configuration must be regenerated for these integrations.'
                 );
                 $this->dao->deleteAllGitlabRepositoryWebhookConfigurationUsingOldOne($previous_webhook_id);
             }
         } catch (GitlabRequestException $e) {
             // Ignore errors. It is not big deal if we cannot remove the hook.
             // Maybe it has already been manually deleted on GitLab side?
-            $this->logger->info("Unable to delete the hook. Ignoring error: " . $e->getMessage());
+            $this->logger->info('Unable to delete the hook. Ignoring error: ' . $e->getMessage());
         }
     }
 }

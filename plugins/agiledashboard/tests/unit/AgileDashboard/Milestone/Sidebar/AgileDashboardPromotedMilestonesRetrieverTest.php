@@ -111,7 +111,7 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
 
         $milestone_factory->method('getVirtualTopMilestone')->willReturn($virtual_milestone);
         $semantic_description = $this->createMock(Tracker_Semantic_Description::class);
-        $semantic_description->method("getField")->willReturn(TextFieldBuilder::aTextField(1)->build());
+        $semantic_description->method('getField')->willReturn(TextFieldBuilder::aTextField(1)->build());
         Tracker_Semantic_Description::setInstance($semantic_description, $tracker);
 
         $retriever = new AgileDashboardPromotedMilestonesRetriever(
@@ -123,12 +123,12 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
 
         $items = $retriever->getSidebarPromotedMilestones($user, $active_promoted_item_id);
         self::assertCount(1, $items);
-        self::assertEquals("Title", $items[0]->label);
+        self::assertEquals('Title', $items[0]->label);
         self::assertSame('Description', $items[0]->description);
         self::assertSame($should_milestone_be_active, $items[0]->is_active);
         self::assertEmpty($items[0]->quick_link_add);
         self::assertCount(1, $items[0]->items);
-        self::assertEquals("Sub Title", $items[0]->items[0]->label);
+        self::assertEquals('Sub Title', $items[0]->items[0]->label);
         self::assertSame('Sub Description', $items[0]->items[0]->description);
         self::assertSame($should_sub_milestone_be_active, $items[0]->items[0]->is_active);
         self::assertEmpty($items[0]->items[0]->quick_link_add);

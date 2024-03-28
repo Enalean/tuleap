@@ -122,30 +122,30 @@ class Statistics_ServicesUsageDao extends DataAccessObject
 
     public function getAdministrators()
     {
-        $sql = "SELECT g.group_id, u.user_name AS result
+        $sql = 'SELECT g.group_id, u.user_name AS result
                 FROM user_group g, user u
                 WHERE g.user_id=u.user_id
-                GROUP BY group_id";
+                GROUP BY group_id';
 
         return $this->retrieve($sql);
     }
 
     public function getAdministratorsRealNames()
     {
-        $sql = "SELECT g.group_id, u.realname AS result
+        $sql = 'SELECT g.group_id, u.realname AS result
                 FROM user_group g, user u
                 WHERE g.user_id=u.user_id
-                GROUP BY group_id";
+                GROUP BY group_id';
 
         return $this->retrieve($sql);
     }
 
     public function getAdministratorsEMails()
     {
-        $sql = "SELECT g.group_id, u.email AS result
+        $sql = 'SELECT g.group_id, u.email AS result
                 FROM user_group g, user u
                 WHERE g.user_id=u.user_id
-                GROUP BY group_id";
+                GROUP BY group_id';
 
         return $this->retrieve($sql);
     }
@@ -306,9 +306,9 @@ class Statistics_ServicesUsageDao extends DataAccessObject
 
     public function getNumberOfWikiDocuments()
     {
-        $sql = "SELECT group_id, COUNT( DISTINCT id) AS result
+        $sql = 'SELECT group_id, COUNT( DISTINCT id) AS result
                 FROM wiki_group_list
-                GROUP BY group_id";
+                GROUP BY group_id';
 
         return $this->retrieve($sql);
     }
@@ -421,9 +421,9 @@ class Statistics_ServicesUsageDao extends DataAccessObject
 
     public function getNumberOfCIJobs()
     {
-        $sql = "SELECT group_id, COUNT(*) AS result
+        $sql = 'SELECT group_id, COUNT(*) AS result
                 FROM plugin_hudson_job
-                GROUP BY  group_id";
+                GROUP BY  group_id';
 
         return $this->retrieve($sql);
     }

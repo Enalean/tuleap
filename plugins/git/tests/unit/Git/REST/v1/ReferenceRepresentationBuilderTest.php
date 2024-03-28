@@ -32,29 +32,29 @@ final class ReferenceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
     protected function setUp(): void
     {
         $this->cross_reference_factory = $this->createMock(CrossReferenceFactory::class);
-        $this->cross_reference_factory->method("fetchDatas");
-        $this->cross_reference_factory->method("getFormattedCrossReferences")->willReturn(
+        $this->cross_reference_factory->method('fetchDatas');
+        $this->cross_reference_factory->method('getFormattedCrossReferences')->willReturn(
             [
-                "source" => [
+                'source' => [
                     [
-                        "url" => "custom_url",
-                        "ref" => "story #1234",
+                        'url' => 'custom_url',
+                        'ref' => 'story #1234',
                     ],
                     [
-                        "url" => "custom_url2",
-                        "ref" => "art #123",
-                    ],
-                ],
-                "target" => [
-                    [
-                        "url" => "custom_url3",
-                        "ref" => "rel #1234",
+                        'url' => 'custom_url2',
+                        'ref' => 'art #123',
                     ],
                 ],
-                "both" => [
+                'target' => [
                     [
-                        "url" => "custom_url4",
-                        "ref" => "epic #123",
+                        'url' => 'custom_url3',
+                        'ref' => 'rel #1234',
+                    ],
+                ],
+                'both' => [
+                    [
+                        'url' => 'custom_url4',
+                        'ref' => 'epic #123',
                     ],
                 ],
             ]
@@ -69,20 +69,20 @@ final class ReferenceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->assertCount(4, $references);
 
-        $this->assertSame("in", $references[0]->direction);
-        $this->assertSame("story #1234", $references[0]->ref);
-        $this->assertSame("custom_url", $references[0]->url);
+        $this->assertSame('in', $references[0]->direction);
+        $this->assertSame('story #1234', $references[0]->ref);
+        $this->assertSame('custom_url', $references[0]->url);
 
-        $this->assertSame("in", $references[1]->direction);
-        $this->assertSame("art #123", $references[1]->ref);
-        $this->assertSame("custom_url2", $references[1]->url);
+        $this->assertSame('in', $references[1]->direction);
+        $this->assertSame('art #123', $references[1]->ref);
+        $this->assertSame('custom_url2', $references[1]->url);
 
-        $this->assertSame("out", $references[2]->direction);
-        $this->assertSame("custom_url3", $references[2]->url);
-        $this->assertSame("rel #1234", $references[2]->ref);
+        $this->assertSame('out', $references[2]->direction);
+        $this->assertSame('custom_url3', $references[2]->url);
+        $this->assertSame('rel #1234', $references[2]->ref);
 
-        $this->assertSame("both", $references[3]->direction);
-        $this->assertSame("custom_url4", $references[3]->url);
-        $this->assertSame("epic #123", $references[3]->ref);
+        $this->assertSame('both', $references[3]->direction);
+        $this->assertSame('custom_url4', $references[3]->url);
+        $this->assertSame('epic #123', $references[3]->ref);
     }
 }

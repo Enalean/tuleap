@@ -166,7 +166,7 @@ final class CreateProjectFromJiraCommand extends Command
             foreach ($jira_projects as $project) {
                 $autocomplete[] = $project['id'];
             }
-            $question = new ChoiceQuestion("Please select the name of the Jira project to import", $autocomplete);
+            $question = new ChoiceQuestion('Please select the name of the Jira project to import', $autocomplete);
             $question->setAutocompleterValues($autocomplete);
             $jira_project = $question_helper->ask($input, $output, $question);
         } else {
@@ -180,7 +180,7 @@ final class CreateProjectFromJiraCommand extends Command
 
         $jira_epic_issue_type = $input->getOption(self::OPT_JIRA_EPIC_ISSUE_TYPE);
         if (! is_string($jira_epic_issue_type)) {
-            $jira_epic_issue_type = "Epic";
+            $jira_epic_issue_type = 'Epic';
         }
 
         $jira_board_id = $input->getOption(self::OPT_JIRA_BOARD);
@@ -212,7 +212,7 @@ final class CreateProjectFromJiraCommand extends Command
             throw new InvalidArgumentException('invalid import mode.');
         }
 
-        $output->writeln(sprintf("Create project %s", $shortname));
+        $output->writeln(sprintf('Create project %s', $shortname));
 
         try {
             if ($archive_path !== false) {
@@ -255,7 +255,7 @@ final class CreateProjectFromJiraCommand extends Command
                 )->match(
                     function (\Project $project) use ($output): int {
                         $output->writeln(sprintf('Project %d created', $project->getID()));
-                        $output->writeln("Import completed");
+                        $output->writeln('Import completed');
 
                         return Command::SUCCESS;
                     },

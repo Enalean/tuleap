@@ -68,8 +68,8 @@ class CardFieldsPresenterBuilder
 
         foreach ($form_elements_fields as $field) {
             $formatted_field[] = [
-                "id"   => $field->getId(),
-                "name" => $field->getLabel(),
+                'id'   => $field->getId(),
+                'name' => $field->getLabel(),
             ];
         }
 

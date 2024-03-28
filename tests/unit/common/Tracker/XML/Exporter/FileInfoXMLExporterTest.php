@@ -64,7 +64,7 @@ final class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 101,
                 '',
                 'avatar.png',
-                "42",
+                '42',
                 'image/png'
             )
         );
@@ -76,7 +76,7 @@ final class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 101,
                 '',
                 'document.txt',
-                "2",
+                '2',
                 'text/plain'
             )
         );
@@ -88,7 +88,7 @@ final class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 102,
                 '',
                 'landscape.png',
-                "256",
+                '256',
                 'image/png'
             )
         );

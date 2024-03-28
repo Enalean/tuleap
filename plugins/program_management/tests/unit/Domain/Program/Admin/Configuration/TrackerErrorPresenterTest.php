@@ -171,7 +171,7 @@ final class TrackerErrorPresenterTest extends TestCase
         $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addSubmitFieldPermissionError(
             100,
-            "My custom field",
+            'My custom field',
             $this->tracker,
             ProjectReferenceStub::buildGeneric()
         );
@@ -193,7 +193,7 @@ final class TrackerErrorPresenterTest extends TestCase
         $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addUpdateFieldPermissionError(
             100,
-            "My custom field",
+            'My custom field',
             $this->tracker,
             ProjectReferenceStub::buildGeneric()
         );

@@ -20,7 +20,7 @@ class b201510011056_add_index_on_service_table extends \Tuleap\ForgeUpgrade\Buck
 {
     public function description()
     {
-        return "Add index on service table in order to speed-up queries on this table.";
+        return 'Add index on service table in order to speed-up queries on this table.';
     }
 
     public function preUp()
@@ -33,11 +33,11 @@ class b201510011056_add_index_on_service_table extends \Tuleap\ForgeUpgrade\Buck
         $this->log->warn('Following operation might take a while, please be patient...');
 
         if ($this->db->indexNameExists('service', 'idx_short_name')) {
-            $this->db->dbh->query("ALTER TABLE service DROP INDEX idx_short_name");
+            $this->db->dbh->query('ALTER TABLE service DROP INDEX idx_short_name');
         }
 
-        $sql = "ALTER TABLE service
-                ADD INDEX idx_short_name (short_name(10))";
+        $sql = 'ALTER TABLE service
+                ADD INDEX idx_short_name (short_name(10))';
 
         $this->db->addIndex('service', 'idx_short_name', $sql);
     }

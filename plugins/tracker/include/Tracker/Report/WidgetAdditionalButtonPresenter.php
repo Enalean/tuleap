@@ -33,7 +33,7 @@ class WidgetAdditionalButtonPresenter
             $tracker->getItemName()
         );
         $this->url_artifact_submit = \Tuleap\ServerHostname::HTTPSUrl() .
-            "/plugins/tracker/?tracker=" . urlencode($tracker->getId()) . "&func=new-artifact";
+            '/plugins/tracker/?tracker=' . urlencode($tracker->getId()) . '&func=new-artifact';
 
         $this->is_a_table_renderer = $is_a_table_renderer;
     }

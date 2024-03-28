@@ -38,13 +38,13 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
 {
     public function getName()
     {
-        return _("FuzzyPages");
+        return _('FuzzyPages');
     }
 
     public function getDescription()
     {
         return sprintf(
-            _("Search for page titles similar to %s."),
+            _('Search for page titles similar to %s.'),
             '[pagename]'
         );
     }
@@ -52,9 +52,9 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.12 $"
+            '$Revision: 1.12 $'
         );
     }
 
@@ -131,8 +131,8 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
     public function addTableHead(&$table)
     {
         $row = HTML::tr(
-            HTML::th(_("Name")),
-            HTML::th(['align' => 'right'], _("Score"))
+            HTML::th(_('Name')),
+            HTML::th(['align' => 'right'], _('Score'))
         );
         if ($this->debug) {
             $this->_pushDebugHeadingTDinto($row);
@@ -203,8 +203,8 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
     public function _pushDebugHeadingTDinto(&$row)
     {
         $row->pushContent(
-            HTML::td(_("Spelling Score")),
-            HTML::td(_("Sound Score")),
+            HTML::td(_('Spelling Score')),
+            HTML::td(_('Sound Score')),
             HTML::td('Metaphones')
         );
     }
@@ -216,7 +216,7 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
         $debug_spelling  = round($this->spelling_similarity($pagename), 1);
         $debug_sound     = round($this->sound_similarity($pagename), 1);
         $debug_metaphone = sprintf(
-            "(%s, %s)",
+            '(%s, %s)',
             metaphone($pagename),
             $this->_searchterm_metaphone
         );

@@ -76,7 +76,7 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
 
         file_put_contents($this->working_copy . '/trunk/README', $data);
         (new Process(['svn', 'add', "$this->working_copy/trunk/README"]))->mustRun();
-        (new Process(['svn', 'commit', '-m', "add a file", "$this->working_copy/trunk/README"]))->mustRun();
+        (new Process(['svn', 'commit', '-m', 'add a file', "$this->working_copy/trunk/README"]))->mustRun();
 
         assertEquals(strlen($data), (int) file_get_contents($this->svnrepo . '/filesize'));
     }

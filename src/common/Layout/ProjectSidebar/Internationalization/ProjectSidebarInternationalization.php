@@ -41,13 +41,13 @@ final class ProjectSidebarInternationalization
     public static function build(): self
     {
         return new self(
-            _("Tools"),
-            _("Homepage"),
-            _("Project administration"),
-            _("Project announcement"),
-            _("Show project announcement"),
-            _("Close sidebar"),
-            _("Open sidebar"),
+            _('Tools'),
+            _('Homepage'),
+            _('Project administration'),
+            _('Project announcement'),
+            _('Show project announcement'),
+            _('Close sidebar'),
+            _('Open sidebar'),
         );
     }
 }

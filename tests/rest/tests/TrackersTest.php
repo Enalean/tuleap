@@ -235,20 +235,20 @@ final class TrackersTest extends TrackerBase
 
         $this->assertEquals(
             [
-                "can_access" => [
+                'can_access' => [
                     [
-                        "id"         => "1",
-                        "uri"        => "user_groups/1",
-                        "label"      => "Anonymous",
-                        "users_uri"  => "user_groups/1/users",
-                        "short_name" => "all_users",
-                        "key"        => "ugroup_anonymous_users_name_key",
+                        'id'         => '1',
+                        'uri'        => 'user_groups/1',
+                        'label'      => 'Anonymous',
+                        'users_uri'  => 'user_groups/1/users',
+                        'short_name' => 'all_users',
+                        'key'        => 'ugroup_anonymous_users_name_key',
                     ],
                 ],
-                "can_access_submitted_by_user"  => [],
-                "can_access_assigned_to_group"  => [],
-                "can_access_submitted_by_group" => [],
-                "can_admin"                     => [
+                'can_access_submitted_by_user'  => [],
+                'can_access_assigned_to_group'  => [],
+                'can_access_submitted_by_group' => [],
+                'can_admin'                     => [
                     $developers_ugroup,
                 ],
             ],
@@ -260,22 +260,22 @@ final class TrackersTest extends TrackerBase
             [
                 'can_read'   => [
                     [
-                        "id"         => "1",
-                        "uri"        => "user_groups/1",
-                        "label"      => "Anonymous",
-                        "users_uri"  => "user_groups/1/users",
-                        "short_name" => "all_users",
-                        "key"        => "ugroup_anonymous_users_name_key",
+                        'id'         => '1',
+                        'uri'        => 'user_groups/1',
+                        'label'      => 'Anonymous',
+                        'users_uri'  => 'user_groups/1/users',
+                        'short_name' => 'all_users',
+                        'key'        => 'ugroup_anonymous_users_name_key',
                     ],
                 ],
                 'can_submit' => [
                     [
-                        "id"         => "2",
-                        "uri"        => "user_groups/2",
-                        "label"      => "Registered users",
-                        "users_uri"  => "user_groups/2/users",
-                        "short_name" => "registered_users",
-                        "key"        => "ugroup_registered_users_name_key",
+                        'id'         => '2',
+                        'uri'        => 'user_groups/2',
+                        'label'      => 'Registered users',
+                        'users_uri'  => 'user_groups/2/users',
+                        'short_name' => 'registered_users',
+                        'key'        => 'ugroup_registered_users_name_key',
                     ],
                 ],
                 'can_update' => [
@@ -428,7 +428,7 @@ final class TrackersTest extends TrackerBase
     {
         $query     = json_encode(
             [
-                "Name" => "lease",
+                'Name' => 'lease',
             ]
         );
         $request   = $this->request_factory->createRequest('GET', $this->getReleaseTrackerUri() . '/artifacts?query=' . urlencode($query));
@@ -446,7 +446,7 @@ final class TrackersTest extends TrackerBase
     {
         $query    = json_encode(
             [
-                "Nonexisting" => "lease",
+                'Nonexisting' => 'lease',
             ]
         );
         $request  = $this->request_factory->createRequest('GET', $this->getReleaseTrackerUri() . '/artifacts?query=' . urlencode($query));
@@ -459,7 +459,7 @@ final class TrackersTest extends TrackerBase
     {
         $query = json_encode(
             [
-                "Name" => "wwwxxxyyyzzz",
+                'Name' => 'wwwxxxyyyzzz',
             ]
         );
 
@@ -475,9 +475,9 @@ final class TrackersTest extends TrackerBase
     {
         $query     = json_encode(
             [
-                "Name" => [
-                    "operator" => "contains",
-                    "value" => "lease",
+                'Name' => [
+                    'operator' => 'contains',
+                    'value' => 'lease',
                 ],
             ]
         );

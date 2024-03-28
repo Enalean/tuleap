@@ -43,7 +43,7 @@ class b201608298050_migrate_incoherent_permissions extends \Tuleap\ForgeUpgrade\
                 AND permissions.ugroup_id = $permission_anonyme";
 
         if (! $this->db->dbh->query($sql)) {
-            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException("Error while migrating incoherent permissions");
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Error while migrating incoherent permissions');
         }
     }
 }

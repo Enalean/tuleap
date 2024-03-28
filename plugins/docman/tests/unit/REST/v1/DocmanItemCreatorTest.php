@@ -228,7 +228,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $post_representation                             = new DocmanWikiPOSTRepresentation();
         $post_representation->title                      = 'Title';
         $post_representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
-        $post_representation->wiki_properties->page_name = "Monchichi";
+        $post_representation->wiki_properties->page_name = 'Monchichi';
         $post_representation->permissions_for_groups     = $permissions_for_groups_set;
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
@@ -268,7 +268,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, \Mockery::any(), \Mockery::any(), "Monchichi", null)
+            ->with('Title', '', 11, 100, (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, \Mockery::any(), \Mockery::any(), 'Monchichi', null)
             ->once()
             ->andReturns($created_item);
 
@@ -299,7 +299,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $post_representation                             = new DocmanWikiPOSTRepresentation();
         $post_representation->title                      = 'Title';
         $post_representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
-        $post_representation->wiki_properties->page_name = "Monchichi";
+        $post_representation->wiki_properties->page_name = 'Monchichi';
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -524,7 +524,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
-        $this->link_validity_checker->shouldReceive("checkLinkValidity");
+        $this->link_validity_checker->shouldReceive('checkLinkValidity');
 
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
@@ -1030,7 +1030,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $this->link_validity_checker->shouldReceive("checkLinkValidity")->once();
+        $this->link_validity_checker->shouldReceive('checkLinkValidity')->once();
 
         $created_item_representation = $this->item_creator->createLink(
             $parent_item,
@@ -1053,7 +1053,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $post_representation                             = new DocmanWikiPOSTRepresentation();
         $post_representation->title                      = 'wiki';
         $post_representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
-        $post_representation->wiki_properties->page_name = "Monchocho";
+        $post_representation->wiki_properties->page_name = 'Monchocho';
         $post_representation->status                     = 'rejected';
         $post_representation->obsolescence_date          = '2019-10-11';
 
@@ -1094,7 +1094,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
                 \Mockery::any(),
                 \Mockery::any(),
-                "Monchocho",
+                'Monchocho',
                 null
             )
             ->once()

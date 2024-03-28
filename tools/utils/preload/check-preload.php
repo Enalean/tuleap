@@ -26,5 +26,5 @@ if (! isset($opcache['scripts'])) {
     exit(1);
 }
 
-echo "There are " . count($opcache['scripts']) . " scripts cached\n";
-echo "Memory footprint: " . round($opcache['preload_statistics']['memory_consumption'] / 1024 / 1024, 2) . "MB\n";
+echo 'There are ' . count($opcache['scripts']) . " scripts cached\n";
+echo 'Memory footprint: ' . round($opcache['preload_statistics']['memory_consumption'] / 1024 / 1024, 2) . "MB\n";

@@ -338,9 +338,9 @@ class XMLNode
 
         if ($nmspc != '') {
             if ($alias == '') {
-                return(" xmlns=\"" . $nmspc . "\"");
+                return(' xmlns="' . $nmspc . '"');
             } else {
-                return(" xmlns:$alias=\"" . $nmspc . "\"");
+                return(" xmlns:$alias=\"" . $nmspc . '"');
             }
         } else {
             return('');
@@ -779,7 +779,7 @@ class ASCIIMathPHP
                 $node_0->setName('mrow');
 
                 if ($len > 0) {
-                    if ($txt[0] == " ") {
+                    if ($txt[0] == ' ') {
                          $node_1 = $this->createNode();
                          $node_1->setName('mspace');
                          $node_1->setAttr('width', '1ex');
@@ -793,7 +793,7 @@ class ASCIIMathPHP
 
                     $node_0->addChild($node_3);
 
-                    if ($len > 1 && $txt[$len - 1] == " ") {
+                    if ($len > 1 && $txt[$len - 1] == ' ') {
                          $node_2 = $this->createNode();
                          $node_2->setName('mspace');
                          $node_2->setAttr('width', '1ex');

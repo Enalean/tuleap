@@ -51,7 +51,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->tracker              = TrackerTestBuilder::aTracker()->withId(10)->build();
         $this->implied_from_tracker = $this->createMock(\Tracker::class);
-        $this->implied_from_tracker->expects(self::any())->method('getName')->will(self::returnValue("Releases"));
+        $this->implied_from_tracker->expects(self::any())->method('getName')->will(self::returnValue('Releases'));
         $this->implied_from_tracker->expects(self::any())->method('getId')->will(self::returnValue(self::RELEASE_TRACKER_ID));
 
         $this->timeframe_calculator = $this->createMock(TimeframeWithDuration::class);

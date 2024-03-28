@@ -139,8 +139,8 @@ class DocmanLinkVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $date,
             103,
             $obsolescence_date->getTimestamp(),
-            "title",
-            "description"
+            'title',
+            'description'
         );
     }
 
@@ -152,7 +152,7 @@ class DocmanLinkVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->shouldReceive('getId')->andReturn(101);
 
         $representation           = new LinkPropertiesPOSTPATCHRepresentation();
-        $representation->link_url = "https://example.test";
+        $representation->link_url = 'https://example.test';
 
         $this->transaction_executor->shouldReceive('execute')->once();
 

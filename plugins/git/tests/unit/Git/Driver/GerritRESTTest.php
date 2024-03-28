@@ -775,7 +775,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->response_factory->createResponse(204)
         );
 
-        $ssh_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw== john.doe@example.com";
+        $ssh_key = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw== john.doe@example.com';
         $user    = $this->buildGerritUser();
 
         $this->driver->removeSSHKeyFromAccount($this->gerrit_server, $user, $ssh_key);

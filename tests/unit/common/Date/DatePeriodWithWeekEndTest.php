@@ -79,13 +79,13 @@ class DatePeriodWithWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItProcessesFloatDurationAsStringValue(): void
     {
-        $date_period = new DatePeriodWithWeekEnd($this->day_timestamp, "0.2");
+        $date_period = new DatePeriodWithWeekEnd($this->day_timestamp, '0.2');
         self::assertSame($this->following_day_timestamp, $date_period->getEndDate());
     }
 
     public function testItProcessesDurationAsStringValue(): void
     {
-        $date_period = new DatePeriodWithWeekEnd($this->day_timestamp, "1");
+        $date_period = new DatePeriodWithWeekEnd($this->day_timestamp, '1');
         self::assertSame($this->following_day_timestamp, $date_period->getEndDate());
     }
 }

@@ -33,7 +33,7 @@ class b201805171738_update_wrong_pk_forgeconfig extends ForgeUpgrade_Bucket // @
 
     public function up()
     {
-        $sql = "ALTER TABLE forgeconfig DROP PRIMARY KEY, ADD CONSTRAINT PRIMARY KEY (name);";
+        $sql = 'ALTER TABLE forgeconfig DROP PRIMARY KEY, ADD CONSTRAINT PRIMARY KEY (name);';
 
         $this->db->dbh->exec($sql);
     }

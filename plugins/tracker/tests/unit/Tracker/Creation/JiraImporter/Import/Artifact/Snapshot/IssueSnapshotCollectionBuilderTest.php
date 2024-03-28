@@ -133,7 +133,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user           = Mockery::mock(PFUser::class);
         $this->jira_issue_api = new IssueAPIRepresentation(
-            "key01",
+            'key01',
             10001,
             [],
             []
@@ -314,16 +314,16 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new Snapshot(
             $user,
-            new DateTimeImmutable("2020-03-25T14:09:10.823+0100"),
+            new DateTimeImmutable('2020-03-25T14:09:10.823+0100'),
             [
                 new FieldSnapshot(
                     new ScalarFieldMapping(
-                        "description",
-                        "Description",
+                        'description',
+                        'Description',
                         null,
-                        "Fdescription",
-                        "description",
-                        "text"
+                        'Fdescription',
+                        'description',
+                        'text'
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'
@@ -337,28 +337,28 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new Snapshot(
             $user,
-            new DateTimeImmutable("2020-03-25T14:11:10.823+0100"),
+            new DateTimeImmutable('2020-03-25T14:11:10.823+0100'),
             [
                 new FieldSnapshot(
                     new ScalarFieldMapping(
-                        "description",
-                        "Description",
+                        'description',
+                        'Description',
                         null,
-                        "Fdescription",
-                        "description",
-                        "text",
+                        'Fdescription',
+                        'description',
+                        'text',
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'
                 ),
                 new FieldSnapshot(
                     new ScalarFieldMapping(
-                        "customfield_10036",
-                        "Field 01",
+                        'customfield_10036',
+                        'Field 01',
                         null,
-                        "Fcustomfield_10036",
-                        "customfield_10036",
-                        "float",
+                        'Fcustomfield_10036',
+                        'customfield_10036',
+                        'float',
                     ),
                     '11',
                     null
@@ -372,28 +372,28 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new Snapshot(
             $user,
-            new DateTimeImmutable("2020-03-25T14:11:10.823+0100"),
+            new DateTimeImmutable('2020-03-25T14:11:10.823+0100'),
             [
                 new FieldSnapshot(
                     new ScalarFieldMapping(
-                        "description",
-                        "Description",
+                        'description',
+                        'Description',
                         null,
-                        "Fdescription",
-                        "description",
-                        "text",
+                        'Fdescription',
+                        'description',
+                        'text',
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'
                 ),
                 new FieldSnapshot(
                     new ScalarFieldMapping(
-                        "customfield_10036",
-                        "Field 01",
+                        'customfield_10036',
+                        'Field 01',
                         null,
-                        "Fcustomfield_10036",
-                        "customfield_10036",
-                        "float",
+                        'Fcustomfield_10036',
+                        'customfield_10036',
+                        'float',
                     ),
                     '9',
                     null
@@ -407,16 +407,16 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new Snapshot(
             $user,
-            new DateTimeImmutable("2020-03-25T14:10:10.823+0100"),
+            new DateTimeImmutable('2020-03-25T14:10:10.823+0100'),
             [
                 new FieldSnapshot(
                     new ScalarFieldMapping(
-                        "customfield_10036",
-                        "Field 01",
+                        'customfield_10036',
+                        'Field 01',
                         null,
-                        "Fcustomfield_10036",
-                        "customfield_10036",
-                        "float",
+                        'Fcustomfield_10036',
+                        'customfield_10036',
+                        'float',
                     ),
                     '9',
                     null
@@ -430,16 +430,16 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new Snapshot(
             $user,
-            new DateTimeImmutable("2020-03-25T14:11:10.823+0100"),
+            new DateTimeImmutable('2020-03-25T14:11:10.823+0100'),
             [
                 new FieldSnapshot(
                     new ScalarFieldMapping(
-                        "customfield_10036",
-                        "Field 01",
+                        'customfield_10036',
+                        'Field 01',
                         null,
-                        "Fcustomfield_10036",
-                        "customfield_10036",
-                        "float",
+                        'Fcustomfield_10036',
+                        'customfield_10036',
+                        'float',
                     ),
                     '11',
                     null
@@ -453,7 +453,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new Snapshot(
             $user,
-            new DateTimeImmutable("2020-03-25T14:11:10.823+0100"),
+            new DateTimeImmutable('2020-03-25T14:11:10.823+0100'),
             [],
             null
         );
@@ -466,8 +466,8 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'displayName' => 'userO1',
                 'accountId' => 'e12ds5123sw',
             ]),
-            new DateTimeImmutable("2020-03-25T14:12:10.823+0100"),
-            "Comment 01"
+            new DateTimeImmutable('2020-03-25T14:12:10.823+0100'),
+            'Comment 01'
         );
     }
 
@@ -478,8 +478,8 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'displayName' => 'userO1',
                 'accountId' => 'e12ds5123sw',
             ]),
-            new DateTimeImmutable("2020-03-25T14:09:10.823+0100"),
-            "Comment 01"
+            new DateTimeImmutable('2020-03-25T14:09:10.823+0100'),
+            'Comment 01'
         );
     }
 
@@ -488,15 +488,15 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return [
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    "id" => "100",
-                    "created" => "2020-03-25T14:10:10.823+0100",
-                    "items" => [
+                    'id' => '100',
+                    'created' => '2020-03-25T14:10:10.823+0100',
+                    'items' => [
                         0 => [
-                            "fieldId" => "customfield_10036",
-                            "from" => null,
-                            "fromString" => null,
-                            "to" => null,
-                            "toString" => "9",
+                            'fieldId' => 'customfield_10036',
+                            'from' => null,
+                            'fromString' => null,
+                            'to' => null,
+                            'toString' => '9',
                         ],
                     ],
                     'author' => [
@@ -508,15 +508,15 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    "id" => "101",
-                    "created" => "2020-03-25T14:11:10.823+0100",
-                    "items" => [
+                    'id' => '101',
+                    'created' => '2020-03-25T14:11:10.823+0100',
+                    'items' => [
                         0 => [
-                            "fieldId" => "customfield_10036",
-                            "from" => null,
-                            "fromString" => "9",
-                            "to" => null,
-                            "toString" => "11",
+                            'fieldId' => 'customfield_10036',
+                            'from' => null,
+                            'fromString' => '9',
+                            'to' => null,
+                            'toString' => '11',
                         ],
                     ],
                     'author' => [

@@ -44,7 +44,7 @@ class TrackerFieldsTest extends TrackerBase
     {
         $field_id = $this->getStaticSelectboxFieldId();
         $body     = json_encode([
-            "new_values" => ['new_value_01', 'new_value_02'],
+            'new_values' => ['new_value_01', 'new_value_02'],
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
@@ -62,7 +62,7 @@ class TrackerFieldsTest extends TrackerBase
     {
         $field_id = $this->getStaticRadiobuttonFieldId();
         $body     = json_encode([
-            "new_values" => ['new_value_01', 'new_value_02'],
+            'new_values' => ['new_value_01', 'new_value_02'],
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
@@ -80,7 +80,7 @@ class TrackerFieldsTest extends TrackerBase
     {
         $field_id = $this->getStaticMultiSelectboxFieldId();
         $body     = json_encode([
-            "new_values" => ['new_value_01', 'new_value_02'],
+            'new_values' => ['new_value_01', 'new_value_02'],
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
@@ -92,7 +92,7 @@ class TrackerFieldsTest extends TrackerBase
     {
         $field_id = $this->getUserSelectboxFieldId();
         $body     = json_encode([
-            "new_values" => ['new_value_01', 'new_value_02'],
+            'new_values' => ['new_value_01', 'new_value_02'],
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
@@ -247,35 +247,35 @@ class TrackerFieldsTest extends TrackerBase
     {
         $tracker_json = $this->tracker_representations[$this->tracker_fields_tracker_id];
 
-        return $this->getFieldId($tracker_json["fields"], self::FIELD_STATIC_MULTI_SELECTBOX_SHOTNAME);
+        return $this->getFieldId($tracker_json['fields'], self::FIELD_STATIC_MULTI_SELECTBOX_SHOTNAME);
     }
 
     private function getStaticSelectboxFieldId()
     {
         $tracker_json = $this->tracker_representations[$this->tracker_fields_tracker_id];
 
-        return $this->getFieldId($tracker_json["fields"], self::FIELD_STATIC_SELECTBOX_SHOTNAME);
+        return $this->getFieldId($tracker_json['fields'], self::FIELD_STATIC_SELECTBOX_SHOTNAME);
     }
 
     private function getUserSelectboxFieldId()
     {
         $tracker_json = $this->tracker_representations[$this->tracker_fields_tracker_id];
 
-        return $this->getFieldId($tracker_json["fields"], self::FIELD_USER_SELECTBOX_SHOTNAME);
+        return $this->getFieldId($tracker_json['fields'], self::FIELD_USER_SELECTBOX_SHOTNAME);
     }
 
     private function getStaticRadiobuttonFieldId()
     {
         $tracker_json = $this->tracker_representations[$this->tracker_fields_tracker_id];
 
-        return $this->getFieldId($tracker_json["fields"], self::FIELD_STATIC_RADIOBUTTON_SHOTNAME);
+        return $this->getFieldId($tracker_json['fields'], self::FIELD_STATIC_RADIOBUTTON_SHOTNAME);
     }
 
     private function getFieldId(array $tracker_fields_json, $field_shortname)
     {
         foreach ($tracker_fields_json as $tracker_field_json) {
-            if ($tracker_field_json["name"] === $field_shortname) {
-                return $tracker_field_json["field_id"];
+            if ($tracker_field_json['name'] === $field_shortname) {
+                return $tracker_field_json['field_id'];
             }
         }
 

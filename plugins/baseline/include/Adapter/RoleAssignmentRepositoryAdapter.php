@@ -44,10 +44,10 @@ class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
     public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
     {
         $user_groups_ids = $this->db->column(
-            "SELECT user_group_id
+            'SELECT user_group_id
                     FROM plugin_baseline_role_assignment
                     WHERE project_id = ?
-                    AND role = ?",
+                    AND role = ?',
             [$project->getID(), $role->getName()]
         );
 

@@ -79,7 +79,7 @@ final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withRealName('Test USER')
             ->withTimezone('America/Montreal')
             ->withLocale('en_US')
-            ->withAvatarUrl("/path/to/avatar.png")
+            ->withAvatarUrl('/path/to/avatar.png')
             ->build();
         return [
             'With subject claim only' => [

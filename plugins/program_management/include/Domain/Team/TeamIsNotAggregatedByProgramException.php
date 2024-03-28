@@ -31,7 +31,7 @@ final class TeamIsNotAggregatedByProgramException extends \Exception
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
-                "Project %d is not a team of program %d",
+                'Project %d is not a team of program %d',
             ),
             $team_id,
             $program_id

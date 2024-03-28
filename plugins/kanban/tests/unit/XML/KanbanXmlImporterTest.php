@@ -109,7 +109,7 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mappings_registry
         );
 
-        self::assertTrue($this->logger->hasInfo("0 Kanban found"));
+        self::assertTrue($this->logger->hasInfo('0 Kanban found'));
     }
 
     public function testItImportsAKanbanWithItsOwnConfiguration(): void

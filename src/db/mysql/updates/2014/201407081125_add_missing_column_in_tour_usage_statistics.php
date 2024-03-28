@@ -20,7 +20,7 @@ class b201407081125_add_missing_column_in_tour_usage_statistics extends \Tuleap\
 {
     public function description()
     {
-        return "Add column to know when the tour is ended";
+        return 'Add column to know when the tour is ended';
     }
 
     public function preUp()
@@ -30,7 +30,7 @@ class b201407081125_add_missing_column_in_tour_usage_statistics extends \Tuleap\
 
     public function up()
     {
-        $sql = "ALTER TABLE tour_usage_statistics ADD COLUMN the_end TINYINT(1) NOT NULL";
+        $sql = 'ALTER TABLE tour_usage_statistics ADD COLUMN the_end TINYINT(1) NOT NULL';
 
         $res = $this->db->dbh->exec($sql);
 

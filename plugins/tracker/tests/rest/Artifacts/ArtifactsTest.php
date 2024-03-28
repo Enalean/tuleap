@@ -100,17 +100,17 @@ final class ArtifactsTest extends TrackerBase
         $description_field_id = $this->getAUsedFieldId($this->tracker_all_fields_tracker_id, 'description');
         $title_field_id       = $this->getAUsedFieldId($this->tracker_all_fields_tracker_id, 'title');
         $payload              = [
-            "tracker" => ["id" => $this->tracker_all_fields_tracker_id],
-            "values"  => [
+            'tracker' => ['id' => $this->tracker_all_fields_tracker_id],
+            'values'  => [
                 [
-                    "field_id" => $title_field_id,
-                    "value"    => "Text field format test title",
+                    'field_id' => $title_field_id,
+                    'value'    => 'Text field format test title',
                 ],
                 [
-                    "field_id" => $description_field_id,
-                    "value"    => [
-                        "content" => "Straight Outta Compton",
-                        "format"  => "gang",
+                    'field_id' => $description_field_id,
+                    'value'    => [
+                        'content' => 'Straight Outta Compton',
+                        'format'  => 'gang',
                     ],
                 ],
             ],
@@ -122,7 +122,7 @@ final class ArtifactsTest extends TrackerBase
 
         self::assertEquals(201, $response->getStatusCode());
 
-        $created_artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["id"];
+        $created_artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $this->assertSavedTextFieldFormatIsUserDefaultFormat($created_artifact_id);
 
@@ -138,13 +138,13 @@ final class ArtifactsTest extends TrackerBase
         $description_field_id = $this->getAUsedFieldId($this->tracker_all_fields_tracker_id, 'description');
 
         $payload = [
-            "tracker" => ["id" => $this->tracker_all_fields_tracker_id],
-            "values"  => [
+            'tracker' => ['id' => $this->tracker_all_fields_tracker_id],
+            'values'  => [
                 [
-                    "field_id" => $description_field_id,
-                    "value"    => [
-                        "content" => "100 Miles And Runnin'",
-                        "format"  => "whololo",
+                    'field_id' => $description_field_id,
+                    'value'    => [
+                        'content' => "100 Miles And Runnin'",
+                        'format'  => 'whololo',
                     ],
                 ],
             ],
@@ -171,8 +171,8 @@ final class ArtifactsTest extends TrackerBase
         );
 
         // Default user format = commonmark
-        $description_field_format  = array_column($description_field, "format");
-        $description_field_content = array_column($description_field, "commonmark");
+        $description_field_format  = array_column($description_field, 'format');
+        $description_field_content = array_column($description_field, 'commonmark');
 
         self::assertEquals('html', $description_field_format[0]);
         self::assertNotNull($description_field_content[0]);

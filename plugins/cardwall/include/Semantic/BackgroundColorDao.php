@@ -26,29 +26,29 @@ class BackgroundColorDao extends DataAccessObject
 {
     public function searchBackgroundColor($tracker_id)
     {
-        $sql = "SELECT field_id FROM plugin_cardwall_background_color_card_field WHERE tracker_id = ?";
+        $sql = 'SELECT field_id FROM plugin_cardwall_background_color_card_field WHERE tracker_id = ?';
 
         return $this->getDB()->single($sql, [$tracker_id]);
     }
 
     public function save($tracker_id, $field_id)
     {
-        $sql = "REPLACE INTO plugin_cardwall_background_color_card_field
-                  VALUES (?, ?)";
+        $sql = 'REPLACE INTO plugin_cardwall_background_color_card_field
+                  VALUES (?, ?)';
 
         $this->getDB()->run($sql, $tracker_id, $field_id);
     }
 
     public function isFieldUsedAsBackgroundColor($field_id)
     {
-        $sql = "SELECT COUNT(*) FROM plugin_cardwall_background_color_card_field WHERE field_id = ?";
+        $sql = 'SELECT COUNT(*) FROM plugin_cardwall_background_color_card_field WHERE field_id = ?';
 
         return $this->getDB()->single($sql, [$field_id]) > 0;
     }
 
     public function unsetBackgroundColorSemantic($tracker_id)
     {
-        $sql = "DELETE FROM plugin_cardwall_background_color_card_field WHERE tracker_id = ?";
+        $sql = 'DELETE FROM plugin_cardwall_background_color_card_field WHERE tracker_id = ?';
 
         $this->getDB()->run($sql, $tracker_id);
     }

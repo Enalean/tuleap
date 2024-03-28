@@ -48,29 +48,29 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 class AlwaysThereFieldsExporter
 {
-    public const JIRA_LINK_FIELD_NAME        = "jira_issue_url";
-    public const JIRA_SUMMARY_FIELD_NAME     = "summary";
-    public const JIRA_DESCRIPTION_FIELD_NAME = "description";
-    public const JIRA_STATUS_NAME            = "status";
-    public const JIRA_PRIORITY_NAME          = "priority";
-    public const JIRA_ATTACHMENT_NAME        = "attachment";
-    public const JIRA_ASSIGNEE_NAME          = "assignee";
-    public const JIRA_REPORTER_NAME          = "reporter";
-    public const JIRA_STORY_POINTS_NAME      = "story_points";
-    public const JIRA_ISSUE_TYPE_NAME        = "issuetype";
+    public const JIRA_LINK_FIELD_NAME        = 'jira_issue_url';
+    public const JIRA_SUMMARY_FIELD_NAME     = 'summary';
+    public const JIRA_DESCRIPTION_FIELD_NAME = 'description';
+    public const JIRA_STATUS_NAME            = 'status';
+    public const JIRA_PRIORITY_NAME          = 'priority';
+    public const JIRA_ATTACHMENT_NAME        = 'attachment';
+    public const JIRA_ASSIGNEE_NAME          = 'assignee';
+    public const JIRA_REPORTER_NAME          = 'reporter';
+    public const JIRA_STORY_POINTS_NAME      = 'story_points';
+    public const JIRA_ISSUE_TYPE_NAME        = 'issuetype';
 
-    public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
-    public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
+    public const JIRA_LINK_FIELD_ID        = 'jira_issue_url';
+    public const JIRA_ARTIFACT_ID_FIELD_ID = 'artifact_id';
 
-    public const JIRA_UPDATED_ON_NAME = "updated";
-    public const JIRA_CREATED_NAME    = "created";
-    public const JIRA_CREATED_BY      = "creator";
+    public const JIRA_UPDATED_ON_NAME = 'updated';
+    public const JIRA_CREATED_NAME    = 'created';
+    public const JIRA_CREATED_BY      = 'creator';
 
     public const JIRA_ISSUE_LINKS_NAME      = 'issuelinks';
     public const JIRA_SUB_TASKS_NAME        = 'subtasks';
     public const JIRA_CROSS_REFERENCES_NAME = 'orgtuleapcrossreferences'; // doesn't exist at jira side
 
-    public const JIRA_RESOLUTION_DATE_NAME = "resolutiondate";
+    public const JIRA_RESOLUTION_DATE_NAME = 'resolutiondate';
     public const JIRA_STATUS_RANK          = 1;
     public const JIRA_CREATOR_RANK         = 2;
     public const JIRA_CREATED_RANK         = 3;

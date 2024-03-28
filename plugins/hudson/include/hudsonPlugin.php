@@ -299,8 +299,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
                 $val      = $event->getValue();
                 $group_id = $event->getProject()->getID();
                 $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
-                if (strpos($val, "/") !== false) {
-                    $arr      = explode("/", $val);
+                if (strpos($val, '/') !== false) {
+                    $arr      = explode('/', $val);
                     $job_name = $arr[0];
                     $build_id = $arr[1];
                     $dar      = $job_dao->searchByJobName($job_name, $group_id);
@@ -387,8 +387,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
                 $val      = $params['val'];
                 $group_id = $params['group_id'];
                 $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
-                if (strpos($val, "/") !== false) {
-                    $arr      = explode("/", $val);
+                if (strpos($val, '/') !== false) {
+                    $arr      = explode('/', $val);
                     $job_name = $arr[0];
                     $build_id = $arr[1];
                     $dar      = $job_dao->searchByJobName($job_name, $group_id);

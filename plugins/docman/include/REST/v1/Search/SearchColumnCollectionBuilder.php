@@ -46,8 +46,8 @@ final class SearchColumnCollectionBuilder
             }
         }
 
-        $columns->add(SearchColumn::buildForHardcodedProperty("location", dgettext('tuleap-document', 'Location')));
-        $columns->add(SearchColumn::buildForHardcodedProperty("filename", dgettext('tuleap-document', 'Filename')));
+        $columns->add(SearchColumn::buildForHardcodedProperty('location', dgettext('tuleap-document', 'Location')));
+        $columns->add(SearchColumn::buildForHardcodedProperty('filename', dgettext('tuleap-document', 'Filename')));
 
         usort(
             $custom_columns,
@@ -62,7 +62,7 @@ final class SearchColumnCollectionBuilder
 
     private function addMandatoryFirstColumns(SearchColumnCollection $columns): void
     {
-        $columns->add(SearchColumn::buildForHardcodedProperty("id", dgettext('tuleap-document', 'Id')));
-        $columns->add(SearchColumn::buildForHardcodedProperty("title", dgettext('tuleap-document', 'Title')));
+        $columns->add(SearchColumn::buildForHardcodedProperty('id', dgettext('tuleap-document', 'Id')));
+        $columns->add(SearchColumn::buildForHardcodedProperty('title', dgettext('tuleap-document', 'Title')));
     }
 }

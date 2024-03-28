@@ -30,7 +30,7 @@ final class BasicAuthLoginExtractor
     public function extract(ServerRequestInterface $server_request): ?LoginCredentialSet
     {
         $authorization_header = $server_request->getHeaderLine('Authorization');
-        $match_success        = preg_match("/Basic\s+(.*)$/i", $authorization_header, $matches);
+        $match_success        = preg_match('/Basic\s+(.*)$/i', $authorization_header, $matches);
         if ($match_success !== 1) {
             return null;
         }

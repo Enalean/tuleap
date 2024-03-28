@@ -44,7 +44,7 @@ class AdminNewsDao extends DataAccessObject
 
     public function getWaitingPublicationNews()
     {
-        $sql = "SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3";
+        $sql = 'SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3';
 
         return $this->retrieve($sql);
     }

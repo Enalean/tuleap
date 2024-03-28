@@ -194,7 +194,7 @@ class BurningParrotTheme extends BaseLayout
                         )
                     );
                 $crumb = new BreadCrumb($crumb_link);
-                $crumb->setAdditionalClassname("breadcrumb-project");
+                $crumb->setAdditionalClassname('breadcrumb-project');
                 $this->breadcrumbs->addFirst($crumb);
             }
 

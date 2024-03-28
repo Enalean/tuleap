@@ -76,7 +76,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->extraction_path = vfsStream::setup()->url() . '/tmp';
         mkdir($this->extraction_path);
-        \ForgeConfig::set("sys_data_dir", $this->extraction_path);
+        \ForgeConfig::set('sys_data_dir', $this->extraction_path);
 
         $this->logger         = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->files_importer = Mockery::mock(Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact::class);
@@ -107,7 +107,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->files_importer
             ->shouldReceive('getFileXML')
-            ->with("F123")
+            ->with('F123')
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
@@ -122,7 +122,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
             );
         $this->files_importer
             ->shouldReceive('getFileXML')
-            ->with("F456")
+            ->with('F456')
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
@@ -221,7 +221,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->files_importer
             ->shouldReceive('getFileXML')
-            ->with("F123")
+            ->with('F123')
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
@@ -236,7 +236,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
             );
         $this->files_importer
             ->shouldReceive('getFileXML')
-            ->with("F456")
+            ->with('F456')
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
@@ -308,7 +308,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->files_importer
             ->shouldReceive('getFileXML')
-            ->with("F123")
+            ->with('F123')
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
@@ -323,7 +323,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
             );
         $this->files_importer
             ->shouldReceive('getFileXML')
-            ->with("F456")
+            ->with('F456')
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
@@ -366,7 +366,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->files_importer
             ->shouldReceive('getFileXML')
-            ->with("F123")
+            ->with('F123')
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
@@ -381,7 +381,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
             );
         $this->files_importer
             ->shouldReceive('getFileXML')
-            ->with("F456")
+            ->with('F456')
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
@@ -469,7 +469,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->files_importer
             ->shouldReceive('getFileXML')
-            ->with("F123")
+            ->with('F123')
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
@@ -484,7 +484,7 @@ final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\Te
             );
         $this->files_importer
             ->shouldReceive('getFileXML')
-            ->with("F456")
+            ->with('F456')
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>

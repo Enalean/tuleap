@@ -42,8 +42,8 @@ final class FaultMapperTest extends TestCase
         yield 'GitLab Group link not found' => [GroupLinkNotFoundFault::fromId(86), 404];
         yield 'User is not git administrator' => [UserIsNotGitAdministratorFault::build(), 403];
         yield 'Invalid branch prefix' => [InvalidBranchPrefixFault::fromBranchPrefix('dev:'), 400];
-        yield 'Invalid Gitlab response' => [GitlabResponseAPIFault::fromGitlabResponseAPIException(new GitlabResponseAPIException("Bad request")), 400];
-        yield 'Bad request send to Gitlab' => [GitlabRequestFault::fromGitlabRequestException(new GitlabRequestException(400, "Bad request")), 400];
+        yield 'Invalid Gitlab response' => [GitlabResponseAPIFault::fromGitlabResponseAPIException(new GitlabResponseAPIException('Bad request')), 400];
+        yield 'Bad request send to Gitlab' => [GitlabRequestFault::fromGitlabRequestException(new GitlabRequestException(400, 'Bad request')), 400];
         yield 'Default to error 500 for unknown Fault' => [Fault::fromMessage('Unmapped fault'), 500];
     }
 

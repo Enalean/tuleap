@@ -32,9 +32,9 @@ class b201309201623_add_cross_references_indexes extends \Tuleap\ForgeUpgrade\Bu
 
     public function up()
     {
-        $sql    = "ALTER TABLE `cross_references`
+        $sql    = 'ALTER TABLE `cross_references`
                     ADD INDEX `target_index` (`target_id`(10) ASC, `target_type`(32) ASC),
-                    ADD INDEX `source_index` (`source_id`(10) ASC, `source_type`(32) ASC)";
+                    ADD INDEX `source_index` (`source_id`(10) ASC, `source_type`(32) ASC)';
         $result = $this->db->dbh->exec($sql);
 
         if ($result === false) {

@@ -45,7 +45,7 @@ class SampleFactory
      *
      * @param string $character session by default
      */
-    public function setSample($character = "session")
+    public function setSample($character = 'session')
     {
         switch ($character) {
             case 'session':

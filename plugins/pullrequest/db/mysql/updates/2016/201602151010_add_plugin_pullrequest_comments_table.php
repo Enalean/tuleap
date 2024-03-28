@@ -34,13 +34,13 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_pullrequest_comments (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_pullrequest_comments (
             id INT(11) PRIMARY KEY AUTO_INCREMENT,
             pull_request_id INT(11) NOT NULL,
             user_id INT(11) NOT NULL,
             content TEXT,
             INDEX idx_pr_pull_request_id(pull_request_id)
-        );";
+        );';
 
         $this->db->createTable('plugin_pullrequest_comments', $sql);
     }

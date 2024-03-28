@@ -137,21 +137,21 @@ final class JiraAgileImporter
         \SimpleXMLElement $xml_agiledashboard,
         JiraBoard $board,
     ): void {
-        $logger->debug("Export backlog");
+        $logger->debug('Export backlog');
 
-        $xml_agiledashboard->addChild("admin")
-            ->addChild("scrum")
-            ->addChild("explicit_backlog")
-            ->addAttribute("is_used", "1");
+        $xml_agiledashboard->addChild('admin')
+            ->addChild('scrum')
+            ->addChild('explicit_backlog')
+            ->addAttribute('is_used', '1');
 
         $backlog_issues = $this->backlog_retriever->getBoardBacklogIssues($board);
         if (empty($backlog_issues)) {
             return;
         }
 
-        $xml_top_backlog = $xml_agiledashboard->addChild("top_backlog");
+        $xml_top_backlog = $xml_agiledashboard->addChild('top_backlog');
         foreach ($backlog_issues as $backlog_issue) {
-            $xml_top_backlog->addChild("artifact")->addAttribute("artifact_id", (string) $backlog_issue->id);
+            $xml_top_backlog->addChild('artifact')->addAttribute('artifact_id', (string) $backlog_issue->id);
         }
     }
 
@@ -165,7 +165,7 @@ final class JiraAgileImporter
         array $jira_issue_types,
         string $jira_epic_issue_type,
     ): void {
-        $logger->debug("Export agiledashboard planning configuration");
+        $logger->debug('Export agiledashboard planning configuration');
 
         $xml_plannings = $xml_agiledashboard->addChild('plannings');
 
@@ -179,10 +179,10 @@ final class JiraAgileImporter
         }
 
         (new XMLPlanning(
-            "Sprint plan",
-            "Sprint plan",
+            'Sprint plan',
+            'Sprint plan',
             $scrum_tracker->getId(),
-            "Backlog",
+            'Backlog',
             $backlog_tracker_ids
         ))
             ->export($xml_plannings);
@@ -194,7 +194,7 @@ final class JiraAgileImporter
         XMLTracker $scrum_tracker,
         JiraBoardConfiguration $board_configuration,
     ): void {
-        $logger->debug("Export cardwall planning configuration");
+        $logger->debug('Export cardwall planning configuration');
 
         $xml_tracker = new XMLCardwallTracker($scrum_tracker->getId());
         foreach ($board_configuration->columns as $configuration_column) {

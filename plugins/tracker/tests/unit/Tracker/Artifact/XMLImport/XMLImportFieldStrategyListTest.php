@@ -158,7 +158,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
               <value format="id"><![CDATA[bug_status_todo]]></value>
             </field_change>'
         );
-        $this->xml_fields_mapping->shouldReceive("getNewValueId")->with('bug_status_todo')->andReturn('111');
+        $this->xml_fields_mapping->shouldReceive('getNewValueId')->with('bug_status_todo')->andReturn('111');
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals([111], $result);
@@ -167,7 +167,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetFieldDataStaticValueSearchValueByLabel(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive("getId")->andReturn(12);
+        $field->shouldReceive('getId')->andReturn(12);
 
         $data_access_result = Mockery::mock(DataAccessResult::class);
 
@@ -177,11 +177,11 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
               <value format="other"><![CDATA[13727]]></value>
             </field_change>'
         );
-        $this->static_value_dao->shouldReceive("searchValueByLabel")->withArgs([12, "13727"])->andReturn(
+        $this->static_value_dao->shouldReceive('searchValueByLabel')->withArgs([12, '13727'])->andReturn(
             $data_access_result
         );
 
-        $data_access_result->shouldReceive("getRow")->andReturn(["id" => "42"]);
+        $data_access_result->shouldReceive('getRow')->andReturn(['id' => '42']);
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals([42], $result);
@@ -190,7 +190,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetFieldDataStaticValueSearchValueByLabelWithoutResultReturnNull(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive("getId")->andReturn(12);
+        $field->shouldReceive('getId')->andReturn(12);
 
         $data_access_result = Mockery::mock(DataAccessResult::class);
 
@@ -200,11 +200,11 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
               <value format="other"><![CDATA[13727]]></value>
             </field_change>'
         );
-        $this->static_value_dao->shouldReceive("searchValueByLabel")->withArgs([12, "13727"])->andReturn(
+        $this->static_value_dao->shouldReceive('searchValueByLabel')->withArgs([12, '13727'])->andReturn(
             $data_access_result
         );
 
-        $data_access_result->shouldReceive("getRow")->andReturn(false);
+        $data_access_result->shouldReceive('getRow')->andReturn(false);
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 
@@ -215,7 +215,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetFieldDataStaticValueWithoutFormatSearchValueByLabelReturnNull(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive("getId")->andReturn(12);
+        $field->shouldReceive('getId')->andReturn(12);
 
         $data_access_result = Mockery::mock(DataAccessResult::class);
 
@@ -225,11 +225,11 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
               <value><![CDATA[13727]]></value>
             </field_change>'
         );
-        $this->static_value_dao->shouldReceive("searchValueByLabel")->withArgs([12, "13727"])->andReturn(
+        $this->static_value_dao->shouldReceive('searchValueByLabel')->withArgs([12, '13727'])->andReturn(
             $data_access_result
         );
 
-        $data_access_result->shouldReceive("getRow")->andReturn(false);
+        $data_access_result->shouldReceive('getRow')->andReturn(false);
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 
@@ -240,7 +240,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetFieldDataStaticWithEmptyValueReturnNull(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive("getId")->andReturn(12);
+        $field->shouldReceive('getId')->andReturn(12);
 
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
@@ -248,7 +248,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
                   <value/>
             </field_change>'
         );
-        $this->static_value_dao->shouldReceive("searchValueByLabel")->never();
+        $this->static_value_dao->shouldReceive('searchValueByLabel')->never();
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 
@@ -265,7 +265,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
               <value format="id"><![CDATA[104_2]]></value>
             </field_change>'
         );
-        $this->xml_fields_mapping->shouldReceive("getNewValueId")->with(104)->andReturn('111');
+        $this->xml_fields_mapping->shouldReceive('getNewValueId')->with(104)->andReturn('111');
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals([111], $result);
@@ -280,7 +280,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
               <value format="other"><![CDATA[104_2]]></value>
             </field_change>'
         );
-        $this->xml_fields_mapping->shouldReceive("getNewValueId")->never();
+        $this->xml_fields_mapping->shouldReceive('getNewValueId')->never();
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertNull($result[0]);
@@ -296,7 +296,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
                  <value><![CDATA[104_2]]></value>
             </field_change>'
         );
-        $this->xml_fields_mapping->shouldReceive("getNewValueId")->never();
+        $this->xml_fields_mapping->shouldReceive('getNewValueId')->never();
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertNull($result[0]);
@@ -307,7 +307,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
 
-        $field->shouldReceive("getId")->andReturn(12);
+        $field->shouldReceive('getId')->andReturn(12);
 
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
@@ -315,7 +315,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
                   <value/>
             </field_change>'
         );
-        $this->static_value_dao->shouldReceive("getNewValueId")->never();
+        $this->static_value_dao->shouldReceive('getNewValueId')->never();
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 
@@ -336,7 +336,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
             </field_change>'
         );
 
-        $this->user_finder->shouldReceive("getUser")->andReturn($user);
+        $this->user_finder->shouldReceive('getUser')->andReturn($user);
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals(104, $result[0]);
@@ -352,7 +352,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
                   <value/>
             </field_change>'
         );
-        $this->static_value_dao->shouldReceive("getUser")->never();
+        $this->static_value_dao->shouldReceive('getUser')->never();
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 

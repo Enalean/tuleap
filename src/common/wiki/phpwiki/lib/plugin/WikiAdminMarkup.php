@@ -35,20 +35,20 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
 {
     public function getName()
     {
-        return _("WikiAdminMarkup");
+        return _('WikiAdminMarkup');
     }
 
     public function getDescription()
     {
-        return _("Change the markup type of selected pages.");
+        return _('Change the markup type of selected pages.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.1 $"
+            '$Revision: 1.1 $'
         );
     }
 
@@ -85,7 +85,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
                     $meta['markup'] = $newmarkup;
                     // convert text?
                     $text            = $current->getPackedContent();
-                    $meta['summary'] = sprintf(_("WikiAdminMarkup from %s to %s"), $markup, $newmarkup);
+                    $meta['summary'] = sprintf(_('WikiAdminMarkup from %s to %s'), $markup, $newmarkup);
                     $page->save($text, $version + 1, $meta);
                     $current = $page->getCurrentRevision();
                     if ($current->get('markup') === $newmarkup) {
@@ -108,18 +108,18 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
         if ($count) {
             $dbi->touch();
             return HTML($ul, HTML::p(fmt(
-                "%s pages have been permanently changed.",
+                '%s pages have been permanently changed.',
                 $count
             )));
         } else {
-            return HTML($ul, HTML::p(fmt("No pages changed.")));
+            return HTML($ul, HTML::p(fmt('No pages changed.')));
         }
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
         if ($request->getArg('action') != 'browse') {
-            if (! $request->getArg('action') == _("PhpWikiAdministration/Markup")) {
+            if (! $request->getArg('action') == _('PhpWikiAdministration/Markup')) {
                 return $this->disabled("(action != 'browse')");
             }
         }
@@ -148,7 +148,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
             // without individual PagePermissions:
             if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
-                $this->disabled("! user->isAdmin");
+                $this->disabled('! user->isAdmin');
             }
             // DONE: error message if not allowed.
             if ($post_args['action'] == 'verify') {
@@ -183,22 +183,22 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
 
         $header = HTML::p();
         if ($next_action == 'verify') {
-            $button_label = _("Yes");
+            $button_label = _('Yes');
             $header->pushContent(
                 HTML::p(HTML::strong(
-                    _("Are you sure you want to permanently change the markup type of the selected files?")
+                    _('Are you sure you want to permanently change the markup type of the selected files?')
                 ))
             );
             $header = $this->chmarkupForm($header, $post_args);
         } else {
-            $button_label = _("Change markup type");
-            $header->pushContent(HTML::p(_("Select the pages to change the markup type:")));
+            $button_label = _('Change markup type');
+            $header->pushContent(HTML::p(_('Select the pages to change the markup type:')));
             $header = $this->chmarkupForm($header, $post_args);
         }
 
         $buttons = HTML::p(
             Button('submit:admin_markup[button]', $button_label, 'wikiadmin'),
-            Button('submit:admin_markup[cancel]', _("Cancel"), 'button')
+            Button('submit:admin_markup[cancel]', _('Cancel'), 'button')
         );
 
         return HTML::form(
@@ -222,8 +222,8 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
 
     public function chmarkupForm(&$header, $post_args)
     {
-        $header->pushContent(_("Change markup") . " ");
-        $header->pushContent(' ' . _("to") . ': ');
+        $header->pushContent(_('Change markup') . ' ');
+        $header->pushContent(' ' . _('to') . ': ');
         $header->pushContent(HTML::input(['name' => 'admin_markup[markup]',
             'value' => $post_args['markup'],
         ]));

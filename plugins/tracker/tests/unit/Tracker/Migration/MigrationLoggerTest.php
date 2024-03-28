@@ -47,57 +47,57 @@ final class MigrationLoggerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ig
 
     public function testItLogsErrorsInMailLogger(): void
     {
-        $this->mail_logger->shouldReceive('error')->with("bla", [])->once();
+        $this->mail_logger->shouldReceive('error')->with('bla', [])->once();
 
-        $this->migration_logger->error("bla");
+        $this->migration_logger->error('bla');
     }
 
     public function testItLogsErrorsInBackendLogger(): void
     {
-        $this->backend_logger->shouldReceive('log')->with(LogLevel::ERROR, "bla", [])->once();
+        $this->backend_logger->shouldReceive('log')->with(LogLevel::ERROR, 'bla', [])->once();
 
-        $this->migration_logger->error("bla");
+        $this->migration_logger->error('bla');
     }
 
     public function testItLogsWarningsInMailLogger(): void
     {
-        $this->mail_logger->shouldReceive('warning')->with("bla", [])->once();
+        $this->mail_logger->shouldReceive('warning')->with('bla', [])->once();
 
-        $this->migration_logger->warning("bla");
+        $this->migration_logger->warning('bla');
     }
 
     public function testItLogsWarningsInBackendLogger(): void
     {
-        $this->backend_logger->shouldReceive('log')->with(LogLevel::WARNING, "bla", [])->once();
+        $this->backend_logger->shouldReceive('log')->with(LogLevel::WARNING, 'bla', [])->once();
 
-        $this->migration_logger->warning("bla");
+        $this->migration_logger->warning('bla');
     }
 
     public function testItDoesntLogsInfoInMailLogger(): void
     {
         $this->mail_logger->shouldReceive('info')->never();
 
-        $this->migration_logger->info("bla");
+        $this->migration_logger->info('bla');
     }
 
     public function testItLogsInfoInBackendLogger(): void
     {
-        $this->backend_logger->shouldReceive('log')->with(LogLevel::INFO, "bla", [])->once();
+        $this->backend_logger->shouldReceive('log')->with(LogLevel::INFO, 'bla', [])->once();
 
-        $this->migration_logger->info("bla");
+        $this->migration_logger->info('bla');
     }
 
     public function testItDoesntLogsDebugInMailLogger(): void
     {
         $this->mail_logger->shouldReceive('debug', [])->never();
 
-        $this->migration_logger->debug("bla");
+        $this->migration_logger->debug('bla');
     }
 
     public function testItLogsDebugInBackendLogger(): void
     {
-        $this->backend_logger->shouldReceive('log')->with(LogLevel::DEBUG, "bla", [])->once();
+        $this->backend_logger->shouldReceive('log')->with(LogLevel::DEBUG, 'bla', [])->once();
 
-        $this->migration_logger->debug("bla");
+        $this->migration_logger->debug('bla');
     }
 }

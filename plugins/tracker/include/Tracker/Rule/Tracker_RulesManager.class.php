@@ -554,18 +554,18 @@ class Tracker_RulesManager
 
         echo "<thead><th class='matrix-cell matrix-empty-cell matrix-label-cell'></th>";
         foreach ($target_field_values as $target_field_value_id => $target_field_value) {
-            echo '<th class="matrix-cell matrix-label-cell">' . $purifier->purify($target_field_value->getLabel()) . "</th>";
+            echo '<th class="matrix-cell matrix-label-cell">' . $purifier->purify($target_field_value->getLabel()) . '</th>';
         }
-        echo "</thead>";
+        echo '</thead>';
 
         $dependencies = $this->getDependenciesBySourceTarget($this->tracker->id, $source_field->getId(), $target_field->getId());
 
         $j = 0;
-        echo "<tbody>";
+        echo '<tbody>';
        //Display the available transitions
         foreach ($source_field_values as $source_field_value_id => $source_field_value) {
-            echo "<tr class=\"" . util_get_alt_row_color($j) . "\" data-test='matrix-row'>\n";
-            echo "<th class='matrix-label-cell'>" . $purifier->purify($source_field_value->getLabel()) . "</th>";
+            echo '<tr class="' . util_get_alt_row_color($j) . "\" data-test='matrix-row'>\n";
+            echo "<th class='matrix-label-cell'>" . $purifier->purify($source_field_value->getLabel()) . '</th>';
             foreach ($target_field_values as $target_field_value_id => $target_field_value) {
                 $box_value = $source_field_value_id . '_' . $target_field_value_id;
                 $this->displayCheckbox($source_field_value_id, $target_field_value_id, $dependencies, $box_value);
@@ -618,7 +618,7 @@ class Tracker_RulesManager
             }
         }
         $html .= "\n//------------------------------------------------------\n";
-        $html .= "</script>";
+        $html .= '</script>';
         return $html;
     }
 

@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class BuildArtifactFormActionEvent implements Dispatchable
 {
-    public const NAME = "buildArtifactFormActionEvent";
+    public const NAME = 'buildArtifactFormActionEvent';
 
     /**
      * @var \Codendi_Request

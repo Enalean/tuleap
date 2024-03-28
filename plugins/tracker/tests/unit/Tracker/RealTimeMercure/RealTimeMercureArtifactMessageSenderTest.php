@@ -37,8 +37,8 @@ final class RealTimeMercureArtifactMessageSenderTest extends TestCase
     {
         $jwt_configuration               = Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText(str_repeat('a', 32)));
         $mercure_jwt_generator           = new MercureJWTGeneratorImpl($jwt_configuration);
-        $data                            = "data";
-        $topic                           = "topic";
+        $data                            = 'data';
+        $topic                           = 'topic';
         $logger                          = new TestLogger();
         $http_client                     = new Client();
         $mercure_client                  = new MercureClient(

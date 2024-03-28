@@ -35,7 +35,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_changeset_value_list ADD INDEX idx_bind (bindvalue_id, changeset_value_id)";
+        $sql = 'ALTER TABLE tracker_changeset_value_list ADD INDEX idx_bind (bindvalue_id, changeset_value_id)';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding index `idx_bind` on `tracker_changeset_value_list`: ' . implode(', ', $this->db->dbh->errorInfo()));

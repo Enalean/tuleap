@@ -123,27 +123,27 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
         switch ($message_type) {
             case self::MESSAGE_REMOVED:
                 $msg = sprintf(
-                    dgettext('tuleap-docman', "%s has been removed by %s."),
+                    dgettext('tuleap-docman', '%s has been removed by %s.'),
                     $params['path']->get($params['item']),
                     $user->getRealName()
                 ) . "\n";
 
                 $msg .= dgettext(
                     'tuleap-docman',
-                    "You are receiving this message because you are monitoring this item."
+                    'You are receiving this message because you are monitoring this item.'
                 );
                 $msg .=  "\n" . $this->getUrlProvider()->getPluginLinkUrl();
                 break;
             case self::MESSAGE_REMOVED_FROM:
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['parent']);
                 $msg           = sprintf(
-                    dgettext('tuleap-docman', "%s has been modified by %s."),
+                    dgettext('tuleap-docman', '%s has been modified by %s.'),
                     $params['path']->get($params['parent']),
                     $user->getRealName()
                 );
 
                 $msg .= "\n" . $this->getMessageLink($message_type, $params) . "\n\n";
-                $msg .= dgettext('tuleap-docman', "Removed:");
+                $msg .= dgettext('tuleap-docman', 'Removed:');
                 $msg .= "\n";
                 $msg .= $params['item']->getTitle();
 

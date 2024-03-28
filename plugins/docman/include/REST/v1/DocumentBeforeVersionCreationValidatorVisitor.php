@@ -79,7 +79,7 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
             $item->getTitle() !== $params['title']
             && $this->item_factory->doesTitleCorrespondToExistingFolder($params['title'], (int) $item->getParentId())
         ) {
-            throw new RestException(400, "A folder with same title already exists in the given folder.");
+            throw new RestException(400, 'A folder with same title already exists in the given folder.');
         }
     }
 
@@ -219,7 +219,7 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
         }
 
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($new_title, (int) $item->getParentId())) {
-            throw new RestException(400, "A file with same title already exists in the given folder.");
+            throw new RestException(400, 'A file with same title already exists in the given folder.');
         }
     }
 }

@@ -30,7 +30,7 @@ class b201501201037_add_show_priority_changes_in_tracker_table extends \Tuleap\F
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker ADD COLUMN show_priority_changes TINYINT(1) DEFAULT 0";
+        $sql = 'ALTER TABLE tracker ADD COLUMN show_priority_changes TINYINT(1) DEFAULT 0';
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {

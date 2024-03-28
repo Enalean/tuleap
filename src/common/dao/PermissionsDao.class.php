@@ -30,7 +30,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     */
     public function searchAll()
     {
-        $sql = "SELECT * FROM permissions";
+        $sql = 'SELECT * FROM permissions';
         return $this->retrieve($sql);
     }
 
@@ -116,7 +116,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
             $_where_clause .= " AND permission_type IN ($ptype_where)";
         }
 
-        $sql = sprintf("SELECT * FROM permissions WHERE " . $_where_clause);
+        $sql = sprintf('SELECT * FROM permissions WHERE ' . $_where_clause);
 
         return $this->retrieve($sql);
     }
@@ -145,19 +145,19 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     public function clonePermissions($source, $target, $perms, $toGroupId = 0)
     {
         $sql = sprintf(
-            "DELETE FROM permissions " .
-                        " WHERE object_id = %s " .
-                        "   AND permission_type IN (%s) ",
+            'DELETE FROM permissions ' .
+                        ' WHERE object_id = %s ' .
+                        '   AND permission_type IN (%s) ',
             $this->da->quoteSmart($target, ['force_string' => true]),
             $this->da->quoteSmartImplode(',', $perms)
         );
         $this->update($sql);
         $sql = sprintf(
-            "INSERT INTO permissions (object_id, permission_type, ugroup_id) " .
-                        " SELECT %s, permission_type, IFNULL(dst_ugroup_id, permissions.ugroup_id) AS ugid " .
-                        " FROM permissions LEFT JOIN ugroup_mapping ON (to_group_id=%d  and src_ugroup_id = permissions.ugroup_id)" .
-                        " WHERE object_id = %s " .
-                        "   AND permission_type IN (%s) ",
+            'INSERT INTO permissions (object_id, permission_type, ugroup_id) ' .
+                        ' SELECT %s, permission_type, IFNULL(dst_ugroup_id, permissions.ugroup_id) AS ugid ' .
+                        ' FROM permissions LEFT JOIN ugroup_mapping ON (to_group_id=%d  and src_ugroup_id = permissions.ugroup_id)' .
+                        ' WHERE object_id = %s ' .
+                        '   AND permission_type IN (%s) ',
             $this->da->quoteSmart($target, ['force_string' => true]),
             $this->da->escapeInt($toGroupId),
             $this->da->quoteSmart($source, ['force_string' => true]),

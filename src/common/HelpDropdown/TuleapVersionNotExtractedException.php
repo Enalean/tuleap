@@ -27,6 +27,6 @@ class TuleapVersionNotExtractedException extends RuntimeException
 {
     public function __construct(string $provided_tuleap_version)
     {
-        parent::__construct("The following string does not seem to be a Tuleap version: " . $provided_tuleap_version);
+        parent::__construct('The following string does not seem to be a Tuleap version: ' . $provided_tuleap_version);
     }
 }

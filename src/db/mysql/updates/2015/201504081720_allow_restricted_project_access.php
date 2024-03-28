@@ -23,7 +23,7 @@ class b201504081720_allow_restricted_project_access extends \Tuleap\ForgeUpgrade
 {
     public function description()
     {
-        return "Add column access";
+        return 'Add column access';
     }
 
     public function preUp()
@@ -54,10 +54,10 @@ class b201504081720_allow_restricted_project_access extends \Tuleap\ForgeUpgrade
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating column access with public projects');
         }
 
-        $sql = "ALTER TABLE `groups`
+        $sql = 'ALTER TABLE `groups`
                 DROP COLUMN is_public,
                 DROP KEY idx_groups_public,
-                ADD KEY idx_groups_access (access)";
+                ADD KEY idx_groups_access (access)';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while droping column is_public in table groups');

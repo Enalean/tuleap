@@ -111,7 +111,7 @@ class Git_Gitolite_ConfigPermissionsSerializer
         return $this->template_renderer->renderToString(
             'gitolite-includes.conf',
             [
-                "project_names" => $project_names,
+                'project_names' => $project_names,
             ]
         );
     }
@@ -121,8 +121,8 @@ class Git_Gitolite_ConfigPermissionsSerializer
         return $this->template_renderer->renderToString(
             'gitolite-includes-for-hostname.conf',
             [
-                "hostname"      => $hostname,
-                "project_names" => $project_names,
+                'hostname'      => $hostname,
+                'project_names' => $project_names,
             ]
         );
     }
@@ -148,7 +148,7 @@ class Git_Gitolite_ConfigPermissionsSerializer
 
     public function denyAccessForRepository()
     {
-        return self::REMOVE_PERMISSION . "refs/.*$ = @all" . PHP_EOL;
+        return self::REMOVE_PERMISSION . 'refs/.*$ = @all' . PHP_EOL;
     }
 
     /**

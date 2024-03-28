@@ -78,17 +78,17 @@ final class CreateBranchButtonFetcher
         $icon       = 'fab fa-gitlab';
         $link       = new AdditionalButtonLinkPresenter(
             $link_label,
-            "",
-            "",
+            '',
+            '',
             $icon,
             'artifact-create-gitlab-branches',
             [
                 [
-                    'name'  => "integrations",
+                    'name'  => 'integrations',
                     'value' => json_encode($representations, JSON_THROW_ON_ERROR),
                 ],
                 [
-                    'name'  => "artifact-id",
+                    'name'  => 'artifact-id',
                     'value' => $artifact->getId(),
                 ],
                 [

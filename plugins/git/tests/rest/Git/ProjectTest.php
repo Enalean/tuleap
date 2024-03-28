@@ -64,7 +64,7 @@ class ProjectTest extends TestBase
 
     public function testScopeProject(): void
     {
-        $query    = urlencode(json_encode(["scope" => "project"]));
+        $query    = urlencode(json_encode(['scope' => 'project']));
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . $this->git_project_id . '/git?query=' . $query)
         );
@@ -77,7 +77,7 @@ class ProjectTest extends TestBase
 
     public function testScopeIndividual(): void
     {
-        $query    = urlencode(json_encode(["scope" => "individual"]));
+        $query    = urlencode(json_encode(['scope' => 'individual']));
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . $this->git_project_id . '/git?query=' . $query)
         );

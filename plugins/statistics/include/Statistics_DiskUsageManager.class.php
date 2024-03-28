@@ -406,7 +406,7 @@ class Statistics_DiskUsageManager
     {
         if (is_dir($dir)) {
             $output = [];
-            exec("nice -n 19 du -s --block-size=1 " . escapeshellarg($dir), $output, $returnValue);
+            exec('nice -n 19 du -s --block-size=1 ' . escapeshellarg($dir), $output, $returnValue);
             if ($returnValue === 0) {
                 $size = explode("\t", $output[0]);
                 return (int) $size[0];
@@ -476,11 +476,11 @@ class Statistics_DiskUsageManager
             $project = new Project($row);
             $this->collectSVNDiskUsage($project, $collect_date, $time_to_collect);
 
-            $this->storeForGroup($collect_date, $row['group_id'], self::FRS, ForgeConfig::get('ftp_frs_dir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
-            $this->storeForGroup($collect_date, $row['group_id'], self::FTP, ForgeConfig::get('ftp_anon_dir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
-            $this->storeForGroup($collect_date, $row['group_id'], Service::WIKI, ForgeConfig::get('sys_wiki_attachment_data_dir') . "/" . $row['group_id'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], self::FRS, ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], self::FTP, ForgeConfig::get('ftp_anon_dir_prefix') . '/' . $row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], Service::WIKI, ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $row['group_id'], $time_to_collect);
             // Fake plugin for webdav/subversion
-            $this->storeForGroup($collect_date, $row['group_id'], self::PLUGIN_WEBDAV, '/var/lib/codendi/webdav' . "/" . $row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], self::PLUGIN_WEBDAV, '/var/lib/codendi/webdav' . '/' . $row['unix_group_name'], $time_to_collect);
 
             $params = [
                 'DiskUsageManager' => $this,
@@ -539,7 +539,7 @@ class Statistics_DiskUsageManager
     {
         $output      = [];
         $returnValue = -1;
-        exec("nice -n 19 df --sync -k --portability --block-size=1", $output, $returnValue);
+        exec('nice -n 19 df --sync -k --portability --block-size=1', $output, $returnValue);
         if ($returnValue === 0) {
             $dao   = $this->_getDao();
             $first = true;
@@ -548,7 +548,7 @@ class Statistics_DiskUsageManager
                     $first = false;
                     continue;
                 } else {
-                    $df = preg_split("/[\s]+/", $line);
+                    $df = preg_split('/[\s]+/', $line);
                     if ($df[0] != 'tmpfs') {
                         $dao->addSite('path_' . $df[5], $df[2], $collect_date->getTimestamp());
                     }

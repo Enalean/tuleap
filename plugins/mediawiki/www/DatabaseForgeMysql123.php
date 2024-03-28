@@ -25,7 +25,7 @@ class DatabaseForge extends DatabaseMysqli
             global $wgDBtype;
 
             $params['schema'] = null;
-            $wgDBtype         = "mysql";
+            $wgDBtype         = 'mysql';
             parent::__construct($params);
     }
 

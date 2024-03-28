@@ -203,7 +203,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger
             ->expects(self::once())
             ->method('info')
-            ->with("Deleting previous hook for the_full_url");
+            ->with('Deleting previous hook for the_full_url');
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
@@ -252,14 +252,14 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger
             ->expects(self::once())
             ->method('info')
-            ->with("Deleting previous hook for the_full_url");
+            ->with('Deleting previous hook for the_full_url');
 
         $this->logger
             ->expects(self::once())
             ->method('warning')
             ->with(
-                "The webhook is used by another integrations (it may come from old integration). " .
-                "It will be deleted on GitLab side and configuration must be regenerated for these integrations."
+                'The webhook is used by another integrations (it may come from old integration). ' .
+                'It will be deleted on GitLab side and configuration must be regenerated for these integrations.'
             );
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
@@ -291,7 +291,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->credentials,
                 '/projects/2/hooks/6'
             )
-            ->willThrowException(new GitlabRequestException(404, "Not found"));
+            ->willThrowException(new GitlabRequestException(404, 'Not found'));
 
         $this->dao
             ->expects(self::never())

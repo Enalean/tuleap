@@ -47,11 +47,11 @@ EOT;
      */
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_mediawiki_version (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_mediawiki_version (
                     project_id INT(11) UNSIGNED PRIMARY KEY,
                     mw_version VARCHAR(10),
                     INDEX idx_version (mw_version(4))
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
         $this->execDB($sql, 'An error occured while adding plugin_mediawiki_version table');
     }
 

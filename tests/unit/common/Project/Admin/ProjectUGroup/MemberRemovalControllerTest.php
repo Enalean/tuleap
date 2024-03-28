@@ -216,7 +216,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_member_remover->method('removeUserFromProject');
 
         $this->layout->method('addFeedback')->with(\Feedback::ERROR, self::anything());
-        $exception_stop_exec_redirect = new \Exception("Redirect");
+        $exception_stop_exec_redirect = new \Exception('Redirect');
         $this->layout->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->willThrowException($exception_stop_exec_redirect);
 
         self::expectExceptionObject($exception_stop_exec_redirect);

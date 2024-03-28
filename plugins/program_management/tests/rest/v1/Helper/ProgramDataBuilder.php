@@ -112,12 +112,12 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $program_trackers = $tracker_factory->getTrackersByGroupId((int) $program_project->getID());
         $team_trackers    = $tracker_factory->getTrackersByGroupId((int) $team_project->getID());
 
-        $this->feature            = $this->getTrackerByName($program_trackers, "features");
-        $this->user_story         = $this->getTrackerByName($team_trackers, "story");
-        $this->iteration          = $this->getTrackerByName($program_trackers, "iteration");
-        $this->mirrored_iteration = $this->getTrackerByName($team_trackers, "sprint");
+        $this->feature            = $this->getTrackerByName($program_trackers, 'features');
+        $this->user_story         = $this->getTrackerByName($team_trackers, 'story');
+        $this->iteration          = $this->getTrackerByName($program_trackers, 'iteration');
+        $this->mirrored_iteration = $this->getTrackerByName($team_trackers, 'sprint');
 
-        $this->program_increment = $this->getTrackerByName($program_trackers, "pi");
+        $this->program_increment = $this->getTrackerByName($program_trackers, 'pi');
 
         $this->linkFeatureAndUserStories();
         $this->linkProgramIncrementToMirroredRelease();
@@ -144,10 +144,10 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $feature_list    = $this->artifact_factory->getArtifactsByTrackerId($this->feature->getId());
         $user_story_list = $this->artifact_factory->getArtifactsByTrackerId($this->user_story->getId());
 
-        $featureA = $this->getArtifactByTitle($feature_list, "FeatureA");
-        $featureB = $this->getArtifactByTitle($feature_list, "FeatureB");
-        $us1      = $this->getArtifactByTitle($user_story_list, "US1");
-        $us2      = $this->getArtifactByTitle($user_story_list, "US2");
+        $featureA = $this->getArtifactByTitle($feature_list, 'FeatureA');
+        $featureB = $this->getArtifactByTitle($feature_list, 'FeatureB');
+        $us1      = $this->getArtifactByTitle($user_story_list, 'US1');
+        $us2      = $this->getArtifactByTitle($user_story_list, 'US2');
 
         $featureA_artifact_link = $featureA->getAnArtifactLinkField($this->user);
         assert($featureA_artifact_link instanceof \Tracker_FormElement_Field_ArtifactLink);
@@ -159,21 +159,21 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         ];
         $fieldsA_data[$featureA_artifact_link->getId()]['removed_values'] = [];
 
-        $featureA->createNewChangeset($fieldsA_data, "", $this->user);
+        $featureA->createNewChangeset($fieldsA_data, '', $this->user);
 
         $featureB_artifact_link = $featureB->getAnArtifactLinkField($this->user);
         assert($featureB_artifact_link instanceof \Tracker_FormElement_Field_ArtifactLink);
         $fieldsB_data                                                     = [];
         $fieldsB_data[$featureB_artifact_link->getId()]['new_values']     = (string) $us2->getId();
         $fieldsB_data[$featureB_artifact_link->getId()]['removed_values'] = [];
-        $featureA->createNewChangeset($fieldsB_data, "", $this->user);
+        $featureA->createNewChangeset($fieldsB_data, '', $this->user);
     }
 
     public function linkProgramIncrementToMirroredRelease(): void
     {
         $program_increment_list = $this->artifact_factory->getArtifactsByTrackerId($this->program_increment->getId());
 
-        $pi = $this->getArtifactByTitle($program_increment_list, "PI");
+        $pi = $this->getArtifactByTitle($program_increment_list, 'PI');
 
         $tracker_event              = new ArtifactCreated($pi, $pi->getLastChangeset(), $this->user);
         $created_event              = ArtifactCreatedProxy::fromArtifactCreated($tracker_event);
@@ -230,8 +230,8 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $program_increment_list = $this->artifact_factory->getArtifactsByTrackerId($this->program_increment->getId());
         $iteration_list         = $this->artifact_factory->getArtifactsByTrackerId($this->iteration->getId());
 
-        $iteration = $this->getArtifactByTitle($iteration_list, "iteration");
-        $pi        = $this->getArtifactByTitle($program_increment_list, "PI");
+        $iteration = $this->getArtifactByTitle($iteration_list, 'iteration');
+        $pi        = $this->getArtifactByTitle($program_increment_list, 'PI');
 
         $pi_artifact_link_field = $pi->getAnArtifactLinkField($this->user);
         assert($pi_artifact_link_field instanceof \Tracker_FormElement_Field_ArtifactLink);
@@ -242,7 +242,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
             $iteration->getId() => Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
         ];
         $data[$pi_artifact_link_field->getId()]['removed_values'] = [];
-        $pi->createNewChangeset($data, "", $this->user);
+        $pi->createNewChangeset($data, '', $this->user);
     }
 
     private function linkUserStoryToIteration(): void
@@ -250,16 +250,16 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $mirrored_iteration_list = $this->artifact_factory->getArtifactsByTrackerId($this->mirrored_iteration->getId());
         $user_story_list         = $this->artifact_factory->getArtifactsByTrackerId($this->user_story->getId());
 
-        $mirrored_iteration = $this->getArtifactByTitle($mirrored_iteration_list, "iteration");
-        $us1                = $this->getArtifactByTitle($user_story_list, "US1");
+        $mirrored_iteration = $this->getArtifactByTitle($mirrored_iteration_list, 'iteration');
+        $us1                = $this->getArtifactByTitle($user_story_list, 'US1');
 
         $iteration_artifact_link_field = $mirrored_iteration->getAnArtifactLinkField($this->user);
         assert($iteration_artifact_link_field instanceof \Tracker_FormElement_Field_ArtifactLink);
         $data                                                            = [];
         $data[$iteration_artifact_link_field->getId()]['new_values']     = (string) $us1->getId();
-        $data[$iteration_artifact_link_field->getId()]['nature']         = "";
+        $data[$iteration_artifact_link_field->getId()]['nature']         = '';
         $data[$iteration_artifact_link_field->getId()]['natures']        = [];
         $data[$iteration_artifact_link_field->getId()]['removed_values'] = [];
-        $mirrored_iteration->createNewChangeset($data, "", $this->user);
+        $mirrored_iteration->createNewChangeset($data, '', $this->user);
     }
 }

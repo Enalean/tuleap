@@ -45,7 +45,7 @@ $armh->displayRulesAsJavascript();
 echo "new UserAutoCompleter('tracker_cc',
                           '" . util_get_dir_image_theme() . "',
                           true);\n";
-echo "</script>";
+echo '</script>';
 
 // Display footer page
 $ath->footer($params);

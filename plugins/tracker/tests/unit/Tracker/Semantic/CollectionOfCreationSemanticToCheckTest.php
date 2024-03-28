@@ -29,7 +29,7 @@ final class CollectionOfCreationSemanticToCheckTest extends TestCase
 {
     public function testItReturnsAnErrorIfSemanticIsNotSupported(): void
     {
-        $semantics = ["status", "hehe"];
+        $semantics = ['status', 'hehe'];
         $result    = CollectionOfCreationSemanticToCheck::fromREST($semantics);
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(SemanticNotSupportedFault::class, $result->error);

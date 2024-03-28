@@ -76,8 +76,8 @@ if ($action == 'permissions_frs_package') {
             $release_controller->displayUserGroups($project, FRSRelease::PERM_READ);
         }
     } else {
-        header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+        header('Cache-Control: no-store, no-cache, must-revalidate'); // HTTP/1.1
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
         if ($action == 'validator_frs_create') {
             $vName = new Valid_String('name');
             $vDate = new Valid_String('date');
@@ -161,7 +161,7 @@ if ($action == 'permissions_frs_package') {
                     $project             = $request->getProject();
                     $frsff               = new FRSFileFactory();
                     $file_list           = $frsff->getUploadedFileNames($project);
-                    $available_ftp_files = implode(",", $file_list);
+                    $available_ftp_files = implode(',', $file_list);
                     $purifier            = Codendi_HTMLPurifier::instance();
                     $available_ftp_files = $purifier->purify($available_ftp_files, CODENDI_PURIFIER_JS_DQUOTE);
                     echo '{"valid":true, "msg":"' . $available_ftp_files . '"}';

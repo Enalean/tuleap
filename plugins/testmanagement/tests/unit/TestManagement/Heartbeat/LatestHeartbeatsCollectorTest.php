@@ -102,8 +102,8 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getLastUpdateDate')->andReturn(123456789);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact->shouldReceive('getXRef')->andReturn("campaing #101");
-        $artifact->shouldReceive('getTitle')->andReturn("Tuleap 12.1");
+        $artifact->shouldReceive('getXRef')->andReturn('campaing #101');
+        $artifact->shouldReceive('getTitle')->andReturn('Tuleap 12.1');
         $artifact->shouldReceive('userCanView')->andReturnTrue();
 
         $this->factory->shouldReceive('getInstanceFromRow')->andReturn($artifact);

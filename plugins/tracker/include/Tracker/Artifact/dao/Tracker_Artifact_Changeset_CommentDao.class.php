@@ -70,7 +70,7 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject
                 VALUES ($changeset_id, $body, $body_format, $submitted_by, $submitted_on, $parent_id)";
         $id  = $this->updateAndGetLastId($sql);
 
-        if ($stripped_body !== "") {
+        if ($stripped_body !== '') {
             $sql = "INSERT INTO tracker_changeset_comment_fulltext (comment_id, stripped_body)
                 VALUES ($id, $escaped_stripped_body)";
             $this->update($sql);

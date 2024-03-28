@@ -64,7 +64,7 @@ final class KanbanTrackerRepresentation
 
         if ($tracker === null) {
             throw new \RuntimeException(
-                sprintf("Cannot find the tracker #%d associated with the kanban #%d", $tracker_id, $kanban->getId())
+                sprintf('Cannot find the tracker #%d associated with the kanban #%d', $tracker_id, $kanban->getId())
             );
         }
 

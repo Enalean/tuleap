@@ -47,20 +47,20 @@ class WikiPlugin_Transclude extends WikiPlugin
 {
     public function getName()
     {
-        return _("Transclude");
+        return _('Transclude');
     }
 
     public function getDescription()
     {
-        return _("Include an external web page within the body of a wiki page.");
+        return _('Include an external web page within the body of a wiki page.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.9 $"
+            '$Revision: 1.9 $'
         );
     }
 
@@ -79,32 +79,32 @@ class WikiPlugin_Transclude extends WikiPlugin
         extract($args);
 
         if (! $src) {
-            return $this->error(fmt("%s parameter missing", "'src'"));
+            return $this->error(fmt('%s parameter missing', "'src'"));
         }
         // FIXME: Better recursion detection.
         // FIXME: Currently this doesnt work at all.
         if ($src == $request->getURLtoSelf()) {
-            return $this->error(fmt("recursive inclusion of url %s", $src));
+            return $this->error(fmt('recursive inclusion of url %s', $src));
         }
 
         if (! IsSafeURL($src)) {
-            return $this->error(_("Bad url in src: remove all of <, >, \""));
+            return $this->error(_('Bad url in src: remove all of <, >, "'));
         }
 
         $uri_sanitizer = new \Tuleap\Sanitizer\URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
         $sanitized_src = $uri_sanitizer->sanitizeForHTMLAttribute($src);
 
-        $params = ['title' => _("Transcluded page"),
+        $params = ['title' => _('Transcluded page'),
             'src' => $sanitized_src,
-            'width' => "100%",
+            'width' => '100%',
             'height' => $height,
             'marginwidth' => 0,
             'marginheight' => 0,
             'class' => 'transclude',
-            "onload" => "adjust_iframe_height(this);",
+            'onload' => 'adjust_iframe_height(this);',
         ];
 
-        $noframe_msg[] = fmt("See: %s", HTML::a(['href' => $sanitized_src], $src));
+        $noframe_msg[] = fmt('See: %s', HTML::a(['href' => $sanitized_src], $src));
 
         $noframe_msg = HTML::div(
             ['class' => 'transclusion'],
@@ -120,7 +120,7 @@ class WikiPlugin_Transclude extends WikiPlugin
         return HTML(
             HTML::p(
                 ['class' => 'transclusion-title'],
-                fmt("Transcluded from %s", LinkURL($sanitized_src))
+                fmt('Transcluded from %s', LinkURL($sanitized_src))
             ),
             $this->_js(),
             $iframe

@@ -57,7 +57,7 @@ class PreferencePresenter
         $this->json_encoded_trackers = \json_encode($this->buildTrackerPresenters($trackers));
 
         $this->selected_tracker_ids               = \json_encode($selected_tracker_ids);
-        $this->selected_filter_report_id          = $selected_filter_report_id ?: "";
+        $this->selected_filter_report_id          = $selected_filter_report_id ?: '';
         $this->selected_lvl1_iteration_tracker_id = (int) $selected_lvl1_iteration_tracker_id;
         $this->selected_lvl2_iteration_tracker_id = (int) $selected_lvl2_iteration_tracker_id;
         $this->selected_default_timescale         = $selected_default_timescale;

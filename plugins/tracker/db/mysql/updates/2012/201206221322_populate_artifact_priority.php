@@ -34,9 +34,9 @@ EOT;
 
     public function up()
     {
-        $this->executeQuery("SET @curr_rank = 0");
-        $this->executeQuery("SET @succ_rank = 0");
-        $sql = "INSERT INTO tracker_artifact_priority (curr_id, succ_id, rank)
+        $this->executeQuery('SET @curr_rank = 0');
+        $this->executeQuery('SET @succ_rank = 0');
+        $sql = 'INSERT INTO tracker_artifact_priority (curr_id, succ_id, rank)
                 SELECT curr.id, succ.id, curr.rank - 1 AS rank
                 FROM (
                         (SELECT NULL AS id, @curr_rank := @curr_rank + 1 AS rank)
@@ -55,7 +55,7 @@ EOT;
                         UNION
                         (SELECT NULL AS id, @succ_rank := @succ_rank + 1 AS rank)
                     ) AS succ
-                    USING (rank)";
+                    USING (rank)';
         $this->executeQuery($sql);
     }
 

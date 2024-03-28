@@ -55,7 +55,7 @@ final class LanguagePresenterBuilder
                             $label,
                             $is_checked,
                             $is_official_language,
-                            _("Work in progress, you might find untranslated strings.")
+                            _('Work in progress, you might find untranslated strings.')
                         )
                     );
                 }

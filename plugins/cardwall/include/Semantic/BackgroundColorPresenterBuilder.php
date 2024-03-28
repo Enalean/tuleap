@@ -40,7 +40,7 @@ class BackgroundColorPresenterBuilder
     {
         $selected_field_id  = $this->dao->searchBackgroundColor($tracker->getId());
         $has_selected_field = false;
-        $url                = "";
+        $url                = '';
         if ($selected_field_id !== false) {
             $has_selected_field = true;
             $selected_field     = $this->form_element_factory->getFieldById($selected_field_id);
@@ -69,9 +69,9 @@ class BackgroundColorPresenterBuilder
         foreach ($form_elements_fields as $field) {
             if ($this->isFieldAListBoundToStaticValues($field)) {
                 $formatted_field[] = [
-                    "id"          => $field->getId(),
-                    "name"        => $field->getLabel(),
-                    "is_selected" => (int) $field->getId() === (int) $selected_field_id,
+                    'id'          => $field->getId(),
+                    'name'        => $field->getLabel(),
+                    'is_selected' => (int) $field->getId() === (int) $selected_field_id,
                 ];
             }
         }

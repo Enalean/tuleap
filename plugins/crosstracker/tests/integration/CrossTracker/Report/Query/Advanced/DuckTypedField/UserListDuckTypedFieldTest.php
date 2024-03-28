@@ -202,7 +202,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field = MYSELF()",
+                'user_field = MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -281,7 +281,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field != MYSELF()",
+                'user_field != MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -341,7 +341,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field IN(MYSELF())",
+                'user_field IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -435,7 +435,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "user_field NOT IN(MYSELF())",
+                'user_field NOT IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice

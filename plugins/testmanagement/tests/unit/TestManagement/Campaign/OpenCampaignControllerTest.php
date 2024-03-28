@@ -140,7 +140,7 @@ class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->status_updater->shouldReceive('openCampaign')->andThrow(NoPossibleValueException::class);
 
-        $layout->shouldReceive('addFeedback')->once()->withArgs(["error", 'The campaign cannot be open : No possible value found regarding your configuration. Please check your transition and field dependencies.']);
+        $layout->shouldReceive('addFeedback')->once()->withArgs(['error', 'The campaign cannot be open : No possible value found regarding your configuration. Please check your transition and field dependencies.']);
         $layout->shouldReceive('redirect')->once();
 
         $this->controller->process(

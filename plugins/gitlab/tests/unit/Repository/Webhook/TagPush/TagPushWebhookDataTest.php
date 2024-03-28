@@ -28,14 +28,14 @@ class TagPushWebhookDataTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTagNameFromPath(): void
     {
         $webhook_data = new TagPushWebhookData(
-            "Tag Push Event",
+            'Tag Push Event',
             1254,
-            "https://example.com",
-            "refs/tags/v1.0.1",
-            "before",
-            "after"
+            'https://example.com',
+            'refs/tags/v1.0.1',
+            'before',
+            'after'
         );
 
-        self::assertSame("v1.0.1", $webhook_data->getTagName());
+        self::assertSame('v1.0.1', $webhook_data->getTagName());
     }
 }

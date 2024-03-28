@@ -20,7 +20,7 @@ class b201701091557_update_default_limit_in_report_config extends \Tuleap\ForgeU
 {
     public function description()
     {
-        return "Update default report expert query limit in database";
+        return 'Update default report expert query limit in database';
     }
 
     public function preUp()
@@ -35,10 +35,10 @@ class b201701091557_update_default_limit_in_report_config extends \Tuleap\ForgeU
 
     private function updateTable()
     {
-        $sql = "
+        $sql = '
             ALTER TABLE tracker_report_config
             MODIFY query_limit INT(1) NOT NULL DEFAULT 30;
-        ";
+        ';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

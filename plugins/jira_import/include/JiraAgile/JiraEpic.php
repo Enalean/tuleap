@@ -64,7 +64,7 @@ final class JiraEpic
         return new self(
             (int) $json['id'],
             $json['key'],
-            "/rest/agile/1.0/epic/" . urlencode($json['id'])
+            '/rest/agile/1.0/epic/' . urlencode($json['id'])
         );
     }
 }

@@ -23,7 +23,7 @@ class b201311081011_remove_codex_themes extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Remove CodeX and CodeX themes from user preferences";
+        return 'Remove CodeX and CodeX themes from user preferences';
     }
 
     public function preUp()

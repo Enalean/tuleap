@@ -37,14 +37,14 @@ class ProjectIconCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('feature_flag_project_icon_display', '1');
         self::expectException(InvalidProjectIconException::class);
 
-        ProjectIconChecker::isIconValid("✖️");
+        ProjectIconChecker::isIconValid('✖️');
     }
 
     public function testItDoesNothingIfTheFeatureIsDisabled(): void
     {
         ForgeConfig::set('feature_flag_project_icon_display', '0');
 
-        ProjectIconChecker::isIconValid("😇");
+        ProjectIconChecker::isIconValid('😇');
         self::expectNotToPerformAssertions();
     }
 
@@ -52,7 +52,7 @@ class ProjectIconCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('feature_flag_project_icon_display', '1');
 
-        ProjectIconChecker::isIconValid("😇");
+        ProjectIconChecker::isIconValid('😇');
 
         self::expectNotToPerformAssertions();
     }
@@ -61,7 +61,7 @@ class ProjectIconCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('feature_flag_project_icon_display', '1');
 
-        ProjectIconChecker::isIconValid("");
+        ProjectIconChecker::isIconValid('');
 
         self::expectNotToPerformAssertions();
     }

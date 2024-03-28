@@ -29,6 +29,6 @@ class ProvidedRemoveIdIsNotInExplicitBacklogException extends Exception
 {
     public function __construct(array $ids)
     {
-        parent::__construct("The following artifact ids do not belong to the project explicit backlog: " . implode(', ', $ids));
+        parent::__construct('The following artifact ids do not belong to the project explicit backlog: ' . implode(', ', $ids));
     }
 }

@@ -74,7 +74,7 @@ final class SettingsBuilderTest extends TestCase
         self::assertInstanceOf(Settings::class, $settings);
 
         self::assertSame([], $settings->getCommitRules());
-        self::assertSame("", $settings->getAccessFileContent());
+        self::assertSame('', $settings->getAccessFileContent());
         self::assertSame([], $settings->getMailNotification());
 
         $settings_immutable_tags = $settings->getImmutableTag();
@@ -108,7 +108,7 @@ final class SettingsBuilderTest extends TestCase
             ],
             $settings->getCommitRules()
         );
-        self::assertSame("Access file content", $settings->getAccessFileContent());
+        self::assertSame('Access file content', $settings->getAccessFileContent());
 
         $settings_notifications = $settings->getMailNotification();
         self::assertNotNull($settings_notifications);
@@ -121,8 +121,8 @@ final class SettingsBuilderTest extends TestCase
 
         $settings_immutable_tags = $settings->getImmutableTag();
         self::assertNotNull($settings_immutable_tags);
-        self::assertSame("/path01", $settings_immutable_tags->getPathsAsString());
-        self::assertSame("", $settings_immutable_tags->getWhitelistAsString());
+        self::assertSame('/path01', $settings_immutable_tags->getPathsAsString());
+        self::assertSame('', $settings_immutable_tags->getWhitelistAsString());
     }
 
     public function testItReturnsSettingsWithRepresentationDataWithUserGroupsNotifications(): void
@@ -157,7 +157,7 @@ final class SettingsBuilderTest extends TestCase
             ],
             $settings->getCommitRules()
         );
-        self::assertSame("Access file content", $settings->getAccessFileContent());
+        self::assertSame('Access file content', $settings->getAccessFileContent());
 
         $settings_notifications = $settings->getMailNotification();
         self::assertNotNull($settings_notifications);
@@ -170,8 +170,8 @@ final class SettingsBuilderTest extends TestCase
 
         $settings_immutable_tags = $settings->getImmutableTag();
         self::assertNotNull($settings_immutable_tags);
-        self::assertSame("/path01", $settings_immutable_tags->getPathsAsString());
-        self::assertSame("", $settings_immutable_tags->getWhitelistAsString());
+        self::assertSame('/path01', $settings_immutable_tags->getPathsAsString());
+        self::assertSame('', $settings_immutable_tags->getWhitelistAsString());
     }
 
     public function testItReturnsAnErrorIfAProvidedUserDoesNotExist(): void
@@ -438,7 +438,7 @@ final class SettingsBuilderTest extends TestCase
                     new ImmutableTag($repository, '/path01', ''),
                 );
 
-                $this->access_file             = "Access file content";
+                $this->access_file             = 'Access file content';
                 $this->email_notifications     = $email_notifications;
                 $this->has_default_permissions = true;
             }

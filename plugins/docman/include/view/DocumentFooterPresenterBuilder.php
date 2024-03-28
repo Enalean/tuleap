@@ -63,6 +63,6 @@ class DocumentFooterPresenterBuilder
     private function isFolderInMigratedView(array $params, array $item): bool
     {
         return $item['item_type'] === PLUGIN_DOCMAN_ITEM_TYPE_FOLDER && isset($params['action']) && $params['action']
-            === "show";
+            === 'show';
     }
 }

@@ -84,8 +84,8 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         );
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move this artifact"),
-            ["Move action is not enabled for tracker tracker01"],
+            dgettext('plugin-tracker', 'Move this artifact'),
+            ['Move action is not enabled for tracker tracker01'],
         );
 
         $built_presenter = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
@@ -113,7 +113,7 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         );
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move this artifact"),
+            dgettext('plugin-tracker', 'Move this artifact'),
             []
         );
 
@@ -145,7 +145,7 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         );
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move this artifact"),
+            dgettext('plugin-tracker', 'Move this artifact'),
             []
         );
         $built_presenter    = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);

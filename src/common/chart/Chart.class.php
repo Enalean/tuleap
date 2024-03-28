@@ -54,7 +54,7 @@ class Chart
     *
     * @return void
     */
-    public function __construct($aWidth = 600, $aHeight = 400, $aCachedName = "", $aTimeOut = 0, $aInline = true)
+    public function __construct($aWidth = 600, $aHeight = 400, $aCachedName = '', $aTimeOut = 0, $aInline = true)
     {
         $this->colors_for_charts = new ColorsForCharts();
 
@@ -273,9 +273,9 @@ class Chart
         //Calculate the baseline
         // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
         //this should be above baseline
-        $test2 = "H";
+        $test2 = 'H';
         //some of these additional letters should go below it
-        $test3 = "Hjgqp";
+        $test3 = 'Hjgqp';
         //get the dimension for these two:
         $box2     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
         $box3     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
@@ -285,7 +285,7 @@ class Chart
             $backgroundColor = imagecolorallocate($im, 255, 255, 255);
             $textColor       = imagecolorallocate($im, 64, 64, 64);
             imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $textColor, $ttf->File(FF_USERFONT), $msg);
-            header("Content-type: image/png");
+            header('Content-type: image/png');
             imagepng($im);
             imagedestroy($im);
         }

@@ -92,11 +92,11 @@ class CommitInfoEnhancer
             $file_updated  = [];
             $file_deleted  = [];
             $changed_files = $this->svn_look->getChangedFiles($repository, $revision);
-            if ($changed_files != "") {
+            if ($changed_files != '') {
                 foreach ($changed_files as $file) {
-                    if (preg_match("/^([A|U|D][ ]+)(.+)$/", $file, $matches)) {
+                    if (preg_match('/^([A|U|D][ ]+)(.+)$/', $file, $matches)) {
                         switch (trim($matches[1])) {
-                            case "A":
+                            case 'A':
                                 $file_added[] = $matches[2];
                                 break;
                             case 'U':

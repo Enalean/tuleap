@@ -20,7 +20,7 @@ class b201503271456_add_forgeconfig extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Add table to store forge configuration";
+        return 'Add table to store forge configuration';
     }
 
     public function preUp()

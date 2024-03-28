@@ -62,10 +62,10 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent
         foreach ($groups as $group_id) {
             if ($project = $this->getProject($group_id)) {
                 if (! $backendSystem->createProjectFRSDirectory($project)) {
-                    $this->error("Could not project FRS repository");
+                    $this->error('Could not project FRS repository');
                     return false;
                 }
-                $backendSystem->log("Project " . $project->getUnixName() . " created");
+                $backendSystem->log('Project ' . $project->getUnixName() . ' created');
             }
         }
 

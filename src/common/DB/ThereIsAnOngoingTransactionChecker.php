@@ -40,7 +40,7 @@ final class ThereIsAnOngoingTransactionChecker extends DataAccessObject implemen
         }
 
         if ($this->getDB()->inTransaction()) {
-            throw new \RuntimeException("You should not start something that will be processed in a different context while being in a transaction");
+            throw new \RuntimeException('You should not start something that will be processed in a different context while being in a transaction');
         }
     }
 }

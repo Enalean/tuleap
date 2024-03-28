@@ -36,7 +36,7 @@ rcs_id('$Id: HelloWorld.php,v 1.13 2004/02/17 12:11:36 rurban Exp $');
 
 // Constants are defined before the class.
 if (! defined('THE_END')) {
-    define('THE_END', "!");
+    define('THE_END', '!');
 }
 
 class WikiPlugin_HelloWorld extends WikiPlugin
@@ -45,28 +45,28 @@ class WikiPlugin_HelloWorld extends WikiPlugin
 
     public function getName()
     {
-        return _("HelloWorld");
+        return _('HelloWorld');
     }
 
     public function getDescription()
     {
-        return _("Simple Sample Plugin");
+        return _('Simple Sample Plugin');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.13 $"
+            '$Revision: 1.13 $'
         );
     }
 
     // Establish default values for each of this plugin's arguments.
     public function getDefaultArguments()
     {
-        return ['salutation' => "Hello,",
-            'name'       => "World",
+        return ['salutation' => 'Hello,',
+            'name'       => 'World',
         ];
     }
 

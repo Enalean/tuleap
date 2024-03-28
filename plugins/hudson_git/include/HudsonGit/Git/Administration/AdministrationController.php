@@ -59,12 +59,12 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
         $project = $this->getProject($variables);
 
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
 
         $user = $request->getCurrentUser();
         if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
-            throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
+            throw new ForbiddenException(dgettext('tuleap-hudson_git', 'User is not Git administrator.'));
         }
 
         $layout->includeFooterJavascriptFile(
@@ -102,7 +102,7 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $project || $project->isError()) {
-            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Project not found.'));
         }
 
         return $project;

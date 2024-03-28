@@ -35,11 +35,11 @@ class FileFieldArtifactChangesetTest extends TrackerBase
 
         $title_field_id = $this->getAUsedFieldId($this->tracker_file_and_title_fields_tracker_id, 'title');
         $payload        = [
-            "tracker" => ["id" => $this->tracker_file_and_title_fields_tracker_id],
-            "values"  => [
+            'tracker' => ['id' => $this->tracker_file_and_title_fields_tracker_id],
+            'values'  => [
                 [
-                    "field_id" => $title_field_id,
-                    "value"    => "New title",
+                    'field_id' => $title_field_id,
+                    'value'    => 'New title',
                 ],
             ],
         ];
@@ -51,7 +51,7 @@ class FileFieldArtifactChangesetTest extends TrackerBase
         $this->assertEquals(200, $response->getStatusCode());
 
         $changeset_response = $this->getResponse(
-            $this->request_factory->createRequest('GET', "artifacts/" . urlencode((string) $this->tracker_file_and_title_fields_artifact_id) . "/changesets?limit=10&order=desc")
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->tracker_file_and_title_fields_artifact_id) . '/changesets?limit=10&order=desc')
         );
         $this->assertEquals(200, $changeset_response->getStatusCode());
         $changeset = json_decode($changeset_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -72,9 +72,9 @@ class FileFieldArtifactChangesetTest extends TrackerBase
         $data          = str_repeat('A', $file_size);
 
         $query = [
-            "name"       => "file_creation_" . bin2hex(random_bytes(8)),
-            "file_size"  => $file_size,
-            "file_type"  => "text/plain",
+            'name'       => 'file_creation_' . bin2hex(random_bytes(8)),
+            'file_size'  => $file_size,
+            'file_type'  => 'text/plain',
         ];
 
         $response1 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$file_field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
@@ -101,11 +101,11 @@ class FileFieldArtifactChangesetTest extends TrackerBase
         $file_field_id = $this->getAUsedFieldId($this->tracker_file_and_title_fields_tracker_id, 'attachments_1');
 
         $payload = [
-            "tracker" => ["id" => $this->tracker_file_and_title_fields_tracker_id],
-            "values"  => [
+            'tracker' => ['id' => $this->tracker_file_and_title_fields_tracker_id],
+            'values'  => [
                 [
-                    "field_id" => $file_field_id,
-                    "value"    => [$file_id],
+                    'field_id' => $file_field_id,
+                    'value'    => [$file_id],
                 ],
             ],
         ];

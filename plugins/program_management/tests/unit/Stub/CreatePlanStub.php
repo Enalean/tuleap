@@ -50,7 +50,7 @@ final class CreatePlanStub implements CreatePlan
     public function create(PlanChange $plan_change): void
     {
         if ($this->will_throw_exception_on_plan_change_creation) {
-            throw new \Exception("PlanChange creation has failed for some reasons ¯\_(ツ)_/¯");
+            throw new \Exception('PlanChange creation has failed for some reasons ¯\_(ツ)_/¯');
         }
 
         $this->method_create_calls_history[] = $plan_change;
@@ -62,7 +62,7 @@ final class CreatePlanStub implements CreatePlan
     public function getCreateMethodCallsArgs(int $call_number): PlanChange
     {
         if (! isset($this->method_create_calls_history[$call_number])) {
-            throw new \Exception(sprintf("Method CreatePlanStub::create has not been called %d time", $call_number + 1));
+            throw new \Exception(sprintf('Method CreatePlanStub::create has not been called %d time', $call_number + 1));
         }
 
         return $this->method_create_calls_history[$call_number];

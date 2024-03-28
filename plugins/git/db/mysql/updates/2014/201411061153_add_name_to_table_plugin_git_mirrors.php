@@ -34,17 +34,17 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git_mirrors
-            ADD COLUMN name VARCHAR(255) NOT NULL";
+        $sql = 'ALTER TABLE plugin_git_mirrors
+            ADD COLUMN name VARCHAR(255) NOT NULL';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column name in plugin_git_mirrors table.');
         }
 
-        $sql2 = "UPDATE plugin_git_mirrors AS target
+        $sql2 = 'UPDATE plugin_git_mirrors AS target
             LEFT JOIN plugin_git_mirrors AS source ON source.id = target.id
-            SET target.name = source.url";
+            SET target.name = source.url';
 
         $res2 = $this->db->dbh->exec($sql2);
 

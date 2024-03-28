@@ -38,13 +38,13 @@ class CIBuildJsonParser implements PostActionUpdateJsonParser
         if (! isset($json['job_url'])) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-tracker', "Mandatory attribute job_url not found in CI build action.")
+                dgettext('tuleap-tracker', 'Mandatory attribute job_url not found in CI build action.')
             );
         }
         if (! is_string($json['job_url'])) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-tracker', "Bad job_url attribute format: string expected.")
+                dgettext('tuleap-tracker', 'Bad job_url attribute format: string expected.')
             );
         }
 

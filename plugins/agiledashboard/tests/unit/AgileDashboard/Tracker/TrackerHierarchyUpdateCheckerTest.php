@@ -125,7 +125,7 @@ final class TrackerHierarchyUpdateCheckerTest extends TestCase
             );
 
         $this->tracker_factory
-            ->method("getTrackerById")
+            ->method('getTrackerById')
             ->with(self::CHILD_TRACKER_ID)
             ->willReturn(
                 TrackerTestBuilder::aTracker()->withId(self::CHILD_TRACKER_ID)->withProject($project)->build()

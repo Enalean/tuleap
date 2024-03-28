@@ -71,7 +71,7 @@ final class UserNameNormalizerTest extends TestCase
 
     public function testGenerateThrowExceptionWhenUsernameIsNotUnixValid(): void
     {
-        $slugified_username = "666";
+        $slugified_username = '666';
 
         $this->rules->method('atLeastOneChar')->willReturn(true);
         $this->rules->method('isUnixValid')->with($slugified_username)->willReturn(false);
@@ -79,13 +79,13 @@ final class UserNameNormalizerTest extends TestCase
 
         $this->expectException(DataIncompatibleWithUsernameGenerationException::class);
 
-        $this->username_normalizer->normalize("666");
+        $this->username_normalizer->normalize('666');
     }
 
     public function testGenerateUserLoginIncrementIfLoginAlreadyExist(): void
     {
-        $slugified_username   = "jean_pierre";
-        $incremented_username = "jean_pierre1";
+        $slugified_username   = 'jean_pierre';
+        $incremented_username = 'jean_pierre1';
 
         $this->rules->method('isUnixValid')->with($slugified_username)->willReturn(true);
         $this->rules->method('isValid')->willReturnMap([
@@ -93,6 +93,6 @@ final class UserNameNormalizerTest extends TestCase
             [$incremented_username, true],
         ]);
 
-        self::assertSame($incremented_username, $this->username_normalizer->normalize("jean pierre"));
+        self::assertSame($incremented_username, $this->username_normalizer->normalize('jean pierre'));
     }
 }

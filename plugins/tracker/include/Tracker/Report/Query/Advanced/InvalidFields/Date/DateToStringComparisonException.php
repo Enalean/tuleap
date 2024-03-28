@@ -28,7 +28,7 @@ final class DateToStringComparisonException extends InvalidFieldException
     {
         parent::__construct(
             sprintf(
-                dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the string value '%s'."),
+                dgettext('tuleap-tracker', "The date field '%s' cannot be compared to the string value '%s'."),
                 $field->getName(),
                 $value
             )

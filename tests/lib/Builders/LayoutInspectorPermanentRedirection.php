@@ -26,6 +26,6 @@ final class LayoutInspectorPermanentRedirection extends \RuntimeException
 {
     public function __construct(public readonly string $redirect_url)
     {
-        parent::__construct("Permanent redirected to " . $this->redirect_url);
+        parent::__construct('Permanent redirected to ' . $this->redirect_url);
     }
 }

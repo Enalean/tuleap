@@ -343,10 +343,10 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         self::assertNotNull($representation->last_comment);
         self::assertInstanceOf(HTMLOrTextCommentRepresentation::class, $representation->last_comment);
-        self::assertEquals("", $representation->last_comment->body);
-        self::assertEquals("text", $representation->last_comment->format);
+        self::assertEquals('', $representation->last_comment->body);
+        self::assertEquals('text', $representation->last_comment->format);
         self::assertNull($representation->last_comment->ugroups);
-        self::assertEquals("", $representation->last_comment->post_processed_body);
+        self::assertEquals('', $representation->last_comment->post_processed_body);
     }
 
     public function testItReturnsCommentIfUserCanSeeIt(): void
@@ -374,11 +374,11 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         self::assertNotNull($representation->last_comment);
         self::assertInstanceOf(HTMLOrTextCommentRepresentation::class, $representation->last_comment);
-        self::assertEquals("A text comment", $representation->last_comment->body);
-        self::assertEquals("text", $representation->last_comment->format);
+        self::assertEquals('A text comment', $representation->last_comment->body);
+        self::assertEquals('text', $representation->last_comment->format);
         self::assertNotNull($representation->last_comment->ugroups);
         self::assertEquals('MyGroup', $representation->last_comment->ugroups[0]->label);
-        self::assertEquals("A text comment", $representation->last_comment->post_processed_body);
+        self::assertEquals('A text comment', $representation->last_comment->post_processed_body);
     }
 
     public function testBuildWithFieldsWithoutPermissions(): void

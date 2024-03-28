@@ -27,7 +27,7 @@ final class CannotFindUserGroupInProjectException extends \Exception implements 
     public function __construct(string $ugroup_name)
     {
         parent::__construct(
-            sprintf("User group %s not found in the project", $ugroup_name)
+            sprintf('User group %s not found in the project', $ugroup_name)
         );
     }
 }

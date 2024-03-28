@@ -309,7 +309,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
 
         // Create reference for all groups
         // Ugly SQL, needed until we have a proper Group/GroupManager class
-        $sql    = "SELECT group_id FROM `groups` WHERE group_id!=100";
+        $sql    = 'SELECT group_id FROM `groups` WHERE group_id!=100';
         $result = db_query($sql);
         while ($arr = db_fetch_array($result)) {
             $my_group_id = $arr['group_id'];
@@ -460,7 +460,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
     public function addSystemReferencesWithoutService($template_id, $group_id)
     {
         $reference_dao = $this->_getReferenceDao();
-        $dar           = $reference_dao->searchByScopeAndServiceShortName('S', "");
+        $dar           = $reference_dao->searchByScopeAndServiceShortName('S', '');
         while ($row = $dar->getRow()) {
             $this->createSystemReferenceGroup($template_id, $group_id, $row['id']);
         }
@@ -475,7 +475,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
     public function addProjectReferences($template_id, $group_id)
     {
         $reference_dao = $this->_getReferenceDao();
-        $dar           = $reference_dao->searchByScopeAndServiceShortNameAndGroupId('P', "", $template_id);
+        $dar           = $reference_dao->searchByScopeAndServiceShortNameAndGroupId('P', '', $template_id);
         while ($row = $dar->getRow()) {
             $dares = $reference_dao->searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($row['keyword'], $group_id, $row['description'], $row['link'], $row['scope']);
             if ($dares && $dares->rowCount() > 0) {
@@ -681,7 +681,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
                     $ref_instance = $this->_getReferenceInstanceFromMatch($match);
                     if (! $ref_instance) {
                         $context_word_with_space = $match['context_word'] !== '' ? $match['context_word'] . ' ' : '';
-                        return $context_word_with_space . $match['key'] . " #" . $match['project_name'] . $match['value'] . $match['after_reference'];
+                        return $context_word_with_space . $match['key'] . ' #' . $match['project_name'] . $match['value'] . $match['after_reference'];
                     }
                     return $this->buildLinkForReference($ref_instance) . $match['after_reference'];
                 },
@@ -778,7 +778,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
      */
     public function getArtifactKeyword($artifact_id, $group_id)
     {
-        $sql    = "SELECT group_artifact_id FROM artifact WHERE artifact_id= " . db_ei($artifact_id);
+        $sql    = 'SELECT group_artifact_id FROM artifact WHERE artifact_id= ' . db_ei($artifact_id);
         $result = db_query($sql);
         if (db_numrows($result) > 0) {
             $row                = db_fetch_array($result);
@@ -1106,7 +1106,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
             return null;
         }
         return new ReferenceInstance(
-            $key . " #" . $match['project_name'] . $value,
+            $key . ' #' . $match['project_name'] . $value,
             $ref,
             $value,
             $key,

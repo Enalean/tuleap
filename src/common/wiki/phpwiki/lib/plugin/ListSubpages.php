@@ -32,20 +32,20 @@ class WikiPlugin_ListSubpages extends WikiPlugin
 {
     public function getName()
     {
-        return _("ListSubpages");
+        return _('ListSubpages');
     }
 
     public function getDescription()
     {
-        return _("Lists the names of all SubPages of the current page.");
+        return _('Lists the names of all SubPages of the current page.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.6 $"
+            '$Revision: 1.6 $'
         );
     }
 
@@ -80,7 +80,7 @@ class WikiPlugin_ListSubpages extends WikiPlugin
         // UnfoldSubPages plugin)
         $subpages = explodePageList($pagename . SUBPAGE_SEPARATOR . '*');
         if (! $subpages) {
-            return $this->error(_("The current page has no subpages defined."));
+            return $this->error(_('The current page has no subpages defined.'));
         }
         extract($args);
 
@@ -91,13 +91,13 @@ class WikiPlugin_ListSubpages extends WikiPlugin
         }
 
         $descrip = fmt(
-            "SubPages of %s:",
+            'SubPages of %s:',
             WikiLink($pagename, 'auto')
         );
         if ($info) {
-            $info = explode(",", $info);
+            $info = explode(',', $info);
             if (in_array('count', $info)) {
-                $args['types']['count'] = new _PageList_Column_ListSubpages_count('count', _("#"), 'center');
+                $args['types']['count'] = new _PageList_Column_ListSubpages_count('count', _('#'), 'center');
             }
         }
         $pagelist = new PageList($info, $exclude, $args);
@@ -110,7 +110,7 @@ class WikiPlugin_ListSubpages extends WikiPlugin
             static $included_pages = [];
             if (in_array($page, $included_pages)) {
                 $content->pushContent(HTML::p(sprintf(
-                    _("recursive inclusion of page %s ignored"),
+                    _('recursive inclusion of page %s ignored'),
                     $page
                 )));
                 continue;

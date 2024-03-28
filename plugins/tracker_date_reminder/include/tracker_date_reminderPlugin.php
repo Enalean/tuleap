@@ -74,7 +74,7 @@ class tracker_date_reminderPlugin extends Plugin
         include_once 'TrackerDateReminder_Logger_Prefix.class.php';
 
         if ($this->isLoggingEnabled()) {
-            $logfile = ForgeConfig::get('codendi_log') . "/tracker_date_reminder.log";
+            $logfile = ForgeConfig::get('codendi_log') . '/tracker_date_reminder.log';
         } else {
             $logfile = false;
         }
@@ -142,7 +142,7 @@ class tracker_date_reminderPlugin extends Plugin
                 }
             }
 
-            $out .= "</table>";
+            $out .= '</table>';
             echo $out;
         }
 
@@ -190,15 +190,15 @@ class tracker_date_reminderPlugin extends Plugin
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify the users to be notified.'));
                     } elseif (! isset($_REQUEST['start']) || (isset($_REQUEST['start']) && $_REQUEST['start'] == null)) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify the notification start date.'));
-                    } elseif (! preg_match("/^[0-9]+$/", $_REQUEST['start']) || $_REQUEST['start'] < 0) {
+                    } elseif (! preg_match('/^[0-9]+$/', $_REQUEST['start']) || $_REQUEST['start'] < 0) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify a positive value.'));
                     } elseif (! isset($_REQUEST['frequency']) || (isset($_REQUEST['frequency']) && ($_REQUEST['frequency'] == null || $_REQUEST['frequency'] == 0))) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify the notification frequency.'));
-                    } elseif (! preg_match("/^[0-9]+$/", $_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {
+                    } elseif (! preg_match('/^[0-9]+$/', $_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify a positive value.'));
                     } elseif (! isset($_REQUEST['recurse']) || (isset($_REQUEST['recurse']) && ($_REQUEST['recurse'] == null || $_REQUEST['recurse'] == 0))) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify the number of mails to be sent.'));
-                    } elseif (! preg_match("/^[0-9]+$/", $_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
+                    } elseif (! preg_match('/^[0-9]+$/', $_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify a positive value.'));
                     } else {
                         //merge notified_users and notified_groups into one array

@@ -58,7 +58,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("status", (string) $result->error);
+        self::assertStringContainsString('status', (string) $result->error);
     }
 
     public function testItWillFilterOnOpenPullRequestsOnly(): void
@@ -92,16 +92,16 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("authors", (string) $result->error);
+        self::assertStringContainsString('authors', (string) $result->error);
     }
 
     public function testItReturnsAnErrorWhenTheAuthorIdIsNotAnInt(): void
     {
-        $result = $this->converter->convert(json_encode(['authors' => [['id' => "one-hundred-and-two"]]], JSON_THROW_ON_ERROR));
+        $result = $this->converter->convert(json_encode(['authors' => [['id' => 'one-hundred-and-two']]], JSON_THROW_ON_ERROR));
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("authors", (string) $result->error);
+        self::assertStringContainsString('authors', (string) $result->error);
     }
 
     public function testItReturnsAnErrorWhenTryingToFilterMultipleAuthors(): void
@@ -110,7 +110,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("authors", (string) $result->error);
+        self::assertStringContainsString('authors', (string) $result->error);
     }
 
     public function testItWillOnlyFilterOnAuthor(): void
@@ -139,11 +139,11 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
     public function testItReturnsAnErrorWhenTheLabelsIdsAreNotIntegers(): void
     {
-        $result = $this->converter->convert(json_encode(['labels' => [['id' => "1"]]], JSON_THROW_ON_ERROR));
+        $result = $this->converter->convert(json_encode(['labels' => [['id' => '1']]], JSON_THROW_ON_ERROR));
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("labels", (string) $result->error);
+        self::assertStringContainsString('labels', (string) $result->error);
     }
 
     public function testItWillFilterOnKeywords(): void
@@ -154,8 +154,8 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         $criteria = $result->unwrapOr(null);
 
-        self::assertEquals("security", $criteria->search[0]->keyword);
-        self::assertEquals("bump", $criteria->search[1]->keyword);
+        self::assertEquals('security', $criteria->search[0]->keyword);
+        self::assertEquals('bump', $criteria->search[1]->keyword);
     }
 
     public function testItReturnsAnErrorWhenTryingToFilterMultipleTargetBranches(): void
@@ -164,7 +164,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("target_branches", (string) $result->error);
+        self::assertStringContainsString('target_branches', (string) $result->error);
     }
 
     public function testItWillFilterOnTargetBranches(): void
@@ -175,7 +175,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         $criteria = $result->unwrapOr(null);
 
-        self::assertEquals("walnut", $criteria->target_branches[0]->name);
+        self::assertEquals('walnut', $criteria->target_branches[0]->name);
     }
 
     public function testItReturnsAnErrorWhenTryingToFilterMultipleReviewers(): void
@@ -184,7 +184,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("reviewers", (string) $result->error);
+        self::assertStringContainsString('reviewers', (string) $result->error);
     }
 
     public function testItWillFilterOnReviewers(): void
@@ -209,7 +209,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("related_to", (string) $result->error);
+        self::assertStringContainsString('related_to', (string) $result->error);
     }
 
     public function testItReturnsAnErrorWhenTryingToFilterOnRelatedToAndReviewersCriteria(): void
@@ -223,7 +223,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("related_to", (string) $result->error);
+        self::assertStringContainsString('related_to', (string) $result->error);
     }
 
     public function testItReturnsAnErrorWhenTryingToFilterOnMultipleRelatedTo(): void
@@ -236,7 +236,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("related_to", (string) $result->error);
+        self::assertStringContainsString('related_to', (string) $result->error);
     }
 
     public function testItWillFilterOnRelatedTo(): void
@@ -262,7 +262,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
                 'labels' => [['id' => 1], ['id' => 2]],
                 'search' => [['keyword' => 'security'], ['keyword' => 'bump']],
                 'target_branches' => [['name' => 'walnut']],
-                'reviewers' => [["id" => 102]],
+                'reviewers' => [['id' => 102]],
             ], JSON_THROW_ON_ERROR)
         );
 
@@ -274,9 +274,9 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         self::assertEquals(102, $criteria->authors[0]->id);
         self::assertEquals(1, $criteria->labels[0]->id);
         self::assertEquals(2, $criteria->labels[1]->id);
-        self::assertEquals("security", $criteria->search[0]->keyword);
-        self::assertEquals("bump", $criteria->search[1]->keyword);
-        self::assertEquals("walnut", $criteria->target_branches[0]->name);
+        self::assertEquals('security', $criteria->search[0]->keyword);
+        self::assertEquals('bump', $criteria->search[1]->keyword);
+        self::assertEquals('walnut', $criteria->target_branches[0]->name);
         self::assertEquals(102, $criteria->reviewers[0]->id);
 
         self::assertTrue($status_criterion->shouldOnlyRetrieveOpenPullRequests());

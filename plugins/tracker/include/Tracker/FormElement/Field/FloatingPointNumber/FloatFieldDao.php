@@ -51,7 +51,7 @@ class FloatFieldDao extends SpecificPropertiesDao
         if (isset($row['default_value']) && trim($row['default_value']) !== '') {
             $default_value = (float) $row['default_value'];
         } else {
-            $default_value = "NULL";
+            $default_value = 'NULL';
         }
 
         $sql = "REPLACE INTO $this->table_name (field_id, maxchars, size, default_value)

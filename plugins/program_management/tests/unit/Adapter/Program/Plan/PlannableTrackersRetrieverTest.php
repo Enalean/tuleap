@@ -53,7 +53,7 @@ final class PlannableTrackersRetrieverTest extends TestCase
     public function testItBuildsATrackerReferenceList(): void
     {
         $retriever = new PlannableTrackersRetriever($this->plan_dao, $this->tracker_factory);
-        $project   = new \Project(['group_id' => '101', 'group_name' => 'A project', 'unix_group_name' => 'a_project', "icon_codepoint" => ""]);
+        $project   = new \Project(['group_id' => '101', 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']);
         $tracker1  = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
         $tracker2  = TrackerTestBuilder::aTracker()->withId(2)->withProject($project)->build();
         $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls($tracker1, $tracker2);

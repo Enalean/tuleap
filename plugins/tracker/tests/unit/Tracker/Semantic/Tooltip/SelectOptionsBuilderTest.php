@@ -83,7 +83,7 @@ final class SelectOptionsBuilderTest extends TestCase
 
         $stepdef = $this->createMock(\Tracker_FormElement_Field::class);
         $stepdef->method('userCanRead')->willReturn(true);
-        $stepdef->method('getLabel')->willReturn("Step definition");
+        $stepdef->method('getLabel')->willReturn('Step definition');
         $stepdef->method('getId')->willReturn(123);
         $stepdef->method('canBeDisplayedInTooltip')->willReturn(false);
 

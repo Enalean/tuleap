@@ -242,11 +242,11 @@ class BaseLanguage
             } else {
                 $error_str = '* Error in ' . $fname . ' line ' . $i . ' string "' . trim($ary[$i]) . '" (length: ' . strlen(trim($ary[$i])) . ') : ';
                 if (! isset($line[0])) {
-                    $error_str .= "no index 0: empty line ? ";
+                    $error_str .= 'no index 0: empty line ? ';
                 } elseif (! isset($line[1])) {
-                    $error_str .= "no index 1: did you use tabs to separate elements ? ";
+                    $error_str .= 'no index 1: did you use tabs to separate elements ? ';
                 } elseif (! isset($line[2])) {
-                    $error_str .= "no index 2: keys present but string is missing ";
+                    $error_str .= 'no index 2: keys present but string is missing ';
                 }
                 throw new RuntimeException($error_str);
             }
@@ -296,7 +296,7 @@ class BaseLanguage
     /**
      * @psalm-taint-specialize
      */
-    public function getText($pagename, $category, $args = "")
+    public function getText($pagename, $category, $args = '')
     {
         // If the language files were modified by an update, the compiled version might not have been generated,
         // and the message not present.
@@ -362,7 +362,7 @@ class BaseLanguage
 
         if (is_null($plugin_name)) {
             // Test first the custom directory
-            $custom_fn = ForgeConfig::get('sys_custom_incdir') . "/" . $lang_code . "/" . $file . $ext;
+            $custom_fn = ForgeConfig::get('sys_custom_incdir') . '/' . $lang_code . '/' . $file . $ext;
         } else {
             $custom_fn = ForgeConfig::get('sys_custompluginsroot') . '/' . $plugin_name . '/site-content/' . $lang_code . '/' . $file . $ext;
         }
@@ -373,7 +373,7 @@ class BaseLanguage
             // Use the default file
             // Check first if exist
             if (is_null($plugin_name)) {
-                $fn = ForgeConfig::get('sys_incdir') . "/" . $lang_code . "/" . $file . $ext;
+                $fn = ForgeConfig::get('sys_incdir') . '/' . $lang_code . '/' . $file . $ext;
             } else {
                 $fn = ForgeConfig::get('sys_pluginsroot') . '/' . $plugin_name . '/site-content/' . $lang_code . '/' . $file . $ext;
             }
@@ -386,7 +386,7 @@ class BaseLanguage
                     return __DIR__ . '/../../../site-content/en_US/others/empty.txt';
                 } else {
                     // else try to find the file in the en_US directory
-                    return $this->getContent($file, "en_US", $plugin_name, $ext);
+                    return $this->getContent($file, 'en_US', $plugin_name, $ext);
                 }
             }
         }
@@ -535,7 +535,7 @@ class BaseLanguage
         return ForgeConfig::getCacheDir() . DIRECTORY_SEPARATOR . 'lang';
     }
 
-    public function getOverridableText($pagename, $category, $args = "")
+    public function getOverridableText($pagename, $category, $args = '')
     {
         return $this->getText($pagename, $category, $args);
     }

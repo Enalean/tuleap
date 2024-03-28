@@ -24,6 +24,6 @@ final class KanbanSemanticStatusColumnIdsNotInOpenSemanticException extends \Exc
 {
     public function __construct()
     {
-        parent::__construct("Some columns ids are not in the open semantic");
+        parent::__construct('Some columns ids are not in the open semantic');
     }
 }

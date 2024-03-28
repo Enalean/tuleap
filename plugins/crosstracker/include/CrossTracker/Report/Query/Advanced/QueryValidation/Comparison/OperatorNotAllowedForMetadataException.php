@@ -28,7 +28,7 @@ final class OperatorNotAllowedForMetadataException extends InvalidQueryException
     public function __construct(Metadata $metadata, $operator)
     {
         $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s is not supported for the operator %s."),
+            dgettext('tuleap-crosstracker', '%s is not supported for the operator %s.'),
             $metadata->getName(),
             $operator
         );

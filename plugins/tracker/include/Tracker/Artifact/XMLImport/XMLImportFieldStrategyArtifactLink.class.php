@@ -84,7 +84,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
             }
         }
 
-        return ["new_values" => $artifact_links, "types" => $types];
+        return ['new_values' => $artifact_links, 'types' => $types];
     }
 
     private function checkTypeExistOnPlateform($linked_type, $linked_artifact_id)

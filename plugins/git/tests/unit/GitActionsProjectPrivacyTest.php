@@ -70,7 +70,7 @@ class GitActionsProjectPrivacyTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('setAccess')
             ->with(GitRepository::PRIVATE_ACCESS)
             ->once()
-            ->andReturns("whatever")
+            ->andReturns('whatever')
             ->getMock();
 
         $repo->shouldReceive('getAccess');
@@ -88,7 +88,7 @@ class GitActionsProjectPrivacyTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo_id    = 333;
         $repo       = Mockery::mock(\GitRepository::class)->shouldReceive('setAccess')->never()->getMock();
         $repo->shouldReceive('getAccess')->andReturns(GitRepository::PRIVATE_ACCESS);
-        $repo->shouldReceive('changeAccess')->andReturns("whatever");
+        $repo->shouldReceive('changeAccess')->andReturns('whatever');
         $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id => null]);
         $this->factory->shouldReceive('getRepositoryById')->with($repo_id)->andReturns($repo);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
@@ -105,14 +105,14 @@ class GitActionsProjectPrivacyTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('setAccess')
             ->with(GitRepository::PRIVATE_ACCESS)
             ->once()
-            ->andReturns("whatever")
+            ->andReturns('whatever')
             ->getMock();
 
         $repo2 = Mockery::mock(\GitRepository::class)
             ->shouldReceive('setAccess')
             ->with(GitRepository::PRIVATE_ACCESS)
             ->once()
-            ->andReturns("whatever")
+            ->andReturns('whatever')
             ->getMock();
 
         $repo1->shouldReceive('getAccess');

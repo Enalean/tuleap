@@ -80,9 +80,9 @@ if (isset($pv) && $pv) {
 } else {
     echo "<TABLE width='100%'><TR><TD>";
     echo '<H3>' . _('Discussion Forums') . '</H3>';
-    echo "</TD>";
-        echo "<TD align='left'> ( <A HREF='?group_id=" . $purifier->purify(urlencode($group_id)) . "&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
-    echo "</TR></TABLE>";
+    echo '</TD>';
+        echo "<TD align='left'> ( <A HREF='?group_id=" . $purifier->purify(urlencode($group_id)) . "&pv=1'><img src='" . util_get_image_theme('msg.png') . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . '</A> ) </TD>';
+    echo '</TR></TABLE>';
 }
 
 echo '<P>' . _('Choose a forum and you can browse, search, and post messages.') . '<P>';
@@ -93,7 +93,7 @@ echo '<P>' . _('Choose a forum and you can browse, search, and post messages.') 
 
 for ($j = 0; $j < $rows; $j++) {
     echo '<A HREF="forum.php?forum_id=' . $purifier->purify(urlencode(db_result($result, $j, 'group_forum_id'))) . '">' .
-        html_image("ic/cfolder15.png", ["border" => "0"]) .
+        html_image('ic/cfolder15.png', ['border' => '0']) .
         '&nbsp;' .
         $purifier->purify(html_entity_decode(db_result($result, $j, 'forum_name'))) . '</A> ';
     //message count

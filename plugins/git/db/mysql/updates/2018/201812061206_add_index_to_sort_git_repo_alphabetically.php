@@ -32,16 +32,16 @@ class b201812061206_add_index_to_sort_git_repo_alphabetically extends ForgeUpgra
 
     public function up()
     {
-        $this->dropIndex("plugin_git", "project_id");
+        $this->dropIndex('plugin_git', 'project_id');
         $this->db->addIndex(
-            "plugin_git",
-            "idx_project_repository",
-            "ALTER TABLE plugin_git ADD INDEX idx_project_repository(project_id, repository_id)"
+            'plugin_git',
+            'idx_project_repository',
+            'ALTER TABLE plugin_git ADD INDEX idx_project_repository(project_id, repository_id)'
         );
         $this->db->addIndex(
-            "plugin_git_log",
-            "idx_repository_date",
-            "ALTER TABLE plugin_git_log ADD INDEX idx_repository_date(repository_id, push_date)"
+            'plugin_git_log',
+            'idx_repository_date',
+            'ALTER TABLE plugin_git_log ADD INDEX idx_repository_date(repository_id, push_date)'
         );
     }
 

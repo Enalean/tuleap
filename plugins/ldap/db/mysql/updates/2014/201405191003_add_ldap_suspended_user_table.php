@@ -49,11 +49,11 @@ EOT;
      */
     public function up()
     {
-        $sql = "CREATE TABLE plugin_ldap_suspended_user (
+        $sql = 'CREATE TABLE plugin_ldap_suspended_user (
                  user_id int(11) NOT NULL,
                  deletion_date int(11) NOT NULL
                 )
-        ";
+        ';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the table plugin_ldap_suspended_user');

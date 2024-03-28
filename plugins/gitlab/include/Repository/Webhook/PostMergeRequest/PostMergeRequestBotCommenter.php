@@ -91,7 +91,7 @@ class PostMergeRequestBotCommenter
         $reference_presenters = $this->bot_comment_reference_presenter_builder->build($references);
 
         $renderer = $this->template_renderer_factory->getRenderer(dirname(__FILE__) . '/../../../../templates');
-        $comment  = $renderer->renderToString("gitlab-bot-comment-merge-request", new BotCommentPresenter($reference_presenters));
+        $comment  = $renderer->renderToString('gitlab-bot-comment-merge-request', new BotCommentPresenter($reference_presenters));
 
         try {
             $url = "/projects/{$gitlab_repository_integration->getGitlabRepositoryId()}/merge_requests/$merge_request_id/notes";
@@ -99,7 +99,7 @@ class PostMergeRequestBotCommenter
                 $gitlab_repository_integration,
                 $credentials,
                 $url,
-                ["body" => $comment]
+                ['body' => $comment]
             );
 
             $this->logger->debug("Comment was successfully added on merge request #$merge_request_id");

@@ -14,7 +14,7 @@ rcs_id('$Id: JabberPresence.php,v 1.3 2004/11/21 11:59:26 rurban Exp $');
  */
 
 if (! defined('MY_JABBER_ID')) {
-    define('MY_JABBER_ID', $GLOBALS['request']->_user->UserName() . "@jabber.com"); // or "@netflint.net"
+    define('MY_JABBER_ID', $GLOBALS['request']->_user->UserName() . '@jabber.com'); // or "@netflint.net"
 }
 
 class WikiPlugin_JabberPresence extends WikiPlugin
@@ -22,30 +22,30 @@ class WikiPlugin_JabberPresence extends WikiPlugin
     // Five required functions in a WikiPlugin.
     public function getName()
     {
-        return _("JabberPresence");
+        return _('JabberPresence');
     }
 
     public function getDescription()
     {
-        return _("Simple jabber presence plugin");
+        return _('Simple jabber presence plugin');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.3 $"
+            '$Revision: 1.3 $'
         );
     }
 
     // Establish default values for each of this plugin's arguments.
     public function getDefaultArguments()
     {
-        return ['scripturl' => "http://edgar.netflint.net/status.php",
+        return ['scripturl' => 'http://edgar.netflint.net/status.php',
             'jid'       => MY_JABBER_ID,
             'type'      => 'image',
-            'iconset'   => "gabber",
+            'iconset'   => 'gabber',
         ];
     }
 

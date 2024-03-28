@@ -55,14 +55,14 @@ class PostPushWebhookDataBuilder
         }
 
         if (! is_string($webhook_content[self::REFERENCE_KEY])) {
-            throw new InvalidValueFormatException(self::REFERENCE_KEY, "string");
+            throw new InvalidValueFormatException(self::REFERENCE_KEY, 'string');
         }
 
         if (
             ! is_string($webhook_content[self::CHECKOUT_SHA_KEY]) &&
             ! is_null($webhook_content[self::CHECKOUT_SHA_KEY])
         ) {
-            throw new InvalidValueFormatException(self::CHECKOUT_SHA_KEY, "string|null");
+            throw new InvalidValueFormatException(self::CHECKOUT_SHA_KEY, 'string|null');
         }
 
         return new PostPushWebhookData(

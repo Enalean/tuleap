@@ -46,9 +46,9 @@ class JenkinsServerDao extends DataAccessObject
      */
     public function getJenkinsServerOfProject(int $project_id): array
     {
-        $sql = "SELECT id, jenkins_server_url, encrypted_token
+        $sql = 'SELECT id, jenkins_server_url, encrypted_token
                 FROM plugin_hudson_git_project_server
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         return $this->getDB()->run($sql, $project_id);
     }
@@ -61,21 +61,21 @@ class JenkinsServerDao extends DataAccessObject
         int $limit,
         int $offset,
     ): array {
-        $sql = "SELECT SQL_CALC_FOUND_ROWS id, jenkins_server_url
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS id, jenkins_server_url
                 FROM plugin_hudson_git_project_server
                 WHERE project_id = ?
                 LIMIT ? OFFSET ?
-                ";
+                ';
 
         return $this->getDB()->run($sql, $project_id, $limit, $offset);
     }
 
     public function isJenkinsServerAlreadyDefinedInProject(int $project_id, string $jenkins_server_url): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_hudson_git_project_server
                 WHERE project_id = ?
-                AND jenkins_server_url = ?";
+                AND jenkins_server_url = ?';
 
         $rows = $this->getDB()->row($sql, $project_id, $jenkins_server_url);
 
@@ -91,9 +91,9 @@ class JenkinsServerDao extends DataAccessObject
      */
     public function getJenkinsServerById(int $jenkins_server_id): ?array
     {
-        $sql = "SELECT id, jenkins_server_url, project_id, encrypted_token
+        $sql = 'SELECT id, jenkins_server_url, project_id, encrypted_token
                 FROM plugin_hudson_git_project_server
-                WHERE id = ?";
+                WHERE id = ?';
 
         return $this->getDB()->row($sql, $jenkins_server_id);
     }

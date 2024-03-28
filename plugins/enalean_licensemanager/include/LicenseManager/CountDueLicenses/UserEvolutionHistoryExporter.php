@@ -56,8 +56,8 @@ class UserEvolutionHistoryExporter
         }
 
         if (! file_exists($this->history_file_location)) {
-            $csv_file = fopen($this->history_file_location, "a");
-            fputcsv($csv_file, ["date", "nb active users", "nb visitor users", "nb due licenses"]);
+            $csv_file = fopen($this->history_file_location, 'a');
+            fputcsv($csv_file, ['date', 'nb active users', 'nb visitor users', 'nb due licenses']);
         } else {
             $csv_file = fopen($this->history_file_location, 'a');
         }
@@ -68,7 +68,7 @@ class UserEvolutionHistoryExporter
         fputcsv($csv_file, $data);
         fclose($csv_file);
 
-        $this->output->writeln("<comment>Forge users evolution history saved. You can consult it here : " . $this->history_file_location . "</comment>");
+        $this->output->writeln('<comment>Forge users evolution history saved. You can consult it here : ' . $this->history_file_location . '</comment>');
     }
 
     private function hasScriptBeenRanToday(): bool

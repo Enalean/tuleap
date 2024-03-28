@@ -31,7 +31,7 @@ use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\GlobalLanguageMock;
 
-require_once __DIR__ . "/../bootstrap.php";
+require_once __DIR__ . '/../bootstrap.php';
 
 final class BaselinesPageRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {

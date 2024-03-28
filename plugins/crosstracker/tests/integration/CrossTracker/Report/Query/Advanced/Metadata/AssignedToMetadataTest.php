@@ -172,7 +172,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@assigned_to = MYSELF()",
+                '@assigned_to = MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -232,7 +232,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@assigned_to != MYSELF()",
+                '@assigned_to != MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -277,7 +277,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@assigned_to IN(MYSELF())",
+                '@assigned_to IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice
@@ -352,7 +352,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@assigned_to NOT IN(MYSELF())",
+                '@assigned_to NOT IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice

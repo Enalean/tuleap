@@ -34,12 +34,12 @@ class HeaderNavigationDisplayer
 {
     public function displayBurningParrotNavigation($title, Project $project, $current_pane_shortname)
     {
-        $this->displayNavigation($title, $project, "navigation", $current_pane_shortname);
+        $this->displayNavigation($title, $project, 'navigation', $current_pane_shortname);
     }
 
     public function displayFlamingParrotNavigation($title, Project $project, $current_pane_shortname)
     {
-        $this->displayNavigation($title, $project, "navigation_flaming_parrot", $current_pane_shortname);
+        $this->displayNavigation($title, $project, 'navigation_flaming_parrot', $current_pane_shortname);
     }
 
     private function displayNavigation($title, Project $project, $template_name, $current_pane_shortname)

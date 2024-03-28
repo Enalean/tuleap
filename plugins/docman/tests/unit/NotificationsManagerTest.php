@@ -62,7 +62,7 @@ class Docman_NotificationsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroups_retriever = Mockery::mock(UGroupsRetriever::class);
         $project                 = Mockery::mock(Project::class);
         $project->shouldReceive('isError')->andReturn(false);
-        $project->shouldReceive('getPublicName')->andReturn("My project");
+        $project->shouldReceive('getPublicName')->andReturn('My project');
         $project->shouldReceive('getTruncatedEmailsUsage')->andReturn(false);
         $this->link_url_provider    = Mockery::mock(ILinkUrlProvider::class);
         $this->notification_manager = new Docman_NotificationsManager(
@@ -94,13 +94,13 @@ class Docman_NotificationsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $params['wiki_page'] = 'wiki';
         $params['url']       = 'http://www.example.com/plugins/docman/';
 
-        $details_link_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $details_link_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
         $this->link_url_provider->shouldReceive('getDetailsLinkUrl')->andReturn($details_link_url);
 
-        $notifications_link_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $notifications_link_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
         $this->link_url_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_link_url);
 
-        $plugin_link_url = "http://www.example.com/plugins/docman/";
+        $plugin_link_url = 'http://www.example.com/plugins/docman/';
         $this->link_url_provider->shouldReceive('getPluginLinkUrl')->andReturn($plugin_link_url);
 
         $message1 = "Folder1/Folder2/File has been modified by John Doe.\n$details_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
@@ -135,10 +135,10 @@ class Docman_NotificationsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $params['wiki_page'] = 'wiki';
         $params['url']       = 'http://www.example.com/plugins/docman/';
 
-        $details_link_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $details_link_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
         $this->link_url_provider->shouldReceive('getDetailsLinkUrl')->andReturn($details_link_url);
 
-        $notifications_link_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $notifications_link_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
         $this->link_url_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_link_url);
 
         $message1 = "Folder1/Folder2/File has been modified by John Doe.\n$details_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";

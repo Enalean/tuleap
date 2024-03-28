@@ -51,9 +51,9 @@ final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $r->method('_getProjectManager')->willReturn($pm);
         $r->method('_getSystemEventManager')->willReturn($sm);
 
-        self::assertTrue($r->isValid("user"));
-        self::assertTrue($r->isValid("user_name"));
-        self::assertTrue($r->isValid("user-name"));
+        self::assertTrue($r->isValid('user'));
+        self::assertTrue($r->isValid('user_name'));
+        self::assertTrue($r->isValid('user-name'));
     }
 
     public function testUserAlreadyExist(): void
@@ -80,7 +80,7 @@ final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $r->method('_getProjectManager')->willReturn($pm);
         $r->method('_getSystemEventManager')->willReturn($sm);
 
-        self::assertFalse($r->isValid("user"));
+        self::assertFalse($r->isValid('user'));
     }
 
     public function testProjectAlreadyExist(): void
@@ -107,7 +107,7 @@ final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $r->method('_getProjectManager')->willReturn($pm);
         $r->method('_getSystemEventManager')->willReturn($sm);
 
-        self::assertFalse($r->isValid("user"));
+        self::assertFalse($r->isValid('user'));
     }
 
     public function testSpaceInName(): void
@@ -133,6 +133,6 @@ final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $r->method('_getProjectManager')->willReturn($pm);
         $r->method('_getSystemEventManager')->willReturn($sm);
 
-        self::assertFalse($r->isValid("user name"));
+        self::assertFalse($r->isValid('user name'));
     }
 }

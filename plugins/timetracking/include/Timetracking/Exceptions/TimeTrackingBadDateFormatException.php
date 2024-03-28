@@ -26,6 +26,6 @@ class TimeTrackingBadDateFormatException extends Exception
 {
     public function __construct()
     {
-        parent::__construct(dgettext('tuleap-timetracking', "The date format is not the one expected (YYYY-MM-DD)."));
+        parent::__construct(dgettext('tuleap-timetracking', 'The date format is not the one expected (YYYY-MM-DD).'));
     }
 }

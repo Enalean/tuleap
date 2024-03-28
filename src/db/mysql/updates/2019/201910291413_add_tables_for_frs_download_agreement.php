@@ -35,22 +35,22 @@ class b201910291413_add_tables_for_frs_download_agreement extends ForgeUpgrade_B
 
     public function up(): void
     {
-        $sql = "CREATE TABLE frs_download_agreement (
+        $sql = 'CREATE TABLE frs_download_agreement (
             id INT(11) NOT NULL AUTO_INCREMENT,
             project_id int(11) NOT NULL,
             title VARCHAR(255) NOT NULL,
             content TEXT,
             PRIMARY KEY  (id),
             INDEX idx_project_id(project_id, id)
-        )";
+        )';
         $this->db->createTable('frs_download_agreement', $sql);
 
-        $sql = "CREATE TABLE frs_package_download_agreement (
+        $sql = 'CREATE TABLE frs_package_download_agreement (
             package_id INT(11) NOT NULL,
             agreement_id INT(11) NOT NULL,
             PRIMARY KEY (package_id, agreement_id),
             INDEX idx_reverse(agreement_id, package_id)
-        )";
+        )';
         $this->db->createTable('frs_package_download_agreement', $sql);
     }
 }

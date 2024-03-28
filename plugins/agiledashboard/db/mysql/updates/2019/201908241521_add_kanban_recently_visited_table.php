@@ -22,7 +22,7 @@ class b201908241521_add_kanban_recently_visited_table extends ForgeUpgrade_Bucke
 {
     public function description()
     {
-        return "Add kanban recently visited table";
+        return 'Add kanban recently visited table';
     }
 
     public function preUp()
@@ -32,7 +32,7 @@ class b201908241521_add_kanban_recently_visited_table extends ForgeUpgrade_Bucke
 
     public function up()
     {
-        $sql = "
+        $sql = '
             CREATE TABLE plugin_agiledashboard_kanban_recently_visited (
                 user_id INT(11) NOT NULL,
                 kanban_id INT(11) NOT NULL,
@@ -40,7 +40,7 @@ class b201908241521_add_kanban_recently_visited_table extends ForgeUpgrade_Bucke
                 PRIMARY KEY(user_id, kanban_id),
                 INDEX idx_user_visit_time(user_id, created_on)
             ) ENGINE=InnoDB
-        ";
+        ';
 
         $this->db->createTable('plugin_agiledashboard_kanban_recently_visited', $sql);
     }

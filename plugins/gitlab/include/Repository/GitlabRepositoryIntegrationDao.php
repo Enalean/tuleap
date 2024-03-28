@@ -138,11 +138,11 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject implements VerifyG
         string $web_url,
         int $project_id,
     ): bool {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_gitlab_repository_integration
                 WHERE plugin_gitlab_repository_integration.name = ?
                     AND plugin_gitlab_repository_integration.gitlab_repository_url != ?
-                    AND plugin_gitlab_repository_integration.project_id = ?";
+                    AND plugin_gitlab_repository_integration.project_id = ?';
 
         $rows = $this->getDB()->run($sql, $name, $web_url, $project_id);
 

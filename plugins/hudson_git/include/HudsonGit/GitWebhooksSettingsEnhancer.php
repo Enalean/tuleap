@@ -97,7 +97,7 @@ class GitWebhooksSettingsEnhancer
                 );
             }
             $params['sections'][] = new SectionOfWebhooksPresenter(
-                dgettext("tuleap-git", "Project Jenkins servers"),
+                dgettext('tuleap-git', 'Project Jenkins servers'),
                 $external_webhook_presenters
             );
         }

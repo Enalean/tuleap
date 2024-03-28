@@ -52,7 +52,7 @@ class DocumentMetadataCreator
         foreach ($metadata_list as $metadata_representation) {
             $row_metadata = $this->metadata_dao->searchById($metadata_representation['id']);
             if (! $row_metadata) {
-                throw new LogicException(sprintf("Save of metadata %d is not supported", $metadata_representation['id']));
+                throw new LogicException(sprintf('Save of metadata %d is not supported', $metadata_representation['id']));
             }
 
             $metadata = $this->initMetadataFromRow($row_metadata->getRow());

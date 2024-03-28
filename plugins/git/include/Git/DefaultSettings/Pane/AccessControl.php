@@ -81,7 +81,7 @@ class AccessControl extends Pane
     ) {
         parent::__construct(
             dgettext('tuleap-git', 'Access control'),
-            "?" . http_build_query(
+            '?' . http_build_query(
                 [
                     'action'   => 'admin-default-settings',
                     'group_id' => $project->getID(),
@@ -112,7 +112,7 @@ class AccessControl extends Pane
         $write_options  = $this->access_rights_builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_WRITE);
         $rewind_options = $this->access_rights_builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_WPLUS);
         $csrf           = new CSRFSynchronizerToken(
-            "/plugins/git/?" . http_build_query(
+            '/plugins/git/?' . http_build_query(
                 [
                     'group_id' => $project_id,
                     'action'   => 'admin-default-access-rights',

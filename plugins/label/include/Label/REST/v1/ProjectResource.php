@@ -125,7 +125,7 @@ class ProjectResource
         }
 
         if (count($label_ids) === 0) {
-            throw new RestException(400, "labels_id must not be empty");
+            throw new RestException(400, 'labels_id must not be empty');
         }
 
         return $label_ids;

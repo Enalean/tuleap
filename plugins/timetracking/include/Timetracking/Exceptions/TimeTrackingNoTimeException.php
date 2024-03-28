@@ -26,6 +26,6 @@ class TimeTrackingNoTimeException extends Exception
 {
     public function __construct()
     {
-        parent::__construct(dgettext('tuleap-timetracking', "Time not found."));
+        parent::__construct(dgettext('tuleap-timetracking', 'Time not found.'));
     }
 }

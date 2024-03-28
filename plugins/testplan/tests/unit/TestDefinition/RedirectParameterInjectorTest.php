@@ -84,7 +84,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request  = new \Codendi_Request(
             [
-                'ttm_backlog_item_id' => "123",
+                'ttm_backlog_item_id' => '123',
             ],
             $this->createMock(\ProjectManager::class)
         );
@@ -99,8 +99,8 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = new \Codendi_Request(
             [
-                'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42",
+                'ttm_backlog_item_id' => '123',
+                'ttm_milestone_id'    => '42',
             ],
             $this->createMock(\ProjectManager::class)
         );
@@ -112,8 +112,8 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getArtifactByIdUserCanView')
             ->willReturnMap(
                 [
-                    [$this->user, "123", null],
-                    [$this->user, "42", $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class)],
+                    [$this->user, '123', null],
+                    [$this->user, '42', $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class)],
                 ],
             );
 
@@ -126,8 +126,8 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = new \Codendi_Request(
             [
-                'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42",
+                'ttm_backlog_item_id' => '123',
+                'ttm_milestone_id'    => '42',
             ],
             $this->createMock(\ProjectManager::class)
         );
@@ -139,8 +139,8 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getArtifactByIdUserCanView')
             ->willReturnMap(
                 [
-                    [$this->user, "42", null],
-                    [$this->user, "123", $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class)],
+                    [$this->user, '42', null],
+                    [$this->user, '123', $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class)],
                 ],
             );
 
@@ -159,8 +159,8 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $request = new \Codendi_Request(
             array_merge(
                 [
-                    'ttm_backlog_item_id' => "123",
-                    'ttm_milestone_id' => "42",
+                    'ttm_backlog_item_id' => '123',
+                    'ttm_milestone_id' => '42',
                 ],
                 $request_parameters
             ),
@@ -176,8 +176,8 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getArtifactByIdUserCanView')
             ->willReturnMap(
                 [
-                    [$this->user, "123", $this->backlog_item],
-                    [$this->user, "42", $milestone],
+                    [$this->user, '123', $this->backlog_item],
+                    [$this->user, '42', $milestone],
                 ],
             );
 
@@ -207,8 +207,8 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals(
             [
-                'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42",
+                'ttm_backlog_item_id' => '123',
+                'ttm_milestone_id'    => '42',
             ],
             $redirect->query_parameters
         );

@@ -85,7 +85,7 @@ EOF;
         //add initial commit
         touch("$this->fixture_dir/stuff");
         $this->git_exec->add("$this->fixture_dir/stuff");
-        $this->git_exec->commit("add stuff file");
+        $this->git_exec->commit('add stuff file');
 
         //get commit SHA1
         $initial_commit_sha1 = trim($gitexe->Execute('rev-parse', ['HEAD']));

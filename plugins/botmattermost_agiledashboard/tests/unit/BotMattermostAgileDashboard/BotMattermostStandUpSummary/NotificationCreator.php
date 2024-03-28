@@ -48,7 +48,7 @@ final class NotificationCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfBotDoesNotBelongToProject(): void
     {
-        $bot = new Bot(1, "bot", "", "", 102);
+        $bot = new Bot(1, 'bot', '', '', 102);
 
         $this->dao->expects(self::never())
             ->method('createNotification');
@@ -59,13 +59,13 @@ final class NotificationCreatorTest extends TestCase
             $bot,
             101,
             ['chan01'],
-            "08:00:00"
+            '08:00:00'
         );
     }
 
     public function testItThrowsAnExceptionIfNotificationCannotBeSaved(): void
     {
-        $bot = new Bot(1, "bot", "", "", null);
+        $bot = new Bot(1, 'bot', '', '', null);
 
         $this->dao->expects(self::once())
             ->method('createNotification')
@@ -77,13 +77,13 @@ final class NotificationCreatorTest extends TestCase
             $bot,
             101,
             ['chan01'],
-            "08:00:00"
+            '08:00:00'
         );
     }
 
     public function testItDoesNotThrowExceptionIfNotificationIsSaved(): void
     {
-        $bot = new Bot(1, "bot", "", "", null);
+        $bot = new Bot(1, 'bot', '', '', null);
 
         $this->dao->expects(self::once())
             ->method('createNotification')
@@ -93,7 +93,7 @@ final class NotificationCreatorTest extends TestCase
             $bot,
             101,
             ['chan01'],
-            "08:00:00"
+            '08:00:00'
         );
     }
 }

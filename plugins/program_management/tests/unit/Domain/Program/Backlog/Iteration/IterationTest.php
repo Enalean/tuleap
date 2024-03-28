@@ -37,8 +37,8 @@ final class IterationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsAnIterationFromArtifact(): void
     {
         $iteration = Iteration::build(
-            RetrieveStatusValueUserCanSeeStub::withValue("On going"),
-            RetrieveTitleValueUserCanSeeStub::withValue("My artifact"),
+            RetrieveStatusValueUserCanSeeStub::withValue('On going'),
+            RetrieveTitleValueUserCanSeeStub::withValue('My artifact'),
             RetrieveTimeframeValueUserCanSeeStub::withValues(1635412289, 1635868368),
             RetrieveUriStub::withDefault(),
             RetrieveCrossRefStub::withDefault(),
@@ -50,10 +50,10 @@ final class IterationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(1, $iteration?->id);
         self::assertEquals(1635412289, $iteration?->start_date);
         self::assertEquals(1635868368, $iteration?->end_date);
-        self::assertEquals("My artifact", $iteration?->title);
-        self::assertEquals("On going", $iteration?->status);
-        self::assertEquals("art #1", $iteration?->cross_ref);
-        self::assertEquals("/plugins/tracker/?aid=1", $iteration?->uri);
+        self::assertEquals('My artifact', $iteration?->title);
+        self::assertEquals('On going', $iteration?->status);
+        self::assertEquals('art #1', $iteration?->cross_ref);
+        self::assertEquals('/plugins/tracker/?aid=1', $iteration?->uri);
         self::assertEquals(true, $iteration?->user_can_update);
     }
 }

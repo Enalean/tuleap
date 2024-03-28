@@ -32,7 +32,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE svn_checkins DROP KEY uniq_checkins_idx";
+        $sql = 'ALTER TABLE svn_checkins DROP KEY uniq_checkins_idx';
         if ($this->db->tableNameExists('svn_checkins')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
@@ -40,7 +40,7 @@ EOT;
             }
         }
 
-        $sql2 = "ALTER TABLE svn_checkins ADD KEY checkins_idx (commitid,dirid,fileid)";
+        $sql2 = 'ALTER TABLE svn_checkins ADD KEY checkins_idx (commitid,dirid,fileid)';
         if ($this->db->tableNameExists('svn_checkins')) {
             $res = $this->db->dbh->exec($sql2);
             if ($res === false) {

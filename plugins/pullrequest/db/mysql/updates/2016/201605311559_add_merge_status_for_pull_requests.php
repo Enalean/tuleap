@@ -34,7 +34,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_pullrequest_review ADD (merge_status INT(2) NOT NULL);";
+        $sql = 'ALTER TABLE plugin_pullrequest_review ADD (merge_status INT(2) NOT NULL);';
         $this->executeSql($sql);
     }
 

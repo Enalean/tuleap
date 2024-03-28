@@ -46,7 +46,7 @@ final class TrackerReportTest extends TrackerBase
             self::fail('Expected Report ID not found.');
         }
 
-        $report_artifacts_url      = "tracker_reports/" . urlencode($report_id) . '/artifacts?values=from_table_renderer';
+        $report_artifacts_url      = 'tracker_reports/' . urlencode($report_id) . '/artifacts?values=from_table_renderer';
         $report_artifacts_response = $this->getResponse(
             $this->request_factory->createRequest('GET', $report_artifacts_url)
         );

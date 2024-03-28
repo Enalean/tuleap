@@ -26,9 +26,9 @@ class LegacyTrackerMigrationDao extends DataAccessObject
 {
     public function isLegacyTrackerAlreadyMigratedWithOriginalIds(int $legacy_tracker_ids): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_tracker_legacy_tracker_migrated
-                WHERE legacy_tracker_id = ?";
+                WHERE legacy_tracker_id = ?';
 
         $rows = $this->getDB()->run($sql, $legacy_tracker_ids);
 

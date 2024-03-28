@@ -32,11 +32,11 @@ class b201607281135_create_plugin_frs_global_permissions extends \Tuleap\ForgeUp
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS frs_global_permissions(
+        $sql = 'CREATE TABLE IF NOT EXISTS frs_global_permissions(
                     project_id int(11) NOT NULL,
                     permission_type VARCHAR(255) NOT NULL,
                     ugroup_id int(11)
-                )";
+                )';
 
         $res = $this->db->dbh->exec($sql);
 

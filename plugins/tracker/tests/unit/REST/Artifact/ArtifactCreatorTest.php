@@ -484,7 +484,7 @@ final class ArtifactCreatorTest extends TestCase
         RetrieveTracker $tracker_factory,
     ): ArtifactCreator {
         $default_values_adder = $this->createMock(AddDefaultValuesToFieldsData::class);
-        $default_values_adder->method("getUsedFieldsWithDefaultValue")
+        $default_values_adder->method('getUsedFieldsWithDefaultValue')
             ->willReturnCallback(static fn (Tracker $tracker, array $fields_data, PFUser $user): array => $fields_data);
 
         $artifact_link_initial_builder = new NewArtifactLinkInitialChangesetValueBuilder();

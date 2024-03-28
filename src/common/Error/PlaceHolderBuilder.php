@@ -38,7 +38,7 @@ class PlaceHolderBuilder
     {
         $result = $this->project_manager->getMessageToRequesterForAccessProject($project->getID());
 
-        $default_message = _("Please write something meaningful for the admin.");
+        $default_message = _('Please write something meaningful for the admin.');
         if (! $result) {
             return $default_message;
         }
@@ -47,7 +47,7 @@ class PlaceHolderBuilder
 
         if (
             ! isset($row['msg_to_requester'])
-            || $row['msg_to_requester'] === "member_request_delegation_msg_to_requester"
+            || $row['msg_to_requester'] === 'member_request_delegation_msg_to_requester'
             || $row['msg_to_requester'] === null
         ) {
             return $default_message;

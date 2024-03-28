@@ -133,12 +133,12 @@ class ArtifactFile
             if ($old_value == '') {
                     $new_value = $filename;
             } else {
-                $new_value = $old_value . "," . $filename;
+                $new_value = $old_value . ',' . $filename;
             }
             $this->Artifact->addHistory('attachment', $old_value, $new_value);
 
             $changes['attach']['href'] = \Tuleap\ServerHostname::HTTPSUrl() .
-             "/tracker/download.php?artifact_id=" . $this->Artifact->getID() . "&id=$id";
+             '/tracker/download.php?artifact_id=' . $this->Artifact->getID() . "&id=$id";
 
             return $id;
         }
@@ -188,7 +188,7 @@ class ArtifactFile
         global $Language;
 
         $old_value = $this->Artifact->getAttachedFileNames();
-        $sql       = "DELETE FROM artifact_file WHERE id=" . db_ei($this->getID());
+        $sql       = 'DELETE FROM artifact_file WHERE id=' . db_ei($this->getID());
      //echo "sql=$sql<br>";
         $res = db_query($sql);
         if (! $res || db_affected_rows($res) < 1) {
@@ -237,9 +237,9 @@ class ArtifactFile
     {
         global $Language;
 
-        $sql = "SELECT af.id, af.artifact_id, af.description, af.bin_data, af.filename, af.filesize, af.filetype, af.adddate, af.submitted_by, user.user_name, user.realname
+        $sql = 'SELECT af.id, af.artifact_id, af.description, af.bin_data, af.filename, af.filesize, af.filetype, af.adddate, af.submitted_by, user.user_name, user.realname
                 FROM artifact_file af, user
-                WHERE (af.submitted_by = user.user_id) and af.id=" . db_ei($id);
+                WHERE (af.submitted_by = user.user_id) and af.id=' . db_ei($id);
      //echo $sql;
         $res = db_query($sql);
         if (! $res || db_numrows($res) < 1) {

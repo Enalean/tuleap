@@ -30,7 +30,7 @@ final class PullRequestAppTest extends TestCase
     public function testItIsTheOverviewAppWhenTheRequestHasATabParameterOverview(): void
     {
         $app_to_load = PullRequestApp::fromRequest(
-            HTTPRequestBuilder::get()->withParam("tab", "overview")->build()
+            HTTPRequestBuilder::get()->withParam('tab', 'overview')->build()
         );
 
         self::assertSame(PullRequestApp::OVERVIEW_APP, $app_to_load);
@@ -39,7 +39,7 @@ final class PullRequestAppTest extends TestCase
     public function testItIsTheHomePageAppWhenTheRequestHasATabParameterHomePage(): void
     {
         $app_to_load = PullRequestApp::fromRequest(
-            HTTPRequestBuilder::get()->withParam("tab", "homepage")->build()
+            HTTPRequestBuilder::get()->withParam('tab', 'homepage')->build()
         );
 
         self::assertSame(PullRequestApp::HOMEPAGE_APP, $app_to_load);
@@ -57,7 +57,7 @@ final class PullRequestAppTest extends TestCase
     public function testItIsTheLegacyAngularAppWhenTheRequestHasAWrongTabParameter(): void
     {
         $app_to_load = PullRequestApp::fromRequest(
-            HTTPRequestBuilder::get()->withParam("tab", "whatever")->build()
+            HTTPRequestBuilder::get()->withParam('tab', 'whatever')->build()
         );
 
         self::assertSame(PullRequestApp::LEGACY_ANGULAR_APP, $app_to_load);

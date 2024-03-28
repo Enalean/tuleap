@@ -26,6 +26,6 @@ class TimeTrackingNotAllowedToAddException extends Exception
 {
     public function __construct()
     {
-        parent::__construct(dgettext('tuleap-timetracking', "You are not allowed to add a time."));
+        parent::__construct(dgettext('tuleap-timetracking', 'You are not allowed to add a time.'));
     }
 }

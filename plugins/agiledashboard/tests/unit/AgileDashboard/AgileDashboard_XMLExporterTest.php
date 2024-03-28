@@ -130,7 +130,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $exporter->export($this->project, $this->xml_tree, []);
 
-        self::assertSame('0', (string) $this->xml_tree->agiledashboard["should_sidebar_display_last_milestones"]);
+        self::assertSame('0', (string) $this->xml_tree->agiledashboard['should_sidebar_display_last_milestones']);
     }
 
     public function testItExportsAttributeShouldSidebarDisplayLastMilestonesWhenFalseAndThereIsAlreadyExportedKanban(): void
@@ -160,7 +160,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $exporter->export($this->project, $xml_tree, []);
 
-        self::assertSame('0', (string) $xml_tree->agiledashboard["should_sidebar_display_last_milestones"]);
+        self::assertSame('0', (string) $xml_tree->agiledashboard['should_sidebar_display_last_milestones']);
     }
 
     public function testItExportsAttributeShouldSidebarDisplayLastMilestonesWhenFalseWhenItIsAlreadyWronglyExported(): void
@@ -190,7 +190,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $exporter->export($this->project, $xml_tree, []);
 
-        self::assertSame('0', (string) $xml_tree->agiledashboard["should_sidebar_display_last_milestones"]);
+        self::assertSame('0', (string) $xml_tree->agiledashboard['should_sidebar_display_last_milestones']);
     }
 
     public function testItRemovesWronglyExportedAttributeWhenShouldSidebarDisplayLastMilestonesIsTrueBecauseItIsTheDefault(): void

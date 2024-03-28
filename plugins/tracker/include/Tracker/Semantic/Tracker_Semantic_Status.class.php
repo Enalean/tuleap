@@ -200,7 +200,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     {
         if ($this->list_field) {
             $purifier = Codendi_HTMLPurifier::instance();
-            $html     = "<p>" . sprintf(dgettext('tuleap-tracker', 'An artifact is considered to be open when its field %s will have one of the following values:'), $purifier->purify($this->list_field->getLabel())) . "</p>";
+            $html     = '<p>' . sprintf(dgettext('tuleap-tracker', 'An artifact is considered to be open when its field %s will have one of the following values:'), $purifier->purify($this->list_field->getLabel())) . '</p>';
             if ($this->open_values) {
                 $html        .= '<ul>';
                 $field_values = $this->list_field->getAllValues();
@@ -568,7 +568,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     public function getColor(?Tracker_Artifact_Changeset $changeset, PFUser $user): ?string
     {
         if (! $changeset) {
-            return "";
+            return '';
         }
 
         $value_provider = new StatusValueForChangesetProvider();

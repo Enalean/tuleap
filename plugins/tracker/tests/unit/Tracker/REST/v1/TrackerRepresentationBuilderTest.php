@@ -55,7 +55,7 @@ final class TrackerRepresentationBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $project                =   ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->withPublicName("Sibérie")->build();
+        $project                =   ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->withPublicName('Sibérie')->build();
         $this->project_trackers = [
             TrackerTestBuilder::aTracker()->withProject($project)->withId(self::FIRST_TRACKER_ID)->build(),
             TrackerTestBuilder::aTracker()->withProject($project)->withId(self::SECOND_TRACKER_ID)->build(),
@@ -66,7 +66,7 @@ final class TrackerRepresentationBuilderTest extends TestCase
 
     public function testItThrowsExceptionWhenThereAreSemanticsToCheckAndTheFullTrackerRepresentationIsSelected(): void
     {
-        $this->semantics_to_check =  CollectionOfCreationSemanticToCheck::fromREST(["title"])->value;
+        $this->semantics_to_check =  CollectionOfCreationSemanticToCheck::fromREST(['title'])->value;
         $this->expectException(RestException::class);
         $this->buildTrackerRepresentations(CompleteTrackerRepresentation::FULL_REPRESENTATION);
     }

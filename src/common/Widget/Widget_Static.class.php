@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "Widget.class.php";
+require_once 'Widget.class.php';
 
 /**
  * Drop-in replacement of "good old" box inherited from sourceforge
@@ -38,25 +38,25 @@ class Widget_Static extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration
      * Title
      * @var String
      */
-    protected $title = "";
+    protected $title = '';
 
     /**
      * Content
      * @var String
      */
-    protected $content = "";
+    protected $content = '';
 
     /**
      * Icon
      * @var String
      */
-    protected $icon = "";
+    protected $icon = '';
 
     /**
      * Icon
      * @var String
      */
-    protected $additional_class = "";
+    protected $additional_class = '';
 
     /**
      * Constructor

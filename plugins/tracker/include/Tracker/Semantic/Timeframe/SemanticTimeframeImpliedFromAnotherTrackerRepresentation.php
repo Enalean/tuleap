@@ -31,8 +31,8 @@ class SemanticTimeframeImpliedFromAnotherTrackerRepresentation implements IRepre
     public function __construct(int $implied_from_tracker_id)
     {
         $this->implied_from_tracker = [
-            "id" => $implied_from_tracker_id,
-            "uri" => CompleteTrackerRepresentation::ROUTE . '/' . $implied_from_tracker_id,
+            'id' => $implied_from_tracker_id,
+            'uri' => CompleteTrackerRepresentation::ROUTE . '/' . $implied_from_tracker_id,
         ];
     }
 }

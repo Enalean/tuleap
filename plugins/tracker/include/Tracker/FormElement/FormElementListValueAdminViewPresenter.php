@@ -97,7 +97,7 @@ class FormElementListValueAdminViewPresenter
     ) {
         $this->id                   = $value->getId();
         $this->label                = self::getListValueLabel($value);
-        $this->description          = ($value instanceof Tracker_FormElement_Field_List_Bind_StaticValue) ? $value->getDescription() : "";
+        $this->description          = ($value instanceof Tracker_FormElement_Field_List_Bind_StaticValue) ? $value->getDescription() : '';
         $this->is_hidden            = (bool) $value->isHidden();
         $this->value_can_be_hidden  = $value_can_be_hidden;
         $this->value_can_be_deleted = $value_can_be_deleted;

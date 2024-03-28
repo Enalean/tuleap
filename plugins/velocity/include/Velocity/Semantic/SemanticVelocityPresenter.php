@@ -93,7 +93,7 @@ class SemanticVelocityPresenter
     ) {
         $this->semantic_done_is_defined = $semantic_done_is_defined;
         $this->velocity_field           = $velocity_field;
-        $this->velocity_field_label     = ($velocity_field !== null) ? $velocity_field->getLabel() : "";
+        $this->velocity_field_label     = ($velocity_field !== null) ? $velocity_field->getLabel() : '';
         $this->tracker_name             = $tracker->getName();
 
         $this->can_status_semantic_have_multiple_values = $can_status_semantic_have_multiple_values;

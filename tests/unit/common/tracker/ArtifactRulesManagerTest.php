@@ -263,46 +263,46 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $arm->method('_getArtifactRuleFactory')->willReturn($arf);
 
         //Forbidden sources
-        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'A'), "Field A cannot be the source of field A");
-        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'B', 'A'), "Field B cannot be the source of field A because A->B->A is cyclic");
-        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'A'), "Field C cannot be the source of field A because A->B->C->A is cyclic");
-        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'D', 'A'), "Field D can be the source of field A");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'A'), 'Field A cannot be the source of field A');
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'B', 'A'), 'Field B cannot be the source of field A because A->B->A is cyclic');
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'A'), 'Field C cannot be the source of field A because A->B->C->A is cyclic');
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'D', 'A'), 'Field D can be the source of field A');
 
-        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'A', 'B'), "Field A is the source of field B");
-        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'B', 'B'), "Field B cannot be the source of field B");
-        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'B'), "Field C cannot be the source of field B because B is already a target");
-        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'B'), "Field D cannot be the source of field B because B is already a target");
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'A', 'B'), 'Field A is the source of field B');
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'B', 'B'), 'Field B cannot be the source of field B');
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'B'), 'Field C cannot be the source of field B because B is already a target');
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'B'), 'Field D cannot be the source of field B because B is already a target');
 
-        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'C'), "Field A cannot be the source of field C because C is already a target");
-        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'B', 'C'), "Field B is the source of field C");
-        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'C'), "Field C cannot be the source of field C");
-        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'C'), "Field D cannot be the source of field C because C is already a target");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'C'), 'Field A cannot be the source of field C because C is already a target');
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'B', 'C'), 'Field B is the source of field C');
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'C'), 'Field C cannot be the source of field C');
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'C'), 'Field D cannot be the source of field C because C is already a target');
 
-        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'A', 'D'), "Field A can be the source of field D");
-        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'B', 'D'), "Field B can be the source of field D");
-        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'C', 'D'), "Field C can be the source of field D");
-        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'D'), "Field D cannot be the source of field D");
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'A', 'D'), 'Field A can be the source of field D');
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'B', 'D'), 'Field B can be the source of field D');
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'C', 'D'), 'Field C can be the source of field D');
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'D'), 'Field D cannot be the source of field D');
 
         //Forbidden targets
-        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'A'), "Field A cannot be the target of field A");
-        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'B', 'A'), "Field B is the target of field A");
-        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'A'), "Field C cannot be the target of field A because C is already a target");
-        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'A'), "Field D can be the target of field A");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'A'), 'Field A cannot be the target of field A');
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'B', 'A'), 'Field B is the target of field A');
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'A'), 'Field C cannot be the target of field A because C is already a target');
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'A'), 'Field D can be the target of field A');
 
-        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'B'), "Field A cannot be the target of field B because A->B->A is cyclic");
-        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'B'), "Field B cannot be the target of field B");
-        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'C', 'B'), "Field C is the target of field B");
-        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'B'), "Field D can be the target of field B");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'B'), 'Field A cannot be the target of field B because A->B->A is cyclic');
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'B'), 'Field B cannot be the target of field B');
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'C', 'B'), 'Field C is the target of field B');
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'B'), 'Field D can be the target of field B');
 
-        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'C'), "Field A cannot be the target of field C because A->B->C->A is cyclic");
-        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'C'), "Field B cannot be the target of field C because B is already a target");
-        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'C'), "Field C cannot be the target of field C");
-        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'C'), "Field D can be the target of field C");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'C'), 'Field A cannot be the target of field C because A->B->C->A is cyclic');
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'C'), 'Field B cannot be the target of field C because B is already a target');
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'C'), 'Field C cannot be the target of field C');
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'C'), 'Field D can be the target of field C');
 
-        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'A', 'D'), "Field A can be the target of field D");
-        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'D'), "Field B cannot be the target of field D because B is already a target");
-        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'D'), "Field C cannot be the target of field D because C is already a target");
-        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'D', 'D'), "Field D cannot be the target of field D");
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'A', 'D'), 'Field A can be the target of field D');
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'D'), 'Field B cannot be the target of field D because B is already a target');
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'D'), 'Field C cannot be the target of field D because C is already a target');
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'D', 'D'), 'Field D cannot be the target of field D');
     }
 
     public function testFieldHasSourceTarget(): void

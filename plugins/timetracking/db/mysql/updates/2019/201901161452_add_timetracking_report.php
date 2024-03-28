@@ -49,7 +49,7 @@ class b201901161452_add_timetracking_report extends ForgeUpgrade_Bucket // @codi
         $result = $this->db->dbh->query($sql);
 
         if ($result === false) {
-            $this->rollBackOnError("An error occured while trying to select reports.");
+            $this->rollBackOnError('An error occured while trying to select reports.');
         }
 
         $this->updateExistingWidget($result);
@@ -69,12 +69,12 @@ class b201901161452_add_timetracking_report extends ForgeUpgrade_Bucket // @codi
 
             $new_content = $this->db->dbh->lastInsertId();
             if ($new_content === false) {
-                $this->rollBackOnError("An error occured while trying to insert new reports.");
+                $this->rollBackOnError('An error occured while trying to insert new reports.');
             }
 
-            $response = $statement->execute([$new_content, $widget["id"]]);
+            $response = $statement->execute([$new_content, $widget['id']]);
             if ($response === false) {
-                    $this->rollBackOnError("An error occured while trying to updates widgets.");
+                    $this->rollBackOnError('An error occured while trying to updates widgets.');
             }
         }
     }

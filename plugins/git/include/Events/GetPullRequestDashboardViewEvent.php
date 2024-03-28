@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class GetPullRequestDashboardViewEvent implements Dispatchable
 {
-    public const NAME = "getPullRequestDashboardViewEvent";
+    public const NAME = 'getPullRequestDashboardViewEvent';
 
     private bool $is_old_view_enabled = false;
 

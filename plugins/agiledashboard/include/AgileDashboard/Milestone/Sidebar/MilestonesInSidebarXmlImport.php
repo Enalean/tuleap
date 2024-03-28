@@ -32,7 +32,7 @@ final class MilestonesInSidebarXmlImport
 
     public function import(\SimpleXMLElement $xml, \Project $project): void
     {
-        if ("0" === (string) $xml['should_sidebar_display_last_milestones']) {
+        if ('0' === (string) $xml['should_sidebar_display_last_milestones']) {
             $this->milestones_in_sidebar_config->deactivateMilestonesInSidebar((int) $project->getID());
         }
     }

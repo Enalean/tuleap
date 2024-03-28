@@ -40,8 +40,8 @@ class DescriptionFieldAdminPresenterBuilder
             _('What is the purpose of your project?'),
             ProjectDescriptionUsageRetriever::isDescriptionMandatory(),
             $this->getTranslatedRequiredLabel(true),
-            "",
-            "",
+            '',
+            '',
             0,
             true
         );

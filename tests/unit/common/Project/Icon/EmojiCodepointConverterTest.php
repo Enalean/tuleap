@@ -34,12 +34,12 @@ final class EmojiCodepointConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsEmptyCharacterIfNoCharacterIsGiven(): void
     {
-        self::assertEquals('', EmojiCodepointConverter::convertEmojiToStoreFormat(""));
+        self::assertEquals('', EmojiCodepointConverter::convertEmojiToStoreFormat(''));
     }
 
     public function testItReturnsTheJsonEncodedEmojiWhichWillBeStored(): void
     {
-        self::assertEquals('"\ud83d\ude2c"', EmojiCodepointConverter::convertEmojiToStoreFormat("😬"));
+        self::assertEquals('"\ud83d\ude2c"', EmojiCodepointConverter::convertEmojiToStoreFormat('😬'));
     }
 
     public function testItReturnsEmptyCharacterIfThereIsNoStoredEmoji(): void
@@ -49,11 +49,11 @@ final class EmojiCodepointConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheStoredEmojiCharacter(): void
     {
-        self::assertEquals("😬", EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat('"\ud83d\ude2c"'));
+        self::assertEquals('😬', EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat('"\ud83d\ude2c"'));
     }
 
     public function testItReturnsEmptyWhenJsonDecodeFail(): void
     {
-        self::assertEquals("", EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat('"\aaa\bbb"'));
+        self::assertEquals('', EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat('"\aaa\bbb"'));
     }
 }

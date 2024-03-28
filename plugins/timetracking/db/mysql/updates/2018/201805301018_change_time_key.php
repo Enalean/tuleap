@@ -31,7 +31,7 @@ class b201805301018_change_time_key extends ForgeUpgrade_Bucket // @codingStanda
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_timetracking_times DROP INDEX user_id , ADD INDEX time (user_id, artifact_id)";
+        $sql = 'ALTER TABLE plugin_timetracking_times DROP INDEX user_id , ADD INDEX time (user_id, artifact_id)';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Drop the old Index and add a new did not work.');

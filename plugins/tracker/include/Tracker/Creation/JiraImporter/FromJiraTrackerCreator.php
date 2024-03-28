@@ -58,8 +58,8 @@ use XMLImportHelper;
 
 class FromJiraTrackerCreator
 {
-    private const LOG_IDENTIFIER     = "jira_import_syslog";
-    public const DEFAULT_IMPORT_MODE = "multi-trackers";
+    private const LOG_IDENTIFIER     = 'jira_import_syslog';
+    public const DEFAULT_IMPORT_MODE = 'multi-trackers';
 
     public function __construct(
         private readonly TrackerXmlImport $tracker_xml_import,
@@ -118,7 +118,7 @@ class FromJiraTrackerCreator
         string $jira_issue_type_id,
         \PFUser $user,
     ): Tracker {
-        $this->logger->info("Begin import from jira.");
+        $this->logger->info('Begin import from jira.');
         $this->logger->info("Selected jira project: $jira_project_id");
         $this->logger->info("Selected jira issue type: $jira_issue_type_id");
 
@@ -180,7 +180,7 @@ class FromJiraTrackerCreator
             Tracker_Exception |
             XML_ParseException $exception
         ) {
-            $this->logger->info("Ending import from jira with errors.");
+            $this->logger->info('Ending import from jira with errors.');
             $this->logger->info($exception->getMessage());
             $this->logger->info($exception->getTraceAsString());
             $xml_content = $tracker_xml->asXML();
@@ -197,7 +197,7 @@ class FromJiraTrackerCreator
 
             $tracker = $this->tracker_factory->getTrackerById($tracker_id);
             if ($tracker) {
-                $this->logger->info("Ending import from jira without error.");
+                $this->logger->info('Ending import from jira without error.');
                 return $tracker;
             }
         }

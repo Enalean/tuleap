@@ -84,8 +84,8 @@ final class ArtifactDependenciesDeletorTest extends TestCase
     {
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
 
-        $this->post_move_deletor->expects(self::never())->method("cleanReferencesAfterArtifactMove");
-        $this->artifact_deletor->expects(self::once())->method("cleanReferencesAfterSimpleArtifactDeletion");
+        $this->post_move_deletor->expects(self::never())->method('cleanReferencesAfterArtifactMove');
+        $this->artifact_deletor->expects(self::once())->method('cleanReferencesAfterSimpleArtifactDeletion');
         $this->deletor->cleanDependencies($artifact, DeletionContext::regularDeletion(self::PROJECT_ID), $this->user);
     }
 
@@ -93,8 +93,8 @@ final class ArtifactDependenciesDeletorTest extends TestCase
     {
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
 
-        $this->post_move_deletor->expects(self::once())->method("cleanReferencesAfterArtifactMove");
-        $this->artifact_deletor->expects(self::never())->method("cleanReferencesAfterSimpleArtifactDeletion");
+        $this->post_move_deletor->expects(self::once())->method('cleanReferencesAfterArtifactMove');
+        $this->artifact_deletor->expects(self::never())->method('cleanReferencesAfterSimpleArtifactDeletion');
         $this->deletor->cleanDependencies($artifact, DeletionContext::moveContext(self::PROJECT_ID, 123456), $this->user);
     }
 }

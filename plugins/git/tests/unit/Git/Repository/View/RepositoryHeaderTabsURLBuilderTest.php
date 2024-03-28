@@ -37,14 +37,14 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
     public function testItBuildsFilesTabURLWithBranchInformation(): void
     {
         $request = new \HTTPRequest();
-        $request->set("hb", "branch01");
+        $request->set('hb', 'branch01');
 
         $repository = new \GitRepository();
 
-        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn("repository_url");
+        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn('repository_url');
 
         self::assertSame(
-            "repository_url?a=tree&hb=branch01",
+            'repository_url?a=tree&hb=branch01',
             $this->builder->buildFilesTabURL($repository, $request),
         );
     }
@@ -52,14 +52,14 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
     public function testItBuildsFilesTabURLWithCommitInformation(): void
     {
         $request = new \HTTPRequest();
-        $request->set("h", "commit01");
+        $request->set('h', 'commit01');
 
         $repository = new \GitRepository();
 
-        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn("repository_url");
+        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn('repository_url');
 
         self::assertSame(
-            "repository_url?a=tree&hb=commit01",
+            'repository_url?a=tree&hb=commit01',
             $this->builder->buildFilesTabURL($repository, $request),
         );
     }
@@ -69,10 +69,10 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
         $request    = new \HTTPRequest();
         $repository = new \GitRepository();
 
-        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn("repository_url");
+        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn('repository_url');
 
         self::assertSame(
-            "repository_url",
+            'repository_url',
             $this->builder->buildFilesTabURL($repository, $request),
         );
     }
@@ -80,14 +80,14 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
     public function testItBuildsCommitsTabURLWithBranchInformation(): void
     {
         $request = new \HTTPRequest();
-        $request->set("hb", "branch01");
+        $request->set('hb', 'branch01');
 
         $repository = new \GitRepository();
 
-        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn("repository_url");
+        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn('repository_url');
 
         self::assertSame(
-            "repository_url?a=shortlog&hb=branch01",
+            'repository_url?a=shortlog&hb=branch01',
             $this->builder->buildCommitsTabURL($repository, $request),
         );
     }
@@ -95,14 +95,14 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
     public function testItBuildsCommitsTabURLWithCommitInformation(): void
     {
         $request = new \HTTPRequest();
-        $request->set("h", "commit01");
+        $request->set('h', 'commit01');
 
         $repository = new \GitRepository();
 
-        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn("repository_url");
+        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn('repository_url');
 
         self::assertSame(
-            "repository_url?a=commit&h=commit01",
+            'repository_url?a=commit&h=commit01',
             $this->builder->buildCommitsTabURL($repository, $request),
         );
     }
@@ -112,10 +112,10 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
         $request    = new \HTTPRequest();
         $repository = new \GitRepository();
 
-        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn("repository_url");
+        $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn('repository_url');
 
         self::assertSame(
-            "repository_url?a=shortlog",
+            'repository_url?a=shortlog',
             $this->builder->buildCommitsTabURL($repository, $request),
         );
     }

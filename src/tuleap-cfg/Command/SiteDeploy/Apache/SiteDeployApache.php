@@ -48,11 +48,11 @@ class SiteDeployApache
 
     public function configure(): void
     {
-        $this->logger->info("Start apache configuration");
+        $this->logger->info('Start apache configuration');
         $this->updateHttpdConf();
         $this->disableSSLvhost();
         $this->logrotate_deployer->deployLogrotate();
-        $this->logger->info("Configuration done!");
+        $this->logger->info('Configuration done!');
     }
 
     private function updateHttpdConf(): void
@@ -78,7 +78,7 @@ class SiteDeployApache
         $conf = $this->turnHttpVhostOn8080($conf);
 
         if ($httpd_conf !== $conf) {
-            $this->logger->info("Make apache listen on localhost 8080");
+            $this->logger->info('Make apache listen on localhost 8080');
             file_put_contents($this->httpd_conf_path . '/conf/httpd.conf', $conf);
         }
     }
@@ -92,7 +92,7 @@ class SiteDeployApache
             $need_rewrite = false;
             foreach (file($vhost_file, FILE_IGNORE_NEW_LINES) as $line) {
                 if (preg_match('/^<VirtualHost .*:443>$/', $line) === 1) {
-                    $this->logger->info("Disable SSH Virtualhost");
+                    $this->logger->info('Disable SSH Virtualhost');
                     $in_ssl_vhost = true;
                     $need_rewrite = true;
                 }
@@ -110,7 +110,7 @@ class SiteDeployApache
 
             $without_vhosts = $this->turnHttpVhostOn8080($new_content);
             if ($without_vhosts !== $new_content) {
-                $this->logger->info("Update :80 vhosts to :8080");
+                $this->logger->info('Update :80 vhosts to :8080');
                 $new_content  = $without_vhosts;
                 $need_rewrite = true;
             }

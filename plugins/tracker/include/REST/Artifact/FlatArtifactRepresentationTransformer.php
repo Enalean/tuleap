@@ -74,13 +74,13 @@ final class FlatArtifactRepresentationTransformer
                 case 'computed':
                     $flat_representation[$this->getFieldName($field->field_id)] = $field->is_autocomputed ? $field->value : $field->manual_value;
                     break;
-                case "sb":
-                case "msb":
-                case "rb":
-                case "cb":
+                case 'sb':
+                case 'msb':
+                case 'rb':
+                case 'cb':
                     $flat_representation[$this->getFieldName($field->field_id)] = $this->transformListValues($field->values);
                     break;
-                case "tbl":
+                case 'tbl':
                     $flat_representation[$this->getFieldName($field->field_id)] = $this->transformListValues($field->bind_value_objects);
                     break;
                 default:

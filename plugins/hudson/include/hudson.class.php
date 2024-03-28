@@ -91,16 +91,16 @@ class hudson extends Controler
                                 $this->view = 'projectOverview';
                             }
                             break;
-                        case "view_job":
+                        case 'view_job':
                             $this->view = 'job_details';
                             break;
-                        case "view_build":
+                        case 'view_build':
                             $this->view = 'build_number';
                             break;
-                        case "view_last_test_result":
+                        case 'view_last_test_result':
                             $this->view = 'last_test_result';
                             break;
-                        case "view_test_trend":
+                        case 'view_test_trend':
                             $this->view = 'test_trend';
                             break;
                         default:

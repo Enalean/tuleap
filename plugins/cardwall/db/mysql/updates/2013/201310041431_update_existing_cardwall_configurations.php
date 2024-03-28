@@ -38,14 +38,14 @@ EOT;
     public function up()
     {
         // clean-out existing unused cardwall custom columns
-        $sql = "DELETE FROM plugin_cardwall_on_top_column
+        $sql = 'DELETE FROM plugin_cardwall_on_top_column
                 USING plugin_cardwall_on_top JOIN plugin_cardwall_on_top_column
                 WHERE plugin_cardwall_on_top.use_freestyle_columns = 0
-                AND   plugin_cardwall_on_top.tracker_id = plugin_cardwall_on_top_column.tracker_id";
+                AND   plugin_cardwall_on_top.tracker_id = plugin_cardwall_on_top_column.tracker_id';
         $res = $this->db->dbh->exec($sql);
 
         //create new columns
-        $sql = "INSERT INTO plugin_cardwall_on_top_column (tracker_id, `label`, bg_red, bg_green, bg_blue)
+        $sql = 'INSERT INTO plugin_cardwall_on_top_column (tracker_id, `label`, bg_red, bg_green, bg_blue)
                 SELECT DISTINCT plugin_cardwall_on_top.tracker_id, tracker_field_list_bind_static_value.label, deco.red, deco.green, deco.blue
                 FROM plugin_cardwall_on_top
                     JOIN plugin_agiledashboard_planning
@@ -60,12 +60,12 @@ EOT;
                         ON (tracker_field.id = tracker_semantic_status.field_id AND tracker_field.use_it = 1)
                     LEFT JOIN tracker_field_list_bind_decorator deco
                         ON deco.value_id = tracker_field_list_bind_static_value.id
-                WHERE plugin_cardwall_on_top.use_freestyle_columns = 0";
+                WHERE plugin_cardwall_on_top.use_freestyle_columns = 0';
 
         $res = $this->db->dbh->exec($sql);
 
         //update values to use new columns
-        $sql = "UPDATE plugin_cardwall_on_top_column_mapping_field_value AS value
+        $sql = 'UPDATE plugin_cardwall_on_top_column_mapping_field_value AS value
                 JOIN tracker_field_list_bind_static_value
                     ON value.column_id  = tracker_field_list_bind_static_value.id
                 JOIN plugin_cardwall_on_top_column AS cardwall_column
@@ -75,12 +75,12 @@ EOT;
                 JOIN plugin_cardwall_on_top
                     ON plugin_cardwall_on_top.tracker_id = cardwall_column.tracker_id
                 SET value.column_id = cardwall_column.id
-                WHERE plugin_cardwall_on_top.use_freestyle_columns = 0";
+                WHERE plugin_cardwall_on_top.use_freestyle_columns = 0';
         $res = $this->db->dbh->exec($sql);
 
         //set all carwalls to use custom columns
-        $sql = "UPDATE plugin_cardwall_on_top
-                SET plugin_cardwall_on_top.use_freestyle_columns = 1";
+        $sql = 'UPDATE plugin_cardwall_on_top
+                SET plugin_cardwall_on_top.use_freestyle_columns = 1';
         $res = $this->db->dbh->exec($sql);
     }
 }

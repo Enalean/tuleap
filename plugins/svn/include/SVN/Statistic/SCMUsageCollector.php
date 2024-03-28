@@ -72,7 +72,7 @@ class SCMUsageCollector
 
         foreach ($global_accesses as $access) {
             $month_key                                         = $access['month'] . ' ' . $access['year'];
-            $accesses_by_month['month'][]                      = $access['month'] . " " . $access['year'];
+            $accesses_by_month['month'][]                      = $access['month'] . ' ' . $access['year'];
             $accesses_by_month['nb_read'][]                    = $access['nb_read'];
             $accesses_by_month['nb_browse'][]                  = $access['nb_browse'];
             $accesses_by_month['nb_write'][]                   = $access['nb_write'];

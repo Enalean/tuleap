@@ -41,7 +41,7 @@ class Worklog
     {
         if ($worklog_response === null) {
             throw new WorklogAPIResponseNotWellFormedException(
-                "Provided worklog response does not have any content."
+                'Provided worklog response does not have any content.'
             );
         }
 
@@ -52,7 +52,7 @@ class Worklog
             ! is_array($worklog_response['author'])
         ) {
             throw new WorklogAPIResponseNotWellFormedException(
-                "Provided worklog does not have all the expected content: `started`, `timeSpentSeconds` and `author`."
+                'Provided worklog does not have all the expected content: `started`, `timeSpentSeconds` and `author`.'
             );
         }
 
@@ -61,7 +61,7 @@ class Worklog
             ! isset($worklog_response['author']['accountId'])
         ) {
             throw new WorklogAPIResponseNotWellFormedException(
-                "Provided worklog author does not have all the expected content: `displayName` and `accountId`."
+                'Provided worklog author does not have all the expected content: `displayName` and `accountId`.'
             );
         }
 
@@ -86,7 +86,7 @@ class Worklog
     {
         if ($worklog_response === null) {
             throw new WorklogAPIResponseNotWellFormedException(
-                "Provided worklog response does not have any content."
+                'Provided worklog response does not have any content.'
             );
         }
 
@@ -96,7 +96,7 @@ class Worklog
             )
         ) {
             throw new WorklogAPIResponseNotWellFormedException(
-                "Provided worklog does not have all the expected content: `started`, `timeSpentSeconds` and `author`."
+                'Provided worklog does not have all the expected content: `started`, `timeSpentSeconds` and `author`.'
             );
         }
 
@@ -107,7 +107,7 @@ class Worklog
             ! is_string($worklog_response['author']['name'])
         ) {
             throw new WorklogAPIResponseNotWellFormedException(
-                "Provided worklog author does not have all the expected content: `displayName` and `name`."
+                'Provided worklog author does not have all the expected content: `displayName` and `name`.'
             );
         }
 

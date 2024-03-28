@@ -96,7 +96,7 @@ final class RoadmapConfigureAtXMLImport
     {
         $tracker_id_nodes = $xml->xpath("preference/value[@name='tracker_id']");
         if (count($tracker_id_nodes) === 0) {
-            throw new \RuntimeException("Reference tracker_id for roadmap widget was not found");
+            throw new \RuntimeException('Reference tracker_id for roadmap widget was not found');
         }
 
         $imported_tracker_ids = [];
@@ -105,7 +105,7 @@ final class RoadmapConfigureAtXMLImport
 
             $imported_tracker_id = $mapping_registry->getReference($ref);
             if ($imported_tracker_id === null) {
-                throw new \RuntimeException("Reference tracker_id for roadmap widget was not found");
+                throw new \RuntimeException('Reference tracker_id for roadmap widget was not found');
             }
 
             $imported_tracker_ids[] = (string) $imported_tracker_id;

@@ -94,9 +94,9 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['group_type', 'string', TemplateSingleton::PROJECT]
         )->willReturnOnConsecutiveCalls('A', TemplateSingleton::PROJECT);
 
-        $this->dao->method("updateProjectStatusAndType");
+        $this->dao->method('updateProjectStatusAndType');
 
-        $GLOBALS['Response']->method("addFeedback")->with(Feedback::INFO, 'Updating Project Info');
+        $GLOBALS['Response']->method('addFeedback')->with(Feedback::INFO, 'Updating Project Info');
 
         $this->project_history_dao->method('groupAddHistory');
 
@@ -114,7 +114,7 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $request->expects(self::exactly(2))->method('get')->withConsecutive(
             ['new_name'],
             ['group_id']
-        )->willReturnOnConsecutiveCalls("new_name", 111);
+        )->willReturnOnConsecutiveCalls('new_name', 111);
 
         $this->project_manager->method('getProject')->willReturn($this->project);
 
@@ -123,9 +123,9 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['group_type', 'string', TemplateSingleton::PROJECT]
         )->willReturnOnConsecutiveCalls('A', TemplateSingleton::PROJECT);
 
-        $this->dao->method("updateProjectStatusAndType");
+        $this->dao->method('updateProjectStatusAndType');
 
-        $GLOBALS['Response']->method("addFeedback")->withConsecutive(
+        $GLOBALS['Response']->method('addFeedback')->withConsecutive(
             [Feedback::WARN, "This project doesn't allow short name edition."],
             [Feedback::INFO, 'Updating Project Info']
         );
@@ -162,10 +162,10 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['group_type', 'string', TemplateSingleton::PROJECT]
         )->willReturnOnConsecutiveCalls('A', TemplateSingleton::PROJECT);
 
-        $GLOBALS['Response']->method("addFeedback")->with(Feedback::ERROR, 'A deleted project can not be restored.');
+        $GLOBALS['Response']->method('addFeedback')->with(Feedback::ERROR, 'A deleted project can not be restored.');
         $GLOBALS['Response']->expects(self::once())->method('redirect');
 
-        $this->dao->expects(self::never())->method("updateProjectStatusAndType");
+        $this->dao->expects(self::never())->method('updateProjectStatusAndType');
 
         $this->project_edit_controller->updateProject($request);
     }
@@ -189,11 +189,11 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['group_type', 'string', TemplateSingleton::PROJECT]
         )->willReturnOnConsecutiveCalls('P', TemplateSingleton::PROJECT);
 
-        $GLOBALS['Response']->expects(self::once())->method("addFeedback")
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')
             ->with(Feedback::ERROR, 'Switching the project status back to "pending" is not possible.');
         $GLOBALS['Response']->expects(self::once())->method('redirect');
 
-        $this->dao->expects(self::never())->method("updateProjectStatusAndType");
+        $this->dao->expects(self::never())->method('updateProjectStatusAndType');
 
         $this->project_edit_controller->updateProject($request);
     }

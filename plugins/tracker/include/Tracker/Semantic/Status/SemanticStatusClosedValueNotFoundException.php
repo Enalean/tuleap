@@ -28,7 +28,7 @@ class SemanticStatusClosedValueNotFoundException extends \RuntimeException
     public function __construct()
     {
         parent::__construct(
-            "There is no not open values defined in status semantic for the tracker."
+            'There is no not open values defined in status semantic for the tracker.'
         );
     }
 }

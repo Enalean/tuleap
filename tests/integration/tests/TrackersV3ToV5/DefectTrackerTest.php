@@ -93,8 +93,8 @@ final class DefectTrackerTest extends TestIntegrationTestCase
         $v3_migration        = new Tracker_Migration_V3(TrackerFactory::instance());
         $project             = ProjectManager::instance()->getProject(100);
         $name                = 'Defect';
-        $description         = "defect tracker";
-        $itemname            = "defect";
+        $description         = 'defect tracker';
+        $itemname            = 'defect';
         $tv3                 = new ArtifactType($project, $defect_trackerv3_id);
 
         $defect_tracker          = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
@@ -156,8 +156,8 @@ final class DefectTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->defect_tracker->getTitleField();
         $this->assertInstanceOf(Tracker_FormElement_Field_String::class, $field);
-        $this->assertEquals($field->getName(), "summary");
-        $this->assertEquals($field->getLabel(), "Summary");
+        $this->assertEquals($field->getName(), 'summary');
+        $this->assertEquals($field->getLabel(), 'Summary');
         $this->assertEquals(1, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
@@ -177,8 +177,8 @@ final class DefectTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->defect_tracker->getStatusField();
         $this->assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        $this->assertEquals($field->getName(), "status_id");
-        $this->assertEquals($field->getLabel(), "Status");
+        $this->assertEquals($field->getName(), 'status_id');
+        $this->assertEquals($field->getLabel(), 'Status');
         $this->assertEquals(1, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
@@ -204,8 +204,8 @@ final class DefectTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->defect_tracker->getContributorField();
         $this->assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        $this->assertEquals($field->getName(), "assigned_to");
-        $this->assertEquals($field->getLabel(), "Assigned to");
+        $this->assertEquals($field->getName(), 'assigned_to');
+        $this->assertEquals($field->getLabel(), 'Assigned to');
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
         $this->assertFalse($field->isMultiple());
@@ -226,8 +226,8 @@ final class DefectTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'submitted_by');
         $this->assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        $this->assertEquals($field->getName(), "submitted_by");
-        $this->assertEquals($field->getLabel(), "Submitted by");
+        $this->assertEquals($field->getName(), 'submitted_by');
+        $this->assertEquals($field->getLabel(), 'Submitted by');
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
@@ -241,8 +241,8 @@ final class DefectTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'details');
         $this->assertInstanceOf(Tracker_FormElement_Field_Text::class, $field);
-        $this->assertEquals($field->getName(), "details");
-        $this->assertEquals($field->getLabel(), "Original Submission");
+        $this->assertEquals($field->getName(), 'details');
+        $this->assertEquals($field->getLabel(), 'Original Submission');
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
@@ -262,8 +262,8 @@ final class DefectTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'close_date');
         $this->assertInstanceOf(Tracker_FormElement_Field_Date::class, $field);
-        $this->assertEquals($field->getName(), "close_date");
-        $this->assertEquals($field->getLabel(), "Close Date");
+        $this->assertEquals($field->getName(), 'close_date');
+        $this->assertEquals($field->getLabel(), 'Close Date');
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(0, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
@@ -280,8 +280,8 @@ final class DefectTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'originator_name');
         $this->assertInstanceOf(Tracker_FormElement_Field_String::class, $field);
-        $this->assertEquals($field->getName(), "originator_name");
-        $this->assertEquals($field->getLabel(), "Originator Name");
+        $this->assertEquals($field->getName(), 'originator_name');
+        $this->assertEquals($field->getLabel(), 'Originator Name');
         $this->assertEquals(0, $field->isUsed());
     }
 
@@ -289,8 +289,8 @@ final class DefectTrackerTest extends TestIntegrationTestCase
     {
         $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'resolution_id');
         $this->assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        $this->assertEquals($field->getName(), "resolution_id");
-        $this->assertEquals($field->getLabel(), "Resolution");
+        $this->assertEquals($field->getName(), 'resolution_id');
+        $this->assertEquals($field->getLabel(), 'Resolution');
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
 

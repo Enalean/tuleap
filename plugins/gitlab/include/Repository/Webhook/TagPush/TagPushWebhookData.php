@@ -94,7 +94,7 @@ class TagPushWebhookData implements WebhookData
 
     public function getTagName(): string
     {
-        return str_replace("refs/tags/", "", $this->ref);
+        return str_replace('refs/tags/', '', $this->ref);
     }
 
     public function getBefore(): string

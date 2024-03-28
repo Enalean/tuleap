@@ -30,11 +30,11 @@ class LinkVersionDao extends DataAccessObject
      */
     public function searchByItemId(int $id, int $offset, int $limit): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_docman_link_version
                 WHERE item_id = ?
                 ORDER BY number DESC
-                LIMIT ?, ?";
+                LIMIT ?, ?';
 
         return $this->getDB()->run($sql, $id, $offset, $limit);
     }

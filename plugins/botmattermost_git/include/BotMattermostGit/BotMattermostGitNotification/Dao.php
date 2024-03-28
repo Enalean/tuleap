@@ -30,9 +30,9 @@ class Dao extends DataAccessObject
      */
     public function searchBotNotification(int $repository_id): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_botmattermost_git_notification
-                WHERE repository_id = ?";
+                WHERE repository_id = ?';
 
         return $this->getDB()->row($sql, $repository_id);
     }
@@ -42,9 +42,9 @@ class Dao extends DataAccessObject
      */
     public function searchChannels(int $notification_id): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_botmattermost_git_notification_channel
-                WHERE notification_id = ?";
+                WHERE notification_id = ?';
 
         return $this->getDB()->run($sql, $notification_id);
     }
@@ -100,9 +100,9 @@ class Dao extends DataAccessObject
 
     private function searchNotificationId(int $repository_id): ?array
     {
-        $sql = "SELECT id
+        $sql = 'SELECT id
                 FROM plugin_botmattermost_git_notification
-                WHERE repository_id = ?";
+                WHERE repository_id = ?';
 
         return $this->getDB()->row($sql, $repository_id);
     }
@@ -173,11 +173,11 @@ class Dao extends DataAccessObject
         try {
             $bot_id = $bot->getId();
 
-            $sql = "DELETE notification, channel
+            $sql = 'DELETE notification, channel
                 FROM plugin_botmattermost_git_notification AS notification
                 INNER JOIN plugin_botmattermost_git_notification_channel AS channel
                   ON notification.id = channel.notification_id
-                WHERE bot_id = ?";
+                WHERE bot_id = ?';
 
             $this->getDB()->run($sql, $bot_id);
         } catch (\PDOException $ex) {

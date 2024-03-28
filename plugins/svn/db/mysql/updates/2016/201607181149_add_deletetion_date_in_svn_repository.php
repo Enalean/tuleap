@@ -30,9 +30,9 @@ class b201607181149_add_deletetion_date_in_svn_repository extends \Tuleap\ForgeU
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_svn_repositories
+        $sql = 'ALTER TABLE plugin_svn_repositories
             ADD COLUMN repository_deletion_date INT(11) NULL,
-            ADD COLUMN backup_path text NULL";
+            ADD COLUMN backup_path text NULL';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

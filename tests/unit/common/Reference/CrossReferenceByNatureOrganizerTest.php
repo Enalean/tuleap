@@ -95,7 +95,7 @@ final class CrossReferenceByNatureOrganizerTest extends TestCase
             UserTestBuilder::buildWithDefaults(),
         );
 
-        $pimped_reference = $a_ref->withTitle("My new title", null);
+        $pimped_reference = $a_ref->withTitle('My new title', null);
         $organizer->moveCrossReferenceToSection(
             $pimped_reference,
             'cloudy/stable'
@@ -224,7 +224,7 @@ final class CrossReferenceByNatureOrganizerTest extends TestCase
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
-        $organizer->moveCrossReferenceToSection($another_ref, "");
+        $organizer->moveCrossReferenceToSection($another_ref, '');
 
         self::assertEquals([], $organizer->getCrossReferencePresenters());
         self::assertEquals(
@@ -435,7 +435,7 @@ final class CrossReferenceByNatureOrganizerTest extends TestCase
             UserTestBuilder::buildWithDefaults(),
         );
 
-        $organizer->removeUnreadableCrossReference($a_ref->withTitle("New title", null));
+        $organizer->removeUnreadableCrossReference($a_ref->withTitle('New title', null));
 
         self::assertEquals(
             [$another_ref],

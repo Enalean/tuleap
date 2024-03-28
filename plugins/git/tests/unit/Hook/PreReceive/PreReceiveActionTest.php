@@ -54,7 +54,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $action = $this->buildPreReceiveAction(null, $wasm_caller, EventDispatcherStub::withIdentityCallback());
 
-        $result = $action->preReceiveExecute("non_existing_repo_path", self::PRE_RECEIVE_HOOK_INPUT);
+        $result = $action->preReceiveExecute('non_existing_repo_path', self::PRE_RECEIVE_HOOK_INPUT);
 
         self::assertFalse($wasm_caller->hasBeenCalled());
         self::assertTrue(Result::isOk($result));
@@ -70,7 +70,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $action = $this->buildPreReceiveAction($git_repository, $wasm_caller, EventDispatcherStub::withIdentityCallback());
 
-        $result = $action->preReceiveExecute("existing_repo_path", self::PRE_RECEIVE_HOOK_INPUT);
+        $result = $action->preReceiveExecute('existing_repo_path', self::PRE_RECEIVE_HOOK_INPUT);
 
         self::assertFalse($wasm_caller->hasBeenCalled());
         self::assertTrue(Result::isOk($result));
@@ -96,7 +96,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $root      = vfsStream::setup('root', null, $structure);
         ForgeConfig::set('sys_data_dir', $root->url());
 
-        $result = $action->preReceiveExecute("existing_repo_path", self::PRE_RECEIVE_HOOK_INPUT);
+        $result = $action->preReceiveExecute('existing_repo_path', self::PRE_RECEIVE_HOOK_INPUT);
         self::assertTrue(Result::isErr($result));
     }
 
@@ -122,7 +122,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $root      = vfsStream::setup('root', null, $structure);
         ForgeConfig::set('sys_data_dir', $root->url());
 
-        $result = $action->preReceiveExecute("existing_repo_path", self::PRE_RECEIVE_HOOK_INPUT);
+        $result = $action->preReceiveExecute('existing_repo_path', self::PRE_RECEIVE_HOOK_INPUT);
         self::assertTrue(Result::isErr($result));
     }
 
@@ -153,7 +153,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $root      = vfsStream::setup('root', null, $structure);
         ForgeConfig::set('sys_data_dir', $root->url());
 
-        $result = $action->preReceiveExecute("existing_repo_path", self::PRE_RECEIVE_HOOK_INPUT);
+        $result = $action->preReceiveExecute('existing_repo_path', self::PRE_RECEIVE_HOOK_INPUT);
 
         self::assertTrue($wasm_caller->hasBeenCalled());
         self::assertTrue(Result::isErr($result));
@@ -184,7 +184,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $root      = vfsStream::setup('root', null, $structure);
         ForgeConfig::set('sys_data_dir', $root->url());
 
-        $result = $action->preReceiveExecute("existing_repo_path", self::TECHNICAL_PRE_RECEIVE_HOOK_INPUT);
+        $result = $action->preReceiveExecute('existing_repo_path', self::TECHNICAL_PRE_RECEIVE_HOOK_INPUT);
 
         self::assertFalse($wasm_caller->hasBeenCalled());
         self::assertTrue(Result::isOk($result));
@@ -210,7 +210,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $root      = vfsStream::setup('root', null, $structure);
         ForgeConfig::set('sys_data_dir', $root->url());
 
-        $result = $action->preReceiveExecute("existing_repo_path", self::PRE_RECEIVE_HOOK_INPUT);
+        $result = $action->preReceiveExecute('existing_repo_path', self::PRE_RECEIVE_HOOK_INPUT);
 
         self::assertTrue($wasm_caller->hasBeenCalled());
         self::assertTrue(Result::isOk($result));

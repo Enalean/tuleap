@@ -56,7 +56,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
 
     public function plan(ProgramIncrementChanged $program_increment_changed): void
     {
-        $this->logger->debug("Check if we need to plan/unplan items in mirrored releases.");
+        $this->logger->debug('Check if we need to plan/unplan items in mirrored releases.');
         $program_increment   = $program_increment_changed->program_increment;
         $user_identifier     = $program_increment_changed->user;
         $feature_plan_change = $this->getPlanChange($program_increment, $program_increment_changed);
@@ -83,7 +83,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
 
     public function planForATeam(ProgramIncrementChanged $program_increment_changed, TeamIdentifier $team_identifier): void
     {
-        $this->logger->debug("Check if we need to plan/unplan items in mirrored releases.");
+        $this->logger->debug('Check if we need to plan/unplan items in mirrored releases.');
 
         $program_increment_identifier = $program_increment_changed->program_increment;
         $user_identifier              = $program_increment_changed->user;
@@ -98,7 +98,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         );
 
         if (! $mirrored_program_increment) {
-            $this->logger->error(sprintf("Mirrored of program increment with id %d not found", $program_increment_identifier->getId()));
+            $this->logger->error(sprintf('Mirrored of program increment with id %d not found', $program_increment_identifier->getId()));
             return;
         }
 

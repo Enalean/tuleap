@@ -34,8 +34,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testNonEmptyTitle()
     {
         $params = [
-            "trackers_id"  => [$this->epic_tracker_id],
-            "expert_query" => ' @title != "" ',
+            'trackers_id'  => [$this->epic_tracker_id],
+            'expert_query' => ' @title != "" ',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -44,7 +44,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             '@title != ""'
         );
 
@@ -57,8 +57,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testMultipleTitles()
     {
         $params = [
-            "trackers_id"  => [$this->epic_tracker_id],
-            "expert_query" => ' @title = "first" OR @title = "third" ',
+            'trackers_id'  => [$this->epic_tracker_id],
+            'expert_query' => ' @title = "first" OR @title = "third" ',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -67,7 +67,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             '@title = "first" OR @title = "third"'
         );
 
@@ -83,8 +83,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testEmptyDescription()
     {
         $params = [
-            "trackers_id"  => [$this->epic_tracker_id],
-            "expert_query" => ' @description = "" ',
+            'trackers_id'  => [$this->epic_tracker_id],
+            'expert_query' => ' @description = "" ',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -93,7 +93,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             '@description = ""'
         );
 
@@ -108,8 +108,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testEmptyDescriptionWithNotEmptyTitle()
     {
         $params = [
-            "trackers_id"  => [$this->epic_tracker_id],
-            "expert_query" => ' @description = "" AND @title != "" ',
+            'trackers_id'  => [$this->epic_tracker_id],
+            'expert_query' => ' @description = "" AND @title != "" ',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -118,7 +118,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             '@description = "" AND @title != ""'
         );
 
@@ -130,8 +130,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testSubmittedByEqualsNotEmpty()
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => ' @submitted_by = "rest_api_tester_1"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => ' @submitted_by = "rest_api_tester_1"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -140,7 +140,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             '@submitted_by = "rest_api_tester_1"'
         );
 
@@ -162,8 +162,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testSubmittedByNotEqualsNotEmpty()
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => ' @submitted_by != "rest_api_tester_1"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => ' @submitted_by != "rest_api_tester_1"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -172,7 +172,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             '@submitted_by != "rest_api_tester_1"'
         );
 
@@ -182,8 +182,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testLastUpdateByNotEmpty()
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => ' @last_update_by = "rest_api_tester_1"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => ' @last_update_by = "rest_api_tester_1"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -192,7 +192,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             '@last_update_by = "rest_api_tester_1"'
         );
 
@@ -211,8 +211,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testAssignedToNotEmpty()
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => ' @assigned_to = "rest_api_tester_1"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => ' @assigned_to = "rest_api_tester_1"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -221,7 +221,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             '@assigned_to = "rest_api_tester_1"'
         );
 
@@ -233,8 +233,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithParent(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITH PARENT',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITH PARENT',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -243,7 +243,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITH PARENT'
         );
 
@@ -253,8 +253,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithParentArtifact(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITH PARENT ARTIFACT = 123',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITH PARENT ARTIFACT = 123',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -263,7 +263,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITH PARENT ARTIFACT = 123'
         );
 
@@ -273,8 +273,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithParentTracker(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITH PARENT TRACKER = "epic"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITH PARENT TRACKER = "epic"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -283,7 +283,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITH PARENT TRACKER = "epic"'
         );
 
@@ -293,8 +293,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithoutParent(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITHOUT PARENT',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITHOUT PARENT',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -303,7 +303,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITHOUT PARENT'
         );
 
@@ -313,8 +313,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithoutParentArtifact(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITHOUT PARENT ARTIFACT = 123',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITHOUT PARENT ARTIFACT = 123',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -323,7 +323,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITHOUT PARENT ARTIFACT = 123'
         );
 
@@ -333,8 +333,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithoutParentTracker(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITHOUT PARENT TRACKER = "epic"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITHOUT PARENT TRACKER = "epic"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -343,7 +343,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITHOUT PARENT TRACKER = "epic"'
         );
 
@@ -353,8 +353,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsLinkedFrom(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS LINKED FROM WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS LINKED FROM WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -363,7 +363,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS LINKED FROM WITH TYPE "_is_child"'
         );
 
@@ -373,8 +373,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsLinkedFromArtifact(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -383,7 +383,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"'
         );
 
@@ -393,8 +393,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsLinkedFromTracker(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -403,7 +403,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"'
         );
 
@@ -413,8 +413,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedFrom(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS NOT LINKED FROM WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS NOT LINKED FROM WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -423,7 +423,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS NOT LINKED FROM WITH TYPE "_is_child"'
         );
 
@@ -433,8 +433,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedFromArtifact(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS NOT LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS NOT LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -443,7 +443,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS NOT LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"'
         );
 
@@ -453,8 +453,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedFromTracker(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS NOT LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS NOT LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -463,7 +463,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS NOT LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"'
         );
 
@@ -473,8 +473,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithChildren(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITH CHILDREN',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITH CHILDREN',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -483,7 +483,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITH CHILDREN'
         );
 
@@ -493,8 +493,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithChildrenArtifact(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITH CHILDREN ARTIFACT = 123',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITH CHILDREN ARTIFACT = 123',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -503,7 +503,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITH CHILDREN ARTIFACT = 123'
         );
 
@@ -513,8 +513,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithChildrenTracker(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITH CHILDREN TRACKER = "epic"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITH CHILDREN TRACKER = "epic"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -523,7 +523,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITH CHILDREN TRACKER = "epic"'
         );
 
@@ -533,8 +533,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithoutChildren(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITHOUT CHILDREN',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITHOUT CHILDREN',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -543,7 +543,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITHOUT CHILDREN'
         );
 
@@ -553,8 +553,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithoutChildrenArtifact(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITHOUT CHILDREN ARTIFACT = 123',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITHOUT CHILDREN ARTIFACT = 123',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -563,7 +563,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITHOUT CHILDREN ARTIFACT = 123'
         );
 
@@ -573,8 +573,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithoutChildrenTracker(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'WITHOUT CHILDREN TRACKER = "epic"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'WITHOUT CHILDREN TRACKER = "epic"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -583,7 +583,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'WITHOUT CHILDREN TRACKER = "epic"'
         );
 
@@ -593,8 +593,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsLinkedToWithType(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS LINKED TO WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS LINKED TO WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -603,7 +603,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS LINKED TO WITH TYPE "_is_child"'
         );
 
@@ -613,8 +613,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsLinkedToArtifact(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -623,7 +623,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"'
         );
 
@@ -633,8 +633,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsLinkedToTracker(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS LINKED TO TRACKER = "epic" WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS LINKED TO TRACKER = "epic" WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -643,7 +643,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS LINKED TO TRACKER = "epic" WITH TYPE "_is_child"'
         );
 
@@ -653,8 +653,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsLinkedToNotTracker(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -663,7 +663,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS LINKED TO TRACKER != "epic" WITH TYPE "_is_child"'
         );
 
@@ -673,8 +673,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsLinkedTo(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS LINKED TO',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS LINKED TO',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -683,7 +683,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS LINKED TO'
         );
 
@@ -693,8 +693,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedToWithType(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS NOT LINKED TO WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS NOT LINKED TO WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -703,7 +703,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS NOT LINKED TO WITH TYPE "_is_child"'
         );
 
@@ -713,8 +713,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedToArtifact(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS NOT LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS NOT LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -723,7 +723,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS NOT LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"'
         );
 
@@ -733,8 +733,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedToTracker(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS NOT LINKED TO TRACKER = "epic" WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS NOT LINKED TO TRACKER = "epic" WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -743,7 +743,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS NOT LINKED TO TRACKER = "epic" WITH TYPE "_is_child"'
         );
 
@@ -753,15 +753,15 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedToNotTracker(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS NOT LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS NOT LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
         $this->assertEquals(400, $response->getStatusCode());
         $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertStringContainsString(
-            "Double negative",
+            'Double negative',
             $body['error']['message']
         );
     }
@@ -769,8 +769,8 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedTo(): void
     {
         $params = [
-            "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => 'IS NOT LINKED TO',
+            'trackers_id'  => [ $this->epic_tracker_id ],
+            'expert_query' => 'IS NOT LINKED TO',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -779,7 +779,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
-            $cross_tracker_report["expert_query"],
+            $cross_tracker_report['expert_query'],
             'IS NOT LINKED TO'
         );
 

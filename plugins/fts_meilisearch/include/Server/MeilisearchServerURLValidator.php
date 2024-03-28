@@ -46,7 +46,7 @@ final class MeilisearchServerURLValidator implements ValueValidator
         }
 
         if (! $this->valid_https_uri->validate($value)) {
-            throw new InvalidConfigKeyValueException("Meilisearch server URL is not a valid HTTPS URL");
+            throw new InvalidConfigKeyValueException('Meilisearch server URL is not a valid HTTPS URL');
         }
     }
 }

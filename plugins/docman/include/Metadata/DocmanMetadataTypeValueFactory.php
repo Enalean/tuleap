@@ -42,7 +42,7 @@ class DocmanMetadataTypeValueFactory
                 $metadata_value = new Docman_MetadataValueScalar();
                 break;
             default:
-                throw new \LogicException(sprintf("Metadata type %d does not exist!", $type));
+                throw new \LogicException(sprintf('Metadata type %d does not exist!', $type));
         }
         $metadata_value->setType($type);
 

@@ -25,7 +25,7 @@ use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 
 class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const EXPORT_XML_FROM_NEW_VALUE = "null";
+    public const EXPORT_XML_FROM_NEW_VALUE = 'null';
 
     public $transition_id;
     public $workflow_id;

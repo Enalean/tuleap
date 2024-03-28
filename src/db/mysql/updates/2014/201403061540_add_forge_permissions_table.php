@@ -23,7 +23,7 @@ class b201403061540_add_forge_permissions_table extends \Tuleap\ForgeUpgrade\Buc
 {
     public function description()
     {
-        return "Add a table to store UGroup permissions that are valid for all the forge and update ugroup table";
+        return 'Add a table to store UGroup permissions that are valid for all the forge and update ugroup table';
     }
 
     public function preUp()
@@ -33,11 +33,11 @@ class b201403061540_add_forge_permissions_table extends \Tuleap\ForgeUpgrade\Buc
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS ugroup_forge_permission (
+        $sql = 'CREATE TABLE IF NOT EXISTS ugroup_forge_permission (
                     ugroup_id INT(11) NOT NULL,
                     permission_id INT(11) NOT NULL,
                     INDEX idx_user_group_id (ugroup_id)
-                )";
+                )';
 
         if (! $this->db->tableNameExists('ugroup_forge_permission')) {
             $res = $this->db->dbh->exec($sql);
@@ -46,8 +46,8 @@ class b201403061540_add_forge_permissions_table extends \Tuleap\ForgeUpgrade\Buc
             }
         }
 
-        $sql = "ALTER TABLE ugroup
-                    CHANGE group_id group_id int(11) NULL";
+        $sql = 'ALTER TABLE ugroup
+                    CHANGE group_id group_id int(11) NULL';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

@@ -27,8 +27,8 @@ use TemplateRenderer;
 
 class TestsDataFromJunitExtractor
 {
-    private const STATUS_FAILURE = "failed";
-    private const STATUS_SUCCESS = "passed";
+    private const STATUS_FAILURE = 'failed';
+    private const STATUS_SUCCESS = 'passed';
 
     /**
      * @var \TemplateRenderer

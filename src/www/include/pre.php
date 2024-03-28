@@ -40,7 +40,7 @@ textdomain('tuleap-core');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (! defined('IS_SCRIPT')) {
-    if (PHP_SAPI === "cli") {
+    if (PHP_SAPI === 'cli') {
         // Backend scripts should never ends because of lack of time or memory
         ini_set('max_execution_time', '0');
         ini_set('memory_limit', '-1');
@@ -94,7 +94,7 @@ foreach (
 
 //{{{ define undefined variables
 if (! isset($GLOBALS['feedback'])) {
-    $GLOBALS['feedback'] = "";  //By default the feedbak is empty
+    $GLOBALS['feedback'] = '';  //By default the feedbak is empty
 }
 
 // Create cache directory if needed
@@ -144,12 +144,12 @@ if (! IS_SCRIPT) {
     $csp_rules                .= "font-src 'self'; ";
     $csp_rules                .= "form-action 'self'; ";
     $csp_rules                .= "manifest-src 'self'; ";
-    $csp_rules                .= "img-src * data: blob:; ";
+    $csp_rules                .= 'img-src * data: blob:; ';
     $csp_rules                .= "media-src 'self'; ";
-    $csp_rules                .= "connect-src *; ";
-    $csp_rules                .= "child-src *; ";
-    $csp_rules                .= "upgrade-insecure-requests; ";
-    $csp_rules                .= "report-uri /csp-violation; ";
+    $csp_rules                .= 'connect-src *; ';
+    $csp_rules                .= 'child-src *; ';
+    $csp_rules                .= 'upgrade-insecure-requests; ';
+    $csp_rules                .= 'report-uri /csp-violation; ';
 
     header("Content-Security-Policy: default-src 'report-sample'; base-uri 'self'; $csp_rules");
 }

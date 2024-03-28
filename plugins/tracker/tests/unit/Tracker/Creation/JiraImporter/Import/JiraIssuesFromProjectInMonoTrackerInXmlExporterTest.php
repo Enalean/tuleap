@@ -309,14 +309,14 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
         $tracker_xml = $exporter->exportIssuesToXml(
             $platform_configuration_collection,
             $tracker_for_export,
-            "https://example.com/",
+            'https://example.com/',
             $jira_client->getJiraProject(),
             [
-                new IssueType("10002", 'Task', false),
-                new IssueType("10003", 'Sub-task', true),
-                new IssueType("10001", 'Story', false),
-                new IssueType("10004", 'Bug', false),
-                new IssueType("10000", 'EpicEN', false),
+                new IssueType('10002', 'Task', false),
+                new IssueType('10003', 'Sub-task', true),
+                new IssueType('10001', 'Story', false),
+                new IssueType('10004', 'Bug', false),
+                new IssueType('10000', 'EpicEN', false),
             ],
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
@@ -328,7 +328,7 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
 
         self::assertStringEqualsFile($fixture_path . '/mono_tracker.xml', self::getTidyXML($tracker_xml));
 
-        $dom         = new DOMDocument("1.0", "UTF-8");
+        $dom         = new DOMDocument('1.0', 'UTF-8');
         $dom_element = $dom->importNode(dom_import_simplexml($tracker_xml), true);
         $dom->appendChild($dom_element);
         self::assertTrue($dom->relaxNGValidateSource(\file_get_contents(__DIR__ . '/../../../../../../resources/tracker.rng')));

@@ -55,7 +55,7 @@ class Collector
 
     public function collectForGitoliteRepositories(Project $project)
     {
-        $yesterday           = new DateTime("yesterday midnight");
+        $yesterday           = new DateTime('yesterday midnight');
         $yesterday_timestamp = $yesterday->getTimestamp();
         $project_id          = $project->getID();
 

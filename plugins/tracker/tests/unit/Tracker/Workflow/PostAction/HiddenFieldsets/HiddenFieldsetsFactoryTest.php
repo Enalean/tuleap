@@ -54,7 +54,7 @@ final class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLoadPostActionsReturnsASinglePostAction(): void
     {
-        $transition = new \Transition(null, null, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
+        $transition = new \Transition(null, null, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false));
 
         $expected_post_action = new HiddenFieldsets($transition, 0, []);
 
@@ -69,7 +69,7 @@ final class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLoadPostActionsReturnsEmptyArray(): void
     {
-        $transition = new \Transition(null, null, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
+        $transition = new \Transition(null, null, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false));
         $this->hidden_fieldsets_retriever
             ->shouldReceive('getHiddenFieldsets')
             ->with($transition)

@@ -33,11 +33,11 @@ class MessageRetriever
         /*
             Figure out which group this message is in, for the sake of the admin links
         */
-        $result = db_query("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id
+        $result = db_query('SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id
             FROM forum_group_list,forum
             WHERE forum_group_list.group_forum_id=forum.group_forum_id
               AND forum_group_list.is_public IN (0, 1)
-              AND forum.msg_id=" . db_ei($id));
+              AND forum.msg_id=' . db_ei($id));
 
         if (! $result || db_numrows($result) < 1) {
             throw new MessageNotFoundException('message not found.');
@@ -53,7 +53,7 @@ class MessageRetriever
         }
 
         //check if the message is a comment on a piece of news.  If so, check permissions on this news
-        $qry = "SELECT * FROM news_bytes WHERE forum_id=" . db_ei($forum_id);
+        $qry = 'SELECT * FROM news_bytes WHERE forum_id=' . db_ei($forum_id);
         $res = db_query($qry);
         if (db_numrows($res) > 0) {
             if (! forum_utils_news_access($forum_id)) {
@@ -61,8 +61,8 @@ class MessageRetriever
             }
         }
 
-        $sql = "SELECT user.user_name,forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body " .
-            "FROM forum,user WHERE user.user_id=forum.posted_by AND forum.msg_id=" . db_ei($id);
+        $sql = 'SELECT user.user_name,forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ' .
+            'FROM forum,user WHERE user.user_id=forum.posted_by AND forum.msg_id=' . db_ei($id);
 
         $result = db_query($sql);
 

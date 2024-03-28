@@ -123,11 +123,11 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             101,
             true,
-            "",
+            '',
             [],
             false,
             true,
-            "",
+            '',
             false,
             true,
             [],
@@ -157,7 +157,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker = Mockery::mock(\Tracker::class);
         $planning->shouldReceive('getPlanningTracker')->andReturn($tracker);
-        $planning->shouldReceive('getName')->once()->andReturn("tracker name");
+        $planning->shouldReceive('getName')->once()->andReturn('tracker name');
         $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($planning);
 
         $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnTrue();
@@ -181,11 +181,11 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             101,
             false,
-            "tracker name",
+            'tracker name',
             [],
             true,
             false,
-            "",
+            '',
             true,
             true,
             [],

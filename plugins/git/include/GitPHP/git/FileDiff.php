@@ -719,7 +719,7 @@ class FileDiff
         } else {
             $diffLines = explode("\n", $exe->Execute(
                 GitExe::DIFF,
-                ["-U0", escapeshellarg($this->fromHash),
+                ['-U0', escapeshellarg($this->fromHash),
                     escapeshellarg($this->toHash),
                 ]
             ));
@@ -743,27 +743,27 @@ class FileDiff
                         }
                         $diffs[] = $currentDiff;
                     }
-                    $comma       = strpos($d, ",");
+                    $comma       = strpos($d, ',');
                     $line        = -intval(substr($d, 2, $comma - 2));
-                    $currentDiff = ["line" => $line,
-                        "left" => [], "right" => [],
+                    $currentDiff = ['line' => $line,
+                        'left' => [], 'right' => [],
                     ];
                     break;
                 case '+':
                     if ($currentDiff) {
-                        $currentDiff["right"][] = substr($d, 1);
+                        $currentDiff['right'][] = substr($d, 1);
                     }
                     break;
                 case '-':
                     if ($currentDiff) {
-                        $currentDiff["left"][] = substr($d, 1);
+                        $currentDiff['left'][] = substr($d, 1);
                     }
                     break;
                 case ' ':
-                    echo "should not happen!";
+                    echo 'should not happen!';
                     if ($currentDiff) {
-                        $currentDiff["left"][]  = substr($d, 1);
-                        $currentDiff["right"][] = substr($d, 1);
+                        $currentDiff['left'][]  = substr($d, 1);
+                        $currentDiff['right'][] = substr($d, 1);
                     }
                     break;
             }
@@ -863,7 +863,7 @@ class FileDiff
         }
         $output = '';
         if ($isBinary) {
-            $output = sprintf(dgettext("gitphp", 'Binary files %1$s and %2$s differ'), $fromName, $toName) . "\n";
+            $output = sprintf(dgettext('gitphp', 'Binary files %1$s and %2$s differ'), $fromName, $toName) . "\n";
         } else {
             if ($header) {
                 $output = '--- ' . $fromName . "\n" . '+++ ' . $toName . "\n";

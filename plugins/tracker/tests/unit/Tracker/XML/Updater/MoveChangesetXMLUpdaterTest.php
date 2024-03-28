@@ -110,7 +110,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_xml = new SimpleXMLElement($xml);
 
         $this->updater->deleteChangesetNode($changeset_xml, 0);
-        $this->assertSame("", trim((string) $changeset_xml));
+        $this->assertSame('', trim((string) $changeset_xml));
     }
 
     public function testItDeletesAFieldChangeNode(): void
@@ -124,7 +124,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_xml = new SimpleXMLElement($xml);
 
         $this->updater->deleteFieldChangeNode($changeset_xml, 0);
-        $this->assertSame("", trim((string) $changeset_xml));
+        $this->assertSame('', trim((string) $changeset_xml));
     }
 
     public function testItDeletesAnExternalFieldChangeNode(): void
@@ -138,7 +138,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_xml = new SimpleXMLElement($xml);
 
         $this->updater->deleteExternalFieldChangeNode($changeset_xml, 0);
-        $this->assertSame("", trim((string) $changeset_xml));
+        $this->assertSame('', trim((string) $changeset_xml));
     }
 
     public function testItDeletesAFieldChangeValueNode(): void
@@ -152,7 +152,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_xml = new SimpleXMLElement($xml);
 
         $this->updater->deleteFieldChangeValueNode($changeset_xml, 0);
-        $this->assertSame("", trim((string) $changeset_xml->value));
+        $this->assertSame('', trim((string) $changeset_xml->value));
     }
 
     public function testItdeletesASpecificValueInAGivenFieldChange(): void
@@ -170,8 +170,8 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->updater->deleteValueInFieldChangeAtIndex($changeset_xml, 0, 2);
 
         $this->assertCount(2, $changeset_xml[0]->field_change[0]->value);
-        $this->assertSame("Value 1", (string) $changeset_xml[0]->field_change[0]->value[0]);
-        $this->assertSame("Value 2", (string) $changeset_xml[0]->field_change[0]->value[1]);
+        $this->assertSame('Value 1', (string) $changeset_xml[0]->field_change[0]->value[0]);
+        $this->assertSame('Value 2', (string) $changeset_xml[0]->field_change[0]->value[1]);
     }
 
     public function testItDoesNotDeleteCommentsWhenThereIsAComment(): void
@@ -181,7 +181,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_xml = new SimpleXMLElement($xml);
 
         $this->updater->deleteEmptyCommentsNode($changeset_xml);
-        $this->assertSame("A comment", (string) $changeset_xml->comments->comment->body);
+        $this->assertSame('A comment', (string) $changeset_xml->comments->comment->body);
     }
 
     public function testItDeletesCommentsAnEmptyCommentNode(): void
@@ -191,7 +191,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_xml = new SimpleXMLElement($xml);
 
         $this->updater->deleteEmptyCommentsNode($changeset_xml);
-        $this->assertSame("", trim((string) $changeset_xml->comments->comment));
+        $this->assertSame('', trim((string) $changeset_xml->comments->comment));
     }
 
     public function testItReturnsFalseWhenFieldChangesDoesNotBelongToGivenField(): void
@@ -204,7 +204,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 </field_change>
             </changeset>';
         $changeset_xml = new SimpleXMLElement($xml);
-        $field         = StringFieldBuilder::aStringField(1)->withName("a_field")->build();
+        $field         = StringFieldBuilder::aStringField(1)->withName('a_field')->build();
 
         $this->assertFalse($this->updater->isFieldChangeCorrespondingToField($changeset_xml, $field, 0));
     }
@@ -219,7 +219,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 </field_change>
             </changeset>';
         $changeset_xml = new SimpleXMLElement($xml);
-        $field         = StringFieldBuilder::aStringField(1)->withName("status")->build();
+        $field         = StringFieldBuilder::aStringField(1)->withName('status')->build();
 
         $this->assertTrue($this->updater->isFieldChangeCorrespondingToField($changeset_xml, $field, 0));
     }
@@ -233,10 +233,10 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 </field_change>
             </changeset>';
         $changeset_xml = new SimpleXMLElement($xml);
-        $field         = StringFieldBuilder::aStringField(1)->withName("a_field")->build();
+        $field         = StringFieldBuilder::aStringField(1)->withName('a_field')->build();
 
         $this->updater->useTargetTrackerFieldName($changeset_xml, $field, 0);
-        $this->assertSame("a_field", (string) $changeset_xml->field_change->attributes()->field_name);
+        $this->assertSame('a_field', (string) $changeset_xml->field_change->attributes()->field_name);
     }
 
     public function testItAddsLastMovedChangesetComment(): void
@@ -257,7 +257,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertSame((string) $user->getId(), (string) $changeset_xml->changeset->submitted_by);
-        $this->assertSame("1970-01-01T01:00:00+01:00", (string) $changeset_xml->changeset->submitted_on);
+        $this->assertSame('1970-01-01T01:00:00+01:00', (string) $changeset_xml->changeset->submitted_on);
         $this->assertSame(
             "Artifact was moved from 'tracker' tracker in 'The Test Project' project.",
             (string) $changeset_xml->changeset->comments->comment->body
@@ -275,6 +275,6 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->updater->addSubmittedInformation($changeset_xml, $user, 123456789);
 
         $this->assertSame((string) $user->getId(), (string) $changeset_xml->submitted_by);
-        $this->assertSame("1973-11-29T22:33:09+01:00", (string) $changeset_xml->submitted_on);
+        $this->assertSame('1973-11-29T22:33:09+01:00', (string) $changeset_xml->submitted_on);
     }
 }

@@ -25,7 +25,7 @@ final class b202211280910_add_missing_artifacts_ranks extends \Tuleap\ForgeUpgra
 {
     public function description(): string
     {
-        return "Add missing artifact ranks";
+        return 'Add missing artifact ranks';
     }
 
     public function up(): void
@@ -41,7 +41,7 @@ final class b202211280910_add_missing_artifacts_ranks extends \Tuleap\ForgeUpgra
 
     private function getMaxRank(): int
     {
-        $sql    = "SELECT MAX(tracker_artifact_priority_rank.`rank`) AS MAX_RANK FROM tracker_artifact_priority_rank";
+        $sql    = 'SELECT MAX(tracker_artifact_priority_rank.`rank`) AS MAX_RANK FROM tracker_artifact_priority_rank';
         $result = $this->api->dbh->query($sql);
         $row    = $result->fetch();
 
@@ -50,11 +50,11 @@ final class b202211280910_add_missing_artifacts_ranks extends \Tuleap\ForgeUpgra
 
     private function getArtifactsRowsWithMissingRank(): array
     {
-        $sql = "SELECT tracker_artifact.id
+        $sql = 'SELECT tracker_artifact.id
     FROM tracker_artifact
     LEFT JOIN tracker_artifact_priority_rank ON (tracker_artifact.id = tracker_artifact_priority_rank.artifact_id)
     WHERE tracker_artifact_priority_rank.artifact_id IS NULL;
-        ";
+        ';
 
         $result = $this->api->dbh->query($sql);
         $rows   = $result->fetchAll();
@@ -65,7 +65,7 @@ final class b202211280910_add_missing_artifacts_ranks extends \Tuleap\ForgeUpgra
     private function insertNewRank(int $artifact_id, int $rank): void
     {
         $pdo_statement = $this->api->dbh->prepare(
-            "INSERT INTO tracker_artifact_priority_rank (artifact_id, `rank`) VALUES (?,?)"
+            'INSERT INTO tracker_artifact_priority_rank (artifact_id, `rank`) VALUES (?,?)'
         );
 
         $pdo_statement->execute([$artifact_id, $rank]);

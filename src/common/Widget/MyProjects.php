@@ -147,7 +147,7 @@ class MyProjects extends \Widget
                     $massmail_link_title = $GLOBALS['Language']->getText(
                         'my_index',
                         'send_mail',
-                        $project_icon . " " . $hp->purify($project->getPublicName())
+                        $project_icon . ' ' . $hp->purify($project->getPublicName())
                     );
                     $html               .= '<td>';
                     $html               .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="' . $project->getID() . '" title="' . $massmail_link_title . '" data-toggle="modal"><span class="far fa-envelope"></span></a>';
@@ -226,14 +226,14 @@ class MyProjects extends \Widget
             'copyright'   => 'Copyright Xerox',
             'pubDate'     => gmdate('D, d M Y G:i:s', time()) . ' GMT',
         ]);
-        $result     = db_query("SELECT `groups`.group_name,"
-            . "`groups`.group_id,"
-            . "`groups`.unix_group_name,"
-            . "`groups`.status,"
-            . "`groups`.access,"
-            . "user_group.admin_flags "
-            . "FROM `groups`,user_group "
-            . "WHERE `groups`.group_id=user_group.group_id "
+        $result     = db_query('SELECT `groups`.group_name,'
+            . '`groups`.group_id,'
+            . '`groups`.unix_group_name,'
+            . '`groups`.status,'
+            . '`groups`.access,'
+            . 'user_group.admin_flags '
+            . 'FROM `groups`,user_group '
+            . 'WHERE `groups`.group_id=user_group.group_id '
             . "AND user_group.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' "
             . "AND `groups`.status='A' ORDER BY group_name");
         $rows       = db_numrows($result);

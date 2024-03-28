@@ -34,7 +34,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_pullrequest_review ADD (title VARCHAR(256) NOT NULL, description TEXT NOT NULL);";
+        $sql = 'ALTER TABLE plugin_pullrequest_review ADD (title VARCHAR(256) NOT NULL, description TEXT NOT NULL);';
         $this->executeSql($sql);
     }
 

@@ -55,16 +55,16 @@ class CSVRepresentationBuilder
     public function buildHeaderLine(PFUser $user, SimilarFieldCollection $similar_fields)
     {
         $semantic_and_always_there_fields = [
-            "id",
-            "project",
-            "tracker",
-            "title",
-            "description",
-            "status",
-            "submitted_by",
-            "submitted_on",
-            "last_update_by",
-            "last_update_date",
+            'id',
+            'project',
+            'tracker',
+            'title',
+            'description',
+            'status',
+            'submitted_by',
+            'submitted_on',
+            'last_update_by',
+            'last_update_date',
         ];
 
         $all_fields = array_merge(

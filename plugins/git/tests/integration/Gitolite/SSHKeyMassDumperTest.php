@@ -115,7 +115,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
 
         touch($this->gitolite_admin_dir . '/keydir/id_rsa_gl-adm.pub');
         $this->git_exec->add($this->gitolite_admin_dir . '/keydir/id_rsa_gl-adm.pub');
-        $this->git_exec->commit("Admin key");
+        $this->git_exec->commit('Admin key');
         $this->assertEmptyGitStatus();
 
         $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([]);
@@ -135,7 +135,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $keyfile = 'forge__gerrit_1@0.pub';
         touch($this->gitolite_admin_dir . '/keydir/' . $keyfile);
         $this->git_exec->add($this->gitolite_admin_dir . '/keydir/' . $keyfile);
-        $this->git_exec->commit("Gerrit key");
+        $this->git_exec->commit('Gerrit key');
         $this->assertEmptyGitStatus();
 
         $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([]);

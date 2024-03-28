@@ -47,11 +47,11 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
             ->build();
 
         $this->task_tracker = $this->createMock(Tracker::class);
-        $this->task_tracker->method("getId")->willReturn(36);
-        $this->task_tracker->method("getParent")->willReturn($this->backlog_tracker);
+        $this->task_tracker->method('getId')->willReturn(36);
+        $this->task_tracker->method('getParent')->willReturn($this->backlog_tracker);
 
         $sprint_tracker = $this->createMock(Tracker::class);
-        $sprint_tracker->method("getId")->willReturn(106);
+        $sprint_tracker->method('getId')->willReturn(106);
 
         $sprint_planning = $this->createMock(Planning::class);
         $sprint_planning->method('getPlanningTrackerId')->willReturn($sprint_tracker->getId());

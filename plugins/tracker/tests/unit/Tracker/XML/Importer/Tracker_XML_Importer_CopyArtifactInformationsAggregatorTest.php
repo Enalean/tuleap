@@ -44,12 +44,12 @@ final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends 
 
     public function testItContainsAllTheLoggedMessages(): void
     {
-        $this->logger->error("this is an error");
-        $this->logger->warning("this is a warning");
+        $this->logger->error('this is an error');
+        $this->logger->warning('this is a warning');
 
         $expected_logs = [
-            "[error] this is an error",
-            "[warning] this is a warning",
+            '[error] this is an error',
+            '[warning] this is a warning',
         ];
         $this->assertEquals($expected_logs, $this->logger->getAllLogs());
     }
@@ -58,21 +58,21 @@ final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends 
     {
         $this->backend_logger->shouldReceive('log')->once();
 
-        $this->logger->error("this is an error");
+        $this->logger->error('this is an error');
     }
 
     public function testItOnlyLogsErrorsAndWarningsInTheLogStack(): void
     {
         $this->backend_logger->shouldReceive('log')->times(4);
 
-        $this->logger->error("this is an error");
-        $this->logger->warning("this is a warning");
-        $this->logger->info("this is an info");
-        $this->logger->debug("this is a debug");
+        $this->logger->error('this is an error');
+        $this->logger->warning('this is a warning');
+        $this->logger->info('this is an info');
+        $this->logger->debug('this is a debug');
 
         $expected_logs = [
-            "[error] this is an error",
-            "[warning] this is a warning",
+            '[error] this is an error',
+            '[warning] this is a warning',
         ];
         $this->assertEquals($expected_logs, $this->logger->getAllLogs());
     }

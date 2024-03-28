@@ -41,7 +41,7 @@ class Widget_MyBookmarks extends Widget
     public function getContent()
     {
         $html_my_bookmarks = '';
-        $result            = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where " .
+        $result            = db_query('SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ' .
             "user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' ORDER BY bookmark_title");
         $rows              = db_numrows($result);
         if (! $result || $rows < 1) {

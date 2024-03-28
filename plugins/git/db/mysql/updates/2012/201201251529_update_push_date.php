@@ -47,12 +47,12 @@ EOT;
      */
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git_log DROP COLUMN push_date";
+        $sql = 'ALTER TABLE plugin_git_log DROP COLUMN push_date';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while dropping the column push_date from the table plugin_git_log');
         }
-        $sql = "ALTER TABLE plugin_git_log ADD COLUMN push_date INT(11) DEFAULT 0 AFTER user_id";
+        $sql = 'ALTER TABLE plugin_git_log ADD COLUMN push_date INT(11) DEFAULT 0 AFTER user_id';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the column push_date to the table plugin_git_log');

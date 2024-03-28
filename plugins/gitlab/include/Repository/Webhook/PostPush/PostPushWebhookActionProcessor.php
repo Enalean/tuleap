@@ -127,10 +127,10 @@ class PostPushWebhookActionProcessor
 
         $good_references = [];
 
-        $this->logger->info(count($references_collection->getTuleapReferences()) . " Tuleap references found in commit " . $commit_webhook_data->getSha1());
+        $this->logger->info(count($references_collection->getTuleapReferences()) . ' Tuleap references found in commit ' . $commit_webhook_data->getSha1());
 
         foreach ($references_collection->getTuleapReferences() as $tuleap_reference) {
-            $this->logger->info("|_ Reference to Tuleap artifact #" . $tuleap_reference->getId() . " found.");
+            $this->logger->info('|_ Reference to Tuleap artifact #' . $tuleap_reference->getId() . ' found.');
 
             try {
                 $external_reference = $this->tuleap_reference_retriever->retrieveTuleapReference($tuleap_reference->getId());
@@ -138,7 +138,7 @@ class PostPushWebhookActionProcessor
                 assert($external_reference instanceof \Reference);
 
                 $this->logger->info(
-                    "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " found, cross-reference will be added in project the GitLab repository is integrated in."
+                    '|  |_ Tuleap artifact #' . $tuleap_reference->getId() . ' found, cross-reference will be added in project the GitLab repository is integrated in.'
                 );
 
                 $this->saveCommitReferenceInIntegratedProject(

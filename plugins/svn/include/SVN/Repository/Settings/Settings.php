@@ -83,7 +83,7 @@ final class Settings
             || ! empty($this->immutable_tag->getPaths())
             || ! empty($this->immutable_tag->getWhitelist())
             || ! empty($this->mail_notification)
-            || $this->access_file !== "";
+            || $this->access_file !== '';
     }
 
     /**

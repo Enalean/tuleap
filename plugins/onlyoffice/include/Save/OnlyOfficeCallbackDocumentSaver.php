@@ -191,7 +191,7 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
                 'number'         => $next_version_id,
                 'user_id'        => $primary_user->getId(),
                 'changelog'      => '',
-                'authoring_tool' => sprintf("ONLYOFFICE %s", $onlyoffice_version),
+                'authoring_tool' => sprintf('ONLYOFFICE %s', $onlyoffice_version),
                 'filename'       => $version->getFilename(),
                 'filesize'       => strlen($response_content),
                 'filetype'       => $version->getFiletype(),

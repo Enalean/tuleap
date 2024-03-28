@@ -53,7 +53,7 @@ final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $request->shouldReceive('getJsonDecodedBody')->andReturn($body);
 
         $this->expectException(JiraConnectionException::class);
-        $this->expectExceptionMessage("credentials key is mandatory");
+        $this->expectExceptionMessage('credentials key is mandatory');
 
         $this->wrapper_builder->buildFromRequest($request, new NullLogger());
     }
@@ -61,12 +61,12 @@ final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenCredentialValuesAreMissing(): void
     {
         $body              = new \stdClass();
-        $body->credentials = "";
+        $body->credentials = '';
         $request           = Mockery::mock(HTTPRequest::class);
         $request->shouldReceive('getJsonDecodedBody')->andReturn($body);
 
         $this->expectException(JiraConnectionException::class);
-        $this->expectExceptionMessage("server, email or token empty");
+        $this->expectExceptionMessage('server, email or token empty');
 
         $this->wrapper_builder->buildFromRequest($request, new NullLogger());
     }
@@ -75,15 +75,15 @@ final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $body                          = new \stdClass();
         $body->credentials             = new \stdClass();
-        $body->credentials->server_url = "invalid-example.com";
-        $body->credentials->user_email = "user-email@example.com";
-        $body->credentials->token      = "azerty1234";
+        $body->credentials->server_url = 'invalid-example.com';
+        $body->credentials->user_email = 'user-email@example.com';
+        $body->credentials->token      = 'azerty1234';
 
         $request = Mockery::mock(HTTPRequest::class);
         $request->shouldReceive('getJsonDecodedBody')->andReturn($body);
 
         $this->expectException(JiraConnectionException::class);
-        $this->expectExceptionMessage("server url is invalid");
+        $this->expectExceptionMessage('server url is invalid');
 
         $this->wrapper_builder->buildFromRequest($request, new NullLogger());
     }
@@ -92,9 +92,9 @@ final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $body                          = new \stdClass();
         $body->credentials             = new \stdClass();
-        $body->credentials->server_url = "https://example.com";
-        $body->credentials->user_email = "user-email@example.com";
-        $body->credentials->token      = "azerty1234";
+        $body->credentials->server_url = 'https://example.com';
+        $body->credentials->user_email = 'user-email@example.com';
+        $body->credentials->token      = 'azerty1234';
 
         $request = Mockery::mock(HTTPRequest::class);
         $request->shouldReceive('getJsonDecodedBody')->andReturn($body);

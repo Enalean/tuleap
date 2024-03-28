@@ -35,20 +35,20 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
 {
     public function getName()
     {
-        return _("WikiAdminChown");
+        return _('WikiAdminChown');
     }
 
     public function getDescription()
     {
-        return _("Chown selected pages.");
+        return _('Chown selected pages.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.8 $"
+            '$Revision: 1.8 $'
         );
     }
 
@@ -102,19 +102,19 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         if ($count) {
             $dbi->touch();
             return HTML($ul, HTML::p(fmt(
-                "%s pages have been permanently changed.",
+                '%s pages have been permanently changed.',
                 $count
             )));
         } else {
-            return HTML($ul, HTML::p(fmt("No pages changed.")));
+            return HTML($ul, HTML::p(fmt('No pages changed.')));
         }
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-        return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
+        return $this->disabled('This action is blocked by administrator. Sorry for the inconvenience !');
         if ($request->getArg('action') != 'browse') {
-            if (! $request->getArg('action') == _("PhpWikiAdministration/Chown")) {
+            if (! $request->getArg('action') == _('PhpWikiAdministration/Chown')) {
                 return $this->disabled("(action != 'browse')");
             }
         }
@@ -150,7 +150,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
             // without individual PagePermissions:
             if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
-                $this->disabled("! user->isAdmin");
+                $this->disabled('! user->isAdmin');
             }
             // DONE: error message if not allowed.
             if ($post_args['action'] == 'verify') {
@@ -191,22 +191,22 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
 
         $header = HTML::p();
         if ($next_action == 'verify') {
-            $button_label = _("Yes");
+            $button_label = _('Yes');
             $header->pushContent(
                 HTML::p(HTML::strong(
-                    _("Are you sure you want to permanently chown the selected files?")
+                    _('Are you sure you want to permanently chown the selected files?')
                 ))
             );
             $header = $this->chownForm($header, $post_args);
         } else {
-            $button_label = _("Chown selected pages");
-            $header->pushContent(HTML::p(_("Select the pages to change the owner:")));
+            $button_label = _('Chown selected pages');
+            $header->pushContent(HTML::p(_('Select the pages to change the owner:')));
             $header = $this->chownForm($header, $post_args);
         }
 
         $buttons = HTML::p(
             Button('submit:admin_chown[chown]', $button_label, 'wikiadmin'),
-            Button('submit:admin_chown[cancel]', _("Cancel"), 'button')
+            Button('submit:admin_chown[cancel]', _('Cancel'), 'button')
         );
 
         return HTML::form(
@@ -230,8 +230,8 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
 
     public function chownForm(&$header, $post_args)
     {
-        $header->pushContent(_("Chown") . " ");
-        $header->pushContent(' ' . _("to") . ': ');
+        $header->pushContent(_('Chown') . ' ');
+        $header->pushContent(' ' . _('to') . ': ');
         $header->pushContent(HTML::input(['name' => 'admin_chown[user]',
             'value' => $post_args['user'],
         ]));

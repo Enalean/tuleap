@@ -35,7 +35,7 @@ class Docman_SqlFilterDate extends \Docman_SqlFilter
         if ($ok) {
             list($year, $month, $day) = \util_date_explode($value);
             $time_before              = \mktime(23, 59, 59, $month, $day - 1, $year);
-            $stmt                     = $this->field . " <= " . $time_before;
+            $stmt                     = $this->field . ' <= ' . $time_before;
         }
         return $stmt;
     }
@@ -47,7 +47,7 @@ class Docman_SqlFilterDate extends \Docman_SqlFilter
         if ($ok) {
             list($year, $month, $day) = \util_date_explode($value);
             $time_end                 = \mktime(23, 59, 59, $month, $day, $year);
-            $stmt                     = $this->field . " >= " . $time . " AND " . $this->field . " <= " . $time_end;
+            $stmt                     = $this->field . ' >= ' . $time . ' AND ' . $this->field . ' <= ' . $time_end;
         }
         return $stmt;
     }
@@ -59,7 +59,7 @@ class Docman_SqlFilterDate extends \Docman_SqlFilter
         if ($ok) {
             list($year, $month, $day) = \util_date_explode($value);
             $time_after               = \mktime(0, 0, 0, $month, $day + 1, $year);
-            $stmt                     = $this->field . " >= " . $time_after;
+            $stmt                     = $this->field . ' >= ' . $time_after;
         }
         return $stmt;
     }

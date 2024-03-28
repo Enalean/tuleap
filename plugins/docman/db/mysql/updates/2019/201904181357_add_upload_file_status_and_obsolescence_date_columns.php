@@ -35,7 +35,7 @@ class b201904181357_add_upload_file_status_and_obsolescence_date_columns extends
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_docman_new_document_upload ADD status TINYINT(4) DEFAULT 100 NOT NULL";
+        $sql = 'ALTER TABLE plugin_docman_new_document_upload ADD status TINYINT(4) DEFAULT 100 NOT NULL';
         $this->db->alterTable(
             'plugin_docman_new_document_upload',
             'tuleap',
@@ -43,7 +43,7 @@ class b201904181357_add_upload_file_status_and_obsolescence_date_columns extends
             $sql
         );
 
-        $sql = "ALTER TABLE plugin_docman_new_document_upload ADD obsolescence_date int(11) DEFAULT 0 NOT NULL";
+        $sql = 'ALTER TABLE plugin_docman_new_document_upload ADD obsolescence_date int(11) DEFAULT 0 NOT NULL';
         $this->db->alterTable(
             'plugin_docman_new_document_upload',
             'tuleap',

@@ -39,8 +39,8 @@ class b201910241530_remove_callmeback_configuration_table extends ForgeUpgrade_B
 
     private function dropCallMeBackTables()
     {
-        $sql = "DROP TABLE IF EXISTS plugin_callmeback_email;
-                DROP TABLE IF EXISTS plugin_callmeback_messages;";
+        $sql = 'DROP TABLE IF EXISTS plugin_callmeback_email;
+                DROP TABLE IF EXISTS plugin_callmeback_messages;';
 
         $result = $this->db->dbh->exec($sql);
 

@@ -313,7 +313,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         $link = new AdditionalButtonLinkPresenter(
             $link_label,
             $url,
-            "",
+            '',
             $icon
         );
 
@@ -661,7 +661,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         if (! $project->usesService($this->getServiceShortname())) {
             $event->setTypeIsUnusable();
         } else {
-            $event->setMessage(TypeCoveredByPresenter::TYPE_COVERED_BY . " type is forced because the service testmanagement is used.");
+            $event->setMessage(TypeCoveredByPresenter::TYPE_COVERED_BY . ' type is forced because the service testmanagement is used.');
         }
     }
 

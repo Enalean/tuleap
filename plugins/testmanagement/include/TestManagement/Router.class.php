@@ -283,7 +283,7 @@ class Router
             $this->service = $project->getService('plugin_testmanagement');
         }
         if ($this->service === null) {
-            throw new NotFoundException(dgettext('tuleap-testmanagement', "Test Management service is not active in this project"));
+            throw new NotFoundException(dgettext('tuleap-testmanagement', 'Test Management service is not active in this project'));
         }
 
         return $this->service;

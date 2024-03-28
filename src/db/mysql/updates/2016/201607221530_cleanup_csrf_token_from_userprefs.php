@@ -20,7 +20,7 @@ class b201607221530_cleanup_csrf_token_from_userprefs extends \Tuleap\ForgeUpgra
 {
     public function description()
     {
-        return "Cleanup the CSRF tokens stored in the user preferences";
+        return 'Cleanup the CSRF tokens stored in the user preferences';
     }
 
     public function preUp()

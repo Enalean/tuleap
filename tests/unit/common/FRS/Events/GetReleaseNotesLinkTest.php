@@ -37,12 +37,12 @@ final class GetReleaseNotesLinkTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDefaultsToCoreFRSURL(): void
     {
-        self::assertEquals("/file/shownotes.php?release_id=124", $this->event->getUrl());
+        self::assertEquals('/file/shownotes.php?release_id=124', $this->event->getUrl());
     }
 
     public function testItReturnsURLProvidedByPlugin(): void
     {
-        $plugin_url = "/example.com/124/squatinoidei";
+        $plugin_url = '/example.com/124/squatinoidei';
         $this->event->setUrl($plugin_url);
         self::assertEquals($plugin_url, $this->event->getUrl());
     }

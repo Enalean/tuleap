@@ -35,7 +35,7 @@ class DbaListSet
             $dbh->insert('max_key', 0);
         }
 
-        $key = "s" . urlencode($seq);
+        $key = 's' . urlencode($seq);
         assert(intval($key) == 0 && ! strstr($key, ':'));
         if (! $dbh->exists($key)) {
             $dbh->insert($key, "$key:$key:");
@@ -44,7 +44,7 @@ class DbaListSet
 
     public function delete_sequence($seq)
     {
-        $key = "s" . urlencode($seq);
+        $key = 's' . urlencode($seq);
         for ($i = $this->firstkey($seq); $i; $i = $next) {
             $next = $this->next($i);
             $this->delete($i);
@@ -54,14 +54,14 @@ class DbaListSet
 
     public function firstkey($seq)
     {
-        $key          = "s" . urlencode($seq);
+        $key          = 's' . urlencode($seq);
         list(, $next) =  explode(':', $this->_dbh->fetch($key), 3);
         return intval($next);
     }
 
     public function lastkey($seq)
     {
-        $key        = "s" . urlencode($seq);
+        $key        = 's' . urlencode($seq);
         list($prev) =  explode(':', $this->_dbh->fetch($key), 3);
         return intval($prev);
     }
@@ -111,13 +111,13 @@ class DbaListSet
 
     public function append($seq, $data)
     {
-        $key = "s" . urlencode($seq);
+        $key = 's' . urlencode($seq);
         $this->_insert_before_nc($key, $data);
     }
 
     public function prepend($seq, $data)
     {
-        $key = "s" . urlencode($seq);
+        $key = 's' . urlencode($seq);
         $this->_insert_after_nc($key, $data);
     }
 

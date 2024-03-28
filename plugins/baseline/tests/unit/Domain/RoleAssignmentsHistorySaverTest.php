@@ -216,6 +216,6 @@ class RoleAssignmentsHistorySaverTest extends TestCase
 
     private function getDeveloperUserGroup(): \ProjectUGroup
     {
-        return ProjectUGroupTestBuilder::aCustomUserGroup(self::DEVELOPER_UGROUP_ID)->withName("Developers")->build();
+        return ProjectUGroupTestBuilder::aCustomUserGroup(self::DEVELOPER_UGROUP_ID)->withName('Developers')->build();
     }
 }

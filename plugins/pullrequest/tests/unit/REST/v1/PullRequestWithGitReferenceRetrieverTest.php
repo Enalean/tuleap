@@ -170,7 +170,7 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
-        $this->expectExceptionMessage("Git repository not found");
+        $this->expectExceptionMessage('Git repository not found');
 
         $this->getAccessiblePullRequestWithGitReferenceForCurrentUser(BypassBrokenGitReferenceCheck::check());
         self::assertSame(0, $this->git_pull_request_reference_updater->getUpdatePullRequestReferenceCallCount());
@@ -180,7 +180,7 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
     {
         // Needed because of the usage of GitExec::buildFromRepository which call `GitRepository::getFullPath
         $git_repository = $this->createMock(GitRepository::class);
-        $git_repository->method("getFullPath")->willReturn("/repo.git");
+        $git_repository->method('getFullPath')->willReturn('/repo.git');
 
         $this->git_repository_factory = RetrieveGitRepositoryStub::withGitRepository($git_repository);
 

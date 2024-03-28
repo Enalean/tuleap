@@ -36,8 +36,8 @@ final class IterationRedirectionParametersProxy implements IterationRedirectionP
 
     public static function buildFromCodendiRequest(\Codendi_Request $request): self
     {
-        $redirect_value = $request->get(IterationRedirectionParameters::FLAG) ?: "";
-        $increment_id   = $request->get(IterationRedirectionParameters::PARAM_INCREMENT_ID) ?: "";
+        $redirect_value = $request->get(IterationRedirectionParameters::FLAG) ?: '';
+        $increment_id   = $request->get(IterationRedirectionParameters::PARAM_INCREMENT_ID) ?: '';
 
         return new self($redirect_value, $increment_id);
     }
@@ -59,13 +59,13 @@ final class IterationRedirectionParametersProxy implements IterationRedirectionP
 
     public function needsRedirectionAfterCreate(): bool
     {
-        return $this->increment_id !== "" &&
+        return $this->increment_id !== '' &&
             $this->redirect_value === IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION;
     }
 
     public function needsRedirectionAfterUpdate(): bool
     {
-        return $this->increment_id !== "" &&
+        return $this->increment_id !== '' &&
         $this->redirect_value === IterationRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION;
     }
 }

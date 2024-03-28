@@ -27,21 +27,21 @@ final class ArtifactsTest extends ArtifactBase
     public function testGETReleaseBurnup(): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', "artifacts/" . $this->burnup_artifact_ids[1])
+            $this->request_factory->createRequest('GET', 'artifacts/' . $this->burnup_artifact_ids[1])
         );
 
         $this->assertEquals(200, $response->getStatusCode());
         $burnup = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $expected_burnup_chart = [
-            ["date" => '2017-12-11T23:59:59+01:00', "team_effort" => 0, "total_effort" => 0],
-            ["date" => '2017-12-12T23:59:59+01:00', "team_effort" => 0, "total_effort" => 0],
-            ["date" => '2017-12-13T23:59:59+01:00', "team_effort" => 20, "total_effort" => 100],
-            ["date" => '2017-12-14T23:59:59+01:00', "team_effort" => 20, "total_effort" => 100],
-            ["date" => '2017-12-15T23:59:59+01:00', "team_effort" => 20, "total_effort" => 100],
-            ["date" => '2017-12-18T23:59:59+01:00', "team_effort" => 30, "total_effort" => 110],
-            ["date" => '2017-12-19T23:59:59+01:00', "team_effort" => 30, "total_effort" => 110],
-            ["date" => '2017-12-20T23:59:59+01:00', "team_effort" => 30, "total_effort" => 110],
+            ['date' => '2017-12-11T23:59:59+01:00', 'team_effort' => 0, 'total_effort' => 0],
+            ['date' => '2017-12-12T23:59:59+01:00', 'team_effort' => 0, 'total_effort' => 0],
+            ['date' => '2017-12-13T23:59:59+01:00', 'team_effort' => 20, 'total_effort' => 100],
+            ['date' => '2017-12-14T23:59:59+01:00', 'team_effort' => 20, 'total_effort' => 100],
+            ['date' => '2017-12-15T23:59:59+01:00', 'team_effort' => 20, 'total_effort' => 100],
+            ['date' => '2017-12-18T23:59:59+01:00', 'team_effort' => 30, 'total_effort' => 110],
+            ['date' => '2017-12-19T23:59:59+01:00', 'team_effort' => 30, 'total_effort' => 110],
+            ['date' => '2017-12-20T23:59:59+01:00', 'team_effort' => 30, 'total_effort' => 110],
         ];
 
         foreach ($burnup['values'] as $field) {

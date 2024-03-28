@@ -23,7 +23,7 @@ class b201704051759_add_index_on_tracker_changeset_value_artifactlink extends \T
 {
     public function description()
     {
-        return "Add index to on tracker_changeset_value_artifactlink";
+        return 'Add index to on tracker_changeset_value_artifactlink';
     }
 
     public function preUp()
@@ -38,7 +38,7 @@ class b201704051759_add_index_on_tracker_changeset_value_artifactlink extends \T
 
     private function updateTable()
     {
-        $sql = "ALTER TABLE tracker_changeset_value_artifactlink ADD INDEX idx_group_id_keyword (group_id, keyword)";
+        $sql = 'ALTER TABLE tracker_changeset_value_artifactlink ADD INDEX idx_group_id_keyword (group_id, keyword)';
 
         $this->addIndex('tracker_changeset_value_artifactlink', 'idx_group_id_keyword', $sql);
     }

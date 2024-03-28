@@ -61,23 +61,23 @@ class Tracker_DateReminderManager
             $remiderFactory = $this->getDateReminderRenderer()->getDateReminderFactory();
             $reminders      = $remiderFactory->getTrackerReminders(false);
             foreach ($reminders as $reminder) {
-                $logger->debug("[TDR] Processing reminder on " . $reminder->getField()->getName() . " (id: " . $reminder->getId() . ")");
+                $logger->debug('[TDR] Processing reminder on ' . $reminder->getField()->getName() . ' (id: ' . $reminder->getId() . ')');
                 $artifacts = $this->getArtifactsByReminder($reminder);
 
                 if (count($artifacts) == 0) {
-                    $logger->debug("[TDR] No matching artifact.");
+                    $logger->debug('[TDR] No matching artifact.');
                 }
                 foreach ($artifacts as $artifact) {
                     if (! $reminder->mustNotifyClosedArtifacts() && ! $artifact->isOpen()) {
-                        $logger->debug("[TDR] Artifact #" . $artifact->getId() . " matches but is not open. As per reminder configuration, skipping.");
+                        $logger->debug('[TDR] Artifact #' . $artifact->getId() . ' matches but is not open. As per reminder configuration, skipping.');
                         continue;
                     }
-                    $logger->debug("[TDR] Artifact #" . $artifact->getId() . " matches");
+                    $logger->debug('[TDR] Artifact #' . $artifact->getId() . ' matches');
                     $this->sendReminderNotification($reminder, $artifact);
                 }
             }
         } else {
-            $logger->info("[TDR] Notifications are suspended");
+            $logger->info('[TDR] Notifications are suspended');
         }
     }
 
@@ -120,7 +120,7 @@ class Tracker_DateReminderManager
         if ($reminder === null) {
             throw new Tracker_DateReminderException(
                 sprintf(
-                    dgettext('tuleap-tracker', "Reminder with ID %d not found."),
+                    dgettext('tuleap-tracker', 'Reminder with ID %d not found.'),
                     $reminder_id,
                 )
             );
@@ -177,7 +177,7 @@ class Tracker_DateReminderManager
         // 3. Send the notification
         foreach ($messages as $m) {
             $historyDao = new ProjectHistoryDao();
-            $historyDao->groupAddHistory("tracker_date_reminder_sent", $this->tracker->getName() . ":" . $reminder->getField()->getId(), $this->tracker->getGroupId(), $m['recipients']);
+            $historyDao->groupAddHistory('tracker_date_reminder_sent', $this->tracker->getName() . ':' . $reminder->getField()->getId(), $this->tracker->getGroupId(), $m['recipients']);
             $this->sendReminder($artifact, $m['recipients'], $m['headers'], $m['subject'], $m['htmlBody'], $m['txtBody']);
         }
     }
@@ -251,9 +251,9 @@ class Tracker_DateReminderManager
 
         $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
         $mail_enhancer->addPropertiesToLookAndFeel('title', $hp->purify($subject));
-        $mail_enhancer->addHeader("X-Codendi-Project", $this->getTracker()->getProject()->getUnixName());
-        $mail_enhancer->addHeader("X-Codendi-Tracker", $this->getTracker()->getItemName());
-        $mail_enhancer->addHeader("X-Codendi-Artifact-ID", $artifact->getId());
+        $mail_enhancer->addHeader('X-Codendi-Project', $this->getTracker()->getProject()->getUnixName());
+        $mail_enhancer->addHeader('X-Codendi-Tracker', $this->getTracker()->getItemName());
+        $mail_enhancer->addHeader('X-Codendi-Artifact-ID', $artifact->getId());
         foreach ($headers as $header) {
             $mail_enhancer->addHeader($header['name'], $header['value']);
         }
@@ -292,7 +292,7 @@ class Tracker_DateReminderManager
      */
     public function getSubject($reminder, $artifact, $recipient)
     {
-        $s = "[" . $this->tracker->getName() . "] " . sprintf(dgettext('tuleap-tracker', 'Reminder: \'%1$s\' %2$s for \'%3$s\''), $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact), $artifact->getTitle());
+        $s = '[' . $this->tracker->getName() . '] ' . sprintf(dgettext('tuleap-tracker', 'Reminder: \'%1$s\' %2$s for \'%3$s\''), $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact), $artifact->getTitle());
         return $s;
     }
 

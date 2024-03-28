@@ -85,9 +85,9 @@ final class VersionRepresentationCollectionBuilder
 
             $versions[] = FileVersionRepresentation::build(
                 (int) $version->getId(),
-                $row["number"],
-                $row["label"],
-                $row["filename"],
+                $row['number'],
+                $row['label'],
+                $row['filename'],
                 (int) $item->getGroupId(),
                 (int) $item->getId(),
                 $approval_href,

@@ -141,7 +141,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
 
         return new ServiceController(
             ProjectManager::instance(),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
             $this,
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
             $container->get(Authorizations::class),

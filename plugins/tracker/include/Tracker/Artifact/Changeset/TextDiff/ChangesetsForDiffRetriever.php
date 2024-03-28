@@ -53,16 +53,16 @@ class ChangesetsForDiffRetriever
     {
         $next_changeset = $this->changeset_factory->getChangeset($artifact, $changeset_id);
         if (! $next_changeset) {
-            throw new NotFoundException(dgettext("tuleap-tracker", 'Changeset is not found.'));
+            throw new NotFoundException(dgettext('tuleap-tracker', 'Changeset is not found.'));
         }
 
         $field = $this->field_factory->getFieldById($field_id);
         if (! $field) {
-            throw new NotFoundException(dgettext("tuleap-tracker", 'Field not found.'));
+            throw new NotFoundException(dgettext('tuleap-tracker', 'Field not found.'));
         }
 
         if (! $field instanceof \Tracker_FormElement_Field_Text) {
-            throw new ForbiddenException(dgettext("tuleap-tracker", 'Only text fields are supported for diff.'));
+            throw new ForbiddenException(dgettext('tuleap-tracker', 'Only text fields are supported for diff.'));
         }
 
         $previous_changeset = $artifact->getPreviousChangeset((int) $next_changeset->getId());

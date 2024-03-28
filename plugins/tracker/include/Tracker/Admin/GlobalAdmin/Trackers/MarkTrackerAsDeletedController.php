@@ -48,8 +48,8 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
      */
     public final const TRACKER_EVENT_DELETE_TRACKER = 'tracker_event_delete_tracker';
 
-    public const DELETION_URL                         = "delete-tracker";
-    public const PROJECT_HISTORY_TRACKER_DELETION_KEY = "plugin_tracker_tracker_deletion";
+    public const DELETION_URL                         = 'delete-tracker';
+    public const PROJECT_HISTORY_TRACKER_DELETION_KEY = 'plugin_tracker_tracker_deletion';
 
     public function __construct(
         private readonly TrackerFactory $tracker_factory,
@@ -166,7 +166,7 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
             $current_user,
             new \DateTimeImmutable(),
             self::PROJECT_HISTORY_TRACKER_DELETION_KEY,
-            $tracker->getName() . " (" . $tracker->getItemName() . ")",
+            $tracker->getName() . ' (' . $tracker->getItemName() . ')',
         );
     }
 

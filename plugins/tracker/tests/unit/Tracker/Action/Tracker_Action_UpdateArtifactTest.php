@@ -370,14 +370,14 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
             'submit_and_stay' => true,
         ];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
-        $this->assertUriHasArgument($redirect_uri->toUrl(), "aid", $this->artifact_id);
-        $this->assertUriHasArgument($redirect_uri->toUrl(), "from_aid", $from_aid);
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'aid', $this->artifact_id);
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'from_aid', $from_aid);
     }
 
     public function testSubmitAndStayHasPrecedenceOverReturnToAid(): void
     {
         $request_data = ['submit_and_stay' => true];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
-        $this->assertUriHasArgument($redirect_uri->toUrl(), "aid", $this->artifact_id);
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'aid', $this->artifact_id);
     }
 }

@@ -22,7 +22,7 @@ class b201710201025_add_unused_artifact_link_type_table extends \Tuleap\ForgeUpg
 {
     public function description()
     {
-        return "Add table to store the artifact link type not used per project";
+        return 'Add table to store the artifact link type not used per project';
     }
 
     public function preUp()
@@ -32,11 +32,11 @@ class b201710201025_add_unused_artifact_link_type_table extends \Tuleap\ForgeUpg
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_tracker_projects_unused_artifactlink_types (
+        $sql = 'CREATE TABLE plugin_tracker_projects_unused_artifactlink_types (
                     project_id INT(11) UNSIGNED,
                     type_shortname VARCHAR(255) NOT NULL,
                     PRIMARY KEY (project_id, type_shortname)
-                ) ENGINE=InnoDB;";
+                ) ENGINE=InnoDB;';
 
         $this->db->createTable('plugin_tracker_projects_unused_artifactlink_types', $sql);
     }

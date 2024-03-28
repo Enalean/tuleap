@@ -93,7 +93,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $project || $project->isError()) {
-            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Project not found.'));
         }
 
         return $project;
@@ -112,7 +112,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
     {
         $project = $this->getProject($variables);
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
 
         $repository = $this->repository_factory->getByProjectNameAndPath(
@@ -120,7 +120,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
             $variables['path'] . '.git'
         );
         if (! $repository) {
-            throw new NotFoundException("Repository does not exist");
+            throw new NotFoundException('Repository does not exist');
         }
 
         $current_user = $request->getCurrentUser();

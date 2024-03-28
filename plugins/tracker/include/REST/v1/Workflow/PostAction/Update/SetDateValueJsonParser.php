@@ -48,7 +48,7 @@ class SetDateValueJsonParser implements PostActionUpdateJsonParser
         if (! is_int($json['field_id'])) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-tracker', "Bad field_id attribute format: int expected.")
+                dgettext('tuleap-tracker', 'Bad field_id attribute format: int expected.')
             );
         }
         if (! isset($json['value'])) {
@@ -60,7 +60,7 @@ class SetDateValueJsonParser implements PostActionUpdateJsonParser
         if (! is_string($json['value'])) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-tracker', "Bad value attribute format: string expected.")
+                dgettext('tuleap-tracker', 'Bad value attribute format: string expected.')
             );
         }
 

@@ -37,7 +37,7 @@ final class FilteredOutboundHTTPResponseAlerter implements Plugin
 {
     #[ConfigKey('Alert when an outbound HTTP requests is filtered (either ' . self::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_NEVER_VALUE  . ' or ' . self::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE . ')')]
     #[ConfigKeyString(self::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE)]
-    public const ALERT_FILTERED_OUTBOUND_HTTP_REQUEST                    = "http_outbound_requests_filtered_alert";
+    public const ALERT_FILTERED_OUTBOUND_HTTP_REQUEST                    = 'http_outbound_requests_filtered_alert';
     public const ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_NEVER_VALUE        = 'never';
     public const ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE = 'system-check';
 
@@ -74,7 +74,7 @@ final class FilteredOutboundHTTPResponseAlerter implements Plugin
             function (FilteredOutboundRequestJustification $filtering_justification) use ($request): void {
                 $this->logger->error(
                     sprintf(
-                        "A possible SSRF attempt was blocked: %s (%s)",
+                        'A possible SSRF attempt was blocked: %s (%s)',
                         (string) $request->getUri(),
                         $filtering_justification->reason,
                     ),

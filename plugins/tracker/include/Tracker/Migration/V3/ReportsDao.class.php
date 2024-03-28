@@ -65,8 +65,8 @@ class Tracker_Migration_V3_ReportsDao extends DataAccessObject
                 ORDER BY R.id, place_query";
         $this->update($sql);
 
-        $this->update("SET @counter = 0");
-        $this->update("SET @previous = NULL");
+        $this->update('SET @counter = 0');
+        $this->update('SET @previous = NULL');
 
         $sql = "UPDATE tracker_report_criteria
                 INNER JOIN (SELECT @counter := IF(@previous = report_id, @counter + 1, 1) AS new_rank,

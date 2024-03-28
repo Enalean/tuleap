@@ -62,7 +62,7 @@ class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfTrackerHasNoTitle(): void
     {
-        $this->artifact->shouldReceive('getTitle')->andReturns("title");
+        $this->artifact->shouldReceive('getTitle')->andReturns('title');
         $this->tracker->shouldReceive('getTitleField')->andReturns(null);
 
         $this->expectException(\Tuleap\Tracker\Exception\SemanticTitleNotDefinedException::class);
@@ -72,7 +72,7 @@ class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsArtifactValuesRepresentation(): void
     {
-        $this->artifact->shouldReceive('getTitle')->andReturns("title");
+        $this->artifact->shouldReceive('getTitle')->andReturns('title');
         $this->tracker->shouldReceive('getTitleField')->andReturns($this->field_string);
 
         $values = $this->builder->getValues($this->artifact, $this->tracker);

@@ -54,11 +54,11 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends \Tuleap\Test\PH
         $this->permission_dao = \Mockery::mock(TrackerPrivateCommentUGroupPermissionDao::class);
         $this->ugroup_manager = \Mockery::mock(\UGroupManager::class);
 
-        $this->tracker = \Mockery::mock(\Tracker::class, ["getId" => 15]);
+        $this->tracker = \Mockery::mock(\Tracker::class, ['getId' => 15]);
 
         $this->tracker_private_comment_information_retriever = \Mockery::mock(RetrieveTrackerPrivateCommentInformation::class);
         $this->tracker_private_comment_information_retriever
-            ->shouldReceive("doesTrackerAllowPrivateComments")
+            ->shouldReceive('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->once()
             ->andReturnTrue()
@@ -73,9 +73,9 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends \Tuleap\Test\PH
 
     public function testReturnsNullIfTrackerDoesNotUsePrivateComment(): void
     {
-        $this->permission_dao->shouldReceive("getUgroupIdsOfPrivateComment")->never();
-        $this->tracker_private_comment_information_retriever->shouldReceive("doesTrackerAllowPrivateComments")->with($this->tracker)->once()->andReturnFalse();
-        $this->ugroup_manager->shouldReceive("getById")->never();
+        $this->permission_dao->shouldReceive('getUgroupIdsOfPrivateComment')->never();
+        $this->tracker_private_comment_information_retriever->shouldReceive('doesTrackerAllowPrivateComments')->with($this->tracker)->once()->andReturnFalse();
+        $this->ugroup_manager->shouldReceive('getById')->never();
 
         $ugroups = $this->retriever->getUGroupsCanSeePrivateComment($this->tracker, 5);
 
@@ -84,8 +84,8 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends \Tuleap\Test\PH
 
     public function testReturnsNullIfThereIsNotUGroup(): void
     {
-        $this->permission_dao->shouldReceive("getUgroupIdsOfPrivateComment")->with(5)->once()->andReturn([]);
-        $this->ugroup_manager->shouldReceive("getById")->never();
+        $this->permission_dao->shouldReceive('getUgroupIdsOfPrivateComment')->with(5)->once()->andReturn([]);
+        $this->ugroup_manager->shouldReceive('getById')->never();
 
         $ugroups = $this->retriever->getUGroupsCanSeePrivateComment($this->tracker, 5);
 
@@ -95,7 +95,7 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends \Tuleap\Test\PH
     public function testReturnsArrayOfUgroupsIfTheyExist(): void
     {
         $this->permission_dao
-            ->shouldReceive("getUgroupIdsOfPrivateComment")
+            ->shouldReceive('getUgroupIdsOfPrivateComment')
             ->with(5)
             ->once()
             ->andReturn([1, 2, 666]);
@@ -104,17 +104,17 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends \Tuleap\Test\PH
         $ugroup_2 = \Mockery::mock(\ProjectUGroup::class);
 
         $this->ugroup_manager
-            ->shouldReceive("getById")
+            ->shouldReceive('getById')
             ->with(1)
             ->once()
             ->andReturn($ugroup_1);
         $this->ugroup_manager
-            ->shouldReceive("getById")
+            ->shouldReceive('getById')
             ->with(2)
             ->once()
             ->andReturn($ugroup_2);
         $this->ugroup_manager
-            ->shouldReceive("getById")
+            ->shouldReceive('getById')
             ->with(666)
             ->once()
             ->andReturn(null);

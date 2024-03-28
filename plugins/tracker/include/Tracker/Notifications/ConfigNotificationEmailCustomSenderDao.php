@@ -32,18 +32,18 @@ class ConfigNotificationEmailCustomSenderDao extends DataAccessObject
      */
     public function searchCustomSender(int $tracker_id): array
     {
-        $sql = "SELECT
+        $sql = 'SELECT
                     f.format,
                     f.enabled
                 FROM plugin_tracker_notification_email_custom_sender_format as f
-                WHERE f.tracker_id=?";
+                WHERE f.tracker_id=?';
         return $this->getDB()->run($sql, $tracker_id);
     }
 
     public function create(int $tracker_id, string $format, int $enabled): void
     {
-        $sql = "INSERT INTO plugin_tracker_notification_email_custom_sender_format(tracker_id,format,enabled) VALUES (?,?,?)
-                ON DUPLICATE KEY UPDATE tracker_id = tracker_id, format = ?, enabled = ?";
+        $sql = 'INSERT INTO plugin_tracker_notification_email_custom_sender_format(tracker_id,format,enabled) VALUES (?,?,?)
+                ON DUPLICATE KEY UPDATE tracker_id = tracker_id, format = ?, enabled = ?';
         $this->getDB()->run($sql, $tracker_id, $format, $enabled, $format, $enabled);
     }
 

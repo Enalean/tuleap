@@ -27,7 +27,7 @@ class TrackerReportConfigDao extends DataAccessObject
 {
     public function searchExpertQueryConfig()
     {
-        $sql = "SELECT * FROM tracker_report_config";
+        $sql = 'SELECT * FROM tracker_report_config';
 
         return $this->retrieve($sql);
     }

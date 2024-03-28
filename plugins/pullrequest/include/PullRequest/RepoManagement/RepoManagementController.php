@@ -57,7 +57,7 @@ class RepoManagementController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getProject()->usesService(\gitPlugin::SERVICE_SHORTNAME)) {
-            throw new \Tuleap\Request\NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+            throw new \Tuleap\Request\NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
 
         \Tuleap\Project\ServiceInstrumentation::increment('git');
@@ -67,7 +67,7 @@ class RepoManagementController implements DispatchableWithRequest
         (new \CSRFSynchronizerToken($pane_url))->check();
 
         $this->merge_setting_dao->save($repository->getId(), (int) $request->get('is_merge_commit_allowed'));
-        $layout->addFeedback(\Feedback::INFO, dgettext("tuleap-pullrequest", "Pull requests settings updated"));
+        $layout->addFeedback(\Feedback::INFO, dgettext('tuleap-pullrequest', 'Pull requests settings updated'));
         $layout->redirect($pane_url);
     }
 

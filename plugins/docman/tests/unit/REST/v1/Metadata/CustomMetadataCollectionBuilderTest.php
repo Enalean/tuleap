@@ -54,29 +54,29 @@ class CustomMetadataCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $metadata      = \Mockery::mock(\Docman_Metadata::class);
 
         $list_metadata->shouldReceive('getId')->andReturn(1);
-        $list_metadata->shouldReceive('getLabel')->andReturn("label list");
-        $metadata->shouldReceive('getLabel')->andReturn("label");
-        $list_metadata->shouldReceive("getName")->andReturn("name list");
-        $metadata->shouldReceive("getName")->andReturn("name");
-        $list_metadata->shouldReceive("getDescription")->andReturn("");
-        $metadata->shouldReceive("getDescription")->andReturn("");
-        $list_metadata->shouldReceive("getType")->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $metadata->shouldReceive("getType")->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $list_metadata->shouldReceive("isEmptyAllowed")->andReturn(false);
-        $metadata->shouldReceive("isEmptyAllowed")->andReturn(false);
-        $list_metadata->shouldReceive("isMultipleValuesAllowed")->andReturn(false);
-        $metadata->shouldReceive("isMultipleValuesAllowed")->andReturn(false);
-        $list_metadata->shouldReceive("isUsed")->andReturn(true);
-        $metadata->shouldReceive("isUsed")->andReturn(true);
+        $list_metadata->shouldReceive('getLabel')->andReturn('label list');
+        $metadata->shouldReceive('getLabel')->andReturn('label');
+        $list_metadata->shouldReceive('getName')->andReturn('name list');
+        $metadata->shouldReceive('getName')->andReturn('name');
+        $list_metadata->shouldReceive('getDescription')->andReturn('');
+        $metadata->shouldReceive('getDescription')->andReturn('');
+        $list_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+        $list_metadata->shouldReceive('isEmptyAllowed')->andReturn(false);
+        $metadata->shouldReceive('isEmptyAllowed')->andReturn(false);
+        $list_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
+        $metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
+        $list_metadata->shouldReceive('isUsed')->andReturn(true);
+        $metadata->shouldReceive('isUsed')->andReturn(true);
 
         $metadata_list = [$list_metadata, $metadata];
-        $this->metadata_factory->shouldReceive("getRealMetadataList")->andReturn($metadata_list);
+        $this->metadata_factory->shouldReceive('getRealMetadataList')->andReturn($metadata_list);
 
         $element = new Docman_MetadataListOfValuesElement();
-        $element->initFromRow(['value_id' => 1, 'name' => "value"]);
+        $element->initFromRow(['value_id' => 1, 'name' => 'value']);
 
         $element_two = new Docman_MetadataListOfValuesElement();
-        $element_two->initFromRow(['value_id' => 2, 'name' => "an other value"]);
+        $element_two->initFromRow(['value_id' => 2, 'name' => 'an other value']);
 
         $value_representation = new DocmanMetadataListValueRepresentation();
         $value_representation->build($element->getId(), $element->getName());

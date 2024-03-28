@@ -520,8 +520,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\T
 
     private function assertCommitterIsConfigured(): void
     {
-        $this->assertEquals(trim(shell_exec("cd $this->gerrit_tmpdir; " . Git_Exec::getGitCommand() . " config --get user.name")), $this->gerrit_admin_instance);
-        $this->assertEquals(trim(shell_exec("cd $this->gerrit_tmpdir; " . Git_Exec::getGitCommand() . " config --get user.email")), 'codendiadm@' . $this->tuleap_instance);
+        $this->assertEquals(trim(shell_exec("cd $this->gerrit_tmpdir; " . Git_Exec::getGitCommand() . ' config --get user.name')), $this->gerrit_admin_instance);
+        $this->assertEquals(trim(shell_exec("cd $this->gerrit_tmpdir; " . Git_Exec::getGitCommand() . ' config --get user.email')), 'codendiadm@' . $this->tuleap_instance);
     }
 
     private function assertTheRemoteOriginIsConfigured(): void
@@ -551,7 +551,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\T
             [
                 "To $this->gerrit_git_url",
                 "=\tHEAD:refs/meta/config\t[up to date]",
-                "Done",
+                'Done',
             ],
             $output
         );

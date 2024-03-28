@@ -67,7 +67,7 @@ class Gitolite3LogParser
 
     public function parseCurrentAndPreviousMonthLogs($path)
     {
-        $last_month_file    = self::FILE_NAME . date("Y-m", strtotime("-1 month")) . self::FILE_EXTENSION;
+        $last_month_file    = self::FILE_NAME . date('Y-m', strtotime('-1 month')) . self::FILE_EXTENSION;
         $current_month_file = self::FILE_NAME . date('Y-m') . self::FILE_EXTENSION;
 
         $this->parseLogs($path . $last_month_file);
@@ -77,7 +77,7 @@ class Gitolite3LogParser
     public function parseLogs($log)
     {
         if (file_exists($log)) {
-            $log_file = fopen("$log", "r");
+            $log_file = fopen("$log", 'r');
             if (! $log_file) {
                 $this->logger->error('Cannot open ' . $log_file);
                 throw new CannotAccessToGitoliteLogException();

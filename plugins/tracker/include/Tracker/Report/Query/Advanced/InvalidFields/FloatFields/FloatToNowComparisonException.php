@@ -27,7 +27,7 @@ final class FloatToNowComparisonException extends InvalidFieldException
     public function __construct(Tracker_FormElement_Field $field)
     {
         $message = sprintf(
-            dgettext("tuleap-tracker", "The float field '%s' cannot be compared to NOW()."),
+            dgettext('tuleap-tracker', "The float field '%s' cannot be compared to NOW()."),
             $field->getName()
         );
         parent::__construct($message);

@@ -20,7 +20,7 @@ class b201505131103_project_admin_can_choose_visibility extends \Tuleap\ForgeUpg
 {
     public function description()
     {
-        return "By default, project admin can choose their project visibility";
+        return 'By default, project admin can choose their project visibility';
     }
 
     public function preUp()

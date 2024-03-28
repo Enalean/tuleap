@@ -50,7 +50,7 @@ final class ArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
     private const EXPECTED_HTML_URI         = '/plugins/tracker/?aid=' . self::ARTIFACT_ID;
     private const EXPECTED_REST_URI         = ArtifactRepresentation::ROUTE . '/' . self::ARTIFACT_ID;
     private const EXPECTED_CHANGESETS_URI   = ArtifactRepresentation::ROUTE . '/' . self::ARTIFACT_ID . '/' . ChangesetRepresentation::ROUTE;
-    private const EXPECTED_COLOR            = "flamingo-pink";
+    private const EXPECTED_COLOR            = 'flamingo-pink';
 
     private function getRepresentationWithoutFields(): ArtifactRepresentation
     {

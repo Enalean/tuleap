@@ -66,11 +66,11 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
 
             $from_user = $this->user_manager->getUserById($invitation->from_user_id);
             if (! $from_user) {
-                $this->logger->error("Invitation was referencing an unknown user #" . $invitation->from_user_id);
+                $this->logger->error('Invitation was referencing an unknown user #' . $invitation->from_user_id);
                 continue;
             }
             if (! $from_user->isAlive()) {
-                $this->logger->warning("Cannot send invitation feedback to inactive user #" . $invitation->from_user_id);
+                $this->logger->warning('Cannot send invitation feedback to inactive user #' . $invitation->from_user_id);
                 continue;
             }
 

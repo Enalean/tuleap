@@ -29,7 +29,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class PullRequestEmptyStatePresenterBuilderTest extends TestCase
 {
-    private const PARENT_REPOSITORY_URL = "url/to/parent_repository.git";
+    private const PARENT_REPOSITORY_URL = 'url/to/parent_repository.git';
 
     private PullRequestEmptyStatePresenterBuilder $presenter_builder;
 
@@ -54,7 +54,7 @@ final class PullRequestEmptyStatePresenterBuilderTest extends TestCase
 
         $parent_repository_id         = 1;
         $parent_repository_project_id = 104;
-        $parent_repository_name       = "parent-repository.git";
+        $parent_repository_name       = 'parent-repository.git';
 
         $parent_repository = GitRepositoryTestBuilder::aProjectRepository()
             ->withId($parent_repository_id)

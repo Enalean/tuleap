@@ -30,11 +30,11 @@ class b201603080951_create_tracker_artifactlink_natures_table extends \Tuleap\Fo
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_tracker_artifactlink_natures (
+        $sql = 'CREATE TABLE plugin_tracker_artifactlink_natures (
                     shortname     VARCHAR(255) NOT NULL PRIMARY KEY,
                     forward_label VARCHAR(255) NOT NULL,
                     reverse_label VARCHAR(255) NOT NULL
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
 
         $this->db->createTable('plugin_tracker_artifactlink_natures', $sql);
     }

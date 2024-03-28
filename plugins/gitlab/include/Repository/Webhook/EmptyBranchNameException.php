@@ -27,7 +27,7 @@ class EmptyBranchNameException extends \RuntimeException
     public function __construct()
     {
         parent::__construct(
-            "Branch name not found in webhook data, this probably should not happen."
+            'Branch name not found in webhook data, this probably should not happen.'
         );
     }
 }

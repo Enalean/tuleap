@@ -101,7 +101,7 @@ class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             [12],
             [],
             123,
-            "result",
+            'result',
             $this->artifact,
             $this->user
         );
@@ -132,7 +132,7 @@ class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             [],
             0,
-            "result",
+            'result',
             $this->artifact,
             $this->user
         );

@@ -100,13 +100,13 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
     {
         $default_value_dao = Mockery::mock(BindDefaultValueDao::class);
 
-        $this->bind->shouldReceive("filterDefaultValues")->never();
-        $this->field->shouldReceive("getId")->andReturn(42);
+        $this->bind->shouldReceive('filterDefaultValues')->never();
+        $this->field->shouldReceive('getId')->andReturn(42);
 
-        $this->bind->shouldReceive("getDefaultValueDao")->andReturn($default_value_dao);
-        $this->bind->shouldReceive("getAllVisibleValues")->andReturn(([]));
+        $this->bind->shouldReceive('getDefaultValueDao')->andReturn($default_value_dao);
+        $this->bind->shouldReceive('getAllVisibleValues')->andReturn(([]));
 
-        $default_value_dao->shouldReceive("save")->withArgs([42, []])->andReturn(true);
+        $default_value_dao->shouldReceive('save')->withArgs([42, []])->andReturn(true);
 
         $params = [];
         $this->bind->process($params, true);
@@ -115,18 +115,18 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
     public function testItExtractDefaultValues(): void
     {
         $default_value_dao = Mockery::mock(BindDefaultValueDao::class);
-        $this->field->shouldReceive("getId")->andReturn(42);
-        $this->bind->shouldReceive("getDefaultValueDao")->andReturn($default_value_dao);
+        $this->field->shouldReceive('getId')->andReturn(42);
+        $this->bind->shouldReceive('getDefaultValueDao')->andReturn($default_value_dao);
 
-        $this->bind->shouldReceive("getAllVisibleValues")->andReturn((["111" => "value1", "112" => "value1", "114" => "value1"]));
+        $this->bind->shouldReceive('getAllVisibleValues')->andReturn((['111' => 'value1', '112' => 'value1', '114' => 'value1']));
 
         $default_value_dao
-            ->shouldReceive("save")
-            ->withArgs([42, ["111", "112"]])
+            ->shouldReceive('save')
+            ->withArgs([42, ['111', '112']])
             ->andReturn(true)
             ->atLeast()->once();
 
-        $params = ["default" => ["111", "112", "116"]];
+        $params = ['default' => ['111', '112', '116']];
         $this->bind->process($params, true);
     }
 
@@ -146,19 +146,19 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
             ->makePartial();
 
         $default_value_dao = Mockery::mock(BindDefaultValueDao::class);
-        $field->shouldReceive("getId")->andReturn(42);
+        $field->shouldReceive('getId')->andReturn(42);
 
-        $bind->shouldReceive("getAllValues")->andReturn($user_list);
+        $bind->shouldReceive('getAllValues')->andReturn($user_list);
 
         $default_value_dao
-            ->shouldReceive("save")
-            ->withArgs([42, ["103", "111", "117"]])
+            ->shouldReceive('save')
+            ->withArgs([42, ['103', '111', '117']])
             ->andReturn(true)
             ->once();
 
-        $bind->shouldReceive("getDefaultValueDao")->andReturn($default_value_dao);
+        $bind->shouldReceive('getDefaultValueDao')->andReturn($default_value_dao);
 
-        $params = ["default" => ["103,111,b117"]];
+        $params = ['default' => ['103,111,b117']];
         $bind->process($params, true);
     }
 
@@ -174,7 +174,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
             117 => new Tracker_FormElement_Field_List_Bind_UsersValue(117),
         ];
 
-        $bind->shouldReceive("getAllValues")->andReturn($user_list);
+        $bind->shouldReceive('getAllValues')->andReturn($user_list);
 
         $this->assertSame([111 => true], $bind->getDefaultValues());
     }

@@ -33,6 +33,6 @@ class CommentXMLValueEnhancer
             return $comment->getRenderedValue();
         }
 
-        return $comment->getUpdateAuthor()->getDisplayName() . " said: " . "<br/><br/>" . $comment->getRenderedValue();
+        return $comment->getUpdateAuthor()->getDisplayName() . ' said: ' . '<br/><br/>' . $comment->getRenderedValue();
     }
 }

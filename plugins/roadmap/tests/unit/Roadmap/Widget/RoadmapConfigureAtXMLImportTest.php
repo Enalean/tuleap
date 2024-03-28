@@ -75,7 +75,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Reference tracker_id for roadmap widget was not found");
+        $this->expectExceptionMessage('Reference tracker_id for roadmap widget was not found');
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -107,7 +107,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Reference tracker_id for roadmap widget was not found");
+        $this->expectExceptionMessage('Reference tracker_id for roadmap widget was not found');
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -117,7 +117,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $project  = ProjectTestBuilder::aProject()->build();
         $registry = new MappingsRegistry();
-        $registry->addReference("T754", 1234);
+        $registry->addReference('T754', 1234);
         $dao   = $this->createMock(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
@@ -154,10 +154,10 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 ?int $lvl1_iteration_tracker_id,
                 ?int $lvl2_iteration_tracker_id,
             ) => match (true) {
-                $title === "My Roadmap"
+                $title === 'My Roadmap'
                 && $tracker_ids === [1234]
                 && $report_id === 0
-                && $default_timescale === "week"
+                && $default_timescale === 'week'
                 && $lvl1_iteration_tracker_id === null
                 && $lvl2_iteration_tracker_id === null
                     => 1
@@ -173,7 +173,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $project  = ProjectTestBuilder::aProject()->build();
         $registry = new MappingsRegistry();
-        $registry->addReference("T754", 1234);
+        $registry->addReference('T754', 1234);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
@@ -198,7 +198,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Reference filter_report_id for roadmap widget was not found");
+        $this->expectExceptionMessage('Reference filter_report_id for roadmap widget was not found');
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -211,8 +211,8 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $project  = ProjectTestBuilder::aProject()->build();
         $registry = new MappingsRegistry();
-        $registry->addReference("T754", 1234);
-        $registry->addReference("REPORT_979", $created_report);
+        $registry->addReference('T754', 1234);
+        $registry->addReference('REPORT_979', $created_report);
         $dao   = $this->createMock(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
@@ -249,10 +249,10 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 ?int $lvl1_iteration_tracker_id,
                 ?int $lvl2_iteration_tracker_id,
             ) => match (true) {
-                $title === "My Roadmap"
+                $title === 'My Roadmap'
                 && $tracker_ids === [1234]
                 && $report_id === 1979
-                && $default_timescale === "month"
+                && $default_timescale === 'month'
                 && $lvl1_iteration_tracker_id === null
                 && $lvl2_iteration_tracker_id === null
                 => 1
@@ -268,7 +268,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $project  = ProjectTestBuilder::aProject()->build();
         $registry = new MappingsRegistry();
-        $registry->addReference("T754", 1234);
+        $registry->addReference('T754', 1234);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
@@ -293,7 +293,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Reference lvl1_iteration_tracker_id for roadmap widget was not found");
+        $this->expectExceptionMessage('Reference lvl1_iteration_tracker_id for roadmap widget was not found');
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -303,8 +303,8 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $project  = ProjectTestBuilder::aProject()->build();
         $registry = new MappingsRegistry();
-        $registry->addReference("T754", 1234);
-        $registry->addReference("T755", 1235);
+        $registry->addReference('T754', 1234);
+        $registry->addReference('T755', 1235);
         $dao   = $this->createMock(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
@@ -341,10 +341,10 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 ?int $lvl1_iteration_tracker_id,
                 ?int $lvl2_iteration_tracker_id,
             ) => match (true) {
-                $title === "My Roadmap"
+                $title === 'My Roadmap'
                 && $tracker_ids === [1234]
                 && $report_id === 0
-                && $default_timescale === "month"
+                && $default_timescale === 'month'
                 && $lvl1_iteration_tracker_id === 1235
                 && $lvl2_iteration_tracker_id === null
                 => 1
@@ -360,7 +360,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $project  = ProjectTestBuilder::aProject()->build();
         $registry = new MappingsRegistry();
-        $registry->addReference("T754", 1234);
+        $registry->addReference('T754', 1234);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
@@ -385,7 +385,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Reference lvl2_iteration_tracker_id for roadmap widget was not found");
+        $this->expectExceptionMessage('Reference lvl2_iteration_tracker_id for roadmap widget was not found');
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -395,8 +395,8 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $project  = ProjectTestBuilder::aProject()->build();
         $registry = new MappingsRegistry();
-        $registry->addReference("T754", 1234);
-        $registry->addReference("T756", 1236);
+        $registry->addReference('T754', 1234);
+        $registry->addReference('T756', 1236);
         $dao   = $this->createMock(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
@@ -433,10 +433,10 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 ?int $lvl1_iteration_tracker_id,
                 ?int $lvl2_iteration_tracker_id,
             ) => match (true) {
-                $title === "My Roadmap"
+                $title === 'My Roadmap'
                 && $tracker_ids === [1234]
                 && $report_id === 0
-                && $default_timescale === "month"
+                && $default_timescale === 'month'
                 && $lvl1_iteration_tracker_id === null
                 && $lvl2_iteration_tracker_id === 1236
                 => 1
@@ -452,9 +452,9 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $project  = ProjectTestBuilder::aProject()->build();
         $registry = new MappingsRegistry();
-        $registry->addReference("T754", 1234);
-        $registry->addReference("T755", 1235);
-        $registry->addReference("T756", 1236);
+        $registry->addReference('T754', 1234);
+        $registry->addReference('T755', 1235);
+        $registry->addReference('T756', 1236);
         $dao   = $this->createMock(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
@@ -492,10 +492,10 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 ?int $lvl1_iteration_tracker_id,
                 ?int $lvl2_iteration_tracker_id,
             ) => match (true) {
-                $title === "My Roadmap"
+                $title === 'My Roadmap'
                 && $tracker_ids === [1234]
                 && $report_id === 0
-                && $default_timescale === "month"
+                && $default_timescale === 'month'
                 && $lvl1_iteration_tracker_id === 1235
                 && $lvl2_iteration_tracker_id === 1236
                 => 1
@@ -511,11 +511,11 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $project  = ProjectTestBuilder::aProject()->build();
         $registry = new MappingsRegistry();
-        $registry->addReference("T754", 1234);
-        $registry->addReference("T755", 1235);
-        $registry->addReference("T756", 1236);
-        $registry->addReference("T757", 1237);
-        $registry->addReference("T758", 1238);
+        $registry->addReference('T754', 1234);
+        $registry->addReference('T755', 1235);
+        $registry->addReference('T756', 1236);
+        $registry->addReference('T757', 1237);
+        $registry->addReference('T758', 1238);
         $dao   = $this->createMock(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
@@ -555,10 +555,10 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 ?int $lvl1_iteration_tracker_id,
                 ?int $lvl2_iteration_tracker_id,
             ) => match (true) {
-                $title === "My Roadmap"
+                $title === 'My Roadmap'
                 && $tracker_ids === [1234, 1235, 1236]
                 && $report_id === 0
-                && $default_timescale === "month"
+                && $default_timescale === 'month'
                 && $lvl1_iteration_tracker_id === 1237
                 && $lvl2_iteration_tracker_id === 1238
                 => 1

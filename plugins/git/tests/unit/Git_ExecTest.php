@@ -67,7 +67,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         touch("$this->fixture_dir/toto");
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("add stuff");
+        $this->git_exec->commit('add stuff');
         $this->git_exec->rm("$this->fixture_dir/toto");
         $this->assertTrue($this->git_exec->isThereAnythingToCommit());
     }
@@ -76,7 +76,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         touch("$this->fixture_dir/toto");
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("add stuff");
+        $this->git_exec->commit('add stuff');
         $this->git_exec->mv("$this->fixture_dir/toto", "$this->fixture_dir/tata");
         $this->assertTrue($this->git_exec->isThereAnythingToCommit());
     }
@@ -120,7 +120,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add($file_orig_path);
         $this->git_exec->commit('test2');
 
-        $this->assertEquals(["test", "main"], $this->git_exec->getAllBranchesSortedByCreationDate());
+        $this->assertEquals(['test', 'main'], $this->git_exec->getAllBranchesSortedByCreationDate());
     }
 
     public function testGetAllTagsSortedByCreationDate(): void
@@ -129,16 +129,16 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         file_put_contents($file_orig_path, 'test');
         $this->git_exec->add($file_orig_path);
         $this->git_exec->commit('test');
-        system("cd $this->fixture_dir && " . Git_Exec::getGitCommand() . " tag -a test -m oui");
+        system("cd $this->fixture_dir && " . Git_Exec::getGitCommand() . ' tag -a test -m oui');
 
-        $this->assertEquals(["test"], $this->git_exec->getAllTagsSortedByCreationDate());
+        $this->assertEquals(['test'], $this->git_exec->getAllTagsSortedByCreationDate());
     }
 
     public function testThereIsNothingToCommitOnAlreadyCommitedRepo(): void
     {
         touch("$this->fixture_dir/toto");
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("add stuff");
+        $this->git_exec->commit('add stuff');
         $this->assertFalse($this->git_exec->isThereAnythingToCommit());
     }
 
@@ -150,16 +150,16 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testThereIsNothingToCommitWhenContentDoesntChange(): void
     {
-        file_put_contents("$this->fixture_dir/toto", "stuff");
+        file_put_contents("$this->fixture_dir/toto", 'stuff');
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("add stuff");
-        file_put_contents("$this->fixture_dir/toto", "stuff");
+        $this->git_exec->commit('add stuff');
+        file_put_contents("$this->fixture_dir/toto", 'stuff');
         $this->assertFalse($this->git_exec->isThereAnythingToCommit());
     }
 
     public function testItDoesntRaiseAnErrorWhenTryingToRemoveAnUntrackedFile(): void
     {
-        file_put_contents("$this->fixture_dir/toto", "stuff");
+        file_put_contents("$this->fixture_dir/toto", 'stuff');
         $this->git_exec->rm("$this->fixture_dir/toto");
 
         //All is OK
@@ -168,9 +168,9 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueWhenTheRevExists(): void
     {
-        file_put_contents("$this->fixture_dir/toto", "stuff");
+        file_put_contents("$this->fixture_dir/toto", 'stuff');
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("add stuff");
+        $this->git_exec->commit('add stuff');
 
         $res = $this->git_exec->doesObjectExists('main');
 
@@ -192,7 +192,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
             . "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n"
             . "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\n"
             . "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n"
-            . "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+            . 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
         $commit_sha1 = $this->getSha1($message);
 
         $result = $this->git_exec->getCommitMessage($commit_sha1);
@@ -220,28 +220,28 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateRef(): void
     {
         //we must add content
-        file_put_contents("$this->fixture_dir/toto", "stuff");
+        file_put_contents("$this->fixture_dir/toto", 'stuff');
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("add stuff");
+        $this->git_exec->commit('add stuff');
 
         $this->git_exec->updateRef('refs/heads/new_branch', 'main');
-        self::assertEqualsCanonicalizing(["main", "new_branch"], $this->git_exec->getAllBranchesSortedByCreationDate());
+        self::assertEqualsCanonicalizing(['main', 'new_branch'], $this->git_exec->getAllBranchesSortedByCreationDate());
     }
 
     public function testRetrieveAuthorEmail(): void
     {
-        $author = "test@example.com";
+        $author = 'test@example.com';
         $this->git_exec->setLocalCommiter('test', $author);
-        $commit_sha1 = $this->getSha1("add stuff");
+        $commit_sha1 = $this->getSha1('add stuff');
 
         self::assertSame($author, $this->git_exec->getAuthorInformation($commit_sha1)['email']);
     }
 
     public function testRetrieveAuthorName(): void
     {
-        $author = "test";
-        $this->git_exec->setLocalCommiter($author, "test@example.com");
-        $commit_sha1 = $this->getSha1("add stuff");
+        $author = 'test';
+        $this->git_exec->setLocalCommiter($author, 'test@example.com');
+        $commit_sha1 = $this->getSha1('add stuff');
 
         self::assertSame($author, $this->git_exec->getAuthorInformation($commit_sha1)['name']);
     }
@@ -250,7 +250,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         touch("$this->fixture_dir/toto");
         //we must add content
-        file_put_contents("$this->fixture_dir/toto", "stuff");
+        file_put_contents("$this->fixture_dir/toto", 'stuff');
         $this->git_exec->add("$this->fixture_dir/toto");
 
         $this->git_exec->commit($commit_message);

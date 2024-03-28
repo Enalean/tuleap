@@ -58,14 +58,14 @@ function onChangeAllFilter() {
 <select name="group_id" size="8">
 <?php
     $filter = $request->get('filter');
-if ($filter == "member") {
+if ($filter == 'member') {
     $results = $gf->getMemberGroups();
 } else {
     $results = $gf->getAllGroups();
 }
     $hp = Codendi_HTMLPurifier::instance();
 while ($groups_array = db_fetch_array($results)) {
-    echo '<option value="' . (int) $groups_array["group_id"] . '">' . $hp->purify(html_entity_decode($groups_array["group_name"])) . '</option>';
+    echo '<option value="' . (int) $groups_array['group_id'] . '">' . $hp->purify(html_entity_decode($groups_array['group_name'])) . '</option>';
 }
 
 ?>
@@ -73,11 +73,11 @@ while ($groups_array = db_fetch_array($results)) {
     </td>
   </tr>
   <tr>  
-    <td><input type="radio" name="radiobutton" value="radiobutton"<?php if ($filter == "member") {
-        echo " checked";
+    <td><input type="radio" name="radiobutton" value="radiobutton"<?php if ($filter == 'member') {
+        echo ' checked';
                                                                   } ?> onClick="onChangeMemberFilter()"> <?php echo $Language->getText('tracker_group_selection', 'my_proj'); ?></td>
-    <td><input type="radio" name="radiobutton" value="radiobutton"<?php if ($filter == "all") {
-        echo " checked";
+    <td><input type="radio" name="radiobutton" value="radiobutton"<?php if ($filter == 'all') {
+        echo ' checked';
                                                                   } ?> onClick="onChangeAllFilter()"> <?php echo $Language->getText('tracker_group_selection', 'all_proj'); ?></td>
   </tr>
   <tr>

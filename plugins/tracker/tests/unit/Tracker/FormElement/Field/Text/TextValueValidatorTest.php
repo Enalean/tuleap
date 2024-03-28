@@ -131,7 +131,7 @@ final class TextValueValidatorTest extends TestCase
     private function buildTextField(): Tracker_FormElement_Field_Text
     {
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $field->method('getLabel')->willReturn("Text Field");
+        $field->method('getLabel')->willReturn('Text Field');
 
         return $field;
     }

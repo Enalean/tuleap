@@ -27,7 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class MergeRequestTitleCreatorFromArtifact
 {
-    private const DRAFT_PREFIX = "Draft:";
+    private const DRAFT_PREFIX = 'Draft:';
 
     public function getMergeRequestTitle(Artifact $artifact): string
     {

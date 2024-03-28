@@ -156,25 +156,25 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->consistency_checker->method('areAllServicesAvailable')->willReturn(true);
 
         $template100 = $this->createMock(\Project::class);
-        $template100->expects(self::once())->method('getGroupId')->willReturn("100");
+        $template100->expects(self::once())->method('getGroupId')->willReturn('100');
         $template100->expects(self::never())->method('getUnixNameLowerCase');
         $template100->expects(self::never())->method('getDescription');
         $template100->expects(self::never())->method('getPublicName');
 
         $template110 = $this->createMock(\Project::class);
-        $template110->expects(self::atLeast(2))->method('getGroupId')->willReturn("110");
-        $template110->method('getUnixNameLowerCase')->willReturn("hustler-company");
-        $template110->method('getDescription')->willReturn("New Jack City");
-        $template110->method('getPublicName')->willReturn("Hustler Company");
+        $template110->expects(self::atLeast(2))->method('getGroupId')->willReturn('110');
+        $template110->method('getUnixNameLowerCase')->willReturn('hustler-company');
+        $template110->method('getDescription')->willReturn('New Jack City');
+        $template110->method('getPublicName')->willReturn('Hustler Company');
 
         $template120 = $this->createMock(\Project::class);
-        $template120->expects(self::atLeast(2))->method('getGroupId')->willReturn("120");
-        $template120->method('getUnixNameLowerCase')->willReturn("lyudi-invalidy-company");
-        $template120->method('getDescription')->willReturn("All about us");
-        $template120->method('getPublicName')->willReturn("Lyudi Invalidy Company");
+        $template120->expects(self::atLeast(2))->method('getGroupId')->willReturn('120');
+        $template120->method('getUnixNameLowerCase')->willReturn('lyudi-invalidy-company');
+        $template120->method('getDescription')->willReturn('All about us');
+        $template120->method('getPublicName')->willReturn('Lyudi Invalidy Company');
 
         $this->user_manager->method('getCurrentUser')->willReturn($this->user);
-        $this->url_verification->method("userCanAccessProject")->with($this->user, $template100)->willReturn(true);
+        $this->url_verification->method('userCanAccessProject')->with($this->user, $template100)->willReturn(true);
 
         $site_templates = [$template100, $template110, $template120];
         $this->project_manager->method('getSiteTemplates')->willReturn($site_templates);
@@ -193,15 +193,15 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->consistency_checker->method('areAllServicesAvailable')->willReturn(true);
 
         $template110 = $this->createMock(\Project::class);
-        $template110->expects(self::once())->method('getGroupId')->willReturn("110");
-        $template110->method('getUnixNameLowerCase')->willReturn("hustler-company");
-        $template110->method('getDescription')->willReturn("New Jack City");
-        $template110->method('getPublicName')->willReturn("Hustler Company");
+        $template110->expects(self::once())->method('getGroupId')->willReturn('110');
+        $template110->method('getUnixNameLowerCase')->willReturn('hustler-company');
+        $template110->method('getDescription')->willReturn('New Jack City');
+        $template110->method('getPublicName')->willReturn('Hustler Company');
 
         $this->project_manager->method('getSiteTemplates')->willReturn([$template110]);
 
         $this->user_manager->method('getCurrentUser')->willReturn($this->user);
-        $this->url_verification->method("userCanAccessProject")->with($this->user, $template110)->willThrowException(new Project_AccessPrivateException());
+        $this->url_verification->method('userCanAccessProject')->with($this->user, $template110)->willThrowException(new Project_AccessPrivateException());
 
         self::assertEmpty($this->factory->getCompanyTemplateList());
     }

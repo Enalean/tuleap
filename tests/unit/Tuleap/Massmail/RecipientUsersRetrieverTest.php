@@ -40,8 +40,8 @@ final class RecipientUsersRetrieverTest extends TestCase
 
     public function testItRetrievesRecipientsWithAdditionalCommunityMailingsSubscribers(): void
     {
-        $recipient_row_01 = ["email" => "a@example.com"];
-        $recipient_row_02 = ["email" => "B@example.com"];
+        $recipient_row_01 = ['email' => 'a@example.com'];
+        $recipient_row_02 = ['email' => 'B@example.com'];
 
         $this->dao->expects(self::once())
             ->method('searchRecipientsWithAdditionalCommunityMailingsSubscribers')
@@ -55,14 +55,14 @@ final class RecipientUsersRetrieverTest extends TestCase
                 RecipientUser::buildFromArray($recipient_row_01),
                 RecipientUser::buildFromArray($recipient_row_02),
             ],
-            $this->retriever->getRecipientUsers("comm"),
+            $this->retriever->getRecipientUsers('comm'),
         );
     }
 
     public function testItRetrievesRecipientsWithSiteUpdatesSubscribers(): void
     {
-        $recipient_row_01 = ["email" => "a@example.com"];
-        $recipient_row_02 = ["email" => "B@example.com"];
+        $recipient_row_01 = ['email' => 'a@example.com'];
+        $recipient_row_02 = ['email' => 'B@example.com'];
 
         $this->dao->expects(self::once())
             ->method('searchRecipientsWithSiteUpdatesSubscribers')
@@ -76,14 +76,14 @@ final class RecipientUsersRetrieverTest extends TestCase
                 RecipientUser::buildFromArray($recipient_row_01),
                 RecipientUser::buildFromArray($recipient_row_02),
             ],
-            $this->retriever->getRecipientUsers("sf"),
+            $this->retriever->getRecipientUsers('sf'),
         );
     }
 
     public function testItRetrievesRecipientsAllUsers(): void
     {
-        $recipient_row_01 = ["email" => "a@example.com"];
-        $recipient_row_02 = ["email" => "B@example.com"];
+        $recipient_row_01 = ['email' => 'a@example.com'];
+        $recipient_row_02 = ['email' => 'B@example.com'];
 
         $this->dao->expects(self::once())
             ->method('searchRecipientsAllUsers')
@@ -97,14 +97,14 @@ final class RecipientUsersRetrieverTest extends TestCase
                 RecipientUser::buildFromArray($recipient_row_01),
                 RecipientUser::buildFromArray($recipient_row_02),
             ],
-            $this->retriever->getRecipientUsers("all"),
+            $this->retriever->getRecipientUsers('all'),
         );
     }
 
     public function testItRetrievesRecipientsWithProjectAdministrators(): void
     {
-        $recipient_row_01 = ["email" => "a@example.com"];
-        $recipient_row_02 = ["email" => "B@example.com"];
+        $recipient_row_01 = ['email' => 'a@example.com'];
+        $recipient_row_02 = ['email' => 'B@example.com'];
 
         $this->dao->expects(self::once())
             ->method('searchRecipientsWithProjectAdministrators')
@@ -118,14 +118,14 @@ final class RecipientUsersRetrieverTest extends TestCase
                 RecipientUser::buildFromArray($recipient_row_01),
                 RecipientUser::buildFromArray($recipient_row_02),
             ],
-            $this->retriever->getRecipientUsers("admin"),
+            $this->retriever->getRecipientUsers('admin'),
         );
     }
 
     public function testItRetrievesRecipientsWithPlatformAdministrators(): void
     {
-        $recipient_row_01 = ["email" => "a@example.com"];
-        $recipient_row_02 = ["email" => "B@example.com"];
+        $recipient_row_01 = ['email' => 'a@example.com'];
+        $recipient_row_02 = ['email' => 'B@example.com'];
 
         $this->dao->expects(self::once())
             ->method('searchRecipientsWithPlatformAdministrators')
@@ -139,14 +139,14 @@ final class RecipientUsersRetrieverTest extends TestCase
                 RecipientUser::buildFromArray($recipient_row_01),
                 RecipientUser::buildFromArray($recipient_row_02),
             ],
-            $this->retriever->getRecipientUsers("sfadmin"),
+            $this->retriever->getRecipientUsers('sfadmin'),
         );
     }
 
     public function testItRetrievesRecipientsWithProjectDevelopers(): void
     {
-        $recipient_row_01 = ["email" => "a@example.com"];
-        $recipient_row_02 = ["email" => "B@example.com"];
+        $recipient_row_01 = ['email' => 'a@example.com'];
+        $recipient_row_02 = ['email' => 'B@example.com'];
 
         $this->dao->expects(self::once())
             ->method('searchRecipientsWithProjectDevelopers')
@@ -160,12 +160,12 @@ final class RecipientUsersRetrieverTest extends TestCase
                 RecipientUser::buildFromArray($recipient_row_01),
                 RecipientUser::buildFromArray($recipient_row_02),
             ],
-            $this->retriever->getRecipientUsers("devel"),
+            $this->retriever->getRecipientUsers('devel'),
         );
     }
 
     public function testItReturnsEmptyRecipientsWhenUnknown(): void
     {
-        self::assertEmpty($this->retriever->getRecipientUsers("whatever"));
+        self::assertEmpty($this->retriever->getRecipientUsers('whatever'));
     }
 }

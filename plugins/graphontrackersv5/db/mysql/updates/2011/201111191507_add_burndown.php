@@ -35,12 +35,12 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_graphontrackersv5_scrum_burndown(
+        $sql = 'CREATE TABLE plugin_graphontrackersv5_scrum_burndown(
                   id int(11)  NOT NULL PRIMARY KEY ,
                   field_id int(11),
                   start_date int(11),
                   duration int(11)
-                )";
+                )';
         $this->db->createTable('plugin_graphontrackersv5_scrum_burndown', $sql);
     }
 

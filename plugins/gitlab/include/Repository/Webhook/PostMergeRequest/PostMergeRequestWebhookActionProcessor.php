@@ -146,7 +146,7 @@ class PostMergeRequestWebhookActionProcessor
                     $author_email
                 );
 
-                $this->logger->info("|_ Author has been saved in database");
+                $this->logger->info('|_ Author has been saved in database');
             }
         } catch (GitlabRequestException | GitlabResponseAPIException $e) {
             $this->logger->error("| |_Can't get data on author of merge request #{$webhook_data->getMergeRequestId()}", ['exception' => $e]);

@@ -5,10 +5,10 @@
  *
  * This code is now php5 compatible. --2004-04-19 23:51:43 rurban
  */
-if (! class_exists("XmlElement")) {
-    require_once(dirname(__FILE__) . "/XmlElement.php");
+if (! class_exists('XmlElement')) {
+    require_once(dirname(__FILE__) . '/XmlElement.php');
 }
-if (class_exists("HtmlElement")) {
+if (class_exists('HtmlElement')) {
     return;
 }
 
@@ -96,7 +96,7 @@ class HtmlElement extends XmlElement
             return $this->startTag() . "</$this->_tag>";
         }
 
-        return substr($this->startTag(), 0, -1) . " />";
+        return substr($this->startTag(), 0, -1) . ' />';
     }
 
     public function hasInlineContent()
@@ -646,7 +646,7 @@ function JavaScript($js, $script_args = false)
             $script_args,
             new RawXml((ENABLE_XHTML_XML ? "\n//<![CDATA[" : "\n<!--//")
                                        . "\n" . trim($js) . "\n"
-            . (ENABLE_XHTML_XML ? "//]]>\n" : "// -->"))
+            . (ENABLE_XHTML_XML ? "//]]>\n" : '// -->'))
         ), "\n");
     }
 }

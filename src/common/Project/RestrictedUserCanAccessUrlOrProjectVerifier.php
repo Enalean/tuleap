@@ -66,7 +66,7 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         }
 
         // Make sure the URI starts with a single slash
-        $req_uri         = '/' . trim($this->request_uri, "/");
+        $req_uri         = '/' . trim($this->request_uri, '/');
         $user_is_allowed = false;
         /* Examples of input params:
          Script: /projects, Uri=/projects/ljproj/

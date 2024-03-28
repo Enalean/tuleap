@@ -28,12 +28,12 @@ class SetFieldValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testForDate()
     {
         $representation = SetFieldValueRepresentation::forDate(
-            "1",
+            '1',
             43,
             Transition_PostAction_Field_Date::CLEAR_DATE
         );
-        $this->assertEquals("1", $representation->id);
-        $this->assertEquals("date", $representation->field_type);
+        $this->assertEquals('1', $representation->id);
+        $this->assertEquals('date', $representation->field_type);
         $this->assertEquals(43, $representation->field_id);
         $this->assertEquals(SetFieldValueRepresentation::EMPTY_DATE_VALUE, $representation->value);
     }
@@ -41,7 +41,7 @@ class SetFieldValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testForDateWithCurrentDate()
     {
         $representation = SetFieldValueRepresentation::forDate(
-            "1",
+            '1',
             43,
             Transition_PostAction_Field_Date::FILL_CURRENT_TIME
         );
@@ -50,13 +50,13 @@ class SetFieldValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testForDateWithoutValue()
     {
-        $representation = SetFieldValueRepresentation::forDate("1", 43, 0);
+        $representation = SetFieldValueRepresentation::forDate('1', 43, 0);
         $this->assertEquals(SetFieldValueRepresentation::UNSET_DATE_VALUE, $representation->value);
     }
 
     public function testForDateThrowsWhenUnsupportedValue()
     {
         $this->expectException(UnsupportedDateValueException::class);
-        SetFieldValueRepresentation::forDate("1", 43, 99);
+        SetFieldValueRepresentation::forDate('1', 43, 99);
     }
 }

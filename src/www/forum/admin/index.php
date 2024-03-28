@@ -62,8 +62,8 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     */
 
                     // First, check if the message exists
-                    $sql = "SELECT forum_group_list.group_id, forum.group_forum_id FROM forum,forum_group_list " .
-                        "WHERE forum.group_forum_id=forum_group_list.group_forum_id AND forum.msg_id=" . db_ei($msg_id);
+                    $sql = 'SELECT forum_group_list.group_id, forum.group_forum_id FROM forum,forum_group_list ' .
+                        'WHERE forum.group_forum_id=forum_group_list.group_forum_id AND forum.msg_id=' . db_ei($msg_id);
 
                     $result = db_query($sql);
 
@@ -77,7 +77,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     if ($message_group_id == ForgeConfig::get('sys_news_group')) {
                         // This message belongs to a news item.
                         // Check that the news belongs to the same project
-                        $gr = db_query("SELECT group_id FROM news_bytes WHERE forum_id=" . db_ei($forum_id));
+                        $gr = db_query('SELECT group_id FROM news_bytes WHERE forum_id=' . db_ei($forum_id));
                         if (db_result($gr, 0, 'group_id') == $group_id) {
                             // authorized to delete the message
                             $authorized_to_delete_message = true;
@@ -146,9 +146,9 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     $description    = $request->get('description');
                     $group_forum_id = $request->get('group_forum_id');
 
-                    $sql    = "UPDATE forum_group_list SET is_public=" . db_ei($is_public) . ",forum_name='" . db_es(htmlspecialchars($forum_name)) . "'," .
+                    $sql    = 'UPDATE forum_group_list SET is_public=' . db_ei($is_public) . ",forum_name='" . db_es(htmlspecialchars($forum_name)) . "'," .
                     "description='" . db_es(htmlspecialchars($description)) . "' " .
-                    "WHERE group_forum_id=" . db_ei($group_forum_id) . " AND group_id=" . db_ei($group_id);
+                    'WHERE group_forum_id=' . db_ei($group_forum_id) . ' AND group_id=' . db_ei($group_id);
                     $result = db_query($sql);
                     if (! $result || db_affected_rows($result) < 1) {
                         $GLOBALS['Response']->addFeedback(Feedback::INFO, _('Error Updating Forum Info'));
@@ -195,7 +195,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             ->inProject($current_project, Service::FORUM)
             ->build());
 
-        $sql    = "SELECT forum_name FROM forum_group_list WHERE group_id=" . db_ei($group_id);
+        $sql    = 'SELECT forum_name FROM forum_group_list WHERE group_id=' . db_ei($group_id);
         $result = db_query($sql);
         ShowResultSet($result, _('Existing Forums'), false);
 
@@ -238,7 +238,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             ->build());
 
 
-        $sql    = "SELECT * FROM forum_group_list WHERE group_id=" . db_ei($group_id);
+        $sql    = 'SELECT * FROM forum_group_list WHERE group_id=' . db_ei($group_id);
         $result = db_query($sql);
         $rows   = db_numrows($result);
 

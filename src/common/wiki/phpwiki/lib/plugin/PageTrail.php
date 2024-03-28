@@ -34,7 +34,7 @@ rcs_id('$Id: PageTrail.php,v 1.8 2005/08/06 13:23:14 rurban Exp $');
  */
 
 if (! defined('PAGETRAIL_ARROW')) {
-    define('PAGETRAIL_ARROW', " => ");
+    define('PAGETRAIL_ARROW', ' => ');
 }
 
 class WikiPlugin_PageTrail extends WikiPlugin
@@ -44,20 +44,20 @@ class WikiPlugin_PageTrail extends WikiPlugin
 
     public function getName()
     {
-        return _("PageTrail");
+        return _('PageTrail');
     }
 
     public function getDescription()
     {
-        return _("PageTrail Plugin");
+        return _('PageTrail Plugin');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.8 $"
+            '$Revision: 1.8 $'
         );
     }
 
@@ -80,14 +80,14 @@ class WikiPlugin_PageTrail extends WikiPlugin
 
         // Get name of the current page we are on
         $thispage = $request->getArg('pagename');
-        $Pages    = $request->session->get("PageTrail");
+        $Pages    = $request->session->get('PageTrail');
         if (! is_array($Pages)) {
             $Pages = [];
         }
 
         if ($duplicates || ($thispage != $Pages[0])) {
             array_unshift($Pages, $thispage);
-            $request->session->set("PageTrail", $Pages);
+            $request->session->set('PageTrail', $Pages);
         }
 
         $numberlinks = min(count($Pages), $numberlinks);

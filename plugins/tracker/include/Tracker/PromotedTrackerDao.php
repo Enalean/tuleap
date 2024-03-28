@@ -29,12 +29,12 @@ class PromotedTrackerDao extends DataAccessObject
     public function searchByProjectId(int $project_id): array
     {
         return $this->getDB()->run(
-            "SELECT tracker.*
+            'SELECT tracker.*
                 FROM tracker
                     INNER JOIN plugin_tracker_promoted AS dropdown ON tracker.id = dropdown.tracker_id
                 WHERE tracker.group_id = ?
                     AND tracker.deletion_date IS NULL
-                ORDER BY tracker.name",
+                ORDER BY tracker.name',
             $project_id
         );
     }

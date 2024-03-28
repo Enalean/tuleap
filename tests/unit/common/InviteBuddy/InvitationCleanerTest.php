@@ -122,7 +122,7 @@ final class InvitationCleanerTest extends TestCase
     {
         $project = ProjectTestBuilder::aProject()
             ->withId(111)
-            ->withPublicName("Gotham City")
+            ->withPublicName('Gotham City')
             ->build();
 
         $purger = InvitationPurgerStub::withPurgedInvitations(

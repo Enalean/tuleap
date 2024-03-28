@@ -1106,7 +1106,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration = $this->createMock(Artifact::class);
         $iteration->method('userCanView')->willReturn(true);
         $iteration->method('getTracker')->willReturn($this->tracker);
-        $iteration->method('getTitle')->willReturn("");
+        $iteration->method('getTitle')->willReturn('');
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset->method('getValue');
         $iteration->method('getLastChangeset')->willReturn($changeset);
@@ -1201,7 +1201,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration = $this->createMock(Artifact::class);
         $iteration->method('userCanView')->willReturn(true);
         $iteration->method('getTracker')->willReturn($this->tracker);
-        $iteration->method('getTitle')->willReturn("");
+        $iteration->method('getTitle')->willReturn('');
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset->method('getValue');
         $iteration->method('getLastChangeset')->willReturn($changeset);
@@ -1293,7 +1293,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $iteration = $this->anArtifact(123, "Sprint W42", $this->tracker);
+        $iteration = $this->anArtifact(123, 'Sprint W42', $this->tracker);
 
         $this->artifact_factory
             ->expects(self::once())
@@ -1310,7 +1310,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 new IterationRepresentation(
                     123,
                     '/plugins/tracker/?aid=123',
-                    "Sprint W42",
+                    'Sprint W42',
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                 ),

@@ -54,8 +54,8 @@ final class PreReceiveHookData
                 $logger->debug("[pre-receive] - $revs[0] $revs[1] $revs[2]");
                 $updated_references[$revs[2]] = new PreReceiveHookUpdatedReference($revs[0], $revs[1]);
             } else {
-                $logger->error("[pre-receive] Failed to provide 3 arguments on STDIN");
-                return Result::err(Fault::fromMessage("Wrong number of arguments submitted, three arguments of the form old_rev new_rev refname expected on STDIN"));
+                $logger->error('[pre-receive] Failed to provide 3 arguments on STDIN');
+                return Result::err(Fault::fromMessage('Wrong number of arguments submitted, three arguments of the form old_rev new_rev refname expected on STDIN'));
             }
 
             $line = strtok($separator);

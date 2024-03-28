@@ -89,11 +89,11 @@ class PostAdminReleaseNoteLinkController implements DispatchableWithRequest
         $this->checkUserIsSiteAdmin($current_user);
 
         $valid_url  = new Valid_HTTPURI();
-        $custom_url = $request->get("url");
+        $custom_url = $request->get('url');
         if (! $custom_url || $custom_url === '' || ! $valid_url->validate($custom_url)) {
             $layout->addFeedback(
                 Feedback::ERROR,
-                dgettext("tuleap-core", 'Provided release note URL is not well formed')
+                dgettext('tuleap-core', 'Provided release note URL is not well formed')
             );
 
             $layout->redirect('/admin/release-note/');
@@ -108,7 +108,7 @@ class PostAdminReleaseNoteLinkController implements DispatchableWithRequest
 
         $layout->addFeedback(
             \Feedback::INFO,
-            dgettext("tuleap-core", "Custom release note link successfully updated.")
+            dgettext('tuleap-core', 'Custom release note link successfully updated.')
         );
 
         $layout->redirect('/admin/release-note/');
@@ -118,7 +118,7 @@ class PostAdminReleaseNoteLinkController implements DispatchableWithRequest
     {
         if (! $user->isSuperUser()) {
             throw new ForbiddenException(
-                dgettext("tuleap-core", 'Permission denied')
+                dgettext('tuleap-core', 'Permission denied')
             );
         }
     }

@@ -48,13 +48,13 @@ print $Language->getText('project_memberlist', 'contact_to_become_member');
 
 // list members
 // LJ email column added
-$query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
-    . "user.realname AS realname, user.add_date AS add_date, "
-    . "user.email AS email, "
-    . "user_group.admin_flags AS admin_flags "
-    . "FROM user,user_group "
-    . "WHERE user.user_id=user_group.user_id AND user_group.group_id=" . db_ei($group_id) . " AND user.status IN ('A', 'R') "
-    . "ORDER BY user.user_name";
+$query =  'SELECT user.user_name AS user_name,user.user_id AS user_id,'
+    . 'user.realname AS realname, user.add_date AS add_date, '
+    . 'user.email AS email, '
+    . 'user_group.admin_flags AS admin_flags '
+    . 'FROM user,user_group '
+    . 'WHERE user.user_id=user_group.user_id AND user_group.group_id=' . db_ei($group_id) . " AND user.status IN ('A', 'R') "
+    . 'ORDER BY user.user_name';
 
 
 $title_arr   = [];
@@ -77,7 +77,7 @@ while ($row_memb = db_fetch_array($res_memb)) {
         print "\t\t<td>" .  $display_name . "</td>\n";
     }
 
-    print "\t\t<td align=\"center\"><A href=\"mailto:" . $hp->purify($row_memb['email']) . "\">" . $hp->purify($row_memb['email']) . "</A></td>\n";
+    print "\t\t<td align=\"center\"><A href=\"mailto:" . $hp->purify($row_memb['email']) . '">' . $hp->purify($row_memb['email']) . "</A></td>\n";
 
     print "\t<tr>\n";
 }

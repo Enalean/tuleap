@@ -99,7 +99,7 @@ class UserRemover
             $this->user_manager->getUserAnonymous(),
             new \DateTimeImmutable(),
             ProjectAdminHistoryEntry::Remove->value,
-            $removed_user->getUserName() . " (" . $removed_user->getId() . ")",
+            $removed_user->getUserName() . ' (' . $removed_user->getId() . ')',
         );
 
         $this->event_manager->dispatch(

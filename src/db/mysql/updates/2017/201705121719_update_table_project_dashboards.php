@@ -32,10 +32,10 @@ class b201705121719_update_table_project_dashboards extends \Tuleap\ForgeUpgrade
 
     public function up()
     {
-        $sql = "ALTER TABLE project_dashboards
+        $sql = 'ALTER TABLE project_dashboards
                   DROP INDEX project_id,
                   ADD INDEX idx(project_id, name(5));
-               ";
+               ';
 
         $this->db->dbh->exec($sql);
     }

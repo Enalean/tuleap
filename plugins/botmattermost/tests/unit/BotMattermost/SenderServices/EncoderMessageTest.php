@@ -44,9 +44,9 @@ final class EncoderMessageTest extends TestCase
     public function testItVerifiesThatGeneratedMessageWithTextReturnsPostFormatForMattermost(): void
     {
         $message = new Message();
-        $message->setText("text");
+        $message->setText('text');
 
-        $channel = "channel";
+        $channel = 'channel';
         $result  = $this->encoder_message->generateJsonMessage($this->bot, $message, $channel);
 
         self::assertEquals(
@@ -59,7 +59,7 @@ final class EncoderMessageTest extends TestCase
     {
         $message    = new Message();
         $attachment = new Attachment('pre-text', 'title', 'https://www.example.com', 'description');
-        $channel    = "channel";
+        $channel    = 'channel';
 
         $message->addAttachment($attachment);
 

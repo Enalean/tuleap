@@ -43,16 +43,16 @@ final class LogToGraylog2
 {
     public const CONFIG_LOGGER_GRAYLOG2 = 'graylog2';
 
-    #[ConfigKey("Graylog2 server fully qualified domain name")]
+    #[ConfigKey('Graylog2 server fully qualified domain name')]
     public const CONFIG_GRAYLOG2_SERVER = 'graylog2_server';
 
-    #[ConfigKey("Graylog2 port")]
+    #[ConfigKey('Graylog2 port')]
     public const CONFIG_GRAYLOG2_PORT = 'graylog2_port';
 
-    #[ConfigKey("Toggle usage of TLS to communicate with Graylog2 server")]
+    #[ConfigKey('Toggle usage of TLS to communicate with Graylog2 server')]
     public const CONFIG_GRAYLOG2_SSL = 'graylog2_ssl';
 
-    #[ConfigKey("Toggle debug mode of communication between Tuleap and Graylog2 server")]
+    #[ConfigKey('Toggle debug mode of communication between Tuleap and Graylog2 server')]
     public const CONFIG_GRAYLOG2_DEBUG = 'graylog2_debug';
 
     public function configure(Logger $logger, int|Level $level): LoggerInterface

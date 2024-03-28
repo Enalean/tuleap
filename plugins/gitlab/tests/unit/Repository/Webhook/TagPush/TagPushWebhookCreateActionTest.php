@@ -93,26 +93,26 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $integration = new GitlabRepositoryIntegration(
             1,
             12587,
-            "root/repo01",
-            "",
-            "https://example.com/root/repo01",
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
-            "Tag Push Event",
+            'Tag Push Event',
             12587,
-            "https://example.com",
-            "refs/tags/v1.0.2",
-            "before",
-            "after",
+            'https://example.com',
+            'refs/tags/v1.0.2',
+            'before',
+            'after',
         );
 
         $credentials = new Credentials(
-            "https://example.com",
-            IntegrationApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
+            'https://example.com',
+            IntegrationApiToken::buildBrandNewToken(new ConcealedString('DAT-TOKEN'))
         );
 
         $this->credentials_retriever
@@ -122,15 +122,15 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($credentials);
 
         $gitlab_tag = new GitlabTag(
-            "v1.0.2",
-            "This tag references TULEAP-2337",
-            "sha1"
+            'v1.0.2',
+            'This tag references TULEAP-2337',
+            'sha1'
         );
 
         $this->gitlab_tag_retriever
             ->expects(self::once())
             ->method('getTagFromGitlabAPI')
-            ->with($credentials, $integration, "v1.0.2")
+            ->with($credentials, $integration, 'v1.0.2')
             ->willReturn($gitlab_tag);
 
         $tuleap_reference = new Reference(
@@ -176,21 +176,21 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $integration = new GitlabRepositoryIntegration(
             1,
             12587,
-            "root/repo01",
-            "",
-            "https://example.com/root/repo01",
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
-            "Tag Push Event",
+            'Tag Push Event',
             12587,
-            "https://example.com",
-            "refs/tags/v1.0.2",
-            "before",
-            "after",
+            'https://example.com',
+            'refs/tags/v1.0.2',
+            'before',
+            'after',
         );
 
         $this->credentials_retriever
@@ -213,26 +213,26 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $integration = new GitlabRepositoryIntegration(
             1,
             12587,
-            "root/repo01",
-            "",
-            "https://example.com/root/repo01",
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
-            "Tag Push Event",
+            'Tag Push Event',
             12587,
-            "https://example.com",
-            "refs/tags/v1.0.2",
-            "before",
-            "after",
+            'https://example.com',
+            'refs/tags/v1.0.2',
+            'before',
+            'after',
         );
 
         $credentials = new Credentials(
-            "https://example.com",
-            IntegrationApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
+            'https://example.com',
+            IntegrationApiToken::buildBrandNewToken(new ConcealedString('DAT-TOKEN'))
         );
 
         $this->credentials_retriever
@@ -242,15 +242,15 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($credentials);
 
         $gitlab_tag = new GitlabTag(
-            "v1.0.2",
-            "This tag references 2337",
-            "sha1"
+            'v1.0.2',
+            'This tag references 2337',
+            'sha1'
         );
 
         $this->gitlab_tag_retriever
             ->expects(self::once())
             ->method('getTagFromGitlabAPI')
-            ->with($credentials, $integration, "v1.0.2")
+            ->with($credentials, $integration, 'v1.0.2')
             ->willReturn($gitlab_tag);
 
         $this->reference_manager->expects(self::never())->method('insertCrossReference');
@@ -267,26 +267,26 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $integration = new GitlabRepositoryIntegration(
             1,
             12587,
-            "root/repo01",
-            "",
-            "https://example.com/root/repo01",
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
-            "Tag Push Event",
+            'Tag Push Event',
             12587,
-            "https://example.com",
-            "refs/tags/v1.0.2",
-            "before",
-            "after",
+            'https://example.com',
+            'refs/tags/v1.0.2',
+            'before',
+            'after',
         );
 
         $credentials = new Credentials(
-            "https://example.com",
-            IntegrationApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
+            'https://example.com',
+            IntegrationApiToken::buildBrandNewToken(new ConcealedString('DAT-TOKEN'))
         );
 
         $this->credentials_retriever
@@ -296,15 +296,15 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($credentials);
 
         $gitlab_tag = new GitlabTag(
-            "v1.0.2",
-            "This tag references tuleap-1337",
-            "sha1"
+            'v1.0.2',
+            'This tag references tuleap-1337',
+            'sha1'
         );
 
         $this->gitlab_tag_retriever
             ->expects(self::once())
             ->method('getTagFromGitlabAPI')
-            ->with($credentials, $integration, "v1.0.2")
+            ->with($credentials, $integration, 'v1.0.2')
             ->willReturn($gitlab_tag);
 
         $this->tuleap_reference_retriever

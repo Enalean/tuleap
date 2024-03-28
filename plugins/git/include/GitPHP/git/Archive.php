@@ -400,7 +400,7 @@ class Archive
             // can't be compressed on the fly and the php zlib stream
             // doesn't seem to daisy chain with any non-file streams
 
-            $this->tempfile = tempnam(sys_get_temp_dir(), "GitPHP");
+            $this->tempfile = tempnam(sys_get_temp_dir(), 'GitPHP');
 
             $compress = Config::GetInstance()->GetValue('compresslevel');
 

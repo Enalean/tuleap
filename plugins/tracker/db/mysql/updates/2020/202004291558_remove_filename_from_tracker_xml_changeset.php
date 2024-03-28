@@ -35,7 +35,7 @@ class b202004291558_remove_filename_from_tracker_xml_changeset extends \Tuleap\F
 
     public function up(): void
     {
-        $sql = "alter table plugin_tracker_changeset_from_xml drop column xml_filename";
+        $sql = 'alter table plugin_tracker_changeset_from_xml drop column xml_filename';
 
         $this->db->alterTable('plugin_tracker_changeset_from_xml', 'tuleap', 'xml_filename', $sql);
     }

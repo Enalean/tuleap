@@ -125,7 +125,7 @@ class CreateTestEnvResource
     private function checkSecret($submitted_secret)
     {
         if (! hash_equals($this->getSecret(), $submitted_secret)) {
-            throw new RestException(403, "You are not authorized to use this route");
+            throw new RestException(403, 'You are not authorized to use this route');
         }
     }
 
@@ -145,12 +145,12 @@ class CreateTestEnvResource
         }
 
         if (substr(sprintf('%o', fileperms($path)), -4) !== '0400') {
-            throw new RestException(500, "Secret is not properly secured server side");
+            throw new RestException(500, 'Secret is not properly secured server side');
         }
 
         $content = trim(file_get_contents($path));
         if (strlen($content) < 32) {
-            throw new RestException(500, "Secret is not strong enough server side");
+            throw new RestException(500, 'Secret is not strong enough server side');
         }
 
         return $content;

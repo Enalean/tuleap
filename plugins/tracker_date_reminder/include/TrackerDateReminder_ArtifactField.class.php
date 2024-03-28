@@ -99,7 +99,7 @@ class TrackerDateReminder_ArtifactField
     {
         $res = $this->getDateFieldReminderSettings($field->getID(), $group_artifact_id);
         if ($res && ! db_error($res)) {
-            $notified_users = implode(",", $people_notified);
+            $notified_users = implode(',', $people_notified);
             if (db_numrows($res) == 0) {
                 // No reminder, create it
                 $insert   = 'INSERT INTO artifact_date_reminder_settings' .

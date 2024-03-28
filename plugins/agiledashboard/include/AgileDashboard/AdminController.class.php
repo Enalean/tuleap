@@ -172,7 +172,7 @@ class AdminController extends BaseController
     public function adminCharts(\Closure $displayHeader, \Closure $displayFooter): void
     {
         $this->checkScrumAccessIsNotBlocked();
-        $title = dgettext("tuleap-agiledashboard", "Charts configuration");
+        $title = dgettext('tuleap-agiledashboard', 'Charts configuration');
         $displayHeader(
             $title,
             $this->getBreadcrumbs(),
@@ -182,7 +182,7 @@ class AdminController extends BaseController
                 ->build()
         );
         echo $this->renderToString(
-            "admin-charts",
+            'admin-charts',
             $this->getAdminChartsPresenter(
                 $this->project
             )
@@ -209,7 +209,7 @@ class AdminController extends BaseController
 
         $this->additional_scrum_sections->notifyAdditionalSectionsControllers(\HTTPRequest::instance());
 
-        if ($this->request->exist("burnup-count-mode")) {
+        if ($this->request->exist('burnup-count-mode')) {
             $updater = new AgileDashboardChartsConfigurationUpdater(
                 $this->request,
                 new CountElementsModeUpdater(

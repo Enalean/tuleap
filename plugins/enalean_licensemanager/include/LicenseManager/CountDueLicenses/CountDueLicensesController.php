@@ -75,17 +75,17 @@ class CountDueLicensesController
      */
     public function countDueLicences(array $project_ids): void
     {
-        $current_timestamp = new DateTimeImmutable("now");
+        $current_timestamp = new DateTimeImmutable('now');
 
         $active_users = $this->user_dao->searchByStatus(PFUser::STATUS_ACTIVE);
 
-        $this->output->write("<info>- Retrieving user accesses</info>");
+        $this->output->write('<info>- Retrieving user accesses</info>');
 
         $real_users     = $this->due_licences_dao->getRealUsers($project_ids);
         $real_users_ids = array_column($real_users, 'user_id');
 
-        $this->output->writeln("<info> ... done</info>");
-        $this->output->writeln("<info>- Counting users projects</info>");
+        $this->output->writeln('<info> ... done</info>');
+        $this->output->writeln('<info>- Counting users projects</info>');
 
         $nb_active_users = count($active_users);
 
@@ -133,13 +133,13 @@ class CountDueLicensesController
 
         foreach ($real_users as $user) {
             $this->output->writeln(
-                $user["user_id"]
+                $user['user_id']
                 . ' | '
-                . $user["user_name"]
+                . $user['user_name']
                 . ' | '
-                . $user["realname"]
+                . $user['realname']
                 . ' | '
-                . $user["email"]
+                . $user['email']
             );
         }
 

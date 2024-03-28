@@ -253,9 +253,9 @@ class SampleGraph
 
         //management of the axes scales
         if ($this->filter == 'hour') {
-            $this->graph->SetScale("linlin");
+            $this->graph->SetScale('linlin');
         } else {
-            $this->graph->SetScale("textlin");
+            $this->graph->SetScale('textlin');
         }
 
         $this->graph->yaxis->scale->SetGrace(20);
@@ -300,10 +300,10 @@ class SampleGraph
         $gbparray->SetFillColor($this->getColor());
 
         //add to the graph
-        $this->graph->legend->Pos(.02, .05, "right", "top");
+        $this->graph->legend->Pos(.02, .05, 'right', 'top');
 
         if ($this->advsrch == 3) { //the position of the legend depend on the number of month display
-            $this->graph->legend->Pos(.075 / $nbmonth, .05, "right", "top");
+            $this->graph->legend->Pos(.075 / $nbmonth, .05, 'right', 'top');
         }
 
         $this->graph->Add($gbparray);
@@ -317,8 +317,8 @@ class SampleGraph
             $ubandarray = [];
             $abandarray = [];
             foreach ($this->graphValues as $key => $val) {
-                $testday = date("w", mktime(0, 0, 0, $this->month, $key, $this->year));
-                $color3  = "#F4F3F2@0.45";
+                $testday = date('w', mktime(0, 0, 0, $this->month, $key, $this->year));
+                $color3  = '#F4F3F2@0.45';
 
                 //color the Saturday
                 if ($testday == 5) {

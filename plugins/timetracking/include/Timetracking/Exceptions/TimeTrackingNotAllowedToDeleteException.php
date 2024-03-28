@@ -26,6 +26,6 @@ class TimeTrackingNotAllowedToDeleteException extends Exception
 {
     public function __construct()
     {
-        parent::__construct(dgettext('tuleap-timetracking', "You are not allowed to delete a time."));
+        parent::__construct(dgettext('tuleap-timetracking', 'You are not allowed to delete a time.'));
     }
 }

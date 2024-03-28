@@ -37,8 +37,8 @@ final class ForLastUpdateDate implements DateTimeReadOnlyConditionBuilder
         $min_value_floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $min_value);
         $max_value_ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $max_value);
 
-        $condition = "c.submitted_on >= ?
-            AND c.submitted_on <= ?";
+        $condition = 'c.submitted_on >= ?
+            AND c.submitted_on <= ?';
 
         return new ParametrizedSQLFragment(
             $condition,

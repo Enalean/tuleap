@@ -1016,7 +1016,7 @@ class ArtifactsResource extends AuthenticatedResource
             } elseif (! empty($values_by_field)) {
                 $artifact_reference = $creator->createWithValuesIndexedByFieldName($user, $tracker, $values_by_field);
             } else {
-                throw new RestException(400, "No valid data are provided");
+                throw new RestException(400, 'No valid data are provided');
             }
 
             $this->sendLastModifiedHeader($artifact_reference->getArtifact());
@@ -1234,7 +1234,7 @@ class ArtifactsResource extends AuthenticatedResource
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if (! $tracker) {
-            throw new RestException(404, "Tracker not found");
+            throw new RestException(404, 'Tracker not found');
         }
         if (! $tracker->userCanSubmitArtifact($user)) {
             throw new RestException(403, "User can't write in destination tracker");

@@ -20,7 +20,7 @@ class b201503061743_add_homepage_headline extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Add table to store homepage headline";
+        return 'Add table to store homepage headline';
     }
 
     public function preUp()
@@ -36,10 +36,10 @@ class b201503061743_add_homepage_headline extends \Tuleap\ForgeUpgrade\Bucket
 
     private function createTable()
     {
-        $sql = "CREATE TABLE homepage_headline (
+        $sql = 'CREATE TABLE homepage_headline (
             language_id VARCHAR(17) NOT NULL PRIMARY KEY,
             headline TEXT NOT NULL
-        )";
+        )';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding homepage_headline table.');

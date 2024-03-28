@@ -929,7 +929,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                     }
                     break;
                 case self::NEW_VALUE_PREFIX: // new open value
-                    if (substr($extracted_value, 1) !== "") {
+                    if (substr($extracted_value, 1) !== '') {
                         $nb_filled_values++;
                     }
                     break;

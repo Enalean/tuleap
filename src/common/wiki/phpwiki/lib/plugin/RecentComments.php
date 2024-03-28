@@ -8,22 +8,22 @@ rcs_id('$Id: RecentComments.php,v 1.3 2004/05/14 20:55:03 rurban Exp $');
  * @author: Reini Urban
  */
 
-require_once("lib/plugin/RecentChanges.php");
-require_once("lib/plugin/WikiBlog.php");
+require_once('lib/plugin/RecentChanges.php');
+require_once('lib/plugin/WikiBlog.php');
 
 class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
 {
     public function getName()
     {
-        return _("RecentComments");
+        return _('RecentComments');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.3 $"
+            '$Revision: 1.3 $'
         );
     }
 
@@ -32,7 +32,7 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
         $args               = WikiPlugin_RecentChanges::getDefaultArguments();
         $args['show_minor'] = false;
         $args['show_all']   = true;
-        $args['caption']    = _("Recent Comments");
+        $args['caption']    = _('Recent Comments');
         return $args;
     }
 
@@ -71,7 +71,7 @@ class _RecentChanges_CommentFormatter extends _RecentChanges_HtmlFormatter
 {
     public function empty_message()
     {
-        return _("No comments found");
+        return _('No comments found');
     }
 
     public function title()
@@ -107,7 +107,7 @@ class _RecentChanges_CommentFormatter extends _RecentChanges_HtmlFormatter
             $time,
             ' ',
             ' . . . . ',
-            _("latest comment by "),
+            _('latest comment by '),
             $this->authorLink($rev)
         );
         return $line;
@@ -141,8 +141,8 @@ class RecentCommentsRevisionIterator extends WikiDB_PageRevisionIterator
             $this->comments = $this->_blog->findBlogs($this->_wikidb, $rev->getPageName(), 'comment');
             if ($this->comments) {
                 if (count($this->comments) > 2) {
-                    usort($this->comments, ["WikiPlugin_WikiBlog",
-                        "cmp",
+                    usort($this->comments, ['WikiPlugin_WikiBlog',
+                        'cmp',
                     ]);
                 }
                 if (isset($this->comments[$this->_current])) {

@@ -39,13 +39,13 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
 
     public function displayConfirmationForAdmin(BaseLayout $layout, \PFUser $new_user, ConcealedString $password): void
     {
-        $renderer = $this->renderer_factory->getRenderer(__DIR__ . "/../../../../templates/account/create/");
+        $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/account/create/');
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'account-registration-style'));
         $layout->header(
             HeaderConfigurationBuilder::get(_('Register'))->build()
         );
-        $renderer->renderToPage("confirmation-admin-creation", [
+        $renderer->renderToPage('confirmation-admin-creation', [
             'login'    => $new_user->getUserName(),
             'password' => $password->getString(),
         ]);
@@ -54,13 +54,13 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
 
     public function displayConfirmationLinkSent(BaseLayout $layout, \PFUser $new_user): void
     {
-        $renderer = $this->renderer_factory->getRenderer(__DIR__ . "/../../../../templates/account/create/");
+        $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/account/create/');
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'account-registration-style'));
         $layout->header(
             HeaderConfigurationBuilder::get(_('Register'))->build()
         );
-        $renderer->renderToPage("confirmation-link-sent", [
+        $renderer->renderToPage('confirmation-link-sent', [
             'email' => $new_user->getEmail(),
         ]);
         $layout->footer(FooterConfiguration::withoutContent());
@@ -68,13 +68,13 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
 
     public function displayWaitForApproval(BaseLayout $layout, \PFUser $new_user): void
     {
-        $renderer = $this->renderer_factory->getRenderer(__DIR__ . "/../../../../templates/account/create/");
+        $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/account/create/');
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'account-registration-style'));
         $layout->header(
             HeaderConfigurationBuilder::get(_('Register'))->build()
         );
-        $renderer->renderToPage("waiting-for-approval", [
+        $renderer->renderToPage('waiting-for-approval', [
             'email' => $new_user->getEmail(),
         ]);
         $layout->footer(FooterConfiguration::withoutContent());
@@ -82,13 +82,13 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
 
     public function displayConfirmationLinkError(BaseLayout $layout): void
     {
-        $renderer = $this->renderer_factory->getRenderer(__DIR__ . "/../../../../templates/account/create/");
+        $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/account/create/');
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'account-registration-style'));
         $layout->header(
             HeaderConfigurationBuilder::get(_('Register'))->build()
         );
-        $renderer->renderToPage("confirmation-link-error", [
+        $renderer->renderToPage('confirmation-link-error', [
             'email_admin' => \ForgeConfig::get('sys_email_admin'),
         ]);
         $layout->footer(FooterConfiguration::withoutContent());

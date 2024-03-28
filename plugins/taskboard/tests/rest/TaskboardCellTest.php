@@ -98,7 +98,7 @@ final class TaskboardCellTest extends \RestBase
         // Assert the status has changed
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'artifacts/' . $US4_swimlane_id));
         $this->assertEquals(200, $response->getStatusCode());
-        $status_value = $this->searchStatusValue(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["values"]);
+        $status_value = $this->searchStatusValue(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['values']);
         $this->assertSame('Review', $status_value);
     }
 

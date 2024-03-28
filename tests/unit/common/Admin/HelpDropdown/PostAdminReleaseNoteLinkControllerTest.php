@@ -75,10 +75,10 @@ final class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $request = $this->createMock(HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn($this->admin_user);
-        $request->expects(self::once())->method('get')->with('url')->willReturn("https://example.com");
+        $request->expects(self::once())->method('get')->with('url')->willReturn('https://example.com');
 
-        $this->csrf_token->method("check");
-        $this->custom_link_updater->method("updateReleaseNoteLink");
+        $this->csrf_token->method('check');
+        $this->custom_link_updater->method('updateReleaseNoteLink');
 
         $this->layout->expects(self::once())->method('addFeedback');
         $this->layout->expects(self::once())->method('redirect');
@@ -93,8 +93,8 @@ final class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\
 
         $this->expectException(ForbiddenException::class);
 
-        $this->csrf_token->expects(self::never())->method("check");
-        $this->custom_link_updater->expects(self::never())->method("updateReleaseNoteLink");
+        $this->csrf_token->expects(self::never())->method('check');
+        $this->custom_link_updater->expects(self::never())->method('updateReleaseNoteLink');
 
         $this->layout->expects(self::never())->method('addFeedback');
         $this->layout->expects(self::never())->method('redirect');

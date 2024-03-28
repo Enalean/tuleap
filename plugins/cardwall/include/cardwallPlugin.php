@@ -229,7 +229,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->report_session = new Tracker_Report_Session($params['report']->id);
             if (isset($params['row']['id'])) {
                 $this->report_session->changeSessionNamespace("renderers.{$params['row']['id']}");
-                $field_id = $this->report_session->get("field_id");
+                $field_id = $this->report_session->get('field_id');
             }
         }
         if (! $field_id) {
@@ -399,8 +399,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function javascript($params)
     {
         include $GLOBALS['Language']->getContent('script_locale', null, 'cardwall', '.js');
-        echo "var tuleap = tuleap || { };" . PHP_EOL;
-        echo "tuleap.cardwall = tuleap.cardwall || { };" . PHP_EOL;
+        echo 'var tuleap = tuleap || { };' . PHP_EOL;
+        echo 'tuleap.cardwall = tuleap.cardwall || { };' . PHP_EOL;
         echo "tuleap.cardwall.base_url = '" . CARDWALL_BASE_URL . "/';" . PHP_EOL;
         echo PHP_EOL;
     }

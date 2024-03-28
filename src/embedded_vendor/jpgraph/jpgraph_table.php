@@ -108,7 +108,7 @@ class GTextTableCell
 
     public function SetImageFromString($aStr, $aScale = 1.0, $aMix = 100)
     {
-        $this->iIcon = new IconPlot("", 0, 0, $aScale, $aMix);
+        $this->iIcon = new IconPlot('', 0, 0, $aScale, $aMix);
         $this->iIcon->CreateFromString($aStr);
     }
 
@@ -195,7 +195,7 @@ class GTextTableCell
     {
         $weight_arr = [$aLeft, $aTop, $aBottom, $aRight];
         for ($i = 0; $i < count($weight_arr); $i++) {
-            if ($weight_arr[$i] === "") {
+            if ($weight_arr[$i] === '') {
                 $weight_arr[$i] = 0;
             }
         }
@@ -457,10 +457,10 @@ class GTextTableCell
         if (! empty($this->iCSIMtarget)) {
             $this->iCSIMArea = '<area shape="poly" coords="' . $coords . '" href="' . $this->iCSIMtarget . '"';
             if (! empty($this->iCSIMwintarget)) {
-                $this->iCSIMArea .= " target=\"" . $this->iCSIMwintarget . "\"";
+                $this->iCSIMArea .= ' target="' . $this->iCSIMwintarget . '"';
             }
             if (! empty($this->iCSIMalt)) {
-                $this->iCSIMArea .= ' alt="' . $this->iCSIMalt . '" title="' . $this->iCSIMalt . "\" ";
+                $this->iCSIMArea .= ' alt="' . $this->iCSIMalt . '" title="' . $this->iCSIMalt . '" ';
             }
             $this->iCSIMArea .= " />\n";
         }

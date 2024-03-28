@@ -61,7 +61,7 @@ class BotMattermostStandUpSummary
             'has_channels'   => count($this->channels) > 0,
             'channels'       => $this->channels,
             'project_id'     => $this->project_id,
-            'send_time'      => date("H:i", strtotime($this->send_time)),
+            'send_time'      => date('H:i', strtotime($this->send_time)),
             'is_assigned'    => $this->isAssigned(),
         ];
     }

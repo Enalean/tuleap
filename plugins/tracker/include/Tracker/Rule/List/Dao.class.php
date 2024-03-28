@@ -38,11 +38,11 @@ class Tracker_Rule_List_Dao extends \Tuleap\DB\DataAccessObject
 
     public function searchByTrackerId($tracker_id): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM tracker_rule
                     JOIN tracker_rule_list
                     ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                WHERE tracker_rule.tracker_id = ?";
+                WHERE tracker_rule.tracker_id = ?';
 
         return $this->getDB()->run($sql, $tracker_id);
     }
@@ -81,13 +81,13 @@ class Tracker_Rule_List_Dao extends \Tuleap\DB\DataAccessObject
                     ]
                 );
 
-                $sql = "INSERT INTO tracker_rule_list (
+                $sql = 'INSERT INTO tracker_rule_list (
                         tracker_rule_id,
                         source_field_id,
                         source_value_id,
                         target_field_id,
                         target_value_id
-                        ) VALUES (?,?,?,?,?)";
+                        ) VALUES (?,?,?,?,?)';
                 $db->run($sql, $tracker_rule_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id);
 
                 return $tracker_rule_id;
@@ -113,13 +113,13 @@ class Tracker_Rule_List_Dao extends \Tuleap\DB\DataAccessObject
                     ]
                 );
 
-                $sql = "INSERT INTO tracker_rule_list (
+                $sql = 'INSERT INTO tracker_rule_list (
                         tracker_rule_id,
                         source_field_id,
                         source_value_id,
                         target_field_id,
                         target_value_id)
-                    VALUES (?,?,?,?,?)";
+                    VALUES (?,?,?,?,?)';
                 $this->getDB()->run(
                     $sql,
                     $tracker_rule_id,

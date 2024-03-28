@@ -45,20 +45,20 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
 {
     public function getName()
     {
-        return _("OldStyleTable");
+        return _('OldStyleTable');
     }
 
     public function getDescription()
     {
-        return _("Layout tables using the old markup style.");
+        return _('Layout tables using the old markup style.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.11 $"
+            '$Revision: 1.11 $'
         );
     }
 
@@ -107,15 +107,15 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
         if (! empty($caption)) {
             $table->pushContent(HTML::caption(['valign' => 'top'], $caption));
         }
-        if (preg_match("/^\s*(cellpadding|cellspacing|border|caption|summary)/", $lines[0])) {
+        if (preg_match('/^\s*(cellpadding|cellspacing|border|caption|summary)/', $lines[0])) {
             $lines[0] = '';
         }
         foreach ($lines as $line) {
             if (! $line) {
                 continue;
             }
-            if (strstr($line, "=")) {
-                $tmp = explode("=", $line);
+            if (strstr($line, '=')) {
+                $tmp = explode('=', $line);
                 if (in_array(trim($tmp[0]), $default_args)) {
                     continue;
                 }
@@ -133,8 +133,8 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
 
     public function _parse_row($line, $basepage)
     {
-        $brkt_link    = "\\[ .*? [^]\s] .*? \\]";
-        $cell_content = "(?: [^[] | " . ESCAPE_CHAR . "\\[ | $brkt_link )*?";
+        $brkt_link    = '\\[ .*? [^]\s] .*? \\]';
+        $cell_content = '(?: [^[] | ' . ESCAPE_CHAR . "\\[ | $brkt_link )*?";
 
         preg_match_all(
             "/(\\|+) (v*) ([<>^]?) \s* ($cell_content) \s* (?=\\||\$)/x",

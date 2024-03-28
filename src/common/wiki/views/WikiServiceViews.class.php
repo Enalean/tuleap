@@ -177,7 +177,7 @@ class WikiServiceViews extends WikiViews
                 print '<li>' . $href . '</li>';
             }
         }
-        print "</ul>";
+        print '</ul>';
     }
 
   /**
@@ -227,7 +227,7 @@ class WikiServiceViews extends WikiViews
           // Build Lock image if a permission is set on the corresponding page
             if ($wikiPage->permissionExist()) {
                 $permLink = $this->wikiLink . '&view=pagePerms&id=' . $wikiPage->getId();
-                $title    = $title . '<img src="' . util_get_image_theme("ic/lock.png") . '" border="0" alt="Lock" />';
+                $title    = $title . '<img src="' . util_get_image_theme('ic/lock.png') . '" border="0" alt="Lock" />';
             }
 
             $href = '<a href="' . $link . '" data-test="phpwiki-page-' . urlencode($pagename) . '">' . $title . '</a>';
@@ -256,8 +256,8 @@ class WikiServiceViews extends WikiViews
         }
         switch ($language_id) {
             case 'fr_FR':
-                 $attatch_page    = "DéposerUnFichier";
-                $preferences_page = "PréférencesUtilisateurs";
+                 $attatch_page    = 'DéposerUnFichier';
+                $preferences_page = 'PréférencesUtilisateurs';
                 break;
             case 'en_US':
             default:
@@ -286,18 +286,18 @@ class WikiServiceViews extends WikiViews
 
         if (user_ismember($this->gid, 'W2') || user_ismember($this->gid, 'A')) {
               $wiki     = new Wiki($this->gid);
-              $permInfo = "";
+              $permInfo = '';
             if ('wiki' == $this->view) {
             // User is browsing a wiki page
                 $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
 
                 $permLink = Codendi_HTMLPurifier::instance()->purify($this->wikiAdminLink . '&view=pagePerms&id=' . urlencode((string) $wp->getId()));
                 if ($wp->permissionExist()) {
-                      $permInfo =  '<a href="' . $permLink . '"> ' . '<img src="' . util_get_image_theme("ic/lock.png") . '" border="0" alt="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_alt') . '" title="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_title_spec') . '"/></a>';
+                      $permInfo =  '<a href="' . $permLink . '"> ' . '<img src="' . util_get_image_theme('ic/lock.png') . '" border="0" alt="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_alt') . '" title="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_title_spec') . '"/></a>';
                 }
             }
             if ($wiki->permissionExist()) {
-                $permInfo .=  '<a href="/wiki/admin/index.php?group_id=' . $this->gid . '&view=wikiPerms"> ' . '<img src="' . util_get_image_theme("ic/lock.png") . '" border="0" alt="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_alt') . '" title="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_title_set') . '"/>' . '</a>';
+                $permInfo .=  '<a href="/wiki/admin/index.php?group_id=' . $this->gid . '&view=wikiPerms"> ' . '<img src="' . util_get_image_theme('ic/lock.png') . '" border="0" alt="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_alt') . '" title="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_title_set') . '"/>' . '</a>';
             }
             if ($permInfo) {
                 print $permInfo;
@@ -308,7 +308,7 @@ class WikiServiceViews extends WikiViews
         if (isset($_REQUEST['pagename'])) {
               print '
           (<a href="' . $this->base_url . '&pv=1" title="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lighter_display') . '">
-          <img src="' . util_get_image_theme("msg.png") . '" border="0">&nbsp;' .
+          <img src="' . util_get_image_theme('msg.png') . '" border="0">&nbsp;' .
               $GLOBALS['Language']->getText('global', 'printer_version') . '</A> )
           </li>';
         }

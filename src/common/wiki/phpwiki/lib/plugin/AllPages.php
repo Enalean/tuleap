@@ -32,20 +32,20 @@ class WikiPlugin_AllPages extends WikiPlugin
 {
     public function getName()
     {
-        return _("AllPages");
+        return _('AllPages');
     }
 
     public function getDescription()
     {
-        return _("List all pages in this wiki.");
+        return _('List all pages in this wiki.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.36 $"
+            '$Revision: 1.36 $'
         );
     }
 
@@ -77,7 +77,7 @@ class WikiPlugin_AllPages extends WikiPlugin
         if ($args['debug']) {
             $timer = new DebugTimer();
         }
-        $caption = _("All pages in this wiki (%d total):");
+        $caption = _('All pages in this wiki (%d total):');
 
         if (! empty($args['owner'])) {
             $pages = PageList::allPagesByOwner(
@@ -88,7 +88,7 @@ class WikiPlugin_AllPages extends WikiPlugin
             );
             if ($args['owner']) {
                 $caption = fmt(
-                    "List of pages owned by [%s] (%d total):",
+                    'List of pages owned by [%s] (%d total):',
                     WikiLink(
                         $args['owner'] == '[]'
                                         ? $request->_user->getAuthenticatedId()
@@ -107,7 +107,7 @@ class WikiPlugin_AllPages extends WikiPlugin
             );
             if ($args['author']) {
                 $caption = fmt(
-                    "List of pages last edited by [%s] (%d total):",
+                    'List of pages last edited by [%s] (%d total):',
                     WikiLink(
                         $args['author'] == '[]'
                                         ? $request->_user->getAuthenticatedId()
@@ -126,7 +126,7 @@ class WikiPlugin_AllPages extends WikiPlugin
             );
             if ($args['creator']) {
                 $caption = fmt(
-                    "List of pages created by [%s] (%d total):",
+                    'List of pages created by [%s] (%d total):',
                     WikiLink(
                         $args['creator'] == '[]'
                                         ? $request->_user->getAuthenticatedId()
@@ -170,7 +170,7 @@ class WikiPlugin_AllPages extends WikiPlugin
         if ($args['debug']) {
             return HTML(
                 $pagelist,
-                HTML::p(fmt("Elapsed time: %s s", $timer->getStats()))
+                HTML::p(fmt('Elapsed time: %s s', $timer->getStats()))
             );
         } else {
             return $pagelist;
@@ -179,7 +179,7 @@ class WikiPlugin_AllPages extends WikiPlugin
 
     public function getmicrotime()
     {
-        list($usec, $sec) = explode(" ", microtime());
+        list($usec, $sec) = explode(' ', microtime());
         return (float) $usec + (float) $sec;
     }
 }

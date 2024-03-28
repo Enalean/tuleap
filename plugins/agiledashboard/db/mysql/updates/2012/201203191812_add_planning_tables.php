@@ -35,19 +35,19 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning (
                   id int(11) NOT NULL auto_increment,
                   name varchar(255) NOT NULL,
                   release_tracker_id int(11) NOT NULL,
                   KEY idx(id, release_tracker_id)
-                )";
+                )';
         $this->db->createTable('plugin_agiledashboard_planning', $sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning_backlog_tracker (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning_backlog_tracker (
                   planning_id int(11) NOT NULL,
                   tracker_id int(11) NOT NULL,
                   KEY idx(planning_id, tracker_id)
-                )";
+                )';
         $this->db->createTable('plugin_agiledashboard_planning_backlog_tracker', $sql);
     }
 

@@ -26,9 +26,9 @@ class SVN_TokenDao extends \Tuleap\DB\DataAccessObject
      */
     public function getSVNTokensForUser(int $user_id): array
     {
-        $sql = "SELECT id, user_id, token, generated_date, last_usage, last_ip, comment
+        $sql = 'SELECT id, user_id, token, generated_date, last_usage, last_ip, comment
                 FROM svn_token
-                WHERE user_id = ?";
+                WHERE user_id = ?';
 
         return $this->getDB()->run($sql, $user_id);
     }

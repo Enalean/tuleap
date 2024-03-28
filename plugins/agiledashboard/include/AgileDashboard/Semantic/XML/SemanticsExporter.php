@@ -58,15 +58,15 @@ final class SemanticsExporter
         }
 
         $semantic_node = $xml_semantics->addChild('semantic');
-        $semantic_node->addAttribute("type", AgileDashBoard_Semantic_InitialEffort::NAME);
+        $semantic_node->addAttribute('type', AgileDashBoard_Semantic_InitialEffort::NAME);
 
-        $semantic_node->addChild("shortname", AgileDashBoard_Semantic_InitialEffort::NAME);
-        $semantic_node->addChild("label", dgettext('tuleap-agiledashboard', 'Initial Effort'));
+        $semantic_node->addChild('shortname', AgileDashBoard_Semantic_InitialEffort::NAME);
+        $semantic_node->addChild('label', dgettext('tuleap-agiledashboard', 'Initial Effort'));
         $semantic_node->addChild(
-            "description",
+            'description',
             dgettext('tuleap-agiledashboard', 'Define the initial effort of an artifact.')
         );
-        $field_node = $semantic_node->addChild("field");
-        $field_node->addAttribute("REF", $story_points_field->getXMLId());
+        $field_node = $semantic_node->addChild('field');
+        $field_node->addAttribute('REF', $story_points_field->getXMLId());
     }
 }

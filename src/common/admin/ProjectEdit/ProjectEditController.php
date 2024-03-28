@@ -141,7 +141,7 @@ class ProjectEditController
         if ($this->hasStatusChanged($project, $form_status) && $project->getGroupId() !== Project::DEFAULT_TEMPLATE_PROJECT_ID) {
             $old_status_label = $this->getStatusLabel($project->getStatus());
             $new_status_label = $this->getStatusLabel($form_status);
-            $this->project_history_dao->groupAddHistory('status', $old_status_label . " :: " . $new_status_label, $project->group_id);
+            $this->project_history_dao->groupAddHistory('status', $old_status_label . ' :: ' . $new_status_label, $project->group_id);
 
             $this->event_manager->dispatch(new ProjectStatusUpdate($project, $form_status));
         }

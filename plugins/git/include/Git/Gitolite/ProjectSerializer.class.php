@@ -68,13 +68,13 @@ class Git_Gitolite_ProjectSerializer
      */
     public function dumpProjectRepoConf(Project $project)
     {
-        $this->logger->debug("Dumping project repo conf for: " . $project->getUnixName());
+        $this->logger->debug('Dumping project repo conf for: ' . $project->getUnixName());
 
         $project_config = '';
         foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
-            $this->logger->debug("Fetching Repo Configuration: " . $repository->getName() . "...");
+            $this->logger->debug('Fetching Repo Configuration: ' . $repository->getName() . '...');
             $project_config .= $this->fetchReposConfig($project, $repository);
-            $this->logger->debug("Fetching Repo Configuration: " . $repository->getName() . ": done");
+            $this->logger->debug('Fetching Repo Configuration: ' . $repository->getName() . ': done');
         }
 
         return $project_config;
@@ -82,12 +82,12 @@ class Git_Gitolite_ProjectSerializer
 
     public function dumpPartialProjectRepoConf(Project $project, array $repositories)
     {
-        $this->logger->debug("Dumping partial project repo conf for: " . $project->getUnixName());
+        $this->logger->debug('Dumping partial project repo conf for: ' . $project->getUnixName());
         $project_config = '';
         foreach ($repositories as $repository) {
-            $this->logger->debug("Fetching Repo Configuration: " . $repository->getName() . "...");
+            $this->logger->debug('Fetching Repo Configuration: ' . $repository->getName() . '...');
             $project_config .= $this->fetchReposConfig($project, $repository);
-            $this->logger->debug("Fetching Repo Configuration: " . $repository->getName() . ": done");
+            $this->logger->debug('Fetching Repo Configuration: ' . $repository->getName() . ': done');
         }
 
         return $project_config;
@@ -95,12 +95,12 @@ class Git_Gitolite_ProjectSerializer
 
     public function dumpPartialSuspendedProjectRepositoriesConfiguration(Project $project, array $repositories)
     {
-        $this->logger->debug("Dumping partial suspended project repo conf for: " . $project->getUnixName());
+        $this->logger->debug('Dumping partial suspended project repo conf for: ' . $project->getUnixName());
         $project_config = '';
         foreach ($repositories as $repository) {
-            $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . "...");
+            $this->logger->debug('Fetching disabled repo configuration: ' . $repository->getName() . '...');
             $project_config .= $this->fetchSuspendedRepositoryConfiguration($project, $repository);
-            $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . ": done");
+            $this->logger->debug('Fetching disabled repo configuration: ' . $repository->getName() . ': done');
         }
 
         return $project_config;
@@ -108,13 +108,13 @@ class Git_Gitolite_ProjectSerializer
 
     public function dumpSuspendedProjectRepositoriesConfiguration(Project $project)
     {
-        $this->logger->debug("Dumping suspended project repo conf for: " . $project->getUnixName());
+        $this->logger->debug('Dumping suspended project repo conf for: ' . $project->getUnixName());
 
         $project_config = '';
         foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
-            $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . "...");
+            $this->logger->debug('Fetching disabled repo configuration: ' . $repository->getName() . '...');
             $project_config .= $this->fetchSuspendedRepositoryConfiguration($project, $repository);
-            $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . ": done");
+            $this->logger->debug('Fetching disabled repo configuration: ' . $repository->getName() . ': done');
         }
 
         return $project_config;
@@ -171,10 +171,10 @@ class Git_Gitolite_ProjectSerializer
     private function fetchObjectSizeLimit(Project $project)
     {
         if ($this->bigObjectsAreAuthorizedForProject($project)) {
-            return "";
+            return '';
         }
 
-        return ' - VREF/TULEAP_MAX_NEWBIN_SIZE/' . self::OBJECT_SIZE_LIMIT . " = @all" . PHP_EOL;
+        return ' - VREF/TULEAP_MAX_NEWBIN_SIZE/' . self::OBJECT_SIZE_LIMIT . ' = @all' . PHP_EOL;
     }
 
     /**

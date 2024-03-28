@@ -47,18 +47,18 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'startAt'    => 0,
                     'values'     => [
                         [
-                            'key'  => "TO",
+                            'key'  => 'TO',
                             'name' => 'toto',
                         ],
                     ],
                 ],
-                ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1" => [
+                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=1' => [
                     'isLast'     => true,
                     'maxResults' => 2,
                     'startAt'    => 1,
                     'values'     => [
                         [
-                            'key'  => "TU",
+                            'key'  => 'TU',
                             'name' => 'tutu',
                         ],
                     ],
@@ -69,14 +69,14 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_collection = new JiraProjectCollection();
         $expected_collection->addProject(
             [
-                'id'    => "TO",
-                'label' => "toto",
+                'id'    => 'TO',
+                'label' => 'toto',
             ]
         );
         $expected_collection->addProject(
             [
-                'id'    => "TU",
-                'label' => "tutu",
+                'id'    => 'TU',
+                'label' => 'tutu',
             ]
         );
 
@@ -96,12 +96,12 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'startAt'    => 0,
                     'values'     => [
                         [
-                            'key'  => "TO",
+                            'key'  => 'TO',
                             'name' => 'toto',
                         ],
                     ],
                 ],
-                ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1" => null,
+                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=1' => null,
             ];
         };
 
@@ -121,12 +121,12 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'startAt'    => 0,
                     'values'     => [
                         [
-                            'key'  => "TO",
+                            'key'  => 'TO',
                             'dsdsdsds' => 'toto',
                         ],
                     ],
                 ],
-                ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1" => null,
+                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=1' => null,
             ];
         };
 

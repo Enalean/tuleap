@@ -215,7 +215,7 @@ class IndexPresenter
         $this->file_upload_max_size = (int) \ForgeConfig::get('sys_max_size_upload');
 
         $this->artifact_links_types     = json_encode($artifact_links_types, JSON_THROW_ON_ERROR);
-        $this->mercure_enabled          = \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY) === "1";
+        $this->mercure_enabled          = \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY) === '1';
         $this->order_by_definition_rank = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_ORDER_BY_TEST_DEF_RANK);
     }
 

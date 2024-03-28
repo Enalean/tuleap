@@ -84,8 +84,8 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user->shouldReceive('getRealName')->once()->andReturn('UserRealName');
 
         $this->path = Mockery::mock(Docman_Path::class);
-        $this->path->shouldReceive('get')->withArgs([$this->old_parent])->andReturn("/my/old/path");
-        $this->path->shouldReceive('get')->withArgs([$this->parent_folder])->andReturn("/my/new/path");
+        $this->path->shouldReceive('get')->withArgs([$this->old_parent])->andReturn('/my/old/path');
+        $this->path->shouldReceive('get')->withArgs([$this->parent_folder])->andReturn('/my/new/path');
 
         $this->link_provider = Mockery::mock(ILinkUrlProvider::class);
         $this->notification_manager->shouldReceive('getUrlProvider')->andReturn($this->link_provider);
@@ -104,12 +104,12 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
         $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
 
-        $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
+        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/100/';
         $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
         $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
 
-        $this->folder->shouldReceive('getTitle')->once()->andReturn("My title");
+        $this->folder->shouldReceive('getTitle')->once()->andReturn('My title');
 
         $message = $this->notification_manager->_getMessageForUser(
             $this->user,
@@ -141,9 +141,9 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
         $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
 
-        $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
+        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/100/';
         $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
         $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
 
         $message = $this->notification_manager->_getMessageForUser(
@@ -176,9 +176,9 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
         $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
 
-        $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
+        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/100/';
         $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
         $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
 
         $message = $this->notification_manager->_getMessageForUser(
@@ -211,12 +211,12 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
         $this->permission_manager->shouldReceive('userCanAccess')->andReturn(false);
 
-        $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
+        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/100/';
         $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
         $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
 
-        $this->folder->shouldReceive('getTitle')->once()->andReturn("My title");
+        $this->folder->shouldReceive('getTitle')->once()->andReturn('My title');
 
         $message = $this->notification_manager->_getMessageForUser(
             $this->user,

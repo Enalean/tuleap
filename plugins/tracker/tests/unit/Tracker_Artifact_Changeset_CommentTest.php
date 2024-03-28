@@ -46,7 +46,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
-        $user->shouldReceive('getLdapId')->andReturn("ldap_01");
+        $user->shouldReceive('getLdapId')->andReturn('ldap_01');
         $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $this->timestamp = '1433863107';
 
@@ -140,8 +140,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
 
     public function testItExportsToXMLWithPrivateUGroups(): void
     {
-        $ugroup_1 = Mockery::mock(ProjectUGroup::class, ['getNormalizedName' => "ugroup_1"]);
-        $ugroup_2 = Mockery::mock(ProjectUGroup::class, ['getNormalizedName' => "ugroup_2"]);
+        $ugroup_1 = Mockery::mock(ProjectUGroup::class, ['getNormalizedName' => 'ugroup_1']);
+        $ugroup_2 = Mockery::mock(ProjectUGroup::class, ['getNormalizedName' => 'ugroup_2']);
         $body     = '<b> My comment 01</b>';
 
         $comment = new Tracker_Artifact_Changeset_Comment(
@@ -180,8 +180,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
         $this->assertEquals($changeset_node->comment->body['format'], 'html');
         $this->assertTrue(isset($changeset_node->comment->private_ugroups));
         $this->assertCount(2, $changeset_node->comment->private_ugroups->ugroup);
-        $this->assertEquals("ugroup_1", (string) $changeset_node->comment->private_ugroups->ugroup[0]);
-        $this->assertEquals("ugroup_2", (string) $changeset_node->comment->private_ugroups->ugroup[1]);
+        $this->assertEquals('ugroup_1', (string) $changeset_node->comment->private_ugroups->ugroup[0]);
+        $this->assertEquals('ugroup_2', (string) $changeset_node->comment->private_ugroups->ugroup[1]);
     }
 
     public function testItExportsToXMLWithCrossReferencesEscaped(): void
@@ -256,14 +256,14 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
                 0,
                 101,
                 $this->timestamp,
-                "",
+                '',
                 'text',
                 0,
                 [],
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $this->assertEquals("", $comment->fetchMailFollowUp('text'));
+        $this->assertEquals('', $comment->fetchMailFollowUp('text'));
     }
 
     public function testItClearsComment(): void
@@ -277,7 +277,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
                 0,
                 101,
                 $this->timestamp,
-                " ",
+                ' ',
                 'html',
                 1234,
                 [],
@@ -286,7 +286,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
         $user    = $this->getAMockedUser();
         $comment->shouldReceive('getCurrentUser')->andReturn($user);
 
-        $this->assertStringContainsString("Comment has been cleared", $comment->fetchMailFollowUp());
+        $this->assertStringContainsString('Comment has been cleared', $comment->fetchMailFollowUp());
     }
 
     public function testItDisplayStandardComment(): void
@@ -315,8 +315,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
         $comment->shouldReceive('getPurifier')->andReturn($purifier);
 
         $follow_up = $comment->fetchMailFollowUp();
-        $this->assertStringNotContainsString("Comment has been cleared", $follow_up);
-        $this->assertStringNotContainsString("Updated comment", $follow_up);
+        $this->assertStringNotContainsString('Comment has been cleared', $follow_up);
+        $this->assertStringNotContainsString('Updated comment', $follow_up);
     }
 
     public function testItDisplayEditedComment(): void
@@ -344,7 +344,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
         $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn($body);
         $comment->shouldReceive('getPurifier')->andReturn($purifier);
 
-        $this->assertStringContainsString("Updated comment", $comment->fetchMailFollowUp());
+        $this->assertStringContainsString('Updated comment', $comment->fetchMailFollowUp());
     }
 
     private function getAMockedUser()

@@ -96,9 +96,9 @@ final class UploadedLinksRequestFormatterTest extends TestCase
             ['uploaded-link'],
             ['uploaded-link']
         )->willReturnOnConsecutiveCalls(
-            [""],
-            [""],
-            [""]
+            [''],
+            [''],
+            ['']
         );
         $request->method('validArray')->willReturn(true);
 

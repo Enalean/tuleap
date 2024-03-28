@@ -32,20 +32,20 @@ class WikiPlugin_IncludePage extends WikiPlugin
 {
     public function getName()
     {
-        return _("IncludePage");
+        return _('IncludePage');
     }
 
     public function getDescription()
     {
-        return _("Include text from another wiki page.");
+        return _('Include text from another wiki page.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.27 $"
+            '$Revision: 1.27 $'
         );
     }
 
@@ -84,7 +84,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
             $page = $page->name;
         }
         if (! $page) {
-            return $this->error(_("no page specified"));
+            return $this->error(_('no page specified'));
         }
 
         // A page can include itself once (this is needed, e.g.,  when editing
@@ -92,7 +92,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
         static $included_pages = [];
         if (in_array($page, $included_pages)) {
             return $this->error(sprintf(
-                _("recursive inclusion of page %s"),
+                _('recursive inclusion of page %s'),
                 $page
             ));
         }
@@ -102,7 +102,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
             $r = $p->getRevision($rev);
             if (! $r) {
                 return $this->error(sprintf(
-                    _("%s(%d): no such revision"),
+                    _('%s(%d): no such revision'),
                     $page,
                     $rev
                 ));
@@ -136,7 +136,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
         return HTML(
             HTML::p(
                 ['class' => 'transclusion-title'],
-                fmt("Included from %s", WikiLink($page))
+                fmt('Included from %s', WikiLink($page))
             ),
             HTML::div(
                 ['class' => 'transclusion'],
@@ -165,7 +165,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
         }
         if ($lines) {
             $c   = array_slice($c, 0, $lines);
-            $c[] = sprintf(_(" ... first %d lines"), $bytes);
+            $c[] = sprintf(_(' ... first %d lines'), $bytes);
         }
         if ($words) {
             $c = firstNWordsOfContent($words, $c);
@@ -174,7 +174,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
             $ct = implode("\n", $c); // one string
             if (strlen($ct) > $bytes) {
                 $ct = substr($c, 0, $bytes);
-                $c  = [$ct, sprintf(_(" ... first %d bytes"), $bytes)];
+                $c  = [$ct, sprintf(_(' ... first %d bytes'), $bytes)];
             }
         }
         $ct = implode("\n", $c); // one string

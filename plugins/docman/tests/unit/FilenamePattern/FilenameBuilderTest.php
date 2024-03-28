@@ -48,14 +48,14 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ItemStatusMapper($this->docman_settings_bo)
         );
 
-        $original_filename = "M2 CS.jpg";
+        $original_filename = 'M2 CS.jpg';
 
         $update_filename = $filename_builder->buildFilename(
             $original_filename,
             101,
             'From The Window To the Hood',
             100,
-            "",
+            '',
             15
         );
         self::assertSame($original_filename, $update_filename);
@@ -66,18 +66,18 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
 
         $filename_builder = new FilenameBuilder(
-            FilenamePatternRetrieverStub::buildWithPattern(""),
+            FilenamePatternRetrieverStub::buildWithPattern(''),
             new ItemStatusMapper($this->docman_settings_bo)
         );
 
-        $original_filename = "M2 CS.jpg";
+        $original_filename = 'M2 CS.jpg';
 
         $update_filename = $filename_builder->buildFilename(
             $original_filename,
             101,
             'From The Window To the Hood',
             100,
-            "",
+            '',
             15
         );
         self::assertSame($original_filename, $update_filename);
@@ -87,91 +87,91 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
 
-        $pattern          = "Brand-\${TITLE}";
+        $pattern          = 'Brand-${TITLE}';
         $filename_builder = new FilenameBuilder(
             FilenamePatternRetrieverStub::buildWithPattern($pattern),
             new ItemStatusMapper($this->docman_settings_bo)
         );
 
-        $original_filename = "M2 CS.jpg";
+        $original_filename = 'M2 CS.jpg';
 
         $update_filename = $filename_builder->buildFilename(
             $original_filename,
             111,
-            "Mercedes",
+            'Mercedes',
             100,
-            "",
+            '',
             15
         );
-        self::assertSame("Brand-Mercedes.jpg", $update_filename);
+        self::assertSame('Brand-Mercedes.jpg', $update_filename);
     }
 
     public function testItReturnsTheNewFilenameWithTheItemIdVariable(): void
     {
         $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
 
-        $pattern          = "Brand-Mercedes-rejected-Not a Mercredes wow-#\${ID}";
+        $pattern          = 'Brand-Mercedes-rejected-Not a Mercredes wow-#${ID}';
         $filename_builder = new FilenameBuilder(
             FilenamePatternRetrieverStub::buildWithPattern($pattern),
             new ItemStatusMapper($this->docman_settings_bo)
         );
 
-        $original_filename = "M2 CS.jpg";
+        $original_filename = 'M2 CS.jpg';
 
         $update_filename = $filename_builder->buildFilename(
             $original_filename,
             111,
-            "Mercedes",
+            'Mercedes',
             103,
-            "Not a Mercredes wow",
+            'Not a Mercredes wow',
             15
         );
-        self::assertSame("Brand-Mercedes-rejected-Not a Mercredes wow-#15.jpg", $update_filename);
+        self::assertSame('Brand-Mercedes-rejected-Not a Mercredes wow-#15.jpg', $update_filename);
     }
 
     public function testItReturnsTheNewFilenameUsingSomeVariable(): void
     {
-        $this->docman_settings_bo->expects(self::once())->method('getMetadataUsage')->willReturn("1");
+        $this->docman_settings_bo->expects(self::once())->method('getMetadataUsage')->willReturn('1');
 
-        $pattern          = "Brand-\${TITLE}-\${STATUS}-Not a Mercredes wow-#\${ID}";
+        $pattern          = 'Brand-${TITLE}-${STATUS}-Not a Mercredes wow-#${ID}';
         $filename_builder = new FilenameBuilder(
             FilenamePatternRetrieverStub::buildWithPattern($pattern),
             new ItemStatusMapper($this->docman_settings_bo)
         );
 
-        $original_filename = "M2 CS.jpg";
+        $original_filename = 'M2 CS.jpg';
 
         $update_filename = $filename_builder->buildFilename(
             $original_filename,
             111,
-            "BMW",
+            'BMW',
             103,
-            "Not a Mercredes wow",
+            'Not a Mercredes wow',
             15
         );
-        self::assertSame("Brand-BMW-rejected-Not a Mercredes wow-#15.jpg", $update_filename);
+        self::assertSame('Brand-BMW-rejected-Not a Mercredes wow-#15.jpg', $update_filename);
     }
 
     public function testItReturnsTheNewFilenameWithoutExtension(): void
     {
-        $this->docman_settings_bo->expects(self::once())->method('getMetadataUsage')->willReturn("1");
+        $this->docman_settings_bo->expects(self::once())->method('getMetadataUsage')->willReturn('1');
 
-        $pattern          = "Brand-\${TITLE}-\${STATUS}-Not a Mercredes wow-#\${ID}";
+        $pattern          = 'Brand-${TITLE}-${STATUS}-Not a Mercredes wow-#${ID}';
         $filename_builder = new FilenameBuilder(
             FilenamePatternRetrieverStub::buildWithPattern($pattern),
             new ItemStatusMapper($this->docman_settings_bo)
         );
 
-        $original_filename = "M2 CS";
+        $original_filename = 'M2 CS';
 
         $update_filename = $filename_builder->buildFilename(
             $original_filename,
             111,
-            "BMW",
+            'BMW',
             103,
-            "Not a Mercredes wow",
+            'Not a Mercredes wow',
             15
         );
-        self::assertSame("Brand-BMW-rejected-Not a Mercredes wow-#15", $update_filename);
+        self::assertSame('Brand-BMW-rejected-Not a Mercredes wow-#15', $update_filename);
     }
 }

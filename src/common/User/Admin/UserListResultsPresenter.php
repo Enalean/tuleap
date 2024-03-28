@@ -72,8 +72,8 @@ class UserListResultsPresenter
         $base_url       = '/admin/userlist.php';
         $default_params = [
             'user_name_search'     => $user_name_search,
-            'previous_sort_header' => $sort_params["sort_header"],
-            'current_sort_header'  => $sort_params["sort_header"],
+            'previous_sort_header' => $sort_params['sort_header'],
+            'current_sort_header'  => $sort_params['sort_header'],
             'sort_order'           => $sort_params['order'],
             'status_values'        => $user_status,
         ];
@@ -86,9 +86,9 @@ class UserListResultsPresenter
             $default_params['group_id'] = $group_id;
         }
 
-        $this->sortby_name_icon     = $sort_params["user_name_icon"];
-        $this->sortby_realname_icon = $sort_params["realname_icon"];
-        $this->sortby_status_icon   = $sort_params["status_icon"];
+        $this->sortby_name_icon     = $sort_params['user_name_icon'];
+        $this->sortby_realname_icon = $sort_params['realname_icon'];
+        $this->sortby_status_icon   = $sort_params['status_icon'];
         $this->sortby_name_url      = $base_url . '?' . http_build_query($this->getSortUrlParams('user_name', $default_params));
         $this->sortby_realname_url  = $base_url . '?' . http_build_query($this->getSortUrlParams('realname', $default_params));
         $this->sortby_status_url    = $base_url . '?' . http_build_query($this->getSortUrlParams('status', $default_params));

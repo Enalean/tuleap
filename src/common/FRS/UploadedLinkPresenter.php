@@ -40,7 +40,7 @@ class UploadedLinkPresenter
         $this->link_id        = $uploaded_link->getId();
         $this->owner          = $uploaded_link->getOwner()->getRealName();
         $this->name           = $uploaded_link->getName();
-        $this->release_time   = date("Y-m-d", $uploaded_link->getReleaseTime());
+        $this->release_time   = date('Y-m-d', $uploaded_link->getReleaseTime());
         $this->displayed_link = ($this->name) ? $this->name : $this->getDisplayedLink();
     }
 

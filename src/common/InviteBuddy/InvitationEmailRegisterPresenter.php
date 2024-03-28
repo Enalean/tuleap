@@ -64,7 +64,7 @@ class InvitationEmailRegisterPresenter
     ) {
         $this->register_url       = $register_url;
         $this->custom_message     = (string) $custom_message;
-        $this->has_custom_message = $custom_message && trim($custom_message) !== "";
+        $this->has_custom_message = $custom_message && trim($custom_message) !== '';
 
         $this->project_name = $project
             ? EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint()) . ' ' . $project->getPublicName()

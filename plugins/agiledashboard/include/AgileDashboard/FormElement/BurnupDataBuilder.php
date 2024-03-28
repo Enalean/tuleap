@@ -75,7 +75,7 @@ class BurnupDataBuilder
         $start->setTimestamp((int) $date_period->getStartDate());
         $start->setTime(0, 0, 0);
 
-        $this->logger->debug("Start date after updating timezone: " . $start->getTimestamp());
+        $this->logger->debug('Start date after updating timezone: ' . $start->getTimestamp());
 
         $date_period          = DatePeriodWithoutWeekEnd::buildFromDuration($start->getTimestamp(), $date_period->getDuration());
         $is_under_calculation = $this->cache_checker->isBurnupUnderCalculation($artifact, $date_period, $user);
@@ -91,7 +91,7 @@ class BurnupDataBuilder
             }
         }
 
-        $this->logger->info("End calculating burnup " . $artifact->getId());
+        $this->logger->info('End calculating burnup ' . $artifact->getId());
         date_default_timezone_set($user_timezone);
 
         return $burnup_data;

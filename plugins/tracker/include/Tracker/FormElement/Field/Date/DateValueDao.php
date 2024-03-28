@@ -36,7 +36,7 @@ class DateValueDao extends FieldValueDao
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         if ($value === false) {
-            $value = "NULL";
+            $value = 'NULL';
         } else {
             $value = $this->da->escapeInt($value);
         }
@@ -59,7 +59,7 @@ class DateValueDao extends FieldValueDao
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
                  VALUES
-                  ( " . implode(' , NULL ),' . "\n" . ' ( ', array_map(fn (int $value): string => $this->da->escapeInt($value), $changeset_value_ids)) . ", NULL)";
+                  ( " . implode(' , NULL ),' . "\n" . ' ( ', array_map(fn (int $value): string => $this->da->escapeInt($value), $changeset_value_ids)) . ', NULL)';
         return $this->update($sql);
     }
 
@@ -88,12 +88,12 @@ class DateValueDao extends FieldValueDao
         $halfDay = 60 * 60 * 12;
         $minDate = $this->da->escapeInt($date - $halfDay);
         $maxDate = $this->da->escapeInt($date + $halfDay);
-        $sql     = "SELECT t.id AS artifact_id FROM
+        $sql     = 'SELECT t.id AS artifact_id FROM
                      tracker_changeset_value_date d
                      JOIN tracker_changeset_value v on v.id = d.changeset_value_id
                      JOIN tracker_artifact t on t.last_changeset_id = v.changeset_id
-                     WHERE d.value BETWEEN " . $minDate . " AND " . $maxDate . "
-                       AND v.field_id = " . $fieldId;
+                     WHERE d.value BETWEEN ' . $minDate . ' AND ' . $maxDate . '
+                       AND v.field_id = ' . $fieldId;
         return $this->retrieve($sql);
     }
 }

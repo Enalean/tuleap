@@ -26,7 +26,7 @@ use Tuleap\Layout\JavascriptAsset;
 
 class CollectAssets implements Dispatchable
 {
-    public const NAME = "collectAssets";
+    public const NAME = 'collectAssets';
 
     /** @var JavascriptAsset[] */
     private $scripts = [];

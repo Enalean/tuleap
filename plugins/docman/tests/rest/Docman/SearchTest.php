@@ -61,7 +61,7 @@ final class SearchTest extends DocmanTestExecutionHelper
             $item_titles[] = $item['title'];
         }
 
-        $this->assertEqualsCanonicalizing(["foo.txt", "bar.txt"], $item_titles);
+        $this->assertEqualsCanonicalizing(['foo.txt', 'bar.txt'], $item_titles);
 
         $this->assertCount(2, $found_items);
 
@@ -82,7 +82,7 @@ final class SearchTest extends DocmanTestExecutionHelper
 
         $this->assertCount(1, $found_items);
 
-        $parents = ["Project Documentation", "Search"];
+        $parents = ['Project Documentation', 'Search'];
 
         $parent_titles = [];
         foreach ($found_items[0]['parents'] as $parent) {
@@ -123,7 +123,7 @@ final class SearchTest extends DocmanTestExecutionHelper
             $item_titles[] = $item['title'];
         }
 
-        $this->assertEqualsCanonicalizing(["bar.txt", "foo.txt"], $item_titles);
+        $this->assertEqualsCanonicalizing(['bar.txt', 'foo.txt'], $item_titles);
 
         $this->assertCount(2, $found_items);
     }

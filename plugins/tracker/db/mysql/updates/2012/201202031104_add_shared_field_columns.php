@@ -46,13 +46,13 @@ EOT;
 
     private function updateFieldTable()
     {
-        $sql = "ALTER TABLE tracker_field
-                ADD COLUMN original_field_id INT( 11 ) UNSIGNED NOT NULL AFTER notifications";
+        $sql = 'ALTER TABLE tracker_field
+                ADD COLUMN original_field_id INT( 11 ) UNSIGNED NOT NULL AFTER notifications';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column original_field_id to tracker_field table: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
-        $sql = "UPDATE tracker_field set original_field_id = id";
+        $sql = 'UPDATE tracker_field set original_field_id = id';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while initializing original_field_id with some data: ' . implode(', ', $this->db->dbh->errorInfo()));
@@ -61,13 +61,13 @@ EOT;
 
     private function updateFieldListBindStaticValueTable()
     {
-        $sql = "ALTER TABLE tracker_field_list_bind_static_value
-                ADD COLUMN original_value_id INT(11) NOT NULL AFTER is_hidden";
+        $sql = 'ALTER TABLE tracker_field_list_bind_static_value
+                ADD COLUMN original_value_id INT(11) NOT NULL AFTER is_hidden';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column original_value_id to tracker_field_list_bind_static_value table: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
-        $sql = "UPDATE tracker_field_list_bind_static_value set original_value_id = id";
+        $sql = 'UPDATE tracker_field_list_bind_static_value set original_value_id = id';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while initializing original_value_id with some data: ' . implode(', ', $this->db->dbh->errorInfo()));

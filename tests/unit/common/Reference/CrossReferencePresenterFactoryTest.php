@@ -46,7 +46,7 @@ final class CrossReferencePresenterFactoryTest extends TestCase
     public function testGetTargetsOfEntity(): void
     {
         $this->dao->method('searchTargetsOfEntity')
-            ->with("PageName", "wiki", 102)
+            ->with('PageName', 'wiki', 102)
             ->willReturn(
                 [
                     [
@@ -74,7 +74,7 @@ final class CrossReferencePresenterFactoryTest extends TestCase
                 ]
             );
 
-        $presenters = $this->factory->getTargetsOfEntity("PageName", "wiki", 102);
+        $presenters = $this->factory->getTargetsOfEntity('PageName', 'wiki', 102);
 
         self::assertEquals(1, $presenters[0]->id);
         self::assertEquals('https://example.com/goto?key=art&val=123&group_id=103', $presenters[0]->url);
@@ -96,7 +96,7 @@ final class CrossReferencePresenterFactoryTest extends TestCase
     public function testGetSourcesOfEntity(): void
     {
         $this->dao->method('searchSourcesOfEntity')
-            ->with("PageName", "wiki", 102)
+            ->with('PageName', 'wiki', 102)
             ->willReturn(
                 [
                     [
@@ -124,7 +124,7 @@ final class CrossReferencePresenterFactoryTest extends TestCase
                 ]
             );
 
-        $presenters = $this->factory->getSourcesOfEntity("PageName", "wiki", 102);
+        $presenters = $this->factory->getSourcesOfEntity('PageName', 'wiki', 102);
 
         self::assertEquals(1, $presenters[0]->id);
         self::assertEquals('https://example.com/goto?key=art&val=123&group_id=103', $presenters[0]->url);

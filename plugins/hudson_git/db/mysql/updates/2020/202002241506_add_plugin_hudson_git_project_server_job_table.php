@@ -24,7 +24,7 @@ class b202002241506_add_plugin_hudson_git_project_server_job_table extends Forge
 {
     public function description()
     {
-        return "Add plugin_hudson_git_project_server_job table";
+        return 'Add plugin_hudson_git_project_server_job table';
     }
 
     public function preUp()
@@ -34,7 +34,7 @@ class b202002241506_add_plugin_hudson_git_project_server_job_table extends Forge
 
     public function up()
     {
-        $sql = "
+        $sql = '
             CREATE TABLE plugin_hudson_git_project_server_job (
                id int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                project_server_id int(11) UNSIGNED NOT NULL,
@@ -42,7 +42,7 @@ class b202002241506_add_plugin_hudson_git_project_server_job_table extends Forge
                push_date int(11) UNSIGNED NOT NULL,
                job_url text NOT NULL
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_hudson_git_project_server_job', $sql);
     }

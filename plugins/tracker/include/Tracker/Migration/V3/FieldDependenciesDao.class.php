@@ -105,8 +105,8 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject
     protected function insertNewRules($old_rules, $tv5_id)
     {
         foreach ($old_rules as $old_rule) {
-            $tracker_rule_insert = "INSERT INTO tracker_rule(tracker_id, rule_type)
-                    VALUES (" . $this->da->escapeInt($tv5_id) . ", " . $this->da->escapeInt($old_rule['rule_type']) . ")";
+            $tracker_rule_insert = 'INSERT INTO tracker_rule(tracker_id, rule_type)
+                    VALUES (' . $this->da->escapeInt($tv5_id) . ', ' . $this->da->escapeInt($old_rule['rule_type']) . ')';
 
             $tracker_rule_id = $this->da->escapeInt($this->updateAndGetLastId($tracker_rule_insert));
 
@@ -115,11 +115,11 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject
                     (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
                 VALUES (
                     $tracker_rule_id," .
-                    $this->da->escapeInt($old_rule['my_source_field_id']) . "," .
-                    $this->da->escapeInt($old_rule['my_source_value_id']) . "," .
-                    $this->da->escapeInt($old_rule['my_target_field_id']) . "," .
+                    $this->da->escapeInt($old_rule['my_source_field_id']) . ',' .
+                    $this->da->escapeInt($old_rule['my_source_value_id']) . ',' .
+                    $this->da->escapeInt($old_rule['my_target_field_id']) . ',' .
                     $this->da->escapeInt($old_rule['my_target_value_id']) .
-                ");";
+                ');';
             $this->update($tracker_rule_list_insert);
         }
     }

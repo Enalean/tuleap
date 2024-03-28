@@ -53,7 +53,7 @@ final class DocmanDatabaseInitialization extends \DatabaseInitialization
 
     private function defineAFileNamePattern(\Project $project): void
     {
-        if ($project->getUnixName() !== "docmanproject") {
+        if ($project->getUnixName() !== 'docmanproject') {
             return;
         }
 

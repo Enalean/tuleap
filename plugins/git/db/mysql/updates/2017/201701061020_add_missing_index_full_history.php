@@ -22,7 +22,7 @@ class b201701061020_add_missing_index_full_history extends \Tuleap\ForgeUpgrade\
 {
     public function description()
     {
-        return "Add missing index in plugin_git_full_history";
+        return 'Add missing index in plugin_git_full_history';
     }
 
     public function preUp()
@@ -32,9 +32,9 @@ class b201701061020_add_missing_index_full_history extends \Tuleap\ForgeUpgrade\
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git_full_history
+        $sql = 'ALTER TABLE plugin_git_full_history
                 DROP INDEX time_idx,
-                ADD INDEX time_idx (time, repository_id)";
+                ADD INDEX time_idx (time, repository_id)';
 
         $this->execDB($sql, 'An error occured while adding index time_idx');
     }

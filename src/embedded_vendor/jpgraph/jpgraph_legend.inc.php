@@ -43,8 +43,8 @@ class Legend
     private $ypos         = 0.15;
     private $xabspos      = -1;
     private $yabspos      = -1;
-    private $halign       = "right";
-    private $valign       = "top";
+    private $halign       = 'right';
+    private $valign       = 'top';
     private $font_color   = 'black';
     private $hide         = false;
     private $layout_n     = 1;
@@ -518,10 +518,10 @@ class Legend
                 $ye     = $y1 - $rowheight[$row] + 1;
                 $coords = "$xs,$ys,$xe,$y1,$xe,$ye,$xs,$ye";
                 if (! empty($p[4])) {
-                    $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . htmlentities($p[4]) . "\"";
+                    $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . htmlentities($p[4]) . '"';
 
                     if (! empty($p[6])) {
-                        $this->csimareas .= " target=\"" . $p[6] . "\"";
+                        $this->csimareas .= ' target="' . $p[6] . '"';
                     }
 
                     if (! empty($p[5])) {

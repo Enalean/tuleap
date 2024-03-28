@@ -22,7 +22,7 @@ class b201809171115_add_inline_comment_position_column extends ForgeUpgrade_Buck
 {
     public function description()
     {
-        return "Add position column to inline comments";
+        return 'Add position column to inline comments';
     }
 
     public function preUp()

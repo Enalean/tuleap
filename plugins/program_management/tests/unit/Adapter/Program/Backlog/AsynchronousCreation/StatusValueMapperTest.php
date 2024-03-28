@@ -214,7 +214,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field->method('getBind')->willReturn($static_bind);
         $status_field->method('getId')->willReturn(1984);
         $status_field->method('getTrackerId')->willReturn(54);
-        $status_field->method('getLabel')->willReturn("Status");
+        $status_field->method('getLabel')->willReturn('Status');
 
         $this->form_element_factory->method('getFieldById')->with(1984)->willReturn($status_field);
 
@@ -229,7 +229,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field = $this->createStub(\Tracker_FormElement_Field_List::class);
         $status_field->method('getBind')->willReturn($static_bind);
         $status_field->method('getId')->willReturn(101);
-        $status_field->method('getLabel')->willReturn("Status");
+        $status_field->method('getLabel')->willReturn('Status');
 
         $this->form_element_factory->method('getFieldById')->with(101)->willReturn($status_field);
 

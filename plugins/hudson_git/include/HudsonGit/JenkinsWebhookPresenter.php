@@ -63,7 +63,7 @@ final class JenkinsWebhookPresenter extends GenericWebhookPresenter
             $job_list             = $log->getJobUrlList();
             if (count($job_list) > 0) {
                 $purified_information .= '<div class="hook-log-triggered-jobs">';
-                $purified_information .= '<h4>' . dgettext("tuleap-hudson_git", "Git plugin triggered jobs:") . '</h4>';
+                $purified_information .= '<h4>' . dgettext('tuleap-hudson_git', 'Git plugin triggered jobs:') . '</h4>';
                 foreach ($job_list as $triggered_job_url) {
                     $sanitized_job_url = $this->uri_sanitizer->sanitizeForHTMLAttribute($triggered_job_url);
                     if ($sanitized_job_url !== '' && $triggered_job_url !== '') {
@@ -77,7 +77,7 @@ final class JenkinsWebhookPresenter extends GenericWebhookPresenter
 
             if ($log->getStatusCode() !== null) {
                 $purified_information .= '<div class="hook-log-branch-source-status">';
-                $purified_information .= '<h4>' . dgettext("tuleap-hudson_git", "Branch source plugin:") . '</h4>';
+                $purified_information .= '<h4>' . dgettext('tuleap-hudson_git', 'Branch source plugin:') . '</h4>';
                 $purified_information .= $this->html_purifier->purify((string) $log->getStatusCode());
                 $purified_information .= '</div>';
             }

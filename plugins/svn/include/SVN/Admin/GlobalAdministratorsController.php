@@ -62,7 +62,7 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
 
     public static function getURL(Project $project): string
     {
-        return SVN_BASE_URL . "/" . urlencode((string) $project->getUnixNameMixedCase()) . "/admin";
+        return SVN_BASE_URL . '/' . urlencode((string) $project->getUnixNameMixedCase()) . '/admin';
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -70,7 +70,7 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
         $project = $this->getProject($variables);
         $service = $project->getService(\SvnPlugin::SERVICE_SHORTNAME);
         if (! ($service instanceof ServiceSvn)) {
-            throw new NotFoundException(dgettext("tuleap-svn", "Unable to find SVN service"));
+            throw new NotFoundException(dgettext('tuleap-svn', 'Unable to find SVN service'));
         }
 
         if (! $this->permissions_manager->isAdmin($project, $request->getCurrentUser())) {
@@ -96,13 +96,13 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $project || $project->isError()) {
-            throw new NotFoundException(dgettext("tuleap-svn", "Project not found."));
+            throw new NotFoundException(dgettext('tuleap-svn', 'Project not found.'));
         }
 
         if (! $project->usesService(\SvnPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(
                 sprintf(
-                    dgettext("tuleap-svn", "SVN service is not activated in project %s"),
+                    dgettext('tuleap-svn', 'SVN service is not activated in project %s'),
                     $project->getPublicName()
                 )
             );

@@ -50,7 +50,7 @@ class ChangesetFromXmlDisplayer
         $changeset_import_data = $this->dao->searchChangeset($changeset_id);
 
         if (! $changeset_import_data) {
-            return "";
+            return '';
         }
 
         $changeset_representation = new ChangesetFromXmlDataRepresentation(
@@ -60,7 +60,7 @@ class ChangesetFromXmlDisplayer
 
         $user = $this->user_manager->getUserById($changeset_representation->getUserId());
         if (! $user) {
-            return "";
+            return '';
         }
 
         return $this->renderer->renderToString(

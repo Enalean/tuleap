@@ -51,11 +51,11 @@ final class RetrieveIntegrationDaoStub implements RetrieveIntegrationDao
         $row                           = [];
         $row['id']                     = 1;
         $row['gitlab_repository_id']   = 10;
-        $row['name']                   = "Hearts";
-        $row['description']            = "None";
-        $row['gitlab_repository_url']  = "https://gitlab.example.com/hearts";
-        $row['last_push_date']         = (new DateTimeImmutable("@10"))->getTimestamp();
-        $row["project_id"]             = 101;
+        $row['name']                   = 'Hearts';
+        $row['description']            = 'None';
+        $row['gitlab_repository_url']  = 'https://gitlab.example.com/hearts';
+        $row['last_push_date']         = (new DateTimeImmutable('@10'))->getTimestamp();
+        $row['project_id']             = 101;
         $row['allow_artifact_closure'] = false;
 
         return new self($row);

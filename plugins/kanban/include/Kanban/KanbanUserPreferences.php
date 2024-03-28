@@ -29,8 +29,8 @@ final class KanbanUserPreferences
     public const COLLAPSE_BACKLOG_PREFERENCE_PREFIX = 'kanban_collapse_backlog_';
     public const COLLAPSE_ARCHIVE_PREFERENCE_PREFIX = 'kanban_collapse_archive_';
 
-    public const EXPAND   = "0";
-    public const COLLAPSE = "1";
+    public const EXPAND   = '0';
+    public const COLLAPSE = '1';
 
     public function isColumnOpen(Kanban $kanban, int $column_id, PFUser $user): bool
     {

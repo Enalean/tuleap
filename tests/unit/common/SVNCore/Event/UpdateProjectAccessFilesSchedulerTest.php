@@ -48,8 +48,8 @@ final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\T
     public function testAnUpdateCanBeScheduled(): void
     {
         $this->system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturnMap([
-            [SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, "102", false],
-            [SystemEvent::TYPE_UGROUP_MODIFY, "102", false],
+            [SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, '102', false],
+            [SystemEvent::TYPE_UGROUP_MODIFY, '102', false],
         ]);
 
         $this->system_event_manager->expects(self::once())->method('createEvent');
@@ -62,8 +62,8 @@ final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\T
     public function testAnUpdateIsNotScheduledWhenThereIsAlreadyOneWaitingToBeExecuted(): void
     {
         $this->system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturnMap([
-            [SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, "103", true],
-            [SystemEvent::TYPE_UGROUP_MODIFY, "103", false],
+            [SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, '103', true],
+            [SystemEvent::TYPE_UGROUP_MODIFY, '103', false],
         ]);
 
         $this->system_event_manager->expects(self::never())->method('createEvent');
@@ -76,8 +76,8 @@ final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\T
     public function testNoUpdateScheduledWhenThereUGroupModifyAlreadyScheduledBecauseItWillAlsoQueueUpdateLaterOn(): void
     {
         $this->system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturnMap([
-            [SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, "103", false],
-            [SystemEvent::TYPE_UGROUP_MODIFY, "103", true],
+            [SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, '103', false],
+            [SystemEvent::TYPE_UGROUP_MODIFY, '103', true],
         ]);
 
         $this->system_event_manager->expects(self::never())->method('createEvent');

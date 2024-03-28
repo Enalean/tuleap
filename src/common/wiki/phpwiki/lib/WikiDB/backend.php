@@ -71,7 +71,7 @@ class WikiDB_backend
      */
     public function get_pagedata($pagename)
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     /**
@@ -99,7 +99,7 @@ class WikiDB_backend
      */
     public function update_pagedata($pagename, $newdata)
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     /**
@@ -111,7 +111,7 @@ class WikiDB_backend
      */
     public function get_latest_version($pagename)
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     /**
@@ -124,7 +124,7 @@ class WikiDB_backend
      */
     public function get_previous_version($pagename, $version)
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     /**
@@ -154,7 +154,7 @@ class WikiDB_backend
      */
     public function get_versiondata($pagename, $version, $want_content = false)
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     /**
@@ -196,7 +196,7 @@ class WikiDB_backend
      */
     public function purge_page($pagename)
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     /**
@@ -213,7 +213,7 @@ class WikiDB_backend
      */
     public function delete_versiondata($pagename, $version)
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     /**
@@ -230,7 +230,7 @@ class WikiDB_backend
      */
     public function set_versiondata($pagename, $version, $data)
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     /**
@@ -271,7 +271,7 @@ class WikiDB_backend
      */
     public function set_links($pagename, $links)
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     /**
@@ -292,7 +292,7 @@ class WikiDB_backend
         $exclude = false,
     ) {
         //FIXME: implement simple (but slow) link finder.
-        die("FIXME get_links");
+        die('FIXME get_links');
     }
 
     /**
@@ -328,7 +328,7 @@ class WikiDB_backend
      */
     public function get_all_pages($include_defaulted, $orderby = false, $limit = false, $exclude = false)
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     /**
@@ -551,7 +551,7 @@ class WikiDB_backend
                     $result[] = $this->sortby($col, $action);
                 }
             }
-            return join(",", $result);
+            return join(',', $result);
         }
         if (substr($column, 0, 1) == '+') {
             $order  = '+';
@@ -641,7 +641,7 @@ class WikiDB_backend_iterator
      */
     public function next()
     {
-        trigger_error("virtual", E_USER_ERROR);
+        trigger_error('virtual', E_USER_ERROR);
     }
 
     public function count()
@@ -672,22 +672,22 @@ class WikiDB_backend_search
 
     public function _quote($word)
     {
-        return preg_quote($word, "/");
+        return preg_quote($word, '/');
     }
     //TODO: use word anchors
     public function EXACT($word)
     {
-        return "^" . $this->_quote($word) . "$";
+        return '^' . $this->_quote($word) . '$';
     }
 
     public function STARTS_WITH($word)
     {
-        return "^" . $this->_quote($word);
+        return '^' . $this->_quote($word);
     }
 
     public function ENDS_WITH($word)
     {
-        return $this->_quote($word) . "$";
+        return $this->_quote($word) . '$';
     }
 
     public function WORD($word)
@@ -704,7 +704,7 @@ class WikiDB_backend_search
     {
         $method = $node->op;
         $word   = $this->$method($node->word);
-        return "preg_match(\"/\".$word.\"/\"" . ($this->_case_exact ? "i" : "") . ")";
+        return "preg_match(\"/\".$word.\"/\"" . ($this->_case_exact ? 'i' : '') . ')';
     }
     /* Eliminate stoplist words.
        Keep a list of Stoplisted words to inform the poor user. */
@@ -714,7 +714,7 @@ class WikiDB_backend_search
         if ($node->op != 'WORD' and $node->op != 'EXACT') {
             return false;
         }
-        if (preg_match("/^" . $this->_stoplist . "$/i", $node->word)) {
+        if (preg_match('/^' . $this->_stoplist . '$/i', $node->word)) {
             array_push($this->_stoplisted, $node->word);
             return true;
         }
@@ -737,7 +737,7 @@ class WikiDB_backend_search_sql extends WikiDB_backend_search
         // word already quoted by TextSearchQuery_node_word::_sql_quote()
         $word = $node->sql();
         if ($word == '%') { // ALL shortcut
-            return "1=1";
+            return '1=1';
         } else {
             return ($this->_case_exact
                     ? "pagename LIKE '$word'"
@@ -751,7 +751,7 @@ class WikiDB_backend_search_sql extends WikiDB_backend_search
         $word = '%' . $node->_sql_quote($node->word) . '%';
         // eliminate stoplist words
         if ($this->isStoplisted($node)) {
-            return "1=1";  // and (pagename or 1) => and 1
+            return '1=1';  // and (pagename or 1) => and 1
         } else {
             return $this->_pagename_match_clause($node)
                 // probably convert this MATCH AGAINST or SUBSTR/POSITION without wildcards

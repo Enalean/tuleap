@@ -30,18 +30,18 @@ final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \Tuleap\Test\P
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), []);
         $this->assertEquals(
             [
-                "targets" => [],
-                "conditions" => [
+                'targets' => [],
+                'conditions' => [
                     [
-                        "name" => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
-                        "operator" => "or",
+                        'name' => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
+                        'operator' => 'or',
                     ],
                     [
-                        "name" => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
-                        "operator" => "and",
+                        'name' => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
+                        'operator' => 'and',
                     ],
                 ],
-                "triggers" => [],
+                'triggers' => [],
             ],
             $rules_builder_data->fetchFormattedForJson()
         );

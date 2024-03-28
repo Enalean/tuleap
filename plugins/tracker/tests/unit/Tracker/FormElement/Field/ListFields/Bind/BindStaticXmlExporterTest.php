@@ -54,14 +54,14 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->exporter      = new BindStaticXmlExporter(new \XML_SimpleXMLCDATAFactory());
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn("None");
+        $GLOBALS['Language']->shouldReceive('getText')->andReturn('None');
     }
 
     public function testItExportBindWithoutNoneValue(): void
     {
         $values     = [
-            new Tracker_FormElement_Field_List_Bind_StaticValue(1, "Value A", "description", 1, false),
-            new Tracker_FormElement_Field_List_Bind_StaticValue(2, "Value B", "description", 1, true),
+            new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'Value A', 'description', 1, false),
+            new Tracker_FormElement_Field_List_Bind_StaticValue(2, 'Value B', 'description', 1, true),
         ];
         $decorators = [
             new Tracker_FormElement_Field_List_BindDecorator(123, 1, null, null, null, 'inca-silver'),
@@ -75,26 +75,26 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNotNull($items_node);
 
         $value_A = $items_node->item[0];
-        $this->assertLabelAttributeIsSame("Value A", $value_A);
+        $this->assertLabelAttributeIsSame('Value A', $value_A);
 
 
         $value_B = $items_node->item[1];
-        $this->assertLabelAttributeIsSame("Value B", $value_B);
+        $this->assertLabelAttributeIsSame('Value B', $value_B);
 
         $decorators_node = $this->xml->decorators->decorator;
         $this->assertNotNull($decorators_node);
 
         $decorator_A = $decorators_node[0];
-        $this->assertTlpColor("V1", "inca-silver", $decorator_A);
+        $this->assertTlpColor('V1', 'inca-silver', $decorator_A);
 
         $decorator_B = $decorators_node[1];
-        $this->assertLegacyColor("V2", "123", "456", "789", $decorator_B);
+        $this->assertLegacyColor('V2', '123', '456', '789', $decorator_B);
     }
 
     public function testItExportBindWithTLPNoneValue(): void
     {
         $values     = [
-            new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, "None", "description", 1, false),
+            new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, 'None', 'description', 1, false),
         ];
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, null, null, null, 'inca-silver')];
 
@@ -105,21 +105,21 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNotNull($items_node);
 
         $value_A = $items_node->item[0];
-        $this->assertLabelAttributeIsSame("None", $value_A);
+        $this->assertLabelAttributeIsSame('None', $value_A);
 
         $decorators_node = $this->xml->decorators->decorator;
         $this->assertNotNull($decorators_node);
 
         $decorator_none = $decorators_node[0];
-        $this->assertTlpColor("V100", "inca-silver", $decorator_none);
+        $this->assertTlpColor('V100', 'inca-silver', $decorator_none);
     }
 
     public function testItExportBindWithLegacyNoneValue(): void
     {
         $values     = [
-            new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, "None", "description", 1, false),
+            new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, 'None', 'description', 1, false),
         ];
-        $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, "123", "456", "789", null)];
+        $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, '123', '456', '789', null)];
 
         $xml_mapping = [];
         $this->exporter->exportToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
@@ -128,13 +128,13 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNotNull($items_node);
 
         $value_A = $items_node->item[0];
-        $this->assertLabelAttributeIsSame("None", $value_A);
+        $this->assertLabelAttributeIsSame('None', $value_A);
 
         $decorators_node = $this->xml->decorators->decorator;
         $this->assertNotNull($decorators_node);
 
         $decorator_none = $decorators_node[0];
-        $this->assertLegacyColor("V100", "123", "456", "789", $decorator_none);
+        $this->assertLegacyColor('V100', '123', '456', '789', $decorator_none);
     }
 
     private function assertLabelAttributeIsSame(string $expected_value, \SimpleXMLElement $value_node): void

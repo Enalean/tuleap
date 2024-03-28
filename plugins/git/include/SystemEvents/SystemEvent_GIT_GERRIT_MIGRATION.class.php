@@ -22,7 +22,7 @@ use Tuleap\Notification\Notification;
 
 class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NAME = "GIT_GERRIT_MIGRATION";
+    public const NAME = 'GIT_GERRIT_MIGRATION';
 
     /** @var GitDao */
     private $dao;
@@ -72,13 +72,13 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent // phpcs:ignore PSR1.
             $this->done("Created project $gerrit_project on " . $server->getBaseUrl());
             return true;
         } catch (Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException $e) {
-            $this->logError($repository, "gerrit: ", "Gerrit failure: ", $e);
+            $this->logError($repository, 'gerrit: ', 'Gerrit failure: ', $e);
         } catch (Git_Driver_Gerrit_Exception $e) {
-            $this->logError($repository, "gerrit: ", "Gerrit failure: ", $e);
+            $this->logError($repository, 'gerrit: ', 'Gerrit failure: ', $e);
         } catch (Git_Command_Exception $e) {
-            $this->logError($repository, "gerrit: ", "Gerrit failure: ", $e);
+            $this->logError($repository, 'gerrit: ', 'Gerrit failure: ', $e);
         } catch (Exception $e) {
-            $this->logError($repository, "", "An error occured while processing event: ", $e);
+            $this->logError($repository, '', 'An error occured while processing event: ', $e);
         } finally {
             $this->project_creator->removeTemporaryDirectory();
         }
@@ -170,7 +170,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent // phpcs:ignore PSR1.
                 $server = $this->server_factory->getServerById($remote_server_id);
                 $txt    = $server->getBaseUrl();
             } catch (Git_RemoteServer_NotFoundException $exception) {
-                $txt .= " GERRIT SERVER DELETED";
+                $txt .= ' GERRIT SERVER DELETED';
             }
         }
         return $txt;

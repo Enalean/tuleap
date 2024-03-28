@@ -43,7 +43,7 @@ use XML_SimpleXMLCDATAFactory;
 
 class GitXmlExporter
 {
-    public const EXPORT_FOLDER = "export";
+    public const EXPORT_FOLDER = 'export';
 
     public function __construct(
         private readonly Project $project,
@@ -63,7 +63,7 @@ class GitXmlExporter
 
     public function exportToXml(SimpleXMLElement $xml_content, ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
     {
-        $root_node = $xml_content->addChild("git");
+        $root_node = $xml_content->addChild('git');
         $this->exportGitAdministrators($root_node);
         $this->exportExternalGitAdministrationContent($root_node);
 
@@ -73,12 +73,12 @@ class GitXmlExporter
     private function exportGitAdministrators(SimpleXMLElement $xml_content)
     {
         $this->logger->info('Export git administrators');
-        $root_node     = $xml_content->addChild("ugroups-admin");
+        $root_node     = $xml_content->addChild('ugroups-admin');
         $admin_ugroups = $this->permission_manager->getCurrentGitAdminUgroups($this->project->getId());
 
         foreach ($admin_ugroups as $ugroup) {
             $cdata = new XML_SimpleXMLCDATAFactory();
-            $cdata->insert($root_node, "ugroup", $this->getLabelForUgroup($ugroup));
+            $cdata->insert($root_node, 'ugroup', $this->getLabelForUgroup($ugroup));
         }
     }
 
@@ -125,12 +125,12 @@ class GitXmlExporter
                 continue;
             }
 
-            $root_node = $xml_content->addChild("repository");
-            $root_node->addAttribute("name", $repository->getName());
-            $root_node->addAttribute("description", $repository->getDescription());
+            $root_node = $xml_content->addChild('repository');
+            $root_node->addAttribute('name', $repository->getName());
+            $root_node->addAttribute('description', $repository->getDescription());
             $root_node->addAttribute(
                 'allow_artifact_closure',
-                $this->closure_verifier->isArtifactClosureAllowed((int) $repository->getId()) ? "1" : "0",
+                $this->closure_verifier->isArtifactClosureAllowed((int) $repository->getId()) ? '1' : '0',
             );
 
             $this->retrieve_repository_default_branch->getRepositoryDefaultBranch($repository)
@@ -147,14 +147,14 @@ class GitXmlExporter
 
             $row = $this->git_log_dao->getLastPushForRepository($repository->getId());
             if (! empty($row) && $row['user_id'] !== 0) {
-                $last_push_node = $root_node->addChild("last-push-date");
+                $last_push_node = $root_node->addChild('last-push-date');
                 $user           = $this->user_manager->getUserById($row['user_id']);
                 $this->user_exporter->exportUser($user, $last_push_node, 'user');
-                $last_push_node->addAttribute("push_date", $row["push_date"]);
-                $last_push_node->addAttribute("commits_number", $row["commits_number"]);
-                $last_push_node->addAttribute("refname", $row["refname"]);
-                $last_push_node->addAttribute("operation_type", $row["operation_type"]);
-                $last_push_node->addAttribute("refname_type", $row["refname_type"]);
+                $last_push_node->addAttribute('push_date', $row['push_date']);
+                $last_push_node->addAttribute('commits_number', $row['commits_number']);
+                $last_push_node->addAttribute('refname', $row['refname']);
+                $last_push_node->addAttribute('operation_type', $row['operation_type']);
+                $last_push_node->addAttribute('refname_type', $row['refname_type']);
             }
 
             $bundle_path = '';
@@ -165,7 +165,7 @@ class GitXmlExporter
             }
 
             $root_node->addAttribute(
-                "bundle-path",
+                'bundle-path',
                 $bundle_path
             );
 
@@ -191,18 +191,18 @@ class GitXmlExporter
         $this->logger->info('Export repository permissions');
         $default_permissions = $this->permission_manager->getRepositoryGlobalPermissions($repository);
 
-        $read_node = $xml_content->addChild("read");
+        $read_node = $xml_content->addChild('read');
         if (isset($default_permissions[Git::PERM_READ])) {
             $this->exportPermission($read_node, $default_permissions[Git::PERM_READ]);
         }
 
         if (isset($default_permissions[Git::PERM_WRITE])) {
-            $write_node = $xml_content->addChild("write");
+            $write_node = $xml_content->addChild('write');
             $this->exportPermission($write_node, $default_permissions[Git::PERM_WRITE]);
         }
 
         if (isset($default_permissions[Git::PERM_WPLUS])) {
-            $wplus_node = $xml_content->addChild("wplus");
+            $wplus_node = $xml_content->addChild('wplus');
             $this->exportPermission($wplus_node, $default_permissions[Git::PERM_WPLUS]);
         }
     }
@@ -211,7 +211,7 @@ class GitXmlExporter
     {
         $cdata = new XML_SimpleXMLCDATAFactory();
         foreach ($permissions as $permission) {
-            $cdata->insert($xml_content, "ugroup", $this->getLabelForUgroup($permission));
+            $cdata->insert($xml_content, 'ugroup', $this->getLabelForUgroup($permission));
         }
     }
 }

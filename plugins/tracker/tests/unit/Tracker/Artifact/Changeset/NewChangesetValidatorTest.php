@@ -94,9 +94,9 @@ final class NewChangesetValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenAFieldIsNotValid(): void
     {
-        $this->fields_validator->method("validate")->willReturn(false);
+        $this->fields_validator->method('validate')->willReturn(false);
 
-        $GLOBALS['Response']->method("getFeedbackErrors")->willReturn([]);
+        $GLOBALS['Response']->method('getFeedbackErrors')->willReturn([]);
         $this->expectException(FieldValidationException::class);
 
         $this->new_changeset_validator->validateNewChangeset(
@@ -108,9 +108,9 @@ final class NewChangesetValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowWhenNoChangeIsDetectedAndParentIsLinked(): void
     {
-        $this->fields_validator->method("validate")->willReturn(true);
-        $this->parent_link_action->method("linkParent")->willReturn(true);
-        $this->changeset->method("hasChanges")->willReturn(false);
+        $this->fields_validator->method('validate')->willReturn(true);
+        $this->parent_link_action->method('linkParent')->willReturn(true);
+        $this->changeset->method('hasChanges')->willReturn(false);
 
         $this->expectException(LinkToParentWithoutCurrentArtifactChangeException::class);
 
@@ -123,9 +123,9 @@ final class NewChangesetValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsOnNoChange(): void
     {
-        $this->fields_validator->method("validate")->willReturn(true);
-        $this->changeset->method("hasChanges")->willReturn(false);
-        $this->parent_link_action->method("linkParent")->willReturn(false);
+        $this->fields_validator->method('validate')->willReturn(true);
+        $this->changeset->method('hasChanges')->willReturn(false);
+        $this->parent_link_action->method('linkParent')->willReturn(false);
 
         $this->expectException(\Tracker_NoChangeException::class);
 
@@ -138,13 +138,13 @@ final class NewChangesetValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItValidateFields(): void
     {
-        $this->fields_validator->method("validate")->willReturn(true);
-        $this->changeset->method("hasChanges")->willReturn(true);
+        $this->fields_validator->method('validate')->willReturn(true);
+        $this->changeset->method('hasChanges')->willReturn(true);
 
         $new_changeset = NewChangeset::fromFieldsDataArray(
             $this->artifact,
             [],
-            "stuff",
+            'stuff',
             CommentFormatIdentifier::buildCommonMark(),
             [],
             $this->user,
@@ -152,11 +152,11 @@ final class NewChangesetValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new CreatedFileURLMapping(),
         );
 
-        $this->fields_initializator->expects(self::once())->method("process");
+        $this->fields_initializator->expects(self::once())->method('process');
 
-        $this->workflow->expects(self::once())->method("validate");
-        $this->workflow->expects(self::once())->method("before");
-        $this->workflow->expects(self::once())->method("checkGlobalRules");
+        $this->workflow->expects(self::once())->method('validate');
+        $this->workflow->expects(self::once())->method('before');
+        $this->workflow->expects(self::once())->method('checkGlobalRules');
 
         $this->new_changeset_validator->validateNewChangeset(
             $new_changeset,

@@ -59,7 +59,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
 
         $this->upload = $this->getTmpDir() . '/upload';
         create_directory($this->upload);
-        \Psl\Filesystem\copy(__DIR__ . "/Tus/_fixtures/test.zip", $this->upload . '/test.zip');
+        \Psl\Filesystem\copy(__DIR__ . '/Tus/_fixtures/test.zip', $this->upload . '/test.zip');
 
         $this->project = ProjectTestBuilder::aProject()
             ->withId(self::PROJECT_ID)
@@ -333,7 +333,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         $action->process();
 
         self::assertTrue($logger->hasInfoRecords());
-        self::assertFalse(\Psl\Filesystem\is_file($this->upload . "/test.zip"));
+        self::assertFalse(\Psl\Filesystem\is_file($this->upload . '/test.zip'));
         self::assertTrue($activator->isCalled());
         self::assertTrue($force_login->isForced());
         self::assertTrue($archive_for_project_dao->isSaved());
@@ -359,7 +359,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
                     ],
                 ]
             ),
-            ImportFromArchiveStub::buildWithErrorDuringImport("Task failed successfully"),
+            ImportFromArchiveStub::buildWithErrorDuringImport('Task failed successfully'),
             $activator,
             ProjectByIDFactoryStub::buildWith($this->project),
             RetrieveUserByIdStub::withUser($this->user),
@@ -370,8 +370,8 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
 
         $action->process();
 
-        self::assertTrue($logger->hasError("Task failed successfully"));
-        self::assertFalse(\Psl\Filesystem\is_file($this->upload . "/test.zip"));
+        self::assertTrue($logger->hasError('Task failed successfully'));
+        self::assertFalse(\Psl\Filesystem\is_file($this->upload . '/test.zip'));
         self::assertFalse($activator->isCalled());
         self::assertFalse($archive_for_project_dao->isSaved());
     }

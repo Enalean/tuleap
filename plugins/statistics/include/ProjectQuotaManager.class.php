@@ -208,7 +208,7 @@ class ProjectQuotaManager
                 } else {
                     if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
                         $historyDao = new ProjectHistoryDao();
-                        $historyDao->groupAddHistory("add_custom_quota", $quota, $project->getGroupID());
+                        $historyDao->groupAddHistory('add_custom_quota', $quota, $project->getGroupID());
                         $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-statistics', 'Quota for project "%1$s" is now %2$s GB'), $project->getPublicName(), $quota));
                     } else {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-statistics', 'An error occurred when adding the entry'));
@@ -253,7 +253,7 @@ class ProjectQuotaManager
         $defaultQuota = $this->diskUsageManager->getProperty('allowed_quota');
         $historyDao   = new ProjectHistoryDao();
         if ($this->dao->deleteCustomQuota($project->getId())) {
-            $historyDao->groupAddHistory("restore_default_quota", intval($defaultQuota), $project->getId());
+            $historyDao->groupAddHistory('restore_default_quota', intval($defaultQuota), $project->getId());
             $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-statistics', 'Quota deleted for %1$s'), $project->getPublicName()));
         } else {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-statistics', 'An error occurred when deleting entries'));

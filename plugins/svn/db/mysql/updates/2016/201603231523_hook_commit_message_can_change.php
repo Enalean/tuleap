@@ -30,8 +30,8 @@ class b201603231523_hook_commit_message_can_change extends \Tuleap\ForgeUpgrade\
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_svn_hook_config ADD COLUMN
-                commit_message_can_change BOOL DEFAULT false NOT NULL;";
+        $sql = 'ALTER TABLE plugin_svn_hook_config ADD COLUMN
+                commit_message_can_change BOOL DEFAULT false NOT NULL;';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

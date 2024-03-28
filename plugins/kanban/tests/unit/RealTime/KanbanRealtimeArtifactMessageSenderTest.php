@@ -46,7 +46,7 @@ final class KanbanRealtimeArtifactMessageSenderTest extends TestCase
     {
         $user     = UserTestBuilder::aUser()->build();
         $artifact = ArtifactTestBuilder::anArtifact(1)->build();
-        $event    = "event";
+        $event    = 'event';
         $sender   = new KanbanRealtimeArtifactMessageSender(
             $this->realtime_controller_mercure,
             $this->realtime_controller
@@ -65,7 +65,7 @@ final class KanbanRealtimeArtifactMessageSenderTest extends TestCase
         \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, 1);
         $user     = UserTestBuilder::aUser()->build();
         $artifact = ArtifactTestBuilder::anArtifact(1)->build();
-        $event    = "event";
+        $event    = 'event';
         $sender   = new KanbanRealtimeArtifactMessageSender(
             $this->realtime_controller_mercure,
             $this->realtime_controller

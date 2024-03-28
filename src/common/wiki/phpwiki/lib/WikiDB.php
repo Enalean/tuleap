@@ -136,10 +136,10 @@ class WikiDB
                     return false;
                 }
                 $error_displayed = true;
-                if (function_exists("xdebug_get_function_stack")) {
+                if (function_exists('xdebug_get_function_stack')) {
                     var_dump(xdebug_get_function_stack());
                 }
-                trigger_error("empty pagename", E_USER_WARNING);
+                trigger_error('empty pagename', E_USER_WARNING);
                 return false;
             }
         } else {
@@ -212,15 +212,15 @@ class WikiDB
                 if (! empty($emails)) {
                     // Codendi specific
                     $user              = UserManager::instance()->getCurrentUser();
-                    $subject           = sprintf(_("Page removed %s"), $pagename);
+                    $subject           = sprintf(_('Page removed %s'), $pagename);
                     $body              = $subject . "\n" .
-                                         sprintf(_("Removed by: %s"), $user->getRealName() . ' (' . $user->getEmail() . ')') .
+                                         sprintf(_('Removed by: %s'), $user->getRealName() . ' (' . $user->getEmail() . ')') .
                                          "\n\n";
                     $goto_link         = WikiURL($pagename, ['action' => 'PageHistory'], true);
                     $wiki_notification = new WikiNotification($emails, WIKI_NAME, $subject, $body, $goto_link, GROUP_ID);
                     if ($wiki_notification->send()) {
                         trigger_error(
-                            sprintf(_("PageChange Notification of %s sent to %s"), $pagename, join(',', $userids)),
+                            sprintf(_('PageChange Notification of %s sent to %s'), $pagename, join(',', $userids)),
                             E_USER_NOTICE
                         );
                     } else {
@@ -467,7 +467,7 @@ class WikiDB
                     $current         = $page->getCurrentRevision();
                     $meta            = $current->_data;
                     $version         = $current->getVersion();
-                    $meta['summary'] = sprintf(_("renamed from %s"), $from);
+                    $meta['summary'] = sprintf(_('renamed from %s'), $from);
                     $page->save($current->getPackedContent(), $version + 1, $meta);
                 }
             } elseif (! $oldpage->getCurrentRevision(false) and ! $newpage->exists()) {
@@ -475,7 +475,7 @@ class WikiDB
                 $result = $this->_backend->rename_page($from, $to);
             }
         } else {
-            trigger_error(_("WikiDB::renamePage() not yet implemented for this backend"), E_USER_WARNING);
+            trigger_error(_('WikiDB::renamePage() not yet implemented for this backend'), E_USER_WARNING);
         }
         /* Generate notification emails? */
         if ($result and ! isa($GLOBALS['request'], 'MockRequest')) {
@@ -504,7 +504,7 @@ class WikiDB
     public function getTimestamp()
     {
         $ts = $this->get('_timestamp');
-        return sprintf("%d %d", $ts[0], $ts[1]);
+        return sprintf('%d %d', $ts[0], $ts[1]);
     }
 
     /**
@@ -593,9 +593,9 @@ class WikiDB
     public function genericSqlQuery($sql, $args = false)
     {
         if (function_exists('debug_backtrace')) { // >= 4.3.0
-            echo "<pre>", printSimpleTrace(debug_backtrace()), "</pre>\n";
+            echo '<pre>', printSimpleTrace(debug_backtrace()), "</pre>\n";
         }
-        trigger_error("no SQL database", E_USER_ERROR);
+        trigger_error('no SQL database', E_USER_ERROR);
         return false;
     }
 
@@ -604,9 +604,9 @@ class WikiDB
     public function genericSqlIter($sql, $field_list = null)
     {
         if (function_exists('debug_backtrace')) { // >= 4.3.0
-            echo "<pre>", printSimpleTrace(debug_backtrace()), "</pre>\n";
+            echo '<pre>', printSimpleTrace(debug_backtrace()), "</pre>\n";
         }
-        trigger_error("no SQL database", E_USER_ERROR);
+        trigger_error('no SQL database', E_USER_ERROR);
         return false;
     }
 
@@ -670,7 +670,7 @@ class WikiDB_Page
         $this->_pagename = $pagename;
         if (DEBUG) {
             if (! (is_string($pagename) and $pagename != '')) {
-                trigger_error("empty pagename", E_USER_WARNING);
+                trigger_error('empty pagename', E_USER_WARNING);
                 return;
             }
         } else {
@@ -873,7 +873,7 @@ class WikiDB_Page
             // Ensure mtimes are monotonic.
             $pdata = $cache->get_versiondata($pagename, $latestversion);
             if ($data['mtime'] < $pdata['mtime']) {
-                trigger_error(sprintf(_("%s: Date of new revision is %s"), $pagename, "'non-monotonic'"), E_USER_NOTICE);
+                trigger_error(sprintf(_('%s: Date of new revision is %s'), $pagename, "'non-monotonic'"), E_USER_NOTICE);
                 $data['orig_mtime'] = $data['mtime'];
                 $data['mtime']      = $pdata['mtime'];
             }
@@ -1051,14 +1051,14 @@ class WikiDB_Page
         }
         $backend = &$this->_wikidb->_backend;
         //$backend = &$request->_dbi->_backend;
-        $subject  = _("Page change") . ' ' . $this->_pagename;
+        $subject  = _('Page change') . ' ' . $this->_pagename;
         $previous = $backend->get_previous_version($this->_pagename, $version);
         if (! isset($meta['mtime'])) {
             $meta['mtime'] = time();
         }
         if ($previous) {
             $difflink  = WikiURL($this->_pagename, ['action' => 'diff'], true);
-            $difflink .= "&versions%5b%5d=" . $previous . "&versions%5b%5d=" . $version;
+            $difflink .= '&versions%5b%5d=' . $previous . '&versions%5b%5d=' . $version;
             $cache     = &$this->_wikidb->_cache;
             //$cache = &$request->_dbi->_cache;
             $this_content = explode("\n", $wikitext);
@@ -1068,31 +1068,31 @@ class WikiDB_Page
             }
             $other_content = explode("\n", $prevdata['%content']);
 
-            include_once("lib/difflib.php");
+            include_once('lib/difflib.php');
             $diff2 = new Diff($other_content, $this_content);
             //$context_lines = max(4, count($other_content) + 1,
             //                     count($this_content) + 1);
             $fmt      = new UnifiedDiffFormatter(/*$context_lines*/);
-            $content  = $this->_pagename . " " . $previous . " " .
+            $content  = $this->_pagename . ' ' . $previous . ' ' .
                 Iso8601DateTime($prevdata['mtime']) . "\n";
-            $content .= $this->_pagename . " " . $version . " " .
+            $content .= $this->_pagename . ' ' . $version . ' ' .
                 Iso8601DateTime($meta['mtime']) . "\n";
             $content .= $fmt->format($diff2);
         } else {
             $difflink = WikiURL($this->_pagename, [], true);
-            $content  = $this->_pagename . " " . $version . " " .
+            $content  = $this->_pagename . ' ' . $version . ' ' .
                 Iso8601DateTime($meta['mtime']) . "\n";
-            $content .= _("New page");
+            $content .= _('New page');
         }
         // Codendi specific
         $user              = UserManager::instance()->getCurrentUser();
         $body              = $subject . "\n" .
-                             sprintf(_("Edited by: %s"), $user->getRealName() . ' (' . $user->getEmail() . ')') . "\n" .
+                             sprintf(_('Edited by: %s'), $user->getRealName() . ' (' . $user->getEmail() . ')') . "\n" .
                              $difflink;
         $wiki_notification = new WikiNotification($emails, WIKI_NAME, $subject, $body, $difflink, GROUP_ID);
         if ($wiki_notification->send()) {
             trigger_error(
-                sprintf(_("PageChange Notification of %s sent to %s"), $this->_pagename, join(',', $userids)),
+                sprintf(_('PageChange Notification of %s sent to %s'), $this->_pagename, join(',', $userids)),
                 E_USER_NOTICE
             );
         } else {
@@ -1117,14 +1117,14 @@ class WikiDB_Page
             // Codendi specific
             $user              = UserManager::instance()->getCurrentUser();
             $goto_link         = WikiURL($to, [], true);
-            $subject           = sprintf(_("Page rename %s to %s"), $oldname, $to);
+            $subject           = sprintf(_('Page rename %s to %s'), $oldname, $to);
             $body              = $subject . "\n" .
-                                 sprintf(_("Edited by: %s"), $user->getRealName() . ' (' . $user->getEmail() . ')') . "\n" .
+                                 sprintf(_('Edited by: %s'), $user->getRealName() . ' (' . $user->getEmail() . ')') . "\n" .
                                  $goto_link;
             $wiki_notification = new WikiNotification($emails, WIKI_NAME, $subject, $body, $goto_link, GROUP_ID);
             if ($wiki_notification->send()) {
                 trigger_error(
-                    sprintf(_("PageChange Notification of %s sent to %s"), $oldname, join(',', $userids)),
+                    sprintf(_('PageChange Notification of %s sent to %s'), $oldname, join(',', $userids)),
                     E_USER_NOTICE
                 );
             } else {
@@ -1473,7 +1473,7 @@ class WikiDB_Page
      */
     public function _coerce_to_version($version_or_pagerevision)
     {
-        if (! is_int($version_or_pagerevision) && method_exists($version_or_pagerevision, "getContent")) {
+        if (! is_int($version_or_pagerevision) && method_exists($version_or_pagerevision, 'getContent')) {
             $version = $version_or_pagerevision->getVersion();
         } else {
             $version = (int) $version_or_pagerevision;
@@ -1495,7 +1495,7 @@ class WikiDB_Page
     public function getOwner()
     {
         if ($owner = $this->get('owner')) {
-            return ($owner == "The PhpWiki programming team") ? ADMIN_USER : $owner;
+            return ($owner == 'The PhpWiki programming team') ? ADMIN_USER : $owner;
         }
         // check all revisions forwards for the first author_id
         $backend       = &$this->_wikidb->_backend;
@@ -1504,7 +1504,7 @@ class WikiDB_Page
         for ($v = 1; $v <= $latestversion; $v++) {
             $rev = $this->getRevision($v, false);
             if ($rev and $owner = $rev->get('author_id')) {
-                return ($owner == "The PhpWiki programming team") ? ADMIN_USER : $owner;
+                return ($owner == 'The PhpWiki programming team') ? ADMIN_USER : $owner;
             }
         }
         return '';
@@ -1733,17 +1733,17 @@ class WikiDB_PageRevision
                 and is_dir(FORTUNE_DIR)
                 and in_array($GLOBALS['request']->getArg('action'), ['create', 'edit'])
             ) {
-                include_once("lib/fortune.php");
+                include_once('lib/fortune.php');
                 $fortune = new Fortune();
                 $quote   = str_replace("\n<br>", "\n", $fortune->quoteFromDir(FORTUNE_DIR));
                 return sprintf(
-                    "<verbatim>\n%s</verbatim>\n\n" . _("Describe %s here."),
+                    "<verbatim>\n%s</verbatim>\n\n" . _('Describe %s here.'),
                     $quote,
-                    "[" . WikiEscape($this->_pagename) . "]"
+                    '[' . WikiEscape($this->_pagename) . ']'
                 );
             }
             // Replace empty content with default value.
-            return sprintf(_("Describe %s here."), "[" . WikiEscape($this->_pagename) . "]");
+            return sprintf(_('Describe %s here.'), '[' . WikiEscape($this->_pagename) . ']');
         }
 
         // There is (non-default) content.
@@ -1777,7 +1777,7 @@ class WikiDB_PageRevision
             return $newdata['%content'];
         } else {
             // else revision has been deleted... What to do?
-            return PHPWikiSprintf("Oops! Revision %s of %s seems to have been deleted!", $version, $pagename);
+            return PHPWikiSprintf('Oops! Revision %s of %s seems to have been deleted!', $version, $pagename);
         }
     }
 
@@ -2055,7 +2055,7 @@ class WikiDB_PageRevisionIterator
         $versiondata = $next['versiondata'];
         if (DEBUG) {
             if (! (is_string($pagename) and $pagename != '')) {
-                trigger_error("empty pagename", E_USER_WARNING);
+                trigger_error('empty pagename', E_USER_WARNING);
                 return false;
             }
         } else {
@@ -2063,7 +2063,7 @@ class WikiDB_PageRevisionIterator
         }
         if (DEBUG) {
             if (! is_array($versiondata)) {
-                trigger_error("empty versiondata", E_USER_WARNING);
+                trigger_error('empty versiondata', E_USER_WARNING);
                 return false;
             }
         } else {
@@ -2071,7 +2071,7 @@ class WikiDB_PageRevisionIterator
         }
         if (DEBUG) {
             if (! ($version > 0)) {
-                trigger_error("invalid version", E_USER_WARNING);
+                trigger_error('invalid version', E_USER_WARNING);
                 return false;
             }
         } else {
@@ -2375,9 +2375,9 @@ function _sql_debuglog($msg, $newline = true, $shutdown = false)
     static $fp = false;
     static $i  = 0;
     if (! $fp) {
-        $stamp = strftime("%y%m%d-%H%M%S");
-        $fp    = fopen("/tmp/sql-$stamp.log", "a");
-        register_shutdown_function("_sql_debuglog_shutdown_function");
+        $stamp = strftime('%y%m%d-%H%M%S');
+        $fp    = fopen("/tmp/sql-$stamp.log", 'a');
+        register_shutdown_function('_sql_debuglog_shutdown_function');
     } elseif ($shutdown) {
         fclose($fp);
         return;

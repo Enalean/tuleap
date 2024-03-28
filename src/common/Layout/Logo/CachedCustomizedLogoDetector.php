@@ -98,7 +98,7 @@ class CachedCustomizedLogoDetector implements IDetectIfLogoIsCustomized
         } catch (JsonException $e) {
             $this->logger->error(
                 "Cache file $path was containing unreadable information. It has been reset.",
-                ["exception" => $e]
+                ['exception' => $e]
             );
 
             return [];
@@ -116,7 +116,7 @@ class CachedCustomizedLogoDetector implements IDetectIfLogoIsCustomized
         try {
             FileWriter::writeFile(self::getCacheFile(), json_encode($information, JSON_THROW_ON_ERROR));
         } catch (JsonException | \RuntimeException $e) {
-            $this->logger->error("Unable to store customized logo information in cache.", ["exception" => $e]);
+            $this->logger->error('Unable to store customized logo information in cache.', ['exception' => $e]);
         }
     }
 }

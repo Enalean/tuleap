@@ -36,12 +36,12 @@ final class IterationRedirectionParametersStub implements IterationRedirectionPa
 
     public static function withCreate(): self
     {
-        return new self(IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION, "100");
+        return new self(IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION, '100');
     }
 
     public static function withUpdate(): self
     {
-        return new self(IterationRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION, "100");
+        return new self(IterationRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION, '100');
     }
 
     public static function withValues(string $redirect, string $increment_id): self
@@ -66,13 +66,13 @@ final class IterationRedirectionParametersStub implements IterationRedirectionPa
 
     public function needsRedirectionAfterCreate(): bool
     {
-        return $this->increment_id !== "" &&
+        return $this->increment_id !== '' &&
             $this->redirect_value === IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION;
     }
 
     public function needsRedirectionAfterUpdate(): bool
     {
-        return $this->increment_id !== "" &&
+        return $this->increment_id !== '' &&
             $this->redirect_value === IterationRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION;
     }
 }

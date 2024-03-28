@@ -34,9 +34,9 @@ class b201709261432_add_index_for_cross_references extends \Tuleap\ForgeUpgrade\
     {
         $this->removeExistingIndexes('source_idx');
         $this->removeExistingIndexes('target_idx');
-        $sql = "ALTER TABLE cross_references
+        $sql = 'ALTER TABLE cross_references
                     ADD INDEX source_idx(source_id(10), source_type(10)),
-                    ADD INDEX target_idx(target_id(10), target_type(10))";
+                    ADD INDEX target_idx(target_id(10), target_type(10))';
 
         $result = $this->db->dbh->exec($sql);
 

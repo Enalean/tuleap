@@ -86,11 +86,11 @@ final class b202006161036_add_reference_group_for_project extends \Tuleap\ForgeU
 
     private function insertReferenceGroup(int $reference_id, array $group_ids): void
     {
-        $sql           = "INSERT INTO reference_group (reference_id, group_id, is_active) VALUES (?, ?, ?)";
+        $sql           = 'INSERT INTO reference_group (reference_id, group_id, is_active) VALUES (?, ?, ?)';
         $pdo_statement = $this->db->dbh->prepare($sql);
 
         if (! $pdo_statement) {
-            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException("Error while preparing insert request");
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Error while preparing insert request');
         }
 
         $this->db->dbh->beginTransaction();

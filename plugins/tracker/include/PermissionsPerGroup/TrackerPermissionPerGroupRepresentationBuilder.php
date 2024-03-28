@@ -85,11 +85,11 @@ class TrackerPermissionPerGroupRepresentationBuilder
     {
         $query_parameters = http_build_query(
             [
-                "tracker" => $tracker->getId(),
-                "func"    => "admin-perms-tracker",
+                'tracker' => $tracker->getId(),
+                'func'    => 'admin-perms-tracker',
             ]
         );
 
-        return "/plugins/tracker/?" . $query_parameters;
+        return '/plugins/tracker/?' . $query_parameters;
     }
 }

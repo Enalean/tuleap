@@ -39,10 +39,10 @@ final class DatabaseBuilder
         $this->db->insert(
             'plugin_agiledashboard_planning',
             [
-                'name'                => "release plan",
+                'name'                => 'release plan',
                 'group_id'            => $project_id,
                 'planning_tracker_id' => $tracker_id,
-                'backlog_title'       => "backlog",
+                'backlog_title'       => 'backlog',
             ]
         );
     }

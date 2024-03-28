@@ -41,20 +41,20 @@ class WikiPlugin_TitleSearch extends WikiPlugin
 {
     public function getName()
     {
-        return _("TitleSearch");
+        return _('TitleSearch');
     }
 
     public function getDescription()
     {
-        return _("Search the titles of all pages in this wiki.");
+        return _('Search the titles of all pages in this wiki.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.28 $"
+            '$Revision: 1.28 $'
         );
     }
 

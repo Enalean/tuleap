@@ -22,7 +22,7 @@ class b201804171521_fill_execution_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Fill plugin_testmanagement_execution table";
+        return 'Fill plugin_testmanagement_execution table';
     }
 
     public function preUp()

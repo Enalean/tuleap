@@ -47,12 +47,12 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAcceptReturnsTrueWhenTypeMatches()
     {
-        $this->assertTrue($this->parser->accept(["type" => "run_job"]));
+        $this->assertTrue($this->parser->accept(['type' => 'run_job']));
     }
 
     public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
     {
-        $this->assertFalse($this->parser->accept(["type" => "set_date_value"]));
+        $this->assertFalse($this->parser->accept(['type' => 'set_date_value']));
     }
 
     public function testAcceptReturnsFalseWithoutType()
@@ -68,12 +68,12 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $ci_build = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "run_job",
-                "job_url" => "http://example.test",
+                'id' => 2,
+                'type' => 'run_job',
+                'job_url' => 'http://example.test',
             ]
         );
-        $this->assertEquals(new CIBuildValue("http://example.test"), $ci_build);
+        $this->assertEquals(new CIBuildValue('http://example.test'), $ci_build);
     }
 
     public function testParseWhenIdNotProvided()
@@ -84,11 +84,11 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $ci_build = $this->parser->parse(
             $workflow,
             [
-                "type" => "run_job",
-                "job_url" => "http://example.test",
+                'type' => 'run_job',
+                'job_url' => 'http://example.test',
             ]
         );
-        $this->assertEquals(new CIBuildValue("http://example.test"), $ci_build);
+        $this->assertEquals(new CIBuildValue('http://example.test'), $ci_build);
     }
 
     public function testParseReturnsNewCIBuildWithoutIdWhenWorkflowIsNotAdvanced()
@@ -99,12 +99,12 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $ci_build = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "run_job",
-                "job_url" => "http://example.test",
+                'id' => 2,
+                'type' => 'run_job',
+                'job_url' => 'http://example.test',
             ]
         );
-        $this->assertEquals(new CIBuildValue("http://example.test"), $ci_build);
+        $this->assertEquals(new CIBuildValue('http://example.test'), $ci_build);
     }
 
     public function testParseThrowsWhenNoJobUrlProvided()
@@ -114,7 +114,7 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->parser->parse($workflow, ["type" => "run_job"]);
+        $this->parser->parse($workflow, ['type' => 'run_job']);
     }
 
     public function testParseThrowsWhenJobUrlIsNull()
@@ -127,8 +127,8 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "run_job",
-                "job_url" => null,
+                'type' => 'run_job',
+                'job_url' => null,
             ]
         );
     }
@@ -143,8 +143,8 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "run_job",
-                "job_url" => 3,
+                'type' => 'run_job',
+                'job_url' => 3,
             ]
         );
     }

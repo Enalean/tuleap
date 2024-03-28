@@ -125,7 +125,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
         CreatedFileURLMapping $url_mapping,
     ) {
-        if ($value != "") {
+        if ($value != '') {
             $dao_pub_key = new TrackerPublicKeyDao();
             $value_dao   = $this->getValueDao();
             $tracker_key = new Tracker_Key($dao_pub_key, $value_dao, $artifact->tracker_id);
@@ -182,7 +182,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
 
         return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN tracker_changeset_value_encrypted AS $R2 ON ($R2.changeset_value_id = $R1.id)
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
+                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . ' )';
     }
 
     public function getQuerySelect(): string
@@ -270,7 +270,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = [],
     ) {
-        return "<div class='tracker-form-element-encrypted'>" . $this->fetchArtifactValueReadOnly($artifact, $value) . "</div>" .
+        return "<div class='tracker-form-element-encrypted'>" . $this->fetchArtifactValueReadOnly($artifact, $value) . '</div>' .
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 

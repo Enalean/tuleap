@@ -23,12 +23,12 @@
 
 rcs_id('$Id: RSSWriter091.php,v 1.10 2005/08/06 13:06:22 rurban Exp $');
 
-include_once("lib/RssWriter.php");
+include_once('lib/RssWriter.php');
 class RSSWriter091 extends RssWriter
 {
     public function __construct()
     {
-        $this->XmlElement('rss', ['version' => "0.91"]);
+        $this->XmlElement('rss', ['version' => '0.91']);
         $this->_items = [];
     }
 
@@ -71,7 +71,7 @@ class RSSWriter091 extends RssWriter
      */
     public function spew()
     {
-        header("Content-Type: application/xml; charset=" . RSS_ENCODING);
+        header('Content-Type: application/xml; charset=' . RSS_ENCODING);
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", RSS_ENCODING);
         print("<!DOCTYPE rss PUBLIC \"-//Netscape Communications//DTD RSS 0.91//EN\"\n");
         print("\"http://my.netscape.com/publish/formats/rss-0.91.dtd\">\n\n");
@@ -117,7 +117,7 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
         $rc_url = WikiURL($request->getArg('pagename'), false, 'absurl');
 
         return ['title' => WIKI_NAME,
-            'description' => _("RecentChanges"),
+            'description' => _('RecentChanges'),
             'link' => $rc_url,
             'language' => 'en-US',
         ];

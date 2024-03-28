@@ -78,7 +78,7 @@ final class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('get')->with('categories')->willReturn('string');
 
         $this->layout->method('addFeedback')->with(Feedback::ERROR, self::anything());
-        $exception_stop_exec_redirect = new \Exception("Redirect");
+        $exception_stop_exec_redirect = new \Exception('Redirect');
         $this->layout->method('redirect')->with('/project/42/admin/categories')->willThrowException($exception_stop_exec_redirect);
 
         self::expectExceptionObject($exception_stop_exec_redirect);

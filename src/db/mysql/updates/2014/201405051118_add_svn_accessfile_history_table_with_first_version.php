@@ -23,7 +23,7 @@ class b201405051118_add_svn_accessfile_history_table_with_first_version extends 
 {
     public function description()
     {
-        return "Add svn accessfile history table with first version for each project";
+        return 'Add svn accessfile history table with first version for each project';
     }
 
     public function preUp()
@@ -39,7 +39,7 @@ class b201405051118_add_svn_accessfile_history_table_with_first_version extends 
 
     private function createSvnAccessfileHistoryTable()
     {
-        $sql = "CREATE TABLE svn_accessfile_history (
+        $sql = 'CREATE TABLE svn_accessfile_history (
                     id INT(11) AUTO_INCREMENT,
                     version_number INT(11) NOT NULL,
                     group_id INT(11) NOT NULL,
@@ -47,7 +47,7 @@ class b201405051118_add_svn_accessfile_history_table_with_first_version extends 
                     sha1_content CHAR(40),
                     version_date INT(11),
                     PRIMARY KEY(id)
-        )";
+        )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -57,9 +57,9 @@ class b201405051118_add_svn_accessfile_history_table_with_first_version extends 
 
     private function createFirstVersionInSvnAccessfileHistoryTable()
     {
-        $sql = "INSERT INTO svn_accessfile_history (version_number, group_id, content, sha1_content, version_date)
+        $sql = 'INSERT INTO svn_accessfile_history (version_number, group_id, content, sha1_content, version_date)
                     SELECT 1, group_id, svn_accessfile, SHA1(svn_accessfile), CURRENT_TIMESTAMP
-                    FROM `groups`";
+                    FROM `groups`';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

@@ -60,8 +60,8 @@ final class HeartbeatsEntryRepresentation
     {
         $this->updated_at   = $updated_at;
         $this->html_message = $html_message;
-        $this->icon         = "";
-        $this->small_icon   = "";
+        $this->icon         = '';
+        $this->small_icon   = '';
         $this->icon_name    = $svg;
 
         if ($user) {

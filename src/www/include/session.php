@@ -46,8 +46,8 @@ function session_require($req)
 
     if (isset($req['group']) && $req['group']) {
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-        $query              = "SELECT user_id FROM user_group WHERE user_id=" . $db_escaped_user_id
-        . " AND group_id=" . db_ei($req['group']);
+        $query              = 'SELECT user_id FROM user_group WHERE user_id=' . $db_escaped_user_id
+        . ' AND group_id=' . db_ei($req['group']);
         if (isset($req['admin_flags']) && $req['admin_flags']) {
             $query .= " AND admin_flags = '" . db_escape_string($req['admin_flags']) . "'";
         }

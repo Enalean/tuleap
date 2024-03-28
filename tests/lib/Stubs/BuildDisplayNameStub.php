@@ -32,7 +32,7 @@ final class BuildDisplayNameStub implements BuildDisplayName
 
     public function getDisplayName(string $user_name, string $realname): string
     {
-        return $realname . " (" . $user_name . ")";
+        return $realname . ' (' . $user_name . ')';
     }
 
     public static function build(): self

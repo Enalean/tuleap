@@ -33,8 +33,8 @@ class b201810251455_add_user_ldap_index extends ForgeUpgrade_Bucket // phpcs:ign
     public function up()
     {
         if (! $this->indexNameExists('user', 'idx_ldap_id')) {
-            $sql = "ALTER TABLE user
-                ADD INDEX idx_ldap_id(ldap_id(10))";
+            $sql = 'ALTER TABLE user
+                ADD INDEX idx_ldap_id(ldap_id(10))';
 
             $res = $this->db->dbh->exec($sql);
 

@@ -23,7 +23,7 @@ class b201406041516_add_email_gateway_salt extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Adding salt in database";
+        return 'Adding salt in database';
     }
 
     public function preUp()
@@ -39,11 +39,11 @@ class b201406041516_add_email_gateway_salt extends \Tuleap\ForgeUpgrade\Bucket
 
     private function createTable()
     {
-        $sql = "
+        $sql = '
             CREATE TABLE email_gateway_salt (
                 salt VARCHAR(255)
             )
-        ";
+        ';
 
         $res = $this->db->dbh->exec($sql);
 

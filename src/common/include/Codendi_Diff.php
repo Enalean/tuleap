@@ -156,7 +156,7 @@ class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
         $prevtype = 'none';
         foreach ($this->edits as $edit) {
             if ($prevtype == $edit->type) {
-                \trigger_error("Edit sequence is non-optimal", \E_USER_ERROR);
+                \trigger_error('Edit sequence is non-optimal', \E_USER_ERROR);
             }
             $prevtype = $edit->type;
         }

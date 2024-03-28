@@ -34,6 +34,6 @@ final class WidgetKanbanPresenter
     ) {
         $this->there_is_error = ! empty($this->error_message);
 
-        $this->empty_state = dgettext('tuleap-kanban', "There is no content you can see");
+        $this->empty_state = dgettext('tuleap-kanban', 'There is no content you can see');
     }
 }

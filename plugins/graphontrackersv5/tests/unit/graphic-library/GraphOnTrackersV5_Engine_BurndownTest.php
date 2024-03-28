@@ -31,7 +31,7 @@ class GraphOnTrackersV5_Engine_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testDurationIsValidWhenItsLongerThanOneDay(): void
     {
         $burndown_engine           = new GraphOnTrackersV5_Engine_Burndown();
-        $burndown_engine->title    = "my burndown title";
+        $burndown_engine->title    = 'my burndown title';
         $burndown_engine->duration = 2;
 
         $this->assertTrue($burndown_engine->validData());
@@ -40,7 +40,7 @@ class GraphOnTrackersV5_Engine_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testDurationIsInvalid(): void
     {
         $burndown_engine           = new GraphOnTrackersV5_Engine_Burndown();
-        $burndown_engine->title    = "my burndown title";
+        $burndown_engine->title    = 'my burndown title';
         $burndown_engine->duration = 1;
 
         $this->assertFalse($burndown_engine->validData());

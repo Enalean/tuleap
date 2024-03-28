@@ -132,7 +132,7 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@last_update_by = MYSELF()",
+                '@last_update_by = MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice,
@@ -180,7 +180,7 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@last_update_by != MYSELF()",
+                '@last_update_by != MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice,
@@ -225,7 +225,7 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@last_update_by IN(MYSELF())",
+                '@last_update_by IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice,
@@ -288,7 +288,7 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "@last_update_by NOT IN(MYSELF())",
+                '@last_update_by NOT IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
             ),
             $this->alice,

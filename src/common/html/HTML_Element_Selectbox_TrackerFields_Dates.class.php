@@ -26,7 +26,7 @@
  */
 class HTML_Element_Selectbox_TrackerFields_Dates extends HTML_Element_Selectbox
 {
-    public function __construct($label, $name, $value, $with_none = false, $onchange = "", $desc = "")
+    public function __construct($label, $name, $value, $with_none = false, $onchange = '', $desc = '')
     {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 

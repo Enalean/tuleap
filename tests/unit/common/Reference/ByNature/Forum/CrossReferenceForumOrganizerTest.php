@@ -63,7 +63,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
     public function testItRemovesCrossReferenceIfMessageCannotBeFound(): void
     {
         $ref = CrossReferencePresenterBuilder::get(1)
-            ->withValue("123")
+            ->withValue('123')
             ->build();
 
         $this->message_retriever
@@ -83,7 +83,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
     public function testItRemovesCrossReferenceIfMessageCannotBeRead(): void
     {
         $ref = CrossReferencePresenterBuilder::get(1)
-            ->withValue("123")
+            ->withValue('123')
             ->build();
 
         $this->message_retriever
@@ -103,7 +103,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
     public function testItOrganizesCrossReferenceToUnlabelledSection(): void
     {
         $ref = CrossReferencePresenterBuilder::get(1)
-            ->withValue("123")
+            ->withValue('123')
             ->build();
 
         $this->message_retriever
@@ -117,7 +117,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
                 1,
                 2,
                 3,
-                "Open Discussions",
+                'Open Discussions',
             ));
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
@@ -140,7 +140,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $ref = CrossReferencePresenterBuilder::get(1)
-            ->withValue("123")
+            ->withValue('123')
             ->build();
 
         $this->forum_retriever
@@ -163,7 +163,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $ref = CrossReferencePresenterBuilder::get(1)
-            ->withValue("123")
+            ->withValue('123')
             ->build();
 
         $this->forum_retriever

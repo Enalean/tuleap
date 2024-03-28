@@ -329,7 +329,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             'main',
         );
 
-        $this->reopener->expects(self::once())->method("reopen");
+        $this->reopener->expects(self::once())->method('reopen');
 
         $this->patcher->patchStatus(
             $this->user,

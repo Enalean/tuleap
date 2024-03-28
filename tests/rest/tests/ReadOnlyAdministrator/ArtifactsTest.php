@@ -54,7 +54,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper
     public function testPostArtifactWithUserNonMember(): void
     {
         $summary_field_label = 'Summary';
-        $summary_field_value = "This is a new epic";
+        $summary_field_value = 'This is a new epic';
 
         $post_body = $this->buildPOSTBodyContent($summary_field_label, $summary_field_value);
 
@@ -78,7 +78,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper
     public function testGetArtifactWithUser(): void
     {
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->request_factory->createRequest('GET', "artifacts/9")
+            $this->request_factory->createRequest('GET', 'artifacts/9')
         );
 
         $this->assertEquals(200, $response->getStatusCode());

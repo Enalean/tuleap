@@ -51,7 +51,7 @@ class DataBuilder extends REST_TestDataBuilder
 
     public function setUp()
     {
-        echo "Setup data for Tracker plugin tests" . PHP_EOL;
+        echo 'Setup data for Tracker plugin tests' . PHP_EOL;
 
         $this->createUser();
         $this->setUpDeletableArtifactsLimit();

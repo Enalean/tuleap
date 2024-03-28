@@ -62,7 +62,7 @@ function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM)
 function getMembers($groupName, $dbi, $START_DELIM = false)
 {
     if (! $START_DELIM) {
-        $START_DELIM = _("Members:");
+        $START_DELIM = _('Members:');
     }
     return getPageTextData($groupName, $dbi, $START_DELIM);
 }
@@ -72,15 +72,15 @@ function getPageTextData($fromUser, $dbi, $START_DELIM)
     if (is_object($fromUser)) {
         $fromUser = $fromUser->getId();
     }
-    if ($fromUser == "") {
-        return "";
+    if ($fromUser == '') {
+        return '';
     }
     $userPage    = $dbi->getPage($fromUser);
     $transformed = $userPage->getCurrentRevision();
     $pageArray   = $transformed->getContent();
     $p           = -1;
     for ($i = 0; $i < count($pageArray); $i++) {
-        if ($pageArray[$i] != "") {
+        if ($pageArray[$i] != '') {
             if (! ((strpos($pageArray[$i], $START_DELIM)) === false)) {
                 $p = $i;
                 break;
@@ -105,7 +105,7 @@ function getPageTextData($fromUser, $dbi, $START_DELIM)
 
 function notEmptyName($var)
 {
-    return $var != "";
+    return $var != '';
 }
 
 // $Log: Utils.php,v $

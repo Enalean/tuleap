@@ -62,14 +62,14 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
             $artifact,
             101,
             time(),
-            "user@example.com",
+            'user@example.com',
             $comment
         );
 
-        $changeset_with_changes     = $this->buildChangeset(1, $artifact, 101, time(), "user@example.com", $empty_comment);
-        $changeset_by_workflowadmin = $this->buildChangeset(3, $artifact, 90, time(), "user@example.com", $comment);
-        $changeset_by_anonymous     = $this->buildChangeset(4, $artifact, null, time(), "user@example.com", $comment);
-        $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), "user@example.com", $comment);
+        $changeset_with_changes     = $this->buildChangeset(1, $artifact, 101, time(), 'user@example.com', $empty_comment);
+        $changeset_by_workflowadmin = $this->buildChangeset(3, $artifact, 90, time(), 'user@example.com', $comment);
+        $changeset_by_anonymous     = $this->buildChangeset(4, $artifact, null, time(), 'user@example.com', $comment);
+        $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), 'user@example.com', $comment);
 
         $pattern = '/' . preg_quote('tracker_artifact_followup-with_changes') . '/';
         $this->assertMatchesRegularExpression($pattern, $changeset_with_changes->getFollowUpClassnames('The changes', $this->user));
@@ -91,14 +91,14 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
             $artifact,
             101,
             time(),
-            "user@example.com",
+            'user@example.com',
             $comment
         );
 
-        $changeset_with_changes     = $this->buildChangeset(1, $artifact, 101, time(), "user@example.com", $empty_comment);
-        $changeset_by_workflowadmin = $this->buildChangeset(3, $artifact, 90, time(), "user@example.com", $comment);
-        $changeset_by_anonymous     = $this->buildChangeset(4, $artifact, null, time(), "user@example.com", $comment);
-        $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), "user@example.com", $comment);
+        $changeset_with_changes     = $this->buildChangeset(1, $artifact, 101, time(), 'user@example.com', $empty_comment);
+        $changeset_by_workflowadmin = $this->buildChangeset(3, $artifact, 90, time(), 'user@example.com', $comment);
+        $changeset_by_anonymous     = $this->buildChangeset(4, $artifact, null, time(), 'user@example.com', $comment);
+        $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), 'user@example.com', $comment);
 
         $pattern = '/' . preg_quote('tracker_artifact_followup-with_comment') . '/';
         $this->assertMatchesRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false, $this->user));
@@ -120,14 +120,14 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
             $artifact,
             101,
             time(),
-            "user@example.com",
+            'user@example.com',
             $comment
         );
 
-        $changeset_with_changes     = $this->buildChangeset(1, $artifact, 101, time(), "user@example.com", $empty_comment);
-        $changeset_by_workflowadmin = $this->buildChangeset(3, $artifact, 90, time(), "user@example.com", $comment);
-        $changeset_by_anonymous     = $this->buildChangeset(4, $artifact, null, time(), "user@example.com", $comment);
-        $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), "user@example.com", $comment);
+        $changeset_with_changes     = $this->buildChangeset(1, $artifact, 101, time(), 'user@example.com', $empty_comment);
+        $changeset_by_workflowadmin = $this->buildChangeset(3, $artifact, 90, time(), 'user@example.com', $comment);
+        $changeset_by_anonymous     = $this->buildChangeset(4, $artifact, null, time(), 'user@example.com', $comment);
+        $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), 'user@example.com', $comment);
 
         $pattern = '/' . preg_quote('tracker_artifact_followup-by_system_user') . '/';
         $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false, $this->user));
@@ -308,7 +308,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset_id = 1234;
 
-        $changeset = $this->buildChangeset($changeset_id, $artifact, 101, time(), "user@example.com", $comment);
+        $changeset = $this->buildChangeset($changeset_id, $artifact, 101, time(), 'user@example.com', $comment);
 
         $changeset_dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
         $changeset_dao->shouldReceive('delete')->with($changeset_id)->once();
@@ -351,7 +351,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment = $this->getEmptyComment();
         $comment->shouldReceive('fetchFollowUp')->andReturn(null);
 
-        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), 'user@example.com', $comment);
 
         $changeset->shouldReceive('getValues')->once()->andReturn([]);
 
@@ -372,12 +372,12 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment = $this->getEmptyComment();
         $comment->shouldReceive('fetchFollowUp')->andReturn(null);
 
-        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), 'user@example.com', $comment);
 
         $changeset
             ->shouldReceive('diffToPreviousArtifactView')
             ->once()
-            ->andReturn("<div></div>");
+            ->andReturn('<div></div>');
 
         $changeset
             ->shouldReceive('fetchFollowUp')
@@ -386,8 +386,8 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $follow_up_content = $changeset->getFollowUpHTML($user, $changeset);
 
-        self::assertStringContainsString("tracker_artifact_followup-with_changes", $follow_up_content);
-        self::assertStringNotContainsString("tracker_artifact_followup-with_comments", $follow_up_content);
+        self::assertStringContainsString('tracker_artifact_followup-with_changes', $follow_up_content);
+        self::assertStringNotContainsString('tracker_artifact_followup-with_comments', $follow_up_content);
     }
 
     public function testItGetFollowUpWithOnlyComments(): void
@@ -400,14 +400,14 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $comment = $this->getComment();
-        $comment->shouldReceive('fetchFollowUp')->andReturn("<div></div>");
+        $comment->shouldReceive('fetchFollowUp')->andReturn('<div></div>');
 
-        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), 'user@example.com', $comment);
 
         $changeset
             ->shouldReceive('diffToPreviousArtifactView')
             ->once()
-            ->andReturn("");
+            ->andReturn('');
 
         $changeset
             ->shouldReceive('fetchFollowUp')
@@ -416,8 +416,8 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $follow_up_content = $changeset->getFollowUpHTML($user, $changeset);
 
-        self::assertStringNotContainsString("tracker_artifact_followup-with_changes", $follow_up_content);
-        self::assertStringContainsString("tracker_artifact_followup-with_comment", $follow_up_content);
+        self::assertStringNotContainsString('tracker_artifact_followup-with_changes', $follow_up_content);
+        self::assertStringContainsString('tracker_artifact_followup-with_comment', $follow_up_content);
     }
 
     public function testItGetEmptyFollowUpIfNoFollowUpContent(): void
@@ -431,16 +431,16 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $comment = $this->getEmptyComment();
 
-        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), 'user@example.com', $comment);
 
         $changeset
             ->shouldReceive('getFollowupContent')
             ->once()
-            ->andReturn("");
+            ->andReturn('');
 
-        $follow_up_content = $changeset->fetchFollowUp("", $user);
+        $follow_up_content = $changeset->fetchFollowUp('', $user);
 
-        self::assertEquals("", $follow_up_content);
+        self::assertEquals('', $follow_up_content);
     }
 
     public function testItGetFollowUpIfThereIsFollowUpContent(): void
@@ -454,7 +454,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $comment = $this->getEmptyComment();
 
-        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), 'user@example.com', $comment);
 
         $changeset
             ->shouldReceive('getFollowupContent')
@@ -462,27 +462,27 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn("<div class='tracker-followup'></div>");
 
         $changeset
-            ->shouldReceive("getAvatar")
+            ->shouldReceive('getAvatar')
             ->once()
             ->andReturn("<div class='tracker-avatar'></div>");
         $changeset
-            ->shouldReceive("fetchChangesetActionButtons")
+            ->shouldReceive('fetchChangesetActionButtons')
             ->once()
-            ->andReturn("");
+            ->andReturn('');
         $changeset
-            ->shouldReceive("fetchImportedFromXmlData")
+            ->shouldReceive('fetchImportedFromXmlData')
             ->once()
-            ->andReturn("");
+            ->andReturn('');
         $changeset
-            ->shouldReceive("getUserLink")
+            ->shouldReceive('getUserLink')
             ->once()
-            ->andReturn("");
+            ->andReturn('');
         $changeset
-            ->shouldReceive("getTimeAgo")
+            ->shouldReceive('getTimeAgo')
             ->once()
-            ->andReturn("");
+            ->andReturn('');
 
-        $follow_up_content = $changeset->fetchFollowUp("", $user);
+        $follow_up_content = $changeset->fetchFollowUp('', $user);
 
         self::assertStringContainsString("<div class='tracker-followup'></div>", $follow_up_content);
     }
@@ -498,30 +498,30 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $comment = $this->getEmptyComment();
 
-        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), 'user@example.com', $comment);
 
         $changeset
-            ->shouldReceive("getAvatar")
+            ->shouldReceive('getAvatar')
             ->once()
             ->andReturn("<div class='tracker-avatar'></div>");
         $changeset
-            ->shouldReceive("fetchChangesetActionButtons")
+            ->shouldReceive('fetchChangesetActionButtons')
             ->once()
-            ->andReturn("");
+            ->andReturn('');
         $changeset
-            ->shouldReceive("fetchImportedFromXmlData")
+            ->shouldReceive('fetchImportedFromXmlData')
             ->once()
-            ->andReturn("");
+            ->andReturn('');
         $changeset
-            ->shouldReceive("getUserLink")
+            ->shouldReceive('getUserLink')
             ->once()
-            ->andReturn("");
+            ->andReturn('');
         $changeset
-            ->shouldReceive("getTimeAgo")
+            ->shouldReceive('getTimeAgo')
             ->once()
-            ->andReturn("");
+            ->andReturn('');
 
-        $follow_up_content = $changeset->fetchFollowUp("<div></div>", $user);
+        $follow_up_content = $changeset->fetchFollowUp('<div></div>', $user);
 
         self::assertStringContainsString('<div class="tracker_artifact_followup_comment" data-test="tracker_artifact_followup_comment_followup_1234"></div>', $follow_up_content);
     }

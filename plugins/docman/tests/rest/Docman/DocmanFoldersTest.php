@@ -97,7 +97,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("exists", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['message']);
+        $this->assertStringContainsString('exists', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['message']);
     }
 
     /**
@@ -166,7 +166,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(200, $file_content_response->getStatusCode());
         $this->assertEquals($file_content, $file_content_response->getBody());
 
-        $this->assertStringContainsString('filename="tuleap-NEW FILE"', $file_content_response->getHeader("Content-Disposition")[0]);
+        $this->assertStringContainsString('filename="tuleap-NEW FILE"', $file_content_response->getHeader('Content-Disposition')[0]);
 
         return $response1_json['id'];
     }
@@ -270,7 +270,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("size", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['message']);
+        $this->assertStringContainsString('size', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['message']);
     }
 
     /**
@@ -355,7 +355,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/folders")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/folders')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -379,7 +379,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/folders")->withBody($this->stream_factory->createStream($query)),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/folders')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -481,11 +481,11 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/folders")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/folders')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("exists", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['message']);
+        $this->assertStringContainsString('exists', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['message']);
     }
 
     /**
@@ -562,7 +562,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('POST', 'docman_folders/' . $read_only_folder['id'] . '/empties')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('allowed', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
 
         $response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $read_only_folder['id'] . '/empties')->withBody($this->stream_factory->createStream($query)),
@@ -588,7 +588,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/wikis")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -612,7 +612,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/wikis")->withBody($this->stream_factory->createStream($query)),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -750,7 +750,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/links")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/links')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -774,7 +774,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/links")->withBody($this->stream_factory->createStream($query)),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/links')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -831,11 +831,11 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/folders")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/folders')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("Status", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('Status', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
     }
 
     /**
@@ -855,11 +855,11 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/files")->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("Status", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('Status', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
     }
 
     /**
@@ -973,7 +973,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("root folder", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('root folder', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($root_id);
     }
@@ -992,7 +992,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('allowed', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }

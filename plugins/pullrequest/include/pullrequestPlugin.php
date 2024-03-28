@@ -203,7 +203,7 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys
         if ($event->getRequest()->get('action') === 'pull-requests') {
             $layout = $this->getThemeManager()->getBurningParrot(UserManager::instance()->getCurrentUserWithLoggedInInformation());
             if ($layout === null) {
-                throw new \Exception("Could not load BurningParrot theme");
+                throw new \Exception('Could not load BurningParrot theme');
             }
             $this->getPullRequestDisplayer()->display($event->getRequest(), $layout);
         }
@@ -439,7 +439,7 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (! ($git_plugin instanceof GitPlugin)) {
-            throw new Exception("Pullrequest plugin cannot find git plugin");
+            throw new Exception('Pullrequest plugin cannot find git plugin');
         }
 
         $labeled_item_collector = new LabeledItemCollector(
@@ -724,7 +724,7 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (! ($git_plugin instanceof GitPlugin)) {
-            throw new Exception("Pullrequest plugin cannot find git plugin");
+            throw new Exception('Pullrequest plugin cannot find git plugin');
         }
         return new Git_GitRepositoryUrlManager($git_plugin);
     }

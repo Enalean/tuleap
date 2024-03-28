@@ -20,7 +20,7 @@ class b201506031610_add_svn_immutable_tags_whitelist_table extends \Tuleap\Forge
 {
     public function description()
     {
-        return "Add table to store SVN immutable tags whitelist";
+        return 'Add table to store SVN immutable tags whitelist';
     }
 
     public function preUp()
@@ -30,11 +30,11 @@ class b201506031610_add_svn_immutable_tags_whitelist_table extends \Tuleap\Forge
 
     public function up()
     {
-        $sql = "CREATE TABLE svn_immutable_tags_whitelist (
+        $sql = 'CREATE TABLE svn_immutable_tags_whitelist (
                 group_id INT(11),
                 content TEXT,
                 PRIMARY KEY(group_id)
-        )";
+        )';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding svn_immutable_tags_whitelist table.');

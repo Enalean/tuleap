@@ -46,19 +46,19 @@ final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testThrowErrorIfLinkFieldIsNotAccessible(): void
     {
-        $order           = new FeatureElementToOrderInvolvedInChangeRepresentation([111], "before", 45);
+        $order           = new FeatureElementToOrderInvolvedInChangeRepresentation([111], 'before', 45);
         $feature_reorder = FeaturesToReorderProxy::buildFromRESTRepresentation($order);
         if (! $feature_reorder) {
-            throw new \LogicException("Feature reorder is not defined");
+            throw new \LogicException('Feature reorder is not defined');
         }
 
         $this->priority_manager
             ->expects(self::once())
-            ->method("moveListOfArtifactsBefore")
-            ->with([111], 45, "101", 101)
+            ->method('moveListOfArtifactsBefore')
+            ->with([111], 45, '101', 101)
             ->willThrowException(new Tracker_Artifact_Exception_CannotRankWithMyself(45));
 
         $this->expectException(FeatureCanNotBeRankedWithItselfException::class);
-        $this->orderer->reorder($feature_reorder, "101", ProgramIdentifierBuilder::build());
+        $this->orderer->reorder($feature_reorder, '101', ProgramIdentifierBuilder::build());
     }
 }

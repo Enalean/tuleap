@@ -77,15 +77,15 @@ final class AddLDAPGroupCommand extends Command
                     ->andThen(function (array $members) use ($ds, $group_name, $update, $output) {
                         $wording = $update ? 'Updating' : 'Adding';
 
-                        $output->writeln(sprintf("%s to %s: %s", $wording, $group_name, implode(' ', $members)));
+                        $output->writeln(sprintf('%s to %s: %s', $wording, $group_name, implode(' ', $members)));
 
-                        $group_dn = sprintf("%s=%s,%s", \ForgeConfig::get('sys_ldap_grp_cn'), ldap_escape($group_name), \ForgeConfig::get('sys_ldap_grp_dn'));
+                        $group_dn = sprintf('%s=%s,%s', \ForgeConfig::get('sys_ldap_grp_cn'), ldap_escape($group_name), \ForgeConfig::get('sys_ldap_grp_dn'));
                         $info     = [
-                            "cn"             => $group_name,
+                            'cn'             => $group_name,
                             'uniqueMember'   => $members,
-                            "objectclass"    => [
-                                "top",
-                                "groupOfUniqueNames",
+                            'objectclass'    => [
+                                'top',
+                                'groupOfUniqueNames',
                             ],
                         ];
 

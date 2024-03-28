@@ -10,7 +10,7 @@
  */
 
 require_once('jpgraph_plotmark.inc.php');
-require_once "jpgraph_log.php";
+require_once 'jpgraph_log.php';
 
 
 define('POLAR_360', 1);
@@ -34,9 +34,9 @@ class PolarPlot
     public $mark;
     public $legendcsimtarget = '';
     public $legendcsimalt    = '';
-    public $legend           = "";
+    public $legend           = '';
     public $csimtargets      = []; // Array of targets for CSIM
-    public $csimareas        = "";   // Resultant CSIM area tags
+    public $csimareas        = '';   // Resultant CSIM area tags
     public $csimalts         = null;   // ALT:s for corresponding target
     public $scale            = null;
     private $numpoints       = 0;
@@ -95,7 +95,7 @@ class PolarPlot
         return $this->csimareas;
     }
 
-    public function SetLegend($aLegend, $aCSIM = "", $aCSIMAlt = "")
+    public function SetLegend($aLegend, $aCSIM = '', $aCSIMAlt = '')
     {
         $this->legend           = $aLegend;
         $this->legendcsimtarget = $aCSIM;
@@ -107,7 +107,7 @@ class PolarPlot
     public function Legend($aGraph)
     {
         $color = $this->iColor;
-        if ($this->legend != "") {
+        if ($this->legend != '') {
             if ($this->iFillColor != '') {
                 $color = $this->iFillColor;
                 $aGraph->legend->Add(
@@ -547,17 +547,17 @@ class PolarAxis extends Axis
             );
         }
         $y = $pos + $this->img->GetFontHeight() + $this->title_margin + $this->title->margin;
-        if ($this->title_adjust == "high") {
-            $this->title->SetPos($this->img->width - $this->img->right_margin, $y, "right", "top");
-        } elseif ($this->title_adjust == "middle" || $this->title_adjust == "center") {
+        if ($this->title_adjust == 'high') {
+            $this->title->SetPos($this->img->width - $this->img->right_margin, $y, 'right', 'top');
+        } elseif ($this->title_adjust == 'middle' || $this->title_adjust == 'center') {
             $this->title->SetPos(
                 ($this->img->width - $this->img->left_margin - $this->img->right_margin) / 2 + $this->img->left_margin,
                 $y,
-                "center",
-                "top"
+                'center',
+                'top'
             );
-        } elseif ($this->title_adjust == "low") {
-            $this->title->SetPos($this->img->left_margin, $y, "left", "top");
+        } elseif ($this->title_adjust == 'low') {
+            $this->title->SetPos($this->img->left_margin, $y, 'left', 'top');
         } else {
             JpGraphError::RaiseL(17002, $this->title_adjust);
             //('Unknown alignment specified for X-axis title. ('.$this->title_adjust.')');
@@ -728,7 +728,7 @@ class PolarGraph extends Graph
     public $iType       = POLAR_360;
     private $iClockwise = false;
 
-    public function __construct($aWidth = 300, $aHeight = 200, $aCachedName = "", $aTimeOut = 0, $aInline = true)
+    public function __construct($aWidth = 300, $aHeight = 200, $aCachedName = '', $aTimeOut = 0, $aInline = true)
     {
         parent::__construct($aWidth, $aHeight, $aCachedName, $aTimeOut, $aInline);
         $this->SetDensity(TICKD_DENSE);
@@ -800,7 +800,7 @@ class PolarGraph extends Graph
         return $m;
     }
 
-    public function Stroke($aStrokeFileName = "")
+    public function Stroke($aStrokeFileName = '')
     {
         // Start by adjusting the margin so that potential titles will fit.
         $this->AdjustMarginsForTitles();

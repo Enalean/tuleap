@@ -132,7 +132,7 @@ class LegacyReferenceAdministrationBrowsingRenderer
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $can_be_deleted = ($ref->getScope() != "S") || $is_template_project;
+        $can_be_deleted = ($ref->getScope() != 'S') || $is_template_project;
         $this->event_manager->processEvent(
             \Event::GET_REFERENCE_ADMIN_CAPABILITIES,
             [
@@ -179,7 +179,7 @@ class LegacyReferenceAdministrationBrowsingRenderer
             $action_url = $base_url . '&reference_id=' . $purifier->purify($ref->getId()) . '&action=do_delete';
 
             echo '<TD align="center"><form method="post" action="' . $action_url . '" style="margin: 0;" onsubmit="return confirm(\'';
-            if ($ref->getScope() == "S") {
+            if ($ref->getScope() == 'S') {
                 echo sprintf(
                     _('*********** WARNING ***********  Do you want to delete the reference pattern? This will remove this reference pattern (%s) from ALL projects of this server. Are you SURE you want to continue ?'),
                     $purifier->purify($ref->getKeyword(), CODENDI_PURIFIER_JS_QUOTE)
@@ -187,7 +187,7 @@ class LegacyReferenceAdministrationBrowsingRenderer
             } else {
                 echo _('Delete this reference pattern?');
             }
-            echo '\')"><input type="image" SRC="' . util_get_image_theme("ic/trash.png") . '" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE">';
+            echo '\')"><input type="image" SRC="' . util_get_image_theme('ic/trash.png') . '" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE">';
             echo $csrf_token->fetchHTMLInput();
             echo '</form></TD>';
         } else {

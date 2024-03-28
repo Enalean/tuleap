@@ -30,14 +30,14 @@ class ReleaseLinkDao extends DataAccessObject
      */
     public function getReleaseLink(): ?array
     {
-        $sql = "SELECT * FROM release_note_link LIMIT 1";
+        $sql = 'SELECT * FROM release_note_link LIMIT 1';
 
         return $this->getDB()->row($sql);
     }
 
     public function updateReleaseNoteLink(?string $actual_link, string $tuleap_version): void
     {
-        $sql = "UPDATE release_note_link SET actual_link = ?, tuleap_version = ?";
+        $sql = 'UPDATE release_note_link SET actual_link = ?, tuleap_version = ?';
 
         $this->getDB()->run($sql, $actual_link, $tuleap_version);
     }
@@ -45,9 +45,9 @@ class ReleaseLinkDao extends DataAccessObject
     public function createReleaseNoteLink(string $tuleap_version): void
     {
         $this->getDB()->insert(
-            "release_note_link",
+            'release_note_link',
             [
-                "tuleap_version" => $tuleap_version,
+                'tuleap_version' => $tuleap_version,
             ]
         );
     }

@@ -70,7 +70,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
     public function buildRepresentation(Artifact $artifact, \PFUser $user): TaskRepresentation
     {
         if ($this->tracker->getId() !== $artifact->getTracker()->getId()) {
-            throw new \RuntimeException("Given artifact is not part of the tracker");
+            throw new \RuntimeException('Given artifact is not part of the tracker');
         }
 
         $date_period = $this->timeframe_calculator->buildDatePeriodWithoutWeekendForChangesetForREST($artifact->getLastChangeset(), $user, $this->logger);

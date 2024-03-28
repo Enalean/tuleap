@@ -27,20 +27,20 @@ class WikiPlugin_BackLinks extends WikiPlugin
 {
     public function getName()
     {
-        return _("BackLinks");
+        return _('BackLinks');
     }
 
     public function getDescription()
     {
-        return sprintf(_("List all pages which link to %s."), '[pagename]');
+        return sprintf(_('List all pages which link to %s.'), '[pagename]');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.32 $"
+            '$Revision: 1.32 $'
         );
     }
 
@@ -74,10 +74,10 @@ class WikiPlugin_BackLinks extends WikiPlugin
             $exclude[] = $page;
         }
         if ($info) {
-            $info = explode(",", $info);
+            $info = explode(',', $info);
             if (in_array('count', $info)) {
                 $args['types']['count'] =
-                    new _PageList_Column_BackLinks_count('count', _("#"), 'center');
+                    new _PageList_Column_BackLinks_count('count', _('#'), 'center');
             }
         }
         $args['dosort'] = ! empty($args['sortby']); // override DB sort (??)
@@ -106,12 +106,12 @@ class WikiPlugin_BackLinks extends WikiPlugin
                     $pagelink = $page;
 
                 if ($pagelist->isEmpty()) {
-                    return HTML::p(fmt("No other page links to %s yet.", $pagelink));
+                    return HTML::p(fmt('No other page links to %s yet.', $pagelink));
                 }
 
                 if ($pagelist->getTotal() == 1) {
                     $pagelist->setCaption(fmt(
-                        "One page would link to %s:",
+                        'One page would link to %s:',
                         $pagelink
                     ));
                 } else {
@@ -122,7 +122,7 @@ class WikiPlugin_BackLinks extends WikiPlugin
                     //     $pagelist->setCaption(fmt("Two pages would link to %s:",
                     //                               $pagelink));
                     $pagelist->setCaption(fmt(
-                        "%s pages would link to %s:",
+                        '%s pages would link to %s:',
                         $pagelist->getTotal(),
                         $pagelink
                     ));
@@ -132,14 +132,14 @@ class WikiPlugin_BackLinks extends WikiPlugin
                 $pagelink = WikiLink($page, 'auto');
 
                 if ($pagelist->isEmpty()) {
-                    return HTML::p(fmt("No page links to %s.", $pagelink));
+                    return HTML::p(fmt('No page links to %s.', $pagelink));
                 }
 
                 //trigger_error("DEBUG: " . $pagelist->getTotal());
 
                 if ($pagelist->getTotal() == 1) {
                     $pagelist->setCaption(fmt(
-                        "One page links to %s:",
+                        'One page links to %s:',
                         $pagelink
                     ));
                 } else {
@@ -150,7 +150,7 @@ class WikiPlugin_BackLinks extends WikiPlugin
                     //     $pagelist->setCaption(fmt("Two pages link to %s:",
                     //                               $pagelink));
                     $pagelist->setCaption(fmt(
-                        "%s pages link to %s:",
+                        '%s pages link to %s:',
                         $pagelist->getTotal(),
                         $pagelink
                     ));

@@ -107,7 +107,7 @@ class TimeframeConfigInvalid implements IComputeTimeframes
 
     private function getInvalidConfigDifferentProjectsMessage(): string
     {
-        return dgettext('tuleap-tracker', "It is inherited from a tracker of another project, this is not allowed");
+        return dgettext('tuleap-tracker', 'It is inherited from a tracker of another project, this is not allowed');
     }
 
     public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker

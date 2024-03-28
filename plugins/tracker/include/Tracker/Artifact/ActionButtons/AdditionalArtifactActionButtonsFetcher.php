@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class AdditionalArtifactActionButtonsFetcher implements Dispatchable
 {
-    public const NAME = "additionalArtifactActionButtonsFetcher";
+    public const NAME = 'additionalArtifactActionButtonsFetcher';
 
     /**
      * @var Artifact

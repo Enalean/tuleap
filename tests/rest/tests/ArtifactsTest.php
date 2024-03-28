@@ -51,7 +51,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     public function testPostArtifact()
     {
         $summary_field_label = 'Summary';
-        $summary_field_value = "This is a new epic";
+        $summary_field_value = 'This is a new epic';
 
         $post_body = $this->buildPOSTBodyContent($summary_field_label, $summary_field_value);
 
@@ -157,7 +157,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
             self::assertNotEmpty($response->getHeader('Last-Modified'));
             self::assertNotEmpty($response->getHeader('Etag'));
-            self::assertEmpty($response->getHeader('Location'), "There is no redirect with a simple GET");
+            self::assertEmpty($response->getHeader('Location'), 'There is no redirect with a simple GET');
 
             $fields = $artifact['values'];
 
@@ -187,14 +187,14 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     public function testGETBurndownForParentArtifact()
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', "artifacts/" . $this->pokemon_artifact_ids[1])
+            $this->request_factory->createRequest('GET', 'artifacts/' . $this->pokemon_artifact_ids[1])
         );
 
         $burndown = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertNotEmpty($response->getHeader('Last-Modified'));
         self::assertNotEmpty($response->getHeader('Etag'));
-        self::assertEmpty($response->getHeader('Location'), "There is no redirect with a simple GET");
+        self::assertEmpty($response->getHeader('Location'), 'There is no redirect with a simple GET');
         $this->assertEquals(200, $response->getStatusCode());
 
         $start_date = new DateTime();
@@ -204,28 +204,28 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
         $expected_burndown_chart_with_date = [
             [
-                "date"             => $start_date->format(DATE_ATOM),
-                "remaining_effort" => 55,
+                'date'             => $start_date->format(DATE_ATOM),
+                'remaining_effort' => 55,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 43,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 43,
             ],
             [
-                "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
-                "remaining_effort" => 48,
+                'date'             => $start_date->modify('+3 day')->format(DATE_ATOM),
+                'remaining_effort' => 48,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 37,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 37,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 37,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 37,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 37,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 37,
             ],
         ];
 
@@ -245,14 +245,14 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     public function testGETBurndownForAChildrenArtifact()
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', "artifacts/" . $this->niveau_1_artifact_ids[1])
+            $this->request_factory->createRequest('GET', 'artifacts/' . $this->niveau_1_artifact_ids[1])
         );
 
         $burndown = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertNotEmpty($response->getHeader('Last-Modified'));
         self::assertNotEmpty($response->getHeader('Etag'));
-        self::assertEmpty($response->getHeader('Location'), "There is no redirect with a simple GET");
+        self::assertEmpty($response->getHeader('Location'), 'There is no redirect with a simple GET');
         $this->assertEquals(200, $response->getStatusCode());
 
         $start_date = new DateTime();
@@ -262,28 +262,28 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
         $expected_burndown_chart = [
             [
-                "date"             => $start_date->format(DATE_ATOM),
-                "remaining_effort" => 32,
+                'date'             => $start_date->format(DATE_ATOM),
+                'remaining_effort' => 32,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 20,
             ],
             [
-                "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
-                "remaining_effort" => 25,
+                'date'             => $start_date->modify('+3 day')->format(DATE_ATOM),
+                'remaining_effort' => 25,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 20,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 20,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 20,
             ],
         ];
 
@@ -293,14 +293,14 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     public function testGETBurndownForAnotherChildrenArtifact()
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', "artifacts/" . $this->niveau_2_artifact_ids[2])
+            $this->request_factory->createRequest('GET', 'artifacts/' . $this->niveau_2_artifact_ids[2])
         );
 
         $burndown = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertNotEmpty($response->getHeader('Last-Modified'));
         self::assertNotEmpty($response->getHeader('Etag'));
-        self::assertEmpty($response->getHeader('Location'), "There is no redirect with a simple GET");
+        self::assertEmpty($response->getHeader('Location'), 'There is no redirect with a simple GET');
         $this->assertEquals(200, $response->getStatusCode());
 
         $start_date = new DateTime();
@@ -310,28 +310,28 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
         $expected_burndown_chart = [
             [
-                "date"             => $start_date->format(DATE_ATOM),
-                "remaining_effort" => 25,
+                'date'             => $start_date->format(DATE_ATOM),
+                'remaining_effort' => 25,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 20,
             ],
             [
-                "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
-                "remaining_effort" => 40,
+                'date'             => $start_date->modify('+3 day')->format(DATE_ATOM),
+                'remaining_effort' => 40,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 20,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 20,
             ],
             [
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20,
+                'date'             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                'remaining_effort' => 20,
             ],
         ];
 
@@ -423,7 +423,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         self::assertNotEmpty($response->getHeader('Last-Modified'));
         self::assertNotEmpty($response->getHeader('Etag'));
 
-        $this->assertEquals("wunderbar", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
+        $this->assertEquals('wunderbar', $this->getFieldValueForFieldLabel($artifact_id, $field_label));
         return $artifact_id;
     }
 
@@ -451,7 +451,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             'values' => [
                 [
                     'field_id' => $field_id,
-                    'value'    => ["format" => "html", "content" => ""],
+                    'value'    => ['format' => 'html', 'content' => ''],
                 ],
             ],
         ]);
@@ -465,7 +465,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             'values' => [
                 [
                     'field_id' => $field_id,
-                    'value'    => "wunderbar",
+                    'value'    => 'wunderbar',
                 ],
             ],
         ]);
@@ -486,7 +486,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             'values' => [
                 [
                     'field_id' => $field_id,
-                    'value'    => "wunderbar",
+                    'value'    => 'wunderbar',
                 ],
             ],
         ]);
@@ -501,7 +501,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
         $this->assertEquals($response->getHeaderLine('Last-Modified'), $last_modified);
         $this->assertEquals($response->getHeaderLine('Etag'), $etag);
-        $this->assertEquals("wunderbar", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
+        $this->assertEquals('wunderbar', $this->getFieldValueForFieldLabel($artifact_id, $field_label));
         return $artifact_id;
     }
 
@@ -516,7 +516,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             'values' => [
                 [
                     'field_id' => $field_id,
-                    'value'    => "This should return 200",
+                    'value'    => 'This should return 200',
                 ],
             ],
         ]);
@@ -533,7 +533,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         self::assertNotEmpty($response->getHeader('Last-Modified'));
         self::assertNotEmpty($response->getHeader('Etag'));
 
-        $this->assertEquals("This should return 200", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
+        $this->assertEquals('This should return 200', $this->getFieldValueForFieldLabel($artifact_id, $field_label));
         return $artifact_id;
     }
 
@@ -548,7 +548,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             'values' => [
                 [
                     'field_id' => $field_id,
-                    'value'    => "varm choklade",
+                    'value'    => 'varm choklade',
                 ],
             ],
         ]);
@@ -565,7 +565,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         self::assertNotEmpty($response->getHeader('Last-Modified'));
         self::assertNotEmpty($response->getHeader('Etag'));
 
-        $this->assertEquals("varm choklade", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
+        $this->assertEquals('varm choklade', $this->getFieldValueForFieldLabel($artifact_id, $field_label));
         return $artifact_id;
     }
 
@@ -580,12 +580,12 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             'values' => [
                 [
                     'field_id' => $field_id,
-                    'value'    => "This should return 412",
+                    'value'    => 'This should return 412',
                 ],
             ],
         ]);
 
-        $last_modified = "2001-03-05T15:14:55+01:00";
+        $last_modified = '2001-03-05T15:14:55+01:00';
         $request       = $this->request_factory->createRequest('PUT', 'artifacts/' . $artifact_id)
             ->withBody($this->stream_factory->createStream($put_resource))
             ->withHeader('If-Unmodified-Since', $last_modified);
@@ -605,12 +605,12 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             'values' => [
                 [
                     'field_id' => $field_id,
-                    'value'    => "This should return 4122415",
+                    'value'    => 'This should return 4122415',
                 ],
             ],
         ]);
 
-        $Etag    = "one empty bottle";
+        $Etag    = 'one empty bottle';
         $request = $this->request_factory->createRequest('PUT', 'artifacts/' . $artifact_id)
             ->withBody($this->stream_factory->createStream($put_resource))
             ->withHeader('If-Match', $Etag);
@@ -680,9 +680,9 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
                 'values' => [
                     [
                         'field_id' => $field_id,
-                        "links"    => [
-                            ["id" => $this->level_three_artifact_ids[1], "type" => $nature_is_child],
-                            ["id" => $this->level_three_artifact_ids[3], "type" => $nature_empty],
+                        'links'    => [
+                            ['id' => $this->level_three_artifact_ids[1], 'type' => $nature_is_child],
+                            ['id' => $this->level_three_artifact_ids[3], 'type' => $nature_empty],
                         ],
                     ],
                 ],
@@ -741,7 +741,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
                 'values' => [
                     [
                         'field_id' => $this->getFieldByFieldLabel($target_artifact_id, 'name'),
-                        'value'    => "Yolo",
+                        'value'    => 'Yolo',
                     ],
                 ],
             ]
@@ -768,7 +768,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
                 'values' => [
                     [
                         'field_id' => $this->getFieldByFieldLabel($target_artifact_id, 'name'),
-                        'value'    => "Yolo",
+                        'value'    => 'Yolo',
                     ],
                 ],
             ]
@@ -793,7 +793,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
         self::assertNotEmpty($response->getHeader('Last-Modified'));
         self::assertNotEmpty($response->getHeader('Etag'));
-        self::assertEmpty($response->getHeader('Location'), "There is no redirect with a simple GET");
+        self::assertEmpty($response->getHeader('Location'), 'There is no redirect with a simple GET');
 
         $fields = $artifact['values'];
 

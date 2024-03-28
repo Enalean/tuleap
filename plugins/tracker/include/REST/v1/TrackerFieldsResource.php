@@ -101,16 +101,16 @@ class TrackerFieldsResource extends AuthenticatedResource
         $field = $this->getField($id, $user);
 
         if (! $field->getTracker()->userIsAdmin($user)) {
-            throw new RestException(403, "User is not tracker administrator.");
+            throw new RestException(403, 'User is not tracker administrator.');
         }
 
         $form_element_factory = Tracker_FormElementFactory::instance();
         if (! $form_element_factory->isFieldASimpleListField($field)) {
-            throw new RestException(400, "Field is not a simple list.");
+            throw new RestException(400, 'Field is not a simple list.');
         }
 
         if (! is_a($field->getBind(), Tracker_FormElement_Field_List_Bind_Static::class)) {
-            throw new RestException(400, "Field values can be only add with static values.");
+            throw new RestException(400, 'Field values can be only add with static values.');
         }
 
         $request = ['add' => null];
@@ -189,7 +189,7 @@ class TrackerFieldsResource extends AuthenticatedResource
         $field                = $form_element_factory->getFieldById($id);
 
         if (! $field) {
-            throw new RestException(404, "Field not found.");
+            throw new RestException(404, 'Field not found.');
         }
 
         $tracker = $field->getTracker();
@@ -205,7 +205,7 @@ class TrackerFieldsResource extends AuthenticatedResource
         );
 
         if (! $field->isUsed()) {
-            throw new RestException(400, "Field is not used in tracker.");
+            throw new RestException(400, 'Field is not used in tracker.');
         }
 
         return $field;
@@ -221,7 +221,7 @@ class TrackerFieldsResource extends AuthenticatedResource
 
         $form_element_factory = Tracker_FormElementFactory::instance();
         if (! $form_element_factory->isFieldAFileField($field)) {
-            throw new RestException(400, "Field must be of type File.");
+            throw new RestException(400, 'Field must be of type File.');
         }
 
         if (! $field->userCanSubmit($user) && ! $field->userCanUpdate($user)) {

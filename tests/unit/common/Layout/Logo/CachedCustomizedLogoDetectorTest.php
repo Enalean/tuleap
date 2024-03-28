@@ -58,7 +58,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $logger   = new NullLogger();
         $detector = $this->createMock(CustomizedLogoDetector::class);
 
-        $content = json_encode(["is_legacy_organization_logo_customized" => true], JSON_THROW_ON_ERROR);
+        $content = json_encode(['is_legacy_organization_logo_customized' => true], JSON_THROW_ON_ERROR);
         file_put_contents($this->cache_file, $content);
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
@@ -74,7 +74,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $logger   = new NullLogger();
         $detector = $this->createMock(CustomizedLogoDetector::class);
 
-        $content = json_encode(["is_legacy_organization_logo_customized" => false], JSON_THROW_ON_ERROR);
+        $content = json_encode(['is_legacy_organization_logo_customized' => false], JSON_THROW_ON_ERROR);
         file_put_contents($this->cache_file, $content);
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
@@ -129,7 +129,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItInvalidatesCache(): void
     {
-        $content = json_encode(["is_legacy_organization_logo_customized" => true], JSON_THROW_ON_ERROR);
+        $content = json_encode(['is_legacy_organization_logo_customized' => true], JSON_THROW_ON_ERROR);
         file_put_contents($this->cache_file, $content);
 
         CachedCustomizedLogoDetector::invalidateCache();
@@ -153,7 +153,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUsesInformationInCacheToKnowIfSvgLogoIsCustomized(): void
     {
-        $content = json_encode(["is_svg_organization_logo_customized" => true], JSON_THROW_ON_ERROR);
+        $content = json_encode(['is_svg_organization_logo_customized' => true], JSON_THROW_ON_ERROR);
         file_put_contents($this->cache_file, $content);
 
         $logger   = new NullLogger();

@@ -51,7 +51,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
     {
         $hp = Codendi_HTMLPurifier::instance();
         global $Language,$group_id;
-            $html_result = "";
+            $html_result = '';
 
         if (! $masschange) {
             $html_result .= '<table width="100%"><tr><td align="left" width="50%">';
@@ -71,7 +71,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                           <INPUT TYPE="HIDDEN" NAME="atid" VALUE="' . (int) $this->group_artifact_id . '">
                           <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . (int) $group_id . '">
 			  <INPUT TYPE="HIDDEN" NAME="func" VALUE="export">
-                          <INPUT TYPE="HIDDEN" NAME="export_aids" VALUE="' . $hp->purify(implode(",", $aids), CODENDI_PURIFIER_CONVERT_HTML) . '">
+                          <INPUT TYPE="HIDDEN" NAME="export_aids" VALUE="' . $hp->purify(implode(',', $aids), CODENDI_PURIFIER_CONVERT_HTML) . '">
                           <input type="checkbox" name="only_displayed_fields" /> <small>' . $Language->getText('tracker_include_report', 'export_only_report_fields') . '</small><br />
                           <FONT SIZE="-1"><INPUT TYPE="SUBMIT" VALUE="' . $Language->getText('tracker_include_report', 'btn_export') . '"></FONT><br />
                           <input type="hidden" name="report_id" value="' . (int) $this->getReportId() . '" />
@@ -102,7 +102,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                     $arr = explode(',', $criteria_list);
                     $i   = 0;
             foreach ($arr as $attr) {
-                preg_match("/\s*([^<>]*)([<>]*)/", $attr, $match);
+                preg_match('/\s*([^<>]*)([<>]*)/', $attr, $match);
                 list(,$mattr,$mdir) = $match;
             //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
                 if ($mattr == $order) {
@@ -151,7 +151,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
             $arr    = explode(',', $criteria_list);
             $morder = '';
             foreach ($arr as $crit) {
-                $morder .= ($morder ? "," . $crit : $crit);
+                $morder .= ($morder ? ',' . $crit : $crit);
                 $attr    = str_replace('>', '', $crit);
                 $attr    = str_replace('<', '', $attr);
 
@@ -188,7 +188,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
         $query_fields = $this->getQueryFields();
 
         //the width has been removed to correct the display of the Query Form (related to the fix of STTab theme)
-        $html_select .= "<table>";
+        $html_select .= '<table>';
         $labels       = '';
         $boxes        = '';
         // Number of search criteria (boxes) displayed in one row
@@ -205,7 +205,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
 
             // beginning of a new row
             if ($ib % $this->fields_per_line == 0) {
-                $align   = "left";
+                $align   = 'left';
                 $labels .= "\n" . '<TR align="' . $align . '" valign="top">';
                 $boxes  .= "\n" . '<TR align="' . $align . '" valign="top">';
             }
@@ -235,7 +235,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                     if (isset($prefs[$field->getName()][0])) {
                         $values = $prefs[$field->getName()][0];
                     } else {
-                        $values = "";
+                        $values = '';
                     }
                 }
 
@@ -281,7 +281,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                 $field->isTextField() ||
                        $field->isTextArea()
             ) {
-                $val    = isset($prefs[$field->getName()][0]) ? $prefs[$field->getName()][0] : "";
+                $val    = isset($prefs[$field->getName()][0]) ? $prefs[$field->getName()][0] : '';
                 $boxes .=
                     ($pv != 0 ? $val : $field_html->fieldText(stripslashes($val), 15, 80));
             }
@@ -301,7 +301,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
             $html_select .= $labels . '</TR>' . $boxes . '</TR>';
         }
 
-        $html_select .= "</table>";
+        $html_select .= '</table>';
 
         return $html_select;
     }
@@ -350,7 +350,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
     {
         global $Language,$ath;
         $hp          = Codendi_HTMLPurifier::instance();
-        $html_result = "";
+        $html_result = '';
 
         // Build the list of links to use for column headings
         // Used to trigger sort on that column
@@ -482,9 +482,9 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                 if ($field->isDateField()) {
                     if ($value) {
                         if ($field->getName() == 'last_update_date') {
-                             $html_result .= "<TD $width>" . format_date("Y-m-d H:i", $value) . '</TD>' . "\n";
+                             $html_result .= "<TD $width>" . format_date('Y-m-d H:i', $value) . '</TD>' . "\n";
                         } else {
-                            $html_result .= "<TD $width>" . format_date("Y-m-d", $value) . '</TD>' . "\n";
+                            $html_result .= "<TD $width>" . format_date('Y-m-d', $value) . '</TD>' . "\n";
                         }
                     } else {
                         $html_result .= '<TD align="center">-</TD>';
@@ -493,7 +493,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                     if ($nolink) {
                         $html_result .= "<TD $width>" .  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . "</TD>\n";
                     } else {
-                        $target       = ($pv == 0 ? "" : " target=blank");
+                        $target       = ($pv == 0 ? '' : ' target=blank');
                         $html_result .= "<TD $width>" . '<A HREF="/tracker/?func=detail&aid=' .
                         urlencode($value) . '&atid=' . (int) $this->group_artifact_id . '&group_id=' . (int) $group_id . '"' . $target . '>' .
                         $value . '</A></TD>' . "\n";
@@ -508,7 +508,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                          $html_result .= "<TD $width>" . number_format($value, 2) . '&nbsp;</TD>' . "\n";
                 } elseif ($field->isTextArea()) {
                                    $unsane       = util_unconvert_htmlspecialchars($value);
-                                   $text         = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $hp->purify($unsane, CODENDI_PURIFIER_BASIC, $group_id));
+                                   $text         = str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $hp->purify($unsane, CODENDI_PURIFIER_BASIC, $group_id));
                                    $text         = str_replace('  ', '&nbsp; ', $text);
                                    $text         = str_replace('  ', '&nbsp; ', $text);
                                    $html_result .= '<TD ' . $width . ' style="font-family:monospace; font-size:10pt;">' . $text . '&nbsp;</TD>';
@@ -521,7 +521,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                         $field_values = $field->getFieldPredefinedValues($ath->getId(), false, false, true, false);
                         $array_values = [];
                         while ($row = db_fetch_array($field_values)) {
-                            $array_values[] = "[" . $row['value_id'] . ", '" . addslashes($row['value']) . "']";
+                            $array_values[] = '[' . $row['value_id'] . ", '" . addslashes($row['value']) . "']";
                         }
                     }
                     $html_result .= "</TD>\n";
@@ -611,7 +611,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                 $html_result .=  $hp->purify($ath->getBrowseInstructions(), CODENDI_PURIFIER_FULL);
         }
 
-        echo "<p><div class='alert alert-danger'> " . $Language->getText('tracker_index', 'feature_is_deprecated')  .  "</div></p>";
+        echo "<p><div class='alert alert-danger'> " . $Language->getText('tracker_index', 'feature_is_deprecated')  .  '</div></p>';
 
 
         $html_result .= '
@@ -642,7 +642,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
         }
 
             // Start building the URL that we use to for hyperlink in the form
-            $url = "/tracker/?atid=" . (int) $this->group_artifact_id . "&group_id=" . (int) $group_id . "&set=" .  $hp->purify($set, CODENDI_PURIFIER_CONVERT_HTML)  . "&msort=" .  $hp->purify($msort, CODENDI_PURIFIER_CONVERT_HTML);
+            $url = '/tracker/?atid=' . (int) $this->group_artifact_id . '&group_id=' . (int) $group_id . '&set=' .  $hp->purify($set, CODENDI_PURIFIER_CONVERT_HTML)  . '&msort=' .  $hp->purify($msort, CODENDI_PURIFIER_CONVERT_HTML);
         if ($masschange) {
             $url .= '&func=masschange';
         }
@@ -655,9 +655,9 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
 
             $url_nomorder = $url;
         if ($pv != 0) {
-            $url_nomorder .= "&pv=" . (int) $pv;
+            $url_nomorder .= '&pv=' . (int) $pv;
         }
-            $url .= "&morder=" .  $hp->purify($morder, CODENDI_PURIFIER_CONVERT_HTML);
+            $url .= '&morder=' .  $hp->purify($morder, CODENDI_PURIFIER_CONVERT_HTML);
 
             $params = ['url' => &$url];
             $em     = EventManager::instance();
@@ -688,11 +688,11 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
             $onclick      = '';
             $onclick     .= "if ($('artifacts_query').empty()) { return true }";
             if (! $current_user->isAnonymous()) {
-                $onclick .= "else { new Ajax.Request(this.href); }";
+                $onclick .= 'else { new Ajax.Request(this.href); }';
             }
             $onclick     .= "if ($('artifacts_query').visible()) { this.firstChild.src.replace(/minus.png/, 'plus.png'); } else {this.firstChild.src.replace(/plus.png/, 'minus.png');}";
             $onclick     .= "new Effect.toggle($('artifacts_query'), 'slide', {duration:0.1});";
-            $onclick     .= "return false;";
+            $onclick     .= 'return false;';
             $html_result .= '<a href="' . $url . '&amp;func=toggle_section&amp;section=query" onclick="' . $onclick . '">';
             if ($user_dont_want_to_see_query) {
                 $image = 'ic/toggle_plus.png';
@@ -730,11 +730,11 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                     $onclick  = '';
                     $onclick .= "if ($('artifacts_result').empty()) { return true }";
                     if (! $current_user->isAnonymous()) {
-                        $onclick .= "else { new Ajax.Request(this.href); }";
+                        $onclick .= 'else { new Ajax.Request(this.href); }';
                     }
                     $onclick     .= "if ($('artifacts_result').visible()) { this.firstChild.src.replace(/minus.png/, 'plus.png'); } else {this.firstChild.src.replace(/plus.png/, 'minus.png');}";
                     $onclick     .= "new Effect.toggle($('artifacts_result'), 'slide', {duration:0.1});";
-                    $onclick     .= "return false;";
+                    $onclick     .= 'return false;';
                     $html_result .= '<a href="' . $url . '&amp;func=toggle_section&amp;section=results" onclick="' . $onclick . '">';
                     if ($user_dont_want_to_see_results) {
                         $image = 'ic/toggle_plus.png';
@@ -772,7 +772,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
 
                 if ($pv == 0) {
                         $html_result .= $Language->getText('tracker_include_report', 'multicolumn_sort', [$url_alternate_sort, $text]) . '&nbsp;&nbsp;&nbsp;&nbsp;' .
-                            '(<a href="' . $url . '&pv=1"> <img src="' . util_get_image_theme("ic/printer.png") . '" border="0">' .
+                            '(<a href="' . $url . '&pv=1"> <img src="' . util_get_image_theme('ic/printer.png') . '" border="0">' .
                             '&nbsp;' . $Language->getText('global', 'printer_version') . '</a>)' . "\n";
                 }
             }
@@ -897,8 +897,8 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                          $hp->purify($arr['report_id'], CODENDI_PURIFIER_CONVERT_HTML) . '</A>';
                 }
 
-                    echo "</td><td>" . $hp->purify($arr['name'], CODENDI_PURIFIER_CONVERT_HTML) . '</td>' .
-                  "<td>" . $hp->purify($arr['description'], CODENDI_PURIFIER_BASIC, $group_id) . '</td>' .
+                    echo '</td><td>' . $hp->purify($arr['name'], CODENDI_PURIFIER_CONVERT_HTML) . '</td>' .
+                  '<td>' . $hp->purify($arr['description'], CODENDI_PURIFIER_BASIC, $group_id) . '</td>' .
                   '<td align="center">' . $hp->purify($this->getScopeLabel($arr['scope']), CODENDI_PURIFIER_CONVERT_HTML) . '</td>';
 
                   $name = $arr['name'];
@@ -913,7 +913,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
                     echo '<A HREF="/tracker/admin/?func=report&group_id=' . (int) $group_id .
                         '&atid=' . (int) $atid . '&delete_report=1&report_id=' . (int) $arr['report_id'] .
                         '" onClick="return confirm(\'' . $Language->getText('tracker_include_report', 'delete_report', $hp->purify(addslashes($name), CODENDI_PURIFIER_CONVERT_HTML)) . '\');">' .
-                            '<img src="' . util_get_image_theme("ic/trash.png") . '" border="0"></A>';
+                            '<img src="' . util_get_image_theme('ic/trash.png') . '" border="0"></A>';
                 }
 
                     echo '</td></tr>';

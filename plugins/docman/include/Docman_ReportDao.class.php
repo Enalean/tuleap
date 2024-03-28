@@ -142,7 +142,7 @@ class Docman_ReportDao extends DataAccessObject
     {
         $inserted = $this->update($sql);
         if ($inserted) {
-            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            $dar = $this->retrieve('SELECT LAST_INSERT_ID() AS id');
             if ($row = $dar->getRow()) {
                 return $row['id'];
             } else {

@@ -28,7 +28,7 @@ class TrackerPrivateCommentUGroupEnabledDao extends DataAccessObject
 {
     public function disabledPrivateCommentOnTracker(int $tracker_id): void
     {
-        $sql = "INSERT INTO plugin_tracker_private_comment_disabled_tracker (tracker_id) VALUES (?);";
+        $sql = 'INSERT INTO plugin_tracker_private_comment_disabled_tracker (tracker_id) VALUES (?);';
 
         $this->getDB()->run($sql, $tracker_id);
     }

@@ -29,7 +29,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $response->expects(self::once())->method('setContentType')->with('application/json');
 
         ob_start();
-        $response->sendJSON(["toto"]);
+        $response->sendJSON(['toto']);
         $output = ob_get_clean();
         self::assertEquals('["toto"]', $output);
     }

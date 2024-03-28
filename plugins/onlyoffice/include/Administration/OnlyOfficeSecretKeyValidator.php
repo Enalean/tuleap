@@ -46,11 +46,11 @@ final class OnlyOfficeSecretKeyValidator implements SecretValidator
     public function checkIsValid(ConcealedString $value): void
     {
         if ($value->isIdenticalTo(new ConcealedString(''))) {
-            throw new InvalidConfigKeyValueException("Secret cannot be empty");
+            throw new InvalidConfigKeyValueException('Secret cannot be empty');
         }
 
         if (strlen($value->getString()) < 32) {
-            throw new InvalidConfigKeyValueException("Secret length cannot be less than 32 characters");
+            throw new InvalidConfigKeyValueException('Secret length cannot be less than 32 characters');
         }
     }
 }

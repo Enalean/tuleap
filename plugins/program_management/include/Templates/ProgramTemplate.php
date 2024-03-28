@@ -99,12 +99,12 @@ final class ProgramTemplate implements CategorisedTemplate
 
             $this->xml_path = $base_dir . '/project.xml';
             if (! copy(self::PROGRAM_XML, $this->xml_path)) {
-                throw new \RuntimeException("Can not copy Program file for tuleap template import");
+                throw new \RuntimeException('Can not copy Program file for tuleap template import');
             }
 
             $program_management_config_file = $base_dir . '/program-management-config.xml';
             if (! copy(self::PROGRAM_CONFIG_XML, $program_management_config_file)) {
-                throw new \RuntimeException("Can not copy Program config file for tuleap template import");
+                throw new \RuntimeException('Can not copy Program config file for tuleap template import');
             }
         }
 

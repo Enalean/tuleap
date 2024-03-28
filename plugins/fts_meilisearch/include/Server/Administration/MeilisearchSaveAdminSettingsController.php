@@ -61,7 +61,7 @@ final class MeilisearchSaveAdminSettingsController extends DispatchablePSR15Comp
         $key_local_meilisearch_server = $this->local_meilisearch_server->getCurrentKey();
         $is_using_local_server        = $key_local_meilisearch_server !== null;
         if ($is_using_local_server) {
-            throw new ForbiddenException("Cannot set url nor api key for a local meilisearch server");
+            throw new ForbiddenException('Cannot set url nor api key for a local meilisearch server');
         }
 
         $this->csrf_token->check();

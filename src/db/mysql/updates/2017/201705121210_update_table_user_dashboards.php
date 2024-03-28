@@ -32,11 +32,11 @@ class b201705121210_update_table_user_dashboards extends \Tuleap\ForgeUpgrade\Bu
 
     public function up()
     {
-        $sql = "ALTER TABLE user_dashboards
+        $sql = 'ALTER TABLE user_dashboards
                   DROP INDEX `PRIMARY`,
                   ADD PRIMARY KEY id (id),
                   ADD INDEX user_id_name (user_id, name(5));
-               ";
+               ';
 
         $this->db->dbh->exec($sql);
     }

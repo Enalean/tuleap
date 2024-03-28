@@ -176,7 +176,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(45)
             ->willReturn($artifact);
 
-        $order   = OrderRepresentation::build([456], "invalid", 123);
+        $order   = OrderRepresentation::build([456], 'invalid', 123);
         $payload = CellPatchRepresentation::build(null, $order);
 
         $this->expectException(RestException::class);

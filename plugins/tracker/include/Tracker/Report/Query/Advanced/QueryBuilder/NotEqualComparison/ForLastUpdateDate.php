@@ -32,12 +32,12 @@ final class ForLastUpdateDate implements DateTimeReadOnlyConditionBuilder
     public function getCondition($value): ParametrizedSQLFragment
     {
         if ($value === '') {
-            return new ParametrizedSQLFragment("1", []);
+            return new ParametrizedSQLFragment('1', []);
         }
 
         $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $value);
         $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $value);
-        $condition         = "c.submitted_on NOT BETWEEN ? AND ?";
+        $condition         = 'c.submitted_on NOT BETWEEN ? AND ?';
 
         return new ParametrizedSQLFragment($condition, [$floored_timestamp, $ceiled_timestamp]);
     }

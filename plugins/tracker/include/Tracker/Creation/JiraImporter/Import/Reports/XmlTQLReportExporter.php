@@ -67,9 +67,9 @@ class XmlTQLReportExporter
         array $column_fields,
     ): void {
         $report_node = $reports_node->addChild('report');
-        $report_node->addAttribute("is_default", $is_default ? '1' : '0');
-        $report_node->addAttribute("is_in_expert_mode", "1");
-        $report_node->addAttribute("expert_query", $tql_query);
+        $report_node->addAttribute('is_default', $is_default ? '1' : '0');
+        $report_node->addAttribute('is_in_expert_mode', '1');
+        $report_node->addAttribute('expert_query', $tql_query);
 
         $this->cdata_factory->insert($report_node, 'name', $report_name);
         $this->cdata_factory->insert($report_node, 'description', $report_description);

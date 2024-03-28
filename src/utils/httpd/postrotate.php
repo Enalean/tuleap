@@ -30,8 +30,8 @@ $logger = new WrapperLogger(
     'httpd.postrotate'
 );
 
-$logger->info("Restart apache");
+$logger->info('Restart apache');
 (new ApacheServiceControl(new ServiceControl(), new ProcessFactory()))->reload();
-$logger->info("Restart apache completed");
+$logger->info('Restart apache completed');
 
 $event_manager->processEvent(new \Tuleap\Httpd\PostRotateEvent($logger));

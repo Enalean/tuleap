@@ -31,7 +31,7 @@ final class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $parser = new Parser();
 
-        $parser->parse("");
+        $parser->parse('');
     }
 
     public function testItParsesASimpleQuery(): void

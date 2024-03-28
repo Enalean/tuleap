@@ -189,19 +189,19 @@ class PostCommit
     ) {
         $commit_info = $this->commit_info_enhancer->getCommitInfo();
 
-        $body  = "SVN Repository: " . $system_path;
+        $body  = 'SVN Repository: ' . $system_path;
         $body .= "\n";
-        $body .= "Changes by: " . $committer->getUserName() . " <" . $committer->getEmail() . "> on " . $commit_info->getDate() . "\n";
+        $body .= 'Changes by: ' . $committer->getUserName() . ' <' . $committer->getEmail() . '> on ' . $commit_info->getDate() . "\n";
         $body .= "New Revision:   $new_revision  $goto_link \n";
         $body .= "\nLog message: \n" . $commit_info->getCommitMessage() . "\n";
-        $body .= $this->listFiles($commit_info->getUpdatedFiles(), "Updated");
-        $body .= $this->listFiles($commit_info->getAddedFiles(), "Added");
-        $body .= $this->listFiles($commit_info->getDeletedFiles(), "Deleted");
+        $body .= $this->listFiles($commit_info->getUpdatedFiles(), 'Updated');
+        $body .= $this->listFiles($commit_info->getAddedFiles(), 'Added');
+        $body .= $this->listFiles($commit_info->getDeletedFiles(), 'Deleted');
 
         if ($commit_info->hasChangedFiles()) {
             $body .= "\n\nSource code changes: \n";
             foreach ($commit_info->getAllFiles() as $file) {
-                $body .= $repository->getSvnDomain() . '/plugins/svn/' . trim($file) . "?roottype=svn&root=" . $repository->getFullName() . "&r1=$old_revision&r2=$new_revision\n";
+                $body .= $repository->getSvnDomain() . '/plugins/svn/' . trim($file) . '?roottype=svn&root=' . $repository->getFullName() . "&r1=$old_revision&r2=$new_revision\n";
             }
         }
 
@@ -232,7 +232,7 @@ class PostCommit
         $commit_info = $this->commit_info_enhancer->getCommitInfo();
         if (count($commit_info->getDirectories()) > 3) {
             $directories = $commit_info->getDirectories();
-            $subject    .= $directories[0] . " " . $directories[1] . " " . $directories[2] . "...";
+            $subject    .= $directories[0] . ' ' . $directories[1] . ' ' . $directories[2] . '...';
         } else {
             $subject .= join(' ', $commit_info->getDirectories());
         }

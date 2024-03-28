@@ -52,7 +52,7 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItDoesNothingIfUserDidNotSubmitBoardType(): void
     {
-        $this->mockDefaultBoardType("cardwall");
+        $this->mockDefaultBoardType('cardwall');
 
         $request = new \HTTPRequest();
 
@@ -64,7 +64,7 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItDeletesWhenUserUsesTheTwoBoards(): void
     {
-        $this->mockDefaultBoardType("cardwall");
+        $this->mockDefaultBoardType('cardwall');
 
         $request = new \HTTPRequest();
         $request->set('scrum-board-type', 'both');
@@ -76,7 +76,7 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItUpdatesWhenUserUpdatesTheBoardTypeUsedByItsProject(): void
     {
-        $this->mockDefaultBoardType("cardwall");
+        $this->mockDefaultBoardType('cardwall');
 
         $request = new \HTTPRequest();
         $request->set('scrum-board-type', 'taskboard');

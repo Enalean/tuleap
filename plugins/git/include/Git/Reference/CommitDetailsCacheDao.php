@@ -31,7 +31,7 @@ class CommitDetailsCacheDao extends DataAccessObject
      */
     public function searchCommitDetails(int $repository_id, string $commit_sha1): ?array
     {
-        $sql = "SELECT title,
+        $sql = 'SELECT title,
                     author_name,
                     author_email,
                     committer_epoch,
@@ -39,7 +39,7 @@ class CommitDetailsCacheDao extends DataAccessObject
                     first_tag
                 FROM plugin_git_commit_details_cache
                 WHERE repository_id = ?
-                  AND commit_sha1 = UNHEX(?)";
+                  AND commit_sha1 = UNHEX(?)';
 
         return $this->getDB()->row($sql, $repository_id, $commit_sha1);
     }

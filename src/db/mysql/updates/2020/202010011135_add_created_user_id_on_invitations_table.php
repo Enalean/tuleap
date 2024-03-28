@@ -35,13 +35,13 @@ final class b202010011135_add_created_user_id_on_invitations_table extends \Tule
 
     public function up(): void
     {
-        $sql = "ALTER TABLE invitations ADD COLUMN created_user_id INT(11) NULL";
+        $sql = 'ALTER TABLE invitations ADD COLUMN created_user_id INT(11) NULL';
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding created_user_id column: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
-        $sql = "ALTER TABLE invitations ADD INDEX idx_created(created_user_id, status, to_email(20))";
+        $sql = 'ALTER TABLE invitations ADD INDEX idx_created(created_user_id, status, to_email(20))';
         $this->db->addIndex('invitations', 'idx_created', $sql);
     }
 }

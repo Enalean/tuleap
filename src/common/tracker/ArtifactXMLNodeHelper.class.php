@@ -42,7 +42,7 @@ class ArtifactXMLNodeHelper
     {
         $node->setAttribute('format', $is_anonymous ? 'email' : 'username');
         if ($is_anonymous) {
-            $node->setAttribute('is_anonymous', "1");
+            $node->setAttribute('is_anonymous', '1');
         }
     }
 

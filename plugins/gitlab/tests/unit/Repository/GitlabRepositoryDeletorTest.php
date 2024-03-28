@@ -192,7 +192,7 @@ final class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->commit_tuleap_reference_dao
             ->expects(self::once())
             ->method('deleteCommitsInIntegration')
-            ->with("root/repo01", 1, 101);
+            ->with('root/repo01', 1, 101);
 
         $this->merge_request_dao
             ->expects(self::once())

@@ -189,10 +189,10 @@ class FieldChangeXMLExporter
             }
 
             if (is_string($value)) {
-                if ($value === "") {
+                if ($value === '') {
                     $value = [];
                 } else {
-                    $value = explode(" ", $value);
+                    $value = explode(' ', $value);
                 }
 
                 if ($value === false) {

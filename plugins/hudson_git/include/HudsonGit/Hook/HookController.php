@@ -84,7 +84,7 @@ class HookController
         if (! $this->valid_HTTPURI->validate($jenkins_server)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                dgettext("tuleap-hudson_git", "The Jenkins server URL provided is not well formed.")
+                dgettext('tuleap-hudson_git', 'The Jenkins server URL provided is not well formed.')
             );
 
             $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
@@ -93,7 +93,7 @@ class HookController
         if ($cleartext_token === '') {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                dgettext("tuleap-hudson_git", "Jenkins access token is missing.")
+                dgettext('tuleap-hudson_git', 'Jenkins access token is missing.')
             );
             $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
         }
@@ -127,7 +127,7 @@ class HookController
         $repository    = $this->git_repository_factory->getRepositoryById($repository_id);
         if (! $repository) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-hudson_git', 'Invalid repository'));
-            $GLOBALS['Response']->redirect(GIT_BASE_URL . "/?group_id=" . $this->request->getProject()->getID());
+            $GLOBALS['Response']->redirect(GIT_BASE_URL . '/?group_id=' . $this->request->getProject()->getID());
         }
 
         return $repository;

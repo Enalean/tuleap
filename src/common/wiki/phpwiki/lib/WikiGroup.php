@@ -23,19 +23,19 @@ if (
     ! defined('GROUP_METHOD') or
     GROUP_METHOD !== 'NONE'
 ) {
-    trigger_error(_("No or unsupported GROUP_METHOD defined"), E_USER_WARNING);
+    trigger_error(_('No or unsupported GROUP_METHOD defined'), E_USER_WARNING);
 }
 
 /* Special group names for ACL */
-define('GROUP_EVERY', _("Every"));
-define('GROUP_ANONYMOUS', _("Anonymous Users"));
-define('GROUP_BOGOUSER', _("Bogo Users"));
-define('GROUP_HASHOMEPAGE', _("HasHomePage"));
-define('GROUP_SIGNED', _("Signed Users"));
-define('GROUP_AUTHENTICATED', _("Authenticated Users"));
-define('GROUP_ADMIN', _("Administrators"));
-define('GROUP_OWNER', _("Owner"));
-define('GROUP_CREATOR', _("Creator"));
+define('GROUP_EVERY', _('Every'));
+define('GROUP_ANONYMOUS', _('Anonymous Users'));
+define('GROUP_BOGOUSER', _('Bogo Users'));
+define('GROUP_HASHOMEPAGE', _('HasHomePage'));
+define('GROUP_SIGNED', _('Signed Users'));
+define('GROUP_AUTHENTICATED', _('Authenticated Users'));
+define('GROUP_ADMIN', _('Administrators'));
+define('GROUP_OWNER', _('Owner'));
+define('GROUP_CREATOR', _('Creator'));
 
 /**
  * WikiGroup is an abstract class to provide the base functions for determining
@@ -142,14 +142,14 @@ class WikiGroup
     public function _specialGroups()
     {
         return [
-            "_EVERY",
-            "_ANONYMOUS",
-            "_BOGOUSER",
-            "_SIGNED",
-            "_AUTHENTICATED",
-            "_ADMIN",
-            "_OWNER",
-            "_CREATOR",
+            '_EVERY',
+            '_ANONYMOUS',
+            '_BOGOUSER',
+            '_SIGNED',
+            '_AUTHENTICATED',
+            '_ADMIN',
+            '_OWNER',
+            '_CREATOR',
         ];
     }
 
@@ -210,7 +210,7 @@ class WikiGroup
             default:
                 trigger_error(
                     PHPWikiSprintf(
-                        "Undefined method %s for special group %s",
+                        'Undefined method %s for special group %s',
                         'isMember',
                         $group
                     ),

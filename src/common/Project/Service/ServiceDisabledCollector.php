@@ -26,9 +26,9 @@ use Tuleap\Event\Dispatchable;
 
 final class ServiceDisabledCollector implements Dispatchable
 {
-    public const NAME = "serviceDisabledCollector";
+    public const NAME = 'serviceDisabledCollector';
 
-    private string $disabled_reason = "";
+    private string $disabled_reason = '';
     /**
      * @psalm-readonly
      */

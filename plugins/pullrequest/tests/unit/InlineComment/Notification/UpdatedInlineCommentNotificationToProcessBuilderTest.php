@@ -109,7 +109,7 @@ final class UpdatedInlineCommentNotificationToProcessBuilderTest extends TestCas
     {
         $this->inline_comment_searcher = InlineCommentSearcherStub::withNoComment();
 
-        $event = UpdatedInlineCommentEvent::fromInlineComment(InlineCommentTestBuilder::aMarkdownComment("No comment")->withId(404)->build());
+        $event = UpdatedInlineCommentEvent::fromInlineComment(InlineCommentTestBuilder::aMarkdownComment('No comment')->withId(404)->build());
         $this->assertEmpty($this->getNotifications($event));
     }
 

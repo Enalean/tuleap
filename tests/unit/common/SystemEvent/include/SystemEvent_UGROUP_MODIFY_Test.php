@@ -68,7 +68,7 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         $evt->expects(self::never())->method('getProject')->with('1')->willReturn($project);
         $evt->expects(self::never())->method('done');
-        $evt->expects(self::once())->method('error')->with("Could not process binding to this user group (2)");
+        $evt->expects(self::once())->method('error')->with('Could not process binding to this user group (2)');
 
         // Launch the event
         self::assertFalse($evt->process());

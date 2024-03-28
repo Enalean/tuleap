@@ -129,7 +129,7 @@ class Request
 
     public function isPost()
     {
-        return $this->get("REQUEST_METHOD") == "POST";
+        return $this->get('REQUEST_METHOD') == 'POST';
     }
 
     public function isGetOrHead()
@@ -266,10 +266,10 @@ class Request
         // Set validator headers
         if ($this->_is_buffering_output or ! headers_sent()) {
             if (($etag = $validators->getETag()) !== false) {
-                header("ETag: " . $etag->asString());
+                header('ETag: ' . $etag->asString());
             }
             if (($mtime = $validators->getModificationTime()) !== false) {
-                header("Last-Modified: " . Rfc1123DateTime($mtime));
+                header('Last-Modified: ' . Rfc1123DateTime($mtime));
             }
 
             // Set cache control headers
@@ -297,17 +297,17 @@ class Request
     public function cacheControl($strategy = CACHE_CONTROL, $max_age = CACHE_CONTROL_MAX_AGE)
     {
         if ($strategy == 'NO_CACHE') {
-            $cache_control = "no-cache"; // better set private. See Pear HTTP_Header
+            $cache_control = 'no-cache'; // better set private. See Pear HTTP_Header
             $max_age       = -20;
         } elseif ($strategy == 'ALLOW_STALE' && $max_age > 0) {
-            $cache_control = sprintf("max-age=%d", $max_age);
+            $cache_control = sprintf('max-age=%d', $max_age);
         } else {
-            $cache_control = "must-revalidate";
+            $cache_control = 'must-revalidate';
             $max_age       = -20;
         }
         header("Cache-Control: $cache_control");
-        header("Expires: " . Rfc1123DateTime(time() + $max_age));
-        header("Vary: Cookie"); // FIXME: add more here?
+        header('Expires: ' . Rfc1123DateTime(time() + $max_age));
+        header('Vary: Cookie'); // FIXME: add more here?
     }
 
     public function setStatus($status)
@@ -328,7 +328,7 @@ class Request
                 '412' => 'Precondition Failed',
             ];
             // FIXME: is it always okay to send HTTP/1.1 here, even for older clients?
-            header(sprintf("HTTP/1.1 %d %s", $status, $reason[$status]));
+            header(sprintf('HTTP/1.1 %d %s', $status, $reason[$status]));
         }
 
         if (isset($this->_log_entry)) {
@@ -368,7 +368,7 @@ class Request
 
         // "output handler 'ob_gzhandler' cannot be used twice"
         // http://www.php.net/ob_gzhandler
-        if ($compress and ini_get("zlib.output_compression")) {
+        if ($compress and ini_get('zlib.output_compression')) {
             $compress = false;
         }
 
@@ -376,8 +376,8 @@ class Request
         // This should eliminate a lot or reported problems.
         if (
             $compress
-            and (! $this->get("HTTP_ACCEPT_ENCODING")
-                 or ! strstr($this->get("HTTP_ACCEPT_ENCODING"), "gzip"))
+            and (! $this->get('HTTP_ACCEPT_ENCODING')
+                 or ! strstr($this->get('HTTP_ACCEPT_ENCODING'), 'gzip'))
         ) {
             $compress = false;
         }
@@ -400,7 +400,7 @@ class Request
 
             // TODO: dont send a length or get the gzip'ed data length.
             $this->_is_compressing_output = true;
-            header("Content-Encoding: gzip");
+            header('Content-Encoding: gzip');
             /*
              * Attempt to prevent Apache from doing the dreaded double-gzip.
              *
@@ -429,7 +429,7 @@ class Request
             ob_clean();
             $this->_is_buffering_output = false;
         } else {
-            trigger_error("Not buffering output", E_USER_NOTICE);
+            trigger_error('Not buffering output', E_USER_NOTICE);
         }
     }
 
@@ -469,7 +469,7 @@ class Request
                 if (empty($this->_do_chunked_output)) {
                     $this->_ob_get_length = ob_get_length();
                 }
-                header(sprintf("Content-Length: %d", $this->_ob_get_length));
+                header(sprintf('Content-Length: %d', $this->_ob_get_length));
             }
             $this->_is_buffering_output = false;
         }
@@ -613,19 +613,19 @@ class Request_UploadedFile
             // errmsgs by Shilad Sen
             switch ($err) {
                 case 1:
-                    trigger_error(_("Upload error: file too big"), E_USER_WARNING);
+                    trigger_error(_('Upload error: file too big'), E_USER_WARNING);
                     break;
                 case 2:
-                    trigger_error(_("Upload error: file too big"), E_USER_WARNING);
+                    trigger_error(_('Upload error: file too big'), E_USER_WARNING);
                     break;
                 case 3:
-                    trigger_error(_("Upload error: file only partially recieved"), E_USER_WARNING);
+                    trigger_error(_('Upload error: file only partially recieved'), E_USER_WARNING);
                     break;
                 case 4:
-                    trigger_error(_("Upload error: no file selected"), E_USER_WARNING);
+                    trigger_error(_('Upload error: no file selected'), E_USER_WARNING);
                     break;
                 default:
-                    trigger_error(_("Upload error: unknown error #") . $err, E_USER_WARNING);
+                    trigger_error(_('Upload error: unknown error #') . $err, E_USER_WARNING);
             }
             return false;
         }
@@ -641,9 +641,9 @@ class Request_UploadedFile
                 /* but ending slash in php.ini upload_tmp_dir is required. */
                 if (realpath(preg_replace('#/+#D', '/', $tmp_file)) != realpath($fileinfo['tmp_name'])) {
                     trigger_error(
-                        sprintf("Uploaded tmpfile illegal: %s != %s.", $tmp_file, $fileinfo['tmp_name']) .
+                        sprintf('Uploaded tmpfile illegal: %s != %s.', $tmp_file, $fileinfo['tmp_name']) .
                                   "\n" .
-                                  "Probably illegal TEMP environment or upload_tmp_dir setting.",
+                                  'Probably illegal TEMP environment or upload_tmp_dir setting.',
                         E_USER_ERROR
                     );
                     return false;
@@ -657,8 +657,8 @@ class Request_UploadedFile
                 }
             } else {
                 trigger_error(
-                    sprintf("Uploaded tmpfile %s not found.", $fileinfo['tmp_name']) . "\n" .
-                           " Probably illegal TEMP environment or upload_tmp_dir setting.",
+                    sprintf('Uploaded tmpfile %s not found.', $fileinfo['tmp_name']) . "\n" .
+                           ' Probably illegal TEMP environment or upload_tmp_dir setting.',
                     E_USER_WARNING
                 );
             }
@@ -693,7 +693,7 @@ class Request_UploadedFile
 
     public function open()
     {
-        if (($fd = fopen($this->_info['tmp_name'], "rb"))) {
+        if (($fd = fopen($this->_info['tmp_name'], 'rb'))) {
             if ($this->getSize() < filesize($this->_info['tmp_name'])) {
                 // FIXME: Some PHP's (or is it some browsers?) put
                 //    HTTP/MIME headers in the file body, some don't.
@@ -887,7 +887,7 @@ class HTTP_ValidatorSet
     public function _checkIfUnmodifiedSince(&$request)
     {
         if ($this->_mtime !== false) {
-            $since = ParseRfc1123DateTime($request->get("HTTP_IF_UNMODIFIED_SINCE"));
+            $since = ParseRfc1123DateTime($request->get('HTTP_IF_UNMODIFIED_SINCE'));
             if ($since !== false && $this->_mtime > $since) {
                 return _HTTP_VAL_FAILED;
             }
@@ -898,7 +898,7 @@ class HTTP_ValidatorSet
     public function _checkIfModifiedSince(&$request)
     {
         if ($this->_mtime !== false and $request->isGetOrHead()) {
-            $since = ParseRfc1123DateTime($request->get("HTTP_IF_MODIFIED_SINCE"));
+            $since = ParseRfc1123DateTime($request->get('HTTP_IF_MODIFIED_SINCE'));
             if ($since !== false) {
                 if ($this->_mtime <= $since) {
                     return _HTTP_VAL_NOT_MODIFIED;
@@ -911,7 +911,7 @@ class HTTP_ValidatorSet
 
     public function _checkIfMatch(&$request)
     {
-        if ($this->_tag && ($taglist = $request->get("HTTP_IF_MATCH"))) {
+        if ($this->_tag && ($taglist = $request->get('HTTP_IF_MATCH'))) {
             $tag = $this->getETag();
             if (! $tag->matches($taglist, 'strong')) {
                 return _HTTP_VAL_FAILED;
@@ -922,7 +922,7 @@ class HTTP_ValidatorSet
 
     public function _checkIfNoneMatch(&$request)
     {
-        if ($this->_tag && ($taglist = $request->get("HTTP_IF_NONE_MATCH"))) {
+        if ($this->_tag && ($taglist = $request->get('HTTP_IF_NONE_MATCH'))) {
             $tag            = $this->getETag();
             $strong_compare = ! $request->isGetOrHead();
             if ($taglist) {

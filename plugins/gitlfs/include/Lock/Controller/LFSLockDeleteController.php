@@ -146,7 +146,7 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
 
         if (empty($locks)) {
             http_response_code(404);
-            echo json_encode($this->lock_response_builder->buildErrorResponse("Lock not found"));
+            echo json_encode($this->lock_response_builder->buildErrorResponse('Lock not found'));
             return;
         }
 
@@ -165,7 +165,7 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
             }
         } catch (LockDestructionNotAuthorizedException $exception) {
             http_response_code(403);
-            echo json_encode($this->lock_response_builder->buildErrorResponse("You are not allowed to delete lock"));
+            echo json_encode($this->lock_response_builder->buildErrorResponse('You are not allowed to delete lock'));
             return;
         }
 

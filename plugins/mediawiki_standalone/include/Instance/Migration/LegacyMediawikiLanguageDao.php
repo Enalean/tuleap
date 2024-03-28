@@ -29,9 +29,9 @@ final class LegacyMediawikiLanguageDao extends DataAccessObject implements Legac
     public function getLanguageFor(int $project_id): string|false
     {
         return $this->getDB()->cell(
-            "SELECT language
+            'SELECT language
             FROM plugin_mediawiki_admin_options
-            WHERE project_id = ?",
+            WHERE project_id = ?',
             $project_id
         );
     }

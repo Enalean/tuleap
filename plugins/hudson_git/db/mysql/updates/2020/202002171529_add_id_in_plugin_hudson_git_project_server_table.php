@@ -24,7 +24,7 @@ class b202002171529_add_id_in_plugin_hudson_git_project_server_table extends For
 {
     public function description()
     {
-        return "Add id in plugin_hudson_git_project_server table";
+        return 'Add id in plugin_hudson_git_project_server table';
     }
 
     public function preUp()
@@ -40,23 +40,23 @@ class b202002171529_add_id_in_plugin_hudson_git_project_server_table extends For
 
     private function addIdColumn(): void
     {
-        $sql_alter_table = "ALTER TABLE plugin_hudson_git_project_server
-                            ADD COLUMN id int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY";
+        $sql_alter_table = 'ALTER TABLE plugin_hudson_git_project_server
+                            ADD COLUMN id int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY';
 
         if ($this->db->dbh->exec($sql_alter_table) === false) {
             $this->rollBackOnError(
-                "An error occured while add id column in the plugin_hudson_git_project_server table."
+                'An error occured while add id column in the plugin_hudson_git_project_server table.'
             );
         }
     }
 
     private function dropPrimaryKey(): void
     {
-        $sql_alter_table = "ALTER TABLE plugin_hudson_git_project_server DROP PRIMARY KEY";
+        $sql_alter_table = 'ALTER TABLE plugin_hudson_git_project_server DROP PRIMARY KEY';
 
         if ($this->db->dbh->exec($sql_alter_table) === false) {
             $this->rollBackOnError(
-                "An error occured while removing the primary of plugin_hudson_git_project_server table."
+                'An error occured while removing the primary of plugin_hudson_git_project_server table.'
             );
         }
     }

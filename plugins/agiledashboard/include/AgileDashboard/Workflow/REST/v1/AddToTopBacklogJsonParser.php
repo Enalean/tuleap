@@ -59,8 +59,8 @@ class AddToTopBacklogJsonParser implements PostActionUpdateJsonParser
                 400,
                 sprintf(
                     dgettext(
-                        "tuleap-agiledashboard",
-                        "PostAction of type %s cannot be defined without explicit backlog management."
+                        'tuleap-agiledashboard',
+                        'PostAction of type %s cannot be defined without explicit backlog management.'
                     ),
                     AddToTopBacklog::SHORT_NAME
                 )

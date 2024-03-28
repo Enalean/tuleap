@@ -189,7 +189,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->method('dispatch')
             ->willReturn($collector);
 
-        $current_context_section = new NewDropdownLinkSectionPresenter("Current context", [
+        $current_context_section = new NewDropdownLinkSectionPresenter('Current context', [
             new \Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus', []),
         ]);
 

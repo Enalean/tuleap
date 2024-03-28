@@ -28,7 +28,7 @@ final class StatusToSimpleValueComparisonException extends InvalidQueryException
     public function __construct($value)
     {
         $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s cannot be compared to '%s'."),
+            dgettext('tuleap-crosstracker', "%s cannot be compared to '%s'."),
             AllowedMetadata::STATUS,
             $value
         );

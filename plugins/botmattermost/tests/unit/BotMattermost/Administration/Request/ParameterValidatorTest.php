@@ -32,9 +32,9 @@ final class ParameterValidatorTest extends TestCase
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
 
         (new ParameterValidator())->validateBotParameterFromRequest(
-            "",
-            "https://example.com",
-            "https://example.com",
+            '',
+            'https://example.com',
+            'https://example.com',
         );
     }
 
@@ -43,9 +43,9 @@ final class ParameterValidatorTest extends TestCase
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
 
         (new ParameterValidator())->validateBotParameterFromRequest(
-            "Name",
-            "",
-            "https://example.com",
+            'Name',
+            '',
+            'https://example.com',
         );
     }
 
@@ -54,18 +54,18 @@ final class ParameterValidatorTest extends TestCase
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
 
         (new ParameterValidator())->validateBotParameterFromRequest(
-            "Name",
-            "http://example.com",
-            "https://example.com",
+            'Name',
+            'http://example.com',
+            'https://example.com',
         );
     }
 
     public function testItValidatesIfOptionalAvatarURLIsMissing(): void
     {
         (new ParameterValidator())->validateBotParameterFromRequest(
-            "Name",
-            "https://example.com",
-            "",
+            'Name',
+            'https://example.com',
+            '',
         );
 
         $this->expectNotToPerformAssertions();
@@ -76,9 +76,9 @@ final class ParameterValidatorTest extends TestCase
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
 
         (new ParameterValidator())->validateBotParameterFromRequest(
-            "Name",
-            "https://example.com",
-            "http://example.com",
+            'Name',
+            'https://example.com',
+            'http://example.com',
         );
     }
 }

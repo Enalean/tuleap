@@ -30,11 +30,11 @@ class b201606021408_create_tracker_changeset_value_computed_table extends \Tulea
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_changeset_value_computedfield_manual_value (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_changeset_value_computedfield_manual_value (
                     changeset_value_id INT(11) NOT NULL,
                     value FLOAT(10,4),
                     PRIMARY KEY(changeset_value_id)
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while creating tracker_changeset_value_computedfield_manual_value: ' . implode(', ', $this->db->dbh->errorInfo()));

@@ -247,7 +247,7 @@ class DashboardWidgetDao extends DataAccessObject
     {
         $line_id = $this->da->escapeInt($line_id);
 
-        $this->update("SET @counter = 0");
+        $this->update('SET @counter = 0');
 
         $sql = "UPDATE dashboards_lines
                 INNER JOIN (
@@ -265,7 +265,7 @@ class DashboardWidgetDao extends DataAccessObject
     {
         $line_id = $this->da->escapeInt($line_id);
 
-        $this->update("SET @counter = 0");
+        $this->update('SET @counter = 0');
 
         $sql = "UPDATE dashboards_lines_columns
                 INNER JOIN (
@@ -283,7 +283,7 @@ class DashboardWidgetDao extends DataAccessObject
     {
         $column_id = $this->da->escapeInt($column_id);
 
-        $this->update("SET @counter = 0");
+        $this->update('SET @counter = 0');
 
         $sql = "UPDATE dashboards_lines_columns_widgets
             INNER JOIN (
@@ -721,10 +721,10 @@ class DashboardWidgetDao extends DataAccessObject
 
     private function getEmptyColumns()
     {
-        $sql = "SELECT col.*
+        $sql = 'SELECT col.*
                 FROM dashboards_lines_columns AS col
                   LEFT JOIN dashboards_lines_columns_widgets AS widget ON (col.id = widget.column_id)
-                WHERE widget.id IS NULL";
+                WHERE widget.id IS NULL';
         return $this->retrieve($sql);
     }
 

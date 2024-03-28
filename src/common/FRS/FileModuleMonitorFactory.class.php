@@ -158,7 +158,7 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
                     $result    = $this->setMonitor($fileModuleId, $user, $anonymous);
                     if ($result) {
                         $historyDao = new ProjectHistoryDao();
-                        $historyDao->groupAddHistory("frs_add_monitor_package", $fileModuleId . "_" . $user->getId(), $groupId);
+                        $historyDao->groupAddHistory('frs_add_monitor_package', $fileModuleId . '_' . $user->getId(), $groupId);
                         $this->notifyAfterAdd($package, $user);
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_added', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
                     } else {
@@ -237,7 +237,7 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     {
         if ($this->stopMonitor($fileModuleId, $user, true)) {
             $historyDao = new ProjectHistoryDao();
-            $historyDao->groupAddHistory("frs_stop_monitor_package", $fileModuleId . "_" . $user->getId(), $groupId);
+            $historyDao->groupAddHistory('frs_stop_monitor_package', $fileModuleId . '_' . $user->getId(), $groupId);
             $this->notifyAfterDelete($package, $user);
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'deleted', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
         } else {
@@ -551,7 +551,7 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         } elseif (! $anonymous && ! $this->isMonitoring($fileModuleId, $currentUser, ! $anonymous)) {
             $performAction = true;
             $historyDao    = new ProjectHistoryDao();
-            $historyDao->groupAddHistory("frs_self_add_monitor_package", $fileModuleId, $groupId);
+            $historyDao->groupAddHistory('frs_self_add_monitor_package', $fileModuleId, $groupId);
         }
         if ($performAction) {
             $this->stopMonitor($fileModuleId, $currentUser);

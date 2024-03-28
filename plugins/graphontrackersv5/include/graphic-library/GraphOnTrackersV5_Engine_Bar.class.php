@@ -53,10 +53,10 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
         $right_margin = 50;
 
         $this->graph = new Chart($this->width, $this->height);
-        $this->graph->SetScale("textlint");
+        $this->graph->SetScale('textlint');
         $this->graph->title->Set($this->title);
         if (is_null($this->description)) {
-            $this->description = "";
+            $this->description = '';
         }
         $this->graph->subtitle->Set($this->description);
 
@@ -127,7 +127,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
         $b->SetAbsWidth(10);
         $b->value->Show(true);
         $b->value->SetColor($this->graph->getMainColor());
-        $b->value->SetFormat("%d");
+        $b->value->SetFormat('%d');
         $b->value->HideZero();
         $b->value->SetMargin(4);
         $b->value->SetFont($this->graph->getFont(), FS_NORMAL, 7);

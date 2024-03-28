@@ -39,7 +39,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
     {
         if (! $this->hasStart()) {
             $this->setError(
-                dgettext('tuleap-graphontrackersv5', "No start date defined.")
+                dgettext('tuleap-graphontrackersv5', 'No start date defined.')
             );
 
             return true;
@@ -47,7 +47,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
 
         if (! $this->isStartDateBeforeEndDate()) {
             $this->setError(
-                dgettext('tuleap-graphontrackersv5', "Start date must be before the end date.")
+                dgettext('tuleap-graphontrackersv5', 'Start date must be before the end date.')
             );
 
             return true;
@@ -126,8 +126,8 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
     public function setError($error)
     {
         $this->error = [
-            "message" => dgettext('tuleap-graphontrackersv5', 'Unable to render the chart'),
-            "cause" => $error,
+            'message' => dgettext('tuleap-graphontrackersv5', 'Unable to render the chart'),
+            'cause' => $error,
         ];
     }
 }

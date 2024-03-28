@@ -30,41 +30,41 @@ class WidgetKanbanConfigDAO extends DataAccessObject
 {
     public function searchKanbanTrackerReportId(int $kanban_widget_id): ?int
     {
-        $sql = "
+        $sql = '
             SELECT tracker_report_id
             FROM plugin_agiledashboard_kanban_widget_config
             WHERE widget_id = ?
-        ";
+        ';
 
         return $this->getDB()->single($sql, [$kanban_widget_id]) ?: null;
     }
 
     public function createNewConfigForWidgetId(int $widget_id, int $tracker_report_id): void
     {
-        $sql = "
+        $sql = '
             REPLACE INTO plugin_agiledashboard_kanban_widget_config(widget_id, tracker_report_id)
             VALUES (?, ?)
-        ";
+        ';
 
         $this->getDB()->run($sql, $widget_id, $tracker_report_id);
     }
 
     public function deleteConfigForWidgetId(int $widget_id): void
     {
-        $sql = "
+        $sql = '
             DELETE FROM plugin_agiledashboard_kanban_widget_config
             WHERE widget_id = ?
-        ";
+        ';
 
         $this->getDB()->run($sql, $widget_id);
     }
 
     public function deleteConfigurationForWidgetMatchingReportId(int $report_id): void
     {
-        $sql = "
+        $sql = '
             DELETE FROM plugin_agiledashboard_kanban_widget_config
             WHERE tracker_report_id = ?
-        ";
+        ';
 
         $this->getDB()->run($sql, $report_id);
     }

@@ -43,7 +43,7 @@ final class MoveArtifactsAdminUpdateController implements DispatchableWithReques
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['tracker_id']);
         if (! $tracker) {
-            throw new NotFoundException(dgettext('tuleap-tracker', "Tracker does not exist"));
+            throw new NotFoundException(dgettext('tuleap-tracker', 'Tracker does not exist'));
         }
 
         $current_user = $request->getCurrentUser();
@@ -56,7 +56,7 @@ final class MoveArtifactsAdminUpdateController implements DispatchableWithReques
         }
 
         $tracker_id = $tracker->getId();
-        (new \CSRFSynchronizerToken(TRACKER_BASE_URL . "/move-artifacts/" . urlencode((string) $tracker_id)))->check();
+        (new \CSRFSynchronizerToken(TRACKER_BASE_URL . '/move-artifacts/' . urlencode((string) $tracker_id)))->check();
 
         $enable_move = $request->get('enable-move-artifacts');
         if ($enable_move) {

@@ -94,15 +94,15 @@ class Tracker_ArtifactDao extends DataAccessObject
     {
         $artifact_ids = $this->da->escapeIntImplode(explode(',', $artifact_ids));
 
-        $sql   = " SELECT tracker_id, GROUP_CONCAT(id) AS id, GROUP_CONCAT(last_changeset_id) AS last_changeset_id";
+        $sql   = ' SELECT tracker_id, GROUP_CONCAT(id) AS id, GROUP_CONCAT(last_changeset_id) AS last_changeset_id';
         $from  = " FROM $this->table_name AS artifact";
-        $where = " WHERE id IN (" . $artifact_ids . ")";
-        $group = " GROUP BY tracker_id";
+        $where = ' WHERE id IN (' . $artifact_ids . ')';
+        $group = ' GROUP BY tracker_id';
 
         if (! $user_is_admin) {
             $ugroups = $this->da->escapeIntImplode($ugroups);
             $from   .= " LEFT JOIN permissions ON (permissions.object_id = CAST(artifact.id AS CHAR CHARACTER SET utf8) AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS')";
-            $where  .= " AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (" . $ugroups . ")))";
+            $where  .= ' AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (' . $ugroups . ')))';
         }
 
         $sql .= $from . $where . $group;
@@ -501,10 +501,10 @@ class Tracker_ArtifactDao extends DataAccessObject
         $halfDay   = 60 * 60 * 12;
         $minDate   = $this->da->escapeInt($date - $halfDay);
         $maxDate   = $this->da->escapeInt($date + $halfDay);
-        $sql       = "SELECT id AS artifact_id FROM
+        $sql       = 'SELECT id AS artifact_id FROM
                        tracker_artifact
-                       WHERE DATE(FROM_UNIXTIME(submitted_on)) BETWEEN DATE(FROM_UNIXTIME(" . $minDate . ")) AND DATE(FROM_UNIXTIME(" . $maxDate . "))
-                         AND tracker_id = " . $trackerId;
+                       WHERE DATE(FROM_UNIXTIME(submitted_on)) BETWEEN DATE(FROM_UNIXTIME(' . $minDate . ')) AND DATE(FROM_UNIXTIME(' . $maxDate . '))
+                         AND tracker_id = ' . $trackerId;
         return $this->retrieve($sql);
     }
 
@@ -613,7 +613,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $limit        = $this->da->escapeInt($limit);
         $offset       = $this->da->escapeInt($offset);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id, tracker_artifact_priority_rank.`rank` as `rank`" .
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id, tracker_artifact_priority_rank.`rank` as `rank`' .
             $this->getSortedFromStatementForChildrenOfArtifacts($artifact_ids) .
             "LIMIT $limit
              OFFSET $offset";
@@ -625,7 +625,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
 
-        $sql = "SELECT child_art.*, parent_art.id as parent_id " .
+        $sql = 'SELECT child_art.*, parent_art.id as parent_id ' .
                $this->getSortedFromStatementForChildrenOfArtifacts($artifact_ids);
 
         return $this->retrieve($sql);
@@ -755,7 +755,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                         INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = excluded_cv.id)
                     ) ON (linked_art.id = artlink2.artifact_id AND submile.id IN ($excluded_linked_ids))";
 
-            $submile_null = "AND submile.id IS NULL";
+            $submile_null = 'AND submile.id IS NULL';
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS linked_art.*
@@ -991,7 +991,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                         INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = excluded_cv.id)
                     ) ON (linked_art.id = artlink2.artifact_id AND submile.id IN ($excluded_linked_ids))";
 
-            $submile_null = "AND submile.id IS NULL";
+            $submile_null = 'AND submile.id IS NULL';
         }
 
         $additional_artifacts_sql = '';
@@ -1307,7 +1307,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      */
     public function countArtifacts()
     {
-        $sql = "SELECT count(*) AS nb FROM tracker_artifact";
+        $sql = 'SELECT count(*) AS nb FROM tracker_artifact';
 
         $row = $this->retrieve($sql)->getRow();
 

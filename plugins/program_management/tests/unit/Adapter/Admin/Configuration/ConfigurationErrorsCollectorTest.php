@@ -80,14 +80,14 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 
     public function testItHasErrorWhenFieldIsNotSubmittable(): void
     {
-        $this->collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
+        $this->collector->addSubmitFieldPermissionError(100, 'My custom field', TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
         self::assertTrue($this->collector->hasError());
         self::assertCount(1, $this->collector->getTeamsWithError());
     }
 
     public function testItHasErrorWhenFieldIsNotUpdatable(): void
     {
-        $this->collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
+        $this->collector->addUpdateFieldPermissionError(100, 'My custom field', TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
         self::assertTrue($this->collector->hasError());
         self::assertCount(1, $this->collector->getTeamsWithError());
     }

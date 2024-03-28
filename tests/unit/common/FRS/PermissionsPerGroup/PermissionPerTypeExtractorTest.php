@@ -87,27 +87,27 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             'is_project_admin' => false,
             'is_static'        => true,
             'is_custom'        => false,
-            'name'             => "Project members",
+            'name'             => 'Project members',
         ];
 
         $this->formatted_project_admin = [
             'is_project_admin' => true,
             'is_static'        => true,
             'is_custom'        => false,
-            'name'             => "Project admin",
+            'name'             => 'Project admin',
         ];
 
         $this->ugroup_project_member = new ProjectUGroup(
             [
-                "ugroup_id" => ProjectUGroup::PROJECT_MEMBERS,
-                "name"      => "Project members",
+                'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
+                'name'      => 'Project members',
             ]
         );
 
         $this->ugroup_project_admin = new ProjectUGroup(
             [
-                "ugroup_id" => ProjectUGroup::PROJECT_ADMIN,
-                "name"      => "Project admin",
+                'ugroup_id' => ProjectUGroup::PROJECT_ADMIN,
+                'name'      => 'Project admin',
             ]
         );
 
@@ -139,7 +139,7 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->url_builder->method('getGlobalAdminLink')->willReturn(
-            "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
+            '/admin/?group_id=' . $this->project->getID() . '&action=edit-permissions'
         );
 
         $permissions = new PermissionPerGroupCollection();
@@ -155,9 +155,9 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_packages =
             [
                 [
-                    "name"   => "FRS administrators",
-                    "groups" => [$this->formatted_project_admin, $this->formatted_project_member],
-                    "url"    => "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions",
+                    'name'   => 'FRS administrators',
+                    'groups' => [$this->formatted_project_admin, $this->formatted_project_member],
+                    'url'    => '/admin/?group_id=' . $this->project->getID() . '&action=edit-permissions',
                 ],
             ];
 
@@ -187,7 +187,7 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->url_builder->method('getGlobalAdminLink')->willReturn(
-            "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
+            '/admin/?group_id=' . $this->project->getID() . '&action=edit-permissions'
         );
 
         $permissions = new PermissionPerGroupCollection();
@@ -203,9 +203,9 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_packages =
             [
                 [
-                    "name"   => "FRS readers",
-                    "groups" => [$this->formatted_project_member],
-                    "url"    => "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions",
+                    'name'   => 'FRS readers',
+                    'groups' => [$this->formatted_project_member],
+                    'url'    => '/admin/?group_id=' . $this->project->getID() . '&action=edit-permissions',
                 ],
             ];
 
@@ -226,7 +226,7 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->url_builder->method('getGlobalAdminLink')->willReturn(
-            "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
+            '/admin/?group_id=' . $this->project->getID() . '&action=edit-permissions'
         );
 
         $permissions = new PermissionPerGroupCollection();

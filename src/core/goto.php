@@ -72,7 +72,7 @@ if ((! $request->valid($vKey)) || (! $request->valid($vVal))) {
 
 $keyword = $request->get('key');
 $value   = $request->get('val');
-$args    = explode("/", $value);
+$args    = explode('/', $value);
 
 if ($keyword === 'wiki') {
     $wiki = new WikiDao();
@@ -195,8 +195,8 @@ if ($request->isAjax()) {
             break;
     }
 } else {
-    $feed     = isset($feed) ? $feed : "";
-    $location = "Location: " . $ref->getLink() . $feed;
+    $feed     = isset($feed) ? $feed : '';
+    $location = 'Location: ' . $ref->getLink() . $feed;
     header($location);
     exit;
 }

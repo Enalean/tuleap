@@ -103,7 +103,7 @@ class XmlParserPHPWiki
         if (is_string($attrs) and ! empty($attrs)) {
             // lowercase attr names
             foreach (preg_split('/ /D', $attrs) as $pair) {
-                if (strstr($pair, "=")) {
+                if (strstr($pair, '=')) {
                     list($key,$val)    = preg_split('/=/D', $pair);
                     $key               = strtolower(trim($key));
                     $val               = str_replace(['"', "'"], '', trim($val));
@@ -142,7 +142,7 @@ class XmlParserPHPWiki
         if (isset($this->current)) {
             $this->current->_content[] = $data;
         } else {
-            trigger_error(sprintf("unparsed content outside tags: %s", $data), E_USER_WARNING);
+            trigger_error(sprintf('unparsed content outside tags: %s', $data), E_USER_WARNING);
         }
         if ($this->current === $this->root) {   // workaround php OO bug: ref => copy
             $GLOBALS['xml_parser_root'] = $this->root; // copy!
@@ -155,7 +155,7 @@ class XmlParserPHPWiki
         xml_parse($this->_parser, $content, $is_final) or
             trigger_error(
                 sprintf(
-                    "XML error: %s at line %d",
+                    'XML error: %s at line %d',
                     xml_error_string(xml_get_error_code($this->_parser)),
                     xml_get_current_line_number($this->_parser)
                 ),
@@ -166,7 +166,7 @@ class XmlParserPHPWiki
     public function parse_url($file, $debug = false)
     {
         if (get_cfg_var('allow_url_fopen')) {
-            if (! ($fp = fopen("$file", "r"))) {
+            if (! ($fp = fopen("$file", 'r'))) {
                 trigger_error("Error parse url $file");
                 return;
             }

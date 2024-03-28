@@ -423,10 +423,10 @@ class Tracker_RuleFactory
         $involved_fields_collection = [];
 
         foreach ($involved_fields as $fields) {
-            if (! isset($fields["source_field_id"], $fields["target_field_id"])) {
+            if (! isset($fields['source_field_id'], $fields['target_field_id'])) {
                 continue;
             }
-            $involved_fields_collection[] = new InvolvedFieldsInRule((int) $fields["source_field_id"], (int) $fields["target_field_id"]);
+            $involved_fields_collection[] = new InvolvedFieldsInRule((int) $fields['source_field_id'], (int) $fields['target_field_id']);
         }
 
         return $involved_fields_collection;

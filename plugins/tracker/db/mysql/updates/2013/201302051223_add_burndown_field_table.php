@@ -32,10 +32,10 @@ class b201302051223_add_burndown_field_table extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_field_burndown (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_field_burndown (
                     field_id int(11) UNSIGNED NOT NULL PRIMARY KEY,
                     use_capacity tinyint(1) NOT NULL
-                );";
+                );';
         $this->db->createTable('tracker_field_burndown', $sql);
     }
 

@@ -35,12 +35,12 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_artifact ADD INDEX idx_last_changeset_id (last_changeset_id, id)";
-        $msg = "adding index on `last_changeset_id` on `tracker_artifact`";
+        $sql = 'ALTER TABLE tracker_artifact ADD INDEX idx_last_changeset_id (last_changeset_id, id)';
+        $msg = 'adding index on `last_changeset_id` on `tracker_artifact`';
         $this->executeQuery($sql, $msg);
 
-        $sql = "ALTER TABLE tracker_semantic_status ADD INDEX idx_ovi_fi (open_value_id, field_id)";
-        $msg = "adding index on (`open_value_id`, `field_id`) on `tracker_semantic_status`";
+        $sql = 'ALTER TABLE tracker_semantic_status ADD INDEX idx_ovi_fi (open_value_id, field_id)';
+        $msg = 'adding index on (`open_value_id`, `field_id`) on `tracker_semantic_status`';
         $this->executeQuery($sql, $msg);
     }
 

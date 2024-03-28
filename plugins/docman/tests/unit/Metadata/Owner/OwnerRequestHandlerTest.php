@@ -176,18 +176,18 @@ final class OwnerRequestHandlerTest extends TestCase
                         OwnerRepresentationForAutocomplete::buildForSelect2AutocompleteFromOwner(
                             UserTestBuilder::aUser()
                                 ->withId(101)
-                                ->withUserName("knopel")
-                                ->withRealName("Leslie Knope")
-                                ->withAvatarUrl("avatar.example.com")
+                                ->withUserName('knopel')
+                                ->withRealName('Leslie Knope')
+                                ->withAvatarUrl('avatar.example.com')
                                 ->build(),
                             BuildDisplayNameStub::build()
                         ),
                         OwnerRepresentationForAutocomplete::buildForSelect2AutocompleteFromOwner(
                             UserTestBuilder::aUser()
                                 ->withId(102)
-                                ->withUserName("swansonr")
-                                ->withRealName("Ron Swanson")
-                                ->withAvatarUrl("avatar.example.com")
+                                ->withUserName('swansonr')
+                                ->withRealName('Ron Swanson')
+                                ->withAvatarUrl('avatar.example.com')
                                 ->build(),
                             BuildDisplayNameStub::build()
                         ),
@@ -213,7 +213,7 @@ final class OwnerRequestHandlerTest extends TestCase
             new NoopSapiEmitter(),
         );
 
-        $request  = (new NullServerRequest())->withQueryParams(["name" => 'o']);
+        $request  = (new NullServerRequest())->withQueryParams(['name' => 'o']);
         $response = $owner_sender->handle($request);
 
         self::assertEquals(200, $response->getStatusCode());

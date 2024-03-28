@@ -76,6 +76,6 @@ final class CreateGitlabRepositoriesStub implements CreateGitlabRepositories
 
     public static function withGitlabResponseAPIException(): self
     {
-        return new self([], new GitlabResponseAPIException("echec"));
+        return new self([], new GitlabResponseAPIException('echec'));
     }
 }

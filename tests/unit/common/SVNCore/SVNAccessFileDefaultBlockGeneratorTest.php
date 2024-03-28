@@ -275,6 +275,6 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
             $content_2->content
         );
 
-        self::assertEquals(1, $plugin->call, "Plugin is called only once because group definition is cached");
+        self::assertEquals(1, $plugin->call, 'Plugin is called only once because group definition is cached');
     }
 }

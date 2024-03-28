@@ -46,10 +46,10 @@ class Link
 
     private function buildUrl(\Project $project, int $folder_id): string
     {
-        $url = "/plugins/document/" . urlencode($project->getUnixName()) . "/";
+        $url = '/plugins/document/' . urlencode($project->getUnixName()) . '/';
         if ($folder_id === 0) {
             return $url;
         }
-        return $url . "folder/" . $folder_id . "/";
+        return $url . 'folder/' . $folder_id . '/';
     }
 }

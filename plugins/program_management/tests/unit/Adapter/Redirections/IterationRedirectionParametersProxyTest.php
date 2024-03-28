@@ -34,7 +34,7 @@ final class IterationRedirectionParametersProxyTest extends TestCase
 
         $proxy = IterationRedirectionParametersProxy::buildFromCodendiRequest($request);
         self::assertSame(IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION, $proxy->getValue());
-        self::assertSame("1280", $proxy->getIncrementId());
+        self::assertSame('1280', $proxy->getIncrementId());
         self::assertTrue($proxy->needsRedirectionAfterCreate());
         self::assertFalse($proxy->needsRedirectionAfterUpdate());
         self::assertTrue($proxy->isRedirectionNeeded());
@@ -46,7 +46,7 @@ final class IterationRedirectionParametersProxyTest extends TestCase
 
         $proxy = IterationRedirectionParametersProxy::buildFromCodendiRequest($request);
         self::assertSame(IterationRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION, $proxy->getValue());
-        self::assertSame("1280", $proxy->getIncrementId());
+        self::assertSame('1280', $proxy->getIncrementId());
         self::assertFalse($proxy->needsRedirectionAfterCreate());
         self::assertTrue($proxy->needsRedirectionAfterUpdate());
         self::assertTrue($proxy->isRedirectionNeeded());
@@ -57,7 +57,7 @@ final class IterationRedirectionParametersProxyTest extends TestCase
         return new \Codendi_Request(
             [
                 IterationRedirectionParameters::FLAG               => $action,
-                IterationRedirectionParameters::PARAM_INCREMENT_ID => "1280",
+                IterationRedirectionParameters::PARAM_INCREMENT_ID => '1280',
             ],
             null
         );

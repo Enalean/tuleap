@@ -67,10 +67,10 @@ class Docman_ReportColumn
         $sort = $this->getSort();
         if ($sort == 1) {
             $toggleValue = '0';
-            $toogleIcon  = '<img src="' . \util_get_image_theme("up_arrow.png") . '" border="0" >';
+            $toogleIcon  = '<img src="' . \util_get_image_theme('up_arrow.png') . '" border="0" >';
         } else {
             $toggleValue = '1';
-            $toogleIcon  = '<img src="' . \util_get_image_theme("dn_arrow.png") . '" border="0" >';
+            $toogleIcon  = '<img src="' . \util_get_image_theme('dn_arrow.png') . '" border="0" >';
         }
         // URL
         $toggleParam = [];

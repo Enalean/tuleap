@@ -45,16 +45,16 @@ class AttachmentXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 new Attachment(
                     10007,
-                    "file01.png",
-                    "image/png",
-                    "URL1",
+                    'file01.png',
+                    'image/png',
+                    'URL1',
                     30
                 ),
                 new Attachment(
                     10008,
-                    "file02.gif",
-                    "image/gif",
-                    "URL2",
+                    'file02.gif',
+                    'image/gif',
+                    'URL2',
                     1234
                 ),
             ]
@@ -74,13 +74,13 @@ class AttachmentXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertCount(2, $artifact_node->children());
         $exported_file_01 = $artifact_node->file[0];
-        $this->assertSame("fileinfo_10007", (string) $exported_file_01['id']);
-        $this->assertSame("file01.png", (string) $exported_file_01->filename);
-        $this->assertSame("file0123", (string) $exported_file_01->path);
+        $this->assertSame('fileinfo_10007', (string) $exported_file_01['id']);
+        $this->assertSame('file01.png', (string) $exported_file_01->filename);
+        $this->assertSame('file0123', (string) $exported_file_01->path);
 
         $exported_file_02 = $artifact_node->file[1];
-        $this->assertSame("fileinfo_10008", (string) $exported_file_02['id']);
-        $this->assertSame("file02.gif", (string) $exported_file_02->filename);
-        $this->assertSame("file5678", (string) $exported_file_02->path);
+        $this->assertSame('fileinfo_10008', (string) $exported_file_02['id']);
+        $this->assertSame('file02.gif', (string) $exported_file_02->filename);
+        $this->assertSame('file5678', (string) $exported_file_02->path);
     }
 }

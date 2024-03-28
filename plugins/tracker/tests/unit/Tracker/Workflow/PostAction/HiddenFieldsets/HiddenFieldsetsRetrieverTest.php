@@ -81,7 +81,7 @@ final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive('getFieldsetById')->with(331)->andReturn($fieldset_01);
         $this->form_element_factory->shouldReceive('getFieldsetById')->with(651)->andReturn($fieldset_02);
 
-        $transition = new \Transition($transition_id, $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
+        $transition = new \Transition($transition_id, $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false));
         $transition->setWorkflow($this->workflow);
         $expected_post_action = new HiddenFieldsets($transition, $postaction_id, [$fieldset_01, $fieldset_02]);
 
@@ -94,7 +94,7 @@ final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->hidden_dao->shouldReceive('searchByWorkflow')->andReturn([]);
 
-        $transition = new \Transition('97', $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
+        $transition = new \Transition('97', $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false));
         $transition->setWorkflow($this->workflow);
 
         $this->expectException(NoHiddenFieldsetsPostActionException::class);
@@ -117,7 +117,7 @@ final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->shouldReceive('getFieldsetById')->with(331)->andReturn($fieldset_01);
 
-        $transition = new \Transition($transition_id, $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
+        $transition = new \Transition($transition_id, $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false));
         $transition->setWorkflow($this->workflow);
         $expected_post_action = new HiddenFieldsets($transition, $postaction_id, [$fieldset_01]);
 

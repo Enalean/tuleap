@@ -78,7 +78,7 @@ final class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $project_A = $this->createMock(\Project::class);
         $project_A->method('getId')->willReturn(101);
-        $project_A->method('getUnixName')->willReturn("Project A");
+        $project_A->method('getUnixName')->willReturn('Project A');
 
         $repository_A = $this->createMock(Repository::class);
         $repository_A->method('getSystemPath')->willReturn('/var/lib/tuleap/101/repo_A');
@@ -90,7 +90,7 @@ final class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\Tes
 
         $project_B = $this->createMock(\Project::class);
         $project_B->method('getId')->willReturn(102);
-        $project_B->method('getUnixName')->willReturn("Project B");
+        $project_B->method('getUnixName')->willReturn('Project B');
 
         $repository_B = $this->createMock(Repository::class);
         $repository_B->method('getSystemPath')->willReturn('/var/lib/tuleap/102/repo_B');

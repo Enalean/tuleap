@@ -75,10 +75,10 @@ class TextSearchQuery
     {
         if ($regex == 'none' or ! $regex) {
             $this->_regex = 0;
-        } elseif (defined("TSQ_REGEX_" . strtoupper($regex))) {
-            $this->_regex = constant("TSQ_REGEX_" . strtoupper($regex));
+        } elseif (defined('TSQ_REGEX_' . strtoupper($regex))) {
+            $this->_regex = constant('TSQ_REGEX_' . strtoupper($regex));
         } else {
-            trigger_error(fmt("Unsupported argument: %s=%s", 'regex', $regex));
+            trigger_error(fmt('Unsupported argument: %s=%s', 'regex', $regex));
             $this->_regex = 0;
         }
         $this->_case_exact = $case_exact;
@@ -186,12 +186,12 @@ class TextSearchQuery
             case 'WORD':        // word => %word%
                 return $this->_sql_clause_cb->call($node->word);
             case 'NOT':
-                return "NOT (" . $this->_sql_clause($node->leaves[0]) . ")";
+                return 'NOT (' . $this->_sql_clause($node->leaves[0]) . ')';
             case 'AND':
             case 'OR':
                 $subclauses = [];
                 foreach ($node->leaves as $leaf) {
-                    $subclauses[] = "(" . $this->_sql_clause($leaf) . ")";
+                    $subclauses[] = '(' . $this->_sql_clause($leaf) . ')';
                 }
                 return join(" $node->op ", $subclauses);
             default:
@@ -213,12 +213,12 @@ class TextSearchQuery
     {
         switch ($node->op) {
             case 'NOT':
-                return "NOT (" . $this->_sql_clause_cb->call($node->leaves[0]) . ")";
+                return 'NOT (' . $this->_sql_clause_cb->call($node->leaves[0]) . ')';
             case 'AND':
             case 'OR':
                 $subclauses = [];
                 foreach ($node->leaves as $leaf) {
-                    $subclauses[] = "(" . $this->_sql_clause_obj($leaf) . ")";
+                    $subclauses[] = '(' . $this->_sql_clause_obj($leaf) . ')';
                 }
                 return join(" $node->op ", $subclauses);
             case 'VOID':
@@ -252,12 +252,12 @@ class TextSearchQuery
             case 'WORD':
                 return $indent . "WORD: $node->word";
             case 'VOID':
-                return $indent . "VOID";
+                return $indent . 'VOID';
             case 'ALL':
-                return $indent . "ALL";
+                return $indent . 'ALL';
             default:
-                $lines   = [$indent . $node->op . ":"];
-                $indent .= "  ";
+                $lines   = [$indent . $node->op . ':'];
+                $indent .= '  ';
                 foreach ($node->leaves as $leaf) {
                     $lines[] = $this->_as_string($leaf, $indent);
                 }
@@ -292,17 +292,17 @@ class NullTextSearchQuery extends TextSearchQuery
 
     public function getHighlightRegexp()
     {
-        return "";
+        return '';
     }
 
     public function makeSqlClause($make_sql_clause_cb)
     {
-        return "(1 = 0)";
+        return '(1 = 0)';
     }
 
     public function asString()
     {
-        return "NullTextSearchQuery";
+        return 'NullTextSearchQuery';
     }
 }
 
@@ -358,7 +358,7 @@ class TextSearchQuery_node
  */
 class TextSearchQuery_node_word extends TextSearchQuery_node
 {
-    public $op = "WORD";
+    public $op = 'WORD';
 
     public function __construct($word)
     {
@@ -377,7 +377,7 @@ class TextSearchQuery_node_word extends TextSearchQuery_node
 
     public function _sql_quote()
     {
-        $word = preg_replace('/(?=[%_\\\\])/', "\\", $this->word);
+        $word = preg_replace('/(?=[%_\\\\])/', '\\', $this->word);
         return $GLOBALS['request']->_dbi->qstr($word);
     }
 
@@ -389,7 +389,7 @@ class TextSearchQuery_node_word extends TextSearchQuery_node
 
 class TextSearchQuery_node_all extends TextSearchQuery_node
 {
-    public $op = "ALL";
+    public $op = 'ALL';
     public function regexp()
     {
         return '(?=.*)';
@@ -402,7 +402,7 @@ class TextSearchQuery_node_all extends TextSearchQuery_node
 }
 class TextSearchQuery_node_starts_with extends TextSearchQuery_node_word
 {
-    public $op = "STARTS_WITH";
+    public $op = 'STARTS_WITH';
     public function regexp()
     {
         return '(?=.*\b' . preg_quote($this->word, '/') . ')';
@@ -416,7 +416,7 @@ class TextSearchQuery_node_starts_with extends TextSearchQuery_node_word
 
 class TextSearchQuery_node_ends_with extends TextSearchQuery_node_word
 {
-    public $op = "ENDS_WITH";
+    public $op = 'ENDS_WITH';
     public function regexp()
     {
         return '(?=.*' . preg_quote($this->word, '/') . '\b)';
@@ -430,7 +430,7 @@ class TextSearchQuery_node_ends_with extends TextSearchQuery_node_word
 
 class TextSearchQuery_node_exact extends TextSearchQuery_node_word
 {
-    public $op = "EXACT";
+    public $op = 'EXACT';
     public function regexp()
     {
         return '(?=\b' . preg_quote($this->word, '/') . '\b)';
@@ -445,7 +445,7 @@ class TextSearchQuery_node_exact extends TextSearchQuery_node_word
 class TextSearchQuery_node_regex extends TextSearchQuery_node_word
 {
  // posix regex. FIXME!
-    public $op = "REGEX"; // using REGEXP or ~ extension
+    public $op = 'REGEX'; // using REGEXP or ~ extension
     public function regexp()
     {
         return '(?=.*\b' . $this->word . '\b)';
@@ -459,7 +459,7 @@ class TextSearchQuery_node_regex extends TextSearchQuery_node_word
 
 class TextSearchQuery_node_regex_glob extends TextSearchQuery_node_regex
 {
-    public $op = "REGEX_GLOB";
+    public $op = 'REGEX_GLOB';
     public function regexp()
     {
         return '(?=.*\b' . glob_to_pcre($this->word) . '\b)';
@@ -469,7 +469,7 @@ class TextSearchQuery_node_regex_glob extends TextSearchQuery_node_regex
 class TextSearchQuery_node_regex_pcre extends TextSearchQuery_node_regex
 {
  // how to handle pcre modifiers? /i
-    public $op = "REGEX_PCRE";
+    public $op = 'REGEX_PCRE';
     public function regexp()
     {
         return $this->word;
@@ -478,10 +478,10 @@ class TextSearchQuery_node_regex_pcre extends TextSearchQuery_node_regex
 
 class TextSearchQuery_node_regex_sql extends TextSearchQuery_node_regex
 {
-    public $op = "REGEX_SQL"; // using LIKE
+    public $op = 'REGEX_SQL'; // using LIKE
     public function regexp()
     {
-        return str_replace(["/%/", "/_/"], [".*", "."], $this->word);
+        return str_replace(['/%/', '/_/'], ['.*', '.'], $this->word);
     }
 
     public function sql()
@@ -495,7 +495,7 @@ class TextSearchQuery_node_regex_sql extends TextSearchQuery_node_regex
  */
 class TextSearchQuery_node_not extends TextSearchQuery_node
 {
-    public $op = "NOT";
+    public $op = 'NOT';
 
     public function __construct($leaf)
     {
@@ -580,7 +580,7 @@ class TextSearchQuery_node_binop extends TextSearchQuery_node
  */
 class TextSearchQuery_node_and extends TextSearchQuery_node_binop
 {
-    public $op = "AND";
+    public $op = 'AND';
 
     public function optimize()
     {
@@ -632,7 +632,7 @@ class TextSearchQuery_node_and extends TextSearchQuery_node_binop
  */
 class TextSearchQuery_node_or extends TextSearchQuery_node_binop
 {
-    public $op = "OR";
+    public $op = 'OR';
 
     public function regexp()
     {
@@ -823,13 +823,13 @@ class TextSearchQuery_Parser
     public function get_word($accept = TSQ_ALLWORDS)
     {
         foreach (
-            ["WORD","STARTS_WITH","ENDS_WITH","EXACT",
-                "REGEX","REGEX_GLOB","REGEX_PCRE","ALL",
+            ['WORD','STARTS_WITH','ENDS_WITH','EXACT',
+                'REGEX','REGEX_GLOB','REGEX_PCRE','ALL',
             ] as $tok
         ) {
-            $const = constant("TSQ_TOK_" . $tok);
+            $const = constant('TSQ_TOK_' . $tok);
             if ($accept & $const and ($word = $this->lexer->get($const))) {
-                $classname = "TextSearchQuery_node_" . strtolower($tok);
+                $classname = 'TextSearchQuery_node_' . strtolower($tok);
                 return new $classname($word);
             }
         }
@@ -882,19 +882,19 @@ class TextSearchQuery_Lexer
                 $regex & (TSQ_REGEX_AUTO | TSQ_REGEX_POSIX | TSQ_REGEX_GLOB)
                     and preg_match('/^\*\s*/', $buf, $m)
             ) { // * => ALL
-                $val  = "*";
+                $val  = '*';
                 $type = TSQ_TOK_ALL;
             } elseif (
                 $regex & (TSQ_REGEX_PCRE)
                     and preg_match('/^\.\*\s*/', $buf, $m)
             ) { // .* => ALL
-                $val  = ".*";
+                $val  = '.*';
                 $type = TSQ_TOK_ALL;
             } elseif (
                 $regex & (TSQ_REGEX_SQL)
                     and preg_match('/^%\s*/', $buf, $m)
             ) { // % => ALL
-                $val  = "%";
+                $val  = '%';
                 $type = TSQ_TOK_ALL;
             } elseif (
                 $regex & (TSQ_REGEX_AUTO | TSQ_REGEX_POSIX | TSQ_REGEX_PCRE)

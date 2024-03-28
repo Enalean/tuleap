@@ -64,7 +64,7 @@ class AsynchronousArtifactsDeletionActionsRunner
             }
 
             $context = DeletionContext::regularDeletion((int) $message['source_project_id']);
-            if ($message["context"] === DeletionContext::MOVE_TYPE) {
+            if ($message['context'] === DeletionContext::MOVE_TYPE) {
                 $context = DeletionContext::moveContext((int) $message['source_project_id'], (int) $message['destination_project_id']);
             }
 

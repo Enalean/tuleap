@@ -27,7 +27,7 @@ use Tuleap\News\NewsDao;
 
 class NewsCollectionBuilder
 {
-    #[ConfigKey("Toggle display of news on the site home page")]
+    #[ConfigKey('Toggle display of news on the site home page')]
     public const CONFIG_DISPLAY_NEWS = 'display_homepage_news';
 
     /**

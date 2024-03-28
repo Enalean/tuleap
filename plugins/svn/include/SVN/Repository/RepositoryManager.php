@@ -342,11 +342,11 @@ class RepositoryManager
     public function purgeArchivedRepositories()
     {
         if (! ForgeConfig::exists('sys_file_deletion_delay')) {
-            $this->logger->warning("Purge of archived SVN repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
+            $this->logger->warning('Purge of archived SVN repositories is disabled: sys_file_deletion_delay is missing in local.inc file');
             return;
         }
         $retention_period      = intval(ForgeConfig::get('sys_file_deletion_delay'));
-        $retention_date        = strtotime("-" . $retention_period . " days");
+        $retention_date        = strtotime('-' . $retention_period . ' days');
         $archived_repositories = $this->getArchivedRepositoriesToPurge($retention_date);
 
         foreach ($archived_repositories as $repository) {

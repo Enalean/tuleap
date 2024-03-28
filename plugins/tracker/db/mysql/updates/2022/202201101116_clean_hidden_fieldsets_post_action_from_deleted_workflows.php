@@ -35,7 +35,7 @@ final class b202201101116_clean_hidden_fieldsets_post_action_from_deleted_workfl
 
     public function up(): void
     {
-        $sql = "
+        $sql = '
             DELETE plugin_tracker_workflow_postactions_hidden_fieldsets_value, plugin_tracker_workflow_postactions_hidden_fieldsets
             FROM plugin_tracker_workflow_postactions_hidden_fieldsets_value
                 JOIN plugin_tracker_workflow_postactions_hidden_fieldsets ON (
@@ -45,7 +45,7 @@ final class b202201101116_clean_hidden_fieldsets_post_action_from_deleted_workfl
                     plugin_tracker_workflow_postactions_hidden_fieldsets.transition_id = tracker_workflow_transition.transition_id
                 )
             WHERE tracker_workflow_transition.transition_id IS NULL;
-        ";
+        ';
 
         if ($this->db->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(

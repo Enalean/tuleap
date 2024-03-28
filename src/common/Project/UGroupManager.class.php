@@ -516,7 +516,7 @@ class UGroupManager implements UGroupRetriever, ProjectAdminsUGroupRetriever // 
      */
     public function createEmptyUgroup($project_id, $ugroup_name, $ugroup_description)
     {
-        return ugroup_create($project_id, $ugroup_name, $ugroup_description, "cx_empty");
+        return ugroup_create($project_id, $ugroup_name, $ugroup_description, 'cx_empty');
     }
 
     /**

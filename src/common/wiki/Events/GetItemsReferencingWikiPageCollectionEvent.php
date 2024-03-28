@@ -27,7 +27,7 @@ use Tuleap\PHPWiki\WikiPage;
 
 class GetItemsReferencingWikiPageCollectionEvent implements Dispatchable
 {
-    public const NAME = "getItemsReferencingWikiPageCollectionEvent";
+    public const NAME = 'getItemsReferencingWikiPageCollectionEvent';
 
     /**
      * @var WikiPage

@@ -34,8 +34,8 @@ class TrackerFormElementFieldStringRESTTest extends \Tuleap\Test\PHPUnit\TestCas
             ->shouldAllowMockingProtectedMethods();
 
         $value = [
-            "field_id" => 330,
-            "value"    => 'My awesome content',
+            'field_id' => 330,
+            'value'    => 'My awesome content',
         ];
 
         $this->assertEquals('My awesome content', $field->getFieldDataFromRESTValueByField($value));

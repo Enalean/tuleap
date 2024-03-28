@@ -51,13 +51,13 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
         $list_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
 
         $xml_static_mapping = [
-            "F21840" => $list_field,
-            "V24058" => $static_value_01,
-            "V24059" => $static_value_02,
-            "V24060" => $static_value_03,
-            "V24061" => $static_value_04,
-            "V24062" => $static_value_05,
-            "V24063" => $static_value_06,
+            'F21840' => $list_field,
+            'V24058' => $static_value_01,
+            'V24059' => $static_value_02,
+            'V24060' => $static_value_03,
+            'V24061' => $static_value_04,
+            'V24062' => $static_value_05,
+            'V24063' => $static_value_06,
         ];
 
         $this->xml_static_fields_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($xml_static_mapping);
@@ -67,10 +67,10 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
         $ugroup_value_03 = $this->getBindForUGroupWithId(302);
 
         $xml_ugroup_mapping = [
-            "F21840" => $list_field,
-            "V198"   => $ugroup_value_01,
-            "V200"   => $ugroup_value_02,
-            "V201"   => $ugroup_value_03,
+            'F21840' => $list_field,
+            'V198'   => $ugroup_value_01,
+            'V200'   => $ugroup_value_02,
+            'V201'   => $ugroup_value_03,
         ];
 
         $this->xml_ugroup_fields_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($xml_ugroup_mapping);
@@ -84,10 +84,10 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
 
         $open_list_field  = Mockery::mock(Tracker_FormElement_Field_OpenList::class);
         $open_xml_mapping = [
-            "F21840"     => $open_list_field,
-            "V24058"     => $static_value_01,
-            "V24059"     => $static_value_02,
-            "Vbug_label" => $static_value_03,
+            'F21840'     => $open_list_field,
+            'V24058'     => $static_value_01,
+            'V24059'     => $static_value_02,
+            'Vbug_label' => $static_value_03,
         ];
 
         $this->xml_open_fields_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($open_xml_mapping);

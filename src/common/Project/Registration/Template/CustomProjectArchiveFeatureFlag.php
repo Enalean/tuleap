@@ -29,7 +29,7 @@ use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 
 final readonly class CustomProjectArchiveFeatureFlag implements VerifyProjectCreationFromArchiveIsAllowed
 {
-    #[FeatureFlagConfigKey("Feature flag to allow the user to create a new project from a custom zip archive which contains the project XML template")]
+    #[FeatureFlagConfigKey('Feature flag to allow the user to create a new project from a custom zip archive which contains the project XML template')]
     #[ConfigKeyInt(0)]
     #[ConfigKeyHidden]
     public const FEATURE_FLAG_KEY = 'create_from_custom_archive';

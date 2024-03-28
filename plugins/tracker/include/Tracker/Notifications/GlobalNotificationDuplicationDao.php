@@ -34,10 +34,10 @@ final class GlobalNotificationDuplicationDao extends DataAccessObject
 
     public function duplicate(int $from_notification_id, int $to_tracker_id): int
     {
-        $sql = "INSERT INTO tracker_global_notification (tracker_id, addresses, all_updates, check_permissions)
+        $sql = 'INSERT INTO tracker_global_notification (tracker_id, addresses, all_updates, check_permissions)
                 SELECT ?, addresses, all_updates, check_permissions
                 FROM tracker_global_notification
-                WHERE id = ?";
+                WHERE id = ?';
         $db  = $this->getDB();
         $db->run($sql, $to_tracker_id, $from_notification_id);
         return (int) $db->lastInsertId();

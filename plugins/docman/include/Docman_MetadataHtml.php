@@ -80,7 +80,7 @@ class Docman_MetadataHtml
                     break;
             }
         } else {
-            $html .= $this->hp->purify($this->md->getName()) . ":";
+            $html .= $this->hp->purify($this->md->getName()) . ':';
         }
         if ($show_mandatory_information && $this->md->canChangeValue() && ! $this->md->isEmptyAllowed()) {
             $html .= '&nbsp;';

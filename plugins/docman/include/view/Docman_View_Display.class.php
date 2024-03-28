@@ -31,10 +31,10 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
             return;
         }
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
         $renderer->renderToPage(
             'docman-title',
-            ["title" => $this->getUnconvertedTitle($params)]
+            ['title' => $this->getUnconvertedTitle($params)]
         );
     }
 
@@ -42,7 +42,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
     {
         $builder   = new DocumentFooterPresenterBuilder(ProjectManager::instance());
         $presenter = $builder->build($params, $params['group_id'], $params['item']->toRow(), $params['user']);
-        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
+        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
         $renderer->renderToPage(
             'docman-footer',
             $presenter

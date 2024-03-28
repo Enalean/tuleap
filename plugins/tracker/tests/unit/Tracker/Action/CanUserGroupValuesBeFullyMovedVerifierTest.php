@@ -42,11 +42,11 @@ final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
     {
         $this->user         = UserTestBuilder::anActiveUser()->withId(101)->withUserName('Mildred Favorito')->build();
         $this->source_field = $this->createStub(Tracker_FormElement_Field_List::class);
-        $this->source_field->method('getId')->willReturn("123");
-        $this->source_field->method('getName')->willReturn("UserGroup");
+        $this->source_field->method('getId')->willReturn('123');
+        $this->source_field->method('getName')->willReturn('UserGroup');
         $this->destination_field = $this->createStub(Tracker_FormElement_Field_List::class);
-        $this->destination_field->method('getId')->willReturn("456");
-        $this->destination_field->method('getName')->willReturn("UserGroup");
+        $this->destination_field->method('getId')->willReturn('456');
+        $this->destination_field->method('getName')->willReturn('UserGroup');
 
         $this->changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
         $this->artifact        = ArtifactTestBuilder::anArtifact(1234)->build();
@@ -59,8 +59,8 @@ final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
             $this->createStub(\Tracker_Artifact_Changeset::class),
             $this->source_field,
             1,
-            "",
-            ""
+            '',
+            ''
         );
         $this->source_field->method('getLastChangesetValue')->willReturn($changeset_value);
         $verifier = new CanUserGroupValuesBeFullyMovedVerifier();
@@ -73,11 +73,11 @@ final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $this->source_field->method('getLastChangesetValue')->willReturn($this->changeset_value);
         $verifier = new CanUserGroupValuesBeFullyMovedVerifier();
         $this->changeset_value->method('getListValues')->willReturn([
-            new \Tracker_FormElement_Field_List_Bind_UgroupsValue(1, ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName("perceval le gaulois")->build(), false),
+            new \Tracker_FormElement_Field_List_Bind_UgroupsValue(1, ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName('perceval le gaulois')->build(), false),
         ]);
         $this->destination_field->method('getAllValues')->willReturn(
             [
-                new \Tracker_FormElement_Field_List_Bind_UgroupsValue(1, ProjectUGroupTestBuilder::aCustomUserGroup(987)->withName("perceval le gallois")->build(), false),
+                new \Tracker_FormElement_Field_List_Bind_UgroupsValue(1, ProjectUGroupTestBuilder::aCustomUserGroup(987)->withName('perceval le gallois')->build(), false),
             ]
         );
 
@@ -89,11 +89,11 @@ final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $this->source_field->method('getLastChangesetValue')->willReturn($this->changeset_value);
         $verifier = new CanUserGroupValuesBeFullyMovedVerifier();
         $this->changeset_value->method('getListValues')->willReturn([
-            new \Tracker_FormElement_Field_List_Bind_UgroupsValue(101, ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName("perceval le gallois")->build(), false),
+            new \Tracker_FormElement_Field_List_Bind_UgroupsValue(101, ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName('perceval le gallois')->build(), false),
         ]);
         $this->destination_field->method('getAllValues')->willReturn(
             [
-                new \Tracker_FormElement_Field_List_Bind_UgroupsValue(1, ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName("perceval le gallois")->build(), false),
+                new \Tracker_FormElement_Field_List_Bind_UgroupsValue(1, ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName('perceval le gallois')->build(), false),
             ]
         );
 

@@ -119,12 +119,12 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
 
     public function hasRepositoryOpenPullRequestsWithBrokenGitReferences(int $repository_id): bool
     {
-        $sql = "
+        $sql = '
             SELECT TRUE
             FROM plugin_pullrequest_review as review
             INNER JOIN plugin_pullrequest_git_reference as ref ON (review.id = ref.pr_id)
             WHERE review.repo_dest_id = ? AND ref.status = ? AND review.status = ?
-        ";
+        ';
 
         return $this->getDB()->exists(
             $sql,
@@ -326,7 +326,7 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
         foreach ($search_criteria->search as $search_part) {
             $keyword = '"' . str_replace(['"'], ['\\"'], $search_part->keyword) . '"';
             $where_statement->andWith(
-                "(MATCH(plugin_pullrequest_review.title) AGAINST(? IN BOOLEAN MODE) OR MATCH(plugin_pullrequest_review.description) AGAINST(? IN BOOLEAN MODE))",
+                '(MATCH(plugin_pullrequest_review.title) AGAINST(? IN BOOLEAN MODE) OR MATCH(plugin_pullrequest_review.description) AGAINST(? IN BOOLEAN MODE))',
                 $keyword,
                 $keyword,
             );
@@ -387,9 +387,9 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
         $this->getDB()->update(
             'plugin_pullrequest_review',
             [
-                "status" => PullRequest::STATUS_REVIEW,
+                'status' => PullRequest::STATUS_REVIEW,
             ],
-            ["id" => $pull_request_id],
+            ['id' => $pull_request_id],
         );
     }
 
@@ -465,21 +465,21 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
     {
         return $this->getDB()->tryFlatTransaction(
             function () use ($repository_id, $limit, $offset) {
-                $sql_total_authors = "
+                $sql_total_authors = '
                     SELECT COUNT(DISTINCT user_id)
                     FROM plugin_pullrequest_review
                     WHERE (repository_id = ? OR repo_dest_id = ?)
                     AND user_id != 0
-                ";
+                ';
 
-                $sql = "
+                $sql = '
                     SELECT DISTINCT user_id
                     FROM plugin_pullrequest_review
                     WHERE (repository_id = ? OR repo_dest_id = ?)
                     AND user_id != 0
                     LIMIT ?
                     OFFSET ?
-                ";
+                ';
 
                 $total_authors = $this->getDB()->single($sql_total_authors, [$repository_id, $repository_id]);
                 $authors_ids   = $this->getDB()->column($sql, [$repository_id, $repository_id, $limit, $offset]);

@@ -57,7 +57,7 @@ final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnErrorWhenChangesetIsNotFound(): void
     {
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->changeset_factory->shouldReceive("getChangeset")->once()->andReturnNull();
+        $this->changeset_factory->shouldReceive('getChangeset')->once()->andReturnNull();
 
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('Changeset is not found.');
@@ -69,7 +69,7 @@ final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $artifact      = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $next_changset = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive("getChangeset")->once()->andReturn($next_changset);
+        $this->changeset_factory->shouldReceive('getChangeset')->once()->andReturn($next_changset);
 
         $this->field_factory->shouldReceive('getFieldById')->with(123)->andReturnNull();
 
@@ -83,7 +83,7 @@ final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $artifact      = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $next_changset = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive("getChangeset")->once()->andReturn($next_changset);
+        $this->changeset_factory->shouldReceive('getChangeset')->once()->andReturn($next_changset);
 
         $field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
 
@@ -100,7 +100,7 @@ final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact      = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $next_changset = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $next_changset->shouldReceive('getId')->andReturn(12);
-        $this->changeset_factory->shouldReceive("getChangeset")->once()->andReturn($next_changset);
+        $this->changeset_factory->shouldReceive('getChangeset')->once()->andReturn($next_changset);
 
         $field = Mockery::mock(\Tracker_FormElement_Field_Text::class);
 

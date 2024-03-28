@@ -189,7 +189,7 @@ class TQLTest extends RestBase
         $this->assertEquals(400, $response->getStatusCode());
         $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertStringContainsString(
-            "Error during parsing expert query",
+            'Error during parsing expert query',
             $body['error']['message']
         );
     }
@@ -233,7 +233,7 @@ class TQLTest extends RestBase
         $this->assertEquals(400, $response->getStatusCode());
         $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertStringContainsString(
-            "Double negative",
+            'Double negative',
             $body['error']['message']
         );
     }

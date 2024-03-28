@@ -96,7 +96,7 @@ class MethodBasedOnEffort implements IComputeProgression
     public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult
     {
         if (! $this->canUserReadBothFields($user)) {
-            return new ProgressionResult(null, "");
+            return new ProgressionResult(null, '');
         }
 
         $total_effort = $this->getNumericFieldValue(

@@ -47,31 +47,31 @@ final class JiraServerChangelogEntriesBuilderTest extends TestCase
                         'total' => 1,
                         'histories' => [
                             [
-                                "id"      => "19074",
-                                "author"  => [
-                                    "self"         => "https://jira.example.com/rest/api/2/user?username=jdoe",
-                                    "name"         => "jdoe",
-                                    "key"          => "JIRAUSER10131",
-                                    "emailAddress" => "john.doe@example.com",
-                                    "avatarUrls"   => [
-                                        "48x48" => "https://jira.example.com//secure/useravatar?avatarId=10337",
-                                        "24x24" => "https://jira.example.com//secure/useravatar?size=small&avatarId=10337",
-                                        "16x16" => "https://jira.example.com//secure/useravatar?size=xsmall&avatarId=10337",
-                                        "32x32" => "https://jira.example.com//secure/useravatar?size=medium&avatarId=10337",
+                                'id'      => '19074',
+                                'author'  => [
+                                    'self'         => 'https://jira.example.com/rest/api/2/user?username=jdoe',
+                                    'name'         => 'jdoe',
+                                    'key'          => 'JIRAUSER10131',
+                                    'emailAddress' => 'john.doe@example.com',
+                                    'avatarUrls'   => [
+                                        '48x48' => 'https://jira.example.com//secure/useravatar?avatarId=10337',
+                                        '24x24' => 'https://jira.example.com//secure/useravatar?size=small&avatarId=10337',
+                                        '16x16' => 'https://jira.example.com//secure/useravatar?size=xsmall&avatarId=10337',
+                                        '32x32' => 'https://jira.example.com//secure/useravatar?size=medium&avatarId=10337',
                                     ],
-                                    "displayName"  => "DOE John",
-                                    "active"       => true,
-                                    "timeZone"     => "Europe/Paris",
+                                    'displayName'  => 'DOE John',
+                                    'active'       => true,
+                                    'timeZone'     => 'Europe/Paris',
                                 ],
-                                "created" => "2021-03-24T11:06:46.027+0100",
-                                "items"   => [
+                                'created' => '2021-03-24T11:06:46.027+0100',
+                                'items'   => [
                                     [
-                                        "field"      => "duedate",
-                                        "fieldtype"  => "jira",
-                                        "from"       => null,
-                                        "fromString" => null,
-                                        "to"         => "2021-03-24",
-                                        "toString"   => "2021-03-24 00:00:00.0",
+                                        'field'      => 'duedate',
+                                        'fieldtype'  => 'jira',
+                                        'from'       => null,
+                                        'fromString' => null,
+                                        'to'         => '2021-03-24',
+                                        'toString'   => '2021-03-24 00:00:00.0',
                                     ],
                                 ],
 

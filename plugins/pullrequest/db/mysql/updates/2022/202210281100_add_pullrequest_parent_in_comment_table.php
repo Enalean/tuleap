@@ -45,7 +45,7 @@ final class b202210281100_add_pullrequest_parent_in_comment_table extends \Tulea
             return;
         }
 
-        $sql = "ALTER TABLE plugin_pullrequest_comments ADD COLUMN parent_id INT DEFAULT 0";
+        $sql = 'ALTER TABLE plugin_pullrequest_comments ADD COLUMN parent_id INT DEFAULT 0';
 
         if ($this->api->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
@@ -60,7 +60,7 @@ final class b202210281100_add_pullrequest_parent_in_comment_table extends \Tulea
             return;
         }
 
-        $sql = "ALTER TABLE plugin_pullrequest_inline_comments ADD COLUMN parent_id INT DEFAULT 0";
+        $sql = 'ALTER TABLE plugin_pullrequest_inline_comments ADD COLUMN parent_id INT DEFAULT 0';
 
         if ($this->api->dbh->exec($sql) === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(

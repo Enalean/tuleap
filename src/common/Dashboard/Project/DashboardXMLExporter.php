@@ -54,12 +54,12 @@ class DashboardXMLExporter
     {
         $dashboards = $this->retriever->getAllProjectDashboards($project);
         if (empty($dashboards)) {
-            $this->logger->debug("The project does not have any dashboards to export");
+            $this->logger->debug('The project does not have any dashboards to export');
 
             return;
         }
 
-        $this->logger->debug(sprintf("Found %d dashboards to export", count($dashboards)));
+        $this->logger->debug(sprintf('Found %d dashboards to export', count($dashboards)));
         $dashboards_element = $xml_element->addChild('dashboards');
         foreach ($dashboards as $dashboard) {
             $this->exportOneDashboard($dashboard, $dashboards_element, OwnerInfo::createForProject($project));
@@ -68,7 +68,7 @@ class DashboardXMLExporter
 
     private function exportOneDashboard(Dashboard $dashboard, \SimpleXMLElement $dashboards_element, OwnerInfo $owner_info): void
     {
-        $this->logger->debug("Exporting dashboard " . $dashboard->getName());
+        $this->logger->debug('Exporting dashboard ' . $dashboard->getName());
         $dashboard_element = $dashboards_element->addChild('dashboard');
         $dashboard_element->addAttribute('name', $dashboard->getName());
 
@@ -132,7 +132,7 @@ class DashboardXMLExporter
     {
         $dom = dom_import_simplexml($element);
         if (! $dom) {
-            throw new \RuntimeException("Unable to get DOMElement from SimpleXMLElement");
+            throw new \RuntimeException('Unable to get DOMElement from SimpleXMLElement');
         }
 
         return $dom;

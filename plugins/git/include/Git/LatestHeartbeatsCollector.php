@@ -59,7 +59,7 @@ class LatestHeartbeatsCollector
                 new HeartbeatsEntry(
                     $push_row['push_date'],
                     $this->getHTMLMessage($repository, $push_row),
-                    "fas fa-tlp-versioning-git",
+                    'fas fa-tlp-versioning-git',
                     $this->getUser((int) $push_row['user_id'])
                 )
             );

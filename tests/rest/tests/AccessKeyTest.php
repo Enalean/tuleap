@@ -152,7 +152,7 @@ class AccessKeyTest extends RestBase
 
     private function getFormattedExpirationDate(): string
     {
-        $expiration_date = new DateTimeImmutable("tomorrow");
+        $expiration_date = new DateTimeImmutable('tomorrow');
 
         return $expiration_date->format(DateTimeImmutable::ATOM);
     }

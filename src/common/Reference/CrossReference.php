@@ -132,13 +132,13 @@ class CrossReference
         $server_url  = \Tuleap\ServerHostname::HTTPSUrl();
         $group_param = '';
         if ($this->refTargetGid !== 100) {
-            $group_param = "&group_id=" . $this->refTargetGid;
+            $group_param = '&group_id=' . $this->refTargetGid;
         }
-        $this->targetUrl = $server_url . "/goto?key=" . urlencode($this->targetKey) . "&val=" . urlencode((string) $this->refTargetId) . $group_param;
+        $this->targetUrl = $server_url . '/goto?key=' . urlencode($this->targetKey) . '&val=' . urlencode((string) $this->refTargetId) . $group_param;
         $group_param     = '';
         if ($this->refSourceGid !== 100) {
-            $group_param = "&group_id=" . $this->refSourceGid;
+            $group_param = '&group_id=' . $this->refSourceGid;
         }
-        $this->sourceUrl = $server_url . "/goto?key=" . urlencode($this->sourceKey) . "&val=" . urlencode((string) $this->refSourceId) . $group_param;
+        $this->sourceUrl = $server_url . '/goto?key=' . urlencode($this->sourceKey) . '&val=' . urlencode((string) $this->refSourceId) . $group_param;
     }
 }

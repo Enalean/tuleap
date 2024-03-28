@@ -42,20 +42,20 @@ class WikiPlugin_PageGroup extends WikiPlugin
 {
     public function getName()
     {
-        return _("PageGroup");
+        return _('PageGroup');
     }
 
     public function getDescription()
     {
-        return sprintf(_("PageGroup for %s"), '[pagename]');
+        return sprintf(_('PageGroup for %s'), '[pagename]');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.9 $"
+            '$Revision: 1.9 $'
         );
     }
 
@@ -64,7 +64,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
         return [
             'parent'  => '',
             'rev'     => false,
-            'section' => _("Contents"),
+            'section' => _('Contents'),
             'label'   => '',
             'loop'    => false,
         ];
@@ -89,49 +89,49 @@ class WikiPlugin_PageGroup extends WikiPlugin
             foreach (explode("\n", $match[2]) as $line) {
                 $text = trim($line);
                 // Strip trailing blanks lines and ---- <hr>s
-                $text = preg_replace("/\\s*^-{4,}\\s*$/", "", $text);
+                $text = preg_replace('/\\s*^-{4,}\\s*$/', '', $text);
                 // Strip leading list chars: * or #
-                $text = preg_replace("/^[\*#]+\s*(\S.+)$/", "\\1", $text);
+                $text = preg_replace('/^[\*#]+\s*(\S.+)$/', "\\1", $text);
                 // Strip surrounding []
                 // FIXME: parse [ name | link ]
-                $text = preg_replace("/^\[\s*(\S.+)\s*\]$/", "\\1", $text);
+                $text = preg_replace('/^\[\s*(\S.+)\s*\]$/', "\\1", $text);
                 if (! empty($text)) {
                     $result[] = $text;
                 }
             }
             return $result;
         }
-        return [sprintf(_("<%s: no such section>"), $page . " " . $section)];
+        return [sprintf(_('<%s: no such section>'), $page . ' ' . $section)];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         extract($args);
-        $html = "";
+        $html = '';
         if (empty($parent)) {
             // FIXME: WikiPlugin has no way to report when
             // required args are missing?
             $error_text  = fmt(
-                "%s: %s",
-                "WikiPlugin_" . $this->getName(),
+                '%s: %s',
+                'WikiPlugin_' . $this->getName(),
                 $error_text
             );
-            $error_text .= " " . sprintf(_("A required argument '%s' is missing."), 'parent');
+            $error_text .= ' ' . sprintf(_("A required argument '%s' is missing."), 'parent');
             $html        = $error_text;
             return $html;
         }
-        $directions =  ['next'     => _("Next"),
-            'previous' => _("Previous"),
-            'contents' => _("Contents"),
-            'first'    => _("First"),
-            'last'     => _("Last"),
+        $directions =  ['next'     => _('Next'),
+            'previous' => _('Previous'),
+            'contents' => _('Contents'),
+            'first'    => _('First'),
+            'last'     => _('Last'),
         ];
 
         global $WikiTheme;
         $sep = $WikiTheme->getButtonSeparator();
         if (! $sep) {
-            $sep = " | "; // force some kind of separator
+            $sep = ' | '; // force some kind of separator
         }
 
         // default label
@@ -147,7 +147,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
             $r = $p->getRevision($rev);
             if (! $r) {
                 $this->error(sprintf(
-                    _("%s(%d): no such revision"),
+                    _('%s(%d): no such revision'),
                     $parent,
                     $rev
                 ));
@@ -171,7 +171,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
         $go    =  ['previous', 'next'];
         $links = HTML();
         $links->pushcontent($label);
-        $links->pushcontent(" [ "); // an experiment
+        $links->pushcontent(' [ '); // an experiment
         $lastindex = count($c) - 1; // array is 0-based, count is 1-based!
 
         foreach ($go as $go_item) {
@@ -185,7 +185,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
                     }
                     // mind the French : punctuation
                     $text = fmt(
-                        "%s: %s",
+                        '%s: %s',
                         $directions[$go_item],
                         $WikiTheme->makeLinkButton($linkpage)
                     );
@@ -199,7 +199,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
                     } else {
                         $linkpage = $c[$thispage - 1];
                         $text     = fmt(
-                            "%s: %s",
+                            '%s: %s',
                             $directions[$go_item],
                             $WikiTheme->makeLinkButton($linkpage)
                         );
@@ -218,7 +218,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
                         $linkpage = $c[$thispage + 1];
                     }
                     $text = fmt(
-                        "%s: %s",
+                        '%s: %s',
                         $directions[$go_item],
                         $WikiTheme->makeLinkButton($linkpage)
                     );
@@ -228,7 +228,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
                     } else {
                         $linkpage = $c[$thispage + 1];
                         $text     = fmt(
-                            "%s: %s",
+                            '%s: %s',
                             $directions[$go_item],
                             $WikiTheme->makeLinkButton($linkpage)
                         );
@@ -237,7 +237,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
                 $links->pushcontent($text);
             }
         }
-        $links->pushcontent(" ] "); // an experiment
+        $links->pushcontent(' ] '); // an experiment
         return $links;
     }
 }

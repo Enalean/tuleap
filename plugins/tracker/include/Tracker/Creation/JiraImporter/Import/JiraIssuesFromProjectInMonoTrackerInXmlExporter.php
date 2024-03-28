@@ -138,7 +138,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
         $forge_user                          = $user_manager->getUserById(TrackerImporterUser::ID);
 
         if ($forge_user === null) {
-            throw new \RuntimeException("Unable to find TrackerImporterUser");
+            throw new \RuntimeException('Unable to find TrackerImporterUser');
         }
 
         $jira_user_retriever = new JiraUserRetriever(
@@ -291,20 +291,20 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
             $this->logger
         );
 
-        $this->logger->debug("Handle status");
+        $this->logger->debug('Handle status');
         $status_values_collection->initCollectionForProject(
             $jira_project_key,
             $field_id_generator,
         );
 
-        $this->logger->debug("Export Always there fields");
+        $this->logger->debug('Export Always there fields');
         $xml_tracker = $this->always_there_fields_exporter->exportFields(
             $xml_tracker,
             $status_values_collection,
             $jira_field_mapping_collection,
         );
 
-        $this->logger->debug("Export custom jira fields");
+        $this->logger->debug('Export custom jira fields');
         $xml_tracker = $this->exportJiraField(
             $xml_tracker,
             $field_id_generator,
@@ -315,7 +315,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
             $import_mode,
         );
 
-        $this->logger->debug("Export semantics");
+        $this->logger->debug('Export semantics');
         $tracker_for_semantic_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $this->semantics_xml_exporter->exportSemantics(
             $tracker_for_semantic_xml,
@@ -324,7 +324,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
         );
 
 
-        $this->logger->debug("Export reports");
+        $this->logger->debug('Export reports');
         $tracker_for_reports_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $this->report_exporter->exportReports(
             $tracker_for_reports_xml,
@@ -339,7 +339,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
 
         $node_tracker = JiraXMLNodeBuilder::buildTrackerXMLNode($xml_tracker, $tracker_for_semantic_xml, $tracker_for_reports_xml);
 
-        $this->logger->debug("Export artifacts");
+        $this->logger->debug('Export artifacts');
         $issue_representation_collection = new IssueAPIRepresentationCollection();
         $this->artifacts_in_mono_tracker_xml_exporter->exportArtifacts(
             $node_tracker,
@@ -385,7 +385,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
         FieldMappingCollection $field_mapping_collection,
         string $import_mode,
     ): XMLTracker {
-        $this->logger->debug("Start exporting jira field structure (custom fields) ...");
+        $this->logger->debug('Start exporting jira field structure (custom fields) ...');
         $fields = $this->mergeAllProjectFields(
             $id_generator,
             $jira_project_id,
@@ -402,7 +402,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
                 $import_mode,
             );
         }
-        $this->logger->debug("Field structure exported successfully");
+        $this->logger->debug('Field structure exported successfully');
         return $xml_tracker;
     }
 

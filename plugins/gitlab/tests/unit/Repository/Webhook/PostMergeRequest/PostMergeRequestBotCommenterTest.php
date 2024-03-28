@@ -113,12 +113,12 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNothingHappenIfNoCredentialsRetrieved(): void
     {
         $this->webhook_data
-            ->method("getMergeRequestId")
+            ->method('getMergeRequestId')
             ->willReturn(42);
 
         $this->logger
             ->expects(self::once())
-            ->method("debug")
+            ->method('debug')
             ->with("Comment can't be added on merge request #42 because there is no bot API token.");
 
         $this->credentials_retriever
@@ -139,7 +139,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testClientWrapperThrowErrorAndLogIt(): void
     {
         $this->webhook_data
-            ->method("getMergeRequestId")
+            ->method('getMergeRequestId')
             ->willReturn(42);
 
         $this->gitlab_repository
@@ -161,8 +161,8 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $references_presenter = [
-            new BotCommentReferencePresenter(123, "https://example.fr"),
-            new BotCommentReferencePresenter(59, "https://example.fr"),
+            new BotCommentReferencePresenter(123, 'https://example.fr'),
+            new BotCommentReferencePresenter(59, 'https://example.fr'),
         ];
 
         $this->bot_comment_reference_presenter_builder
@@ -171,7 +171,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($references)
             ->willReturn($references_presenter);
 
-        $url     = "/projects/4/merge_requests/42/notes";
+        $url     = '/projects/4/merge_requests/42/notes';
         $comment = <<<EOS
 
             This merge request references:
@@ -185,16 +185,16 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->client_wrapper
             ->expects(self::once())
             ->method('postUrl')
-            ->with($credentials, $url, ["body" => $comment])
-            ->willThrowException(new GitlabRequestException(404, "not found"));
+            ->with($credentials, $url, ['body' => $comment])
+            ->willThrowException(new GitlabRequestException(404, 'not found'));
 
         $this->logger
             ->method('error')
             ->willReturnCallback(
                 function (string $message): void {
                     match ($message) {
-                        "An error occurred during automatically comment merge request #42",
-                        "|  |_Error returned by the GitLab server: not found" => true,
+                        'An error occurred during automatically comment merge request #42',
+                        '|  |_Error returned by the GitLab server: not found' => true,
                     };
                 }
             );
@@ -209,7 +209,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testPOSTCommentOnCommit(): void
     {
         $this->webhook_data
-            ->method("getMergeRequestId")
+            ->method('getMergeRequestId')
             ->willReturn(42);
 
         $this->gitlab_repository
@@ -230,7 +230,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $references_presenter = [
-            new BotCommentReferencePresenter(123, "https://example.fr"),
+            new BotCommentReferencePresenter(123, 'https://example.fr'),
         ];
 
         $this->bot_comment_reference_presenter_builder
@@ -239,7 +239,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($references)
             ->willReturn($references_presenter);
 
-        $url     = "/projects/4/merge_requests/42/notes";
+        $url     = '/projects/4/merge_requests/42/notes';
         $comment = <<<EOS
 
             This merge request references: [TULEAP-123](https://example.fr).
@@ -254,8 +254,8 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->logger
             ->expects(self::once())
-            ->method("debug")
-            ->with("Comment was successfully added on merge request #42");
+            ->method('debug')
+            ->with('Comment was successfully added on merge request #42');
 
         $this->commenter->addCommentOnMergeRequest(
             $this->webhook_data,

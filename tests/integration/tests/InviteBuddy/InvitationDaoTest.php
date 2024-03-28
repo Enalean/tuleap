@@ -48,7 +48,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "jdoe@example.com", null, null, null, $verifier);
+        $id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, 'jdoe@example.com', null, null, null, $verifier);
 
         $invitation = $this->dao->searchBySplitToken(new SplitToken($id, $verifier));
         self::assertEquals($id, $invitation->id);
@@ -63,8 +63,8 @@ class InvitationDaoTest extends TestIntegrationTestCase
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "alice@example.com", 102, null, null, $verifier);
-        $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "bob@example.com", null, null, null, $verifier);
+        $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, 'alice@example.com', 102, null, null, $verifier);
+        $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, 'bob@example.com', null, null, null, $verifier);
 
         self::assertEquals(
             ['', 'bob@example.com'],
@@ -76,7 +76,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "jdoe@example.com", null, null, null, $verifier);
+        $id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, 'jdoe@example.com', null, null, null, $verifier);
 
         $invalid_verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
@@ -116,11 +116,11 @@ class InvitationDaoTest extends TestIntegrationTestCase
 
         self::assertEquals(
             [201, null, 201],
-            DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT created_user_id FROM invitations ORDER BY id"),
+            DBFactory::getMainTuleapDBConnection()->getDB()->column('SELECT created_user_id FROM invitations ORDER BY id'),
         );
         self::assertEquals(
             [Invitation::STATUS_COMPLETED, Invitation::STATUS_SENT, Invitation::STATUS_COMPLETED],
-            DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT status FROM invitations ORDER BY id"),
+            DBFactory::getMainTuleapDBConnection()->getDB()->column('SELECT status FROM invitations ORDER BY id'),
         );
     }
 
@@ -136,11 +136,11 @@ class InvitationDaoTest extends TestIntegrationTestCase
 
         self::assertEquals(
             [201, null, 201],
-            DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT created_user_id FROM invitations ORDER BY id"),
+            DBFactory::getMainTuleapDBConnection()->getDB()->column('SELECT created_user_id FROM invitations ORDER BY id'),
         );
         self::assertEquals(
             [Invitation::STATUS_COMPLETED, Invitation::STATUS_SENT, Invitation::STATUS_USED],
-            DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT status FROM invitations ORDER BY id"),
+            DBFactory::getMainTuleapDBConnection()->getDB()->column('SELECT status FROM invitations ORDER BY id'),
         );
         self::assertEquals(
             [101, 103],
@@ -159,7 +159,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
             $second_invitation_to_alice_id,
         ] = $this->createBunchOfInvitations();
         self::assertEquals(
-            ["alice@example.com", "bob@example.com", "alice@example.com"],
+            ['alice@example.com', 'bob@example.com', 'alice@example.com'],
             $this->getStoredEmails(),
         );
         $verifiers = $this->getStoredVerifiers();
@@ -169,7 +169,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
 
         $this->dao->markAsError($first_invitation_to_bob_id);
         self::assertEquals(
-            ["alice@example.com", "", "alice@example.com"],
+            ['alice@example.com', '', 'alice@example.com'],
             $this->getStoredEmails(),
         );
         $verifiers = $this->getStoredVerifiers();
@@ -179,7 +179,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
 
         $this->dao->saveJustCreatedUserThanksToInvitation('alice@example.com', 201, $second_invitation_to_alice_id);
         self::assertEquals(
-            ["", "", ""],
+            ['', '', ''],
             $this->getStoredEmails(),
         );
         $verifiers = $this->getStoredVerifiers();
@@ -193,7 +193,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
      */
     private function getStoredEmails(): array
     {
-        return DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT to_email FROM invitations ORDER BY id");
+        return DBFactory::getMainTuleapDBConnection()->getDB()->column('SELECT to_email FROM invitations ORDER BY id');
     }
 
     /**
@@ -201,7 +201,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
      */
     private function getStoredVerifiers(): array
     {
-        return DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT verifier FROM invitations ORDER BY id");
+        return DBFactory::getMainTuleapDBConnection()->getDB()->column('SELECT verifier FROM invitations ORDER BY id');
     }
 
     private function createBunchOfInvitations(): array
@@ -210,9 +210,9 @@ class InvitationDaoTest extends TestIntegrationTestCase
         $verifier_2 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $verifier_3 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $first_invitation_to_alice_id  = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "alice@example.com", null, null, null, $verifier_1);
-        $first_invitation_to_bob_id    = $this->dao->create(self::CREATED_ON_TIMESTAMP, 102, "bob@example.com", null, null, null, $verifier_2);
-        $second_invitation_to_alice_id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 103, "alice@example.com", null, null, null, $verifier_3);
+        $first_invitation_to_alice_id  = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, 'alice@example.com', null, null, null, $verifier_1);
+        $first_invitation_to_bob_id    = $this->dao->create(self::CREATED_ON_TIMESTAMP, 102, 'bob@example.com', null, null, null, $verifier_2);
+        $second_invitation_to_alice_id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 103, 'alice@example.com', null, null, null, $verifier_3);
 
         $this->dao->markAsSent($first_invitation_to_alice_id);
         $this->dao->markAsSent($first_invitation_to_bob_id);
@@ -241,7 +241,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
         self::assertCount(3, $purged_invitations);
         self::assertEquals(0, $this->getNumberOfRemainingInvitations());
 
-        DBFactory::getMainTuleapDBConnection()->getDB()->run("DELETE FROM invitations");
+        DBFactory::getMainTuleapDBConnection()->getDB()->run('DELETE FROM invitations');
 
         [, , $second_invitation_to_alice_id] = $this->createBunchOfInvitations();
 
@@ -376,12 +376,12 @@ class InvitationDaoTest extends TestIntegrationTestCase
                 $a_used_invitation_that_should_not_be_removed,
                 $an_invitation_that_is_kept_in_sent_status_for_a_registered_user_and_should_not_be_removed,
             ],
-            DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT id FROM invitations ORDER BY id"),
+            DBFactory::getMainTuleapDBConnection()->getDB()->column('SELECT id FROM invitations ORDER BY id'),
         );
     }
 
     private function getNumberOfRemainingInvitations(): int
     {
-        return DBFactory::getMainTuleapDBConnection()->getDB()->single("SELECT count(*) FROM invitations");
+        return DBFactory::getMainTuleapDBConnection()->getDB()->single('SELECT count(*) FROM invitations');
     }
 }

@@ -62,7 +62,7 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project = ProjectTestBuilder::aProject()->withId(101)->withAccessPrivate()->build();
         $this->current_user->method('isMemberOfUGroup')->willReturnCallback(
             function (int $ugroup_id, string $group_id): bool {
-                if ($group_id === "101" && $ugroup_id === 103) {
+                if ($group_id === '101' && $ugroup_id === 103) {
                     return true;
                 }
 
@@ -164,14 +164,14 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Response']->expects(self::exactly(3))->method('addFeedback')->willReturnCallback(
             function (string $level, string $message): void {
                 if ($level !== \Feedback::WARN) {
-                    throw new \LogicException("Unexpected feedback level: " . $level);
+                    throw new \LogicException('Unexpected feedback level: ' . $level);
                 }
                 if (
                     $message !== "The entered value 'bla' is invalid." &&
                     $message !== "The entered value 'Secret' is invalid." &&
                     $message !== "The entered value 'Unknown (seraph)' is invalid."
                 ) {
-                    throw new \LogicException("Unexpected message");
+                    throw new \LogicException('Unexpected message');
                 }
             }
         );

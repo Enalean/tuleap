@@ -80,7 +80,7 @@ class UpdateController implements DispatchableWithRequest
 
         $categories = $request->get('categories');
         if (! is_array($categories)) {
-            $layout->addFeedback(Feedback::ERROR, gettext("Your request is invalid"));
+            $layout->addFeedback(Feedback::ERROR, gettext('Your request is invalid'));
             $layout->redirect($redirect_url);
         }
 
@@ -93,7 +93,7 @@ class UpdateController implements DispatchableWithRequest
                 $csrf,
                 $submitted_categories
             );
-            $layout->addFeedback(Feedback::INFO, gettext("Categories successfully updated."));
+            $layout->addFeedback(Feedback::INFO, gettext('Categories successfully updated.'));
         } catch (MissingMandatoryCategoriesException $exception) {
             $layout->addFeedback(Feedback::ERROR, _('Some mandatory categories are missing'));
         } catch (ProjectCategoriesException $exception) {

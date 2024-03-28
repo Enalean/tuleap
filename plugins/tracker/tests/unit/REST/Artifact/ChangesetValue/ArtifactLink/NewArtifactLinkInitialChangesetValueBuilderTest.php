@@ -113,13 +113,13 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
     {
         $link1_representation            = new LinkWithDirectionRepresentation();
         $link1_representation->id        = self::FIRST_ADDED_ARTIFACT_ID;
-        $link1_representation->direction = "forward";
-        $link1_representation->type      = "";
+        $link1_representation->direction = 'forward';
+        $link1_representation->type      = '';
 
         $link2_representation            = new LinkWithDirectionRepresentation();
         $link2_representation->id        = self::SECOND_ADDED_ARTIFACT_ID;
-        $link2_representation->direction = "reverse";
-        $link2_representation->type      = "";
+        $link2_representation->direction = 'reverse';
+        $link2_representation->type      = '';
 
         $payload            = new ArtifactValuesRepresentation();
         $payload->all_links = [$link1_representation, $link2_representation];

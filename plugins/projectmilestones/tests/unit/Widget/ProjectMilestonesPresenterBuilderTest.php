@@ -92,7 +92,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->project->method('getPublicName')->willReturn('My Project');
 
         $this->root_planning->method('getPlanningTracker')->willReturn($this->tracker);
-        $this->tracker->method('getName')->willReturn("Releases");
+        $this->tracker->method('getName')->willReturn('Releases');
 
         $this->http_request->method('getProject')->willReturn($this->project);
         $this->http_request->method('getCurrentUser')->willReturn($this->john_doe);
@@ -136,11 +136,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->tracker->method('getChildren')->willReturn([$this->tracker]);
         $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -171,11 +171,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->tracker->method('getChildren')->willReturn([$this->tracker]);
         $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -206,11 +206,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->tracker->method('getChildren')->willReturn([$this->tracker]);
         $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -245,11 +245,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->tracker->method('getChildren')->willReturn([$this->tracker]);
         $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -289,11 +289,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->tracker->method('getChildren')->willReturn([$this->tracker]);
         $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -323,11 +323,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->tracker->method('getChildren')->willReturn([$this->tracker]);
         $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -364,11 +364,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->tracker->method('getChildren')->willReturn([$this->tracker]);
         $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -406,11 +406,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->tracker->method('getChildren')->willReturn([$this->tracker]);
         $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -449,7 +449,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -479,11 +479,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->tracker->method('getChildren')->willReturn([$this->tracker]);
         $this->tracker->method('userCanView')->willReturn(false);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -514,11 +514,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->tracker->method('getChildren')->willReturn([$this->tracker, $this->createMock(Tracker::class)]);
         $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -548,11 +548,11 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->tracker->method('getChildren')->willReturn([]);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
@@ -582,17 +582,17 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->tracker->method('getChildren')->willReturn([]);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(false);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(false);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        self::assertEquals($built_presenter->burnup_mode, "effort");
+        self::assertEquals($built_presenter->burnup_mode, 'effort');
     }
 
     public function testBurnupUseCountMode(): void
@@ -616,23 +616,23 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->tracker->method('getChildren')->willReturn([]);
 
-        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method('burnupMustUseCountElementsMode')->willReturn(true);
 
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        self::assertEquals($built_presenter->burnup_mode, "count");
+        self::assertEquals($built_presenter->burnup_mode, 'count');
     }
 
     public function testThrowExceptionWhenUserCantAccessToProject(): void
     {
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject")->willThrowException(new Project_AccessProjectNotFoundException());
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject')->willThrowException(new Project_AccessProjectNotFoundException());
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildUserNotAccessToProject()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
@@ -641,7 +641,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
     public function testThrowExceptionWhenUserCantAccessToAPrivateProject(): void
     {
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject")->willThrowException(new \Project_AccessPrivateException());
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject')->willThrowException(new \Project_AccessPrivateException());
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildUserNotAccessToPrivateProject()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
@@ -658,25 +658,25 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
     public function testThrowExceptionWhenNoRootPlanning(): void
     {
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildRootPlanningDontExist()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter($this->project, null);
 
-        $this->http_request->method("getCurrentUser")->willReturn($this->john_doe);
+        $this->http_request->method('getCurrentUser')->willReturn($this->john_doe);
     }
 
     public function testThrowExceptionWhenNoServiceAgileDashboard(): void
     {
         $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
-        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
         $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(false);
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildNoAgileDashboardPlugin()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->http_request->method("getCurrentUser")->willReturn($this->john_doe);
+        $this->http_request->method('getCurrentUser')->willReturn($this->john_doe);
     }
 
     private function aTracker(int $id, string $name, string $color): Tracker

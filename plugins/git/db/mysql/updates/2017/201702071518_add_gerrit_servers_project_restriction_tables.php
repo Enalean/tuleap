@@ -22,7 +22,7 @@ class b201702071518_add_gerrit_servers_project_restriction_tables extends \Tulea
 {
     public function description()
     {
-        return "Add new project restriction tables for Gerrit servers.";
+        return 'Add new project restriction tables for Gerrit servers.';
     }
 
     public function preUp()
@@ -32,17 +32,17 @@ class b201702071518_add_gerrit_servers_project_restriction_tables extends \Tulea
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_restricted_gerrit_servers (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_restricted_gerrit_servers (
                   gerrit_server_id INT(11) unsigned PRIMARY KEY
-               )";
+               )';
 
         $this->db->createTable('plugin_git_restricted_gerrit_servers', $sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_restricted_gerrit_servers_allowed_projects (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_restricted_gerrit_servers_allowed_projects (
                   gerrit_server_id INT(11) unsigned NOT NULL,
                   project_id INT(11) NOT NULL,
                   PRIMARY KEY idx(gerrit_server_id, project_id)
-                )";
+                )';
 
         $this->db->createTable('plugin_git_restricted_gerrit_servers_allowed_projects', $sql);
     }

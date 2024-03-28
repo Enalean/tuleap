@@ -54,7 +54,7 @@ class HudsonBuild
             throw new HudsonJobURLMalformedException(sprintf(dgettext('tuleap-hudson', 'Wrong Job URL: %1$s'), $hudson_build_url));
         }
 
-        $this->hudson_build_url = $hudson_build_url . "/api/xml";
+        $this->hudson_build_url = $hudson_build_url . '/api/xml';
         $this->http_client      = $http_client;
         $this->request_factory  = $request_factory;
 
@@ -93,7 +93,7 @@ class HudsonBuild
 
     public function isBuilding()
     {
-        return ($this->dom_build->building == "true");
+        return ($this->dom_build->building == 'true');
     }
 
     public function getUrl()

@@ -27,11 +27,11 @@ class AnonymousNotAllowedException extends RegistrationForbiddenException
 {
     public function __construct()
     {
-        parent::__construct("Anonymous users are not allowed.");
+        parent::__construct('Anonymous users are not allowed.');
     }
 
     public function getI18NMessage(): string
     {
-        return dgettext("tuleap-core", "Anonymous users are not allowed.");
+        return dgettext('tuleap-core', 'Anonymous users are not allowed.');
     }
 }

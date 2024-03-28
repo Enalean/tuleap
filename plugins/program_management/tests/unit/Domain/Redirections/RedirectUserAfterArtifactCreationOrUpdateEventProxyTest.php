@@ -43,7 +43,7 @@ final class RedirectUserAfterArtifactCreationOrUpdateEventProxyTest extends Test
                 new \Codendi_Request(
                     [
                         IterationRedirectionParameters::FLAG               => IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,
-                        IterationRedirectionParameters::PARAM_INCREMENT_ID => "1280",
+                        IterationRedirectionParameters::PARAM_INCREMENT_ID => '1280',
                     ],
                     null
                 ),

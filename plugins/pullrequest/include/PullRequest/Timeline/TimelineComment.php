@@ -25,7 +25,7 @@ namespace Tuleap\PullRequest\PullRequest\Timeline;
 interface TimelineComment
 {
     public final const FORMAT_TEXT     = 'text';
-    public final const FORMAT_MARKDOWN = "commonmark";
+    public final const FORMAT_MARKDOWN = 'commonmark';
 
     public function getContent(): string;
 

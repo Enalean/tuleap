@@ -33,7 +33,7 @@ class b201910231002_add_project_id_index_explicit_backlog_artifacts extends Forg
 
     public function up(): void
     {
-        $sql = "ALTER TABLE plugin_agiledashboard_planning_artifacts_explicit_backlog ADD INDEX idx_project_id(project_id)";
+        $sql = 'ALTER TABLE plugin_agiledashboard_planning_artifacts_explicit_backlog ADD INDEX idx_project_id(project_id)';
 
         $this->db->addIndex('plugin_agiledashboard_planning_artifacts_explicit_backlog', 'idx_project_id', $sql);
     }

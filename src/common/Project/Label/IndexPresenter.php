@@ -69,8 +69,8 @@ class IndexPresenter
         $this->style_label        = _('Style');
         $this->is_used_label      = _('Is used?');
         $this->this_label_is_used = _('This label is used in the project');
-        $this->empty_state        = _("No labels defined in this project");
-        $this->empty_filter       = _("No matching labels");
+        $this->empty_state        = _('No labels defined in this project');
+        $this->empty_filter       = _('No matching labels');
         $this->filter_placeholder = _('Name');
         $this->delete_button      = _('Delete');
         $this->edit_button        = _('Edit');

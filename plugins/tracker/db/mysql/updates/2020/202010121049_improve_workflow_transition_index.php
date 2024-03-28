@@ -34,9 +34,9 @@ class b202010121049_improve_workflow_transition_index extends \Tuleap\ForgeUpgra
 
     public function up(): void
     {
-        $sql = "ALTER TABLE tracker_workflow_transition
+        $sql = 'ALTER TABLE tracker_workflow_transition
                 DROP INDEX idx_wf_workflow_id,
-                ADD INDEX idx_wf_workflow_id (workflow_id, transition_id)";
+                ADD INDEX idx_wf_workflow_id (workflow_id, transition_id)';
 
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {

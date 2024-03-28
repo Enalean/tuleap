@@ -79,7 +79,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         foreach ($snapshot->getAllFieldsSnapshot() as $field_snapshot) {
             $field_id = $field_snapshot->getFieldMapping()->getJiraFieldId();
             if ($field_id === 'summary') {
-                $this->assertSame("summary01", $field_snapshot->getValue());
+                $this->assertSame('summary01', $field_snapshot->getValue());
                 $this->assertNull($field_snapshot->getRenderedValue());
             } elseif ($field_id === 'issuetype') {
                 $this->assertSame(['id' => '10004'], $field_snapshot->getValue());

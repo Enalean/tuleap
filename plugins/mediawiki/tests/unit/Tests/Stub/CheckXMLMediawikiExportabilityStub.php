@@ -52,6 +52,6 @@ final class CheckXMLMediawikiExportabilityStub implements CheckXMLMediawikiExpor
             return Result::ok(true);
         }
 
-        return Result::err(Fault::fromMessage("XML export is not possible"));
+        return Result::err(Fault::fromMessage('XML export is not possible'));
     }
 }

@@ -56,7 +56,7 @@ class BaselineService
     {
         if (! $this->authorizations->canCreateBaseline($current_user, $baseline)) {
             throw new NotAuthorizedException(
-                dgettext('tuleap-baseline', "You are not allowed to create this baseline")
+                dgettext('tuleap-baseline', 'You are not allowed to create this baseline')
             );
         }
 
@@ -80,7 +80,7 @@ class BaselineService
     {
         if (! $this->authorizations->canDeleteBaseline($current_user, $baseline)) {
             throw new NotAuthorizedException(
-                dgettext('tuleap-baseline', "You are not allowed to delete this baseline")
+                dgettext('tuleap-baseline', 'You are not allowed to delete this baseline')
             );
         }
 
@@ -107,7 +107,7 @@ class BaselineService
     ): BaselinesPage {
         if (! $this->authorizations->canReadBaselinesOnProject($current_user, $project)) {
             throw new NotAuthorizedException(
-                dgettext('tuleap-baseline', "You are not allowed to read baselines of this project")
+                dgettext('tuleap-baseline', 'You are not allowed to read baselines of this project')
             );
         }
         $baselines = $this->baseline_repository->findByProject($current_user, $project, $page_size, $baseline_offset);

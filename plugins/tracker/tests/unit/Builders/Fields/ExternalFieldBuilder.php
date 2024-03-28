@@ -193,7 +193,7 @@ final class ExternalFieldBuilder
                 ?Tracker_Report $report = null,
                 ?int $from_aid = null,
             ): string {
-                return "";
+                return '';
             }
         };
         $field->setTracker($this->tracker);

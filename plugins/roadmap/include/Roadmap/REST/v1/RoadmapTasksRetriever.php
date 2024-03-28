@@ -113,7 +113,7 @@ final class RoadmapTasksRetriever
 
             $tracker_id = $artifact->getTracker()->getId();
             if (! isset($representation_builders_by_tracker_id[$tracker_id])) {
-                throw new \RuntimeException("Unable to find representation builder");
+                throw new \RuntimeException('Unable to find representation builder');
             }
 
             $representations[] = $representation_builders_by_tracker_id[$tracker_id]->buildRepresentation($artifact, $user);

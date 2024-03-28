@@ -38,14 +38,14 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_statistics_aggregator (
+        $sql = 'CREATE TABLE plugin_statistics_aggregator (
                     project_id INT(11) NOT NULL,
                     day DATE NOT NULL,
                     name VARCHAR(255) NOT NULL,
                     value INT(11) UNSIGNED NOT NULL,
                     PRIMARY KEY (project_id, day, name(16)),
                     INDEX idx_day (day, name(16))
-                ) ENGINE = InnoDB;";
+                ) ENGINE = InnoDB;';
 
         $this->db->createTable('plugin_statistics_aggregator', $sql);
     }

@@ -171,11 +171,11 @@ class WebhookDataExtractor
         }
 
         if (! isset($webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY])) {
-            throw new MissingKeyException(self::PROJECT_KEY . " > " . self::PROJECT_ID_KEY);
+            throw new MissingKeyException(self::PROJECT_KEY . ' > ' . self::PROJECT_ID_KEY);
         }
 
         if (! isset($webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY])) {
-            throw new MissingKeyException(self::PROJECT_KEY . " > " . self::PROJECT_URL_KEY);
+            throw new MissingKeyException(self::PROJECT_KEY . ' > ' . self::PROJECT_URL_KEY);
         }
     }
 }

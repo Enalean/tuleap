@@ -49,7 +49,7 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
             $diff_to_previous  = $followup->diffToPrevious();
             $follow_up_content = $followup->getFollowupContent($diff_to_previous, $current_user);
 
-            if ($follow_up_content === "") {
+            if ($follow_up_content === '') {
                 continue;
             }
 

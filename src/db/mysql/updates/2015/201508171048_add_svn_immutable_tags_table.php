@@ -20,7 +20,7 @@ class b201508171048_add_svn_immutable_tags_table extends \Tuleap\ForgeUpgrade\Bu
 {
     public function description()
     {
-        return "Modify table svn_immutable_tags_whitelist to store SVN immutable tags paths";
+        return 'Modify table svn_immutable_tags_whitelist to store SVN immutable tags paths';
     }
 
     public function preUp()
@@ -80,8 +80,8 @@ class b201508171048_add_svn_immutable_tags_table extends \Tuleap\ForgeUpgrade\Bu
 
     private function convertWhitelist()
     {
-        $sql = "SELECT *
-                FROM svn_immutable_tags_whitelist";
+        $sql = 'SELECT *
+                FROM svn_immutable_tags_whitelist';
 
         foreach ($this->db->dbh->query($sql)->fetchAll() as $row) {
             $new_content = $this->getNewContent($row['content']);
@@ -111,11 +111,11 @@ class b201508171048_add_svn_immutable_tags_table extends \Tuleap\ForgeUpgrade\Bu
 
     private function deleteOldTable()
     {
-        $sql = "DROP TABLE svn_immutable_tags_whitelist";
+        $sql = 'DROP TABLE svn_immutable_tags_whitelist';
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            $this->rollBackOnError("An error occured while trying to remove the old svn_immutable_tags_whitelist table.");
+            $this->rollBackOnError('An error occured while trying to remove the old svn_immutable_tags_whitelist table.');
         }
     }
 

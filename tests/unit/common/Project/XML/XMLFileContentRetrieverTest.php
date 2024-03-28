@@ -36,7 +36,7 @@ final class XMLFileContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::assertEquals('<tracker/>', $xml->tracker->saveXML());
             },
             function () {
-                self::fail("Valid xml should not be err");
+                self::fail('Valid xml should not be err');
             }
         );
     }
@@ -49,10 +49,10 @@ final class XMLFileContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result->match(
             function () {
-                self::fail("Invalid xml should not be ok");
+                self::fail('Invalid xml should not be ok');
             },
             function (Fault $fault) {
-                self::assertStringContainsString("Premature end of data in tag project line 1", (string) $fault);
+                self::assertStringContainsString('Premature end of data in tag project line 1', (string) $fault);
             }
         );
     }

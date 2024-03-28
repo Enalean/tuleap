@@ -57,7 +57,7 @@ class DescriptionUpdater
             $repository->save();
 
             $this->history_dao->groupAddHistory(
-                "git_repo_update",
+                'git_repo_update',
                 $repository->getName() . ': update description',
                 $repository->getProjectId()
             );
@@ -92,7 +92,7 @@ class DescriptionUpdater
             'pane'     => 'settings',
         ];
 
-        $url = "/plugins/git/?" . http_build_query($query_parts);
+        $url = '/plugins/git/?' . http_build_query($query_parts);
 
         $GLOBALS['HTML']->redirect($url);
     }

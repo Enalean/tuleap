@@ -57,7 +57,7 @@ final class GitlabGroupInformationRetrieverTest extends TestCase
     public function testItThrowsAnExceptionIfTheGitlabServerReturnNothing(): void
     {
         $this->expectException(GitlabResponseAPIException::class);
-        $this->expectExceptionMessage("The query is not in error but the json content is empty. This is not expected.");
+        $this->expectExceptionMessage('The query is not in error but the json content is empty. This is not expected.');
         $this->getGroup();
     }
 

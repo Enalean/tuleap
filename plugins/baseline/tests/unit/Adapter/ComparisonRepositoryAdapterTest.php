@@ -137,13 +137,13 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"                      => 1,
-                        "name"                    => "Persisted comparison",
-                        "comment"                 => null,
-                        "base_baseline_id"        => 1,
-                        "compared_to_baseline_id" => 2,
-                        "user_id"                 => 9,
-                        "creation_date"           => 1553176023,
+                        'id'                      => 1,
+                        'name'                    => 'Persisted comparison',
+                        'comment'                 => null,
+                        'base_baseline_id'        => 1,
+                        'compared_to_baseline_id' => 2,
+                        'user_id'                 => 9,
+                        'creation_date'           => 1553176023,
                     ],
                 ]
             );
@@ -168,7 +168,7 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_comparison = new Comparison(
             1,
-            "Persisted comparison",
+            'Persisted comparison',
             null,
             $base_baseline,
             $compared_to_baseline,
@@ -209,13 +209,13 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"                      => 1,
-                        "name"                    => "Persisted comparison",
-                        "comment"                 => null,
-                        "base_baseline_id"        => 1,
-                        "compared_to_baseline_id" => 2,
-                        "user_id"                 => 9,
-                        "creation_date"           => 1553176023,
+                        'id'                      => 1,
+                        'name'                    => 'Persisted comparison',
+                        'comment'                 => null,
+                        'base_baseline_id'        => 1,
+                        'compared_to_baseline_id' => 2,
+                        'user_id'                 => 9,
+                        'creation_date'           => 1553176023,
                     ],
                 ]
             );
@@ -252,13 +252,13 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"                      => 1,
-                        "name"                    => "Persisted comparison",
-                        "comment"                 => null,
-                        "base_baseline_id"        => 1,
-                        "compared_to_baseline_id" => 2,
-                        "user_id"                 => 9,
-                        "creation_date"           => 1553176023,
+                        'id'                      => 1,
+                        'name'                    => 'Persisted comparison',
+                        'comment'                 => null,
+                        'base_baseline_id'        => 1,
+                        'compared_to_baseline_id' => 2,
+                        'user_id'                 => 9,
+                        'creation_date'           => 1553176023,
                     ],
                 ]
             );
@@ -284,13 +284,13 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"                      => 1,
-                        "name"                    => "Persisted comparison",
-                        "comment"                 => null,
-                        "base_baseline_id"        => 1,
-                        "compared_to_baseline_id" => 2,
-                        "user_id"                 => 9,
-                        "creation_date"           => 1553176023,
+                        'id'                      => 1,
+                        'name'                    => 'Persisted comparison',
+                        'comment'                 => null,
+                        'base_baseline_id'        => 1,
+                        'compared_to_baseline_id' => 2,
+                        'user_id'                 => 9,
+                        'creation_date'           => 1553176023,
                     ],
                 ]
             );
@@ -307,13 +307,13 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"                      => 1,
-                        "name"                    => "Persisted comparison",
-                        "comment"                 => null,
-                        "base_baseline_id"        => 1,
-                        "compared_to_baseline_id" => 2,
-                        "user_id"                 => 22,
-                        "creation_date"           => 1553176023,
+                        'id'                      => 1,
+                        'name'                    => 'Persisted comparison',
+                        'comment'                 => null,
+                        'base_baseline_id'        => 1,
+                        'compared_to_baseline_id' => 2,
+                        'user_id'                 => 22,
+                        'creation_date'           => 1553176023,
                     ],
                 ]
             );
@@ -345,7 +345,7 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_baselines = [new Comparison(
             1,
-            "Persisted comparison",
+            'Persisted comparison',
             null,
             $base_baseline,
             $compared_to_baseline,
@@ -363,13 +363,13 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(
                 [
                     [
-                        "id"                      => 1,
-                        "name"                    => "Persisted comparison",
-                        "comment"                 => null,
-                        "base_baseline_id"        => 1,
-                        "compared_to_baseline_id" => 2,
-                        "user_id"                 => 22,
-                        "creation_date"           => 1553176023,
+                        'id'                      => 1,
+                        'name'                    => 'Persisted comparison',
+                        'comment'                 => null,
+                        'base_baseline_id'        => 1,
+                        'compared_to_baseline_id' => 2,
+                        'user_id'                 => 22,
+                        'creation_date'           => 1553176023,
                     ],
                 ]
             );

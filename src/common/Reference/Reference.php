@@ -116,7 +116,7 @@ class Reference
 
     public function getResolvedDescription(): string
     {
-        if (! str_contains($this->description, "_desc_key")) {
+        if (! str_contains($this->description, '_desc_key')) {
             return $this->description;
         }
 

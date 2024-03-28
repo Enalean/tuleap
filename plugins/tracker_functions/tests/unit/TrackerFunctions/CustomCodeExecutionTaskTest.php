@@ -216,7 +216,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
             ArtifactPayloadBuilderStub::withEmptyPayload(),
             WASMFunctionPathHelperStub::withPath(self::WASM_FILE),
             WASMFunctionCallerStub::withOkResult(new WASMResponseRepresentation([], null)),
-            WASMResponseExecutorStub::buildErr("Executor error"),
+            WASMResponseExecutorStub::buildErr('Executor error'),
             $dao,
             CheckFunctionIsActivatedStub::activated(),
             $notification,
@@ -230,7 +230,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $task->execute($changeset, true);
-        self::assertTrue($logger->hasDebug("Executor error"));
+        self::assertTrue($logger->hasDebug('Executor error'));
         $line_saved = $dao->getLineSaved();
         self::assertNotNull($line_saved);
         self::assertEquals(FunctionLogLine::STATUS_ERROR, $line_saved->status);

@@ -43,17 +43,17 @@ class ChartCachedDaysComparator
         $days = $date_period_without_week_end->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
 
         if ($this->isTodayAWeekDayAndIsTodayBeforeDatePeriodEnd($date_period_without_week_end)) {
-            $this->logger->debug("Period is current");
-            $this->logger->debug("Day cached: " . $number_of_cached_days);
-            $this->logger->debug("Period days: " . $days);
-            $this->logger->debug("Period days without last computed value: " . ($days - 1));
+            $this->logger->debug('Period is current');
+            $this->logger->debug('Day cached: ' . $number_of_cached_days);
+            $this->logger->debug('Period days: ' . $days);
+            $this->logger->debug('Period days without last computed value: ' . ($days - 1));
 
             return $this->compareCachedDaysWhenLastDayIsAComputedValue((int) $number_of_cached_days, $days);
         }
 
-        $this->logger->debug("Period is in past");
-        $this->logger->debug("Day cached: " . $number_of_cached_days);
-        $this->logger->debug("Period days: " . $days);
+        $this->logger->debug('Period is in past');
+        $this->logger->debug('Day cached: ' . $number_of_cached_days);
+        $this->logger->debug('Period days: ' . $days);
 
         return $this->compareCachedDaysWithPeriodDays((int) $number_of_cached_days, $days);
     }

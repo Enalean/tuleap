@@ -31,11 +31,11 @@ class SimpleWorkflowDao extends DataAccessObject
      */
     public function searchStatesForWorkflow(int $workflow_id)
     {
-        $sql = "SELECT DISTINCT tracker_workflow_transition.to_id
+        $sql = 'SELECT DISTINCT tracker_workflow_transition.to_id
                 FROM tracker_workflow
                   INNER JOIN tracker_workflow_transition ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
                 WHERE tracker_workflow.workflow_id = ?
-                    AND tracker_workflow.is_advanced = 0";
+                    AND tracker_workflow.is_advanced = 0';
 
         return $this->getDB()->run($sql, $workflow_id);
     }

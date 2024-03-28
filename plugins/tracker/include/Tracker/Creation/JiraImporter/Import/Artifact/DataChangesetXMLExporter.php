@@ -84,7 +84,7 @@ class DataChangesetXMLExporter
         LinkedIssuesCollection $linked_issues_collection,
         string $jira_base_url,
     ): void {
-        $this->logger->debug("Start exporting data in changeset XML...");
+        $this->logger->debug('Start exporting data in changeset XML...');
         $snapshot_collection = $this->issue_snapshot_collection_builder->buildCollectionOfSnapshotsForIssue(
             $issue_api_representation,
             $attachment_collection,
@@ -100,7 +100,7 @@ class DataChangesetXMLExporter
             $this->exportSnapshotInXML($snapshot, $changeset_node);
         }
 
-        $this->logger->debug("End exporting data in changeset XML...");
+        $this->logger->debug('End exporting data in changeset XML...');
     }
 
     private function exportSnapshotInXML(Snapshot $snapshot, SimpleXMLElement $changeset_node): void

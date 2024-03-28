@@ -59,20 +59,20 @@ class WikiPlugin_Template extends WikiPlugin
 {
     public function getName()
     {
-        return _("Template");
+        return _('Template');
     }
 
     public function getDescription()
     {
-        return _("Parametrized page inclusion.");
+        return _('Parametrized page inclusion.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.4 $"
+            '$Revision: 1.4 $'
         );
     }
 
@@ -109,14 +109,14 @@ class WikiPlugin_Template extends WikiPlugin
             $page = $page->name;
         }
         if (! $page) {
-            return $this->error(_("no page specified"));
+            return $this->error(_('no page specified'));
         }
 
         // Protect from recursive inclusion. A page can include itself once
         static $included_pages = [];
         if (in_array($page, $included_pages)) {
             return $this->error(sprintf(
-                _("recursive inclusion of page %s"),
+                _('recursive inclusion of page %s'),
                 $page
             ));
         }
@@ -126,7 +126,7 @@ class WikiPlugin_Template extends WikiPlugin
             $r = $p->getRevision($rev);
             if (! $r) {
                 return $this->error(sprintf(
-                    _("%s(%d): no such revision"),
+                    _('%s(%d): no such revision'),
                     $page,
                     $rev
                 ));
@@ -144,16 +144,16 @@ class WikiPlugin_Template extends WikiPlugin
 
         if (preg_match('/<noinclude>.+<\/noinclude>/s', $initial_content)) {
             $initial_content = preg_replace(
-                "/<noinclude>.+?<\/noinclude>/s",
-                "",
+                '/<noinclude>.+?<\/noinclude>/s',
+                '',
                 $initial_content
             );
         }
         if (preg_match('/%%\w+%%/', $initial_content)) { // need variable expansion
             $var = [];
             if (! empty($vars)) {
-                foreach (preg_split("/&/D", $vars) as $pair) {
-                    list($key,$val) = preg_split("/=/D", $pair);
+                foreach (preg_split('/&/D', $vars) as $pair) {
+                    list($key,$val) = preg_split('/=/D', $pair);
                     $var[$key]      = $val;
                 }
             }
@@ -181,7 +181,7 @@ class WikiPlugin_Template extends WikiPlugin
             if (empty($var['creator']) and preg_match('/%%creator%%/', $initial_content)) {
                 $var['creator'] = $thispage->getCreator();
             }
-            foreach (["SERVER_URL", "DATA_PATH", "SCRIPT_NAME", "PHPWIKI_BASE_URL"] as $c) {
+            foreach (['SERVER_URL', 'DATA_PATH', 'SCRIPT_NAME', 'PHPWIKI_BASE_URL'] as $c) {
                 // constants are not overridable
                 if (preg_match('/%%' . $c . '%%/', $initial_content)) {
                     $var[$c] = constant($c);

@@ -32,11 +32,11 @@ class b201704031658_create_svn_notif_group_table extends \Tuleap\ForgeUpgrade\Bu
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_svn_notification_ugroups(
+        $sql = 'CREATE TABLE plugin_svn_notification_ugroups(
                     notification_id INT(11) UNSIGNED NOT NULL,
                     ugroup_id INT(11) NOT NULL,
                     PRIMARY KEY (notification_id, ugroup_id)
-                )";
+                )';
 
         $this->db->createTable('plugin_svn_notification_ugroups', $sql);
     }

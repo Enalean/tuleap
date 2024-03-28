@@ -23,7 +23,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FormElement_DateFormatter
 {
-    public const DATE_FORMAT = "Y-m-d";
+    public const DATE_FORMAT = 'Y-m-d';
 
     /** @var Tracker_FormElement_Field_Date */
     protected $field;
@@ -127,7 +127,7 @@ class Tracker_FormElement_DateFormatter
     protected function getDatePicker($value, array $errors)
     {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
-            "tracker_admin_field_" . $this->field->getId(),
+            'tracker_admin_field_' . $this->field->getId(),
             'artifact[' . $this->field->getId() . ']',
             $value,
             [],

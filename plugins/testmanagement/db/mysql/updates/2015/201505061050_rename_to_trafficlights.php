@@ -44,12 +44,12 @@ EOT;
 
     private function createTable()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_trafficlights(
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_trafficlights(
             project_id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
             campaign_tracker_id INT(11) NOT NULL,
             test_definition_tracker_id INT(11) NOT NULL,
             test_execution_tracker_id INT(11) NOT NULL
-        )";
+        )';
         $this->db->createTable('plugin_trafficlights', $sql);
 
         if (! $this->db->tableNameExists('plugin_trafficlights')) {
@@ -59,10 +59,10 @@ EOT;
 
     private function feedTable()
     {
-        $sql = "INSERT INTO plugin_trafficlights(project_id, campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id)
+        $sql = 'INSERT INTO plugin_trafficlights(project_id, campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id)
                 SELECT project_id, campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id
                 FROM plugin_testing
-               ";
+               ';
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
@@ -72,7 +72,7 @@ EOT;
 
     private function dropTable()
     {
-        $sql = "DROP TABLE plugin_testing";
+        $sql = 'DROP TABLE plugin_testing';
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {

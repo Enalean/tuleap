@@ -33,7 +33,7 @@ class b201927091548_add_index_tracker_hierarchy extends ForgeUpgrade_Bucket //ph
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_hierarchy ADD INDEX idx_tracker_hierarchy_parent_id(parent_id)";
+        $sql = 'ALTER TABLE tracker_hierarchy ADD INDEX idx_tracker_hierarchy_parent_id(parent_id)';
 
         $this->db->addIndex('tracker_hierarchy', 'idx_tracker_hierarchy_parent_id', $sql);
     }

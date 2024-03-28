@@ -43,8 +43,8 @@ final class TrackerReportDao extends DataAccessObject
 
     private function deleteAllForKanban(int $kanban_id): void
     {
-        $sql = "DELETE FROM plugin_agiledashboard_kanban_tracker_reports
-                WHERE kanban_id = ?";
+        $sql = 'DELETE FROM plugin_agiledashboard_kanban_tracker_reports
+                WHERE kanban_id = ?';
 
         $this->getDB()->run($sql, $kanban_id);
     }
@@ -54,7 +54,7 @@ final class TrackerReportDao extends DataAccessObject
         $values     = [];
         $parameters = [];
         foreach ($tracker_report_ids as $report_id) {
-            $values[]     = "(?, ?)";
+            $values[]     = '(?, ?)';
             $parameters[] = $kanban_id;
             $parameters[] = $report_id;
         }
@@ -68,8 +68,8 @@ final class TrackerReportDao extends DataAccessObject
 
     public function deleteAllForReport(int $report_id): void
     {
-        $sql = "DELETE FROM plugin_agiledashboard_kanban_tracker_reports
-                WHERE report_id = ?";
+        $sql = 'DELETE FROM plugin_agiledashboard_kanban_tracker_reports
+                WHERE report_id = ?';
 
         $this->getDB()->run($sql, $report_id);
     }
@@ -79,9 +79,9 @@ final class TrackerReportDao extends DataAccessObject
      */
     public function searchReportIdsForKanban(int $kanban_id): array
     {
-        $sql = "SELECT report_id as id
+        $sql = 'SELECT report_id as id
                 FROM plugin_agiledashboard_kanban_tracker_reports
-                WHERE kanban_id = ?";
+                WHERE kanban_id = ?';
 
         return $this->getDB()->column($sql, [$kanban_id]);
     }

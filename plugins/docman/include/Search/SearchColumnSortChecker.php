@@ -33,7 +33,7 @@ final class SearchColumnSortChecker
     {
         $property = $column->getColumnProperty();
         if (
-            $sort_representation->name === "location"
+            $sort_representation->name === 'location'
             || $property === null
             || $property->isMultipleValuesAllowed()
         ) {

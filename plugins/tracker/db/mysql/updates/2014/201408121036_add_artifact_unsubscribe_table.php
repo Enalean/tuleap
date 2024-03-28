@@ -30,11 +30,11 @@ class b201408121036_add_artifact_unsubscribe_table extends \Tuleap\ForgeUpgrade\
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_artifact_unsubscribe (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_artifact_unsubscribe (
                     artifact_id int(11) NOT NULL,
                     user_id int(11) NOT NULL,
                     PRIMARY KEY (artifact_id, user_id)
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
         $this->db->createTable('tracker_artifact_unsubscribe', $sql);
     }
 

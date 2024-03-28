@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class StatisticsRefreshDiskUsage implements Dispatchable
 {
-    public const NAME = "statisticsRefreshDiskUsage";
+    public const NAME = 'statisticsRefreshDiskUsage';
 
     /**
      * @var array

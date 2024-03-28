@@ -23,6 +23,6 @@ final class KanbanSemanticStatusAllColumnIdsNotProvidedException extends \Except
 {
     public function __construct()
     {
-        parent::__construct("All columns ids are not provided");
+        parent::__construct('All columns ids are not provided');
     }
 }

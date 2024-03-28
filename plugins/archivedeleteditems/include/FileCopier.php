@@ -43,8 +43,8 @@ class FileCopier
             $this->logger->error("Source file $source_file already exist");
             return false;
         }
-        $this->logger->debug("Permissions of source file: " . $this->convertFilePermissionsToNumbers($source_file));
-        $this->logger->debug("Owner of source: " . $this->getGroupNameForFile($source_file));
+        $this->logger->debug('Permissions of source file: ' . $this->convertFilePermissionsToNumbers($source_file));
+        $this->logger->debug('Owner of source: ' . $this->getGroupNameForFile($source_file));
 
         if (file_exists($destination_file)) {
             if ($skip_duplicated) {

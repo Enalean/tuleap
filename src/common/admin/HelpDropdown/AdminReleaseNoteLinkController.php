@@ -104,14 +104,14 @@ final class AdminReleaseNoteLinkController implements DispatchableWithRequest, D
     {
         if (! $user->isSuperUser()) {
             throw new ForbiddenException(
-                dgettext("tuleap-core", 'Permission denied')
+                dgettext('tuleap-core', 'Permission denied')
             );
         }
     }
 
     public function loadAdminPage(): void
     {
-        $title             = dgettext("tuleap-core", "Manage help links");
+        $title             = dgettext('tuleap-core', 'Manage help links');
         $release_note_link = $this->help_links_manager->getReleaseNoteLink($this->version_number);
 
         $presenter = new AdminReleaseNotePresenter(

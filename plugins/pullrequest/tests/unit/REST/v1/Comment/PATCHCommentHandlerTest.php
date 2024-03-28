@@ -57,7 +57,7 @@ use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 final class PATCHCommentHandlerTest extends TestCase
 {
     private const CURRENT_USER_ID = 105;
-    private const NEW_CONTENT     = "B35";
+    private const NEW_CONTENT     = 'B35';
 
     private CommentPATCHRepresentation $comment_data;
     private CommentSearcherStub $comment_dao_searcher;
@@ -198,7 +198,7 @@ final class PATCHCommentHandlerTest extends TestCase
     public function testUpdatesTheComment(): void
     {
         $comment_id  = 1;
-        $old_content = "old content";
+        $old_content = 'old content';
         $comment     =  CommentTestBuilder::aMarkdownComment(self::NEW_CONTENT)
                 ->withId($comment_id)
                     ->build();

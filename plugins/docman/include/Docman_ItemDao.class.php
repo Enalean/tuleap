@@ -229,7 +229,7 @@ class Docman_ItemDao extends DataAccessObject
 
     private function getLightItemSearchSelectStmt(): string
     {
-        return "SELECT i.item_id, i.parent_id ";
+        return 'SELECT i.item_id, i.parent_id ';
     }
 
     public function _getItemSearchSelectStmt()
@@ -318,7 +318,7 @@ class Docman_ItemDao extends DataAccessObject
         if (isset($params['offset']) && isset($params['limit'])) {
             $search_limit = $this->da->escapeInt($params['limit']);
             $offset       = $this->da->escapeInt($params['offset']);
-            $limit        = " LIMIT " . $offset . ", " . $search_limit;
+            $limit        = ' LIMIT ' . $offset . ', ' . $search_limit;
         }
 
         $sql .= $where . $group . $order . $limit;
@@ -588,7 +588,7 @@ class Docman_ItemDao extends DataAccessObject
     public function delete($item_id)
     {
         $sql = sprintf(
-            "DELETE FROM plugin_docman_item WHERE item_id=%d",
+            'DELETE FROM plugin_docman_item WHERE item_id=%d',
             $this->da->escapeInt($item_id)
         );
 
@@ -818,7 +818,7 @@ class Docman_ItemDao extends DataAccessObject
      */
     public function searchChildren($parentIds, $params)
     {
-        $where = " i.parent_id in (" . $this->da->escapeIntImplode($parentIds) . ")";
+        $where = ' i.parent_id in (' . $this->da->escapeIntImplode($parentIds) . ')';
         return $this->_searchWithCurrentVersion($where, '', '', [], $params);
     }
 

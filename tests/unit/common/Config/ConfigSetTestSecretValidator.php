@@ -33,6 +33,6 @@ final class ConfigSetTestSecretValidator implements SecretValidator
 
     public function checkIsValid(ConcealedString $value): void
     {
-        throw new InvalidConfigKeyValueException("Invalid secret");
+        throw new InvalidConfigKeyValueException('Invalid secret');
     }
 }

@@ -23,7 +23,7 @@ class b201704031442_create_table_plugin_git_full_history_checkpoint extends \Tul
 {
     public function description()
     {
-        return "Create table plugin_git_full_history_checkpoint";
+        return 'Create table plugin_git_full_history_checkpoint';
     }
 
     public function preUp()
@@ -36,9 +36,9 @@ class b201704031442_create_table_plugin_git_full_history_checkpoint extends \Tul
      */
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_full_history_checkpoint (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_full_history_checkpoint (
                   last_timestamp int(11) UNSIGNED NOT NULL
-                )";
+                )';
 
         $this->execDB($sql, 'An error occured while creating table plugin_git_full_history_checkpoint');
     }

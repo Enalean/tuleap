@@ -56,7 +56,7 @@ if ($request->validArray($validSubEvents)) {
     if ($request->valid($validPaginationSubEvents)) {
         $subEvents       = [];
         $subEventsString = $request->get('subEventsBox');
-        $subEventsBox    = explode(",", $subEventsString);
+        $subEventsBox    = explode(',', $subEventsString);
         foreach ($subEventsBox as $element) {
             $subEvents[$element] = true;
         }

@@ -29,9 +29,9 @@ class BotDao extends DataAccessObject
      */
     public function searchSystemBots(): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_botmattermost_bot
-                WHERE project_id IS NULL";
+                WHERE project_id IS NULL';
 
         return $this->getDB()->run($sql);
     }
@@ -41,9 +41,9 @@ class BotDao extends DataAccessObject
      */
     public function searchProjectBots(int $project_id): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_botmattermost_bot
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         return $this->getDB()->run($sql, $project_id);
     }
@@ -98,12 +98,12 @@ class BotDao extends DataAccessObject
 
     public function isThereAnotherSystemBotWithNameAndWebhookUrl(int $bot_id, string $bot_name, string $bot_webhook_url): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_botmattermost_bot
                 WHERE name = ?
                     AND webhook_url = ?
                     AND project_id is NULL
-                    AND id <> ?";
+                    AND id <> ?';
 
         $rows = $this->getDB()->run($sql, $bot_name, $bot_webhook_url, $bot_id);
 
@@ -112,11 +112,11 @@ class BotDao extends DataAccessObject
 
     public function isASystemBotWithNameAndWebhookUrlAlreadyExisting(string $bot_name, string $bot_webhook_url): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_botmattermost_bot
                 WHERE name = ?
                     AND webhook_url = ?
-                    AND project_id is NULL";
+                    AND project_id is NULL';
 
         $rows = $this->getDB()->run($sql, $bot_name, $bot_webhook_url);
 
@@ -125,12 +125,12 @@ class BotDao extends DataAccessObject
 
     public function isThereAnotherProjectBotWithNameWebhookUrlAndProjectId(int $bot_id, string $bot_name, string $bot_webhook_url, int $project_id): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_botmattermost_bot
                 WHERE name = ?
                     AND webhook_url = ?
                     AND project_id = ?
-                    AND id <> ?";
+                    AND id <> ?';
 
         $rows = $this->getDB()->run($sql, $bot_name, $bot_webhook_url, $project_id, $bot_id);
 
@@ -139,11 +139,11 @@ class BotDao extends DataAccessObject
 
     public function isAProjectBotWithNameWebhookUrlAndProjectIdAlreadyExisting(string $bot_name, string $bot_webhook_url, int $project_id): bool
     {
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_botmattermost_bot
                 WHERE name = ?
                     AND webhook_url = ?
-                    AND project_id = ?";
+                    AND project_id = ?';
 
         $rows = $this->getDB()->run($sql, $bot_name, $bot_webhook_url, $project_id);
 
@@ -155,9 +155,9 @@ class BotDao extends DataAccessObject
      */
     public function searchBotById(int $bot_id): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_botmattermost_bot
-                WHERE id = ?";
+                WHERE id = ?';
 
         return $this->getDB()->row($sql, $bot_id);
     }

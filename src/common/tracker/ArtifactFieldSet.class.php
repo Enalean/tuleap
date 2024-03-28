@@ -77,9 +77,9 @@ class ArtifactFieldSet
      */
     public function fetchData()
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM artifact_field_set
-                WHERE artifact_field_set_id=" . db_ei($this->getID()) . "";
+                WHERE artifact_field_set_id=' . db_ei($this->getID()) . '';
         $res = db_query($sql);
         if (! $res || db_numrows($res) < 1) {
             return false;
@@ -230,7 +230,7 @@ class ArtifactFieldSet
      */
     public function isNameMustBeLocalized()
     {
-        $pattern = "/fieldset_(.*)_lbl_key/";
+        $pattern = '/fieldset_(.*)_lbl_key/';
         return preg_match($pattern, $this->getName());
     }
 
@@ -242,7 +242,7 @@ class ArtifactFieldSet
      */
     public function isDescriptionMustBeLocalized()
     {
-        $pattern = "/fieldset_(.*)_desc_key/";
+        $pattern = '/fieldset_(.*)_desc_key/';
         return preg_match($pattern, $this->getDescription());
     }
 
@@ -319,7 +319,7 @@ class ArtifactFieldSet
      */
     public function update($name, $description, $rank)
     {
-        if (! $name || trim($name) == "") {
+        if (! $name || trim($name) == '') {
             return false;
         }
 

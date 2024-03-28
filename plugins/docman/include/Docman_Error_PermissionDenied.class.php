@@ -37,16 +37,16 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
     {
         $purifier = Codendi_HTMLPurifier::instance();
         site_header(\Tuleap\Layout\HeaderConfiguration::fromTitle($GLOBALS['Language']->getText('include_exit', 'exit_error')));
-        echo "<b>" . $purifier->purify(dgettext('tuleap-docman', 'You do not have the permission to access the document')) . "</b>";
+        echo '<b>' . $purifier->purify(dgettext('tuleap-docman', 'You do not have the permission to access the document')) . '</b>';
         echo '<br>';
-        echo "<br>" . $purifier->purify(dgettext('tuleap-docman', 'Permission denied set on documents. You can not view this documents unless administrator grant you access.'));
+        echo '<br>' . $purifier->purify(dgettext('tuleap-docman', 'Permission denied set on documents. You can not view this documents unless administrator grant you access.'));
 
         $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
         $pm      = ProjectManager::instance();
         $dar     = $pm->getMessageToRequesterForAccessProject($project->getID());
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
-            if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
+            if ($row['msg_to_requester'] != 'member_request_delegation_msg_to_requester') {
                 $message = $row['msg_to_requester'];
             }
         }

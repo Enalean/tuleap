@@ -38,7 +38,7 @@ final class FilenamePatternFeedbackHandler
             $this->filename_pattern_updater->updatePattern($project_id, $filename_pattern);
             $this->feedback->log(
                 Feedback::INFO,
-                dgettext("tuleap-docman", "The pattern has been successfully updated.")
+                dgettext('tuleap-docman', 'The pattern has been successfully updated.')
             );
         } catch (FilenamePatternException $exception) {
             $this->feedback->log(

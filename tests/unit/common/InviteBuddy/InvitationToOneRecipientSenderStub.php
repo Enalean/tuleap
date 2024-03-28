@@ -46,7 +46,7 @@ final class InvitationToOneRecipientSenderStub implements InvitationToOneRecipie
 
     public static function withErr(): self
     {
-        return new self(static fn () => Result::err(Fault::fromMessage("An error occurred")));
+        return new self(static fn () => Result::err(Fault::fromMessage('An error occurred')));
     }
 
     public static function withReturnCallback(\Closure $callback): self

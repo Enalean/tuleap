@@ -112,7 +112,7 @@ class PackageResource extends AuthenticatedResource
         }
 
         if ($this->package_factory->isPackageNameExist($label, $project->getID())) {
-            throw new RestException(409, "Package with the same label already exists in this project");
+            throw new RestException(409, 'Package with the same label already exists in this project');
         }
 
         $package_array  = [
@@ -124,7 +124,7 @@ class PackageResource extends AuthenticatedResource
         ];
         $new_package_id = $this->package_factory->create($package_array);
         if (! $new_package_id) {
-            throw new RestException(500, "Unable to create the package");
+            throw new RestException(500, 'Unable to create the package');
         }
 
         $this->sendOptionsHeaders();
@@ -238,17 +238,17 @@ class PackageResource extends AuthenticatedResource
         $package = $this->package_factory->getFRSPackageFromDb($id);
 
         if (! $package) {
-            throw new RestException(404, "Package not found");
+            throw new RestException(404, 'Package not found');
         }
 
         $user = $this->user_manager->getCurrentUser();
 
         if (! $this->package_factory->userCanRead($package->getGroupID(), $package->getPackageID(), $user->getId())) {
-            throw new RestException(403, "Access to package denied");
+            throw new RestException(403, 'Access to package denied');
         }
 
         if (! $package->isActive()) {
-            throw new RestException(403, "Package is not active");
+            throw new RestException(403, 'Package is not active');
         }
 
         return $package;
@@ -282,7 +282,7 @@ class PackageResource extends AuthenticatedResource
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         if ($project->isError() || ! $project->isActive()) {
-            throw new RestException(400, "Given project does not exist");
+            throw new RestException(400, 'Given project does not exist');
         }
 
         return $project;

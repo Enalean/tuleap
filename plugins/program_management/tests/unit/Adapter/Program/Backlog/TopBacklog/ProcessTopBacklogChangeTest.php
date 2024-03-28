@@ -141,12 +141,12 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddFeatureInTopBacklogAndRemoveLinkToProgramIncrement(): void
     {
-        $this->program_increment_dao = SearchProgramIncrementLinkedToFeatureStub::with([["id" => 63]]);
+        $this->program_increment_dao = SearchProgramIncrementLinkedToFeatureStub::with([['id' => 63]]);
         $program_increment           = ArtifactTestBuilder::anArtifact(63)->build();
         $this->artifact_factory->expects(self::once())->method('getArtifactById')->with(63)->willReturn($program_increment);
 
         $this->dao->expects(self::once())->method('addArtifactsToTheExplicitTopBacklog');
-        $this->artifact_link_updater->expects(self::once())->method("updateArtifactLinks")->with($this->user, $program_increment, [], [964], "");
+        $this->artifact_link_updater->expects(self::once())->method('updateArtifactLinks')->with($this->user, $program_increment, [], [964], '');
 
         $this->getProcessor()->processTopBacklogChangeForAProgram(
             ProgramIdentifierBuilder::buildWithId(102),
@@ -163,7 +163,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_factory->expects(self::never())->method('getArtifactById');
 
         $this->dao->expects(self::never())->method('addArtifactsToTheExplicitTopBacklog');
-        $this->artifact_link_updater->expects(self::never())->method("updateArtifactLinks");
+        $this->artifact_link_updater->expects(self::never())->method('updateArtifactLinks');
 
         $this->expectException(FeatureHasPlannedUserStoryException::class);
 
@@ -193,7 +193,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao->expects(self::never())->method('removeArtifactsFromExplicitTopBacklog');
 
-        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], "before", 900);
+        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], 'before', 900);
 
         $feature_reorder = FeaturesToReorderProxy::buildFromRESTRepresentation($element_to_order);
 

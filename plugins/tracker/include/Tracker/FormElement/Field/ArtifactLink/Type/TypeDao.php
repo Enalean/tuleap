@@ -86,7 +86,7 @@ class TypeDao extends DataAccessObject
 
     private function deleteTypeInTableColumns($shortname): void
     {
-        $sql = "DELETE FROM tracker_report_renderer_table_columns WHERE artlink_nature = ?";
+        $sql = 'DELETE FROM tracker_report_renderer_table_columns WHERE artlink_nature = ?';
 
         $this->getDB()->run($sql, $shortname);
     }
@@ -120,13 +120,13 @@ class TypeDao extends DataAccessObject
      */
     public function searchAllCurrentlyUsedTypesByTrackerID(int $tracker_id): array
     {
-        $sql = "SELECT DISTINCT nature, forward_label, reverse_label
+        $sql = 'SELECT DISTINCT nature, forward_label, reverse_label
                  FROM tracker_changeset_value_artifactlink
                  JOIN tracker_changeset_value ON (tracker_changeset_value_artifactlink.changeset_value_id = tracker_changeset_value.id)
                  JOIN tracker_artifact ON (tracker_changeset_value.changeset_id = tracker_artifact.last_changeset_id)
                  LEFT JOIN plugin_tracker_artifactlink_natures ON (tracker_changeset_value_artifactlink.nature = plugin_tracker_artifactlink_natures.shortname)
                  WHERE tracker_artifact.tracker_id = ?
-                 ORDER BY nature ASC";
+                 ORDER BY nature ASC';
 
         return $this->getDB()->run($sql, $tracker_id);
     }
@@ -136,9 +136,9 @@ class TypeDao extends DataAccessObject
      */
     public function searchAll(): array
     {
-        $sql = "SELECT shortname, forward_label, reverse_label
+        $sql = 'SELECT shortname, forward_label, reverse_label
                 FROM plugin_tracker_artifactlink_natures
-                ORDER BY shortname ASC";
+                ORDER BY shortname ASC';
 
         return $this->getDB()->run($sql);
     }
@@ -278,9 +278,9 @@ class TypeDao extends DataAccessObject
      */
     public function getUsedTypes(): array
     {
-        $sql = "SELECT DISTINCT nature AS shortname
+        $sql = 'SELECT DISTINCT nature AS shortname
                 FROM tracker_changeset_value_artifactlink
-                WHERE nature IS NOT NULL";
+                WHERE nature IS NOT NULL';
 
         return $this->getDB()->run($sql);
     }

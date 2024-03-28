@@ -25,6 +25,6 @@ class UsersXMLNotFoundException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("users.xml is missing from archive");
+        parent::__construct('users.xml is missing from archive');
     }
 }

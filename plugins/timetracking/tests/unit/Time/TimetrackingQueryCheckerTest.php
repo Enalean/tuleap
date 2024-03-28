@@ -39,28 +39,28 @@ class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testPassWhenQueryIsValid(): void
     {
-        $json_query = ["trackers_id" => [1, 2], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-12-30T00:00:00+01"];
+        $json_query = ['trackers_id' => [1, 2], 'start_date' => '2018-11-20T00:00:00+01', 'end_date' => '2018-12-30T00:00:00+01'];
         $this->checker->checkQuery($json_query);
         $this->expectNotToPerformAssertions();
     }
 
     public function testPassWhenNoTrackers(): void
     {
-        $json_query = ["start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-12-30T00:00:00+01"];
+        $json_query = ['start_date' => '2018-11-20T00:00:00+01', 'end_date' => '2018-12-30T00:00:00+01'];
         $this->checker->checkQuery($json_query);
         $this->expectNotToPerformAssertions();
     }
 
     public function testPassWhenStartDateEqualsEndDate(): void
     {
-        $json_query = ["trackers_id" => [1, 2], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-11-20T00:00:00+01"];
+        $json_query = ['trackers_id' => [1, 2], 'start_date' => '2018-11-20T00:00:00+01', 'end_date' => '2018-11-20T00:00:00+01'];
         $this->checker->checkQuery($json_query);
         $this->expectNotToPerformAssertions();
     }
 
     public function testItRaiseExeptionWhenBadDates(): void
     {
-        $json_query = ["trackers_id" => [1, 2], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "Banane"];
+        $json_query = ['trackers_id' => [1, 2], 'start_date' => '2018-11-20T00:00:00+01', 'end_date' => 'Banane'];
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -71,7 +71,7 @@ class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaiseExeptionWhenStartDateGreaterThanEndDate(): void
     {
-        $json_query = ["trackers_id" => [1, 2], "start_date" => "2019-11-20T00:00:00+01", "end_date" => "2018-11-20T00:00:00+01"];
+        $json_query = ['trackers_id' => [1, 2], 'start_date' => '2019-11-20T00:00:00+01', 'end_date' => '2018-11-20T00:00:00+01'];
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -82,7 +82,7 @@ class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaiseExeptionWhenNoDates(): void
     {
-        $json_query = ["trackers_id" => [1, 2]];
+        $json_query = ['trackers_id' => [1, 2]];
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -93,7 +93,7 @@ class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaiseExeptionWhenBadIds(): void
     {
-        $json_query = ["trackers_id" => [1, "bad id"], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-12-30T00:00:00+01"];
+        $json_query = ['trackers_id' => [1, 'bad id'], 'start_date' => '2018-11-20T00:00:00+01', 'end_date' => '2018-12-30T00:00:00+01'];
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);

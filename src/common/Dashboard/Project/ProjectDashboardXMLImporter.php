@@ -82,7 +82,7 @@ class ProjectDashboardXMLImporter
         if ($xml_element->dashboards) {
             foreach ($xml_element->dashboards->dashboard as $dashboard_xml) {
                 try {
-                    $dashboard_name = trim((string) $dashboard_xml["name"]);
+                    $dashboard_name = trim((string) $dashboard_xml['name']);
                     $this->logger->info("Create dashboard $dashboard_name");
                     $dashboard_id = $this->project_dashboard_saver->save($user, $project, $dashboard_name);
                     $dashboard    = new Dashboard($dashboard_id, $dashboard_name);
@@ -101,7 +101,7 @@ class ProjectDashboardXMLImporter
 
     private function importWidgets(Dashboard $dashboard, Project $project, \SimpleXMLElement $dashboard_xml, MappingsRegistry $mapping_registry)
     {
-        $this->logger->info("Import widgets");
+        $this->logger->info('Import widgets');
         if (! isset($dashboard_xml->line)) {
             return;
         }
@@ -112,7 +112,7 @@ class ProjectDashboardXMLImporter
             $this->createLine($line, $project, $dashboard, $line_rank, $all_widgets, $mapping_registry);
             $line_rank++;
         }
-        $this->logger->info("Import of widgets: Done");
+        $this->logger->info('Import of widgets: Done');
     }
 
     private function createLine(\SimpleXMLElement $line, Project $project, Dashboard $dashboard, $line_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
@@ -163,7 +163,7 @@ class ProjectDashboardXMLImporter
                 }
                 $widget_rank++;
             } catch (\Exception $exception) {
-                $this->logger->warning("Impossible to create widget: " . $exception->getMessage());
+                $this->logger->warning('Impossible to create widget: ' . $exception->getMessage());
             }
         }
     }

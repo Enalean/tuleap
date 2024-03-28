@@ -49,10 +49,10 @@ final class RetrieveGitlabGroupInformationStub implements RetrieveGitlabGroupInf
     {
         $group_data               = [];
         $group_data['id']         = 10;
-        $group_data['name']       = "";
-        $group_data['avatar_url'] = "";
-        $group_data['full_path']  = "";
-        $group_data['web_url']    = "";
+        $group_data['name']       = '';
+        $group_data['avatar_url'] = '';
+        $group_data['full_path']  = '';
+        $group_data['web_url']    = '';
 
         return new self(null, GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi($group_data));
     }

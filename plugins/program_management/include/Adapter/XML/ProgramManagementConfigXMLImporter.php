@@ -76,7 +76,7 @@ final class ProgramManagementConfigXMLImporter
         } catch (\Exception $exception) {
             $this->logger->error(
                 sprintf(
-                    "[ProgramManagementConfigXMLImporter] Import has failed: %s",
+                    '[ProgramManagementConfigXMLImporter] Import has failed: %s',
                     $exception->getMessage()
                 )
             );

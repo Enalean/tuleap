@@ -36,10 +36,10 @@ class PermissionsOnArtifactFieldValueDao extends DataAccessObject implements Sea
 
     public function searchById($changeset_value_id): ?array
     {
-        $sql = "SELECT changeset_value_id, use_perm, ugroup.ugroup_id, ugroup.name AS ugroup_name
+        $sql = 'SELECT changeset_value_id, use_perm, ugroup.ugroup_id, ugroup.name AS ugroup_name
                 FROM tracker_changeset_value_permissionsonartifact
                 JOIN ugroup ON (ugroup.ugroup_id = tracker_changeset_value_permissionsonartifact.ugroup_id)
-                WHERE changeset_value_id = ? ";
+                WHERE changeset_value_id = ? ';
         return $this->getDB()->run($sql, $changeset_value_id);
     }
 
@@ -50,10 +50,10 @@ class PermissionsOnArtifactFieldValueDao extends DataAccessObject implements Sea
             $value_ids = [$value_ids];
         }
         foreach ($value_ids as $v) {
-            $values[] = ["changeset_value_id" => $changeset_value_id, "use_perm" => $use_perm, "ugroup_id" => $v];
+            $values[] = ['changeset_value_id' => $changeset_value_id, 'use_perm' => $use_perm, 'ugroup_id' => $v];
         }
         if ($values) {
-            return $this->getDB()->insertMany("tracker_changeset_value_permissionsonartifact", $values) !== null;
+            return $this->getDB()->insertMany('tracker_changeset_value_permissionsonartifact', $values) !== null;
         }
         return true;
     }
@@ -67,17 +67,17 @@ class PermissionsOnArtifactFieldValueDao extends DataAccessObject implements Sea
 
         $values = [];
         foreach ($changeset_value_ids as $v) {
-            $values[] = ["changeset_value_id" => $v, "use_perm" => 1, "ugroup_id" => 1];
+            $values[] = ['changeset_value_id' => $v, 'use_perm' => 1, 'ugroup_id' => 1];
         }
-        return $this->getDB()->insertMany("tracker_changeset_value_permissionsonartifact", $values) !== null;
+        return $this->getDB()->insertMany('tracker_changeset_value_permissionsonartifact', $values) !== null;
     }
 
     public function keep(int $from, int $to): bool
     {
-        $sql = "INSERT INTO tracker_changeset_value_permissionsonartifact (changeset_value_id, use_perm, ugroup_id)
+        $sql = 'INSERT INTO tracker_changeset_value_permissionsonartifact (changeset_value_id, use_perm, ugroup_id)
                 SELECT ?, use_perm, ugroup_id
                 FROM tracker_changeset_value_permissionsonartifact
-                WHERE changeset_value_id = ?";
+                WHERE changeset_value_id = ?';
         return $this->getDB()->run($sql, $to, $from) !== null;
     }
 

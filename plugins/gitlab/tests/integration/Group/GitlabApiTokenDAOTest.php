@@ -58,16 +58,16 @@ final class GitlabApiTokenDAOTest extends TestIntegrationTestCase
         $this->token_dao->storeToken(self::GROUP_LINK_ID, self::ENCRYPTED_TOKEN);
 
         $row = $this->getGroupToken();
-        self::assertSame(self::GROUP_LINK_ID, $row["group_id"]);
-        self::assertSame(self::ENCRYPTED_TOKEN, $row["token"]);
+        self::assertSame(self::GROUP_LINK_ID, $row['group_id']);
+        self::assertSame(self::ENCRYPTED_TOKEN, $row['token']);
     }
 
     private function updateTokenOfGroupLink(): void
     {
         $this->token_dao->updateGitlabTokenOfGroupLink($this->buildGroupLink(), self::UPDATED_ENCRYPTED_TOKEN);
         $row = $this->getGroupToken();
-        self::assertSame(self::GROUP_LINK_ID, $row["group_id"]);
-        self::assertSame(self::UPDATED_ENCRYPTED_TOKEN, $row["token"]);
+        self::assertSame(self::GROUP_LINK_ID, $row['group_id']);
+        self::assertSame(self::UPDATED_ENCRYPTED_TOKEN, $row['token']);
     }
 
     private function getGroupToken(): mixed

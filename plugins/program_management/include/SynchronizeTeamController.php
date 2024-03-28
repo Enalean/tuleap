@@ -65,7 +65,7 @@ final class SynchronizeTeamController implements DispatchableWithRequest, Dispat
         $project = $this->getProject($variables);
         if (! $project->usesService(ProgramService::SERVICE_SHORTNAME)) {
             throw new NotFoundException(
-                dgettext("tuleap-program_management", "Program management service is disabled.")
+                dgettext('tuleap-program_management', 'Program management service is disabled.')
             );
         }
 

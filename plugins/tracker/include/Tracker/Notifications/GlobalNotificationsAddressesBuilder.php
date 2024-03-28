@@ -29,7 +29,7 @@ class GlobalNotificationsAddressesBuilder
         $addresses = $this->transformNotificationAddressesStringAsArray($addresses);
         $addresses = array_diff($addresses, [$user->getEmail(), $user->getUserName()]);
 
-        return implode(",", $addresses);
+        return implode(',', $addresses);
     }
 
     /**

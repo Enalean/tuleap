@@ -20,7 +20,7 @@ class b201703131434_add_table_global_notification_ugroups extends \Tuleap\ForgeU
 {
     public function description()
     {
-        return "Add table to store the ugroup to notify after an artifact update";
+        return 'Add table to store the ugroup to notify after an artifact update';
     }
 
     public function preUp()
@@ -30,11 +30,11 @@ class b201703131434_add_table_global_notification_ugroups extends \Tuleap\ForgeU
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_global_notification_ugroups (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_global_notification_ugroups (
             notification_id INT(11) UNSIGNED NOT NULL,
             ugroup_id INT(11) NOT NULL,
             PRIMARY KEY (notification_id, ugroup_id)
-        ) ENGINE=InnoDB;";
+        ) ENGINE=InnoDB;';
 
         $this->db->createTable('tracker_global_notification_ugroups', $sql);
     }

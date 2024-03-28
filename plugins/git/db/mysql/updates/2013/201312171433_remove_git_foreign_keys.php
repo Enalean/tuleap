@@ -50,7 +50,7 @@ EOT;
      */
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git DROP FOREIGN KEY remote_server_idx";
+        $sql = 'ALTER TABLE plugin_git DROP FOREIGN KEY remote_server_idx';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while dropping FK remote_server_idx from table plugin_git');

@@ -25,7 +25,7 @@ if ($argc !== 7) {
     exit(1);
 }
 
-$sys_user = getenv("USER");
+$sys_user = getenv('USER');
 if ($sys_user !== 'root' && $sys_user !== 'codendiadm') {
     fwrite(STDERR, 'Unsufficient privileges for user ' . $sys_user . PHP_EOL);
     exit(1);

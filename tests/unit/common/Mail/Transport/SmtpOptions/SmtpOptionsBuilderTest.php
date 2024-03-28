@@ -40,25 +40,25 @@ final class SmtpOptionsBuilderTest extends TestCase
 
     public function testItBuildsSmtpOptionsWithHostAndPortFromConfig(): void
     {
-        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig("url:443");
+        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig('url:443');
 
-        self::assertSame("url", $smtp_options->getHost());
+        self::assertSame('url', $smtp_options->getHost());
         self::assertSame(443, $smtp_options->getPort());
     }
 
     public function testItBuildsSmtpOptionsWithHostOnlyFromConfig(): void
     {
-        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig("url");
+        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig('url');
 
-        self::assertSame("url", $smtp_options->getHost());
+        self::assertSame('url', $smtp_options->getHost());
         self::assertSame(self::DEFAULT_PORT, $smtp_options->getPort());
     }
 
     public function testItBuildsSmtpOptionsWithHostAndEmptyPortFromConfig(): void
     {
-        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig("url:");
+        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig('url:');
 
-        self::assertSame("url", $smtp_options->getHost());
+        self::assertSame('url', $smtp_options->getHost());
         self::assertSame(self::DEFAULT_PORT, $smtp_options->getPort());
     }
 
@@ -71,7 +71,7 @@ final class SmtpOptionsBuilderTest extends TestCase
         \ForgeConfig::set('email_relayhost_smtp_username', 'username');
         \ForgeConfig::set('email_relayhost_smtp_password', \ForgeConfig::encryptValue(new ConcealedString('password')));
 
-        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig("smtp.example.com");
+        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig('smtp.example.com');
 
         self::assertSame(['username' => 'username', 'password' => 'password', 'ssl' => 'tls'], $smtp_options->getConnectionConfig());
         self::assertSame('login', $smtp_options->getConnectionClass());

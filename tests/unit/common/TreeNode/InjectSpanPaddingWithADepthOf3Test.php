@@ -89,11 +89,11 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" indent pipe tree indent minus-tree");
+        $pattern    = $this->getPatternSuite(' indent pipe tree indent minus-tree');
         $givenChild = $given->getChild(0);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content child"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content child'));
     }
 
     /**
@@ -104,11 +104,11 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" indent pipe blank indent pipe tree indent minus-tree");
+        $pattern    = $this->getPatternSuite(' indent pipe blank indent pipe tree indent minus-tree');
         $givenChild = $given->getChild(0)->getChild(0);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content child"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content child'));
     }
 
     /**
@@ -119,11 +119,11 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" indent pipe blank indent pipe blank indent pipe indent minus");
+        $pattern    = $this->getPatternSuite(' indent pipe blank indent pipe blank indent pipe indent minus');
         $givenChild = $given->getChild(0)->getChild(0)->getChild(0);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content'));
     }
 
     /**
@@ -134,11 +134,11 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" indent pipe blank indent pipe blank indent last-left indent last-right");
+        $pattern    = $this->getPatternSuite(' indent pipe blank indent pipe blank indent last-left indent last-right');
         $givenChild = $given->getChild(0)->getChild(0)->getChild(1);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content'));
     }
 
     /**
@@ -149,11 +149,11 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" indent pipe blank indent pipe indent minus");
+        $pattern    = $this->getPatternSuite(' indent pipe blank indent pipe indent minus');
         $givenChild = $given->getChild(0)->getChild(1);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content'));
     }
 
     /**
@@ -164,11 +164,11 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" indent pipe blank indent last-left indent last-right");
+        $pattern    = $this->getPatternSuite(' indent pipe blank indent last-left indent last-right');
         $givenChild = $given->getChild(0)->getChild(2);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content'));
     }
 
     /**
@@ -179,11 +179,11 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" indent pipe indent minus");
+        $pattern    = $this->getPatternSuite(' indent pipe indent minus');
         $givenChild = $given->getChild(1);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content'));
     }
 
     /**
@@ -194,11 +194,11 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" indent last-left tree indent minus-tree");
+        $pattern    = $this->getPatternSuite(' indent last-left tree indent minus-tree');
         $givenChild = $given->getChild(2);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content child"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content child'));
     }
 
     /**
@@ -209,11 +209,11 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" blank blank indent pipe indent minus");
+        $pattern    = $this->getPatternSuite(' blank blank indent pipe indent minus');
         $givenChild = $given->getChild(2)->getChild(0);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content'));
     }
 
     /**
@@ -224,10 +224,10 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern    = $this->getPatternSuite(" blank blank indent last-left indent last-right");
+        $pattern    = $this->getPatternSuite(' blank blank indent last-left indent last-right');
         $givenChild = $given->getChild(2)->getChild(1);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
-        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content"));
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(' content'));
     }
 }

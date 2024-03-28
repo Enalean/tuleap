@@ -34,9 +34,9 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_enabled (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_enabled (
                     project_id int(11) NOT NULL PRIMARY KEY
-                )";
+                )';
 
         $this->db->createTable('plugin_git_default_fine_grained_permissions_enabled', $sql);
     }

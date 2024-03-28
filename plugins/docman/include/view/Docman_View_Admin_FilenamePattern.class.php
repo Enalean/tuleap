@@ -28,7 +28,7 @@ use Tuleap\Docman\View\Admin\AdminView;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_View_Admin_FilenamePattern extends AdminView
 {
-    public const IDENTIFIER = "admin_filename_pattern";
+    public const IDENTIFIER = 'admin_filename_pattern';
 
     protected function getIdentifier(): string
     {

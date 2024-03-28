@@ -47,7 +47,7 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->project_manager                    = $this->createStub(\ProjectManager::class);
-        $this->variables                          = ["project_name" => "my-program", 'team_id' => self::TEAM_ID];
+        $this->variables                          = ['project_name' => 'my-program', 'team_id' => self::TEAM_ID];
         $this->store_pending_team_synchronization = StorePendingTeamSynchronizationStub::withCount();
 
         $user          = UserTestBuilder::buildWithDefaults();

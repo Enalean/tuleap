@@ -31,20 +31,20 @@ class WikiPlugin_RandomPage extends WikiPlugin
 {
     public function getName()
     {
-        return _("RandomPage");
+        return _('RandomPage');
     }
 
     public function getDescription()
     {
-        return _("Displays a list of randomly chosen pages or redirects to a random page.");
+        return _('Displays a list of randomly chosen pages or redirects to a random page.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.13 $"
+            '$Revision: 1.13 $'
         );
     }
 
@@ -91,7 +91,7 @@ class WikiPlugin_RandomPage extends WikiPlugin
                 $request->redirect(WikiURL($pagename, false, 'absurl')); // noreturn
             }
             if ($hidename) {
-                return WikiLink($pagename, false, _("RandomPage"));
+                return WikiLink($pagename, false, _('RandomPage'));
             } else {
                 return WikiLink($pagename);
             }
@@ -118,10 +118,10 @@ class WikiPlugin_RandomPage extends WikiPlugin
     {
         // Some useful default pages to exclude.
         $default_exclude = 'RandomPage,HomePage,AllPages,RecentChanges,RecentEdits,FullRecentChanges';
-        foreach (explode(",", $default_exclude) as $e) {
+        foreach (explode(',', $default_exclude) as $e) {
             $exclude[] = gettext($e);
         }
-        return implode(",", $exclude);
+        return implode(',', $exclude);
     }
 }
 

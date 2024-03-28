@@ -101,7 +101,7 @@ class MimeDetector
     public static function getMimeInfo(string $file_path, string $dest_content, string $src_content): array
     {
         $finfo        = finfo_open(FILEINFO_MIME);
-        $file_content = $src_content === "" ? $dest_content : $src_content;
+        $file_content = $src_content === '' ? $dest_content : $src_content;
         $finfo_buffer = finfo_buffer($finfo, $file_content);
         if ($finfo_buffer != false) {
             $tokens    = explode(';', $finfo_buffer);

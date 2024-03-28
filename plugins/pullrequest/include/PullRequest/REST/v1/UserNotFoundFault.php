@@ -31,6 +31,6 @@ final class UserNotFoundFault extends Fault
 {
     public static function fromUserId(int $user_id): Fault
     {
-        return new self(sprintf("Could not find user #%d", $user_id));
+        return new self(sprintf('Could not find user #%d', $user_id));
     }
 }

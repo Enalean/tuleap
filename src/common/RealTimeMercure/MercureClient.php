@@ -30,14 +30,14 @@ use Tuleap\JWT\generators\MercureJWTGenerator;
 
 class MercureClient implements Client
 {
-    #[FeatureFlagConfigKey("Feature flag to enable mercure based real time in kanban ")]
+    #[FeatureFlagConfigKey('Feature flag to enable mercure based real time in kanban ')]
     public const FEATURE_FLAG_KANBAN_KEY = 'enable_mercure_dev_kanban';
 
-    #[FeatureFlagConfigKey("Feature flag to enable mercure based real time in TestManagement")]
+    #[FeatureFlagConfigKey('Feature flag to enable mercure based real time in TestManagement')]
     public const FEATURE_FLAG_TESTMANAGEMENT_KEY = 'enable_mercure_dev_testmanagement';
     #[ConfigKeyInt(0)]
 
-    private const MERCURE_LOCAL_URL = "http://localhost:3000/.well-known/mercure";
+    private const MERCURE_LOCAL_URL = 'http://localhost:3000/.well-known/mercure';
 
     public function __construct(
         private ClientInterface $http_client,

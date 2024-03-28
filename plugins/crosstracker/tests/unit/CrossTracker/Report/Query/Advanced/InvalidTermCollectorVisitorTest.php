@@ -685,7 +685,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 
     public function testItAddsMetadataThatDoesNotExistInAllTrackersToCollection(): void
     {
-        $this->comparison       = new EqualComparison(new Metadata("title"), new SimpleValueWrapper('romeo'));
+        $this->comparison       = new EqualComparison(new Metadata('title'), new SimpleValueWrapper('romeo'));
         $this->metadata_checker = MetadataCheckerStub::withInvalidMetadata();
 
         $this->check();

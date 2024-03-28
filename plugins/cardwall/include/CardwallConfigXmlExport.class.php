@@ -131,7 +131,7 @@ class CardwallConfigXmlExport
         }
 
         if ($bg_colors) {
-            $regexp  = "/^rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)$/";
+            $regexp  = '/^rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)$/';
             $matches = [];
             if (preg_match($regexp, $bg_colors, $matches)) {
                 $bg_red   = $matches[1];

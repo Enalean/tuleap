@@ -89,7 +89,7 @@ final class MissingProgramIncrementCreatorTest extends TestCase
             MessageLog::buildFromLogger($this->logger)
         );
 
-        self::assertTrue($this->logger->hasDebugThatContains("Missing Program Increments #1"));
+        self::assertTrue($this->logger->hasDebugThatContains('Missing Program Increments #1'));
         self::assertEquals(1, $processor->getCallCount());
     }
 

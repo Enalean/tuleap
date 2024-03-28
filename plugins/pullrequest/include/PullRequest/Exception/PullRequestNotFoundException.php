@@ -26,6 +26,6 @@ class PullRequestNotFoundException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("This pull request does not exists");
+        parent::__construct('This pull request does not exists');
     }
 }

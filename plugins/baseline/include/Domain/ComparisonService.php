@@ -45,7 +45,7 @@ class ComparisonService
     {
         if (! $this->authorizations->canCreateComparison($current_user, $transient_comparison)) {
             throw new NotAuthorizedException(
-                dgettext('tuleap-baseline', "You are not allowed to create this comparison")
+                dgettext('tuleap-baseline', 'You are not allowed to create this comparison')
             );
         }
 
@@ -88,7 +88,7 @@ class ComparisonService
     ): ComparisonsPage {
         if (! $this->authorizations->canReadComparisonsOnProject($current_user, $project)) {
             throw new NotAuthorizedException(
-                dgettext('tuleap-baseline', "You are not allowed to read comparisons of this project")
+                dgettext('tuleap-baseline', 'You are not allowed to read comparisons of this project')
             );
         }
         $comparisons = $this->comparison_repository->findByProject(
@@ -108,7 +108,7 @@ class ComparisonService
     {
         if (! $this->authorizations->canDeleteComparison($current_user, $comparison)) {
             throw new NotAuthorizedException(
-                dgettext('tuleap-baseline', "You are not allowed to delete this comparison")
+                dgettext('tuleap-baseline', 'You are not allowed to delete this comparison')
             );
         }
         $this->comparison_repository->delete($comparison, $current_user);

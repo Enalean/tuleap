@@ -56,11 +56,11 @@ class InviteBuddyAdminUpdateController implements DispatchableWithRequest
 
         $this->csrf_token->check();
 
-        $submitted_max_invitations_by_day = (int) $request->get("max_invitations_by_day");
+        $submitted_max_invitations_by_day = (int) $request->get('max_invitations_by_day');
         if ($submitted_max_invitations_by_day === $this->configuration->getNbMaxInvitationsByDay()) {
             $layout->addFeedback(
                 \Feedback::INFO,
-                _("Nothing changed")
+                _('Nothing changed')
             );
             $this->redirect($layout);
 
@@ -70,7 +70,7 @@ class InviteBuddyAdminUpdateController implements DispatchableWithRequest
         if ($submitted_max_invitations_by_day <= 0) {
             $layout->addFeedback(
                 \Feedback::ERROR,
-                _("Users must be able to send at least one invitation by day.")
+                _('Users must be able to send at least one invitation by day.')
             );
             $this->redirect($layout);
 
@@ -84,7 +84,7 @@ class InviteBuddyAdminUpdateController implements DispatchableWithRequest
 
         $layout->addFeedback(
             \Feedback::INFO,
-            _("Invitations settings successfully updated.")
+            _('Invitations settings successfully updated.')
         );
 
         $this->redirect($layout);

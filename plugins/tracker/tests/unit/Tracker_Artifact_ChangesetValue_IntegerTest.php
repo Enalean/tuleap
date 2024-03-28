@@ -69,7 +69,7 @@ final class Tracker_Artifact_ChangesetValue_IntegerTest extends \Tuleap\Test\PHP
     {
         $field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
         $field->shouldReceive('getId')->andReturn(10);
-        $field->shouldReceive('getLabel')->andReturn("integer");
+        $field->shouldReceive('getLabel')->andReturn('integer');
 
         $user = Mockery::mock(PFUser::class);
 

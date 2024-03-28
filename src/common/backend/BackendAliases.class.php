@@ -23,7 +23,7 @@
 class BackendAliases extends Backend
 {
     public const ADMIN_ALIAS        = 'codendi-admin';
-    public const ALIAS_ENTRY_FORMAT = "%-50s%-10s";
+    public const ALIAS_ENTRY_FORMAT = '%-50s%-10s';
 
     protected $need_update = false;
 
@@ -57,8 +57,8 @@ class BackendAliases extends Backend
     public function update()
     {
         $alias_file     = ForgeConfig::get('alias_file');
-        $alias_file_new = $alias_file . ".new";
-        $alias_file_old = $alias_file . ".old";
+        $alias_file_new = $alias_file . '.new';
+        $alias_file_old = $alias_file . '.old';
 
         if (! $fp = fopen($alias_file_new, 'w')) {
             $this->log("Can't open file for writing: $alias_file_new", Backend::LOG_ERROR);
@@ -80,7 +80,7 @@ class BackendAliases extends Backend
         }
 
         // Run newaliases
-        return ($this->system("/usr/bin/newaliases > /dev/null") !== false);
+        return ($this->system('/usr/bin/newaliases > /dev/null') !== false);
     }
 
     /**
@@ -96,14 +96,14 @@ class BackendAliases extends Backend
         fwrite($fp, "# The Tuleap wide aliases (specific to Tuleap) resides in this file\n");
         fwrite($fp, "# All system wide aliases remains in /etc/aliases\n\n");
         fwrite($fp, "# Tuleap wide aliases\n\n");
-        fwrite($fp, "codendi-contact:         " . self::ADMIN_ALIAS . "\n\n");
-        fwrite($fp, "codex-contact:           " . self::ADMIN_ALIAS . "\n");// deprecated user name
-        fwrite($fp, "codex-admin:             " . self::ADMIN_ALIAS . "\n");// deprecated user name
-        fwrite($fp, "sourceforge:             " . self::ADMIN_ALIAS . "\n");// deprecated user name
-        fwrite($fp, $this->getHTTPUser() . ":               " . self::ADMIN_ALIAS . "\n");
-        fwrite($fp, "noreply:                 \"|" . ForgeConfig::get('codendi_bin_prefix') . "/gotohell\"\n");
-        fwrite($fp, "undisclosed-recipients:  \"|" . ForgeConfig::get('codendi_bin_prefix') . "/gotohell\"\n"); // for phpWiki notifications...
-        fwrite($fp, "webmaster:               " . self::ADMIN_ALIAS . "\n");
+        fwrite($fp, 'codendi-contact:         ' . self::ADMIN_ALIAS . "\n\n");
+        fwrite($fp, 'codex-contact:           ' . self::ADMIN_ALIAS . "\n");// deprecated user name
+        fwrite($fp, 'codex-admin:             ' . self::ADMIN_ALIAS . "\n");// deprecated user name
+        fwrite($fp, 'sourceforge:             ' . self::ADMIN_ALIAS . "\n");// deprecated user name
+        fwrite($fp, $this->getHTTPUser() . ':               ' . self::ADMIN_ALIAS . "\n");
+        fwrite($fp, 'noreply:                 "|' . ForgeConfig::get('codendi_bin_prefix') . "/gotohell\"\n");
+        fwrite($fp, 'undisclosed-recipients:  "|' . ForgeConfig::get('codendi_bin_prefix') . "/gotohell\"\n"); // for phpWiki notifications...
+        fwrite($fp, 'webmaster:               ' . self::ADMIN_ALIAS . "\n");
         return fwrite($fp, "\n\n");
     }
 

@@ -57,7 +57,7 @@ class ProjectCreationNotifier implements NotifySiteAdmin
 
         if (! $mail->send()) {
             $this->logger->warning(
-                "The mail for project" . $project->getPublicName() . "creation was not accepted for the delivery."
+                'The mail for project' . $project->getPublicName() . 'creation was not accepted for the delivery.'
             );
         }
     }

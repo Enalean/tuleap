@@ -38,7 +38,7 @@ EOT;
 
     public function up()
     {
-        $sql = "DROP TABLE `plugin_botmattermost_channel`";
+        $sql = 'DROP TABLE `plugin_botmattermost_channel`';
 
         $res = $this->db->dbh->exec($sql);
 

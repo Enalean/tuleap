@@ -341,7 +341,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $this->artifact_factory->shouldReceive('getParents')->once()->andReturn([]);
         $this->dao->shouldReceive('getArtifactsSemantics')->once()->andReturn(
             [
-                ['id' => 9, 'title' => "title", "title_format" => "text", "status" => "open"],
+                ['id' => 9, 'title' => 'title', 'title_format' => 'text', 'status' => 'open'],
             ]
         );
         $this->collection_factory->shouldReceive('userCanReadBacklogTitleField')->once()->andReturnTrue();
@@ -410,7 +410,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $this->artifact_factory->shouldReceive('getParents')->once()->andReturn([]);
         $this->dao->shouldReceive('getArtifactsSemantics')->once()->andReturn(
             [
-                ['id' => 9, 'title' => "title", "title_format" => "text", "status" => "open"],
+                ['id' => 9, 'title' => 'title', 'title_format' => 'text', 'status' => 'open'],
             ]
         );
         $this->collection_factory->shouldReceive('userCanReadBacklogTitleField')->once()->andReturnFalse();
@@ -565,8 +565,8 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
 
         $this->dao->shouldReceive('getArtifactsSemantics')->twice()->andReturn(
             [
-                ['id' => 10, 'title' => "title", "title_format" => "text", "status" => "open"],
-                ['id' => 11, 'title' => "title", "title_format" => "text", "status" => "open"],
+                ['id' => 10, 'title' => 'title', 'title_format' => 'text', 'status' => 'open'],
+                ['id' => 11, 'title' => 'title', 'title_format' => 'text', 'status' => 'open'],
             ]
         );
         $this->collection_factory->shouldReceive('getInitialEffortField')->times(4)->andReturnNull();

@@ -65,7 +65,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->user->method('isSuperUser')->willReturn(true);
         $this->user->method('isAdmin')->willReturn(true);
         $this->user->method('getId')->willReturn(101);
-        $this->user->method('getUserName')->willReturn("John");
+        $this->user->method('getUserName')->willReturn('John');
     }
 
     public function testBuildsActionForAnUnplannedArtifact(): void
@@ -140,8 +140,8 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $additional_button_action = $this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $this->user);
         self::assertNotNull($additional_button_action);
         self::assertTrue($additional_button_action->getLinkPresenter()->is_disabled);
-        self::assertStringContainsString("Title semantic is not defined", $additional_button_action->getLinkPresenter()->disabled_messages);
-        self::assertStringNotContainsString("Status semantic is not defined", $additional_button_action->getLinkPresenter()->disabled_messages);
+        self::assertStringContainsString('Title semantic is not defined', $additional_button_action->getLinkPresenter()->disabled_messages);
+        self::assertStringNotContainsString('Status semantic is not defined', $additional_button_action->getLinkPresenter()->disabled_messages);
     }
 
     public function testDisabledActionIsBuiltWhenStatusIsNotDefined(): void
@@ -159,8 +159,8 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         self::assertNotNull($additional_button_action);
         self::assertTrue($additional_button_action->getLinkPresenter()->is_disabled);
         self::assertNotNull($additional_button_action->getLinkPresenter()->disabled_messages);
-        self::assertStringContainsString("Status semantic is not defined", $additional_button_action->getLinkPresenter()->disabled_messages);
-        self::assertStringNotContainsString("Title semantic is not defined", $additional_button_action->getLinkPresenter()->disabled_messages);
+        self::assertStringContainsString('Status semantic is not defined', $additional_button_action->getLinkPresenter()->disabled_messages);
+        self::assertStringNotContainsString('Title semantic is not defined', $additional_button_action->getLinkPresenter()->disabled_messages);
     }
 
     private function getBuilder(VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier): ArtifactTopBacklogActionBuilder

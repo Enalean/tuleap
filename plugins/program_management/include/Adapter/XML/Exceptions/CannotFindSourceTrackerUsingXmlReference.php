@@ -27,7 +27,7 @@ final class CannotFindSourceTrackerUsingXmlReference extends \Exception implemen
     public function __construct(string $source_tracker_ref)
     {
         parent::__construct(
-            sprintf("Source tracker not found in created trackers mapping using reference %s", $source_tracker_ref)
+            sprintf('Source tracker not found in created trackers mapping using reference %s', $source_tracker_ref)
         );
     }
 }

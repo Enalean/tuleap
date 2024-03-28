@@ -69,7 +69,7 @@ class UserWidget extends Widget
 
     public function getIcon()
     {
-        return "fa-clock-o";
+        return 'fa-clock-o';
     }
 
     /**
@@ -83,7 +83,7 @@ class UserWidget extends Widget
                     __DIR__ . '/../../../scripts/personal-timetracking-widget/frontend-assets',
                     '/assets/timetracking/personal-timetracking-widget'
                 ),
-                "src/index.ts"
+                'src/index.ts'
             ),
         ];
     }

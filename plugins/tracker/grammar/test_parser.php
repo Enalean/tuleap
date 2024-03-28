@@ -19,8 +19,8 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-include __DIR__ . "/../vendor/autoload.php";
-include __DIR__ . "/../include/manual_autoload.php";
+include __DIR__ . '/../vendor/autoload.php';
+include __DIR__ . '/../include/manual_autoload.php';
 
 $input = <<<EOS
 
@@ -45,7 +45,7 @@ try {
     $result = $parser->parse($input);
     print_r($result);
 } catch (SyntaxError $ex) {
-    echo "Syntax error: " . $ex->getMessage()
+    echo 'Syntax error: ' . $ex->getMessage()
         . ' At line ' . $ex->grammarLine
         . ' column ' . $ex->grammarColumn
         . ' offset ' . $ex->grammarOffset;

@@ -21,10 +21,10 @@
 
 function usage()
 {
-    echo "Usage: .../mw-maintenance-wrapper.php <projectname> <script> [ arguments... ]
+    echo 'Usage: .../mw-maintenance-wrapper.php <projectname> <script> [ arguments... ]
 For instance: .../mw-maintenance-wrapper.php projectname importDump.php /tmp/wikidump.xml
               .../mw-maintenance-wrapper.php projectname rebuildrecentchanges.php
-";
+';
     exit(1);
 }
 

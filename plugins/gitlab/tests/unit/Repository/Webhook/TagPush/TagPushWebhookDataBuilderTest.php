@@ -30,7 +30,7 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfRefIsNotInContent(): void
     {
         $webhook_data = [
-            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
+            'project' => ['id' => 123456, 'web_url' => 'https://example.com/path/repo01'],
         ];
 
         $builder = new TagPushWebhookDataBuilder();
@@ -38,9 +38,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(MissingKeyException::class);
 
         $builder->build(
-            "Tag Push Hook",
+            'Tag Push Hook',
             123456,
-            "https://example.com/path/repo01",
+            'https://example.com/path/repo01',
             $webhook_data
         );
     }
@@ -48,9 +48,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfAfterIsNotInContent(): void
     {
         $webhook_data = [
-            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
-            "ref" => 1.0,
-            "before" => "before",
+            'project' => ['id' => 123456, 'web_url' => 'https://example.com/path/repo01'],
+            'ref' => 1.0,
+            'before' => 'before',
         ];
 
         $builder = new TagPushWebhookDataBuilder();
@@ -58,9 +58,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(MissingKeyException::class);
 
         $builder->build(
-            "Tag Push Hook",
+            'Tag Push Hook',
             123456,
-            "https://example.com/path/repo01",
+            'https://example.com/path/repo01',
             $webhook_data
         );
     }
@@ -68,9 +68,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfBeforeIsNotInContent(): void
     {
         $webhook_data = [
-            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
-            "ref" => 1.0,
-            "after" => "after",
+            'project' => ['id' => 123456, 'web_url' => 'https://example.com/path/repo01'],
+            'ref' => 1.0,
+            'after' => 'after',
         ];
 
         $builder = new TagPushWebhookDataBuilder();
@@ -78,9 +78,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(MissingKeyException::class);
 
         $builder->build(
-            "Tag Push Hook",
+            'Tag Push Hook',
             123456,
-            "https://example.com/path/repo01",
+            'https://example.com/path/repo01',
             $webhook_data
         );
     }
@@ -88,10 +88,10 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfRefIsNotAString(): void
     {
         $webhook_data = [
-            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
-            "ref" => 1.0,
-            "before" => "before",
-            "after" => "after",
+            'project' => ['id' => 123456, 'web_url' => 'https://example.com/path/repo01'],
+            'ref' => 1.0,
+            'before' => 'before',
+            'after' => 'after',
         ];
 
         $builder = new TagPushWebhookDataBuilder();
@@ -99,9 +99,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(InvalidValueFormatException::class);
 
         $builder->build(
-            "Tag Push Hook",
+            'Tag Push Hook',
             123456,
-            "https://example.com/path/repo01",
+            'https://example.com/path/repo01',
             $webhook_data
         );
     }
@@ -109,10 +109,10 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfBeforeIsNotAString(): void
     {
         $webhook_data = [
-            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
-            "ref" => "refs/tags/v1.0",
-            "before" => 5845,
-            "after" => "after",
+            'project' => ['id' => 123456, 'web_url' => 'https://example.com/path/repo01'],
+            'ref' => 'refs/tags/v1.0',
+            'before' => 5845,
+            'after' => 'after',
         ];
 
         $builder = new TagPushWebhookDataBuilder();
@@ -120,9 +120,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(InvalidValueFormatException::class);
 
         $builder->build(
-            "Tag Push Hook",
+            'Tag Push Hook',
             123456,
-            "https://example.com/path/repo01",
+            'https://example.com/path/repo01',
             $webhook_data
         );
     }
@@ -130,10 +130,10 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfAfterIsNotAString(): void
     {
         $webhook_data = [
-            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
-            "ref" => "refs/tags/v1.0",
-            "before" => "before",
-            "after" => 4845,
+            'project' => ['id' => 123456, 'web_url' => 'https://example.com/path/repo01'],
+            'ref' => 'refs/tags/v1.0',
+            'before' => 'before',
+            'after' => 4845,
         ];
 
         $builder = new TagPushWebhookDataBuilder();
@@ -141,9 +141,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(InvalidValueFormatException::class);
 
         $builder->build(
-            "Tag Push Hook",
+            'Tag Push Hook',
             123456,
-            "https://example.com/path/repo01",
+            'https://example.com/path/repo01',
             $webhook_data
         );
     }
@@ -151,25 +151,25 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesTagPushWebhookData(): void
     {
         $webhook_data = [
-            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
-            "ref" => "refs/tags/v1.0",
-            "before" => "before",
-            "after" => "after",
+            'project' => ['id' => 123456, 'web_url' => 'https://example.com/path/repo01'],
+            'ref' => 'refs/tags/v1.0',
+            'before' => 'before',
+            'after' => 'after',
         ];
 
         $builder = new TagPushWebhookDataBuilder();
 
         $tag_push_webhook_data = $builder->build(
-            "Tag Push Hook",
+            'Tag Push Hook',
             123456,
-            "https://example.com/path/repo01",
+            'https://example.com/path/repo01',
             $webhook_data
         );
 
-        self::assertSame("Tag Push Hook", $tag_push_webhook_data->getEventName());
+        self::assertSame('Tag Push Hook', $tag_push_webhook_data->getEventName());
         self::assertSame(123456, $tag_push_webhook_data->getGitlabProjectId());
-        self::assertSame("https://example.com/path/repo01", $tag_push_webhook_data->getGitlabWebUrl());
+        self::assertSame('https://example.com/path/repo01', $tag_push_webhook_data->getGitlabWebUrl());
         self::assertInstanceOf(TagPushWebhookData::class, $tag_push_webhook_data);
-        self::assertSame("refs/tags/v1.0", $tag_push_webhook_data->getRef());
+        self::assertSame('refs/tags/v1.0', $tag_push_webhook_data->getRef());
     }
 }

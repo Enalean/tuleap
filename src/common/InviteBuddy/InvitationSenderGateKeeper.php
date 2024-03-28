@@ -60,7 +60,7 @@ class InvitationSenderGateKeeper
 
         foreach ($emails as $email) {
             if (! $this->valid_email->validate($email)) {
-                throw new InvitationSenderGateKeeperException(sprintf(_("Email %s is not valid"), $email));
+                throw new InvitationSenderGateKeeperException(sprintf(_('Email %s is not valid'), $email));
             }
         }
 

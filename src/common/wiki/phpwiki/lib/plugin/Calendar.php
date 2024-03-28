@@ -38,17 +38,17 @@ class WikiPlugin_Calendar extends WikiPlugin
 {
     public function getName()
     {
-        return _("Calendar");
+        return _('Calendar');
     }
 
     public function getDescription()
     {
-        return _("Calendar");
+        return _('Calendar');
     }
 
     public function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '', "\$Revision: 1.30 $");
+        return preg_replace('/[Revision: $]/', '', '$Revision: 1.30 $');
     }
 
     public function getDefaultArguments()
@@ -97,8 +97,8 @@ class WikiPlugin_Calendar extends WikiPlugin
             'year'  => $t['tm_year'] + 1900,
         ]);
 
-        $prev = HTML::a(['href'  => $prev_url, 'class' => 'cal-arrow', 'title' => _("Previous Month")], '<');
-        $next = HTML::a(['href'  => $next_url, 'class' => 'cal-arrow', 'title' => _("Next Month")], '>');
+        $prev = HTML::a(['href'  => $prev_url, 'class' => 'cal-arrow', 'title' => _('Previous Month')], '<');
+        $next = HTML::a(['href'  => $next_url, 'class' => 'cal-arrow', 'title' => _('Next Month')], '>');
 
         $row = HTML::tr(
             HTML::td(['align' => 'left'], $prev),
@@ -165,7 +165,7 @@ class WikiPlugin_Calendar extends WikiPlugin
                 [
                     'class' => 'cal-hide',
                     'href' => WikiURL($page_for_date, ['action' => 'edit']),
-                    'title' => sprintf(_("Edit %s"), $page_for_date),
+                    'title' => sprintf(_('Edit %s'), $page_for_date),
                 ],
                 $mday
             );

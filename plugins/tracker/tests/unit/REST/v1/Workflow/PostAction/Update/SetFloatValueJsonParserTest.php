@@ -48,21 +48,21 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAcceptReturnsTrueWhenTypeMatches()
     {
         $this->assertTrue($this->parser->accept([
-            "type" => "set_field_value",
-            "field_type" => "float",
+            'type' => 'set_field_value',
+            'field_type' => 'float',
         ]));
     }
 
     public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
     {
-        $this->assertFalse($this->parser->accept(["type" => "run_job"]));
+        $this->assertFalse($this->parser->accept(['type' => 'run_job']));
     }
 
     public function testAcceptReturnsFalseWhenFieldTypeDoesNotMatch()
     {
         $this->assertFalse($this->parser->accept([
-            "type" => "set_field_value",
-            "field_type" => "date",
+            'type' => 'set_field_value',
+            'field_type' => 'date',
         ]));
     }
 
@@ -79,11 +79,11 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $set_date_value  = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "field_id" => 43,
-                "value" => 1.23,
+                'id' => 2,
+                'type' => 'set_field_value',
+                'field_type' => 'float',
+                'field_id' => 43,
+                'value' => 1.23,
             ]
         );
         $expected_action = new SetFloatValue(43, 1.23);
@@ -98,11 +98,11 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $set_date_value  = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "field_id" => 43,
-                "value" => 1,
+                'id' => 2,
+                'type' => 'set_field_value',
+                'field_type' => 'float',
+                'field_id' => 43,
+                'value' => 1,
             ]
         );
         $expected_action = new SetFloatValue(43, 1);
@@ -117,10 +117,10 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $set_date_value  = $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "field_id" => 43,
-                "value" => 1,
+                'type' => 'set_field_value',
+                'field_type' => 'float',
+                'field_id' => 43,
+                'value' => 1,
             ]
         );
         $expected_action = new SetFloatValue(43, 1);
@@ -135,11 +135,11 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $set_date_value  = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "field_id" => 43,
-                "value" => 1,
+                'id' => 2,
+                'type' => 'set_field_value',
+                'field_type' => 'float',
+                'field_id' => 43,
+                'value' => 1,
             ]
         );
         $expected_action = new SetFloatValue(43, 1);
@@ -156,9 +156,9 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "value" => 1,
+                'type' => 'set_field_value',
+                'field_type' => 'float',
+                'value' => 1,
             ]
         );
     }
@@ -173,10 +173,10 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "field_id" => null,
-                "value" => 1,
+                'type' => 'set_field_value',
+                'field_type' => 'float',
+                'field_id' => null,
+                'value' => 1,
             ]
         );
     }
@@ -191,10 +191,10 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "field_id" => "not int",
-                "value" => 1,
+                'type' => 'set_field_value',
+                'field_type' => 'float',
+                'field_id' => 'not int',
+                'value' => 1,
             ]
         );
     }
@@ -209,9 +209,9 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "field_id" => 43,
+                'type' => 'set_field_value',
+                'field_type' => 'float',
+                'field_id' => 43,
             ]
         );
     }
@@ -226,10 +226,10 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "field_id" => 43,
-                "value" => null,
+                'type' => 'set_field_value',
+                'field_type' => 'float',
+                'field_id' => 43,
+                'value' => null,
             ]
         );
     }
@@ -244,10 +244,10 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "field_id" => 43,
-                "value" => "not numeric",
+                'type' => 'set_field_value',
+                'field_type' => 'float',
+                'field_id' => 43,
+                'value' => 'not numeric',
             ]
         );
     }

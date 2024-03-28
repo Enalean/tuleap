@@ -109,8 +109,8 @@ class GitlabBranchCrossReferenceEnhancerTest extends TestCase
     {
         $user = $this->createMock(PFUser::class);
 
-        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
-        $user->method('getLocale')->willReturn("en_US");
+        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $user->method('getLocale')->willReturn('en_US');
 
         return $user;
     }

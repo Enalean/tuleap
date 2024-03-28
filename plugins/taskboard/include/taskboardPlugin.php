@@ -227,7 +227,7 @@ class taskboardPlugin extends Plugin
             new ScrumBoardTypeSelectorController(
                 $event->getProject(),
                 new TaskboardUsageDao(),
-                \TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates/Admin")
+                \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/Admin')
             )
         );
     }

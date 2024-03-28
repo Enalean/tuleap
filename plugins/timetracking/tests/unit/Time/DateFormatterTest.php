@@ -39,30 +39,30 @@ final class DateFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAlwaysReturnsTwoCharsForHoursAndForMinutes(): void
     {
         $minutes = 0;
-        self::assertEquals("00:00", $this->formatter->formatMinutes($minutes));
+        self::assertEquals('00:00', $this->formatter->formatMinutes($minutes));
 
         $minutes = 1;
-        self::assertEquals("00:01", $this->formatter->formatMinutes($minutes));
+        self::assertEquals('00:01', $this->formatter->formatMinutes($minutes));
 
         $minutes = 59;
-        self::assertEquals("00:59", $this->formatter->formatMinutes($minutes));
+        self::assertEquals('00:59', $this->formatter->formatMinutes($minutes));
 
         $minutes = 61;
-        self::assertEquals("01:01", $this->formatter->formatMinutes($minutes));
+        self::assertEquals('01:01', $this->formatter->formatMinutes($minutes));
 
         $minutes = 119;
-        self::assertEquals("01:59", $this->formatter->formatMinutes($minutes));
+        self::assertEquals('01:59', $this->formatter->formatMinutes($minutes));
 
         $minutes = 601;
-        self::assertEquals("10:01", $this->formatter->formatMinutes($minutes));
+        self::assertEquals('10:01', $this->formatter->formatMinutes($minutes));
 
         $minutes = 659;
-        self::assertEquals("10:59", $this->formatter->formatMinutes($minutes));
+        self::assertEquals('10:59', $this->formatter->formatMinutes($minutes));
     }
 
     public function testItCanReturnsMoreThan24Hours(): void
     {
         $minutes = 26 * 60 + 59;
-        self::assertEquals("26:59", $this->formatter->formatMinutes($minutes));
+        self::assertEquals('26:59', $this->formatter->formatMinutes($minutes));
     }
 }

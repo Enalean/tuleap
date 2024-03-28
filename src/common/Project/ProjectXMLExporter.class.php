@@ -131,7 +131,7 @@ class ProjectXMLExporter
 
     private function exportProjectUgroup(SimpleXMLElement $ugroups_node, ExportOptions $options, ProjectUGroup $ugroup)
     {
-        $this->logger->debug("Current ugroup: " . $ugroup->getName());
+        $this->logger->debug('Current ugroup: ' . $ugroup->getName());
 
         $ugroup_node = $ugroups_node->addChild('ugroup');
         $ugroup_node->addAttribute('name', $ugroup->getNormalizedName());
@@ -156,7 +156,7 @@ class ProjectXMLExporter
         ArchiveInterface $archive,
         $temporary_dump_path_on_filesystem,
     ) {
-        $this->logger->info("Export plugins");
+        $this->logger->info('Export plugins');
 
         $event = new ExportXmlProject(
             $project,
@@ -182,7 +182,7 @@ class ProjectXMLExporter
         if (! $project->isActive()) {
             throw new ProjectIsInactiveException();
         }
-        $this->logger->info("Start exporting project " . $project->getPublicName());
+        $this->logger->info('Start exporting project ' . $project->getPublicName());
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                              <project />');
@@ -192,7 +192,7 @@ class ProjectXMLExporter
         $this->exportDashboards($project, $xml_element);
         $this->exportPlugins($project, $xml_element, $options, $user, $archive, $temporary_dump_path_on_filesystem);
 
-        $this->logger->info("Finish exporting project " . $project->getPublicName());
+        $this->logger->info('Finish exporting project ' . $project->getPublicName());
 
         return $this->convertToXml($xml_element);
     }

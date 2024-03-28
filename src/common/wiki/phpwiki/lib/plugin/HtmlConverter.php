@@ -35,12 +35,12 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
 {
     public function getName()
     {
-        return "HtmlConverter";
+        return 'HtmlConverter';
     }
 
     public function getDescription()
     {
-        return _("Convert HTML markup into wiki markup. (Version 0.5)");
+        return _('Convert HTML markup into wiki markup. (Version 0.5)');
     }
 
     public function getDefaultArguments()
@@ -68,8 +68,8 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
             'type' => 'file',
             'size' => '50',
         ]));
-        $contents->pushContent(HTML::raw(" "));
-        $contents->pushContent(HTML::input(['value' => _("Upload"),
+        $contents->pushContent(HTML::raw(' '));
+        $contents->pushContent(HTML::input(['value' => _('Upload'),
             'type' => 'submit',
         ]));
         $form->pushContent($contents);
@@ -81,11 +81,11 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
             $userfile_name    = basename($userfile_name);
             $userfile_tmpname = $userfile->getTmpName();
 
-            if (! preg_match("/(\.html|\.htm)$/i", $userfile_name)) {
-                $message->pushContent(_("Only files with extension HTML are allowed"), HTML::br(), HTML::br());
+            if (! preg_match('/(\.html|\.htm)$/i', $userfile_name)) {
+                $message->pushContent(_('Only files with extension HTML are allowed'), HTML::br(), HTML::br());
             } else {
                 $message->pushContent(_("Processed $userfile_name"), HTML::br(), HTML::br());
-                $message->pushContent(_("Copy the output below and paste it into your Wiki page."), HTML::br());
+                $message->pushContent(_('Copy the output below and paste it into your Wiki page.'), HTML::br());
                 $message->pushContent($this->_process($userfile_tmpname));
             }
         } else {
@@ -119,18 +119,18 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
     public function _processUL(&$file)
     {
      // put any <li>-Tag in a new line to indent correctly and strip trailing white space (including new-lines)
-        $file = str_replace("<li", "\n<li", $file);
-        $file = preg_replace("/<li>\s*/", "<li>", $file);
+        $file = str_replace('<li', "\n<li", $file);
+        $file = preg_replace('/<li>\s*/', '<li>', $file);
 
-        $enclosing_regexp        = "_(.*)<ul\s?[^>]*>((?U).*)</ul>(.*)_is";
-        $indent_tag              = "<li";
+        $enclosing_regexp        = '_(.*)<ul\s?[^>]*>((?U).*)</ul>(.*)_is';
+        $indent_tag              = '<li';
         $embedded_fragment_array = [];
         $found                   = preg_match($enclosing_regexp, $file, $embedded_fragment_array);
         while ($found) {
             $indented = str_replace($indent_tag, "\t" . $indent_tag, $embedded_fragment_array[2]);
          // string the file together again with the indented part in the middle.
          // a <p> is inserted instead of the erased <ul> tags to have a paragraph generated at the end of the script
-            $file  = $embedded_fragment_array[1] . "<p>" . $indented . $embedded_fragment_array[3];
+            $file  = $embedded_fragment_array[1] . '<p>' . $indented . $embedded_fragment_array[3];
             $found = preg_match($enclosing_regexp, $file, $embedded_fragment_array);
         }
     }
@@ -151,35 +151,35 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
 
         $file = str_replace("\r\n", "\n", $file);
 
-        $file = preg_replace("/<h1[[:space:]]?[^>]*>/Di", "\n\n!!!!", $file);
+        $file = preg_replace('/<h1[[:space:]]?[^>]*>/Di', "\n\n!!!!", $file);
 
-        $file = preg_replace("/<h2[[:space:]]?[^>]*>/Di", "\n\n!!!", $file);
+        $file = preg_replace('/<h2[[:space:]]?[^>]*>/Di', "\n\n!!!", $file);
 
-        $file = preg_replace("/<h3[[:space:]]?[^>]*>/Di", "\n\n!!", $file);
+        $file = preg_replace('/<h3[[:space:]]?[^>]*>/Di', "\n\n!!", $file);
 
-        $file = preg_replace("/<h4[[:space:]]?[^>]*>/Di", "\n\n!", $file);
+        $file = preg_replace('/<h4[[:space:]]?[^>]*>/Di', "\n\n!", $file);
 
-        $file = preg_replace("/<h5[[:space:]]?[^>]*>/Di", "\n\n__", $file);
+        $file = preg_replace('/<h5[[:space:]]?[^>]*>/Di', "\n\n__", $file);
 
-        $file = preg_replace("#</h1>#Di", "\n\n", $file);
+        $file = preg_replace('#</h1>#Di', "\n\n", $file);
 
-        $file = preg_replace("#</h2>#Di", "\n\n", $file);
+        $file = preg_replace('#</h2>#Di', "\n\n", $file);
 
-        $file = preg_replace("#</h3>#Di", "\n\n", $file);
+        $file = preg_replace('#</h3>#Di', "\n\n", $file);
 
-        $file = preg_replace("#</h4>#Di", "\n\n", $file);
+        $file = preg_replace('#</h4>#Di', "\n\n", $file);
 
-        $file = preg_replace("#</h5>#Di", "__\n\n", $file);
+        $file = preg_replace('#</h5>#Di', "__\n\n", $file);
 
-        $file = preg_replace("/<hr[[:space:]]?[^>]*>/Di", "\n----\n", $file);
+        $file = preg_replace('/<hr[[:space:]]?[^>]*>/Di', "\n----\n", $file);
 
-        $file = preg_replace("/<li[[:space:]]?[^>]*>/Di", "* ", $file);
+        $file = preg_replace('/<li[[:space:]]?[^>]*>/Di', '* ', $file);
 
      // strip all tags, except for <pre>, which is supported by wiki
      // and <p>'s which will be converted after compression.
-        $file = strip_tags($file, "<pre><p>");
+        $file = strip_tags($file, '<pre><p>');
      // strip </p> end tags with trailing white space
-        $file = preg_replace("_</p>\s*_i", "", $file);
+        $file = preg_replace('_</p>\s*_i', '', $file);
 
      // get rid of all blank lines
         $file = preg_replace("/\n\s*\n/", "\n", $file);
@@ -191,7 +191,7 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
         $file = preg_replace("_\n?[^\S\n]*<p(\s[^>]*|)>[^\S\n]*\n?_i", "\n\n", $file);
 
      // strip attributes from <pre>-Tags and add a new-line before
-        $file = preg_replace("_<pre(\s[^>]*|)>_iU", "\n<pre>", $file);
+        $file = preg_replace('_<pre(\s[^>]*|)>_iU', "\n<pre>", $file);
 
         $outputArea = HTML::textarea([
             'rows' => '30',

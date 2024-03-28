@@ -38,9 +38,9 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban (
                     project_id INT(11) PRIMARY KEY
-                )";
+                )';
         $this->db->createTable('plugin_agiledashboard_kanban', $sql);
     }
 

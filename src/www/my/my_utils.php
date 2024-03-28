@@ -122,7 +122,7 @@ function my_format_as_flag2($assignee, $submitter)
 function my_item_count($total, $new)
 {
     global $Language;
-    return '[' . $total . ($new ? ", <b>" . $Language->getText('my_utils', 'new_items', [$new]) . "</b>]" : ']');
+    return '[' . $total . ($new ? ', <b>' . $Language->getText('my_utils', 'new_items', [$new]) . '</b>]' : ']');
 }
 
 function my_check_bookmark_URL($bookmark_url, $redirect_url)

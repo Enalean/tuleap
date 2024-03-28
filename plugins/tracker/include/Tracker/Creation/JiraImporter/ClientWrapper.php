@@ -87,7 +87,7 @@ abstract class ClientWrapper implements JiraClient
         $client = self::getClientDependingOnServer($jira_credentials, $request_factory, $logger);
 
         if (\ForgeConfig::get(self::CONFIG_KEY_DEBUG_DIRECTORY) && is_dir(\ForgeConfig::get(self::CONFIG_KEY_DEBUG_DIRECTORY))) {
-            $logger->debug("Set Jira client in debug mode");
+            $logger->debug('Set Jira client in debug mode');
             $client->setDebugDirectory(\ForgeConfig::get(self::CONFIG_KEY_DEBUG_DIRECTORY));
         }
         return $client;
@@ -100,13 +100,13 @@ abstract class ClientWrapper implements JiraClient
     ): JiraServer9Client|JiraCloudClient|JiraServer7and8Client {
         $client_without_authentication = HttpClientFactory::createClientWithCustomTimeout(self::DEFAULT_TIMEOUT);
         $server_info_uri               = $jira_credentials->getJiraUrl() . self::JIRA_CORE_BASE_URL . '/serverInfo';
-        $logger->debug("Do we talk to JiraCloud or JiraServer ?");
+        $logger->debug('Do we talk to JiraCloud or JiraServer ?');
         $logger->debug("GET $server_info_uri");
         $server_info_response = $client_without_authentication->sendRequest($request_factory->createRequest('GET', $server_info_uri));
-        $logger->debug("Response: " . $server_info_response->getStatusCode());
+        $logger->debug('Response: ' . $server_info_response->getStatusCode());
         $server_info = json_decode($server_info_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         if (isset($server_info['deploymentType']) && $server_info['deploymentType'] === self::DEPLOYMENT_TYPE_CLOUD) {
-            $logger->info("Instantiate JiraCloudClient");
+            $logger->info('Instantiate JiraCloudClient');
             return new JiraCloudClient(
                 self::getClientWithBasicAuth($jira_credentials),
                 $request_factory,
@@ -114,7 +114,7 @@ abstract class ClientWrapper implements JiraClient
             );
         }
 
-        $logger->info("Instantiate JiraServerClient");
+        $logger->info('Instantiate JiraServerClient');
 
         $jira_server_major_version = self::getJiraServerMajorVersion($server_info);
         if ($jira_server_major_version < 9) {

@@ -89,10 +89,10 @@ function trove_getrootcat($trove_cat_id)
     $current_cat = $trove_cat_id;
 
     while ($parent > 0) {
-        $res_par = db_query("SELECT parent FROM trove_cat WHERE "
-            . "trove_cat_id=" . db_ei($current_cat));
+        $res_par = db_query('SELECT parent FROM trove_cat WHERE '
+            . 'trove_cat_id=' . db_ei($current_cat));
         $row_par = db_fetch_array($res_par);
-        $parent  = $row_par["parent"];
+        $parent  = $row_par['parent'];
         if ($parent == 0) {
             return $current_cat;
         }

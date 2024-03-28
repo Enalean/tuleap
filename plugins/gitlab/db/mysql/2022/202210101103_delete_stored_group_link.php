@@ -28,7 +28,7 @@ final class b202210101103_delete_stored_group_link extends \Tuleap\ForgeUpgrade\
 
     public function up(): void
     {
-        $sql = "DELETE FROM plugin_gitlab_group_repository_integration";
+        $sql = 'DELETE FROM plugin_gitlab_group_repository_integration';
         $this->api->dbh->exec($sql);
     }
 }

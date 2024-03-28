@@ -27,7 +27,7 @@ use Tuleap\Config\FeatureFlagConfigKey;
 
 final class FeatureFlagSetOldHomepageViewByDefault
 {
-    #[FeatureFlagConfigKey("Feature flag to display the old pull-requests dashboard view by default.")]
+    #[FeatureFlagConfigKey('Feature flag to display the old pull-requests dashboard view by default.')]
     #[ConfigKeyInt(0)]
     public const FEATURE_FLAG_KEY = 'display_old_pull_requests_dashboard';
 

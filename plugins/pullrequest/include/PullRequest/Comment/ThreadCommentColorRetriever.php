@@ -31,7 +31,7 @@ final class ThreadCommentColorRetriever
     public function retrieveColor(int $id, int $parent_id): string
     {
         if ($parent_id === 0) {
-            return "";
+            return '';
         }
 
         $parent_comment = $this->dao->searchByCommentID($parent_id);

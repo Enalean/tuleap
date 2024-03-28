@@ -26,9 +26,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class TypePresenterBuilder
 {
-    private string $shortname     = "type";
-    private string $forward_label = "forward_type";
-    private string $reverse_label = "reverse_type";
+    private string $shortname     = 'type';
+    private string $forward_label = 'forward_type';
+    private string $reverse_label = 'reverse_type';
 
     private function __construct(private readonly bool $is_system)
     {

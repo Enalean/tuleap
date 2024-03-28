@@ -194,7 +194,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     public function fetchRawValue($value)
     {
         $artifact_id_array = $value->getArtifactIds();
-        return implode(", ", $artifact_id_array);
+        return implode(', ', $artifact_id_array);
     }
 
     /**
@@ -336,8 +336,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
                             " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ? )
                              INNER JOIN tracker_changeset_value_artifactlink AS $b ON (
                                 $b.changeset_value_id = $a.id
-                                AND " . $match_expression->sql . "
-                             ) ",
+                                AND " . $match_expression->sql . '
+                             ) ',
                             [
                                 $this->id,
                                 ...$match_expression->parameters,
@@ -367,7 +367,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         $matches = [];
         if (preg_match('/\/(.*)\//', $criteria_value, $matches)) {
             // If it is sourrounded by /.../ then assume a regexp
-            return Option::fromValue(new ParametrizedSQLFragment($field_name . " RLIKE ?", [$matches[1]]));
+            return Option::fromValue(new ParametrizedSQLFragment($field_name . ' RLIKE ?', [$matches[1]]));
         }
 
         $matches = [];
@@ -486,7 +486,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
 
         if (! $read_only) {
             $read_only_class = '';
-            $classes         = implode(" ", $additional_classes);
+            $classes         = implode(' ', $additional_classes);
             $html           .= '<section class="tracker_formelement_read_and_edit_edition_section tracker-form-element-artifactlink-section ' . $hp->purify($classes) . '">';
             $html           .= '<div>';
             $html           .= '<div><span class="input-append"><input type="text"
@@ -585,7 +585,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     protected function getNoValueLabelForLinks(Artifact $artifact): string
     {
         if (count($this->getReverseLinks($artifact->getId())) > 0) {
-            return "<span class='empty_value has-reverse-links'>" . dgettext('tuleap-tracker', 'Empty') . "</span>";
+            return "<span class='empty_value has-reverse-links'>" . dgettext('tuleap-tracker', 'Empty') . '</span>';
         }
 
         return $this->getNoValueLabel();
@@ -740,8 +740,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
                     $head = [];
                     $rows = [];
                     foreach ($result as $key => $value) {
-                        $head[$key] = $value["head"];
-                        $rows[$key] = $value["rows"];
+                        $head[$key] = $value['head'];
+                        $rows[$key] = $value['rows'];
                     }
                     $GLOBALS['HTML']->sendJSON(['head' => $head, 'rows' => $rows]);
                 }
@@ -1134,7 +1134,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
             $prefill_edited_types,
             $prefill_parent,
             $read_only,
-            ["tracker_formelement_artifact_link_editable_on_submit"]
+            ['tracker_formelement_artifact_link_editable_on_submit']
         );
     }
 

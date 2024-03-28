@@ -93,7 +93,7 @@ final class DaoTest extends TestCase
             self::OFFSET,
         );
 
-        self::assertSame(array_column($result->pull_requests, "id"), [$this->open_pull_request_id]);
+        self::assertSame(array_column($result->pull_requests, 'id'), [$this->open_pull_request_id]);
         self::assertEquals(1, $result->total_size);
     }
 
@@ -107,7 +107,7 @@ final class DaoTest extends TestCase
             self::OFFSET,
         );
 
-        self::assertEqualsCanonicalizing([$this->merged_pull_request_id, $this->abandoned_pull_request_id], array_column($result->pull_requests, "id"));
+        self::assertEqualsCanonicalizing([$this->merged_pull_request_id, $this->abandoned_pull_request_id], array_column($result->pull_requests, 'id'));
     }
 
     public function testItRetrievesAllPullRequestsInDescendingOrder(): void
@@ -148,7 +148,7 @@ final class DaoTest extends TestCase
             self::OFFSET,
         );
 
-        self::assertEqualsCanonicalizing($expected_pr_ids, array_column($result->pull_requests, "id"));
+        self::assertEqualsCanonicalizing($expected_pr_ids, array_column($result->pull_requests, 'id'));
     }
 
     public function testItFiltersOnASpecificAuthor(): void
@@ -164,7 +164,7 @@ final class DaoTest extends TestCase
         self::assertEqualsCanonicalizing([
             $this->open_pull_request_id,
             $this->merged_pull_request_id,
-        ], array_column($result->pull_requests, "id"));
+        ], array_column($result->pull_requests, 'id'));
         self::assertEquals(2, $result->total_size);
     }
 
@@ -182,7 +182,7 @@ final class DaoTest extends TestCase
             self::OFFSET,
         );
 
-        self::assertEqualsCanonicalizing([$this->merged_pull_request_id], array_column($result->pull_requests, "id"));
+        self::assertEqualsCanonicalizing([$this->merged_pull_request_id], array_column($result->pull_requests, 'id'));
         self::assertEquals(1, $result->total_size);
     }
 
@@ -194,7 +194,7 @@ final class DaoTest extends TestCase
                 null,
                 [],
                 [],
-                [new KeywordCriterion("nice")],
+                [new KeywordCriterion('nice')],
             ),
             PullRequestSortOrder::DESCENDING,
             self::LIMIT,
@@ -204,7 +204,7 @@ final class DaoTest extends TestCase
         self::assertEqualsCanonicalizing([
             $this->abandoned_pull_request_id,
             $this->open_pull_request_id,
-        ], array_column($result->pull_requests, "id"));
+        ], array_column($result->pull_requests, 'id'));
         self::assertEquals(2, $result->total_size);
     }
 
@@ -217,7 +217,7 @@ final class DaoTest extends TestCase
                 [],
                 [],
                 [],
-                [new TargetBranchCriterion("walnut")],
+                [new TargetBranchCriterion('walnut')],
             ),
             PullRequestSortOrder::DESCENDING,
             self::LIMIT,
@@ -227,7 +227,7 @@ final class DaoTest extends TestCase
         self::assertEqualsCanonicalizing([
             $this->open_pull_request_id,
             $this->merged_pull_request_id,
-        ], array_column($result->pull_requests, "id"));
+        ], array_column($result->pull_requests, 'id'));
         self::assertEquals(2, $result->total_size);
     }
 
@@ -250,7 +250,7 @@ final class DaoTest extends TestCase
 
         self::assertEqualsCanonicalizing([
             $this->merged_pull_request_id,
-        ], array_column($result->pull_requests, "id"));
+        ], array_column($result->pull_requests, 'id'));
         self::assertEquals(1, $result->total_size);
     }
 
@@ -275,7 +275,7 @@ final class DaoTest extends TestCase
         self::assertEqualsCanonicalizing([
             $this->merged_pull_request_id,
             $this->abandoned_pull_request_id,
-        ], array_column($result->pull_requests, "id"));
+        ], array_column($result->pull_requests, 'id'));
         self::assertEquals(2, $result->total_size);
     }
 
@@ -287,8 +287,8 @@ final class DaoTest extends TestCase
                 StatusCriterion::OPEN,
                 [],
                 [new LabelCriterion(self::LABEL_EMERGENCY_ID)],
-                [new KeywordCriterion("good")],
-                [new TargetBranchCriterion("walnut")],
+                [new KeywordCriterion('good')],
+                [new TargetBranchCriterion('walnut')],
                 [],
                 [new RelatedToCriterion(self::BOB_USER_ID)]
             ),
@@ -297,7 +297,7 @@ final class DaoTest extends TestCase
             self::OFFSET,
         );
 
-        self::assertEqualsCanonicalizing([$this->open_pull_request_id], array_column($result->pull_requests, "id"));
+        self::assertEqualsCanonicalizing([$this->open_pull_request_id], array_column($result->pull_requests, 'id'));
     }
 
     public function testItAppliesAllTheFilters(): void
@@ -308,8 +308,8 @@ final class DaoTest extends TestCase
                 StatusCriterion::CLOSED,
                 [new AuthorCriterion(self::ALICE_USER_ID)],
                 [new LabelCriterion(self::LABEL_EASY_FIX_ID)],
-                [new KeywordCriterion("external")],
-                [new TargetBranchCriterion("baobab")],
+                [new KeywordCriterion('external')],
+                [new TargetBranchCriterion('baobab')],
                 [new ReviewerCriterion(self::BOB_USER_ID)]
             ),
             PullRequestSortOrder::DESCENDING,
@@ -317,7 +317,7 @@ final class DaoTest extends TestCase
             self::OFFSET,
         );
 
-        self::assertEqualsCanonicalizing([$this->abandoned_pull_request_id], array_column($result->pull_requests, "id"));
+        self::assertEqualsCanonicalizing([$this->abandoned_pull_request_id], array_column($result->pull_requests, 'id'));
     }
 
     public function testItRetrievesAllPullRequestsAuthorsWhoAreNotAnonymous(): void
@@ -349,12 +349,12 @@ final class DaoTest extends TestCase
     {
         return $this->insertPullRequest(
             PullRequestTestBuilder::aPullRequestInReview()
-                ->withTitle("A good pull-request")
-                ->withDescription(TimelineComment::FORMAT_TEXT, "A nice description")
+                ->withTitle('A good pull-request')
+                ->withDescription(TimelineComment::FORMAT_TEXT, 'A nice description')
                 ->createdBy(self::BOB_USER_ID)
                 ->createdAt(1)
                 ->withRepositoryId(self::REPOSITORY_ID)
-                ->toDestinationBranch("walnut")
+                ->toDestinationBranch('walnut')
                 ->build(),
         );
     }
@@ -363,12 +363,12 @@ final class DaoTest extends TestCase
     {
         $pull_request_id = $this->insertPullRequest(
             PullRequestTestBuilder::aMergedPullRequest()
-                ->withTitle("Emergency fix")
-                ->withDescription(TimelineComment::FORMAT_TEXT, "Everything is burning")
+                ->withTitle('Emergency fix')
+                ->withDescription(TimelineComment::FORMAT_TEXT, 'Everything is burning')
                 ->createdBy(self::BOB_USER_ID)
                 ->createdAt(2)
                 ->withRepositoryId(self::REPOSITORY_ID)
-                ->toDestinationBranch("walnut")
+                ->toDestinationBranch('walnut')
                 ->build(),
         );
 
@@ -381,12 +381,12 @@ final class DaoTest extends TestCase
     {
         $pull_request_id = $this->insertPullRequest(
             PullRequestTestBuilder::anAbandonedPullRequest()
-                ->withTitle("A (not so) nice external contribution")
+                ->withTitle('A (not so) nice external contribution')
                 ->withDescription(TimelineComment::FORMAT_MARKDOWN, "I've decided this software should make **coffee**")
                 ->createdBy(self::ALICE_USER_ID)
                 ->createdAt(3)
                 ->withRepositoryId(self::REPOSITORY_ID)
-                ->toDestinationBranch("baobab")
+                ->toDestinationBranch('baobab')
                 ->build()
         );
 

@@ -464,6 +464,6 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     private function buildStatusValueRepresentation(): StatusValueRepresentation
     {
-        return StatusValueRepresentation::buildFromValues("On going", "flamingo-pink");
+        return StatusValueRepresentation::buildFromValues('On going', 'flamingo-pink');
     }
 }

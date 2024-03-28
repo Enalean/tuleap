@@ -365,7 +365,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
 
         // Workaround for files bigger than 2Gb:
         $src_dir  = $this->getSrcDir($project);
-        $filelist = shell_exec("/usr/bin/find " . $src_dir . " -maxdepth 1 -type f -printf \"%f\\n\"");
+        $filelist = shell_exec('/usr/bin/find ' . $src_dir . " -maxdepth 1 -type f -printf \"%f\\n\"");
         $files    = explode("\n", $filelist);
         // Remove last (empty) element
         array_pop($files);
@@ -387,7 +387,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function getResolvedFileName($file_name)
     {
-        $resolvedName = $file_name . "_" . $_SERVER['REQUEST_TIME'];
+        $resolvedName = $file_name . '_' . $_SERVER['REQUEST_TIME'];
         return $resolvedName;
     }
 
@@ -559,7 +559,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             }
             return $moveStatus;
         }
-        $backend->log("Error while searching staging candidates", Backend::LOG_ERROR);
+        $backend->log('Error while searching staging candidates', Backend::LOG_ERROR);
         return false;
     }
 
@@ -589,11 +589,11 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             $moveStatus = rename($file->getFileLocation(), $stagingPath) && $moveStatus;
         } else {
             $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
-            $backend->log("File " . $file->getFileLocation() . "(" . $file->getFileID() . ") doesn't exist. It cannot be moved to staging area. Marked as purged", Backend::LOG_WARNING);
+            $backend->log('File ' . $file->getFileLocation() . '(' . $file->getFileID() . ") doesn't exist. It cannot be moved to staging area. Marked as purged", Backend::LOG_WARNING);
             $moveStatus = false;
         }
         if (! $moveStatus) {
-            $backend->log("Error while moving file " . $file->getFileLocation() . "(" . $file->getFileID() . ") to staging area", Backend::LOG_ERROR);
+            $backend->log('Error while moving file ' . $file->getFileLocation() . '(' . $file->getFileID() . ') to staging area', Backend::LOG_ERROR);
         }
         if (! $this->deleteEmptyReleaseDirectory($file, $backend)) {
             $moveStatus = false;
@@ -649,10 +649,10 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             }
             return true;
         } catch (RuntimeException $e) {
-            $backend->log("Directory " . $directory . " already deleted", "warn");
+            $backend->log('Directory ' . $directory . ' already deleted', 'warn');
             return true;
         } catch (Exception $e) {
-            $backend->log("Error while deleting empty release directory " . $directory, Backend::LOG_ERROR);
+            $backend->log('Error while deleting empty release directory ' . $directory, Backend::LOG_ERROR);
             return false;
         }
     }
@@ -737,20 +737,20 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             if ($has_been_archived) {
                 if (unlink($this->getStagingPath($file))) {
                     if (! $dao->setPurgeDate($file->getFileID(), time())) {
-                        $backend->log("File " . $this->getStagingPath($file) . " not purged, Set purge date in DB fail", Backend::LOG_ERROR);
+                        $backend->log('File ' . $this->getStagingPath($file) . ' not purged, Set purge date in DB fail', Backend::LOG_ERROR);
                         return false;
                     }
                     return true;
                 }
             }
-            $backend->log("File " . $this->getStagingPath($file) . " not purged, unlink failed", Backend::LOG_ERROR);
+            $backend->log('File ' . $this->getStagingPath($file) . ' not purged, unlink failed', Backend::LOG_ERROR);
             return false;
         }
         if (! $dao->setPurgeDate($file->getFileID(), time())) {
-            $backend->log("File " . $this->getStagingPath($file) . " not found on file system and not purged, Set purge date in DB fail", Backend::LOG_ERROR);
+            $backend->log('File ' . $this->getStagingPath($file) . ' not found on file system and not purged, Set purge date in DB fail', Backend::LOG_ERROR);
             return false;
         }
-        $backend->log("File " . $this->getStagingPath($file) . " not found on file system, automatically marked as purged", Backend::LOG_WARNING);
+        $backend->log('File ' . $this->getStagingPath($file) . ' not found on file system, automatically marked as purged', Backend::LOG_WARNING);
         return true;
     }
 
@@ -782,7 +782,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
                         }
                         if ($nbFiles === 0) {
                             if (! rmdir($rel->getPathname())) {
-                                $backend->log("Error while removing " . $rel->getPathname() . "release folder", Backend::LOG_ERROR);
+                                $backend->log('Error while removing ' . $rel->getPathname() . 'release folder', Backend::LOG_ERROR);
                                 return false;
                             }
                         } else {
@@ -792,7 +792,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
                 }
                 if ($nbRel === 0) {
                     if (! rmdir($prj->getPathname())) {
-                        $backend->log("Error while removing " . $prj->getPathname() . " project folder", Backend::LOG_ERROR);
+                        $backend->log('Error while removing ' . $prj->getPathname() . ' project folder', Backend::LOG_ERROR);
                         return false;
                     }
                 }
@@ -939,15 +939,15 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
                         );
                         return true;
                     }
-                    $backend->log("File " . $file->getFileLocation() . "(" . $file->getFileID() . ") not restored, database error", Backend::LOG_ERROR);
+                    $backend->log('File ' . $file->getFileLocation() . '(' . $file->getFileID() . ') not restored, database error', Backend::LOG_ERROR);
                     return false;
                 }
             }
-            $backend->log("File " . $file->getFileLocation() . "(" . $file->getFileID() . ") could not be restored, not found in staging path " . $stagingPath, Backend::LOG_ERROR);
+            $backend->log('File ' . $file->getFileLocation() . '(' . $file->getFileID() . ') could not be restored, not found in staging path ' . $stagingPath, Backend::LOG_ERROR);
             return false;
         }
         $dao->cancelRestore($file->getFileID());
-        $backend->log("File " . $file->getFileLocation() . "(" . $file->getFileID() . ") could not be restored in deleted release " . $release->getName() . "(" . $release->getReleaseID() . ")", Backend::LOG_ERROR);
+        $backend->log('File ' . $file->getFileLocation() . '(' . $file->getFileID() . ') could not be restored in deleted release ' . $release->getName() . '(' . $release->getReleaseID() . ')', Backend::LOG_ERROR);
         return false;
     }
 

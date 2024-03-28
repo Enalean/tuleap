@@ -27,6 +27,6 @@ final class LayoutInspectorRedirection extends \RuntimeException
 {
     public function __construct(public readonly string $redirect_url)
     {
-        parent::__construct("Redirected to " . $this->redirect_url);
+        parent::__construct('Redirected to ' . $this->redirect_url);
     }
 }

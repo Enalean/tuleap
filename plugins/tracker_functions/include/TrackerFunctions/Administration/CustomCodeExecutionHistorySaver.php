@@ -94,7 +94,7 @@ final class CustomCodeExecutionHistorySaver implements LogFunctionRemoved, LogFu
             $user,
             new \DateTimeImmutable(),
             $action,
-            $tracker->getName() . " (" . $tracker->getItemName() . ")",
+            $tracker->getName() . ' (' . $tracker->getItemName() . ')',
         );
     }
 }

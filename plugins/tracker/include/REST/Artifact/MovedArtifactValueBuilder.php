@@ -42,11 +42,11 @@ class MovedArtifactValueBuilder
     private function checkSemantic(Artifact $artifact, Tracker $tracker)
     {
         if (! $artifact->getTitle()) {
-            throw new SemanticTitleNotDefinedException("No semantic found for title artifact");
+            throw new SemanticTitleNotDefinedException('No semantic found for title artifact');
         }
 
         if (! $tracker->getTitleField()) {
-            throw new SemanticTitleNotDefinedException("No title semantic found in tracker dest");
+            throw new SemanticTitleNotDefinedException('No title semantic found in tracker dest');
         }
     }
 }

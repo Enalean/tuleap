@@ -74,8 +74,8 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->original_timezone = $timezone_retriever::getServerTimezone();
 
         $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $logger->shouldReceive("debug");
-        $logger->shouldReceive("info");
+        $logger->shouldReceive('debug');
+        $logger->shouldReceive('info');
 
         $field_retriever = Mockery::mock(ChartConfigurationFieldRetriever::class);
         $field_retriever->shouldReceive('doesCapacityFieldExist')->andReturn(false);
@@ -106,8 +106,8 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::mock(\Tracker::class));
         $this->user = Mockery::mock(\PFUser::class);
-        $this->user->shouldReceive("toRow");
-        $this->user->shouldReceive("isAnonymous")->andReturn(false);
+        $this->user->shouldReceive('toRow');
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
         $language = Mockery::mock(\BaseLanguage::class);
         $language->shouldReceive('getLanguageFromAcceptLanguage');
@@ -124,14 +124,14 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testStartDateDoesNotShiftForUsersLocatedInUTCNegative()
     {
-        $this->user->shouldReceive("getTimezone")->andReturn('America/Los_Angeles');
+        $this->user->shouldReceive('getTimezone')->andReturn('America/Los_Angeles');
 
         $start_date = strtotime('2018-11-01');
         $duration   = 5;
 
         $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
+        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns([]);
 
         $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
 
@@ -141,14 +141,14 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testStartDateDoesNotShiftForUsersLocatedInUTCPositive()
     {
-        $this->user->shouldReceive("getTimezone")->andReturn('Asia/Tokyo');
+        $this->user->shouldReceive('getTimezone')->andReturn('Asia/Tokyo');
 
         $start_date = strtotime('2018-11-01');
         $duration   = 5;
 
         $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
+        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns([]);
 
         $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
 
@@ -158,7 +158,7 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemainingEffortAreNotShiftedUsersLocatedInUTCNegative()
     {
-        $this->user->shouldReceive("getTimezone")->andReturn('America/Los_Angeles');
+        $this->user->shouldReceive('getTimezone')->andReturn('America/Los_Angeles');
 
         $start_date = strtotime('2018-11-01');
         $second_day = strtotime('2018-11-02');
@@ -166,23 +166,23 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $duration = 2;
 
-        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns(
+        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns(
             [
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $this->filed_id,
-                    "timestamp"   => $start_date,
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $this->filed_id,
+                    'timestamp'   => $start_date,
+                    'value'       => 10,
                 ], [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $this->filed_id,
-                    "timestamp"   => $second_day,
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $this->filed_id,
+                    'timestamp'   => $second_day,
+                    'value'       => 10,
                 ], [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $this->filed_id,
-                    "timestamp"   => $third_day,
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $this->filed_id,
+                    'timestamp'   => $third_day,
+                    'value'       => 10,
                 ],
             ]
         );
@@ -198,29 +198,29 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemainingEffortAreNotShiftedUsersLocatedInUTCPositive()
     {
-        $this->user->shouldReceive("getTimezone")->andReturn('Asia/Tokyo');
+        $this->user->shouldReceive('getTimezone')->andReturn('Asia/Tokyo');
 
         $start_date = strtotime('2018-11-01');
         $second_day = strtotime('2018-11-02');
         $third_day  = strtotime('2018-11-03');
 
-        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns(
+        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns(
             [
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $this->filed_id,
-                    "timestamp"   => $start_date,
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $this->filed_id,
+                    'timestamp'   => $start_date,
+                    'value'       => 10,
                 ], [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $this->filed_id,
-                    "timestamp"   => $second_day,
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $this->filed_id,
+                    'timestamp'   => $second_day,
+                    'value'       => 10,
                 ], [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $this->filed_id,
-                    "timestamp"   => $third_day,
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $this->filed_id,
+                    'timestamp'   => $third_day,
+                    'value'       => 10,
                 ],
             ]
         );
@@ -238,9 +238,9 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnEmptyArrayWhenTimePeriodIsInFuture()
     {
-        $this->user->shouldReceive("getTimezone")->andReturn('Europe/London');
+        $this->user->shouldReceive('getTimezone')->andReturn('Europe/London');
 
-        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
+        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns([]);
 
         $duration = 2;
 

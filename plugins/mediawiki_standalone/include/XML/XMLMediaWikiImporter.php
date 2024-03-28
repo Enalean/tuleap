@@ -111,7 +111,7 @@ final class XMLMediaWikiImporter
     {
         if (count($ugroups) > 0) {
             $this->logger->info(
-                "Found the following ugroups: " .
+                'Found the following ugroups: ' .
                 implode(', ', array_map(static fn(\ProjectUGroup $ugroup) => $ugroup->getNormalizedName(), $ugroups))
             );
         }

@@ -94,7 +94,7 @@ class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with(
                 [156 => 1],
-                "",
+                '',
                 $user
             );
 
@@ -144,7 +144,7 @@ class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with(
                 [156 => 2],
-                "",
+                '',
                 $user
             );
 

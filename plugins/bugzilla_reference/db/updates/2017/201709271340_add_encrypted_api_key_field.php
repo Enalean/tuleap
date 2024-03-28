@@ -32,7 +32,7 @@ class b201709271340_add_encrypted_api_key_field extends \Tuleap\ForgeUpgrade\Buc
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_bugzilla_reference ADD COLUMN encrypted_api_key BLOB NOT NULL";
+        $sql = 'ALTER TABLE plugin_bugzilla_reference ADD COLUMN encrypted_api_key BLOB NOT NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(

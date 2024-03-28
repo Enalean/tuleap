@@ -59,8 +59,8 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->original_timezone = $timezone_retriever::getServerTimezone();
 
         $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $logger->shouldReceive("debug");
-        $logger->shouldReceive("info");
+        $logger->shouldReceive('debug');
+        $logger->shouldReceive('info');
 
         $field_retriever = Mockery::mock(ChartConfigurationFieldRetriever::class);
         $field_retriever->shouldReceive('doesCapacityFieldExist')->andReturn(false);
@@ -84,8 +84,8 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::mock(\Tracker::class));
         $this->user = Mockery::mock(\PFUser::class);
-        $this->user->shouldReceive("toRow");
-        $this->user->shouldReceive("isAnonymous")->andReturn(false);
+        $this->user->shouldReceive('toRow');
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
         $language = Mockery::mock(\BaseLanguage::class);
         $language->shouldReceive('getLanguageFromAcceptLanguage');
@@ -102,7 +102,7 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testStartDateDoesNotShiftForUsersLocatedInUTCNegative()
     {
-        $this->user->shouldReceive("getTimezone")->andReturn('America/Los_Angeles');
+        $this->user->shouldReceive('getTimezone')->andReturn('America/Los_Angeles');
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 5;
@@ -116,7 +116,7 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testStartDateDoesNotShiftForUsersLocatedInUTCPositive()
     {
-        $this->user->shouldReceive("getTimezone")->andReturn('Asia/Tokyo');
+        $this->user->shouldReceive('getTimezone')->andReturn('Asia/Tokyo');
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 5;
@@ -130,7 +130,7 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemainingEffortAreNotShiftedUsersLocatedInUTCNegative()
     {
-        $this->user->shouldReceive("getTimezone")->andReturn('America/Los_Angeles');
+        $this->user->shouldReceive('getTimezone')->andReturn('America/Los_Angeles');
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 2;
@@ -148,7 +148,7 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemainingEffortAreNotShiftedUsersLocatedInUTCPositive()
     {
-        $this->user->shouldReceive("getTimezone")->andReturn('Asia/Tokyo');
+        $this->user->shouldReceive('getTimezone')->andReturn('Asia/Tokyo');
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 2;

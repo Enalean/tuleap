@@ -33,13 +33,13 @@ class b201712131642_add_changesets_notification_log_table extends \Tuleap\ForgeU
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_email_notification_log (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_email_notification_log (
                   changeset_id INT(11) NOT NULL PRIMARY KEY,
                   create_date int(11) NOT NULL,
                   start_date int(11) NULL,
                   end_date int(11) NULL,
                   INDEX idx_end_date( end_date )
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
 
         $this->db->createTable('tracker_email_notification_log', $sql);
     }

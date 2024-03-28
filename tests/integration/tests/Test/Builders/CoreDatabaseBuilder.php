@@ -39,10 +39,10 @@ final class CoreDatabaseBuilder
     public function buildProject(): Project
     {
         $row         = [
-            'group_name'      => "cross tracker",
-            'access'          => "public",
+            'group_name'      => 'cross tracker',
+            'access'          => 'public',
             'status'          => 'A',
-            "unix_group_name" => "cross-tracker-comparison",
+            'unix_group_name' => 'cross-tracker-comparison',
         ];
         $project_id  = (int) $this->db->insertReturnId(
             'groups',

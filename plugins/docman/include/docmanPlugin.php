@@ -186,7 +186,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     public const ADMIN_BASE_URL = '/admin/document';
 
-    #[ConfigKey("Max size for individual files in Document and Docman plugins (in bytes)")]
+    #[ConfigKey('Max size for individual files in Document and Docman plugins (in bytes)')]
     public const PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING = 'plugin_docman_max_file_size';
 
     #[ConfigKey("Max number of files that can be uploaded with a drag'n drop in interface")]
@@ -841,7 +841,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                     $offset,
                     count($versions),
                     $nbVersions,
-                    "/admin/show_pending_documents.php",
+                    '/admin/show_pending_documents.php',
                     [
                         'group_id'   => $groupId,
                         'offsetItem' => ($offset + $limit),
@@ -925,7 +925,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                     $offset,
                     count($res),
                     $nbItems,
-                    "/admin/show_pending_documents.php",
+                    '/admin/show_pending_documents.php',
                     [
                         'group_id'   => $groupId,
                         'offsetItem' => ($offset + $limit),
@@ -1581,8 +1581,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $route_collector->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'], '/uploads/docman/file/{id:\d+}', $this->getRouteHandler('routeUploadsDocmanFile'));
         $route_collector->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'], '/uploads/docman/version/{id:\d+}', $this->getRouteHandler('routeUploadsVersionFile'));
 
-        $route_collector->addRoute(['GET'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routeGetDocumentSettings'));
-        $route_collector->addRoute(['POST'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routePostDocumentSettings'));
+        $route_collector->addRoute(['GET'], self::ADMIN_BASE_URL . '/files-upload-limits', $this->getRouteHandler('routeGetDocumentSettings'));
+        $route_collector->addRoute(['POST'], self::ADMIN_BASE_URL . '/files-upload-limits', $this->getRouteHandler('routePostDocumentSettings'));
 
         $route_collector->addGroup('/plugins/docman', function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '/restore_documents.php', $this->getRouteHandler('routeLegacyRestoreDocumentsController'));

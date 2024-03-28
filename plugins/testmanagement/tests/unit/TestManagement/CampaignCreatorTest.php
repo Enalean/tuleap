@@ -174,11 +174,11 @@ final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesTestExecutionsForSelectedDefinitions(): void
     {
         $definition_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $definition_1->allows()->getId()->andReturn("1");
+        $definition_1->allows()->getId()->andReturn('1');
         $definition_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $definition_2->allows()->getId()->andReturn("2");
+        $definition_2->allows()->getId()->andReturn('2');
         $definition_3 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $definition_3->allows()->getId()->andReturn("3");
+        $definition_3->allows()->getId()->andReturn('3');
         $test_definitions = [$definition_1, $definition_2, $definition_3];
 
         $this->stubCampaignTracker();

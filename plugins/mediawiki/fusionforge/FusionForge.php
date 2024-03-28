@@ -148,7 +148,7 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
         <?php if ($this->data['sitenotice']) {
             ?><div id="siteNotice"><?php $this->html('sitenotice') ?></div><?php
         } ?>
-        <h1 id="firstHeading" class="firstHeading"><?php $this->data['displaytitle'] != "" ? $this->html('title') : $this->text('title') ?></h1>
+        <h1 id="firstHeading" class="firstHeading"><?php $this->data['displaytitle'] != '' ? $this->html('title') : $this->text('title') ?></h1>
         <div id="bodyContent">
             <h3 id="siteSub"><?php $this->msg('tagline') ?></h3>
             <div id="contentSub"><?php $this->html('subtitle') ?></div>

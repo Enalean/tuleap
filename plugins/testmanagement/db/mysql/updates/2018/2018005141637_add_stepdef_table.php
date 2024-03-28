@@ -22,7 +22,7 @@ class b2018005141637_add_stepdef_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Create plugin_testmanagement_changeset_value_stepdef table";
+        return 'Create plugin_testmanagement_changeset_value_stepdef table';
     }
 
     public function preUp()
@@ -32,13 +32,13 @@ class b2018005141637_add_stepdef_table extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql    = "CREATE TABLE IF NOT EXISTS plugin_testmanagement_changeset_value_stepdef(
+        $sql    = 'CREATE TABLE IF NOT EXISTS plugin_testmanagement_changeset_value_stepdef(
             id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
             changeset_value_id INT(11) NOT NULL,
             description TEXT,
             `rank` INT(11) UNSIGNED NOT NULL,
             INDEX cvid_idx(changeset_value_id, `rank`)
-        )";
+        )';
         $result = $this->db->createTable('plugin_testmanagement_changeset_value_stepdef', $sql);
 
         if ($result === false) {

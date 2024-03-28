@@ -103,7 +103,7 @@ if (TrackerV3::instance()->available()) {
             'group_artifact_id' => $tracker['group_artifact_id'],
             'project_name'      => $tracker['project_name'],
             'name'              => $tracker['name'],
-            'deletion_date'     => date("Y-m-d", $tracker['deletion_date']),
+            'deletion_date'     => date('Y-m-d', $tracker['deletion_date']),
             'group_id'          => $tracker['group_id'],
         ];
     }

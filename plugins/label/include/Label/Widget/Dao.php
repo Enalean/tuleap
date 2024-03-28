@@ -36,7 +36,7 @@ class Dao extends \DataAccessObject
 
         $sql_values = [];
         foreach ($labels_id as $label_id) {
-            $sql_values[] = "($content_id, " . $this->da->escapeInt($label_id) . ")";
+            $sql_values[] = "($content_id, " . $this->da->escapeInt($label_id) . ')';
         }
 
         if (count($sql_values) === 0) {
@@ -50,8 +50,8 @@ class Dao extends \DataAccessObject
 
             $this->update($sql);
 
-            $sql = "INSERT INTO plugin_label_widget_config(content_id, label_id)
-             VALUES " . implode(',', $sql_values);
+            $sql = 'INSERT INTO plugin_label_widget_config(content_id, label_id)
+             VALUES ' . implode(',', $sql_values);
 
             $this->update($sql);
 
@@ -64,8 +64,8 @@ class Dao extends \DataAccessObject
 
     public function create()
     {
-        $sql = "INSERT INTO plugin_label_widget(content_id)
-             VALUES (null)";
+        $sql = 'INSERT INTO plugin_label_widget(content_id)
+             VALUES (null)';
 
         return $this->updateAndGetLastId($sql);
     }

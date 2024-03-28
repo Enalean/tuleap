@@ -236,7 +236,7 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
         $artifact = Mockery::mock(Artifact::class);
         $this->list_field->shouldReceive('isPossibleValue')->andReturnFalse();
 
-        $this->assertFalse($this->list_field->isValid($artifact, "impossible"));
+        $this->assertFalse($this->list_field->isValid($artifact, 'impossible'));
     }
 
     public function testItHasErrorWhenItIsNotValid(): void
@@ -245,7 +245,7 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
         $this->list_field->shouldReceive('isPossibleValue')->andReturnTrue();
         $this->list_field->shouldReceive('validate')->andReturnFalse();
 
-        $this->assertFalse($this->list_field->isValid($artifact, "invalid"));
+        $this->assertFalse($this->list_field->isValid($artifact, 'invalid'));
     }
 
     public function testItIsValid(): void
@@ -254,31 +254,31 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
         $this->list_field->shouldReceive('isPossibleValue')->andReturnTrue();
         $this->list_field->shouldReceive('validate')->andReturnTrue();
 
-        $this->assertTrue($this->list_field->isValid($artifact, "valid"));
+        $this->assertTrue($this->list_field->isValid($artifact, 'valid'));
     }
 
     public function testExistingValueOfArrayIsAPossibleValue(): void
     {
         $this->bind->shouldReceive('isExistingValue')->andReturnTrue();
-        $this->assertTrue($this->list_field->isPossibleValue(["valid"]));
+        $this->assertTrue($this->list_field->isPossibleValue(['valid']));
     }
 
     public function testNonExistingValueOfArrayIsNotAPossibleValue(): void
     {
         $this->bind->shouldReceive('isExistingValue')->andReturnFalse();
-        self::assertFalse($this->list_field->isPossibleValue(["invalid"]));
+        self::assertFalse($this->list_field->isPossibleValue(['invalid']));
     }
 
     public function testExistingStringIsAPossibleValue(): void
     {
         $this->bind->shouldReceive('isExistingValue')->andReturnTrue();
-        $this->assertTrue($this->list_field->isPossibleValue("valid"));
+        $this->assertTrue($this->list_field->isPossibleValue('valid'));
     }
 
     public function testNonExistingStringIsNotAPossibleValue(): void
     {
         $this->bind->shouldReceive('isExistingValue')->andReturnFalse();
-        self::assertFalse($this->list_field->isPossibleValue("invalid"));
+        self::assertFalse($this->list_field->isPossibleValue('invalid'));
     }
 
     public function testNullIsAPossibleValue(): void

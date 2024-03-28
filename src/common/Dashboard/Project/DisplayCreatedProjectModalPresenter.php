@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class DisplayCreatedProjectModalPresenter implements Dispatchable
 {
-    public const NAME = "displayCreatedProjectModal";
+    public const NAME = 'displayCreatedProjectModal';
     public bool $should_display_created_project_modal;
     /**
      * @psalm-var null|array{label: string, href: string}

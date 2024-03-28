@@ -55,16 +55,16 @@ class GitPanePresenter
         $this->service_presenter    = $service_presenter;
         $this->url                  = $this->getGlobalAdminLink($project);
         $this->project_id           = $project->getID();
-        $this->ugroup_id            = ($ugroup) ? $ugroup->getId() : "";
-        $this->selected_ugroup_name = ($ugroup) ? $ugroup->getTranslatedName() : "";
+        $this->ugroup_id            = ($ugroup) ? $ugroup->getId() : '';
+        $this->selected_ugroup_name = ($ugroup) ? $ugroup->getTranslatedName() : '';
     }
 
     private function getGlobalAdminLink(Project $project)
     {
-        return GIT_BASE_URL . "/?" . http_build_query(
+        return GIT_BASE_URL . '/?' . http_build_query(
             [
-                "group_id" => $project->getID(),
-                "action"   => "admin-git-admins",
+                'group_id' => $project->getID(),
+                'action'   => 'admin-git-admins',
             ]
         );
     }

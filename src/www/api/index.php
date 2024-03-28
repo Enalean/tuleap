@@ -48,7 +48,7 @@ try {
         403,
         DetectedBrowser::detectFromTuleapHTTPRequest($http_request)
     );
-    header("HTTP/1.0 403 Forbidden");
+    header('HTTP/1.0 403 Forbidden');
     $GLOBALS['Response']->sendJSON([
         'error' => $exception->getMessage(),
     ]);

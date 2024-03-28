@@ -42,8 +42,8 @@ class CreateBotController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->existAndNonEmpty('project_id')) {
-            $layout->addFeedback(Feedback::ERROR, "System bots cannot be created this way.");
-            $layout->redirect("/");
+            $layout->addFeedback(Feedback::ERROR, 'System bots cannot be created this way.');
+            $layout->redirect('/');
         }
 
         $project_id = (int) $request->get('project_id');
@@ -51,7 +51,7 @@ class CreateBotController implements DispatchableWithRequest
         $user = $request->getCurrentUser();
         if (! $user->isAdmin($project_id)) {
             throw new ForbiddenException(
-                "User is not project administrator."
+                'User is not project administrator.'
             );
         }
 
@@ -62,7 +62,7 @@ class CreateBotController implements DispatchableWithRequest
         if ($bot_name === false) {
             $layout->addFeedback(
                 Feedback::ERROR,
-                "Request is not well formed, missing bot_name"
+                'Request is not well formed, missing bot_name'
             );
             $this->redirectToBotProjectAdmin($layout, $project_id);
         }
@@ -71,7 +71,7 @@ class CreateBotController implements DispatchableWithRequest
         if ($bot_name === false) {
             $layout->addFeedback(
                 Feedback::ERROR,
-                "Request is not well formed, missing webhook_url"
+                'Request is not well formed, missing webhook_url'
             );
             $this->redirectToBotProjectAdmin($layout, $project_id);
         }
@@ -80,7 +80,7 @@ class CreateBotController implements DispatchableWithRequest
         if ($bot_name === false) {
             $layout->addFeedback(
                 Feedback::ERROR,
-                "Request is not well formed, missing avatar_url"
+                'Request is not well formed, missing avatar_url'
             );
             $this->redirectToBotProjectAdmin($layout, $project_id);
         }

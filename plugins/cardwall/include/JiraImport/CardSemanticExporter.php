@@ -35,16 +35,16 @@ final class CardSemanticExporter
             return;
         }
 
-        $semantic_node = $semantics_node->addChild("semantic");
+        $semantic_node = $semantics_node->addChild('semantic');
         if ($semantic_node === null) {
             throw new \RuntimeException('This must not happen.');
         }
-        $semantic_node->addAttribute("type", Cardwall_Semantic_CardFields::NAME);
+        $semantic_node->addAttribute('type', Cardwall_Semantic_CardFields::NAME);
 
-        $field_node = $semantic_node->addChild("field");
+        $field_node = $semantic_node->addChild('field');
         if ($field_node === null) {
             throw new \RuntimeException('This must not happen.');
         }
-        $field_node->addAttribute("REF", $assignee_field->getXMLId());
+        $field_node->addAttribute('REF', $assignee_field->getXMLId());
     }
 }

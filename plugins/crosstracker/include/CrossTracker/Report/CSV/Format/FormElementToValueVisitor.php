@@ -61,7 +61,7 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field)
     {
-        throw new RuntimeException("Artifact link field is not supported for similar fields matching.");
+        throw new RuntimeException('Artifact link field is not supported for similar fields matching.');
     }
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
@@ -73,7 +73,7 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitFile(Tracker_FormElement_Field_File $field)
     {
-        throw new RuntimeException("File field is not supported for similar fields matching.");
+        throw new RuntimeException('File field is not supported for similar fields matching.');
     }
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
@@ -88,12 +88,12 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)
     {
-        throw new RuntimeException("Open list field is not supported for similar fields matching.");
+        throw new RuntimeException('Open list field is not supported for similar fields matching.');
     }
 
     public function visitPermissionsOnArtifact(Tracker_FormElement_Field_PermissionsOnArtifact $field)
     {
-        throw new RuntimeException("Permission field is not supported for similar fields matching.");
+        throw new RuntimeException('Permission field is not supported for similar fields matching.');
     }
 
     public function visitString(Tracker_FormElement_Field_String $field)
@@ -116,12 +116,12 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        throw new RuntimeException("Checkbox field is not supported for similar fields matching.");
+        throw new RuntimeException('Checkbox field is not supported for similar fields matching.');
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        throw new RuntimeException("Multi-selectbox field is not supported for similar fields matching.");
+        throw new RuntimeException('Multi-selectbox field is not supported for similar fields matching.');
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
@@ -132,56 +132,56 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        throw new RuntimeException("Matching always-there fields should already be done in another step.");
+        throw new RuntimeException('Matching always-there fields should already be done in another step.');
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        throw new RuntimeException("Matching always-there fields should already be done in another step.");
+        throw new RuntimeException('Matching always-there fields should already be done in another step.');
     }
 
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)
     {
-        throw new RuntimeException("Matching always-there fields should already be done in another step.");
+        throw new RuntimeException('Matching always-there fields should already be done in another step.');
     }
 
     public function visitPerTrackerArtifactId(Tracker_FormElement_Field_PerTrackerArtifactId $field)
     {
-        throw new RuntimeException("Matching always-there fields should already be done in another step.");
+        throw new RuntimeException('Matching always-there fields should already be done in another step.');
     }
 
     public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $field)
     {
-        throw new RuntimeException("Cross references field is not supported for similar fields matching.");
+        throw new RuntimeException('Cross references field is not supported for similar fields matching.');
     }
 
     public function visitBurndown(Tracker_FormElement_Field_Burndown $field)
     {
-        throw new RuntimeException("Burndown field is not supported for similar fields matching.");
+        throw new RuntimeException('Burndown field is not supported for similar fields matching.');
     }
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        throw new RuntimeException("Matching always-there fields should already be done in another step.");
+        throw new RuntimeException('Matching always-there fields should already be done in another step.');
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        throw new RuntimeException("Matching always-there fields should already be done in another step.");
+        throw new RuntimeException('Matching always-there fields should already be done in another step.');
     }
 
     public function visitComputed(Tracker_FormElement_Field_Computed $field)
     {
-        throw new RuntimeException("Computed field is not supported for similar fields matching.");
+        throw new RuntimeException('Computed field is not supported for similar fields matching.');
     }
 
     public function visitExternalField(TrackerFormElementExternalField $element)
     {
-        throw new RuntimeException("External field is not supported for similar fields matching.");
+        throw new RuntimeException('External field is not supported for similar fields matching.');
     }
 
     public function visitPriority(Tracker_FormElement_Field_Priority $field)
     {
-        throw new RuntimeException("Priority field is not supported for similar fields matching.");
+        throw new RuntimeException('Priority field is not supported for similar fields matching.');
     }
 }

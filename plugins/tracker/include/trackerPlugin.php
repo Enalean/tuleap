@@ -504,15 +504,15 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             if (
                 ! isset($query_string['semantic']) ||
                 (
-                    $query_string['semantic'] !== "title" &&
-                    $query_string['semantic'] !== "description" &&
-                    $query_string['semantic'] !== "status" &&
-                    $query_string['semantic'] !== "done" &&
-                    $query_string['semantic'] !== "contributor" &&
-                    $query_string['semantic'] !== "timeframe" &&
-                    $query_string['semantic'] !== "progress" &&
-                    $query_string['semantic'] !== "initial_effort" &&
-                    $query_string['semantic'] !== "tooltip"
+                    $query_string['semantic'] !== 'title' &&
+                    $query_string['semantic'] !== 'description' &&
+                    $query_string['semantic'] !== 'status' &&
+                    $query_string['semantic'] !== 'done' &&
+                    $query_string['semantic'] !== 'contributor' &&
+                    $query_string['semantic'] !== 'timeframe' &&
+                    $query_string['semantic'] !== 'progress' &&
+                    $query_string['semantic'] !== 'initial_effort' &&
+                    $query_string['semantic'] !== 'tooltip'
                 )
             ) {
                 return false;
@@ -670,7 +670,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         // TODO: Move this in ServiceTracker::displayHeader()
         include $GLOBALS['Language']->getContent('script_locale', null, 'tracker');
         echo PHP_EOL;
-        echo "codendi.tracker = codendi.tracker || { };" . PHP_EOL;
+        echo 'codendi.tracker = codendi.tracker || { };' . PHP_EOL;
         echo "codendi.tracker.base_url = '" . TRACKER_BASE_URL . "/';" . PHP_EOL;
     }
 
@@ -1122,11 +1122,11 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     {
         $trackerManager = new TrackerManager();
         $logger         = BackendLogger::getDefaultLogger();
-        $logger->debug("[TDR] Tuleap daily start event: launch date reminder");
+        $logger->debug('[TDR] Tuleap daily start event: launch date reminder');
 
         $this->getSystemEventManager()->createEvent(
             'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME,
-            "",
+            '',
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP
         );
@@ -1248,7 +1248,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $missing_types = $this->checkTypesExistsOnPlatform($event->getXmlElement());
         if (! empty($missing_types)) {
             throw new ImportNotValidException(
-                "Some natures used in trackers are not created on platform: " . implode(', ', $missing_types)
+                'Some natures used in trackers are not created on platform: ' . implode(', ', $missing_types)
             );
         }
     }
@@ -1324,8 +1324,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $number_of_open_artifacts_between_two_dates   = $dao->searchSubmittedArtifactBetweenTwoDates($start_date, $end_date);
         $number_of_closed_artifacts_between_two_dates = $dao->searchClosedArtifactBetweenTwoDates($start_date, $end_date);
 
-        $event->csv_exporter->buildDatas($number_of_open_artifacts_between_two_dates, "Trackers v5 - Opened Artifacts");
-        $event->csv_exporter->buildDatas($number_of_closed_artifacts_between_two_dates, "Trackers v5 - Closed Artifacts");
+        $event->csv_exporter->buildDatas($number_of_open_artifacts_between_two_dates, 'Trackers v5 - Opened Artifacts');
+        $event->csv_exporter->buildDatas($number_of_closed_artifacts_between_two_dates, 'Trackers v5 - Closed Artifacts');
     }
 
     /**

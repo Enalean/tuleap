@@ -498,11 +498,11 @@ class PullRequestsResource extends AuthenticatedResource
         try {
             $this->labels_updater->update($repository_dest->getProjectId(), $pull_request, $body);
         } catch (UnknownLabelException $exception) {
-            throw new RestException(400, "Label is unknown in the project");
+            throw new RestException(400, 'Label is unknown in the project');
         } catch (UnableToAddAndRemoveSameLabelException $exception) {
-            throw new RestException(400, "Unable to add and remove the same label");
+            throw new RestException(400, 'Unable to add and remove the same label');
         } catch (UnableToAddEmptyLabelException $exception) {
-            throw new RestException(400, "Unable to add an empty label");
+            throw new RestException(400, 'Unable to add an empty label');
         } catch (\Exception $exception) {
             throw new RestException(500, $exception->getMessage());
         }
@@ -597,8 +597,8 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(404, 'The file does not exist');
         }
 
-        $object_src  = $git_project->GetObject($object_reference_src, $object_type_src) ?: "";
-        $object_dest = $git_project->GetObject($object_reference_dest, $object_type_dest) ?: "";
+        $object_src  = $git_project->GetObject($object_reference_src, $object_type_src) ?: '';
+        $object_dest = $git_project->GetObject($object_reference_dest, $object_type_dest) ?: '';
 
         $mime_type = 'text/plain';
         $charset   = 'utf-8';
@@ -611,7 +611,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $special_format = $event->getSpecialFormat();
 
-        if ($charset === "binary" || $special_format !== '') {
+        if ($charset === 'binary' || $special_format !== '') {
             $diff            = new FileUniDiff();
             $inline_comments = [];
         } else {

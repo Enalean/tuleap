@@ -66,27 +66,27 @@ final class FloatToEmptyStringTermException extends InvalidFieldException implem
 
     public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the empty string with < operator.");
+        return dgettext('tuleap-tracker', "The float field '%s' cannot be compared to the empty string with < operator.");
     }
 
     public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the empty string with > operator.");
+        return dgettext('tuleap-tracker', "The float field '%s' cannot be compared to the empty string with > operator.");
     }
 
     public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the empty string with <= operator.");
+        return dgettext('tuleap-tracker', "The float field '%s' cannot be compared to the empty string with <= operator.");
     }
 
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the empty string with >= operator.");
+        return dgettext('tuleap-tracker', "The float field '%s' cannot be compared to the empty string with >= operator.");
     }
 
     public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the empty string with BETWEEN() operator.");
+        return dgettext('tuleap-tracker', "The float field '%s' cannot be compared to the empty string with BETWEEN() operator.");
     }
 
     public function visitInComparison(InComparison $comparison, $parameters)
@@ -101,7 +101,7 @@ final class FloatToEmptyStringTermException extends InvalidFieldException implem
 
     public function visitParenthesis(Parenthesis $parenthesis, $parameters)
     {
-        throw new RuntimeException("We should not end up here.");
+        throw new RuntimeException('We should not end up here.');
     }
 
     public function visitWithReverseLink(WithReverseLink $condition, $parameters)

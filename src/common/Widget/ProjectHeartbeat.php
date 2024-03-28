@@ -47,7 +47,7 @@ class ProjectHeartbeat extends Widget
 
     public function getIcon()
     {
-        return "fa-heartbeat";
+        return 'fa-heartbeat';
     }
 
     public function getContent()

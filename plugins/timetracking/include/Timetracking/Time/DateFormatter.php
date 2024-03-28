@@ -32,6 +32,6 @@ class DateFormatter
         $hours   = floor($total_minutes / 60);
         $minutes = $total_minutes % 60;
 
-        return str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT);
+        return str_pad($hours, 2, '0', STR_PAD_LEFT) . ':' . str_pad($minutes, 2, '0', STR_PAD_LEFT);
     }
 }

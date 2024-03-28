@@ -22,7 +22,7 @@
 class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormElement_Field_List_Bind_StaticValue
 {
     public const VALUE_ID     = 100;
-    public const XML_VALUE_ID = "";
+    public const XML_VALUE_ID = '';
 
     public function __construct()
     {

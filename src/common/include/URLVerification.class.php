@@ -349,7 +349,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
             } catch (Project_AccessProjectNotFoundException $exception) {
                 $layout = $this->getThemeManager()->getBurningParrot($current_user);
                 if ($layout === null) {
-                    throw new \Exception("Could not load BurningParrot theme");
+                    throw new \Exception('Could not load BurningParrot theme');
                 }
                 (new RequestInstrumentation(Prometheus::instance(), BackendLogger::getDefaultLogger()))->increment(404, DetectedBrowser::detectFromTuleapHTTPRequest($request));
                 (new ErrorRendering())->rendersError(

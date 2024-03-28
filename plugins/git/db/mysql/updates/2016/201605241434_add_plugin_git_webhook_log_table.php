@@ -34,12 +34,12 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_webhook_log (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_webhook_log (
                     created_on int(11) NOT NULL,
                     webhook_id int(11) unsigned NOT NULL,
                     status TEXT NOT NULL,
                     INDEX idx(webhook_id)
-                )";
+                )';
 
         $this->db->createTable('plugin_git_webhook_log', $sql);
     }

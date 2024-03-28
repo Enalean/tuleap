@@ -25,8 +25,8 @@ abstract class Git_HTTP_Command
     public function __construct()
     {
         $this->env = [
-            'GIT_PROJECT_ROOT'    => ForgeConfig::get('sys_data_dir') . "/gitolite/repositories",
-            'GIT_HTTP_EXPORT_ALL' => "1",
+            'GIT_PROJECT_ROOT'    => ForgeConfig::get('sys_data_dir') . '/gitolite/repositories',
+            'GIT_HTTP_EXPORT_ALL' => '1',
             'QUERY_STRING'        => $_SERVER['QUERY_STRING'] ?? '',
             'REQUEST_METHOD'      => $_SERVER['REQUEST_METHOD'] ?? '',
         ];

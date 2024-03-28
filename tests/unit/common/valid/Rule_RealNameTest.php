@@ -33,8 +33,8 @@ class Rule_RealNameTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItForbidsCRLFChar(): void
     {
         $this->assertFalse($this->rule->isValid("toto\ntata"));
-        $this->assertFalse($this->rule->isValid("toto
-tata"));
+        $this->assertFalse($this->rule->isValid('toto
+tata'));
         $this->assertFalse($this->rule->isValid("\ntata"));
     }
 
@@ -45,7 +45,7 @@ tata"));
 
     public function testItForbidsBellChar(): void
     {
-        $this->assertFalse($this->rule->isValid("toto\atard"));
+        $this->assertFalse($this->rule->isValid('toto\atard'));
         $this->assertFalse($this->rule->isValid('toto\atard'));
     }
 

@@ -44,7 +44,7 @@ final class MercureJWTGeneratorBuilderTest extends TestCase
         touch($this->mercure_key_path);
         file_put_contents(
             $this->mercure_key_path,
-            "MERCURE_KEY=" . str_repeat('aA', 100),
+            'MERCURE_KEY=' . str_repeat('aA', 100),
         );
     }
 
@@ -122,7 +122,7 @@ final class MercureJWTGeneratorBuilderTest extends TestCase
         touch($this->base_path . '/wrong_content_length');
         file_put_contents(
             $this->base_path . '/wrong_content_length',
-            "MERCURE_KEY=" . str_repeat('aA', 1),
+            'MERCURE_KEY=' . str_repeat('aA', 1),
         );
 
         $generator = MercureJWTGeneratorBuilder::build($this->base_path . '/wrong_content_length');

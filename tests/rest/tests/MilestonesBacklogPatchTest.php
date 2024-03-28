@@ -48,10 +48,10 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
         parent::setUp();
 
         $this->stories         = $this->getArtifactIdsIndexedByTitle('dragndrop', 'story');
-        $this->story_add['id'] = $this->stories["add two integers"];
-        $this->story_sub['id'] = $this->stories["sub two integers"];
-        $this->story_mul['id'] = $this->stories["mul two integers"];
-        $this->story_div['id'] = $this->stories["div two integers"];
+        $this->story_add['id'] = $this->stories['add two integers'];
+        $this->story_sub['id'] = $this->stories['sub two integers'];
+        $this->story_mul['id'] = $this->stories['mul two integers'];
+        $this->story_div['id'] = $this->stories['div two integers'];
 
         $this->epics            = $this->getArtifactIdsIndexedByTitle('dragndrop', 'epic');
         $this->epic_basic['id'] = $this->epics['Basic calculator'];

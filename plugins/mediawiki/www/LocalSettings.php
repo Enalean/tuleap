@@ -121,10 +121,10 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $IP = '/usr/share/mediawiki-tuleap-123';
 
     $gconfig_dir = forge_get_config('mwdata_path', 'mediawiki');
-    $project_dir = forge_get_config('projects_path', 'mediawiki') . "/"
+    $project_dir = forge_get_config('projects_path', 'mediawiki') . '/'
     . $group->getID();
     if (! is_dir($project_dir)) {
-        $project_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $group->getUnixName();
+        $project_dir = forge_get_config('projects_path', 'mediawiki') . '/' . $group->getUnixName();
         if (! is_dir($project_dir)) {
             exit_error(sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), Codendi_HTMLPurifier::instance()->purify($group->getPublicName()) . ' : ' . $project_dir));
         }
@@ -142,11 +142,11 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         }
     }
 
-    $wgSitename         = $group->getPublicName() . " Wiki";
+    $wgSitename         = $group->getPublicName() . ' Wiki';
     $wgScriptPath       = "/plugins/mediawiki/wiki/$fusionforgeproject";
     $wgEmergencyContact = forge_get_config('admin_email');
     $wgPasswordSender   = forge_get_config('admin_email');
-    $wgDBtype           = "forge";
+    $wgDBtype           = 'forge';
     $wgDBserver         = forge_get_config('database_host') . ':' . \ForgeConfig::getInt(DBConfig::CONF_PORT);
 
     if (forge_get_config('mw_dbtype', 'mediawiki') == 'mysql') {
@@ -200,7 +200,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $wgEnableUploads             = true;
     $wgUploadDirectory           = "$project_dir/images";
     $wgUseImageMagick            = true;
-    $wgImageMagickConvertCommand = "/usr/bin/convert";
+    $wgImageMagickConvertCommand = '/usr/bin/convert';
     $wgLocalInterwiki            = $wgSitename;
     $wgShowExceptionDetails      = true;
 
@@ -220,7 +220,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $wgHtml5          = false;
     $wgStyleDirectory = forge_get_config('codendi_dir') . forge_get_config('mw_style_path', 'mediawiki');
     $wgWellFormedXml  = true;
-    $wgLogo           = "";
+    $wgLogo           = '';
 
     $GLOBALS['sys_dbhost']         = forge_get_config('database_host');
     $GLOBALS['sys_dbport']         = forge_get_config('database_port');
@@ -404,12 +404,12 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         {
             public $dstappendself = false;
 
-            public function getTitle($subpage = "")
+            public function getTitle($subpage = '')
             {
                   return 'SpecialForgeRedir';
             }
 
-            public function getRedirect($subpage = "")
+            public function getRedirect($subpage = '')
             {
                   return $this;
             }
@@ -477,12 +477,12 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     ini_set('memory_limit', '100M');
 
 // LOAD THE SITE-WIDE AND PROJECT-SPECIFIC EXTRA-SETTINGS
-    if (is_file(forge_get_config('config_path') . "/plugins/mediawiki/LocalSettings.php")) {
-        include(forge_get_config('config_path') . "/plugins/mediawiki/LocalSettings.php");
+    if (is_file(forge_get_config('config_path') . '/plugins/mediawiki/LocalSettings.php')) {
+        include(forge_get_config('config_path') . '/plugins/mediawiki/LocalSettings.php');
     }
 
 // debian style system-wide mediawiki extensions
-    if (is_file("/etc/mediawiki-extensions/extensions.php")) {
+    if (is_file('/etc/mediawiki-extensions/extensions.php')) {
         include '/etc/mediawiki-extensions/extensions.php';
     }
 
@@ -502,7 +502,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
 // Add Tuleap Skin
 $wgDefaultSkin                  = 'tuleap123';
-$wgAutoloadClasses['Tuleap123'] = __DIR__ . "/skins/Tuleap123/Tuleap123.php";
+$wgAutoloadClasses['Tuleap123'] = __DIR__ . '/skins/Tuleap123/Tuleap123.php';
 $wgValidSkinNames['tuleap123']  = 'Tuleap123';
 require_once $wgAutoloadClasses['Tuleap123'];
 

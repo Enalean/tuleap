@@ -24,7 +24,7 @@ class b202001131436_add_tracker_workflow_add_top_backlog_table extends ForgeUpgr
 {
     public function description()
     {
-        return "Add plugin_agiledashboard_tracker_workflow_action_add_top_backlog table";
+        return 'Add plugin_agiledashboard_tracker_workflow_action_add_top_backlog table';
     }
 
     public function preUp()
@@ -34,13 +34,13 @@ class b202001131436_add_tracker_workflow_add_top_backlog_table extends ForgeUpgr
 
     public function up()
     {
-        $sql = "
+        $sql = '
             CREATE TABLE plugin_agiledashboard_tracker_workflow_action_add_top_backlog (
                 id INT(11) PRIMARY KEY AUTO_INCREMENT,
                 transition_id INT(11) NOT NULL,
                 INDEX idx_wf_transition_id(transition_id)
             ) ENGINE=InnoDB;
-        ";
+        ';
 
         $this->db->createTable('plugin_agiledashboard_tracker_workflow_action_add_top_backlog', $sql);
     }

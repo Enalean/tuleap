@@ -30,10 +30,10 @@ class b201604071310_replace_primary_key_in_table_columns extends \Tuleap\ForgeUp
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_report_renderer_table_columns
+        $sql = 'ALTER TABLE tracker_report_renderer_table_columns
             DROP INDEX `PRIMARY`,
             ADD INDEX column_idx(renderer_id, field_id)
-        ";
+        ';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while replacing primary key in table columns: ' . implode(', ', $this->db->dbh->errorInfo()));

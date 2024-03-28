@@ -24,7 +24,7 @@
  *
  */
 
-header("Cache-Control: no-cache, no-store, must-revalidate");
+header('Cache-Control: no-cache, no-store, must-revalidate');
 
 require __DIR__ . '/../include/pre.php';
 

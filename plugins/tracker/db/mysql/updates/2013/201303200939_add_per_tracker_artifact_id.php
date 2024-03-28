@@ -32,8 +32,8 @@ class b201303200939_add_per_tracker_artifact_id extends \Tuleap\ForgeUpgrade\Buc
 
     public function up()
     {
-        $sql    = "ALTER TABLE `tracker_artifact`
-					ADD COLUMN `per_tracker_artifact_id` INT(11) NOT NULL;";
+        $sql    = 'ALTER TABLE `tracker_artifact`
+					ADD COLUMN `per_tracker_artifact_id` INT(11) NOT NULL;';
         $result = $this->db->dbh->exec($sql);
 
         if ($result === false) {

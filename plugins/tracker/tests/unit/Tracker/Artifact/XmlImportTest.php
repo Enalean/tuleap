@@ -200,9 +200,9 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testImportChangesetInNewArtifactWithNoChangeSet(): void
     {
-        $changeset_1 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'OK', 0);
-        $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'Again', 1);
-        $changeset_3 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'Value', 2);
+        $changeset_1 = $this->mockAChangeset($this->john_doe->getId(), strtotime('2014-01-15T10:38:06+01:00'), null, null, null, $this->tracker_id, 'summary', 'OK', 0);
+        $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime('2014-01-15T10:38:06+01:00'), null, null, null, $this->tracker_id, 'summary', 'Again', 1);
+        $changeset_3 = $this->mockAChangeset($this->john_doe->getId(), strtotime('2014-01-15T10:38:06+01:00'), null, null, null, $this->tracker_id, 'summary', 'Value', 2);
 
         $artifact = $this->mockAnArtifact(101, $this->tracker, $this->tracker_id, []);
 
@@ -285,8 +285,8 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testImportChangesetWithPrivateCommentAndUpdateCommentInNewArtifact(): void
     {
-        $changeset_1 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'OK', 0);
-        $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'Again', 1);
+        $changeset_1 = $this->mockAChangeset($this->john_doe->getId(), strtotime('2014-01-15T10:38:06+01:00'), null, null, null, $this->tracker_id, 'summary', 'OK', 0);
+        $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime('2014-01-15T10:38:06+01:00'), null, null, null, $this->tracker_id, 'summary', 'Again', 1);
 
         $artifact = $this->mockAnArtifact(101, $this->tracker, $this->tracker_id, []);
 
@@ -319,13 +319,13 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup_2 = Mockery::mock(\ProjectUGroup::class);
 
         $this->private_comment_extractor
-            ->shouldReceive("extractUGroupsFromXML")
+            ->shouldReceive('extractUGroupsFromXML')
             ->with(
                 $artifact,
                 Mockery::on(
                     function (\SimpleXMLElement $comment): bool {
-                        return (string) $comment->body === "My First Comment" &&
-                            (string) $comment->private_ugroups->ugroup[0] === "my_group";
+                        return (string) $comment->body === 'My First Comment' &&
+                            (string) $comment->private_ugroups->ugroup[0] === 'my_group';
                     }
                 )
             )
@@ -366,11 +366,11 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup_3 = Mockery::mock(\ProjectUGroup::class);
 
         $this->private_comment_extractor
-            ->shouldReceive("extractUGroupsFromXML")
+            ->shouldReceive('extractUGroupsFromXML')
             ->with($artifact, Mockery::on(
                 function (\SimpleXMLElement $comment): bool {
-                    return (string) $comment->body === "My Second Comment" &&
-                           (string) $comment->private_ugroups->ugroup[0] === "my_other_group";
+                    return (string) $comment->body === 'My Second Comment' &&
+                           (string) $comment->private_ugroups->ugroup[0] === 'my_other_group';
                 }
             ))
             ->once()
@@ -413,9 +413,9 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getTmpDir()
     {
         vfsStreamWrapper::register();
-        vfsStreamWrapper::setRoot(new vfsStreamDirectory("tuleap_tests"));
+        vfsStreamWrapper::setRoot(new vfsStreamDirectory('tuleap_tests'));
 
-        return vfsStream::url("tuleap_tests");
+        return vfsStream::url('tuleap_tests');
     }
 
     /**

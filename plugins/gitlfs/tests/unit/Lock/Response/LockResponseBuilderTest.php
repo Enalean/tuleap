@@ -138,7 +138,7 @@ final class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testErrorResponseIsCorrect(): void
     {
-        $message             = "this is a test error message";
+        $message             = 'this is a test error message';
         $response            = $this->lock_response_builder->buildErrorResponse($message);
         $serialized_response = json_decode(json_encode($response));
 

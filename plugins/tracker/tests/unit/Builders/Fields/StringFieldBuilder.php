@@ -85,7 +85,7 @@ final class StringFieldBuilder
             15,
             $this->name,
             $this->label,
-            "",
+            '',
             true,
             'P',
             $this->is_required,

@@ -49,7 +49,7 @@ class VelocityRepresentation
     {
         $this->id         = JsonCast::ToInt($id);
         $this->name       = $name;
-        $this->start_date = ($start_date) ? JsonCast::toDate($start_date) : "";
+        $this->start_date = ($start_date) ? JsonCast::toDate($start_date) : '';
         $this->duration   = JsonCast::toFloat($duration);
         $this->velocity   = JsonCast::toFloat($velocity);
     }

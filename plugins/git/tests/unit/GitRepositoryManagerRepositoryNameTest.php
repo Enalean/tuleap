@@ -43,7 +43,7 @@ class GitRepositoryManagerRepositoryNameTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->project->shouldReceive('getUnixName')->andReturns($this->project_name);
 
         $this->dao              = Mockery::mock(GitDao::class);
-        $this->backup_directory = "/tmp/";
+        $this->backup_directory = '/tmp/';
 
         $this->factory = \Mockery::spy(\GitRepositoryFactory::class);
         $this->manager = new GitRepositoryManager(

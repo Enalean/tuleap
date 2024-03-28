@@ -46,7 +46,7 @@ class ClientWrapper implements WrapGitlabClient
     {
         $client = $this->gitlab_client_factory->buildHTTPClient($gitlab_credentials);
 
-        $request = $this->factory->createRequest('GET', $gitlab_credentials->getGitlabServerUrl() . "/api/v4" . $url);
+        $request = $this->factory->createRequest('GET', $gitlab_credentials->getGitlabServerUrl() . '/api/v4' . $url);
 
         try {
             $response = $client->sendRequest($request);
@@ -71,8 +71,8 @@ class ClientWrapper implements WrapGitlabClient
     {
         $client = $this->gitlab_client_factory->buildHTTPClient($gitlab_credentials);
 
-        $uri            = HTTPFactoryBuilder::URIFactory()->createUri($gitlab_credentials->getGitlabServerUrl() . "/api/v4" . $url);
-        $uri_with_query = Uri::withQueryValue($uri, "per_page", (string) $row_per_page);
+        $uri            = HTTPFactoryBuilder::URIFactory()->createUri($gitlab_credentials->getGitlabServerUrl() . '/api/v4' . $url);
+        $uri_with_query = Uri::withQueryValue($uri, 'per_page', (string) $row_per_page);
         $request        = $this->factory->createRequest('GET', $uri_with_query);
 
         try {
@@ -126,14 +126,14 @@ class ClientWrapper implements WrapGitlabClient
      */
     private function getNextLinkURI(ResponseInterface $response): ?string
     {
-        $link_header = Header::parse($response->getHeader("link"));
+        $link_header = Header::parse($response->getHeader('link'));
         if (! $link_header) {
-            throw new GitlabResponseAPIException("The query is not in error but we cannot retrieve the link header");
+            throw new GitlabResponseAPIException('The query is not in error but we cannot retrieve the link header');
         }
         $next_link_entity = array_filter(
             $link_header,
             function ($link) {
-                return $link['rel'] === "next";
+                return $link['rel'] === 'next';
             }
         );
 
@@ -141,7 +141,7 @@ class ClientWrapper implements WrapGitlabClient
             return null;
         }
 
-        return preg_replace("/[<>]/", "", $next_link_entity[0][0]);
+        return preg_replace('/[<>]/', '', $next_link_entity[0][0]);
     }
 
     /**
@@ -152,7 +152,7 @@ class ClientWrapper implements WrapGitlabClient
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_OBJECT_AS_ARRAY);
 
         if ($json !== null && ! is_array($json)) {
-            throw new GitlabResponseAPIException("The query is not in error but the json content is not an array. This is not expected.");
+            throw new GitlabResponseAPIException('The query is not in error but the json content is not an array. This is not expected.');
         }
 
         return $json;
@@ -166,7 +166,7 @@ class ClientWrapper implements WrapGitlabClient
     {
         $client = $this->gitlab_client_factory->buildHTTPClient($gitlab_credentials);
 
-        $request = $this->factory->createRequest('POST', $gitlab_credentials->getGitlabServerUrl() . "/api/v4" . $url)
+        $request = $this->factory->createRequest('POST', $gitlab_credentials->getGitlabServerUrl() . '/api/v4' . $url)
             ->withHeader('Content-Type', 'application/json')
             ->withBody(
                 $this->stream_factory->createStream(
@@ -190,7 +190,7 @@ class ClientWrapper implements WrapGitlabClient
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_OBJECT_AS_ARRAY);
 
         if ($json !== null && ! is_array($json)) {
-            throw new GitlabResponseAPIException("The query is not in error but the json content is not an array. This is not expected.");
+            throw new GitlabResponseAPIException('The query is not in error but the json content is not an array. This is not expected.');
         }
 
         return $json;
@@ -206,7 +206,7 @@ class ClientWrapper implements WrapGitlabClient
         $request = $this->factory
             ->createRequest(
                 'DELETE',
-                $gitlab_credentials->getGitlabServerUrl() . "/api/v4" . $url
+                $gitlab_credentials->getGitlabServerUrl() . '/api/v4' . $url
             )
             ->withHeader('Content-Type', 'application/json');
 

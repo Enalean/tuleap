@@ -72,7 +72,7 @@ class VersionRepresentationCollectionBuilderTest extends TestCase
                 'id'        => 234,
                 'item_id'   => 4,
                 'number'    => 1,
-                'label'     => "my version label",
+                'label'     => 'my version label',
                 'changelog' => '',
                 'user_id'   => (int) $user->getId(),
                 'date'      => 1542099693,
@@ -87,7 +87,7 @@ class VersionRepresentationCollectionBuilderTest extends TestCase
         $representation = $collection->getRepresentations()[0];
         self::assertEquals(234, $representation->id);
         self::assertEquals(1, $representation->number);
-        self::assertEquals("my version label", $representation->name);
+        self::assertEquals('my version label', $representation->name);
         self::assertEquals('', $representation->changelog);
     }
 }

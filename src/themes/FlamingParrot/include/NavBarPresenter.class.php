@@ -191,7 +191,7 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function user_login_name() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return "@" . $this->current_user->user->getUserName();
+        return '@' . $this->current_user->user->getUserName();
     }
 
     public function has_user_avatar() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

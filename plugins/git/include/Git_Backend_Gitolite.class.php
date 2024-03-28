@@ -50,7 +50,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     protected $gitPlugin;
 
-    public const PREFIX = "gitolite_";
+    public const PREFIX = 'gitolite_';
     /**
      * @var GitoliteAccessURLGenerator
      */
@@ -303,7 +303,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
                     return false;
                 }
             } else {
-                $backend->log("Rename: Unable to rename gitolite top directory", Backend::LOG_ERROR);
+                $backend->log('Rename: Unable to rename gitolite top directory', Backend::LOG_ERROR);
             }
         }
         return true;
@@ -592,9 +592,9 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $formatter->addEmptyLine();
         $formatter->addHeader('Git');
         $gitoliteIndex       = [dgettext('tuleap-git', 'Month')];
-        $gitolite            = ["Gitolite created repositories"];
+        $gitolite            = ['Gitolite created repositories'];
         $gitoliteActiveIndex = [dgettext('tuleap-git', 'Month')];
-        $gitoliteActive      = ["Gitolite created repositories (still active)"];
+        $gitoliteActive      = ['Gitolite created repositories (still active)'];
         $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteIndex, $gitolite, false);
         $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteActiveIndex, $gitoliteActive, true);
         $this->retrieveLoggedPushesStatistics($formatter);
@@ -619,7 +619,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $rows = $dao->getBackendStatistics($type, $formatter->startDate, $formatter->endDate, $formatter->groupId, $keepedAlive);
         if (count($rows) > 0) {
             foreach ($rows as $row) {
-                $typeIndex[] = $row['month'] . " " . $row['year'];
+                $typeIndex[] = $row['month'] . ' ' . $row['year'];
                 $typeArray[] = intval($row['count']);
             }
             $formatter->addLine($typeIndex);
@@ -642,7 +642,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $gitLogDao = new Git_LogDao();
         $rows      = $gitLogDao->totalPushes($formatter->startDate, $formatter->endDate, $formatter->groupId);
         foreach ($rows as $row) {
-            $gitIndex[]   = $row['month'] . " " . $row['year'];
+            $gitIndex[]   = $row['month'] . ' ' . $row['year'];
             $gitPushes[]  = intval($row['pushes_count']);
             $gitCommits[] = intval($row['commits_count']);
             $gitUsers[]   = intval($row['users']);
@@ -667,7 +667,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $header = [dgettext('tuleap-git', 'Month')];
         $line   = [dgettext('tuleap-git', 'Total number of git read access')];
         foreach ($stats as $row) {
-            $header[] = $row['month'] . " " . $row['year'];
+            $header[] = $row['month'] . ' ' . $row['year'];
             $line[]   = intval($row['nb']);
         }
 

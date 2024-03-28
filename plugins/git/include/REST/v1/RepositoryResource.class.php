@@ -300,7 +300,7 @@ class RepositoryResource extends AuthenticatedResource
                 $this->repository_factory,
                 $this->git_system_event_manager,
                 $git_dao,
-                "",
+                '',
                 $fine_grained_replicator,
                 $project_history_dao,
                 $history_value_formatter,
@@ -383,11 +383,11 @@ class RepositoryResource extends AuthenticatedResource
         $user    = $this->user_manager->getCurrentUser();
         $project = $this->project_manager->getProject($project_id);
         if ($project->isError()) {
-            throw new RestException(404, "Given project does not exist");
+            throw new RestException(404, 'Given project does not exist');
         }
 
         if (! $project->usesService(\GitPlugin::SERVICE_SHORTNAME)) {
-            throw new RestException(400, "Project does not use Git service");
+            throw new RestException(400, 'Project does not use Git service');
         }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -395,7 +395,7 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         if (! $this->git_permission_manager->userIsGitAdmin($user, $project)) {
-            throw new RestException(403, "User does not have permissions to create a Git Repository");
+            throw new RestException(403, 'User does not have permissions to create a Git Repository');
         }
         try {
             $repository = $this->repository_creator->create($project, $user, $name);
@@ -451,7 +451,7 @@ class RepositoryResource extends AuthenticatedResource
         if (ctype_digit($id_or_path)) {
             $repository = $this->repository_factory->getRepositoryById((int) $id_or_path);
         } else {
-            preg_match("/(.+?)\/(.+)/", $id_or_path, $path);
+            preg_match('/(.+?)\/(.+)/', $id_or_path, $path);
             if (count($path) !== 3) {
                 throw new RestException(400, 'Bad repository path format');
             }
@@ -632,7 +632,7 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException 500
      *
      */
-    public function getTree(int $id, string $ref, string $path = "", int $offset = 0, int $limit = self::MAX_LIMIT): array
+    public function getTree(int $id, string $ref, string $path = '', int $offset = 0, int $limit = self::MAX_LIMIT): array
     {
         $this->checkAccess();
         $tree_representation_factory = new GitTreeRepresentationFactory();
@@ -669,7 +669,7 @@ class RepositoryResource extends AuthenticatedResource
      * @param string $ref          ref {@from path} {@required true}
      * @param string $path         path {@from path} {@required false}
      */
-    public function optionsGetTree(int $id, string $ref, string $path = ""): void
+    public function optionsGetTree(int $id, string $ref, string $path = ''): void
     {
         Header::allowOptionsGet();
     }
@@ -868,7 +868,7 @@ class RepositoryResource extends AuthenticatedResource
             if ($commit === null) {
                 throw new RestException(
                     500,
-                    "Associated commit not found"
+                    'Associated commit not found'
                 );
             }
 
@@ -881,7 +881,7 @@ class RepositoryResource extends AuthenticatedResource
         } catch (RepositoryNotExistingException $ex) {
             throw new RestException(
                 500,
-                "GitPHP project not found for repository"
+                'GitPHP project not found for repository'
             );
         }
     }

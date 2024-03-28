@@ -61,7 +61,7 @@ final class ProjectArchiveOngoingUploadDao extends DataAccessObject implements D
 
     public function deleteUnusableFile(DateTimeImmutable $current_time): void
     {
-        $this->getDB()->run("DELETE FROM project_file_upload WHERE expiration_date <= ?", $current_time->getTimestamp());
+        $this->getDB()->run('DELETE FROM project_file_upload WHERE expiration_date <= ?', $current_time->getTimestamp());
     }
 
     public function searchFileOngoingUploadById(int $id): array

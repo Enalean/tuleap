@@ -69,7 +69,7 @@ final class FileVersionsDeletor
 
         $this->transaction->execute(function () use ($item, $version) {
             if ($this->versions_counter->countByItemId((int) $item->getId()) <= 1) {
-                throw new RestException(403, "Cannot delete the last version of an item");
+                throw new RestException(403, 'Cannot delete the last version of an item');
             }
 
             if (! $this->version_deletor->deleteSpecificVersion($item, (int) $version->getNumber())) {

@@ -31,7 +31,7 @@
  */
 function smarty_modifier_highlight($haystack, $needle, $trimlen = null, $escape = true, $highlightclass = 'git-repository-highlight')
 {
-    if (preg_match("/(.*)(" . quotemeta($needle) . ")(.*)/i", $haystack, $regs)) {
+    if (preg_match('/(.*)(' . quotemeta($needle) . ')(.*)/i', $haystack, $regs)) {
         if (isset($trimlen) && ($trimlen > 0)) {
             $linelen = strlen($regs[0]);
             if ($linelen > $trimlen) {
@@ -44,14 +44,14 @@ function smarty_modifier_highlight($haystack, $needle, $trimlen = null, $escape 
                     if ($rightlen < $remain) {
                         $leftremain += ($remain - $rightlen);
                     }
-                    $regs[1] = "…" . substr($regs[1], ($leftlen - ($leftremain - 3)));
+                    $regs[1] = '…' . substr($regs[1], ($leftlen - ($leftremain - 3)));
                 }
                 if ($rightlen > $remain) {
                     $rightremain = $remain;
                     if ($leftlen < $remain) {
                         $rightremain += ($remain - $leftlen);
                     }
-                    $regs[3] = substr($regs[3], 0, $rightremain - 3) . "…";
+                    $regs[3] = substr($regs[3], 0, $rightremain - 3) . '…';
                 }
             }
         }
@@ -60,11 +60,11 @@ function smarty_modifier_highlight($haystack, $needle, $trimlen = null, $escape 
             $regs[2] = htmlspecialchars($regs[2]);
             $regs[3] = htmlspecialchars($regs[3]);
         }
-        $ret = $regs[1] . "<span";
+        $ret = $regs[1] . '<span';
         if ($highlightclass) {
-            $ret .= " class=\"" . $highlightclass . "\"";
+            $ret .= ' class="' . $highlightclass . '"';
         }
-        $ret .= ">" . $regs[2] . "</span>" . $regs[3];
+        $ret .= '>' . $regs[2] . '</span>' . $regs[3];
         return $ret;
     }
 

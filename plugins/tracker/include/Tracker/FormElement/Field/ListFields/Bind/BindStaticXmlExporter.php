@@ -99,7 +99,7 @@ class BindStaticXmlExporter
         $grandchild->addAttribute('ID', $ID);
         $xml_mapping['values'][$ID] = $id;
         $grandchild->addAttribute('label', $label);
-        $grandchild->addAttribute('is_hidden', $is_hidden ? "1" : "0");
+        $grandchild->addAttribute('is_hidden', $is_hidden ? '1' : '0');
 
         if ($description !== '') {
             $this->cdata_section_factory->insert($grandchild, 'description', $description);

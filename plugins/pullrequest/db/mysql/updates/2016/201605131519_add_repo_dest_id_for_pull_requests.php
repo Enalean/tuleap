@@ -34,7 +34,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_pullrequest_review ADD (repo_dest_id INT(11) NOT NULL);";
+        $sql = 'ALTER TABLE plugin_pullrequest_review ADD (repo_dest_id INT(11) NOT NULL);';
         $this->executeSql($sql);
     }
 

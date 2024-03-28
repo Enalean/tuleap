@@ -262,10 +262,10 @@ class SemanticVelocity extends Tracker_Semantic
     private function getCSRFSynchronizerToken()
     {
         return new CSRFSynchronizerToken(
-            TRACKER_BASE_URL . "?" . http_build_query(
+            TRACKER_BASE_URL . '?' . http_build_query(
                 [
-                    "semantic" => "velocity",
-                    "func"     => "admin-semantic",
+                    'semantic' => 'velocity',
+                    'func'     => 'admin-semantic',
                 ]
             )
         );
@@ -295,11 +295,11 @@ class SemanticVelocity extends Tracker_Semantic
     private function redirectToVelocityAdmin($tracker_id)
     {
         $GLOBALS['Response']->redirect(
-            TRACKER_BASE_URL . "?" . http_build_query(
+            TRACKER_BASE_URL . '?' . http_build_query(
                 [
-                    "semantic" => "velocity",
-                    "func"     => "admin-semantic",
-                    "tracker"  => $tracker_id,
+                    'semantic' => 'velocity',
+                    'func'     => 'admin-semantic',
+                    'tracker'  => $tracker_id,
                 ]
             )
         );

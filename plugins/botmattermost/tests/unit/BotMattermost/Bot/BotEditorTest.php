@@ -52,9 +52,9 @@ final class BotEditorTest extends TestCase
 
         $this->bot_editor->editBotById(
             1,
-            "Bot name",
-            "https://example.com",
-            "https://example.com",
+            'Bot name',
+            'https://example.com',
+            'https://example.com',
         );
     }
 
@@ -68,9 +68,9 @@ final class BotEditorTest extends TestCase
 
         $this->bot_editor->editBotById(
             1,
-            "",
-            "https://example.com",
-            "https://example.com",
+            '',
+            'https://example.com',
+            'https://example.com',
         );
     }
 
@@ -84,9 +84,9 @@ final class BotEditorTest extends TestCase
 
         $this->bot_editor->editBotById(
             1,
-            "Name",
-            "",
-            "https://example.com",
+            'Name',
+            '',
+            'https://example.com',
         );
     }
 
@@ -100,9 +100,9 @@ final class BotEditorTest extends TestCase
 
         $this->bot_editor->editBotById(
             1,
-            "Name",
-            "http://example.com",
-            "https://example.com",
+            'Name',
+            'http://example.com',
+            'https://example.com',
         );
     }
 
@@ -114,9 +114,9 @@ final class BotEditorTest extends TestCase
 
         $this->bot_editor->editBotById(
             1,
-            "Name",
-            "https://example.com",
-            "",
+            'Name',
+            'https://example.com',
+            '',
         );
     }
 
@@ -130,9 +130,9 @@ final class BotEditorTest extends TestCase
 
         $this->bot_editor->editBotById(
             1,
-            "Name",
-            "https://example.com",
-            "http://example.com",
+            'Name',
+            'https://example.com',
+            'http://example.com',
         );
     }
 }

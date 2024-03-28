@@ -120,12 +120,12 @@ class PlanningPermissionsRepresentationBuilder
     {
         $query_params = http_build_query(
             [
-                "group_id"    => $planning->getGroupId(),
-                "planning_id" => $planning->getId(),
-                "action"      => 'edit',
+                'group_id'    => $planning->getGroupId(),
+                'planning_id' => $planning->getId(),
+                'action'      => 'edit',
             ]
         );
 
-        return "/plugins/agiledashboard/?" . $query_params;
+        return '/plugins/agiledashboard/?' . $query_params;
     }
 }

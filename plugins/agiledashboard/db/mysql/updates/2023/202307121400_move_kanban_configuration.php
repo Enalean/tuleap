@@ -25,27 +25,27 @@ final class b202307121400_move_kanban_configuration extends \Tuleap\ForgeUpgrade
 {
     public function description(): string
     {
-        return "Move kanban configuration in dedicated table";
+        return 'Move kanban configuration in dedicated table';
     }
 
     public function up(): void
     {
         $this->api->createTable(
             'plugin_kanban_legacy_configuration',
-            "CREATE TABLE IF NOT EXISTS plugin_kanban_legacy_configuration (
+            'CREATE TABLE IF NOT EXISTS plugin_kanban_legacy_configuration (
                 project_id INT(11) PRIMARY KEY,
                 kanban TINYINT NOT NULL
-            )"
+            )'
         );
 
         $this->api->dbh->exec(
-            "INSERT INTO plugin_kanban_legacy_configuration(project_id, kanban)
-            SELECT project_id, kanban FROM plugin_agiledashboard_configuration"
+            'INSERT INTO plugin_kanban_legacy_configuration(project_id, kanban)
+            SELECT project_id, kanban FROM plugin_agiledashboard_configuration'
         );
 
         $this->api->dbh->exec(
-            "ALTER TABLE plugin_agiledashboard_configuration CHANGE COLUMN kanban
-            kanban TINYINT NOT NULL DEFAULT 0"
+            'ALTER TABLE plugin_agiledashboard_configuration CHANGE COLUMN kanban
+            kanban TINYINT NOT NULL DEFAULT 0'
         );
     }
 }

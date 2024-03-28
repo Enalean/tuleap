@@ -77,7 +77,7 @@ final class ReplayCreateProjectFromJiraCommand extends Command
 
         $jira_client = JiraClientReplayBuilder::buildReplayClientWithCommandOptions(
             $input->getOption('server-flavor'),
-            $input->getOption("server-major-version"),
+            $input->getOption('server-major-version'),
             $input->getOption('path'),
         );
 
@@ -128,7 +128,7 @@ final class ReplayCreateProjectFromJiraCommand extends Command
             )->match(
                 function (\Project $project) use ($output): int {
                     $output->writeln(sprintf('Project %d created', $project->getID()));
-                    $output->writeln("Import completed");
+                    $output->writeln('Import completed');
                     return Command::SUCCESS;
                 },
                 function (Fault $fault) use ($logger): int {
@@ -140,7 +140,7 @@ final class ReplayCreateProjectFromJiraCommand extends Command
             foreach ($exception->getErrors() as $error) {
                 $logger->error($error->getMessage() . ' (Type: ' . $error->getType() . ') Line: ' . $error->getLine() . ' Column: ' . $error->getColumn());
             }
-            $logger->info("Generated XML file: " . $traces_path . '/project.xml');
+            $logger->info('Generated XML file: ' . $traces_path . '/project.xml');
             file_put_contents($traces_path . '/project.xml', $exception->getXMLWithoutLineNumbers());
             return Command::FAILURE;
         }

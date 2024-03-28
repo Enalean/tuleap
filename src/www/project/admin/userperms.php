@@ -46,7 +46,7 @@ session_require(['group' => $group_id, 'admin_flags' => 'A']);
 $project = $pm->getProject($group_id);
 if ($project->isError()) {
         //wasn't found or some other problem
-        echo $Language->getText('project_admin_userperms', 'unable_load_p') . "<br>";
+        echo $Language->getText('project_admin_userperms', 'unable_load_p') . '<br>';
         return;
 }
 
@@ -55,14 +55,14 @@ if ($request->exist('submit')) {
     (new ProjectHistoryDao())->groupAddHistory('changed_member_perm', '', $group_id);
     $nb_errors = 0;
 
-    $res_dev = db_query("SELECT * FROM user_group WHERE group_id=" . db_ei($group_id));
+    $res_dev = db_query('SELECT * FROM user_group WHERE group_id=' . db_ei($group_id));
     while ($row_dev = db_fetch_array($res_dev)) {
         if ($request->exist("update_user_$row_dev[user_id]")) {
             $svn_flags = "svn_user_$row_dev[user_id]";
             $res       = true;
             if ($request->exist($svn_flags)) {
                 $sql  = "UPDATE user_group SET svn_flags = '" . db_es($request->get($svn_flags)) . "'";
-                $sql .= " WHERE user_id=" . db_ei($row_dev['user_id']) . " AND group_id=" . db_ei($group_id);
+                $sql .= ' WHERE user_id=' . db_ei($row_dev['user_id']) . ' AND group_id=' . db_ei($group_id);
 
                 $res = db_query($sql);
             }
@@ -119,7 +119,7 @@ if (! $offset) {
 $number_per_page = 25;
 
 $sql           = [];
-$sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
+$sql['select'] = 'SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
                   user.realname AS realname,
                   user.user_id AS user_id,
                   user_group.bug_flags,
@@ -127,11 +127,11 @@ $sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
                   user_group.patch_flags,
                   user_group.file_flags,
                   user_group.support_flags,
-                  user_group.svn_flags";
+                  user_group.svn_flags';
 
-$sql['from']  = " FROM user,user_group ";
-$sql['where'] = " WHERE user.user_id = user_group.user_id
-                    AND user_group.group_id = " . db_ei($group_id);
+$sql['from']  = ' FROM user,user_group ';
+$sql['where'] = ' WHERE user.user_id = user_group.user_id
+                    AND user_group.group_id = ' . db_ei($group_id);
 
 if ($pattern) {
     $uh            = UserHelper::instance();
@@ -140,16 +140,16 @@ if ($pattern) {
     $sql['filter'] = '';
 }
 
-$sql['order'] = " ORDER BY user.user_name ";
-$sql['limit'] = " LIMIT " . db_ei($offset) . ", " . db_ei($number_per_page);
+$sql['order'] = ' ORDER BY user.user_name ';
+$sql['limit'] = ' LIMIT ' . db_ei($offset) . ', ' . db_ei($number_per_page);
 
 if ($project->usesTracker() && $at_arr) {
     for ($j = 0; $j < count($at_arr); $j++) {
         $atid           = db_ei($at_arr[$j]->getID());
-        $sql['select'] .= ", IFNULL(artifact_perm_" . $atid . ".perm_level, 0) AS perm_level_" . $atid . " ";
-        $sql['from']   .= " LEFT JOIN artifact_perm AS artifact_perm_" . $atid . "
-                                 ON(artifact_perm_" . $atid . ".user_id = user_group.user_id
-                                    AND artifact_perm_" . $atid . ".group_artifact_id = " . $atid . ") ";
+        $sql['select'] .= ', IFNULL(artifact_perm_' . $atid . '.perm_level, 0) AS perm_level_' . $atid . ' ';
+        $sql['from']   .= ' LEFT JOIN artifact_perm AS artifact_perm_' . $atid . '
+                                 ON(artifact_perm_' . $atid . '.user_id = user_group.user_id
+                                    AND artifact_perm_' . $atid . '.group_artifact_id = ' . $atid . ') ';
     }
 }
 $res_dev = db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['filter'] . $sql['order'] . $sql['limit']);
@@ -231,8 +231,8 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
         if ($project->usesSVN()) {
             $cell  = '';
             $cell .= '<TD><SELECT name="' . $purifier->purify('svn_user_' . $row_dev['user_id']) . '">';
-            $cell .= '<OPTION value="0"' . (($row_dev['svn_flags'] == 0) ? " selected" : "") . '>' . $Language->getText('global', 'none');
-            $cell .= '<OPTION value="2"' . (($row_dev['svn_flags'] == 2) ? " selected" : "") . '>' . $Language->getText('project_admin_index', 'admin');
+            $cell .= '<OPTION value="0"' . (($row_dev['svn_flags'] == 0) ? ' selected' : '') . '>' . $Language->getText('global', 'none');
+            $cell .= '<OPTION value="2"' . (($row_dev['svn_flags'] == 2) ? ' selected' : '') . '>' . $Language->getText('project_admin_index', 'admin');
             $cell .= '</SELECT></TD>';
             echo $cell;
         }
@@ -245,8 +245,8 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
                 $perm  = $row_dev['perm_level_' . $atid];
                 $cell  = '';
                 $cell .= '<TD><SELECT name="' . $purifier->purify('tracker_user_' . $row_dev['user_id']) . '_' . $purifier->purify($atid) . '">';
-                $cell .= '<OPTION value="0"' . (($perm == 0) ? " selected" : "") . '>' . $Language->getText('global', 'none');
-                $cell .= '<OPTION value="3"' . (($perm == 3 || $perm == 2) ? " selected" : "") . '>' . $Language->getText('project_admin_userperms', 'admin');
+                $cell .= '<OPTION value="0"' . (($perm == 0) ? ' selected' : '') . '>' . $Language->getText('global', 'none');
+                $cell .= '<OPTION value="3"' . (($perm == 3 || $perm == 2) ? ' selected' : '') . '>' . $Language->getText('project_admin_userperms', 'admin');
                 $cell .= '</SELECT></TD>';
                 echo $cell;
             }

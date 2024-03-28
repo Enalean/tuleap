@@ -84,7 +84,7 @@ final class FieldChangeArtifactLinksUpdater implements UpdateArtifactLinkXML
             }
         }
 
-        if ($comment !== "") {
+        if ($comment !== '') {
             $comments_node = $changeset_xml->addChild('comments');
             if (! $comments_node instanceof SimpleXMLElement) {
                 return;
@@ -115,7 +115,7 @@ final class FieldChangeArtifactLinksUpdater implements UpdateArtifactLinkXML
             $simplexml_cdata_factory->insertWithAttributes(
                 $comment_node,
                 'body',
-                implode("<br />", $comment),
+                implode('<br />', $comment),
                 ['format' => Tracker_Artifact_Changeset_Comment::HTML_COMMENT]
             );
         }

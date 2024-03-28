@@ -99,17 +99,17 @@ final class BackendSVNTest extends TestIntegrationTestCase
         $svn_dao = $this->createMock(SVN_DAO::class);
         $svn_dao->method('searchSvnRepositories')
             ->willReturn(TestHelper::argListToDar([[
-                "group_id"        => "101",
-                "group_name"      => "Guinea Pig",
-                "unix_group_name" => "gpig",
+                'group_id'        => '101',
+                'group_name'      => 'Guinea Pig',
+                'unix_group_name' => 'gpig',
             ], [
-                "group_id"        => "102",
-                "group_name"      => "Guinea Pig is \"back\"",
-                "unix_group_name" => "gpig2",
+                'group_id'        => '102',
+                'group_name'      => 'Guinea Pig is "back"',
+                'unix_group_name' => 'gpig2',
             ], [
-                "group_id"        => "103",
-                "group_name"      => "Guinea Pig is 'angry'",
-                "unix_group_name" => "gpig3",
+                'group_id'        => '103',
+                'group_name'      => "Guinea Pig is 'angry'",
+                'unix_group_name' => 'gpig3',
             ],
             ]));
         $this->backend->method('getSvnDao')->willReturn($svn_dao);
@@ -120,7 +120,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
         $svnroots = file_get_contents(ForgeConfig::get('svn_root_file'));
 
         self::assertNotFalse($svnroots);
-        self::assertStringContainsString("gpig2", $svnroots, "Project name not found in SVN root");
+        self::assertStringContainsString('gpig2', $svnroots, 'Project name not found in SVN root');
     }
 
     public function testSetSVNPrivacyPrivate(): void
@@ -174,8 +174,8 @@ final class BackendSVNTest extends TestIntegrationTestCase
             true,
             ForgeConfig::get('codendi_bin_prefix'),
             'svn_post_commit.php',
-            "",
-            "svn_pre_commit.php"
+            '',
+            'svn_pre_commit.php'
         );
     }
 
@@ -198,8 +198,8 @@ final class BackendSVNTest extends TestIntegrationTestCase
             true,
             ForgeConfig::get('codendi_bin_prefix'),
             'svn_post_commit.php',
-            "",
-            "svn_pre_commit.php"
+            '',
+            'svn_pre_commit.php'
         );
     }
 }

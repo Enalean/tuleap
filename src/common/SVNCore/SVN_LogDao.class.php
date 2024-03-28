@@ -36,8 +36,8 @@ class SVN_LogDao extends DataAccessObject
 
     public function countSVNCommits()
     {
-        $sql = "SELECT sum(svn_commits) AS nb
-                FROM group_svn_full_history";
+        $sql = 'SELECT sum(svn_commits) AS nb
+                FROM group_svn_full_history';
 
         $row = $this->retrieve($sql)->getRow();
 

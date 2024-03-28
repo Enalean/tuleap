@@ -35,12 +35,12 @@ final class OwnerDao extends DataAccessObject implements OwnerData
     public function getDocumentOwnerOfProjectForAutocomplete(Project $project, string $name_to_search): ?array
     {
         $name = $this->getDB()->escapeLikeValue($name_to_search);
-        $sql  = "SELECT DISTINCT user.user_id, user.user_name, user.realname, user.has_custom_avatar
+        $sql  = 'SELECT DISTINCT user.user_id, user.user_name, user.realname, user.has_custom_avatar
                 FROM user JOIN plugin_docman_item on user.user_id = plugin_docman_item.user_id
                 WHERE group_id = ?
                 AND (user.realname LIKE ?
                     OR user.user_name LIKE ? )
-                LIMIT ?";
+                LIMIT ?';
 
         return $this->getDB()->safeQuery($sql, [(int) $project->getID(), '%' . $name . '%', '%' . $name . '%', self::LIMIT_OF_AUTOCOMPLETE]);
     }

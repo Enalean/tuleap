@@ -117,7 +117,7 @@ class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.Missin
             } elseif ($edit->type == 'change') {
                 $this->_changed($edit->orig, $edit->fin);
             } else {
-                \trigger_error("Unknown edit type", \E_USER_ERROR);
+                \trigger_error('Unknown edit type', \E_USER_ERROR);
             }
         }
         $this->_end_block();
@@ -138,10 +138,10 @@ class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.Missin
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
         if ($xlen > 1) {
-            $xbeg .= "," . ($xbeg + $xlen - 1);
+            $xbeg .= ',' . ($xbeg + $xlen - 1);
         }
         if ($ylen > 1) {
-            $ybeg .= "," . ($ybeg + $ylen - 1);
+            $ybeg .= ',' . ($ybeg + $ylen - 1);
         }
         return $xbeg . ($xlen ? $ylen ? 'c' : 'd' : 'a') . $ybeg;
     }
@@ -169,12 +169,12 @@ class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.Missin
 
     public function _added($lines)
     {
-        $this->_lines($lines, ">");
+        $this->_lines($lines, '>');
     }
 
     public function _deleted($lines)
     {
-        $this->_lines($lines, "<");
+        $this->_lines($lines, '<');
     }
 
     public function _changed($orig, $fin)

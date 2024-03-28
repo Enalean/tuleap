@@ -37,8 +37,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
      */
     public function displayServiceGraph($services, $groupBy, $startDate, $endDate, $accumulative, $absolute = true)
     {
-        $graph = new Chart(750, 450, "auto");
-        $graph->SetScale("textint");
+        $graph = new Chart(750, 450, 'auto');
+        $graph->SetScale('textint');
         $graph->title->Set(dgettext('tuleap-statistics', 'Services growth over time'));
 
         $graph->yaxis->title->Set(dgettext('tuleap-statistics', 'Size'));
@@ -109,8 +109,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
      */
     public function displayUserGraph($userId, $groupBy, $startDate, $endDate, $absolute = true)
     {
-        $graph = new Chart(750, 450, "auto");
-        $graph->SetScale("textlin");
+        $graph = new Chart(750, 450, 'auto');
+        $graph->SetScale('textlin');
         $graph->title->Set(dgettext('tuleap-statistics', 'User consumption over time'));
 
         $graph->yaxis->title->Set(dgettext('tuleap-statistics', 'Size'));
@@ -172,8 +172,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
      */
     public function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute = true, $accumulative = true, $siteAdminView = true)
     {
-        $graph = new Chart(750, 450, "auto");
-        $graph->SetScale("textint");
+        $graph = new Chart(750, 450, 'auto');
+        $graph->SetScale('textint');
         $graph->title->Set(dgettext('tuleap-statistics', 'Project by service growth over time'));
 
         $graph->yaxis->title->Set(dgettext('tuleap-statistics', 'Size'));
@@ -252,12 +252,12 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
      */
     public function displayProjectTotalSizeGraph($groupId, $groupBy, $startDate, $endDate, $absolute = true)
     {
-        $graph = new Chart(420, 340, "auto");
+        $graph = new Chart(420, 340, 'auto');
         $graph->img->SetMargin(70, 50, 30, 70);
-        $graph->SetScale("textlin");
-        $graph->title->Set("Total project size growth over the time");
+        $graph->SetScale('textlin');
+        $graph->title->Set('Total project size growth over the time');
 
-        $graph->yaxis->title->Set("Size");
+        $graph->yaxis->title->Set('Size');
         $graph->yaxis->SetTitleMargin(60);
         $graph->yaxis->setLabelFormatCallback([$this, 'sizeReadable']);
         if ($absolute) {
@@ -283,7 +283,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
             $lineplot->value->setFormatCallback([$this, 'sizeReadable']);
             $graph->Add($lineplot);
 
-            $graph->xaxis->title->Set("Weeks");
+            $graph->xaxis->title->Set('Weeks');
             $graph->xaxis->SetTitleMargin(35);
             $graph->xaxis->SetTickLabels($dates);
 

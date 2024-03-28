@@ -82,8 +82,8 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject
 
     private function reorderFieldsForPrepareRankingUsage($tv5_id)
     {
-        $this->update("SET @counter = 0");
-        $this->update("SET @previous = NULL");
+        $this->update('SET @counter = 0');
+        $this->update('SET @previous = NULL');
         $sql = "UPDATE tracker_field
                     INNER JOIN (SELECT @counter := IF(@previous = parent_id, @counter + 1, 1) AS new_rank,
                                        @previous := parent_id,

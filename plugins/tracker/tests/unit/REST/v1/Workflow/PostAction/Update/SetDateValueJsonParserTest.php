@@ -49,21 +49,21 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAcceptReturnsTrueWhenTypeMatches()
     {
         $this->assertTrue($this->parser->accept([
-            "type" => "set_field_value",
-            "field_type" => "date",
+            'type' => 'set_field_value',
+            'field_type' => 'date',
         ]));
     }
 
     public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
     {
-        $this->assertFalse($this->parser->accept(["type" => "run_job"]));
+        $this->assertFalse($this->parser->accept(['type' => 'run_job']));
     }
 
     public function testAcceptReturnsFalseWhenFieldTypeDoesNotMatch()
     {
         $this->assertFalse($this->parser->accept([
-            "type" => "set_field_value",
-            "field_type" => "int",
+            'type' => 'set_field_value',
+            'field_type' => 'int',
         ]));
     }
 
@@ -80,11 +80,11 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $set_date_value  = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => "",
+                'id' => 2,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
+                'value' => '',
             ]
         );
         $expected_action = new SetDateValue(43, Transition_PostAction_Field_Date::CLEAR_DATE);
@@ -99,10 +99,10 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $set_date_value  = $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => "current",
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
+                'value' => 'current',
             ]
         );
         $expected_action = new SetDateValue(43, Transition_PostAction_Field_Date::FILL_CURRENT_TIME);
@@ -117,11 +117,11 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $set_date_value  = $this->parser->parse(
             $workflow,
             [
-                "id" => 2,
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => "",
+                'id' => 2,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
+                'value' => '',
             ]
         );
         $expected_action = new SetDateValue(43, Transition_PostAction_Field_Date::CLEAR_DATE);
@@ -138,9 +138,9 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "value" => "current",
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'value' => 'current',
             ]
         );
     }
@@ -155,10 +155,10 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => null,
-                "value" => "current",
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => null,
+                'value' => 'current',
             ]
         );
     }
@@ -173,10 +173,10 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => "not int",
-                "value" => "current",
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 'not int',
+                'value' => 'current',
             ]
         );
     }
@@ -191,9 +191,9 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
             ]
         );
     }
@@ -208,10 +208,10 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => null,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
+                'value' => null,
             ]
         );
     }
@@ -226,10 +226,10 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => 99,
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
+                'value' => 99,
             ]
         );
     }
@@ -244,10 +244,10 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse(
             $workflow,
             [
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => "not supported",
+                'type' => 'set_field_value',
+                'field_type' => 'date',
+                'field_id' => 43,
+                'value' => 'not supported',
             ]
         );
     }

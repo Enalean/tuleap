@@ -63,9 +63,9 @@ final class BranchNameCreatorFromArtifactTest extends TestCase
         $integration = new GitlabRepositoryIntegration(
             18,
             12,
-            "MyRepo",
-            "",
-            "https://example",
+            'MyRepo',
+            '',
+            'https://example',
             new DateTimeImmutable(),
             ProjectTestBuilder::aProject()->build(),
             false
@@ -75,7 +75,7 @@ final class BranchNameCreatorFromArtifactTest extends TestCase
             ->expects(self::once())
             ->method('searchCreateBranchPrefixForIntegration')
             ->with(18)
-            ->willReturn("dev-");
+            ->willReturn('dev-');
 
         $branch_name = $this->branch_name_creator_from_artifact->getFullBranchName($artifact, $integration);
         self::assertEquals('dev-tuleap-123-art-title', $branch_name);

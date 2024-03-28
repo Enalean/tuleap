@@ -91,7 +91,7 @@ class TagPushWebhookCreateAction
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository_integration);
         if ($credentials === null) {
             //Do nothing, not able to query the GitLab API
-            $this->logger->warning("No credentials found for the repository, tag reference cannot be extracted.");
+            $this->logger->warning('No credentials found for the repository, tag reference cannot be extracted.');
             return;
         }
 
@@ -107,17 +107,17 @@ class TagPushWebhookCreateAction
             $gitlab_tag_from_api->getMessage()
         );
 
-        $this->logger->info(count($references_collection->getTuleapReferences()) . " Tuleap references found in tag message " . $tag_push_webhook_data->getRef());
+        $this->logger->info(count($references_collection->getTuleapReferences()) . ' Tuleap references found in tag message ' . $tag_push_webhook_data->getRef());
 
         $valid_tuleap_references = [];
         foreach ($references_collection->getTuleapReferences() as $tuleap_reference) {
-            $this->logger->info("|_ Reference to Tuleap artifact #" . $tuleap_reference->getId() . " found.");
+            $this->logger->info('|_ Reference to Tuleap artifact #' . $tuleap_reference->getId() . ' found.');
 
             try {
                 $external_reference = $this->tuleap_reference_retriever->retrieveTuleapReference($tuleap_reference->getId());
 
                 $this->logger->info(
-                    "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " found, cross-reference will be added in project the GitLab repository is integrated in."
+                    '|  |_ Tuleap artifact #' . $tuleap_reference->getId() . ' found, cross-reference will be added in project the GitLab repository is integrated in.'
                 );
 
                 $this->saveReferenceInIntegratedProject(

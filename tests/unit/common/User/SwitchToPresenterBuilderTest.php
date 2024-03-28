@@ -45,8 +45,8 @@ final class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildOfPresenter(): void
     {
-        \ForgeConfig::set("access_mode", "restricted");
-        \ForgeConfig::set("is_trove_cat_enabled", false);
+        \ForgeConfig::set('access_mode', 'restricted');
+        \ForgeConfig::set('is_trove_cat_enabled', false);
 
         $user = UserTestBuilder::anActiveUser()->build();
 
@@ -61,13 +61,13 @@ final class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $search_form_presenter_builder
             ->expects(self::once())
             ->method('build')
-            ->willReturn(new SearchFormPresenter("soft", []));
+            ->willReturn(new SearchFormPresenter('soft', []));
 
         $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 
         $presenter = $builder->build(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
 
-        self::assertEquals("[]", $presenter->projects);
+        self::assertEquals('[]', $presenter->projects);
         self::assertEquals(true, $presenter->are_restricted_users_allowed);
         self::assertEquals(false, $presenter->is_trove_cat_enabled);
         self::assertEquals(true, $presenter->is_search_available);
@@ -76,8 +76,8 @@ final class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSearchNotAvailableIfUserIsNotAlive(): void
     {
-        \ForgeConfig::set("access_mode", "restricted");
-        \ForgeConfig::set("is_trove_cat_enabled", false);
+        \ForgeConfig::set('access_mode', 'restricted');
+        \ForgeConfig::set('is_trove_cat_enabled', false);
 
         $user = UserTestBuilder::aUser()->withId(101)->withStatus('D')->build();
 
@@ -92,7 +92,7 @@ final class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $search_form_presenter_builder
             ->expects(self::once())
             ->method('build')
-            ->willReturn(new SearchFormPresenter("soft", []));
+            ->willReturn(new SearchFormPresenter('soft', []));
 
         $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 
@@ -103,8 +103,8 @@ final class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSearchNotAvailableIfUserIsRestricted(): void
     {
-        \ForgeConfig::set("access_mode", "restricted");
-        \ForgeConfig::set("is_trove_cat_enabled", false);
+        \ForgeConfig::set('access_mode', 'restricted');
+        \ForgeConfig::set('is_trove_cat_enabled', false);
 
         $user = UserTestBuilder::aRestrictedUser()->build();
 
@@ -119,7 +119,7 @@ final class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $search_form_presenter_builder
             ->expects(self::once())
             ->method('build')
-            ->willReturn(new SearchFormPresenter("soft", []));
+            ->willReturn(new SearchFormPresenter('soft', []));
 
         $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 

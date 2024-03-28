@@ -30,13 +30,13 @@ class WikiPlugin_PageInfo extends WikiPlugin
 {
     public function getName()
     {
-        return _("PageInfo");
+        return _('PageInfo');
     }
 
     public function getDescription()
     {
         return sprintf(
-            _("Show extra page Info and statistics for %s."),
+            _('Show extra page Info and statistics for %s.'),
             '[pagename]'
         );
     }
@@ -44,9 +44,9 @@ class WikiPlugin_PageInfo extends WikiPlugin
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.5 $"
+            '$Revision: 1.5 $'
         );
     }
 

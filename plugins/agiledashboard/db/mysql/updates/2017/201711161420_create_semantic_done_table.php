@@ -36,12 +36,12 @@ class b201711161420_create_semantic_done_table extends \Tuleap\ForgeUpgrade\Buck
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_agiledashboard_semantic_done (
+        $sql = 'CREATE TABLE plugin_agiledashboard_semantic_done (
                   tracker_id INT(11) NOT NULL,
                   value_id INT(11) NOT NULL,
                   PRIMARY KEY(tracker_id, value_id),
                   INDEX semantic_done_tracker_idx(tracker_id)
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
 
         $this->db->createTable('plugin_agiledashboard_semantic_done', $sql);
     }

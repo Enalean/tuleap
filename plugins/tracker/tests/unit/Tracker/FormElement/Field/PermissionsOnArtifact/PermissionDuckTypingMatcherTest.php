@@ -40,7 +40,7 @@ final class PermissionDuckTypingMatcherTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertTrue(
             (new PermissionDuckTypingMatcher())->doesUserGroupExistsInDestinationField(
                 $this->getDestinationField(),
-                "semi-crusty"
+                'semi-crusty'
             )
         );
     }
@@ -49,8 +49,8 @@ final class PermissionDuckTypingMatcherTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $field = $this->createStub(Tracker_FormElement_Field_PermissionsOnArtifact::class);
         $field->method('getAllUserGroups')->willReturn([
-            ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName("semi-crusty")->build(),
-            ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName("crusty")->build(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('semi-crusty')->build(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('crusty')->build(),
         ]);
         return $field;
     }

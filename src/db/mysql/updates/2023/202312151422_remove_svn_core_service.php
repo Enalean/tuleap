@@ -25,7 +25,7 @@ final class b202312151422_remove_svn_core_service extends \Tuleap\ForgeUpgrade\B
 {
     public function description(): string
     {
-        return "Remove SVN core service";
+        return 'Remove SVN core service';
     }
 
     public function up(): void

@@ -153,17 +153,17 @@ class WikiServiceAdminViews extends WikiViews
     public function main()
     {
         if (defined('DEFAULT_LANGUAGE') && DEFAULT_LANGUAGE === 'fr_FR') {
-            printf("<h2>Wiki %s - Administration</h2><h3><a href=%s&view=wikiDocuments>Gérer les documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des documents Wiki.</p>", $this->wikiname, $this->wikiAdminLink);
-            printf("<h3><a href=%s&view=wikiPages>Gérer les pages Wiki</a></h3><p>Parcourir et donner des permissions sur des pages Wiki.</p>", $this->wikiAdminLink);
-            printf("<h3><a href=%s&view=wikiAttachments>Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p>", $this->wikiAdminLink);
-            printf("<h3><a href=%s&view=wikiPerms>Gérer les permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki %s.</p>", $this->wikiAdminLink, $this->wikiname);
+            printf('<h2>Wiki %s - Administration</h2><h3><a href=%s&view=wikiDocuments>Gérer les documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des documents Wiki.</p>', $this->wikiname, $this->wikiAdminLink);
+            printf('<h3><a href=%s&view=wikiPages>Gérer les pages Wiki</a></h3><p>Parcourir et donner des permissions sur des pages Wiki.</p>', $this->wikiAdminLink);
+            printf('<h3><a href=%s&view=wikiAttachments>Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p>', $this->wikiAdminLink);
+            printf('<h3><a href=%s&view=wikiPerms>Gérer les permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki %s.</p>', $this->wikiAdminLink, $this->wikiname);
             printf("<h3><a href=%s&pagename=AdministrationDePhpWiki>Administration du wiki</a></h3><p>Panneau d'administration de l'engin wiki. Plusieurs outils pour suppression , renommage et réinitialisation de pages.</p>", $this->wikiLink);
         } else {
-            printf("<h2>Wiki  %s - Administration</h2><h3><a href= %s&view=wikiDocuments data-test=\"manage-wiki-documents\">Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p>", $this->wikiname, $this->wikiAdminLink);
+            printf('<h2>Wiki  %s - Administration</h2><h3><a href= %s&view=wikiDocuments data-test="manage-wiki-documents">Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p>', $this->wikiname, $this->wikiAdminLink);
             printf("<h3><a data-test='manage-wiki-page' href=%s&view=wikiPages>Manage Wiki Pages</a></h3><p>Browse and set specific permissions on Wiki Pages.</p>", $this->wikiAdminLink);
-            printf("<h3><a href=%s&view=wikiAttachments>Manage Wiki Attachments</a></h3><p>Browse and set permissions on ressources attached on the Wiki.</p>", $this->wikiAdminLink);
-            printf("<h3><a href=%s&view=wikiPerms data-test=\"set-wiki-permissions\">Set Wiki Permissions</a></h3><p>Set permissions on whole %s Wiki.</p>", $this->wikiAdminLink, $this->wikiname);
-            printf("<h3><a href=%s&pagename=PhpWikiAdministration>PhpWiki Administration</a></h3><p>Administration panel of the wiki engine. This propose a set of tools to delete and rename pages.</p>", $this->wikiLink);
+            printf('<h3><a href=%s&view=wikiAttachments>Manage Wiki Attachments</a></h3><p>Browse and set permissions on ressources attached on the Wiki.</p>', $this->wikiAdminLink);
+            printf('<h3><a href=%s&view=wikiPerms data-test="set-wiki-permissions">Set Wiki Permissions</a></h3><p>Set permissions on whole %s Wiki.</p>', $this->wikiAdminLink, $this->wikiname);
+            printf('<h3><a href=%s&pagename=PhpWikiAdministration>PhpWiki Administration</a></h3><p>Administration panel of the wiki engine. This propose a set of tools to delete and rename pages.</p>', $this->wikiLink);
         }
     }
 
@@ -406,7 +406,7 @@ class WikiServiceAdminViews extends WikiViews
         $purifier = Codendi_HTMLPurifier::instance();
         echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikiperm', [$purifier->purify($this->wikiname), $purifier->purify($this->wikiname)]);
         $postUrl = '/wiki/admin/index.php?group_id=' . $purifier->purify(urlencode((string) $this->gid)) . '&action=setWikiPerms';
-        permission_display_selection_form("WIKI_READ", $this->gid, $this->gid, $postUrl);
+        permission_display_selection_form('WIKI_READ', $this->gid, $this->gid, $postUrl);
 
         print '<hr/><p><a href="' . $this->wikiAdminLink . '">' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin') . '</a></p>' . "\n";
     }
@@ -422,7 +422,7 @@ class WikiServiceAdminViews extends WikiViews
         print html_build_list_table_top([$GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_name'),
             $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_revisions'),
             $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_permissions'),
-            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete') . " ?",
+            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete') . ' ?',
         ]);
 
         $wai = WikiAttachment::getAttachmentIterator($this->gid);
@@ -475,7 +475,7 @@ class WikiServiceAdminViews extends WikiViews
         echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wiki_attachment_perm', [$purifier->purify($wa->getFilename())]);
 
         $postUrl = $this->wikiAdminLink . '&view=wikiAttachments&action=setWikiAttachmentPerms';
-        permission_display_selection_form("WIKIATTACHMENT_READ", $wa->getId(), $this->gid, $postUrl);
+        permission_display_selection_form('WIKIATTACHMENT_READ', $wa->getId(), $this->gid, $postUrl);
 
         print '<hr/><p><a href="' . $this->wikiAdminLink . '&view=wikiAttachments">' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin') . '</a></p>' . "\n";
     }
@@ -508,7 +508,7 @@ class WikiServiceAdminViews extends WikiViews
             print '
              <tr>
 	       <td><a href="/wiki/uploads/' . $purifier->purify(urlencode((string) $this->gid)) . '/' . $purifier->purify(urlencode($wa->getFilename())) . '/' . $purifier->purify(urlencode($war->getRevision() + 1)) . '">' . $purifier->purify(urlencode($war->getRevision() + 1)) . '</a></td>
-	       <td>' . $purifier->purify(strftime("%e %b %Y %H:%M", $war->getDate())) . '</td>
+	       <td>' . $purifier->purify(strftime('%e %b %Y %H:%M', $war->getDate())) . '</td>
                <td><a href="/users/' . $purifier->purify(urlencode(user_getname($war->getOwnerId()))) . '/">' . $purifier->purify(user_getname($war->getOwnerId())) . '</td>
 	       <td>' . $purifier->purify($war->getSize()) . '</td>
 	     </tr>';

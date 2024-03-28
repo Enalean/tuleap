@@ -40,23 +40,23 @@ class CreationStateListValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItFormatsSimpleListValue(): void
     {
-        $value = "10000";
+        $value = '10000';
 
         $formatted_value = $this->formatter->formatListValue($value);
 
-        $this->assertSame(['id' => "10000"], $formatted_value);
+        $this->assertSame(['id' => '10000'], $formatted_value);
     }
 
     public function testItFormatsMultipleListValue(): void
     {
-        $value = "[10000, 10001]";
+        $value = '[10000, 10001]';
 
         $formatted_value = $this->formatter->formatListValue($value);
 
         $this->assertSame(
             [
-                ['id' => "10000"],
-                ['id' => "10001"],
+                ['id' => '10000'],
+                ['id' => '10001'],
             ],
             $formatted_value
         );
@@ -70,9 +70,9 @@ class CreationStateListValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertSame(
             [
-                ['id' => "105"],
-                ['id' => "106"],
-                ['id' => "201"],
+                ['id' => '105'],
+                ['id' => '106'],
+                ['id' => '201'],
             ],
             $formatted_value
         );

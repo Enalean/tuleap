@@ -73,7 +73,7 @@ class RepositoryHeaderPresenter
         $this->repository_admin_url           = $repository_admin_url;
         $this->parent_repository_presenter    = $parent_repository_presenter;
         $this->clone_presenter                = $clone_presenter;
-        $this->is_migrated_to_gerrit          = $repository->isMigratedToGerrit() ? "1" : "0";
+        $this->is_migrated_to_gerrit          = $repository->isMigratedToGerrit() ? '1' : '0';
         $this->fork_url                       = $fork_url;
         $this->user_is_anonymous              = $user->isAnonymous();
         $this->navigation_tabs_presenters     = $navigation_tabs_presenters;

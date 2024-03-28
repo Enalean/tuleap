@@ -35,7 +35,7 @@ final class UserSettingsUpdateController implements DispatchableWithRequest
         $request->checkUserIsSuperUser();
 
         $request_uri = $request->getFromServer(('REQUEST_URI'));
-        $csrf_token  = new \CSRFSynchronizerToken("/admin/user-settings/");
+        $csrf_token  = new \CSRFSynchronizerToken('/admin/user-settings/');
         $csrf_token->check();
 
 

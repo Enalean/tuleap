@@ -120,7 +120,7 @@ function WikiLink($page_or_rev, $type = 'known', $label = false)
             $path[] = $part;
             $parent = join(SUBPAGE_SEPARATOR, $path);
             if ($WikiTheme->_autosplitWikiWords) {
-                $part = " " . $part;
+                $part = ' ' . $part;
             }
             if ($part) {
                 $link->pushContent($WikiTheme->linkExistingWikiWord($parent, $sep . $part));
@@ -205,8 +205,8 @@ class PHPWikiTheme
     public function __construct($theme_name = 'default')
     {
         $this->_name       = $theme_name;
-        $this->_themes_dir = NormalizeLocalFileName("themes");
-        $this->_path       = defined('PHPWIKI_DIR') ? NormalizeLocalFileName("") : "";
+        $this->_themes_dir = NormalizeLocalFileName('themes');
+        $this->_path       = defined('PHPWIKI_DIR') ? NormalizeLocalFileName('') : '';
         $this->_theme      = "themes/$theme_name";
 
         if ($theme_name != 'default') {
@@ -279,8 +279,8 @@ class PHPWikiTheme
     // http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vclib/html/_crt_strftime.2c_.wcsftime.asp
     // As a result, we have to use %d, and strip out leading zeros ourselves.
 
-    public $_dateFormat = "%B %d, %Y";
-    public $_timeFormat = "%I:%M %p";
+    public $_dateFormat = '%B %d, %Y';
+    public $_timeFormat = '%I:%M %p';
 
     public $_showModTime = true;
 
@@ -418,7 +418,7 @@ class PHPWikiTheme
 
         $mtime = $revision->get('mtime');
         if ($mtime <= EPOCH) {
-            return fmt("Never edited");
+            return fmt('Never edited');
         }
 
         if ($show_version == 'auto') {
@@ -428,16 +428,16 @@ class PHPWikiTheme
         if ($request->getPref('relativeDates') && ($date = $this->_relativeDay($mtime))) {
             if ($this->_showModTime) {
                 $date =  sprintf(
-                    _("%s at %s"),
+                    _('%s at %s'),
                     $date,
                     $this->formatTime($mtime)
                 );
             }
 
             if ($show_version) {
-                return fmt("Version %s, saved %s", $revision->getVersion(), $date);
+                return fmt('Version %s, saved %s', $revision->getVersion(), $date);
             } else {
-                return fmt("Last edited %s", $date);
+                return fmt('Last edited %s', $date);
             }
         }
 
@@ -448,9 +448,9 @@ class PHPWikiTheme
         }
 
         if ($show_version) {
-            return fmt("Version %s, saved on %s", $revision->getVersion(), $date);
+            return fmt('Version %s, saved on %s', $revision->getVersion(), $date);
         } else {
-            return fmt("Last edited on %s", $date);
+            return fmt('Last edited on %s', $date);
         }
     }
 
@@ -469,7 +469,7 @@ class PHPWikiTheme
         $time  = localtime($time_t + $offset, true);
 
         if ($time['tm_yday'] == $today['tm_yday'] && $time['tm_year'] == $today['tm_year']) {
-            return _("today");
+            return _('today');
         }
 
         // Note that due to daylight savings chages (and leap seconds), $now minus
@@ -479,7 +479,7 @@ class PHPWikiTheme
             $time['tm_yday'] == $yesterday['tm_yday']
             and $time['tm_year'] == $yesterday['tm_year']
         ) {
-            return _("yesterday");
+            return _('yesterday');
         }
 
         return false;
@@ -490,7 +490,7 @@ class PHPWikiTheme
      */
     public function getOwnerMessage($page)
     {
-        if (! ENABLE_PAGEPERM or ! class_exists("PagePermission")) {
+        if (! ENABLE_PAGEPERM or ! class_exists('PagePermission')) {
             return '';
         }
         $dbi   = $GLOBALS['request']->_dbi;
@@ -507,9 +507,9 @@ class PHPWikiTheme
                                                                 $owner, $page));
             */
             if ($dbi->isWikiPage($owner)) {
-                return fmt("Owner: %s", WikiLink($owner));
+                return fmt('Owner: %s', WikiLink($owner));
             } else {
-                return fmt("Owner: %s", '"' . $owner . '"');
+                return fmt('Owner: %s', '"' . $owner . '"');
             }
         }
     }
@@ -529,13 +529,13 @@ class PHPWikiTheme
                 return '';
             }
             //display revision author user_name according to the user choice: real name, or Codendi login
-            if ($author <> "The PhpWiki programming team") {
+            if ($author <> 'The PhpWiki programming team') {
                 $author = UserHelper::instance()->getDisplayNameFromUserName($author);
             }
             if ($dbi->isWikiPage($author)) {
-                return fmt("by %s", WikiLink($author));
+                return fmt('by %s', WikiLink($author));
             } else {
-                return fmt("by %s", '"' . $author . '"');
+                return fmt('by %s', '"' . $author . '"');
             }
         }
     }
@@ -637,7 +637,7 @@ class PHPWikiTheme
 
         if ($this->DUMP_MODE) { // HTML, PDF or XML
             $link = HTML::u(empty($linktext) ? $wikiword : $linktext);
-            $link->addTooltip(sprintf(_("Empty link to: %s"), $wikiword));
+            $link->addTooltip(sprintf(_('Empty link to: %s'), $wikiword));
             $link->setAttr('class', empty($linktext) ? 'wikiunknown' : 'named-wikiunknown');
             return $link;
         } else {
@@ -653,7 +653,7 @@ class PHPWikiTheme
             } else {
                 $url    = WikiURL($wikiword, ['action' => 'create']);
                 $button = $this->makeButton('?', $url);
-                $button->addTooltip(sprintf(_("Create: %s"), $wikiword));
+                $button->addTooltip(sprintf(_('Create: %s'), $wikiword));
             }
         }
 
@@ -665,14 +665,14 @@ class PHPWikiTheme
             $link->pushContent(HTML::u($this->maybeSplitWikiWord($default_text)));
             $link->setAttr('class', 'wikiunknown');
         }
-        if (! isa($button, "ImageButton")) {
+        if (! isa($button, 'ImageButton')) {
             $button->setAttr('rel', 'nofollow');
         }
         $link->pushContent($button);
         if ($request->getPref('googleLink')) {
-            $gbutton = $this->makeButton('G', "http://www.google.com/search?q="
+            $gbutton = $this->makeButton('G', 'http://www.google.com/search?q='
                                          . urlencode($wikiword));
-            $gbutton->addTooltip(sprintf(_("Google:%s"), $wikiword));
+            $gbutton->addTooltip(sprintf(_('Google:%s'), $wikiword));
             $link->pushContent($gbutton);
         }
         if ($request->getArg('frame')) {
@@ -763,7 +763,7 @@ class PHPWikiTheme
             if (empty($this->dumped_images)) {
                 $this->dumped_images = [];
             }
-            $path = "images/" . basename($path);
+            $path = 'images/' . basename($path);
             if (! in_array($path, $this->dumped_images)) {
                 $this->dumped_images[] = $path;
             }
@@ -857,7 +857,7 @@ class PHPWikiTheme
             if (defined('DATA_PATH')) {
                 $file = substr($url, strlen(DATA_PATH) + 1);
             }
-            $url = "images/buttons/" . basename($file);
+            $url = 'images/buttons/' . basename($file);
             if (! array_key_exists($text, $this->dumped_buttons)) {
                 $this->dumped_buttons[$text] = $file;
             }
@@ -881,7 +881,7 @@ class PHPWikiTheme
 
     public function _getButtonPath()
     {
-        $button_dir = $this->_findFile("buttons");
+        $button_dir = $this->_findFile('buttons');
         $path_dir   = $this->_path . $button_dir;
         if (! file_exists($path_dir) || ! is_dir($path_dir)) {
             return [];
@@ -902,8 +902,8 @@ class PHPWikiTheme
         }
         $dir->close();
         // add default buttons
-        $path[]   = "themes/default/buttons";
-        $path_dir = $this->_path . "themes/default/buttons";
+        $path[]   = 'themes/default/buttons';
+        $path_dir = $this->_path . 'themes/default/buttons';
         $dir      = dir($path_dir);
         while (($subdir = $dir->read()) !== false) {
             if ($subdir[0] == '.') {
@@ -1049,8 +1049,8 @@ class PHPWikiTheme
 
         if (empty($page_or_rev)) {
             global $request;
-            $pagename = $request->getArg("pagename");
-            $version  = $request->getArg("version");
+            $pagename = $request->getArg('pagename');
+            $version  = $request->getArg('version');
         } elseif (is_object($page_or_rev)) {
             if (isa($page_or_rev, 'WikiDB_PageRevision')) {
                 $rev  = $page_or_rev;
@@ -1074,19 +1074,19 @@ class PHPWikiTheme
     {
         switch ($action) {
             case 'edit':
-                return _("Edit");
+                return _('Edit');
             case 'diff':
-                return _("Diff");
+                return _('Diff');
             case 'logout':
-                return _("Sign Out");
+                return _('Sign Out');
             case 'login':
-                return _("Sign In");
+                return _('Sign In');
             case 'lock':
-                return _("Lock Page");
+                return _('Lock Page');
             case 'unlock':
-                return _("Unlock Page");
+                return _('Unlock Page');
             case 'remove':
-                return _("Remove Page");
+                return _('Remove Page');
             default:
                 // I don't think the rest of these actually get used.
                 // 'setprefs'
@@ -1252,7 +1252,7 @@ class PHPWikiTheme
             return $this->_path . $tmp;
         } else {
             $f1 = $this->file("templates/$name.tmpl");
-            trigger_error("pwd: " . getcwd(), E_USER_ERROR);
+            trigger_error('pwd: ' . getcwd(), E_USER_ERROR);
             if (isset($this->_default_theme)) {
                 $f2 = $this->_default_theme->file("templates/$name.tmpl");
                 trigger_error("$f1 nor $f2 found", E_USER_ERROR);
@@ -1292,7 +1292,7 @@ class PHPWikiTheme
     {
         // protect from duplicate attr (body jscript: themes, prefs, ...)
         static $_attr_cache = [];
-        $hash               = md5($tag . "/" . $element);
+        $hash               = md5($tag . '/' . $element);
         if (! empty($_attr_cache[$hash])) {
             return;
         }
@@ -1375,10 +1375,10 @@ class PHPWikiTheme
             $this->addMoreAttr(
                 'body',
                 'LiveSearch',
-                HTML::Raw(" onload=\"liveSearchInit()")
+                HTML::Raw(' onload="liveSearchInit()')
             );
             $this->addMoreHeaders(JavaScript('var liveSearchURI="'
-                                             . WikiURL(_("TitleSearch"), false, true) . '";'));
+                                             . WikiURL(_('TitleSearch'), false, true) . '";'));
             $this->addMoreHeaders(JavaScript(
                 '',
                 ['src' => $this->_findData('livesearch.js')]
@@ -1563,7 +1563,7 @@ class PluginSidebarBox extends SidebarBox
         $plugin = $loader->getPlugin($name);
         if (! $plugin) {
             return $loader->_error(sprintf(
-                _("Plugin %s: undefined"),
+                _('Plugin %s: undefined'),
                 $name
             ));
         }/*
@@ -1592,7 +1592,7 @@ class RelatedLinksBox extends SidebarBox
     public function __construct($title = false, $body = '', $limit = 20)
     {
         global $request;
-        $this->title  = $title ? $title : _("Related Links");
+        $this->title  = $title ? $title : _('Related Links');
         $this->body   = HTML($body);
         $page         = $request->getPage($request->getArg('pagename'));
         $revision     = $page->getCurrentRevision();
@@ -1618,7 +1618,7 @@ class RelatedExternalLinksBox extends SidebarBox
     public function __construct($title = false, $body = '', $limit = 20)
     {
         global $request;
-        $this->title = $title ? $title : _("External Links");
+        $this->title = $title ? $title : _('External Links');
         $this->body  = HTML($body);
         $page        = $request->getPage($request->getArg('pagename'));
         $cache       = &$page->_wikidb->_cache;
@@ -1669,7 +1669,7 @@ function listAvailableLanguages()
     if ($dir = dir($dir_root)) {
         while ($entry = $dir->read()) {
             if (
-                is_dir($dir_root . "/" . $entry)
+                is_dir($dir_root . '/' . $entry)
                 && (substr($entry, 0, 1) != '.')
                 && $entry != 'po'
                 && $entry != 'CVS'

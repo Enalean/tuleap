@@ -68,7 +68,7 @@ EOT;
 
 $plugin = PluginManager::instance()->getPluginByName('mediawiki');
 if (! ($plugin instanceof MediaWikiPlugin)) {
-    echo "Plugin mediawiki is not activated" . PHP_EOL;
+    echo 'Plugin mediawiki is not activated' . PHP_EOL;
     exit(1);
 }
 $logger  = new Log_ConsoleLogger();
@@ -83,7 +83,7 @@ if ($is_go_option) {
     $dry_run = false;
 }
 
-if ($is_go_option && $argv[2] === "force") {
+if ($is_go_option && $argv[2] === 'force') {
     $force_all = true;
     if (isset($argv[3]) && is_numeric($argv[3])) {
         $limit = (int) $argv[3];

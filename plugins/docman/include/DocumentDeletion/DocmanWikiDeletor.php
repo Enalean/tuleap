@@ -89,7 +89,7 @@ class DocmanWikiDeletor
 
             if ($wiki_page && $wiki_page->getId()) {
                 $this->event_manager->processEvent(
-                    "wiki_page_updated",
+                    'wiki_page_updated',
                     [
                         'group_id'   => $wiki->getGroupId(),
                         'wiki_page'  => $wiki->getPagename(),

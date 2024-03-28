@@ -34,8 +34,8 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git
-                 ADD COLUMN repository_is_mirrored boolean DEFAULT 0";
+        $sql = 'ALTER TABLE plugin_git
+                 ADD COLUMN repository_is_mirrored boolean DEFAULT 0';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

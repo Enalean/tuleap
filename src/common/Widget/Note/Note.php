@@ -58,7 +58,7 @@ abstract class Note extends \Widget
 
     public function getIcon(): string
     {
-        return "fa-sticky-note";
+        return 'fa-sticky-note';
     }
 
     public function isUnique(): bool

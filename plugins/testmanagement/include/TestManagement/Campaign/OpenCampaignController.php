@@ -61,7 +61,7 @@ class OpenCampaignController implements DispatchableWithRequest, DispatchableWit
         $project = $campaign->getArtifact()->getTracker()->getProject();
 
         $csrf_token = new CSRFSynchronizerToken(
-            "/plugins/testmanagement/?group_id=" . (int) $project->getID()
+            '/plugins/testmanagement/?group_id=' . (int) $project->getID()
         );
 
         try {
@@ -74,7 +74,7 @@ class OpenCampaignController implements DispatchableWithRequest, DispatchableWit
             $layout->addFeedback(
                 Feedback::INFO,
                 sprintf(
-                    dgettext('tuleap-testmanagement', "The campaign %s is now open."),
+                    dgettext('tuleap-testmanagement', 'The campaign %s is now open.'),
                     $campaign->getLabel()
                 )
             );
@@ -82,7 +82,7 @@ class OpenCampaignController implements DispatchableWithRequest, DispatchableWit
             $layout->addFeedback(
                 Feedback::ERROR,
                 sprintf(
-                    dgettext('tuleap-testmanagement', "The campaign cannot be open : %s"),
+                    dgettext('tuleap-testmanagement', 'The campaign cannot be open : %s'),
                     $exception->getMessage()
                 )
             );

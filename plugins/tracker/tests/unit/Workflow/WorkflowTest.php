@@ -634,7 +634,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         $this->workflow->shouldReceive('getTransitions')->andReturns([
             $this->transition_null_to_open,
         ]);
-        $this->transition_null_to_open->shouldReceive("bypassPermissions")->andReturnTrue();
+        $this->transition_null_to_open->shouldReceive('bypassPermissions')->andReturnTrue();
 
         self::assertTrue($this->workflow->bypassPermissions($this->status_field));
     }
@@ -644,7 +644,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         $this->workflow->shouldReceive('getTransitions')->andReturns([
             $this->transition_null_to_open,
         ]);
-        $this->transition_null_to_open->shouldReceive("bypassPermissions")->andReturnFalse();
+        $this->transition_null_to_open->shouldReceive('bypassPermissions')->andReturnFalse();
 
         self::assertFalse($this->workflow->bypassPermissions($this->status_field));
     }

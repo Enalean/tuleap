@@ -20,7 +20,7 @@ class b201508241048_add_truncated_emails_column extends \Tuleap\ForgeUpgrade\Buc
 {
     public function description()
     {
-        return "Modify table groups to store truncated emails usage";
+        return 'Modify table groups to store truncated emails usage';
     }
 
     public function preUp()

@@ -24,7 +24,7 @@ class Codendi_HTTPPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:igno
     public function testPurify()
     {
         $p = Codendi_HTTPPurifier::instance();
-        $this->assertEquals('a', $p->purify("a"));
+        $this->assertEquals('a', $p->purify('a'));
         $this->assertEquals('a', $p->purify("a\n"));
         $this->assertEquals('a', $p->purify("a\nb"));
         $this->assertEquals('a', $p->purify("a\r"));

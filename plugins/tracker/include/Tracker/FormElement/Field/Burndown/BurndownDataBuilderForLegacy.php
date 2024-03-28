@@ -87,7 +87,7 @@ class BurndownDataBuilderForLegacy
             $is_burndown_under_calculation
         );
 
-        $this->logger->info("End calculating burndown " . $artifact->getId());
+        $this->logger->info('End calculating burndown ' . $artifact->getId());
 
         date_default_timezone_set($user_timezone);
 
@@ -113,17 +113,17 @@ class BurndownDataBuilderForLegacy
         $capacity,
         $user_timezone,
     ) {
-        $this->logger->info("Start calculating burndown " . $artifact->getId());
+        $this->logger->info('Start calculating burndown ' . $artifact->getId());
 
         $server_timezone = TimezoneRetriever::getServerTimezone();
 
         date_default_timezone_set($server_timezone);
 
-        $this->logger->debug("Capacity: " . $capacity);
-        $this->logger->debug("Original start date: " . (string) $date_period->getStartDate());
-        $this->logger->debug("Duration: " . (string) $date_period->getDuration());
-        $this->logger->debug("User Timezone: " . $user_timezone);
-        $this->logger->debug("Server timezone: " . $server_timezone);
+        $this->logger->debug('Capacity: ' . $capacity);
+        $this->logger->debug('Original start date: ' . (string) $date_period->getStartDate());
+        $this->logger->debug('Duration: ' . (string) $date_period->getDuration());
+        $this->logger->debug('User Timezone: ' . $user_timezone);
+        $this->logger->debug('Server timezone: ' . $server_timezone);
 
         return $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
             $artifact,

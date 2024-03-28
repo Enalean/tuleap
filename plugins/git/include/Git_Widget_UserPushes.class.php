@@ -83,7 +83,7 @@ class Git_Widget_UserPushes extends Widget
         if (count($result) > 0) {
             foreach ($result as $entry) {
                 if (! empty($entry['repository_namespace'])) {
-                    $namespace = $entry['repository_namespace'] . "/";
+                    $namespace = $entry['repository_namespace'] . '/';
                 } else {
                     $namespace = '';
                 }
@@ -135,8 +135,8 @@ class Git_Widget_UserPushes extends Widget
                                          </td>
                                      </tr>';
                     }
-                    $content .= "</tbody></table>
-                                 </fieldset>";
+                    $content .= '</tbody></table>
+                                 </fieldset>';
                 } else {
                     $content .= '<p>' . dgettext('tuleap-git', 'No pushes to display') . '</p>';
                 }

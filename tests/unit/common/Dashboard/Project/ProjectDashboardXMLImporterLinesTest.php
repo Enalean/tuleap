@@ -766,7 +766,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
 
         $widget = $this->createMock(\Widget::class);
         $widget->method('getId')->willReturn('projectimageviewer');
-        $widget->method('create')->willThrowException(new \Exception("foo"));
+        $widget->method('create')->willThrowException(new \Exception('foo'));
 
         $this->widget_factory->method('getInstanceByWidgetName')->with('projectimageviewer')->willReturn($widget);
 

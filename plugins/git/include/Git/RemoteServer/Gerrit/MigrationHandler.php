@@ -107,7 +107,7 @@ class MigrationHandler
             throw new RepositoryNotMigratedException(
                 dgettext(
                     'tuleap-git',
-                    "Parent project is not active, you are not allowed to migrate your repository on gerrit."
+                    'Parent project is not active, you are not allowed to migrate your repository on gerrit.'
                 )
             );
         }
@@ -122,7 +122,7 @@ class MigrationHandler
         $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $gerrit_template_id, $user);
 
         $this->history_dao->groupAddHistory(
-            "git_repo_to_gerrit",
+            'git_repo_to_gerrit',
             $repository->getName(),
             $repository->getProjectId()
         );
@@ -160,7 +160,7 @@ class MigrationHandler
                 $this->git_system_event_manager->queueRemoteProjectDeletion($repository, $driver);
 
                 $this->history_dao->groupAddHistory(
-                    "git_disconnect_gerrit_delete",
+                    'git_disconnect_gerrit_delete',
                     $repository->getName(),
                     $repository->getProjectId()
                 );
@@ -170,7 +170,7 @@ class MigrationHandler
                 $this->git_system_event_manager->queueRemoteProjectReadOnly($repository, $driver);
 
                 $this->history_dao->groupAddHistory(
-                    "git_disconnect_gerrit_read_only",
+                    'git_disconnect_gerrit_read_only',
                     $repository->getName(),
                     $repository->getProjectId()
                 );

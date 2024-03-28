@@ -61,8 +61,8 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
     {
         $value = \Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $value->shouldReceive('getId')->andReturn(666);
-        $value->shouldReceive('getLabel')->andReturn("label");
-        $value->shouldReceive('getDescription')->andReturn("description");
+        $value->shouldReceive('getLabel')->andReturn('label');
+        $value->shouldReceive('getDescription')->andReturn('description');
         $value->shouldReceive('isHidden')->andReturn(false);
 
         $decorator = new ColorpickerMountPointPresenter('fiesta-red', 'name', 'id', true, false);
@@ -72,7 +72,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
             $decorator,
             true,
             false,
-            "/plugins/tracker/?tracker=5&func=admin-formElement-update&formElement=111&bind-update=1&bind%5Bdelete%5D=666",
+            '/plugins/tracker/?tracker=5&func=admin-formElement-update&formElement=111&bind-update=1&bind%5Bdelete%5D=666',
             'Show/hide this value',
             'Show/hide this value',
             '',
@@ -93,8 +93,8 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
     {
         $value = \Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $value->shouldReceive('getId')->andReturn(100);
-        $value->shouldReceive('getLabel')->andReturn("label");
-        $value->shouldReceive('getDescription')->andReturn("description");
+        $value->shouldReceive('getLabel')->andReturn('label');
+        $value->shouldReceive('getDescription')->andReturn('description');
 
         $value->shouldReceive('isHidden')->andReturn(false);
 
@@ -105,7 +105,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
             $decorator,
             false,
             false,
-            "/plugins/tracker/?tracker=5&func=admin-formElement-update&formElement=111&bind-update=1&bind%5Bdelete%5D=100",
+            '/plugins/tracker/?tracker=5&func=admin-formElement-update&formElement=111&bind-update=1&bind%5Bdelete%5D=100',
             '"None" value cannot be hidden',
             'cannot hide',
             '--exclamation-hidden',
@@ -123,7 +123,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
     {
         $value = \Mockery::mock(Tracker_FormElement_Field_List_OpenValue::class);
         $value->shouldReceive('getId')->andReturn(100);
-        $value->shouldReceive('getLabel')->andReturn("label");
+        $value->shouldReceive('getLabel')->andReturn('label');
         $value->shouldReceive('isHidden')->andReturn(false);
 
         $decorator = new ColorpickerMountPointPresenter('fiesta-red', 'name', 'id', true, false);
@@ -133,8 +133,8 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
             $decorator,
             true,
             false,
-            "/plugins/tracker/?tracker=5&func=admin-formElement-update&formElement=111&bind-update=1&bind%5Bdelete%5D=100",
-            "Show/hide this value",
+            '/plugins/tracker/?tracker=5&func=admin-formElement-update&formElement=111&bind-update=1&bind%5Bdelete%5D=100',
+            'Show/hide this value',
             'Show/hide this value',
             '',
             true

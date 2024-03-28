@@ -218,19 +218,19 @@ final class ReverseLinksAdderTest extends TestCase
     {
         return [
             [
-                Fault::fromMessage("Something gone wrong"),
-                new \Exception("Something gone wrong"),
+                Fault::fromMessage('Something gone wrong'),
+                new \Exception('Something gone wrong'),
             ],
             [
                 ArtifactDoesNotExistFault::build(self::REQUEST_ID),
-                new ArtifactDoesNotExistException("Artifact #101 does not exist"),
+                new ArtifactDoesNotExistException('Artifact #101 does not exist'),
             ],
             [
                 ArtifactLinkFieldDoesNotExistFault::build(self::REQUEST_ID),
-                new ArtifactLinkFieldDoesNotExistException("Artifact link field does not exist for the artifact #101"),
+                new ArtifactLinkFieldDoesNotExistException('Artifact link field does not exist for the artifact #101'),
             ],
             [
-                SemanticNotSupportedFault::fromSemanticName("tooltip"),
+                SemanticNotSupportedFault::fromSemanticName('tooltip'),
                 new SemanticNotSupportedException('Semantic "tooltip" not supported'),
             ],
         ];

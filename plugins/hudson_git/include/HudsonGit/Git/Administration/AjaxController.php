@@ -62,14 +62,14 @@ class AjaxController implements DispatchableWithRequest
         $jenkins_url_to_test = $request->get('jenkins_url_to_test');
         if ($jenkins_url_to_test === false) {
             $tuleap_response = [
-                'type'    => "error",
-                'message' => dgettext("tuleap-hudson_git", "No Jenkins server URL provided."),
+                'type'    => 'error',
+                'message' => dgettext('tuleap-hudson_git', 'No Jenkins server URL provided.'),
             ];
             $layout->sendJSON($tuleap_response);
             return;
         }
 
-        $this->logger->debug("Jenkins server URL to test: " . $jenkins_url_to_test);
+        $this->logger->debug('Jenkins server URL to test: ' . $jenkins_url_to_test);
 
         $request = $this->request_factory->createRequest(
             'GET',
@@ -78,19 +78,19 @@ class AjaxController implements DispatchableWithRequest
 
         try {
             $response = $this->http_client->sendRequest($request);
-            $this->logger->debug("Jenkins server is reachable.");
-            $this->logger->debug("Response status code: " . $response->getStatusCode());
-            $this->logger->debug("Response body: " . $response->getBody());
+            $this->logger->debug('Jenkins server is reachable.');
+            $this->logger->debug('Response status code: ' . $response->getStatusCode());
+            $this->logger->debug('Response body: ' . $response->getBody());
             $tuleap_response = [
-                'type' => "success",
-                'message' => dgettext("tuleap-hudson_git", "Jenkins server is reachable."),
+                'type' => 'success',
+                'message' => dgettext('tuleap-hudson_git', 'Jenkins server is reachable.'),
             ];
         } catch (ClientExceptionInterface $exception) {
-            $this->logger->debug("Jenkins server is not reachable.");
-            $this->logger->debug("Error message: " . $exception->getMessage());
+            $this->logger->debug('Jenkins server is not reachable.');
+            $this->logger->debug('Error message: ' . $exception->getMessage());
             $tuleap_response = [
-                'type' => "error",
-                'message' => dgettext("tuleap-hudson_git", "Jenkins server is not reachable."),
+                'type' => 'error',
+                'message' => dgettext('tuleap-hudson_git', 'Jenkins server is not reachable.'),
             ];
         }
 

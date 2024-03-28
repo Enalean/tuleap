@@ -37,20 +37,20 @@ class WikiPlugin_WantedPages extends WikiPlugin
 {
     public function getName()
     {
-        return _("WantedPages");
+        return _('WantedPages');
     }
 
     public function getDescription()
     {
-        return _("Lists referenced page names which do not exist yet.");
+        return _('Lists referenced page names which do not exist yet.');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.16 $"
+            '$Revision: 1.16 $'
         );
     }
 
@@ -60,7 +60,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
             PageList::supportedArgs(),
             ['page'     => '[pagename]', // just for a single page.
                 'noheader' => false,
-                'exclude_from'  => _("PgsrcTranslation") . ',' . _("InterWikiMap"),
+                'exclude_from'  => _('PgsrcTranslation') . ',' . _('InterWikiMap'),
                 'limit'    => '100',
                 'paging'   => 'auto',
             ]
@@ -79,8 +79,8 @@ class WikiPlugin_WantedPages extends WikiPlugin
                 : $args['exclude_from']; // <! plugin-list !>
         }
         extract($args);
-        if ($page == _("WantedPages")) {
-            $page = "";
+        if ($page == _('WantedPages')) {
+            $page = '';
         }
 
         // There's probably a more memory-efficient way to do this (eg
@@ -90,7 +90,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
 
         if (! $page) {
             $GLOBALS['WikiTheme']->addPageListColumn(
-                ['wanted' => ['_PageList_Column_WantedPages_wanted', 'custom:wanted', _("Wanted From"), 'left']]
+                ['wanted' => ['_PageList_Column_WantedPages_wanted', 'custom:wanted', _('Wanted From'), 'left']]
             );
         }
         $pagelist             = new PageList($page ? '' : 'pagename,wanted', $exclude, $args); // search button?
@@ -130,9 +130,9 @@ class WikiPlugin_WantedPages extends WikiPlugin
         }*/
         if (! $noheader) {
             if ($page) {
-                $pagelist->setCaption(sprintf(_("Wanted Pages for %s:"), $page));
+                $pagelist->setCaption(sprintf(_('Wanted Pages for %s:'), $page));
             } else {
-                $pagelist->setCaption(sprintf(_("Wanted Pages in this wiki:")));
+                $pagelist->setCaption(sprintf(_('Wanted Pages in this wiki:')));
             }
         }
         // reference obviously doesn't work, so force an update to add _wpagelist to parentobj

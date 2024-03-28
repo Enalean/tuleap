@@ -55,7 +55,7 @@ class InvitationEmailLoginPresenter
     {
         $this->login_url          = $login_url;
         $this->custom_message     = (string) $custom_message;
-        $this->has_custom_message = $custom_message && trim($custom_message) !== "";
+        $this->has_custom_message = $custom_message && trim($custom_message) !== '';
 
         $this->current_user_real_name = $current_user->getRealName();
         $this->instance_name          = (string) ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);

@@ -127,7 +127,7 @@ class DoneValueRetrieverTest extends TestCase
     {
         $this->mockDoneSemanticDefinedWithDoneValue();
 
-        $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")->withArgs(
+        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
             [$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user]
         )->andReturn(45);
 
@@ -144,7 +144,7 @@ class DoneValueRetrieverTest extends TestCase
     {
         $this->mockDoneSemanticDefinedWithDoneValue();
 
-        $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")->withArgs(
+        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
             [$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user]
         )->andThrow(NoPossibleValueException::class);
 

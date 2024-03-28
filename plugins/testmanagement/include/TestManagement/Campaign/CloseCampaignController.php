@@ -61,7 +61,7 @@ class CloseCampaignController implements DispatchableWithRequest, DispatchableWi
         $project = $campaign->getArtifact()->getTracker()->getProject();
 
         $csrf_token = new CSRFSynchronizerToken(
-            "/plugins/testmanagement/?group_id=" . (int) $project->getID()
+            '/plugins/testmanagement/?group_id=' . (int) $project->getID()
         );
 
         try {
@@ -74,7 +74,7 @@ class CloseCampaignController implements DispatchableWithRequest, DispatchableWi
             $layout->addFeedback(
                 Feedback::INFO,
                 sprintf(
-                    dgettext('tuleap-testmanagement', "The campaign %s is now closed."),
+                    dgettext('tuleap-testmanagement', 'The campaign %s is now closed.'),
                     $campaign->getLabel()
                 )
             );
@@ -82,7 +82,7 @@ class CloseCampaignController implements DispatchableWithRequest, DispatchableWi
             $layout->addFeedback(
                 Feedback::ERROR,
                 sprintf(
-                    dgettext('tuleap-testmanagement', "The campaign cannot be closed : %s"),
+                    dgettext('tuleap-testmanagement', 'The campaign cannot be closed : %s'),
                     $e->getMessage()
                 )
             );

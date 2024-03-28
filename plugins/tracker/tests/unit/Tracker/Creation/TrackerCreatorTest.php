@@ -103,10 +103,10 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDuplicateExistingTracker(): void
     {
         $from_project = Mockery::mock(\Project::class);
-        $from_project->shouldReceive('getID')->andReturn("110");
+        $from_project->shouldReceive('getID')->andReturn('110');
 
         $to_project = Mockery::mock(\Project::class);
-        $to_project->shouldReceive('getID')->andReturn("110");
+        $to_project->shouldReceive('getID')->andReturn('110');
 
         $from_tracker = Mockery::mock(Tracker::class);
         $from_tracker->shouldReceive('getProject')
@@ -121,11 +121,11 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $to_project->getId(),
                 Mockery::type(MappingRegistry::class),
-                "101",
-                "Tracker Name",
-                "",
-                "tracker-shortname",
-                "peggy-pink",
+                '101',
+                'Tracker Name',
+                '',
+                'tracker-shortname',
+                'peggy-pink',
             ]
         )->once()->andReturn(['tracker' => $to_tracker, 'field_mapping' => ['F101' => 1001, 'F102' => 1002], 'report_mapping' => []]);
         $this->creation_data_checker->shouldReceive('checkAtTrackerDuplication')->once();
@@ -141,11 +141,11 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $created_tracker = $this->creator->duplicateTracker(
             $to_project,
-            "Tracker Name",
-            "",
-            "tracker-shortname",
-            "peggy-pink",
-            "101",
+            'Tracker Name',
+            '',
+            'tracker-shortname',
+            'peggy-pink',
+            '101',
             Mockery::mock(\PFUser::class)
         );
 
@@ -155,17 +155,17 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowExceptionWhenTrackerDuplicationFails(): void
     {
         $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn("110");
+        $project->shouldReceive('getId')->andReturn('110');
         $this->creation_data_checker->shouldReceive('checkAtTrackerDuplication')->once();
         $this->tracker_factory->shouldReceive('create')->withArgs(
             [
                 $project->getId(),
                 Mockery::type(MappingRegistry::class),
-                "101",
-                "Tracker Name",
-                "",
-                "tracker-shortname",
-                "peggy-pink",
+                '101',
+                'Tracker Name',
+                '',
+                'tracker-shortname',
+                'peggy-pink',
             ]
         )->once()->andReturn(false);
 
@@ -175,11 +175,11 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(TrackerCreationHasFailedException::class);
         $this->creator->duplicateTracker(
             $project,
-            "Tracker Name",
-            "",
-            "tracker-shortname",
-            "peggy-pink",
-            "101",
+            'Tracker Name',
+            '',
+            'tracker-shortname',
+            'peggy-pink',
+            '101',
             Mockery::mock(\PFUser::class)
         );
     }
@@ -187,10 +187,10 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAsksToDuplicateSemanticTimeframeWhenTemplateTrackerComesFromAnotherProjectAndIsBasedOnFields(): void
     {
         $from_project = Mockery::mock(\Project::class);
-        $from_project->shouldReceive('getId')->andReturn("110");
+        $from_project->shouldReceive('getId')->andReturn('110');
 
         $to_project = Mockery::mock(\Project::class);
-        $to_project->shouldReceive('getID')->andReturn("111");
+        $to_project->shouldReceive('getID')->andReturn('111');
 
         $from_tracker = Mockery::mock(Tracker::class);
         $from_tracker->shouldReceive('getProject')
@@ -205,11 +205,11 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $to_project->getId(),
                 Mockery::type(MappingRegistry::class),
-                "101",
-                "Tracker Name",
-                "",
-                "tracker-shortname",
-                "peggy-pink",
+                '101',
+                'Tracker Name',
+                '',
+                'tracker-shortname',
+                'peggy-pink',
             ]
         )->once()->andReturn(['tracker' => $to_tracker, 'field_mapping' => ['F101' => 1001, 'F102' => 1002], 'report_mapping' => []]);
         $this->creation_data_checker->shouldReceive('checkAtTrackerDuplication')->once();
@@ -227,11 +227,11 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $created_tracker = $this->creator->duplicateTracker(
             $to_project,
-            "Tracker Name",
-            "",
-            "tracker-shortname",
-            "peggy-pink",
-            "101",
+            'Tracker Name',
+            '',
+            'tracker-shortname',
+            'peggy-pink',
+            '101',
             Mockery::mock(\PFUser::class)
         );
     }

@@ -28,7 +28,7 @@ final class ToNowComparisonException extends InvalidQueryException
     public function __construct(Metadata $metadata)
     {
         $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s cannot be compared to NOW()."),
+            dgettext('tuleap-crosstracker', '%s cannot be compared to NOW().'),
             $metadata->getName()
         );
         parent::__construct($message);

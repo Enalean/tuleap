@@ -46,11 +46,11 @@ class ProjectCreationData
     private ?bool $is_template         = null;
     private ?string $short_description = null;
     private TemplateFromProjectForCreation $built_from_template;
-    private string $icon_codepoint = "";
+    private string $icon_codepoint = '';
 
     private CategoryCollection $trove_data;
     private bool $inherit_from_template = true;
-    private string $access              = "";
+    private string $access              = '';
     /**
      * @psalm-var Project::STATUS_PENDING | Project::STATUS_CREATING_FROM_ARCHIVE
      */
@@ -184,8 +184,8 @@ class ProjectCreationData
     {
         $project = isset($data['project']) ? $data['project'] : [];
 
-        $this->unix_name           = isset($project['form_unix_name']) ? $project['form_unix_name'] : "";
-        $this->full_name           = isset($project['form_full_name']) ? $project['form_full_name'] : "";
+        $this->unix_name           = isset($project['form_unix_name']) ? $project['form_unix_name'] : '';
+        $this->full_name           = isset($project['form_full_name']) ? $project['form_full_name'] : '';
         $this->short_description   = isset($project['form_short_description']) ? $project['form_short_description'] : null;
         $this->built_from_template = $template_from_project_for_creation;
         $this->is_test             = isset($project['is_test']) ? $project['is_test'] : false;
@@ -269,17 +269,17 @@ class ProjectCreationData
             $service_inheritor = new ProjectCreationDataServiceFromXmlInheritor($service_manager);
         }
 
-        $this->logger->debug("Start import from XML, validate RNG");
+        $this->logger->debug('Start import from XML, validate RNG');
         $rng_path = realpath(dirname(__FILE__) . '/../xml/resources/project/project.rng');
 
         $partial_element = SimpleXMLElementBuilder::buildSimpleXMLElementToLoadHugeFiles((string) $xml->asXml());
         $external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
         $xml_validator->validate($partial_element, $rng_path);
-        $this->logger->debug("RNG validated, feed the data");
+        $this->logger->debug('RNG validated, feed the data');
 
         $attrs = $xml->attributes();
         if (! isset($attrs)) {
-            throw new LogicException("XML seems valid from rng standpoint, but does not have attributes later");
+            throw new LogicException('XML seems valid from rng standpoint, but does not have attributes later');
         }
         $this->unix_name           = (string) $attrs['unix-name'];
         $this->full_name           = (string) $attrs['full-name'];
@@ -289,7 +289,7 @@ class ProjectCreationData
         $this->trove_data          = new CategoryCollection();
         $this->data_services       = [];
         $this->is_built_from_xml   = true;
-        $this->icon_codepoint      = ($attrs['icon-codepoint']) ? (string) $attrs['icon-codepoint'] : "";
+        $this->icon_codepoint      = ($attrs['icon-codepoint']) ? (string) $attrs['icon-codepoint'] : '';
 
         $requested_access_level = (string) $attrs['access'];
         if (in_array($requested_access_level, [Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE], true)) {
@@ -301,7 +301,7 @@ class ProjectCreationData
         $this->data_services = $service_inheritor->markUsedServicesFromXML($xml, $this->built_from_template->getProject());
 
         $this->inherit_from_template = isset($attrs['inherit-from-template']) && (bool) $attrs['inherit-from-template'] === true;
-        $this->logger->debug("Data gathered from XML");
+        $this->logger->debug('Data gathered from XML');
     }
 
     public function unsetProjectServiceUsage(int $service_id): void

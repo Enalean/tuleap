@@ -159,7 +159,7 @@ class RepositoryResource extends AuthenticatedResource
     {
         $git_plugin = \PluginFactory::instance()->getPluginByName('git');
         if (! $git_plugin) {
-            return Result::err(Fault::fromMessage("Pullrequest plugin cannot find git plugin"));
+            return Result::err(Fault::fromMessage('Pullrequest plugin cannot find git plugin'));
         }
 
         $gitolite_access_URL_generator = new GitoliteAccessURLGenerator($git_plugin->getPluginInfo());

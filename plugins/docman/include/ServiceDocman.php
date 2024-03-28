@@ -69,7 +69,7 @@ class ServiceDocman extends \Service
 
     public function getUrl(?string $url = null): string
     {
-        return "/plugins/document/" . urlencode($this->project->getUnixNameLowerCase()) . "/";
+        return '/plugins/document/' . urlencode($this->project->getUnixNameLowerCase()) . '/';
     }
 
     public function urlCanChange(): bool

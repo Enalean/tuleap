@@ -49,7 +49,7 @@ class MemberPresenter
 
     public function __construct(\UserHelper $user_helper, \PFUser $member, ProjectUGroup $ugroup, ProjectUGroupMemberUpdatable $ugroup_members_updatable)
     {
-        $this->profile_page_url = "/users/" . urlencode($member->getUserName()) . "/";
+        $this->profile_page_url = '/users/' . urlencode($member->getUserName()) . '/';
 
         $this->username_display = $user_helper->getDisplayName(
             $member->getUserName(),
@@ -59,7 +59,7 @@ class MemberPresenter
         $is_news_admin = false;
         if (
             $ugroup->getId() === ProjectUGroup::NEWS_WRITER
-            && $member->isMember($ugroup->getProjectId(), "N2")
+            && $member->isMember($ugroup->getProjectId(), 'N2')
         ) {
             $is_news_admin = true;
         }

@@ -31,7 +31,7 @@ final class ProgramIncrementTrackerNotFoundException extends RuntimeException
     {
         parent::__construct(
             sprintf(
-                "Could not find tracker of Program Increment #%d",
+                'Could not find tracker of Program Increment #%d',
                 $program_increment->getId()
             )
         );

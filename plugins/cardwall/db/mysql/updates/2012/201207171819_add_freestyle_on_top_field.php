@@ -34,8 +34,8 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_cardwall_on_top
-                ADD COLUMN use_freestyle_columns tinyint(4) default 0 AFTER tracker_id";
+        $sql = 'ALTER TABLE plugin_cardwall_on_top
+                ADD COLUMN use_freestyle_columns tinyint(4) default 0 AFTER tracker_id';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column use_freestyle_columns to plugin_cardwall_on_top: ' . implode(', ', $this->db->dbh->errorInfo()));

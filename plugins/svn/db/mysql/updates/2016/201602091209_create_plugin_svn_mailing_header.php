@@ -30,11 +30,11 @@ class b201602091209_create_plugin_svn_mailing_header extends \Tuleap\ForgeUpgrad
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_svn_mailing_header (
+        $sql = 'CREATE TABLE plugin_svn_mailing_header (
                 repository_id INT(11) UNSIGNED NOT NULL,
                 header varchar(64) NOT NULL,
                 PRIMARY KEY (repository_id)
-              )";
+              )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

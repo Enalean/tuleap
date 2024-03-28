@@ -32,7 +32,7 @@ final class ForLastUpdateDate implements DateTimeReadOnlyConditionBuilder
     public function getCondition($value): ParametrizedSQLFragment
     {
         $ceiled_timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $value);
-        $condition        = "c.submitted_on <= ?";
+        $condition        = 'c.submitted_on <= ?';
 
         return new ParametrizedSQLFragment($condition, [$ceiled_timestamp]);
     }

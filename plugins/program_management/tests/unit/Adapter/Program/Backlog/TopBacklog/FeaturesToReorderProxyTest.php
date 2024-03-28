@@ -30,7 +30,7 @@ final class FeaturesToReorderProxyTest extends TestCase
 {
     public function testItBuildFeatureToReorder(): void
     {
-        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], "before", 900);
+        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], 'before', 900);
 
         $feature_to_order = FeaturesToReorderProxy::buildFromRESTRepresentation($element_to_order);
         self::assertSame($element_to_order->ids, $feature_to_order?->getIds());
@@ -40,7 +40,7 @@ final class FeaturesToReorderProxyTest extends TestCase
 
     public function testItReturnsTrueWhenOrderIsBefore(): void
     {
-        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], "before", 900);
+        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], 'before', 900);
 
         $feature_to_order = FeaturesToReorderProxy::buildFromRESTRepresentation($element_to_order);
         self::assertTrue($feature_to_order?->isBefore());
@@ -48,7 +48,7 @@ final class FeaturesToReorderProxyTest extends TestCase
 
     public function testItReturnsFalseWhenOrderIsAfter(): void
     {
-        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], "after", 900);
+        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], 'after', 900);
 
         $feature_to_order = FeaturesToReorderProxy::buildFromRESTRepresentation($element_to_order);
         self::assertFalse($feature_to_order?->isBefore());

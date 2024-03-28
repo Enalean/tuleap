@@ -30,10 +30,10 @@ class b201512281119_add_svn_token_usage_table extends \Tuleap\ForgeUpgrade\Bucke
 
     public function up()
     {
-        $sql = "CREATE TABLE svn_token_usage (
+        $sql = 'CREATE TABLE svn_token_usage (
                     project_id INT(11),
                     PRIMARY KEY(project_id)
-                )";
+                )';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

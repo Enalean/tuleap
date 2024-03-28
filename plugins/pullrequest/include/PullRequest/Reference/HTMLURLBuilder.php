@@ -70,13 +70,13 @@ class HTMLURLBuilder
         $project_id = $repository->getProject()->getID();
 
         $query_params = [
-            "action" => "pull-requests",
-            "repo_id" => $repository->getId(),
-            "group_id" => $project_id,
+            'action' => 'pull-requests',
+            'repo_id' => $repository->getId(),
+            'group_id' => $project_id,
         ];
 
         if (! FeatureFlagSetOldHomepageViewByDefault::isActive()) {
-            $query_params["tab"] = "homepage";
+            $query_params['tab'] = 'homepage';
         }
 
         return '/plugins/git/?' . http_build_query($query_params);

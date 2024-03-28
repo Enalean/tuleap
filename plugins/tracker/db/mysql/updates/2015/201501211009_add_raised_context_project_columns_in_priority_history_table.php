@@ -30,31 +30,31 @@ class b201501211009_add_raised_context_project_columns_in_priority_history_table
 
     public function up()
     {
-        $sql = "TRUNCATE TABLE tracker_artifact_priority_history";
+        $sql = 'TRUNCATE TABLE tracker_artifact_priority_history';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while truncating tracker_artifact_priority_history: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
-        $sql = "ALTER TABLE tracker_artifact_priority_history ADD COLUMN has_been_raised TINYINT(1) NULL";
+        $sql = 'ALTER TABLE tracker_artifact_priority_history ADD COLUMN has_been_raised TINYINT(1) NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column has_been_raised to tracker_artifact_priority_history: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
-        $sql = "ALTER TABLE tracker_artifact_priority_history ADD COLUMN context INT(11) NULL";
+        $sql = 'ALTER TABLE tracker_artifact_priority_history ADD COLUMN context INT(11) NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column context to tracker_artifact_priority_history: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
-        $sql = "ALTER TABLE tracker_artifact_priority_history ADD COLUMN project_id INT(11) NULL";
+        $sql = 'ALTER TABLE tracker_artifact_priority_history ADD COLUMN project_id INT(11) NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column project_id to tracker_artifact_priority_history: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
-        $sql = "ALTER TABLE tracker_artifact_priority_history ADD COLUMN moved_artifact_id INT(11) NOT NULL";
+        $sql = 'ALTER TABLE tracker_artifact_priority_history ADD COLUMN moved_artifact_id INT(11) NOT NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column moved_artifact_id to tracker_artifact_priority_history: ' . implode(', ', $this->db->dbh->errorInfo()));

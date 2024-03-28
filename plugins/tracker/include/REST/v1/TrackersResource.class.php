@@ -404,12 +404,12 @@ class TrackersResource extends AuthenticatedResource
         } catch (SyntaxError $exception) {
             throw new RestException(
                 400,
-                "Error during parsing expert query"
+                'Error during parsing expert query'
             );
         } catch (LimitSizeIsExceededException $exception) {
             throw new RestException(
                 400,
-                "The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue."
+                'The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue.'
             );
         }
     }
@@ -762,7 +762,7 @@ class TrackersResource extends AuthenticatedResource
         $workflow_factory = $this->getWorkflowFactory();
         $workflow         = $workflow_factory->getWorkflowByTrackerId($tracker_id);
         if (! $workflow) {
-            throw new I18NRestException(400, dgettext('tuleap-tracker', "This tracker has no workflow."));
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'This tracker has no workflow.'));
         }
 
         if (! $workflow_factory->deleteWorkflow($workflow->getId())) {
@@ -803,7 +803,7 @@ class TrackersResource extends AuthenticatedResource
         $workflow_factory = $this->getWorkflowFactory();
         $workflow         = $workflow_factory->getWorkflowByTrackerId($tracker->getId());
         if (! $workflow) {
-            throw new I18NRestException(400, dgettext('tuleap-tracker', "No workflow defined on the given tracker."));
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'No workflow defined on the given tracker.'));
         }
 
         $workflow_id = $workflow_factory->updateActivation($workflow->getId(), $is_used);

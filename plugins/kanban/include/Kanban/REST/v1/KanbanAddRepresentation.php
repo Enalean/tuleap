@@ -39,7 +39,7 @@ final class KanbanAddRepresentation
     {
         $this->isArrayOfInt('ids');
         if (count($this->ids) == 0) {
-            throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");
+            throw new RestException(400, 'invalid value specified for `ids`. Expected: array of integers');
         }
     }
 

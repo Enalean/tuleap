@@ -214,7 +214,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('allowed', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
@@ -234,7 +234,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $this->assertEquals(403, $response->getStatusCode());
 
-        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
+        $this->assertStringContainsString('allowed', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
@@ -302,14 +302,14 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $locked_document_id = $locked_document['id'];
 
         $post_response_with_rest_read_only_user = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $locked_document_id . "/lock"),
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $locked_document_id . '/lock'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $post_response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $locked_document_id . "/lock")
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $locked_document_id . '/lock')
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -320,7 +320,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
 
         $document = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals($document['lock_info']["locked_by"]["username"], \TestDataBuilder::ADMIN_USER_NAME);
+        $this->assertEquals($document['lock_info']['locked_by']['username'], \TestDataBuilder::ADMIN_USER_NAME);
     }
 
     /**
@@ -332,14 +332,14 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $locked_document_id = $locked_document['id'];
 
         $delete_response_with_rest_read_only_user = $this->getResponse(
-            $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . $locked_document_id . "/lock"),
+            $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . $locked_document_id . '/lock'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $delete_response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . $locked_document_id . "/lock")
+            $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . $locked_document_id . '/lock')
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -366,14 +366,14 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
-                "embedded_properties" => [
-                    "content" => "my new content",
+                'embedded_properties' => [
+                    'content' => 'my new content',
                 ],
-                "should_lock_file"    => false,
+                'should_lock_file'    => false,
             ]
         );
         $new_version_response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource)),
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -393,15 +393,15 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
-                "embedded_properties" => [
-                    "content" => "my new content",
+                'embedded_properties' => [
+                    'content' => 'my new content',
                 ],
-                "should_lock_file"    => false,
+                'should_lock_file'    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -423,16 +423,16 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
-                "embedded_properties"   => [
-                    "content" => "my new content",
+                'embedded_properties'   => [
+                    'content' => 'my new content',
                 ],
-                "should_lock_file"      => false,
+                'should_lock_file'      => false,
                 'approval_table_action' => 'copy',
             ]
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -455,16 +455,16 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
-                "embedded_properties"   => [
-                    "content" => "my new content",
+                'embedded_properties'   => [
+                    'content' => 'my new content',
                 ],
-                "should_lock_file"      => false,
+                'should_lock_file'      => false,
                 'approval_table_action' => 'reset',
             ]
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -489,16 +489,16 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
-                "embedded_properties"   => [
-                    "content" => "my new content",
+                'embedded_properties'   => [
+                    'content' => 'my new content',
                 ],
-                "should_lock_file"      => false,
+                'should_lock_file'      => false,
                 'approval_table_action' => 'empty',
             ]
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -525,22 +525,22 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
-                "embedded_properties"   => [
-                    "content" => "my new content",
+                'embedded_properties'   => [
+                    'content' => 'my new content',
                 ],
-                "should_lock_file"      => false,
+                'should_lock_file'      => false,
                 'approval_table_action' => 'reset',
             ]
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(400, $new_version_response->getStatusCode());
         $this->assertStringContainsString(
-            "does not have an approval table",
-            json_decode($new_version_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']
+            'does not have an approval table',
+            json_decode($new_version_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']
         );
     }
 
@@ -558,15 +558,15 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
-                "embedded_properties" => [
-                    "content" => "my new content",
+                'embedded_properties' => [
+                    'content' => 'my new content',
                 ],
-                "should_lock_file"    => false,
+                'should_lock_file'    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -595,15 +595,15 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
-                "embedded_properties" => [
-                    "content" => "my new content",
+                'embedded_properties' => [
+                    'content' => 'my new content',
                 ],
-                "should_lock_file"    => false,
+                'should_lock_file'    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -634,15 +634,15 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
-                "embedded_properties" => [
-                    "content" => "my new content",
+                'embedded_properties' => [
+                    'content' => 'my new content',
                 ],
-                "should_lock_file"    => false,
+                'should_lock_file'    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(403, $new_version_response->getStatusCode());
@@ -810,15 +810,15 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             ),
         );
 
-        $versions_uri = 'docman_embedded_files/' . $embedded_doc_id . "/versions";
+        $versions_uri = 'docman_embedded_files/' . $embedded_doc_id . '/versions';
 
         $new_version_resource = json_encode([
             'version_title'       => 'My new version',
             'description'         => 'whatever',
-            "embedded_properties" => [
-                "content" => "my new content",
+            'embedded_properties' => [
+                'content' => 'my new content',
             ],
-            "should_lock_file"    => false,
+            'should_lock_file'    => false,
         ], JSON_THROW_ON_ERROR);
 
         $new_version_response = $this->getResponseByName(

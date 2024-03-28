@@ -78,7 +78,7 @@ final class CreateInstance
      */
     public function process(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
-        $logger->info(sprintf("Processing %s: ", self::TOPIC));
+        $logger->info(sprintf('Processing %s: ', self::TOPIC));
         $instance_name = $this->project->getUnixNameLowerCase();
         $request       = $request_factory->createRequest(
             'GET',

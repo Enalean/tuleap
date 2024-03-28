@@ -34,11 +34,11 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_default_project_mirrors (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_default_project_mirrors (
                 project_id INT(11) NOT NULL,
                 mirror_id INT(11) unsigned NOT NULL,
                 PRIMARY KEY (project_id, mirror_id)
-            );";
+            );';
 
         $this->db->createTable('plugin_git_default_project_mirrors', $sql);
     }

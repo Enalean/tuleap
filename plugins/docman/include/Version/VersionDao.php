@@ -31,8 +31,8 @@ class VersionDao extends DataAccessObject implements ICountVersions
     public function searchByItemId(int $id, int $offset, int $limit): array
     {
         $sql =
-            "SELECT id, number, label, filename, user_id, date, changelog, authoring_tool
-                FROM plugin_docman_version WHERE item_id = ? ORDER BY number DESC LIMIT ?, ?";
+            'SELECT id, number, label, filename, user_id, date, changelog, authoring_tool
+                FROM plugin_docman_version WHERE item_id = ? ORDER BY number DESC LIMIT ?, ?';
 
         return $this->getDB()->run($sql, $id, $offset, $limit);
     }
@@ -50,7 +50,7 @@ class VersionDao extends DataAccessObject implements ICountVersions
      */
     public function searchById(int $id): ?array
     {
-        $sql = "SELECT * FROM plugin_docman_version WHERE id = ?";
+        $sql = 'SELECT * FROM plugin_docman_version WHERE id = ?';
 
         return $this->getDB()->row($sql, $id);
     }

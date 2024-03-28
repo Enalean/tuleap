@@ -52,16 +52,16 @@ class BranchNameTuleapReferenceParserTest extends TestCase
     public static function branchNamesProvider(): array
     {
         return [
-            ["dev", false],
-            ["dev_TULEAP", false],
-            ["dev_TULEAP-2447", true],
-            ["dev_TULEAP-2447_v2", true],
-            ["dev_TULEAP-2447/other", true],
-            ["dev_TULEAP-2447TULEAP-123", true],
-            ["dev_TULEAP-2447_TULEAP-123", true],
-            ["dev/TULEAP-2447/TULEAP-123", true],
-            ["dev/TULEAP-2447", true],
-            ["dev/tuleap-2447", true],
+            ['dev', false],
+            ['dev_TULEAP', false],
+            ['dev_TULEAP-2447', true],
+            ['dev_TULEAP-2447_v2', true],
+            ['dev_TULEAP-2447/other', true],
+            ['dev_TULEAP-2447TULEAP-123', true],
+            ['dev_TULEAP-2447_TULEAP-123', true],
+            ['dev/TULEAP-2447/TULEAP-123', true],
+            ['dev/TULEAP-2447', true],
+            ['dev/tuleap-2447', true],
         ];
     }
 }

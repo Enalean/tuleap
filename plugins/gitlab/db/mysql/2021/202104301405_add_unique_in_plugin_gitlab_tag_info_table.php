@@ -35,7 +35,7 @@ final class b202104301405_add_unique_in_plugin_gitlab_tag_info_table extends \Tu
 
     public function up(): void
     {
-        $sql    = "ALTER TABLE plugin_gitlab_tag_info DROP INDEX idx_tag, ADD UNIQUE(repository_id, tag_name(255))";
+        $sql    = 'ALTER TABLE plugin_gitlab_tag_info DROP INDEX idx_tag, ADD UNIQUE(repository_id, tag_name(255))';
         $result = $this->db->dbh->exec($sql);
 
         if ($result === false) {

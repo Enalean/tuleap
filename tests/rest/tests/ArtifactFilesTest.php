@@ -123,7 +123,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
 
         $put_resource = json_encode([
             'content' => base64_encode($second_chunk),
-            'offset'  => "2",
+            'offset'  => '2',
         ]);
 
         $request  = $this->request_factory->createRequest('PUT', 'artifact_temporary_files/' . $file_id)
@@ -152,7 +152,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
 
         $put_resource = json_encode([
             'content' => base64_encode($second_chunk),
-            'offset'  => "2",
+            'offset'  => '2',
         ]);
 
         $request = $this->request_factory->createRequest('PUT', 'artifact_temporary_files/' . $file_id)
@@ -171,7 +171,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
 
         $put_resource = json_encode([
             'content' => base64_encode($second_chunk),
-            'offset'  => "45",
+            'offset'  => '45',
         ]);
 
         $request = $this->request_factory->createRequest('PUT', 'artifact_temporary_files/' . $file_id)
@@ -189,7 +189,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
 
         $put_resource = json_encode([
             'content' => base64_encode($chunk),
-            'offset'  => "2",
+            'offset'  => '2',
         ]);
 
         $request = $this->request_factory->createRequest('PUT', 'artifact_temporary_files/' . $file_id)

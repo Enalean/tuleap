@@ -42,7 +42,7 @@ final class FaultMapperTest extends TestCase
         yield 'Cannot access to the Pull Request' => [CannotAccessToPullRequestFault::fromUpdatingComment(new GitRepoNotFoundException('Not Found')), 404];
         yield 'Comment not found' => [CommentNotFoundFault::withCommentId(15), 404];
         yield 'Cannot update other user comment' => [CommentIsNotFromCurrentUserFault::fromComment(), 403];
-        yield 'Cannot edit comment which is not in Markdown' => [CommentFormatNotAllowedFault::withGivenFormat("hehe"), 403];
+        yield 'Cannot edit comment which is not in Markdown' => [CommentFormatNotAllowedFault::withGivenFormat('hehe'), 403];
         yield 'Inline comment not found' => [InlineCommentNotFoundFault::fromCommentId(785), 404];
         yield 'Source Git Repository not found' => [GitRepositoryNotFoundFault::fromRepositoryId(982), 404];
         yield 'Malformed query parameter' => [MalformedQueryFault::build(), 400];

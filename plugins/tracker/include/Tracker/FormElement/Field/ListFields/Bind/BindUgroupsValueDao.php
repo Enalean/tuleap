@@ -31,11 +31,11 @@ class BindUgroupsValueDao extends DataAccessObject implements SearchUserGroupsVa
      */
     public function searchById(int $id): ?array
     {
-        $sql = "
+        $sql = '
             SELECT *
             FROM tracker_field_list_bind_ugroups_value
             WHERE id = ?
-        ";
+        ';
 
         return $this->getDB()->row($sql, $id);
     }
@@ -45,12 +45,12 @@ class BindUgroupsValueDao extends DataAccessObject implements SearchUserGroupsVa
      */
     public function searchByFieldId(int $field_id): array
     {
-        $sql = "
+        $sql = '
             SELECT *
             FROM tracker_field_list_bind_ugroups_value
             WHERE field_id = ?
             ORDER BY id
-        ";
+        ';
 
         return $this->getDB()->safeQuery($sql, [$field_id]);
     }
@@ -60,19 +60,19 @@ class BindUgroupsValueDao extends DataAccessObject implements SearchUserGroupsVa
      */
     public function searchByFieldIdAndGroupId(int $field_id, int $ugroup_id): ?array
     {
-        $sql = "
+        $sql = '
             SELECT *
             FROM tracker_field_list_bind_ugroups_value
             WHERE field_id = ? AND ugroup_id = ?
             ORDER BY id
-        ";
+        ';
 
         return $this->getDB()->row($sql, $field_id, $ugroup_id);
     }
 
     public function duplicate(int $from_value_id, int $to_field_id): int
     {
-        $sql = "
+        $sql = '
             REPLACE INTO tracker_field_list_bind_ugroups_value (field_id, ugroup_id, is_hidden)
             SELECT ?, u1.ugroup_id, v.is_hidden
             FROM ugroup u1
@@ -86,7 +86,7 @@ class BindUgroupsValueDao extends DataAccessObject implements SearchUserGroupsVa
             INNER JOIN tracker_field_list_bind_ugroups_value v ON (v.ugroup_id = u2.ugroup_id)
             WHERE f.id = ?
               AND v.id = ?
-          ";
+          ';
 
         $this->getDB()->safeQuery($sql, [$to_field_id, $to_field_id, $from_value_id]);
         return (int) $this->getDB()->lastInsertId();
@@ -95,7 +95,7 @@ class BindUgroupsValueDao extends DataAccessObject implements SearchUserGroupsVa
     public function create(int $field_id, int $ugroup_id, bool $is_hidden): int
     {
         return (int) $this->getDB()->insertReturnId(
-            "tracker_field_list_bind_ugroups_value",
+            'tracker_field_list_bind_ugroups_value',
             [
                 'field_id' => $field_id,
                 'ugroup_id' => $ugroup_id,

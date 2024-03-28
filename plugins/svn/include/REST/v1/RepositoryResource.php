@@ -644,11 +644,11 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         if ($project->isError()) {
-            throw new RestException(400, "Given project does not exist");
+            throw new RestException(400, 'Given project does not exist');
         }
 
         if (! $project->usesService(\SvnPlugin::SERVICE_SHORTNAME)) {
-            throw new RestException(400, "Project does not use SVN service");
+            throw new RestException(400, 'Project does not use SVN service');
         }
 
         ProjectAuthorization::userCanAccessProject(
@@ -672,13 +672,13 @@ class RepositoryResource extends AuthenticatedResource
         } catch (ImmutableTagListTooBigException $exception) {
             throw new RestException(400, $exception->getMessage(), [], $exception);
         } catch (CannotCreateRepositoryException $e) {
-            throw new RestException(500, "Unable to create the repository");
+            throw new RestException(500, 'Unable to create the repository');
         } catch (UserIsNotSVNAdministratorException $e) {
             throw new RestException(403, "User doesn't have permission to create a repository");
         } catch (RepositoryNameIsInvalidException $e) {
             throw new RestException(409, $e->getMessage());
         } catch (CannotCreateAccessFileHistoryException $e) {
-            throw new RestException(500, "Unable to store access file");
+            throw new RestException(500, 'Unable to store access file');
         }
 
         $repository = $this->repository_manager->getRepositoryByName($project, $name);

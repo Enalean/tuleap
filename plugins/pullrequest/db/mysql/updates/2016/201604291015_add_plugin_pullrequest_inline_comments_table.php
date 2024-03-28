@@ -34,7 +34,7 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_pullrequest_inline_comments (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_pullrequest_inline_comments (
             id              INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
             pull_request_id INT(11) NOT NULL,
             user_id         INT(11) NOT NULL,
@@ -43,7 +43,7 @@ EOT;
             unidiff_offset  INT(6)  NOT NULL,
             content         TEXT    NOT NULL,
             is_outdated     BOOL    NOT NULL DEFAULT false
-        )";
+        )';
 
         $this->db->createTable('plugin_pullrequest_inline_comments', $sql);
     }

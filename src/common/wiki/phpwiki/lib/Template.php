@@ -2,7 +2,7 @@
 //-*-php-*-
 rcs_id('$Id: Template.php,v 1.73 2005/04/08 05:41:00 rurban Exp $');
 
-require_once("lib/ErrorManager.php");
+require_once('lib/ErrorManager.php');
 
 
 /** An HTML template.
@@ -19,10 +19,10 @@ class Template
         $this->_request  = $request;
         $this->_basepage = $request->getArg('pagename');
 
-        if (strstr($name, "/")) {
+        if (strstr($name, '/')) {
             $oldname                = $WikiTheme->_name;
             $oldtheme               = $WikiTheme->_theme;
-            list($themename, $name) = explode("/", $name);
+            list($themename, $name) = explode('/', $name);
             $WikiTheme->_theme      = "themes/$themename";
         }
         $this->_name = $name;
@@ -35,7 +35,7 @@ class Template
             $WikiTheme->_name  = $oldname;
             $WikiTheme->_theme = $oldtheme;
         }
-        $fp = fopen($file, "rb");
+        $fp = fopen($file, 'rb');
         if (! $fp) {
             trigger_error("$file not found", E_USER_WARNING);
             return;
@@ -73,7 +73,7 @@ class Template
 
     public function _printPlugin($pi)
     {
-        include_once("lib/WikiPlugin.php");
+        include_once('lib/WikiPlugin.php');
         static $loader;
 
         if (empty($loader)) {

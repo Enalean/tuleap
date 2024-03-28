@@ -48,16 +48,16 @@ abstract class PermissionDeniedMailSender extends Error_PermissionDenied impleme
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $this->token->check("/my/");
+        $this->token->check('/my/');
 
         $valid_message = new Valid_Text('msg_private_project');
         $valid_message->required();
         if (! $request->valid($valid_message)) {
-            throw new UnexpectedValueException(_("Message sent to administrator should not be empty."));
+            throw new UnexpectedValueException(_('Message sent to administrator should not be empty.'));
         }
 
         if ($request->get('msg_private_project') === $this->place_holder_builder->buildPlaceHolder($request->getProject())) {
-            throw new UnexpectedValueException(_("Message sent to administrator should not be empty."));
+            throw new UnexpectedValueException(_('Message sent to administrator should not be empty.'));
         }
 
         $this->processMail($request->get('msg_private_project'));

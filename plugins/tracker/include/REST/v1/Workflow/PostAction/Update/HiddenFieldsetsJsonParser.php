@@ -28,7 +28,7 @@ use Workflow;
 
 class HiddenFieldsetsJsonParser implements PostActionUpdateJsonParser
 {
-    public const POSTACTION_TYPE = "hidden_fieldsets";
+    public const POSTACTION_TYPE = 'hidden_fieldsets';
 
     public function accept(array $json): bool
     {
@@ -55,14 +55,14 @@ class HiddenFieldsetsJsonParser implements PostActionUpdateJsonParser
         if (! is_array($json['fieldset_ids'])) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-tracker', "Bad fieldset_ids attribute format: array of integer expected.")
+                dgettext('tuleap-tracker', 'Bad fieldset_ids attribute format: array of integer expected.')
             );
         }
 
         if (count($json['fieldset_ids']) === 0) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-tracker', "fieldset_ids attribute must not be empty.")
+                dgettext('tuleap-tracker', 'fieldset_ids attribute must not be empty.')
             );
         }
 
@@ -70,7 +70,7 @@ class HiddenFieldsetsJsonParser implements PostActionUpdateJsonParser
             if (! is_int($field_id)) {
                 throw new I18NRestException(
                     400,
-                    dgettext('tuleap-tracker', "Bad fieldset_ids attribute format: array of integer expected.")
+                    dgettext('tuleap-tracker', 'Bad fieldset_ids attribute format: array of integer expected.')
                 );
             }
         }

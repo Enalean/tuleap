@@ -105,9 +105,9 @@ final class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\Te
 
         $existing_section                     = Option::fromValue(
             new NewDropdownLinkSectionPresenter(
-                "Current section",
+                'Current section',
                 [
-                    new NewDropdownLinkPresenter("url", "Already existing link", "icon", []),
+                    new NewDropdownLinkPresenter('url', 'Already existing link', 'icon', []),
                 ],
             ),
         );

@@ -32,7 +32,7 @@
                 'spinner'       => $di->getSpinner(),
                 'pluginPath'    => $this->_controller->pluginPath,
                 'themePath'     => $this->_controller->themePath,
-                'document_path' => "/plugins/document/" . urlencode($project->getUnixNameLowerCase()),
+                'document_path' => '/plugins/document/' . urlencode($project->getUnixNameLowerCase()),
                 'language'      => [
                     'btn_close'                => $GLOBALS['Language']->getText('global', 'btn_close'),
                     'new_in'                   => dgettext('tuleap-docman', 'In:&nbsp;'),

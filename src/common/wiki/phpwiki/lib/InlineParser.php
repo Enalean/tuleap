@@ -163,7 +163,7 @@ class RegexpSet
                     trigger_error("empty regexp $i", E_USER_WARNING);
                     continue;
                 }
-                $pat = "/ ( . $repeat ) ( " . $regexps[$i] . " ) /x";
+                $pat = "/ ( . $repeat ) ( " . $regexps[$i] . ' ) /x';
                 if (preg_match($pat, $text, $_m)) {
                     $m             = $_m; // FIXME: prematch, postmatch is wrong
                     $matched[]     = $regexps[$i];
@@ -191,7 +191,7 @@ class RegexpSet
             }
             // We could do much better, if we would know the matching markup for the
             // longest regexp match:
-            $hugepat = "/ ( . $repeat ) ( (" . join(')|(', $regexps) . ") ) /Asx";
+            $hugepat = "/ ( . $repeat ) ( (" . join(')|(', $regexps) . ') ) /Asx';
             // Proposed premature optimization 1:
             //$hugepat= "/ ( . $repeat ) ( (" . join(')|(', array_values($matched)) . ") ) /Asx";
             if (! preg_match($hugepat, $text, $m)) {
@@ -261,7 +261,7 @@ class SimpleMarkup
      */
     public function markup($match /*, $body */)
     {
-        trigger_error("pure virtual", E_USER_ERROR);
+        trigger_error('pure virtual', E_USER_ERROR);
     }
 }
 
@@ -305,7 +305,7 @@ class BalancedMarkup
      */
     public function markup($match, $body)
     {
-        trigger_error("pure virtual", E_USER_ERROR);
+        trigger_error('pure virtual', E_USER_ERROR);
     }
 }
 
@@ -335,8 +335,8 @@ function isImageLink($link)
         return false;
     }
     assert(defined('INLINE_IMAGES'));
-    return preg_match("/\\.(" . INLINE_IMAGES . ")$/i", $link)
-        or preg_match("/\\.(" . INLINE_IMAGES . ")\s+(size|border|align|hspace|vspace)=/i", $link);
+    return preg_match('/\\.(' . INLINE_IMAGES . ')$/i', $link)
+        or preg_match('/\\.(' . INLINE_IMAGES . ')\s+(size|border|align|hspace|vspace)=/i', $link);
 }
 
 function LinkBracketLink($bracketlink)
@@ -352,7 +352,7 @@ function LinkBracketLink($bracketlink)
         $matches
     );
     if (count($matches) < 4) {
-        trigger_error(_("Invalid [] syntax ignored") . ": " . $bracketlink, E_USER_WARNING);
+        trigger_error(_('Invalid [] syntax ignored') . ': ' . $bracketlink, E_USER_WARNING);
         return new Cached_Link();
     }
     list (, $hash, $label, $bar, $rawlink) = $matches;
@@ -364,13 +364,13 @@ function LinkBracketLink($bracketlink)
      *   "[http:/server/~name/]" will work as expected
      *   "http:/server/~name/"   will NOT work as expected, will remove the ~
      */
-    if (strstr($rawlink, "http://") or strstr($rawlink, "https://")) {
+    if (strstr($rawlink, 'http://') or strstr($rawlink, 'https://')) {
         $link = $rawlink;
         // Mozilla Browser URI Obfuscation Weakness 2004-06-14
         //   http://www.securityfocus.com/bid/10532/
         //   goodurl+"%2F%20%20%20."+badurl
-        if (preg_match("/%2F(%20)+\./i", $rawlink)) {
-            $rawlink = preg_replace("/%2F(%20)+\./i", "%2F.", $rawlink);
+        if (preg_match('/%2F(%20)+\./i', $rawlink)) {
+            $rawlink = preg_replace('/%2F(%20)+\./i', '%2F.', $rawlink);
         }
     } else {
         $link = UnWikiEscape($rawlink);
@@ -387,10 +387,10 @@ function LinkBracketLink($bracketlink)
     if (isImageLink($label)) {
         $imgurl   = $label;
         $intermap = getInterwikiMap();
-        if (preg_match("/^" . $intermap->getRegexp() . ":/", $label)) {
+        if (preg_match('/^' . $intermap->getRegexp() . ':/', $label)) {
             $imgurl = $intermap->link($label);
             $imgurl = $imgurl->getAttr('href');
-        } elseif (! preg_match("#^(" . ALLOWED_PROTOCOLS . "):#", $imgurl)) {
+        } elseif (! preg_match('#^(' . ALLOWED_PROTOCOLS . '):#', $imgurl)) {
             // local theme linkname like 'images/next.gif'.
             global $WikiTheme;
             $imgurl = $WikiTheme->getImageURL($imgurl);
@@ -407,19 +407,19 @@ function LinkBracketLink($bracketlink)
         );
     }
 
-    if (preg_match("#^(" . ALLOWED_PROTOCOLS . "):#", $link)) {
+    if (preg_match('#^(' . ALLOWED_PROTOCOLS . '):#', $link)) {
         // if it's an image, embed it; otherwise, it's a regular link
         if (isImageLink($link)) {
             return LinkImage($link, $label);
         } else {
             return new Cached_ExternalLink($link, $label);
         }
-    } elseif (preg_match("/^phpwiki:/", $link)) {
+    } elseif (preg_match('/^phpwiki:/', $link)) {
         return new Cached_PhpwikiURL($link, $label);
     } elseif (
         strstr($link, ':')
             and ($intermap = getInterwikiMap())
-            and preg_match("/^" . $intermap->getRegexp() . ":/", $link)
+            and preg_match('/^' . $intermap->getRegexp() . ':/', $link)
     ) {
         /*
          * Inline images in Interwiki urls's:
@@ -457,7 +457,7 @@ function LinkBracketLink($bracketlink)
 
 class Markup_bracketlink extends SimpleMarkup
 {
-    public $_match_regexp = "\\#? \\[ .*? [^]\\s] .*? \\]";
+    public $_match_regexp = '\\#? \\[ .*? [^]\\s] .*? \\]';
 
     public function markup($match)
     {
@@ -471,7 +471,7 @@ class Markup_url extends SimpleMarkup
 {
     public function getMatchRegexp()
     {
-        return "(?<![[:alnum:]]) (?:" . ALLOWED_PROTOCOLS . ") : [^\s<>\"']+ (?<![ ,.?; \] \) ])";
+        return '(?<![[:alnum:]]) (?:' . ALLOWED_PROTOCOLS . ") : [^\s<>\"']+ (?<![ ,.?; \] \) ])";
     }
 
     public function markup($match)
@@ -487,7 +487,7 @@ class Markup_interwiki extends SimpleMarkup
     {
         global $request;
         $map = getInterwikiMap();
-        return "(?<! [[:alnum:]])" . $map->getRegexp() . ": \S+ (?<![ ,.?;! \] \) \" \' ])";
+        return '(?<! [[:alnum:]])' . $map->getRegexp() . ": \S+ (?<![ ,.?;! \] \) \" \' ])";
     }
 
     public function markup($match)
@@ -503,7 +503,7 @@ class Markup_wikiword extends SimpleMarkup
     {
         global $WikiNameRegexp;
         if (! trim($WikiNameRegexp)) {
-            return " " . WIKI_NAME_REGEXP;
+            return ' ' . WIKI_NAME_REGEXP;
         }
         return " $WikiNameRegexp";
     }
@@ -545,7 +545,7 @@ class Markup_wikiword extends SimpleMarkup
 class Markup_linebreak extends SimpleMarkup
 {
     //var $_match_regexp = "(?: (?<! %) %%% (?! %) | <(?:br|BR)> | <(?:br|BR) \/> )";
-    public $_match_regexp = "(?: (?<! %) %%% (?! %) | <(?:br|BR)> )";
+    public $_match_regexp = '(?: (?<! %) %%% (?! %) | <(?:br|BR)> )';
 
     public function markup($match)
     {
@@ -578,9 +578,9 @@ class Markup_nestled_emphasis extends BalancedMarkup
         if (! $start_regexp) {
             // The three possible delimiters
             // (none of which can be followed by itself.)
-            $i  = "_ (?! _)";
-            $b  = "\\* (?! \\*)";
-            $tt = "= (?! =)";
+            $i  = '_ (?! _)';
+            $b  = '\\* (?! \\*)';
+            $tt = '= (?! =)';
 
             $any = "(?: ${i}|${b}|${tt})"; // any of the three.
 
@@ -600,10 +600,10 @@ class Markup_nestled_emphasis extends BalancedMarkup
             $start[] = "(?<= < ) ${any} (?! > )";
             $start[] = "(?<= \\( ) ${any} (?! \\) )";
 
-            $start = "(?:" . join('|', $start) . ")";
+            $start = '(?:' . join('|', $start) . ')';
 
             // Any of the above must be immediately followed by non-whitespace.
-            $start_regexp = $start . "(?= \S)";
+            $start_regexp = $start . '(?= \S)';
         }
 
         return $start_regexp;
@@ -631,11 +631,11 @@ class Markup_nestled_emphasis extends BalancedMarkup
 class Markup_html_emphasis extends BalancedMarkup
 {
     public $_start_regexp =
-        "<(?: b|big|i|small|tt|em|strong|cite|code|dfn|kbd|samp|var|sup|sub )>";
+        '<(?: b|big|i|small|tt|em|strong|cite|code|dfn|kbd|samp|var|sup|sub )>';
 
     public function getEndRegexp($match)
     {
-        return "<\\/" . substr($match, 1);
+        return '<\\/' . substr($match, 1);
     }
 
     public function markup($match, $body)
@@ -649,7 +649,7 @@ class Markup_html_abbr extends BalancedMarkup
 {
     //rurban: abbr|acronym need an optional title tag.
     //sf.net bug #728595
-    public $_start_regexp = "<(?: abbr|acronym )(?: \stitle=[^>]*)?>";
+    public $_start_regexp = '<(?: abbr|acronym )(?: \stitle=[^>]*)?>';
 
     public function getEndRegexp($match)
     {
@@ -658,7 +658,7 @@ class Markup_html_abbr extends BalancedMarkup
         } else {
             $tag = 'acronym';
         }
-        return "<\\/" . $tag . '>';
+        return '<\\/' . $tag . '>';
     }
 
     public function markup($match, $body)
@@ -670,7 +670,7 @@ class Markup_html_abbr extends BalancedMarkup
         }
         $rest = substr($match, 1 + strlen($tag), -1);
         if (! empty($rest)) {
-            list($key,$val) = explode("=", $rest);
+            list($key,$val) = explode('=', $rest);
             $args           = [$key => $val];
         } else {
             $args = [];
@@ -686,8 +686,8 @@ class Markup_html_abbr extends BalancedMarkup
 class Markup_color extends BalancedMarkup
 {
     // %color=blue% blue text %% and back to normal
-    public $_start_regexp = "%color=(?: [^%]*)%";
-    public $_end_regexp   = "%%";
+    public $_start_regexp = '%color=(?: [^%]*)%';
+    public $_end_regexp   = '%%';
 
     public function markup($match, $body)
     {
@@ -704,7 +704,7 @@ class Markup_color extends BalancedMarkup
         ) {
             return new HtmlElement('font', ['color' => $color], $body);
         } else {
-            trigger_error(sprintf(_("unknown color %s ignored"), $color), E_USER_WARNING);
+            trigger_error(sprintf(_('unknown color %s ignored'), $color), E_USER_WARNING);
         }
     }
 }
@@ -910,7 +910,7 @@ class InlineTransformer
         // parse will fail.  This is an important optimization,
         // e.g. when text is "*lots *of *start *delims *with
         // *no *matching *end *delims".
-        $ends_pat = "/(?:" . join(").*(?:", $end_regexps) . ")/xs";
+        $ends_pat = '/(?:' . join(').*(?:', $end_regexps) . ')/xs';
         if (! preg_match($ends_pat, $text)) {
             return false;
         }

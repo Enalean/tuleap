@@ -195,7 +195,7 @@ echo '<tr><td colspan="2">';
 echo '<form method="post" action="permission_request.php">';
 echo '<input type="hidden" name="func" value="member_req_notif_group" />';
 echo '<input type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '">';
-echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
+echo html_build_multiple_select_box_from_array($ugroupList, 'ugroups[]', $selectedUgroup, 8, false, '', false, '', false, '', false);
 echo '<br />';
 echo '<input type="submit" name="submit" value="' . $Language->getText('global', 'btn_update') . '" />';
 echo '</form>';
@@ -209,7 +209,7 @@ $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_
 $dar     = $pm->getMessageToRequesterForAccessProject($group_id);
 if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
     $row = $dar->current();
-    if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
+    if ($row['msg_to_requester'] != 'member_request_delegation_msg_to_requester') {
         $message = $row['msg_to_requester'];
     }
 }

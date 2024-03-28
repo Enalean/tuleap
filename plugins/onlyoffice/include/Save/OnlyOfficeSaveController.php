@@ -84,11 +84,11 @@ final class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Co
 
     private function buildSuccessResponse(): ResponseInterface
     {
-        return $this->json_response_builder->fromData(["error" => 0]);
+        return $this->json_response_builder->fromData(['error' => 0]);
     }
 
     private function buildErrorResponse(): ResponseInterface
     {
-        return $this->json_response_builder->fromData(["error" => 1]);
+        return $this->json_response_builder->fromData(['error' => 1]);
     }
 }

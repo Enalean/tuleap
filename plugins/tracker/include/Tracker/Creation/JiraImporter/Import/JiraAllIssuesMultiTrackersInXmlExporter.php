@@ -76,9 +76,9 @@ class JiraAllIssuesMultiTrackersInXmlExporter implements JiraAllIssuesInXmlExpor
         LinkedIssuesCollection $linked_issues_collection,
         string $import_mode,
     ): void {
-        $this->logger->info("Import is done in multi tracker mode");
+        $this->logger->info('Import is done in multi tracker mode');
         foreach ($jira_issue_types as $jira_issue_type) {
-            $this->logger->info(sprintf("Import tracker %s", $jira_issue_type->getName()));
+            $this->logger->info(sprintf('Import tracker %s', $jira_issue_type->getName()));
 
             $tracker_fullname = $jira_issue_type->getName();
             $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat($jira_issue_type->getName());

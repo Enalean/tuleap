@@ -33,10 +33,10 @@ final class OutboundHTTPRequestSettings
     #[ConfigKey('CIDR ranges that can be reached by outbound HTTP requests')]
     #[ConfigKeyString('')]
     #[ConfigKeyValueValidator(CIDRRangesValidator::class)]
-    public const ALLOW_RANGES = "http_outbound_requests_allow_ranges";
+    public const ALLOW_RANGES = 'http_outbound_requests_allow_ranges';
 
     #[ConfigKey('CIDR ranges that cannot be reached by outbound HTTP requests if not allowed (extends the default deny list)')]
     #[ConfigKeyString('')]
     #[ConfigKeyValueValidator(CIDRRangesValidator::class)]
-    public const DENY_RANGES = "http_outbound_requests_deny_ranges";
+    public const DENY_RANGES = 'http_outbound_requests_deny_ranges';
 }

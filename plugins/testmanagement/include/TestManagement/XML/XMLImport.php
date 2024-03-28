@@ -121,7 +121,7 @@ class XMLImport
             TrackerHasAtLeastOneFrozenFieldsPostActionException |
             TrackerHasAtLeastOneHiddenFieldsetsPostActionException $exception
         ) {
-            throw new Exception("Trackers defined in the configuration files are not valid.");
+            throw new Exception('Trackers defined in the configuration files are not valid.');
         }
 
         $this->bindExecutionsToSpecificDefinitionChangeset((int) $execution_tracker_id, (int) $definition_tracker_id, $xml, $artifact_id_mapping, $changeset_mapping);

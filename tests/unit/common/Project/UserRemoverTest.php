@@ -72,7 +72,7 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_permissions_dao,
         );
 
-        $this->project    = ProjectTestBuilder::aProject()->withId(101)->withUnixName("")->withAccess(\Project::ACCESS_PRIVATE)->build();
+        $this->project    = ProjectTestBuilder::aProject()->withId(101)->withUnixName('')->withAccess(\Project::ACCESS_PRIVATE)->build();
         $this->user       = new PFUser([
             'language_id' => 'en',
             'user_id' => 102,

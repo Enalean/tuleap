@@ -26,23 +26,23 @@ class GitLabLinkGroupTabPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testWithInactiveState(): void
     {
-        $project = ProjectTestBuilder::aProject()->withUnixName("tuleap-gitlab")->build();
+        $project = ProjectTestBuilder::aProject()->withUnixName('tuleap-gitlab')->build();
 
         $presenter = GitLabLinkGroupTabPresenter::withInactiveState($project);
 
-        self::assertEquals("/plugins/git/tuleap-gitlab/administration/gitlab/", $presenter->getUrl());
-        self::assertEquals("GitLab Group Link", $presenter->getPaneName());
+        self::assertEquals('/plugins/git/tuleap-gitlab/administration/gitlab/', $presenter->getUrl());
+        self::assertEquals('GitLab Group Link', $presenter->getPaneName());
         self::assertFalse($presenter->isActive());
     }
 
     public function testWithActiveState(): void
     {
-        $project = ProjectTestBuilder::aProject()->withUnixName("tuleap-gitlab")->build();
+        $project = ProjectTestBuilder::aProject()->withUnixName('tuleap-gitlab')->build();
 
         $presenter = GitLabLinkGroupTabPresenter::withActiveState($project);
 
-        self::assertEquals("/plugins/git/tuleap-gitlab/administration/gitlab/", $presenter->getUrl());
-        self::assertEquals("GitLab Group Link", $presenter->getPaneName());
+        self::assertEquals('/plugins/git/tuleap-gitlab/administration/gitlab/', $presenter->getUrl());
+        self::assertEquals('GitLab Group Link', $presenter->getPaneName());
         self::assertTrue($presenter->isActive());
     }
 }

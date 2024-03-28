@@ -30,10 +30,10 @@ class b201410081156_add_burndown_table extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_field_burndown (
+        $sql = 'CREATE TABLE IF NOT EXISTS tracker_field_burndown (
                     field_id INT(11) NOT NULL PRIMARY KEY,
                     use_cache TINYINT DEFAULT 0
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
         $this->db->createTable('tracker_field_burndown', $sql);
 
         $sql = "REPLACE INTO tracker_field_burndown (field_id, use_cache)

@@ -38,15 +38,15 @@ final class SearchSortPropertyMapperTest extends TestCase
     {
         $this->expectException(InvalidSortTypeException::class);
 
-        $this->sort_property_mapper->convertToLegacySort("brrrrrr");
+        $this->sort_property_mapper->convertToLegacySort('brrrrrr');
     }
 
     public function testItReturnsTheLegacySortValueAccordingTheGivenSort(): void
     {
-        $legacy_sort = $this->sort_property_mapper->convertToLegacySort("desc");
+        $legacy_sort = $this->sort_property_mapper->convertToLegacySort('desc');
         self::assertEquals(0, $legacy_sort);
 
-        $legacy_sort = $this->sort_property_mapper->convertToLegacySort("asc");
+        $legacy_sort = $this->sort_property_mapper->convertToLegacySort('asc');
         self::assertEquals(1, $legacy_sort);
     }
 }

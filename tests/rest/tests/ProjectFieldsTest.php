@@ -29,17 +29,17 @@ class ProjectFieldsTest extends RestBase
     public function testGETProjectFields(): void
     {
         $expected_result = [
-            "project_fields_representation" => [
+            'project_fields_representation' => [
                 [
-                    "id"          => 1,
-                    "name"        => "Test Rest",
-                    "rank"        => 2,
-                    "is_required" => false,
-                    "description" => "Field for test rest",
-                    "type"        => "text",
+                    'id'          => 1,
+                    'name'        => 'Test Rest',
+                    'rank'        => 2,
+                    'is_required' => false,
+                    'description' => 'Field for test rest',
+                    'type'        => 'text',
                 ],
             ],
-            "total_size"                    => 1,
+            'total_size'                    => 1,
         ];
 
         $response = $this->getResponse(

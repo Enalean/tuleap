@@ -37,9 +37,9 @@ final class ArtifactsActionsTest extends TrackerBase
         $artifact_id = end($this->base_artifact_ids);
         $body        = json_encode(
             [
-                "move" => [
-                    "tracker_id" => $this->move_tracker_id,
-                    "dry_run" => true,
+                'move' => [
+                    'tracker_id' => $this->move_tracker_id,
+                    'dry_run' => true,
                 ],
             ]
         );
@@ -56,9 +56,9 @@ final class ArtifactsActionsTest extends TrackerBase
         $artifact_id = end($this->base_artifact_ids);
         $body        = json_encode(
             [
-                "move" => [
-                    "tracker_id" => $this->move_tracker_id,
-                    "dry_run"    => true,
+                'move' => [
+                    'tracker_id' => $this->move_tracker_id,
+                    'dry_run'    => true,
                 ],
             ]
         );
@@ -77,8 +77,8 @@ final class ArtifactsActionsTest extends TrackerBase
 
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        self::assertArrayHasKey("dry_run", $json);
-        self::assertArrayHasKey("fields", $json['dry_run']);
+        self::assertArrayHasKey('dry_run', $json);
+        self::assertArrayHasKey('fields', $json['dry_run']);
 
         $migrated_fields = $json['dry_run']['fields']['fields_migrated'];
         self::assertCount(38, $migrated_fields);
@@ -111,8 +111,8 @@ final class ArtifactsActionsTest extends TrackerBase
         $artifact_id = end($this->base_artifact_ids);
         $body        = json_encode(
             [
-                "move" => [
-                    "tracker_id" => $this->move_tracker_id,
+                'move' => [
+                    'tracker_id' => $this->move_tracker_id,
                 ],
             ]
         );
@@ -133,8 +133,8 @@ final class ArtifactsActionsTest extends TrackerBase
         $artifact_id = end($this->base_artifact_ids);
         $body        = json_encode(
             [
-                "move" => [
-                    "tracker_id" => $this->move_tracker_id,
+                'move' => [
+                    'tracker_id' => $this->move_tracker_id,
                 ],
             ]
         );
@@ -193,12 +193,12 @@ final class ArtifactsActionsTest extends TrackerBase
         $response = $this->performArtifactDeletion($this->delete_artifact_ids[1]);
 
         self::assertEquals(
-            "1",
+            '1',
             $response->getHeader('x-ratelimit-limit')[0],
         );
 
         self::assertEquals(
-            "0",
+            '0',
             $response->getHeader('x-ratelimit-remaining')[0],
         );
 
@@ -230,9 +230,9 @@ final class ArtifactsActionsTest extends TrackerBase
         $artifact_id = end($this->move_forbidden_artifact_ids);
         $body        = json_encode(
             [
-                "move" => [
-                    "tracker_id" => $this->move_destination_tracker_id,
-                    "dry_run" => true,
+                'move' => [
+                    'tracker_id' => $this->move_destination_tracker_id,
+                    'dry_run' => true,
                 ],
             ]
         );

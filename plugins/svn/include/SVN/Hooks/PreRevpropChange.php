@@ -75,7 +75,7 @@ class PreRevpropChange
             throw new Exception('Cannot modify anything but svn:log');
         }
         if (! $this->hook_config->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)) {
-            throw new Exception("Commit message is not allowed to change.");
+            throw new Exception('Commit message is not allowed to change.');
         }
 
         $validator = new CommitMessageValidator(

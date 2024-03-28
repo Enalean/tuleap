@@ -95,7 +95,7 @@ class ProjectLabeledItems extends Widget
 
     public function hasCustomTitle()
     {
-        return $this->getPurifiedCustomTitle() !== "";
+        return $this->getPurifiedCustomTitle() !== '';
     }
 
     public function getPurifiedCustomTitle()

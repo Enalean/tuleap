@@ -97,8 +97,8 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
         $remaining_effort_field->shouldReceive('getId')->andReturn(1);
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
 
-        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
-        $remaining_effort_field->shouldReceive("getComputedValue")->never();
+        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns([]);
+        $remaining_effort_field->shouldReceive('getComputedValue')->never();
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
 
@@ -119,7 +119,7 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
 
-        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
+        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns([]);
 
         $remaining_effort_field->shouldReceive('getCachedValue')->never();
         $remaining_effort_field->shouldReceive('getComputedValue')->never();
@@ -143,47 +143,47 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
 
-        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns(
+        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns(
             [
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $field_id,
-                    "timestamp"   => strtotime('+1 day', $old_start_date),
-                    "value"        => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $field_id,
+                    'timestamp'   => strtotime('+1 day', $old_start_date),
+                    'value'        => 10,
                 ],
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $field_id,
-                    "timestamp"   => strtotime('+2 day', $old_start_date),
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $field_id,
+                    'timestamp'   => strtotime('+2 day', $old_start_date),
+                    'value'       => 10,
 
                 ],
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $field_id,
-                    "timestamp"   => strtotime('+3 day', $old_start_date),
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $field_id,
+                    'timestamp'   => strtotime('+3 day', $old_start_date),
+                    'value'       => 10,
 
                 ],
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $field_id,
-                    "timestamp"   => strtotime('+4 day', $old_start_date),
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $field_id,
+                    'timestamp'   => strtotime('+4 day', $old_start_date),
+                    'value'       => 10,
 
                 ],
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $field_id,
-                    "timestamp"   => strtotime('+5 day', $old_start_date),
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $field_id,
+                    'timestamp'   => strtotime('+5 day', $old_start_date),
+                    'value'       => 10,
 
                 ],
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $field_id,
-                    "timestamp"   => strtotime('+6 day', $old_start_date),
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $field_id,
+                    'timestamp'   => strtotime('+6 day', $old_start_date),
+                    'value'       => 10,
 
                 ],
             ]
@@ -209,26 +209,26 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
         $remaining_effort_field->shouldReceive('getId')->andReturn($field_id);
 
-        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns(
+        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns(
             [
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $field_id,
-                    "timestamp"   => strtotime('+1 day', $recent_start_date),
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $field_id,
+                    'timestamp'   => strtotime('+1 day', $recent_start_date),
+                    'value'       => 10,
                 ],
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $field_id,
-                    "timestamp"   => strtotime('+2 day', $recent_start_date),
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $field_id,
+                    'timestamp'   => strtotime('+2 day', $recent_start_date),
+                    'value'       => 10,
 
                 ],
                 [
-                    "artifact_id" => $this->artifact->getId(),
-                    "field_id"    => $field_id,
-                    "timestamp"   => strtotime('+3 day', $recent_start_date),
-                    "value"       => 10,
+                    'artifact_id' => $this->artifact->getId(),
+                    'field_id'    => $field_id,
+                    'timestamp'   => strtotime('+3 day', $recent_start_date),
+                    'value'       => 10,
 
                 ],
             ]

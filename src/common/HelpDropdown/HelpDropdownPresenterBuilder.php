@@ -52,7 +52,7 @@ class HelpDropdownPresenterBuilder
 
     public function build(PFUser $current_user, string $tuleap_version): HelpDropdownPresenter
     {
-        $documentation = "/doc/" . urlencode($current_user->getShortLocale()) . "/";
+        $documentation = '/doc/' . urlencode($current_user->getShortLocale()) . '/';
 
         $main_items = [
             HelpLinkPresenter::build(
@@ -60,8 +60,8 @@ class HelpDropdownPresenterBuilder
                     'tuleap-core',
                     'Get help'
                 ),
-                "/help/",
-                "fa-life-saver",
+                '/help/',
+                'fa-life-saver',
                 $this->uri_sanitizer,
                 'help-link'
             ),
@@ -71,7 +71,7 @@ class HelpDropdownPresenterBuilder
                     'Documentation'
                 ),
                 $documentation,
-                "fa-book",
+                'fa-book',
                 $this->uri_sanitizer,
                 'documentation-link'
             ),
@@ -82,7 +82,7 @@ class HelpDropdownPresenterBuilder
         if ($current_user->isAnonymous()) {
             $has_release_note_been_seen = true;
         } else {
-            $has_release_note_been_seen = (bool) $current_user->getPreference("has_release_note_been_seen");
+            $has_release_note_been_seen = (bool) $current_user->getPreference('has_release_note_been_seen');
         }
 
         $explorer_endpoint_event = $this->event_dispatcher->dispatch(new \Tuleap\REST\ExplorerEndpointAvailableEvent());
@@ -106,7 +106,7 @@ class HelpDropdownPresenterBuilder
                 'Release Note'
             ),
             $release_note_link,
-            "fa-star",
+            'fa-star',
             $this->uri_sanitizer,
             'release-note-link'
         );

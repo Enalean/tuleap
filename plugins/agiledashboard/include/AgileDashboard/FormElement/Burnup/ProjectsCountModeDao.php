@@ -28,32 +28,32 @@ class ProjectsCountModeDao extends DataAccessObject
 {
     public function isBurnupInCountMode(int $project_id): bool
     {
-        $sql = "SELECT COUNT(*) FROM plugin_agiledashboard_burnup_projects_count_mode WHERE project_id = ?";
+        $sql = 'SELECT COUNT(*) FROM plugin_agiledashboard_burnup_projects_count_mode WHERE project_id = ?';
 
         return $this->getDB()->single($sql, [$project_id]) > 0;
     }
 
     public function enableBurnupCountMode(int $project_id): void
     {
-        $sql = "INSERT INTO plugin_agiledashboard_burnup_projects_count_mode (project_id) VALUES (?)
-                ON DUPLICATE KEY UPDATE project_id = ?";
+        $sql = 'INSERT INTO plugin_agiledashboard_burnup_projects_count_mode (project_id) VALUES (?)
+                ON DUPLICATE KEY UPDATE project_id = ?';
 
         $this->getDB()->cell($sql, $project_id, $project_id);
     }
 
     public function disableBurnupCountMode(int $project_id): void
     {
-        $sql = "DELETE FROM plugin_agiledashboard_burnup_projects_count_mode WHERE project_id = ?";
+        $sql = 'DELETE FROM plugin_agiledashboard_burnup_projects_count_mode WHERE project_id = ?';
 
         $this->getDB()->single($sql, [$project_id]);
     }
 
     public function inheritBurnupCountMode(int $template_project_id, int $project_id): void
     {
-        $sql = "INSERT INTO plugin_agiledashboard_burnup_projects_count_mode
+        $sql = 'INSERT INTO plugin_agiledashboard_burnup_projects_count_mode
                 SELECT ?
                 FROM plugin_agiledashboard_burnup_projects_count_mode
-                WHERE project_id = ?";
+                WHERE project_id = ?';
 
         $this->getDB()->single($sql, [$project_id, $template_project_id]);
     }

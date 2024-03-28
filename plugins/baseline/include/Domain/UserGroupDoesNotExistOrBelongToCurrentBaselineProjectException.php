@@ -27,7 +27,7 @@ final class UserGroupDoesNotExistOrBelongToCurrentBaselineProjectException exten
     public function __construct(int $group_id)
     {
         parent::__construct(
-            sprintf("User group with id %d does not belong to the current baseline project", $group_id)
+            sprintf('User group with id %d does not belong to the current baseline project', $group_id)
         );
     }
 }

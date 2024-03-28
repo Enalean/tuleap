@@ -23,7 +23,7 @@ class b201510071857_add_semantic_description extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return "Add table to store semantic description";
+        return 'Add table to store semantic description';
     }
 
     public function preUp()
@@ -33,11 +33,11 @@ class b201510071857_add_semantic_description extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "CREATE TABLE tracker_semantic_description (
+        $sql = 'CREATE TABLE tracker_semantic_description (
                     tracker_id INT(11) NOT NULL PRIMARY KEY,
                     field_id INT(11) NOT NULL,
                     INDEX filed_id_idx(field_id)
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
         $this->db->createTable('tracker_semantic_description', $sql);
     }
 

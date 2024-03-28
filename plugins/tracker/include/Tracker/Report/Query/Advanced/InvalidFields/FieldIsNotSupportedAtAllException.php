@@ -27,7 +27,7 @@ final class FieldIsNotSupportedAtAllException extends InvalidFieldException
     {
         parent::__construct(
             sprintf(
-                dgettext("tuleap-tracker", "The field '%s' is not supported. Please
+                dgettext('tuleap-tracker', "The field '%s' is not supported. Please
                     refer to the documentation for the allowed types."),
                 $field->getName()
             )

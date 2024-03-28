@@ -65,7 +65,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
 
     public function visitFolder($item, $params = [])
     {
-        return "";
+        return '';
     }
 
     public function visitDocument($item, $params = [])

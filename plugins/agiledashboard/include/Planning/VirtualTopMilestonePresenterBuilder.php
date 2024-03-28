@@ -63,7 +63,7 @@ final class VirtualTopMilestonePresenterBuilder
             );
         }, null);
         $is_project_admin   = $user->isAdmin((int) $project->getID());
-        $backlog_title      = dgettext("tuleap-agiledashboard", "Backlog");
+        $backlog_title      = dgettext('tuleap-agiledashboard', 'Backlog');
 
         return new VirtualTopMilestonePresenter(
             $planning_presenter,

@@ -27,7 +27,7 @@ class CannotAddUgroupsNotificationException extends Exception
 {
     private $ugroups_not_added;
 
-    public function __construct($ugroups_not_added, $message = "", $code = 0, ?Throwable $previous = null)
+    public function __construct($ugroups_not_added, $message = '', $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->ugroups_not_added = $ugroups_not_added;

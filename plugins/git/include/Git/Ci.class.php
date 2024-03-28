@@ -84,7 +84,7 @@ class Git_Ci
                     }
                 }
 
-                $warning    = "";
+                $warning    = '';
                 $intalled   = false;
                 $parameters = [
                     'installed' => &$intalled,
@@ -104,7 +104,7 @@ class Git_Ci
                 foreach ($repositories as $repository) {
                     $nameSpace = '';
                     if (! empty($repository['repository_namespace'])) {
-                        $nameSpace = $repository['repository_namespace'] . "/";
+                        $nameSpace = $repository['repository_namespace'] . '/';
                     }
                     $selectBox .= '<option value="' . $repository['repository_id'] . '" ';
                     if ($repositoryId == $repository['repository_id']) {

@@ -29,7 +29,7 @@ class WebhookDataBranchNameExtractor
      */
     public static function extractBranchName(string $ref): string
     {
-        if ($ref === "") {
+        if ($ref === '') {
             throw new EmptyBranchNameException();
         }
 

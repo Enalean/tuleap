@@ -30,7 +30,7 @@ final class SynchronizationCleaner
 
     public function clean(): void
     {
-        $start_purge_timestamp = strtotime("-1 days");
+        $start_purge_timestamp = strtotime('-1 days');
         if (! $start_purge_timestamp) {
             return;
         }

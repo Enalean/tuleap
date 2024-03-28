@@ -37,7 +37,7 @@ class AttachmentDownloader
 
     public function downloadAttachment(Attachment $attachment): string
     {
-        $this->logger->debug("GET " . $attachment->getContentUrl());
+        $this->logger->debug('GET ' . $attachment->getContentUrl());
 
         if (! is_dir(self::getTmpFolderURL())) {
             mkdir(self::getTmpFolderURL());

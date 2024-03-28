@@ -85,8 +85,8 @@ class DocmanItemUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $version               = \Mockery::mock(Version::class);
 
         $item->shouldReceive('getId')->andReturn(100);
-        $this->docman_item_factory->shouldReceive("update")->once()->with(['id' => 100]);
-        $this->docman_item_factory->shouldReceive("getItemFromDb")->once()->with(100)->andReturn($item);
+        $this->docman_item_factory->shouldReceive('update')->once()->with(['id' => 100]);
+        $this->docman_item_factory->shouldReceive('getItemFromDb')->once()->with(100)->andReturn($item);
 
         $this->approval_table_action_checker->shouldReceive('checkAvailableUpdateAction')
             ->once()
@@ -116,8 +116,8 @@ class DocmanItemUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $version               = \Mockery::mock(Version::class);
 
         $item->shouldReceive('getId')->andReturn(100);
-        $this->docman_item_factory->shouldReceive("update")->never();
-        $this->docman_item_factory->shouldReceive("getItemFromDb")->never();
+        $this->docman_item_factory->shouldReceive('update')->never();
+        $this->docman_item_factory->shouldReceive('getItemFromDb')->never();
 
         $this->approval_table_action_checker->shouldReceive('checkAvailableUpdateAction')
             ->never();
@@ -143,8 +143,8 @@ class DocmanItemUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $version               = \Mockery::mock(Version::class);
 
         $item->shouldReceive('getId')->andReturn(100);
-        $this->docman_item_factory->shouldReceive("update")->never();
-        $this->docman_item_factory->shouldReceive("getItemFromDb")->never();
+        $this->docman_item_factory->shouldReceive('update')->never();
+        $this->docman_item_factory->shouldReceive('getItemFromDb')->never();
 
         $this->approval_table_action_checker->shouldReceive('checkAvailableUpdateAction')
             ->never();

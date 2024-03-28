@@ -252,7 +252,7 @@ class HeaderPresenter
         $this->has_platform_banner        = $platform_banner !== null;
         $this->platform_banner_is_visible = $platform_banner && $platform_banner->isVisible();
         $this->platform_banner_importance = $platform_banner ? $platform_banner->getImportance() : '';
-        $this->purified_platform_banner   = "";
+        $this->purified_platform_banner   = '';
         if ($platform_banner) {
             $this->purified_platform_banner = \Codendi_HTMLPurifier::instance()->purify(
                 $platform_banner->getMessage(),

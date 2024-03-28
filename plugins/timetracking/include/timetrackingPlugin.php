@@ -278,9 +278,9 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
             $get_trackers->getOffset()
         );
 
-        if (isset($tracker_representations["trackers"])) {
-            $get_trackers->setTotalTrackers($tracker_representations["total_trackers"]);
-            $get_trackers->addTrackersWithCriteria($tracker_representations["trackers"]);
+        if (isset($tracker_representations['trackers'])) {
+            $get_trackers->setTotalTrackers($tracker_representations['total_trackers']);
+            $get_trackers->addTrackersWithCriteria($tracker_representations['trackers']);
         }
     }
 

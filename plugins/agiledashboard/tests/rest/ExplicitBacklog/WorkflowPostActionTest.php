@@ -43,7 +43,7 @@ class WorkflowPostActionTest extends TestBase
         $transition_id = $this->getTransitionId();
 
         $body = json_encode([
-            "post_actions" => [],
+            'post_actions' => [],
         ]);
 
         $response = $this->getResponseByName(
@@ -72,10 +72,10 @@ class WorkflowPostActionTest extends TestBase
         $transition_id = $this->getTransitionId();
 
         $body = json_encode([
-            "post_actions" => [
+            'post_actions' => [
                 [
-                    "id" => null,
-                    "type" => "add_to_top_backlog",
+                    'id' => null,
+                    'type' => 'add_to_top_backlog',
                 ],
             ],
         ]);
@@ -134,7 +134,7 @@ class WorkflowPostActionTest extends TestBase
         }
 
         $found_transition = null;
-        foreach ($tracker["workflow"]["transitions"] as $transition) {
+        foreach ($tracker['workflow']['transitions'] as $transition) {
             if ($transition['from_id'] === $from_value_id && $transition['to_id'] === $to_value_id) {
                 $found_transition = $transition;
                 break;

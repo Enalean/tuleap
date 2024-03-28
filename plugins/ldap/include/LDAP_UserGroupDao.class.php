@@ -166,8 +166,8 @@ class LDAP_UserGroupDao extends DataAccessObject
     public function isSynchronizedUgroup($ugroup_id)
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $sql       = "SELECT * FROM plugin_ldap_ugroup
-                WHERE ugroup_id = " . $ugroup_id . " and synchro_policy = " . $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+        $sql       = 'SELECT * FROM plugin_ldap_ugroup
+                WHERE ugroup_id = ' . $ugroup_id . ' and synchro_policy = ' . $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
         $rs        = $this->retrieve($sql);
         if (! empty($rs) && $rs->rowCount() == 1) {
             return true;
@@ -204,10 +204,10 @@ class LDAP_UserGroupDao extends DataAccessObject
     public function isMembersUpdateAllowed($ugroup_id)
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $sql       = "SELECT * FROM plugin_ldap_ugroup
-                      WHERE ugroup_id = " . $ugroup_id . "
-                        AND bind_option = " . $this->da->quoteSmart(LDAP_GroupManager::BIND_OPTION) . "
-                        AND synchro_policy = " . $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+        $sql       = 'SELECT * FROM plugin_ldap_ugroup
+                      WHERE ugroup_id = ' . $ugroup_id . '
+                        AND bind_option = ' . $this->da->quoteSmart(LDAP_GroupManager::BIND_OPTION) . '
+                        AND synchro_policy = ' . $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
         $rs        = $this->retrieve($sql);
         if (! empty($rs) && $rs->rowCount() == 1) {
             return false;

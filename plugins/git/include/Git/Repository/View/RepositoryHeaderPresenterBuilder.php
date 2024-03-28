@@ -201,7 +201,7 @@ class RepositoryHeaderPresenterBuilder
         return new TabPresenter(
             $is_selected,
             $this->repository_header_tabs_url_builder->buildFilesTabURL($repository, \HTTPRequest::instance()),
-            dgettext("tuleap-git", "Files"),
+            dgettext('tuleap-git', 'Files'),
             self::TAB_FILES,
             false,
             0,
@@ -216,7 +216,7 @@ class RepositoryHeaderPresenterBuilder
         return new TabPresenter(
             $is_selected,
             $this->repository_header_tabs_url_builder->buildCommitsTabURL($repository, \HTTPRequest::instance()),
-            dgettext("tuleap-git", "Commits"),
+            dgettext('tuleap-git', 'Commits'),
             self::TAB_COMMITS,
             false,
             0,

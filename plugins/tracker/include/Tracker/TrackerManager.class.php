@@ -56,7 +56,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             return true;
         }
 
-        header("HTTP/1.0 404 Not Found");
+        header('HTTP/1.0 404 Not Found');
         if (! $request->isAjax()) {
             $GLOBALS['Response']->addFeedback('error', "The project doesn't use the 'tracker v5' service");
             $GLOBALS['HTML']->redirect('/projects/' . $project->getUnixName() . '/');
@@ -225,7 +225,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                                         [
                                             'error' => [
                                                 'message' => dgettext(
-                                                    "tuleap-tracker",
+                                                    'tuleap-tracker',
                                                     "You don't have permissions to see user groups."
                                                 ),
                                             ],
@@ -320,7 +320,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 [
                     'title'     => $GLOBALS['Language']->getText('global', 'Administration'),
                     'url'       => Tracker::getTrackerGlobalAdministrationURL($project),
-                    'data-test' => "tracker-administration",
+                    'data-test' => 'tracker-administration',
                 ],
             ];
         }
@@ -749,7 +749,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $project_manager = ProjectManager::instance();
 
         foreach ($projects as $data) {
-            $project = $project_manager->getProject($data["group_id"]);
+            $project = $project_manager->getProject($data['group_id']);
 
             if (! $project->usesService(trackerPlugin::SERVICE_SHORTNAME)) {
                 continue;
@@ -890,14 +890,14 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     public function sendDateReminder()
     {
         $logger = BackendLogger::getDefaultLogger();
-        $logger->debug("[TDR] Start processing date reminders");
+        $logger->debug('[TDR] Start processing date reminders');
         $trackers = $this->getTrackersHavingDateReminders();
         foreach ($trackers as $tracker) {
-            $logger->debug("[TDR] Processing date reminders for tracker " . $tracker->getProject()->getUnixName() . " / " . $tracker->getItemName() . " (id: " . $tracker->getId() . ")");
+            $logger->debug('[TDR] Processing date reminders for tracker ' . $tracker->getProject()->getUnixName() . ' / ' . $tracker->getItemName() . ' (id: ' . $tracker->getId() . ')');
             $dateReminderManager = new Tracker_DateReminderManager($tracker);
             $dateReminderManager->process();
         }
-        $logger->debug("[TDR] End processing date reminders");
+        $logger->debug('[TDR] End processing date reminders');
     }
 
     private function displayMigrateFromTV3Option($requested_create_mode, Project $project, $requested_template_id)

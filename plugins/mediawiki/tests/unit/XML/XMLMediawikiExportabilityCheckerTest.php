@@ -58,7 +58,7 @@ final class XMLMediawikiExportabilityCheckerTest extends TestCase
             $this->getProjectMediawikiDataDirectory(Option::nothing(bool())),
         )->match(
             function () {
-                self::fail("Expected an error");
+                self::fail('Expected an error');
             },
             function (Fault $fault) {
                 self::assertInstanceOf(XMLPartialExportFault::class, $fault);
@@ -76,7 +76,7 @@ final class XMLMediawikiExportabilityCheckerTest extends TestCase
             $this->getProjectMediawikiDataDirectory(Option::nothing(bool())),
         )->match(
             function () {
-                self::fail("Expected an error");
+                self::fail('Expected an error');
             },
             function (Fault $fault) {
                 self::assertInstanceOf(XMLExportMediawikiServiceNotUsedFault::class, $fault);
@@ -92,7 +92,7 @@ final class XMLMediawikiExportabilityCheckerTest extends TestCase
             $this->getProjectMediawikiDataDirectory(Option::nothing(bool())),
         )->match(
             function () {
-                self::fail("Expected an error");
+                self::fail('Expected an error');
             },
             function (Fault $fault) {
                 self::assertInstanceOf(XMLExportMediawikiNotInstantiatedFault::class, $fault);
@@ -107,7 +107,7 @@ final class XMLMediawikiExportabilityCheckerTest extends TestCase
                 function (Dispatchable $event) {
                     if ($event instanceof ProjectServiceBeforeActivation) {
                         $event->pluginSetAValue();
-                        $event->setWarningMessage("You cannot");
+                        $event->setWarningMessage('You cannot');
                     }
 
                     return $event;
@@ -120,7 +120,7 @@ final class XMLMediawikiExportabilityCheckerTest extends TestCase
             $this->getProjectMediawikiDataDirectory(Option::fromValue(true)),
         )->match(
             function () {
-                self::fail("Expected an error");
+                self::fail('Expected an error');
             },
             function (Fault $fault) {
                 self::assertInstanceOf(XMLExportMediawikiCannotBeActivatedFault::class, $fault);
@@ -178,7 +178,7 @@ final class XMLMediawikiExportabilityCheckerTest extends TestCase
         $with_mediawiki_directory->match(
             function () use ($directory) {
                 $directory->method('getMediawikiDir')->willReturn(
-                    vfsStream::setup("/path/to/project/mediawiki_directory")->url()
+                    vfsStream::setup('/path/to/project/mediawiki_directory')->url()
                 );
             },
             function () use ($directory) {

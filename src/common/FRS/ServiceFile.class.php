@@ -133,12 +133,12 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         $frspf      = $this->getFRSPackageFactory();
         $packages   = [];
-        $sql        = "SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date " .
-        "FROM frs_package,frs_release " .
-        "WHERE frs_package.package_id=frs_release.package_id " .
+        $sql        = 'SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date ' .
+        'FROM frs_package,frs_release ' .
+        'WHERE frs_package.package_id=frs_release.package_id ' .
         "AND frs_package.group_id='" . db_ei($this->getGroupId()) . "' " .
         "AND frs_release.status_id=' " . db_ei($frspf->STATUS_ACTIVE) . "' " .
-        "ORDER BY frs_package.rank,frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
+        'ORDER BY frs_package.rank,frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC';
         $res_files  = db_query($sql);
         $rows_files = db_numrows($res_files);
         if ($res_files && $rows_files >= 1) {
@@ -211,7 +211,7 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
         $pv     = (int) HTTPRequest::instance()->get('pv');
         $params = \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
-            ->inProject($project, "file")
+            ->inProject($project, 'file')
             ->withPrinterVersion($pv)
             ->build();
         $this->displayHeader($title, $breadcrumbs, [], $params);

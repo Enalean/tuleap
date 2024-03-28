@@ -53,14 +53,14 @@ class DeleteBotController implements DispatchableWithRequest
 
         $project_id = $bot->getProjectId();
         if ($project_id === null) {
-            $layout->addFeedback(Feedback::ERROR, "System bots cannot be deleted this way.");
-            $layout->redirect("/");
+            $layout->addFeedback(Feedback::ERROR, 'System bots cannot be deleted this way.');
+            $layout->redirect('/');
         }
 
         $user = $request->getCurrentUser();
         if (! $user->isAdmin($project_id)) {
             throw new ForbiddenException(
-                "User is not project administrator."
+                'User is not project administrator.'
             );
         }
 

@@ -38,19 +38,19 @@ class TimetrackingQueryChecker
      */
     public function checkQuery(array $json_query): void
     {
-        if (! isset($json_query["start_date"]) || ! isset($json_query["end_date"])) {
-            throw new RestException(400, "Please provide a start date and an end date");
+        if (! isset($json_query['start_date']) || ! isset($json_query['end_date'])) {
+            throw new RestException(400, 'Please provide a start date and an end date');
         }
 
-        if (isset($json_query["trackers_id"])) {
-            foreach ($json_query["trackers_id"] as $ids) {
+        if (isset($json_query['trackers_id'])) {
+            foreach ($json_query['trackers_id'] as $ids) {
                 if (! is_int($ids)) {
                     throw new RestException(400, "Please provide valid trackers' ids");
                 }
             }
         }
 
-        $this->checkTimePeriodIsValid($json_query["start_date"], $json_query["end_date"]);
+        $this->checkTimePeriodIsValid($json_query['start_date'], $json_query['end_date']);
     }
 
     /**
@@ -64,11 +64,11 @@ class TimetrackingQueryChecker
         $period_end   = DateTime::createFromFormat(DateTime::ATOM, $end_date);
 
         if (! $period_start || ! $period_end) {
-            throw new RestException(400, "Please provide valid ISO-8601 dates");
+            throw new RestException(400, 'Please provide valid ISO-8601 dates');
         }
 
         if ($period_start > $period_end) {
-            throw new RestException(400, "end_date must be greater than start_date");
+            throw new RestException(400, 'end_date must be greater than start_date');
         }
     }
 }

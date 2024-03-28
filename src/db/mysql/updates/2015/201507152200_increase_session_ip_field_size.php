@@ -23,7 +23,7 @@ class b201507152200_increase_session_ip_field_size extends \Tuleap\ForgeUpgrade\
 {
     public function description()
     {
-        return "Increase session IP field size to accept IPv6";
+        return 'Increase session IP field size to accept IPv6';
     }
 
     public function preUp()

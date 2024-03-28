@@ -29,7 +29,7 @@ final class UpdatedCommentEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEventCanBeTransformedToAWorkerEventPayload(): void
     {
-        $event = UpdatedCommentEvent::fromUpdatedComment(CommentTestBuilder::aMarkdownComment("jigouli")->withId(951)->build());
+        $event = UpdatedCommentEvent::fromUpdatedComment(CommentTestBuilder::aMarkdownComment('jigouli')->withId(951)->build());
 
         self::assertEquals(['comment_id' => 951], $event->toWorkerEventPayload());
     }
@@ -42,7 +42,7 @@ final class UpdatedCommentEventTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $event = UpdatedCommentEvent::fromWorkerEventPayload($payload);
 
-        self::assertEquals(UpdatedCommentEvent::fromUpdatedComment(CommentTestBuilder::aMarkdownComment("jigouli")->withId(952)->build()), $event);
+        self::assertEquals(UpdatedCommentEvent::fromUpdatedComment(CommentTestBuilder::aMarkdownComment('jigouli')->withId(952)->build()), $event);
     }
 
     public function testBuildingFromAnInvalidPayloadIsRejected(): void

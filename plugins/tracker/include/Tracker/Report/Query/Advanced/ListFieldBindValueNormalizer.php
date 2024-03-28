@@ -24,6 +24,6 @@ final class ListFieldBindValueNormalizer
 {
     public function normalize($value)
     {
-        return mb_strtolower($value, "UTF-8");
+        return mb_strtolower($value, 'UTF-8');
     }
 }

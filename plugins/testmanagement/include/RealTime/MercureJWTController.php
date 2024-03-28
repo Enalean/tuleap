@@ -57,7 +57,7 @@ class MercureJWTController extends DispatchablePSR15Compatible
         if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY) == ! 1) {
             return $this->response_factory->createResponse(404);
         }
-        $id = (int) $request->getAttribute("campaign_id");
+        $id = (int) $request->getAttribute('campaign_id');
         try {
             $campaign = $this->campaign_retriever->getById($id);
         } catch (ArtifactNotFoundException $e) {

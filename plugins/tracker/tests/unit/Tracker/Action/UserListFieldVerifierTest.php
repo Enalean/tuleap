@@ -41,8 +41,8 @@ final class UserListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $static_bind = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField(422)->build()
         )->withStaticValues([
-            1 => "Open",
-            2 => "Closed",
+            1 => 'Open',
+            2 => 'Closed',
         ])->build();
 
         self::assertFalse((new UserListFieldVerifier())->isUserListField($static_bind->getField()));

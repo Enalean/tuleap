@@ -34,12 +34,12 @@ EOT;
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_git_webhook_url (
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_webhook_url (
                     id int(11) unsigned PRIMARY KEY AUTO_INCREMENT,
                     repository_id int(10) unsigned NOT NULL,
                     url TEXT NOT NULL,
                     INDEX idx_git_webhook_url_repository_id (repository_id)
-                )";
+                )';
 
         $this->db->createTable('plugin_git_webhook_url', $sql);
     }

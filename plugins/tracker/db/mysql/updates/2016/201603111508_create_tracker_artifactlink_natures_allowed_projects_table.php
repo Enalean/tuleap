@@ -30,9 +30,9 @@ class b201603111508_create_tracker_artifactlink_natures_allowed_projects_table e
 
     public function up()
     {
-        $sql = "CREATE TABLE plugin_tracker_artifactlink_natures_allowed_projects (
+        $sql = 'CREATE TABLE plugin_tracker_artifactlink_natures_allowed_projects (
                     project_id int(11) NOT NULL PRIMARY KEY
-                ) ENGINE=InnoDB";
+                ) ENGINE=InnoDB';
 
         $this->db->createTable('plugin_tracker_artifactlink_natures_allowed_projects', $sql);
     }

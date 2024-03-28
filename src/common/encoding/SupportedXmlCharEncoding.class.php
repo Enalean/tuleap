@@ -32,7 +32,7 @@ class Encoding_SupportedXmlCharEncoding
     */
     public static function getXMLCompatibleString(string $string): string
     {
-        $clean   = "";
+        $clean   = '';
         $current = null;
 
         if (empty($string)) {
@@ -64,7 +64,7 @@ class Encoding_SupportedXmlCharEncoding
             ) {
                 $clean .= chr($current);
             } else {
-                $clean .= " ";
+                $clean .= ' ';
             }
         }
 

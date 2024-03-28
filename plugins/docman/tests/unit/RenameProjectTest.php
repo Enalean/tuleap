@@ -51,7 +51,7 @@ class RenameProjectTest extends \Tuleap\Test\PHPUnit\TestCase
         $fact->allows(['_getVersionDao' => $dao]);
         $dao->allows()->renameProject($docman_root_directory->url(), $project, $new_name)->andReturns(true);
 
-        $this->assertFalse(is_dir($old_directory_url), "Docman old rep should be renamed");
-        $this->assertTrue(is_dir($docman_root_directory->url() . '/' . $new_name), "Docman new Rep should be created");
+        $this->assertFalse(is_dir($old_directory_url), 'Docman old rep should be renamed');
+        $this->assertTrue(is_dir($docman_root_directory->url() . '/' . $new_name), 'Docman new Rep should be created');
     }
 }

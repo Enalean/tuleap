@@ -129,12 +129,12 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
         $halfDay   = 60 * 60 * 12;
         $minDate   = $this->da->escapeInt($date - $halfDay);
         $maxDate   = $this->da->escapeInt($date + $halfDay);
-        $sql       = "SELECT MAX(c.id) AS id, c.artifact_id FROM
+        $sql       = 'SELECT MAX(c.id) AS id, c.artifact_id FROM
                          tracker_changeset c
                          JOIN tracker_artifact a ON c.artifact_id = a.id
-                         WHERE DATE(FROM_UNIXTIME(c.submitted_on)) BETWEEN DATE(FROM_UNIXTIME(" . $minDate . ")) AND DATE(FROM_UNIXTIME(" . $maxDate . "))
-                           AND a.tracker_id = " . $trackerId . "
-                         GROUP BY c.artifact_id";
+                         WHERE DATE(FROM_UNIXTIME(c.submitted_on)) BETWEEN DATE(FROM_UNIXTIME(' . $minDate . ')) AND DATE(FROM_UNIXTIME(' . $maxDate . '))
+                           AND a.tracker_id = ' . $trackerId . '
+                         GROUP BY c.artifact_id';
         return $this->retrieve($sql);
     }
 

@@ -70,7 +70,7 @@ class ContinuousIntegrationCollector
 
         if (count($repositories) > 0) {
             $html_form = $this->renderer->renderToString(
-                "hudson_svn_form",
+                'hudson_svn_form',
                 new FormPresenter(
                     $repositories,
                     $this->doesJobTriggerCommit($job_ids, $job_id),
@@ -79,7 +79,7 @@ class ContinuousIntegrationCollector
             );
 
             return [
-                'service'   => "",
+                'service'   => '',
                 'title'     => dgettext('tuleap-hudson_svn', 'Subversion multi repositories trigger'),
                 'used'      => $job_ids,
                 'add_form'  => $html_form,
@@ -116,7 +116,7 @@ class ContinuousIntegrationCollector
         $used = [];
 
         foreach ($this->getJobIds($project) as $row) {
-            $used[$row["id"]] = true;
+            $used[$row['id']] = true;
         }
 
         return $used;

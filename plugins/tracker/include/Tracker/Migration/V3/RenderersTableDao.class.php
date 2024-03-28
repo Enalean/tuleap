@@ -51,8 +51,8 @@ class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject
                 ORDER BY TRR.id, ARF.place_result";
         $this->update($sql);
 
-        $this->update("SET @counter = 0");
-        $this->update("SET @previous = NULL");
+        $this->update('SET @counter = 0');
+        $this->update('SET @previous = NULL');
 
         $sql = "UPDATE tracker_report_renderer_table_columns 
                 INNER JOIN (SELECT @counter := IF(@previous = renderer_id, @counter + 1, 1) AS new_rank, 

@@ -87,24 +87,24 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         self::assertNotNull($report_json->criteria);
         self::assertCount(8, $report_json->criteria);
         self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[0]);
-        self::assertSame("Summary", $report_json->criteria[0]->criterion_name);
-        self::assertSame("Test", $report_json->criteria[0]->criterion_value);
+        self::assertSame('Summary', $report_json->criteria[0]->criterion_name);
+        self::assertSame('Test', $report_json->criteria[0]->criterion_value);
         self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[1]);
-        self::assertSame("Users list", $report_json->criteria[1]->criterion_name);
-        self::assertSame("User Name 01, User Name 02", $report_json->criteria[1]->criterion_value);
+        self::assertSame('Users list', $report_json->criteria[1]->criterion_name);
+        self::assertSame('User Name 01, User Name 02', $report_json->criteria[1]->criterion_value);
         self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[2]);
-        self::assertSame("User groups list", $report_json->criteria[2]->criterion_name);
-        self::assertSame("Ugroup01, Ugroup02", $report_json->criteria[2]->criterion_value);
+        self::assertSame('User groups list', $report_json->criteria[2]->criterion_name);
+        self::assertSame('Ugroup01, Ugroup02', $report_json->criteria[2]->criterion_value);
         self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[3]);
-        self::assertSame("Static values list", $report_json->criteria[3]->criterion_name);
-        self::assertSame("None, Static value 01, Static value 02", $report_json->criteria[3]->criterion_value);
+        self::assertSame('Static values list', $report_json->criteria[3]->criterion_name);
+        self::assertSame('None, Static value 01, Static value 02', $report_json->criteria[3]->criterion_value);
         self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[4]);
-        self::assertSame("Open list static values", $report_json->criteria[4]->criterion_name);
-        self::assertSame("a, b, abc", $report_json->criteria[4]->criterion_value);
+        self::assertSame('Open list static values', $report_json->criteria[4]->criterion_name);
+        self::assertSame('a, b, abc', $report_json->criteria[4]->criterion_value);
         self::assertInstanceOf(DateCriterionValueJson::class, $report_json->criteria[5]);
-        self::assertSame("Submitted On", $report_json->criteria[5]->criterion_name);
-        self::assertSame("2021-08-01T00:00:00+02:00", $report_json->criteria[5]->criterion_from_value);
-        self::assertSame("2021-08-28T00:00:00+02:00", $report_json->criteria[5]->criterion_to_value);
+        self::assertSame('Submitted On', $report_json->criteria[5]->criterion_name);
+        self::assertSame('2021-08-01T00:00:00+02:00', $report_json->criteria[5]->criterion_from_value);
+        self::assertSame('2021-08-28T00:00:00+02:00', $report_json->criteria[5]->criterion_to_value);
         self::assertEquals(new ClassicCriterionValueJson('Perms', 'ugroup_name'), $report_json->criteria[6]);
         self::assertEquals(new ClassicCriterionValueJson('Additional01', 'ValueAdd01'), $report_json->criteria[7]);
     }
@@ -113,8 +113,8 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
     {
         return new Tracker_Report(
             1,
-            "Default",
-            "Default Report",
+            'Default',
+            'Default Report',
             1,
             null,
             101,
@@ -151,11 +151,11 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $additional_criteria = [
             new Tracker_Report_AdditionalCriterion(
-                "Additional01",
-                "ValueAdd01"
+                'Additional01',
+                'ValueAdd01'
             ),
             new Tracker_Report_AdditionalCriterion(
-                "Additional02",
+                'Additional02',
                 null
             ),
         ];
@@ -178,12 +178,12 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $string_field
             ->method('getLabel')
-            ->willReturn("Summary");
+            ->willReturn('Summary');
 
         $string_field
             ->method('getCriteriaValue')
             ->with($criterion_string)
-            ->willReturn("Test");
+            ->willReturn('Test');
 
         return $criterion_string;
     }
@@ -202,13 +202,13 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $date_field
             ->method('getLabel')
-            ->willReturn("Submitted On");
+            ->willReturn('Submitted On');
 
         $date_field
             ->method('getCriteriaValue')
             ->with($criterion_date)
             ->willReturn([
-                "op" => "=",
+                'op' => '=',
                 'from_date' => '1627768800',
                 'to_date' => '1630101600',
             ]);
@@ -232,13 +232,13 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $user_bind
             ->method('getValue')
             ->willReturnMap([
-                ['101', new Tracker_FormElement_Field_List_Bind_UsersValue(101, "User01", "User Name 01")],
-                ['102', new Tracker_FormElement_Field_List_Bind_UsersValue(102, "User02", "User Name 02")],
+                ['101', new Tracker_FormElement_Field_List_Bind_UsersValue(101, 'User01', 'User Name 01')],
+                ['102', new Tracker_FormElement_Field_List_Bind_UsersValue(102, 'User02', 'User Name 02')],
             ]);
 
         $list_user_field
             ->method('getLabel')
-            ->willReturn("Users list");
+            ->willReturn('Users list');
 
         $list_user_field
             ->method('getCriteriaValue')
@@ -265,10 +265,10 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         );
 
         $ugroup_01 = $this->createMock(ProjectUGroup::class);
-        $ugroup_01->method('getTranslatedName')->willReturn("Ugroup01");
+        $ugroup_01->method('getTranslatedName')->willReturn('Ugroup01');
 
         $ugroup_02 = $this->createMock(ProjectUGroup::class);
-        $ugroup_02->method('getTranslatedName')->willReturn("Ugroup02");
+        $ugroup_02->method('getTranslatedName')->willReturn('Ugroup02');
 
         $group_bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Ugroups::class);
         $group_bind
@@ -280,7 +280,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $list_groups_field
             ->method('getLabel')
-            ->willReturn("User groups list");
+            ->willReturn('User groups list');
 
         $list_groups_field
             ->method('getCriteriaValue')
@@ -316,7 +316,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $list_static_field
             ->method('getLabel')
-            ->willReturn("Static values list");
+            ->willReturn('Static values list');
 
         $list_static_field
             ->method('getCriteriaValue')
@@ -344,16 +344,16 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $open_list_static_field
             ->method('getLabel')
-            ->willReturn("Open list static values");
+            ->willReturn('Open list static values');
 
         $open_list_static_field
             ->method('getCriteriaValue')
             ->with($criterion_open_list_static)
-            ->willReturn("b14,b15,!abc");
+            ->willReturn('b14,b15,!abc');
 
         $open_list_static_field
             ->method('extractCriteriaValue')
-            ->with("b14,b15,!abc")
+            ->with('b14,b15,!abc')
             ->willReturn([
                 new Tracker_FormElement_Field_List_Bind_StaticValue(
                     14,
@@ -391,7 +391,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $list_static_field
             ->method('getLabel')
-            ->willReturn("Static values list");
+            ->willReturn('Static values list');
 
         $list_static_field
             ->method('getCriteriaValue')
@@ -415,12 +415,12 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $open_list_static_field
             ->method('getLabel')
-            ->willReturn("Open list static values");
+            ->willReturn('Open list static values');
 
         $open_list_static_field
             ->method('getCriteriaValue')
             ->with($criterion_open_list_static)
-            ->willReturn("");
+            ->willReturn('');
 
         return $criterion_open_list_static;
     }
@@ -494,7 +494,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $date_field
             ->method('getLabel')
-            ->willReturn("Submitted On");
+            ->willReturn('Submitted On');
 
         $date_field
             ->method('getCriteriaValue')

@@ -118,7 +118,7 @@ class DocmanFolderDataBuild
             $folder_id,
             'GET L',
             PLUGIN_DOCMAN_ITEM_TYPE_LINK,
-            "https://example.test"
+            'https://example.test'
         );
 
         $embedded_id = $this->common_builder->createItemWithVersion(
@@ -137,11 +137,11 @@ class DocmanFolderDataBuild
             'MyWikiPage'
         );
 
-        $this->common_builder->appendCustomMetadataValueToItem($empty_id, "custom value");
-        $this->common_builder->appendCustomMetadataValueToItem($file_id, "custom value");
-        $this->common_builder->appendCustomMetadataValueToItem($link_id, "custom value");
-        $this->common_builder->appendCustomMetadataValueToItem($embedded_id, "custom value");
-        $this->common_builder->appendCustomMetadataValueToItem($wiki_id, "custom value");
+        $this->common_builder->appendCustomMetadataValueToItem($empty_id, 'custom value');
+        $this->common_builder->appendCustomMetadataValueToItem($file_id, 'custom value');
+        $this->common_builder->appendCustomMetadataValueToItem($link_id, 'custom value');
+        $this->common_builder->appendCustomMetadataValueToItem($embedded_id, 'custom value');
+        $this->common_builder->appendCustomMetadataValueToItem($wiki_id, 'custom value');
     }
 
     private function createGetROFolder(int $folder_file_id): void
@@ -212,7 +212,7 @@ class DocmanFolderDataBuild
             $folder_id,
             'Link item',
             PLUGIN_DOCMAN_ITEM_TYPE_LINK,
-            "https://example.test"
+            'https://example.test'
         );
 
         $this->common_builder->createItemWithVersion(

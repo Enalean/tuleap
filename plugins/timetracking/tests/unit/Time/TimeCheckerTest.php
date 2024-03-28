@@ -76,43 +76,43 @@ final class TimeCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotThrowExceptionIfGoodTimeFormat(): void
     {
-        $this->time_checker->checkMandatoryTimeValue("11:23");
+        $this->time_checker->checkMandatoryTimeValue('11:23');
         $this->expectNotToPerformAssertions();
     }
 
     public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatWrongSlashSeparator(): void
     {
         $this->expectException(TimeTrackingBadTimeFormatException::class);
-        $this->time_checker->checkMandatoryTimeValue("11/23");
+        $this->time_checker->checkMandatoryTimeValue('11/23');
     }
 
     public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatWrongSemicolonSeparator(): void
     {
         $this->expectException(TimeTrackingBadTimeFormatException::class);
-        $this->time_checker->checkMandatoryTimeValue("11;23");
+        $this->time_checker->checkMandatoryTimeValue('11;23');
     }
 
     public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatToLong(): void
     {
         $this->expectException(TimeTrackingBadTimeFormatException::class);
-        $this->time_checker->checkMandatoryTimeValue("11:234");
+        $this->time_checker->checkMandatoryTimeValue('11:234');
     }
 
     public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatIfLetter(): void
     {
         $this->expectException(TimeTrackingBadTimeFormatException::class);
-        $this->time_checker->checkMandatoryTimeValue("11:f8");
+        $this->time_checker->checkMandatoryTimeValue('11:f8');
     }
 
     public function testItDoesNotThrowExceptionIfGoodDateFormat(): void
     {
-        $this->time_checker->checkDateFormat("2018-01-01");
+        $this->time_checker->checkDateFormat('2018-01-01');
         $this->expectNotToPerformAssertions();
     }
 
     public function testItReturnTimeTrackingBadDateFormatException(): void
     {
         $this->expectException(TimeTrackingBadDateFormatException::class);
-        $this->time_checker->checkDateFormat("toto");
+        $this->time_checker->checkDateFormat('toto');
     }
 }

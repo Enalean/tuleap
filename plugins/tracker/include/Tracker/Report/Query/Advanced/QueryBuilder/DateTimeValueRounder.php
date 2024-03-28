@@ -70,7 +70,7 @@ final class DateTimeValueRounder
         if ($date_value === false) {
             return null;
         }
-        $date_value->setTime($date_value->format("H"), $date_value->format("i"), 0);
+        $date_value->setTime($date_value->format('H'), $date_value->format('i'), 0);
 
         return $date_value;
     }

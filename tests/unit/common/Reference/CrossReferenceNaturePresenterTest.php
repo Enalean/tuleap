@@ -31,14 +31,14 @@ class CrossReferenceNaturePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $a_ref       = CrossReferencePresenterBuilder::get(1)->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->build();
 
-        $section = new CrossReferenceSectionPresenter("my section", [$a_ref]);
-        $nature  = new CrossReferenceNaturePresenter("My Nature", "fas fa-candy-cane", [$section]);
+        $section = new CrossReferenceSectionPresenter('my section', [$a_ref]);
+        $nature  = new CrossReferenceNaturePresenter('My Nature', 'fas fa-candy-cane', [$section]);
 
-        $new_nature = $nature->withAdditionalCrossReferencePresenter("my section", $another_ref);
+        $new_nature = $nature->withAdditionalCrossReferencePresenter('my section', $another_ref);
 
-        self::assertEquals("My Nature", $new_nature->label);
+        self::assertEquals('My Nature', $new_nature->label);
         self::assertCount(1, $new_nature->sections);
-        self::assertEquals("my section", $new_nature->sections[0]->label);
+        self::assertEquals('my section', $new_nature->sections[0]->label);
         self::assertEquals([$a_ref, $another_ref], $new_nature->sections[0]->cross_references);
     }
 
@@ -48,16 +48,16 @@ class CrossReferenceNaturePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $b_ref = CrossReferencePresenterBuilder::get(2)->build();
         $c_ref = CrossReferencePresenterBuilder::get(3)->build();
 
-        $c_section = new CrossReferenceSectionPresenter("C Section", [$c_ref]);
-        $a_section = new CrossReferenceSectionPresenter("A Section", [$a_ref]);
-        $nature    = new CrossReferenceNaturePresenter("My Nature", "fas fa-candy-cane", [$c_section, $a_section]);
-        $nature    = $nature->withAdditionalCrossReferencePresenter("b Section", $b_ref);
+        $c_section = new CrossReferenceSectionPresenter('C Section', [$c_ref]);
+        $a_section = new CrossReferenceSectionPresenter('A Section', [$a_ref]);
+        $nature    = new CrossReferenceNaturePresenter('My Nature', 'fas fa-candy-cane', [$c_section, $a_section]);
+        $nature    = $nature->withAdditionalCrossReferencePresenter('b Section', $b_ref);
 
-        self::assertEquals("My Nature", $nature->label);
+        self::assertEquals('My Nature', $nature->label);
         self::assertCount(3, $nature->sections);
-        self::assertEquals("A Section", $nature->sections[0]->label);
-        self::assertEquals("b Section", $nature->sections[1]->label);
-        self::assertEquals("C Section", $nature->sections[2]->label);
+        self::assertEquals('A Section', $nature->sections[0]->label);
+        self::assertEquals('b Section', $nature->sections[1]->label);
+        self::assertEquals('C Section', $nature->sections[2]->label);
         self::assertEquals([$a_ref], $nature->sections[0]->cross_references);
         self::assertEquals([$b_ref], $nature->sections[1]->cross_references);
         self::assertEquals([$c_ref], $nature->sections[2]->cross_references);

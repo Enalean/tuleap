@@ -43,7 +43,7 @@ class SystemEventDao extends DataAccessObject
     public function store($type, $parameters, $priority, $status, $create_date, $owner)
     {
         $sql = sprintf(
-            "INSERT INTO system_event (type, parameters, priority, status, create_date, owner) VALUES (%s, %s, %d, %s, FROM_UNIXTIME(%d), %s)",
+            'INSERT INTO system_event (type, parameters, priority, status, create_date, owner) VALUES (%s, %s, %d, %s, FROM_UNIXTIME(%d), %s)',
             $this->da->quoteSmart($type),
             $this->da->quoteSmart($parameters),
             $this->da->escapeInt($priority),
@@ -64,7 +64,7 @@ class SystemEventDao extends DataAccessObject
     {
         $now = time();
         $sql = sprintf(
-            "UPDATE system_event SET status=%s, log=%s, end_date=FROM_UNIXTIME(%d) WHERE id=%d",
+            'UPDATE system_event SET status=%s, log=%s, end_date=FROM_UNIXTIME(%d) WHERE id=%d',
             $this->da->quoteSmart($sysevent->getStatus()),
             $this->da->quoteSmart($sysevent->getLog()),
             $this->da->escapeInt($now),
@@ -128,8 +128,8 @@ class SystemEventDao extends DataAccessObject
     {
         $offset         = $this->da->escapeInt($offset);
         $limit          = $this->da->escapeInt($limit);
-        $filters_status = $this->da->quoteSmartImplode(", ", $filters_status);
-        $filters_type   = $this->da->quoteSmartImplode(", ", $filters_type);
+        $filters_status = $this->da->quoteSmartImplode(', ', $filters_status);
+        $filters_type   = $this->da->quoteSmartImplode(', ', $filters_type);
         $sql            = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM system_event
                 WHERE status IN ($filters_status)
@@ -178,8 +178,8 @@ class SystemEventDao extends DataAccessObject
             $stm = $this->da->quoteLikeValueSurround($separator . $val . $separator);
         }
 
-        $type   = $this->da->quoteSmartImplode(", ", $type);
-        $status = $this->da->quoteSmartImplode(", ", $status);
+        $type   = $this->da->quoteSmartImplode(', ', $type);
+        $status = $this->da->quoteSmartImplode(', ', $status);
 
         $sql = 'SELECT  * FROM system_event
                 WHERE type   IN (' . $type . ')
@@ -194,8 +194,8 @@ class SystemEventDao extends DataAccessObject
      */
     public function searchWithTypeAndStatus(array $type, array $status)
     {
-        $type   = $this->da->quoteSmartImplode(", ", $type);
-        $status = $this->da->quoteSmartImplode(", ", $status);
+        $type   = $this->da->quoteSmartImplode(', ', $type);
+        $status = $this->da->quoteSmartImplode(', ', $status);
 
         $sql = 'SELECT  * FROM system_event
                 WHERE type   IN (' . $type . ')
@@ -270,7 +270,7 @@ class SystemEventDao extends DataAccessObject
                 WHERE create_date < '$one_year_ago_date'";
         $this->update($sql);
 
-        $sql = "OPTIMIZE TABLE system_event";
+        $sql = 'OPTIMIZE TABLE system_event';
         return $this->update($sql);
     }
 

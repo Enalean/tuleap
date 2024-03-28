@@ -106,14 +106,14 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
         $this->project->method('getId')->willReturn(101);
 
         $this->project_member_representation = new PermissionPerGroupUGroupRepresentation(
-            "Project members",
+            'Project members',
             false,
             true,
             false
         );
 
         $this->project_admin_representation = new PermissionPerGroupUGroupRepresentation(
-            "Project admin",
+            'Project admin',
             true,
             true,
             false

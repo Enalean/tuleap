@@ -65,14 +65,14 @@ class PostActionCollectionJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->action_parser
             ->shouldReceive('accept')
             ->andReturn(true);
-        $ci_build = new CIBuildValue("http://example.test");
+        $ci_build = new CIBuildValue('http://example.test');
         $this->action_parser
             ->shouldReceive('parse')
             ->andReturn($ci_build);
 
         $workflow = Mockery::mock(Workflow::class);
 
-        $action_collection = $collection_parser->parse($workflow, [["type" => "should match one parser"]]);
+        $action_collection = $collection_parser->parse($workflow, [['type' => 'should match one parser']]);
 
         $this->assertEquals(new PostActionCollection($ci_build), $action_collection);
     }
@@ -95,7 +95,7 @@ class PostActionCollectionJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('accept')
             ->andReturn(false);
 
-        $this->collection_parser->parse($workflow, [["id" => 1]]);
+        $this->collection_parser->parse($workflow, [['id' => 1]]);
     }
 
     public function testParseWithNotAssociativeArrayThrows()
@@ -107,7 +107,7 @@ class PostActionCollectionJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->collection_parser->parse(
             $workflow,
             [
-                "not an array",
+                'not an array',
             ]
         );
     }

@@ -40,7 +40,7 @@ final class SiteDeployGitolite3HooksTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
         $base_dir                = $this->getTmpDir();
-        $this->gitolite_base_dir = $base_dir . "/var/lib/gitolite";
+        $this->gitolite_base_dir = $base_dir . '/var/lib/gitolite';
 
         $this->process_factory = $this->createStub(ProcessFactory::class);
         $this->process_factory->method('getProcessWithoutTimeout')->willReturn(new Process(['/bin/true']));

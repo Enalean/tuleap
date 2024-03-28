@@ -38,7 +38,7 @@ class BotCommentReferencePresenter
 
     public function __construct(int $id, string $url)
     {
-        $this->label = "TULEAP-" . $id;
+        $this->label = 'TULEAP-' . $id;
         $this->url   = $url;
     }
 }

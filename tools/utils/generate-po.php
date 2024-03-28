@@ -84,7 +84,7 @@ $gettext_in_mustache_extractor = new DomainExtractor(
 );
 
 if (! $plugin) {
-    info("[core] Generating .pot file");
+    info('[core] Generating .pot file');
     $core_src = escapeshellarg("$basedir/src");
     $template = escapeshellarg("$basedir/site-content/tuleap-core.pot");
     executeCommandAndExitIfStderrNotEmpty(
@@ -101,10 +101,10 @@ if (! $plugin) {
     > $template"
     );
 
-    info("[core] Ensure .pot strings uniquness");
+    info('[core] Ensure .pot strings uniquness');
     executeCommandAndExitIfStderrNotEmpty("msguniq --sort-output --use-first -o $template $template");
 
-    info("[core] Generating .pot file for .mustache files");
+    info('[core] Generating .pot file for .mustache files');
     $mustache_template = "$basedir/site-content/tuleap-core.mustache.pot";
     $gettext_in_mustache_extractor->extract(
         'tuleap-core',
@@ -119,22 +119,22 @@ if (! $plugin) {
         $mustache_template
     );
 
-    info("[core] Combining .pot files into one");
+    info('[core] Combining .pot files into one');
     executeCommandAndExitIfStderrNotEmpty(
         "msgcat --sort-output -o $template $template " . escapeshellarg($mustache_template)
     );
     unlink($mustache_template);
 
-    info("[core] Merging .pot file into .po files");
+    info('[core] Merging .pot file into .po files');
     $site_content = escapeshellarg("$basedir/site-content");
     exec("find $site_content -name 'tuleap-core.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
 
     $core_manifest = "$basedir/build-manifest.json";
     $json          = json_decode(file_get_contents($core_manifest), true);
 
-    gettextTS("core", $basedir, $json);
-    gettextVue("core", $basedir, $json);
-    gettextVue3("core", $basedir, $json);
+    gettextTS('core', $basedir, $json);
+    gettextVue('core', $basedir, $json);
+    gettextVue3('core', $basedir, $json);
 }
 
 foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
@@ -259,7 +259,7 @@ function gettextAngularJS(string $translated_plugin, string $path, array $manife
     }
 
     foreach ($manifest_json['gettext-angularjs'] as $component => $gettext) {
-        $gettext_step_header = sprintf("[%s][angularjs][%s]", $translated_plugin, $component);
+        $gettext_step_header = sprintf('[%s][angularjs][%s]', $translated_plugin, $component);
         info("$gettext_step_header Generating default .pot file");
         $src      = escapeshellarg("$path/{$gettext['src']}");
         $po       = escapeshellarg("$path/{$gettext['po']}");

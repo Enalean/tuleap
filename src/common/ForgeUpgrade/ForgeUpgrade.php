@@ -119,9 +119,9 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
                 $color = LoggerAppenderConsoleColor::NOCOLOR;
                 break;
         }
-        return $color . ($info['start_date'] . "  " . $info['execution_delay'] . "  " . ucfirst(
+        return $color . ($info['start_date'] . '  ' . $info['execution_delay'] . '  ' . ucfirst(
             $status
-        ) . "  " . $info['id'] . "  " . $info['script'] . PHP_EOL . LoggerAppenderConsoleColor::NOCOLOR);
+        ) . '  ' . $info['id'] . '  ' . $info['script'] . PHP_EOL . LoggerAppenderConsoleColor::NOCOLOR);
     }
 
     /**
@@ -129,7 +129,7 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
      */
     private function displayAlreadyAppliedForAllBuckets(): void
     {
-        echo 'start date' . "           " . 'Execution' . "  " . 'Status' . "  " . 'Id' . "  " . 'Script' . PHP_EOL;
+        echo 'start date' . '           ' . 'Execution' . '  ' . 'Status' . '  ' . 'Id' . '  ' . 'Script' . PHP_EOL;
         foreach ($this->db->getAllBuckets() as $row) {
             echo $this->displayColoriedStatus($row);
         }
@@ -170,7 +170,7 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
     private function doRecordOnly(array $buckets): void
     {
         foreach ($buckets as $bucket) {
-            $this->logger->info("[doRecordOnly] " . $bucket::class);
+            $this->logger->info('[doRecordOnly] ' . $bucket::class);
             $this->db->logStart($bucket);
             $this->db->logEnd($bucket, ForgeUpgradeDb::STATUS_SKIP);
         }
@@ -213,7 +213,7 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
      */
     private function runPreUp(array $buckets): bool
     {
-        $this->logger->info("Process all pre up checks");
+        $this->logger->info('Process all pre up checks');
         $result = true;
         foreach ($buckets as $bucket) {
             $className = $bucket::class;
@@ -222,7 +222,7 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
                     $bucket->preUp();
                     $this->logger->info("OK: $className");
                 } else {
-                    $this->logger->info("SKIP: " . $className . " (depends on a migration not already applied)");
+                    $this->logger->info('SKIP: ' . $className . ' (depends on a migration not already applied)');
                 }
             } catch (Exception $e) {
                 $this->logger->error($className . ': ' . $e->getMessage());
@@ -230,9 +230,9 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
             }
         }
         if ($result) {
-            $this->logger->info("PreUp checks OK");
+            $this->logger->info('PreUp checks OK');
         } else {
-            $this->logger->error("PreUp checks FAILD");
+            $this->logger->error('PreUp checks FAILD');
             exit(1);
         }
 
@@ -246,16 +246,16 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
     {
         $this->db->logStart($bucket);
 
-        $log->info("Processing " . $bucket::class);
+        $log->info('Processing ' . $bucket::class);
 
         $bucket->preUp();
-        $log->info("PreUp OK");
+        $log->info('PreUp OK');
 
         $bucket->up();
-        $log->info("Up OK");
+        $log->info('Up OK');
 
         $bucket->postUp();
-        $log->info("PostUp OK");
+        $log->info('PostUp OK');
 
         $this->db->logEnd($bucket, ForgeUpgradeDb::STATUS_SUCCESS);
     }

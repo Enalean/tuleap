@@ -23,8 +23,8 @@
  */
 class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
 {
-    public const TOP_BACKLOG_IDENTIFIER   = "0";
-    public const TOP_BACKLOG_OPTION_ENTRY = "Top Backlog";
+    public const TOP_BACKLOG_IDENTIFIER   = '0';
+    public const TOP_BACKLOG_OPTION_ENTRY = 'Top Backlog';
 
     /** @var AgileDashboard_Planning_NearestPlanningTrackerProvider */
     private $nearest_planning_tracker_provider;

@@ -41,14 +41,14 @@ class CampaignRepresentation
 {
     public const ROUTE = 'testmanagement_campaigns';
 
-    public const FIELD_NAME           = "label";
-    public const FIELD_ARTIFACT_LINKS = "artifact_links";
-    public const FIELD_STATUS         = "status";
+    public const FIELD_NAME           = 'label';
+    public const FIELD_ARTIFACT_LINKS = 'artifact_links';
+    public const FIELD_STATUS         = 'status';
 
-    public const STATUS_NOT_RUN = "notrun";
-    public const STATUS_PASSED  = "passed";
-    public const STATUS_FAILED  = "failed";
-    public const STATUS_BLOCKED = "blocked";
+    public const STATUS_NOT_RUN = 'notrun';
+    public const STATUS_PASSED  = 'passed';
+    public const STATUS_FAILED  = 'failed';
+    public const STATUS_BLOCKED = 'blocked';
     /**
      * @var int
      */

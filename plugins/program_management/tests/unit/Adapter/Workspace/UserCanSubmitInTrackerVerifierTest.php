@@ -60,16 +60,16 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
 
     public function testItReturnsFalseWhenTrackerIsNotFound(): void
     {
-        $this->tracker_factory->method("getTrackerById")->willReturn(null);
-        $this->user_manager->method("getUserById")->willReturn(null);
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
+        $this->user_manager->method('getUserById')->willReturn(null);
 
         self::assertFalse($this->verifier->canUserSubmitArtifact($this->user_identifier, $this->tracker));
     }
 
     public function testItReturnsFalseWhenUserIsNotFound(): void
     {
-        $this->tracker_factory->method("getTrackerById")->willReturn(TrackerTestBuilder::aTracker()->build());
-        $this->user_manager->method("getUserById")->willReturn(null);
+        $this->tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $this->user_manager->method('getUserById')->willReturn(null);
 
         self::assertFalse($this->verifier->canUserSubmitArtifact($this->user_identifier, $this->tracker));
     }
@@ -77,8 +77,8 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
     public function testItReturnsUserCanSubmitArtifact(): void
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
-        $this->tracker_factory->method("getTrackerById")->willReturn($tracker);
-        $this->user_manager->method("getUserById")->willReturn(UserTestBuilder::aUser()->build());
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::aUser()->build());
 
         self::assertTrue($this->verifier->canUserSubmitArtifact($this->user_identifier, $this->tracker));
     }

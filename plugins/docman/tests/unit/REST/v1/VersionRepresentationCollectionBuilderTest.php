@@ -82,8 +82,8 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             'id' => 234,
             'item_id' => 4,
             'number' => 1,
-            'label' => "my version label",
-            'filename' => "a_file.txt",
+            'label' => 'my version label',
+            'filename' => 'a_file.txt',
             'changelog' => '',
             'user_id' => self::USER_ID,
             'date' => 1542099693,
@@ -105,8 +105,8 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         $representation = $collection->getPaginatedFileversionrepresentations()[0];
         self::assertEquals(234, $representation->id);
         self::assertEquals(1, $representation->number);
-        self::assertEquals("my version label", $representation->name);
-        self::assertEquals("a_file.txt", $representation->filename);
+        self::assertEquals('my version label', $representation->name);
+        self::assertEquals('a_file.txt', $representation->filename);
         self::assertEquals('', $representation->changelog);
         self::assertNull($representation->approval_href);
         self::assertEquals('Awesome Office Editor', $representation->authoring_tool);
@@ -130,8 +130,8 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             'id' => 234,
             'item_id' => 4,
             'number' => 1,
-            'label' => "my version label",
-            'filename' => "a_file.txt",
+            'label' => 'my version label',
+            'filename' => 'a_file.txt',
             'changelog' => '',
             'user_id' => self::USER_ID,
             'date' => 1542099693,

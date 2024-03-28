@@ -33,7 +33,7 @@ final class RoadmapWidgetDaoTest extends TestIntegrationTestCase
         $id  = $dao->insertContent(101, 'g', 'My Roadmap', [666], 0, 'month', null, null);
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("INSERT INTO plugin_roadmap_widget_filter(widget_id, report_id) VALUES (?, 979)", $id);
+        $db->run('INSERT INTO plugin_roadmap_widget_filter(widget_id, report_id) VALUES (?, 979)', $id);
 
         self::assertNotEmpty($db->run('SELECT * FROM plugin_roadmap_widget_filter WHERE widget_id = ?', $id));
 

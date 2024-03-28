@@ -30,18 +30,18 @@ class XMLCardwallMappingTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $mappings_xml =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><plannings />');
 
-        $xml_mapping      = (new XMLCardwallMapping("T411", "F789"));
+        $xml_mapping      = (new XMLCardwallMapping('T411', 'F789'));
         $xml_mapping_node = $xml_mapping
-            ->withMappingValue(new XMLCardwallMappingValue("Vvalue", "C150"))
+            ->withMappingValue(new XMLCardwallMappingValue('Vvalue', 'C150'))
             ->export($mappings_xml);
 
-        self::assertSame("mapping", $xml_mapping_node->getName());
-        self::assertEquals("T411", $xml_mapping_node['tracker_id']);
-        self::assertEquals("F789", $xml_mapping_node['field_id']);
+        self::assertSame('mapping', $xml_mapping_node->getName());
+        self::assertEquals('T411', $xml_mapping_node['tracker_id']);
+        self::assertEquals('F789', $xml_mapping_node['field_id']);
 
         self::assertCount(1, $xml_mapping_node->values->children());
         $value_node = $xml_mapping_node->values->value[0];
-        self::assertEquals("Vvalue", $value_node['value_id']);
-        self::assertEquals("C150", $value_node['column_id']);
+        self::assertEquals('Vvalue', $value_node['value_id']);
+        self::assertEquals('C150', $value_node['column_id']);
     }
 }

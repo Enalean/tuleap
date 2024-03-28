@@ -70,7 +70,7 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
             $this->in_new_dropdown_dao->insert($tracker->getId());
             $this->history_dao->groupAddHistory(
                 self::PROJECT_HISTORY_ENTRY,
-                "1",
+                '1',
                 $project->getID(),
                 [$tracker->getName()]
             );
@@ -93,7 +93,7 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
             $this->in_new_dropdown_dao->delete($tracker->getId());
             $this->history_dao->groupAddHistory(
                 self::PROJECT_HISTORY_ENTRY,
-                "0",
+                '0',
                 $project->getID(),
                 [$tracker->getName()]
             );

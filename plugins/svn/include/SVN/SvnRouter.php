@@ -126,20 +126,20 @@ class SvnRouter implements DispatchableWithRequest
             $action = $request->get('action');
 
             switch ($action) {
-                case "create-repository":
+                case 'create-repository':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->explorer_controller->createRepository($request, $request->getCurrentUser());
                     break;
-                case "settings":
-                case "display-mail-notification":
+                case 'settings':
+                case 'display-mail-notification':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->admin_controller->displayMailNotification($this->getService($request), $request);
                     break;
-                case "save-mail-header":
+                case 'save-mail-header':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->admin_controller->saveMailHeader($request);
                     break;
-                case "update-mailing-lists":
+                case 'update-mailing-lists':
                     if ($request->get('save-mailing-lists')) {
                         $this->checkUserCanAdministrateARepository($request);
                         $this->admin_controller->saveMailingList($request);
@@ -148,19 +148,19 @@ class SvnRouter implements DispatchableWithRequest
                         $this->admin_controller->deleteMailingList($request);
                     }
                     break;
-                case "save-hooks-config":
+                case 'save-hooks-config':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->admin_controller->updateHooksConfig($this->getService($request), $request);
                     break;
-                case "hooks-config":
+                case 'hooks-config':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->admin_controller->displayHooksConfig($this->getService($request), $request);
                     break;
-                case "display-repository-delete":
+                case 'display-repository-delete':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->admin_controller->displayRepositoryDelete($this->getService($request), $request);
                     break;
-                case "delete-repository":
+                case 'delete-repository':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->admin_controller->deleteRepository($request);
                     break;
@@ -170,23 +170,23 @@ class SvnRouter implements DispatchableWithRequest
                     }
                     $this->restore_controller->restoreRepository($request);
                     break;
-                case "access-control":
+                case 'access-control':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->access_control_controller->displayAuthFile($this->getService($request), $request);
                     break;
-                case "save-access-file":
+                case 'save-access-file':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->access_control_controller->saveAuthFile($this->getService($request), $request);
                     break;
-                case "display-archived-version":
+                case 'display-archived-version':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->access_control_controller->displayArchivedVersion($request);
                     break;
-                case "display-immutable-tag":
+                case 'display-immutable-tag':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->immutable_tag_controller->displayImmutableTag($this->getService($request), $request);
                     break;
-                case "save-immutable-tag":
+                case 'save-immutable-tag':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->immutable_tag_controller->saveImmutableTag($this->getService($request), $request);
                     break;
@@ -239,7 +239,7 @@ class SvnRouter implements DispatchableWithRequest
         if ($request->get('root')) {
             $repository = $this->repository_manager->getRepositoryFromPublicPath($request);
 
-            $request->set("repo_id", $repository->getId());
+            $request->set('repo_id', $repository->getId());
 
             $this->display_controller->displayRepository($this->getService($request), $request, $url_variables);
 

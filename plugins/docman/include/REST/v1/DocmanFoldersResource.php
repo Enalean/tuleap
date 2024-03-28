@@ -674,7 +674,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->addAllEvent($project);
 
         if ($item_to_delete->getParentId() === 0) {
-            throw new I18NRestException(400, dgettext("tuleap-docman", "You cannot delete the root folder."));
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'You cannot delete the root folder.'));
         }
 
         try {

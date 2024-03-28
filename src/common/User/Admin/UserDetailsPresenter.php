@@ -106,7 +106,7 @@ class UserDetailsPresenter
         if ((int) $user->getExpiryDate() !== 0) {
             $this->expiry = (new DateTimeImmutable())->setTimestamp((int) $user->getExpiryDate())->format('Y-m-d');
         } else {
-            $this->expiry = "";
+            $this->expiry = '';
         }
 
         $this->has_avatar = $user->hasAvatar();

@@ -25,7 +25,7 @@ final class b202309250847_rename_in_new_dropdown_table extends \Tuleap\ForgeUpgr
 {
     public function description(): string
     {
-        return "Rename in_new_dropdown table";
+        return 'Rename in_new_dropdown table';
     }
 
     public function up(): void
@@ -33,7 +33,7 @@ final class b202309250847_rename_in_new_dropdown_table extends \Tuleap\ForgeUpgr
         // Actually it is more a copy than a rename, so that we can bisect in the
         // past without having to worry about the loss of tables
         $this->api->createTable(
-            "plugin_tracker_promoted",
+            'plugin_tracker_promoted',
             <<<EOS
             CREATE TABLE plugin_tracker_promoted(
                 tracker_id int(11) NOT NULL PRIMARY KEY

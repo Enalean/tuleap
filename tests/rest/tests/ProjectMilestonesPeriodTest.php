@@ -31,7 +31,7 @@ class ProjectMilestonesPeriodTest extends ProjectBase
 {
     public function testGETmilestonesWithPeriodFutureQuery(): void
     {
-        $query    = urlencode(json_encode(["period" => "future"]));
+        $query    = urlencode(json_encode(['period' => 'future']));
         $response = $this->getResponse(
             $this->request_factory->createRequest(
                 'GET',
@@ -47,7 +47,7 @@ class ProjectMilestonesPeriodTest extends ProjectBase
 
     public function testGETonlyOpenedMilestonesWithPeriodCurrentQuery(): void
     {
-        $query    = urlencode(json_encode(["period" => "current"]));
+        $query    = urlencode(json_encode(['period' => 'current']));
         $response = $this->getResponse(
             $this->request_factory->createRequest(
                 'GET',
@@ -67,7 +67,7 @@ class ProjectMilestonesPeriodTest extends ProjectBase
 
     public function testGETmilestonesWithPeriodCurrentQueryWithRESTReadOnlyUser(): void
     {
-        $query    = urlencode(json_encode(["period" => "current"]));
+        $query    = urlencode(json_encode(['period' => 'current']));
         $response = $this->getResponse(
             $this->request_factory->createRequest(
                 'GET',

@@ -30,7 +30,7 @@ final class ProgramManagementProjectAdapterTest extends \Tuleap\Test\PHPUnit\Tes
 {
     public function testItBuildsProjectData(): void
     {
-        $project               = new Project(['group_id' => 101, 'group_name' => 'Team 1', 'unix_group_name' => 'team_1', 'icon_codepoint' => ""]);
+        $project               = new Project(['group_id' => 101, 'group_name' => 'Team 1', 'unix_group_name' => 'team_1', 'icon_codepoint' => '']);
         $retrieve_full_project = RetrieveFullProjectStub::withProject($project);
 
         $project_data = ProjectProxy::buildFromProject($project);

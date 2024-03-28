@@ -2,21 +2,21 @@
 // -*-php-*-
 rcs_id('$Id: RecentEdits.php,v 1.1 2004/04/21 04:29:10 rurban Exp $');
 
-require_once("lib/plugin/RecentChanges.php");
+require_once('lib/plugin/RecentChanges.php');
 
 class WikiPlugin_RecentEdits extends WikiPlugin_RecentChanges
 {
     public function getName()
     {
-        return _("RecentEdits");
+        return _('RecentEdits');
     }
 
     public function getVersion()
     {
         return preg_replace(
-            "/[Revision: $]/",
+            '/[Revision: $]/',
             '',
-            "\$Revision: 1.1 $"
+            '$Revision: 1.1 $'
         );
     }
 
@@ -45,7 +45,7 @@ class WikiPlugin_RecentEdits extends WikiPlugin_RecentChanges
         $args['show_all']     = true;
         $args['days']         = 90;
         return $this->makeBox(
-            WikiLink(_("RecentEdits"), '', _("Recent Edits")),
+            WikiLink(_('RecentEdits'), '', _('Recent Edits')),
             $this->format($this->getChanges($request->_dbi, $args), $args)
         );
     }

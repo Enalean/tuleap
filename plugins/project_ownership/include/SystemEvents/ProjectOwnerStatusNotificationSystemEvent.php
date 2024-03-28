@@ -39,7 +39,7 @@ class ProjectOwnerStatusNotificationSystemEvent extends \SystemEvent
 
         $status_label = ProjectStatusMapper::getProjectStatusLabelFromStatusFlag($new_status);
 
-        return "Notify members of project " . $this->verbalizeProjectId($group_id, $with_link) . " is now " . $status_label;
+        return 'Notify members of project ' . $this->verbalizeProjectId($group_id, $with_link) . ' is now ' . $status_label;
     }
 
     public function process()

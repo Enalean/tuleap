@@ -43,7 +43,7 @@ class DateFieldDao extends SpecificPropertiesDao
                 $default_value = $this->da->escapeInt(strtotime($row['default_value']));
             }
         } else {
-            $default_value = "NULL";
+            $default_value = 'NULL';
         }
 
         if (isset($row['default_value_type'])) {

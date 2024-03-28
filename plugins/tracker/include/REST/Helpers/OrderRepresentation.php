@@ -74,27 +74,27 @@ final class OrderRepresentation
     public function checkFormat(): void
     {
         if (! in_array($this->direction, [self::BEFORE, self::AFTER])) {
-            throw new RestException(400, "invalid value specified for `direction`. Expected: before | after");
+            throw new RestException(400, 'invalid value specified for `direction`. Expected: before | after');
         }
 
         $this->isArrayOfInt();
         if (count($this->ids) == 0) {
-            throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");
+            throw new RestException(400, 'invalid value specified for `ids`. Expected: array of integers');
         }
 
         if (! is_int($this->compared_to)) {
-            throw new RestException(400, "invalid value specified for `compared_to`. Expected: integer");
+            throw new RestException(400, 'invalid value specified for `compared_to`. Expected: integer');
         }
     }
 
     private function isArrayOfInt(): void
     {
         if (! is_array($this->ids)) {
-            throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");
+            throw new RestException(400, 'invalid value specified for `ids`. Expected: array of integers');
         }
         foreach ($this->ids as $id) {
             if (! is_int($id)) {
-                throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");
+                throw new RestException(400, 'invalid value specified for `ids`. Expected: array of integers');
             }
         }
     }

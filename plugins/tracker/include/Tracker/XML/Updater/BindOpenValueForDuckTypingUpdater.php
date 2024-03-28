@@ -56,8 +56,8 @@ final class BindOpenValueForDuckTypingUpdater implements UpdateBindOpenValueByDu
             $destination_list_value_id = null;
 
             if ($value && ! str_starts_with($value[0], Tracker_FormElement_Field_OpenList::BIND_PREFIX)) {
-                $destinations_values_ids[$value]["value"]  = (string) $value_id;
-                $destinations_values_ids[$value]["format"] = "label";
+                $destinations_values_ids[$value]['value']  = (string) $value_id;
+                $destinations_values_ids[$value]['format'] = 'label';
             } else {
                 $destination_list_value_id = $this->field_value_matcher->getMatchingValueByDuckTyping(
                     $source_field,
@@ -70,24 +70,24 @@ final class BindOpenValueForDuckTypingUpdater implements UpdateBindOpenValueByDu
                 continue;
             }
 
-            $destinations_values_ids[$destination_list_value_id]["value"]  = $destination_list_value_id;
-            $destinations_values_ids[$destination_list_value_id]["format"] = "id";
+            $destinations_values_ids[$destination_list_value_id]['value']  = $destination_list_value_id;
+            $destinations_values_ids[$destination_list_value_id]['format'] = 'id';
         }
 
         if (empty($destinations_values_ids)) {
-            $destinations_values_ids[$destination_field->getDefaultValue()]["value"]  = (int) str_replace(Tracker_FormElement_Field_OpenList::BIND_PREFIX, '', (string) $destination_field->getDefaultValue());
-            $destinations_values_ids[$destination_field->getDefaultValue()]["format"] = "id";
+            $destinations_values_ids[$destination_field->getDefaultValue()]['value']  = (int) str_replace(Tracker_FormElement_Field_OpenList::BIND_PREFIX, '', (string) $destination_field->getDefaultValue());
+            $destinations_values_ids[$destination_field->getDefaultValue()]['format'] = 'id';
         }
 
         $this->XML_updater->deleteFieldChangeValueNode($changeset_xml, $index);
 
         foreach ($destinations_values_ids as $values_id) {
-            if (isset($values_id["value"]) && isset($values_id["format"])) {
+            if (isset($values_id['value']) && isset($values_id['format'])) {
                 $this->cdata_factory->insertWithAttributes(
                     $changeset_xml->field_change[$index],
-                    "value",
-                    (string) $values_id["value"],
-                    ['format' => $values_id["format"]]
+                    'value',
+                    (string) $values_id['value'],
+                    ['format' => $values_id['format']]
                 );
             }
         }

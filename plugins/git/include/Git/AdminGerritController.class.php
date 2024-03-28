@@ -266,7 +266,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
                         ->setUseSSL($gerrit_server['use_ssl'])
                         ->setGerritVersion($gerrit_server['gerrit_version']);
 
-                    if ($gerrit_server['http_password'] !== "") {
+                    if ($gerrit_server['http_password'] !== '') {
                         $server->setHTTPPassword($gerrit_server['http_password']);
                     }
 
@@ -281,7 +281,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
 
     private function updateReplicationPassword(Git_RemoteServer_GerritServer $server, $replication_password)
     {
-        if ($replication_password !== "" && ! hash_equals($server->getReplicationPassword(), $replication_password)) {
+        if ($replication_password !== '' && ! hash_equals($server->getReplicationPassword(), $replication_password)) {
             $server->setReplicationPassword($replication_password);
             $this->gerrit_server_factory->updateReplicationPassword($server);
 
