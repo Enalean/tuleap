@@ -28,7 +28,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class NoTemplateProvidedFault extends Fault
+final readonly class NoTemplateProvidedFault extends Fault
 {
     public static function build(): \Tuleap\NeverThrow\Fault
     {

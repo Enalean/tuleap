@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class ArtifactDoesNotExistFault extends Fault
+final readonly class ArtifactDoesNotExistFault extends Fault
 {
     public static function build(int $artifact_id): Fault
     {

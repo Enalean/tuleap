@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class ProjectNotFoundFault extends Fault
+final readonly class ProjectNotFoundFault extends Fault
 {
     public static function fromProjectId(int $project_id): Fault
     {

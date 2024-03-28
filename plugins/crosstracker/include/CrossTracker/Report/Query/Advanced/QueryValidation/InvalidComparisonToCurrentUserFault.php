@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class InvalidComparisonToCurrentUserFault extends Fault
+final readonly class InvalidComparisonToCurrentUserFault extends Fault
 {
     /**
      * @psalm-mutation-free

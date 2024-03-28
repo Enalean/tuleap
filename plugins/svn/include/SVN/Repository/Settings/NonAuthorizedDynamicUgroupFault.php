@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class NonAuthorizedDynamicUgroupFault extends Fault
+final readonly class NonAuthorizedDynamicUgroupFault extends Fault
 {
     public static function build(): Fault
     {

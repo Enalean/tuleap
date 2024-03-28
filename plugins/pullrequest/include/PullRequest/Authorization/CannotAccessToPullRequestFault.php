@@ -28,7 +28,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class CannotAccessToPullRequestFault extends Fault
+final readonly class CannotAccessToPullRequestFault extends Fault
 {
     public static function fromUpdatingComment(Throwable $exception): Fault
     {

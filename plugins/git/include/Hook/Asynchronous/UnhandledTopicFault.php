@@ -25,7 +25,7 @@ namespace Tuleap\Git\Hook\Asynchronous;
 /**
  * @psalm-immutable
  */
-final class UnhandledTopicFault extends \Tuleap\NeverThrow\Fault
+final readonly class UnhandledTopicFault extends \Tuleap\NeverThrow\Fault
 {
     public static function build(): \Tuleap\NeverThrow\Fault
     {

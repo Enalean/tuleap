@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class XMLExportMediawikiNotInstantiatedFault extends Fault
+final readonly class XMLExportMediawikiNotInstantiatedFault extends Fault
 {
     public static function buildForXMLExportLogger(): Fault
     {

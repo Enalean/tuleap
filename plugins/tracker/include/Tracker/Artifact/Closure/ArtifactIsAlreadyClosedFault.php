@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Artifact\Closure;
 /**
  * @psalm-immutable
  */
-final class ArtifactIsAlreadyClosedFault extends \Tuleap\NeverThrow\Fault
+final readonly class ArtifactIsAlreadyClosedFault extends \Tuleap\NeverThrow\Fault
 {
     public static function build(): \Tuleap\NeverThrow\Fault
     {

@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class MalformedQueryFault extends Fault
+final readonly class MalformedQueryFault extends Fault
 {
     public static function build(): Fault
     {

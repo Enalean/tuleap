@@ -25,7 +25,7 @@ namespace Tuleap\Git\Repository\Settings\ArtifactClosure;
 /**
  * @psalm-immutable
  */
-final class ArtifactClosureNotAllowedFault extends \Tuleap\NeverThrow\Fault
+final readonly class ArtifactClosureNotAllowedFault extends \Tuleap\NeverThrow\Fault
 {
     public static function build(\GitRepository $git_repository): \Tuleap\NeverThrow\Fault
     {

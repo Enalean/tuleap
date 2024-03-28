@@ -29,7 +29,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class RepositoryIntegrationNotFoundFault extends Fault
+final readonly class RepositoryIntegrationNotFoundFault extends Fault
 {
     public static function build(Project $project, GitlabProject $gitlab_project): Fault
     {

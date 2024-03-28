@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class MissingAccessFileFault extends Fault
+final readonly class MissingAccessFileFault extends Fault
 {
     public static function build(): Fault
     {

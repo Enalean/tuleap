@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class PullRequestNotFoundFault extends Fault
+final readonly class PullRequestNotFoundFault extends Fault
 {
     public static function withId(int $pull_request_id): Fault
     {

@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class GitRepositoryNotFoundFault extends Fault
+final readonly class GitRepositoryNotFoundFault extends Fault
 {
     public static function fromRepositoryId(int $repository_id): Fault
     {

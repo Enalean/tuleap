@@ -83,7 +83,7 @@ Faults can be extended to help distinguish them in error-handling. To do so, cre
 Examples:
 ```php
 /** @psalm-immutable */
-final class PermissionFault extends \Tuleap\NeverThrow\Fault
+final readonly class PermissionFault extends \Tuleap\NeverThrow\Fault
 {
     public static function build(): \Tuleap\NeverThrow\Fault // It should return Fault, otherwise Psalm will make you add every sub-type of Fault to docblocks.
     {

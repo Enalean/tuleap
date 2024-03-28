@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class NonUniqueMailsFault extends Fault
+final readonly class NonUniqueMailsFault extends Fault
 {
     /**
      * @psalm-param non-empty-array $non_unique_mails

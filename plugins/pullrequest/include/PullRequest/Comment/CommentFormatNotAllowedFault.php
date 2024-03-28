@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class CommentFormatNotAllowedFault extends Fault
+final readonly class CommentFormatNotAllowedFault extends Fault
 {
     public static function withGivenFormat(string $format): Fault
     {

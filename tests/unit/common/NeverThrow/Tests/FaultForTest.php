@@ -20,20 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation;
+namespace Tuleap\NeverThrow\Tests;
 
 use Tuleap\NeverThrow\Fault;
 
 /**
  * @psalm-immutable
  */
-final readonly class MyselfNotAllowedForAnonymousFault extends Fault
+final readonly class FaultForTest extends Fault
 {
-    /**
-     * @psalm-mutation-free
-     */
-    public static function build(): Fault
+    public function __construct(string $error_message, private int $code)
     {
-        return new self('Using MYSELF() is not allowed for anonymous user');
+        parent::__construct($error_message);
+    }
+
+    public function getCode(): int
+    {
+        return $this->code;
     }
 }

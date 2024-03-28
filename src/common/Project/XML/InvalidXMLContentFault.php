@@ -26,7 +26,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class InvalidXMLContentFault extends Fault
+final readonly class InvalidXMLContentFault extends Fault
 {
     public static function fromLibXMLErrors(array $errors): Fault
     {
