@@ -252,6 +252,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 new TextSemanticChecker(),
                 new StatusChecker(),
                 new AssignedToChecker($this->user_manager),
+                new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker($this->user_manager),
             )
         );
 
