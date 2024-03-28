@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan;
+declare(strict_types=1);
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterOrLesserThanComparisonChecker;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation;
 
-final class GreaterThanOrEqualComparisonChecker extends GreaterOrLesserThanComparisonChecker
+use Tuleap\NeverThrow\Fault;
+
+/**
+ * @psalm-immutable
+ */
+final class MyselfNotAllowedForAnonymousFault extends Fault
 {
-    private const OPERATOR = '>=';
-
-    public function getOperator(): string
+    /**
+     * @psalm-mutation-free
+     */
+    public static function build(): Fault
     {
-        return self::OPERATOR;
+        return new self('Using MYSELF() is not allowed for anonymous user');
     }
 }

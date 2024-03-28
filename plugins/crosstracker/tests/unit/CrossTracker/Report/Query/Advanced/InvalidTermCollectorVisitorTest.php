@@ -22,21 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanOrEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\In\InComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanOrEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListValueValidator;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
 use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -48,7 +39,6 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -77,9 +67,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
@@ -158,10 +145,6 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         $user_manager   = $this->createStub(\UserManager::class);
         $user_retriever = ProvideAndRetrieveUserStub::build($this->user);
 
-        $date_validator                 = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
-        $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $user_retriever);
-        $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $user_retriever);
-
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
         $ugroup_label_converter           = new UgroupLabelConverter(
             $list_field_bind_value_normalizer,
@@ -214,19 +197,11 @@ final class InvalidTermCollectorVisitorTest extends TestCase
                 )
             ),
             new FlatInvalidMetadataChecker(
-                new EqualComparisonChecker($date_validator, $list_value_validator),
-                new NotEqualComparisonChecker($date_validator, $list_value_validator),
-                new GreaterThanComparisonChecker($date_validator, $list_value_validator),
-                new GreaterThanOrEqualComparisonChecker($date_validator, $list_value_validator),
-                new LesserThanComparisonChecker($date_validator, $list_value_validator),
-                new LesserThanOrEqualComparisonChecker($date_validator, $list_value_validator),
-                new BetweenComparisonChecker($date_validator, $list_value_validator),
-                new InComparisonChecker($date_validator, $list_value_validator_not_empty),
-                new NotInComparisonChecker($date_validator, $list_value_validator_not_empty),
                 new TextSemanticChecker(),
                 new StatusChecker(),
                 new AssignedToChecker($user_retriever),
                 new QueryValidation\Metadata\ArtifactSubmitterChecker($user_retriever),
+                new SubmissionDateChecker(),
             )
         );
         $collector->collectErrors(

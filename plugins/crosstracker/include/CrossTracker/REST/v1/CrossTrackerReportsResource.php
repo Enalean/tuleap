@@ -51,22 +51,13 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanOrEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\In\InComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanOrEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListValueValidator;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
 use Tuleap\DB\DBFactory;
 use Tuleap\REST\AuthenticatedResource;
@@ -79,15 +70,11 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
@@ -179,10 +166,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new SizeValidatorVisitor($report_config->getExpertQueryLimit())
         );
 
-        $date_validator                 = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
-        $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $this->user_manager);
-        $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $this->user_manager);
-
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
         $ugroup_label_converter           = new UgroupLabelConverter(
             $list_field_bind_value_normalizer,
@@ -240,19 +223,13 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 ),
             ),
             new FlatInvalidMetadataChecker(
-                new EqualComparisonChecker($date_validator, $list_value_validator),
-                new NotEqualComparisonChecker($date_validator, $list_value_validator),
-                new GreaterThanComparisonChecker($date_validator, $list_value_validator),
-                new GreaterThanOrEqualComparisonChecker($date_validator, $list_value_validator),
-                new LesserThanComparisonChecker($date_validator, $list_value_validator),
-                new LesserThanOrEqualComparisonChecker($date_validator, $list_value_validator),
-                new BetweenComparisonChecker($date_validator, $list_value_validator),
-                new InComparisonChecker($date_validator, $list_value_validator_not_empty),
-                new NotInComparisonChecker($date_validator, $list_value_validator_not_empty),
                 new TextSemanticChecker(),
                 new StatusChecker(),
                 new AssignedToChecker($this->user_manager),
-                new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker($this->user_manager),
+                new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
+                    $this->user_manager
+                ),
+                new SubmissionDateChecker(),
             )
         );
 

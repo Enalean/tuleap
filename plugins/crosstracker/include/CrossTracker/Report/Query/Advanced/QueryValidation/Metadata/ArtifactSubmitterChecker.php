@@ -22,16 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\ListFields\ListComparisonToCurrentDateTimeFault;
-use Tuleap\CrossTracker\Report\Query\Advanced\ListFields\ListComparisonToStatusOpenFault;
-use Tuleap\CrossTracker\Report\Query\Advanced\ListFields\ListValuesCollection;
-use Tuleap\CrossTracker\Report\Query\Advanced\ListFields\MyselfNotAllowedForAnonymousFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\EmptyStringComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListToMyselfForAnonymousComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorNotAllowedForMetadataException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToNowComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToStatusOpenComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToStringComparisonException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidComparisonToCurrentDateTimeFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidComparisonToStatusOpenFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\ListValuesCollection;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\MyselfNotAllowedForAnonymousFault;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
@@ -93,8 +93,8 @@ final readonly class ArtifactSubmitterChecker
                 },
                 static function (Fault $fault) use ($metadata) {
                     match ($fault::class) {
-                        ListComparisonToStatusOpenFault::class => throw new ToStatusOpenComparisonException($metadata),
-                        ListComparisonToCurrentDateTimeFault::class => throw new ToNowComparisonException($metadata),
+                        InvalidComparisonToStatusOpenFault::class => throw new ToStatusOpenComparisonException($metadata),
+                        InvalidComparisonToCurrentDateTimeFault::class => throw new ToNowComparisonException($metadata),
                         MyselfNotAllowedForAnonymousFault::class => throw new ListToMyselfForAnonymousComparisonException($metadata),
                     };
                 }

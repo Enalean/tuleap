@@ -20,20 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ListFields;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation;
 
 use Tuleap\NeverThrow\Fault;
 
 /**
  * @psalm-immutable
  */
-final class ListComparisonToStatusOpenFault extends Fault
+final class InvalidComparisonToCurrentDateTimeFault extends Fault
 {
     /**
      * @psalm-mutation-free
      */
     public static function build(): Fault
     {
-        return new self('Comparison of list with OPEN() is not valid');
+        return new self('Comparison with NOW() is not allowed');
     }
 }
