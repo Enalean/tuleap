@@ -1012,8 +1012,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration = $this->createMock(Artifact::class);
         $iteration->method('userCanView')->willReturn(true);
         $iteration->method('getTracker')->willReturn($this->tracker);
+        $iteration->method('getId')->willReturn(1);
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset->method('getValue');
+        $changeset->method('getArtifact')->willReturn($iteration);
         $iteration->method('getLastChangeset')->willReturn($changeset);
         $this->mockDate($iteration, $start_date_field, 1234567890);
         $this->mockDate($iteration, $end_date_field, null);
@@ -1109,6 +1111,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration->method('getTitle')->willReturn('');
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset->method('getValue');
+        $changeset->method('getArtifact')->willReturn($iteration);
         $iteration->method('getLastChangeset')->willReturn($changeset);
         $this->mockDate($iteration, $start_date_field, 1234567890);
         $this->mockDate($iteration, $end_date_field, 1234567890);
@@ -1202,8 +1205,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration->method('userCanView')->willReturn(true);
         $iteration->method('getTracker')->willReturn($this->tracker);
         $iteration->method('getTitle')->willReturn('');
+        $iteration->method('getId')->willReturn(1);
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset->method('getValue');
+        $changeset->method('getArtifact')->willReturn($iteration);
         $iteration->method('getLastChangeset')->willReturn($changeset);
         $this->mockDate($iteration, $start_date_field, 1234567890);
         $this->mockDate($iteration, $end_date_field, 1123456789);
@@ -1360,7 +1365,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset->method('getValue')->willReturn($changeset_value);
         $changeset_value->method('getTimestamp')->willReturn(1234567890);
 
-        return ArtifactTestBuilder::anArtifact($id)
+        $artifact = ArtifactTestBuilder::anArtifact($id)
             ->withTitle($title)
             ->inTracker($tracker)
             ->withChangesets($changeset)
@@ -1368,6 +1373,9 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withParent(null)
             ->isOpen(true)
             ->build();
+        $changeset->method('getArtifact')->willReturn($artifact);
+
+        return $artifact;
     }
 
     private function anArtifactWithoutChangesetValue(int $id, string $title, Tracker $tracker): Artifact
@@ -1377,7 +1385,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset->method('getValue')->willReturn($changeset_value);
         $changeset_value->method('getTimestamp')->willReturn(null);
 
-        return ArtifactTestBuilder::anArtifact($id)
+        $artifact = ArtifactTestBuilder::anArtifact($id)
             ->withTitle($title)
             ->inTracker($tracker)
             ->withChangesets($changeset)
@@ -1385,5 +1393,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withParent(null)
             ->isOpen(true)
             ->build();
+
+        $changeset->method('getArtifact')->willReturn($artifact);
+        return $artifact;
     }
 }

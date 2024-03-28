@@ -217,6 +217,9 @@ class TimeframeWithEndDate implements IComputeTimeframes
             );
         }
 
+        $logger->debug(
+            'Checking timeframe for artifact #' . $changeset->getArtifact()->getId()
+        );
         return DatePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
     }
 

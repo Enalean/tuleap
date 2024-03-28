@@ -86,6 +86,7 @@ final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgno
         }
 
         foreach ($this->burnup_dao->searchArtifactsWithBurnup() as $burnup) {
+            $this->logger->debug('Calculating burnup for artifact #' . $burnup['id']);
             if (empty($burnup['duration'])) {
                 $burnup_period = DatePeriodWithoutWeekEnd::buildFromEndDate(
                     $burnup['start_date'],
