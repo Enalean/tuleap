@@ -39,7 +39,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
@@ -112,7 +112,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
         $checker = new DuckTypedFieldChecker(
             $this->fields_retriever,
             RetrieveFieldTypeStub::withDetectionOfType(),
-            new FlatInvalidFieldChecker(
+            new InvalidFieldChecker(
                 new FloatFieldChecker(),
                 new IntegerFieldChecker(),
                 new TextFieldChecker(),

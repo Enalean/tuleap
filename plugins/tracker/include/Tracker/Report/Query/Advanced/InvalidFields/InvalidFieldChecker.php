@@ -31,7 +31,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmit
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 
-final readonly class FlatInvalidFieldChecker
+final readonly class InvalidFieldChecker
 {
     public function __construct(
         private FloatFieldChecker $float_field_checker,

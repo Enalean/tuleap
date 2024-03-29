@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\CheckComparison;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-final readonly class FlatInvalidMetadataChecker implements CheckComparison
+final readonly class InvalidMetadataChecker
 {
     public function __construct(
         private TextSemanticChecker $text_semantic_checker,

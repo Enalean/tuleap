@@ -22,7 +22,6 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use PFUser;
 use Tracker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -63,7 +62,6 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
     public function __construct(
         private InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
         private ArtifactLinkTypeChecker $artifact_link_type_checker,
-        private FlatInvalidMetadataChecker $metadata_checker,
     ) {
     }
 
@@ -135,7 +133,6 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
                 $parameters,
-                $this->metadata_checker,
                 $comparison,
             )
         );

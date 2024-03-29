@@ -32,7 +32,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
 final readonly class DuckTypedFieldChecker
@@ -40,7 +40,7 @@ final readonly class DuckTypedFieldChecker
     public function __construct(
         private RetrieveUsedFields $retrieve_used_fields,
         private RetrieveFieldType $retrieve_field_type,
-        private FlatInvalidFieldChecker $field_checker,
+        private InvalidFieldChecker $field_checker,
     ) {
     }
 
@@ -51,16 +51,15 @@ final readonly class DuckTypedFieldChecker
         Field $field,
         InvalidSearchableCollectorParameters $collector_parameters,
     ): Ok|Err {
-        $tracker_ids          = $collector_parameters->getInvalidSearchablesCollectorParameters()->getTrackerIds();
-        $user                 = $collector_parameters->getInvalidSearchablesCollectorParameters()->getUser();
+        $tracker_ids          = $collector_parameters->invalid_comparison_parameters->getTrackerIds();
+        $user                 = $collector_parameters->invalid_comparison_parameters->getUser();
         $fields_user_can_read = [];
         $exception_collector  = [];
         foreach ($tracker_ids as $tracker_id) {
             $used_field = $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName());
             if ($used_field && $used_field->userCanRead($user)) {
                 try {
-                    $comparison = $collector_parameters->getComparison();
-                    $this->field_checker->checkFieldIsValidForComparison($comparison, $used_field);
+                    $this->field_checker->checkFieldIsValidForComparison($collector_parameters->comparison, $used_field);
                 } catch (InvalidFieldException $e) {
                     $exception_collector[] = $e;
                 }
