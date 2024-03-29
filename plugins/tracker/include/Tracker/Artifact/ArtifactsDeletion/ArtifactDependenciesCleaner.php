@@ -36,7 +36,6 @@ class ArtifactDependenciesCleaner
         private readonly ComputedFieldDaoCache $computed_dao_cache,
         private readonly RecentlyVisitedDao $recently_visited_dao,
         private readonly PendingArtifactRemovalDao $artifact_removal,
-        private readonly ArtifactChangesetValueDeletorDAO $changeset_value_deletor_DAO,
         private readonly PostArtifactMoveReferencesCleaner $post_artifact_move_references_cleaner,
         private readonly PostArtifactDeletionCleaner $artifact_deletion_cleaner,
     ) {
@@ -48,7 +47,6 @@ class ArtifactDependenciesCleaner
 
         $this->cleanReferences($artifact, $context, $user);
 
-        $this->changeset_value_deletor_DAO->cleanAllChangesetValueInTransaction($artifact);
         $this->dao->deleteUnsubscribeNotificationForArtifact($artifact->getId());
         // We do not keep trace of the history change here because it doesn't have any sense
         $this->tracker_artifact_priority_manager->deletePriority($artifact);
