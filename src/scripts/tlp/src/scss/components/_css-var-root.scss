@@ -57,7 +57,7 @@ $tlp-illustration-secondary-dark-color: #fcd2ad !default;
 $tlp-illustration-tertiary-color: #f8e2d0 !default;
 
 // Internal
-$fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color, 50);
+$fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color, 50%);
 
 :root {
     // Fonts
@@ -83,7 +83,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     // Do not use transparency for hover background or you will
     // have issue when two hovering elements are on top of each other.
     // (e.g. a sticky cell in a table row)
-    --tlp-main-color-hover-background: #{color.mix($tlp-main-color, common.$tlp-white-color, 7)};
+    --tlp-main-color-hover-background: #{color.mix($tlp-main-color, common.$tlp-white-color, 7%)};
     --tlp-fade-background-color: #{$fade-background-color};
     --tlp-typo-default-text-color: #{$tlp-typo-default-text-color};
     --tlp-table-row-background-odd: #{common.$tlp-white-color};
@@ -115,12 +115,12 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-fade-background-color-hover-background: #{color.mix(
             $tlp-background-color,
             common.$tlp-white-color,
-            90
+            90%
         )};
     --tlp-fade-background-color-hover-border: #{color.mix(
             $tlp-background-color,
             common.$tlp-white-color,
-            90
+            90%
         )};
     --tlp-main-color-darker-03: #{color.adjust($tlp-main-color, $lightness: - 3%)};
     --tlp-main-color-darker-05: #{color.adjust($tlp-main-color, $lightness: - 5%)};
