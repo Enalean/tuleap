@@ -28,7 +28,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class SVNAccessFileWriteFault extends Fault
+final readonly class SVNAccessFileWriteFault extends Fault
 {
     public readonly string $access_file;
 

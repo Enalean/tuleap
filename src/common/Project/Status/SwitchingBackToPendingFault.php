@@ -25,7 +25,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class SwitchingBackToPendingFault extends Fault
+final readonly class SwitchingBackToPendingFault extends Fault
 {
     public static function build(): Fault
     {

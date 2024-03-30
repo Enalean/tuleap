@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class FieldNotFoundInAnyTrackerFault extends Fault
+final readonly class FieldNotFoundInAnyTrackerFault extends Fault
 {
     public static function build(): Fault
     {

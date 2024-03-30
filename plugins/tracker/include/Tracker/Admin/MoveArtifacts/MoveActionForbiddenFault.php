@@ -28,7 +28,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-class MoveActionForbiddenFault extends Fault
+final readonly class MoveActionForbiddenFault extends Fault
 {
     public static function build(Tracker $tracker): Fault
     {

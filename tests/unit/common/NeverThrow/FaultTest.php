@@ -24,6 +24,7 @@ namespace Tuleap\NeverThrow;
 
 use Psr\Log\LogLevel;
 use ColinODell\PsrTestLogger\TestLogger;
+use Tuleap\NeverThrow\Tests\FaultForTest;
 
 final class FaultTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -71,17 +72,7 @@ final class FaultTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCanBeExtended(): void
     {
         $error_code        = 123;
-        $specialized_fault = new /** @psalm-immutable */ class (self::ERROR_MESSAGE, $error_code) extends Fault {
-            public function __construct(string $error_message, private int $code)
-            {
-                parent::__construct($error_message);
-            }
-
-            public function getCode(): int
-            {
-                return $this->code;
-            }
-        };
+        $specialized_fault = new FaultForTest(self::ERROR_MESSAGE, $error_code);
         self::assertSame($error_code, $specialized_fault->getCode());
         self::assertSame(self::ERROR_MESSAGE, (string) $specialized_fault, 'It can be cast to string');
         self::assertStringContainsString(

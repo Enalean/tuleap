@@ -28,7 +28,7 @@ namespace Tuleap\NeverThrow;
  * @template TError
  * @implements IResult<never, TError>
  */
-final class Err implements IResult
+final readonly class Err implements IResult
 {
     /**
      * @param TError $error
@@ -36,7 +36,6 @@ final class Err implements IResult
      * @psalm-pure
      */
     public function __construct(
-        /** @psalm-readonly */
         public mixed $error,
     ) {
     }

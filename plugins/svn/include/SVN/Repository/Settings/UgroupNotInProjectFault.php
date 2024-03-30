@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class UgroupNotInProjectFault extends Fault
+final readonly class UgroupNotInProjectFault extends Fault
 {
     public static function build(): Fault
     {

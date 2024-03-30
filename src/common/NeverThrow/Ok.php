@@ -28,7 +28,7 @@ namespace Tuleap\NeverThrow;
  * @template TValue
  * @implements IResult<TValue, never>
  */
-final class Ok implements IResult
+final readonly class Ok implements IResult
 {
     /**
      * @param TValue $value
@@ -36,7 +36,6 @@ final class Ok implements IResult
      * @psalm-pure
      */
     public function __construct(
-        /** @psalm-readonly */
         public mixed $value,
     ) {
     }

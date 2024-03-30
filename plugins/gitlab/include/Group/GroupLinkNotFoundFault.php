@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class GroupLinkNotFoundFault extends \Tuleap\NeverThrow\Fault
+final readonly class GroupLinkNotFoundFault extends \Tuleap\NeverThrow\Fault
 {
     public static function fromId(int $group_link_id): Fault
     {

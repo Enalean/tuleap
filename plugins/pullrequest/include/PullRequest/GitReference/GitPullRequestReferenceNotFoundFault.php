@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class GitPullRequestReferenceNotFoundFault extends Fault
+final readonly class GitPullRequestReferenceNotFoundFault extends Fault
 {
     public static function build(): Fault
     {

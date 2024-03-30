@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class InvalidBranchPrefixFault extends Fault
+final readonly class InvalidBranchPrefixFault extends Fault
 {
     public static function fromBranchPrefix(string $branch_prefix): Fault
     {

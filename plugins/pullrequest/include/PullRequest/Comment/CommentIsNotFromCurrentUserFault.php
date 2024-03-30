@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class CommentIsNotFromCurrentUserFault extends Fault
+final readonly class CommentIsNotFromCurrentUserFault extends Fault
 {
     public static function fromComment(): Fault
     {

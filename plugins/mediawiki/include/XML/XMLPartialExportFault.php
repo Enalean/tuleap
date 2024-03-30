@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class XMLPartialExportFault extends Fault
+final readonly class XMLPartialExportFault extends Fault
 {
     public static function buildForXMLExportLogger(): Fault
     {

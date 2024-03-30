@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class NonUniqueNotificationPathFault extends Fault
+final readonly class NonUniqueNotificationPathFault extends Fault
 {
     /**
      * @param list<string> $non_unique_path

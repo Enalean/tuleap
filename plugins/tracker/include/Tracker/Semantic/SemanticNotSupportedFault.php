@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class SemanticNotSupportedFault extends Fault
+final readonly class SemanticNotSupportedFault extends Fault
 {
     public static function fromSemanticName(string $semantic): Fault
     {

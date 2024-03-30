@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class InlineCommentNotFoundFault extends Fault
+final readonly class InlineCommentNotFoundFault extends Fault
 {
     public static function fromCommentId(int $inline_comment_id): Fault
     {

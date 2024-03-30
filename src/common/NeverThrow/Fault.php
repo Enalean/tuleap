@@ -31,7 +31,7 @@ use Psr\Log\LogLevel;
  * For example: A User cannot see a Project.
  * @psalm-immutable
  */
-class Fault implements \Stringable
+readonly class Fault implements \Stringable
 {
     /** Internal Exception used only to record stack traces. It is never thrown */
     private readonly \Throwable $exception;

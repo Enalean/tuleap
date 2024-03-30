@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class FieldTypeIsNotSupportedFault extends Fault
+final readonly class FieldTypeIsNotSupportedFault extends Fault
 {
     public static function build(): Fault
     {

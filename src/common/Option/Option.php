@@ -29,14 +29,14 @@ use Tuleap\NeverThrow\Result;
 /**
  * @template Value
  */
-final class Option
+final readonly class Option
 {
     /**
      * @psalm-param Value $value
      */
     private function __construct(
-        private readonly mixed $value,
-        private readonly bool $has_value,
+        private mixed $value,
+        private bool $has_value,
     ) {
     }
 

@@ -25,7 +25,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class UpdateAlreadyDeletedProjectFault extends Fault
+final readonly class UpdateAlreadyDeletedProjectFault extends Fault
 {
     public static function build(): Fault
     {

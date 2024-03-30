@@ -28,7 +28,7 @@ use Tuleap\PullRequest\PullRequest;
 /**
  * @psalm-immutable
  */
-final class PullRequestAuthorNotFoundFault extends Fault
+final readonly class PullRequestAuthorNotFoundFault extends Fault
 {
     public static function fromPullRequest(PullRequest $pull_request): Fault
     {

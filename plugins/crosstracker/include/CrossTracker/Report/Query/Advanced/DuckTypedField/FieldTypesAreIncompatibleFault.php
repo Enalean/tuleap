@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class FieldTypesAreIncompatibleFault extends Fault
+final readonly class FieldTypesAreIncompatibleFault extends Fault
 {
     public static function build(string $field_name, array $tracker_ids): Fault
     {

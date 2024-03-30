@@ -25,7 +25,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class CannotDeletedDefaultAdminProjectFault extends Fault
+final readonly class CannotDeletedDefaultAdminProjectFault extends Fault
 {
     public static function build(): Fault
     {

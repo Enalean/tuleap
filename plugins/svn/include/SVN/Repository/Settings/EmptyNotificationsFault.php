@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class EmptyNotificationsFault extends Fault
+final readonly class EmptyNotificationsFault extends Fault
 {
     /**
      * @param list<string> $empty_notifications

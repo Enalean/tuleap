@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class GitlabResponseAPIFault extends Fault
+final readonly class GitlabResponseAPIFault extends Fault
 {
     public static function fromGitlabResponseAPIException(GitlabResponseAPIException $exception): Fault
     {

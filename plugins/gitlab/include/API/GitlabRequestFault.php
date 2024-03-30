@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class GitlabRequestFault extends Fault
+final readonly class GitlabRequestFault extends Fault
 {
     private function __construct(string $message, private int $status_code)
     {

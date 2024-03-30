@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class UserNotFoundFault extends Fault
+final readonly class UserNotFoundFault extends Fault
 {
     public static function fromUserId(int $user_id): Fault
     {

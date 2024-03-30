@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 /**
  * @psalm-immutable
  */
-final class UserIsNotGitAdministratorFault extends Fault
+final readonly class UserIsNotGitAdministratorFault extends Fault
 {
     public static function build(): Fault
     {
