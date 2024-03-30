@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace  Tuleap\Tracker\XML\Exporter\ChangesetValue;
+namespace Tuleap\Tracker\XML\Exporter\ChangesetValue;
 
 use EventManager;
 use Tracker_Artifact_ChangesetValue;
