@@ -29,6 +29,7 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSet;
@@ -119,6 +120,11 @@ class AfterItemCreationVisitor implements ItemVisitor
     }
 
     public function visitFile(Docman_File $item, array $params = [])
+    {
+        throw new CannotCreateThisItemTypeException();
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         throw new CannotCreateThisItemTypeException();
     }

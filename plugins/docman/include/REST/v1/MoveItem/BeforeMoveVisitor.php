@@ -35,6 +35,7 @@ use Docman_Wiki;
 use LogicException;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 
@@ -94,6 +95,14 @@ final class BeforeMoveVisitor implements ItemVisitor
      * @throws RestException
      */
     public function visitWiki(Docman_Wiki $item, array $params = []): void
+    {
+        $this->handleDocument($item, $params['destination'], $params['current_time']);
+    }
+
+    /**
+     * @throws RestException
+     */
+    public function visitOtherDocument(OtherDocument $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
     }

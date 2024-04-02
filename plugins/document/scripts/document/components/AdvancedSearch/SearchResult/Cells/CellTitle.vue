@@ -33,6 +33,7 @@
                 class="fa-fw document-search-result-icon"
                 v-bind:class="icon_classes"
                 aria-hidden="true"
+                data-test="icon"
             ></i>
             <a
                 v-if="href"
@@ -92,6 +93,8 @@ import type { Route } from "vue-router/types/router";
 import { useNamespacedState, useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import SearchItemDropdown from "./SearchItemDropdown.vue";
+import { OTHER_ITEM_TYPES } from "../../../../injection-keys";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const { current_folder } = useState<{ current_folder: Folder }>(["current_folder"]);
 
@@ -121,6 +124,8 @@ const action_icon_classes = computed((): string => {
     }
 });
 
+const other_item_types = strictInject(OTHER_ITEM_TYPES);
+
 const icon_classes = computed((): string => {
     switch (props.item.type) {
         case TYPE_FILE:
@@ -138,7 +143,9 @@ const icon_classes = computed((): string => {
         case TYPE_WIKI:
             return ICON_WIKI;
         default:
-            return ICON_EMPTY;
+            return props.item.type in other_item_types
+                ? other_item_types[props.item.type].icon
+                : ICON_EMPTY;
     }
 });
 

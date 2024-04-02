@@ -30,6 +30,7 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\REST\I18NRestException;
 
@@ -97,6 +98,12 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = []): void
+    {
+        $this->checkExpectedType($item);
+        $this->checkUserCanWrite($this->current_user, $this->item);
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);

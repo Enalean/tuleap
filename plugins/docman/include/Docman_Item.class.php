@@ -54,6 +54,7 @@ class Docman_Item
     public $pathId       = [];
     public $pathTitle    = [];
 
+    public const TYPE_OTHER = 7;
 
 
     public function __construct($data = null)

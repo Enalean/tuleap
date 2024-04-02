@@ -146,6 +146,10 @@ class Docman_ItemFactory
             case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
                 $item = new Docman_Empty($row);
                 break;
+            case Docman_Item::TYPE_OTHER:
+                return EventManager::instance()
+                    ->dispatch(new \Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent($row['other_type'], $row))
+                    ->getInstance();
             default:
                 return;
         }

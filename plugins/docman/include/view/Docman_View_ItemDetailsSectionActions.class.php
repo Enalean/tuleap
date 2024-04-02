@@ -21,9 +21,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSection
+/**
+ * @template-implements ItemVisitor<string>
+ */
+class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSection implements ItemVisitor
 {
     public $is_moveable;
     public $is_deleteable;
@@ -148,7 +152,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    public function visitFolder($item, $params = [])
+    public function visitFolder(Docman_Folder $item, array $params = []): string
     {
         $content = '';
         if ($this->_controller->userCanWrite($this->item->getid())) {
@@ -179,7 +183,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    public function visitDocument($item, $params = [])
+    public function visitItem(Docman_Item $item, array $params = []): string
     {
         $content  = '';
         $content .= '<dt>' . dgettext('tuleap-docman', 'Update') . '</dt><dd>';
@@ -194,22 +198,27 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    public function visitWiki($item, $params = [])
+    public function visitDocument(Docman_Document $item, array $params = []): string
+    {
+        return $this->visitItem($item, $params);
+    }
+
+    public function visitWiki(Docman_Wiki $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitLink($item, $params = [])
+    public function visitLink(Docman_Link $item, array $params = []): string
     {
         return $this->getSectionForNewVersion();
     }
 
-    public function visitFile($item, $params = [])
+    public function visitFile(Docman_File $item, array $params = []): string
     {
         return $this->getSectionForNewVersion();
     }
 
-    private function getSectionForNewVersion()
+    private function getSectionForNewVersion(): string
     {
         $content = '<dt>' . dgettext('tuleap-docman', 'New Version') . '</dt><dd>';
         if (! $this->_controller->userCanWrite($this->item->getid())) {
@@ -222,7 +231,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    public function visitEmbeddedFile($item, $params = [])
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): string
     {
         $content = '<textarea name="content" rows="15" cols="50">';
         $version = $item->getCurrentVersion();
@@ -233,7 +242,12 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $this->visitFile($item, array_merge($params, ['input_content' => $content]));
     }
 
-    public function visitEmpty($item, $params = [])
+    public function visitEmpty(Docman_Empty $item, array $params = []): string
+    {
+        return $this->visitDocument($item, $params);
+    }
+
+    public function visitOtherDocument(\Tuleap\Docman\Item\OtherDocument $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }

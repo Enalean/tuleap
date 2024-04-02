@@ -29,6 +29,7 @@ use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\Item\OpenItemHref;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesFullRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesMinimalRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
@@ -194,9 +195,21 @@ class ItemRepresentationVisitor implements ItemVisitor
         );
     }
 
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return $this->event_manager
+            ->dispatch(
+                new GetOtherDocumentItemRepresentationWrapper(
+                    $this->item_representation_builder,
+                    $item,
+                    $params['current_user'],
+                )
+            )->buildItemRepresentation();
+    }
+
     public function visitItem(Docman_Item $item, array $params = [])
     {
-        return $this->item_representation_builder->buildItemRepresentation($item, null, null);
+        return $this->item_representation_builder->buildItemRepresentation($item, $params['current_user'], null);
     }
 
     private function buildFileDirectAccessURL(Docman_Item $item): string

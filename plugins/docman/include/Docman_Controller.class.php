@@ -569,7 +569,11 @@ class Docman_Controller extends Controler
                         break;
                     }
                 }
-                $this->view = $item->accept($get_show_view, $this->request->get('report'));
+                $report = $this->request->get('report');
+                if (! is_array($report)) {
+                    $report = [];
+                }
+                $this->view = $item->accept($get_show_view, $report);
                 break;
             case 'expandFolder':
                 $this->action = 'expandFolder';

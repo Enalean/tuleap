@@ -63,12 +63,12 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $content;
     }
 
-    public function visitFolder($item, $params = [])
+    public function visitFolder(Docman_Folder $item, array $params = []): string
     {
         return '';
     }
 
-    public function visitDocument($item, $params = [])
+    public function visitDocument(Docman_Document $item, array $params = []): string
     {
         $content = '';
 
@@ -86,27 +86,27 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $content;
     }
 
-    public function visitWiki($item, $params = [])
+    public function visitWiki(Docman_Wiki $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitLink($item, $params = [])
+    public function visitLink(Docman_Link $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitFile($item, $params = [])
+    public function visitFile(Docman_File $item, array $params = []): string
     {
         return '';
     }
 
-    public function visitEmbeddedFile($item, $params = [])
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): string
     {
         return $this->visitFile($item, $params);
     }
 
-    public function visitEmpty($item, $params = [])
+    public function visitEmpty(Docman_Empty $item, array $params = []): string
     {
         $content = '';
 

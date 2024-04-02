@@ -30,6 +30,7 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 
 final class ItemActionURLVisitor implements ItemVisitor
 {
@@ -69,6 +70,11 @@ final class ItemActionURLVisitor implements ItemVisitor
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = []): ?string
+    {
+        return null;
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = []): ?string
     {
         return null;
     }

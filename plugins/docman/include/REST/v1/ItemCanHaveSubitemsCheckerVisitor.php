@@ -29,6 +29,7 @@ use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 
 /**
  * @template-implements ItemVisitor<void>
@@ -66,6 +67,11 @@ class ItemCanHaveSubitemsCheckerVisitor implements ItemVisitor
     }
 
     public function visitItem(Docman_Item $item, array $params = [])
+    {
+        throw new ItemIsNotAFolderException();
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }

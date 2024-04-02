@@ -111,6 +111,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $this->filename_pattern_retriever->getPattern((int) $project->getID()),
                 $this->dispatcher->dispatch(new ShouldDisplaySourceColumnForFileVersions())->shouldDisplaySourceColumn(),
                 $this->dispatcher->dispatch(new NewItemAlternativeCollector($project))->getSections(),
+                $this->dispatcher->dispatch(new OtherItemTypes())->getTypes(),
             )
         );
 

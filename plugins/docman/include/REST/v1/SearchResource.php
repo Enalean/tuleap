@@ -308,7 +308,7 @@ final class SearchResource extends AuthenticatedResource
                 $item_dao
             ),
             $item_factory,
-            new SearchRepresentationTypeVisitor(),
+            new SearchRepresentationTypeVisitor(\EventManager::instance()),
             new FilePropertiesVisitor($version_factory, $event_manager),
             new ListOfCustomPropertyRepresentationBuilder(),
         );

@@ -18,6 +18,7 @@ CREATE TABLE plugin_docman_item (
   obsolescence_date int(11) DEFAULT 0 NOT NULL,
   `rank` INT(11) DEFAULT 0 NOT NULL,
   item_type INT(11) UNSIGNED NULL,
+  other_type VARCHAR(32) NULL,
   link_url TEXT NULL,
   wiki_page TEXT NULL,
   file_is_embedded INT(11) UNSIGNED NULL,

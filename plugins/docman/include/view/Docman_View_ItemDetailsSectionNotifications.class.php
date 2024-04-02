@@ -22,11 +22,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder;
 use Tuleap\Docman\Notifications\NotificationListPresenter;
 
+/**
+ * @template-implements ItemVisitor<string>
+ */
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection
+class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection implements ItemVisitor
 {
     /**
      * @var Docman_NotificationsManager
@@ -118,37 +122,47 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         return $content;
     }
 
-    public function visitEmpty(&$item, $params)
+    public function visitEmpty(Docman_Empty $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitWiki(&$item, $params)
+    public function visitWiki(Docman_Wiki $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitLink(&$item, $params)
+    public function visitLink(Docman_Link $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitEmbeddedFile(&$item, $params)
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitFile(&$item, $params)
+    public function visitFile(Docman_File $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitDocument(&$item, $params)
+    public function visitOtherDocument(\Tuleap\Docman\Item\OtherDocument $item, array $params = []): string
+    {
+        return $this->visitDocument($item, $params);
+    }
+
+    public function visitDocument(Docman_Document $item, array $params = []): string
     {
         return '';
     }
 
-    public function visitFolder(&$item, $params)
+    public function visitItem(Docman_Item $item, array $params = []): string
+    {
+        return '';
+    }
+
+    public function visitFolder(Docman_Folder $item, array $params = [])
     {
         $content  = '<blockquote>';
         $checked  = ! $params['user']->isAnonymous() && $this->notificationsManager->userExists($params['user']->getId(), $this->item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE) ? 'checked="checked"' : '';

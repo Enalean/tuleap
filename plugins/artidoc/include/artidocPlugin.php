@@ -21,6 +21,12 @@
 declare(strict_types=1);
 
 use Tuleap\Artidoc\ArtidocController;
+use Tuleap\Artidoc\Document\ArtidocDocument;
+use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
+use Tuleap\Docman\REST\v1\GetOtherDocumentItemRepresentationWrapper;
+use Tuleap\Docman\REST\v1\Search\SearchRepresentationOtherType;
+use Tuleap\Document\Tree\OtherItemTypeDefinition;
+use Tuleap\Document\Tree\OtherItemTypes;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Request\DispatchableWithRequest;
 
@@ -71,6 +77,39 @@ class ArtidocPlugin extends Plugin
         return new ArtidocController(
             ProjectManager::instance(),
             $this,
+        );
+    }
+
+    #[ListeningToEventClass]
+    public function getDocmanItemOtherTypeEvent(GetDocmanItemOtherTypeEvent $event): void
+    {
+        if ($event->type === ArtidocDocument::TYPE) {
+            $event->setInstance(new ArtidocDocument($event->row));
+        }
+    }
+
+    #[ListeningToEventClass]
+    public function getOtherDocumentItemRepresentationWrapper(GetOtherDocumentItemRepresentationWrapper $event): void
+    {
+        if ($event->item instanceof ArtidocDocument) {
+            $event->setType(ArtidocDocument::TYPE);
+        }
+    }
+
+    #[ListeningToEventClass]
+    public function searchRepresentationOtherType(SearchRepresentationOtherType $event): void
+    {
+        if ($event->item instanceof ArtidocDocument) {
+            $event->setType(ArtidocDocument::TYPE);
+        }
+    }
+
+    #[ListeningToEventClass]
+    public function otherItemTypes(OtherItemTypes $event): void
+    {
+        $event->addType(
+            ArtidocDocument::TYPE,
+            new OtherItemTypeDefinition('fa-solid fa-tlp-tracker-circle document-document-icon')
         );
     }
 }

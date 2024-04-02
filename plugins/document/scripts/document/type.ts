@@ -567,3 +567,9 @@ export interface NewItemAlternative {
     readonly mime_type: string;
     readonly title: string;
 }
+
+interface OtherItemType {
+    readonly icon: string;
+}
+
+export type OtherItemTypeCollection = Record<string, OtherItemType>;

@@ -69,32 +69,27 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $content;
     }
 
-    public function visitFolder($item, $params = [])
+    public function visitFolder(Docman_Folder $item, array $params = []): string
     {
         return '';
     }
 
-    public function visitDocument($item, $params = [])
+    public function visitDocument(Docman_Document $item, array $params = []): string
     {
         return '';
     }
 
-    public function visitWiki($item, $params = [])
-    {
-        return $this->visitDocument($item, $params);
-    }
-
-    public function visitLink($item, $params = [])
+    public function visitLink(Docman_Link $item, array $params = []): string
     {
         return $this->visitVersionnedItem($item, $params);
     }
 
-    public function visitFile($item, $params = [])
+    public function visitFile(Docman_File $item, array $params = []): string
     {
         return $this->visitVersionnedItem($item, $params);
     }
 
-    private function visitVersionnedItem($item, $params = [])
+    private function visitVersionnedItem($item, array $params = []): string
     {
         $label = '';
         if (isset($this->_controller->_viewParams['label'])) {
@@ -162,13 +157,8 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $content;
     }
 
-    public function visitEmbeddedFile($item, $params = [])
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): string
     {
         return $this->visitFile($item, $params);
-    }
-
-    public function visitEmpty($item, $params = [])
-    {
-        return $this->visitDocument($item, $params);
     }
 }

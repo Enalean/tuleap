@@ -76,7 +76,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
                 $this->createMock(VersionDao::class)
             ),
             $this->item_factory,
-            new SearchRepresentationTypeVisitor(),
+            new SearchRepresentationTypeVisitor(EventDispatcherStub::withIdentityCallback()),
             new FilePropertiesVisitor($this->version_factory, EventDispatcherStub::withIdentityCallback()),
             new ListOfCustomPropertyRepresentationBuilder(),
         );
