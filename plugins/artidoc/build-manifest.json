@@ -1,0 +1,8 @@
+{
+    "gettext-vue3": {
+        "artidoc": {
+            "src": "scripts/artidoc/src",
+            "po": "scripts/artidoc/po"
+        }
+    }
+}
