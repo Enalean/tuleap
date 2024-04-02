@@ -33,14 +33,18 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
 /**
  * @template-implements SearchableVisitor<InvalidSearchableCollectorParameters, void>
  */
-final class InvalidSearchableCollectorVisitor implements SearchableVisitor
+final readonly class InvalidSearchableCollectorVisitor implements SearchableVisitor
 {
     public function __construct(
-        private readonly MetadataChecker $metadata_checker,
-        private readonly DuckTypedFieldChecker $field_checker,
+        private MetadataChecker $metadata_checker,
+        private DuckTypedFieldChecker $field_checker,
     ) {
     }
 
+    /**
+     * @param InvalidSearchableCollectorParameters $parameters
+     * @return void
+     */
     public function visitField(Field $searchable_field, $parameters)
     {
         $this->field_checker->checkFieldIsValid($searchable_field, $parameters)
@@ -49,7 +53,7 @@ final class InvalidSearchableCollectorVisitor implements SearchableVisitor
                     // Do nothing
                 },
                 static function (Fault $fault) use ($searchable_field, $parameters) {
-                    $invalid_searchables_collection = $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection();
+                    $invalid_searchables_collection = $parameters->invalid_comparison_parameters->getInvalidSearchablesCollection();
                     if ($fault instanceof FieldTypeIsNotSupportedFault || $fault instanceof FieldNotFoundInAnyTrackerFault) {
                         $invalid_searchables_collection->addNonExistentSearchable($searchable_field->getName());
                         return;
@@ -59,9 +63,13 @@ final class InvalidSearchableCollectorVisitor implements SearchableVisitor
             );
     }
 
+    /**
+     * @param InvalidSearchableCollectorParameters $parameters
+     * @return void
+     */
     public function visitMetadata(Metadata $metadata, $parameters)
     {
-        $invalid_searchables_collection = $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection();
+        $invalid_searchables_collection = $parameters->invalid_comparison_parameters->getInvalidSearchablesCollection();
         if (! in_array($metadata->getName(), AllowedMetadata::NAMES, true)) {
             $invalid_searchables_collection->addNonexistentSearchable(
                 $metadata->getName()
@@ -73,9 +81,8 @@ final class InvalidSearchableCollectorVisitor implements SearchableVisitor
         try {
             $this->metadata_checker->checkMetadataIsValid(
                 $metadata,
-                $parameters->getComparison(),
-                $parameters->getInvalidSearchablesCollectorParameters(),
-                $parameters->getComparisonChecker()
+                $parameters->comparison,
+                $parameters->invalid_comparison_parameters,
             );
         } catch (InvalidQueryException $exception) {
             $invalid_searchables_collection->addInvalidSearchableError(

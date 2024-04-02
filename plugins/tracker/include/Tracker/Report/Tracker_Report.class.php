@@ -2168,7 +2168,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 new InvalidMetadata\NotInComparisonChecker(),
                 new InvalidSearchableCollectorVisitor(
                     $this->getFormElementFactory(),
-                    new InvalidFields\FlatInvalidFieldChecker(
+                    new InvalidFields\InvalidFieldChecker(
                         new InvalidFields\FloatFields\FloatFieldChecker(),
                         new InvalidFields\Integer\IntegerFieldChecker(),
                         new InvalidFields\Text\TextFieldChecker(),

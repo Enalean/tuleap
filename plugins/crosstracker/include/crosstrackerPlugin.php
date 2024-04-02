@@ -40,7 +40,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\FlatInvalidMetadataChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\InvalidMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
@@ -64,7 +64,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
@@ -196,12 +196,21 @@ class crosstrackerPlugin extends Plugin
                         new Tracker_Semantic_DescriptionDao(),
                         new Tracker_Semantic_StatusDao(),
                         new Tracker_Semantic_ContributorDao()
+                    ),
+                    new InvalidMetadataChecker(
+                        new TextSemanticChecker(),
+                        new StatusChecker(),
+                        new AssignedToChecker($user_manager),
+                        new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
+                            $user_manager
+                        ),
+                        new SubmissionDateChecker(),
                     )
                 ),
                 new DuckTypedFieldChecker(
                     $form_element_factory,
                     $form_element_factory,
-                    new FlatInvalidFieldChecker(
+                    new InvalidFieldChecker(
                         new FloatFieldChecker(),
                         new IntegerFieldChecker(),
                         new TextFieldChecker(),
@@ -231,15 +240,6 @@ class crosstrackerPlugin extends Plugin
                     new TypeDao(),
                     new ArtifactLinksUsageDao(),
                 ),
-            ),
-            new FlatInvalidMetadataChecker(
-                new TextSemanticChecker(),
-                new StatusChecker(),
-                new AssignedToChecker($user_manager),
-                new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
-                    $user_manager
-                ),
-                new SubmissionDateChecker(),
             )
         );
 

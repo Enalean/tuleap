@@ -21,15 +21,16 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\CheckComparison;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-final class MetadataChecker
+final readonly class MetadataChecker
 {
-    public function __construct(private readonly CheckMetadataUsage $semantic_usage_checker)
-    {
+    public function __construct(
+        private CheckMetadataUsage $semantic_usage_checker,
+        private InvalidMetadataChecker $comparison_checker,
+    ) {
     }
 
     /**
@@ -39,9 +40,8 @@ final class MetadataChecker
         Metadata $metadata,
         Comparison $comparison,
         InvalidComparisonCollectorParameters $collector_parameters,
-        CheckComparison $checker,
     ): void {
         $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters);
-        $checker->checkComparisonIsValid($metadata, $comparison);
+        $this->comparison_checker->checkComparisonIsValid($metadata, $comparison);
     }
 }

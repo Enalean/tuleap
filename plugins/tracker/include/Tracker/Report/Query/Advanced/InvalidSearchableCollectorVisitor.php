@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FlatInvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataForComparisonException;
@@ -37,7 +37,7 @@ final readonly class InvalidSearchableCollectorVisitor implements SearchableVisi
 
     public function __construct(
         private \Tracker_FormElementFactory $form_element_factory,
-        private FlatInvalidFieldChecker $field_checker,
+        private InvalidFieldChecker $field_checker,
         private \Tracker $tracker,
         private \PFUser $user,
     ) {
