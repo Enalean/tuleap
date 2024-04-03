@@ -86,3 +86,10 @@ reason = "@vue/component-compiler-utils will be removed when the Vue 2 migration
 id = "GO-2024-2631" # CVE-2024-28180
 reason = "No JWE in Tuleap use case and upstreams need to sort out the issue in their dep trees."
 ignoreUntil = 2024-05-19
+
+## github.com/quic-go/quic-go
+[[IgnoredVulns]]
+id = "GHSA-c33x-xqrf-c478" # CVE-2024-22189
+# https://github.com/caddyserver/caddy/issues/6210
+reason = "Wait for new Caddy release"
+ignoreUntil = 2024-04-10
