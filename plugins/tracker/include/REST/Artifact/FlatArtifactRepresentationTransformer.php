@@ -35,11 +35,12 @@ use Tuleap\User\REST\UserRepresentation;
 /**
  * @psalm-import-type FlatRepresentation from \Tuleap\REST\RESTCollectionTransformer
  */
-final class FlatArtifactRepresentationTransformer
+final readonly class FlatArtifactRepresentationTransformer
 {
     public function __construct(
-        private readonly RetrieveUsedFields $used_field_retriever,
-        private readonly \Codendi_HTMLPurifier $html_purifier,
+        private RetrieveUsedFields $used_field_retriever,
+        private \Codendi_HTMLPurifier $html_purifier,
+        private FlatArtifactListValueLabelTransformer $value_labels_transformer,
     ) {
     }
 
@@ -51,6 +52,8 @@ final class FlatArtifactRepresentationTransformer
         if ($artifact_representation->values === null) {
             return Result::err(Fault::fromMessage('No values in the artifact representation, check the query parameters'));
         }
+
+        $flat_representation_faults = [];
 
         $flat_representation = [];
         foreach ($artifact_representation->values as $field) {
@@ -78,14 +81,33 @@ final class FlatArtifactRepresentationTransformer
                 case 'msb':
                 case 'rb':
                 case 'cb':
-                    $flat_representation[$this->getFieldName($field->field_id)] = $this->transformListValues($field->values);
-                    break;
                 case 'tbl':
-                    $flat_representation[$this->getFieldName($field->field_id)] = $this->transformListValues($field->bind_value_objects);
+                    $field_id   = $field->field_id;
+                    $field_name = $this->getFieldName($field_id);
+                    $this->transformListValues($artifact_representation->id, $field_id, $field_name, $field)
+                        ->match(
+                            /**
+                             * @psalm-param string|list<string> $value
+                             */
+                            function (mixed $value) use (&$flat_representation, $field_name): void {
+                                $flat_representation[$field_name] = $value;
+                            },
+                            function (Fault $fault) use (&$flat_representation_faults): void {
+                                $flat_representation_faults[] = $fault;
+                            },
+                        );
                     break;
                 default:
                     continue 2;
             }
+        }
+
+        if (count($flat_representation_faults) > 0) {
+            $all_fault_messages = '';
+            foreach ($flat_representation_faults as $flat_representation_fault) {
+                $all_fault_messages .= "$flat_representation_fault. ";
+            }
+            return Result::err(Fault::fromMessage(trim($all_fault_messages)));
         }
 
         return Result::ok($flat_representation);
@@ -104,16 +126,25 @@ final class FlatArtifactRepresentationTransformer
     }
 
     /**
-     * @psalm-param array<array|UserRepresentation|MinimalUserGroupRepresentation> $list_values
-     * @psalm-return list<string>
+     * @psalm-return Ok<string>|Ok<list<string>>|Err<Fault>
      */
-    private function transformListValues(array $list_values): array
+    private function transformListValues(int $artifact_id, int $field_id, string $field_name, object $field): Ok|Err
     {
+        if ($field->type === 'tbl') {
+            $list_values = $field->bind_value_objects;
+        } else {
+            $list_values = $field->values;
+        }
         $value_labels = [];
         foreach ($list_values as $list_value) {
             $value_labels[] = $this->getListValueLabel($list_value);
         }
-        return Options::collect($value_labels);
+        return $this->value_labels_transformer->transformListValueLabels(
+            $artifact_id,
+            $field_id,
+            $field_name,
+            Options::collect($value_labels)
+        );
     }
 
     /**

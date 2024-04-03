@@ -56,9 +56,21 @@ final class TrackerReportTest extends TrackerBase
         $response_flat_representation = $this->getResponse(
             $this->request_factory->createRequest('GET', 'tracker_reports/' . urlencode($report_id) . '/artifacts?values=from_table_renderer&output_format=flat')
         );
+
+        $report_artifacts_response_body_content = $report_artifacts_response->getBody()->getContents();
+
         self::assertEquals(200, $response_flat_representation->getStatusCode());
         self::assertJsonStringNotEqualsJsonString(
-            $report_artifacts_response->getBody()->getContents(),
+            $report_artifacts_response_body_content,
+            $response_flat_representation->getBody()->getContents(),
+        );
+
+        $response_flat_representation = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'tracker_reports/' . urlencode($report_id) . '/artifacts?values=from_table_renderer&output_format=flat_with_semicolon_string_array')
+        );
+        self::assertEquals(200, $response_flat_representation->getStatusCode());
+        self::assertJsonStringNotEqualsJsonString(
+            $report_artifacts_response_body_content,
             $response_flat_representation->getBody()->getContents(),
         );
     }
