@@ -22,22 +22,13 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 
-final class LastUpdateDateIsMissingInAtLeastOneTrackerException extends InvalidQueryException
+final class SubmittedOnIsMissingInAllTrackersException extends InvalidQueryException
 {
-    public function __construct($count)
+    public function __construct()
     {
-        parent::__construct(
-            sprintf(
-                dngettext(
-                    'tuleap-crosstracker',
-                    'One of the trackers involved in the query does not expose a last update date field. Please refine
-                    your query or check the configuration of the trackers.',
-                    '%d of the trackers involved in the query do not expose a last update date field. Please refine
-                    your query or check the configuration of the trackers.',
-                    $count
-                ),
-                $count
-            )
-        );
+        parent::__construct(dgettext(
+            'tuleap-crosstracker',
+            'All trackers involved in the query do not expose a submitted on field. Please refine your query or check the configuration of the trackers.',
+        ));
     }
 }

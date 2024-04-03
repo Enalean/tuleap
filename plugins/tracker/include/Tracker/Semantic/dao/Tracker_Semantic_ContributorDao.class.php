@@ -53,7 +53,7 @@ class Tracker_Semantic_ContributorDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function getNbOfTrackerWithoutSemanticContributorDefined(array $trackers_id)
+    public function getNbOfTrackerWithoutSemanticContributorDefined(array $trackers_id): int
     {
         $trackers_id = $this->da->escapeIntImplode($trackers_id);
 
