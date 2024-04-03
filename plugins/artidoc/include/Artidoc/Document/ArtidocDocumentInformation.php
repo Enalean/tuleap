@@ -20,27 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Item;
+namespace Tuleap\Artidoc\Document;
 
-use Tuleap\Event\Dispatchable;
+use Tuleap\Docman\ServiceDocman;
 
-final class GetDocmanItemOtherTypeEvent implements Dispatchable
+final readonly class ArtidocDocumentInformation
 {
-    private ?\Docman_Item $instance = null;
-
     public function __construct(
-        public readonly string $type,
-        public readonly array $row,
+        public ArtidocDocument $document,
+        public ServiceDocman $service_docman,
     ) {
-    }
-
-    public function getInstance(): ?\Docman_Item
-    {
-        return $this->instance;
-    }
-
-    public function setInstance(\Docman_Item $instance): void
-    {
-        $this->instance = $instance;
     }
 }

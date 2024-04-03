@@ -22,46 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc;
 
-use DocmanPlugin;
 use HTTPRequest;
-use Project;
-use Tuleap\Docman\ServiceDocman;
+use Psr\Log\LoggerInterface;
+use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Document\RetriveArtidoc;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\Request\DispatchableWithProject;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 
-final readonly class ArtidocController implements DispatchableWithRequest, DispatchableWithProject
+final readonly class ArtidocController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public function __construct(
-        private \ProjectManager $project_manager,
-        private \ArtidocPlugin $plugin,
+        private RetriveArtidoc $retrieve_artidoc,
+        private LoggerInterface $logger,
     ) {
-    }
-
-    public function getProject(array $variables): Project
-    {
-        try {
-            $project = $this->project_manager->getValidProjectByShortNameOrId($variables['project_name']);
-        } catch (\Project_NotFoundException) {
-            throw new NotFoundException();
-        }
-
-        if (! $this->plugin->isAllowed((int) $project->getID())) {
-            throw new NotFoundException();
-        }
-
-        return $project;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->getProject($variables);
+        $this->retrieve_artidoc->retrieveArtidoc((int) $variables['id'], $request->getCurrentUser())
+            ->match(
+                fn (ArtidocDocumentInformation $document_information) => $this->renderPage($document_information, $layout),
+                function (Fault $fault) {
+                    Fault::writeToLogger($fault, $this->logger);
+                    throw new NotFoundException();
+                }
+            );
+    }
 
-        $service = $this->getService($project);
-
+    private function renderPage(ArtidocDocumentInformation $document_information, BaseLayout $layout): void
+    {
         $layout->addJavascriptAsset(
             new JavascriptViteAsset(
                 new IncludeViteAssets(
@@ -72,20 +66,14 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
             )
         );
 
-        $service->displayHeader(dgettext('tuleap-artidoc', 'Artifacts as Documents'), [], []);
+        $title   = $document_information->document->getTitle();
+        $service = $document_information->service_docman;
+
+        $service->displayHeader($title, [], []);
         \TemplateRendererFactory::build()->getRenderer(__DIR__)->renderToPage('artidoc', [
-            'project_id' => $project->getID(),
+            'project_id' => $service->getProject()->getID(),
+            'title' => $title,
         ]);
         $service->displayFooter();
-    }
-
-    private function getService(Project $project): ServiceDocman
-    {
-        $service = $project->getService(DocmanPlugin::SERVICE_SHORTNAME);
-        if ($service instanceof ServiceDocman) {
-            return $service;
-        }
-
-        throw new NotFoundException();
     }
 }

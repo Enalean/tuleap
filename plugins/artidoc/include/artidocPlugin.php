@@ -21,7 +21,9 @@
 declare(strict_types=1);
 
 use Tuleap\Artidoc\ArtidocController;
+use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocDocument;
+use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
 use Tuleap\Docman\REST\v1\GetOtherDocumentItemRepresentationWrapper;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationOtherType;
@@ -68,15 +70,20 @@ class ArtidocPlugin extends Plugin
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup('/artidoc', function (FastRoute\RouteCollector $r) {
-            $r->get('/{project_name:[A-z0-9-]+}/', $this->getRouteHandler('routeController'));
+            $r->get('/{id:\d+}[/]', $this->getRouteHandler('routeController'));
         });
     }
 
     public function routeController(): DispatchableWithRequest
     {
         return new ArtidocController(
-            ProjectManager::instance(),
-            $this,
+            new ArtidocRetriever(
+                ProjectManager::instance(),
+                new ArtidocDao(),
+                new Docman_ItemFactory(),
+                $this,
+            ),
+            BackendLogger::getDefaultLogger(),
         );
     }
 

@@ -34,11 +34,11 @@ use Psr\Log\LogLevel;
 readonly class Fault implements \Stringable
 {
     /** Internal Exception used only to record stack traces. It is never thrown */
-    private readonly \Throwable $exception;
+    private \Throwable $exception;
 
     /** @param string $message Error message to be logged or showed on-screen. */
     protected function __construct(
-        private readonly string $message,
+        private string $message,
         ?\Throwable $exception = null,
     ) {
         $this->exception = $exception ?? new \Exception();

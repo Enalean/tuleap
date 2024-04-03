@@ -28,7 +28,7 @@ use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\PHPWiki\WikiPage;
 
-class Docman_ItemFactory
+class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
 {
     public array $rootItems;
     public array $onlyOneChildForRoot;
@@ -105,9 +105,6 @@ class Docman_ItemFactory
         return $this->groupId;
     }
 
-    /**
-     * @return Docman_Item|null|void
-     */
     public function getItemFromRow(array $row)
     {
         $item = null;
@@ -305,10 +302,7 @@ class Docman_ItemFactory
         return $wiki_page;
     }
 
-    /**
-     * @return Docman_Item | null
-     */
-    public function getItemFromDb($id, $params = [])
+    public function getItemFromDb($id, $params = []): ?Docman_Item
     {
         $dao = $this->_getItemDao();
         $dar = $dao->searchById($id, $params);

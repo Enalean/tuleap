@@ -18,29 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Docman\Item;
 
-use Tuleap\Event\Dispatchable;
+use Docman_Item;
 
-final class GetDocmanItemOtherTypeEvent implements Dispatchable
+interface GetItemFromRow
 {
-    private ?\Docman_Item $instance = null;
-
-    public function __construct(
-        public readonly string $type,
-        public readonly array $row,
-    ) {
-    }
-
-    public function getInstance(): ?\Docman_Item
-    {
-        return $this->instance;
-    }
-
-    public function setInstance(\Docman_Item $instance): void
-    {
-        $this->instance = $instance;
-    }
+    /**
+     * @return Docman_Item|null|void
+     */
+    public function getItemFromRow(array $row);
 }

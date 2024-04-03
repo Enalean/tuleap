@@ -267,6 +267,7 @@ module.exports = {
             files: [
                 "lib/frontend/project-sidebar-internal/**/*.vue",
                 "plugins/agiledashboard/scripts/permissions-per-group/**/*.vue",
+                "plugins/artidoc/scripts/**/*.vue",
                 "plugins/document/scripts/**/*.vue",
                 "plugins/document_generation/scripts/**/*.vue",
                 "plugins/git/scripts/artifact-create-branch-action/**/*.vue",

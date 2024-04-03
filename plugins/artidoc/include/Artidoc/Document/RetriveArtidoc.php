@@ -18,29 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Artidoc\Document;
 
-namespace Tuleap\Docman\Item;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-use Tuleap\Event\Dispatchable;
-
-final class GetDocmanItemOtherTypeEvent implements Dispatchable
+interface RetriveArtidoc
 {
-    private ?\Docman_Item $instance = null;
-
-    public function __construct(
-        public readonly string $type,
-        public readonly array $row,
-    ) {
-    }
-
-    public function getInstance(): ?\Docman_Item
-    {
-        return $this->instance;
-    }
-
-    public function setInstance(\Docman_Item $instance): void
-    {
-        $this->instance = $instance;
-    }
+    /**
+     * @return Ok<ArtidocDocumentInformation>|Err<Fault>
+     */
+    public function retrieveArtidoc(int $id, \PFUser $user): Ok|Err;
 }
