@@ -148,9 +148,9 @@ class XMLExportVisitor implements ItemVisitor
     {
         $node = $this->visitDocument($item, $params);
 
-        $versions = array_reverse($this->version_factory->getAllVersionForItem($item));
+        $versions          = array_reverse($this->version_factory->getAllVersionForItem($item));
+        $node_for_versions = $node->addChild('versions');
         if (count($versions) > 0) {
-            $node_for_versions = $node->addChild('versions');
             foreach ($versions as $version) {
                 $this->createVersion($node_for_versions, $version);
             }
