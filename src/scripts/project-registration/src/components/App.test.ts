@@ -23,7 +23,7 @@ import App from "./App.vue";
 import { createProjectRegistrationLocalVue } from "../helpers/local-vue-for-tests";
 
 describe("App", () => {
-    let factory: Wrapper<App>;
+    let factory: Wrapper<Vue, Element>;
     beforeEach(async () => {
         factory = shallowMount(App, {
             localVue: await createProjectRegistrationLocalVue(),
