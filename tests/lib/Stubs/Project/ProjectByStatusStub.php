@@ -20,21 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project\Registration\Template\Upload;
+namespace Tuleap\Test\Stubs\Project;
 
-final class SearchFileUploadIdsStub implements SearchFileUploadIds
+use Project;
+use Tuleap\Project\ProjectByStatus;
+
+final readonly class ProjectByStatusStub implements ProjectByStatus
 {
-    private function __construct(private readonly array $file_upload_ids)
+    private function __construct(private array $projects)
     {
     }
 
-    public function searchFileOngoingUploadIds(): array
+    public function getProjectsByStatus(string $status): array
     {
-        return $this->file_upload_ids;
+        return $this->projects;
     }
 
-    public static function withFileIds(array $file_upload_ids): self
+    public static function withProjects(Project $project, Project ...$other_projects): self
     {
-        return new self($file_upload_ids);
+        return new self([$project, ... $other_projects]);
     }
 }

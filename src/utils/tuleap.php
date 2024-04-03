@@ -191,6 +191,7 @@ $CLI_command_collector->addCommand(
     static function () use ($event_manager, $user_manager): DailyJobCommand {
         $locale_switcher     = new LocaleSwitcher();
         $project_archive_dao = new ProjectArchiveOngoingUploadDao();
+        $project_manager     =  ProjectManager::instance();
         return new DailyJobCommand(
             $event_manager,
             new AccessKeyRevoker(
@@ -228,13 +229,17 @@ $CLI_command_collector->addCommand(
                     $mail->send();
                 },
                 UserManager::instance(),
-                ProjectManager::instance(),
+                $project_manager,
                 new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
             ),
             new \Tuleap\Project\Registration\Template\Upload\ProjectArchiveUploadCleaner(
                 new \Tuleap\Upload\UploadPathAllocator(ForgeConfig::get('tmp_dir') . '/project/ongoing-upload'),
                 $project_archive_dao,
-                $project_archive_dao
+                $project_archive_dao,
+                $event_manager,
+                $project_manager,
+                $project_manager,
+                $project_manager,
             )
         );
     }

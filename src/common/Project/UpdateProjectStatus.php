@@ -20,10 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project\Registration\Template\Upload;
+namespace Tuleap\Project;
 
-interface SearchFileUploadIds
+use Project;
+
+interface UpdateProjectStatus
 {
-    /** @return array{id: int} | array{} */
-    public function searchFileOngoingUploadIds(): array;
+    /**
+     * @throws \Tuleap\Project\DeletedProjectStatusChangeException
+     * @throws \Tuleap\Project\Status\CannotDeletedDefaultAdminProjectException
+     * @throws \Tuleap\Project\Status\SwitchingBackToPendingException
+     */
+    public function updateStatus(Project $project, string $status): void;
 }

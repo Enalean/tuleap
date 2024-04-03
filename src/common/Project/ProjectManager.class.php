@@ -29,7 +29,9 @@ use Tuleap\Project\ActivateProject;
 use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\Project\ProjectByStatus;
 use Tuleap\Project\ProjectByUnixNameFactory;
+use Tuleap\Project\ProjectRename;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Status\CannotDeletedDefaultAdminProjectException;
 use Tuleap\Project\Status\CannotDeletedDefaultAdminProjectFault;
@@ -39,14 +41,15 @@ use Tuleap\Project\Status\UpdateAlreadyDeletedProjectFault;
 use Tuleap\Project\Status\UpdateStatusChecker;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipProjectVisibilityToggler;
+use Tuleap\Project\UpdateProjectStatus;
 use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
 use Tuleap\Project\Webhook\Log\WebhookLoggerDao;
 use Tuleap\Project\Webhook\ProjectCreatedPayload;
-use Tuleap\Project\Webhook\WebhookDao;
 use Tuleap\Project\Webhook\Retriever;
+use Tuleap\Project\Webhook\WebhookDao;
 use Tuleap\Webhook\Emitter;
 
-class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory, ActivateProject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectByStatus, ProjectByIDFactory, ProjectByUnixNameFactory, ActivateProject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     #[ConfigKey('Is project creation allowed to regular users (1) or not (0)')]
     public const CONFIG_PROJECTS_CAN_BE_CREATED = 'sys_use_project_registration';
@@ -257,7 +260,10 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory, Ac
         unset($this->_cached_projects[$group_id]);
     }
 
-    public function getProjectsByStatus($status)
+    /**
+     * @return Project[]
+     */
+    public function getProjectsByStatus(string $status): array
     {
         $projects = [];
         $dao      = new ProjectDao(CodendiDataAccess::instance());
@@ -493,15 +499,7 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory, Ac
         }
     }
 
-    /**
-     * Rename project
-     *
-     * @param Project $project
-     * @param String  $new_name
-     *
-     * @return bool
-     */
-    public function renameProject($project, $new_name)
+    public function renameProject(Project $project, string $new_name): bool
     {
         //Remove the project from the cache, because it will be modified
         $this->clear($project->getId());
