@@ -30,7 +30,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use UserXMLExporter;
 
-class XMLExportVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XMLExportVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -188,6 +188,41 @@ class XMLExportVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                     <content><![CDATA[documents/content-241.bin]]></content>
                   </version>
                 </versions>
+              </item>
+            </docman>
+
+            EOS,
+            $dom->saveXML()
+        );
+    }
+
+    public function testFileWithNoVersionMustBeRNCValidated(): void
+    {
+        $file = new \Docman_File(['title' => 'My document', 'item_id' => 42]);
+        $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
+
+        $this->perms_exporter->shouldReceive('exportPermissions')->once();
+
+        $this->logger->shouldReceive('debug')->with('Exporting file item #42: My document')->once();
+        $this->version_factory
+            ->shouldReceive('getAllVersionForItem')
+            ->andReturn([])
+            ->once();
+        $this->archive->shouldReceive('addFile')->never();
+
+        $this->visitor->export($xml, $file);
+
+        $dom               = dom_import_simplexml($xml)->ownerDocument;
+        $dom->formatOutput = true;
+        $this->assertEquals(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <docman>
+              <item type="file">
+                <properties>
+                  <title><![CDATA[My document]]></title>
+                </properties>
+                <versions/>
               </item>
             </docman>
 
