@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
+use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Timetracking\Admin\AdminController;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingEnabler;
@@ -424,6 +425,18 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
 
         if ($configuration !== null) {
             $event->addConfigurationInCollection($configuration);
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function archiveWithoutDataCheckerEvent(ArchiveWithoutDataCheckerErrorCollection $event): void
+    {
+        $event->getLogger()->debug('Checking that timetracking does not contain data');
+
+        if (! empty($event->getXmlElement()->xpath('//timetracking/time'))) {
+            $event->addError(
+                dgettext('tuleap-timetracking', 'Archive should not contain timetracking data.'),
+            );
         }
     }
 }

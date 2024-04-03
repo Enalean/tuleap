@@ -27,6 +27,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\ImportFromArchive;
+use Tuleap\Project\Registration\Template\Upload\CheckArchiveContent;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 
@@ -51,8 +52,12 @@ final class ImportFromArchiveStub implements ImportFromArchive
         return new self(Result::err(Fault::fromMessage($message)));
     }
 
-    public function importFromArchive(ImportConfig $configuration, int $project_id, ArchiveInterface $archive): Ok|Err
-    {
+    public function importFromArchive(
+        ImportConfig $configuration,
+        int $project_id,
+        ArchiveInterface $archive,
+        CheckArchiveContent $check_archive_content,
+    ): Ok|Err {
         $this->captured_project_id = $project_id;
 
         return $this->result;

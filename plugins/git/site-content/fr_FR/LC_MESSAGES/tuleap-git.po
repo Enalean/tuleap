@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid " At least a git repository is migrated to gerrit"
 msgstr " Au moins un repertoire git est migré sur gerrit"
@@ -190,6 +190,9 @@ msgstr ""
 #, php-format
 msgid "An error occurred while creating the branch: %s"
 msgstr "Une erreur est survenue lors de la création de la branche : %s"
+
+msgid "Archive should not contain git data."
+msgstr "L'archive ne peut pas contenir des données git."
 
 msgid "Artifact closure is not allowed anymore for repository"
 msgstr "La fermeture des artéfacts n'est plus autorisée pour ce dépôt"

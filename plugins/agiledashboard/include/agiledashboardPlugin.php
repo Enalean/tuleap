@@ -101,6 +101,7 @@ use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Routing\CheckProjectCSRFMiddleware;
 use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
@@ -1834,5 +1835,17 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function collectTrackerDependantServices(CollectTrackerDependantServices $event): void
     {
         $event->addDependantServicesNames($this->getServiceShortname());
+    }
+
+    #[ListeningToEventClass]
+    public function archiveWithoutDataCheckerEvent(ArchiveWithoutDataCheckerErrorCollection $event): void
+    {
+        $event->getLogger()->debug('Checking that agiledashboard does not contain data');
+
+        if (! empty($event->getXmlElement()->xpath('//agiledashboard/top_backlog/artifact'))) {
+            $event->addError(
+                dgettext('tuleap-agiledashboard', 'Archive should not contain agiledashboard data.'),
+            );
+        }
     }
 }

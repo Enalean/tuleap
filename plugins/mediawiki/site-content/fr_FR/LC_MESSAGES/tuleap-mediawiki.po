@@ -31,6 +31,9 @@ msgstr "Anonymous"
 msgid "Apply defaults"
 msgstr "Appliquer choix par défaut"
 
+msgid "Archive should not contain mediawiki data."
+msgstr "L'archive ne peut pas contenir des données mediawiki."
+
 msgid "Available languages"
 msgstr "Langues disponibles"
 

@@ -32,6 +32,7 @@ use Tuleap\CLI\ConsoleLogger;
 use Tuleap\DB\DBConnection;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\Registration\RegistrationErrorException;
+use Tuleap\Project\Registration\Template\Upload\NoNeedToCheckArchiveContentForCliXmlImport;
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
@@ -191,7 +192,12 @@ class ImportProjectXMLCommand extends Command
                     $project_name_override
                 );
             } else {
-                $result = $xml_importer->importFromArchive($configuration, (int) $project_id, $archive);
+                $result = $xml_importer->importFromArchive(
+                    $configuration,
+                    (int) $project_id,
+                    $archive,
+                    new NoNeedToCheckArchiveContentForCliXmlImport(),
+                );
             }
 
             return $result->match(

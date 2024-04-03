@@ -45,6 +45,7 @@ use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\ImportFromArchive;
 use Tuleap\Project\ProjectCreationData;
+use Tuleap\Project\Registration\Template\Upload\CheckArchiveContent;
 use Tuleap\Project\SystemEventRunnerInterface;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
@@ -332,14 +333,23 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
         return $project;
     }
 
-    public function importFromArchive(ImportConfig $configuration, int $project_id, ArchiveInterface $archive): Ok|Err
-    {
+    public function importFromArchive(
+        ImportConfig $configuration,
+        int $project_id,
+        ArchiveInterface $archive,
+        CheckArchiveContent $check_archive_content,
+    ): Ok|Err {
         $this->logger->info('Start importing into existing project from archive ' . $archive->getExtractionPath());
 
         return $this->getProjectXMLFromArchive($archive)
-            ->andThen(function (SimpleXMLElement $xml_element) use ($configuration, $project_id, $archive) {
-                $this->assertXMLisValid($xml_element);
+            ->andThen(
+                function (SimpleXMLElement $xml_element) {
+                    $this->assertXMLisValid($xml_element);
 
+                    return Result::ok($xml_element);
+                }
+            )->andThen(fn (SimpleXMLElement $xml_element) => $check_archive_content->checkArchiveContent($xml_element))
+            ->andThen(function (SimpleXMLElement $xml_element) use ($configuration, $project_id, $archive) {
                 $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, $archive->getExtractionPath());
 
                 return Result::ok(true);

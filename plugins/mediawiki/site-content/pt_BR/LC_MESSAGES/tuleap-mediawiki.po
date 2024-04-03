@@ -23,6 +23,9 @@ msgstr ""
 msgid "Apply defaults"
 msgstr ""
 
+msgid "Archive should not contain mediawiki data."
+msgstr ""
+
 msgid "Available languages"
 msgstr ""
 

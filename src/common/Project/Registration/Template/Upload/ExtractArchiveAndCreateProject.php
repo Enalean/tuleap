@@ -49,6 +49,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         private ForceLogin $force_login,
         private ArchiveUploadedArchive $archiver,
         private SaveUploadedArchiveForProject $archive_for_project_dao,
+        private ArchiveWithoutDataChecker $archive_does_not_contain_data_checker,
         private LoggerInterface $logger,
         private int $project_id,
         private string $filename,
@@ -65,6 +66,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         ForceLogin $force_login,
         ArchiveUploadedArchive $archiver,
         SaveUploadedArchiveForProject $archive_for_project_dao,
+        ArchiveWithoutDataChecker $archive_does_not_contain_data_checker,
     ): WorkerEventProcessor {
         $payload = $event->getPayload();
         if (! isset($payload['project_id']) || ! is_int($payload['project_id'])) {
@@ -87,6 +89,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
             $force_login,
             $archiver,
             $archive_for_project_dao,
+            $archive_does_not_contain_data_checker,
             $event->getLogger(),
             $payload['project_id'],
             $payload['filename'],
@@ -110,7 +113,8 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
             $this->importer->importFromArchive(
                 new ImportConfig(),
                 (int) $project->getID(),
-                $archive
+                $archive,
+                $this->archive_does_not_contain_data_checker,
             )->match(
                 function () use ($project, $user): void {
                     $this->archive_for_project_dao->save(

@@ -372,6 +372,9 @@ msgstr ""
 msgid "Approved"
 msgstr ""
 
+msgid "Archive should not contain docman data."
+msgstr ""
+
 msgid "Are you sure you want to delete the property '%1$s'?"
 msgstr ""
 

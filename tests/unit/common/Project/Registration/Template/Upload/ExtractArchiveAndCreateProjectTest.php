@@ -30,6 +30,7 @@ use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\Project\ImportFromArchiveStub;
 use Tuleap\Test\Stubs\Project\Registration\Template\Upload\ActivateProjectAfterArchiveImportStub;
 use Tuleap\Test\Stubs\Project\Registration\Template\Upload\ArchiveUploadedArchiveStub;
@@ -50,6 +51,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
     private string $upload;
     private \Project $project;
     private \PFUser $user;
+    private ArchiveWithoutDataChecker $archive_without_data_checker;
 
     protected function setUp(): void
     {
@@ -66,6 +68,11 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ->build();
 
         $this->user = UserTestBuilder::buildWithId(self::USER_ID);
+
+        $this->archive_without_data_checker = new ArchiveWithoutDataChecker(
+            EventDispatcherStub::withIdentityCallback(),
+            new NullLogger(),
+        );
     }
 
     public function testProjectIdIsNotInPayload(): void
@@ -87,6 +94,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ForceLoginStub::build(),
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
+            $this->archive_without_data_checker,
         );
     }
 
@@ -109,6 +117,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ForceLoginStub::build(),
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
+            $this->archive_without_data_checker,
         );
     }
 
@@ -131,6 +140,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ForceLoginStub::build(),
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
+            $this->archive_without_data_checker,
         );
     }
 
@@ -153,6 +163,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ForceLoginStub::build(),
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
+            $this->archive_without_data_checker,
         );
     }
 
@@ -175,6 +186,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ForceLoginStub::build(),
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
+            $this->archive_without_data_checker,
         );
     }
 
@@ -200,6 +212,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ForceLoginStub::build(),
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
+            $this->archive_without_data_checker,
         );
     }
 
@@ -226,6 +239,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ForceLoginStub::build(),
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
+            $this->archive_without_data_checker,
         );
     }
 
@@ -252,6 +266,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ForceLoginStub::build(),
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
+            $this->archive_without_data_checker,
         );
 
         $action->process();
@@ -288,6 +303,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             $force_login,
             ArchiveUploadedArchiveStub::withDestination('/final/destination'),
             $archive_for_project_dao,
+            $this->archive_without_data_checker,
         );
 
         $action->process();
@@ -328,6 +344,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             $force_login,
             ArchiveUploadedArchiveStub::withDestination('/final/destination'),
             $archive_for_project_dao,
+            $this->archive_without_data_checker,
         );
 
         $action->process();
@@ -366,6 +383,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ForceLoginStub::build(),
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             $archive_for_project_dao,
+            $this->archive_without_data_checker,
         );
 
         $action->process();

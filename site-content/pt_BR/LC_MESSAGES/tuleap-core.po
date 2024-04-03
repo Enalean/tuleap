@@ -613,6 +613,12 @@ msgstr ""
 msgid "Appearance & language"
 msgstr "Aparência e linguagem"
 
+msgid "Archive should not contain FRS packages."
+msgstr ""
+
+msgid "Archive should not contain users."
+msgstr ""
+
 msgid "Are you sure you want to remove this passkey?"
 msgstr ""
 

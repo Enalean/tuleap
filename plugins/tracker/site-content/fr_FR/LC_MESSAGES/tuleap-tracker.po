@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -523,6 +523,9 @@ msgstr ""
 "Chaque artéfact supprimé sera exporté et placé dans le dossier temporaire "
 "défini dans le fichier local.inc. Ils seront purgés automatiquement selon la "
 "configuration de la machine sur laquelle le serveur tourne."
+
+msgid "Archive should not contain tracker data."
+msgstr "L'archive ne peut pas contenir des données d'outil de suivi."
 
 msgid "Are you sure that you want to delete it?"
 msgstr "Etes-vous sûr de vouloir le supprimer?"
