@@ -40,7 +40,7 @@ final class OpenListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIsAnOpenListField(): void
     {
-        $bind = OpenListFieldBuilder::aBind()->buildUserBind();
-        self::assertTrue($this->open_list_verifier->isAnOpenListField($bind->getField()));
+        $field = OpenListFieldBuilder::anOpenListField()->build();
+        self::assertTrue($this->open_list_verifier->isAnOpenListField($field));
     }
 }

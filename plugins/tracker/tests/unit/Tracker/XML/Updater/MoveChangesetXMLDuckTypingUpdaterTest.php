@@ -260,13 +260,25 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $source_computed_field = $this->createStub(\Tracker_FormElement_Field_Computed::class);
         $source_computed_field->method('getName')->willReturn('computed');
 
-        $source_open_list_static_field     = OpenListFieldBuilder::aBind()->withId(10)->withName('open_static')->buildStaticBind()->getField();
-        $source_open_list_user_field       = OpenListFieldBuilder::aBind()->withId(11)->withName('open_users')->buildUserBind()->getField();
-        $source_open_list_user_group_field = OpenListFieldBuilder::aBind()->withId(12)->withTracker($this->source_tracker)->withName('open_ugroups')->buildUserGroupBind()->getField();
+        $source_open_list_static_field     = ListStaticBindBuilder::aStaticBind(
+            OpenListFieldBuilder::anOpenListField()->withId(10)->withName('open_static')->build()
+        )->build()->getField();
+        $source_open_list_user_field       = ListUserBindBuilder::aUserBind(
+            OpenListFieldBuilder::anOpenListField()->withId(11)->withName('open_users')->build()
+        )->build()->getField();
+        $source_open_list_user_group_field = ListUserGroupBindBuilder::aUserGroupBind(
+            OpenListFieldBuilder::anOpenListField()->withId(12)->withTracker($this->source_tracker)->withName('open_ugroups')->build()
+        )->build()->getField();
 
-        $destination_open_list_static_field     = OpenListFieldBuilder::aBind()->withId(30)->withName('open_static')->buildStaticBind()->getField();
-        $destination_open_list_user_field       = OpenListFieldBuilder::aBind()->withId(31)->withName('open_users')->buildUserBind()->getField();
-        $destination_open_list_user_group_field = OpenListFieldBuilder::aBind()->withId(32)->withTracker($this->destination_tracker)->withName('open_ugroups')->buildUserGroupBind()->getField();
+        $destination_open_list_static_field     = ListStaticBindBuilder::aStaticBind(
+            OpenListFieldBuilder::anOpenListField()->withId(30)->withName('open_static')->build()
+        )->build()->getField();
+        $destination_open_list_user_field       = ListUserBindBuilder::aUserBind(
+            OpenListFieldBuilder::anOpenListField()->withId(31)->withName('open_users')->build()
+        )->build()->getField();
+        $destination_open_list_user_group_field = ListUserGroupBindBuilder::aUserGroupBind(
+            OpenListFieldBuilder::anOpenListField()->withId(32)->withTracker($this->destination_tracker)->withName('open_ugroups')->build()
+        )->build()->getField();
 
         $source_external_field      = ExternalFieldBuilder::anExternalField(13)->withName('external_field')->build();
         $destination_external_field = ExternalFieldBuilder::anExternalField(23)->withName('external_field')->build();

@@ -224,11 +224,10 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->with(self::TRACKER_ID, self::UNSUPPORTED_FIELD_NAME, $this->user)
             ->willReturn(
-                OpenListFieldBuilder::aBind()
+                OpenListFieldBuilder::anOpenListField()
                     ->withId(102)
                     ->withName(self::UNSUPPORTED_FIELD_NAME)
-                    ->buildStaticBind()
-                    ->getField()
+                    ->build()
             );
 
         $this->comparison = new EqualComparison(
