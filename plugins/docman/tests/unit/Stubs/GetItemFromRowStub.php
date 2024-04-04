@@ -20,27 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Item;
+namespace Tuleap\Docman\Stubs;
 
-use Tuleap\Event\Dispatchable;
-
-final class GetDocmanItemOtherTypeEvent implements Dispatchable
+final readonly class GetItemFromRowStub implements \Tuleap\Docman\Item\GetItemFromRow
 {
-    private ?\Docman_Item $instance = null;
-
-    public function __construct(
-        public readonly string $type,
-        public readonly array $row,
-    ) {
+    public function __construct(private ?\Docman_Item $item, private bool $void)
+    {
     }
 
-    public function getInstance(): ?\Docman_Item
+    public static function withVoid(): self
     {
-        return $this->instance;
+        return new self(null, true);
     }
 
-    public function setInstance(\Docman_Item $instance): void
+    public static function withNull(): self
     {
-        $this->instance = $instance;
+        return new self(null, false);
+    }
+
+    public static function withItem(\Docman_Item $item): self
+    {
+        return new self($item, false);
+    }
+
+    public function getItemFromRow(array $row)
+    {
+        if ($this->void) {
+            return;
+        }
+
+        return $this->item;
     }
 }

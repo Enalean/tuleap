@@ -20,27 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Item;
+namespace Tuleap\Artidoc\Stubs\Document;
 
-use Tuleap\Event\Dispatchable;
+use Tuleap\Artidoc\Document\SearchArtidocDocument;
 
-final class GetDocmanItemOtherTypeEvent implements Dispatchable
+final readonly class SearchArtidocDocumentStub implements SearchArtidocDocument
 {
-    private ?\Docman_Item $instance = null;
-
-    public function __construct(
-        public readonly string $type,
-        public readonly array $row,
-    ) {
+    public function __construct(private ?array $results)
+    {
     }
 
-    public function getInstance(): ?\Docman_Item
+    public static function withResults(array $results): self
     {
-        return $this->instance;
+        return new self($results);
     }
 
-    public function setInstance(\Docman_Item $instance): void
+    public static function withoutResults(): self
     {
-        $this->instance = $instance;
+        return new self(null);
+    }
+
+    public function searchById(int $id): ?array
+    {
+        return $this->results;
     }
 }

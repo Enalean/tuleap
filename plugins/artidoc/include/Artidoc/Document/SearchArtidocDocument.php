@@ -18,29 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Artidoc\Document;
 
-namespace Tuleap\Docman\Item;
-
-use Tuleap\Event\Dispatchable;
-
-final class GetDocmanItemOtherTypeEvent implements Dispatchable
+interface SearchArtidocDocument
 {
-    private ?\Docman_Item $instance = null;
-
-    public function __construct(
-        public readonly string $type,
-        public readonly array $row,
-    ) {
-    }
-
-    public function getInstance(): ?\Docman_Item
-    {
-        return $this->instance;
-    }
-
-    public function setInstance(\Docman_Item $instance): void
-    {
-        $this->instance = $instance;
-    }
+    public function searchById(int $id): ?array;
 }

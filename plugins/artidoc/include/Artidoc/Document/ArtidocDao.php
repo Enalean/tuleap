@@ -20,27 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Item;
+namespace Tuleap\Artidoc\Document;
 
-use Tuleap\Event\Dispatchable;
+use Tuleap\DB\DataAccessObject;
 
-final class GetDocmanItemOtherTypeEvent implements Dispatchable
+final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
 {
-    private ?\Docman_Item $instance = null;
-
-    public function __construct(
-        public readonly string $type,
-        public readonly array $row,
-    ) {
-    }
-
-    public function getInstance(): ?\Docman_Item
+    public function searchById(int $id): ?array
     {
-        return $this->instance;
-    }
-
-    public function setInstance(\Docman_Item $instance): void
-    {
-        $this->instance = $instance;
+        return $this->getDB()->row(
+            <<<EOS
+            SELECT *
+            FROM plugin_docman_item
+            WHERE item_id = ?
+              AND item_type = ?
+              AND other_type = ?
+              AND delete_date IS NULL
+            EOS,
+            $id,
+            \Docman_Item::TYPE_OTHER,
+            ArtidocDocument::TYPE,
+        );
     }
 }
