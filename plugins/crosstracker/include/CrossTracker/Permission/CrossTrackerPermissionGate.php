@@ -20,24 +20,24 @@
 
 namespace Tuleap\CrossTracker\Permission;
 
+use PFUser;
+use Project;
+use Project_AccessException;
+use Tracker;
+use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\CrossTrackerReport;
+use URLVerification;
 
-class CrossTrackerPermissionGate
+final readonly class CrossTrackerPermissionGate
 {
-    /**
-     * @var \URLVerification
-     */
-    private $url_verification;
-
-    public function __construct(\URLVerification $url_verification)
+    public function __construct(private URLVerification $url_verification)
     {
-        $this->url_verification = $url_verification;
     }
 
     /**
      * @throws CrossTrackerUnauthorizedException
      */
-    public function check(\PFUser $user, CrossTrackerReport $report)
+    public function check(PFUser $user, CrossTrackerReport $report): void
     {
         $this->checkProjectsAuthorization($user, $report->getProjects());
         $this->checkTrackersAuthorization($user, $report->getTrackers());
@@ -46,50 +46,65 @@ class CrossTrackerPermissionGate
     }
 
     /**
+     * @param Project[] $projects
      * @throws CrossTrackerUnauthorizedProjectException
      */
-    private function checkProjectsAuthorization(\PFUser $user, array $projects)
+    private function checkProjectsAuthorization(PFUser $user, array $projects): void
     {
         foreach ($projects as $project) {
-            \assert($project instanceof \Project);
             try {
                 $this->url_verification->userCanAccessProject($user, $project);
-            } catch (\Project_AccessException $ex) {
+            } catch (Project_AccessException) {
                 throw new CrossTrackerUnauthorizedProjectException();
             }
         }
     }
 
     /**
+     * @param Tracker[] $trackers
      * @throws CrossTrackerUnauthorizedTrackerException
      */
-    private function checkTrackersAuthorization(\PFUser $user, array $trackers)
+    private function checkTrackersAuthorization(PFUser $user, array $trackers): void
     {
         foreach ($trackers as $tracker) {
-            \assert($tracker instanceof \Tracker);
             if (! $tracker->userCanView($user)) {
                 throw new CrossTrackerUnauthorizedTrackerException();
             }
         }
     }
 
-    private function checkColumnFieldsAuthorization($user, array $column_fields)
+    /**
+     * @param Tracker_FormElement_Field[] $column_fields
+     * @throws CrossTrackerUnauthorizedException
+     */
+    private function checkColumnFieldsAuthorization($user, array $column_fields): void
     {
         $this->checkFieldsAuthorization($user, $column_fields, new CrossTrackerUnauthorizedColumnFieldException());
     }
 
-    private function checkSearchFieldsAuthorization(\PFUser $user, array $search_fields)
+    /**
+     * @param Tracker_FormElement_Field[] $search_fields
+     * @throws CrossTrackerUnauthorizedException
+     */
+    private function checkSearchFieldsAuthorization(PFUser $user, array $search_fields): void
     {
         $this->checkFieldsAuthorization($user, $search_fields, new CrossTrackerUnauthorizedSearchFieldException());
     }
 
-    private function checkFieldsAuthorization(\PFUser $user, array $fields, CrossTrackerUnauthorizedException $exception_to_throw)
+    /**
+     * @param Tracker_FormElement_Field[] $fields
+     * @throws CrossTrackerUnauthorizedException
+     */
+    private function checkFieldsAuthorization(PFUser $user, array $fields, CrossTrackerUnauthorizedException $exception_to_throw): void
     {
+        $count_of_authorized_fields = 0;
         foreach ($fields as $field) {
-            \assert($field instanceof \Tracker_FormElement_Field);
-            if (! $field->userCanRead($user)) {
-                throw $exception_to_throw;
+            if ($field->userCanRead($user)) {
+                $count_of_authorized_fields++;
             }
+        }
+        if (! empty($fields) && $count_of_authorized_fields === 0) {
+            throw $exception_to_throw;
         }
     }
 }

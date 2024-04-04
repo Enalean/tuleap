@@ -24,6 +24,9 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semant
 
 use LogicException;
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\EasyStatement;
+use PFUser;
+use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
@@ -53,15 +56,30 @@ final readonly class TitleFromWhereBuilder implements ValueWrapperVisitor
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return match ($parameters->comparison->getType()) {
-            ComparisonType::Equal    => $this->getWhereForEqual($value_wrapper),
-            ComparisonType::NotEqual => $this->getWhereForNotEqual($value_wrapper),
+            ComparisonType::Equal    => $this->getWhereForEqual($value_wrapper, $parameters->trackers, $parameters->user),
+            ComparisonType::NotEqual => $this->getWhereForNotEqual($value_wrapper, $parameters->trackers, $parameters->user),
             default                  => throw new LogicException('Other comparison types are invalid for Title semantic'),
         };
     }
 
-    private function getWhereForEqual(SimpleValueWrapper $wrapper): ParametrizedWhere
-    {
+    /**
+     * @param Tracker[] $trackers
+     */
+    private function getWhereForEqual(
+        SimpleValueWrapper $wrapper,
+        array $trackers,
+        PFUser $user,
+    ): ParametrizedWhere {
         $value = $wrapper->getValue();
+
+        $field_ids = [];
+        foreach ($trackers as $tracker) {
+            $title_field = $tracker->getTitleField();
+            if ($title_field && $title_field->userCanRead($user)) {
+                $field_ids[] = $title_field->getId();
+            }
+        }
+        $field_ids_statement = EasyStatement::open()->in('tracker_semantic_title.field_id IN (?*)', $field_ids);
 
         if ($value === '') {
             $match_value      = "= ''";
@@ -74,24 +92,43 @@ final readonly class TitleFromWhereBuilder implements ValueWrapperVisitor
         $where = <<<EOSQL
         changeset_value_title.changeset_id IS NOT NULL
         AND tracker_changeset_value_title.value $match_value
+        AND $field_ids_statement
         EOSQL;
 
-        return new ParametrizedWhere($where, $where_parameters);
+        return new ParametrizedWhere(
+            $where,
+            [...$where_parameters, ...$field_ids],
+        );
     }
 
-    private function getWhereForNotEqual(SimpleValueWrapper $wrapper): ParametrizedWhere
-    {
+    /**
+     * @param Tracker[] $trackers
+     */
+    private function getWhereForNotEqual(
+        SimpleValueWrapper $wrapper,
+        array $trackers,
+        PFUser $user,
+    ): ParametrizedWhere {
         $value = $wrapper->getValue();
+
+        $field_ids = [];
+        foreach ($trackers as $tracker) {
+            $title_field = $tracker->getTitleField();
+            if ($title_field && $title_field->userCanRead($user)) {
+                $field_ids[] = $title_field->getId();
+            }
+        }
+        $field_ids_statement = EasyStatement::open()->in('tracker_semantic_title.field_id IN (?*)', $field_ids);
 
         if ($value === '') {
             return new ParametrizedWhere(
-                "tracker_changeset_value_title.value IS NOT NULL AND tracker_changeset_value_title.value <> ''",
-                [],
+                "tracker_changeset_value_title.value IS NOT NULL AND tracker_changeset_value_title.value <> '' AND $field_ids_statement",
+                $field_ids,
             );
         } else {
             return new ParametrizedWhere(
-                '(tracker_changeset_value_title.value IS NULL OR tracker_changeset_value_title.value NOT LIKE ?)',
-                [$this->quoteLikeValueSurround($value)],
+                "(tracker_changeset_value_title.value IS NULL OR tracker_changeset_value_title.value NOT LIKE ?) AND $field_ids_statement",
+                [$this->quoteLikeValueSurround($value), ...$field_ids],
             );
         }
     }

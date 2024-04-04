@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semant
 
 use LogicException;
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
@@ -48,24 +49,31 @@ final readonly class DescriptionFromWhereBuilder implements ValueWrapperVisitor
 
     public function getFromWhere(MetadataValueWrapperParameters $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
+        $field_ids = [];
+        foreach ($parameters->trackers as $tracker) {
+            $description_field = $tracker->getDescriptionField();
+            if ($description_field && $description_field->userCanRead($parameters->user)) {
+                $field_ids[] = $description_field->getId();
+            }
+        }
+        $field_ids_statement = EasyStatement::open()->in('tracker_semantic_description.field_id IN (?*)', $field_ids);
+
         $from = <<<EOSQL
-        LEFT JOIN (
-            tracker_changeset_value AS changeset_value_description
-            INNER JOIN tracker_semantic_description
-                ON (tracker_semantic_description.field_id = changeset_value_description.field_id)
-            INNER JOIN tracker_changeset_value_text AS tracker_changeset_value_description
-                ON (tracker_changeset_value_description.changeset_value_id = changeset_value_description.id)
-        ) ON (
-            tracker_semantic_description.tracker_id = tracker_artifact.tracker_id
-            AND changeset_value_description.changeset_id = tracker_artifact.last_changeset_id
+        INNER JOIN tracker_semantic_description
+            ON (tracker_semantic_description.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement)
+        LEFT JOIN tracker_changeset_value AS changeset_value_description ON (
+            changeset_value_description.changeset_id = tracker_artifact.last_changeset_id
+            AND changeset_value_description.field_id = tracker_semantic_description.field_id
         )
+        LEFT JOIN tracker_changeset_value_text AS tracker_changeset_value_description
+            ON (tracker_changeset_value_description.changeset_value_id = changeset_value_description.id)
         EOSQL;
 
         $where = $parameters->comparison->getValueWrapper()->accept($this, $parameters);
         return new ParametrizedFromWhere(
             $from,
             $where->getWhere(),
-            [],
+            $field_ids_statement->values(),
             $where->getWhereParameters(),
         );
     }
@@ -92,7 +100,7 @@ final readonly class DescriptionFromWhereBuilder implements ValueWrapperVisitor
         }
 
         return new ParametrizedWhere(
-            "changeset_value_description.changeset_id IS NOT NULL AND tracker_changeset_value_description.value $match_value",
+            "tracker_changeset_value_description.value $match_value",
             $where_parameters,
         );
     }

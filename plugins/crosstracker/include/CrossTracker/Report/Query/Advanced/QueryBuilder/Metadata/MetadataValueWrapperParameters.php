@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 
+use PFUser;
 use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
@@ -37,7 +38,8 @@ final readonly class MetadataValueWrapperParameters implements ValueWrapperParam
     public function __construct(
         public Comparison $comparison,
         public array $trackers,
-        public string $field_alias = '',
+        public PFUser $user,
+        public string $field_alias,
     ) {
     }
 }

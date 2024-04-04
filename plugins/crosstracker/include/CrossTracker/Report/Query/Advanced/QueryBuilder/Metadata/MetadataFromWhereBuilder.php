@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 
 use LogicException;
+use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date\DateFromWhereBuilder;
@@ -59,8 +60,9 @@ final readonly class MetadataFromWhereBuilder
         Metadata $metadata,
         Comparison $comparison,
         array $trackers,
+        PFUser $user,
     ): IProvideParametrizedFromAndWhereSQLFragments {
-        $parameters = new MetadataValueWrapperParameters($comparison, $trackers, '');
+        $parameters = new MetadataValueWrapperParameters($comparison, $trackers, $user, '');
         return match ($metadata->getName()) {
             // Semantics
             AllowedMetadata::TITLE            => $this->title_builder->getFromWhere($parameters),
@@ -69,10 +71,10 @@ final readonly class MetadataFromWhereBuilder
             AllowedMetadata::ASSIGNED_TO      => $this->assigned_to_builder->getFromWhere($parameters),
 
             // Always there fields
-            AllowedMetadata::SUBMITTED_ON     => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, self::SUBMITTED_ON_ALIAS)),
-            AllowedMetadata::LAST_UPDATE_DATE => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, self::LAST_UPDATE_DATE_ALIAS)),
-            AllowedMetadata::SUBMITTED_BY     => $this->users_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, self::SUBMITTED_BY_ALIAS)),
-            AllowedMetadata::LAST_UPDATE_BY   => $this->users_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, self::LAST_UPDATE_BY_ALIAS)),
+            AllowedMetadata::SUBMITTED_ON     => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, $user, self::SUBMITTED_ON_ALIAS)),
+            AllowedMetadata::LAST_UPDATE_DATE => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, $user, self::LAST_UPDATE_DATE_ALIAS)),
+            AllowedMetadata::SUBMITTED_BY     => $this->users_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, $user, self::SUBMITTED_BY_ALIAS)),
+            AllowedMetadata::LAST_UPDATE_BY   => $this->users_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, $user, self::LAST_UPDATE_BY_ALIAS)),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }

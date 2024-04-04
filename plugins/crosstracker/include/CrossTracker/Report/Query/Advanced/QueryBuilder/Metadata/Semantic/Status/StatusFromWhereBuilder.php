@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
 
 use LogicException;
+use ParagonIE\EasyDB\EasyStatement;
 use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
@@ -68,9 +69,18 @@ final class StatusFromWhereBuilder implements ValueWrapperVisitor
 
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters): ParametrizedWhere
     {
+        $tracker_ids = [];
+        foreach ($parameters->trackers as $tracker) {
+            $status_field = $tracker->getStatusField();
+            if ($status_field && $status_field->userCanRead($parameters->user)) {
+                $tracker_ids[] = $tracker->getId();
+            }
+        }
+        $tracker_ids_statement = EasyStatement::open()->in('tracker.id IN (?*)', $tracker_ids);
+
         return match ($parameters->comparison->getType()) {
-            ComparisonType::Equal    => new ParametrizedWhere('artifact_filter.artifact_id IS NOT NULL', []),
-            ComparisonType::NotEqual => new ParametrizedWhere('artifact_filter.artifact_id IS NULL', []),
+            ComparisonType::Equal    => new ParametrizedWhere("artifact_filter.artifact_id IS NOT NULL AND $tracker_ids_statement", $tracker_ids),
+            ComparisonType::NotEqual => new ParametrizedWhere("artifact_filter.artifact_id IS NULL AND $tracker_ids_statement", $tracker_ids),
             default                  => throw new LogicException('Other comparison types are invalid for Status semantic'),
         };
     }
