@@ -26,6 +26,7 @@ export function uploadFile(
     upload_href: string,
     router: VueRouter,
     setIsCreatingProject: (is_creating_project: boolean) => void,
+    setErrorMessage: (error: string) => void,
 ): void {
     const uploader = new Upload(project_archive, {
         uploadUrl: upload_href,
@@ -33,8 +34,11 @@ export function uploadFile(
             filename: project_archive.name,
             filetype: project_archive.type,
         },
-        onError: function (error): void {
-            throw new Error(error.message);
+        onError: function (): void {
+            setIsCreatingProject(false);
+            setErrorMessage(
+                "Unable to finalize the creation of the project, the upload of the archive failed.",
+            );
         },
         onSuccess: async function (): Promise<void> {
             setIsCreatingProject(true);
