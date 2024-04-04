@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -102,10 +102,4 @@
     </svg>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-
-@Component({})
-export default class ProjectApprovalSvg extends Vue {}
-</script>
+<script setup lang="ts"></script>
