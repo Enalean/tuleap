@@ -18,11 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class CrossTrackerExpertQueryReportDao extends DataAccessObject
 {
@@ -37,39 +39,39 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
 
         $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
 
-        $sql = "SELECT
-                  SQL_CALC_FOUND_ROWS
-                  DISTINCT
-                  tracker_artifact.tracker_id,
-                  tracker_artifact.id,
-                  tracker_changeset_value_title.value AS title
-                FROM tracker_artifact
-                  INNER JOIN tracker_changeset AS last_changeset ON (tracker_artifact.last_changeset_id = last_changeset.id)
-                  INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
-                  INNER JOIN `groups`  ON (`groups`.group_id = tracker.group_id)
-                  LEFT JOIN (
-                      tracker_changeset_value AS changeset_value_title
-                      INNER JOIN tracker_semantic_title
-                        ON (tracker_semantic_title.field_id = changeset_value_title.field_id)
-                      INNER JOIN tracker_changeset_value_text AS tracker_changeset_value_title
-                          ON (tracker_changeset_value_title.changeset_value_id = changeset_value_title.id)
-                    ) ON (
-                      tracker_semantic_title.tracker_id = tracker_artifact.tracker_id
-                      AND changeset_value_title.changeset_id = tracker_artifact.last_changeset_id
-                    )
-                    $from
-                    WHERE `groups`.status = 'A'
-                      AND tracker.deletion_date IS NULL
-                      AND $tracker_ids_statement
-                      AND $where
-                ORDER BY tracker_artifact.id DESC
-                LIMIT ?, ?";
+        $sql = <<<EOSQL
+        SELECT
+            SQL_CALC_FOUND_ROWS
+            DISTINCT
+            tracker_artifact.tracker_id,
+            tracker_artifact.id,
+            tracker_changeset_value_title.value AS title
+        FROM tracker_artifact
+        INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
+        INNER JOIN tracker_changeset AS last_changeset ON (tracker_artifact.last_changeset_id = last_changeset.id)
+        LEFT JOIN (
+            tracker_changeset_value AS changeset_value_title
+            INNER JOIN tracker_semantic_title
+                ON (tracker_semantic_title.field_id = changeset_value_title.field_id)
+            INNER JOIN tracker_changeset_value_text AS tracker_changeset_value_title
+                ON (tracker_changeset_value_title.changeset_value_id = changeset_value_title.id)
+        ) ON (
+            tracker_semantic_title.tracker_id = tracker_artifact.tracker_id
+            AND changeset_value_title.changeset_id = tracker_artifact.last_changeset_id
+        )
+        $from
+        WHERE $tracker_ids_statement AND $where
+        ORDER BY tracker_artifact.id DESC
+        LIMIT ?, ?
+        EOSQL;
 
-        $parameters   = $from_where->getFromParameters();
-        $parameters   = array_merge($parameters, $tracker_ids_statement->values());
-        $parameters   = array_merge($parameters, $from_where->getWhereParameters());
-        $parameters[] = $offset;
-        $parameters[] = $limit;
+        $parameters = [
+            ...$from_where->getFromParameters(),
+            ...$tracker_ids_statement->values(),
+            ...$from_where->getWhereParameters(),
+            $offset,
+            $limit,
+        ];
 
         return $this->getDB()->safeQuery($sql, $parameters);
     }
