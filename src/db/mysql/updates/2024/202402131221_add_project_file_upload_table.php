@@ -23,22 +23,11 @@ class b202402131221_add_project_file_upload_table extends \Tuleap\ForgeUpgrade\B
 {
     public function description(): string
     {
-        return 'Create new table project_file_upload for project';
+        return 'Do nothing as project_file_upload was already added by b2024003071430_add_project_to_project_file_upload_table';
     }
 
     public function up(): void
     {
-        $sql = <<<SQL
-            CREATE TABLE project_file_upload
-            (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                file_name VARCHAR(255) NOT NULL DEFAULT '',
-                file_size BIGINT NOT NULL DEFAULT 0,
-                user_id INT NOT NULL,
-                expiration_date INT UNSIGNED NOT NULL
-            ) ENGINE = InnoDB;
-        SQL;
-
-        $this->api->dbh->exec($sql);
+        // Do nothing
     }
 }
