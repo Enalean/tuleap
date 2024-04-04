@@ -54,13 +54,18 @@ final readonly class ArtifactSubmitterChecker
      */
     public function checkAlwaysThereFieldIsValidForComparison(Comparison $comparison, Metadata $metadata): void
     {
-        match ($comparison->getType()) {
+        $allowed_comparisons = [
+            ComparisonType::NotEqual,
             ComparisonType::Equal,
-            ComparisonType::NotEqual => $this->checkValueIsValid($comparison, $metadata, false),
             ComparisonType::In,
-            ComparisonType::NotIn => $this->checkValueIsValid($comparison, $metadata, true),
-            default => throw new OperatorNotAllowedForMetadataException($metadata, $comparison->getType()->value),
-        };
+            ComparisonType::NotIn,
+        ];
+
+        if (! in_array($comparison->getType(), $allowed_comparisons, true)) {
+            throw new OperatorNotAllowedForMetadataException($metadata, $comparison->getType()->value);
+        }
+
+        $this->checkValueIsValid($comparison, $metadata);
     }
 
     /**
@@ -73,16 +78,12 @@ final readonly class ArtifactSubmitterChecker
     private function checkValueIsValid(
         Comparison $comparison,
         Metadata $metadata,
-        bool $is_empty_string_a_problem,
     ): void {
         ListValuesCollection::fromValueWrapper($comparison->getValueWrapper())
             ->match(
-                function (ListValuesCollection $collection) use ($comparison, $metadata, $is_empty_string_a_problem) {
+                function (ListValuesCollection $collection) use ($comparison, $metadata) {
                     foreach ($collection->list_values as $username) {
                         if ($username === '') {
-                            if (! $is_empty_string_a_problem) {
-                                continue;
-                            }
                             throw new EmptyStringComparisonException($metadata, $comparison->getType()->value);
                         }
                         $user = $this->user_retriever->getUserByUserName($username);
