@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,22 +22,13 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 
-final class AssignedToIsMissingInAtLeastOneTrackerException extends InvalidQueryException
+final class TitleIsMissingInAllTrackersException extends InvalidQueryException
 {
-    public function __construct($count)
+    public function __construct()
     {
-        parent::__construct(
-            sprintf(
-                dngettext(
-                    'tuleap-crosstracker',
-                    'One of the trackers involved in the query does not have the semantic contributor/assignee defined.
-                    Please refine your query or check the configuration of the trackers.',
-                    '%d of the trackers involved in the query do not have the semantic contributor/assignee defined.
-                    Please refine your query or check the configuration of the trackers.',
-                    $count
-                ),
-                $count
-            )
-        );
+        parent::__construct(dgettext(
+            'tuleap-crosstracker',
+            'All trackers involved in the query do not have the semantic title defined. Please refine your query or check the configuration of the trackers.',
+        ));
     }
 }

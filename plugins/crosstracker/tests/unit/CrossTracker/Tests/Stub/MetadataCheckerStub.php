@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Tests\Stub;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TitleIsMissingInAtLeastOneTrackerException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TitleIsMissingInAllTrackersException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 final class MetadataCheckerStub implements CheckMetadataUsage
@@ -46,7 +46,7 @@ final class MetadataCheckerStub implements CheckMetadataUsage
     public function checkMetadataIsUsedByAllTrackers(Metadata $metadata, InvalidComparisonCollectorParameters $collector_parameters): void
     {
         if (! $this->is_valid) {
-            throw new TitleIsMissingInAtLeastOneTrackerException(2);
+            throw new TitleIsMissingInAllTrackersException();
         }
     }
 }

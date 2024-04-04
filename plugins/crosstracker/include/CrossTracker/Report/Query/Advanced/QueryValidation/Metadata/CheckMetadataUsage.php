@@ -28,14 +28,14 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 interface CheckMetadataUsage
 {
     /**
-     * @throws DescriptionIsMissingInAtLeastOneTrackerException
-     * @throws StatusIsMissingInAtLeastOneTrackerException
-     * @throws SubmittedOnIsMissingInAtLeastOneTrackerException
-     * @throws TitleIsMissingInAtLeastOneTrackerException
-     * @throws LastUpdateDateIsMissingInAtLeastOneTrackerException
-     * @throws SubmittedByIsMissingInAtLeastOneTrackerException
-     * @throws LastUpdateByIsMissingInAtLeastOneTrackerException
-     * @throws AssignedToIsMissingInAtLeastOneTrackerException
+     * @throws DescriptionIsMissingInAllTrackersException
+     * @throws StatusIsMissingInAllTrackersException
+     * @throws SubmittedOnIsMissingInAllTrackersException
+     * @throws TitleIsMissingInAllTrackersException
+     * @throws LastUpdateDateIsMissingInAllTrackersException
+     * @throws SubmittedByIsMissingInAllTrackersException
+     * @throws LastUpdateByIsMissingInAllTrackersException
+     * @throws AssignedToIsMissingInAllTrackersException
      */
     public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,

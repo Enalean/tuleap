@@ -48,7 +48,7 @@ class Tracker_Semantic_DescriptionDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function getNbOfTrackerWithoutSemanticDescriptionDefined($trackers_id)
+    public function getNbOfTrackerWithoutSemanticDescriptionDefined($trackers_id): int
     {
         $trackers_id = $this->da->escapeIntImplode($trackers_id);
 
@@ -61,7 +61,7 @@ class Tracker_Semantic_DescriptionDao extends DataAccessObject
 
         $row = $this->retrieveFirstRow($sql);
 
-        return $row['nb'];
+        return (int) $row['nb'];
     }
 
     public function getTrackerIdsWithoutSemanticDescriptionDefined(array $trackers_id): array

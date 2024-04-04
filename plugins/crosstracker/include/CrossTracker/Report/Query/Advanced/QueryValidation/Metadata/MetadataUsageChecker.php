@@ -20,8 +20,15 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
+use LogicException;
 use PFUser;
 use Tracker;
+use Tracker_FormElement;
+use Tracker_FormElementFactory;
+use Tracker_Semantic_ContributorDao;
+use Tracker_Semantic_DescriptionDao;
+use Tracker_Semantic_StatusDao;
+use Tracker_Semantic_TitleDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -34,11 +41,11 @@ final class MetadataUsageChecker implements CheckMetadataUsage
     private array $cache_already_checked;
 
     public function __construct(
-        private readonly \Tracker_FormElementFactory $form_element_factory,
-        private readonly \Tracker_Semantic_TitleDao $title_dao,
-        private readonly \Tracker_Semantic_DescriptionDao $description_dao,
-        private readonly \Tracker_Semantic_StatusDao $status_dao,
-        private readonly \Tracker_Semantic_ContributorDao $assigned_to_dao,
+        private readonly Tracker_FormElementFactory $form_element_factory,
+        private readonly Tracker_Semantic_TitleDao $title_dao,
+        private readonly Tracker_Semantic_DescriptionDao $description_dao,
+        private readonly Tracker_Semantic_StatusDao $status_dao,
+        private readonly Tracker_Semantic_ContributorDao $assigned_to_dao,
     ) {
         $this->cache_already_checked = [];
     }
@@ -52,144 +59,128 @@ final class MetadataUsageChecker implements CheckMetadataUsage
         }
         $this->cache_already_checked[$metadata->getName()] = true;
 
-        switch ($metadata->getName()) {
-            case AllowedMetadata::TITLE:
-                $this->checkTitleIsUsedByAllTrackers($collector_parameters->getTrackerIds());
-                break;
-            case AllowedMetadata::DESCRIPTION:
-                $this->checkDescriptionIsUsedByAllTrackers($collector_parameters->getTrackerIds());
-                break;
-            case AllowedMetadata::STATUS:
-                $this->checkStatusIsUsedByAllTrackers($collector_parameters->getTrackerIds());
-                break;
-            case AllowedMetadata::SUBMITTED_ON:
-                $this->checkSubmittedOnIsUsedByAllTrackers(
-                    $collector_parameters->getTrackers(),
-                    $collector_parameters->getUser()
-                );
-                break;
-            case AllowedMetadata::LAST_UPDATE_DATE:
-                $this->checkLastUpdateDateIsUsedByAllTrackers(
-                    $collector_parameters->getTrackers(),
-                    $collector_parameters->getUser()
-                );
-                break;
-            case AllowedMetadata::SUBMITTED_BY:
-                $this->checkSubmittedByIsUsedByAllTracker(
-                    $collector_parameters->getTrackers(),
-                    $collector_parameters->getUser()
-                );
-                break;
-            case AllowedMetadata::LAST_UPDATE_BY:
-                $this->checkLastUpdateByIsUsedByAllTracker(
-                    $collector_parameters->getTrackers(),
-                    $collector_parameters->getUser()
-                );
-                break;
-            case AllowedMetadata::ASSIGNED_TO:
-                $this->checkAssignedToIsUsedByAllTracker(
-                    $collector_parameters->getTrackerIds()
-                );
-                break;
-        }
+        match ($metadata->getName()) {
+            AllowedMetadata::TITLE            => $this->checkTitleIsUsedByAtLeastOneTracker($collector_parameters->getTrackerIds()),
+            AllowedMetadata::DESCRIPTION      => $this->checkDescriptionIsUsedByAtLeastOneTracker($collector_parameters->getTrackerIds()),
+            AllowedMetadata::STATUS           => $this->checkStatusIsUsedByAtLeastOneTracker($collector_parameters->getTrackerIds()),
+            AllowedMetadata::ASSIGNED_TO      => $this->checkAssignedToIsUsedByAtLeastOneTracker($collector_parameters->getTrackerIds()),
+
+            AllowedMetadata::SUBMITTED_ON     => $this->checkSubmittedOnIsUsedByAtLeastOneTracker(
+                $collector_parameters->getTrackers(),
+                $collector_parameters->getUser()
+            ),
+            AllowedMetadata::LAST_UPDATE_DATE => $this->checkLastUpdateDateIsUsedByAtLeastOneTracker(
+                $collector_parameters->getTrackers(),
+                $collector_parameters->getUser()
+            ),
+            AllowedMetadata::SUBMITTED_BY     => $this->checkSubmittedByIsUsedByAtLeastOneTracker(
+                $collector_parameters->getTrackers(),
+                $collector_parameters->getUser()
+            ),
+            AllowedMetadata::LAST_UPDATE_BY   => $this->checkLastUpdateByIsUsedByAtLeastOneTracker(
+                $collector_parameters->getTrackers(),
+                $collector_parameters->getUser()
+            ),
+            default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
+        };
     }
 
     /**
      * @param int[] $trackers_id
-     * @throws TitleIsMissingInAtLeastOneTrackerException
+     * @throws TitleIsMissingInAllTrackersException
      */
-    private function checkTitleIsUsedByAllTrackers(array $trackers_id): void
+    private function checkTitleIsUsedByAtLeastOneTracker(array $trackers_id): void
     {
         $count = $this->title_dao->getNbOfTrackerWithoutSemanticTitleDefined($trackers_id);
-        if ($count > 0) {
-            throw new TitleIsMissingInAtLeastOneTrackerException($count);
+        if ($count === count($trackers_id)) {
+            throw new TitleIsMissingInAllTrackersException();
         }
     }
 
     /**
      * @param int[] $trackers_id
-     * @throws DescriptionIsMissingInAtLeastOneTrackerException
+     * @throws DescriptionIsMissingInAllTrackersException
      */
-    private function checkDescriptionIsUsedByAllTrackers(array $trackers_id): void
+    private function checkDescriptionIsUsedByAtLeastOneTracker(array $trackers_id): void
     {
         $count = $this->description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($trackers_id);
-        if ($count > 0) {
-            throw new DescriptionIsMissingInAtLeastOneTrackerException($count);
+        if ($count === count($trackers_id)) {
+            throw new DescriptionIsMissingInAllTrackersException();
         }
     }
 
     /**
      * @param int[] $trackers_id
-     * @throws StatusIsMissingInAtLeastOneTrackerException
+     * @throws StatusIsMissingInAllTrackersException
      */
-    private function checkStatusIsUsedByAllTrackers(array $trackers_id): void
+    private function checkStatusIsUsedByAtLeastOneTracker(array $trackers_id): void
     {
         $count = $this->status_dao->getNbOfTrackerWithoutSemanticStatusDefined($trackers_id);
-        if ($count > 0) {
-            throw new StatusIsMissingInAtLeastOneTrackerException($count);
+        if ($count === count($trackers_id)) {
+            throw new StatusIsMissingInAllTrackersException();
+        }
+    }
+
+    /**
+     * @param int[] $trackers_id
+     * @throws AssignedToIsMissingInAllTrackersException
+     */
+    private function checkAssignedToIsUsedByAtLeastOneTracker(array $trackers_id): void
+    {
+        $count = $this->assigned_to_dao->getNbOfTrackerWithoutSemanticContributorDefined($trackers_id);
+        if ($count === count($trackers_id)) {
+            throw new AssignedToIsMissingInAllTrackersException();
         }
     }
 
     /**
      * @param Tracker[] $trackers
-     * @throws SubmittedOnIsMissingInAtLeastOneTrackerException
+     * @throws SubmittedOnIsMissingInAllTrackersException
      */
-    private function checkSubmittedOnIsUsedByAllTrackers(array $trackers, PFUser $user): void
+    private function checkSubmittedOnIsUsedByAtLeastOneTracker(array $trackers, PFUser $user): void
     {
         $count = $this->getNumberOfFieldsUserCannotReadByType($trackers, $user, 'subon');
-        if ($count > 0) {
-            throw new SubmittedOnIsMissingInAtLeastOneTrackerException($count);
+        if ($count === count($trackers)) {
+            throw new SubmittedOnIsMissingInAllTrackersException();
         }
     }
 
     /**
      * @param Tracker[] $trackers
-     * @throws LastUpdateDateIsMissingInAtLeastOneTrackerException
+     * @throws LastUpdateDateIsMissingInAllTrackersException
      */
-    private function checkLastUpdateDateIsUsedByAllTrackers(array $trackers, PFUser $user): void
+    private function checkLastUpdateDateIsUsedByAtLeastOneTracker(array $trackers, PFUser $user): void
     {
         $count = $this->getNumberOfFieldsUserCannotReadByType($trackers, $user, 'lud');
-        if ($count > 0) {
-            throw new LastUpdateDateIsMissingInAtLeastOneTrackerException($count);
+        if ($count === count($trackers)) {
+            throw new LastUpdateDateIsMissingInAllTrackersException();
         }
     }
 
     /**
-     * @throws SubmittedByIsMissingInAtLeastOneTrackerException
+     * @throws SubmittedByIsMissingInAllTrackersException
      */
-    private function checkSubmittedByIsUsedByAllTracker(array $trackers, PFUser $user): void
+    private function checkSubmittedByIsUsedByAtLeastOneTracker(array $trackers, PFUser $user): void
     {
         $count = $this->getNumberOfFieldsUserCannotReadByType($trackers, $user, 'subby');
-        if ($count > 0) {
-            throw new SubmittedByIsMissingInAtLeastOneTrackerException($count);
+        if ($count === count($trackers)) {
+            throw new SubmittedByIsMissingInAllTrackersException();
         }
     }
 
     /**
-     * @throws LastUpdateByIsMissingInAtLeastOneTrackerException
+     * @throws LastUpdateByIsMissingInAllTrackersException
      */
-    private function checkLastUpdateByIsUsedByAllTracker(array $trackers, PFUser $user): void
+    private function checkLastUpdateByIsUsedByAtLeastOneTracker(array $trackers, PFUser $user): void
     {
         $count = $this->getNumberOfFieldsUserCannotReadByType($trackers, $user, 'luby');
-        if ($count > 0) {
-            throw new LastUpdateByIsMissingInAtLeastOneTrackerException($count);
+        if ($count === count($trackers)) {
+            throw new LastUpdateByIsMissingInAllTrackersException();
         }
     }
 
     /**
-     * @param array $trackers
-     * @throws AssignedToIsMissingInAtLeastOneTrackerException
-     */
-    private function checkAssignedToIsUsedByAllTracker(array $trackers): void
-    {
-        $count = $this->assigned_to_dao->getNbOfTrackerWithoutSemanticContributorDefined($trackers);
-        if ($count > 0) {
-            throw new AssignedToIsMissingInAtLeastOneTrackerException($count);
-        }
-    }
-
-    /**
-     * @param \Tracker_FormElement[] $fields
+     * @param Tracker_FormElement[] $fields
      */
     private function isThereAtLeastOneReadableField(array $fields, PFUser $user): bool
     {

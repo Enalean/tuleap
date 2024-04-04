@@ -69,7 +69,7 @@ class Tracker_Semantic_StatusDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function getNbOfTrackerWithoutSemanticStatusDefined(array $trackers_id)
+    public function getNbOfTrackerWithoutSemanticStatusDefined(array $trackers_id): int
     {
         $trackers_id = $this->da->escapeIntImplode($trackers_id);
 
@@ -82,7 +82,7 @@ class Tracker_Semantic_StatusDao extends DataAccessObject
 
         $row = $this->retrieveFirstRow($sql);
 
-        return $row['nb'];
+        return (int) $row['nb'];
     }
 
     public function getTrackerIdsWithoutSemanticStatusDefined(array $trackers_id): array
