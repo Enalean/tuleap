@@ -30,6 +30,7 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 
 class ComputeFolderSizeVisitor implements ItemVisitor
 {
@@ -56,6 +57,10 @@ class ComputeFolderSizeVisitor implements ItemVisitor
     }
 
     public function visitLink(Docman_Link $item, array $params = []): void
+    {
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = []): void
     {
     }
 

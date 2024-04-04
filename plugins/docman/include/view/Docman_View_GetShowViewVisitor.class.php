@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 
 /**
  * @template-implements ItemVisitor<string>
@@ -29,6 +30,11 @@ class Docman_View_GetShowViewVisitor implements ItemVisitor
     public function visitFolder(Docman_Folder $item, $params = [])
     {
         return (string) Docman_View_Browse::getViewForCurrentUser($item->getGroupId(), $params);
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return $this->visitItem($item, $params);
     }
 
     public function visitWiki(Docman_Wiki $item, $params = [])

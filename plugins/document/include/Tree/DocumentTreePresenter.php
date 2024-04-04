@@ -34,6 +34,7 @@ use Tuleap\Document\Config\FileDownloadLimits;
 use Tuleap\Document\Tree\Create\NewItemAlternativeSection;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
+use function Psl\Json\encode;
 
 class DocumentTreePresenter
 {
@@ -154,6 +155,7 @@ class DocumentTreePresenter
     public bool $can_user_switch_to_old_ui;
     public bool $should_display_history_in_document;
     public string $create_new_item_alternatives;
+    public string $other_item_types;
 
     /**
      * @param NewItemAlternativeSection[] $create_new_item_alternatives
@@ -177,6 +179,7 @@ class DocumentTreePresenter
         FilenamePattern $filename_pattern,
         public bool $should_display_source_column,
         array $create_new_item_alternatives,
+        array $other_item_types,
     ) {
         $this->project_id                         = $project->getID();
         $this->root_id                            = $root_id;
@@ -215,5 +218,6 @@ class DocumentTreePresenter
         $this->should_display_history_in_document = (int) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_HISTORY) === 0;
 
         $this->create_new_item_alternatives = json_encode($create_new_item_alternatives, JSON_THROW_ON_ERROR);
+        $this->other_item_types             = encode($other_item_types);
     }
 }

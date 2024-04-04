@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1\Search;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\Item\OpenItemHref;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
@@ -50,6 +51,11 @@ final class FilePropertiesVisitor implements ItemVisitor
     }
 
     public function visitLink(\Docman_Link $item, array $params = [])
+    {
+        return null;
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return null;
     }

@@ -34,6 +34,7 @@ use Project;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\REST\I18NRestException;
 
@@ -130,6 +131,11 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
     {
         $this->checkExpectedType($item, $params['document_type']);
         $this->checkItemCanBeUpdated($item, $params);
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = []): void
+    {
+        $this->throwItemHasNotTheRightType($params['document_type']);
     }
 
     public function visitItem(Docman_Item $item, array $params = []): void

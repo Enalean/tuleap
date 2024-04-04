@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 
 /**
  * @template-implements ItemVisitor<array>
@@ -65,6 +66,11 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
     }
 
     public function visitDocument(Docman_Document $item, $params = [])
+    {
+        return $this->visitItem($item, $params);
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->visitItem($item, $params);
     }

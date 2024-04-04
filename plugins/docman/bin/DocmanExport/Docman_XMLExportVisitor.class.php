@@ -205,6 +205,11 @@ class Docman_XMLExportVisitor implements ItemVisitor
         return $this->visitDocument($item);
     }
 
+    public function visitOtherDocument(\Tuleap\Docman\Item\OtherDocument $item, array $params = [])
+    {
+        return $this->visitDocument($item);
+    }
+
     protected function createVersion($version)
     {
         $vNode = $this->doc->createElement('version');

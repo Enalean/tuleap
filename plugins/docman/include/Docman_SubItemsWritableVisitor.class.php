@@ -22,6 +22,7 @@
  */
 
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 
 /**
  * Check if all the sub items are writable by given user.
@@ -78,6 +79,11 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
             return true;
         }
         return false;
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return $this->visitDocument($item, $params);
     }
 
     public function visitWiki(Docman_Wiki $item, array $params = [])

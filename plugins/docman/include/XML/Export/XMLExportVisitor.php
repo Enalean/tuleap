@@ -37,6 +37,7 @@ use Docman_Wiki;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\xml\XMLDateHelper;
 use UserXMLExporter;
@@ -118,6 +119,11 @@ class XMLExportVisitor implements ItemVisitor
     public function visitDocument(Docman_Document $item, array $params = []): SimpleXMLElement
     {
         return $this->visitItem($item, $params);
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return $this->visitDocument($item, $params);
     }
 
     public function visitWiki(Docman_Wiki $item, array $params = []): SimpleXMLElement

@@ -24,6 +24,7 @@
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DocumentDeletion\DocmanWikiDeletor;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 
 /**
  * @implements ItemVisitor<bool>
@@ -110,6 +111,11 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     }
 
     public function visitLink(Docman_Link $item, $params = [])
+    {
+        return $this->visitDocument($item, $params);
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->visitDocument($item, $params);
     }

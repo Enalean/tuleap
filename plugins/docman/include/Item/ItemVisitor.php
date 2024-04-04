@@ -67,4 +67,9 @@ interface ItemVisitor
      * @psalm-return ReturnType
      */
     public function visitItem(Docman_Item $item, array $params = []);
+
+    /**
+     * @psalm-return ReturnType
+     */
+    public function visitOtherDocument(OtherDocument $item, array $params = []);
 }

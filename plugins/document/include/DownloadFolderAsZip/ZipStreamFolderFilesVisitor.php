@@ -31,6 +31,7 @@ use Docman_Link;
 use Docman_Version;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Document\Exceptions\DocmanFileCorruptedException;
 use ZipStream\Exception\FileNotFoundException;
 use ZipStream\Exception\FileNotReadableException;
@@ -82,6 +83,10 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
     }
 
     public function visitLink(Docman_Link $item, array $params = []): void
+    {
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = []): void
     {
     }
 

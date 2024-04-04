@@ -21,6 +21,7 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\Widget\WidgetEmbeddedDao;
 use Tuleap\Project\MappingRegistry;
 
@@ -382,6 +383,11 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
     }
 
     public function visitFile(Docman_File $item, $params = [])
+    {
+        return $this->visitDocument($item, $params);
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->visitDocument($item, $params);
     }

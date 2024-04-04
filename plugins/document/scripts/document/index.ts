@@ -33,6 +33,7 @@ import { getDatasetItemOrThrow } from "@tuleap/dom";
 import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
 import {
     NEW_ITEMS_ALTERNATIVES,
+    OTHER_ITEM_TYPES,
     SHOULD_DISPLAY_HISTORY_IN_DOCUMENT,
     SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
 } from "./injection-keys";
@@ -137,6 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const create_new_item_alternatives = JSON.parse(
         getDatasetItemOrThrow(vue_mount_point, "createNewItemAlternatives"),
     );
+    const other_item_types = JSON.parse(getDatasetItemOrThrow(vue_mount_point, "otherItemTypes"));
 
     moment.tz(user_timezone);
     moment.locale(user_locale);
@@ -198,6 +200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         should_display_source_column_for_versions,
     );
     app.provide(NEW_ITEMS_ALTERNATIVES, create_new_item_alternatives);
+    app.provide(OTHER_ITEM_TYPES, other_item_types);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

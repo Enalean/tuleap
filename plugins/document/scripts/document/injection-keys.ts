@@ -18,7 +18,7 @@
  */
 
 import type { InjectionKey } from "vue";
-import type { FeedbackHandler, NewItemAlternativeArray } from "./type";
+import type { FeedbackHandler, NewItemAlternativeArray, OtherItemTypeCollection } from "./type";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
 export const FEEDBACK: InjectionKey<FeedbackHandler> = Symbol("feedback");
@@ -31,3 +31,6 @@ export const SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS: StrictInjectionKey<boole
 export const NEW_ITEMS_ALTERNATIVES: StrictInjectionKey<NewItemAlternativeArray> = Symbol(
     "create_new_item_alternatives",
 );
+
+export const OTHER_ITEM_TYPES: StrictInjectionKey<OtherItemTypeCollection> =
+    Symbol("other_item_types");

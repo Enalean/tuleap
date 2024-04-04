@@ -32,6 +32,7 @@ use Docman_Wiki;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\Item\OpenItemHref;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Project\ProjectByIDFactory;
 
 /**
@@ -111,6 +112,11 @@ final class ReferenceURLBuilder implements ItemVisitor
         $project = $this->project_factory->getProjectById((int) $item->getGroupId());
 
         return '/plugins/document/' . urlencode($project->getUnixNameLowerCase()) . '/preview/$1';
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return $this->visitItem($item, $params);
     }
 
     public function visitItem(Docman_Item $item, array $params = [])

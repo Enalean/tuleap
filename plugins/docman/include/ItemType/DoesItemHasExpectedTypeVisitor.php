@@ -30,6 +30,7 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 
 /**
  * @template-implements ItemVisitor<bool>
@@ -84,6 +85,11 @@ final class DoesItemHasExpectedTypeVisitor implements ItemVisitor
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = []): bool
+    {
+        return $this->visitItem($item);
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->visitItem($item);
     }

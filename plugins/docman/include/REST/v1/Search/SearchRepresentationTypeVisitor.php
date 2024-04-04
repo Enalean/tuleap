@@ -22,14 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Search;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 
 /**
  * @template-implements ItemVisitor<string | null>
  */
-final class SearchRepresentationTypeVisitor implements ItemVisitor
+final readonly class SearchRepresentationTypeVisitor implements ItemVisitor
 {
+    public function __construct(private EventDispatcherInterface $dispatcher)
+    {
+    }
+
     public function visitFolder(\Docman_Folder $item, array $params = [])
     {
         return ItemRepresentation::TYPE_FOLDER;
@@ -58,6 +64,13 @@ final class SearchRepresentationTypeVisitor implements ItemVisitor
     public function visitEmpty(\Docman_Empty $item, array $params = [])
     {
         return ItemRepresentation::TYPE_EMPTY;
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return $this->dispatcher
+            ->dispatch(new SearchRepresentationOtherType($item))
+            ->getType();
     }
 
     public function visitItem(\Docman_Item $item, array $params = [])

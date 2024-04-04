@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 
@@ -118,6 +119,11 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
         if ($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canUpdate'] = true;
         }
+        return $this->visitDocument($item, $params);
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
         return $this->visitDocument($item, $params);
     }
 

@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Item\OtherDocument;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVisitor
 {
@@ -51,6 +53,11 @@ class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVi
             $link_url = $item->getUrl();
         }
         return [new \Docman_MetadataHtmlLink($link_url)];
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return [];
     }
 
     public function visitFile(\Docman_File $item, $params = [])

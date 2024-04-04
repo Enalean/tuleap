@@ -22,6 +22,7 @@
  */
 
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
 
 /**
@@ -114,6 +115,11 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     }
 
     public function visitEmpty(Docman_Empty $item, $params = [])
+    {
+        $this->_cloneItem($item, $params);
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         $this->_cloneItem($item, $params);
     }

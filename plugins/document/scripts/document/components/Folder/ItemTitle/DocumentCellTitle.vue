@@ -22,7 +22,7 @@
 <template>
     <div data-test="empty-file-title">
         <fake-caret v-bind:item="item" />
-        <i class="fa-fw document-folder-content-icon" v-bind:class="ICON_EMPTY"></i>
+        <i class="fa-fw document-folder-content-icon" v-bind:class="icon"></i>
         <span tabindex="0" class="document-folder-subitem-link">
             {{ item.title }}
         </span>
@@ -33,6 +33,15 @@
 import { ICON_EMPTY } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 import type { Item } from "../../../type";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { OTHER_ITEM_TYPES } from "../../../injection-keys";
+import { computed } from "vue";
 
-defineProps<{ item: Item }>();
+const props = defineProps<{ item: Item }>();
+
+const other_item_types = strictInject(OTHER_ITEM_TYPES);
+
+const icon = computed((): string =>
+    props.item.type in other_item_types ? other_item_types[props.item.type].icon : ICON_EMPTY,
+);
 </script>

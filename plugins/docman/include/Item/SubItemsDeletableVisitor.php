@@ -56,6 +56,11 @@ class SubItemsDeletableVisitor implements ItemVisitor
         return $this->visitItem($item, $params);
     }
 
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return $this->visitItem($item, $params);
+    }
+
     public function visitWiki(\Docman_Wiki $item, array $params = []): bool
     {
         return $this->visitItem($item, $params);

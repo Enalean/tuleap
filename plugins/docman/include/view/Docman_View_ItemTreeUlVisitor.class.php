@@ -24,6 +24,7 @@
  *
  */
 
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
@@ -119,6 +120,11 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         if ($li_displayed) {
             $this->html .= '</li>' . "\n";
         }
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return $this->visitDocument($item, $params);
     }
 
     public function visitWiki(Docman_Wiki $item, $params = [])

@@ -34,6 +34,7 @@ use Docman_Wiki;
 use LogicException;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\REST\I18NRestException;
@@ -69,6 +70,11 @@ final class BeforeCopyVisitor implements ItemVisitor
     public function visitFolder(Docman_Folder $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleItem($item, $params['destination'], $this->isFolderTitleConflictingVerifier());
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
     public function visitWiki(Docman_Wiki $item, array $params = []): ItemBeingCopiedExpectation
