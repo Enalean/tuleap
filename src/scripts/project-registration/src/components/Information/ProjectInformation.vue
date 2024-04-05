@@ -104,9 +104,9 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import type { Ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
@@ -126,134 +126,114 @@ import FieldsList from "./Fields/FieldsList.vue";
 import { redirectToUrl } from "../../helpers/location-helper";
 import { buildProjectPrivacy } from "../../helpers/privacy-builder";
 import { useStore } from "../../stores/root";
+import { useRouter } from "../../helpers/use-router";
 
-@Component({
-    components: {
-        PolicyAgreement,
-        FieldDescription,
-        FieldsList,
-        TroveCategoryList,
-        ProjectInformationInputPrivacyList,
-        ProjectName,
-        ProjectInformationFooter,
-        ProjectInformationSvg,
-    },
-})
-export default class ProjectInformation extends Vue {
-    root_store = useStore();
+const root_store = useStore();
 
-    selected_visibility = "";
+const router = useRouter();
 
-    name_properties: ProjectNameProperties = {
-        slugified_name: "",
-        name: "",
+const selected_visibility = ref("");
+const name_properties: Ref<ProjectNameProperties> = ref({
+    slugified_name: "",
+    name: "",
+});
+const field_description = ref("");
+const trove_cats: Ref<Array<TroveCatProperties>> = ref([]);
+const is_private = ref(false);
+const selected_template_name = ref("");
+const field_list: Ref<Array<FieldProperties>> = ref([]);
+
+onMounted(() => {
+    if (!root_store.is_template_selected) {
+        router.push("new");
+        return;
+    }
+
+    if (root_store.selected_tuleap_template) {
+        selected_template_name.value = root_store.selected_tuleap_template.title;
+    } else if (root_store.selected_company_template) {
+        selected_template_name.value = root_store.selected_company_template.title;
+    }
+
+    selected_visibility.value = root_store.project_default_visibility;
+    EventBus.$on("update-project-name", updateProjectName);
+    EventBus.$on("choose-trove-cat", updateTroveCat);
+    EventBus.$on("update-field-list", updateFieldList);
+    EventBus.$on("update-project-visibility", updateProjectVisibility);
+});
+
+onBeforeUnmount((): void => {
+    EventBus.$off("update-project-name", updateProjectName);
+    EventBus.$off("choose-trove-cat", updateTroveCat);
+    EventBus.$off("update-field-list", updateFieldList);
+    EventBus.$off("update-project-visibility", updateProjectVisibility);
+});
+
+function updateProjectName(event: ProjectNameProperties): void {
+    name_properties.value = event;
+}
+
+function updateTroveCat(event: TroveCatProperties): void {
+    const index = trove_cats.value.findIndex((trove) => trove.category_id === event.category_id);
+    if (index === -1) {
+        trove_cats.value.push(event);
+    } else {
+        trove_cats.value[index] = event;
+    }
+}
+
+function updateFieldList(event: FieldProperties): void {
+    const index = field_list.value.findIndex((field) => field.field_id === event.field_id);
+    if (index === -1) {
+        field_list.value.push(event);
+    } else {
+        field_list.value[index] = event;
+    }
+}
+
+function updateProjectVisibility(event: ProjectVisibilityProperties): void {
+    selected_visibility.value = event.new_visibility;
+}
+
+async function createProject(): Promise<void> {
+    let project_properties: ProjectProperties = {
+        shortname: name_properties.value.slugified_name,
+        description: field_description.value,
+        label: name_properties.value.name,
+        is_public: !is_private.value,
+        categories: trove_cats.value,
+        fields: field_list.value,
     };
 
-    field_description = "";
+    project_properties = buildProjectPrivacy(
+        root_store.selected_tuleap_template,
+        root_store.selected_company_template,
+        selected_visibility.value,
+        project_properties,
+    );
 
-    trove_cats: Array<TroveCatProperties> = [];
+    if (root_store.selected_company_template?.id === "from_project_archive") {
+        await root_store.createProjectFromArchive(project_properties, router);
+        return;
+    }
 
-    is_private = false;
-
-    selected_template_name = "";
-
-    field_list: Array<FieldProperties> = [];
-
-    mounted(): void {
-        if (!this.root_store.is_template_selected) {
-            this.$router.push("new");
-            return;
+    await root_store.createProject(project_properties);
+    if (!root_store.is_project_approval_required) {
+        const params = new URLSearchParams();
+        params.set("should-display-created-project-modal", "true");
+        if (project_properties.xml_template_name) {
+            params.set("xml-template-name", project_properties.xml_template_name);
         }
 
-        if (this.root_store.selected_tuleap_template) {
-            this.selected_template_name = this.root_store.selected_tuleap_template.title;
-        } else if (this.root_store.selected_company_template) {
-            this.selected_template_name = this.root_store.selected_company_template.title;
-        }
-
-        this.selected_visibility = this.root_store.project_default_visibility;
-        EventBus.$on("update-project-name", this.updateProjectName);
-        EventBus.$on("choose-trove-cat", this.updateTroveCat);
-        EventBus.$on("update-field-list", this.updateFieldList);
-        EventBus.$on("update-project-visibility", this.updateProjectVisibility);
-    }
-
-    beforeDestroy(): void {
-        EventBus.$off("update-project-name", this.updateProjectName);
-        EventBus.$off("choose-trove-cat", this.updateTroveCat);
-        EventBus.$off("update-field-list", this.updateFieldList);
-        EventBus.$off("update-project-visibility", this.updateProjectVisibility);
-    }
-
-    updateProjectName(event: ProjectNameProperties): void {
-        this.name_properties = event;
-    }
-
-    updateTroveCat(event: TroveCatProperties): void {
-        const index = this.trove_cats.findIndex((trove) => trove.category_id === event.category_id);
-        if (index === -1) {
-            this.trove_cats.push(event);
-        } else {
-            this.trove_cats[index] = event;
-        }
-    }
-
-    updateFieldList(event: FieldProperties): void {
-        const index = this.field_list.findIndex((field) => field.field_id === event.field_id);
-        if (index === -1) {
-            this.field_list.push(event);
-        } else {
-            this.field_list[index] = event;
-        }
-    }
-
-    updateProjectVisibility(event: ProjectVisibilityProperties): void {
-        this.selected_visibility = event.new_visibility;
-    }
-
-    async createProject(): Promise<void> {
-        let project_properties: ProjectProperties = {
-            shortname: this.name_properties.slugified_name,
-            description: this.field_description,
-            label: this.name_properties.name,
-            is_public: !this.is_private,
-            categories: this.trove_cats,
-            fields: this.field_list,
-        };
-
-        project_properties = buildProjectPrivacy(
-            this.root_store.selected_tuleap_template,
-            this.root_store.selected_company_template,
-            this.selected_visibility,
-            project_properties,
+        redirectToUrl(
+            "/projects/" + encodeURIComponent(name_properties.value.slugified_name) + "/?" + params,
         );
-
-        if (this.root_store.selected_company_template?.id === "from_project_archive") {
-            await this.root_store.createProjectFromArchive(project_properties, this.$router);
-            return;
-        }
-
-        await this.root_store.createProject(project_properties);
-        if (!this.root_store.is_project_approval_required) {
-            const params = new URLSearchParams();
-            params.set("should-display-created-project-modal", "true");
-            if (project_properties.xml_template_name) {
-                params.set("xml-template-name", project_properties.xml_template_name);
-            }
-
-            redirectToUrl(
-                "/projects/" +
-                    encodeURIComponent(this.name_properties.slugified_name) +
-                    "/?" +
-                    params,
-            );
-        } else {
-            this.$router.push("approval");
-        }
+    } else {
+        router.push("approval");
     }
+}
 
-    resetProjectCreationError(): void {
-        this.root_store.resetProjectCreationError();
-    }
+function resetProjectCreationError(): void {
+    root_store.resetProjectCreationError();
 }
 </script>
