@@ -29,36 +29,27 @@ use TemplateRendererFactory;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Mail\TemplateWithoutFooter;
 
-final readonly class ProjectImportStatusNotifier implements NotifyProjectImportStatus
+final readonly class ProjectImportNotifierStatus implements NotifyProjectImportStatus
 {
     public function __construct(private LoggerInterface $logger, private LocaleSwitcher $locale_switcher)
     {
     }
 
-    public function notify(\Project $project, \PFUser $project_admin): void
+    public function notify(\Project $project, \PFUser $project_admin, NotifyProjectImportMessage $message): void
     {
         $this->locale_switcher->setLocaleForSpecificExecutionContext(
             $project_admin->getLocale(),
-            function () use ($project, $project_admin) {
+            function () use ($project, $project_admin, $message) {
                 $mail = new Codendi_Mail();
                 $mail->setLookAndFeelTemplate(new TemplateWithoutFooter());
                 $mail->setFrom(ForgeConfig::get('sys_noreply'));
                 $mail->setTo($project_admin->getEmail());
-                $mail->setSubject(
-                    sprintf(
-                        _('Project "%s" imported'),
-                        $project->getPublicName(),
-                    ),
-                );
+                $mail->setSubject($message->getSubject());
 
                 $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__);
 
-                $presenter = [
-                    'project_name'  => $project->getPublicName(),
-                    'instance_name' => ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
-                ];
-                $mail->setBodyHtml($renderer->renderToString('notification-project-created-but-pending', $presenter));
-                $mail->setBodyText($renderer->renderToString('notification-project-created-but-pending-text', $presenter));
+                $mail->setBodyHtml($renderer->renderToString($message->getHTMLTemplateName(), $message->getPresenter()));
+                $mail->setBodyText($renderer->renderToString($message->getTextTemplateName(), $message->getPresenter()));
 
                 if (! $mail->send()) {
                     $this->logger->error(

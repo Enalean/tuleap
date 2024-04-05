@@ -39,9 +39,23 @@ final readonly class ProjectAfterArchiveImportActivation implements ActivateProj
     public function activateProject(Project $project, \PFUser $project_admin): void
     {
         if ($this->shouldProjectBeApprovedByAdmin()) {
+            $presenter = [
+                'project_name' => $project->getPublicName(),
+                'instance_name' => \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
+            ];
+
+            $message = ProjectImportMessage::build(
+                sprintf(
+                    _('Project "%s" imported'),
+                    $project->getPublicName(),
+                ),
+                'notification-project-created-but-pending',
+                'notification-project-created-but-pending-text',
+                $presenter
+            );
             $this->project_dao->updateStatus($project->getID(), Project::STATUS_PENDING);
             $this->site_admin_notifier->notifySiteAdmin($project);
-            $this->notify_project_import_status->notify($project, $project_admin);
+            $this->notify_project_import_status->notify($project, $project_admin, $message);
             return;
         }
 

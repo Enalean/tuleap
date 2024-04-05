@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\Registration\Template\Upload;
 
-interface NotifyProjectImportStatus
+interface NotifyProjectImportMessage
 {
-    public function notify(\Project $project, \PFUser $project_admin, NotifyProjectImportMessage $message): void;
+    public function getSubject(): string;
+
+    public function getHTMLTemplateName(): string;
+
+    public function getTextTemplateName(): string;
+
+    public function getPresenter(): array;
 }

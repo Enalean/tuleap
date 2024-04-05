@@ -51,6 +51,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         private SaveUploadedArchiveForProject $archive_for_project_dao,
         private ArchiveWithoutDataChecker $archive_does_not_contain_data_checker,
         private LoggerInterface $logger,
+        private NotifyProjectImportStatus $mail,
         private int $project_id,
         private string $filename,
         private int $user_id,
@@ -67,6 +68,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         ArchiveUploadedArchive $archiver,
         SaveUploadedArchiveForProject $archive_for_project_dao,
         ArchiveWithoutDataChecker $archive_does_not_contain_data_checker,
+        NotifyProjectImportStatus $mail,
     ): WorkerEventProcessor {
         $payload = $event->getPayload();
         if (! isset($payload['project_id']) || ! is_int($payload['project_id'])) {
@@ -91,6 +93,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
             $archive_for_project_dao,
             $archive_does_not_contain_data_checker,
             $event->getLogger(),
+            $mail,
             $payload['project_id'],
             $payload['filename'],
             $payload['user_id'],
@@ -108,6 +111,8 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         }
         $this->force_login->forceLogin($user->getUserName());
 
+        $mail = $this->mail;
+
         try {
             $archive = new ZipArchive($this->filename, \ForgeConfig::get('tmp_dir'));
             $this->importer->importFromArchive(
@@ -124,8 +129,27 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
                     $this->activator->activateProject($project, $user);
                     $this->logger->info("Successfully imported archive into project #{$project->getID()}");
                 },
-                function (Fault $fault) use ($project): void {
+                function (Fault $fault) use ($project, $mail, $user): void {
                     $this->logger->error("Unable to import archive into project #{$project->getID()}");
+
+                    $presenter = [
+                        'project_name' => $project->getPublicName(),
+                        'instance_name' => \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
+                        'error' => (string) $fault,
+                    ];
+
+                    $message = ProjectImportMessage::build(
+                        sprintf(
+                            _('Unable to import project from archive'),
+                            $project->getPublicName(),
+                        ),
+                        'notification-project-creation-error',
+                        'notification-project-creation-error-text',
+                        $presenter
+                    );
+
+                    $mail->notify($project, $user, $message);
+
                     Fault::writeToLogger($fault, $this->logger);
                 }
             );
