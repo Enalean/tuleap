@@ -91,24 +91,14 @@ final class ArtifactSubmitterCheckerTest extends TestCase
         ));
     }
 
-    public function testItAllowsEmptyValueForEquals(): void
-    {
-        $this->expectNotToPerformAssertions();
-        $this->check(new EqualComparison($this->metadata, new SimpleValueWrapper('')));
-    }
-
-    public function testItAllowsEmptyValueForNotEquals(): void
-    {
-        $this->expectNotToPerformAssertions();
-        $this->check(new NotEqualComparison($this->metadata, new SimpleValueWrapper('')));
-    }
-
     public static function generateInvalidComparisonsToEmptyString(): iterable
     {
         $metadata    = new Metadata('submitted_by');
         $empty_value = new SimpleValueWrapper('');
         yield 'in()' => [new InComparison($metadata, new InValueWrapper([$empty_value]))];
         yield 'not in()' => [new NotInComparison($metadata, new InValueWrapper([$empty_value]))];
+        yield '=' => [new EqualComparison($metadata, new InValueWrapper([$empty_value]))];
+        yield '!=' => [new NotEqualComparison($metadata, new InValueWrapper([$empty_value]))];
     }
 
     /**
