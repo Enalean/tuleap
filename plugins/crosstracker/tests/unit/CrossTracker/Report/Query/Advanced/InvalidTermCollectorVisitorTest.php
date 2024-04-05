@@ -527,12 +527,13 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     public function testItRejectsMoreInvalidOpenListComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            OpenListFieldBuilder::aBind()
-                ->withName(self::FIELD_NAME)
-                ->withTracker($this->first_tracker)
-                ->withReadPermission($this->user, true)
-                ->withStaticValues(['unbait'])
-                ->buildStaticBind()->getField(),
+            ListStaticBindBuilder::aStaticBind(
+                OpenListFieldBuilder::anOpenListField()
+                    ->withName(self::FIELD_NAME)
+                    ->withTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->withStaticValues(['unbait'])->build()->getField(),
         );
         $this->comparison       = $comparison;
 
@@ -616,17 +617,18 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             $user,
         ];
 
-        $open_list_field_builder = OpenListFieldBuilder::aBind()
+        $open_list = OpenListFieldBuilder::anOpenListField()
             ->withName(self::FIELD_NAME)
             ->withTracker($tracker)
-            ->withReadPermission($user, true);
+            ->withReadPermission($user, true)
+            ->build();
         yield 'static open list' => [
-            $open_list_field_builder->buildStaticBind()->getField(),
+            ListStaticBindBuilder::aStaticBind($open_list)->build()->getField(),
             $tracker,
             $user,
         ];
         yield 'user group open list' => [
-            $open_list_field_builder->buildUserGroupBind()->getField(),
+            ListUserGroupBindBuilder::aUserGroupBind($open_list)->build()->getField(),
             $tracker,
             $user,
         ];
