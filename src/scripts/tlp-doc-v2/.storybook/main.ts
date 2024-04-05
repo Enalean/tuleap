@@ -17,12 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StorybookConfig } from "@storybook/web-components-webpack5";
-// sass is installed at workspace root
-// eslint-disable-next-line import/no-extraneous-dependencies
-import * as sass from "sass";
+import type { StorybookConfig } from "@storybook/web-components-vite";
 
 const config: StorybookConfig = {
+    framework: "@storybook/web-components-vite",
     stories: [
         "../stories/**/*.mdx",
         "../stories/**/*.stories.ts",
@@ -34,33 +32,11 @@ const config: StorybookConfig = {
         "../../../../plugins/*/scripts/*/src/**/*.stories.ts",
     ],
     addons: [
-        "@storybook/addon-links",
         "@storybook/addon-essentials",
         "@storybook/addon-interactions",
+        "@storybook/addon-links",
         "@storybook/addon-themes",
-        "@storybook/addon-webpack5-compiler-swc",
-        {
-            name: "@storybook/addon-styling-webpack",
-            options: {
-                rules: [
-                    {
-                        test: /\.(s?)css$/,
-                        use: [
-                            "style-loader",
-                            "css-loader",
-                            {
-                                loader: "sass-loader",
-                                options: {
-                                    implementation: sass,
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
     ],
-    framework: "@storybook/web-components-webpack5",
 };
 
 export default config;
