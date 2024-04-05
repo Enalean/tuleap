@@ -14,3 +14,9 @@ msgstr ""
 
 msgid "Artifacts as Documents for %{name}"
 msgstr "Artifacts sous forme de Documents pour %{name}"
+
+msgid "This document is empty"
+msgstr "Ce document est vide"
+
+msgid "You can read this document, it's just empty for now"
+msgstr "Vous pouvez lire ce document, mais celui-ci est vide pour l'instant"

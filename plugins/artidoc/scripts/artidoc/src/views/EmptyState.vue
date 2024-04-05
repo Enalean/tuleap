@@ -17,37 +17,21 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -
   -->
-
 <template>
-    <h1 class="" data-test="title">
-        {{ title }}
-    </h1>
+    <empty-state-message-with-image
+        v-bind:title="$gettext('This document is empty')"
+        v-bind:message="$gettext('You can read this document, it\'s just empty for now')"
+    >
+        <template #empty-state-image>
+            <tumbleweed />
+        </template>
+    </empty-state-message-with-image>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { getProject } from "../helpers/rest-querier";
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import Tumbleweed from "@/assets/Tumbleweed.vue";
+import EmptyStateMessageWithImage from "@/components/EmptyStateMessageWithImage.vue";
 import { useGettext } from "vue3-gettext";
 
-const props = defineProps<{ project_id: number }>();
-
-const { $gettext, interpolate } = useGettext();
-
-const project_name = ref("...");
-
-const title = computed(() =>
-    interpolate($gettext("Artifacts as Documents for %{name}"), { name: project_name.value }),
-);
-
-onMounted(() => {
-    getProject(props.project_id).match(
-        (project: ProjectReference) => {
-            project_name.value = project.label;
-        },
-        () => {
-            // do nothing
-        },
-    );
-});
+const { $gettext } = useGettext();
 </script>
