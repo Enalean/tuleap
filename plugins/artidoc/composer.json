@@ -7,7 +7,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\Artidoc\\": "tests/unit/Artidoc"
+      "Tuleap\\Artidoc\\": ["tests/unit/Artidoc", "tests/integration/Artidoc"]
     }
   }
 }

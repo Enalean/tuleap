@@ -24,16 +24,19 @@ use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
+use Tuleap\Artidoc\REST\ResourcesInjector;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
 use Tuleap\Docman\REST\v1\GetOtherDocumentItemRepresentationWrapper;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationOtherType;
 use Tuleap\Document\Tree\OtherItemTypeDefinition;
 use Tuleap\Document\Tree\OtherItemTypes;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\DispatchableWithRequest;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../docman/vendor/autoload.php';
+require_once __DIR__ . '/../../tracker/vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ArtidocPlugin extends Plugin
@@ -118,5 +121,11 @@ class ArtidocPlugin extends Plugin
             ArtidocDocument::TYPE,
             new OtherItemTypeDefinition('fa-solid fa-tlp-tracker-circle document-document-icon')
         );
+    }
+
+    #[ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources(array $params): void
+    {
+        (new ResourcesInjector())->populate($params['restler']);
     }
 }

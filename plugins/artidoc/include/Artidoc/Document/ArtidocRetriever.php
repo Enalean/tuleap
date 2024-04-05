@@ -35,7 +35,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Plugin\IsProjectAllowedToUsePlugin;
 use Tuleap\Project\ProjectByIDFactory;
 
-final class ArtidocRetriever implements RetriveArtidoc
+final class ArtidocRetriever implements RetrieveArtidoc
 {
     public function __construct(
         private ProjectByIDFactory $project_manager,

@@ -199,7 +199,7 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
      *
      * @return Artifact[]
      */
-    public function getArtifactsByArtifactIdList(array $artifact_ids)
+    public function getArtifactsByArtifactIdList(array $artifact_ids): array
     {
         $artifact_ids            = array_unique($artifact_ids);
         $artifacts               = [];

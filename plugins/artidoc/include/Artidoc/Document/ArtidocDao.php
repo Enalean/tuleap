@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 
-final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
+final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchPaginatedRawSections
 {
     public function searchById(int $id): ?array
     {
@@ -41,5 +42,27 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
             \Docman_Item::TYPE_OTHER,
             ArtidocDocument::TYPE,
         );
+    }
+
+    public function searchPaginatedRawSectionsById(int $id, int $limit, int $offset): PaginatedRawSections
+    {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($id, $limit, $offset) {
+            $rows = $db->run(
+                <<<EOS
+                SELECT artifact_id
+                FROM plugin_artidoc_document
+                WHERE item_id = ?
+                ORDER BY `rank`
+                LIMIT ? OFFSET ?
+                EOS,
+                $id,
+                $limit,
+                $offset,
+            );
+
+            $total = $db->cell('SELECT COUNT(*) FROM plugin_artidoc_document WHERE item_id = ?', $id);
+
+            return new PaginatedRawSections($id, $rows, $total);
+        });
     }
 }

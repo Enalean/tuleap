@@ -25,7 +25,7 @@ namespace Tuleap\Artidoc;
 use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
-use Tuleap\Artidoc\Document\RetriveArtidoc;
+use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -37,7 +37,7 @@ use Tuleap\Request\NotFoundException;
 final readonly class ArtidocController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public function __construct(
-        private RetriveArtidoc $retrieve_artidoc,
+        private RetrieveArtidoc $retrieve_artidoc,
         private LoggerInterface $logger,
     ) {
     }
