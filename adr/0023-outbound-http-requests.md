@@ -1,7 +1,7 @@
 # Management of outbound HTTP requests (SSRF protection)
 
 * Status: Accepted
-* Deciders: Thomas Gerbet
+* Deciders: Thomas GERBET
 * Date: 2023-04-03
 
 Technical Story: [request #31580: Filter outbound HTTP requests][9]

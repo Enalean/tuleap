@@ -2,7 +2,7 @@
 
 * Status: accepted
 * Deciders: Florian CAILLOL, Yannis ROSSETTO, Manuel VACELET, Thomas GERBET
-* Date: 29/07/2022
+* Date: 2022-07-29
 
 Technical Story: [story #27884](https://tuleap.net/plugins/tracker/?aid=27884)
 

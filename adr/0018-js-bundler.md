@@ -8,11 +8,11 @@ Technical Story: [request #23415 Allow to bundle app with Vite][0]
 
 ## Context and Problem Statement
 
-In a [previous decision][2] (before writing ADRs), we chose to use [webpack][3] as our JavaScript module bundler. It was one of the first tools of this kind and ushered us into the world of ECMAScript modules: we could finally split our JavaScript apps into clean, isolated modules. However, configuring webpack is very complicated. Since then, new tools have appeared that can do what webpack cannot: start from scratch while learning `webpack`'s lessons. One such tool is [Vite][4]. The question is thus: should we change our default module bundler tool to [vite][4] or stick with [webpack][3] ?
+In a [previous decision][2] (before writing ADRs), we chose to use [webpack][3] as our JavaScript module bundler. It was one of the first tools of this kind and ushered us into the world of ECMAScript modules: we could finally split our JavaScript apps into clean, isolated modules. However, configuring webpack is very complicated. Since then, new tools have appeared that can do what webpack cannot: start from scratch while learning webpack's lessons. One such tool is [Vite][4]. The question is thus: should we change our default module bundler tool to [Vite][4] or stick with [webpack][3] ?
 
 ## Decision Drivers
 
-* Keeping the overall frontend build system running costs a lot of time.
+* Keeping the frontend build system running costs a lot of time.
 * New Applications and Libraries are mostly started by copying the configuration from another one.
 
 ## Considered Options
@@ -46,7 +46,7 @@ In a [previous decision][2] (before writing ADRs), we chose to use [webpack][3] 
 
 * Good, because Vite has far easier configuration. Most of our explicit configuration for webpack comes as default for Vite. Its configuration file is also in TypeScript, which means we get auto-completion for it.
 * Good, because Vite is pushed and maintained by the team behind [Vue.js][5]. The quality of maintenance of Vue.js has been very high so far, so we can expect the same for Vite.
-* Good, because it handles the majority of our needs by default: bundling TypeScript, SCSS and images works out of the box. It is not very hard to load `.po` files (translations), and we have the same constraint for `webpack`.
+* Good, because it handles the majority of our needs by default: bundling TypeScript, SCSS and images works out of the box. It is not very hard to load `.po` files (translations), and we have the same constraint for webpack.
 * Bad, because it is still relatively new.
 
 ## Links
