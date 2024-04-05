@@ -188,6 +188,7 @@ final class ArtifactReportFactoryInstantiator
                 new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder($user_manager),
                 new Metadata\AlwaysThereField\Date\DateFromWhereBuilder($date_time_value_rounder),
                 new Metadata\AlwaysThereField\Users\UsersFromWhereBuilder($user_manager),
+                $form_element_factory,
             ),
         );
 

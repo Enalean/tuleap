@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 
 use LogicException;
+use ParagonIE\EasyDB\EasyStatement;
+use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
@@ -59,13 +61,18 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
             throw new LogicException('Comparison to empty string should have been flagged as invalid for Date metadata');
         }
 
+        $tracker_ids_statement = EasyStatement::open()->in(
+            'tracker.id IN (?*)',
+            array_map(static fn(Tracker $tracker) => $tracker->getId(), $parameters->trackers)
+        );
+
         return match ($parameters->comparison->getType()) {
-            ComparisonType::Equal              => $this->getWhereForEqual((string) $value, $parameters->field_alias),
-            ComparisonType::NotEqual           => $this->getWhereForNotEqual((string) $value, $parameters->field_alias),
-            ComparisonType::LesserThan         => $this->getWhereForLesserThan((string) $value, $parameters->field_alias),
-            ComparisonType::GreaterThan        => $this->getWhereForGreaterThan((string) $value, $parameters->field_alias),
-            ComparisonType::LesserThanOrEqual  => $this->getWhereForLesserThanOrEqual((string) $value, $parameters->field_alias),
-            ComparisonType::GreaterThanOrEqual => $this->getWhereForGreaterThanOrEqual((string) $value, $parameters->field_alias),
+            ComparisonType::Equal              => $this->getWhereForEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
+            ComparisonType::NotEqual           => $this->getWhereForNotEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
+            ComparisonType::LesserThan         => $this->getWhereForLesserThan((string) $value, $parameters->field_alias, $tracker_ids_statement),
+            ComparisonType::GreaterThan        => $this->getWhereForGreaterThan((string) $value, $parameters->field_alias, $tracker_ids_statement),
+            ComparisonType::LesserThanOrEqual  => $this->getWhereForLesserThanOrEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
+            ComparisonType::GreaterThanOrEqual => $this->getWhereForGreaterThanOrEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
             ComparisonType::Between            => throw new LogicException(
                 'Between comparison expected a BetweenValueWrapper, not a SimpleValueWrapper'
             ),
@@ -73,65 +80,65 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         };
     }
 
-    private function getWhereForEqual(string $value, string $field_alias): ParametrizedWhere
+    private function getWhereForEqual(string $value, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         $min_value = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
         $max_value = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
 
         return new ParametrizedWhere(
-            "$field_alias BETWEEN ? AND ?",
-            [$min_value, $max_value]
+            "$field_alias BETWEEN ? AND ? AND $tracker_ids_statement",
+            [$min_value, $max_value, ...array_values($tracker_ids_statement->values())]
         );
     }
 
-    private function getWhereForNotEqual(string $value, string $field_alias): ParametrizedWhere
+    private function getWhereForNotEqual(string $value, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         $min_value = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
         $max_value = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
 
         return new ParametrizedWhere(
-            "$field_alias NOT BETWEEN ? AND ?",
-            [$min_value, $max_value]
+            "$field_alias NOT BETWEEN ? AND ? AND $tracker_ids_statement",
+            [$min_value, $max_value, ...array_values($tracker_ids_statement->values())]
         );
     }
 
-    private function getWhereForLesserThan(string $value, string $field_alias): ParametrizedWhere
+    private function getWhereForLesserThan(string $value, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         $limit_value = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
 
         return new ParametrizedWhere(
-            "$field_alias < ?",
-            [$limit_value]
+            "$field_alias < ? AND $tracker_ids_statement",
+            [$limit_value, ...array_values($tracker_ids_statement->values())]
         );
     }
 
-    private function getWhereForGreaterThan(string $value, string $field_alias): ParametrizedWhere
+    private function getWhereForGreaterThan(string $value, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         $limit_value = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
 
         return new ParametrizedWhere(
-            "$field_alias > ?",
-            [$limit_value]
+            "$field_alias > ? AND $tracker_ids_statement",
+            [$limit_value, ...array_values($tracker_ids_statement->values())]
         );
     }
 
-    private function getWhereForLesserThanOrEqual(string $value, string $field_alias): ParametrizedWhere
+    private function getWhereForLesserThanOrEqual(string $value, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         $limit_value = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
 
         return new ParametrizedWhere(
-            "$field_alias <= ?",
-            [$limit_value]
+            "$field_alias <= ? AND $tracker_ids_statement",
+            [$limit_value, ...array_values($tracker_ids_statement->values())]
         );
     }
 
-    private function getWhereForGreaterThanOrEqual(string $value, string $field_alias): ParametrizedWhere
+    private function getWhereForGreaterThanOrEqual(string $value, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         $limit_value = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
 
         return new ParametrizedWhere(
-            "$field_alias >= ?",
-            [$limit_value]
+            "$field_alias >= ? AND $tracker_ids_statement",
+            [$limit_value, ...array_values($tracker_ids_statement->values())]
         );
     }
 
@@ -158,9 +165,14 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         assert($max_wrapper instanceof SimpleValueWrapper);
         $max_value = $this->date_time_value_rounder->getCeiledTimestampFromDateTime((string) $max_wrapper->getValue());
 
+        $tracker_ids_statement = EasyStatement::open()->in(
+            'tracker.id IN (?*)',
+            array_map(static fn(Tracker $tracker) => $tracker->getId(), $parameters->trackers)
+        );
+
         return new ParametrizedWhere(
-            "$parameters->field_alias BETWEEN ? AND ?",
-            [$min_value, $max_value]
+            "$parameters->field_alias BETWEEN ? AND ? AND $tracker_ids_statement",
+            [$min_value, $max_value, ...array_values($tracker_ids_statement->values())]
         );
     }
 

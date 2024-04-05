@@ -261,6 +261,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder($this->user_manager),
                 new Metadata\AlwaysThereField\Date\DateFromWhereBuilder($date_time_value_rounder),
                 new Metadata\AlwaysThereField\Users\UsersFromWhereBuilder($this->user_manager),
+                $form_element_factory,
             ),
         );
 

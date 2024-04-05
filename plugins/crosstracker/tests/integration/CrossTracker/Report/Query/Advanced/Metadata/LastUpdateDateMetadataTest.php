@@ -39,12 +39,16 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
 {
     private PFUser $project_member;
+    private PFUser $project_admin;
     private Tracker $release_tracker;
     private Tracker $sprint_tracker;
+    private Tracker $task_tracker;
     private int $release_artifact_past_1_id;
     private int $release_artifact_today_id;
     private int $sprint_artifact_past_2_id;
     private int $sprint_artifact_today_id;
+    private int $task_artifact_past_1_id;
+    private int $task_artifact_today_id;
 
     protected function setUp(): void
     {
@@ -55,13 +59,18 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         $project              = $core_builder->buildProject();
         $project_id           = (int) $project->getID();
         $this->project_member = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->project_admin  = $core_builder->buildUser('project_admin', 'Project Admin', 'project_admin@example.com');
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
+        $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
+        $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
 
         $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
+        $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
 
         $release_lud_field_id = $tracker_builder->buildLastUpdateDateField($this->release_tracker->getId());
         $sprint_lud_field_id  = $tracker_builder->buildLastUpdateDateField($this->sprint_tracker->getId());
+        $task_lud_field_id    = $tracker_builder->buildLastUpdateDateField($this->task_tracker->getId());
 
         $tracker_builder->setReadPermission(
             $release_lud_field_id,
@@ -71,11 +80,17 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
             $sprint_lud_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
+        $tracker_builder->setReadPermission(
+            $task_lud_field_id,
+            ProjectUGroup::PROJECT_ADMIN
+        );
 
         $this->release_artifact_past_1_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
         $this->release_artifact_today_id  = $tracker_builder->buildArtifact($this->release_tracker->getId());
         $this->sprint_artifact_past_2_id  = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
         $this->sprint_artifact_today_id   = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
+        $this->task_artifact_past_1_id    = $tracker_builder->buildArtifact($this->task_tracker->getId());
+        $this->task_artifact_today_id     = $tracker_builder->buildArtifact($this->task_tracker->getId());
 
         $today_timestamp  = (new DateTime('now'))->getTimestamp();
         $past_1_timestamp = (new DateTime('2023-03-08 10:25'))->getTimestamp();
@@ -85,6 +100,8 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildLastChangeset($this->release_artifact_today_id, $today_timestamp);
         $tracker_builder->buildLastChangeset($this->sprint_artifact_past_2_id, $past_2_timestamp);
         $tracker_builder->buildLastChangeset($this->sprint_artifact_today_id, $today_timestamp);
+        $tracker_builder->buildLastChangeset($this->task_artifact_past_1_id, $past_1_timestamp);
+        $tracker_builder->buildLastChangeset($this->task_artifact_today_id, $today_timestamp);
     }
 
     /**
@@ -107,13 +124,28 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_date = '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member
         );
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_past_1_id, $this->sprint_artifact_past_2_id], $artifacts);
+    }
+
+    public function testPermissionsEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_date = '2023-03-08'",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_past_1_id, $this->sprint_artifact_past_2_id, $this->task_artifact_past_1_id], $artifacts);
     }
 
     public function testEqualDatetime(): void
@@ -152,13 +184,28 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_date != '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member
         );
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_today_id, $this->sprint_artifact_today_id], $artifacts);
+    }
+
+    public function testPermissionsNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_date != '2023-03-08'",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_today_id, $this->sprint_artifact_today_id, $this->task_artifact_today_id], $artifacts);
     }
 
     public function testNotEqualDatetime(): void
@@ -197,13 +244,28 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_date < '2023-03-09'",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member
         );
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_past_1_id, $this->sprint_artifact_past_2_id], $artifacts);
+    }
+
+    public function testPermissionsLesserThan(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_date < '2023-03-09'",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_past_1_id, $this->sprint_artifact_past_2_id, $this->task_artifact_past_1_id], $artifacts);
     }
 
     public function testLesserThanDatetime(): void
@@ -257,13 +319,28 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_date <= '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member
         );
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_past_1_id, $this->sprint_artifact_past_2_id], $artifacts);
+    }
+
+    public function testPermissionsLesserThanOrEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_date <= '2023-03-08'",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_past_1_id, $this->sprint_artifact_past_2_id, $this->task_artifact_past_1_id], $artifacts);
     }
 
     public function testLesserThanOrEqualDatetime(): void
@@ -323,13 +400,28 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_date > '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member
         );
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_today_id, $this->sprint_artifact_today_id], $artifacts);
+    }
+
+    public function testPermissionsGreaterThan(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_date > '2023-03-08'",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_today_id, $this->sprint_artifact_today_id, $this->task_artifact_today_id], $artifacts);
     }
 
     public function testGreaterThanDatetime(): void
@@ -383,7 +475,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_date >= '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member
         );
@@ -392,6 +484,25 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         self::assertEqualsCanonicalizing([
             $this->release_artifact_today_id, $this->release_artifact_past_1_id,
             $this->sprint_artifact_today_id, $this->sprint_artifact_past_2_id,
+        ], $artifacts);
+    }
+
+    public function testPermissionsGreaterThanOrEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_date >= '2023-03-08'",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(6, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_today_id, $this->release_artifact_past_1_id,
+            $this->sprint_artifact_today_id, $this->sprint_artifact_past_2_id,
+            $this->task_artifact_today_id, $this->task_artifact_past_1_id,
         ], $artifacts);
     }
 
@@ -452,13 +563,28 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_date BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member
         );
 
         self::assertCount(1, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_past_1_id], $artifacts);
+    }
+
+    public function testPermissionsBetween(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_date BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_past_1_id, $this->task_artifact_past_1_id], $artifacts);
     }
 
     public function testBetweenDate(): void
