@@ -44,16 +44,18 @@ be added.
 
 ### Contributors
 
-* Thomas Cottier
 * Aurélien Tisné
 * Fábio F. Silva
-* Florian Caillol
-* Thomas Piras
 * Clarisse Deschamps
 * Chloé Masoni
+* Guilhem Bonnefille
+* Lou-Evan Rouby
 
 ### Previous contributors (no longer active committers)
 
+* Florian Caillol
+* Thomas Piras
+* Thomas Cottier
 * Benjamin Dauton
 * Romain Lorentz
 * Benjamin Bouillot
