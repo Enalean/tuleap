@@ -6,14 +6,14 @@
         {
           "name": "mediawiki/labeled-section-transclusion",
           "type": "mediawiki-extension",
-          "version": "1.39.1",
+          "version": "1.39.7",
           "require": {
             "composer/installers": "^1.0"
           },
           "source": {
             "url": "https://github.com/wikimedia/mediawiki-extensions-LabeledSectionTransclusion.git",
             "type": "git",
-            "reference": "5181f579d20b807a975965b37cdd84c91645a2eb"
+            "reference": "5159ffb5602bed6c096381a86210451435a478d1"
           }
         }
       ]
@@ -24,14 +24,14 @@
         {
           "name": "mediawiki/mpdf",
           "type": "mediawiki-extension",
-          "version": "1.39.1",
+          "version": "1.39.7",
           "require": {
             "mpdf/mpdf": "^8.1.4"
           },
           "source": {
             "url": "https://github.com/wikimedia/mediawiki-extensions-Mpdf.git",
             "type": "git",
-            "reference": "fb6ff534526f3b9a554cc4172db6e3715adfef36"
+            "reference": "abada1d008fdfe9be840e38fd940de34eacefac6"
           }
         }
       ]
@@ -50,7 +50,7 @@
     }
   ],
   "require": {
-    "mediawiki/labeled-section-transclusion": "^1.39.1",
+    "mediawiki/labeled-section-transclusion": "^1.39.7",
     "mediawiki/mpdf": "^1.0",
     "mediawiki/tuleap-integration": "dev-REL1_39",
     "mediawiki/tuleap-skin": "dev-REL1_39",
