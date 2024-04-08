@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Always
 
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
+use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
@@ -60,42 +61,52 @@ final readonly class UsersFromWhereBuilder implements ValueWrapperVisitor
             throw new LogicException('Comparison to empty string should have been flagged as invalid for Users metadata');
         }
 
+        $tracker_ids_statement = EasyStatement::open()->in(
+            'tracker.id IN (?*)',
+            array_map(static fn(Tracker $tracker) => $tracker->getId(), $parameters->trackers)
+        );
+
         return match ($parameters->comparison->getType()) {
-            ComparisonType::Equal    => $this->getWhereForEqual((string) $value, $parameters->field_alias),
-            ComparisonType::NotEqual => $this->getWhereForNotEqual((string) $value, $parameters->field_alias),
+            ComparisonType::Equal    => $this->getWhereForEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
+            ComparisonType::NotEqual => $this->getWhereForNotEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
             ComparisonType::In,
             ComparisonType::NotIn    => throw new LogicException('In comparison expected a InValueWrapper, not a SimpleValueWrapper'),
             default                  => throw new LogicException('Other comparison types are invalid for Users metadata')
         };
     }
 
-    private function getWhereForEqual(string $value, string $field_alias): ParametrizedWhere
+    private function getWhereForEqual(string $value, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         $user = $this->user_retriever->getUserByUserName($value);
         assert($user !== null);
 
         return new ParametrizedWhere(
-            "$field_alias = ?",
-            [$user->getId()]
+            "$field_alias = ? AND $tracker_ids_statement",
+            [$user->getId(), ...array_values($tracker_ids_statement->values())]
         );
     }
 
-    private function getWhereForNotEqual(string $value, string $field_alias): ParametrizedWhere
+    private function getWhereForNotEqual(string $value, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         $user = $this->user_retriever->getUserByUserName($value);
         assert($user !== null);
 
         return new ParametrizedWhere(
-            "$field_alias != ?",
-            [$user->getId()]
+            "$field_alias != ? AND $tracker_ids_statement",
+            [$user->getId(), ...array_values($tracker_ids_statement->values())]
         );
     }
 
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
+        $tracker_ids_statement = EasyStatement::open()->in(
+            'tracker.id IN (?*)',
+            array_map(static fn(Tracker $tracker) => $tracker->getId(), $parameters->trackers)
+        );
+
         return match ($parameters->comparison->getType()) {
-            ComparisonType::In       => $this->getWhereForIn($collection_of_value_wrappers, $parameters->field_alias),
-            ComparisonType::NotIn    => $this->getWhereForNotIn($collection_of_value_wrappers, $parameters->field_alias),
+            ComparisonType::In       => $this->getWhereForIn($collection_of_value_wrappers, $parameters->field_alias, $tracker_ids_statement),
+            ComparisonType::NotIn    => $this->getWhereForNotIn($collection_of_value_wrappers, $parameters->field_alias, $tracker_ids_statement),
             ComparisonType::Equal    => throw new LogicException('Equal comparison expected a SimpleValueWrapper, not a InValueWrapper'),
             ComparisonType::NotEqual => throw new LogicException('Not Equal comparison expected a SimpleValueWrapper, not a InValueWrapper'),
             default                  => throw new LogicException('Other comparison types are invalid for Users metadata')
@@ -134,7 +145,7 @@ final readonly class UsersFromWhereBuilder implements ValueWrapperVisitor
         );
     }
 
-    private function getWhereForIn(InValueWrapper $wrapper, string $field_alias): ParametrizedWhere
+    private function getWhereForIn(InValueWrapper $wrapper, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         $values       = $this->parseValueWrappersToValues($wrapper->getValueWrappers());
         $in_condition = EasyStatement::open()->in(
@@ -143,12 +154,12 @@ final readonly class UsersFromWhereBuilder implements ValueWrapperVisitor
         );
 
         return new ParametrizedWhere(
-            $in_condition,
-            array_values($in_condition->values())
+            $in_condition . " AND $tracker_ids_statement",
+            [...array_values($in_condition->values()), ...array_values($tracker_ids_statement->values())]
         );
     }
 
-    private function getWhereForNotIn(InValueWrapper $wrapper, string $field_alias): ParametrizedWhere
+    private function getWhereForNotIn(InValueWrapper $wrapper, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         $values       = $this->parseValueWrappersToValues($wrapper->getValueWrappers());
         $in_condition = EasyStatement::open()->in(
@@ -157,8 +168,8 @@ final readonly class UsersFromWhereBuilder implements ValueWrapperVisitor
         );
 
         return new ParametrizedWhere(
-            $in_condition,
-            array_values($in_condition->values())
+            $in_condition . " AND $tracker_ids_statement",
+            [...array_values($in_condition->values()), ...array_values($tracker_ids_statement->values())]
         );
     }
 

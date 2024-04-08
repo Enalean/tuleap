@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use LogicException;
 use PFUser;
 use Tracker;
+use Tracker_FormElementFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date\DateFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users\UsersFromWhereBuilder;
@@ -50,6 +51,7 @@ final readonly class MetadataFromWhereBuilder
         private AssignedToFromWhereBuilder $assigned_to_builder,
         private DateFromWhereBuilder $date_builder,
         private UsersFromWhereBuilder $users_builder,
+        private Tracker_FormElementFactory $form_element_factory,
     ) {
     }
 
@@ -71,11 +73,51 @@ final readonly class MetadataFromWhereBuilder
             AllowedMetadata::ASSIGNED_TO      => $this->assigned_to_builder->getFromWhere($parameters),
 
             // Always there fields
-            AllowedMetadata::SUBMITTED_ON     => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, $user, self::SUBMITTED_ON_ALIAS)),
-            AllowedMetadata::LAST_UPDATE_DATE => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, $user, self::LAST_UPDATE_DATE_ALIAS)),
-            AllowedMetadata::SUBMITTED_BY     => $this->users_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, $user, self::SUBMITTED_BY_ALIAS)),
-            AllowedMetadata::LAST_UPDATE_BY   => $this->users_builder->getFromWhere(new MetadataValueWrapperParameters($comparison, $trackers, $user, self::LAST_UPDATE_BY_ALIAS)),
+            AllowedMetadata::SUBMITTED_ON     => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters(
+                $comparison,
+                $this->filterTrackersOnReadableField($trackers, Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE, $user),
+                $user,
+                self::SUBMITTED_ON_ALIAS
+            )),
+            AllowedMetadata::LAST_UPDATE_DATE => $this->date_builder->getFromWhere(new MetadataValueWrapperParameters(
+                $comparison,
+                $this->filterTrackersOnReadableField($trackers, Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE, $user),
+                $user,
+                self::LAST_UPDATE_DATE_ALIAS
+            )),
+            AllowedMetadata::SUBMITTED_BY     => $this->users_builder->getFromWhere(new MetadataValueWrapperParameters(
+                $comparison,
+                $this->filterTrackersOnReadableField($trackers, Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE, $user),
+                $user,
+                self::SUBMITTED_BY_ALIAS
+            )),
+            AllowedMetadata::LAST_UPDATE_BY   => $this->users_builder->getFromWhere(new MetadataValueWrapperParameters(
+                $comparison,
+                $this->filterTrackersOnReadableField($trackers, Tracker_FormElementFactory::FIELD_LAST_MODIFIED_BY, $user),
+                $user,
+                self::LAST_UPDATE_BY_ALIAS
+            )),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @return Tracker[]
+     */
+    private function filterTrackersOnReadableField(array $trackers, string $field_type, PFUser $user): array
+    {
+        $result = [];
+        foreach ($trackers as $tracker) {
+            $fields = $this->form_element_factory->getFormElementsByType($tracker, $field_type);
+            foreach ($fields as $field) {
+                if ($field->userCanRead($user)) {
+                    $result[] = $tracker;
+                    break;
+                }
+            }
+        }
+
+        return $result;
     }
 }

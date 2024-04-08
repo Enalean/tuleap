@@ -39,14 +39,18 @@ use UserManager;
 final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
 {
     private PFUser $project_member;
+    private PFUser $project_admin;
     private PFUser $alice;
     private Tracker $release_tracker;
     private Tracker $sprint_tracker;
+    private Tracker $task_tracker;
     private int $release_artifact_alice_id;
     private int $release_artifact_bob_id;
     private int $sprint_artifact_alice_id;
     private int $sprint_artifact_bob_id;
     private int $sprint_artifact_charles_id;
+    private int $task_artifact_alice_id;
+    private int $task_artifact_bob_id;
 
     protected function setUp(): void
     {
@@ -57,7 +61,10 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
         $project              = $core_builder->buildProject();
         $project_id           = (int) $project->getID();
         $this->project_member = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->project_admin  = $core_builder->buildUser('project_admin', 'Project Admin', 'project_admin@example.com');
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
+        $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
+        $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
 
         $this->alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
         $bob         = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
@@ -72,17 +79,23 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
 
         $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
+        $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
 
-        $release_subon_field_id = $tracker_builder->buildLastUpdateByField($this->release_tracker->getId());
-        $sprint_subon_field_id  = $tracker_builder->buildLastUpdateByField($this->sprint_tracker->getId());
+        $release_luby_field_id = $tracker_builder->buildLastUpdateByField($this->release_tracker->getId());
+        $sprint_luby_field_id  = $tracker_builder->buildLastUpdateByField($this->sprint_tracker->getId());
+        $task_luby_field_id    = $tracker_builder->buildLastUpdateByField($this->task_tracker->getId());
 
         $tracker_builder->setReadPermission(
-            $release_subon_field_id,
+            $release_luby_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
         $tracker_builder->setReadPermission(
-            $sprint_subon_field_id,
+            $sprint_luby_field_id,
             ProjectUGroup::PROJECT_MEMBERS
+        );
+        $tracker_builder->setReadPermission(
+            $task_luby_field_id,
+            ProjectUGroup::PROJECT_ADMIN
         );
 
         $this->release_artifact_alice_id  = $tracker_builder->buildArtifact($this->release_tracker->getId());
@@ -90,12 +103,16 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
         $this->sprint_artifact_alice_id   = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
         $this->sprint_artifact_bob_id     = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
         $this->sprint_artifact_charles_id = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
+        $this->task_artifact_alice_id     = $tracker_builder->buildArtifact($this->task_tracker->getId());
+        $this->task_artifact_bob_id       = $tracker_builder->buildArtifact($this->task_tracker->getId());
 
         $tracker_builder->buildLastChangeset($this->release_artifact_alice_id, 0, (int) $this->alice->getId());
         $tracker_builder->buildLastChangeset($this->release_artifact_bob_id, 0, (int) $bob->getId());
         $tracker_builder->buildLastChangeset($this->sprint_artifact_alice_id, 0, (int) $this->alice->getId());
         $tracker_builder->buildLastChangeset($this->sprint_artifact_bob_id, 0, (int) $bob->getId());
         $tracker_builder->buildLastChangeset($this->sprint_artifact_charles_id, 0, (int) $charles->getId());
+        $tracker_builder->buildLastChangeset($this->task_artifact_alice_id, 0, (int) $this->alice->getId());
+        $tracker_builder->buildLastChangeset($this->task_artifact_bob_id, 0, (int) $bob->getId());
     }
 
     /**
@@ -118,13 +135,28 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_by = 'bob'",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member,
         );
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_bob_id, $this->sprint_artifact_bob_id], $artifacts);
+    }
+
+    public function testPermissionsEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_by = 'bob'",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin,
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_bob_id, $this->sprint_artifact_bob_id, $this->task_artifact_bob_id], $artifacts);
     }
 
     public function testEqualMyself(): void
@@ -166,13 +198,32 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_by != 'bob'",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member,
         );
 
         self::assertCount(3, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_alice_id, $this->sprint_artifact_alice_id, $this->sprint_artifact_charles_id], $artifacts);
+    }
+
+    public function testPermissionsNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_by != 'bob'",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin,
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_alice_id,
+            $this->sprint_artifact_alice_id, $this->sprint_artifact_charles_id,
+            $this->task_artifact_alice_id,
+        ], $artifacts);
     }
 
     public function testNotEqualMyself(): void
@@ -211,13 +262,28 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_by IN('bob')",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member,
         );
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_bob_id, $this->sprint_artifact_bob_id], $artifacts);
+    }
+
+    public function testPermissionsIn(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_by IN('bob')",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin,
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_bob_id, $this->sprint_artifact_bob_id, $this->task_artifact_bob_id], $artifacts);
     }
 
     public function testInMyself(): void
@@ -274,13 +340,32 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
             new CrossTrackerReport(
                 1,
                 "@last_update_by NOT IN('bob')",
-                [$this->release_tracker, $this->sprint_tracker],
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
             ),
             $this->project_member,
         );
 
         self::assertCount(3, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_alice_id, $this->sprint_artifact_alice_id, $this->sprint_artifact_charles_id], $artifacts);
+    }
+
+    public function testPermissionsNotIn(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "@last_update_by NOT IN('bob')",
+                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+            ),
+            $this->project_admin,
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_alice_id,
+            $this->sprint_artifact_alice_id, $this->sprint_artifact_charles_id,
+            $this->task_artifact_alice_id,
+        ], $artifacts);
     }
 
     public function testNotInMyself(): void
