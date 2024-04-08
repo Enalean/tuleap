@@ -93,6 +93,7 @@ seed_data() {
         taskboard \
         roadmap \
         program_management \
+        artidoc \
         mediawiki_standalone
 
     load_project /usr/share/tuleap/tests/rest/_fixtures/01-private-member

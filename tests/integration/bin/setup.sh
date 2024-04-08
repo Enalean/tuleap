@@ -78,6 +78,7 @@ seed_data() {
         baseline \
         gitlab \
         roadmap \
+        artidoc \
         tracker_functions
 }
 
