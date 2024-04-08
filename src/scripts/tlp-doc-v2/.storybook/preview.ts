@@ -23,31 +23,31 @@ import { html } from "lit";
 import "@tuleap/tlp/src/scss/_reset.scss";
 import "@tuleap/tlp-styles/components/typography";
 import "@tuleap/tlp/src/scss/tlp.scss";
+import blue_theme from "@tuleap/tlp/src/scss/tlp-vars-blue.scss?inline";
+import green_theme from "@tuleap/tlp/src/scss/tlp-vars-green.scss?inline";
+import grey_theme from "@tuleap/tlp/src/scss/tlp-vars-grey.scss?inline";
+import orange_theme from "@tuleap/tlp/src/scss/tlp-vars-orange.scss?inline";
+import purple_theme from "@tuleap/tlp/src/scss/tlp-vars-purple.scss?inline";
+import red_theme from "@tuleap/tlp/src/scss/tlp-vars-red.scss?inline";
 import { dark_background, grey_background, white_background } from "./backgrounds";
 
-const getTheme = (color_name: string): Promise<string> => {
-    /* eslint-disable @typescript-eslint/consistent-type-assertions */
+const getTheme = (color_name: string): string => {
     switch (color_name) {
         case "blue":
-            return import("@tuleap/tlp/src/scss/tlp-vars-blue.scss") as unknown as Promise<string>;
+            return blue_theme;
         case "green":
-            return import("@tuleap/tlp/src/scss/tlp-vars-green.scss") as unknown as Promise<string>;
+            return green_theme;
         case "grey":
-            return import("@tuleap/tlp/src/scss/tlp-vars-grey.scss") as unknown as Promise<string>;
+            return grey_theme;
         case "orange":
-            return import(
-                "@tuleap/tlp/src/scss/tlp-vars-orange.scss"
-            ) as unknown as Promise<string>;
+            return orange_theme;
         case "purple":
-            return import(
-                "@tuleap/tlp/src/scss/tlp-vars-purple.scss"
-            ) as unknown as Promise<string>;
+            return purple_theme;
         case "red":
-            return import("@tuleap/tlp/src/scss/tlp-vars-red.scss") as unknown as Promise<string>;
+            return red_theme;
         default:
             throw Error("Unknown theme color");
     }
-    /* eslint-enable */
 };
 
 const preview: Preview = {
@@ -76,11 +76,10 @@ const preview: Preview = {
             const selected_theme = context.globals.theme;
             const defaulted_theme = selected_theme === "" ? "orange" : selected_theme;
             const doc = context.canvasElement.ownerDocument;
-            const colors = new CSSStyleSheet();
-            getTheme(defaulted_theme).then((theme_style) => {
-                colors.replaceSync(theme_style);
-                doc.adoptedStyleSheets = [colors];
-            });
+            const colors_stylesheet = new CSSStyleSheet();
+            const theme_style = getTheme(defaulted_theme);
+            colors_stylesheet.replaceSync(theme_style);
+            doc.adoptedStyleSheets = [colors_stylesheet];
             return html`${Story()}`;
         },
         (Story, context): HTMLTemplateResult => {

@@ -1,4 +1,4 @@
 playwright-report/
 playwright/.cache/
 storybook-static/
-doctor-storybook.log
+*storybook.log
