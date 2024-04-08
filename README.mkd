@@ -50,6 +50,7 @@ be added.
 * Florian Caillol
 * Thomas Piras
 * Clarisse Deschamps
+* Chloé Masoni
 
 ### Previous contributors (no longer active committers)
 
