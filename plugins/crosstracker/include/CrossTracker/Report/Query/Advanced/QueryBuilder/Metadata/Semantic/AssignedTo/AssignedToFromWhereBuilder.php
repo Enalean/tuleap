@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semant
 
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
+use PFUser;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
@@ -58,23 +59,37 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return match ($parameters->comparison->getType()) {
-            ComparisonType::Equal    => $this->getFromWhereForEqual($value_wrapper),
-            ComparisonType::NotEqual => $this->getFromWhereForNotEqual($value_wrapper, $parameters->trackers),
+            ComparisonType::Equal    => $this->getFromWhereForEqual($value_wrapper, $parameters->trackers, $parameters->user),
+            ComparisonType::NotEqual => $this->getFromWhereForNotEqual($value_wrapper, $parameters->trackers, $parameters->user),
             ComparisonType::In,
             ComparisonType::NotIn    => throw new LogicException('In comparison expected a InValueWrapper, not a SimpleValueWrapper'),
             default                  => throw new LogicException('Other comparison types are invalid for AssignedTo semantic'),
         };
     }
 
+    /**
+     * @param Tracker[] $trackers
+     */
     private function getFromWhereForEqual(
         SimpleValueWrapper $value_wrapper,
+        array $trackers,
+        PFUser $user,
     ): ParametrizedFromWhere {
         $value = $value_wrapper->getValue();
 
+        $field_ids = [];
+        foreach ($trackers as $tracker) {
+            $assigned_to_field = $tracker->getContributorField();
+            if ($assigned_to_field && $assigned_to_field->userCanRead($user)) {
+                $field_ids[] = $assigned_to_field->getId();
+            }
+        }
+
         if ($value === '') {
-            $from = <<<EOSQL
+            $field_ids_statement = EasyStatement::open()->in('empty_assigned_to_field.field_id IN (?*)', $field_ids);
+            $from                = <<<EOSQL
             INNER JOIN tracker_semantic_contributor AS empty_assigned_to_field
-                ON (empty_assigned_to_field.tracker_id = tracker_artifact.tracker_id)
+                ON (empty_assigned_to_field.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement)
             LEFT JOIN (
                 tracker_changeset_value AS changeset_value_assigned_to
                 INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_assigned_to
@@ -88,14 +103,15 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
             return new ParametrizedFromWhere(
                 $from,
                 '(changeset_value_assigned_to.changeset_id IS NULL OR tracker_changeset_value_assigned_to.bindvalue_id = ?)',
-                [],
+                $field_ids_statement->values(),
                 [Tracker_FormElement_Field_List::NONE_VALUE]
             );
         }
 
-        $from = <<<EOSQL
+        $field_ids_statement = EasyStatement::open()->in('equal_assigned_to_field.field_id IN (?*)', $field_ids);
+        $from                = <<<EOSQL
         INNER JOIN tracker_semantic_contributor AS equal_assigned_to_field
-            ON (equal_assigned_to_field.tracker_id = tracker_artifact.tracker_id)
+            ON (equal_assigned_to_field.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement)
         EOSQL;
 
         $where = <<<EOSQL
@@ -115,7 +131,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedFromWhere(
             $from,
             $where,
-            [],
+            $field_ids_statement->values(),
             [$user->getId()]
         );
     }
@@ -126,12 +142,22 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
     private function getFromWhereForNotEqual(
         SimpleValueWrapper $value_wrapper,
         array $trackers,
+        PFUser $user,
     ): ParametrizedFromWhere {
         $value = $value_wrapper->getValue();
 
-        $from = <<<EOSQL
+        $field_ids = [];
+        foreach ($trackers as $tracker) {
+            $assigned_to_field = $tracker->getContributorField();
+            if ($assigned_to_field && $assigned_to_field->userCanRead($user)) {
+                $field_ids[] = $assigned_to_field->getId();
+            }
+        }
+
+        $field_ids_statement = EasyStatement::open()->in('assigned_to_field_not_equal.field_id IN (?*)', $field_ids);
+        $from                = <<<EOSQL
         INNER JOIN tracker_semantic_contributor AS assigned_to_field_not_equal
-            ON (assigned_to_field_not_equal.tracker_id = tracker_artifact.tracker_id)
+            ON (assigned_to_field_not_equal.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement)
         LEFT JOIN (
             tracker_changeset_value AS changeset_value_assigned_to_not_equal
             INNER JOIN tracker_changeset_value_list AS changeset_value_list_assigned_to_not_equal
@@ -146,7 +172,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
             return new ParametrizedFromWhere(
                 $from,
                 'changeset_value_assigned_to_not_equal.changeset_id IS NOT NULL AND changeset_value_list_assigned_to_not_equal.bindvalue_id != ?',
-                [],
+                $field_ids_statement->values(),
                 [Tracker_FormElement_Field_List::NONE_VALUE]
             );
         }
@@ -191,7 +217,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedFromWhere(
             $from,
             $where,
-            [],
+            $field_ids_statement->values(),
             [...$tracker_ids_condition->values(), $user->getId()],
         );
     }
@@ -199,8 +225,8 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         return match ($parameters->comparison->getType()) {
-            ComparisonType::In       => $this->getFromWhereForIn($collection_of_value_wrappers),
-            ComparisonType::NotIn    => $this->getFromWhereForNotIn($collection_of_value_wrappers, $parameters->trackers),
+            ComparisonType::In       => $this->getFromWhereForIn($collection_of_value_wrappers, $parameters->trackers, $parameters->user),
+            ComparisonType::NotIn    => $this->getFromWhereForNotIn($collection_of_value_wrappers, $parameters->trackers, $parameters->user),
             ComparisonType::Equal    => throw new LogicException('Equal comparison expected a SimpleValueWrapper, not a InValueWrapper'),
             ComparisonType::NotEqual => throw new LogicException('Not Equal comparison expected a SimpleValueWrapper, not a InValueWrapper'),
             default                  => throw new LogicException('Other comparison types are invalid for AssignedTo semantic'),
@@ -239,8 +265,13 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         );
     }
 
+    /**
+     * @param Tracker[] $trackers
+     */
     private function getFromWhereForIn(
         InValueWrapper $wrapper,
+        array $trackers,
+        PFUser $user,
     ): ParametrizedFromWhere {
         $values           = $this->parseValueWrappersToValues($wrapper->getValueWrappers());
         $values_condition = EasyStatement::open()->in(
@@ -248,10 +279,19 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
             $this->mapUsernameToUserId($values)
         );
 
+        $field_ids = [];
+        foreach ($trackers as $tracker) {
+            $assigned_to_field = $tracker->getContributorField();
+            if ($assigned_to_field && $assigned_to_field->userCanRead($user)) {
+                $field_ids[] = $assigned_to_field->getId();
+            }
+        }
+        $field_ids_statement = EasyStatement::open()->in('equal_assigned_to_field.field_id IN (?*)', $field_ids);
+
         $from = <<<EOSQL
         INNER JOIN tracker_semantic_contributor AS equal_assigned_to_field
         ON (
-            equal_assigned_to_field.tracker_id = tracker_artifact.tracker_id
+            equal_assigned_to_field.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement
         )
         EOSQL;
 
@@ -271,7 +311,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedFromWhere(
             $from,
             $where,
-            [],
+            $field_ids_statement->values(),
             $values_condition->values()
         );
     }
@@ -282,6 +322,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
     private function getFromWhereForNotIn(
         InValueWrapper $wrapper,
         array $trackers,
+        PFUser $user,
     ): ParametrizedFromWhere {
         $tracker_ids_condition = EasyStatement::open()->in(
             'artifact.tracker_id IN (?*)',
@@ -291,6 +332,15 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
             )
         );
 
+        $field_ids = [];
+        foreach ($trackers as $tracker) {
+            $assigned_to_field = $tracker->getContributorField();
+            if ($assigned_to_field && $assigned_to_field->userCanRead($user)) {
+                $field_ids[] = $assigned_to_field->getId();
+            }
+        }
+        $field_ids_statement = EasyStatement::open()->in('assigned_to_field_not_equal.field_id IN (?*)', $field_ids);
+
         $values           = $this->parseValueWrappersToValues($wrapper->getValueWrappers());
         $values_condition = EasyStatement::open()->in(
             'tracker_changeset_value_assigned_to.bindvalue_id IN (?*)',
@@ -299,7 +349,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
 
         $from = <<<EOSQL
         INNER JOIN tracker_semantic_contributor AS assigned_to_field_not_equal
-            ON (assigned_to_field_not_equal.tracker_id = tracker_artifact.tracker_id)
+            ON (assigned_to_field_not_equal.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement)
         LEFT JOIN (
             tracker_changeset_value AS changeset_value_assigned_to_not_equal
             INNER JOIN tracker_changeset_value_list AS changeset_value_list_assigned_to_not_equal
@@ -335,7 +385,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedFromWhere(
             $from,
             $where,
-            [],
+            $field_ids_statement->values(),
             [...$tracker_ids_condition->values(), ...$values_condition->values()]
         );
     }

@@ -106,7 +106,7 @@ final class CrossTrackerPermissionGateTest extends \Tuleap\Test\PHPUnit\TestCase
         $permission_gate->check($user, $report);
     }
 
-    public function testItBlocksUserThatCannotAccessToColumnFields(): void
+    public function testItBlocksUserThatCannotAccessToAnyColumnFields(): void
     {
         $user    = UserTestBuilder::aUser()->build();
         $project = ProjectTestBuilder::aProject()->build();
@@ -115,7 +115,7 @@ final class CrossTrackerPermissionGateTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->method('userCanView')->willReturn(true);
 
         $column_field1 = $this->createMock(\Tracker_FormElement_Field_List::class);
-        $column_field1->method('userCanRead')->willReturn(true);
+        $column_field1->method('userCanRead')->willReturn(false);
         $column_field2 = $this->createMock(\Tracker_FormElement_Field_List::class);
         $column_field2->method('userCanRead')->willReturn(false);
         $report = $this->createMock(\Tuleap\CrossTracker\CrossTrackerReport::class);
@@ -133,7 +133,7 @@ final class CrossTrackerPermissionGateTest extends \Tuleap\Test\PHPUnit\TestCase
         $permission_gate->check($user, $report);
     }
 
-    public function testItBlocksUserThatCannotAccessToSearchFields(): void
+    public function testItBlocksUserThatCannotAccessToAnySearchFields(): void
     {
         $user    = UserTestBuilder::aUser()->build();
         $project = ProjectTestBuilder::aProject()->build();
@@ -144,7 +144,7 @@ final class CrossTrackerPermissionGateTest extends \Tuleap\Test\PHPUnit\TestCase
         $column_field = $this->createMock(\Tracker_FormElement_Field_List::class);
         $column_field->method('userCanRead')->willReturn(true);
         $search_field1 = $this->createMock(\Tracker_FormElement_Field_List::class);
-        $search_field1->method('userCanRead')->willReturn(true);
+        $search_field1->method('userCanRead')->willReturn(false);
         $search_field2 = $this->createMock(\Tracker_FormElement_Field_List::class);
         $search_field2->method('userCanRead')->willReturn(false);
         $report = $this->createMock(\Tuleap\CrossTracker\CrossTrackerReport::class);

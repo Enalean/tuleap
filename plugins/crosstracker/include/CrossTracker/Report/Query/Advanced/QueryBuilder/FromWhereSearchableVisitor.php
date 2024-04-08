@@ -47,7 +47,8 @@ final class FromWhereSearchableVisitor implements SearchableVisitor
         return $parameters->metadata_from_where_builder->getFromWhere(
             $metadata,
             $parameters->comparison,
-            $parameters->trackers
+            $parameters->trackers,
+            $parameters->user,
         );
     }
 }
