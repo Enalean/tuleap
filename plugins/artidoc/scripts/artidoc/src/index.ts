@@ -19,7 +19,7 @@
 
 import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
-import App from "./components/App.vue";
+import App from "./App.vue";
 import { createApp } from "vue";
 
 document.addEventListener("DOMContentLoaded", async () => {

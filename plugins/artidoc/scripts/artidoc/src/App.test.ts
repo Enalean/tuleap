@@ -19,7 +19,7 @@
 
 import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import * as rest from "../helpers/rest-querier";
+import * as rest from "./helpers/rest-querier";
 import { okAsync } from "neverthrow";
 import { createGettext } from "vue3-gettext";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
