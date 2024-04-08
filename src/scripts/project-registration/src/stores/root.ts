@@ -92,6 +92,7 @@ export const useStore = defineStore("root", {
         ): Promise<ProjectReference | ProjectArchiveReference> {
             let response;
             try {
+                this.error = null;
                 this.setIsCreatingProject(true);
                 response = await postProject(project_properties);
                 if (
@@ -105,6 +106,7 @@ export const useStore = defineStore("root", {
                         response.upload_href,
                         router,
                         this.setIsCreatingProject,
+                        this.setErrorMessage,
                     );
                 }
             } catch (error) {
@@ -164,6 +166,10 @@ export const useStore = defineStore("root", {
                 this.error = "Internal server error";
                 throw e;
             }
+        },
+
+        setErrorMessage(error: string): void {
+            this.error = error;
         },
 
         resetError(): void {
