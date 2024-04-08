@@ -24,22 +24,12 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Docman_ItemFactory;
 use Luracast\Restler\RestException;
-use Tracker_FormElementFactory;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
-use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\RESTLogger;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
-use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use UserManager;
 
 final class ArtidocResource extends AuthenticatedResource
@@ -97,37 +87,17 @@ final class ArtidocResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $artifact_factory = \Tracker_ArtifactFactory::instance();
-        $dao              = new ArtidocDao();
-        $retriever        = new ArtidocRetriever(
+        $dao       = new ArtidocDao();
+        $retriever = new ArtidocRetriever(
             \ProjectManager::instance(),
             $dao,
             new Docman_ItemFactory(),
             $plugin,
         );
 
-        $formelement_factory = Tracker_FormElementFactory::instance();
-
-        $artifact_representation_builder = new ArtifactRepresentationBuilder(
-            $formelement_factory,
-            $artifact_factory,
-            new TypeDao(),
-            new ChangesetRepresentationBuilder(
-                UserManager::instance(),
-                $formelement_factory,
-                new CommentRepresentationBuilder(
-                    CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
-                ),
-                new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
-            )
-        );
-
         $transformer = new RawSectionsToRepresentationTransformer(
             new \Tracker_ArtifactDao(),
             \Tracker_ArtifactFactory::instance(),
-            $artifact_representation_builder,
-            RawSectionsToRepresentationTransformer::DEFAULT_TRACKER_REPRESENTATION,
-            RawSectionsToRepresentationTransformer::DEFAULT_STATUS_VALUE_REPRESENTATION,
         );
 
         return new PaginatedArtidocSectionRepresentationCollectionBuilder($retriever, $dao, $transformer);

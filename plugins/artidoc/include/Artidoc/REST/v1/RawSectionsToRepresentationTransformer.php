@@ -22,51 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tracker;
+use Tracker_Semantic_Description;
+use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
-use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
-use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
 final readonly class RawSectionsToRepresentationTransformer implements TransformRawSectionsToRepresentation
 {
     public const DEFAULT_TRACKER_REPRESENTATION      = null;
     public const DEFAULT_STATUS_VALUE_REPRESENTATION = null;
 
-    /**
-     * @var \Closure(Tracker): TrackerRepresentation
-     */
-    private \Closure $get_tracker_representation;
-    /**
-     * @var \Closure(Artifact, \PFUser): StatusValueRepresentation
-     */
-    private \Closure $get_status_value_representation;
-
-    /**
-     * @param ?\Closure(Tracker): TrackerRepresentation $get_tracker_representation
-     * @param ?\Closure(Artifact, \PFUser): StatusValueRepresentation $get_status_value_representation
-     */
     public function __construct(
         private \Tracker_ArtifactDao $artifact_dao,
         private \Tracker_ArtifactFactory $artifact_factory,
-        private ArtifactRepresentationBuilder $artifact_representation_builder,
-        ?\Closure $get_tracker_representation,
-        ?\Closure $get_status_value_representation,
     ) {
-        $this->get_tracker_representation      = $get_tracker_representation ?? MinimalTrackerRepresentation::build(...);
-        $this->get_status_value_representation = $get_status_value_representation ?? StatusValueRepresentation::buildFromArtifact(...);
     }
 
     public function getRepresentation(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
     {
         return $this->instantiateArtifacts($raw_sections, $user)
-            ->andThen(fn (array $artifacts) => $this->instantiateSections($artifacts, $user))
+            ->andThen(fn (array $artifacts) => $this->instantiateSections($raw_sections, $artifacts, $user))
             ->map(
                 /**
                  * @param list<ArtidocSectionRepresentation> $sections
@@ -102,17 +82,45 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
      * @param list<Artifact> $artifacts
      * @return Ok<list<ArtidocSectionRepresentation>>|Err<Fault>
      */
-    private function instantiateSections(array $artifacts, \PFUser $user): Ok|Err
+    private function instantiateSections(PaginatedRawSections $raw_sections, array $artifacts, \PFUser $user): Ok|Err
     {
         $sections = [];
         foreach ($artifacts as $artifact) {
+            $last_changeset = $artifact->getLastChangeset();
+            if ($last_changeset === null) {
+                return Result::err(Fault::fromMessage("No changeset for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
+            }
+
+            $title_field = Tracker_Semantic_Title::load($artifact->getTracker())->getField();
+            if (! $title_field) {
+                return Result::err(Fault::fromMessage("There is no title field for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
+            }
+            if (! $title_field->userCanRead($user)) {
+                return Result::err(Fault::fromMessage("User cannot read title of artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
+            }
+
+            $title_field_value = $last_changeset->getValue($title_field);
+            $title             = $title_field_value instanceof \Tracker_Artifact_ChangesetValue_Text
+                ? $title_field_value->getContentAsText()
+                : '';
+
+            $description_field = Tracker_Semantic_Description::load($artifact->getTracker())->getField();
+            if (! $description_field) {
+                return Result::err(Fault::fromMessage("There is no description field for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
+            }
+            if (! $description_field->userCanRead($user)) {
+                return Result::err(Fault::fromMessage("User cannot read title of artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
+            }
+
+            $description = $description_field->getFullRESTValue($user, $last_changeset) ?: '';
+            if (! $description) {
+                return Result::err(Fault::fromMessage("There is no description data for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
+            }
+
             $sections[] = new ArtidocSectionRepresentation(
-                $this->artifact_representation_builder->getArtifactRepresentationWithFieldValues(
-                    $user,
-                    $artifact,
-                    call_user_func($this->get_tracker_representation, $artifact->getTracker()),
-                    call_user_func($this->get_status_value_representation, $artifact, $user),
-                )
+                ArtifactReference::build($artifact),
+                $title,
+                $description,
             );
         }
 
