@@ -26,6 +26,7 @@ use Docman_ItemFactory;
 use Luracast\Restler\RestException;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
+use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -92,7 +93,7 @@ final class ArtidocResource extends AuthenticatedResource
             \ProjectManager::instance(),
             $dao,
             new Docman_ItemFactory(),
-            $plugin,
+            new DocumentServiceFromAllowedProjectRetriever($plugin),
         );
 
         $transformer = new RawSectionsToRepresentationTransformer(

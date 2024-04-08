@@ -22,17 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
-use DocmanPlugin;
 use Project_NotFoundException;
-use ServiceTracker;
-use trackerPlugin;
 use Tuleap\Docman\Item\GetItemFromRow;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Plugin\IsProjectAllowedToUsePlugin;
 use Tuleap\Project\ProjectByIDFactory;
 
 final class ArtidocRetriever implements RetrieveArtidoc
@@ -41,7 +37,7 @@ final class ArtidocRetriever implements RetrieveArtidoc
         private ProjectByIDFactory $project_manager,
         private SearchArtidocDocument $dao,
         private GetItemFromRow $item_factory,
-        private IsProjectAllowedToUsePlugin $plugin,
+        private DocumentServiceFromAllowedProjectRetriever $service_from_allowed_project_retriever,
     ) {
     }
 
@@ -68,20 +64,8 @@ final class ArtidocRetriever implements RetrieveArtidoc
             return Result::err(Fault::fromThrowableWithMessage($e, 'Project is not valid'));
         }
 
-        if (! $this->plugin->isAllowed((int) $project->getID())) {
-            return Result::err(Fault::fromMessage('Project is not allowed to use artidoc'));
-        }
-
-
-        if (! $project->getService(trackerPlugin::SERVICE_SHORTNAME) instanceof ServiceTracker) {
-            return Result::err(Fault::fromMessage('Project does not have tracker service enabled'));
-        }
-
-        $service = $project->getService(DocmanPlugin::SERVICE_SHORTNAME);
-        if (! $service instanceof ServiceDocman) {
-            return Result::err(Fault::fromMessage('Project does not have docman service enabled'));
-        }
-
-        return Result::ok(new ArtidocDocumentInformation($item, $service));
+        return $this->service_from_allowed_project_retriever
+            ->getDocumentServiceFromAllowedProject($project)
+            ->map(static fn(ServiceDocman $service) => new ArtidocDocumentInformation($item, $service));
     }
 }

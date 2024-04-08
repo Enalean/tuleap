@@ -22,12 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Tree;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Document\Config\Project\IRetrieveCriteria;
 
 final class ListOfSearchCriterionPresenterBuilder
 {
-    public function __construct(private IRetrieveCriteria $criteria_dao)
+    public function __construct(private IRetrieveCriteria $criteria_dao, private readonly EventDispatcherInterface $dispatcher)
     {
     }
 
@@ -174,18 +175,16 @@ final class ListOfSearchCriterionPresenterBuilder
      */
     private function getTypeOptions(\Project $project): array
     {
-        $type_options = [
-            new SearchCriterionListOptionPresenter('folder', dgettext('tuleap-document', 'Folder')),
-            new SearchCriterionListOptionPresenter('file', dgettext('tuleap-document', 'File')),
-            new SearchCriterionListOptionPresenter('embedded', dgettext('tuleap-document', 'Embedded file')),
-        ];
+        $collection = (new TypeOptionsCollection($project))
+            ->addOption(new SearchCriterionListOptionPresenter('folder', dgettext('tuleap-document', 'Folder')))
+            ->addOption(new SearchCriterionListOptionPresenter('file', dgettext('tuleap-document', 'File')))
+            ->addOption(new SearchCriterionListOptionPresenter('embedded', dgettext('tuleap-document', 'Embedded file')))
+            ->addOption(new SearchCriterionListOptionPresenter('empty', 'Empty document'));
 
         if ($project->usesWiki()) {
-            $type_options[] = new SearchCriterionListOptionPresenter('wiki', 'Wiki page');
+            $collection->addOptionAfter('embedded', new SearchCriterionListOptionPresenter('wiki', 'Wiki page'));
         }
 
-        $type_options[] = new SearchCriterionListOptionPresenter('empty', 'Empty document');
-
-        return $type_options;
+        return $this->dispatcher->dispatch($collection)->getOptions();
     }
 }

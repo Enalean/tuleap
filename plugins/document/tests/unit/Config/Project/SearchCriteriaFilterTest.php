@@ -26,6 +26,7 @@ use Docman_MetadataFactory;
 use Docman_SettingsBo;
 use Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class SearchCriteriaFilterTest extends TestCase
 {
@@ -34,7 +35,7 @@ final class SearchCriteriaFilterTest extends TestCase
     protected function setUp(): void
     {
         $this->search_criteria_filter = new SearchCriteriaFilter(
-            new ListOfSearchCriterionPresenterBuilder($this->searchCriteriaDAOStub()),
+            new ListOfSearchCriterionPresenterBuilder($this->searchCriteriaDAOStub(), EventDispatcherStub::withIdentityCallback()),
             $this->searchCriteriaDAOStub()
         );
     }

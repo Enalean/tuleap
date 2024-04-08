@@ -27,6 +27,7 @@ use Docman_FilterGlobalText;
 use Docman_FilterText;
 use Docman_Report;
 use Luracast\Restler\RestException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
@@ -51,6 +52,7 @@ class SearchReportBuilder
         private AlwaysThereColumnRetriever $always_there_column_retriever,
         private ColumnReportAugmenter $column_report_builder,
         private \UserManager $user_manager,
+        private EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -112,10 +114,14 @@ class SearchReportBuilder
                 'link'     => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
                 'folder'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
             ];
-            if (! isset($human_readable_value_to_internal_value[$property->value])) {
-                throw new RestException(400, 'Unknown type ' . $property->value);
+            if (isset($human_readable_value_to_internal_value[$property->value])) {
+                $type_filter->setValue($human_readable_value_to_internal_value[$property->value]);
+            } else {
+                $filter_item_other_type_provider = $this->dispatcher
+                    ->dispatch(new FilterItemOtherTypeProvider($type_filter, $property->value));
+                $type_filter                     = $filter_item_other_type_provider
+                    ->getExternalFilter();
             }
-            $type_filter->setValue($human_readable_value_to_internal_value[$property->value]);
             $report->addFilter($type_filter);
         }
     }

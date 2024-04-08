@@ -114,9 +114,65 @@ describe("get-search-props-from-route", () => {
             const { query } = getSearchPropsFromRoute(
                 { params: {}, query: { type: "wiki" } } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                [],
+                [
+                    {
+                        type: "list",
+                        name: "type",
+                        label: "Type",
+                        options: [
+                            {
+                                value: "folder",
+                                label: "Folder",
+                            },
+                            {
+                                value: "wiki",
+                                label: "Wiki",
+                            },
+                        ],
+                    },
+                ],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ type: "wiki" }));
+        });
+
+        it("should not accept type parameter if not present in type allowed options", () => {
+            const { query } = getSearchPropsFromRoute(
+                {
+                    params: {},
+                    query: { type: "whatever" },
+                } as unknown as RouteLocationNormalizedLoaded,
+                101,
+                [
+                    {
+                        type: "list",
+                        name: "type",
+                        label: "Type",
+                        options: [
+                            {
+                                value: "folder",
+                                label: "Folder",
+                            },
+                            {
+                                value: "wiki",
+                                label: "Wiki",
+                            },
+                        ],
+                    },
+                ],
+            );
+            expect(query).toStrictEqual(buildAdvancedSearchParams({ type: "" }));
+        });
+
+        it("should not accept type parameter if type is not present in criteria", () => {
+            const { query } = getSearchPropsFromRoute(
+                {
+                    params: {},
+                    query: { type: "whatever" },
+                } as unknown as RouteLocationNormalizedLoaded,
+                101,
+                [],
+            );
+            expect(query).toStrictEqual(buildAdvancedSearchParams({ type: "" }));
         });
 
         it("should default to no type if user starts to update the url parameter by hand", () => {

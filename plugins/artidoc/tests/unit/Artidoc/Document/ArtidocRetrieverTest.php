@@ -59,7 +59,7 @@ final class ArtidocRetrieverTest extends TestCase
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             SearchArtidocDocumentStub::withoutResults(),
             GetItemFromRowStub::withVoid(),
-            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
         self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
@@ -71,7 +71,7 @@ final class ArtidocRetrieverTest extends TestCase
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             SearchArtidocDocumentStub::withResults(['group_id' => self::PROJECT_ID]),
             GetItemFromRowStub::withVoid(),
-            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
         self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
@@ -83,7 +83,7 @@ final class ArtidocRetrieverTest extends TestCase
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             SearchArtidocDocumentStub::withResults(['group_id' => self::PROJECT_ID]),
             GetItemFromRowStub::withNull(),
-            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
         self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
@@ -97,7 +97,7 @@ final class ArtidocRetrieverTest extends TestCase
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new \Docman_File($row)),
-            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
         self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
@@ -113,7 +113,7 @@ final class ArtidocRetrieverTest extends TestCase
             ProjectByIDFactoryStub::buildWithoutProject(),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new ArtidocDocument($row)),
-            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
         self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
@@ -129,7 +129,7 @@ final class ArtidocRetrieverTest extends TestCase
             ProjectByIDFactoryStub::buildWithoutProject(),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new ArtidocDocument($row)),
-            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
         self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
@@ -145,7 +145,7 @@ final class ArtidocRetrieverTest extends TestCase
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new ArtidocDocument($row)),
-            IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsNotAllowed()),
         );
 
         self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
@@ -165,7 +165,7 @@ final class ArtidocRetrieverTest extends TestCase
             ProjectByIDFactoryStub::buildWith($project),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new ArtidocDocument($row)),
-            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
         self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
@@ -190,7 +190,7 @@ final class ArtidocRetrieverTest extends TestCase
             ProjectByIDFactoryStub::buildWith($project),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new ArtidocDocument($row)),
-            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
         self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
@@ -221,7 +221,7 @@ final class ArtidocRetrieverTest extends TestCase
             ProjectByIDFactoryStub::buildWith($project),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem($item),
-            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
         $result = $retriever->retrieveArtidoc(123, $this->user);

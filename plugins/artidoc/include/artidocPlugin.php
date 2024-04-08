@@ -24,12 +24,16 @@ use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
+use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
+use Tuleap\Docman\REST\v1\Folders\FilterItemOtherTypeProvider;
 use Tuleap\Docman\REST\v1\GetOtherDocumentItemRepresentationWrapper;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationOtherType;
 use Tuleap\Document\Tree\OtherItemTypeDefinition;
 use Tuleap\Document\Tree\OtherItemTypes;
+use Tuleap\Document\Tree\SearchCriterionListOptionPresenter;
+use Tuleap\Document\Tree\TypeOptionsCollection;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\DispatchableWithRequest;
@@ -84,7 +88,7 @@ class ArtidocPlugin extends Plugin
                 ProjectManager::instance(),
                 new ArtidocDao(),
                 new Docman_ItemFactory(),
-                $this,
+                new DocumentServiceFromAllowedProjectRetriever($this),
             ),
             BackendLogger::getDefaultLogger(),
         );
@@ -127,5 +131,27 @@ class ArtidocPlugin extends Plugin
     public function restResources(array $params): void
     {
         (new ResourcesInjector())->populate($params['restler']);
+    }
+
+    #[ListeningToEventClass]
+    public function typeOptionsCollection(TypeOptionsCollection $collection): void
+    {
+        (new DocumentServiceFromAllowedProjectRetriever($this))
+            ->getDocumentServiceFromAllowedProject($collection->project)
+            ->match(
+                fn () => $collection->addOptionAfter(
+                    'folder',
+                    new SearchCriterionListOptionPresenter('artidoc', dgettext('tuleap-artidoc', 'Artidoc'))
+                ),
+                static fn () => null
+            );
+    }
+
+    #[ListeningToEventClass]
+    public function filterItemOtherTypeProvider(FilterItemOtherTypeProvider $provider): void
+    {
+        if ($provider->name === 'artidoc') {
+            $provider->setValue('artidoc');
+        }
     }
 }
