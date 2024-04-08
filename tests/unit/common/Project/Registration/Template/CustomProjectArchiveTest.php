@@ -27,15 +27,15 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class CustomProjectArchiveFeatureFlagTest extends TestCase
+final class CustomProjectArchiveTest extends TestCase
 {
     use ForgeConfigSandbox;
 
     public function testUserCanCreateProjectFromCustomTemplate(): void
     {
-        ForgeConfig::setFeatureFlag(CustomProjectArchiveFeatureFlag::FEATURE_FLAG_KEY, '1');
+        ForgeConfig::set(CustomProjectArchive::CONFIG_KEY, '0');
 
-        $verifier = new CustomProjectArchiveFeatureFlag(
+        $verifier = new CustomProjectArchive(
             new class implements IsAsyncTaskProcessingAvailable {
                 public function canProcessAsyncTasks(): bool
                 {
@@ -49,9 +49,9 @@ final class CustomProjectArchiveFeatureFlagTest extends TestCase
 
     public function testUserCannotCreateProjectFromCustomTemplate(): void
     {
-        ForgeConfig::setFeatureFlag(CustomProjectArchiveFeatureFlag::FEATURE_FLAG_KEY, '0');
+        ForgeConfig::set(CustomProjectArchive::CONFIG_KEY, '1');
 
-        $verifier = new CustomProjectArchiveFeatureFlag(
+        $verifier = new CustomProjectArchive(
             new class implements IsAsyncTaskProcessingAvailable {
                 public function canProcessAsyncTasks(): bool
                 {
@@ -63,11 +63,9 @@ final class CustomProjectArchiveFeatureFlagTest extends TestCase
         self::assertFalse($verifier->canCreateFromCustomArchive());
     }
 
-    public function testCreateProjectFromCustomTemplateHasFeatureFlagOnButNoWorkerIsAvailable(): void
+    public function testCreateProjectFromCustomTemplateWhenNoWorkerIsAvailable(): void
     {
-        ForgeConfig::setFeatureFlag(CustomProjectArchiveFeatureFlag::FEATURE_FLAG_KEY, '1');
-
-        $verifier = new CustomProjectArchiveFeatureFlag(
+        $verifier = new CustomProjectArchive(
             new class implements IsAsyncTaskProcessingAvailable {
                 public function canProcessAsyncTasks(): bool
                 {

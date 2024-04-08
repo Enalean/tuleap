@@ -83,7 +83,7 @@ use Tuleap\Project\Registration\ProjectRegistrationCheckerBlockErrorSet;
 use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
 use Tuleap\Project\Registration\ProjectRegistrationRESTChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
-use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
+use Tuleap\Project\Registration\Template\CustomProjectArchive;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\NoTemplateProvidedFault;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -295,7 +295,7 @@ class ProjectResource extends AuthenticatedResource
                 ),
                 $this->getBackendLogger(),
                 $this->getURLVerification(),
-                new CustomProjectArchiveFeatureFlag(new WorkerAvailability()),
+                new CustomProjectArchive(new WorkerAvailability()),
             );
 
             $creation_data = $creation_data_post_project_builder->buildProjectCreationDataFromPOSTRepresentation(

@@ -21,7 +21,6 @@
 
 use ParagonIE\EasyDB\Factory;
 use Tuleap\DB\DBConfig;
-use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -78,9 +77,3 @@ foreach ($phpwiki_fixtures as $phpwiki_fixture) {
 // Avoid 3rd party service call (IHaveBeenPwned) during tests
 $db = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
 $db->run('DELETE FROM password_configuration');
-
-$sql = sprintf(
-    "INSERT INTO forgeconfig (name, value) VALUES ('feature_flag_%s', 1)",
-    CustomProjectArchiveFeatureFlag::FEATURE_FLAG_KEY
-);
-$db->run($sql);

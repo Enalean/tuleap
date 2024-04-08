@@ -43,7 +43,7 @@ use Tuleap\Log\LogToGraylog2;
 use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
+use Tuleap\Project\Registration\Template\CustomProjectArchive;
 use Tuleap\Queue\WorkerAvailability;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Request\RequestInstrumentation;
@@ -90,7 +90,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         FilteredOutboundHTTPResponseAlerter::class,
         RequestInstrumentation::class,
         WorkerAvailability::class,
-        CustomProjectArchiveFeatureFlag::class,
+        CustomProjectArchive::class,
         ThereIsAnOngoingTransactionChecker::class,
     ];
 

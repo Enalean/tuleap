@@ -31,7 +31,6 @@ use SimpleXMLElement;
 use Tuleap\Glyph\Glyph;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
-use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\REST\v1\Project\ProjectCreationDataPOSTProjectBuilder;
 use Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation;
@@ -223,8 +222,6 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
     public function testItBuildsFromArchive(): void
     {
         $post_representation = ProjectPostRepresentation::build(101);
-
-        \ForgeConfig::setFeatureFlag(CustomProjectArchiveFeatureFlag::FEATURE_FLAG_KEY, '1');
 
         $post_representation->template_id  = null;
         $post_representation->shortname    = 'test';
