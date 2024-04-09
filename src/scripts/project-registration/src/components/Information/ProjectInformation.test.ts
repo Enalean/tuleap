@@ -26,13 +26,15 @@ import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
-import VueRouter from "vue-router";
+import type VueRouter from "vue-router";
 import * as location_helper from "../../helpers/location-helper";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import EventBus from "../../helpers/event-bus";
 import { useStore } from "../../stores/root";
 import type { ProjectArchiveTemplateData, TemplateData } from "../../type";
+import * as router from "../../helpers/use-router";
+import { ACCESS_PRIVATE, ACCESS_PUBLIC } from "../../constant";
 
 let has_error = false;
 let are_restricted_users_allowed = false;
@@ -41,37 +43,22 @@ let is_template_selected = true;
 const create_project_mock = jest.fn();
 const create_project_from_archive_mock = jest.fn();
 describe("ProjectInformation -", () => {
-    let router: VueRouter;
+    let push_route_spy: jest.Mock;
     beforeEach(() => {
         has_error = false;
         are_restricted_users_allowed = false;
         is_project_approval_required = false;
         is_template_selected = true;
-        router = new VueRouter({
-            routes: [
-                {
-                    path: "/new",
-                    name: "template",
-                },
-                {
-                    path: "/information",
-                    name: "information",
-                },
-                {
-                    path: "/approval",
-                    name: "approval",
-                },
-                {
-                    path: "/from-archive-creation",
-                    name: "from-archive-creation",
-                },
-            ],
+        push_route_spy = jest.fn();
+
+        jest.spyOn(router, "useRouter").mockImplementation(() => {
+            return { push: push_route_spy } as unknown as VueRouter;
         });
     });
 
     async function getWrapper(
         selected_company_template: TemplateData | ProjectArchiveTemplateData | null = null,
-    ): Promise<Wrapper<ProjectInformation>> {
+    ): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
                 is_template_selected,
@@ -102,7 +89,6 @@ describe("ProjectInformation -", () => {
         return shallowMount(ProjectInformation, {
             localVue: await createProjectRegistrationLocalVue(),
             pinia,
-            router,
         });
     }
 
@@ -134,31 +120,8 @@ describe("ProjectInformation -", () => {
 
     it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
         is_template_selected = false;
-        const wrapper = await getWrapper();
-        expect(wrapper.vm.$route.name).toBe("template");
-    });
-
-    it("build the trovecat object", async () => {
-        const wrapper = await getWrapper();
-        expect(wrapper.vm.$data.trove_cats).toStrictEqual([]);
-
-        EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 10 });
-        wrapper.vm.$nextTick();
-        expect(wrapper.vm.$data.trove_cats).toStrictEqual([{ category_id: 1, value_id: 10 }]);
-
-        EventBus.$emit("choose-trove-cat", { category_id: 2, value_id: 20 });
-        wrapper.vm.$nextTick();
-        expect(wrapper.vm.$data.trove_cats).toStrictEqual([
-            { category_id: 1, value_id: 10 },
-            { category_id: 2, value_id: 20 },
-        ]);
-
-        EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 100 });
-        wrapper.vm.$nextTick();
-        expect(wrapper.vm.$data.trove_cats).toStrictEqual([
-            { category_id: 1, value_id: 100 },
-            { category_id: 2, value_id: 20 },
-        ]);
+        await getWrapper();
+        expect(push_route_spy).toHaveBeenCalledWith("new");
     });
 
     it(`creates the new project and redirect user on his own personal dashboard`, async () => {
@@ -167,14 +130,37 @@ describe("ProjectInformation -", () => {
         const wrapper = await getWrapper();
         const store = useStore();
 
+        EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 10 });
+        wrapper.vm.$nextTick();
+        EventBus.$emit("choose-trove-cat", { category_id: 2, value_id: 20 });
+        wrapper.vm.$nextTick();
+
+        EventBus.$emit("update-field-list", { field_id: 1, value: "test value" });
+        wrapper.vm.$nextTick();
+        EventBus.$emit("update-field-list", { field_id: 2, value: "other value" });
+        wrapper.vm.$nextTick();
+        EventBus.$emit("update-project-visibility", { new_visibility: ACCESS_PUBLIC });
+        wrapper.vm.$nextTick();
+        EventBus.$emit("update-project-name", {
+            slugified_name: "this-is-a-test",
+            name: "this is a test",
+        });
+        wrapper.vm.$nextTick();
+
         const expected_project_properties = {
             shortname: "this-is-a-test",
             label: "this is a test",
             is_public: true,
             description: "",
-            categories: [],
+            categories: [
+                { category_id: 1, value_id: 10 },
+                { category_id: 2, value_id: 20 },
+            ],
             xml_template_name: "scrum",
-            fields: [],
+            fields: [
+                { field_id: 1, value: "test value" },
+                { field_id: 2, value: "other value" },
+            ],
             allow_restricted: false,
         };
 
@@ -204,14 +190,14 @@ describe("ProjectInformation -", () => {
         is_project_approval_required = true;
         are_restricted_users_allowed = true;
         const wrapper = await getWrapper();
-        wrapper.vm.$data.selected_visibility = "private";
-        await wrapper.vm.$nextTick();
+        EventBus.$emit("update-project-visibility", { new_visibility: ACCESS_PRIVATE });
+        wrapper.vm.$nextTick();
 
         wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$route.name).toBe("approval");
+        expect(push_route_spy).toHaveBeenCalledWith("approval");
     });
 
     it(`Create a new project when project is created from an archive`, async () => {
@@ -224,32 +210,12 @@ describe("ProjectInformation -", () => {
         };
         const wrapper = await getWrapper(selected_company_template);
         const store = useStore();
-        wrapper.vm.$data.selected_visibility = "private";
-        await wrapper.vm.$nextTick();
+        EventBus.$emit("update-project-visibility", { new_visibility: ACCESS_PRIVATE });
+        wrapper.vm.$nextTick();
 
         wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
 
         expect(store.createProjectFromArchive).toHaveBeenCalled();
         expect(store.createProject).not.toHaveBeenCalled();
-    });
-
-    it("build the field list object", async () => {
-        const wrapper = await getWrapper();
-        expect(wrapper.vm.$data.field_list).toStrictEqual([]);
-
-        EventBus.$emit("update-field-list", { field_id: 1, value: "test value" });
-        expect(wrapper.vm.$data.field_list).toStrictEqual([{ field_id: 1, value: "test value" }]);
-
-        EventBus.$emit("update-field-list", { field_id: 2, value: "other value" });
-        expect(wrapper.vm.$data.field_list).toStrictEqual([
-            { field_id: 1, value: "test value" },
-            { field_id: 2, value: "other value" },
-        ]);
-
-        EventBus.$emit("update-field-list", { field_id: 1, value: "updated value" });
-        expect(wrapper.vm.$data.field_list).toStrictEqual([
-            { field_id: 1, value: "updated value" },
-            { field_id: 2, value: "other value" },
-        ]);
     });
 });
