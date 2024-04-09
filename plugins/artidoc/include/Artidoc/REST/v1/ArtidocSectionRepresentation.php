@@ -22,14 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
 /**
  * @psalm-immutable
  */
 final readonly class ArtidocSectionRepresentation
 {
-    public function __construct(public ArtifactRepresentation $artifact)
-    {
+    public function __construct(
+        public ArtifactReference $artifact,
+        public string $title,
+        public ArtifactTextFieldValueRepresentation $description,
+    ) {
     }
 }
