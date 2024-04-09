@@ -124,7 +124,8 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
 
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
-        return $this->visitDocument($item, $params);
+        // We don't want to support other type of documents in the legacy interface
+        return '';
     }
 
     public function visitWiki(Docman_Wiki $item, $params = [])
