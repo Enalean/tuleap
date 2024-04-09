@@ -18,20 +18,18 @@
   -
   -->
 <template>
-    <div class="tlp-framed">
-        <div class="tlp-pane">
-            <section class="empty-state-page">
-                <div class="empty-state-illustration">
-                    <slot name="empty-state-image"></slot>
-                </div>
-                <h1 class="empty-state-title">
-                    {{ title }}
-                </h1>
-                <p class="empty-state-text">
-                    {{ message }}
-                </p>
-            </section>
-        </div>
+    <div class="tlp-pane">
+        <section class="empty-state-page">
+            <div class="empty-state-illustration">
+                <slot name="empty-state-image"></slot>
+            </div>
+            <h1 class="empty-state-title">
+                {{ title }}
+            </h1>
+            <p class="empty-state-text">
+                {{ message }}
+            </p>
+        </section>
     </div>
 </template>
 

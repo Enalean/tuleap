@@ -6,6 +6,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/project-background": "workspace:^",
     "@tuleap/core-rest-api-types": "workspace:^",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
