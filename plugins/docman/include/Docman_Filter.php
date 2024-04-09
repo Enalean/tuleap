@@ -25,6 +25,8 @@ class Docman_Filter
 {
     public $value;
     public Docman_Metadata $md;
+    private ?string $alternate_value = null;
+
     public function __construct(Docman_Metadata $md)
     {
         $this->value = \null;
@@ -99,5 +101,15 @@ class Docman_Filter
             }
         }
         return \false;
+    }
+
+    public function getAlternateValue(): ?string
+    {
+        return $this->alternate_value;
+    }
+
+    public function setAlternateValue(?string $alternate_value): void
+    {
+        $this->alternate_value = $alternate_value;
     }
 }

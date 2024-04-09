@@ -42,6 +42,7 @@ use Tuleap\Docman\Search\SearchSortPropertyMapper;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class SearchReportBuilderTest extends TestCase
 {
@@ -87,6 +88,7 @@ final class SearchReportBuilderTest extends TestCase
             $always_there_column_retriever,
             $column_report_builder,
             $user_manager,
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         $custom_text_property = new \Docman_Metadata();

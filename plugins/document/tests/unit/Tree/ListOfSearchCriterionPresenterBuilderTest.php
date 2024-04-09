@@ -27,6 +27,7 @@ use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Document\Config\Project\IRetrieveCriteria;
 use Tuleap\Document\Config\Project\SearchCriteriaDao;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 {
@@ -45,7 +46,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao(), EventDispatcherStub::withIdentityCallback()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(3, $criteria);
         self::assertEquals('id', $criteria[0]->name);
@@ -66,12 +67,20 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(
+            new SearchCriteriaDao(),
+            EventDispatcherStub::withCallback(static function (object $event): object {
+                if ($event instanceof TypeOptionsCollection) {
+                    $event->addOptionAfter('folder', new SearchCriterionListOptionPresenter('external', 'External'));
+                }
+                return $event;
+            }),
+        ))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(3, $criteria);
         self::assertEquals('type', $criteria[1]->name);
         self::assertEquals(
-            ['folder', 'file', 'embedded', 'wiki', 'empty'],
+            ['folder', 'external', 'file', 'embedded', 'wiki', 'empty'],
             array_map(
                 static fn(SearchCriterionListOptionPresenter $option): string => $option->value,
                 $criteria[1]->options
@@ -94,7 +103,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao(), EventDispatcherStub::withIdentityCallback()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(3, $criteria);
         self::assertEquals('type', $criteria[1]->name);
@@ -122,7 +131,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao(), EventDispatcherStub::withIdentityCallback()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(3, $criteria);
         self::assertEquals('filename', $criteria[2]->name);
@@ -157,7 +166,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $docman_settings->method('getMetadataUsage')->willReturn('1');
         $status_mapper = new ItemStatusMapper($docman_settings);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao(), EventDispatcherStub::withIdentityCallback()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(4, $criteria);
         self::assertEquals($metadata_name, $criteria[3]->name);
@@ -201,7 +210,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->willReturn([$metadata]);
         $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao(), EventDispatcherStub::withIdentityCallback()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(4, $criteria);
         self::assertEquals('status', $criteria[3]->name);
@@ -235,7 +244,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->willReturn([$metadata]);
         $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao(), EventDispatcherStub::withIdentityCallback()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(4, $criteria);
         self::assertEquals('field_2', $criteria[3]->name);
@@ -268,7 +277,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->willReturn([$metadata_foo, $metadata_bar]);
         $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao(), EventDispatcherStub::withIdentityCallback()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(5, $criteria);
         self::assertEquals('Bar', $criteria[3]->label);
@@ -313,7 +322,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->willReturn([$metadata]);
         $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao(), EventDispatcherStub::withIdentityCallback()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(4, $criteria);
         self::assertEquals('field_2', $criteria[3]->name);
@@ -347,12 +356,15 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->willReturn([$metadata_foo, $metadata_bar]);
         $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new class implements IRetrieveCriteria {
-            public function searchByProjectId(int $project_id): array
-            {
-                return ['id', 'filename'];
-            }
-        }))->getSelectedCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(
+            new class implements IRetrieveCriteria {
+                public function searchByProjectId(int $project_id): array
+                {
+                    return ['id', 'filename'];
+                }
+            },
+            EventDispatcherStub::withIdentityCallback()
+        ))->getSelectedCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(2, $criteria);
         self::assertEquals('Id', $criteria[0]->label);
@@ -387,12 +399,15 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->willReturn([$metadata_foo, $metadata_bar]);
         $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder(new class implements IRetrieveCriteria {
-            public function searchByProjectId(int $project_id): array
-            {
-                return [];
-            }
-        }))->getSelectedCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(
+            new class implements IRetrieveCriteria {
+                public function searchByProjectId(int $project_id): array
+                {
+                    return [];
+                }
+            },
+            EventDispatcherStub::withIdentityCallback(),
+        ))->getSelectedCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(5, $criteria);
         self::assertEquals('Id', $criteria[0]->label);

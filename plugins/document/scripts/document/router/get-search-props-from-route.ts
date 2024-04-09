@@ -17,14 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { Route } from "vue-router/types/router";
+import { AllowedSearchDateOperator } from "../type";
 import type {
     AdditionalFieldNumber,
     AdvancedSearchParams,
     SearchDate,
     SearchCriteria,
     SortParams,
+    SearchCriterionList,
+    SearchCriterion,
 } from "../type";
-import { AllowedSearchDateOperator, AllowedSearchType } from "../type";
 import { isAdditionalFieldNumber } from "../helpers/additional-custom-properties";
 
 export function getSearchPropsFromRoute(
@@ -38,7 +40,7 @@ export function getSearchPropsFromRoute(
 } {
     const user_submitted_type = String(route.query.type || "");
 
-    const type = isAllowedType(user_submitted_type) ? user_submitted_type : "";
+    const type = isAllowedType(user_submitted_type, criteria) ? user_submitted_type : "";
     return {
         folder_id: route.params.folder_id ? Number(route.params.folder_id) : root_id,
         query: {
@@ -110,8 +112,29 @@ function getSort(route: Route): SortParams | null {
     return { name, order };
 }
 
-function isAllowedType(type: string): type is AllowedSearchType {
-    return AllowedSearchType.some((allowed_type) => type === allowed_type);
+function isAllowedType(type: string, criteria: SearchCriteria): boolean {
+    const criterion = getTypeCriterion(criteria);
+    if (!criterion) {
+        return false;
+    }
+
+    const allowed_types = criterion.options.map((option) => option.value);
+
+    return type === "" || allowed_types.some((allowed_type) => type === allowed_type);
+}
+
+function getTypeCriterion(criteria: SearchCriteria): SearchCriterionList | null {
+    for (const criterion of criteria) {
+        if (isSearchCriterionList(criterion) && criterion.name === "type") {
+            return criterion;
+        }
+    }
+
+    return null;
+}
+
+function isSearchCriterionList(criterion: SearchCriterion): criterion is SearchCriterionList {
+    return criterion.type === "list";
 }
 
 function getUpdateDate(route: Route): SearchDate | null {

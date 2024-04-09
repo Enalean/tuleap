@@ -376,17 +376,6 @@ export interface UserGroup {
     label: string;
 }
 
-export const AllowedSearchType = [
-    "",
-    "folder",
-    "file",
-    "embedded",
-    "wiki",
-    "link",
-    "empty",
-] as const;
-export type AllowedSearchType = (typeof AllowedSearchType)[number];
-
 export const AllowedSearchDateOperator = [">", "=", "<"];
 export type AllowedSearchDateOperator = (typeof AllowedSearchDateOperator)[number];
 
@@ -400,7 +389,7 @@ export type AdditionalFieldNumber = `field_${number}`;
 export interface AdvancedSearchParams {
     global_search: string;
     readonly id: string;
-    readonly type: AllowedSearchType;
+    readonly type: string;
     readonly filename: string;
     readonly title: string;
     readonly description: string;

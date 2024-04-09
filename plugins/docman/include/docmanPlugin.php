@@ -1465,6 +1465,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             new Docman_ItemDao(),
             new ListOfSearchCriterionPresenterBuilder(
                 new SearchCriteriaDao(),
+                EventManager::instance(),
             ),
             new ListOfSearchColumnDefinitionPresenterBuilder(
                 new SearchColumnCollectionBuilder(),
@@ -1503,7 +1504,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             $this->getProjectExtractor(),
             new SearchColumnFilter(new SearchColumnCollectionBuilder(), new SearchColumnsDao()),
             new SearchCriteriaFilter(
-                new ListOfSearchCriterionPresenterBuilder($search_criteria_dao),
+                new ListOfSearchCriterionPresenterBuilder($search_criteria_dao, EventManager::instance()),
                 $search_criteria_dao
             )
         );

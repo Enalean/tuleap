@@ -251,6 +251,7 @@ final class SearchResource extends AuthenticatedResource
             new AlwaysThereColumnRetriever($docman_settings),
             new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id), new SearchSortPropertyMapper()),
             $user_manager,
+            \EventManager::instance(),
         );
         $status_mapper         = new ItemStatusMapper($docman_settings);
         $item_dao              = new \Docman_ItemDao();
