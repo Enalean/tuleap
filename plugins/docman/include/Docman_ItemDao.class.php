@@ -167,6 +167,17 @@ class Docman_ItemDao extends DataAccessObject
         $_id       = (int) $id;
         $sql_where = ' i.group_id = ' . $this->da->escapeInt($_id);
 
+        /*
+         We only want to retrieve legacy types of items in legacy interface.
+         @see PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+         @see PLUGIN_DOCMAN_ITEM_TYPE_FILE
+         @see PLUGIN_DOCMAN_ITEM_TYPE_LINK
+         @see PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+         @see PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+         @see PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
+        */
+        $sql_where .= ' AND i.item_type IN (1, 2, 3, 4, 5, 6) ';
+
         // Order clause
         $sql_order = '';
 
