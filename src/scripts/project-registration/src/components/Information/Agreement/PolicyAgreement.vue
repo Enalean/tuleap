@@ -29,28 +29,23 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import AgreementModal from "./AgreementModal.vue";
 import EventBus from "../../../helpers/event-bus";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component({
-    components: { AgreementModal },
-})
-export default class PolicyAgreement extends Vue {
-    is_loading = false;
+const { $gettext } = useGettext();
 
-    get agreement(): string {
-        return this.$gettext(`I agree to the <a href="/tos/tos.php">policy agreement</a>`);
-    }
+const agreement = computed((): string => {
+    return $gettext(`I agree to the <a href="/tos/tos.php">policy agreement</a>`);
+});
 
-    loadAgreement(event: MouseEvent): void {
-        if (event.target instanceof Element) {
-            if (event.target.tagName === "A") {
-                EventBus.$emit("show-agreement");
-                event.preventDefault();
-            }
+function loadAgreement(event: MouseEvent): void {
+    if (event.target instanceof Element) {
+        if (event.target.tagName === "A") {
+            EventBus.$emit("show-agreement");
+            event.preventDefault();
         }
     }
 }
