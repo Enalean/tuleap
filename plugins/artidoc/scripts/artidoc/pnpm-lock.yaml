@@ -14,6 +14,9 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/project-background':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/project-background
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue3-gettext-init

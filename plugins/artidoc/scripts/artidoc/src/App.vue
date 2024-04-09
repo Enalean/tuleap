@@ -53,3 +53,7 @@ onMounted(() => {
     );
 });
 </script>
+
+<style lang="scss">
+@use "@/themes/artidoc";
+</style>
