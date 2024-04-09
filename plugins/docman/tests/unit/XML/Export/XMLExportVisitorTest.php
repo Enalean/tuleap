@@ -27,6 +27,7 @@ use Docman_VersionFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use UserXMLExporter;
 
@@ -105,6 +106,23 @@ final class XMLExportVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->logger->shouldReceive('warning')->with('Cannot export wiki item #42 (My document). Export/import of wiki documents is not supported.')->once();
         $this->visitor->export($xml, $wiki);
+
+        $this->assertEmpty($xml->item);
+    }
+
+    public function testOtherDocument(): void
+    {
+        $other = new class extends OtherDocument {
+            public function __construct()
+            {
+                parent::__construct(['title' => 'My document', 'item_id' => 42]);
+            }
+        };
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
+
+        $this->logger->shouldReceive('warning')->with('Cannot export item #42 (My document). Export/import of other type of documents is not supported.')->once();
+        $this->visitor->export($xml, $other);
 
         $this->assertEmpty($xml->item);
     }

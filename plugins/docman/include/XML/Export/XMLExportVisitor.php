@@ -38,13 +38,14 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\Item\OtherDocument;
+use Tuleap\Option\Option;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\xml\XMLDateHelper;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
 /**
- * @template-implements ItemVisitor<SimpleXMLElement>
+ * @template-implements ItemVisitor<Option<SimpleXMLElement>>
  */
 class XMLExportVisitor implements ItemVisitor
 {
@@ -88,7 +89,10 @@ class XMLExportVisitor implements ItemVisitor
         $item->accept($this, ['xml' => $xml]);
     }
 
-    public function visitItem(Docman_Item $item, array $params = []): SimpleXMLElement
+    /**
+     * @return Option<SimpleXMLElement>
+     */
+    public function visitItem(Docman_Item $item, array $params = []): Option
     {
         $type = str_replace('docman_', '', strtolower($item::class));
         $this->log($item, $type);
@@ -102,31 +106,53 @@ class XMLExportVisitor implements ItemVisitor
         $this->exportProperties($node, $item);
         $this->permissions_exporter->exportPermissions($node, $item);
 
-        return $node;
+        return Option::fromValue($node);
     }
 
-    public function visitFolder(Docman_Folder $item, array $params = []): SimpleXMLElement
+    /**
+     * @return Option<SimpleXMLElement>
+     */
+    public function visitFolder(Docman_Folder $item, array $params = []): Option
     {
-        $node  = $this->visitItem($item, $params);
-        $items = $item->getAllItems();
-        foreach ($items->iterator() as $child) {
-            $child->accept($this, ['xml' => $node]);
-        }
+        return $this->visitItem($item, $params)
+            ->andThen(function (SimpleXMLElement $node) use ($item) {
+                $items = $item->getAllItems();
+                foreach ($items->iterator() as $child) {
+                    $child->accept($this, ['xml' => $node]);
+                }
 
-        return $node;
+                return Option::fromValue($node);
+            });
     }
 
-    public function visitDocument(Docman_Document $item, array $params = []): SimpleXMLElement
+    /**
+     * @return Option<SimpleXMLElement>
+     */
+    public function visitDocument(Docman_Document $item, array $params = []): Option
     {
         return $this->visitItem($item, $params);
     }
 
+    /**
+     * @return Option<SimpleXMLElement>
+     */
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
-        return $this->visitDocument($item, $params);
+        $this->logger->warning(
+            sprintf(
+                'Cannot export item #%d (%s). Export/import of other type of documents is not supported.',
+                $item->getId(),
+                $item->getTitle()
+            )
+        );
+
+        return Option::nothing(SimpleXMLElement::class);
     }
 
-    public function visitWiki(Docman_Wiki $item, array $params = []): SimpleXMLElement
+    /**
+     * @return Option<SimpleXMLElement>
+     */
+    public function visitWiki(Docman_Wiki $item, array $params = []): Option
     {
         $this->logger->warning(
             sprintf(
@@ -136,41 +162,53 @@ class XMLExportVisitor implements ItemVisitor
             )
         );
 
-        $xml = $params['xml'];
-        assert($xml instanceof SimpleXMLElement);
-
-        return $xml;
+        return Option::nothing(SimpleXMLElement::class);
     }
 
-    public function visitLink(Docman_Link $item, array $params = []): SimpleXMLElement
+    /**
+     * @return Option<SimpleXMLElement>
+     */
+    public function visitLink(Docman_Link $item, array $params = []): Option
     {
-        $node = $this->visitDocument($item, $params);
-        $this->appendTextChild($node, 'url', $item->getUrl());
+        return $this->visitDocument($item, $params)
+            ->andThen(function (SimpleXMLElement $node) use ($item) {
+                $this->appendTextChild($node, 'url', $item->getUrl());
 
-        return $node;
+                return Option::fromValue($node);
+            });
     }
 
-    public function visitFile(Docman_File $item, array $params = []): SimpleXMLElement
+    /**
+     * @return Option<SimpleXMLElement>
+     */
+    public function visitFile(Docman_File $item, array $params = []): Option
     {
-        $node = $this->visitDocument($item, $params);
+        return $this->visitDocument($item, $params)
+            ->andThen(function (SimpleXMLElement $node) use ($item) {
+                $versions          = array_reverse($this->version_factory->getAllVersionForItem($item));
+                $node_for_versions = $node->addChild('versions');
+                if (count($versions) > 0) {
+                    foreach ($versions as $version) {
+                        $this->createVersion($node_for_versions, $version);
+                    }
+                }
 
-        $versions          = array_reverse($this->version_factory->getAllVersionForItem($item));
-        $node_for_versions = $node->addChild('versions');
-        if (count($versions) > 0) {
-            foreach ($versions as $version) {
-                $this->createVersion($node_for_versions, $version);
-            }
-        }
-
-        return $node;
+                return Option::fromValue($node);
+            });
     }
 
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): SimpleXMLElement
+    /**
+     * @return Option<SimpleXMLElement>
+     */
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): Option
     {
         return $this->visitFile($item, $params);
     }
 
-    public function visitEmpty(Docman_Empty $item, array $params = []): SimpleXMLElement
+    /**
+     * @return Option<SimpleXMLElement>
+     */
+    public function visitEmpty(Docman_Empty $item, array $params = []): Option
     {
         return $this->visitDocument($item, $params);
     }
@@ -221,7 +259,7 @@ class XMLExportVisitor implements ItemVisitor
             sprintf(
                 'Exporting %s item #%d: %s',
                 $type,
-                $item->getId(),
+                (int) $item->getId(),
                 $item->getTitle()
             )
         );
