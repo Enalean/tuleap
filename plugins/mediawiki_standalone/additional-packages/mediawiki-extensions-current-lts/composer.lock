@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "84ce6d148b96199683da334c63d41467",
+    "content-hash": "b7a16252a38e0bb4a40b18db2475622b",
     "packages": [
         {
             "name": "composer/installers",
@@ -286,11 +286,11 @@
         },
         {
             "name": "mediawiki/labeled-section-transclusion",
-            "version": "1.39.1",
+            "version": "1.39.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-LabeledSectionTransclusion.git",
-                "reference": "5181f579d20b807a975965b37cdd84c91645a2eb"
+                "reference": "5159ffb5602bed6c096381a86210451435a478d1"
             },
             "require": {
                 "composer/installers": "^1.0"
@@ -299,11 +299,11 @@
         },
         {
             "name": "mediawiki/mpdf",
-            "version": "1.39.1",
+            "version": "1.39.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-Mpdf.git",
-                "reference": "fb6ff534526f3b9a554cc4172db6e3715adfef36"
+                "reference": "abada1d008fdfe9be840e38fd940de34eacefac6"
             },
             "require": {
                 "mpdf/mpdf": "^8.1.4"
