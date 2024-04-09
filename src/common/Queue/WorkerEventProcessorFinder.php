@@ -31,7 +31,7 @@ use Tuleap\Project\ProjectCreationNotifier;
 use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataChecker;
 use Tuleap\Project\Registration\Template\Upload\ExtractArchiveAndCreateProject;
 use Tuleap\Project\Registration\Template\Upload\ProjectAfterArchiveImportActivation;
-use Tuleap\Project\Registration\Template\Upload\ProjectImportStatusNotifier;
+use Tuleap\Project\Registration\Template\Upload\ProjectImportNotifierStatus;
 use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectArchiver;
 use Tuleap\Project\Registration\Template\Upload\UploadedArchiveForProjectDao;
 use TuleapRegisterMail;
@@ -46,6 +46,7 @@ final readonly class WorkerEventProcessorFinder implements FindWorkerEventProces
         $user_manager    = UserManager::instance();
         $locale_switcher = new LocaleSwitcher();
 
+        $project_import_notifier = new ProjectImportNotifierStatus($worker_event->getLogger(), $locale_switcher);
         return match ($worker_event->getEventName()) {
             ExtractArchiveAndCreateProject::TOPIC =>
                 Option::fromValue(
@@ -69,7 +70,7 @@ final readonly class WorkerEventProcessorFinder implements FindWorkerEventProces
                                 ),
                                 $worker_event->getLogger(),
                             ),
-                            new ProjectImportStatusNotifier($worker_event->getLogger(), $locale_switcher),
+                            $project_import_notifier,
                             $project_manager,
                         ),
                         $project_manager,
@@ -81,6 +82,7 @@ final readonly class WorkerEventProcessorFinder implements FindWorkerEventProces
                             \EventManager::instance(),
                             $worker_event->getLogger(),
                         ),
+                        $project_import_notifier
                     ),
                 ),
             default =>

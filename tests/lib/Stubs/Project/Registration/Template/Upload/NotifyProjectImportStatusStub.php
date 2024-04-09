@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Test\Stubs\Project\Registration\Template\Upload;
 
 use Tuleap\Project\Registration\Template\Upload\NotifyProjectImportStatus;
+use Tuleap\Project\Registration\Template\Upload\NotifyProjectImportMessage;
 
 final class NotifyProjectImportStatusStub implements NotifyProjectImportStatus
 {
@@ -37,7 +38,7 @@ final class NotifyProjectImportStatusStub implements NotifyProjectImportStatus
         return new self();
     }
 
-    public function notify(\Project $project, \PFUser $project_admin): void
+    public function notify(\Project $project, \PFUser $project_admin, NotifyProjectImportMessage $message): void
     {
         $this->notified = true;
     }

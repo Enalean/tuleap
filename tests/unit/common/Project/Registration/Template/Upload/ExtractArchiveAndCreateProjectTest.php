@@ -34,6 +34,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\Project\ImportFromArchiveStub;
 use Tuleap\Test\Stubs\Project\Registration\Template\Upload\ActivateProjectAfterArchiveImportStub;
 use Tuleap\Test\Stubs\Project\Registration\Template\Upload\ArchiveUploadedArchiveStub;
+use Tuleap\Test\Stubs\Project\Registration\Template\Upload\NotifyProjectImportStatusStub;
 use Tuleap\Test\Stubs\Project\Registration\Template\Upload\SaveUploadedArchiveForProjectStub;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
@@ -95,6 +96,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
             $this->archive_without_data_checker,
+            NotifyProjectImportStatusStub::build()
         );
     }
 
@@ -118,6 +120,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
             $this->archive_without_data_checker,
+            NotifyProjectImportStatusStub::build()
         );
     }
 
@@ -141,6 +144,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
             $this->archive_without_data_checker,
+            NotifyProjectImportStatusStub::build()
         );
     }
 
@@ -164,6 +168,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
             $this->archive_without_data_checker,
+            NotifyProjectImportStatusStub::build()
         );
     }
 
@@ -187,6 +192,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
             $this->archive_without_data_checker,
+            NotifyProjectImportStatusStub::build()
         );
     }
 
@@ -213,6 +219,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
             $this->archive_without_data_checker,
+            NotifyProjectImportStatusStub::build()
         );
     }
 
@@ -240,6 +247,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
             $this->archive_without_data_checker,
+            NotifyProjectImportStatusStub::build()
         );
     }
 
@@ -267,6 +275,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             SaveUploadedArchiveForProjectStub::build(),
             $this->archive_without_data_checker,
+            NotifyProjectImportStatusStub::build()
         );
 
         $action->process();
@@ -304,6 +313,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::withDestination('/final/destination'),
             $archive_for_project_dao,
             $this->archive_without_data_checker,
+            NotifyProjectImportStatusStub::build()
         );
 
         $action->process();
@@ -345,6 +355,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::withDestination('/final/destination'),
             $archive_for_project_dao,
             $this->archive_without_data_checker,
+            NotifyProjectImportStatusStub::build()
         );
 
         $action->process();
@@ -364,6 +375,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         $archive_for_project_dao = SaveUploadedArchiveForProjectStub::build();
 
         $activator = ActivateProjectAfterArchiveImportStub::build();
+        $mail      = NotifyProjectImportStatusStub::build();
         $action    = ExtractArchiveAndCreateProject::fromEvent(
             new WorkerEvent(
                 $logger,
@@ -384,6 +396,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
             ArchiveUploadedArchiveStub::notExpectedToBeCalled(),
             $archive_for_project_dao,
             $this->archive_without_data_checker,
+            $mail
         );
 
         $action->process();
@@ -392,5 +405,6 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
         self::assertFalse(\Psl\Filesystem\is_file($this->upload . '/test.zip'));
         self::assertFalse($activator->isCalled());
         self::assertFalse($archive_for_project_dao->isSaved());
+        self::assertTrue($mail->isCalled());
     }
 }

@@ -1357,6 +1357,9 @@ msgstr "Erro ao inserir no forum_saved_place"
 msgid "Error updating time in forum_saved_place"
 msgstr "Erro no tempo de atualização no forum_saved_place"
 
+msgid "Error:"
+msgstr ""
+
 msgid "Errors"
 msgstr "Erros"
 
@@ -3438,6 +3441,9 @@ msgstr "Falta o nome do grupo"
 msgid "The header background has been successfully changed"
 msgstr "O fundo do cabeçalho foi alterado com sucesso"
 
+msgid "The import of project \"%s\" have failed."
+msgstr ""
+
 msgid ""
 "The invitation cannot be found. Maybe it has already been completed or "
 "removed?"
@@ -3948,6 +3954,10 @@ msgstr "Não foi possível adicionar %s como membro do projeto"
 
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Não foi possível obter as últimas atividades do projeto"
+
+#, php-format
+msgid "Unable to import project from archive"
+msgstr ""
 
 #, php-format
 msgid "Unable to login under %1$s"
