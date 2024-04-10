@@ -19,24 +19,26 @@
 
 <template>
     <div class="tlp-form-element">
-        <translate v-if="projectList.length === 0" data-test="no-project-list">
-            You are not administrator of any project.
-        </translate>
+        <span v-if="props.projectList.length === 0" data-test="no-project-list">
+            {{ $gettext("You are not administrator of any project.") }}
+        </span>
         <select
             class="tlp-select tlp-select-adjusted user-project-list-select"
             id="from-another-project"
             data-test="from-another-project"
             name="from-another-project"
-            v-model="selected_project"
-            v-on:change="storeSelectedTemplate()"
+            v-on:change="storeSelectedTemplate"
             v-else
         >
-            <option disabled value=""><translate>Please choose a project...</translate></option>
+            <option disabled value="" v-bind:selected="selected_project.id === default_option.id">
+                {{ $gettext("Please choose a project...") }}
+            </option>
             <option
-                v-for="project in projectList"
-                v-bind:value="project"
+                v-for="project in props.projectList"
+                v-bind:value="project.id"
                 v-bind:key="project.id"
                 v-bind:data-test="`select-project-${project.id}`"
+                v-bind:selected="project.id === selected_project.id"
             >
                 {{ project.title }}
             </option>
@@ -44,41 +46,55 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Watch } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import type { Ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import type { TemplateData } from "../../../../type";
 import { useStore } from "../../../../stores/root";
 
-@Component({})
-export default class UserProjectList extends Vue {
-    @Prop({ required: true })
-    readonly projectList!: Array<TemplateData>;
+const root_store = useStore();
 
-    @Prop({ required: true })
-    readonly selectedCompanyTemplate!: null | TemplateData;
+const default_option = {
+    title: "",
+    description: "",
+    id: "",
+    glyph: "",
+    is_built_in: false,
+};
 
-    @Watch("selectedCompanyTemplate")
-    observeSelectedCompanyTemplate(): void {
-        if (this.selectedCompanyTemplate === null) {
-            this.selected_project = "";
+const selected_project: Ref<TemplateData> = ref(default_option);
+
+const props = defineProps<{
+    projectList: Array<TemplateData>;
+    selectedCompanyTemplate: null | TemplateData;
+}>();
+
+watch(
+    () => props.selectedCompanyTemplate,
+    (): void => {
+        if (props.selectedCompanyTemplate === null) {
+            selected_project.value = default_option;
         }
+    },
+);
+
+onMounted((): void => {
+    if (props.selectedCompanyTemplate !== null) {
+        selected_project.value = props.selectedCompanyTemplate;
     }
+});
 
-    root_store = useStore();
-
-    selected_project: TemplateData | string = "";
-
-    mounted(): void {
-        if (this.selectedCompanyTemplate !== null) {
-            this.selected_project = this.selectedCompanyTemplate;
+function storeSelectedTemplate(event: Event): void {
+    if (event.target instanceof HTMLSelectElement) {
+        const selected_template_id: number = Number.parseInt(event.target.value, 10);
+        const selected_template = props.projectList.find(
+            (project: TemplateData) => selected_template_id === Number.parseInt(project.id, 10),
+        );
+        if (selected_template === undefined) {
+            return;
         }
-    }
 
-    storeSelectedTemplate(): void {
-        if (typeof this.selected_project === "object") {
-            this.root_store.setSelectedTemplate(this.selected_project);
-        }
+        root_store.setSelectedTemplate(selected_template);
     }
 }
 </script>

@@ -7,8 +7,9 @@
   "type": "module",
   "dependencies": {
     "@pinia/testing": "^0.1.3",
-    "@tuleap/fault": "workspace:*",
     "@tuleap/core-rest-api-types": "workspace:^",
+    "@tuleap/dom": "workspace:^",
+    "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",

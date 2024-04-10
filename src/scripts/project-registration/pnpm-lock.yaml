@@ -11,6 +11,9 @@ dependencies:
   '@tuleap/core-rest-api-types':
     specifier: workspace:^
     version: link:../../../lib/frontend/rest-api-types
+  '@tuleap/dom':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/dom
   '@tuleap/fault':
     specifier: workspace:*
     version: link:../../../lib/frontend/fault
