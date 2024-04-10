@@ -22,17 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
-use Tuleap\Config\ConfigKeyHidden;
+use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 
-final readonly class CustomProjectArchiveFeatureFlag implements VerifyProjectCreationFromArchiveIsAllowed
+final readonly class CustomProjectArchive implements VerifyProjectCreationFromArchiveIsAllowed
 {
-    #[FeatureFlagConfigKey('Feature flag to allow the user to create a new project from a custom zip archive which contains the project XML template')]
+    #[ConfigKey('Disable the possibility to create a new project from a custom zip archive which contains the project XML template')]
     #[ConfigKeyInt(0)]
-    #[ConfigKeyHidden]
-    public const FEATURE_FLAG_KEY = 'create_from_custom_archive';
+    public const CONFIG_KEY = 'disable_create_from_custom_archive';
 
     public function __construct(private IsAsyncTaskProcessingAvailable $worker_availability)
     {
@@ -40,6 +38,6 @@ final readonly class CustomProjectArchiveFeatureFlag implements VerifyProjectCre
 
     public function canCreateFromCustomArchive(): bool
     {
-        return \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY) === '1' && $this->worker_availability->canProcessAsyncTasks();
+        return (string) \ForgeConfig::get(self::CONFIG_KEY) === '0' && $this->worker_availability->canProcessAsyncTasks();
     }
 }

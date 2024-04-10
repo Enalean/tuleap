@@ -162,7 +162,7 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundAdministrationController;
 use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
-use Tuleap\Project\Registration\Template\CustomProjectArchiveFeatureFlag;
+use Tuleap\Project\Registration\Template\CustomProjectArchive;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\Upload\EnqueueProjectCreationFromArchive;
 use Tuleap\Project\Registration\Template\Upload\ProjectArchiveOngoingUploadDao;
@@ -957,7 +957,7 @@ class RouteCollector
                 new DefaultProjectVisibilityRetriever(),
                 new TroveCatFactory(new TroveCatDao()),
                 new DescriptionFieldsFactory(new DescriptionFieldsDao()),
-                new CustomProjectArchiveFeatureFlag(new WorkerAvailability()),
+                new CustomProjectArchive(new WorkerAvailability()),
             )
         );
     }
