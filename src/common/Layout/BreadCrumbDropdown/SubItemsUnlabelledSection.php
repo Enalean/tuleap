@@ -20,7 +20,7 @@
 
 namespace Tuleap\Layout\BreadCrumbDropdown;
 
-class SubItemsUnlabelledSection extends SubItemsSection
+final readonly class SubItemsUnlabelledSection extends SubItemsSection
 {
     public function __construct(BreadCrumbLinkCollection $links)
     {

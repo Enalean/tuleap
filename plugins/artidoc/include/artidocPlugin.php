@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\Artidoc\ArtidocController;
+use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
@@ -83,13 +84,15 @@ class ArtidocPlugin extends Plugin
 
     public function routeController(): DispatchableWithRequest
     {
+        $docman_item_factory = new Docman_ItemFactory();
         return new ArtidocController(
             new ArtidocRetriever(
                 ProjectManager::instance(),
                 new ArtidocDao(),
-                new Docman_ItemFactory(),
+                $docman_item_factory,
                 new DocumentServiceFromAllowedProjectRetriever($this),
             ),
+            new ArtidocBreadcrumbsProvider($docman_item_factory),
             BackendLogger::getDefaultLogger(),
         );
     }

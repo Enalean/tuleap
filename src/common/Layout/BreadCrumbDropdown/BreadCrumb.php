@@ -20,45 +20,28 @@
 
 namespace Tuleap\Layout\BreadCrumbDropdown;
 
-class BreadCrumb
+class BreadCrumb implements PresentableBreadCrumb
 {
-    /**
-     * @var BreadCrumbLink
-     */
-    private $link;
-    /**
-     * @var BreadCrumbSubItems
-     */
-    private $sub_items;
-    /**
-     * @var string
-     */
-    private $classname;
+    private BreadCrumbSubItems $sub_items;
+    private string $classname;
 
-    public function __construct(BreadCrumbLink $link)
+    public function __construct(private readonly BreadCrumbLink $link)
     {
-        $this->link      = $link;
         $this->sub_items = new BreadCrumbSubItems();
         $this->classname = '';
     }
 
-    /**
-     * @return BreadCrumbLink
-     */
-    public function getLink()
+    public function getLink(): BreadCrumbLink
     {
         return $this->link;
     }
 
-    /**
-     * @return BreadCrumbSubItems
-     */
-    public function getSubItems()
+    public function getSubItems(): BreadCrumbSubItems
     {
         return $this->sub_items;
     }
 
-    public function setSubItems(BreadCrumbSubItems $sub_items)
+    public function setSubItems(BreadCrumbSubItems $sub_items): void
     {
         $this->sub_items = $sub_items;
     }
@@ -71,5 +54,37 @@ class BreadCrumb
     public function getAdditionalClassname(): string
     {
         return $this->classname;
+    }
+
+    public function getBreadCrumbPresenter(): BreadCrumbPresenter
+    {
+        return new BreadCrumbPresenter(
+            $this->getAdditionalClassname(),
+            new BreadCrumbLinkPresenter($this->getLink()),
+            $this->getSectionsPresenters($this->getSubItems())
+        );
+    }
+
+    private function getSectionsPresenters(BreadCrumbSubItems $sub_items): array
+    {
+        $presenters = [];
+        foreach ($sub_items->getSections() as $section) {
+            $presenters[] = new SubItemsSectionPresenter(
+                $section->getLabel(),
+                $this->getLinksPresenters($section)
+            );
+        }
+
+        return $presenters;
+    }
+
+    private function getLinksPresenters(SubItemsSection $section): array
+    {
+        $presenters = [];
+        foreach ($section->getLinks() as $link) {
+            $presenters[] = new BreadCrumbLinkPresenter($link);
+        }
+
+        return $presenters;
     }
 }
