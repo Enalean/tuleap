@@ -60,10 +60,6 @@ final readonly class ArtifactIdFromWhereBuilder implements ValueWrapperVisitor
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         $value = $value_wrapper->getValue();
-        if ($parameters->comparison->getType() !== ComparisonType::Equal) {
-            throw new LogicException('Other comparison types are invalid for Artifact id metadata');
-        }
-
         if ($value === '') {
             throw new LogicException('Comparison to empty string should have been flagged as invalid for the Artifact id metadata');
         }
@@ -73,13 +69,25 @@ final readonly class ArtifactIdFromWhereBuilder implements ValueWrapperVisitor
             array_map(static fn(Tracker $tracker) => $tracker->getId(), $parameters->trackers)
         );
 
-        return $this->getWhereForEqual((string) $value, $parameters->field_alias, $tracker_ids_statement);
+        return match ($parameters->comparison->getType()) {
+            ComparisonType::Equal => $this->getWhereForEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
+            ComparisonType::NotEqual => $this->getWhereForNotEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
+            default => throw new LogicException('Other comparison types are invalid for Artifact id metadata'),
+        };
     }
 
     private function getWhereForEqual(string $artifact_id, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
     {
         return new ParametrizedWhere(
             "$field_alias = ? AND $tracker_ids_statement",
+            [$artifact_id, ...array_values($tracker_ids_statement->values())]
+        );
+    }
+
+    private function getWhereForNotEqual(string $artifact_id, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
+    {
+        return new ParametrizedWhere(
+            "$field_alias != ? AND $tracker_ids_statement",
             [$artifact_id, ...array_values($tracker_ids_statement->values())]
         );
     }

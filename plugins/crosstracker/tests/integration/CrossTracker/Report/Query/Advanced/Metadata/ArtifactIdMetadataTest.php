@@ -142,4 +142,47 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
 
         self::assertCount(0, $artifacts);
     }
+
+    public function testNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                '@id != ' . $this->release_artifact_id,
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(1, $artifacts);
+        self::assertSame($this->sprint_artifact_id, $artifacts[0]);
+    }
+
+    public function testMultipleNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                '@id != ' . $this->release_artifact_id . ' AND @id != ' . $this->sprint_artifact_id,
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(0, $artifacts);
+    }
+
+    public function testPermissionsNotEqual(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                '@id != ' . $this->release_artifact_id,
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(0, $artifacts);
+    }
 }
