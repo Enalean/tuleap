@@ -1092,12 +1092,13 @@ fi
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/user
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/project
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/images
-%dir %attr(0755, root, %{ftp_group}) %{APP_DATA_DIR}/ftp
+%dir %attr(0750,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/ftp
 %dir %attr(3777, %{APP_USER}, %{APP_USER}) %{APP_DATA_DIR}/ftp/incoming
-%dir %attr(0711, root, root) %{APP_DATA_DIR}/ftp/codendi
+%dir %attr(0750, %{APP_USER}, %{APP_USER}) %{APP_DATA_DIR}/ftp/codendi
 %dir %attr(0750, %{APP_USER}, %{APP_USER}) %{APP_DATA_DIR}/ftp/codendi/DELETED
 %dir %attr(0755, %{ftpadmin_user}, %{ftpadmin_group}) %{APP_DATA_DIR}/ftp/pub
-%{APP_DATA_DIR}/ftp/tuleap
+# Do not attempt to create, just mark it as owned by the package to avoid removal
+%ghost %{APP_DATA_DIR}/ftp/tuleap
 
 # Executables (/usr/bin)
 %attr(00755,%{APP_USER},%{APP_USER}) %{_bindir}/tuleap

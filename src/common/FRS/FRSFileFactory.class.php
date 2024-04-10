@@ -413,7 +413,10 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         $fileName           = $file->getFileName();
         $filePath           = $this->getResolvedFileName($file->getFileName());
         $ftp_frs_dir_prefix = (string) ForgeConfig::get('ftp_frs_dir_prefix');
-        if (! file_exists($ftp_frs_dir_prefix . '/' . $unixName . '/' . $upload_sub_dir . '/' . $filePath)) {
+        $dest_file          = $ftp_frs_dir_prefix . '/' . $unixName . '/' . $upload_sub_dir . '/' . $filePath;
+
+        if (! file_exists($dest_file)) {
+            \Psl\Filesystem\create_directory_for_file($dest_file);
             $cmdFilePath = $unixName . '/' . $upload_sub_dir . '/' . $filePath;
 
             $process = new Process(array_merge($this->fileforge, [$fileName, $cmdFilePath, $src_dir, $ftp_frs_dir_prefix]));
