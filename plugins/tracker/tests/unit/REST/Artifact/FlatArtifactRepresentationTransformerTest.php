@@ -129,7 +129,7 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
         yield 'lud field' => [$build_base_field_value('date', '2021-03-08T13:06:30+01:00'), ['f1' => '2021-03-08T13:06:30+01:00']];
         yield 'base field with no set value' => [$build_base_field_value('string', null), ['f1' => null]];
         $build_text_field_value = static fn (string $format, string $value): ArtifactFieldValueTextRepresentation
-            => new ArtifactFieldValueTextRepresentation(1, 'text', 'label1', $value, $format);
+            => new ArtifactFieldValueTextRepresentation(1, 'text', 'label1', $value, $value, $format);
         yield 'text field (plain text)' => [$build_text_field_value('text', 'plaintext'), ['f1' => 'plaintext']];
         yield 'text field (html text)' => [$build_text_field_value('html', '<p>html</p>'), ['f1' => 'html']];
         yield 'text field (commonmark text)' => [$build_text_field_value('commonmark', '<em>commonmark</em>'), ['f1' => 'commonmark']];

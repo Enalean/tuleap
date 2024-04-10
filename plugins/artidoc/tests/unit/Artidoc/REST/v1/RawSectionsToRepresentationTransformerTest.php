@@ -100,6 +100,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             'Description',
             "Desc <b>for</b> #{$artifact->getId()}",
             "Desc **for** #{$artifact->getId()}",
+            "Desc <b>for</b> #{$artifact->getId()}",
         );
     }
 
