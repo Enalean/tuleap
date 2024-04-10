@@ -55,6 +55,7 @@
                 multiple
                 v-on:click.prevent="insertSelectedField"
             >
+                <option value="@id">{{ artifact_id_label }}</option>
                 <option value="@title">{{ title_semantic_label }}</option>
                 <option value="@description">{{ description_semantic_label }}</option>
                 <option value="@status">{{ status_semantic_label }}</option>
@@ -147,6 +148,10 @@ export default class QueryEditor extends Vue {
     get assigned_to_label(): string {
         return this.$gettext("Assigned to");
     }
+    get artifact_id_label(): string {
+        return this.$gettext("Artifact id");
+    }
+
     get placeholder(): string {
         return this.$gettext("Example: @title = 'value'");
     }

@@ -81,6 +81,10 @@ final class MetadataUsageChecker implements CheckMetadataUsage
                 $collector_parameters->getTrackers(),
                 $collector_parameters->getUser()
             ),
+            AllowedMetadata::ID => $this->checkArtifactIdIsUsedByAtLeastOneTracker(
+                $collector_parameters->getTrackers(),
+                $collector_parameters->getUser()
+            ),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
@@ -176,6 +180,17 @@ final class MetadataUsageChecker implements CheckMetadataUsage
         $count = $this->getNumberOfFieldsUserCannotReadByType($trackers, $user, 'luby');
         if ($count === count($trackers)) {
             throw new LastUpdateByIsMissingInAllTrackersException();
+        }
+    }
+
+    /**
+     * @throws ArtifactIdIsMissingInAllTrackersException
+     */
+    private function checkArtifactIdIsUsedByAtLeastOneTracker(array $trackers, PFUser $user): void
+    {
+        $count = $this->getNumberOfFieldsUserCannotReadByType($trackers, $user, Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE);
+        if ($count === count($trackers)) {
+            throw new ArtifactIdIsMissingInAllTrackersException();
         }
     }
 

@@ -28,6 +28,7 @@ use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date\DateFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users\UsersFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description\DescriptionFromWhereBuilder;
@@ -43,6 +44,7 @@ final readonly class MetadataFromWhereBuilder
     private const LAST_UPDATE_DATE_ALIAS = 'last_changeset.submitted_on';
     private const SUBMITTED_BY_ALIAS     = 'tracker_artifact.submitted_by';
     private const LAST_UPDATE_BY_ALIAS   = 'last_changeset.submitted_by';
+    private const ARTIFACT_ID_ALIAS      = 'tracker_artifact.id';
 
     public function __construct(
         private TitleFromWhereBuilder $title_builder,
@@ -51,6 +53,7 @@ final readonly class MetadataFromWhereBuilder
         private AssignedToFromWhereBuilder $assigned_to_builder,
         private DateFromWhereBuilder $date_builder,
         private UsersFromWhereBuilder $users_builder,
+        private ArtifactIdFromWhereBuilder $artifact_id_builder,
         private Tracker_FormElementFactory $form_element_factory,
     ) {
     }
@@ -96,6 +99,12 @@ final readonly class MetadataFromWhereBuilder
                 $this->filterTrackersOnReadableField($trackers, Tracker_FormElementFactory::FIELD_LAST_MODIFIED_BY, $user),
                 $user,
                 self::LAST_UPDATE_BY_ALIAS
+            )),
+            AllowedMetadata::ID               => $this->artifact_id_builder->getFromWhere(new MetadataValueWrapperParameters(
+                $comparison,
+                $this->filterTrackersOnReadableField($trackers, Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE, $user),
+                $user,
+                self::ARTIFACT_ID_ALIAS,
             )),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };

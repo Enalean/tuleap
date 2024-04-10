@@ -30,6 +30,7 @@ final class AllowedMetadata
     public const SUBMITTED_BY     = '@submitted_by';
     public const LAST_UPDATE_BY   = '@last_update_by';
     public const ASSIGNED_TO      = '@assigned_to';
+    public const ID               = '@id';
 
     public const NAMES = [
         self::TITLE,
@@ -40,5 +41,6 @@ final class AllowedMetadata
         self::SUBMITTED_BY,
         self::LAST_UPDATE_BY,
         self::ASSIGNED_TO,
+        self::ID,
     ];
 }
