@@ -71,7 +71,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
 
         $service->displayHeader($title, [], []);
         \TemplateRendererFactory::build()->getRenderer(__DIR__)->renderToPage('artidoc', [
-            'project_id' => $service->getProject()->getID(),
+            'item_id' => $document_information->document->getId(),
             'title' => $title,
         ]);
         $service->displayFooter();

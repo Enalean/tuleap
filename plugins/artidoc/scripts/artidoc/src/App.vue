@@ -19,36 +19,40 @@
   -->
 
 <template>
-    <h1 data-test="title">
-        {{ title }}
-    </h1>
-    <empty-state />
+    <div v-if="!is_loading">
+        <div v-if="sections && sections.length > 0" class="document-layout">
+            <section class="tlp-framed document-content">
+                <document-content v-bind:sections="sections" />
+            </section>
+            <aside class="table-of-contents"></aside>
+        </div>
+        <div v-else class="tlp-framed">
+            <empty-state />
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { getProject } from "./helpers/rest-querier";
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
-import { useGettext } from "vue3-gettext";
+import type { Ref } from "vue";
+import { onMounted, ref } from "vue";
 import EmptyState from "@/views/EmptyState.vue";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { getAllSections } from "@/helpers/rest-querier";
+import DocumentContent from "@/views/DocumentContent.vue";
 
-const props = defineProps<{ project_id: number }>();
+const props = defineProps<{ item_id: number }>();
 
-const { $gettext, interpolate } = useGettext();
-
-const project_name = ref("...");
-
-const title = computed(() =>
-    interpolate($gettext("Artifacts as Documents for %{name}"), { name: project_name.value }),
-);
+const sections: Ref<readonly ArtidocSection[] | undefined> = ref(undefined);
+const is_loading = ref(true);
 
 onMounted(() => {
-    getProject(props.project_id).match(
-        (project: ProjectReference) => {
-            project_name.value = project.label;
+    getAllSections(props.item_id).match(
+        (artidoc_sections: readonly ArtidocSection[]) => {
+            sections.value = artidoc_sections;
+            is_loading.value = false;
         },
         () => {
-            // do nothing
+            is_loading.value = false;
         },
     );
 });
@@ -56,4 +60,22 @@ onMounted(() => {
 
 <style lang="scss">
 @use "@/themes/artidoc";
+</style>
+<style lang="scss" scoped>
+.document-layout {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    border-top: 1px solid var(--tlp-neutral-normal-color);
+
+    .document-content {
+        padding: 1.5rem 3rem;
+        background-color: var(--tlp-white-color);
+    }
+
+    .table-of-contents {
+        padding: 1rem;
+        border-left: 1px solid var(--tlp-neutral-normal-color);
+        background: var(--tlp-fade-background-color);
+    }
+}
 </style>

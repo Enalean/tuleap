@@ -17,15 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ResultAsync } from "neverthrow";
-import { getAllJSON, uri } from "@tuleap/fetch-result";
-import type { Fault } from "@tuleap/fault";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-
-export function getAllSections(document_id: number): ResultAsync<readonly ArtidocSection[], Fault> {
-    return getAllJSON(uri`/api/artidoc/${document_id}/sections`, {
-        params: {
-            limit: 50,
-        },
-    });
-}
+export type ArtidocSection = {
+    artifact: {
+        id: number;
+        uri: string;
+        tracker: {
+            id: number;
+            uri: string;
+            label: string;
+            project: {
+                id: number;
+                uri: string;
+                label: string;
+                icon: string;
+            };
+        };
+    };
+    title: string;
+    description: {
+        field_id: number;
+        type: string;
+        label: string;
+        value: string;
+        format: string;
+        commonmark: string;
+    };
+};

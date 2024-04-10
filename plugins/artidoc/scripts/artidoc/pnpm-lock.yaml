@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@tuleap/core-rest-api-types':
-    specifier: workspace:^
-    version: link:../../../../lib/frontend/rest-api-types
   '@tuleap/fault':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fault
@@ -26,6 +23,9 @@ dependencies:
   vue:
     specifier: ^3.3.4
     version: 3.4.21
+  vue-dompurify-html:
+    specifier: ^5.0.1
+    version: 5.0.1(vue@3.4.21)
   vue3-gettext:
     specifier: ^2.4.0
     version: 2.4.0(vue@3.4.21)
@@ -366,6 +366,10 @@ packages:
 
   /csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  /dompurify@3.1.0:
+    resolution: {integrity: sha512-yoU4rhgPKCo+p5UrWWWNKiIq+ToGqmVVhk0PmMYBK4kRsR3/qhemNFL8f6CFmBd4gMwm3F4T7HBoydP5uY07fA==}
+    dev: false
 
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
@@ -796,6 +800,15 @@ packages:
   /vue-component-type-helpers@2.0.7:
     resolution: {integrity: sha512-7e12Evdll7JcTIocojgnCgwocX4WzIYStGClBQ+QuWPinZo/vQolv2EMq4a3lg16TKfwWafLimG77bxb56UauA==}
     dev: true
+
+  /vue-dompurify-html@5.0.1(vue@3.4.21):
+    resolution: {integrity: sha512-8yoMbo7PX4vt01k0dcCHvP4tY0fOCLkQeMhXXRNmH7/muIUTkFOQNzkAtE0RmqgaF/unabvYnsnCu2CjIMgueg==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      dompurify: 3.1.0
+      vue: 3.4.21
+    dev: false
 
   /vue3-gettext@2.4.0(vue@3.4.21):
     resolution: {integrity: sha512-xnCndk88nzC+EiUJpNKykUulvPhivM1AQuT6oa72PA4DUOFPjJvpy5hZ/GbxLUJiqvYJebMDMTWywCJwIw+biA==}
