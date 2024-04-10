@@ -35,6 +35,7 @@ final readonly class InvalidMetadataChecker
         private AssignedToChecker $assigned_to_checker,
         private ArtifactSubmitterChecker $submitter_checker,
         private SubmissionDateChecker $submission_date_checker,
+        private ArtifactIdMetadataChecker $artifact_id_metadata_checker,
     ) {
     }
 
@@ -52,6 +53,7 @@ final readonly class InvalidMetadataChecker
             AllowedMetadata::LAST_UPDATE_DATE => $this->submission_date_checker->checkAlwaysThereFieldIsValidForComparison($comparison, $metadata),
             AllowedMetadata::SUBMITTED_BY,
             AllowedMetadata::LAST_UPDATE_BY => $this->submitter_checker->checkAlwaysThereFieldIsValidForComparison($comparison, $metadata),
+            AllowedMetadata::ID => $this->artifact_id_metadata_checker->checkAlwaysThereFieldIsValidForComparison($comparison, $metadata),
             default => throw new \LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }

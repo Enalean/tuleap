@@ -37,6 +37,18 @@ msgid "%s cannot be compared to OPEN()."
 msgstr "%s ne peut pas être comparé à OPEN()."
 
 #, php-format
+msgid "%s cannot be compared to a string."
+msgstr "%s ne peut pas être comparé à une chaîne de caractères."
+
+#, php-format
+msgid "%s cannot be compared to an empty string."
+msgstr "%s ne peut pas être comparé à une chaîne de caractères vide."
+
+#, php-format
+msgid "%s cannot be compared to an integer lesser than one."
+msgstr "%s ne peut pas être comparé à un nombre entier inférieur à un."
+
+#, php-format
 msgid "%s cannot be compared to the empty string with %s operator."
 msgstr "%s ne peut pas être comparé à une chaîne vide avec l'opérateur %s."
 
@@ -84,6 +96,14 @@ msgid ""
 msgstr ""
 "Tous les outils de suivi utilisés pour la requête n'exposent pas de champs "
 "Date de soumission. Merci de modifier votre requête ou de vérifier la "
+"configuration des outils de suivi."
+
+msgid ""
+"All trackers involved in the query do not expose an artifact id field. "
+"Please refine your query or check the configuration of the trackers."
+msgstr ""
+"Tous les outils de suivi utilisés pour la requête n'exposent pas de champs "
+"ID de l'artéfact. Merci de modifier votre requête ou de vérifier la "
 "configuration des outils de suivi."
 
 msgid ""

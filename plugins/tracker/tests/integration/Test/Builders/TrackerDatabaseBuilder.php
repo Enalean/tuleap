@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Test\Builders;
 use ParagonIE\EasyDB\EasyDB;
 use Tracker;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElementFactory;
 
 final class TrackerDatabaseBuilder
 {
@@ -250,6 +251,21 @@ final class TrackerDatabaseBuilder
                 'formElement_type' => 'luby',
                 'name'             => 'last_update_by',
                 'label'            => 'Last Update By',
+                'use_it'           => true,
+                'scope'            => 'P',
+            ]
+        );
+    }
+
+    public function buildArtifactIdField(int $tracker_id): int
+    {
+        return (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id'       => $tracker_id,
+                'formElement_type' => Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
+                'name'             => 'artifact_id',
+                'label'            => 'Artifact ID',
                 'use_it'           => true,
                 'scope'            => 'P',
             ]

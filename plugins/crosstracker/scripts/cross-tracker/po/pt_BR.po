@@ -15,6 +15,9 @@ msgstr ""
 msgid "Artifact"
 msgstr ""
 
+msgid "Artifact id"
+msgstr ""
+
 msgid "Assigned to"
 msgstr ""
 

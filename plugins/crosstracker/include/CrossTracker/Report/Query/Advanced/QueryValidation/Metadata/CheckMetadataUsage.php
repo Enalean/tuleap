@@ -36,6 +36,7 @@ interface CheckMetadataUsage
      * @throws SubmittedByIsMissingInAllTrackersException
      * @throws LastUpdateByIsMissingInAllTrackersException
      * @throws AssignedToIsMissingInAllTrackersException
+     * @throws ArtifactIdIsMissingInAllTrackersException
      */
     public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,

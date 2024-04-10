@@ -52,6 +52,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVi
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\InvalidMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
@@ -195,6 +196,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                             $this->user_manager
                         ),
                         new SubmissionDateChecker(),
+                        new ArtifactIdMetadataChecker(),
                     )
                 ),
                 new DuckTypedFieldChecker(
@@ -261,6 +263,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder($this->user_manager),
                 new Metadata\AlwaysThereField\Date\DateFromWhereBuilder($date_time_value_rounder),
                 new Metadata\AlwaysThereField\Users\UsersFromWhereBuilder($this->user_manager),
+                new Metadata\AlwaysThereField\ArtifactId\ArtifactIdFromWhereBuilder(),
                 $form_element_factory,
             ),
         );

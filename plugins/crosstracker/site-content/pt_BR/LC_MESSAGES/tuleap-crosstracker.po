@@ -31,6 +31,18 @@ msgid "%s cannot be compared to OPEN()."
 msgstr ""
 
 #, php-format
+msgid "%s cannot be compared to a string."
+msgstr ""
+
+#, php-format
+msgid "%s cannot be compared to an empty string."
+msgstr ""
+
+#, php-format
+msgid "%s cannot be compared to an integer lesser than one."
+msgstr ""
+
+#, php-format
 msgid "%s cannot be compared to the empty string with %s operator."
 msgstr ""
 
@@ -63,6 +75,11 @@ msgstr ""
 
 msgid ""
 "All trackers involved in the query do not expose a submitted on field. "
+"Please refine your query or check the configuration of the trackers."
+msgstr ""
+
+msgid ""
+"All trackers involved in the query do not expose an artifact id field. "
 "Please refine your query or check the configuration of the trackers."
 msgstr ""
 

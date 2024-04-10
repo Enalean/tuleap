@@ -22,6 +22,9 @@ msgstr "Une erreur est survenue"
 msgid "Artifact"
 msgstr "Artéfact"
 
+msgid "Artifact id"
+msgstr "ID de l'artéfact"
+
 msgid "Assigned to"
 msgstr "Assigné à"
 
