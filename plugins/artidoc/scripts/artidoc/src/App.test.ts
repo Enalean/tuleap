@@ -19,39 +19,59 @@
 
 import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import * as rest from "./helpers/rest-querier";
-import { okAsync } from "neverthrow";
+import EmptyState from "@/views/EmptyState.vue";
 import { createGettext } from "vue3-gettext";
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
-import App from "./App.vue";
+import DocumentContent from "@/views/DocumentContent.vue";
+import App from "@/App.vue";
+import * as rest from "./helpers/rest-querier";
+import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import { okAsync, errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 
 vi.mock("./rest-querier");
 
 describe("App", () => {
-    it("should display the project label", async () => {
-        vi.spyOn(rest, "getProject").mockReturnValue(
-            okAsync({
-                id: 123,
-                label: "Acme Project",
-                icon: "",
-                uri: "",
-            } as ProjectReference),
-        );
+    describe("when sections not found", () => {
+        it("should display empty state view", async () => {
+            vi.spyOn(rest, "getAllSections").mockReturnValue(
+                errAsync(Fault.fromMessage("sections not found")),
+            );
 
-        const wrapper = shallowMount(App, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
-            propsData: {
-                project_id: 123,
-            },
+            const wrapper = shallowMount(App, {
+                global: {
+                    plugins: [createGettext({ silent: true })],
+                },
+                props: {
+                    item_id: 1,
+                },
+            });
+
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
         });
+    });
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+    describe("when sections found", () => {
+        it("should display document content view", async () => {
+            vi.spyOn(rest, "getAllSections").mockReturnValue(
+                okAsync([ArtidocSectionFactory.create()]),
+            );
 
-        expect(wrapper.find("[data-test=title]").text()).toBe(
-            "Artifacts as Documents for Acme Project",
-        );
+            const wrapper = shallowMount(App, {
+                global: {
+                    plugins: [createGettext({ silent: true })],
+                },
+                props: {
+                    item_id: 1,
+                },
+            });
+
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.findComponent(DocumentContent).exists()).toBe(true);
+        });
     });
 });

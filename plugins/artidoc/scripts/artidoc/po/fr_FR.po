@@ -12,9 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-msgid "Artifacts as Documents for %{name}"
-msgstr "Artifacts sous forme de Documents pour %{name}"
-
 msgid "This document is empty"
 msgstr "Ce document est vide"
 

@@ -21,6 +21,7 @@ import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue
 import { createGettext } from "vue3-gettext";
 import App from "./App.vue";
 import { createApp } from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -32,8 +33,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
     });
     const app = createApp(App, {
-        project_id: Number.parseInt(vue_mount_point.dataset.projectId || "", 10),
+        item_id: Number.parseInt(vue_mount_point.dataset.itemId || "", 10),
     });
     app.use(gettext);
+    app.use(VueDOMPurifyHTML);
     app.mount(vue_mount_point);
 });
