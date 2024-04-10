@@ -23,6 +23,8 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    private const PROJECT_ID = 101;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset
      */
@@ -95,7 +97,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
             'Problems with my code: <b>example</b>',
             Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
         );
-        $this->assertEquals('Problems with my code: <b>example</b>', $text->getTextWithReferences(101));
+        $this->assertEquals('Problems with my code: <b>example</b>', $text->getTextWithReferences(self::PROJECT_ID));
     }
 
     public function testReturnsUnconvertedTextWhenFormatIsText(): void
@@ -109,7 +111,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
             'Problems with my code: <b>example</b>',
             Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
         );
-        $this->assertEquals('Problems with my code: &lt;b&gt;example&lt;/b&gt;', $text->getTextWithReferences(101));
+        $this->assertEquals('Problems with my code: &lt;b&gt;example&lt;/b&gt;', $text->getTextWithReferences(self::PROJECT_ID));
     }
 
     /**
@@ -124,7 +126,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $field->shouldReceive('getLabel')->andReturn('my field');
 
         $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getId')->andReturn(101);
+        $project->shouldReceive('getId')->andReturn(self::PROJECT_ID);
         $tracker->shouldReceive('getProject')->andReturn($project);
 
         return $field;
@@ -163,7 +165,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
     public function testItReturnsTheMarkdownValue(): void
     {
         $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
+        $tracker->shouldReceive('getGroupId')->andReturn(self::PROJECT_ID);
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -183,7 +185,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
     public function testItBuildTheMarkdownTextValueRepresentation(): void
     {
         $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
+        $tracker->shouldReceive('getGroupId')->andReturn(self::PROJECT_ID);
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -200,16 +202,29 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         );
 
         $representation = $changeset_value_text->getRESTValue($user);
-        $this->assertEquals("<p>Problems with my code: <strong>example</strong></p>\n", $representation->value);
+        $this->assertEquals(
+            "<p>Problems with my code: <strong>example</strong></p>\n",
+            $representation->value,
+        );
+        $this->assertEquals(
+            "<p>Problems with my code: <strong>example</strong></p>\n",
+            $representation->post_processed_value,
+        );
         $this->assertEquals('html', $representation->format);
         $this->assertEquals($text, $representation->commonmark);
     }
 
     public function testItBuildTheHtmlTextValueRepresentation(): void
     {
-        $user                 = Mockery::mock(PFUser::class);
-        $text                 = '<p>Problems with my code: <strong>example</strong></p>';
-        $field                = $this->getTextFieldWithProject();
+        $user  = Mockery::mock(PFUser::class);
+        $text  = '<p>Problems with my code: <strong>example</strong> art #1</p>';
+        $field = $this->getTextFieldWithProject();
+
+        $purifier = $this->createMock(Codendi_HTMLPurifier::class);
+        $purifier->method('purifyHTMLWithReferences')
+            ->with('<p>Problems with my code: <strong>example</strong> art #1</p>', self::PROJECT_ID)
+            ->willReturn('<p>Problems with my code: <strong>example</strong> <a href>art #1</a></p>');
+
         $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
             111,
             \Mockery::spy(\Tracker_Artifact_Changeset::class),
@@ -218,17 +233,27 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
             $text,
             Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
         );
+        $changeset_value_text->setPurifier($purifier);
 
         $representation = $changeset_value_text->getRESTValue($user);
-        $this->assertEquals($text, $representation->value);
+        $this->assertEquals(
+            '<p>Problems with my code: <strong>example</strong> art #1</p>',
+            $representation->value,
+        );
         $this->assertEquals('html', $representation->format);
     }
 
     public function testItBuildTheTextTextValueRepresentation(): void
     {
-        $user                 = Mockery::mock(PFUser::class);
-        $text                 = 'Ca débite, Ca débite';
-        $field                = $this->getTextFieldWithProject();
+        $user  = Mockery::mock(PFUser::class);
+        $text  = 'Ca débite, Ca débite art #1';
+        $field = $this->getTextFieldWithProject();
+
+        $purifier = $this->createMock(Codendi_HTMLPurifier::class);
+        $purifier->method('purifyTextWithReferences')
+            ->with('Ca débite, Ca débite art #1', self::PROJECT_ID)
+            ->willReturn('Ca débite, Ca débite <a href>art #1</a>');
+
         $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
             111,
             \Mockery::spy(\Tracker_Artifact_Changeset::class),
@@ -237,9 +262,17 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
             $text,
             Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
         );
+        $changeset_value_text->setPurifier($purifier);
 
         $representation = $changeset_value_text->getRESTValue($user);
-        $this->assertEquals($text, $representation->value);
+        $this->assertEquals(
+            'Ca débite, Ca débite art #1',
+            $representation->value,
+        );
+        $this->assertEquals(
+            'Ca débite, Ca débite <a href>art #1</a>',
+            $representation->post_processed_value,
+        );
         $this->assertEquals('text', $representation->format);
     }
 }

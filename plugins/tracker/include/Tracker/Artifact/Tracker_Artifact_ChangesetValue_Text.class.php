@@ -50,12 +50,15 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     /** @var string */
     private $format;
+    private Codendi_HTMLPurifier $purifier;
 
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $text, $format)
     {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->text   = $text;
         $this->format = $format;
+
+        $this->purifier = Codendi_HTMLPurifier::instance();
     }
 
     /**
@@ -98,6 +101,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     protected function getFullRESTRepresentation($value)
     {
+        $post_processed_value = $this->getValue();
+
         if ($this->format === self::COMMONMARK_CONTENT) {
             $text_field_value = $this->interpretMarkdownContent($value);
             $commonmark_value = $value;
@@ -106,7 +111,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
                 Tracker_FormElementFactory::instance()->getType($this->field),
                 $this->field->getLabel(),
                 $text_field_value,
-                $commonmark_value
+                $commonmark_value,
+                $post_processed_value,
             );
         }
 
@@ -115,7 +121,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
             $value,
-            $this->getFormat()
+            $post_processed_value,
+            $this->getFormat(),
         );
     }
 
@@ -126,14 +133,12 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      */
     public function getValue()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-
         if ($this->isInHTMLFormat()) {
-            return $hp->purifyHTMLWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
+            return $this->purifier->purifyHTMLWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
         } elseif ($this->format === self::COMMONMARK_CONTENT) {
             return $this->interpretMarkdownContent($this->getText());
         }
-        return $hp->purifyTextWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
+        return $this->purifier->purifyTextWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
     }
 
     /**
@@ -244,7 +249,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     public function getFormattedDiff(array $previous, array $next, int $purifier_level): string
     {
-        $callback = [Codendi_HTMLPurifier::instance(), 'purify'];
+        $callback = [$this->purifier, 'purify'];
         $formater = new Codendi_HtmlUnifiedDiffFormatter();
         $diff     = new Codendi_Diff(
             array_map($callback, $previous, array_fill(0, count($previous), $purifier_level)),
@@ -271,12 +276,11 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     public function getTextWithReferences(int $group_id): string
     {
-        $hp = Codendi_HTMLPurifier::instance();
         if ($this->isInHTMLFormat()) {
-            return $hp->purifyHTMLWithReferences($this->getText(), $group_id);
+            return $this->purifier->purifyHTMLWithReferences($this->getText(), $group_id);
         }
 
-        return $hp->purifyTextWithReferences($this->getText(), $group_id);
+        return $this->purifier->purifyTextWithReferences($this->getText(), $group_id);
     }
 
     private function isInHTMLFormat(): bool
@@ -286,7 +290,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     private function interpretMarkdownContent(string $text): string
     {
-        $content_interpreter = self::getCommonMarkInterpreter(Codendi_HTMLPurifier::instance());
+        $content_interpreter = self::getCommonMarkInterpreter($this->purifier);
 
         $interpreted_content_with_references = $content_interpreter->getInterpretedContentWithReferences(
             $text,
@@ -299,8 +303,13 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     private static function getCommonMarkInterpreter(Codendi_HTMLPurifier $purifier): CommonMarkInterpreter
     {
         return CommonMarkInterpreter::build(
-            Codendi_HTMLPurifier::instance(),
+            $purifier,
             new EnhancedCodeBlockExtension(CodeBlockFeaturesOnArtifact::getInstance())
         );
+    }
+
+    public function setPurifier(Codendi_HTMLPurifier $purifier): void
+    {
+        $this->purifier = $purifier;
     }
 }

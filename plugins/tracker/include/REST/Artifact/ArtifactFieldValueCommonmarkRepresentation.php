@@ -66,6 +66,7 @@ final class ArtifactFieldValueCommonmarkRepresentation implements ArtifactTextFi
         string $label,
         string $value,
         string $commonmark,
+        public string $post_processed_value,
     ) {
         $this->field_id   = JsonCast::toInt($id);
         $this->type       = $type;

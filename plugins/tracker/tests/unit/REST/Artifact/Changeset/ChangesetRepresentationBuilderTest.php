@@ -95,7 +95,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
         $string_field->shouldReceive('userCanRead')->andReturnTrue();
-        $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'text');
+        $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'overcompensation', 'text');
         $string_field->shouldReceive('getRESTValue')->andReturn($string_value);
         $int_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
         $int_field->shouldReceive('userCanRead')->andReturnTrue();
@@ -136,7 +136,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $permission_on_artifact_field->shouldReceive('getRESTValue')->andReturnNull();
         $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
         $string_field->shouldReceive('userCanRead')->andReturnTrue();
-        $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'text');
+        $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'overcompensation', 'text');
         $string_field->shouldReceive('getRESTValue')->andReturn($string_value);
 
         $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
@@ -162,7 +162,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $int_field_user_can_not_read->shouldReceive('userCanRead')->andReturnFalse();
         $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
         $string_field->shouldReceive('userCanRead')->andReturnTrue();
-        $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'text');
+        $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'overcompensation', 'text');
         $string_field->shouldReceive('getRESTValue')->andReturn($string_value);
 
         $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
@@ -387,7 +387,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $changeset = $this->buildChangeset();
 
         $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
-        $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'text');
+        $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'overcompensation', 'text');
         $string_field
             ->method('getRESTValue')
             ->with(self::isInstanceOf(Tracker_UserWithReadAllPermission::class), $changeset)
@@ -419,7 +419,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $permission_on_artifact_field = \Mockery::mock(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
         $permission_on_artifact_field->shouldReceive('getRESTValue')->andReturnNull();
         $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
-        $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'text');
+        $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'overcompensation', 'text');
         $string_field->shouldReceive('getRESTValue')->andReturn($string_value);
 
         $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
