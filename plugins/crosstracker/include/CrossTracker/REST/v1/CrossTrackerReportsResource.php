@@ -312,7 +312,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $this->checkAccess();
         try {
             $report         = $this->getReport($id);
-            $representation = $this->getReportRepresentation($report);
+            $representation = $this->getReportRepresentation($report, $this->user_manager->getCurrentUser());
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, "Report $id not found");
         }
@@ -454,7 +454,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        return $this->getReportRepresentation($expected_report);
+        return $this->getReportRepresentation($expected_report, $current_user);
     }
 
     /**
@@ -491,14 +491,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         Header::allowOptionsGetPut();
     }
 
-    /**
-     * @param $report
-     *
-     * @return CrossTrackerReportRepresentation
-     */
-    private function getReportRepresentation($report)
+    private function getReportRepresentation(CrossTrackerReport $report, PFUser $user): CrossTrackerReportRepresentation
     {
-        return CrossTrackerReportRepresentation::fromReport($report);
+        return CrossTrackerReportRepresentation::fromReport($report, $user);
     }
 
     private function sendPaginationHeaders($limit, $offset, $size)
