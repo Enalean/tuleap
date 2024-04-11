@@ -34,18 +34,18 @@ import {
     retrieveTrackerStructure,
 } from "@tuleap/plugin-docgen-docx";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
-import { getTraceabilityMatrix } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/traceability-matrix-creator";
-import { getExecutionsForCampaigns } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/executions-for-campaigns-retriever";
+import { getTraceabilityMatrix } from "@tuleap/plugin-testmanagement-app/src/helpers/ExportAsDocument/Reporter/traceability-matrix-creator";
+import { getExecutionsForCampaigns } from "@tuleap/plugin-testmanagement-app/src/helpers/ExportAsDocument/Reporter/executions-for-campaigns-retriever";
 import {
     buildStepDefinitionEnhancedWithResultsFunction,
     buildStepDefinitionFunction,
-} from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/step-test-definition-formatter";
+} from "@tuleap/plugin-testmanagement-app/src/helpers/ExportAsDocument/Reporter/step-test-definition-formatter";
 import type {
     ExportDocument,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
     LastExecutionsMap,
-} from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/type";
-import { getLastExecutionForTest } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/last-executions-retriever";
+} from "@tuleap/plugin-testmanagement-app/src/type";
+import { getLastExecutionForTest } from "@tuleap/plugin-testmanagement-app/src/helpers/ExportAsDocument/Reporter/last-executions-retriever";
 
 interface TrackerStructurePromiseTuple {
     readonly tracker_id: number;

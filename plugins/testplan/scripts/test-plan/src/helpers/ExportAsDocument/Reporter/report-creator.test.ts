@@ -30,7 +30,7 @@ import type {
     TestExecutionResponse,
     ArtifactFieldValueStepDefinitionContent,
 } from "@tuleap/plugin-docgen-docx";
-import * as querier from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/execution-querier";
+import * as querier from "@tuleap/plugin-testmanagement-app/src/helpers/ExportAsDocument/Reporter/execution-querier";
 
 describe("Create an export report", () => {
     it("generates the report", async () => {
