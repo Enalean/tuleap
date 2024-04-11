@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <div class="register-new-project-boxes">
         <svg
             width="316"
@@ -121,10 +121,4 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-
-@Component({})
-export default class ProjectInformationSvg extends Vue {}
-</script>
+<script setup lang="ts"></script>
