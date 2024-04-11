@@ -19,12 +19,16 @@
   -->
 
 <template>
-    <div v-if="!is_loading">
+    <div class="artidoc-app-container" v-if="!is_loading">
         <div v-if="sections && sections.length > 0" class="document-layout">
             <section class="tlp-framed document-content">
                 <document-content v-bind:sections="sections" />
             </section>
-            <aside class="table-of-contents"></aside>
+            <aside>
+                <div class="table-of-contents">
+                    <table-of-contents v-bind:sections="sections" />
+                </div>
+            </aside>
         </div>
         <div v-else class="tlp-framed">
             <empty-state />
@@ -39,6 +43,7 @@ import EmptyState from "@/views/EmptyState.vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { getAllSections } from "@/helpers/rest-querier";
 import DocumentContent from "@/views/DocumentContent.vue";
+import TableOfContents from "@/components/TableOfContents.vue";
 
 const props = defineProps<{ item_id: number }>();
 
@@ -60,21 +65,41 @@ onMounted(() => {
 
 <style lang="scss">
 @use "@/themes/artidoc";
+
+html {
+    scroll-behavior: smooth;
+}
+
+.artidoc-container,
+.artidoc-mountpoint {
+    height: 100%;
+}
 </style>
 <style lang="scss" scoped>
+.artidoc-app-container {
+    height: inherit;
+}
+
 .document-layout {
     display: grid;
     grid-template-columns: 80% 20%;
+    height: inherit;
     border-top: 1px solid var(--tlp-neutral-normal-color);
 
     .document-content {
         padding: 1.5rem 3rem;
+        border-right: 1px solid var(--tlp-neutral-normal-color);
         background-color: var(--tlp-white-color);
     }
 
     .table-of-contents {
-        padding: 1rem;
-        border-left: 1px solid var(--tlp-neutral-normal-color);
+        position: sticky;
+        top: var(--header-height);
+        padding: 1.5rem 1rem 1rem;
+    }
+
+    aside {
+        height: 100%;
         background: var(--tlp-fade-background-color);
     }
 }

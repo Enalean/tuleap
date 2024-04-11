@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+msgid "Table of contents"
+msgstr "Table des matières"
+
 msgid "This document is empty"
 msgstr "Ce document est vide"
 

@@ -19,45 +19,45 @@
   -->
 
 <template>
+    <h1 class="tlp-pane-title">
+        {{ $gettext("Table of contents") }}
+    </h1>
     <ol>
-        <li
-            v-for="section in sections"
-            v-bind:key="section.artifact.id"
-            v-bind:id="`${section.artifact.id}`"
-        >
-            <article class="document-section">
-                <h1>{{ section.title }}</h1>
-                <div
-                    class="section-description"
-                    v-dompurify-html="section.description.post_processed_value"
-                ></div>
-            </article>
+        <li v-for="section in sections" v-bind:key="section.artifact.id">
+            <a v-bind:href="`#${section.artifact.id}`">
+                <span class="section-title">{{ section.title }}</span>
+            </a>
         </li>
     </ol>
 </template>
+
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 defineProps<{ sections: readonly ArtidocSection[] }>();
 </script>
-<style lang="scss" scoped>
-.document-section {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 2rem;
 
-    h1 {
-        border-bottom: 1px solid var(--tlp-neutral-normal-color);
-        color: var(--tlp-dark-color);
-        font-size: 1.5rem;
-        font-weight: 600;
-        line-height: 3rem;
-    }
+<style scoped lang="scss">
+h1 {
+    margin-bottom: 1rem;
 }
 
-li::marker {
-    color: var(--tlp-dimmed-color-lighter-50);
-    font-style: italic;
+ol {
+    height: var(--available-height-for-sidebar);
+    overflow: hidden scroll;
+}
+
+li {
+    margin-bottom: 1.5rem;
+    padding-right: 1rem;
+}
+
+.section-title {
+    color: var(--tlp-dark-color);
+    font-size: 0.9rem;
     font-weight: 600;
 }
 </style>
