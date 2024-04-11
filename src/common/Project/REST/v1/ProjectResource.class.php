@@ -255,7 +255,41 @@ class ProjectResource extends AuthenticatedResource
      * }<br>
      * </pre>
      *
-     * If both template_id and xml_template_name are provided, only template_id will be taken into account.
+     *  Here is an example of JSON content to ask for a project creation with a Zip archive file:<br>
+     *  You will get an URL where the file needs to be uploaded using the
+     *  <a href="https://tus.io/protocols/resumable-upload.html">tus resumable upload protocol</a>
+     *  to validate the item creation. You will need to use the same authentication mechanism you used
+     *  to call this endpoint.
+     *  <br/>
+     *  <br/>
+     *  <pre>
+     *  {<br>
+     *  &nbsp; "shortname": "project-shortname",<br>
+     *  &nbsp; "description": "Project Description",<br>
+     *  &nbsp; "label": "Project Label",<br>
+     *  &nbsp; "is_public": true,<br>
+     *  &nbsp; "allow_restricted": true,<br>
+     *  &nbsp; "from_archive": {<br>
+     *  &nbsp;&nbsp;&nbsp;"file_name": "hierarchy.zip",<br>
+     *  &nbsp;&nbsp;&nbsp;"file_size": 2838<br>
+     *  &nbsp;},<br>
+     *  &nbsp; "categories":[<br>
+     *  &nbsp;&nbsp; {<br>
+     *  &nbsp;&nbsp;&nbsp; "category_id": 4,<br>
+     *  &nbsp;&nbsp;&nbsp; "value_id": 5<br>
+     *  &nbsp;&nbsp; }<br>
+     *  &nbsp;],<br>
+     *  &nbsp; "fields": [<br>
+     *  &nbsp;&nbsp; {<br>
+     *  &nbsp;&nbsp;&nbsp; "field_id": 1,<br>
+     *  &nbsp;&nbsp;&nbsp; "value": "Project custom field value"<br>
+     *  &nbsp;&nbsp; }<br>
+     *  &nbsp;]<br>
+     *  }<br>
+     *  </pre>
+     *
+     * If template_id is provided along others templates type, only template_id will be taken in account<br>
+     * If`xml_template_name` and `from_archive` are provided, only `xml_template_name` will be taken in account
      * <br>
      * <br>
      *
