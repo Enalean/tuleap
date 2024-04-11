@@ -18,19 +18,22 @@
  */
 
 import { beforeAll, describe, expect, it } from "vitest";
-import type { ComponentPublicInstance } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import DocumentContent from "@/views/DocumentContent.vue";
+import { createGettext } from "vue3-gettext";
+import type { ComponentPublicInstance } from "vue";
+import TableOfContents from "@/components/TableOfContents.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 
-describe("DocumentContent", () => {
+describe("TableOfContents", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
 
     beforeAll(() => {
         const defaultSection = ArtidocSectionFactory.create();
-
-        wrapper = shallowMount(DocumentContent, {
+        wrapper = shallowMount(TableOfContents, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
             propsData: {
                 sections: [
                     ArtidocSectionFactory.override({
@@ -46,17 +49,18 @@ describe("DocumentContent", () => {
         });
     });
 
-    it("should display the two sections", () => {
+    it("should display the two title sections", () => {
         const list = wrapper.find("ol");
         expect(list.findAll("li")).toHaveLength(2);
         expect(list.text()).toContain("Title 1");
         expect(list.text()).toContain("Title 2");
     });
 
-    it("sections should have an id for anchor feature", () => {
+    it("should have an url to redirect to the section", () => {
         const list = wrapper.find("ol");
-        const sections = list.findAll("li");
-        expect(sections[0].attributes().id).toBe("1");
-        expect(sections[1].attributes().id).toBe("2");
+        const links = list.findAll("li a");
+        expect(links.length).toBe(2);
+        expect(links[0].attributes().href).toBe("#1");
+        expect(links[1].attributes().href).toBe("#2");
     });
 });

@@ -23,3 +23,14 @@
     margin: 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
 }
+
+:root {
+    --header-height: 5vh;
+    --table-of-content-header-height: 10vh;
+    --help-dropdown-button-height: 15vh;
+    --available-height-for-sidebar: calc(
+        100vh - var(--header-height) - var(--table-of-content-header-height) - var(
+                --help-dropdown-button-height
+            )
+    );
+}
