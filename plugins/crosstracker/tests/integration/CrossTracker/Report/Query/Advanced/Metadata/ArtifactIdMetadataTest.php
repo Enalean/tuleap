@@ -41,10 +41,11 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     private PFUser $project_admin;
     private Tracker $release_tracker;
     private Tracker $sprint_tracker;
-    private int $sprint_artifact_id;
+    private int $sprint_artifact_1_id;
     private int $release_artifact_1_id;
     private int $release_artifact_2_id;
     private int $release_artifact_3_id;
+    private int $sprint_artifact_2_id;
 
     protected function setUp(): void
     {
@@ -79,16 +80,18 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
             ProjectUGroup::PROJECT_ADMIN
         );
 
-        $this->sprint_artifact_id    = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
+        $this->sprint_artifact_1_id  = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
         $this->release_artifact_1_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
         $this->release_artifact_2_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
         $this->release_artifact_3_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
+        $this->sprint_artifact_2_id  = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
 
         // Build a last changeset for each artifact, otherwise they won't be found
-        $tracker_builder->buildLastChangeset($this->sprint_artifact_id);
+        $tracker_builder->buildLastChangeset($this->sprint_artifact_1_id);
         $tracker_builder->buildLastChangeset($this->release_artifact_1_id);
         $tracker_builder->buildLastChangeset($this->release_artifact_2_id);
         $tracker_builder->buildLastChangeset($this->release_artifact_3_id);
+        $tracker_builder->buildLastChangeset($this->sprint_artifact_2_id);
     }
 
     /**
@@ -125,14 +128,14 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id = ' . $this->release_artifact_1_id . ' OR @id = ' . $this->sprint_artifact_id,
+                '@id = ' . $this->release_artifact_1_id . ' OR @id = ' . $this->sprint_artifact_1_id,
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
         );
 
         self::assertCount(2, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_1_id, $this->sprint_artifact_id], $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_1_id, $this->sprint_artifact_1_id], $artifacts);
     }
 
     public function testPermissionsEqual(): void
@@ -140,7 +143,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id = ' . $this->sprint_artifact_id,
+                '@id = ' . $this->sprint_artifact_1_id,
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_member
@@ -160,8 +163,8 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
             $this->project_admin
         );
 
-        self::assertCount(3, $artifacts);
-        self::assertEqualsCanonicalizing([$this->sprint_artifact_id, $this->release_artifact_3_id, $this->release_artifact_2_id], $artifacts);
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([$this->sprint_artifact_1_id, $this->release_artifact_3_id, $this->release_artifact_2_id, $this->sprint_artifact_2_id], $artifacts);
     }
 
     public function testMultipleNotEqual(): void
@@ -169,14 +172,14 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id != ' . $this->release_artifact_1_id . ' AND @id != ' . $this->sprint_artifact_id,
+                '@id != ' . $this->release_artifact_1_id . ' AND @id != ' . $this->sprint_artifact_1_id,
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
         );
 
-        self::assertCount(2, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_3_id, $this->release_artifact_2_id], $artifacts);
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_3_id, $this->release_artifact_2_id, $this->sprint_artifact_2_id], $artifacts);
     }
 
     public function testPermissionsNotEqual(): void
@@ -206,7 +209,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         );
 
         self::assertCount(3, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_2_id, $this->release_artifact_1_id, $this->sprint_artifact_id], $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_2_id, $this->release_artifact_1_id, $this->sprint_artifact_1_id], $artifacts);
     }
 
     public function testMultipleLesserThan(): void
@@ -221,7 +224,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         );
 
         self::assertCount(2, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_1_id, $this->sprint_artifact_id], $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_1_id, $this->sprint_artifact_1_id], $artifacts);
     }
 
     public function testPermissionsLesserThan(): void
@@ -251,7 +254,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         );
 
         self::assertCount(3, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_2_id, $this->release_artifact_1_id, $this->sprint_artifact_id], $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_2_id, $this->release_artifact_1_id, $this->sprint_artifact_1_id], $artifacts);
     }
 
     public function testMultipleLesserThanOrEqual(): void
@@ -266,7 +269,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         );
 
         self::assertCount(2, $artifacts);
-        self::assertEqualsCanonicalizing([$this->release_artifact_1_id, $this->sprint_artifact_id], $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_1_id, $this->sprint_artifact_1_id], $artifacts);
     }
 
     public function testPermissionsLesserThanOrEqual(): void
@@ -282,5 +285,50 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
 
         self::assertCount(2, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_2_id, $this->release_artifact_1_id], $artifacts);
+    }
+
+    public function testGreaterThan(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                '@id >' . $this->release_artifact_1_id,
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_2_id, $this->release_artifact_3_id, $this->sprint_artifact_2_id], $artifacts);
+    }
+
+    public function testMultipleGreaterThan(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                '@id > ' . $this->release_artifact_1_id . ' AND @id > ' . $this->release_artifact_2_id,
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_3_id, $this->sprint_artifact_2_id], $artifacts);
+    }
+
+    public function testPermissionsGreaterThan(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                '@id > ' . $this->release_artifact_1_id,
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_artifact_2_id, $this->release_artifact_3_id], $artifacts);
     }
 }
