@@ -23,7 +23,10 @@
         <li v-for="section in sections" v-bind:key="section.artifact.id">
             <article class="document-section">
                 <h1>{{ section.title }}</h1>
-                <div class="section-description" v-dompurify-html="section.description.value"></div>
+                <div
+                    class="section-description"
+                    v-dompurify-html="section.description.post_processed_value"
+                ></div>
             </article>
         </li>
     </ol>

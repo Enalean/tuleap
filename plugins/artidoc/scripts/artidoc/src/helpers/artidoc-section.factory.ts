@@ -44,6 +44,7 @@ const ArtidocSectionFactory = {
             value: "<h2>Title 1</h2><p>description 1</p>",
             format: "html",
             commonmark: "<h2>Title 1</h2><p>description 1</p>",
+            post_processed_value: "<h2>Title 1</h2><p>description 1</p>",
         },
     }),
 

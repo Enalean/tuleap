@@ -17,6 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+interface ArtifactFieldValueTextRepresentation {
+    readonly field_id: number;
+    readonly type: string;
+    readonly label: string;
+    readonly value: string;
+    readonly format: string;
+    readonly post_processed_value: string;
+}
+
+interface ArtifactFieldValueCommonmarkRepresentation extends ArtifactFieldValueTextRepresentation {
+    readonly commonmark: string;
+}
+
+type ArtifactTextFieldValueRepresentation =
+    | ArtifactFieldValueCommonmarkRepresentation
+    | ArtifactFieldValueTextRepresentation;
+
 export type ArtidocSection = {
     artifact: {
         id: number;
@@ -34,12 +51,5 @@ export type ArtidocSection = {
         };
     };
     title: string;
-    description: {
-        field_id: number;
-        type: string;
-        label: string;
-        value: string;
-        format: string;
-        commonmark: string;
-    };
+    description: ArtifactTextFieldValueRepresentation;
 };
