@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc;
 
 use HTTPRequest;
 use Psr\Log\LoggerInterface;
+use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Layout\BaseLayout;
@@ -38,6 +39,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
 {
     public function __construct(
         private RetrieveArtidoc $retrieve_artidoc,
+        private ArtidocBreadcrumbsProvider $breadcrumbs_provider,
         private LoggerInterface $logger,
     ) {
     }
@@ -46,7 +48,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     {
         $this->retrieve_artidoc->retrieveArtidoc((int) $variables['id'], $request->getCurrentUser())
             ->match(
-                fn (ArtidocDocumentInformation $document_information) => $this->renderPage($document_information, $layout),
+                fn (ArtidocDocumentInformation $document_information) => $this->renderPage($document_information, $layout, $request->getCurrentUser()),
                 function (Fault $fault) {
                     Fault::writeToLogger($fault, $this->logger);
                     throw new NotFoundException();
@@ -54,7 +56,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
             );
     }
 
-    private function renderPage(ArtidocDocumentInformation $document_information, BaseLayout $layout): void
+    private function renderPage(ArtidocDocumentInformation $document_information, BaseLayout $layout, \PFUser $user): void
     {
         $layout->addJavascriptAsset(
             new JavascriptViteAsset(
@@ -69,7 +71,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         $title   = $document_information->document->getTitle();
         $service = $document_information->service_docman;
 
-        $service->displayHeader($title, [], []);
+        $service->displayHeader($title, $this->breadcrumbs_provider->getBreadcrumbs($document_information, $user), []);
         \TemplateRendererFactory::build()->getRenderer(__DIR__)->renderToPage('artidoc', [
             'item_id' => $document_information->document->getId(),
             'title' => $title,

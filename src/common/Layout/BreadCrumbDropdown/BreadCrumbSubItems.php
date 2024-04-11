@@ -30,7 +30,7 @@ class BreadCrumbSubItems
         $this->sections = [];
     }
 
-    public function addSection(SubItemsSection $section)
+    public function addSection(SubItemsSection $section): void
     {
         $this->sections[] = $section;
     }
@@ -38,7 +38,7 @@ class BreadCrumbSubItems
     /**
      * @return SubItemsSection[]
      */
-    public function getSections()
+    public function getSections(): array
     {
         return $this->sections;
     }

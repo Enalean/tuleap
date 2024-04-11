@@ -24,7 +24,7 @@ use ArrayObject;
 
 class BreadCrumbLinkCollection extends ArrayObject
 {
-    public function add(BreadCrumbLink $link)
+    public function add(BreadCrumbLink $link): void
     {
         $this->append($link);
     }

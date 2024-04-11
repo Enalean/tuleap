@@ -22,15 +22,15 @@ namespace Tuleap\Layout\BreadCrumbDropdown;
 
 class BreadCrumbCollection
 {
-    /** @var BreadCrumb[] */
+    /** @var array<PresentableBreadCrumb> */
     private $breadcrumbs = [];
 
-    public function addBreadCrumb(BreadCrumb $crumb)
+    public function addBreadCrumb(PresentableBreadCrumb $crumb): void
     {
         $this->breadcrumbs[] = $crumb;
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
         return $this->breadcrumbs;
     }

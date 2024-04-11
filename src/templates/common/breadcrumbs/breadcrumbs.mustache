@@ -5,34 +5,50 @@
     <nav class="breadcrumb">
         {{# breadcrumbs }}
             {{^ has_sub_items }}
-                <span class="breadcrumb-item {{ classname }}">
-                    {{# link }}
-                        <a class="breadcrumb-link"
-                           href="{{ url }}"
-                           title="{{ label }}"
-                            {{# data_attributes }}
-                           data-{{ key }}="{{ value }}"
-                            {{/ data_attributes }}
-                        >
-                            <span aria-hidden="true"> {{ project_icon }} </span>{{ label }}
-                        </a>
-                    {{/ link }}
-                </span>
+                {{# is_ellipsis }}
+                    <span class="breadcrumb-item breadcrumb-item-disabled">
+                        <span class="breadcrumb-link" title="{{ reason }}"> ... </span>
+                    </span>
+                {{/ is_ellipsis }}
+                {{^ is_ellipsis }}
+                    <span class="breadcrumb-item {{ classname }}">
+                        {{# item }}
+                            {{# url }}
+                                <a class="breadcrumb-link"
+                                   href="{{ url }}"
+                                   title="{{ label }}"
+                                    {{# data_attributes }}
+                                   data-{{ key }}="{{ value }}"
+                                    {{/ data_attributes }}
+                                >
+                                    {{# project_icon }}<span aria-hidden="true"> {{ . }} </span>{{/ project_icon }}{{ label }}
+                                </a>
+                            {{/ url }}
+                        {{/ item }}
+                    </span>
+                {{/ is_ellipsis }}
             {{/ has_sub_items }}
 
             {{# has_sub_items }}
                 <div class="breadcrumb-switchable breadcrumb-item {{ classname }}">
-                    {{# link }}
-                        <a class="breadcrumb-link"
-                           href="{{ url }}"
-                           title="{{ label }}"
-                            {{# data_attributes }}
-                                data-{{ key }}="{{ value }}"
-                            {{/ data_attributes }}
-                        >
-                            {{ label }}
-                        </a>
-                    {{/ link }}
+                    {{# is_ellipsis }}
+                            <span class="breadcrumb-item breadcrumb-item-disabled">
+                            <span class="breadcrumb-link" title="{{ reason }}"> ... </span>
+                        </span>
+                    {{/ is_ellipsis }}
+                    {{^ is_ellipsis }}
+                        {{# item }}
+                            <a class="breadcrumb-link"
+                               href="{{ url }}"
+                               title="{{ label }}"
+                                {{# data_attributes }}
+                                    data-{{ key }}="{{ value }}"
+                                {{/ data_attributes }}
+                            >
+                                {{ label }}
+                            </a>
+                        {{/ item }}
+                    {{/ is_ellipsis }}
                     <div class="breadcrumb-switch-menu-container">
                         <nav class="breadcrumb-switch-menu">
                             {{# sections }}

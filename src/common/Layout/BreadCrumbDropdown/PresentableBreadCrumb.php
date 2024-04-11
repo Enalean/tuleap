@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,21 +20,7 @@
 
 namespace Tuleap\Layout\BreadCrumbDropdown;
 
-class BreadCrumbPresenterBuilder
+interface PresentableBreadCrumb
 {
-    /**
-     *
-     * @return BreadCrumbPresenter[]
-     */
-    public function build(BreadCrumbCollection $collection)
-    {
-        $presenters = [];
-        foreach ($collection->getBreadcrumbs() as $breadcrumb) {
-            $item_presenter = $breadcrumb->getBreadCrumbPresenter();
-
-            $presenters[] = $item_presenter;
-        }
-
-        return $presenters;
-    }
+    public function getBreadCrumbPresenter(): EllipsisBreadCrumbPresenter|BreadCrumbPresenter;
 }
