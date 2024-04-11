@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   xlsx:
-    specifier: git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#333e4e40f9c5603bd22a811f54c61c20bc9e17ab
-    version: tuleap.net/plugins/git/tuleap/deps/sheetjs/333e4e40f9c5603bd22a811f54c61c20bc9e17ab
+    specifier: git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#a0bed2a97dcb1e3b76049be91abf3747f333c975
+    version: tuleap.net/plugins/git/tuleap/deps/sheetjs/a0bed2a97dcb1e3b76049be91abf3747f333c975
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -16,10 +16,10 @@ devDependencies:
 
 packages:
 
-  tuleap.net/plugins/git/tuleap/deps/sheetjs/333e4e40f9c5603bd22a811f54c61c20bc9e17ab:
-    resolution: {commit: 333e4e40f9c5603bd22a811f54c61c20bc9e17ab, repo: https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git, type: git}
+  tuleap.net/plugins/git/tuleap/deps/sheetjs/a0bed2a97dcb1e3b76049be91abf3747f333c975:
+    resolution: {commit: a0bed2a97dcb1e3b76049be91abf3747f333c975, repo: https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git, type: git}
     name: xlsx
-    version: 0.19.3
+    version: 0.20.2
     engines: {node: '>=0.8'}
     hasBin: true
     dev: false
