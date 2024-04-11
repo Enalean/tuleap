@@ -92,4 +92,4 @@ ignoreUntil = 2024-05-19
 id = "GHSA-c33x-xqrf-c478" # CVE-2024-22189
 # https://github.com/caddyserver/caddy/issues/6210
 reason = "Wait for new Caddy release"
-ignoreUntil = 2024-04-10
+ignoreUntil = 2024-05-11
