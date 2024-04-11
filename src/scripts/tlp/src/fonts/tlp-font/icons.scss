@@ -59,6 +59,7 @@ $tlp-fontawesome-icons: (
     big-cards: "\f039",
     tracker: "\f040",
     tracker-circle: "\f041",
+    artidoc: "\f042",
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
