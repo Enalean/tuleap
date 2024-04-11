@@ -56,11 +56,11 @@ final readonly class ArtifactIdMetadataChecker
      */
     public function checkAlwaysThereFieldIsValidForComparison(Comparison $comparison, Metadata $metadata): void
     {
-        if ($comparison->getType() !== ComparisonType::Equal) {
-            throw new OperatorNotAllowedForMetadataException($metadata, $comparison->getType()->value);
-        }
-
-        $this->checkIntegerValueIsValid($comparison, $metadata);
+        match ($comparison->getType()) {
+            ComparisonType::Equal,
+            ComparisonType::NotEqual => $this->checkIntegerValueIsValid($comparison, $metadata),
+            default => throw new OperatorNotAllowedForMetadataException($metadata, $comparison->getType()->value),
+        };
     }
 
     /**
