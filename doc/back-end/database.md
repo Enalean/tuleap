@@ -45,6 +45,32 @@ escaping methods (`\DataAccessObject::quoteSmart`,
 `\DataAccessObject::escapeInt`, `db_es` and `db_ei`). The usage of these
 deprecated interfaces should be avoided.
 
+## Usage of auto incremented ids
+
+New code should not rely on `AUTO_INCREMENT` feature of MySQL. UUIDs must be used instead.
+
+Example of table creation:
+```sql
+CREATE TABLE IF NOT EXISTS plugin_foobar (
+    id BINARY(16) NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+) ENGINE=InnoDB;
+```
+
+Then, when a new entry is added to the table:
+```php
+    public function addFoo(string $name): void
+    {
+        $id = $this->uuid_factory->buildUUIDBytes();
+        $this->getDB()->insert(
+            'plugin_foobar',
+            ['id' => $id, 'name' => $name]
+        );
+    }
+```
+
+For more context about this policy, you can check [ADR 0028 Prevent data loss](../../adr/0028-prevent-data-loss.md).
+
 ## Database structure change with ForgeUpgrade
 
 Each version of Tuleap is likely to differ from the next one on many
