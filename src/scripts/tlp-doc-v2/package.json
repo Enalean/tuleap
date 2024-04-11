@@ -11,15 +11,15 @@
     "@tuleap/tlp-styles": "workspace:^"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^8.0.4",
-    "@storybook/addon-interactions": "^8.0.4",
-    "@storybook/addon-links": "^8.0.4",
-    "@storybook/addon-themes": "^8.0.4",
-    "@storybook/web-components": "^8.0.4",
-    "@storybook/web-components-vite": "^8.0.4",
+    "@storybook/addon-essentials": "^8.0.6",
+    "@storybook/addon-interactions": "^8.0.6",
+    "@storybook/addon-links": "^8.0.6",
+    "@storybook/addon-themes": "^8.0.6",
+    "@storybook/web-components": "^8.0.6",
+    "@storybook/web-components-vite": "^8.0.6",
     "@tuleap/build-system-configurator": "workspace:*",
     "lit": "^3.1.2",
-    "storybook": "^8.0.4"
+    "storybook": "^8.0.6"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
