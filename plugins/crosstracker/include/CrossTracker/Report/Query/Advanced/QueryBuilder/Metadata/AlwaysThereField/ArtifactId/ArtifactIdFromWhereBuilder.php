@@ -76,6 +76,9 @@ final readonly class ArtifactIdFromWhereBuilder implements ValueWrapperVisitor
             ComparisonType::LesserThanOrEqual => $this->getWhereForLesserThanOrEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
             ComparisonType::GreaterThan => $this->getWhereForGreaterThan((string) $value, $parameters->field_alias, $tracker_ids_statement),
             ComparisonType::GreaterThanOrEqual => $this->getWhereForGreaterThanOrEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
+            ComparisonType::Between => throw new LogicException(
+                'Between comparison expected a BetweenValueWrapper, not a SimpleValueWrapper'
+            ),
             default => throw new LogicException('Other comparison types are invalid for Artifact id metadata'),
         };
     }
@@ -130,7 +133,20 @@ final readonly class ArtifactIdFromWhereBuilder implements ValueWrapperVisitor
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
-        throw new LogicException('Comparison with BETWEEN() should have been flagged as invalid for Artifact id metadata');
+        $min_wrapper = $value_wrapper->getMinValue();
+        assert($min_wrapper instanceof SimpleValueWrapper);
+        $max_wrapper = $value_wrapper->getMaxValue();
+        assert($max_wrapper instanceof SimpleValueWrapper);
+
+        $tracker_ids_statement = EasyStatement::open()->in(
+            'tracker.id IN (?*)',
+            array_map(static fn(Tracker $tracker) => $tracker->getId(), $parameters->trackers)
+        );
+
+        return new ParametrizedWhere(
+            "$parameters->field_alias BETWEEN ? AND ? AND $tracker_ids_statement",
+            [$min_wrapper->getValue(), $max_wrapper->getValue(), ...array_values($tracker_ids_statement->values())]
+        );
     }
 
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)

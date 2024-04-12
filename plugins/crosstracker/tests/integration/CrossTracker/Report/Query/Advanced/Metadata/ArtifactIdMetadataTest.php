@@ -113,7 +113,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id = ' . $this->release_artifact_1_id,
+                sprintf('@id = %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_member
@@ -128,7 +128,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id = ' . $this->release_artifact_1_id . ' OR @id = ' . $this->sprint_artifact_1_id,
+                sprintf('@id = %d OR @id = %d', $this->release_artifact_1_id, $this->sprint_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -143,7 +143,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id = ' . $this->sprint_artifact_1_id,
+                sprintf('@id = %d', $this->sprint_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_member
@@ -157,7 +157,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id != ' . $this->release_artifact_1_id,
+                sprintf('@id != %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -172,7 +172,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id != ' . $this->release_artifact_1_id . ' AND @id != ' . $this->sprint_artifact_1_id,
+                sprintf('@id != %d AND @id != %d', $this->release_artifact_1_id, $this->sprint_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -187,7 +187,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id != ' . $this->release_artifact_1_id,
+                sprintf('@id != %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_member
@@ -202,7 +202,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id <' . $this->release_artifact_3_id,
+                sprintf('@id < %d', $this->release_artifact_3_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -217,7 +217,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id < ' . $this->release_artifact_2_id . ' AND @id < ' . $this->release_artifact_3_id,
+                sprintf('@id < %d AND @id < %d', $this->release_artifact_2_id, $this->release_artifact_3_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -232,7 +232,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id < ' . $this->release_artifact_3_id,
+                sprintf('@id < %d', $this->release_artifact_3_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_member
@@ -247,7 +247,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id <=' . $this->release_artifact_2_id,
+                sprintf('@id <= %d', $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -262,7 +262,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id <= ' . $this->release_artifact_1_id . ' AND @id <= ' . $this->release_artifact_2_id,
+                sprintf('@id <= %d AND @id <= %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -277,7 +277,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id <= ' . $this->release_artifact_2_id,
+                sprintf('@id <= %d', $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_member
@@ -292,7 +292,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id >' . $this->release_artifact_1_id,
+                sprintf('@id > %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -307,7 +307,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id > ' . $this->release_artifact_1_id . ' AND @id > ' . $this->release_artifact_2_id,
+                sprintf('@id > %d AND @id > %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -322,7 +322,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id > ' . $this->release_artifact_1_id,
+                sprintf('@id > %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_member
@@ -337,7 +337,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id >=' . $this->release_artifact_2_id,
+                sprintf('@id >= %d', $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -352,7 +352,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id >= ' . $this->release_artifact_1_id . ' AND @id >= ' . $this->release_artifact_2_id,
+                sprintf('@id >= %d AND @id >= %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_admin
@@ -367,7 +367,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                '@id >= ' . $this->release_artifact_1_id,
+                sprintf('@id >= %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_member
@@ -375,5 +375,69 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
 
         self::assertCount(3, $artifacts);
         self::assertEqualsCanonicalizing([$this->release_artifact_1_id, $this->release_artifact_2_id, $this->release_artifact_3_id], $artifacts);
+    }
+
+    public function testBetween(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                sprintf('@id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->sprint_artifact_2_id),
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(5, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->sprint_artifact_1_id,
+            $this->release_artifact_1_id,
+            $this->release_artifact_2_id,
+            $this->release_artifact_3_id,
+            $this->sprint_artifact_2_id,
+        ], $artifacts);
+    }
+
+    public function testMultipleBetween(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                sprintf(
+                    '%s OR %s',
+                    sprintf('@id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->release_artifact_1_id),
+                    sprintf('@id BETWEEN(%d, %d)', $this->release_artifact_3_id, $this->sprint_artifact_2_id),
+                ),
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_admin
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->sprint_artifact_1_id,
+            $this->release_artifact_1_id,
+            $this->release_artifact_3_id,
+            $this->sprint_artifact_2_id,
+        ], $artifacts);
+    }
+
+    public function testPermissionsBetween(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                sprintf('@id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->sprint_artifact_2_id),
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $artifacts);
+        self::assertEqualsCanonicalizing([
+            $this->release_artifact_1_id,
+            $this->release_artifact_2_id,
+            $this->release_artifact_3_id,
+        ], $artifacts);
     }
 }
