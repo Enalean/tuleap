@@ -73,6 +73,7 @@ final readonly class ArtifactIdFromWhereBuilder implements ValueWrapperVisitor
             ComparisonType::Equal => $this->getWhereForEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
             ComparisonType::NotEqual => $this->getWhereForNotEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
             ComparisonType::LesserThan => $this->getWhereForLesserThan((string) $value, $parameters->field_alias, $tracker_ids_statement),
+            ComparisonType::LesserThanOrEqual => $this->getWhereForLesserThanOrEqual((string) $value, $parameters->field_alias, $tracker_ids_statement),
             default => throw new LogicException('Other comparison types are invalid for Artifact id metadata'),
         };
     }
@@ -97,6 +98,14 @@ final readonly class ArtifactIdFromWhereBuilder implements ValueWrapperVisitor
     {
         return new ParametrizedWhere(
             "$field_alias < ? AND $tracker_ids_statement",
+            [$artifact_id, ...array_values($tracker_ids_statement->values())]
+        );
+    }
+
+    private function getWhereForLesserThanOrEqual(string $artifact_id, string $field_alias, EasyStatement $tracker_ids_statement): ParametrizedWhere
+    {
+        return new ParametrizedWhere(
+            "$field_alias <= ? AND $tracker_ids_statement",
             [$artifact_id, ...array_values($tracker_ids_statement->values())]
         );
     }

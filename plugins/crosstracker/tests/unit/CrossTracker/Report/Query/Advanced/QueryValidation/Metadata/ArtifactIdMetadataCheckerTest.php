@@ -93,6 +93,22 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
         $this->check($comparison);
     }
 
+    public function testItAllowsTheLesserThanOperator(): void
+    {
+        $comparison = new LesserThanComparison($this->metadata, new SimpleValueWrapper(105));
+
+        $this->expectNotToPerformAssertions();
+        $this->check($comparison);
+    }
+
+    public function testItAllowsTheLesserThanOrEqualOperator(): void
+    {
+        $comparison = new LesserThanOrEqualComparison($this->metadata, new SimpleValueWrapper(105));
+
+        $this->expectNotToPerformAssertions();
+        $this->check($comparison);
+    }
+
     public static function generateComparisonsWithInvalidValues(): iterable
     {
         $user           = UserTestBuilder::aUser()->withUserName('jdoe')->build();
@@ -120,8 +136,16 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
         yield '@id < a string' => [new LesserThanComparison($metadata, new SimpleValueWrapper('1090')), ToAnyStringComparisonException::class];
         yield '@id < an integer lesser than 1' => [new LesserThanComparison($metadata, new SimpleValueWrapper(0)), ToIntegerLesserThanOneException::class];
         yield '@id < OPEN()' => [new LesserThanComparison($metadata, new StatusOpenValueWrapper()), ToStatusOpenComparisonException::class];
-        yield '@id <NOW()' => [new LesserThanComparison($metadata, new CurrentDateTimeValueWrapper(null, null)), ToNowComparisonException::class];
+        yield '@id < NOW()' => [new LesserThanComparison($metadata, new CurrentDateTimeValueWrapper(null, null)), ToNowComparisonException::class];
         yield '@id < MYSELF()' => [new LesserThanComparison($metadata, new CurrentUserValueWrapper($user_retriever)), ToMyselfComparisonException::class];
+
+        // Lesser Than or Equal operator
+        yield '@id <= empty string' => [new LesserThanOrEqualComparison($metadata, new SimpleValueWrapper('')), ToEmptyStringComparisonException::class];
+        yield '@id <= a string' => [new LesserThanOrEqualComparison($metadata, new SimpleValueWrapper('1090')), ToAnyStringComparisonException::class];
+        yield '@id <= an integer lesser than 1' => [new LesserThanOrEqualComparison($metadata, new SimpleValueWrapper(0)), ToIntegerLesserThanOneException::class];
+        yield '@id <= OPEN()' => [new LesserThanOrEqualComparison($metadata, new StatusOpenValueWrapper()), ToStatusOpenComparisonException::class];
+        yield '@id <= NOW()' => [new LesserThanOrEqualComparison($metadata, new CurrentDateTimeValueWrapper(null, null)), ToNowComparisonException::class];
+        yield '@id <= MYSELF()' => [new LesserThanOrEqualComparison($metadata, new CurrentUserValueWrapper($user_retriever)), ToMyselfComparisonException::class];
     }
 
     /**
@@ -142,7 +166,6 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
         yield 'in()' => [new InComparison($metadata, new InValueWrapper([$value]))];
         yield 'not in()' => [new NotInComparison($metadata, new InValueWrapper([$value]))];
         yield 'between()' => [new BetweenComparison($metadata, new BetweenValueWrapper($value, $value))];
-        yield '<=' => [new LesserThanOrEqualComparison($metadata, $value)];
         yield '>' => [new GreaterThanComparison($metadata, $value)];
         yield '>=' => [new GreaterThanOrEqualComparison($metadata, $value)];
     }
