@@ -30,6 +30,9 @@
                 </div>
             </aside>
         </div>
+        <div v-else-if="!sections" class="tlp-framed">
+            <no-access-state />
+        </div>
         <div v-else class="tlp-framed">
             <empty-state />
         </div>
@@ -44,6 +47,7 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { getAllSections } from "@/helpers/rest-querier";
 import DocumentContent from "@/views/DocumentContent.vue";
 import TableOfContents from "@/components/TableOfContents.vue";
+import NoAccessState from "@/views/NoAccessState.vue";
 
 const props = defineProps<{ item_id: number }>();
 

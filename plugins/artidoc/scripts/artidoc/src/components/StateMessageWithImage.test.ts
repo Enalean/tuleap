@@ -21,20 +21,20 @@ import { beforeAll, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
-import ErrorMessageWithImage from "./EmptyStateMessageWithImage.vue";
+import StateMessageWithImage from "./StateMessageWithImage.vue";
 import Tumbleweed from "@/assets/Tumbleweed.vue";
 import type { ComponentPublicInstance } from "vue";
 
-describe("EmptyStateMessageWithImage", () => {
+describe("StateMessageWithImage", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
 
     beforeAll(() => {
-        wrapper = shallowMount(ErrorMessageWithImage, {
+        wrapper = shallowMount(StateMessageWithImage, {
             global: {
                 plugins: [createGettext({ silent: true })],
             },
             slots: {
-                "empty-state-image": Tumbleweed,
+                "state-image": Tumbleweed,
             },
             propsData: {
                 title: "expected title",

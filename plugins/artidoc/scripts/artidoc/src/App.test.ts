@@ -27,15 +27,15 @@ import * as rest from "./helpers/rest-querier";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
+import TableOfContents from "@/components/TableOfContents.vue";
+import NoAccessState from "@/views/NoAccessState.vue";
 
 vi.mock("./rest-querier");
 
 describe("App", () => {
     describe("when sections not found", () => {
         it("should display empty state view", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                errAsync(Fault.fromMessage("sections not found")),
-            );
+            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
 
             const wrapper = shallowMount(App, {
                 global: {
@@ -50,6 +50,8 @@ describe("App", () => {
             await wrapper.vm.$nextTick();
 
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
+            expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
+            expect(wrapper.findComponent(DocumentContent).exists()).toBe(false);
         });
     });
 
@@ -72,6 +74,51 @@ describe("App", () => {
             await wrapper.vm.$nextTick();
 
             expect(wrapper.findComponent(DocumentContent).exists()).toBe(true);
+            expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
+            expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
+        });
+        it("should display table of contents", async () => {
+            vi.spyOn(rest, "getAllSections").mockReturnValue(
+                okAsync([ArtidocSectionFactory.create()]),
+            );
+
+            const wrapper = shallowMount(App, {
+                global: {
+                    plugins: [createGettext({ silent: true })],
+                },
+                props: {
+                    item_id: 1,
+                },
+            });
+
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.findComponent(TableOfContents).exists()).toBe(true);
+        });
+    });
+
+    describe("when the user is not allowed to access the document", () => {
+        it("should display no access state view", async () => {
+            vi.spyOn(rest, "getAllSections").mockReturnValue(
+                errAsync(Fault.fromMessage("User not allowed to access the document")),
+            );
+
+            const wrapper = shallowMount(App, {
+                global: {
+                    plugins: [createGettext({ silent: true })],
+                },
+                props: {
+                    item_id: 1,
+                },
+            });
+
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.findComponent(NoAccessState).exists()).toBe(true);
+            expect(wrapper.findComponent(DocumentContent).exists()).toBe(false);
+            expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
         });
     });
 });

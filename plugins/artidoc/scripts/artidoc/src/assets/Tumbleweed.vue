@@ -22,8 +22,8 @@
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
         xml:space="preserve"
-        width="243"
-        height="128.958"
+        width="300"
+        height="200"
         viewBox="0 0 243 128.958"
     >
         <defs>

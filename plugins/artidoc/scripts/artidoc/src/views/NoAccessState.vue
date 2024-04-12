@@ -18,36 +18,20 @@
   -
   -->
 <template>
-    <div class="tlp-pane">
-        <section class="empty-state-page">
-            <div class="empty-state-illustration">
-                <slot name="empty-state-image"></slot>
-            </div>
-            <h1 class="empty-state-title">
-                {{ title }}
-            </h1>
-            <p class="empty-state-text">
-                {{ message }}
-            </p>
-        </section>
-    </div>
+    <state-message-with-image
+        v-bind:title="$gettext('You don\'t have access to this document')"
+        v-bind:message="$gettext('You can’t see nor edit this document')"
+    >
+        <template #state-image>
+            <restricted-document-illustration />
+        </template>
+    </state-message-with-image>
 </template>
 
 <script setup lang="ts">
-defineProps({
-    title: {
-        type: String,
-        required: true,
-    },
-    message: {
-        type: String,
-        required: true,
-    },
-});
-</script>
+import StateMessageWithImage from "@/components/StateMessageWithImage.vue";
+import { useGettext } from "vue3-gettext";
+import RestrictedDocumentIllustration from "@/assets/RestrictedDocumentIllustration.vue";
 
-<style lang="scss" scoped>
-.empty-state-page {
-    margin-bottom: calc(4 * var(--tlp-large-spacing));
-}
-</style>
+const { $gettext } = useGettext();
+</script>
