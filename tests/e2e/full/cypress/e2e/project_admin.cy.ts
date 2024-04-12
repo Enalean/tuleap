@@ -366,6 +366,52 @@ context("Membership management", function () {
     });
 });
 
+context("Project creation", function () {
+    let project_name: string, now: number;
+
+    before(() => {
+        now = Date.now();
+        project_name = "zip-import-" + now;
+    });
+    it("project can be created from archive template", function () {
+        cy.projectAdministratorSession();
+
+        cy.visit("/my/");
+        cy.get("[data-test=new-button]").click();
+        cy.get("[data-test=create-new-item]").click();
+
+        cy.get(
+            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]",
+        );
+        cy.get("[data-test=project-registration-advanced-templates-tab]").click();
+        cy.get("[data-test=archive-project-description]").click();
+
+        cy.get('[data-test="archive-project-file-input"]');
+        cy.get("[data-test=archive-project-file-input]").selectFile(
+            "cypress/fixtures/import-project-xml.zip",
+        );
+
+        cy.get("[data-test=project-registration-next-button]").click({ force: true });
+        cy.get("[data-test=new-project-name]").type(project_name);
+        cy.get("[data-test=approve_tos]").click();
+        cy.get("[data-test=project-registration-next-button]").click();
+
+        cy.reloadUntilCondition(
+            () => cy.visit(`/projects/${project_name}/?should-display-created-project-modal=true`),
+            (number_of_attempts: number, max_attempts: number) => {
+                cy.log(
+                    `Check that project is available (attempt ${number_of_attempts}/${max_attempts})`,
+                );
+
+                return cy
+                    .get("[data-test=dashboard-project-title-name]")
+                    .then((title) => Promise.resolve(title.text().includes(project_name)));
+            },
+            `Timed out while checking if "${project_name}" has been created`,
+        );
+    });
+});
+
 function createNewPublicProject(project_name: string): void {
     const payload = {
         shortname: project_name,
