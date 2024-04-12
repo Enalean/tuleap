@@ -316,12 +316,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "e8b2e2d2f44cd2d64edc5afd5e9f3deb08fa48f1"
+                "reference": "b5392894e1ac8d6286b7576ea61365c6b01685f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/e8b2e2d2f44cd2d64edc5afd5e9f3deb08fa48f1",
-                "reference": "e8b2e2d2f44cd2d64edc5afd5e9f3deb08fa48f1",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/b5392894e1ac8d6286b7576ea61365c6b01685f4",
+                "reference": "b5392894e1ac8d6286b7576ea61365c6b01685f4",
                 "shasum": ""
             },
             "require": {
@@ -365,9 +365,9 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/REL1_39"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/2.0.0"
             },
-            "time": "2023-12-05T07:23:08+00:00"
+            "time": "2024-04-09T08:46:59+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
@@ -1078,16 +1078,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.28",
+            "version": "v5.4.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "45261e1fccad1b5447a8d7a8e67aa7b4a9798b7b"
+                "reference": "4fdf34004f149cc20b2f51d7d119aa500caad975"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/45261e1fccad1b5447a8d7a8e67aa7b4a9798b7b",
-                "reference": "45261e1fccad1b5447a8d7a8e67aa7b4a9798b7b",
+                "url": "https://api.github.com/repos/symfony/process/zipball/4fdf34004f149cc20b2f51d7d119aa500caad975",
+                "reference": "4fdf34004f149cc20b2f51d7d119aa500caad975",
                 "shasum": ""
             },
             "require": {
@@ -1120,7 +1120,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.4.28"
+                "source": "https://github.com/symfony/process/tree/v5.4.36"
             },
             "funding": [
                 {
@@ -1136,7 +1136,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-07T10:36:04+00:00"
+            "time": "2024-02-12T15:49:53+00:00"
         }
     ],
     "packages-dev": [],
