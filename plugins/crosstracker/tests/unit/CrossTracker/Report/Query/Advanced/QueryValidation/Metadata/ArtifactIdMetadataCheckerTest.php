@@ -117,6 +117,14 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
         $this->check($comparison);
     }
 
+    public function testItAllowsTheGreaterThanOrEqualOperator(): void
+    {
+        $comparison = new GreaterThanOrEqualComparison($this->metadata, new SimpleValueWrapper(105));
+
+        $this->expectNotToPerformAssertions();
+        $this->check($comparison);
+    }
+
     public static function generateComparisonsWithInvalidValues(): iterable
     {
         $user           = UserTestBuilder::aUser()->withUserName('jdoe')->build();
@@ -162,6 +170,14 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
         yield '@id > OPEN()' => [new GreaterThanComparison($metadata, new StatusOpenValueWrapper()), ToStatusOpenComparisonException::class];
         yield '@id > NOW()' => [new GreaterThanComparison($metadata, new CurrentDateTimeValueWrapper(null, null)), ToNowComparisonException::class];
         yield '@id > MYSELF()' => [new GreaterThanComparison($metadata, new CurrentUserValueWrapper($user_retriever)), ToMyselfComparisonException::class];
+
+        // Greater Than or Equal operator
+        yield '@id >= empty string' => [new GreaterThanOrEqualComparison($metadata, new SimpleValueWrapper('')), ToEmptyStringComparisonException::class];
+        yield '@id >= a string' => [new GreaterThanOrEqualComparison($metadata, new SimpleValueWrapper('1090')), ToAnyStringComparisonException::class];
+        yield '@id >= an integer lesser than 1' => [new GreaterThanOrEqualComparison($metadata, new SimpleValueWrapper(0)), ToIntegerLesserThanOneException::class];
+        yield '@id >= OPEN()' => [new GreaterThanOrEqualComparison($metadata, new StatusOpenValueWrapper()), ToStatusOpenComparisonException::class];
+        yield '@id >= NOW()' => [new GreaterThanOrEqualComparison($metadata, new CurrentDateTimeValueWrapper(null, null)), ToNowComparisonException::class];
+        yield '@id >= MYSELF()' => [new GreaterThanOrEqualComparison($metadata, new CurrentUserValueWrapper($user_retriever)), ToMyselfComparisonException::class];
     }
 
     /**
@@ -182,7 +198,6 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
         yield 'in()' => [new InComparison($metadata, new InValueWrapper([$value]))];
         yield 'not in()' => [new NotInComparison($metadata, new InValueWrapper([$value]))];
         yield 'between()' => [new BetweenComparison($metadata, new BetweenValueWrapper($value, $value))];
-        yield '>=' => [new GreaterThanOrEqualComparison($metadata, $value)];
     }
 
     /**
