@@ -126,7 +126,7 @@ class ArtidocPlugin extends Plugin
     {
         $event->addType(
             ArtidocDocument::TYPE,
-            new OtherItemTypeDefinition('fa-solid fa-tlp-artidoc document-document-icon')
+            new OtherItemTypeDefinition('fa-solid fa-tlp-artidoc document-other-type-badge tlp-swatch-peggy-pink')
         );
     }
 
