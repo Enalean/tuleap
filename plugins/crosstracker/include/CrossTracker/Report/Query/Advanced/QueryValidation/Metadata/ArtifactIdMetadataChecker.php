@@ -60,7 +60,8 @@ final readonly class ArtifactIdMetadataChecker
             ComparisonType::Equal,
             ComparisonType::NotEqual,
             ComparisonType::LesserThan,
-            ComparisonType::LesserThanOrEqual => $this->checkIntegerValueIsValid($comparison, $metadata),
+            ComparisonType::LesserThanOrEqual,
+            ComparisonType::GreaterThan => $this->checkIntegerValueIsValid($comparison, $metadata),
             default => throw new OperatorNotAllowedForMetadataException($metadata, $comparison->getType()->value),
         };
     }
