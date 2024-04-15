@@ -20,3 +20,9 @@ msgstr "Ce document est vide"
 
 msgid "You can read this document, it's just empty for now"
 msgstr "Vous pouvez lire ce document, mais celui-ci est vide pour l'instant"
+
+msgid "You can’t see nor edit this document"
+msgstr "Vous ne pouvez pas lire ou éditer ce document"
+
+msgid "You don't have access to this document"
+msgstr "Vous n'avez pas les droits d'accès à ce document"

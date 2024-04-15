@@ -21,16 +21,16 @@ import { beforeAll, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
-import EmptyState from "./EmptyState.vue";
 import StateMessageWithImage from "@/components/StateMessageWithImage.vue";
-import Tumbleweed from "@/assets/Tumbleweed.vue";
 import type { ComponentPublicInstance } from "vue";
+import NoAccessState from "@/views/NoAccessState.vue";
+import RestrictedDocumentIllustration from "@/assets/RestrictedDocumentIllustration.vue";
 
-describe("EmptyState", () => {
+describe("NoAccessState", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
 
     beforeAll(() => {
-        wrapper = mount(EmptyState, {
+        wrapper = mount(NoAccessState, {
             global: {
                 plugins: [createGettext({ silent: true })],
             },
@@ -40,7 +40,7 @@ describe("EmptyState", () => {
     it("should display the error message", () => {
         expect(wrapper.findComponent(StateMessageWithImage).exists()).toBe(true);
     });
-    it("should display a tumbleweed", () => {
-        expect(wrapper.findComponent(Tumbleweed).exists()).toBe(true);
+    it("should display a restricted document illustration", () => {
+        expect(wrapper.findComponent(RestrictedDocumentIllustration).exists()).toBe(true);
     });
 });

@@ -18,20 +18,36 @@
   -
   -->
 <template>
-    <state-message-with-image
-        v-bind:title="$gettext('This document is empty')"
-        v-bind:message="$gettext('You can read this document, it\'s just empty for now')"
-    >
-        <template #state-image>
-            <tumbleweed />
-        </template>
-    </state-message-with-image>
+    <div class="tlp-pane">
+        <section class="empty-state-page">
+            <div class="empty-state-illustration">
+                <slot name="state-image"></slot>
+            </div>
+            <h1 class="empty-state-title">
+                {{ title }}
+            </h1>
+            <p class="empty-state-text">
+                {{ message }}
+            </p>
+        </section>
+    </div>
 </template>
 
 <script setup lang="ts">
-import Tumbleweed from "@/assets/Tumbleweed.vue";
-import StateMessageWithImage from "@/components/StateMessageWithImage.vue";
-import { useGettext } from "vue3-gettext";
-
-const { $gettext } = useGettext();
+defineProps({
+    title: {
+        type: String,
+        required: true,
+    },
+    message: {
+        type: String,
+        required: true,
+    },
+});
 </script>
+
+<style lang="scss" scoped>
+.empty-state-page {
+    margin-bottom: calc(4 * var(--tlp-large-spacing));
+}
+</style>
