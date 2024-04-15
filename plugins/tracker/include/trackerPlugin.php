@@ -236,6 +236,7 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
+use Tuleap\Tracker\Permission\TrackersPermissions;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\PromotedTrackerDao;
@@ -2514,6 +2515,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(Tracker_ReportDao::class);
         $event->addConfigClass(ColorpickerMountPointPresenterBuilder::class);
         $event->addConfigClass(PromotedTrackerConfiguration::class);
+        $event->addConfigClass(TrackersPermissions::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder
