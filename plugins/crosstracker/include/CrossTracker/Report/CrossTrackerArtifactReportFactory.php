@@ -63,7 +63,7 @@ final readonly class CrossTrackerArtifactReportFactory
     ): ArtifactMatchingReportCollection {
         if ($report->getExpertQuery() === '') {
             return $this->getArtifactsFromGivenTrackers(
-                $report->getTrackers(),
+                $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers()),
                 $limit,
                 $offset
             );

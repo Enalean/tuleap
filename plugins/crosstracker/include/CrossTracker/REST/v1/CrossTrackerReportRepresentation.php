@@ -18,8 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\REST\v1;
 
+use PFUser;
 use Tuleap\REST\JsonCast;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\Tracker\REST\TrackerReference;
@@ -67,15 +70,17 @@ class CrossTrackerReportRepresentation
         $this->invalid_trackers = $invalid_trackers;
     }
 
-    public static function fromReport(CrossTrackerReport $report): self
+    public static function fromReport(CrossTrackerReport $report, PFUser $user): self
     {
         $trackers         = [];
         $invalid_trackers = [];
 
         foreach ($report->getTrackers() as $tracker) {
-            $tracker_reference = TrackerReference::build($tracker);
+            if ($tracker->userCanView($user)) {
+                $tracker_reference = TrackerReference::build($tracker);
 
-            $trackers[] = $tracker_reference;
+                $trackers[] = $tracker_reference;
+            }
         }
 
         foreach ($report->getInvalidTrackers() as $invalid_tracker) {

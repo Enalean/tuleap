@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Permission;
 
 use PFUser;
@@ -26,11 +28,11 @@ use Project_AccessException;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\CrossTrackerReport;
-use URLVerification;
+use Tuleap\include\CheckUserCanAccessProject;
 
 final readonly class CrossTrackerPermissionGate
 {
-    public function __construct(private URLVerification $url_verification)
+    public function __construct(private CheckUserCanAccessProject $project_access)
     {
     }
 
@@ -51,12 +53,17 @@ final readonly class CrossTrackerPermissionGate
      */
     private function checkProjectsAuthorization(PFUser $user, array $projects): void
     {
+        $count_of_authorized_projects = 0;
         foreach ($projects as $project) {
             try {
-                $this->url_verification->userCanAccessProject($user, $project);
+                $this->project_access->userCanAccessProject($user, $project);
+                $count_of_authorized_projects++;
             } catch (Project_AccessException) {
-                throw new CrossTrackerUnauthorizedProjectException();
             }
+        }
+
+        if (! empty($projects) && $count_of_authorized_projects === 0) {
+            throw new CrossTrackerUnauthorizedProjectException();
         }
     }
 
@@ -66,10 +73,15 @@ final readonly class CrossTrackerPermissionGate
      */
     private function checkTrackersAuthorization(PFUser $user, array $trackers): void
     {
+        $count_of_authorized_trackers = 0;
         foreach ($trackers as $tracker) {
-            if (! $tracker->userCanView($user)) {
-                throw new CrossTrackerUnauthorizedTrackerException();
+            if ($tracker->userCanView($user)) {
+                $count_of_authorized_trackers++;
             }
+        }
+
+        if (! empty($trackers) && $count_of_authorized_trackers === 0) {
+            throw new CrossTrackerUnauthorizedTrackerException();
         }
     }
 
