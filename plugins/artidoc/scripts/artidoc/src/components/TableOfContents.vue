@@ -24,8 +24,8 @@
     </h1>
     <ol>
         <li v-for="section in sections" v-bind:key="section.artifact.id">
-            <a v-bind:href="`#${section.artifact.id}`">
-                <span class="section-title">{{ section.title }}</span>
+            <a v-bind:href="`#${section.artifact.id}`" class="section-title">
+                {{ section.title }}
             </a>
         </li>
     </ol>
@@ -42,7 +42,7 @@ defineProps<{ sections: readonly ArtidocSection[] }>();
 
 <style scoped lang="scss">
 h1 {
-    margin-bottom: 1rem;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 ol {
@@ -51,8 +51,7 @@ ol {
 }
 
 li {
-    margin-bottom: 1.5rem;
-    padding-right: 1rem;
+    margin: 0 0 var(--tlp-small-spacing);
 }
 
 .section-title {
