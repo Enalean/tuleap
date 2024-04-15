@@ -60,7 +60,7 @@ class LatestNewsController implements DispatchableWithRequest
     {
         $feed = new Feed();
         $feed->setTitle(sprintf(_('%s news'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
-        $feed->setCopyright(sprintf(_('Copyright (c) %s, %s Team, 2001-%d. All Rights Reserved'), ForgeConfig::get('sys_long_org_name'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), date('Y')));
+        $feed->setCopyright(sprintf(_('Copyright (c) %1$s, %2$s Team, 2001-%3$d. All Rights Reserved'), ForgeConfig::get('sys_long_org_name'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), date('Y')));
         $feed->setDescription(sprintf(_('%s project news highlights'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
         $feed->setLink(\Tuleap\ServerHostname::HTTPSUrl());
         $feed->setLanguage('en-us');
