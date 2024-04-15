@@ -30,6 +30,7 @@ use Tuleap\Artidoc\REST\ResourcesInjector;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
 use Tuleap\Docman\REST\v1\Folders\FilterItemOtherTypeProvider;
 use Tuleap\Docman\REST\v1\GetOtherDocumentItemRepresentationWrapper;
+use Tuleap\Docman\REST\v1\MoveItem\MoveOtherItemUriRetriever;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationOtherType;
 use Tuleap\Document\Tree\OtherItemTypeDefinition;
 use Tuleap\Document\Tree\OtherItemTypes;
@@ -128,6 +129,14 @@ class ArtidocPlugin extends Plugin
             ArtidocDocument::TYPE,
             new OtherItemTypeDefinition('fa-solid fa-tlp-artidoc document-other-type-badge tlp-swatch-peggy-pink')
         );
+    }
+
+    #[ListeningToEventClass]
+    public function moveOtherItemUriRetriever(MoveOtherItemUriRetriever $event): void
+    {
+        if ($event->item instanceof ArtidocDocument) {
+            $event->setMoveUri('/api/artidoc/' . urlencode((string) $event->item->getId()));
+        }
     }
 
     #[ListeningToEventName(Event::REST_RESOURCES)]
