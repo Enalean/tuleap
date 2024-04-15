@@ -1,0 +1,15 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as LayoutStories from "./tlp-layout.stories";
+
+<Meta of={LayoutStories}/>
+
+# Layout
+
+<code>.tlp-framed</code> and <code>.tlp-centered</code>
+
+By default there isn't margins on the main container; this allows you to be able to use the full with of the viewport (for example when you use tabs).
+However most of the time you will need to add some margins (for example when you use panes). This is achieving by using <code>.tlp-framed</code>
+
+<Canvas of={LayoutStories.Layout}></Canvas>
+
+<Controls></Controls>

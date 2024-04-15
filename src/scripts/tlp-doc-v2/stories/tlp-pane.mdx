@@ -1,0 +1,32 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as PaneStories from "./tlp-pane.stories";
+
+<Meta of={PaneStories}/>
+
+# Panes
+
+<code>.tlp-pane</code>
+
+<Canvas withToolbar={true} of={PaneStories.Pane}></Canvas>
+
+<Controls></Controls>
+
+## With tabs
+
+<Canvas withToolbar={true} of={PaneStories.PaneWithTabs}></Canvas>
+
+## With table
+
+<Canvas withToolbar={true} of={PaneStories.PaneWithTable}></Canvas>
+
+## With submit button
+
+<Canvas withToolbar={true} of={PaneStories.PaneWithSubmitButton}></Canvas>
+
+## Horizontally split
+
+<Canvas withToolbar={true} of={PaneStories.HorizontallySplitPane}></Canvas>
+
+## Vertically split
+
+<Canvas withToolbar={true} of={PaneStories.VerticallySplitPane}></Canvas>
