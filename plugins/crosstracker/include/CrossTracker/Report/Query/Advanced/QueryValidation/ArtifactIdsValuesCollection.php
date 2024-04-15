@@ -98,7 +98,22 @@ final readonly class ArtifactIdsValuesCollection implements ValueWrapperVisitor
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
-        throw new \LogicException('Should not end there');
+        return $value_wrapper->getMinValue()
+            ->accept($this, $parameters)
+            ->andThen(fn(array $min_artifact_id) => $value_wrapper->getMaxValue()
+                ->accept($this, $parameters)
+                ->map(static fn(array $max_artifact_id) => array_merge($min_artifact_id, $max_artifact_id)))
+            ->andThen(
+                function (array $values) {
+                    if ($values[0] > $values[1]) {
+                        return Result::err(InvalidComparisonWithBetweenValuesMinGreaterThanMaxFault::build());
+                    }
+
+                    /** @var Ok<list<int>> $ok */
+                    $ok = Result::ok($values);
+                    return $ok;
+                }
+            );
     }
 
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)

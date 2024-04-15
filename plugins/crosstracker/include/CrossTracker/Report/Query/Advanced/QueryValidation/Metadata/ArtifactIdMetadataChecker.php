@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\EmptyStringComparisonException;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListToMyselfForAnonymousComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorNotAllowedForMetadataException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToAnyStringComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToEmptyStringComparisonException;
@@ -31,8 +29,9 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToInteg
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToMyselfComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToNowComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToStatusOpenComparisonException;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToStringComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\ArtifactIdsValuesCollection;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\WithBetweenValuesMinGreaterThanMaxException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidComparisonWithBetweenValuesMinGreaterThanMaxFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidComparisonToEmptyStringFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidComparisonToAnyStringFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidComparisonToIntegerLesserThanOneFault;
@@ -47,12 +46,14 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 final readonly class ArtifactIdMetadataChecker
 {
     /**
-     * @throws ToStatusOpenComparisonException
-     * @throws ListToMyselfForAnonymousComparisonException
-     * @throws ToStringComparisonException
      * @throws ToNowComparisonException
+     * @throws WithBetweenValuesMinGreaterThanMaxException
+     * @throws ToAnyStringComparisonException
+     * @throws ToIntegerLesserThanOneException
+     * @throws ToStatusOpenComparisonException
+     * @throws ToEmptyStringComparisonException
      * @throws OperatorNotAllowedForMetadataException
-     * @throws EmptyStringComparisonException
+     * @throws ToMyselfComparisonException
      */
     public function checkAlwaysThereFieldIsValidForComparison(Comparison $comparison, Metadata $metadata): void
     {
@@ -62,17 +63,20 @@ final readonly class ArtifactIdMetadataChecker
             ComparisonType::LesserThan,
             ComparisonType::LesserThanOrEqual,
             ComparisonType::GreaterThan,
-            ComparisonType::GreaterThanOrEqual => $this->checkIntegerValueIsValid($comparison, $metadata),
+            ComparisonType::GreaterThanOrEqual,
+            ComparisonType::Between => $this->checkIntegerValueIsValid($comparison, $metadata),
             default => throw new OperatorNotAllowedForMetadataException($metadata, $comparison->getType()->value),
         };
     }
 
     /**
-     * @throws EmptyStringComparisonException
-     * @throws ToStringComparisonException
+     * @throws ToEmptyStringComparisonException
+     * @throws ToAnyStringComparisonException
+     * @throws ToIntegerLesserThanOneException
+     * @throws WithBetweenValuesMinGreaterThanMaxException
      * @throws ToStatusOpenComparisonException
      * @throws ToNowComparisonException
-     * @throws ListToMyselfForAnonymousComparisonException
+     * @throws ToMyselfComparisonException
      */
     private function checkIntegerValueIsValid(
         Comparison $comparison,
@@ -85,6 +89,7 @@ final readonly class ArtifactIdMetadataChecker
                         InvalidComparisonToEmptyStringFault::class => throw new ToEmptyStringComparisonException($metadata),
                         InvalidComparisonToAnyStringFault::class => throw new ToAnyStringComparisonException($metadata),
                         InvalidComparisonToIntegerLesserThanOneFault::class => throw new ToIntegerLesserThanOneException($metadata),
+                        InvalidComparisonWithBetweenValuesMinGreaterThanMaxFault::class => throw new WithBetweenValuesMinGreaterThanMaxException($metadata),
                         InvalidComparisonToStatusOpenFault::class => throw new ToStatusOpenComparisonException($metadata),
                         InvalidComparisonToCurrentDateTimeFault::class => throw new ToNowComparisonException($metadata),
                         InvalidComparisonToCurrentUserFault::class => throw new ToMyselfComparisonException($metadata),

@@ -68,16 +68,34 @@ final class ArtifactIdsValuesCollectionTest extends TestCase
         self::assertInstanceOf(InvalidComparisonToStatusOpenFault::class, $result->error);
     }
 
-    public function testItThrowsForBetweenValueAsItIsNotSupportedYet(): void
+    public function testItReturnsOkForBetweenValue(): void
     {
-        $this->expectException(\LogicException::class);
-
-        ArtifactIdsValuesCollection::fromValueWrapper(
+        $min_id = 5;
+        $max_id = 8;
+        $result = ArtifactIdsValuesCollection::fromValueWrapper(
             new BetweenValueWrapper(
-                new SimpleValueWrapper(5),
-                new SimpleValueWrapper(8)
+                new SimpleValueWrapper($min_id),
+                new SimpleValueWrapper($max_id)
             )
         );
+
+        $artifact_ids = $result->unwrapOr(null)->artifact_ids ?? [];
+        self::assertEquals([$min_id, $max_id], $artifact_ids);
+    }
+
+    public function testItReturnsErrForBetweenValueWhenMinIsGreaterThanMax(): void
+    {
+        $min_id = 8;
+        $max_id = 5;
+        $result = ArtifactIdsValuesCollection::fromValueWrapper(
+            new BetweenValueWrapper(
+                new SimpleValueWrapper($min_id),
+                new SimpleValueWrapper($max_id)
+            )
+        );
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(InvalidComparisonWithBetweenValuesMinGreaterThanMaxFault::class, $result->error);
     }
 
     public function testItThrowsForInValueAsArtifactIdValuesListsNeverSupportIn(): void

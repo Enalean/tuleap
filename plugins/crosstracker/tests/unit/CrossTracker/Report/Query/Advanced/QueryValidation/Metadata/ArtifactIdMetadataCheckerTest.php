@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Throwable;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\EmptyStringComparisonException;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListToMyselfForAnonymousComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorNotAllowedForMetadataException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToAnyStringComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToEmptyStringComparisonException;
@@ -32,7 +30,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToInteg
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToMyselfComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToNowComparisonException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToStatusOpenComparisonException;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToStringComparisonException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\WithBetweenValuesMinGreaterThanMaxException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
@@ -56,71 +54,41 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 
 final class ArtifactIdMetadataCheckerTest extends TestCase
 {
-    private Metadata $metadata;
-
-    protected function setUp(): void
-    {
-        $this->metadata = new Metadata('id');
-    }
-
     /**
-     * @throws ListToMyselfForAnonymousComparisonException
-     * @throws ToStatusOpenComparisonException
      * @throws ToNowComparisonException
-     * @throws ToStringComparisonException
+     * @throws ToAnyStringComparisonException
+     * @throws WithBetweenValuesMinGreaterThanMaxException
+     * @throws ToIntegerLesserThanOneException
+     * @throws ToStatusOpenComparisonException
+     * @throws ToEmptyStringComparisonException
      * @throws OperatorNotAllowedForMetadataException
-     * @throws EmptyStringComparisonException
+     * @throws ToMyselfComparisonException
      */
     private function check(Comparison $comparison): void
     {
         $checker = new ArtifactIdMetadataChecker();
-        $checker->checkAlwaysThereFieldIsValidForComparison($comparison, $this->metadata);
+        $checker->checkAlwaysThereFieldIsValidForComparison($comparison, new Metadata('id'));
     }
 
-    public function testItAllowsTheEqualOperator(): void
+    public static function generateAllowedComparisonsWithValidValues(): iterable
     {
-        $comparison = new EqualComparison($this->metadata, new SimpleValueWrapper(105));
+        $metadata = new Metadata('id');
 
-        $this->expectNotToPerformAssertions();
-        $this->check($comparison);
+        yield '@id = int, when int > 0' => [new EqualComparison($metadata, new SimpleValueWrapper(105))];
+        yield '@id != int, when int > 0' => [new NotEqualComparison($metadata, new SimpleValueWrapper(105))];
+        yield '@id < int, when int > 0' => [new LesserThanComparison($metadata, new SimpleValueWrapper(105))];
+        yield '@id <= int, when int > 0' => [new LesserThanOrEqualComparison($metadata, new SimpleValueWrapper(105))];
+        yield '@id > int, when int > 0' => [new GreaterThanComparison($metadata, new SimpleValueWrapper(105))];
+        yield '@id >= int, when int > 0' => [new GreaterThanOrEqualComparison($metadata, new SimpleValueWrapper(105))];
+        yield '@id BETWEEN(min, max), min === max AND are > 0' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(1), new SimpleValueWrapper(1)))];
+        yield '@id BETWEEN(min, max), min < max AND are > 0' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(1), new SimpleValueWrapper(10)))];
     }
 
-    public function testItAllowsTheNotEqualOperator(): void
+    /**
+     * @dataProvider generateAllowedComparisonsWithValidValues
+     */
+    public function testItDoesNothingWhenTheComparisonAndTheValuesAreValid(Comparison $comparison): void
     {
-        $comparison = new NotEqualComparison($this->metadata, new SimpleValueWrapper(105));
-
-        $this->expectNotToPerformAssertions();
-        $this->check($comparison);
-    }
-
-    public function testItAllowsTheLesserThanOperator(): void
-    {
-        $comparison = new LesserThanComparison($this->metadata, new SimpleValueWrapper(105));
-
-        $this->expectNotToPerformAssertions();
-        $this->check($comparison);
-    }
-
-    public function testItAllowsTheLesserThanOrEqualOperator(): void
-    {
-        $comparison = new LesserThanOrEqualComparison($this->metadata, new SimpleValueWrapper(105));
-
-        $this->expectNotToPerformAssertions();
-        $this->check($comparison);
-    }
-
-    public function testItAllowsTheGreaterThanOperator(): void
-    {
-        $comparison = new GreaterThanComparison($this->metadata, new SimpleValueWrapper(105));
-
-        $this->expectNotToPerformAssertions();
-        $this->check($comparison);
-    }
-
-    public function testItAllowsTheGreaterThanOrEqualOperator(): void
-    {
-        $comparison = new GreaterThanOrEqualComparison($this->metadata, new SimpleValueWrapper(105));
-
         $this->expectNotToPerformAssertions();
         $this->check($comparison);
     }
@@ -178,6 +146,21 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
         yield '@id >= OPEN()' => [new GreaterThanOrEqualComparison($metadata, new StatusOpenValueWrapper()), ToStatusOpenComparisonException::class];
         yield '@id >= NOW()' => [new GreaterThanOrEqualComparison($metadata, new CurrentDateTimeValueWrapper(null, null)), ToNowComparisonException::class];
         yield '@id >= MYSELF()' => [new GreaterThanOrEqualComparison($metadata, new CurrentUserValueWrapper($user_retriever)), ToMyselfComparisonException::class];
+
+        // Between operator
+        yield '@id BETWEEN(empty string, int > 0)' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(''), new SimpleValueWrapper(1))), ToEmptyStringComparisonException::class];
+        yield '@id BETWEEN(int > 0, empty string)' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(1), new SimpleValueWrapper(''))), ToEmptyStringComparisonException::class];
+        yield '@id BETWEEN(string, int > 0)' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper('1'), new SimpleValueWrapper(1))), ToAnyStringComparisonException::class];
+        yield '@id BETWEEN(int > 0, string)' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(1), new SimpleValueWrapper('1'))), ToAnyStringComparisonException::class];
+        yield '@id BETWEEN(int < 1, int > 0)' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(0), new SimpleValueWrapper(1))), ToIntegerLesserThanOneException::class];
+        yield '@id BETWEEN(int > 0, int < 1)' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(1), new SimpleValueWrapper(0))), ToIntegerLesserThanOneException::class];
+        yield '@id BETWEEN(OPEN(), int > 0)' => [new BetweenComparison($metadata, new BetweenValueWrapper(new StatusOpenValueWrapper(), new SimpleValueWrapper(1))), ToStatusOpenComparisonException::class];
+        yield '@id BETWEEN(int > 0, OPEN())' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(1), new StatusOpenValueWrapper())), ToStatusOpenComparisonException::class];
+        yield '@id BETWEEN(NOW(), int > 0)' => [new BetweenComparison($metadata, new BetweenValueWrapper(new CurrentDateTimeValueWrapper(null, null), new SimpleValueWrapper(1))), ToNowComparisonException::class];
+        yield '@id BETWEEN(int > 0, NOW())' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(1), new CurrentDateTimeValueWrapper(null, null))), ToNowComparisonException::class];
+        yield '@id BETWEEN(MYSELF(), int > 0)' => [new BetweenComparison($metadata, new BetweenValueWrapper(new CurrentUserValueWrapper($user_retriever), new SimpleValueWrapper(1))), ToMyselfComparisonException::class];
+        yield '@id BETWEEN(int > 0, MYSELF())' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(1), new CurrentUserValueWrapper($user_retriever))), ToMyselfComparisonException::class];
+        yield '@id BETWEEN(int > 0, int > 0), when min > max' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(2), new SimpleValueWrapper(1))), WithBetweenValuesMinGreaterThanMaxException::class];
     }
 
     /**
@@ -197,7 +180,6 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
 
         yield 'in()' => [new InComparison($metadata, new InValueWrapper([$value]))];
         yield 'not in()' => [new NotInComparison($metadata, new InValueWrapper([$value]))];
-        yield 'between()' => [new BetweenComparison($metadata, new BetweenValueWrapper($value, $value))];
     }
 
     /**

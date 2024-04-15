@@ -57,6 +57,14 @@ msgid "%s cannot be compared to the string value '%s'."
 msgstr "%s ne peut pas être comparé à '%s'."
 
 #, php-format
+msgid ""
+"%s cannot be compared with the BETWEEN() operator because the minimum value "
+"is greater than the maximum value."
+msgstr ""
+"%s ne peut pas être comparé avec l'opérateur BETWEEN() car la valeur minimum "
+"est plus grande que la valeur maximum."
+
+#, php-format
 msgid "%s is not supported for the operator %s."
 msgstr "%s ne supporte pas l'opérateur %s."
 
