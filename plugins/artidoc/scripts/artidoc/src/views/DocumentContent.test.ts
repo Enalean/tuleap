@@ -23,6 +23,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentContent from "@/views/DocumentContent.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.vue";
 
 describe("DocumentContent", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
@@ -49,8 +50,16 @@ describe("DocumentContent", () => {
     it("should display the two sections", () => {
         const list = wrapper.find("ol");
         expect(list.findAll("li")).toHaveLength(2);
-        expect(list.text()).toContain("Title 1");
-        expect(list.text()).toContain("Title 2");
+    });
+
+    it("should contains section titles", () => {
+        const list = wrapper.find("ol");
+        const sectionTitles = list.findAllComponents(SectionTitleWithArtifactId);
+        expect(sectionTitles).toHaveLength(2);
+        expect(sectionTitles[0].attributes().title).toBe("Title 1");
+        expect(sectionTitles[0].attributes().artifact_id).toBe("1");
+        expect(sectionTitles[1].attributes().title).toBe("Title 2");
+        expect(sectionTitles[1].attributes().artifact_id).toBe("2");
     });
 
     it("sections should have an id for anchor feature", () => {
