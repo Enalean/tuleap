@@ -26,79 +26,19 @@ import {
     copyFolder,
     copyLink,
     copyWiki,
-    moveEmbedded,
-    moveEmpty,
-    moveFile,
-    moveFolder,
-    moveLink,
-    moveWiki,
+    moveDocument,
 } from "./move-rest-querier";
 
 describe("Move item", () => {
     const moved_item_id = 147;
     const destination_folder_id = 852;
 
-    it("Move a file", async () => {
+    it("Move a document", async () => {
         const tlpPatch = jest.spyOn(tlp_fetch, "patch");
         mockFetchSuccess(tlpPatch);
-        await moveFile(moved_item_id, destination_folder_id);
+        await moveDocument(`/api/docman_files/${moved_item_id}`, destination_folder_id);
 
         expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_files/${moved_item_id}`, {
-            headers: expect.objectContaining({ "content-type": "application/json" }),
-            body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
-        });
-    });
-
-    it("Move an empty document", async () => {
-        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
-        mockFetchSuccess(tlpPatch);
-        await moveEmpty(moved_item_id, destination_folder_id);
-
-        expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_empty_documents/${moved_item_id}`, {
-            headers: expect.objectContaining({ "content-type": "application/json" }),
-            body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
-        });
-    });
-
-    it("Move an embedded document", async () => {
-        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
-        mockFetchSuccess(tlpPatch);
-        await moveEmbedded(moved_item_id, destination_folder_id);
-
-        expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_embedded_files/${moved_item_id}`, {
-            headers: expect.objectContaining({ "content-type": "application/json" }),
-            body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
-        });
-    });
-
-    it("Move a wiki document", async () => {
-        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
-        mockFetchSuccess(tlpPatch);
-        await moveWiki(moved_item_id, destination_folder_id);
-
-        expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_wikis/${moved_item_id}`, {
-            headers: expect.objectContaining({ "content-type": "application/json" }),
-            body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
-        });
-    });
-
-    it("Move a link document", async () => {
-        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
-        mockFetchSuccess(tlpPatch);
-        await moveLink(moved_item_id, destination_folder_id);
-
-        expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_links/${moved_item_id}`, {
-            headers: expect.objectContaining({ "content-type": "application/json" }),
-            body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
-        });
-    });
-
-    it("Move a folder", async () => {
-        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
-        mockFetchSuccess(tlpPatch);
-        await moveFolder(moved_item_id, destination_folder_id);
-
-        expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_folders/${moved_item_id}`, {
             headers: expect.objectContaining({ "content-type": "application/json" }),
             body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
         });

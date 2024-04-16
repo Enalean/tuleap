@@ -100,7 +100,7 @@ describe("Clipboard Store", () => {
                 item_type: TYPE_EMPTY,
             });
 
-            const mocked_move = jest.spyOn(rest_querier, "moveEmpty");
+            const mocked_move = jest.spyOn(rest_querier, "moveDocument");
             mocked_move.mockRejectedValue("Forbidden");
 
             const pasting_has_failed_mock = jest.spyOn(store, "pastingHasFailed");
@@ -195,11 +195,15 @@ describe("Clipboard Store", () => {
     });
 
     describe("Cut/PasteItem", () => {
-        const testPasteSuccess = async (type: string): Promise<void> => {
+        it("Paste a document", async () => {
+            const moveDocument = jest.spyOn(rest_querier, "moveDocument");
+            moveDocument.mockReturnValue(Promise.resolve());
+
             const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
-                item_type: type,
+                item_type: TYPE_EMPTY,
                 item_id: moved_item_id,
+                move_uri: "/api/move/uri",
                 operation_type: CLIPBOARD_OPERATION_CUT,
             });
 
@@ -208,77 +212,9 @@ describe("Clipboard Store", () => {
             const current_folder = { id: 147 } as Folder;
             const destination_folder = { id: 147 } as Folder;
             await store.pasteItem({ destination_folder, current_folder });
+            await expect(empty_clipboard_mock).toHaveBeenCalled();
 
-            expect(empty_clipboard_mock).toHaveBeenCalled();
-        };
-
-        it("Paste a file", async () => {
-            const moveFile = jest.spyOn(rest_querier, "moveFile");
-            moveFile.mockReturnValue(Promise.resolve());
-
-            await testPasteSuccess(TYPE_FILE);
-
-            expect(moveFile).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
-            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created", {
-                id: moved_item_id,
-            });
-        });
-
-        it("Paste a folder", async () => {
-            const moveFolder = jest.spyOn(rest_querier, "moveFolder");
-            moveFolder.mockReturnValue(Promise.resolve());
-
-            await testPasteSuccess(TYPE_FOLDER);
-
-            expect(moveFolder).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
-            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created", {
-                id: moved_item_id,
-            });
-        });
-
-        it("Paste an empty document", async () => {
-            const moveEmpty = jest.spyOn(rest_querier, "moveEmpty");
-            moveEmpty.mockReturnValue(Promise.resolve());
-
-            await testPasteSuccess(TYPE_EMPTY);
-
-            expect(moveEmpty).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
-            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created", {
-                id: moved_item_id,
-            });
-        });
-
-        it("Paste a wiki document", async () => {
-            const moveWiki = jest.spyOn(rest_querier, "moveWiki");
-            moveWiki.mockReturnValue(Promise.resolve());
-
-            await testPasteSuccess(TYPE_WIKI);
-
-            expect(moveWiki).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
-            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created", {
-                id: moved_item_id,
-            });
-        });
-
-        it("Paste an embedded file", async () => {
-            const moveEmbedded = jest.spyOn(rest_querier, "moveEmbedded");
-            moveEmbedded.mockReturnValue(Promise.resolve());
-
-            await testPasteSuccess(TYPE_EMBEDDED);
-
-            expect(moveEmbedded).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
-            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created", {
-                id: moved_item_id,
-            });
-        });
-
-        it("Paste a link", async () => {
-            const moveLink = jest.spyOn(rest_querier, "moveLink");
-            moveLink.mockReturnValue(Promise.resolve());
-
-            await testPasteSuccess(TYPE_LINK);
-
-            expect(moveLink).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
+            expect(moveDocument).toHaveBeenCalledWith("/api/move/uri", expect.any(Number));
             expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created", {
                 id: moved_item_id,
             });
@@ -291,6 +227,7 @@ describe("Clipboard Store", () => {
                 id: 3,
                 title: "My doc",
                 type: TYPE_EMPTY,
+                move_uri: "/api/move",
             } as Empty;
 
             const store = useClipboardStore(mocked_store, "1", "1");
@@ -301,6 +238,7 @@ describe("Clipboard Store", () => {
             store.cutItem(item);
 
             expect(store.item_id).toBe(item.id);
+            expect(store.move_uri).toBe(item.move_uri);
             expect(store.item_title).toBe(item.title);
             expect(store.item_type).toBe(item.type);
             expect(store.operation_type).toBe(CLIPBOARD_OPERATION_CUT);
@@ -330,6 +268,7 @@ describe("Clipboard Store", () => {
                 id: 3,
                 title: "My doc",
                 type: TYPE_EMPTY,
+                move_uri: "/api/move",
             } as Empty;
 
             const store = useClipboardStore(mocked_store, "1", "1");
@@ -339,6 +278,7 @@ describe("Clipboard Store", () => {
 
             store.copyItem(item);
             expect(store.item_id).toBe(item.id);
+            expect(store.move_uri).toBe(item.move_uri);
             expect(store.item_title).toBe(item.title);
             expect(store.item_type).toBe(item.type);
             expect(store.operation_type).toBe(CLIPBOARD_OPERATION_COPY);
@@ -368,11 +308,13 @@ describe("Clipboard Store", () => {
                 item_id: 147,
                 item_title: "My title",
                 item_type: TYPE_EMPTY,
+                move_uri: "/api/move",
             });
 
             store.emptyClipboard();
             expect(store.$state).toStrictEqual({
                 item_id: null,
+                move_uri: null,
                 item_title: null,
                 item_type: null,
                 operation_type: null,

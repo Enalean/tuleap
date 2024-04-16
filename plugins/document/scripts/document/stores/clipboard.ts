@@ -39,12 +39,7 @@ import {
     copyFolder,
     copyLink,
     copyWiki,
-    moveEmbedded,
-    moveEmpty,
-    moveFile,
-    moveFolder,
-    moveLink,
-    moveWiki,
+    moveDocument,
 } from "../api/move-rest-querier";
 import { useLocalStorage } from "@vueuse/core";
 import type { Store } from "vuex";
@@ -72,6 +67,7 @@ export function useClipboardStore(
     return defineStore("clipboard", {
         state: (): ClipboardState => ({
             item_id: useLocalStorage(`${base_storage_key}item_id`, null),
+            move_uri: useLocalStorage(`${base_storage_key}move_uri`, null),
             item_title: useLocalStorage(`${base_storage_key}item_title`, null),
             item_type: useLocalStorage(`${base_storage_key}item_type`, null),
             operation_type: useLocalStorage(`${base_storage_key}operation_type`, null),
@@ -127,23 +123,12 @@ export function useClipboardStore(
                 if (!this.item_id) {
                     throw new Error("Cannot copy unknown item");
                 }
-                switch (this.item_type) {
-                    case TYPE_FILE:
-                        return moveFile(this.item_id, destination_folder.id);
-                    case TYPE_FOLDER:
-                        return moveFolder(this.item_id, destination_folder.id);
-                    case TYPE_EMPTY:
-                        return moveEmpty(this.item_id, destination_folder.id);
-                    case TYPE_WIKI:
-                        return moveWiki(this.item_id, destination_folder.id);
-                    case TYPE_EMBEDDED:
-                        return moveEmbedded(this.item_id, destination_folder.id);
-                    case TYPE_LINK:
-                        return moveLink(this.item_id, destination_folder.id);
-                    default:
-                        this.emptyClipboard();
-                        throw new Error("Cannot copy unknown item type " + this.item_type);
+                if (!this.move_uri || this.move_uri.length === 0) {
+                    this.emptyClipboard();
+                    throw new Error("Cannot copy item type " + this.item_type);
                 }
+
+                return moveDocument(this.move_uri, destination_folder.id);
             },
             pasteItemBeingCopied(destination_folder: Folder): Promise<Item> {
                 if (!this.item_id) {
@@ -181,6 +166,7 @@ export function useClipboardStore(
                     return;
                 }
                 this.item_id = item.id;
+                this.move_uri = item.move_uri;
                 this.item_type = item.type;
                 this.item_title = item.title;
                 this.operation_type = operationType;
@@ -194,6 +180,7 @@ export function useClipboardStore(
 
             emptyClipboard(): void {
                 this.item_id = null;
+                this.move_uri = null;
                 this.item_title = null;
                 this.item_type = null;
                 this.operation_type = null;

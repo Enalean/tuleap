@@ -31,6 +31,7 @@ use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\UnknownMetadataException;
+use Tuleap\Docman\REST\v1\MoveItem\MoveItemUriVisitor;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
@@ -172,6 +173,7 @@ class ItemRepresentationBuilder
             $metadata_representations,
             $has_approval_item,
             $is_approval_table_enabled,
+            $item->accept(new MoveItemUriVisitor(\EventManager::instance())),
             $approval_table,
             $lock_info,
             $this->item_permissions_for_groups_builder->getRepresentation($current_user, $item),
@@ -179,7 +181,7 @@ class ItemRepresentationBuilder
             $embedded_file_properties,
             $link_properties,
             $wiki_properties,
-            $folder_properties
+            $folder_properties,
         );
     }
 

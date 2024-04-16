@@ -20,37 +20,7 @@
 import { patch, post } from "@tuleap/tlp-fetch";
 import type { Item } from "../type";
 
-export function moveFile(moved_item_id: number, parent_id: number): Promise<void> {
-    return moveDocumentType("/api/docman_files/" + encodeURIComponent(moved_item_id), parent_id);
-}
-
-export function moveEmpty(moved_item_id: number, parent_id: number): Promise<void> {
-    return moveDocumentType(
-        "/api/docman_empty_documents/" + encodeURIComponent(moved_item_id),
-        parent_id,
-    );
-}
-
-export function moveEmbedded(moved_item_id: number, parent_id: number): Promise<void> {
-    return moveDocumentType(
-        "/api/docman_embedded_files/" + encodeURIComponent(moved_item_id),
-        parent_id,
-    );
-}
-
-export function moveWiki(moved_item_id: number, parent_id: number): Promise<void> {
-    return moveDocumentType("/api/docman_wikis/" + encodeURIComponent(moved_item_id), parent_id);
-}
-
-export function moveLink(moved_item_id: number, parent_id: number): Promise<void> {
-    return moveDocumentType("/api/docman_links/" + encodeURIComponent(moved_item_id), parent_id);
-}
-
-export function moveFolder(moved_item_id: number, parent_id: number): Promise<void> {
-    return moveDocumentType("/api/docman_folders/" + encodeURIComponent(moved_item_id), parent_id);
-}
-
-export async function moveDocumentType(url: string, destination_folder_id: number): Promise<void> {
+export async function moveDocument(url: string, destination_folder_id: number): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };

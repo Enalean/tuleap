@@ -191,6 +191,7 @@ class ItemRepresentation
         bool $is_approval_table_enabled,
         ?DocmanItemPermissionsForGroupsRepresentation $permissions_for_groups,
         ?int $parent_id,
+        public readonly string $move_uri,
     ) {
         $this->id                         = $id;
         $this->title                      = $title;
@@ -233,6 +234,7 @@ class ItemRepresentation
         array $metadata_representations,
         bool $has_approval_table,
         bool $is_approval_table_enabled,
+        string $move_uri,
         ?ItemApprovalTableRepresentation $approval_table,
         ?ItemLockInfoRepresentation $lock_info,
         ?DocmanItemPermissionsForGroupsRepresentation $permissions_for_groups,
@@ -267,7 +269,8 @@ class ItemRepresentation
             $has_approval_table,
             $is_approval_table_enabled,
             $permissions_for_groups,
-            JsonCast::toInt($item->getParentId())
+            JsonCast::toInt($item->getParentId()),
+            $move_uri,
         );
     }
 }

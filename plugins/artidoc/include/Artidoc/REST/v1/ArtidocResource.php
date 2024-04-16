@@ -22,11 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use DateTimeImmutable;
 use Docman_ItemFactory;
+use Docman_PermissionsManager;
+use EventManager;
 use Luracast\Restler\RestException;
+use ProjectManager;
 use Tuleap\Artidoc\Document\ArtidocDao;
+use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
+use Tuleap\Docman\REST\v1\DocmanItemsRequestBuilder;
+use Tuleap\Docman\REST\v1\DocmanPATCHItemRepresentation;
+use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
+use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -37,6 +50,72 @@ final class ArtidocResource extends AuthenticatedResource
 {
     public const ROUTE      = 'artidoc';
     private const MAX_LIMIT = 50;
+
+    /**
+     * @url OPTIONS {id}
+     */
+    public function options(): void
+    {
+        Header::allowOptionsPatch();
+    }
+
+    /**
+     * Move an existing artidoc document
+     *
+     * @url    PATCH {id}
+     * @access hybrid
+     *
+     * @param int                           $id             Id of the item
+     * @param DocmanPATCHItemRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+
+    public function patch(int $id, DocmanPATCHItemRepresentation $representation): void
+    {
+        $this->checkAccess();
+
+        $user_manager    = UserManager::instance();
+        $request_builder = new DocmanItemsRequestBuilder($user_manager, ProjectManager::instance());
+
+        $item_request = $request_builder->buildFromItemId($id);
+        $project      = $item_request->getProject();
+        $this->addAllEvent($project);
+
+        $item_factory = new Docman_ItemFactory();
+        $item_mover   = new DocmanItemMover(
+            $item_factory,
+            new BeforeMoveVisitor(
+                new DoesItemHasExpectedTypeVisitor(ArtidocDocument::class),
+                $item_factory,
+                new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
+            ),
+            $this->getPermissionManager($project),
+            EventManager::instance(),
+        );
+
+        $item_mover->moveItem(
+            new DateTimeImmutable(),
+            $item_request->getItem(),
+            $user_manager->getCurrentUser(),
+            $representation->move
+        );
+    }
+
+    private function addAllEvent(\Project $project): void
+    {
+        $event_adder = new DocmanItemsEventAdder(EventManager::instance());
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+    }
+
+    private function getPermissionManager(\Project $project): Docman_PermissionsManager
+    {
+        return Docman_PermissionsManager::instance($project->getGroupId());
+    }
 
     /**
      * @url OPTIONS {id}/sections

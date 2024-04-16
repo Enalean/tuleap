@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Ref } from "vue";
+declare(strict_types=1);
 
-export interface ClipboardState {
-    item_id: Ref<null | number>;
-    move_uri: Ref<null | string>;
-    item_title: Ref<null | string>;
-    item_type: Ref<null | string>;
-    operation_type: Ref<null | string>;
-    pasting_in_progress: Ref<boolean>;
+namespace Tuleap\Docman\REST\v1\MoveItem;
+
+use Tuleap\Docman\Item\OtherDocument;
+use Tuleap\Event\Dispatchable;
+
+final class MoveOtherItemUriRetriever implements Dispatchable
+{
+    private string $move_uri = '';
+
+    public function __construct(public readonly OtherDocument $item)
+    {
+    }
+
+    public function getMoveUri(): string
+    {
+        return $this->move_uri;
+    }
+
+    public function setMoveUri(string $move_uri): void
+    {
+        $this->move_uri = $move_uri;
+    }
 }

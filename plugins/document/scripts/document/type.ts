@@ -148,6 +148,7 @@ export interface Item extends MinimalItem {
     obsolescence_date: null | number;
     updated?: boolean;
     properties: Array<Property>;
+    readonly move_uri: string;
 }
 
 /**
