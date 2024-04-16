@@ -26,17 +26,19 @@
             v-bind:id="`${section.artifact.id}`"
         >
             <article class="document-section">
-                <h1>{{ section.title }}</h1>
-                <div
-                    class="section-description"
-                    v-dompurify-html="section.description.post_processed_value"
-                ></div>
+                <section-title-with-artifact-id
+                    v-bind:title="section.title"
+                    v-bind:artifact_id="section.artifact.id"
+                    class="section-title"
+                />
+                <div v-dompurify-html="section.description.post_processed_value"></div>
             </article>
         </li>
     </ol>
 </template>
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.vue";
 
 defineProps<{ sections: readonly ArtidocSection[] }>();
 </script>
@@ -45,14 +47,11 @@ defineProps<{ sections: readonly ArtidocSection[] }>();
     display: flex;
     flex-direction: column;
     margin-bottom: 2rem;
+}
 
-    h1 {
-        border-bottom: 1px solid var(--tlp-neutral-normal-color);
-        color: var(--tlp-dark-color);
-        font-size: 1.5rem;
-        font-weight: 600;
-        line-height: 3rem;
-    }
+.section-title {
+    margin-bottom: var(--tlp-medium-spacing);
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
 }
 
 li::marker {
