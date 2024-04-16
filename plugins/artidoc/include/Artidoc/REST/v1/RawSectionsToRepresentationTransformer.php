@@ -65,6 +65,8 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
             return Result::ok([]);
         }
 
+        $order = array_flip($artifact_ids);
+
         $artifacts = [];
         foreach ($this->artifact_dao->searchByIds($artifact_ids) as $row) {
             $artifact = $this->artifact_factory->getInstanceFromRow($row);
@@ -72,10 +74,12 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
                 return Result::err(Fault::fromMessage('User cannot read one of the artifact of artidoc #' . $raw_sections->id));
             }
 
-            $artifacts[] = $artifact;
+            $artifacts[$order[$artifact->getId()]] = $artifact;
         }
 
-        return Result::ok($artifacts);
+        ksort($artifacts);
+
+        return Result::ok(array_values($artifacts));
     }
 
     /**
