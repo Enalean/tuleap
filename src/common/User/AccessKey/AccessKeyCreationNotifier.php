@@ -62,8 +62,8 @@ class AccessKeyCreationNotifier
 
         $content = sprintf(
             ngettext(
-                "A personal access key (%s) with the %s scope was recently added to your account %s.\n\nVisit %s for more information.",
-                "A personal access key (%s) with the %s scopes was recently added to your account %s.\n\nVisit %s for more information.",
+                "A personal access key (%1\$s) with the %2\$s scope was recently added to your account %3\$s.\n\nVisit %4\$s for more information.",
+                "A personal access key (%1\$s) with the %2\$s scopes was recently added to your account %3\$s.\n\nVisit %4\$s for more information.",
                 count($scope_names)
             ),
             $description,

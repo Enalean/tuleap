@@ -38,6 +38,7 @@ final class GettextHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals('A useful text', $helper->gettext('A %s text|useful'));
         self::assertEquals('A useful text', $helper->dgettext('domain | A %s text|useful'));
+        self::assertEquals('A useful text period', $helper->dgettext('domain | A %2$s text %1$s | period | useful'));
     }
 
     public function testItTrimsTextAndArguments(): void

@@ -36,7 +36,7 @@ class EmailUpdater
             \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
         );
         $message = sprintf(
-            _("You have requested a change of email address on %s.\nPlease visit the following URL to complete the email change:\n\n%s%s\n\n-- The %s Team"),
+            _("You have requested a change of email address on %1\$s.\nPlease visit the following URL to complete the email change:\n\n%2\$s%3\$s\n\n-- The %4\$s Team"),
             \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
             $server_url,
             ConfirmNewEmailController::getUrlToSelf($current_user->getConfirmHash()),

@@ -173,7 +173,7 @@ class Chart
             $result = call_user_func_array([$this->jpgraph_instance, $method], $args);
         } catch (\Exception $exc) {
             $error_message = sprintf(
-                _('JpGraph error for graph "%s": %s'),
+                _('JpGraph error for graph "%1$s": %2$s'),
                 $this->title->t,
                 $exc->getMessage()
             );
