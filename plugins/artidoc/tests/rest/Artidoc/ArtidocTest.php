@@ -26,6 +26,14 @@ use RestBase;
 
 final class ArtidocTest extends RestBase
 {
+    public function testOptionsDocument(): void
+    {
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/123'));
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(['OPTIONS', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
+    }
+
     public function testOptionsSections(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/123/sections'));
