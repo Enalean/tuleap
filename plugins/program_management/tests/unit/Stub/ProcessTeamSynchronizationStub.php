@@ -41,7 +41,7 @@ final class ProcessTeamSynchronizationStub implements ProcessTeamSynchronization
 
     public function processTeamSynchronization(TeamSynchronizationEvent $event): void
     {
-        $this->calls_count ++;
+        $this->calls_count++;
     }
 
     public function getCallsCount(): int

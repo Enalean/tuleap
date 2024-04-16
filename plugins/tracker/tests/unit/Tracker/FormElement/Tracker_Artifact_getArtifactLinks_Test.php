@@ -71,7 +71,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
 
     protected function tearDown(): void
     {
-        $this->current_id ++;
+        $this->current_id++;
     }
 
     public function testItReturnsAnEmptyListWhenThereIsNoArtifactLinkField(): void
