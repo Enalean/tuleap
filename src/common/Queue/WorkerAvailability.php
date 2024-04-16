@@ -26,6 +26,7 @@ use ForgeConfig;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\ConfigKeyValueValidator;
+use Tuleap\Queue\DB\DBPersistentQueue;
 
 class WorkerAvailability implements IsAsyncTaskProcessingAvailable
 {
@@ -44,7 +45,10 @@ class WorkerAvailability implements IsAsyncTaskProcessingAvailable
 
     public function getWorkerCount(): int
     {
-        if (! \Tuleap\Redis\ClientFactory::canClientBeBuiltFromForgeConfig()) {
+        if (
+            (int) ForgeConfig::getFeatureFlag(DBPersistentQueue::FEATURE_FLAG) !== 1 &&
+            ! \Tuleap\Redis\ClientFactory::canClientBeBuiltFromForgeConfig()
+        ) {
             return 0;
         }
 

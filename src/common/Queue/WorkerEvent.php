@@ -24,44 +24,26 @@ namespace Tuleap\Queue;
 use Psr\Log\LoggerInterface;
 use Tuleap\Event\Dispatchable;
 
-class WorkerEvent implements Dispatchable
+readonly class WorkerEvent implements Dispatchable
 {
     public const NAME = 'workerEvent';
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var string
-     */
-    private $event_name;
-
-    /**
-     * @var mixed
-     */
-    private $payload;
-
-    public function __construct(LoggerInterface $logger, array $event)
+    public function __construct(private LoggerInterface $logger, private WorkerEventContent $content)
     {
-        $this->logger     = $logger;
-        $this->event_name = $event['event_name'];
-        $this->payload    = $event['payload'];
     }
 
-    public function getLogger()
+    public function getLogger(): LoggerInterface
     {
         return $this->logger;
     }
 
-    public function getEventName()
+    public function getEventName(): string
     {
-        return $this->event_name;
+        return $this->content->event_name;
     }
 
-    public function getPayload()
+    public function getPayload(): mixed
     {
-        return $this->payload;
+        return $this->content->payload;
     }
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue\TaskWorker;
 
+use CuyZ\Valinor\Mapper\TreeMapper;
 use Psr\Log\LoggerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
@@ -30,6 +31,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\Queue\FindWorkerEventProcessor;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Queue\WorkerEventProcessor;
 
 final class TaskWorkerProcessCommand extends Command
@@ -39,6 +41,7 @@ final class TaskWorkerProcessCommand extends Command
     public function __construct(
         private readonly EventDispatcherInterface $event_dispatcher,
         private readonly LoggerInterface $logger,
+        private readonly TreeMapper $mapper,
         private readonly FindWorkerEventProcessor $find_worker_event_processor,
     ) {
         parent::__construct(self::NAME);
@@ -62,8 +65,12 @@ final class TaskWorkerProcessCommand extends Command
         assert(is_string($path_file_event));
         $event_string = file_get_contents($path_file_event);
         $this->logger->debug('Starting to process message: ' . $event_string);
-        $event              = json_decode($event_string, true, 512, JSON_THROW_ON_ERROR);
-        $worker_queue_event = new WorkerEvent($this->logger, $event);
+
+        $worker_event_content = $this->mapper->map(
+            WorkerEventContent::class,
+            new \CuyZ\Valinor\Mapper\Source\JsonSource($event_string)
+        );
+        $worker_queue_event   = new WorkerEvent($this->logger, $worker_event_content);
         $this->find_worker_event_processor
             ->findFromWorkerEvent($worker_queue_event)
             ->match(

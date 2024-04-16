@@ -41,6 +41,7 @@ use Tuleap\MediawikiStandalone\Permissions\LegacyPermissionsMigratorStub;
 use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageStub;
 use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\ServerHostname;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -106,7 +107,7 @@ final class InstanceManagementTest extends TestCase
 
     public function testCreationInvalidProjectWillNotIssueRequests(): void
     {
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 100]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(CreateInstance::TOPIC, ['project_id' => 100])));
 
         self::assertFalse($this->mediawiki_client->getLastRequest());
     }
@@ -134,7 +135,7 @@ final class InstanceManagementTest extends TestCase
         );
 
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(CreateInstance::TOPIC, ['project_id' => 120])));
 
         self::assertFalse($this->logger->hasErrorRecords());
         self::assertTrue($this->initializations_state_stub->isFinished());
@@ -164,7 +165,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(CreateInstance::TOPIC, ['project_id' => 120])));
 
         self::assertFalse($this->logger->hasErrorRecords());
         self::assertTrue($this->initializations_state_stub->isFinished());
@@ -186,7 +187,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(CreateInstance::TOPIC, ['project_id' => 120])));
 
         self::assertTrue($this->logger->hasErrorThatContains(CreateInstance::class . ' error'));
         self::assertTrue($this->initializations_state_stub->isError());
@@ -219,7 +220,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(CreateInstance::TOPIC, ['project_id' => 120])));
 
         self::assertTrue($resume_has_been_called);
         self::assertTrue($update_instance_has_been_called);
@@ -236,7 +237,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(CreateInstance::TOPIC, ['project_id' => 120])));
 
         self::assertTrue($this->logger->hasErrorThatContains('Could not determine current status of the gpig instance'));
         self::assertTrue($this->initializations_state_stub->isError());
@@ -251,7 +252,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => SuspendInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(SuspendInstance::TOPIC, ['project_id' => 120])));
 
         self::assertFalse($this->logger->hasErrorRecords());
     }
@@ -265,7 +266,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => SuspendInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(SuspendInstance::TOPIC, ['project_id' => 120])));
 
         self::assertTrue($this->logger->hasErrorThatContains(SuspendInstance::class . ' error'));
     }
@@ -279,7 +280,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => ResumeInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(ResumeInstance::TOPIC, ['project_id' => 120])));
 
         self::assertFalse($this->logger->hasErrorRecords());
     }
@@ -293,7 +294,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => ResumeInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(ResumeInstance::TOPIC, ['project_id' => 120])));
 
         self::assertTrue($this->logger->hasErrorThatContains(ResumeInstance::class . ' error'));
     }
@@ -313,7 +314,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => []]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(LogUsersOutInstance::TOPIC, [])));
 
         self::assertFalse($this->logger->hasErrorRecords());
     }
@@ -333,7 +334,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(LogUsersOutInstance::TOPIC, ['project_id' => 120])));
 
         self::assertFalse($this->logger->hasErrorRecords());
     }
@@ -353,7 +354,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => ['project_id' => 120, 'user_id' => 103]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(LogUsersOutInstance::TOPIC, ['project_id' => 120, 'user_id' => 103])));
 
         self::assertFalse($this->logger->hasErrorRecords());
     }
@@ -367,7 +368,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(LogUsersOutInstance::TOPIC, ['project_id' => 120])));
 
         self::assertTrue($this->logger->hasErrorThatContains(LogUsersOutInstance::class . ' error'));
     }
@@ -384,7 +385,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => DeleteInstance::TOPIC, 'payload' => ['project_id' => self::DELETED_PROJECT_ID]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(DeleteInstance::TOPIC, ['project_id' => self::DELETED_PROJECT_ID])));
 
         self::assertTrue($delete_has_been_called);
         self::assertFalse($this->logger->hasErrorRecords());
@@ -399,7 +400,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => DeleteInstance::TOPIC, 'payload' => ['project_id' => self::DELETED_PROJECT_ID]]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(DeleteInstance::TOPIC, ['project_id' => self::DELETED_PROJECT_ID])));
 
         self::assertTrue($this->logger->hasErrorThatContains(DeleteInstance::class . ' error'));
     }
@@ -416,7 +417,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => RenameInstance::TOPIC, 'payload' => ['project_id' => 120, 'new_name' => 'baz']]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(RenameInstance::TOPIC, ['project_id' => 120, 'new_name' => 'baz'])));
 
         self::assertTrue($rename_has_been_called);
         self::assertFalse($this->logger->hasErrorRecords());
@@ -431,7 +432,7 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => RenameInstance::TOPIC, 'payload' => ['project_id' => 120, 'new_name' => 'baz']]));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), new WorkerEventContent(RenameInstance::TOPIC, ['project_id' => 120, 'new_name' => 'baz'])));
 
         self::assertTrue($this->logger->hasErrorThatContains(RenameInstance::class . ' error'));
     }

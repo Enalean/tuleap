@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue\TaskWorker;
 
+use Tuleap\Queue\WorkerEventContent;
+
 interface TaskWorker
 {
     /**
      * @throws TaskWorkerTimedOutException
      */
-    public function run(string $event): void;
+    public function run(WorkerEventContent $worker_event_content): void;
 }

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue\TaskWorker;
 
-use JsonException;
+use CuyZ\Valinor\MapperBuilder;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -46,7 +46,7 @@ final class TaskWorkerProcessCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $processor = WorkerEventProcessorStub::build();
 
         $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $command          = new TaskWorkerProcessCommand($event_dispatcher, new NullLogger(), FindWorkerEventProcessorStub::withMatchingProcessor($processor));
+        $command          = new TaskWorkerProcessCommand($event_dispatcher, new NullLogger(), (new MapperBuilder())->allowPermissiveTypes()->mapper(), FindWorkerEventProcessorStub::withMatchingProcessor($processor));
 
         $path_to_file            = $this->filesystem_root->url() . '/event';
         $event_serialized_string = '{"event_name":"event.name","payload":{"id":2545}}';
@@ -63,7 +63,7 @@ final class TaskWorkerProcessCommandTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testEventIsDispatchedForProcessing(): void
     {
         $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $command          = new TaskWorkerProcessCommand($event_dispatcher, new NullLogger(), FindWorkerEventProcessorStub::withoutProcessor());
+        $command          = new TaskWorkerProcessCommand($event_dispatcher, new NullLogger(), (new MapperBuilder())->allowPermissiveTypes()->mapper(), FindWorkerEventProcessorStub::withoutProcessor());
 
         $path_to_file            = $this->filesystem_root->url() . '/event';
         $event_serialized_string = '{"event_name":"event.name","payload":{"id":2545}}';
@@ -77,14 +77,14 @@ final class TaskWorkerProcessCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testEventNotProperlyJSONSerializedIsRejected(): void
     {
-        $command = new TaskWorkerProcessCommand($this->createMock(EventDispatcherInterface::class), new NullLogger(), FindWorkerEventProcessorStub::withoutProcessor());
+        $command = new TaskWorkerProcessCommand($this->createMock(EventDispatcherInterface::class), new NullLogger(), (new MapperBuilder())->allowPermissiveTypes()->mapper(), FindWorkerEventProcessorStub::withoutProcessor());
 
         $path_to_file = $this->filesystem_root->url() . '/event';
         file_put_contents($path_to_file, '{ broken json');
 
         $command_tester = new CommandTester($command);
 
-        self::expectException(JsonException::class);
+        self::expectException(\RuntimeException::class);
         $command_tester->execute(['input_file' => $path_to_file]);
     }
 }

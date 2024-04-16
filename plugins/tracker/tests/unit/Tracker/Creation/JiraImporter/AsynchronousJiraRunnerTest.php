@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 
 class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -67,7 +68,10 @@ class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $event = new WorkerEvent(
             $this->logger,
-            ['event_name' => AsynchronousJiraRunner::TOPIC, 'payload' => []]
+            new WorkerEventContent(
+                AsynchronousJiraRunner::TOPIC,
+                []
+            )
         );
 
         $this->logger
@@ -86,7 +90,10 @@ class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $event = new WorkerEvent(
             $this->logger,
-            ['event_name' => AsynchronousJiraRunner::TOPIC, 'payload' => ['pending_jira_import_id' => 123]]
+            new WorkerEventContent(
+                AsynchronousJiraRunner::TOPIC,
+                ['pending_jira_import_id' => 123]
+            )
         );
 
         $this->dao
@@ -109,7 +116,10 @@ class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $event = new WorkerEvent(
             $this->logger,
-            ['event_name' => AsynchronousJiraRunner::TOPIC, 'payload' => ['pending_jira_import_id' => 123]]
+            new WorkerEventContent(
+                AsynchronousJiraRunner::TOPIC,
+                ['pending_jira_import_id' => 123]
+            )
         );
 
         $this->dao
@@ -138,7 +148,10 @@ class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $event = new WorkerEvent(
             $this->logger,
-            ['event_name' => AsynchronousJiraRunner::TOPIC, 'payload' => ['pending_jira_import_id' => 123]]
+            new WorkerEventContent(
+                AsynchronousJiraRunner::TOPIC,
+                ['pending_jira_import_id' => 123]
+            )
         );
 
         $this->dao

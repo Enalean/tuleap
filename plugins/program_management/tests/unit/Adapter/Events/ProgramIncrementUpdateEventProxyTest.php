@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProgramIncrementUpdateEventProxyTest extends TestCase
@@ -59,19 +60,22 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
         $this->iteration_verifier         = VerifyIsIterationStub::withValidIteration();
         $this->changeset_verifier         = VerifyIsChangesetStub::withValidChangeset();
 
-        $this->worker_event = new WorkerEvent($this->logger, [
-            'event_name' => ProgramIncrementUpdateEvent::TOPIC,
-            'payload'    => [
-                'program_increment_id' => self::PROGRAM_INCREMENT_ID,
-                'user_id'              => self::USER_ID,
-                'changeset_id'         => self::PROGRAM_INCREMENT_CHANGESET_ID,
-                'old_changeset_id'     => self::PROGRAM_INCREMENT_OLD_CHANGESET_ID,
-                'iterations'           => [
-                    ['id' => self::FIRST_ITERATION_ID, 'changeset_id' => self::FIRST_ITERATION_CHANGESET_ID],
-                    ['id' => self::SECOND_ITERATION_ID, 'changeset_id' => self::SECOND_ITERATION_CHANGESET_ID],
-                ],
-            ],
-        ]);
+        $this->worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent(
+                ProgramIncrementUpdateEvent::TOPIC,
+                [
+                    'program_increment_id' => self::PROGRAM_INCREMENT_ID,
+                    'user_id'              => self::USER_ID,
+                    'changeset_id'         => self::PROGRAM_INCREMENT_CHANGESET_ID,
+                    'old_changeset_id'     => self::PROGRAM_INCREMENT_OLD_CHANGESET_ID,
+                    'iterations'           => [
+                        ['id' => self::FIRST_ITERATION_ID, 'changeset_id' => self::FIRST_ITERATION_CHANGESET_ID],
+                        ['id' => self::SECOND_ITERATION_ID, 'changeset_id' => self::SECOND_ITERATION_CHANGESET_ID],
+                    ],
+                ]
+            )
+        );
     }
 
     public function testItBuildsFromValidWorkerEvent(): void
@@ -107,10 +111,13 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
 
     public function testItReturnsNullWhenUnrelatedTopic(): void
     {
-        $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => 'unrelated.topic',
-            'payload'    => [],
-        ]);
+        $worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent(
+                'unrelated.topic',
+                []
+            )
+        );
         self::assertNull(
             ProgramIncrementUpdateEventProxy::fromWorkerEvent(
                 $this->logger,
@@ -126,10 +133,13 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
 
     public function testItLogsMalformedPayload(): void
     {
-        $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => ProgramIncrementUpdateEventProxy::TOPIC,
-            'payload'    => [],
-        ]);
+        $worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent(
+                ProgramIncrementUpdateEvent::TOPIC,
+                []
+            )
+        );
         self::assertNull(
             ProgramIncrementUpdateEventProxy::fromWorkerEvent(
                 $this->logger,

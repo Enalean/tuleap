@@ -21,8 +21,13 @@
 
 namespace Tuleap\Queue;
 
+use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use Tuleap\DB\CheckThereIsAnOngoingTransaction;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Queue\DB\DBPersistentQueue;
+use Tuleap\Queue\DB\DBPersistentQueueDAO;
 use Tuleap\Queue\Redis\BackOffDelayFailedMessage;
 use Tuleap\Redis\ClientFactory as RedisClientFactory;
 
@@ -52,6 +57,14 @@ class QueueFactory
      */
     private function getQueue(string $queue_name, string $favor): PersistentQueue
     {
+        if ((int) ForgeConfig::getFeatureFlag(DBPersistentQueue::FEATURE_FLAG) === 1) {
+            return new DBPersistentQueue(
+                $queue_name,
+                $this->logger,
+                new DBPersistentQueueDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            );
+        }
         if (RedisClientFactory::canClientBeBuiltFromForgeConfig()) {
             return new Redis\RedisPersistentQueue(
                 $this->logger,

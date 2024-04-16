@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 
 use Psr\Log\NullLogger;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class MediaWikiAsyncInstallAndUpdateProcessorTest extends TestCase
@@ -49,13 +50,29 @@ final class MediaWikiAsyncInstallAndUpdateProcessorTest extends TestCase
 
     public function testExecutesUpdateWhenAppropriateEventIsProcessed(): void
     {
-        $this->update_processor->process(new WorkerEvent(new NullLogger(), ['event_name' => UpdateMediaWikiTask::TOPIC, 'payload' => []]));
+        $this->update_processor->process(
+            new WorkerEvent(
+                new NullLogger(),
+                new WorkerEventContent(
+                    UpdateMediaWikiTask::TOPIC,
+                    []
+                )
+            )
+        );
         self::assertTrue(($this->has_update_been_executed)());
     }
 
     public function testDoesNothingForEventsTheUpdateProcessorDoesNotKnow(): void
     {
-        $this->update_processor->process(new WorkerEvent(new NullLogger(), ['event_name' => 'something', 'payload' => []]));
+        $this->update_processor->process(
+            new WorkerEvent(
+                new NullLogger(),
+                new WorkerEventContent(
+                    'something',
+                    []
+                )
+            )
+        );
         self::assertFalse(($this->has_update_been_executed)());
     }
 }

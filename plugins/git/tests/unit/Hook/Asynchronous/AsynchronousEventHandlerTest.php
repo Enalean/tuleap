@@ -32,6 +32,7 @@ use Tuleap\Git\Tests\Stub\RetrieveCommitMessageStub;
 use Tuleap\Git\Tests\Stub\VerifyArtifactClosureIsAllowedStub;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
@@ -70,14 +71,17 @@ final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function handle(): void
     {
-        $worker_event = new WorkerEvent(new NullLogger(), [
-            'event_name' => $this->topic,
-            'payload'    => [
-                'git_repository_id' => 232,
-                'commit_hashes'     => ['84d3a987', 'ec35bde4'],
-                'pushing_user_id'   => self::PUSHING_USER_ID,
-            ],
-        ]);
+        $worker_event = new WorkerEvent(
+            new NullLogger(),
+            new WorkerEventContent(
+                $this->topic,
+                [
+                    'git_repository_id' => 232,
+                    'commit_hashes'     => ['84d3a987', 'ec35bde4'],
+                    'pushing_user_id'   => self::PUSHING_USER_ID,
+                ]
+            )
+        );
 
         $user = UserTestBuilder::aUser()->withId(self::PUSHING_USER_ID)->build();
 

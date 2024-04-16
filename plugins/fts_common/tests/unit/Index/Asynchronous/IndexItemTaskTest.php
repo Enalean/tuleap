@@ -24,6 +24,7 @@ namespace Tuleap\FullTextSearchCommon\Index\Asynchronous;
 
 use Psr\Log\NullLogger;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -45,10 +46,10 @@ final class IndexItemTaskTest extends TestCase
     {
         $worker_event = new WorkerEvent(
             new NullLogger(),
-            [
-                'event_name' => 'tuleap.fts.index-item',
-                'payload' => ['type' => 'type', 'project_id' => 102, 'content' => 'content', 'content_type' => 'plaintext', 'metadata' => ['A' => 'A']],
-            ]
+            new WorkerEventContent(
+                'tuleap.fts.index-item',
+                ['type' => 'type', 'project_id' => 102, 'content' => 'content', 'content_type' => 'plaintext', 'metadata' => ['A' => 'A']]
+            )
         );
 
         self::assertEquals(
@@ -61,10 +62,10 @@ final class IndexItemTaskTest extends TestCase
     {
         $worker_event = new WorkerEvent(
             new NullLogger(),
-            [
-                'event_name' => 'something.else',
-                'payload' => ['type' => 'type', 'content' => 'content', 'metadata' => ['A' => 'A']],
-            ]
+            new WorkerEventContent(
+                'something.else',
+                ['type' => 'type', 'content' => 'content', 'metadata' => ['A' => 'A']]
+            )
         );
 
         self::assertNull(
@@ -76,10 +77,10 @@ final class IndexItemTaskTest extends TestCase
     {
         $worker_event = new WorkerEvent(
             new NullLogger(),
-            [
-                'event_name' => 'tuleap.fts.index-item',
-                'payload' => [],
-            ]
+            new WorkerEventContent(
+                'tuleap.fts.index-item',
+                []
+            )
         );
 
         self::assertNull(

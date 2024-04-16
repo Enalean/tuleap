@@ -261,6 +261,7 @@ $CLI_command_collector->addCommand(
                 BackendLogger::getDefaultLogger(basename(WorkerLogger::DEFAULT_LOG_FILE_PATH)),
                 ForgeConfig::get('sys_logger_level')
             ),
+            \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
             new \Tuleap\Queue\WorkerEventProcessorFinder(),
         );
     }

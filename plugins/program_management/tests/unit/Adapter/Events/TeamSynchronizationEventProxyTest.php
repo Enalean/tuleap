@@ -22,6 +22,7 @@ namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Queue\WorkerEventContent;
 
 class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,10 +35,13 @@ class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenWorkerEventIsNotForTeamSync(): void
     {
-        $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => 'a.random.event',
-            'payload'    => [],
-        ]);
+        $worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent(
+                'a.random.event',
+                []
+            )
+        );
 
         $event = TeamSynchronizationEventProxy::fromWorkerEvent(
             $this->logger,
@@ -49,10 +53,13 @@ class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenPayloadIsMalformedAndLogsAWarning(): void
     {
-        $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => TeamSynchronizationEventProxy::TOPIC,
-            'payload'    => [],
-        ]);
+        $worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent(
+                TeamSynchronizationEventProxy::TOPIC,
+                []
+            )
+        );
 
         $event = TeamSynchronizationEventProxy::fromWorkerEvent(
             $this->logger,
@@ -65,14 +72,17 @@ class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsFromWorkerEvent(): void
     {
-        $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => TeamSynchronizationEventProxy::TOPIC,
-            'payload'    => [
-                'program_id' => 1,
-                'team_id' => 123,
-                'user_id' => 456,
-            ],
-        ]);
+        $worker_event = new WorkerEvent(
+            $this->logger,
+            new WorkerEventContent(
+                TeamSynchronizationEventProxy::TOPIC,
+                [
+                    'program_id' => 1,
+                    'team_id' => 123,
+                    'user_id' => 456,
+                ]
+            )
+        );
 
         $event = TeamSynchronizationEventProxy::fromWorkerEvent(
             $this->logger,
