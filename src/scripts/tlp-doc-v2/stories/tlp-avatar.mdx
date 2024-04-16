@@ -1,0 +1,20 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as AvatarStories from "./tlp-avatar.stories.ts";
+
+<Meta of={AvatarStories}/>
+
+# Avatars
+
+<code>.tlp-avatar-[size]</code>
+
+<Canvas withToolbar={true} of={AvatarStories.Avatar}></Canvas>
+
+<Controls></Controls>
+
+## All variations
+
+<Canvas withToolbar={true} of={AvatarStories.AllVariations}></Canvas>
+
+## All variations with image
+
+<Canvas withToolbar={true} of={AvatarStories.AllVariationsWithImage}></Canvas>
