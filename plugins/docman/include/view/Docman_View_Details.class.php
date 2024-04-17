@@ -170,12 +170,6 @@ class Docman_View_Details extends Docman_View_Display
         }
 
         if ($user_can_read) {
-            $sections['history'] = true;
-            $logger              = $this->_controller->getLogger();
-            $details->addSection(new Docman_View_ItemDetailsSectionHistory($params['item'], $params['default_url'], $user_can_manage, $logger));
-        }
-
-        if ($user_can_read) {
             $sections['references'] = true;
             $details->addSection(new Docman_View_ItemDetailsSectionReferences($params['item'], $params['default_url']));
         }

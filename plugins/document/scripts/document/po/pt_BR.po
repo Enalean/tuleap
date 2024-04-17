@@ -319,9 +319,6 @@ msgstr ""
 msgid "Got it"
 msgstr ""
 
-msgid "History"
-msgstr "Histórico"
-
 msgid "Hold on a second!"
 msgstr ""
 

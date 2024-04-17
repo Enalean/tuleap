@@ -70,7 +70,8 @@ describe("Document new UI", () => {
             });
 
             function createProjectWithAVersionnedEmbededFile(): void {
-                cy.createNewPublicProject(`doc-version-${now}`, "issues").then((project_id) =>
+                const project_shortname = `doc-version-${now}`;
+                cy.createNewPublicProject(project_shortname, "issues").then((project_id) =>
                     cy
                         .getFromTuleapAPI(`api/projects/${project_id}/docman_service`)
                         .then((response) => {
@@ -101,9 +102,7 @@ describe("Document new UI", () => {
                                 `api/docman_embedded_files/${item}/versions`,
                                 updated_embedded_payload,
                             );
-                            cy.visit(
-                                `plugins/docman/?group_id=${project_id}&id=${item}&action=details&section=history`,
-                            );
+                            cy.visit(`/plugins/document/${project_shortname}/versions/${item}`);
                         }),
                 );
             }
@@ -113,18 +112,15 @@ describe("Document new UI", () => {
                 createProjectWithAVersionnedEmbededFile();
 
                 cy.log("delete a given version of a document");
-                cy.get(`[data-test=delete-2]`).click();
-                cy.get("[data-test=confirm-deletion]").click();
+                cy.get(`[data-test=delete-button]`).eq(0).click();
+                cy.get("[data-test=confirm-button]").eq(0).click();
 
-                cy.get("[data-test=feedback]").contains("successfully deleted");
+                cy.get("[data-test=display-version-feedback]").contains("successfully deleted");
 
-                cy.log("throw an error when you try to delete the last version of a document");
-                cy.get(`[data-test=delete-1]`).click();
-                cy.get("[data-test=confirm-deletion]").click();
-
-                cy.get("[data-test=feedback]").contains(
-                    "Cannot delete last version of a file. If you want to continue, please delete the document itself.",
+                cy.log(
+                    "The delete button should be disabled because there is only one version left",
                 );
+                cy.get(`[data-test=delete-button]`).should("be.disabled");
             });
         });
     });

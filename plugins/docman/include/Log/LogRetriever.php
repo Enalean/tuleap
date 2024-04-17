@@ -57,18 +57,6 @@ final class LogRetriever
     /**
      * @return LogEntry[]
      */
-    public function getLogForItemId(\Docman_Item $item, bool $display_access_logs): array
-    {
-        return $this->instantiateEntries(
-            $item,
-            $this->dao->searchByItemIdOrderByTimestamp((int) $item->getId()),
-            $display_access_logs
-        );
-    }
-
-    /**
-     * @return LogEntry[]
-     */
     private function instantiateEntries(\Docman_Item $item, array $rows, bool $display_access_logs): array
     {
         $entries = [];

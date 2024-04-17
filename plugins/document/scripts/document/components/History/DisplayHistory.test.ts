@@ -46,29 +46,6 @@ describe("DisplayHistory", () => {
         load_document = jest.fn();
     });
 
-    it("should not display anything if user tries direct access while feature flag is off", async () => {
-        load_document.mockReturnValue({ id: 10 } as Item);
-        jest.spyOn(strict_inject, "strictInject").mockReturnValue(false);
-        const wrapper = shallowMount(DisplayHistory, {
-            global: {
-                ...getGlobalTestOptions({
-                    actions: {
-                        loadDocumentWithAscendentHierarchy: load_document,
-                    },
-                }),
-                stubs: {
-                    RouterLink: RouterLinkStub,
-                },
-            },
-        });
-
-        // wait for loadDocumentWithAscendentHierarchy() to be called
-        await nextTick();
-        await nextTick();
-
-        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
-    });
-
     it("should display logs", async () => {
         load_document.mockReturnValue({ id: 10 } as Item);
         jest.spyOn(strict_inject, "strictInject").mockReturnValue(true);

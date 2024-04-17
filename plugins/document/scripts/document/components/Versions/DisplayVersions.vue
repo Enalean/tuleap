@@ -19,22 +19,29 @@
   -->
 
 <template>
-    <section v-if="item && should_display_history_in_document">
+    <section v-if="item">
         <div class="document-header tlp-framed-horizontally">
             <document-title-lock-info v-bind:item="item" v-bind:is-displaying-in-header="true" />
 
-            <h1 class="document-header-title">{{ item.title }}</h1>
+            <h1 class="document-header-title">
+                {{ item.title }}
+            </h1>
         </div>
         <nav class="tlp-tabs">
             <span class="tlp-tab tlp-tab-active">{{ $gettext("Versions") }}</span>
             <router-link
                 class="tlp-tab"
                 v-bind:to="{ name: 'history', params: { item_id: item.id } }"
-                >{{ $gettext("Logs") }}</router-link
             >
+                {{ $gettext("Logs") }}
+            </router-link>
         </nav>
         <div class="tlp-framed-horizontally">
-            <div class="tlp-alert-success" v-if="success_feedback">
+            <div
+                class="tlp-alert-success"
+                v-if="success_feedback"
+                data-test="display-version-feedback"
+            >
                 {{ success_feedback }}
             </div>
             <history-versions v-if="item_type_has_versions" v-bind:item="item" />
@@ -53,8 +60,7 @@ import { onBeforeMount, provide, ref } from "vue";
 import type { Item } from "../../type";
 import HistoryVersions from "./HistoryVersions.vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
-import { FEEDBACK, SHOULD_DISPLAY_HISTORY_IN_DOCUMENT } from "../../injection-keys";
-import { strictInject } from "@tuleap/vue-strict-inject";
+import { FEEDBACK } from "../../injection-keys";
 
 const success_feedback = ref<string | null>(null);
 
@@ -63,8 +69,6 @@ provide(FEEDBACK, {
         success_feedback.value = feedback;
     },
 });
-
-const should_display_history_in_document = strictInject(SHOULD_DISPLAY_HISTORY_IN_DOCUMENT);
 
 const item = ref<Item | null>(null);
 const item_type_has_versions = ref(false);

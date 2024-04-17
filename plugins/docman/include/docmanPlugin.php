@@ -717,7 +717,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                 <section class="tlp-pane-section">
                     <h2 class="tlp-pane-subtitle">' . dgettext('tuleap-docman', 'Deleted versions') . '</h2>';
         if (isset($res) && $res) {
-            $html .= $this->showPendingVersions($event->getToken(), $res['versions'], $event->getProject()->getID(), $res['nbVersions'], $offsetVers, $limit);
+            $html .= $this->showPendingVersions($event->getToken(), $res['versions'], $event->getProject(), $res['nbVersions'], $offsetVers, $limit);
         } else {
             $html .= '<table class="tlp-table">
                 <thead>
@@ -786,7 +786,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $event->addPurifiedHTML($html);
     }
 
-    public function showPendingVersions(CSRFSynchronizerToken $csrf_token, $versions, $groupId, $nbVersions, $offset, $limit)
+    public function showPendingVersions(CSRFSynchronizerToken $csrf_token, $versions, Project $project, $nbVersions, $offset, $limit)
     {
         $hp = Codendi_HTMLPurifier::instance();
 
@@ -810,11 +810,12 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
         if ($nbVersions > 0) {
             foreach ($versions as $row) {
-                $historyUrl = $this->getPluginPath() . '/index.php?group_id=' . $groupId . '&id=' . $row['item_id'] . '&action=details&section=history';
+                $hp->purify($project->getID());
+                $historyUrl = '/plugins/document/' . urlencode($project->getUnixNameLowerCase()) . '/versions/' . urlencode($row['item_id']);
                 $purgeDate  = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $row['date']);
                 $html      .= '<tr>' .
                 '<td class="tlp-table-cell-numeric"><a href="' . $historyUrl . '">' . $row['item_id'] . '</a></td>' .
-                '<td>' . $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId) . '</td>' .
+                '<td>' . $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $project->getID()) . '</td>' .
                 '<td>' . $hp->purify($row['label']) . '</td>' .
                 '<td class="tlp-table-cell-numeric">' . $row['number'] . '</td>' .
                 '<td>' . DateHelper::relativeDateInlineContext((int) $row['date'], $user) . '</td>' .
@@ -824,7 +825,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                             ' . $csrf_token->fetchHTMLInput() . '
                             <input type="hidden" name="id" value="' . $hp->purify($row['id']) . '">
                             <input type="hidden" name="item_id" value="' . $hp->purify($row['item_id']) . '">
-                            <input type="hidden" name="group_id" value="' . $hp->purify($groupId) . '">
+                            <input type="hidden" name="group_id" value="' . $hp->purify($project->getID()) . '">
                             <input type="hidden" name="func" value="confirm_restore_version">
                             <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
                                 <i class="fas fa-redo tlp-button-icon"></i> Restore
@@ -844,7 +845,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                     $nbVersions,
                     '/admin/show_pending_documents.php',
                     [
-                        'group_id'   => $groupId,
+                        'group_id'   => (int) $project->getID(),
                         'offsetItem' => ($offset + $limit),
                     ]
                 );
@@ -1409,7 +1410,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeLegacyRestoreDocumentsController(): LegacyRestoreDocumentsController
     {
-        return new LegacyRestoreDocumentsController($this);
+        return new LegacyRestoreDocumentsController($this, ProjectManager::instance());
     }
 
     public function routeLegacySendMessageController(): LegacySendMessageController

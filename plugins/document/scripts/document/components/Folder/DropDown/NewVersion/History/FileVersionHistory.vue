@@ -25,10 +25,16 @@
         </h2>
         <p v-if="display_latest_version_text">
             {{ $gettext("Only the last 5 versions are displayed.") }}
-            <a v-bind:href="history_url" target="_blank" rel="noopener noreferrer">
+            <router-link
+                v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
+                class="tlp-dropdown-menu-item"
+                role="menuitem"
+                data-shortcut-history
+                data-test="document-versions"
+            >
                 {{ $gettext("View all versions") }}
                 <i class="fa-solid fa-right-long"></i>
-            </a>
+            </router-link>
         </p>
         <table class="tlp-table" v-if="!get_has_error">
             <thead>
@@ -78,10 +84,9 @@ import FileVersionHistorySkeleton from "./FileVersionHistorySkeleton.vue";
 
 const props = defineProps<{ item: ItemFile }>();
 
-const { is_filename_pattern_enforced, project_id } = useNamespacedState<ConfigurationState>(
-    "configuration",
-    ["is_filename_pattern_enforced", "project_id"],
-);
+const { is_filename_pattern_enforced } = useNamespacedState<ConfigurationState>("configuration", [
+    "is_filename_pattern_enforced",
+]);
 
 let versions = ref<ReadonlyArray<FileHistory>>([]);
 let has_error = ref(false);
@@ -109,12 +114,6 @@ onBeforeUnmount((): void => {
 
 const is_version_history_empty = computed((): boolean => {
     return versions.value.length === 0;
-});
-
-const history_url = computed((): string => {
-    return `/plugins/docman/?group_id=${encodeURIComponent(
-        project_id.value,
-    )}&id=${encodeURIComponent(props.item.id)}&action=details&section=history`;
 });
 
 const display_latest_version_text = computed((): boolean => {

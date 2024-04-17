@@ -33,16 +33,9 @@ import {
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 import { nextTick } from "vue";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 
 describe("DropDownMenu", () => {
-    function createWrapper(
-        item: Item,
-        should_display_history_in_document = false,
-    ): VueWrapper<InstanceType<typeof DropDownMenu>> {
-        jest.spyOn(strict_inject, "strictInject").mockReturnValue(
-            should_display_history_in_document,
-        );
+    function createWrapper(item: Item): VueWrapper<InstanceType<typeof DropDownMenu>> {
         return shallowMount(DropDownMenu, {
             props: { item },
             global: {
@@ -111,76 +104,23 @@ describe("DropDownMenu", () => {
         });
     });
 
-    describe("History", () => {
-        it("should display a link to the legacy history by default", async () => {
-            const wrapper = createWrapper({
-                id: 4,
-                title: "my item title",
-                type: "file",
-                can_user_manage: false,
-            } as Item);
+    it.each([
+        [TYPE_FOLDER, false],
+        [TYPE_FILE, true],
+        [TYPE_LINK, true],
+        [TYPE_EMBEDDED, true],
+        [TYPE_WIKI, false],
+        [TYPE_EMPTY, false],
+    ])("should display a %s with versions link: %s", async (type, should_versions_be_displayed) => {
+        const wrapper = createWrapper({
+            id: 4,
+            title: "my item title",
+            type,
+            can_user_manage: false,
+        } as Item);
 
-            await nextTick();
+        await nextTick();
 
-            expect(wrapper.vm.should_display_versions_link).toBe(false);
-        });
-
-        it("should display a link to the Document history when feature flag is on", async () => {
-            const wrapper = createWrapper(
-                {
-                    id: 4,
-                    title: "my item title",
-                    type: "file",
-                    can_user_manage: false,
-                } as Item,
-                true,
-            );
-
-            await nextTick();
-
-            expect(wrapper.vm.should_display_versions_link).toBe(true);
-        });
-
-        it.each([TYPE_FOLDER, TYPE_FILE, TYPE_LINK, TYPE_EMBEDDED, TYPE_WIKI, TYPE_EMPTY])(
-            "should not display a %s with versions link by default",
-            async (type) => {
-                const wrapper = createWrapper({
-                    id: 4,
-                    title: "my item title",
-                    type,
-                    can_user_manage: false,
-                } as Item);
-
-                await nextTick();
-
-                expect(wrapper.vm.should_display_versions_link).toBe(false);
-            },
-        );
-
-        it.each([
-            [TYPE_FOLDER, false],
-            [TYPE_FILE, true],
-            [TYPE_LINK, true],
-            [TYPE_EMBEDDED, true],
-            [TYPE_WIKI, false],
-            [TYPE_EMPTY, false],
-        ])(
-            "should display a %s with versions link: %s when feature flag is on",
-            async (type, should_versions_be_displayed) => {
-                const wrapper = createWrapper(
-                    {
-                        id: 4,
-                        title: "my item title",
-                        type,
-                        can_user_manage: false,
-                    } as Item,
-                    true,
-                );
-
-                await nextTick();
-
-                expect(wrapper.vm.should_display_versions_link).toBe(should_versions_be_displayed);
-            },
-        );
+        expect(wrapper.vm.should_display_versions_link).toBe(should_versions_be_displayed);
     });
 });

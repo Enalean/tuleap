@@ -41,7 +41,7 @@ class Docman_Token
             if (isset($url['query'])) {
                 parse_str($url['query'], $args);
                 //valid referers : Pages without action =>
-                // Embed, Browse, History, Properties
+                // Embed, Browse, Properties
                 $is_valid = isset($args['action']) && (
                     $args['action'] == 'show' //Browse & Embed
                     ||
@@ -50,8 +50,6 @@ class Docman_Token
                         &&
                         (
                             ! isset($args['section']) //Properties
-                            ||
-                            $args['section'] == 'history' //History
                         )
                     )
                 );

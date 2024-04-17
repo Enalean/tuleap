@@ -346,9 +346,6 @@ msgstr "Aller à la dernière version (%{ version_number })."
 msgid "Got it"
 msgstr "J'ai compris"
 
-msgid "History"
-msgstr "Historique"
-
 msgid "Hold on a second!"
 msgstr "Attendez une seconde !"
 

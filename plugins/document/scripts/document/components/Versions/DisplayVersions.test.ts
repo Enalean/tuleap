@@ -78,32 +78,4 @@ describe("DisplayVersions", () => {
 
         expect(wrapper.findComponent(HistoryVersions).exists()).toBe(should_versions_be_displayed);
     });
-
-    it("should not display anything if user tries direct access while feature flag is off", async () => {
-        const load_with_hierarchy = jest.fn().mockImplementation(() => {
-            return Promise.resolve({
-                id: 42,
-                type: TYPE_FILE,
-            } as Item);
-        });
-
-        jest.spyOn(strict_inject, "strictInject").mockReturnValue(false);
-
-        const wrapper = shallowMount(DisplayVersions, {
-            global: {
-                ...getGlobalTestOptions({
-                    actions: {
-                        loadDocumentWithAscendentHierarchy: load_with_hierarchy,
-                    },
-                }),
-                stubs: ["router-link"],
-            },
-        });
-
-        // wait for loadDocumentWithAscendentHierarchy() to be called
-        await nextTick();
-        await nextTick();
-
-        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
-    });
 });
