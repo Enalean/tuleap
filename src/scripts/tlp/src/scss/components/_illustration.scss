@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/// @deprecated
 .tlp-illustration {
     --tlp-illustration-primary-color: var(--tlp-legacy-illustration-primary-color);
     --tlp-illustration-secondary-dark-color: var(--tlp-legacy-illustration-secondary-dark-color);
@@ -24,44 +25,44 @@
     --tlp-illustration-tertiary-color: var(--tlp-legacy-illustration-tertiary-color);
 }
 
+/// @deprecated
 .tlp-illustration-primary-box {
     stroke: var(--tlp-legacy-illustration-primary-color);
     fill: var(--tlp-legacy-illustration-secondary-light-color);
 }
 
+/// @deprecated
 .tlp-illustration-primary-dark-box {
     stroke: var(--tlp-legacy-illustration-primary-color);
     fill: var(--tlp-legacy-illustration-secondary-dark-color);
 }
 
+/// @deprecated
 .tlp-illustration-primary-fill {
     fill: var(--tlp-legacy-illustration-primary-color);
 }
 
+/// @deprecated
 .tlp-illustration-primary-stroke {
     stroke: var(--tlp-legacy-illustration-primary-color);
 }
 
-.tlp-illustration-secondary-light-stroke {
-    stroke: var(--tlp-legacy-illustration-secondary-light-color);
-}
-
-.tlp-illustration-secondary-light-fill {
-    fill: var(--tlp-legacy-illustration-secondary-light-color);
-}
-
+/// @deprecated
 .tlp-illustration-secondary-dark-stroke {
     stroke: var(--tlp-legacy-illustration-secondary-dark-color);
 }
 
+/// @deprecated
 .tlp-illustration-secondary-dark-fill {
     fill: var(--tlp-legacy-illustration-secondary-dark-color);
 }
 
+/// @deprecated
 .tlp-illustration-tertiary-fill {
     fill: var(--tlp-legacy-illustration-tertiary-color);
 }
 
+/// @deprecated
 .tlp-illustration-tertiary-stroke {
     stroke: var(--tlp-legacy-illustration-tertiary-color);
 }
