@@ -25,15 +25,19 @@ namespace Tuleap\Tracker\Permission;
 use ForgeConfig;
 use LogicException;
 use PFUser;
+use Project;
+use Project_AccessException;
+use Tracker;
 use Tracker_FormElement;
 use Tracker_UserWithReadAllPermission;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\include\CheckUserCanAccessProject;
 use Tuleap\User\TuleapFunctionsUser;
 
-final class TrackersPermissionsRetriever implements RetrieveUserPermissionOnFields
+final readonly class TrackersPermissionsRetriever implements RetrieveUserPermissionOnFields, RetrieveUserPermissionOnTrackers
 {
     #[FeatureFlagConfigKey('Use the new way of checking user permissions on Trackers')]
     #[ConfigKeyInt(0)]
@@ -41,7 +45,9 @@ final class TrackersPermissionsRetriever implements RetrieveUserPermissionOnFiel
     public const FEATURE_FLAG = 'new_tracker_permissions_check';
 
     public function __construct(
-        private readonly SearchUserGroupsPermissionOnFields $dao,
+        private SearchUserGroupsPermissionOnFields $fields_dao,
+        private SearchUserGroupsPermissionOnTrackers $trackers_dao,
+        private CheckUserCanAccessProject $project_access,
     ) {
     }
 
@@ -50,14 +56,14 @@ final class TrackersPermissionsRetriever implements RetrieveUserPermissionOnFiel
         return (int) ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === 1;
     }
 
-    public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnObjects
+    public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnItems
     {
         if (! self::isEnabled()) {
             throw new LogicException('Trackers permissions on tracker are disabled by feature flag.');
         }
 
-        if (empty($fields)) {
-            return new UserPermissionsOnObjects($user, $permission, [], []);
+        if ($fields === []) {
+            return new UserPermissionsOnItems($user, $permission, [], []);
         }
 
         if (
@@ -65,11 +71,11 @@ final class TrackersPermissionsRetriever implements RetrieveUserPermissionOnFiel
             || $user instanceof TuleapFunctionsUser
             || ($permission === FieldPermissionType::PERMISSION_READ && $user instanceof Tracker_UserWithReadAllPermission)
         ) {
-            return new UserPermissionsOnObjects($user, $permission, $fields, []);
+            return new UserPermissionsOnItems($user, $permission, $fields, []);
         }
 
-        $results = $this->dao->searchUserGroupsPermissionOnFields(
-            $this->getUserUGroups($user, $fields),
+        $results = $this->fields_dao->searchUserGroupsPermissionOnFields(
+            $this->getUserUGroupsFromFields($user, $fields),
             array_map(static fn(Tracker_FormElement $element) => $element->getId(), $fields),
             $permission->value
         );
@@ -84,14 +90,45 @@ final class TrackersPermissionsRetriever implements RetrieveUserPermissionOnFiel
             }
         }
 
-        return new UserPermissionsOnObjects($user, $permission, $allowed, $not_allowed);
+        return new UserPermissionsOnItems($user, $permission, $allowed, $not_allowed);
+    }
+
+    public function retrieveUserPermissionOnTrackers(PFUser $user, array $trackers): UserPermissionsOnItems
+    {
+        if (! self::isEnabled()) {
+            throw new LogicException('Trackers permissions on tracker are disabled by feature flag.');
+        }
+
+        if ($trackers === []) {
+            return new UserPermissionsOnItems($user, TrackerPermissionType::PERMISSION_VIEW, [], []);
+        }
+
+        $results = $this->trackers_dao->searchUserGroupsPermissionOnTrackers(
+            $this->getUserUGroupsFromTrackers($user, $trackers),
+            array_map(static fn(Tracker $tracker) => $tracker->getId(), $trackers)
+        );
+
+        $allowed     = [];
+        $not_allowed = [];
+        foreach ($trackers as $tracker) {
+            if (
+                (in_array($tracker->getId(), $results, true) || $tracker->userIsAdmin($user))
+                && $this->userCanAccessProject($user, $tracker->getProject())
+            ) {
+                $allowed[] = $tracker;
+            } else {
+                $not_allowed[] = $tracker;
+            }
+        }
+
+        return new UserPermissionsOnItems($user, TrackerPermissionType::PERMISSION_VIEW, $allowed, $not_allowed);
     }
 
     /**
      * @param Tracker_FormElement[] $fields
      * @return int[]
      */
-    private function getUserUGroups(PFUser $user, array $fields): array
+    private function getUserUGroupsFromFields(PFUser $user, array $fields): array
     {
         $ugroups_id = [];
         foreach ($fields as $field) {
@@ -100,5 +137,29 @@ final class TrackersPermissionsRetriever implements RetrieveUserPermissionOnFiel
         }
 
         return array_map(static fn(int|string $id) => (int) $id, $ugroups_id);
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @return int[]
+     */
+    private function getUserUGroupsFromTrackers(PFUser $user, array $trackers): array
+    {
+        $ugroups_id = [];
+        foreach ($trackers as $tracker) {
+            $project_id = (int) $tracker->getProject()->getID();
+            $ugroups_id = array_merge($ugroups_id, $user->getUgroups($project_id, ['project_id' => $project_id]));
+        }
+
+        return array_map(static fn(int|string $id) => (int) $id, $ugroups_id);
+    }
+
+    private function userCanAccessProject(PFUser $user, Project $project): bool
+    {
+        try {
+            return $this->project_access->userCanAccessProject($user, $project);
+        } catch (Project_AccessException) {
+            return false;
+        }
     }
 }

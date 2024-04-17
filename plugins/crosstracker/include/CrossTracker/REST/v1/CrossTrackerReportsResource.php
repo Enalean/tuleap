@@ -279,9 +279,16 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new CrossTrackerExpertQueryReportDao(),
             $this->invalid_comparisons_collector
         );
+        $trackers_permissions_dao             = new TrackersPermissionsDao();
+        $trackers_permissions_retriever       = new TrackersPermissionsRetriever(
+            $trackers_permissions_dao,
+            $trackers_permissions_dao,
+            new URLVerification(),
+        );
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(
             new URLVerification(),
-            new TrackersPermissionsRetriever(new TrackersPermissionsDao())
+            $trackers_permissions_retriever,
+            $trackers_permissions_retriever,
         );
 
         $this->query_parser           = new QueryParameterParser(new JsonDecoder());

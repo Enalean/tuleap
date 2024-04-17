@@ -20,24 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Permission;
+namespace Tuleap\Tracker\Test\Stub\Tracker\Permission;
 
-use PFUser;
+use Tuleap\Tracker\Permission\SearchUserGroupsPermissionOnTrackers;
 
-/**
- * @template T
- */
-final readonly class UserPermissionsOnObjects
+final readonly class SearchUserGroupsPermissionOnTrackersStub implements SearchUserGroupsPermissionOnTrackers
 {
     /**
-     * @param T[] $allowed
-     * @param T[] $not_allowed
+     * @param list<int> $result
      */
-    public function __construct(
-        public PFUser $user,
-        public FieldPermissionType $permission,
-        public array $allowed,
-        public array $not_allowed,
-    ) {
+    private function __construct(private array $result)
+    {
+    }
+
+    public static function buildEmpty(): self
+    {
+        return new self([]);
+    }
+
+    /**
+     * @param list<int> $results
+     */
+    public static function buildWithResults(array $results): self
+    {
+        return new self($results);
+    }
+
+    public function searchUserGroupsPermissionOnTrackers(array $user_groups_id, array $trackers_id): array
+    {
+        return $this->result;
     }
 }
