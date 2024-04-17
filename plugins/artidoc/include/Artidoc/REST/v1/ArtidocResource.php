@@ -54,7 +54,7 @@ final class ArtidocResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}
      */
-    public function options(): void
+    public function options(int $id): void
     {
         Header::allowOptionsPatch();
     }
