@@ -22,16 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Permission;
 
+use ForgeConfig;
 use Tracker;
-use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\include\CheckUserCanAccessProjectStub;
+use Tuleap\Tracker\Permission\FieldPermissionType;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsStub;
 
 final class CrossTrackerPermissionGateTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
+    protected function setUp(): void
+    {
+        ForgeConfig::setFeatureFlag(TrackersPermissionsRetriever::FEATURE_FLAG, 1);
+    }
+
     public function testItDoesNotBlockLegitimateUser(): void
     {
         $this->expectNotToPerformAssertions();
@@ -41,17 +53,18 @@ final class CrossTrackerPermissionGateTest extends TestCase
 
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('userCanView')->willReturn(true);
-        $column_field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $column_field->method('userCanRead')->willReturn(true);
-        $search_field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $search_field->method('userCanRead')->willReturn(true);
-        $report = $this->createMock(CrossTrackerReport::class);
+        $column_field = ListFieldBuilder::aListField(101)->build();
+        $search_field = ListFieldBuilder::aListField(102)->build();
+        $report       = $this->createMock(CrossTrackerReport::class);
         $report->method('getProjects')->willReturn([$project]);
         $report->method('getTrackers')->willReturn([$tracker]);
         $report->method('getColumnFields')->willReturn([$column_field]);
         $report->method('getSearchFields')->willReturn([$search_field]);
 
-        $permission_gate = new CrossTrackerPermissionGate(CheckUserCanAccessProjectStub::build());
+        $permission_gate = new CrossTrackerPermissionGate(
+            CheckUserCanAccessProjectStub::build(),
+            RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn([$column_field->getId(), $search_field->getId()], FieldPermissionType::PERMISSION_READ)
+        );
 
         $permission_gate->check($user, $report);
     }
@@ -68,7 +81,8 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $permission_gate = new CrossTrackerPermissionGate(
             CheckUserCanAccessProjectStub::build()
                 ->withPrivateProjectForUser($project1, $user)
-                ->withPrivateProjectForUser($project2, $user)
+                ->withPrivateProjectForUser($project2, $user),
+            RetrieveUserPermissionOnFieldsStub::build()
         );
 
         $this->expectException(CrossTrackerUnauthorizedProjectException::class);
@@ -91,7 +105,10 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $report->method('getProjects')->willReturn([$project]);
         $report->method('getTrackers')->willReturn([$tracker1, $tracker2]);
 
-        $permission_gate = new CrossTrackerPermissionGate(CheckUserCanAccessProjectStub::build());
+        $permission_gate = new CrossTrackerPermissionGate(
+            CheckUserCanAccessProjectStub::build(),
+            RetrieveUserPermissionOnFieldsStub::build()
+        );
 
         $this->expectException(CrossTrackerUnauthorizedTrackerException::class);
 
@@ -106,16 +123,17 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('userCanView')->willReturn(true);
 
-        $column_field1 = $this->createMock(Tracker_FormElement_Field_List::class);
-        $column_field1->method('userCanRead')->willReturn(false);
-        $column_field2 = $this->createMock(Tracker_FormElement_Field_List::class);
-        $column_field2->method('userCanRead')->willReturn(false);
-        $report = $this->createMock(CrossTrackerReport::class);
+        $column_field1 = ListFieldBuilder::aListField(101)->build();
+        $column_field2 = ListFieldBuilder::aListField(102)->build();
+        $report        = $this->createMock(CrossTrackerReport::class);
         $report->method('getProjects')->willReturn([$project]);
         $report->method('getTrackers')->willReturn([$tracker]);
         $report->method('getColumnFields')->willReturn([$column_field1, $column_field2]);
 
-        $permission_gate = new CrossTrackerPermissionGate(CheckUserCanAccessProjectStub::build());
+        $permission_gate = new CrossTrackerPermissionGate(
+            CheckUserCanAccessProjectStub::build(),
+            RetrieveUserPermissionOnFieldsStub::build()
+        );
 
         $this->expectException(CrossTrackerUnauthorizedColumnFieldException::class);
 
@@ -130,19 +148,19 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('userCanView')->willReturn(true);
 
-        $column_field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $column_field->method('userCanRead')->willReturn(true);
-        $search_field1 = $this->createMock(Tracker_FormElement_Field_List::class);
-        $search_field1->method('userCanRead')->willReturn(false);
-        $search_field2 = $this->createMock(Tracker_FormElement_Field_List::class);
-        $search_field2->method('userCanRead')->willReturn(false);
-        $report = $this->createMock(CrossTrackerReport::class);
+        $column_field  = ListFieldBuilder::aListField(101)->build();
+        $search_field1 = ListFieldBuilder::aListField(102)->build();
+        $search_field2 = ListFieldBuilder::aListField(103)->build();
+        $report        = $this->createMock(CrossTrackerReport::class);
         $report->method('getProjects')->willReturn([$project]);
         $report->method('getTrackers')->willReturn([$tracker]);
         $report->method('getColumnFields')->willReturn([$column_field]);
         $report->method('getSearchFields')->willReturn([$search_field1, $search_field2]);
 
-        $permission_gate = new CrossTrackerPermissionGate(CheckUserCanAccessProjectStub::build());
+        $permission_gate = new CrossTrackerPermissionGate(
+            CheckUserCanAccessProjectStub::build(),
+            RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn([$column_field->getId()], FieldPermissionType::PERMISSION_READ)
+        );
 
         $this->expectException(CrossTrackerUnauthorizedSearchFieldException::class);
 
@@ -169,7 +187,10 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $report->method('getColumnFields')->willReturn([]);
         $report->method('getSearchFields')->willReturn([]);
 
-        $permission_gate = new CrossTrackerPermissionGate(CheckUserCanAccessProjectStub::build()->withPrivateProjectForUser($project2, $user));
+        $permission_gate = new CrossTrackerPermissionGate(
+            CheckUserCanAccessProjectStub::build()->withPrivateProjectForUser($project2, $user),
+            RetrieveUserPermissionOnFieldsStub::build()
+        );
 
         $permission_gate->check($user, $report);
     }

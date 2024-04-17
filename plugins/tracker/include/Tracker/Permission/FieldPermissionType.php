@@ -22,20 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission;
 
-use ForgeConfig;
-use Tuleap\Config\ConfigKeyHidden;
-use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Config\FeatureFlagConfigKey;
-
-final class TrackersPermissions
+enum FieldPermissionType: string
 {
-    #[FeatureFlagConfigKey('Use the new way of checking user permissions on Trackers')]
-    #[ConfigKeyInt(0)]
-    #[ConfigKeyHidden]
-    public const FEATURE_FLAG = 'new_tracker_permissions_check';
-
-    public static function isEnabled(): bool
-    {
-        return (int) ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === 1;
-    }
+    case PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ';
+    case PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
+    case PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT';
 }

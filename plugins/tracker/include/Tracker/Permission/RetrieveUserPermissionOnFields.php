@@ -22,26 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission;
 
-use ForgeConfig;
-use Tuleap\ForgeConfigSandbox;
-use Tuleap\Test\PHPUnit\TestCase;
+use PFUser;
+use Tracker_FormElement;
 
-final class TrackersPermissionsTest extends TestCase
+interface RetrieveUserPermissionOnFields
 {
-    use ForgeConfigSandbox;
-
-    private TrackersPermissions $permissions;
-
-    protected function setUp(): void
-    {
-        $this->permissions = new TrackersPermissions();
-    }
-
-    public function testIsEnabled(): void
-    {
-        ForgeConfig::setFeatureFlag(TrackersPermissions::FEATURE_FLAG, 0);
-        self::assertFalse($this->permissions->isEnabled());
-        ForgeConfig::setFeatureFlag(TrackersPermissions::FEATURE_FLAG, 1);
-        self::assertTrue($this->permissions->isEnabled());
-    }
+    /**
+     * @param Tracker_FormElement[] $fields
+     * @return UserPermissionsOnObjects<Tracker_FormElement>
+     */
+    public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnObjects;
 }
