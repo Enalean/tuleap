@@ -65,7 +65,7 @@ class DBPersistentQueueDAO extends DataAccessObject
     public function retrieveAMessageToProcess(string $queue_name): ?array
     {
         $row = $this->getDB()->row(
-            'SELECT id, topic, payload, nb_added_in_queue
+            'SELECT id, topic, payload, enqueue_timestamp, enqueue_timestamp_microsecond, nb_added_in_queue
             FROM async_events
             WHERE queue_name = ?
             ORDER BY id
