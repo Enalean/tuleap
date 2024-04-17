@@ -20,24 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document;
+namespace Tuleap\Docman\Item;
 
-use Tuleap\Docman\Item\OtherDocument;
+use Tuleap\Event\Dispatchable;
 
-final class ArtidocDocument extends OtherDocument
+final readonly class CloneOtherItemPostAction implements Dispatchable
 {
-    public const TYPE = 'artidoc';
-
-    public function __construct(array $row)
+    public function __construct(public OtherDocument $source, public OtherDocument $target)
     {
-        parent::__construct($row);
-    }
-
-    public function toRow(): array
-    {
-        $row               = parent::toRow();
-        $row['other_type'] = self::TYPE;
-
-        return $row;
     }
 }

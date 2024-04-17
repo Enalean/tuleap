@@ -130,7 +130,7 @@ final class DocmanItemCopier
             false,
             $this->docman_root_path,
             $item_to_copy,
-            DestinationCloneItem::fromNewParentFolder($destination_folder, $this->project_manager, $this->link_version_factory)
+            DestinationCloneItem::fromNewParentFolder($destination_folder, $this->project_manager, $this->link_version_factory, $this->event_manager),
         );
 
         if (! isset($item_mapping[$item_to_copy_id])) {

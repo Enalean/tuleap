@@ -29,6 +29,7 @@ use Docman_LinkVersionFactory;
 use LogicException;
 use Project;
 use ProjectManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class DestinationCloneItem
 {
@@ -56,6 +57,7 @@ final class DestinationCloneItem
         int $destination_project_id,
         ProjectManager $project_manager,
         Docman_LinkVersionFactory $link_version_factory,
+        private readonly EventDispatcherInterface $dispatcher,
     ) {
         $this->parent_folder_id       = $parent_folder_id;
         $this->destination_project_id = $destination_project_id;
@@ -67,8 +69,9 @@ final class DestinationCloneItem
         Docman_Folder $folder,
         ProjectManager $project_manager,
         Docman_LinkVersionFactory $link_version_factory,
+        EventDispatcherInterface $dispatcher,
     ): self {
-        return new self((int) $folder->getId(), (int) $folder->getGroupId(), $project_manager, $link_version_factory);
+        return new self((int) $folder->getId(), (int) $folder->getGroupId(), $project_manager, $link_version_factory, $dispatcher,);
     }
 
     public static function fromDestinationProject(
@@ -76,6 +79,7 @@ final class DestinationCloneItem
         Project $destination_project,
         ProjectManager $project_manager,
         Docman_LinkVersionFactory $link_version_factory,
+        EventDispatcherInterface $dispatcher,
     ): self {
         $project_id = $destination_project->getID();
         if ($item_factory->getRoot($project_id) !== null) {
@@ -86,7 +90,7 @@ final class DestinationCloneItem
                 )
             );
         }
-        return new self(self::CLONE_ROOT_PARENT_ID, (int) $project_id, $project_manager, $link_version_factory);
+        return new self(self::CLONE_ROOT_PARENT_ID, (int) $project_id, $project_manager, $link_version_factory, $dispatcher);
     }
 
     public function getNewParentID(): int
@@ -99,7 +103,8 @@ final class DestinationCloneItem
         return new Docman_CloneItemsVisitor(
             $this->destination_project_id,
             $this->project_manager,
-            $this->link_version_factory
+            $this->link_version_factory,
+            $this->dispatcher,
         );
     }
 }

@@ -35,6 +35,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use ProjectManager;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class Docman_CloneItemsVisitorTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -47,7 +48,7 @@ final class Docman_CloneItemsVisitorTest extends \Tuleap\Test\PHPUnit\TestCase /
 
         $visitor     = Mockery::mock(
             Docman_CloneItemsVisitor::class,
-            [102, $project_manager, $link_version_factory]
+            [102, $project_manager, $link_version_factory, EventDispatcherStub::withIdentityCallback()]
         )->makePartial();
         $settings_bo = Mockery::mock(Docman_SettingsBo::class);
         $settings_bo->shouldReceive('getMetadataUsage')->andReturn(false);

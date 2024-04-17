@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,24 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document;
+namespace Tuleap\Docman\REST\v1\Others;
 
-use Tuleap\Docman\Item\OtherDocument;
+use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
 
-final class ArtidocDocument extends OtherDocument
+/**
+ * @psalm-immutable
+ */
+class DocmanOtherTypePOSTRepresentation
 {
-    public const TYPE = 'artidoc';
-
-    public function __construct(array $row)
-    {
-        parent::__construct($row);
-    }
-
-    public function toRow(): array
-    {
-        $row               = parent::toRow();
-        $row['other_type'] = self::TYPE;
-
-        return $row;
-    }
+    public DocmanCopyItemRepresentation $copy;
 }

@@ -172,7 +172,8 @@ class Docman_Controller extends Controler
                     $itemFactory,
                     $destination_project,
                     ProjectManager::instance(),
-                    new Docman_LinkVersionFactory()
+                    new Docman_LinkVersionFactory(),
+                    $this->getEventManager(),
                 )
             );
         }

@@ -544,6 +544,20 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     }
 
     /**
+     * @depends testGetRootId
+     * @depends testPostEmptyDocument
+     */
+    public function testPostCopyOtherDocumentIsRejectedIfSourceItemIsNotOtherDocument(int $root_id, int $empty_document_id): void
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/others')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $empty_document_id]])))
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
      * @depends testGetDocumentItemsForAdminUser
      */
     public function testPostReturns403WhenPermissionDenied(array $items): void

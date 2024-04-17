@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Embedded, Empty, Folder, ItemFile, Link, State, Wiki } from "../type";
+import type { Embedded, Empty, Folder, Item, ItemFile, Link, State, Wiki } from "../type";
 import {
     CLIPBOARD_OPERATION_COPY,
     CLIPBOARD_OPERATION_CUT,
@@ -190,6 +190,16 @@ describe("Clipboard Store", () => {
             await testPasteSuccess(TYPE_LINK);
 
             expect(copyLink).toHaveBeenCalledWith(copied_item_id, expect.any(Number));
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created", { id: 123 });
+        });
+
+        it("Paste another type of document", async () => {
+            const copyOtherType = jest.spyOn(rest_querier, "copyOtherType");
+            copyOtherType.mockReturnValue(Promise.resolve({ id: 123 } as Item));
+
+            await testPasteSuccess("whatever");
+
+            expect(copyOtherType).toHaveBeenCalledWith(copied_item_id, expect.any(Number));
             expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created", { id: 123 });
         });
     });

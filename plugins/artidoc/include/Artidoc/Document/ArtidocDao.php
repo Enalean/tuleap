@@ -65,4 +65,18 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
             return new PaginatedRawSections($id, $rows, $total);
         });
     }
+
+    public function cloneItem(int $source_id, int $target_id): void
+    {
+        $this->getDB()->run(
+            <<<EOS
+            INSERT INTO plugin_artidoc_document (item_id, artifact_id, `rank`)
+            SELECT ?, artifact_id, `rank`
+            FROM plugin_artidoc_document
+            WHERE item_id = ?
+            EOS,
+            $target_id,
+            $source_id,
+        );
+    }
 }
