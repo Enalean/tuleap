@@ -21,9 +21,8 @@ import { beforeAll, describe, expect, it } from "vitest";
 import type { ComponentPublicInstance } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import DocumentContent from "@/views/DocumentContent.vue";
+import DocumentContent from "@/components/DocumentContent.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
-import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.vue";
 
 describe("DocumentContent", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
@@ -32,6 +31,10 @@ describe("DocumentContent", () => {
         const defaultSection = ArtidocSectionFactory.create();
 
         wrapper = shallowMount(DocumentContent, {
+            slots: {
+                "section-header": "<h1>section header</h1>",
+                "section-content": "<p>section content</p>",
+            },
             propsData: {
                 sections: [
                     ArtidocSectionFactory.override({
@@ -52,14 +55,18 @@ describe("DocumentContent", () => {
         expect(list.findAll("li")).toHaveLength(2);
     });
 
-    it("should contains section titles", () => {
-        const list = wrapper.find("ol");
-        const sectionTitles = list.findAllComponents(SectionTitleWithArtifactId);
-        expect(sectionTitles).toHaveLength(2);
-        expect(sectionTitles[0].attributes().title).toBe("Title 1");
-        expect(sectionTitles[0].attributes().artifact_id).toBe("1");
-        expect(sectionTitles[1].attributes().title).toBe("Title 2");
-        expect(sectionTitles[1].attributes().artifact_id).toBe("2");
+    it("should contains section header", () => {
+        const list = wrapper.findAll("article");
+        expect(list).toHaveLength(2);
+        expect(list[0].find("h1").text()).toBe("section header");
+        expect(list[1].find("h1").text()).toBe("section header");
+    });
+
+    it("should contains section content", () => {
+        const list = wrapper.findAll("article");
+        expect(list).toHaveLength(2);
+        expect(list[0].find("p").text()).toBe("section content");
+        expect(list[1].find("p").text()).toBe("section content");
     });
 
     it("sections should have an id for anchor feature", () => {

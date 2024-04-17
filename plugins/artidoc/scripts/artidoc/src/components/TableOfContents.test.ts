@@ -34,14 +34,15 @@ describe("TableOfContents", () => {
             global: {
                 plugins: [createGettext({ silent: true })],
             },
+            slots: {
+                default: "<p>section title</p>",
+            },
             propsData: {
                 sections: [
                     ArtidocSectionFactory.override({
-                        title: "Title 1",
                         artifact: { ...defaultSection.artifact, id: 1 },
                     }),
                     ArtidocSectionFactory.override({
-                        title: "Title 2",
                         artifact: { ...defaultSection.artifact, id: 2 },
                     }),
                 ],
@@ -49,11 +50,15 @@ describe("TableOfContents", () => {
         });
     });
 
+    it("should display the table of content title", () => {
+        expect(wrapper.find("h1").text()).toBe("Table of contents");
+    });
+
     it("should display the two title sections", () => {
-        const list = wrapper.find("ol");
-        expect(list.findAll("li")).toHaveLength(2);
-        expect(list.text()).toContain("Title 1");
-        expect(list.text()).toContain("Title 2");
+        const list = wrapper.findAll("li");
+        expect(list).toHaveLength(2);
+        expect(list[0].find("a").text()).toBe("section title");
+        expect(list[1].find("a").text()).toBe("section title");
     });
 
     it("should have an url to redirect to the section", () => {

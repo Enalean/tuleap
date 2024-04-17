@@ -25,7 +25,7 @@
     <ol>
         <li v-for="section in sections" v-bind:key="section.artifact.id">
             <a v-bind:href="`#${section.artifact.id}`" class="section-title">
-                {{ section.title }}
+                <slot v-bind:title="section.title"></slot>
             </a>
         </li>
     </ol>
@@ -36,7 +36,6 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
-
 defineProps<{ sections: readonly ArtidocSection[] }>();
 </script>
 
