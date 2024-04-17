@@ -187,6 +187,90 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         );
     }
 
+    public function testWhenOrderOfArtifactRowsDoesNotMatchOrderOfGivenArtifactIds(): void
+    {
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('userCanRead')->willReturn(true);
+        $this->semantic_title->method('getField')->willReturn($title);
+
+        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('userCanRead')->willReturn(true);
+        $this->semantic_description->method('getField')->willReturn($description);
+
+        $dao                          = $this->createMock(Tracker_ArtifactDao::class);
+        $artifact_rows_in_mixed_order = [
+            ['id' => 4],
+            ['id' => 2],
+            ['id' => 1],
+            ['id' => 3],
+        ];
+        $dao->method('searchByIds')
+            ->with([1, 2, 3, 4])
+            ->willReturn($artifact_rows_in_mixed_order);
+
+        $art1 = $this->getArtifact(1, $title, $user);
+        $art2 = $this->getArtifact(2, $title, $user);
+        $art3 = $this->getArtifact(3, $title, $user);
+        $art4 = $this->getArtifact(4, $title, $user);
+
+        $description->method('getFullRESTValue')
+            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
+                $art2->getLastChangeset() => $this->getDescriptionValue($art2),
+                $art3->getLastChangeset() => $this->getDescriptionValue($art3),
+                $art4->getLastChangeset() => $this->getDescriptionValue($art4),
+            });
+
+        $factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $factory->method('getInstanceFromRow')
+            ->willReturnCallback(static fn (array $row) => match ($row['id']) {
+                1 => $art1,
+                2 => $art2,
+                3 => $art3,
+                4 => $art4,
+            });
+
+        $transformer = new RawSectionsToRepresentationTransformer(
+            $dao,
+            $factory,
+        );
+        $result      = $transformer->getRepresentation(
+            new PaginatedRawSections(
+                101,
+                [
+                    ['artifact_id' => 1],
+                    ['artifact_id' => 2],
+                    ['artifact_id' => 3],
+                    ['artifact_id' => 4],
+                ],
+                10,
+            ),
+            $user
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(10, $result->value->total);
+        self::assertCount(4, $result->value->sections);
+
+        $expected = [
+            ['id' => 1, 'title' => 'Title for #1', 'description' => 'Desc <b>for</b> #1'],
+            ['id' => 2, 'title' => 'Title for #2', 'description' => 'Desc <b>for</b> #2'],
+            ['id' => 3, 'title' => 'Title for #3', 'description' => 'Desc <b>for</b> #3'],
+            ['id' => 4, 'title' => 'Title for #4', 'description' => 'Desc <b>for</b> #4'],
+        ];
+        array_walk(
+            $expected,
+            static function (array $expected, int $index) use ($result) {
+                self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
+                self::assertSame($expected['title'], $result->value->sections[$index]->title);
+                self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
+                self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
+            }
+        );
+    }
+
     public function testWhenTitleSemanticIsNotSet(): void
     {
         $user = UserTestBuilder::buildWithDefaults();
