@@ -23,6 +23,8 @@ import QuickLookGlobal from "./QuickLookGlobal.vue";
 import type { ItemFile, RootState } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
+jest.mock("@tuleap/vue-strict-inject");
+
 describe("QuickLookGlobal", () => {
     it(`Displays the description of the item observed in the QuickLook`, () => {
         const currently_previewed_item = {
