@@ -74,6 +74,8 @@ import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";
 import type { Item } from "../../type";
 import { computed, defineAsyncComponent } from "vue";
 import { isFile } from "../../helpers/type-check-helper";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { OTHER_ITEM_TYPES } from "../../injection-keys";
 
 const props = defineProps<{ currently_previewed_item: Item }>();
 
@@ -86,6 +88,8 @@ const get_description = computed((): string => {
         ? props.currently_previewed_item.post_processed_description
         : "";
 });
+
+const other_item_types = strictInject(OTHER_ITEM_TYPES);
 
 const icon_class = computed((): string => {
     const item = props.currently_previewed_item;
@@ -107,7 +111,7 @@ const icon_class = computed((): string => {
             }
             return iconForMimeType(item.file_properties.file_type);
         default:
-            return ICON_EMPTY;
+            return item.type in other_item_types ? other_item_types[item.type].icon : ICON_EMPTY;
     }
 });
 
