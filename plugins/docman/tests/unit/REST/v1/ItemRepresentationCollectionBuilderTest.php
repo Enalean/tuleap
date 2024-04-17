@@ -111,35 +111,40 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
 
     public function testItReturnsRepresentationOfItemUserCanSee(): void
     {
-        $item = Mockery::mock(Docman_Item::class);
-        $item->shouldReceive('getId')->andReturn(3);
-        $item->shouldReceive('getGroupId')->andReturn(101);
-        $user          = Mockery::mock(PFUser::class);
+        $item = new \Docman_Folder(['item_id' => 42, 'group_id' => 101]);
+        $user = UserTestBuilder::buildWithDefaults();
+
         $html_purifier = Mockery::mock(Codendi_HTMLPurifier::class);
         $html_purifier->shouldReceive('purifyTextWithReferences')->atLeast()->once()
             ->andReturn('description with processed ref');
 
-        $dar_item_1 = [
+        $dar_item_1         = [
             'item_id'     => 1,
             'title'       => 'folder 1',
             'user_id'     => 101,
             'update_date' => 1542099693,
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
         ];
-        $dar_item_2 = [
+        $dar_item_2         = [
             'item_id'     => 2,
             'title'       => 'item A',
             'user_id'     => 101,
             'update_date' => 1542099693,
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
-
         ];
-        $dar_item_3 = [
+        $dar_item_3         = [
             'item_id'     => 3,
             'title'       => 'item B',
             'user_id'     => 101,
             'update_date' => 1542099693,
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FILE,
+        ];
+        $dar_unknown_item_4 = [
+            'item_id'     => 4,
+            'title'       => 'item C',
+            'user_id'     => 101,
+            'update_date' => 1542099693,
+            'item_type'   => Docman_Item::TYPE_OTHER,
         ];
 
         $this->dao->shouldReceive('searchByParentIdWithPagination')->andReturn(
@@ -147,28 +152,22 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
                 $dar_item_1,
                 $dar_item_2,
                 $dar_item_3,
+                $dar_unknown_item_4,
             ]
         );
-        $this->dao->shouldReceive('foundRows')->andReturn(3);
+        $this->dao->shouldReceive('foundRows')->andReturn(4);
 
         $docman_item1 = new \Docman_Folder($dar_item_1);
         $docman_item3 = new \Docman_File($dar_item_3);
 
-        $this->item_factory->shouldReceive('getItemFromRow')->andReturn($docman_item1, $docman_item3);
+        $this->item_factory
+            ->shouldReceive('getItemFromRow')
+            ->andReturn($docman_item1, $docman_item3, null);
 
         $this->permission_manager->shouldReceive('userCanRead')->withArgs([$user, 1])->andReturns(true);
         $this->permission_manager->shouldReceive('userCanRead')->withArgs([$user, 2])->andReturns(false);
         $this->permission_manager->shouldReceive('userCanRead')->withArgs([$user, 3])->andReturns(true);
-
-        $this->permission_manager->shouldReceive('userCanManage')
-            ->withArgs([$user, 1])
-            ->andReturns(true);
-        $this->permission_manager->shouldReceive('userCanManage')
-            ->withArgs([$user, 2])
-            ->andReturns(false);
-        $this->permission_manager->shouldReceive('userCanManage')
-            ->withArgs([$user, 3])
-            ->andReturns(false);
+        $this->permission_manager->shouldReceive('userCanRead')->withArgs([$user, 4])->andReturns(true);
 
         $user_representation = Mockery::mock(MinimalUserRepresentation::class);
         $representation1     = ItemRepresentation::build(
@@ -278,7 +277,7 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
 
         $representation = $this->item_representation_collection_builder->buildFolderContent($item, $user, 50, 0);
 
-        $expected_representation = new PaginatedDocmanItemCollection([$representation1, $representation2], 3);
+        $expected_representation = new PaginatedDocmanItemCollection([$representation1, $representation2], 4);
 
         $this->assertEquals($expected_representation, $representation);
     }

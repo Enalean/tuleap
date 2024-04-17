@@ -58,10 +58,7 @@ class ItemRepresentationCollectionBuilder
         $this->item_representation_visitor = $item_representation_visitor;
     }
 
-    /**
-     * @return PaginatedDocmanItemCollection
-     */
-    public function buildFolderContent(\Docman_Item $item, \PFUser $user, $limit, $offset)
+    public function buildFolderContent(\Docman_Item $item, \PFUser $user, $limit, $offset): PaginatedDocmanItemCollection
     {
         $dar        = $this->item_dao->searchByParentIdWithPagination($item->getId(), $limit, $offset);
         $row_number = $this->item_dao->foundRows();
@@ -69,12 +66,13 @@ class ItemRepresentationCollectionBuilder
         foreach ($dar as $row) {
             if ($row && $this->permission_manager->userCanRead($user, $row['item_id'])) {
                 $docman_item = $this->item_factory->getItemFromRow($row);
-                $children[]  = $docman_item->accept($this->item_representation_visitor, ['current_user' => $user, 'is_a_direct_access' => false]);
+                if ($docman_item) {
+                    $children[] = $docman_item->accept($this->item_representation_visitor, ['current_user' => $user, 'is_a_direct_access' => false]);
+                }
             }
         }
 
-        $paginated_children = new PaginatedDocmanItemCollection($children, $row_number);
-        return $paginated_children;
+        return new PaginatedDocmanItemCollection($children, $row_number);
     }
 
     /**
