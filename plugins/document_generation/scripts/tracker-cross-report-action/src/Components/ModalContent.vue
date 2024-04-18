@@ -40,6 +40,7 @@
             </button>
         </div>
         <div id="config-tracker-cross-report-body-export-modal" class="tlp-modal-body">
+            <export-generation-error-message v-if="export_has_failed" />
             <explanations-export />
             <fake-worksheet
                 v-bind:tracker_name_level_1="props.properties.current_tracker_name"
@@ -104,6 +105,7 @@ import SecondLevelSelector from "./SecondLevelSelector.vue";
 import ThirdLevelSelector from "./ThirdLevelSelector.vue";
 import type { ExportSettings } from "../export-document";
 import FakeWorksheet from "./FakeWorksheet.vue";
+import ExportGenerationErrorMessage from "./ExportGenerationErrorMessage.vue";
 
 const modal_element = ref<InstanceType<typeof HTMLElement>>();
 let modal: Modal | null = null;
@@ -135,8 +137,10 @@ const selected_tracker_level_3 = ref<SelectedTracker | null>(null);
 const selected_report_level_3 = ref<SelectedReport | null>(null);
 
 const export_is_ongoing = ref(false);
+const export_has_failed = ref(false);
 async function startExport(): Promise<void> {
     export_is_ongoing.value = true;
+    export_has_failed.value = false;
     const export_document_module = import("../export-document");
     const download_xlsx_module = import("../Exporter/XLSX/download-xlsx");
 
@@ -171,7 +175,13 @@ async function startExport(): Promise<void> {
             },
         };
     }
-    await downloadXLSXDocument(export_settings, downloadXLSX);
+    try {
+        await downloadXLSXDocument(export_settings, downloadXLSX);
+    } catch (e) {
+        export_has_failed.value = true;
+        export_is_ongoing.value = false;
+        throw e;
+    }
 
     modal?.hide();
 }
