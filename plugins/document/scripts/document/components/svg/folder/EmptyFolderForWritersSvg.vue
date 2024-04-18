@@ -509,8 +509,7 @@
                     </g>
                 </g>
                 <path
-                    fill="#92CEE5"
-                    class="tlp-illustration-primary-fill"
+                    fill="var(--tlp-illustration-main-color)"
                     fill-rule="nonzero"
                     d="M156.270456,318.775136 L169.48226,293.315188 C170.858041,290.663975 173.596194,289 176.583116,289 L179,289 L156.270456,329.930066 L156.270456,318.775136 Z"
                     opacity=".3"
