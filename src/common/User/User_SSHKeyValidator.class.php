@@ -29,7 +29,6 @@ class User_SSHKeyValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     /**
      * Ensure all the keys for a user are valid SSH keys
      *
-     * @param array $all_keys
      *
      * @return string[]
      */

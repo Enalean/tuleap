@@ -482,8 +482,6 @@ class TrackerXmlImport
     }
 
     /**
-     * @param array $xml_trackers
-     * @param array $created_trackers_objects
      * @return array of created artifacts
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -858,8 +856,6 @@ class TrackerXmlImport
 
     /**
      *
-     * @param array $hierarchy
-     * @param array $mapper
      *
      * @return array The hierarchy array with new elements added
      */

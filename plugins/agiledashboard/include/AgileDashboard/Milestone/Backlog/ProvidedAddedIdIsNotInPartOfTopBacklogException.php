@@ -39,9 +39,6 @@ class ProvidedAddedIdIsNotInPartOfTopBacklogException extends Exception
         $this->artifact_ids = $artifact_ids;
     }
 
-    /**
-     * @return array
-     */
     public function getArtifactIds(): array
     {
         return $this->artifact_ids;

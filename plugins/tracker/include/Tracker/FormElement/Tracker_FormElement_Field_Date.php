@@ -1055,7 +1055,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     /**
      * Convert ISO8601 into internal date needed by createNewChangeset
      *
-     * @param array $value
      */
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {

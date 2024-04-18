@@ -53,7 +53,7 @@ function isCGI()
  *  NS/IE < 4.0 cannot display all XHTML tags
  *  NS < 5.0 needs textarea wrap=virtual
  *  IE55 has problems with transparent PNG's
- * @author: ReiniUrban
+ * Author: ReiniUrban
  */
 function browserAgent()
 {

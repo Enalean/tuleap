@@ -33,7 +33,6 @@ use Luracast\Restler\RestException;
 class TimetrackingQueryChecker
 {
     /**
-     * @param array $json_query
      * @throws RestException
      */
     public function checkQuery(array $json_query): void

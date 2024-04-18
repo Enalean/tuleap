@@ -24,9 +24,6 @@ use Project;
 
 class AdmininistrationBreadcrumbs implements Breadcrumbs
 {
-    /**
-     * @return array
-     */
     public function getCrumbs(Project $project): array
     {
         $home_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query([

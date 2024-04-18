@@ -96,7 +96,6 @@ class CSVExportController implements DispatchableWithRequest
     }
 
     /**
-     * @param array       $variables
      * @return void
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)

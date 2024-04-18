@@ -342,7 +342,6 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
     }
 
     /**
-     * @param array $row
      *
      * @return Planning
      */

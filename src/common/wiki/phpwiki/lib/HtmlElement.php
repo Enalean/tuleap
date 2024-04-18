@@ -1,7 +1,7 @@
 <?php
 /**
  * Code for writing the HTML subset of XML.
- * @author: Jeff Dairiki
+ * Author: Jeff Dairiki
  *
  * This code is now php5 compatible. --2004-04-19 23:51:43 rurban
  */

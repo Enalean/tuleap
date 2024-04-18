@@ -40,9 +40,6 @@ class PermissionPerGroupCollection
         return $this->permissions;
     }
 
-    /**
-     * @param array $permissions
-     */
     public function addPermissions(array $permissions)
     {
         $this->permissions[] = $permissions;

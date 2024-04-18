@@ -40,7 +40,7 @@ require_once('lib/InlineParser.php');
  *        but is again broken with the 1.3.11
  *        allow_call_time_pass_reference clean fixes
  *
- * @author: Geoffrey T. Dairiki
+ * Author: Geoffrey T. Dairiki
  */
 
 /**

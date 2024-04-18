@@ -5,7 +5,7 @@ rcs_id('$Id: RecentComments.php,v 1.3 2004/05/14 20:55:03 rurban Exp $');
 /**
  * List of basepages with recently added comments.
  * Idea from http://www.wakkawiki.com/RecentlyCommented
- * @author: Reini Urban
+ * Author: Reini Urban
  */
 
 require_once('lib/plugin/RecentChanges.php');

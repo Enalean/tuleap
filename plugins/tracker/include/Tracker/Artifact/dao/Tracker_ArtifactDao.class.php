@@ -554,7 +554,6 @@ class Tracker_ArtifactDao extends DataAccessObject
      * @param int[] $artifact_ids
      *
      * @psalm-return array{id:int, nb:int}
-     * @return array
      */
     public function getChildrenCount(array $artifact_ids): array
     {

@@ -42,8 +42,6 @@ class Git_UserAccountManager
 
     /**
      *
-     * @param array $original_keys
-     * @param array $new_keys
      * @throws Git_UserSynchronisationException
      */
     public function synchroniseSSHKeys(array $original_keys, array $new_keys, PFUser $user)

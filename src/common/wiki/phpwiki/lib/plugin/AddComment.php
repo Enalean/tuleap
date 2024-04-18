@@ -28,7 +28,7 @@ rcs_id('$Id: AddComment.php,v 1.8 2004/06/13 09:45:23 rurban Exp $');
  * TODO:
  * For admin user, put checkboxes beside comments to allow for bulk removal.
  *
- * @author: ReiniUrban
+ * Author: ReiniUrban
  */
 
 include_once('lib/plugin/WikiBlog.php');

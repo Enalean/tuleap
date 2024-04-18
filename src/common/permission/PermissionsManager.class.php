@@ -231,7 +231,6 @@ class PermissionsManager implements IPermissionsManagerNG
     /**
      * @param type $object_id
      * @param type $permission_type
-     * @param array $ugroup_ids
      *
      * @return PermissionsNormalizerOverrideCollection
      * @throws PermissionDaoException
@@ -318,7 +317,6 @@ class PermissionsManager implements IPermissionsManagerNG
     *
     * @param int    $source
     * @param int    $target
-    * @param array  $permission_types
     *
     * @deprecated Use one of duplicateWithStatic, duplicateWithStaticMapping, duplicateWithoutStatic below
     *
@@ -334,7 +332,6 @@ class PermissionsManager implements IPermissionsManagerNG
      *
      * @param int    $source
      * @param int    $target
-     * @param array  $permission_types
      *
      * @return bool
      */
@@ -348,8 +345,6 @@ class PermissionsManager implements IPermissionsManagerNG
      *
      * @param int    $source
      * @param int    $target
-     * @param array  $permission_types
-     * @param array  $ugroup_mapping
      *
      * @return bool
      */
@@ -363,7 +358,6 @@ class PermissionsManager implements IPermissionsManagerNG
      *
      * @param int    $source
      * @param int    $target
-     * @param array $permission_types
      *
      * @return bool
      */

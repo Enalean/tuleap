@@ -623,9 +623,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         return $this->getDB()->run($sql, $project_id);
     }
 
-    /**
-     * @param array $repository_ids
-     */
     public function searchRepositoriesInSameProjectFromRepositoryList(array $repository_ids, $project_id)
     {
         $repository_list_condition = EasyStatement::open();

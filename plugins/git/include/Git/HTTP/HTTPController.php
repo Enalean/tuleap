@@ -82,7 +82,6 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
     /**
      * Return the project that corresponds to current URI
      *
-     * @param array $variables
      *
      * @throws NotFoundException
      */
@@ -128,7 +127,6 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param array $variables
      *
      * @return void
      */

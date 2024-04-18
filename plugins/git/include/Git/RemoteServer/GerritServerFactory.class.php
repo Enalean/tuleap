@@ -209,7 +209,6 @@ class Git_RemoteServer_GerritServerFactory
 
     /**
      *
-     * @param array $row
      * @return Git_RemoteServer_GerritServer
      */
     public function instantiateFromRow(array $row)

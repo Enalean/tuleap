@@ -121,7 +121,6 @@ class Tracker_RuleFactory
 
     /**
      * called by TrackerFactory::saveObject();
-     * @param array $rules
      */
     public function saveObject(array $rules, Tracker $trackerDB)
     {

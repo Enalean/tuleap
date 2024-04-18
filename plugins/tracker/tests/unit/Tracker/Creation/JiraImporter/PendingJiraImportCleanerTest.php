@@ -140,9 +140,6 @@ class PendingJiraImportCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->cleaner->deleteDanglingPendingJiraImports($current_time);
     }
 
-    /**
-     * @return array
-     */
     private function anExpiredImportRow(string $jira_project = 'jira project'): array
     {
         return [

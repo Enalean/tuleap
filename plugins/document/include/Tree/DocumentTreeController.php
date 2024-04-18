@@ -119,7 +119,6 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     }
 
     /**
-     * @param array $variables
      *
      * @throws NotFoundException
      */

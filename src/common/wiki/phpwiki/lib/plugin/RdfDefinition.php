@@ -34,7 +34,7 @@ rcs_id('$Id: RdfDefinition.php,v 1.6 2004/09/14 10:33:39 rurban Exp $');
  * TODO: Import external standard RDF, Export see below
  * Provide format=rdf methods here, or lib/SemanticWeb.php
  *
- * @author: Reini Urban
+ * Author: Reini Urban
  */
 class WikiPlugin_RdfDefinition extends WikiPlugin
 {

@@ -6,7 +6,7 @@ rcs_id('$Id: XmlParser.php,v 1.6 2004/11/03 16:34:11 rurban Exp $');
  * Requires the expat.so/.dll, usually enabled by default.
  * Used by HtmlParser and RssParser.
  *
- * @author: Reini Urban
+ * Author: Reini Urban
  *
  * TODO: Convert more perl Html::Element style to our XmlElement style
  * Needed additions to XmlElement:

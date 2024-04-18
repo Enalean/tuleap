@@ -10,7 +10,7 @@ rcs_id('$Id: JabberPresence.php,v 1.3 2004/11/21 11:59:26 rurban Exp $');
  *  <?plugin JabberPresence scripturl=http://edgar.netflint.net/status.php
  *                          jid=yourid@jabberserver type=html iconset=phpbb ?>
  *
- * @author: Arnaud Fontaine
+ * Author: Arnaud Fontaine
  */
 
 if (! defined('MY_JABBER_ID')) {

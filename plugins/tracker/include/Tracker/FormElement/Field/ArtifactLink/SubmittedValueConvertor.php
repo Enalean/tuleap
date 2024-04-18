@@ -107,7 +107,6 @@ class SubmittedValueConvertor
 
     /**
      * @param Tracker_ArtifactLinkInfo[] $list_of_artifactlinkinfo
-     * @param array $submitted_value
      */
     private function changeTypeOfExistingLinks(
         array &$list_of_artifactlinkinfo,

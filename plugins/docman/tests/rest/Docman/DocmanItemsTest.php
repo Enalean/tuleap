@@ -296,7 +296,6 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     }
 
     /**
-     * @param array $items
      * @param array|null $folder
      * @param array|null $empty
      * @param array|null $file

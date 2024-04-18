@@ -25,7 +25,6 @@ use Tracker_FormElement_Field_PermissionsOnArtifact;
 class PermissionsOnArtifactUGroupRetriever
 {
     /**
-     * @param array $value
      *
      * @return array
      */

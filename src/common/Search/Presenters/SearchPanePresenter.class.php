@@ -34,7 +34,6 @@ class Search_SearchPanePresenter
 
     /**
      * @param string $title
-     * @param array $search_types
      * @param string $no_search_types
      */
     public function __construct($title, array $search_types, $no_search_types)

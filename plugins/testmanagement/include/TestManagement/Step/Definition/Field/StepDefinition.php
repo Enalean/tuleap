@@ -606,7 +606,6 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     }
 
     /**
-     * @param array $submitted_values
      *
      * @return StepPresenter[]
      */

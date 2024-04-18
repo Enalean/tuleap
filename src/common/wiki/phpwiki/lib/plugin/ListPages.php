@@ -30,7 +30,7 @@ require_once('lib/PageList.php');
  * But also possible to list some Categories or Users, or as generic
  * frontend for plugin-list page lists.
  *
- * @author: Dan Frankowski
+ * Author: Dan Frankowski
  */
 class WikiPlugin_ListPages extends WikiPlugin
 {

@@ -34,7 +34,6 @@ class TrackerReportExtractor
     }
 
     /**
-     * @param array $trackers_id
      *
      * @return array
      * @throws TrackerDuplicateException

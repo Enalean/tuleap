@@ -35,9 +35,6 @@ final class FrozenFieldsValue implements PostAction
         $this->field_ids = $field_ids;
     }
 
-    /**
-     * @return array
-     */
     public function getFieldIds(): array
     {
         return $this->field_ids;

@@ -71,10 +71,6 @@ class MediawikiUserGroupsMapper
         $this->forge_permissions_dao = $forge_permissions_dao;
     }
 
-    /**
-     *
-     * @param array $new_mapping_list
-     */
     public function saveMapping(array $new_mapping_list, Project $project)
     {
         $current_mapping_list = $this->getCurrentUserGroupMapping($project);

@@ -108,8 +108,6 @@ class ProviderManager
 
     /**
      * @param $rows
-     * @param array $providers
-     * @return array
      */
     private function extractProviderFromRows($rows, array $providers): array
     {

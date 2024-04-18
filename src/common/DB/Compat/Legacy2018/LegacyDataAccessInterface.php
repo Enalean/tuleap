@@ -111,7 +111,6 @@ interface LegacyDataAccessInterface
     /**
      * Escape the ints, and implode them.
      *
-     * @param array $ints
      *
      * @deprecated
      *

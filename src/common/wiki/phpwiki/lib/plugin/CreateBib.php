@@ -27,7 +27,7 @@ rcs_id('$Id: CreateToc.php,v 1.20 2004/05/11 13:57:46 rurban Exp $');
  * Usage:
  *  <?plugin CreateBib pagename||=whatever ?>
  *
- * @author:  Lea Viljanen
+ * Author:  Lea Viljanen
  */
 
 class WikiPlugin_CreateBib extends WikiPlugin

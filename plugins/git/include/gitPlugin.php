@@ -1019,7 +1019,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     /**
      *
      * @see Event::EDIT_SSH_KEYS
-     * @param array $params
      */
     public function edit_ssh_keys(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -2190,7 +2189,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     /**
      * @see Event::SITE_ACCESS_CHANGE
-     * @param array $params
      */
     public function site_access_change(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {

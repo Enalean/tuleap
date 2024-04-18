@@ -23,7 +23,6 @@ namespace Tuleap\Git\RepositoryList;
 class DaoByRepositoryPathSorter
 {
     /**
-     * @param array $repository_list_results
      *
      * @return array
      */

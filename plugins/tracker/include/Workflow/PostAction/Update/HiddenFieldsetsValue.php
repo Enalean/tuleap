@@ -35,9 +35,6 @@ final class HiddenFieldsetsValue implements PostAction
         $this->fieldset_ids = $fieldset_ids;
     }
 
-    /**
-     * @return array
-     */
     public function getFieldsetIds(): array
     {
         return $this->fieldset_ids;

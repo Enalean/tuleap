@@ -28,7 +28,6 @@
  * This class do not propose default method to walk through. You can use an
  * iterator to iterate on Childs or a Visitor to walk through the hierarchy.
  *
- * @author: Manuel Vacelet <manuel.vacelet@st.com>
  * @see: Visitor
  */
 class TreeNode /*implements Visitable*/

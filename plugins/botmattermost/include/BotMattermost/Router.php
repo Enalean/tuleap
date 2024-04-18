@@ -38,7 +38,6 @@ class Router implements DispatchableWithRequest
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param array                     $variables
      * @return void
      * @throws \Tuleap\Request\ForbiddenException
      * @throws \Tuleap\Request\NotFoundException

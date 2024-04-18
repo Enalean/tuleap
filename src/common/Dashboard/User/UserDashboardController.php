@@ -219,7 +219,6 @@ class UserDashboardController
 
     /**
      * @param $dashboard_id
-     * @param array $user_dashboards
      * @return UserDashboardPresenter[]
      */
     private function getUserDashboardsPresenter(PFUser $user, $dashboard_id, array $user_dashboards)

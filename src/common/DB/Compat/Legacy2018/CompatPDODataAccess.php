@@ -230,7 +230,6 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
     /**
      * Escape the ints, and implode them.
      *
-     * @param array $ints
      *
      * @deprecated
      *

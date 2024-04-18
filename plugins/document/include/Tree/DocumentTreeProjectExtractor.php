@@ -36,7 +36,6 @@ class DocumentTreeProjectExtractor implements IExtractProjectFromVariables
     }
 
     /**
-     * @param array       $variables
      *
      * @throws NotFoundException
      */

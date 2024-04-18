@@ -9,7 +9,7 @@
  * totally backwards-compatible with the old index.php method, while still
  * providing a much tastier on-going experience.
  *
- * @author: Joby Walker, Reini Urban, Matthew Palmer
+ * Author: Joby Walker, Reini Urban, Matthew Palmer
  */
 /*
  * Copyright 2004,2005 $ThePhpWikiProgrammingTeam

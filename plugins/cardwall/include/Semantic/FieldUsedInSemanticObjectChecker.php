@@ -45,7 +45,6 @@ class FieldUsedInSemanticObjectChecker
     }
 
     /**
-     * @param array                     $card_fields
      *
      * @return bool
      */

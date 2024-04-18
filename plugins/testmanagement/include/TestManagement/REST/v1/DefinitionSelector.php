@@ -98,7 +98,6 @@ class DefinitionSelector
     }
 
     /**
-     * @return array
      *
      * @psalm-return array<empty, empty>
      */
@@ -130,7 +129,6 @@ class DefinitionSelector
     }
 
     /**
-     * @return array
      *
      * @psalm-return list<mixed>
      */

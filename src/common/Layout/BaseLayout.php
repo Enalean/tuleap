@@ -288,7 +288,6 @@ abstract class BaseLayout extends Response
     }
 
     /**
-     * @param array $breadcrumb
      *
      * @return BreadCrumb
      */
@@ -305,7 +304,6 @@ abstract class BaseLayout extends Response
     }
 
     /**
-     * @param array $sub_items
      *
      * @return BreadCrumbSubItems
      */
@@ -326,7 +324,6 @@ abstract class BaseLayout extends Response
     }
 
     /**
-     * @param array $breadcrumb
      *
      * @return BreadCrumbLink
      */

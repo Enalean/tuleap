@@ -48,8 +48,8 @@
  * The parsed tree is then converted to the needed PCRE (highlight,
  * simple backends) or SQL functions.
  *
- * @author: Jeff Dairiki
- * @author: Reini Urban (case and regex detection, enhanced sql callbacks)
+ * Author: Jeff Dairiki
+ * Author: Reini Urban (case and regex detection, enhanced sql callbacks)
  */
 
 // regex-style: 'auto', 'none', 'glob', 'posix', 'pcre', 'sql'

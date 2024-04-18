@@ -73,7 +73,6 @@ class CrossTrackerReportDao extends DataAccessObject
     }
 
     /**
-     * @param array $trackers
      * @param       $report_id
      */
     public function addTrackersToReport(array $trackers, $report_id)

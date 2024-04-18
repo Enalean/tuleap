@@ -25,7 +25,7 @@ rcs_id('$Id: SyntaxHighlighter.php,v 1.7 2004/07/08 20:30:07 rurban Exp $');
  * The SyntaxHighlighter plugin passes all its arguments through a C++
  * highlighter called "highlight" (available at http://www.andre-simon.de/).
  *
- * @author: alecthomas
+ * Author: alecthomas
  *
  * syntax: See http://www.andre-simon.de/doku/highlight/highlight.html
  * style = ["ansi", "gnu", "kr", "java", "linux"]

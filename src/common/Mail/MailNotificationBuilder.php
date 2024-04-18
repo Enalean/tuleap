@@ -33,7 +33,6 @@ class MailNotificationBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     }
 
     /**
-     * @param array $emails
      * @param $subject
      * @param $html_body
      * @param $text_body
@@ -67,7 +66,6 @@ class MailNotificationBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     }
 
     /**
-     * @param array $emails
      * @param $subject
      * @param $html_body
      * @param $text_body

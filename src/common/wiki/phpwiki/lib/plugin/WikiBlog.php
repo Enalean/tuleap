@@ -21,7 +21,7 @@ rcs_id('$Id: WikiBlog.php,v 1.23 2005/10/29 09:06:37 rurban Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /**
- * @author: MichaelVanDam, major refactor by JeffDairiki
+ * Author: MichaelVanDam, major refactor by JeffDairiki
  */
 
 require_once('lib/TextSearchQuery.php');

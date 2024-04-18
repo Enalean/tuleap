@@ -23,7 +23,6 @@ namespace Tuleap\SVN\Repository;
 class HookConfigSanitizer
 {
     /**
-     * @param array $hook_config
      *
      * @return array
      */

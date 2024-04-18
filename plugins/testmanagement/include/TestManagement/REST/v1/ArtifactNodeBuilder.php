@@ -67,7 +67,6 @@ class ArtifactNodeBuilder
     }
 
     /**
-     * @return array
      *
      * @psalm-return list<mixed>
      */
@@ -94,7 +93,6 @@ class ArtifactNodeBuilder
     }
 
     /**
-     * @return array
      *
      * @psalm-return list<mixed>
      */
@@ -131,7 +129,6 @@ class ArtifactNodeBuilder
     }
 
     /**
-     * @return array
      *
      * @psalm-return list<mixed>
      */
@@ -163,7 +160,6 @@ class ArtifactNodeBuilder
     }
 
     /**
-     * @param array $artifact_ids
      * @param NodeRepresentation[][] $nodes
      */
     private function updateNodesWithArtifactValues(array &$artifact_ids, array $nodes): void

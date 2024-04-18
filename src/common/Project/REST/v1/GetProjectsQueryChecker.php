@@ -46,7 +46,6 @@ class GetProjectsQueryChecker
     }
 
     /**
-     * @param array $json_query
      * @param bool  $is_user_a_rest_project_manager
      * @throws RestException
      */
@@ -84,7 +83,6 @@ class GetProjectsQueryChecker
     }
 
     /**
-     * @param array $json_query
      * @throws RestException
      */
     private function checkExternalCriteria(array $json_query)

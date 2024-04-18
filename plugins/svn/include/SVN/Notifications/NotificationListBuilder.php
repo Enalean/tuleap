@@ -74,7 +74,6 @@ class NotificationListBuilder
     }
 
     /**
-     * @param array $ugroups_to_be_notified
      * @return array
      */
     private function transformUgroupsData(array $ugroups_to_be_notified)
@@ -94,7 +93,6 @@ class NotificationListBuilder
     }
 
     /**
-     * @param array $users_to_be_notified
      * @return array
      */
     private function transformUsersData(array $users_to_be_notified)
@@ -111,7 +109,6 @@ class NotificationListBuilder
     }
 
     /**
-     * @param array $emails_to_be_notified
      * @return array
      */
     private function transformEmailsData(array $emails_to_be_notified)

@@ -39,9 +39,6 @@ final class ArtifactPayload implements Payload
         $this->payload = $payload;
     }
 
-    /**
-     * @return array
-     */
     public function getPayload(): array
     {
         return $this->payload;

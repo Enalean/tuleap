@@ -16,7 +16,7 @@ require_once('lib/plugin/WikiBlog.php');
  * TODO: year=
  *       support PageList (paging, limit, info filters: title, num, month, year, ...)
  *       leave off time subpage? Blogs just per day with one summary title only?
- * @author: Reini Urban
+ * Author: Reini Urban
  */
 class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
 {

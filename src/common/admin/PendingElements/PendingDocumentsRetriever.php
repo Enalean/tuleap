@@ -77,9 +77,6 @@ class PendingDocumentsRetriever implements Dispatchable
         $this->html[] = $html;
     }
 
-    /**
-     * @return array
-     */
     public function getHtml(): array
     {
         return $this->html;

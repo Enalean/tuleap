@@ -651,7 +651,6 @@ class TrackersResource extends AuthenticatedResource
     }
 
     /**
-     * @param array $workflow_query
      *
      * @throws I18NRestException 500
      * @throws I18NRestException 400
@@ -727,7 +726,6 @@ class TrackersResource extends AuthenticatedResource
     }
 
     /**
-     * @param array $set_transitions_rules_query
      *
      * @return int Created workflow id
      * @throws I18NRestException 500

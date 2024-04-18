@@ -147,7 +147,6 @@ class Tracker_HierarchyFactory
     /**
      * If no other trackers were found in hierarchy, returns the tracker alone in hierarchy
      *
-     * @param array             $tracker_ids
      *
      * @return \Tracker_Hierarchy
      */

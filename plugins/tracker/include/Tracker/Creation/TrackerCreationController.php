@@ -135,7 +135,6 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
      * This part of controller is needed when you implement a new route without providing a $group_id.
      * It's the preferred way to deal with those kind of URLs over Event::GET_PROJECTID_FROM_URL
      *
-     * @param array $variables
      */
     public function getProject(array $variables): Project
     {

@@ -195,7 +195,6 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
     /**
      * Given a list of artifact ids, return corresponding artifact objects if any
      *
-     * @param array $artifact_ids
      *
      * @return Artifact[]
      */

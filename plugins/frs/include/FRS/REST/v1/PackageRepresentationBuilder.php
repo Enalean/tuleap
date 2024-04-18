@@ -67,9 +67,6 @@ class PackageRepresentationBuilder
         return new PermissionsForGroupsRepresentation($permissions_for_groups);
     }
 
-    /**
-     * @return array
-     */
     private function getPermissionsForGroups(FRSPackage $package, Project $project): array
     {
         $permissions_for_groups = [];

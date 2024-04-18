@@ -31,7 +31,7 @@ rcs_id('$Id: CreatePage.php,v 1.7 2004/09/06 10:22:15 rurban Exp $');
  * enter the name of the page to create, then click the button.
  *
  * Usage: <?plugin-form CreatePage template=SomeTemplatePage vars="year=2004&name=None" ?>
- * @authors: Dan Frankowski, Reini Urban
+ * Authors: Dan Frankowski, Reini Urban
  */
 class WikiPlugin_CreatePage extends WikiPlugin
 {

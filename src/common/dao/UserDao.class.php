@@ -416,7 +416,6 @@ class UserDao extends \Tuleap\DB\DataAccessObject
      *      users: array,
      *      numrows: int
      * }
-     * @return array
      */
     public function listAllUsers($group_id, $pattern, $offset, $limit, string $sort_header, string $sort_order, $status_values): array
     {

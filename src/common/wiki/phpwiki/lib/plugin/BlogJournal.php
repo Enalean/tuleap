@@ -14,7 +14,7 @@ require_once('lib/plugin/WikiBlog.php');
  * Rui called this plugin "JournalLast", but this was written completely independent,
  * without having seen the src.
  *
- * @author: Reini Urban
+ * Author: Reini Urban
  */
 class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
 {

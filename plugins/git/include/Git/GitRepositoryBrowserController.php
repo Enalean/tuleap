@@ -85,7 +85,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
     }
 
     /**
-     * @param array       $variables
      *
      * @throws NotFoundException
      */
@@ -102,7 +101,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param array       $variables
      *
      * @throws NotFoundException
      * @throws ForbiddenException

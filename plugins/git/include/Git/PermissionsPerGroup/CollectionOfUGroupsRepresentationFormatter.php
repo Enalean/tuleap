@@ -38,7 +38,6 @@ class CollectionOfUGroupsRepresentationFormatter
     }
 
     /**
-     * @param array   $ugroup_ids
      *
      * @return PermissionPerGroupUGroupRepresentation[]
      */

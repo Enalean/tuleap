@@ -1488,7 +1488,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      *
-     * @param array $form_element_data
      * @param bool $tracker_is_empty
      */
     public function afterCreate(array $form_element_data, $tracker_is_empty)

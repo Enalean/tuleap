@@ -198,7 +198,6 @@ class Tracker_Artifact_XMLImport
     /**
      * Import changesets from a n array of bare artifacts
      * @param $extraction_path
-     * @param array $artifacts
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     public function importArtifactChangesFromXML(

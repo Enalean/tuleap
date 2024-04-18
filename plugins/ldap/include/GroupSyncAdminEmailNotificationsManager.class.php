@@ -84,7 +84,6 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
     }
 
     /**
-     * @param array $user_ids
      * @return \PFUser[]
      * */
     private function getUsersFromIds(array $user_ids)

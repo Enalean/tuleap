@@ -41,9 +41,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected $bind;
 
-    /**
-     * @return array
-     */
     public function getFormElementDataForCreation($parent_id): array
     {
         $form_element_data = parent::getFormElementDataForCreation($parent_id);
@@ -1190,7 +1187,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Hook called after a creation of a field
      *
-     * @param array $form_element_data
      * @param bool $tracker_is_empty
      */
     public function afterCreate(array $form_element_data, $tracker_is_empty)

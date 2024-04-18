@@ -65,7 +65,6 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
     }
 
     /**
-     * @param array       $variables
      *
      * @throws Request\NotFoundException
      */
@@ -84,7 +83,6 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param array       $variables
      *
      * @return void
      * @throws Request\NotFoundException

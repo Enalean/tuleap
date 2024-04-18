@@ -201,7 +201,6 @@ class FileDiff
      * @param mixed  $project  project
      * @param string $fromHash source hash, can also be a diff-tree info line
      * @param string $toHash   target hash, required if $fromHash is a hash
-     * @param array  $stats_indexed_by_filename
      *
      * @throws \Exception on invalid parameters
      */

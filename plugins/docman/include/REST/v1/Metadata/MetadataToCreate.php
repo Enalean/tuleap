@@ -45,9 +45,6 @@ class MetadataToCreate
         return new self($metadata_list_values, $should_inherit_from_parent);
     }
 
-    /**
-     * @return array
-     */
     public function getMetadataListValues(): array
     {
         return $this->metadata_list_values;

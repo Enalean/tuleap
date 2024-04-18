@@ -132,9 +132,6 @@ class ProjectServicesTest extends ProjectBase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @return array
-     */
     private function getService(string $name): array
     {
         $url      = "projects/$this->project_services_id/project_services";

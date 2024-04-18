@@ -58,9 +58,6 @@ class MessageFetcherAdditionalWarnings implements Dispatchable
         return $this->warnings;
     }
 
-    /**
-     * @param array $warnings
-     */
     public function setWarnings(array $warnings)
     {
         $this->warnings = $warnings;

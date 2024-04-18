@@ -170,7 +170,6 @@ class WidgetDashboardController
      * @param $dashboard_id
      * @param DashboardWidgetLine[] $widgets_lines
      * @param $new_line_rank
-     * @param array $new_ids
      * @return array
      */
     private function createLineIfDoesNotExist(
@@ -200,7 +199,6 @@ class WidgetDashboardController
      * @param $new_line_id
      * @param $new_column_id
      * @param $new_column_rank
-     * @param array $new_ids
      * @return array
      */
     private function createColumnIfDoesNotExist($new_line_id, $new_column_id, $new_column_rank, array $new_ids)
@@ -220,7 +218,6 @@ class WidgetDashboardController
     }
 
     /**
-     * @param array $deleted_ids
      * @return array
      */
     private function deleteColumnIfEmpty(DashboardWidgetColumn $old_column, array $deleted_ids)
@@ -233,7 +230,6 @@ class WidgetDashboardController
     }
 
     /**
-     * @param array $deleted_ids
      * @return array
      */
     private function deleteLineIfEmpty(DashboardWidgetColumn $old_column, array $deleted_ids)

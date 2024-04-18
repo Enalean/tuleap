@@ -73,7 +73,6 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
     }
 
     /**
-     * @param array $variables
      * @throws NotFoundException
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void

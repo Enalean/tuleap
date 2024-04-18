@@ -69,8 +69,6 @@ class Git_Driver_Gerrit_UserAccountManager
 
     /**
      *
-     * @param array $original_keys
-     * @param array $new_keys
      * @throws Git_UserSynchronisationException
      */
     public function synchroniseSSHKeys(array $original_keys, array $new_keys, PFUser $user): void
@@ -140,7 +138,6 @@ class Git_Driver_Gerrit_UserAccountManager
 
     /**
      *
-     * @param array $keys
      *
      * @return string[] List of errors
      */
@@ -159,7 +156,6 @@ class Git_Driver_Gerrit_UserAccountManager
 
     /**
      *
-     * @param array $keys
      *
      * @return string[] List of errors
      */
@@ -178,8 +174,6 @@ class Git_Driver_Gerrit_UserAccountManager
 
     /**
      *
-     * @param array $original_keys
-     * @param array $new_keys
      * @return array
      */
     private function getKeysToAdd(array $original_keys, array $new_keys)
@@ -189,8 +183,6 @@ class Git_Driver_Gerrit_UserAccountManager
 
     /**
      *
-     * @param array $original_keys
-     * @param array $new_keys
      * @return array
      */
     private function getKeysToRemove(array $original_keys, array $new_keys)
@@ -200,8 +192,6 @@ class Git_Driver_Gerrit_UserAccountManager
 
     /**
      *
-     * @param array $keys_to_add
-     * @param array $keys_to_remove
      * @return array
      */
     private function areThereKeysToUpdate(array $keys_to_add, array $keys_to_remove)

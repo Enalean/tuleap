@@ -196,7 +196,6 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
     }
 
     /**
-     * @param array        $params
      *
      * @throws \Tuleap\Docman\ApprovalTable\ApprovalTableException
      */
