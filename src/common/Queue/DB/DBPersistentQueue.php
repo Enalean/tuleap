@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Queue\DB;
 
 use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\UuidInterface;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\DB\UUID;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\PersistentQueueStatistics;
 use Tuleap\Queue\QueueInstrumentation;
@@ -105,7 +105,7 @@ final readonly class DBPersistentQueue implements PersistentQueue
     private function dealWithProcessingFailure(
         \Exception $exception,
         WorkerEventContent $worker_event_content,
-        UuidInterface $message_id,
+        UUID $message_id,
         int $current_nb_processing_attempts,
     ): void {
         $this->logger->error(

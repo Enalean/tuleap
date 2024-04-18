@@ -52,6 +52,7 @@ $application->add(new \TuleapCfg\Command\SetupTuleapCommand(
     static fn (\Psr\Log\LoggerInterface $logger) => new ForgeUpgrade(
         DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
         $logger,
+        new \Tuleap\DB\DatabaseUUIDV7Factory(),
     ),
 ));
 $application->add(new \TuleapCfg\Command\SetupForgeUpgradeCommand());

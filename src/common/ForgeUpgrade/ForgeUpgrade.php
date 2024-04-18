@@ -27,6 +27,7 @@ use Psr\Log\LoggerInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
+use Tuleap\DB\DatabaseUUIDFactory;
 use function count;
 use const PHP_EOL;
 
@@ -43,10 +44,10 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
 
     private bool $force = false;
 
-    public function __construct(PDO $pdo, LoggerInterface $logger)
+    public function __construct(PDO $pdo, LoggerInterface $logger, DatabaseUUIDFactory $uuid_factory)
     {
         $this->db        = new ForgeUpgradeDb($pdo);
-        $this->bucketApi = new \Tuleap\ForgeUpgrade\Bucket\BucketDb($pdo, $logger);
+        $this->bucketApi = new \Tuleap\ForgeUpgrade\Bucket\BucketDb($pdo, $logger, $uuid_factory);
         $this->logger    = $logger;
     }
 

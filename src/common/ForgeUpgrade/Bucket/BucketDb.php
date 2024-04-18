@@ -23,6 +23,7 @@ namespace Tuleap\ForgeUpgrade\Bucket;
 
 use PDO;
 use Psr\Log\LoggerInterface;
+use Tuleap\DB\DatabaseUUIDFactory;
 
 /**
  * Wrap access to the DB and provide a set of convenient tools to write
@@ -30,14 +31,11 @@ use Psr\Log\LoggerInterface;
  */
 class BucketDb
 {
-    public PDO $dbh;
-
-    protected LoggerInterface $log;
-
-    public function __construct(PDO $dbh, LoggerInterface $logger)
-    {
-        $this->dbh = $dbh;
-        $this->log = $logger;
+    public function __construct(
+        public PDO $dbh,
+        protected LoggerInterface $log,
+        private readonly DatabaseUUIDFactory $uuid_factory,
+    ) {
     }
 
     /**
@@ -205,5 +203,56 @@ class BucketDb
         } else {
             $this->log->info($primaryKey . ' pk already exists');
         }
+    }
+
+    /**
+     * @psalm-param literal-string $table_name
+     * @psalm-param literal-string $uuid_column_name
+     * @psalm-param literal-string $autoincrement_id_column_name
+     */
+    public function addNewUUIDColumnToReplaceAutoIncrementedID(
+        string $table_name,
+        string $autoincrement_id_column_name = 'id',
+        string $uuid_column_name = 'uuid',
+    ): void {
+        $this->createAndPopulateNewUUIDColumn(
+            $table_name,
+            $uuid_column_name,
+            function () use ($autoincrement_id_column_name, $uuid_column_name, $table_name): void {
+                $rows = $this->dbh->query("SELECT $autoincrement_id_column_name FROM $table_name");
+                $stmt = $this->dbh->prepare("UPDATE $table_name SET $uuid_column_name = ? WHERE $autoincrement_id_column_name = ?");
+                foreach ($rows as $row) {
+                    $current_id = $row[$autoincrement_id_column_name];
+                    // Faking the date for 2 reasons (this is not something that should be done in "normal" situation):
+                    // * It makes sure the order will be consistent with the existing ID
+                    // * It gives us a chance to recover the original ID if something goes wrong
+                    $uuid = $this->uuid_factory->buildUUIDBytesFromTime(new \DateTimeImmutable('@' . $current_id));
+                    $stmt->execute([$uuid, $current_id]);
+                }
+            },
+        );
+    }
+
+    /**
+     * @psalm-param literal-string $table_name
+     * @psalm-param callable():void $populate_function
+     * @psalm-param literal-string $uuid_column_name
+     */
+    public function createAndPopulateNewUUIDColumn(
+        string $table_name,
+        string $uuid_column_name,
+        callable $populate_function,
+    ): void {
+        if (! $this->columnNameExists($table_name, $uuid_column_name)) {
+            $this->log->info("Creating $table_name.$uuid_column_name");
+            $this->dbh->exec('ALTER TABLE ' . $table_name . ' ADD COLUMN ' . $uuid_column_name . ' BINARY(16)');
+        }
+
+        $this->dbh->beginTransaction();
+        $this->log->info("Populating $table_name.$uuid_column_name");
+        $populate_function();
+        $this->dbh->commit();
+
+        $this->dbh->exec('ALTER TABLE ' . $table_name . ' MODIFY COLUMN ' . $uuid_column_name . ' BINARY(16) NOT NULL');
     }
 }
