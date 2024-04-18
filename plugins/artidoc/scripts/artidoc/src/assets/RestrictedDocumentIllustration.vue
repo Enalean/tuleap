@@ -34,7 +34,7 @@
             y1="212.5"
             x2="241.026"
             y2="212.5"
-            class="tlp-illustration-primary-stroke"
+            stroke="var(--tlp-illustration-main-color)"
             stroke-linecap="round"
         />
         <g clip-path="url(#clip0_643_2430)">
@@ -55,7 +55,7 @@
                 y1="170.857"
                 x2="188.899"
                 y2="170.857"
-                class="tlp-illustration-primary-stroke"
+                stroke="var(--tlp-illustration-main-color)"
                 stroke-width="3"
                 stroke-linecap="round"
             />
@@ -64,7 +64,7 @@
                 y1="175.848"
                 x2="178.234"
                 y2="175.848"
-                class="tlp-illustration-primary-stroke"
+                stroke="var(--tlp-illustration-main-color)"
                 stroke-width="3"
                 stroke-linecap="round"
             />
@@ -73,7 +73,7 @@
                 y1="181.552"
                 x2="183.211"
                 y2="181.552"
-                class="tlp-illustration-primary-stroke"
+                stroke="var(--tlp-illustration-main-color)"
                 stroke-width="3"
                 stroke-linecap="round"
             />
@@ -82,7 +82,7 @@
                 y1="186.543"
                 x2="178.234"
                 y2="186.543"
-                class="tlp-illustration-primary-stroke"
+                stroke="var(--tlp-illustration-main-color)"
                 stroke-width="3"
                 stroke-linecap="round"
             />
