@@ -26,6 +26,7 @@ import {
     putFileProperties,
     putFolderDocumentProperties,
     putLinkProperties,
+    putOtherTypeDocumentProperties,
 } from "./properties-rest-querier";
 
 describe("properties rest querier", () => {
@@ -133,6 +134,33 @@ describe("properties rest querier", () => {
         );
 
         expect(tlpPut).toHaveBeenCalledWith(`/api/docman_empty_documents/${id}/metadata`, {
+            headers: expect.objectContaining({ "Content-Type": "application/json" }),
+            body: JSON.stringify({
+                title,
+                description,
+                owner_id,
+                status,
+                obsolescence_date,
+                metadata: properties,
+            }),
+        });
+    });
+
+    it("Update properties of an other type document", async () => {
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        mockFetchSuccess(tlpPut);
+
+        await putOtherTypeDocumentProperties(
+            id,
+            title,
+            description,
+            owner_id,
+            status,
+            obsolescence_date,
+            properties,
+        );
+
+        expect(tlpPut).toHaveBeenCalledWith(`/api/docman_other_type_documents/${id}/metadata`, {
             headers: expect.objectContaining({ "Content-Type": "application/json" }),
             body: JSON.stringify({
                 title,

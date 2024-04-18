@@ -103,6 +103,9 @@ describe("Properties actions", () => {
 
         beforeEach(() => {
             context = {
+                rootState: {
+                    configuration: { is_status_property_used: false },
+                },
                 commit: jest.fn(),
                 dispatch: jest.fn(),
             } as unknown as ActionContext<PropertiesState, RootState>;
@@ -132,6 +135,7 @@ describe("Properties actions", () => {
                 const item_to_update = {
                     id: 123,
                     title: "My new title",
+                    type: TYPE_FILE,
                     description: "My description",
                     owner: {
                         id: 102,
@@ -185,6 +189,7 @@ describe("Properties actions", () => {
                 const item_to_update = {
                     id: 123,
                     title: "My new title",
+                    type: TYPE_FILE,
                     description: "My description",
                     owner: {
                         id: 102,
@@ -237,6 +242,7 @@ describe("Properties actions", () => {
                 const item_to_update = {
                     id: 123,
                     title: "My new embedded  title",
+                    type: TYPE_EMBEDDED,
                     description: "My description",
                     owner: {
                         id: 102,
@@ -291,6 +297,7 @@ describe("Properties actions", () => {
                 const item_to_update = {
                     id: 123,
                     title: "My new link title",
+                    type: TYPE_LINK,
                     description: "My link description",
                     owner: {
                         id: 102,
@@ -346,6 +353,7 @@ describe("Properties actions", () => {
                 const item_to_update = {
                     id: 123,
                     title: "My new wiki title",
+                    type: TYPE_WIKI,
                     description: "My wiki description",
                     owner: {
                         id: 102,
@@ -400,6 +408,7 @@ describe("Properties actions", () => {
                 const item_to_update = {
                     id: 123,
                     title: "My new empty title",
+                    type: TYPE_EMPTY,
                     description: "My empty description",
                     owner: {
                         id: 102,
@@ -462,6 +471,7 @@ describe("Properties actions", () => {
                 const item_to_update = {
                     id: 123,
                     title: "My new empty title",
+                    type: TYPE_FOLDER,
                     description: "My empty description",
                     owner: {
                         id: 102,
@@ -659,7 +669,7 @@ describe("Properties actions", () => {
 
         describe("Given I'm updating current folder -", () => {
             it("should update file properties", async () => {
-                jest.spyOn(properties_rest_querier, "putFileProperties").mockReturnValue(
+                jest.spyOn(properties_rest_querier, "putFolderDocumentProperties").mockReturnValue(
                     Promise.resolve({} as unknown as Response),
                 );
 
@@ -671,7 +681,10 @@ describe("Properties actions", () => {
                     owner: {
                         id: 102,
                     },
-                    // status: "none",
+                    status: {
+                        value: "none",
+                        recursion: "none",
+                    },
                     obsolescence_date: null,
                 } as Folder;
 
@@ -679,11 +692,15 @@ describe("Properties actions", () => {
                 const item_to_update = {
                     id: 123,
                     title: "My new title",
+                    type: TYPE_FOLDER,
                     description: "My description",
                     owner: {
                         id: 102,
                     },
-                    // status: "draft",
+                    status: {
+                        value: "draft",
+                        recursion: "none",
+                    },
                     obsolescence_date: null,
                     properties,
                 } as Folder;
