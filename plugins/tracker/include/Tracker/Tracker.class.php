@@ -1537,24 +1537,26 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayAdminFooter($layout);
     }
 
-    public function displayAdminConfirmDelete(Tracker_IDisplayTrackerLayout $layout, Artifact $artifact)
+    public function displayAdminConfirmDelete(Tracker_IDisplayTrackerLayout $layout, Artifact $artifact): void
     {
-        $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
+        $token    = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
+        $content  = '<div class="tracker_confirm_delete">';
+        $content .= sprintf(dgettext('tuleap-tracker', '<h3>You are about to delete permanently the artifact "%1$s".</h3><p><strong>There is no way to restore the artifact.</strong></p>'), $artifact->getXRefAndTitle());
+        $content .= '<div class="tracker_confirm_delete_preview">';
+        $content .= $this->fetchFormElementsReadOnly($artifact, []);
+        $content .= '</div>';
+        $content .= '<form name="delete_artifact" method="post" action="' . TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact">';
+        $content .= $token->fetchHTMLInput();
+        $content .= '<div class="tracker_confirm_delete_buttons">';
+        $content .= '<input type="submit" tabindex="2" name="confirm" value="' . dgettext('tuleap-tracker', 'Confirm') . '" />';
+        $content .= '<input type="submit" tabindex="1" name="cancel" value="' . dgettext('tuleap-tracker', 'Cancel') . '" />';
+        $content .= '</div>';
+        $content .= '<input type="hidden" name="id" value="' . $artifact->getId() . '" />';
+        $content .= '</form>';
+        $content .= '</div>';
+
         $this->displayAdminItemHeader($layout, 'clean', dgettext('tuleap-tracker', 'Delete artifacts'));
-        echo '<div class="tracker_confirm_delete">';
-        echo sprintf(dgettext('tuleap-tracker', '<h3>You are about to delete permanently the artifact "%1$s".</h3><p><strong>There is no way to restore the artifact.</strong></p>'), $artifact->getXRefAndTitle());
-        echo '<div class="tracker_confirm_delete_preview">';
-        echo $this->fetchFormElementsReadOnly($artifact, []);
-        echo '</div>';
-        echo '<form name="delete_artifact" method="post" action="' . TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact">';
-        echo $token->fetchHTMLInput();
-        echo '<div class="tracker_confirm_delete_buttons">';
-        echo '<input type="submit" tabindex="2" name="confirm" value="' . dgettext('tuleap-tracker', 'Confirm') . '" />';
-        echo '<input type="submit" tabindex="1" name="cancel" value="' . dgettext('tuleap-tracker', 'Cancel') . '" />';
-        echo '</div>';
-        echo '<input type="hidden" name="id" value="' . $artifact->getId() . '" />';
-        echo '</form>';
-        echo '</div>';
+        echo $content;
         $this->displayAdminFooter($layout);
     }
 
