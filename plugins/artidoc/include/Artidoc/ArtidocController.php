@@ -31,6 +31,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
@@ -46,6 +47,8 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        ServiceInstrumentation::increment('artidoc');
+
         $this->retrieve_artidoc->retrieveArtidoc((int) $variables['id'], $request->getCurrentUser())
             ->match(
                 fn (ArtidocDocumentInformation $document_information) => $this->renderPage($document_information, $layout, $request->getCurrentUser()),
