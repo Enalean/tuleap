@@ -39,7 +39,7 @@ export function downloadXLSX(export_settings: ExportSettings, formatted_data: Re
     sheet["!cols"] = fitColumnWidthsToContent(cells);
     sheet["!rows"] = fitRowHeightsToContent(cells);
     sheet["!merges"] = createMergesForWholeRowLine(cells);
-    sheet["!autofilter"] = { ref: generateAutofilterRange(formatted_data) };
+    generateAutofilterRange(formatted_data).apply((ref) => (sheet["!autofilter"] = { ref }));
     utils.book_append_sheet(book, sheet);
     writeFile(book, generateFilename(export_settings), {
         bookSST: true,

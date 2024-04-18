@@ -50,11 +50,12 @@ describe("autofilter-generator", () => {
             ],
         };
 
-        const autofilter_range: string = generateAutofilterRange(formatted_data);
+        const autofilter_range =
+            generateAutofilterRange(formatted_data).unwrapOr("Value not expected");
 
         expect(autofilter_range).toBe("A2:D4");
     });
-    it("generates empty autofilter range if headers is missing in formatted_data", (): void => {
+    it("does not generate and autofilter range if headers is missing in formatted_data", (): void => {
         const formatted_data: ReportSection = {
             artifacts_rows: [
                 [
@@ -72,11 +73,11 @@ describe("autofilter-generator", () => {
             ],
         };
 
-        const autofilter_range: string = generateAutofilterRange(formatted_data);
+        const autofilter_range = generateAutofilterRange(formatted_data);
 
-        expect(autofilter_range).toBe("");
+        expect(autofilter_range.isNothing()).toBe(true);
     });
-    it("generates empty autofilter range if artifacts_rows is missing in formatted_data", (): void => {
+    it("does not generate an autofilter range if artifacts_rows is missing in formatted_data", (): void => {
         const formatted_data: ReportSection = {
             headers: {
                 tracker_names: [],
@@ -89,12 +90,12 @@ describe("autofilter-generator", () => {
             },
         };
 
-        const autofilter_range: string = generateAutofilterRange(formatted_data);
+        const autofilter_range = generateAutofilterRange(formatted_data);
 
-        expect(autofilter_range).toBe("");
+        expect(autofilter_range.isNothing()).toBe(true);
     });
 
-    it("generates empty autofilter range when there is no report fields", (): void => {
+    it("does not generate autofilter range when there is no report fields", (): void => {
         const formatted_data: ReportSection = {
             artifacts_rows: [],
             headers: {
@@ -103,8 +104,8 @@ describe("autofilter-generator", () => {
             },
         };
 
-        const autofilter_range: string = generateAutofilterRange(formatted_data);
+        const autofilter_range = generateAutofilterRange(formatted_data);
 
-        expect(autofilter_range).toBe("");
+        expect(autofilter_range.isNothing()).toBe(true);
     });
 });
