@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Item\CloneOtherItemPostAction;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
@@ -46,6 +47,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         $dstGroupId,
         ProjectManager $project_manager,
         Docman_LinkVersionFactory $link_version_factory,
+        private readonly \Psr\EventDispatcher\EventDispatcherInterface $dispatcher,
     ) {
         $this->dstGroupId           = $dstGroupId;
         $this->_cacheMetadataUsage  = [];
@@ -121,7 +123,11 @@ class Docman_CloneItemsVisitor implements ItemVisitor
 
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
-        $this->_cloneItem($item, $params);
+        $copied_item_id = $this->_cloneItem($item, $params);
+        $copied_item    = $this->_getItemFactory()->getItemFromDb($copied_item_id);
+        if ($copied_item instanceof OtherDocument) {
+            $this->dispatcher->dispatch(new CloneOtherItemPostAction($item, $copied_item));
+        }
     }
 
     public function visitItem(Docman_Item $item, array $params = [])

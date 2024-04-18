@@ -27,6 +27,7 @@ use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
+use Tuleap\Docman\Item\CloneOtherItemPostAction;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
 use Tuleap\Docman\REST\v1\Folders\FilterItemOtherTypeProvider;
 use Tuleap\Docman\REST\v1\GetOtherDocumentItemRepresentationWrapper;
@@ -136,6 +137,14 @@ class ArtidocPlugin extends Plugin
     {
         if ($event->item instanceof ArtidocDocument) {
             $event->setMoveUri('/api/artidoc/' . urlencode((string) $event->item->getId()));
+        }
+    }
+
+    #[ListeningToEventClass]
+    public function cloneOtherItemPostAction(CloneOtherItemPostAction $event): void
+    {
+        if ($event->source instanceof ArtidocDocument && $event->target instanceof ArtidocDocument) {
+            (new ArtidocDao())->cloneItem((int) $event->source->getId(), (int) $event->target->getId());
         }
     }
 

@@ -89,4 +89,54 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             array_column($dao->searchPaginatedRawSectionsById(103, 50, 0)->rows, 'artifact_id'),
         );
     }
+
+    public function testCloneItem(): void
+    {
+        $dao = new ArtidocDao();
+
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->insertMany('plugin_artidoc_document', [
+            [
+                'item_id'     => 101,
+                'artifact_id' => 1001,
+                'rank'        => 1,
+            ],
+            [
+                'item_id'     => 102,
+                'artifact_id' => 1001,
+                'rank'        => 2,
+            ],
+            [
+                'item_id'     => 102,
+                'artifact_id' => 2001,
+                'rank'        => 1,
+            ],
+        ]);
+
+        self::assertSame(0, $dao->searchPaginatedRawSectionsById(103, 50, 0)->total);
+        self::assertSame(
+            [],
+            array_column($dao->searchPaginatedRawSectionsById(103, 50, 0)->rows, 'artifact_id'),
+        );
+
+        $dao->cloneItem(102, 103);
+
+        self::assertSame(1, $dao->searchPaginatedRawSectionsById(101, 50, 0)->total);
+        self::assertSame(
+            [1001],
+            array_column($dao->searchPaginatedRawSectionsById(101, 50, 0)->rows, 'artifact_id'),
+        );
+
+        self::assertSame(2, $dao->searchPaginatedRawSectionsById(102, 50, 0)->total);
+        self::assertSame(
+            [2001, 1001],
+            array_column($dao->searchPaginatedRawSectionsById(102, 50, 0)->rows, 'artifact_id'),
+        );
+
+        self::assertSame(2, $dao->searchPaginatedRawSectionsById(103, 50, 0)->total);
+        self::assertSame(
+            [2001, 1001],
+            array_column($dao->searchPaginatedRawSectionsById(103, 50, 0)->rows, 'artifact_id'),
+        );
+    }
 }

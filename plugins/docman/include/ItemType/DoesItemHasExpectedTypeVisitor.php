@@ -91,7 +91,7 @@ final class DoesItemHasExpectedTypeVisitor implements ItemVisitor
 
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
-        return $this->visitItem($item);
+        return $item instanceof $this->expected_item_class;
     }
 
     public function visitItem(Docman_Item $item, array $params = []): bool

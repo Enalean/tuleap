@@ -91,3 +91,10 @@ export function copyFolder(copied_item_id: number, parent_id: number): Promise<I
         copied_item_id,
     );
 }
+
+export function copyOtherType(copied_item_id: number, parent_id: number): Promise<Item> {
+    return copyDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/others",
+        copied_item_id,
+    );
+}

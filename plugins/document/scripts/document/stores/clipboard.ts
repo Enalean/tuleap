@@ -38,6 +38,7 @@ import {
     copyFile,
     copyFolder,
     copyLink,
+    copyOtherType,
     copyWiki,
     moveDocument,
 } from "../api/move-rest-querier";
@@ -148,8 +149,7 @@ export function useClipboardStore(
                     case TYPE_LINK:
                         return copyLink(this.item_id, destination_folder.id);
                     default:
-                        this.emptyClipboard();
-                        throw new Error("Cannot copy unknown item type " + this.item_type);
+                        return copyOtherType(this.item_id, destination_folder.id);
                 }
             },
 

@@ -30,6 +30,7 @@ use LogicException;
 use Mockery;
 use Project;
 use ProjectManager;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class DestinationCloneItemTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -40,16 +41,20 @@ final class DestinationCloneItemTest extends \Tuleap\Test\PHPUnit\TestCase
         $folder = Mockery::mock(Docman_Folder::class);
         $folder->shouldReceive('getGroupId')->andReturn('102');
         $folder->shouldReceive('getId')->andReturn('12');
-        $project_manager        = Mockery::mock(ProjectManager::class);
-        $link_version_factory   = Mockery::mock(Docman_LinkVersionFactory::class);
+        $project_manager      = Mockery::mock(ProjectManager::class);
+        $link_version_factory = Mockery::mock(Docman_LinkVersionFactory::class);
+
+        $dispatcher = EventDispatcherStub::withIdentityCallback();
+
         $destination_clone_item = DestinationCloneItem::fromNewParentFolder(
             $folder,
             $project_manager,
-            $link_version_factory
+            $link_version_factory,
+            $dispatcher,
         );
         $this->assertEquals(12, $destination_clone_item->getNewParentID());
         $this->assertEquals(
-            new Docman_CloneItemsVisitor(102, $project_manager, $link_version_factory),
+            new Docman_CloneItemsVisitor(102, $project_manager, $link_version_factory, $dispatcher),
             $destination_clone_item->getCloneItemsVisitor()
         );
     }
@@ -63,15 +68,18 @@ final class DestinationCloneItemTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_manager      = Mockery::mock(ProjectManager::class);
         $link_version_factory = Mockery::mock(Docman_LinkVersionFactory::class);
 
+        $dispatcher = EventDispatcherStub::withIdentityCallback();
+
         $destination_clone_item = DestinationCloneItem::fromDestinationProject(
             $item_factory,
             $project,
             $project_manager,
-            $link_version_factory
+            $link_version_factory,
+            $dispatcher,
         );
         $this->assertEquals(0, $destination_clone_item->getNewParentID());
         $this->assertEquals(
-            new Docman_CloneItemsVisitor(102, $project_manager, $link_version_factory),
+            new Docman_CloneItemsVisitor(102, $project_manager, $link_version_factory, $dispatcher),
             $destination_clone_item->getCloneItemsVisitor()
         );
     }
@@ -88,7 +96,8 @@ final class DestinationCloneItemTest extends \Tuleap\Test\PHPUnit\TestCase
             $item_factory,
             $project,
             Mockery::mock(ProjectManager::class),
-            Mockery::mock(Docman_LinkVersionFactory::class)
+            Mockery::mock(Docman_LinkVersionFactory::class),
+            EventDispatcherStub::withIdentityCallback(),
         );
     }
 }

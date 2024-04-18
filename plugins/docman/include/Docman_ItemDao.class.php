@@ -423,7 +423,7 @@ class Docman_ItemDao extends DataAccessObject
 
         $arg    = [];
         $values = [];
-        $cols   = ['item_id', 'parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded'];
+        $cols   = ['item_id', 'parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'other_type', 'link_url', 'wiki_page', 'file_is_embedded'];
         foreach ($row as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $this->da->quoteSmartSchema($key);

@@ -43,6 +43,7 @@ use PluginManager;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
@@ -64,6 +65,7 @@ use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
+use Tuleap\Docman\REST\v1\Others\DocmanOtherTypePOSTRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanFolderPermissionsForGroupsPUTRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
@@ -115,6 +117,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * @url OPTIONS {id}/wikis
      * @url OPTIONS {id}/embedded_files
      * @url OPTIONS {id}/links
+     * @url OPTIONS {id}/others
      */
     public function optionsCreation(int $id): void
     {
@@ -364,6 +367,48 @@ class DocmanFoldersResource extends AuthenticatedResource
                 'You need to either copy or create an empty document (the properties %s are required for the creation)',
                 implode(', ', $empty_representation::getNonCopyRequiredObjectProperties())
             )
+        );
+    }
+
+    /**
+     * Create new other type document
+     *
+     * For now it only accepts the copy of an existing one
+     *
+     * @param int                                 $id   Id of the parent folder
+     * @param DocmanOtherTypePOSTRepresentation $post_representation {@from body} {@type \Tuleap\Docman\REST\v1\Others\DocmanOtherTypePOSTRepresentation}
+     *
+     * @url    POST {id}/others
+     * @access hybrid
+     * @status 201
+     *
+     *
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 409
+     */
+    public function postOthers(int $id, DocmanOtherTypePOSTRepresentation $post_representation): CreatedItemRepresentation
+    {
+        $this->checkAccess();
+        $this->setCreationHeaders();
+
+        $current_user = $this->user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $parent       = $item_request->getItem();
+        $this->checkItemCanHaveSubitems($parent);
+        $project = $item_request->getProject();
+        $this->getDocmanFolderPermissionChecker($project)
+            ->checkUserCanWriteFolder($current_user, $id);
+
+        $this->addAllEvent($project);
+
+        return $this->getItemCopier($project, OtherDocument::class)->copyItem(
+            new DateTimeImmutable(),
+            $parent,
+            $current_user,
+            $post_representation->copy
         );
     }
 

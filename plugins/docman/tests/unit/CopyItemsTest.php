@@ -22,6 +22,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 /**
  * Test how items are copied.
@@ -59,7 +60,7 @@ class CopyItemsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $cloneItemsVisitor = \Mockery::mock(
             Docman_CloneItemsVisitor::class,
-            [$dstGroupId, Mockery::mock(ProjectManager::class), Mockery::mock(Docman_LinkVersionFactory::class)]
+            [$dstGroupId, Mockery::mock(ProjectManager::class), Mockery::mock(Docman_LinkVersionFactory::class), EventDispatcherStub::withIdentityCallback()]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
         // expectations
