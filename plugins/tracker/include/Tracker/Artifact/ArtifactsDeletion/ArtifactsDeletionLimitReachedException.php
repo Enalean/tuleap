@@ -28,10 +28,13 @@ use Exception;
 
 class ArtifactsDeletionLimitReachedException extends Exception
 {
-    public const MESSAGE = 'The limit of artifacts deletions has been reached for the previous 24 hours.';
-
     public function __construct()
     {
-        parent::__construct(self::MESSAGE);
+        parent::__construct('The limit of artifacts deletions has been reached for the previous 24 hours.');
+    }
+
+    public function getI18NMessage(): string
+    {
+        return dgettext('tuleap-tracker', 'The limit of artifacts deletions has been reached for the previous 24 hours.');
     }
 }

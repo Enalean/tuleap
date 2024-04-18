@@ -32,16 +32,23 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionContext;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
@@ -910,10 +917,30 @@ class Tracker implements Tracker_Dispatchable_Interface
                     if ($request->exist('confirm')) {
                         $artifact = $this->getTrackerArtifactFactory()->getArtifactById($request->get('id'));
                         if ($artifact && $artifact->getTrackerId() == $this->getId()) {
-                            $artifact_deletor = ArtifactDeletorBuilder::build();
-                            $project_id       = (int) $artifact->getTracker()->getGroupId();
-                            $artifact_deletor->delete($artifact, $current_user, DeletionContext::regularDeletion($project_id));
-                            $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s successfully deleted'), $request->get('id')));
+                            $artifact_deletion_manager = new ArtifactsDeletionManager(
+                                new ArtifactsDeletionDAO(),
+                                ArtifactDeletorBuilder::buildForcedSynchronousDeletor(),
+                                new ArtifactDeletionLimitRetriever(
+                                    new ArtifactsDeletionConfig(
+                                        new ArtifactsDeletionConfigDAO(),
+                                    ),
+                                    new UserDeletionRetriever(
+                                        new ArtifactsDeletionDAO(),
+                                    ),
+                                ),
+                            );
+                            try {
+                                $artifact_deletion_manager->deleteArtifact(
+                                    $artifact,
+                                    $current_user
+                                );
+                                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s successfully deleted'), $request->get('id')));
+                            } catch (ArtifactsDeletionLimitReachedException | DeletionOfArtifactsIsNotAllowedException $exception) {
+                                $GLOBALS['Response']->addFeedback(
+                                    'error',
+                                    $exception->getI18NMessage(),
+                                );
+                            }
                         } else {
                             $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s doesn\'t exist or doesn\'t belong to current tracker'), $request->get('id')));
                         }
