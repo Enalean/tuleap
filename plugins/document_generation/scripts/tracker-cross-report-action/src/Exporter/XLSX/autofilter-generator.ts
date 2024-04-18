@@ -20,28 +20,29 @@
 import type { HeadersSection, ReportSection } from "../../Data/data-formator";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { utils } from "xlsx";
+import { Option } from "@tuleap/option";
 
 const RANGE_SEPARATOR = ":";
 const STARTING_COLUMN = "A";
 const STARTING_ROW = 2;
 
-export function generateAutofilterRange(formatted_data: ReportSection): string {
+export function generateAutofilterRange(formatted_data: ReportSection): Option<string> {
     if (
         formatted_data.headers === undefined ||
         formatted_data.artifacts_rows === undefined ||
         formatted_data.headers.reports_fields_labels.length <= 0
     ) {
-        return "";
+        return Option.nothing<string>();
     }
 
     const all_headers: HeadersSection = formatted_data.headers;
     const all_artifacts_rows: ReadonlyArray<ReadonlyArray<ReportCell>> =
         formatted_data.artifacts_rows;
 
-    return (
+    return Option.fromValue(
         getAutofilterStartingRange() +
-        RANGE_SEPARATOR +
-        getAutofilterEndingRange(all_headers, all_artifacts_rows)
+            RANGE_SEPARATOR +
+            getAutofilterEndingRange(all_headers, all_artifacts_rows),
     );
 }
 

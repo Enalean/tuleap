@@ -9,6 +9,7 @@
     "@tuleap/concurrency-limit-pool": "workspace:*",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
+    "@tuleap/option": "workspace:*",
     "@tuleap/plugin-docgen-docx": "workspace:*",
     "@tuleap/plugin-docgen-xlsx": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
