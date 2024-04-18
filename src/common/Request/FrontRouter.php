@@ -223,7 +223,6 @@ class FrontRouter
 
     /**
      * @param             $handler
-     * @param array       $route_info
      * @throws ForbiddenException
      * @throws NotFoundException
      */

@@ -41,7 +41,6 @@ class CollectionOfUgroupsFormatter
     }
 
     /**
-     * @param array $ugroup_ids
      * @return array
      */
     public function formatCollectionOfUgroupIds(array $ugroup_ids, Project $project)

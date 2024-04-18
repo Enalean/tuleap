@@ -127,7 +127,6 @@ class ArtifactRepresentationBuilder
      * Given a collection and a closure, apply on all elements, filter out the
      * empty results and normalize the array
      *
-     * @param array   $collection
      * @return array
      */
     private function mapAndFilter(array $collection, Closure $function, bool $reverse_order)

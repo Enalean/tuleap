@@ -9,7 +9,7 @@ rcs_id('$Id: GoTo.php,v 1.4 2004/07/08 20:30:07 rurban Exp $');
  *  Note: pagenames are absolute, not relative to the actual subpage.
  *
  *  Usage: <?plugin GoTo ?>
- *  @author: Michael van Dam
+ *  Author: Michael van Dam
  */
 
 class WikiPlugin_GoTo extends WikiPlugin

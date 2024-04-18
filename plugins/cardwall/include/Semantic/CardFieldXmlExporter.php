@@ -36,9 +36,6 @@ class CardFieldXmlExporter
         $this->color_dao = $color_dao;
     }
 
-    /**
-     * @param array                        $xml_mapping
-     */
     public function exportToXml(SimpleXMLElement $root, array $xml_mapping, Cardwall_Semantic_CardFields $semantic)
     {
         $child = $root->addChild('semantic');

@@ -140,7 +140,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
     /**
-     * @param array $submitted_values
      *
      * @return string html
      */
@@ -303,7 +302,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @see fetchArtifactValue
      *
      * @param bool                            $is_read_only
-     * @param array                           $submitted_values
      *
      * @return string html
      */

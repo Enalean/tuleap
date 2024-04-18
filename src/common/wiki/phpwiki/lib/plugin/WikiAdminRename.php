@@ -23,7 +23,7 @@ rcs_id('$Id: WikiAdminRename.php,v 1.26 2005/04/01 16:06:41 rurban Exp $');
 
 /**
  * Usage:   <?plugin WikiAdminRename ?> or called via WikiAdminSelect
- * @author:  Reini Urban <rurban@x-ray.at>
+ * Author:  Reini Urban <rurban@x-ray.at>
  *
  * KNOWN ISSUES:
  *   Requires PHP 4.2.

@@ -39,7 +39,6 @@ class CardFieldsPresenterBuilder
     }
 
     /**
-     * @param array                       $already_used_field
      * @param Tracker_FormElement_Field[] $tracker_field
      *
      * @return array
@@ -58,7 +57,6 @@ class CardFieldsPresenterBuilder
     }
 
     /**
-     * @param array $form_elements_fields
      *
      * @return array
      */

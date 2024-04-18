@@ -33,7 +33,7 @@ rcs_id('$Id: TranslateText.php,v 1.5 2004/07/08 20:30:07 rurban Exp $');
  * Examples:
  *    pagename="Some text in english" action=TranslateText lang=es
  *
- * @author:  Reini Urban
+ * Author:  Reini Urban
  */
 
 require_once('lib/plugin/_WikiTranslation.php');

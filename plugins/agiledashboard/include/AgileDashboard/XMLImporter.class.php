@@ -114,7 +114,6 @@ class AgileDashboard_XMLImporter
     /**
      *
      * @param int $tracker_id
-     * @param array $tracker_mappings
      * @return int
      */
     private function getTrackerIdFromMappings($tracker_id, array $tracker_mappings)

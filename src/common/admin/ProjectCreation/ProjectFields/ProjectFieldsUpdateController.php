@@ -52,7 +52,6 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param array $variables
      * @throws NotFoundException
      * @throws ForbiddenException
      * @return void

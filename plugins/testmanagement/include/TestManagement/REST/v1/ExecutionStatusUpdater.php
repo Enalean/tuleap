@@ -62,7 +62,6 @@ class ExecutionStatusUpdater
     }
 
     /**
-     * @param array            $changes
      *
      * @throws RestException
      *

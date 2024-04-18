@@ -242,8 +242,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     }
 
     /**
-     * @param array $submitted_ids
-     * @param array $submitted_values
      *
      * @return array
      */

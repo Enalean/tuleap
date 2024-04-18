@@ -54,7 +54,7 @@ rcs_id('$Id: WikiUserNew.php,v 1.132 2006/03/04 13:19:12 rurban Exp $');
  * user's page and any cookies. lib/main.php will query the user object to
  * verify the password as appropriate.
  *
- * @author: Reini Urban (the tricky parts),
+ * Author: Reini Urban (the tricky parts),
  *          Carsten Klapp (started rolling the ball)
  *
  * Random architectural notes, sorted by date:
@@ -821,7 +821,7 @@ class _PassUser extends _AnonUser
  *
  * Default is PersonalPage auth and prefs.
  *
- * @author: Reini Urban
+ * Author: Reini Urban
  * @tables: pref
  */
 {

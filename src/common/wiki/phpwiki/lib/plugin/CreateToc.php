@@ -27,7 +27,7 @@ rcs_id('$Id: CreateToc.php,v 1.36 2007/07/19 12:41:25 labbenes Exp $');
  * Usage:
  *  <?plugin CreateToc headers=!!!,!! with_toclink||=1
  *                     jshide||=1 ?>
- * @author:  Reini Urban
+ * Author:  Reini Urban
  *
  * Known problems:
  * - MacIE will not work with jshide.

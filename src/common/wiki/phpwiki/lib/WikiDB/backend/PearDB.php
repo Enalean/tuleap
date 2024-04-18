@@ -1260,7 +1260,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
  * (most of the code is cut-and-paste :-( ), but I am trying to make
  * changes that could be merged easily.
  *
- * @author: Dan Frankowski
+ * Author: Dan Frankowski
  */
 class WikiDB_backend_PearDB_generic_iter extends WikiDB_backend_iterator
 {

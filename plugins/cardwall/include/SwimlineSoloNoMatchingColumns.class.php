@@ -30,10 +30,6 @@ class Cardwall_SwimlineSoloNoMatchingColumns extends Cardwall_Swimline
      */
     private $artifact;
 
-    /**
-     *
-     * @param array $cells
-     */
     public function __construct(Cardwall_CardInCellPresenter $swimline_artifact_presenter, Artifact $artifact, array $cells)
     {
         parent::__construct($swimline_artifact_presenter, $cells);

@@ -45,9 +45,6 @@ class GetWorkflowExternalPostActionsValuesForUpdate implements Dispatchable
         $this->transition = $transition;
     }
 
-    /**
-     * @return array
-     */
     public function getExternalValues(): array
     {
         return $this->external_values;

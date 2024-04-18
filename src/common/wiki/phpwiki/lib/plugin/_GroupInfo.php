@@ -20,7 +20,7 @@
  */
 
 /**
- * @author: Charles Corrigan
+ * Author: Charles Corrigan
  */
 class WikiPlugin__GroupInfo extends WikiPlugin
 {

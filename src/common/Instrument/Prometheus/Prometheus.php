@@ -74,9 +74,6 @@ class Prometheus
         $this->incrementBy($name, $help, 1, $labels);
     }
 
-    /**
-     * @param array $labels
-     */
     public function incrementBy(string $name, string $help, float $count, array $labels = []): void
     {
         [$label_names, $label_values] = $this->getLabelsNamesAndValues($labels);
@@ -87,9 +84,6 @@ class Prometheus
         )->incBy($count, ...$label_values);
     }
 
-    /**
-     * @param array $labels
-     */
     public function gaugeSet(string $name, string $help, float $value, array $labels = []): void
     {
         [$label_names, $label_values] = $this->getLabelsNamesAndValues($labels);
@@ -125,7 +119,6 @@ class Prometheus
      *
      * Example inspired by @see https://povilasv.me/prometheus-tracking-request-duration/
      *
-     * @param array $labels
      * @param float[] $buckets
      */
     public function histogram(string $name, string $help, float $time, array $labels = [], array $buckets = []): void

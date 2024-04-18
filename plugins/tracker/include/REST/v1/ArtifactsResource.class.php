@@ -328,7 +328,6 @@ class ArtifactsResource extends AuthenticatedResource
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 100}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
-     * @return array
      * @psalm-return array{"collection":ArtifactRepresentation[]}
      *
      * @throws RestException 403
@@ -1303,8 +1302,6 @@ class ArtifactsResource extends AuthenticatedResource
     }
 
     /**
-     * @param array $values
-     * @param array $values_by_field
      * @param $from_artifact
      * @throws RestException
      */

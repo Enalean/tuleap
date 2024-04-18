@@ -152,7 +152,6 @@ class Jenkins_Client
     }
 
     /**
-     * @param array $build_parameters
      * @return string
      */
     private function generateBuildParameters(array $build_parameters)

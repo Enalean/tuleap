@@ -171,7 +171,6 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Hook called after a creation of a field
      *
-     * @param array $form_element_data
      * @param bool $tracker_is_empty
      * @return void
      */

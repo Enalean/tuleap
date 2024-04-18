@@ -290,7 +290,6 @@ class TimetrackingReportResource extends AuthenticatedResource
      *
      * @throws RestException 400
      *
-     * @return array
      */
     private function getTrackersFromRoute($query, TimetrackingReport $report): array
     {

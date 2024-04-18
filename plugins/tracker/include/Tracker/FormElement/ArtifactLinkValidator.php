@@ -192,9 +192,6 @@ class ArtifactLinkValidator
         return true;
     }
 
-    /**
-     * @param array $value
-     */
     private function areTypesValid(
         Artifact $artifact,
         array $value,

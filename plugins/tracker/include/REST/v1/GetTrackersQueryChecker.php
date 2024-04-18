@@ -61,7 +61,6 @@ class GetTrackersQueryChecker
     }
 
     /**
-     * @param array $json_query
      * @throws RestException
      */
     private function checkExternalCriteria(array $json_query)

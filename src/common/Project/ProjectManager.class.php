@@ -231,7 +231,6 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
     /**
      * Instanciate a project based on a database row
      *
-     * @param array $row
      *
      */
     public function getProjectFromDbRow(array $row): Project

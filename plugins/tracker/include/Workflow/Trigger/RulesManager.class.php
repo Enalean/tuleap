@@ -285,8 +285,6 @@ class Tracker_Workflow_Trigger_RulesManager
     /**
      * Duplicates all the triggers from template on project creation
      *
-     * @param array $template_trackers
-     * @param array $field_mapping
      */
     public function duplicate(array $template_trackers, array $field_mapping)
     {

@@ -38,7 +38,6 @@ class UpdateSearchView implements DispatchableWithProject, DispatchableWithReque
     }
 
     /**
-     * @param array $variables
      *
      * @throws NotFoundException
      */

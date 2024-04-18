@@ -24,9 +24,6 @@ use Project;
 
 class NoCrumb implements Breadcrumbs
 {
-    /**
-     * @return array
-     */
     public function getCrumbs(Project $project): array
     {
         return [];

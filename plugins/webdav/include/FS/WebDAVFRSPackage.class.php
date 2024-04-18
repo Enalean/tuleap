@@ -212,7 +212,6 @@ class WebDAVFRSPackage implements ICollection
      *
      * @param FRSPackage $package
      *
-     * @return array
      */
     public function getReleaseList($package): array
     {

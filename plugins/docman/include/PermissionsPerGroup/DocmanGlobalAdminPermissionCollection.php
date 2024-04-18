@@ -42,9 +42,6 @@ class DocmanGlobalAdminPermissionCollection
         return $unique_permissions;
     }
 
-    /**
-     * @param array $permission
-     */
     public function addPermission($id, array $permission)
     {
         $this->permissions[$id] = $permission;

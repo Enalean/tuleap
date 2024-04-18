@@ -51,7 +51,6 @@ class GitoliteAdmin extends ArrayIterator implements IProvideKey
     }
 
     /**
-     * @param array $paths
      * @return string
      * @throws AccessException
      */

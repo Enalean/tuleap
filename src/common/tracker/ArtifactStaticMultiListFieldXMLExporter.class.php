@@ -51,7 +51,6 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
      *
      * @param int $tracker_id
      * @param int $artifact_id
-     * @param array $row
      *
      * @throws Exception_TV3XMLException
      */
@@ -122,7 +121,6 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
      * @param string $value
      * @param int    $number_of_values
      * @param string $field_name
-     * @param array  $all_labels
      *
      * @return bool
      */

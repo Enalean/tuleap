@@ -1017,7 +1017,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Hook called after a creation of a formelement
      *
-     * @param array $form_element_data
      * @param bool $tracker_is_empty
      * @return void
      */

@@ -40,7 +40,7 @@ rcs_id('$Id: _WikiTranslation.php,v 1.17 2005/09/10 11:31:16 rurban Exp $');
  *  <?plugin _WikiTranslation string=HomePage languages=fr ?>
  *     Just return the translated string for this language.
  *
- * @author:  Reini Urban
+ * Author:  Reini Urban
  */
 
 /* Container for untranslated pagenames. Needed to show up in locale/po/phpwiki.pot */

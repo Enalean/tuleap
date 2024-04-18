@@ -149,9 +149,6 @@ class MilestoneElementMover
         );
     }
 
-    /**
-     * @return array
-     */
     private function getFilteredArtifactIdsToAdd(Planning_Milestone $milestone, array $to_add): array
     {
         $backlog_tracker_ids   = $milestone->getPlanning()->getBacklogTrackersIds();

@@ -46,7 +46,7 @@ rcs_id('$Id: upgrade.php,v 1.47 2005/02/27 19:13:27 rurban Exp $');
 
  * Done: overwrite=1 link on edit conflicts at first occurence "Overwrite all".
  *
- * @author: Reini Urban
+ * Author: Reini Urban
  */
 require_once('lib/loadsave.php');
 

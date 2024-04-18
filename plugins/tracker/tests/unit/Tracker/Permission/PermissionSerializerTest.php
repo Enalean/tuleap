@@ -119,7 +119,6 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
     }
 
     /**
-     * @param array $ugroup_ids
      *
      * @return \Mockery\LegacyMockInterface|PFUser
      */

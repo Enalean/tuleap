@@ -41,7 +41,7 @@ rcs_id('$Id: WikiForum.php,v 1.3 2004/06/14 11:31:39 rurban Exp $');
  * layout
  * pagetype: header: link to parent, no redirects,
  *
- * @author: Reini Urban
+ * Author: Reini Urban
  */
 
 include_once('lib/plugin/WikiBlog.php');

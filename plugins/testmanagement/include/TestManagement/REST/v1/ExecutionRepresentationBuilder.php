@@ -150,7 +150,6 @@ class ExecutionRepresentationBuilder
     }
 
     /**
-     * @param array            $definitions_changeset_ids
      * @param \Tracker_FormElement_Field_File[] $file_fields
      *
      * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
@@ -334,7 +333,6 @@ class ExecutionRepresentationBuilder
     }
 
     /**
-     * @param array            $definitions_changeset_ids
      *
      * @return null|\Tracker_Artifact_Changeset
      */

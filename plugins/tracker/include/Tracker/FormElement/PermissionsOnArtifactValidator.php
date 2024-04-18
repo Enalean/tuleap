@@ -26,7 +26,6 @@ use Tracker_FormElement_Field_PermissionsOnArtifact;
 class PermissionsOnArtifactValidator
 {
     /**
-     * @param  array $value
      *
      * @return bool
      */
@@ -36,7 +35,6 @@ class PermissionsOnArtifactValidator
     }
 
     /**
-     * @param  array $value
      *
      * @return bool
      */

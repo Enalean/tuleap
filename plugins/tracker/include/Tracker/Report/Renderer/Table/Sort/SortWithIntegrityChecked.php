@@ -31,7 +31,6 @@ final class SortWithIntegrityChecked
     /**
      * @psalm-param  array{array{field: Tracker_FormElement_Field, field_id: int, is_desc: bool}} $sort
      * @psalm-return array<array{field: Tracker_FormElement_Field, field_id: int, is_desc: bool}>
-     * @return array
      */
     public static function getSortOnUsedFields(array $sort): array
     {
@@ -48,7 +47,6 @@ final class SortWithIntegrityChecked
     /**
      * @psalm-param  array{array{field: Tracker_FormElement_Field, field_id: int, is_desc: bool}} $sort
      * @psalm-return array<array{field: Tracker_FormElement_Field, field_id: int, is_desc: bool}>
-     * @return array
      */
     public static function getSort(array $sort): array
     {

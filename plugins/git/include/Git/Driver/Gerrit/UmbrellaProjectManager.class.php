@@ -87,9 +87,6 @@ class Git_Driver_Gerrit_UmbrellaProjectManager
         }
     }
 
-    /**
-     * @param array $gerrit_servers
-     */
     private function resetProjectInheritanceOnServers(array $gerrit_servers, Project $project)
     {
         foreach ($gerrit_servers as $gerrit_server) {
@@ -102,9 +99,6 @@ class Git_Driver_Gerrit_UmbrellaProjectManager
         }
     }
 
-    /**
-     * @param array $gerrit_servers
-     */
     private function createProjectOnServers(array $gerrit_servers, Project $project)
     {
         $ugroups      = $this->ugroup_manager->getUGroups($project);

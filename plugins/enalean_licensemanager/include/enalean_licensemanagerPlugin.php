@@ -214,7 +214,6 @@ class enalean_licensemanagerPlugin extends Plugin
     }
 
     /**
-     * @param array $params
      * @return int
      */
     private function getNbUsedUsersFromEventParams(array $params)

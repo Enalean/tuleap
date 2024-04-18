@@ -21,7 +21,7 @@ rcs_id('$Id: RssFeed.php,v 1.10 2005/04/10 10:24:58 rurban Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * @author: Arnaud Fontaine
+ * Author: Arnaud Fontaine
  */
 include('lib/RssParser.php');
 

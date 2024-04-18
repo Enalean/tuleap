@@ -63,7 +63,6 @@ final class SearchView extends AdminView implements DispatchableWithBurningParro
     }
 
     /**
-     * @param array $variables
      *
      * @throws NotFoundException
      */

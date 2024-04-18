@@ -47,7 +47,6 @@ class PatchAddBacklogItemsValidator implements IValidateElementsToAdd
     }
 
     /**
-     * @param array $to_add
      * @throws ArtifactCannotBeChildrenOfException
      */
     public function validate(array $to_add)

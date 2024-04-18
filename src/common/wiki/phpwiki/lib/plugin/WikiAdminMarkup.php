@@ -23,7 +23,7 @@ rcs_id('$Id: WikiAdminMarkup.php,v 1.1 2005/09/18 13:06:24 rurban Exp $');
 
 /**
  * Usage:   <?plugin WikiAdminMarkup s||=* ?> or called via WikiAdminSelect
- * @author:  Reini Urban <rurban@x-ray.at>
+ * Author:  Reini Urban <rurban@x-ray.at>
  *
  * KNOWN ISSUES:
  * Requires PHP 4.2 so far.

@@ -303,7 +303,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     }
 
     /**
-     * @param array $artifacts_ids
      * @return bool True if nothing went wrong
      */
     public function solveInconsistencies(PFUser $user, array $artifacts_ids)

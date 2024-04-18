@@ -30,7 +30,7 @@ rcs_id('$Id: FileInfo.php,v 1.4 2005/10/29 14:18:47 rurban Exp $');
  *   <?plugin FileVersion file=uploads/setup.exe display=name,version,date
  *                        format="%s (version: %s, date: %s)" ?>
  *
- * @author: ReiniUrban
+ * Author: ReiniUrban
  */
 
 class WikiPlugin_FileInfo extends WikiPlugin

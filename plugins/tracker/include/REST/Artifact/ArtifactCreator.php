@@ -90,7 +90,6 @@ class ArtifactCreator
 
     /**
      *
-     * @param array $values
      * @return ArtifactReference
      * @throws \Luracast\Restler\RestException
      */

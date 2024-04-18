@@ -323,10 +323,6 @@ class ProjectCreationData
         $this->short_description = $short_description;
     }
 
-    /**
-     * @param array $project
-     *
-     */
     public function setAccessFromProjectData(array $project): string
     {
         return $this->access = $this->getAccessFromProjectArrayData($project);

@@ -153,7 +153,6 @@ class ProjectResource
     /**
      * @param  int   $limit
      * @param  int   $offset
-     * @param  array $query
      *
      * @return Project[]
      *

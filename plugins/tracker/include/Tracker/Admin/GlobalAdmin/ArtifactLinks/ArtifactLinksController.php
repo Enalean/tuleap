@@ -226,9 +226,6 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         return \Tracker::getTrackerGlobalAdministrationURL($project) . '/' . self::URL;
     }
 
-    /**
-     * @return array
-     */
     private function buildFormattedTypes(Project $project): array
     {
         $formatted_types = [];

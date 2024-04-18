@@ -24,7 +24,7 @@ rcs_id('$Id: PhotoAlbum.php,v 1.14 2005/10/12 06:19:07 rurban Exp $');
 /**
  * Display an album of a set of photos with optional descriptions.
  *
- * @author: Ted Vinke <teddy@jouwfeestje.com>
+ * Author: Ted Vinke <teddy@jouwfeestje.com>
  *          Reini Urban (local fs)
  *          Thomas Harding (slides mode, real thumbnails)
  *

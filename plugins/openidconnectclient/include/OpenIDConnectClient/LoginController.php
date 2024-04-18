@@ -49,7 +49,6 @@ class LoginController implements DispatchableWithRequestNoAuthz
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param array       $variables
      * @return void
      * @throws ForbiddenException
      * @throws NotFoundException

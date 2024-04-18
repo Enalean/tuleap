@@ -128,7 +128,6 @@ class Git_Driver_Gerrit_Template_TemplateFactory
     /**
      * Instatiate a Template from a SQL row
      *
-     * @param array $row
      * @return Git_Driver_Gerrit_Template_Template -where the array is in DAR format
      */
     private function instantiateTemplateFromRow(array $row)

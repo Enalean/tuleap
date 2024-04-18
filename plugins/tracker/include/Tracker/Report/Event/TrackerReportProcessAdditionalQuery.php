@@ -80,25 +80,16 @@ class TrackerReportProcessAdditionalQuery implements Dispatchable
         return $this->user;
     }
 
-    /**
-     * @return array
-     */
     public function getAdditionalCriteria(): array
     {
         return $this->additional_criteria;
     }
 
-    /**
-     * @return array
-     */
     public function getResult(): array
     {
         return $this->result;
     }
 
-    /**
-     * @param array $result
-     */
     public function addResult(array $result): void
     {
         $this->result[] = $result;

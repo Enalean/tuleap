@@ -28,9 +28,7 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 class TestStatusAccordingToStepsStatusChangesBuilder
 {
     /**
-     * @param array                          $changes
      * @param Step[]                         $steps_defined_in_test
-     * @param array                          $steps_changes
      *
      */
     public function enforceTestStatusAccordingToStepsStatus(
@@ -75,8 +73,6 @@ class TestStatusAccordingToStepsStatusChangesBuilder
     }
 
     /**
-     * @param array $steps_defined_in_test
-     * @param array $steps_changes
      *
      * @return mixed|string
      */

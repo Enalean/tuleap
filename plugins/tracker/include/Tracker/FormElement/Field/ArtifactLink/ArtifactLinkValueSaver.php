@@ -290,7 +290,7 @@ class ArtifactLinkValueSaver
      * @param Artifact $artifact        the artifact that is currently updated
      * @param array    $submitted_value the array of added and removed artifact links ($values['added_values'] is a string and $values['removed_values'] is an array of artifact ids
      *
-     * @return boolean
+     * @return bool
      */
     private function updateCrossReferences(PFUser $user, Artifact $artifact, array $submitted_value)
     {

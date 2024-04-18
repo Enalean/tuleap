@@ -1,7 +1,7 @@
 <?php
 /**
  * Code for writing XML.
- * @author: Jeff Dairiki,
+ * Author: Jeff Dairiki,
  *          Reini Urban (php5 tricks)
  *
  * WARNING: This module is very php5 sensitive.
