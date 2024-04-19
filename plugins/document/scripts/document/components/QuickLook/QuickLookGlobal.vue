@@ -151,7 +151,12 @@ const quick_look_component_action = computed(() => {
                     ),
             );
         default:
-            return null;
+            return defineAsyncComponent(
+                () =>
+                    import(
+                        /* webpackChunkName: "quick-look-empty-other-type" */ `./QuickLookOtherType.vue`
+                    ),
+            );
     }
 });
 
