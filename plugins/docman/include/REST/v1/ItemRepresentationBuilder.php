@@ -32,6 +32,7 @@ use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\UnknownMetadataException;
 use Tuleap\Docman\REST\v1\MoveItem\MoveItemUriVisitor;
+use Tuleap\Docman\REST\v1\Others\OtherTypePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
@@ -140,6 +141,7 @@ class ItemRepresentationBuilder
         ?LinkPropertiesRepresentation $link_properties = null,
         ?WikiPropertiesRepresentation $wiki_properties = null,
         ?FolderPropertiesRepresentation $folder_properties = null,
+        ?OtherTypePropertiesRepresentation $other_type_properties = null,
     ) {
         $owner                = $this->user_manager->getUserById($item->getOwnerId());
         $owner_representation = MinimalUserRepresentation::build($owner);
@@ -182,6 +184,7 @@ class ItemRepresentationBuilder
             $link_properties,
             $wiki_properties,
             $folder_properties,
+            $other_type_properties,
         );
     }
 

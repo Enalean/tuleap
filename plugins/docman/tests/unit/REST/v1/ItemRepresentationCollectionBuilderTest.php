@@ -201,7 +201,8 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
             null,
             null,
             null,
-            FolderPropertiesRepresentation::build($docman_item1)
+            FolderPropertiesRepresentation::build($docman_item1),
+            null,
         );
 
         $version_data_item3   = [
@@ -260,7 +261,8 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
             null,
             null,
             null,
-            null
+            null,
+            null,
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
@@ -357,7 +359,8 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
             null,
             null,
             null,
-            FolderPropertiesRepresentation::build($docman_folder1)
+            FolderPropertiesRepresentation::build($docman_folder1),
+            null,
         );
         $representation2 = ItemRepresentation::build(
             $docman_folder2,
@@ -390,7 +393,8 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
             null,
             null,
             null,
-            FolderPropertiesRepresentation::build($docman_folder2)
+            FolderPropertiesRepresentation::build($docman_folder2),
+            null,
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')

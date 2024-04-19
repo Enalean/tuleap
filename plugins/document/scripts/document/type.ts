@@ -271,6 +271,10 @@ export interface Embedded extends Item, ApprovableDocument {
     properties: Array<Property>;
 }
 
+export interface OtherTypeItem extends Item {
+    other_type_properties: OtherTypeProperties | null;
+}
+
 export interface Wiki extends Item, ApprovableDocument {
     parent_id: number;
     wiki_properties: WikiProperties;
@@ -360,6 +364,10 @@ export interface EmbeddedProperties {
     readonly version_number: number;
     readonly content?: string;
     file_type: string;
+}
+
+export interface OtherTypeProperties {
+    readonly open_href: string;
 }
 
 export interface WikiProperties {

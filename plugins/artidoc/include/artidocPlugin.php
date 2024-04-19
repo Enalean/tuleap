@@ -111,7 +111,7 @@ class ArtidocPlugin extends Plugin
     public function getOtherDocumentItemRepresentationWrapper(GetOtherDocumentItemRepresentationWrapper $event): void
     {
         if ($event->item instanceof ArtidocDocument) {
-            $event->setType(ArtidocDocument::TYPE);
+            $event->setItemRepresentationArguments(ArtidocDocument::TYPE, new \Tuleap\Docman\REST\v1\Others\OtherTypePropertiesRepresentation('/artidoc/' . urlencode((string) $event->item->getId())));
         }
     }
 
