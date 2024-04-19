@@ -140,6 +140,30 @@ export function putEmptyDocumentProperties(
     });
 }
 
+export function putOtherTypeDocumentProperties(
+    id: number,
+    title: string,
+    description: string,
+    owner_id: number,
+    status: string | null,
+    obsolescence_date: number | null,
+    properties: Array<Property> | null,
+): Promise<Response> {
+    return put(`/api/docman_other_type_documents/${encodeURIComponent(id)}/metadata`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            title,
+            description,
+            owner_id,
+            status,
+            obsolescence_date,
+            metadata: properties,
+        }),
+    });
+}
+
 export function putFolderDocumentProperties(
     id: number,
     title: string,

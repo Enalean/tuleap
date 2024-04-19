@@ -25,6 +25,7 @@ import {
     putFileProperties,
     putFolderDocumentProperties,
     putLinkProperties,
+    putOtherTypeDocumentProperties,
     putWikiProperties,
 } from "../../api/properties-rest-querier";
 import { getCustomProperties } from "../../helpers/properties-helpers/custom-properties-helper";
@@ -40,6 +41,7 @@ import {
     isWiki,
     isEmpty,
     isFolder,
+    isOtherType,
 } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 
@@ -124,6 +126,16 @@ export const updateProperties = async (
             );
         } else if (isEmpty(item_to_update)) {
             await putEmptyDocumentProperties(
+                item_to_update.id,
+                item_to_update.title,
+                item_to_update.description,
+                item_to_update.owner.id,
+                item_to_update.status,
+                obsolescence_date,
+                custom_properties,
+            );
+        } else if (isOtherType(item_to_update)) {
+            await putOtherTypeDocumentProperties(
                 item_to_update.id,
                 item_to_update.title,
                 item_to_update.description,

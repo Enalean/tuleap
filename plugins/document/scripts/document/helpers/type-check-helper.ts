@@ -68,6 +68,17 @@ export function isFolder(
     return item.type === TYPE_FOLDER;
 }
 
+export function isOtherType(item: Item | Embedded | Empty | ItemFile | Link | Wiki): boolean {
+    return (
+        !isFolder(item) &&
+        !isEmbedded(item) &&
+        !isWiki(item) &&
+        !isLink(item) &&
+        !isEmpty(item) &&
+        !isFile(item)
+    );
+}
+
 export function isFakeItem(item: Item | FakeItem): item is FakeItem {
     return Object.prototype.hasOwnProperty.call(item, "progress");
 }
