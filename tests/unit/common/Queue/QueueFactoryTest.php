@@ -28,18 +28,6 @@ use Tuleap\Test\Stubs\DB\CheckThereIsAnOngoingTransactionStub;
 
 final class QueueFactoryTest extends TestCase
 {
-    public function testPersistentQueueIsWrappedToCheckTransaction(): void
-    {
-        $factory = new QueueFactory(
-            new NullLogger(),
-            CheckThereIsAnOngoingTransactionStub::notInTransaction(),
-        );
-
-        $queue = $factory->getPersistentQueue('queue-name');
-
-        self::assertInstanceOf(PersistentQueueNoTransactionWrapper::class, $queue);
-    }
-
     public function testExceptionIfRedisNotAvailable(): void
     {
         $factory = new QueueFactory(
