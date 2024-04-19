@@ -59,6 +59,7 @@ final readonly class DBPersistentQueue implements PersistentQueue
             \Psl\Json\encode($content),
             new \DateTimeImmutable()
         );
+        QueueInstrumentation::increment($this->queue_name, $topic, QueueInstrumentation::STATUS_ENQUEUED);
     }
 
     public function listen(string $queue_id, string $topic, callable $callback): void
