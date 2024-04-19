@@ -25,6 +25,7 @@ use Tuleap\Docman\REST\v1\EmbeddedFiles\IEmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
+use Tuleap\Docman\REST\v1\Others\OtherTypePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
@@ -164,6 +165,11 @@ class ItemRepresentation
     public $folder_properties;
 
     /**
+     * @var OtherTypePropertiesRepresentation | null
+     */
+    public $other_type_properties;
+
+    /**
      * @param ItemMetadataRepresentation[] $metadata
      */
     private function __construct(
@@ -183,6 +189,7 @@ class ItemRepresentation
         ?LinkPropertiesRepresentation $link_properties,
         ?WikiPropertiesRepresentation $wiki_properties,
         ?FolderPropertiesRepresentation $folder_properties,
+        ?OtherTypePropertiesRepresentation $other_type_properties,
         bool $is_expanded,
         ?ItemApprovalTableRepresentation $approval_table,
         ?ItemLockInfoRepresentation $lock_info,
@@ -209,6 +216,7 @@ class ItemRepresentation
         $this->link_properties            = $link_properties;
         $this->wiki_properties            = $wiki_properties;
         $this->folder_properties          = $folder_properties;
+        $this->other_type_properties      = $other_type_properties;
         $this->is_expanded                = $is_expanded;
         $this->approval_table             = $approval_table;
         $this->lock_info                  = $lock_info;
@@ -243,6 +251,7 @@ class ItemRepresentation
         ?LinkPropertiesRepresentation $link_properties,
         ?WikiPropertiesRepresentation $wiki_properties,
         ?FolderPropertiesRepresentation $folder_properties,
+        ?OtherTypePropertiesRepresentation $other_type_properties,
     ): self {
         $description = $item->getDescription();
         return new self(
@@ -262,6 +271,7 @@ class ItemRepresentation
             $link_properties,
             $wiki_properties,
             $folder_properties,
+            $other_type_properties,
             $is_expanded,
             $approval_table,
             $lock_info,

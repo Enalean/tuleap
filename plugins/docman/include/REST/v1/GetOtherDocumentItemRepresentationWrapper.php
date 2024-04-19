@@ -22,11 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Tuleap\Docman\REST\v1\Others\OtherTypePropertiesRepresentation;
 use Tuleap\Event\Dispatchable;
 
 final class GetOtherDocumentItemRepresentationWrapper implements Dispatchable
 {
     private ?string $type = null;
+
+    private ?OtherTypePropertiesRepresentation $other_type_properties = null;
 
     public function __construct(
         private readonly ItemRepresentationBuilder $item_representation_builder,
@@ -37,11 +40,24 @@ final class GetOtherDocumentItemRepresentationWrapper implements Dispatchable
 
     public function buildItemRepresentation(): ItemRepresentation
     {
-        return $this->item_representation_builder->buildItemRepresentation($this->item, $this->current_user, $this->type);
+        return $this->item_representation_builder->buildItemRepresentation(
+            $this->item,
+            $this->current_user,
+            $this->type,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->other_type_properties,
+        );
     }
 
-    public function setType(string $type): void
-    {
-        $this->type = $type;
+    public function setItemRepresentationArguments(
+        string $type,
+        OtherTypePropertiesRepresentation $other_type_properties,
+    ): void {
+        $this->type                  = $type;
+        $this->other_type_properties = $other_type_properties;
     }
 }

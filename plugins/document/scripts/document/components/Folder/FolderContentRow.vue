@@ -98,7 +98,14 @@
 
 <script>
 import { mapState } from "vuex";
-import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI, TYPE_EMBEDDED } from "../../constants";
+import {
+    TYPE_FILE,
+    TYPE_FOLDER,
+    TYPE_LINK,
+    TYPE_WIKI,
+    TYPE_EMBEDDED,
+    TYPE_EMPTY,
+} from "../../constants";
 import {
     hasNoUploadingContent,
     isItemUploadingInQuickLookMode,
@@ -207,11 +214,18 @@ export default {
                                 /* webpackChunkName: "document-cell-title-wiki" */ `./ItemTitle/WikiCellTitle.vue`
                             ),
                     );
+                case TYPE_EMPTY:
+                    return defineAsyncComponent(
+                        () =>
+                            import(
+                                /* webpackChunkName: "document-cell-title-empty" */ `./ItemTitle/EmptyDocumentCellTitle.vue`
+                            ),
+                    );
                 default:
                     return defineAsyncComponent(
                         () =>
                             import(
-                                /* webpackChunkName: "document-cell-title-document" */ `./ItemTitle/DocumentCellTitle.vue`
+                                /* webpackChunkName: "document-cell-title-other-document" */ `./ItemTitle/OtherDocumentCellTitle.vue`
                             ),
                     );
             }

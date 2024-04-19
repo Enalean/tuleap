@@ -28,6 +28,7 @@ export const ACTION_ICON_FOLDER = "fa-turn-down";
 export const ACTION_ICON_FILE = "fa-download";
 export const ACTION_ICON_LINK = "fa-arrow-right";
 export const ACTION_ICON_EMBEDDED = "fa-arrow-right";
+export const ACTION_ICON_OTHER_TYPE = "fa-arrow-right";
 export const ACTION_ICON_ONLYOFFICE = "fa-arrow-right";
 export const ACTION_ICON_WIKI = "fa-arrow-right";
 
