@@ -34,7 +34,6 @@ use SVN_DAO;
 use TestHelper;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\SVNCore\Cache\Parameters;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
@@ -44,7 +43,6 @@ final class BackendSVNTest extends TestIntegrationTestCase
     use GlobalLanguageMock;
 
     private string $fake_revprop;
-    private Parameters&MockObject $cache_parameters;
     private ProjectManager&MockObject $project_manager;
     private BackendSVN&MockObject $backend;
 
@@ -71,8 +69,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
         ForgeConfig::set('sys_custom_dir', $tmp_dir);
         mkdir($tmp_dir . '/conf');
 
-        $this->project_manager  = $this->createMock(ProjectManager::class);
-        $this->cache_parameters = $this->createMock(Parameters::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
         $this->backend = $this->createPartialMock(BackendSVN::class, [
             'getSvnDao',
@@ -114,7 +111,6 @@ final class BackendSVNTest extends TestIntegrationTestCase
             ]));
         $this->backend->method('getSvnDao')->willReturn($svn_dao);
         $this->backend->method('getProjectManager')->willReturn($this->project_manager);
-        $this->backend->method('getSVNCacheParameters')->willReturn($this->cache_parameters);
 
         self::assertTrue($this->backend->generateSVNApacheConf());
         $svnroots = file_get_contents(ForgeConfig::get('svn_root_file'));

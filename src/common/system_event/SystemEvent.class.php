@@ -37,28 +37,26 @@ abstract class SystemEvent
     protected $log;
 
     // Define event types
-    public const TYPE_SYSTEM_CHECK                             = 'SYSTEM_CHECK';
-    public const TYPE_EDIT_SSH_KEYS                            = 'EDIT_SSH_KEYS';
-    public const TYPE_PROJECT_CREATE                           = 'PROJECT_CREATE';
-    public const TYPE_PROJECT_ACTIVE                           = 'PROJECT_ACTIVE';
-    public const TYPE_PROJECT_DELETE                           = 'PROJECT_DELETE';
-    public const TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH = 'PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH';
-    public const TYPE_PROJECT_RENAME                           = 'PROJECT_RENAME';
-    public const TYPE_UGROUP_MODIFY                            = 'UGROUP_MODIFY';
-    public const TYPE_USER_ACTIVE_STATUS_CHANGE                = 'ACTIVE_USER_STATUS_CHANGE';
-    public const TYPE_USER_MODIFY                              = 'USER_MODIFY';
-    public const TYPE_USER_RENAME                              = 'USER_RENAME';
-    public const TYPE_MEMBERSHIP_CREATE                        = 'MEMBERSHIP_CREATE';
-    public const TYPE_MEMBERSHIP_DELETE                        = 'MEMBERSHIP_DELETE';
-    public const TYPE_MEMBERSHIP_MODIFY                        = 'MEMBERSHIP_MODIFY';
-    public const TYPE_PROJECT_IS_PRIVATE                       = 'PROJECT_IS_PRIVATE';
-    public const TYPE_ROOT_DAILY                               = 'ROOT_DAILY';
-    public const TYPE_COMPUTE_MD5SUM                           = 'COMPUTE_MD5SUM';
-    public const TYPE_MASSMAIL                                 = 'MASSMAIL';
-    public const TYPE_SVN_AUTH_CACHE_CHANGE                    = 'SVN_AUTH_CACHE_CHANGE';
-    public const TYPE_MOVE_FRS_FILE                            = 'MOVE_FRS_FILE';
-    public const TYPE_UPDATE_ALIASES                           = 'UPDATE_ALIASES';
-    public const TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES          = 'UPDATE_SVN_ACCESS_FILE';
+    public const TYPE_SYSTEM_CHECK                    = 'SYSTEM_CHECK';
+    public const TYPE_EDIT_SSH_KEYS                   = 'EDIT_SSH_KEYS';
+    public const TYPE_PROJECT_CREATE                  = 'PROJECT_CREATE';
+    public const TYPE_PROJECT_ACTIVE                  = 'PROJECT_ACTIVE';
+    public const TYPE_PROJECT_DELETE                  = 'PROJECT_DELETE';
+    public const TYPE_PROJECT_RENAME                  = 'PROJECT_RENAME';
+    public const TYPE_UGROUP_MODIFY                   = 'UGROUP_MODIFY';
+    public const TYPE_USER_ACTIVE_STATUS_CHANGE       = 'ACTIVE_USER_STATUS_CHANGE';
+    public const TYPE_USER_MODIFY                     = 'USER_MODIFY';
+    public const TYPE_USER_RENAME                     = 'USER_RENAME';
+    public const TYPE_MEMBERSHIP_CREATE               = 'MEMBERSHIP_CREATE';
+    public const TYPE_MEMBERSHIP_DELETE               = 'MEMBERSHIP_DELETE';
+    public const TYPE_MEMBERSHIP_MODIFY               = 'MEMBERSHIP_MODIFY';
+    public const TYPE_PROJECT_IS_PRIVATE              = 'PROJECT_IS_PRIVATE';
+    public const TYPE_ROOT_DAILY                      = 'ROOT_DAILY';
+    public const TYPE_COMPUTE_MD5SUM                  = 'COMPUTE_MD5SUM';
+    public const TYPE_MASSMAIL                        = 'MASSMAIL';
+    public const TYPE_MOVE_FRS_FILE                   = 'MOVE_FRS_FILE';
+    public const TYPE_UPDATE_ALIASES                  = 'UPDATE_ALIASES';
+    public const TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES = 'UPDATE_SVN_ACCESS_FILE';
 
     // Define status value (in sync with DB enum)
     public const STATUS_NONE    = 'NONE';

@@ -20,25 +20,12 @@
 
 namespace Tuleap\SVNCore\Cache;
 
-use Event;
-use EventManager;
 use Valid_UInt;
 
-class ParameterSaver
+readonly class ParameterSaver
 {
-    /**
-     * @var ParameterDao
-     */
-    private $dao;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    public function __construct(ParameterDao $dao, EventManager $event_manager)
+    public function __construct(private ParameterDao $dao)
     {
-        $this->dao           = $dao;
-        $this->event_manager = $event_manager;
     }
 
     /**
@@ -55,8 +42,6 @@ class ParameterSaver
         if ($is_saved === false) {
             throw new ParameterDataAccessException();
         }
-
-        $this->event_manager->processEvent(Event::SVN_AUTH_CACHE_CHANGE, []);
     }
 
     /**

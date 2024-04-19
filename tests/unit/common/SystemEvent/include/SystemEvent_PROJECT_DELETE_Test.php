@@ -18,8 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
-
 /**
  * Test for project delete system event
  */
@@ -64,10 +62,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'getEventManager',
             ])
             ->getMock();
-
-        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
-        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
-        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
         $project = $this->createMock(\Project::class);
@@ -150,10 +144,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
             ])
             ->getMock();
 
-        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
-        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
-        $evt->injectDependencies($svn_authentication_cache_invalidator);
-
         // The project
         $project = $this->createMock(\Project::class);
         $project->method('usesSVN')->willReturn(true);
@@ -234,10 +224,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'getEventManager',
             ])
             ->getMock();
-
-        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
-        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
-        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
         $project = $this->createMock(\Project::class);
@@ -320,10 +306,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
             ])
             ->getMock();
 
-        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
-        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
-        $evt->injectDependencies($svn_authentication_cache_invalidator);
-
         // The project
         $project = $this->createMock(\Project::class);
         $project->method('usesSVN')->willReturn(true);
@@ -404,10 +386,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'getEventManager',
             ])
             ->getMock();
-
-        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
-        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
-        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
         $project = $this->createMock(\Project::class);
@@ -490,10 +468,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
             ])
             ->getMock();
 
-        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
-        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
-        $evt->injectDependencies($svn_authentication_cache_invalidator);
-
         // The project
         $project = $this->createMock(\Project::class);
         $project->method('usesSVN')->willReturn(true);
@@ -574,10 +548,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'getEventManager',
             ])
             ->getMock();
-
-        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
-        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
-        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
         $project = $this->createMock(\Project::class);
