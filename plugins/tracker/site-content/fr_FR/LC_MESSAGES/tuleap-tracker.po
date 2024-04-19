@@ -1888,7 +1888,7 @@ msgid "Logs for %s"
 msgstr "Historique pour %s"
 
 msgid "Mail configuration"
-msgstr "Configuration des e-mail"
+msgstr "Configuration des courriels"
 
 msgid "Manage Field Usage"
 msgstr "Gérer l'utilisation des champs"
@@ -4387,7 +4387,7 @@ msgstr ""
 "option."
 
 msgid "Users having unsubscribed from the notifications"
-msgstr "Utilisateurs s'étant désabonné des notifications"
+msgstr "Utilisateurs s'étant désabonnés des notifications"
 
 msgid "Users mapping"
 msgstr "Mappage des utilisateurs"
