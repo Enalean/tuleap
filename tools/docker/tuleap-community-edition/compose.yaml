@@ -23,7 +23,6 @@ services:
       - tuleap-data:/data
     depends_on:
       - db
-      - redis
       - mailhog
     environment:
       - TULEAP_FQDN=${TULEAP_FQDN}
@@ -32,9 +31,6 @@ services:
       - SITE_ADMINISTRATOR_PASSWORD=${SITE_ADMINISTRATOR_PASSWORD}
       - DB_ADMIN_USER=root
       - DB_ADMIN_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - TULEAP_FPM_SESSION_MODE=redis
-      - TULEAP_REDIS_SERVER=redis
-      #- TULEAP_REDIS_PASSWORD=${REDIS_PASSWORD}
       - TULEAP_EMAIL_RELAYHOST=mailhog:1025
       - TULEAP_GIT_SSH_URL=ssh://gitolite@%server_name%:3939/
       #- TULEAP_GIT_SSH_URL=
@@ -48,13 +44,6 @@ services:
     volumes:
       - db80-data:/var/lib/mysql
 
-  # This is for test purpose only. It's not advised to run a production database as a docker container
-  redis:
-    image: redis:6
-    volumes:
-      - redis-data:/data
-    command: redis-server --appendonly yes --auto-aof-rewrite-percentage 20 --auto-aof-rewrite-min-size 200kb
-
   # This is for test purpose only. Mailhog is there to capture email traffic
   mailhog:
     image: mailhog/mailhog
@@ -62,4 +51,3 @@ services:
 volumes:
   tuleap-data:
   db80-data:
-  redis-data:
