@@ -19,35 +19,17 @@
   -->
 
 <template>
-    <div class="artidoc-app-container" v-if="!is_loading">
-        <div v-if="sections && sections.length > 0" class="document-layout">
-            <section class="tlp-framed document-content">
-                <document-content v-bind:sections="sections" />
-            </section>
-            <aside>
-                <div class="table-of-contents">
-                    <table-of-contents v-bind:sections="sections" />
-                </div>
-            </aside>
-        </div>
-        <div v-else-if="!sections" class="tlp-framed">
-            <no-access-state />
-        </div>
-        <div v-else class="tlp-framed">
-            <empty-state />
-        </div>
-    </div>
+    <document-view-skeleton v-if="is_loading" class="artidoc-app-container" />
+    <document-view v-else v-bind:sections="sections" class="artidoc-app-container" />
 </template>
 
 <script setup lang="ts">
 import type { Ref } from "vue";
 import { onMounted, ref } from "vue";
-import EmptyState from "@/views/EmptyState.vue";
+import DocumentView from "@/views/DocumentView.vue";
+import DocumentViewSkeleton from "@/views/DocumentViewSkeleton.vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { getAllSections } from "@/helpers/rest-querier";
-import DocumentContent from "@/views/DocumentContent.vue";
-import TableOfContents from "@/components/TableOfContents.vue";
-import NoAccessState from "@/views/NoAccessState.vue";
 
 const props = defineProps<{ item_id: number }>();
 
@@ -82,29 +64,5 @@ html {
 <style lang="scss" scoped>
 .artidoc-app-container {
     height: inherit;
-}
-
-.document-layout {
-    display: grid;
-    grid-template-columns: 80% 20%;
-    height: inherit;
-    border-top: 1px solid var(--tlp-neutral-normal-color);
-
-    .document-content {
-        padding: 1.5rem 3rem;
-        border-right: 1px solid var(--tlp-neutral-normal-color);
-        background-color: var(--tlp-white-color);
-    }
-
-    .table-of-contents {
-        position: sticky;
-        top: var(--header-height);
-        padding: 1.5rem 1rem 1rem;
-    }
-
-    aside {
-        height: 100%;
-        background: var(--tlp-fade-background-color);
-    }
 }
 </style>

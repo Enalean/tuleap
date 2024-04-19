@@ -1,0 +1,58 @@
+<!--
+  - Copyright (c) Enalean, 2024 - present. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
+  -->
+
+<template>
+    <div class="document-layout">
+        <section class="tlp-framed document-content">
+            <slot name="document-content"></slot>
+        </section>
+        <aside>
+            <div class="table-of-contents">
+                <slot name="table-of-contents"></slot>
+            </div>
+        </aside>
+    </div>
+</template>
+
+<style lang="scss" scoped>
+.document-layout {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    height: inherit;
+    border-top: 1px solid var(--tlp-neutral-normal-color);
+
+    .document-content {
+        padding: 1.5rem 3rem;
+        border-right: 1px solid var(--tlp-neutral-normal-color);
+        background-color: var(--tlp-white-color);
+    }
+
+    .table-of-contents {
+        position: sticky;
+        top: var(--header-height);
+        padding: 1.5rem 1rem 1rem;
+    }
+
+    aside {
+        height: 100%;
+        background: var(--tlp-fade-background-color);
+    }
+}
+</style>
