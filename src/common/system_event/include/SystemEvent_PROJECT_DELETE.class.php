@@ -21,25 +21,12 @@
  *
  */
 
-use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
-
 /**
 * System Event classes
 *
 */
 class SystemEvent_PROJECT_DELETE extends SystemEvent
 {
-    /**
-     * @var SVNAuthenticationCacheInvalidator
-     */
-    private $svn_authentication_cache_invalidator;
-
-    public function injectDependencies(
-        SVNAuthenticationCacheInvalidator $svn_authentication_cache_invalidator,
-    ) {
-        $this->svn_authentication_cache_invalidator = $svn_authentication_cache_invalidator;
-    }
-
     /**
      * Verbalize the parameters so they are readable and much user friendly in
      * notifications
@@ -52,7 +39,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
     public function verbalizeParameters($with_link)
     {
         $txt  = '';
-        $txt .= 'project: ' . $this->verbalizeProjectId($this->getIdFromParam($this->parameters), $with_link);
+        $txt .= 'project: ' . $this->verbalizeProjectId($this->getIdFromParam(), $with_link);
         return $txt;
     }
 
@@ -64,7 +51,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
     public function process()
     {
         // Check parameters
-        $groupId = $this->getIdFromParam($this->parameters);
+        $groupId = $this->getIdFromParam();
 
         $deleteState = true;
 
@@ -102,8 +89,6 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
                 $this->error('Could not mark all wiki attachments as deleted');
                 $deleteState = false;
             }
-
-            $this->svn_authentication_cache_invalidator->invalidateProjectCache($project);
 
             if ($deleteState) {
                 $this->done();

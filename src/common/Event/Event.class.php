@@ -419,11 +419,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SVN_UPDATE_HOOKS = 'svn_update_hooks';
 
     /**
-     * Event raised when an admin changes the SVN authentication cache parameters
-     */
-    public const SVN_AUTH_CACHE_CHANGE = 'svn_auth_cache_change';
-
-    /**
      * Event raised to see if additional info must be displayed in SVN homepage
      *
      * Paramters:

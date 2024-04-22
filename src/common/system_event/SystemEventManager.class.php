@@ -25,14 +25,8 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler;
 use Tuleap\SVNCore\Event\UpdateProjectAccessFileSystemEvent;
-use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
-use Tuleap\System\ApacheServiceControl;
-use Tuleap\System\ServiceControl;
 use Tuleap\SystemEvent\SystemEventInstrumentation;
-use Tuleap\SystemEvent\SystemEventSVNAuthenticationCacheRefresh;
-use Tuleap\Redis;
 use Tuleap\SystemEvent\SystemEventUserActiveStatusChange;
-use TuleapCfg\Command\ProcessFactory;
 
 /**
 * Manager of system events
@@ -58,7 +52,6 @@ class SystemEventManager
             Event::USER_RENAME,
             Event::COMPUTE_MD5SUM,
             Event::MASSMAIL,
-            Event::SVN_AUTH_CACHE_CHANGE,
             Event::UPDATE_ALIASES,
             'approve_pending_project',
             ProjectStatusUpdate::NAME,
@@ -153,7 +146,6 @@ class SystemEventManager
      */
     public function addSystemEvent($event, $params)
     {
-        //$event = constant(strtoupper($event));
         if ($event instanceof ProjectStatusUpdate) {
             match ($event->status) {
                 Project::STATUS_ACTIVE => $this->createEvent(
@@ -161,11 +153,7 @@ class SystemEventManager
                     $event->project->getID(),
                     SystemEvent::PRIORITY_LOW
                 ),
-                Project::STATUS_SUSPENDED => $this->createEvent(
-                    SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH,
-                    $event->project->getID(),
-                    SystemEvent::PRIORITY_LOW
-                ),
+                Project::STATUS_SUSPENDED => null, // Nothing to do
                 Project::STATUS_DELETED => $this->createEvent(
                     SystemEvent::TYPE_PROJECT_DELETE,
                     $event->project->getID(),
@@ -312,14 +300,6 @@ class SystemEventManager
                 );
                 break;
 
-            case Event::SVN_AUTH_CACHE_CHANGE:
-                $this->createEvent(
-                    SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE,
-                    '',
-                    SystemEvent::PRIORITY_MEDIUM
-                );
-                break;
-
             case Event::UPDATE_ALIASES:
                 $this->createEvent(SystemEvent::TYPE_UPDATE_ALIASES, '', SystemEvent::PRIORITY_HIGH);
                 break;
@@ -373,8 +353,6 @@ class SystemEventManager
         switch ($type) {
             case SystemEvent::TYPE_MASSMAIL:
                 return \Tuleap\SystemEvent\Massmail::class;
-            case SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH:
-                return SystemEventSVNAuthenticationCacheRefresh::class;
             case SystemEvent::TYPE_PROJECT_ACTIVE:
                 return \Tuleap\SystemEvent\SystemEventProjectActive::class;
             case SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE:
@@ -467,10 +445,6 @@ class SystemEventManager
                 $klass        = $this->getClassForType($row['type']);
                 $klass_params = [new UpdateProjectAccessFilesScheduler($this)];
                 break;
-            case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
-                $klass        = $this->getClassForType($row['type']);
-                $klass_params = [Backend::instance(Backend::SVN)];
-                break;
             case SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES:
                 $klass        = $this->getClassForType($row['type']);
                 $klass_params = [ProjectManager::instance(), EventManager::instance()];
@@ -491,12 +465,6 @@ class SystemEventManager
                     ),
                     $ugroup_manager,
                 ];
-                break;
-            case SystemEvent::TYPE_PROJECT_ACTIVE:
-            case SystemEvent::TYPE_PROJECT_DELETE:
-            case SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH:
-                $klass        = $this->getClassForType($row['type']);
-                $klass_params = [$this->getSVNAuthenticationCacheInvalidator()];
                 break;
 
             default:
@@ -519,18 +487,6 @@ class SystemEventManager
             call_user_func_array([$sysevent, 'injectDependencies'], $klass_params);
         }
         return $sysevent;
-    }
-
-    /**
-     * @return SVNAuthenticationCacheInvalidator
-     */
-    private function getSVNAuthenticationCacheInvalidator()
-    {
-        $redis_client = null;
-        if (Redis\ClientFactory::canClientBeBuiltFromForgeConfig()) {
-            $redis_client = Redis\ClientFactory::fromForgeConfig();
-        }
-        return new SVNAuthenticationCacheInvalidator(new ApacheServiceControl(new ServiceControl(), new ProcessFactory()), $redis_client);
     }
 
     /**

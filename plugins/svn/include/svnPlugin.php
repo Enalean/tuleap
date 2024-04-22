@@ -688,7 +688,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return new UpdateTuleapPMParamsController(
             new ParameterSaver(
                 new ParameterDao(),
-                EventManager::instance()
             )
         );
     }
