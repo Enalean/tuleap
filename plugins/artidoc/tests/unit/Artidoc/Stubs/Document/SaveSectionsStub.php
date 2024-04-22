@@ -20,25 +20,38 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc;
+namespace Tuleap\Artidoc\Stubs\Document;
 
-use RestBase;
+use Tuleap\Artidoc\Document\SaveSections;
 
-final class ArtidocTest extends RestBase
+final class SaveSectionsStub implements SaveSections
 {
-    public function testOptionsDocument(): void
-    {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/123'));
+    /**
+     * @var array<int, int[]>
+     */
+    private array $saved = [];
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
+    private function __construct()
+    {
     }
 
-    public function testOptionsSections(): void
+    public static function build(): self
     {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/123/sections'));
+        return new self();
+    }
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
+    public function save(int $id, array $artifact_ids): void
+    {
+        $this->saved[$id] = $artifact_ids;
+    }
+
+    public function isSaved(int $id): bool
+    {
+        return isset($this->saved[$id]);
+    }
+
+    public function getSavedForId(int $id): array
+    {
+        return $this->saved[$id];
     }
 }

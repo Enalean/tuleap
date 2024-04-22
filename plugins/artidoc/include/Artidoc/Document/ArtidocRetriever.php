@@ -44,7 +44,7 @@ final class ArtidocRetriever implements RetrieveArtidoc
     public function retrieveArtidoc(int $id, \PFUser $user): Ok|Err
     {
         $row = $this->dao->searchById($id);
-        if (! $row) {
+        if ($row === null || count($row) === 0) {
             return Result::err(Fault::fromMessage('Unable to find document'));
         }
 

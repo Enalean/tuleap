@@ -43,6 +43,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\RESTLogger;
 use UserManager;
 
@@ -122,7 +123,7 @@ final class ArtidocResource extends AuthenticatedResource
      */
     public function optionsSections(int $id): void
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPut();
     }
 
     /**
@@ -160,6 +161,43 @@ final class ArtidocResource extends AuthenticatedResource
             );
     }
 
+    /**
+     * Set sections
+     *
+     * Set sections of an artidoc document
+     *
+     * @url    PUT {id}/sections
+     * @access hybrid
+     *
+     * @param int $id Id of the document
+     * @param array $sections {@from body} {@type \Tuleap\Artidoc\REST\v1\ArtidocPUTSectionRepresentation}
+     *
+     * @status 200
+     * @throws RestException
+     */
+    public function putSections(int $id, array $sections): void
+    {
+        $this->checkAccess();
+
+        $this->getPutHandler()
+            ->handle($id, $sections, UserManager::instance()->getCurrentUser())
+            ->match(
+                static function () {
+                    // nothing to do
+                },
+                function (Fault $fault) {
+                    Fault::writeToLogger($fault, RESTLogger::getLogger());
+                    if ($fault instanceof UserCannotReadSectionFault) {
+                        throw new I18NRestException(
+                            403,
+                            dgettext('tuleap-artidoc', 'Unable to set the sections of the document, at least one of the submitted section does not exist.')
+                        );
+                    }
+                    throw new RestException(404);
+                }
+            );
+    }
+
     private function getBuilder(): PaginatedArtidocSectionRepresentationCollectionBuilder
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
@@ -181,5 +219,31 @@ final class ArtidocResource extends AuthenticatedResource
         );
 
         return new PaginatedArtidocSectionRepresentationCollectionBuilder($retriever, $dao, $transformer);
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function getPutHandler(): PUTSectionsHandler
+    {
+        $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
+        if (! $plugin) {
+            throw new RestException(404);
+        }
+
+        $dao       = new ArtidocDao();
+        $retriever = new ArtidocRetriever(
+            \ProjectManager::instance(),
+            $dao,
+            new Docman_ItemFactory(),
+            new DocumentServiceFromAllowedProjectRetriever($plugin),
+        );
+
+        $transformer = new RawSectionsToRepresentationTransformer(
+            new \Tracker_ArtifactDao(),
+            \Tracker_ArtifactFactory::instance(),
+        );
+
+        return new PUTSectionsHandler($retriever, $transformer, $dao);
     }
 }
