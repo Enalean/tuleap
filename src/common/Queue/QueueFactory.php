@@ -46,17 +46,6 @@ class QueueFactory
      */
     public function getPersistentQueue(string $queue_name, string $favor = ''): PersistentQueue
     {
-        return new PersistentQueueNoTransactionWrapper(
-            $this->getQueue($queue_name, $favor),
-            $this->transaction_checker,
-        );
-    }
-
-    /**
-     * @throws NoQueueSystemAvailableException
-     */
-    private function getQueue(string $queue_name, string $favor): PersistentQueue
-    {
         if ((int) ForgeConfig::getFeatureFlag(DBPersistentQueue::FEATURE_FLAG) === 1) {
             return new DBPersistentQueue(
                 $queue_name,
@@ -66,18 +55,21 @@ class QueueFactory
             );
         }
         if (RedisClientFactory::canClientBeBuiltFromForgeConfig()) {
-            return new Redis\RedisPersistentQueue(
-                $this->logger,
-                new BackOffDelayFailedMessage(
+            return new PersistentQueueNoTransactionWrapper(
+                new Redis\RedisPersistentQueue(
                     $this->logger,
-                    /**
-                     * @psalm-param positive-int|0 $time_to_sleep
-                     */
-                    static function (int $time_to_sleep): void {
-                        sleep($time_to_sleep);
-                    }
+                    new BackOffDelayFailedMessage(
+                        $this->logger,
+                        /**
+                         * @psalm-param positive-int|0 $time_to_sleep
+                         */
+                        static function (int $time_to_sleep): void {
+                            sleep($time_to_sleep);
+                        }
+                    ),
+                    $queue_name,
                 ),
-                $queue_name,
+                $this->transaction_checker
             );
         }
         if ($favor === self::REDIS) {
