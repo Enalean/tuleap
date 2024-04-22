@@ -103,6 +103,7 @@ final class Tuleap
         $forge_upgrade = new ForgeUpgrade(
             DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
             new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]),
+            new \Tuleap\DB\DatabaseUUIDV7Factory(),
         );
         $forge_upgrade->recordOnlyCore();
 

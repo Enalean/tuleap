@@ -266,6 +266,7 @@ $site_admin_warnings = new \Tuleap\Admin\SiteAdminWarnings(
         new \Tuleap\ForgeUpgrade\ForgeUpgrade(
             \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
             new \Psr\Log\NullLogger(),
+            new \Tuleap\DB\DatabaseUUIDV7Factory(),
         )
     ),
     new FilteredOutboundHTTPResponseAlerterDAO()

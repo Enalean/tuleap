@@ -193,7 +193,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         $plugin_manager = new PluginManager(
             $plugin_factory,
             new SiteCache($this->logger),
-            new ForgeUpgradeConfig(new ForgeUpgrade($this->createMock(\PDO::class), new NullLogger())),
+            new ForgeUpgradeConfig(new ForgeUpgrade($this->createMock(\PDO::class), new NullLogger(), new \Tuleap\DB\DatabaseUUIDV7Factory())),
             \Tuleap\Markdown\CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
         );
 

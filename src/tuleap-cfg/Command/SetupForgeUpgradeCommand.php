@@ -56,6 +56,7 @@ final class SetupForgeUpgradeCommand extends Command
                     LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
                 ],
             ),
+            new \Tuleap\DB\DatabaseUUIDV7Factory(),
         );
         $forge_upgrade->recordOnlyCore();
         return 0;

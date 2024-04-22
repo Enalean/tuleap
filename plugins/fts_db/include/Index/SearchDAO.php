@@ -76,7 +76,7 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
     }
 
     /**
-     * @psalm-return int[]
+     * @psalm-return string[]
      */
     private function searchMatchingEntries(PlaintextItemToIndex|IndexedItemsToRemove $item): array
     {
@@ -90,9 +90,10 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
 
     private function createNewEntry(PlaintextItemToIndex $item): void
     {
-        $id                 = $this->getDB()->insertReturnId(
+        $id = $this->uuid_factory->buildUUIDBytes();
+        $this->getDB()->insert(
             'plugin_fts_db_search',
-            ['type' => $item->type, 'project_id' => $item->project_id, 'content' => $item->content]
+            ['id' => $id, 'type' => $item->type, 'project_id' => $item->project_id, 'content' => $item->content]
         );
         $metadata_to_insert = [];
         foreach ($item->metadata as $name => $value) {
@@ -136,7 +137,7 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
      */
     private function searchMatchingResults(EasyStatement $match_statement, int $limit, int $offset): array
     {
-        /** @psalm-var array{id: int, type: non-empty-string}[] $rows */
+        /** @psalm-var array{id: string, type: non-empty-string}[] $rows */
         $rows = $this->getDB()->safeQuery(
             "SELECT plugin_fts_db_search.id, plugin_fts_db_search.type
                 FROM plugin_fts_db_search
@@ -147,7 +148,7 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
         );
 
         $search_id_matches = array_map(
-            static fn (array $row): int => $row['id'],
+            static fn (array $row): string => $row['id'],
             $rows
         );
 
@@ -155,7 +156,7 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
             'plugin_fts_db_metadata.search_id IN (?*)',
             $search_id_matches,
         );
-        /** @psalm-var array<int,array{name: non-empty-string, value: string}[]> $metadata_rows_by_id */
+        /** @psalm-var array<string,array{name: non-empty-string, value: string}[]> $metadata_rows_by_id */
         $metadata_rows_by_id = $this->getDB()->safeQuery(
             "SELECT plugin_fts_db_metadata.search_id, plugin_fts_db_metadata.name, plugin_fts_db_metadata.value
             FROM plugin_fts_db_metadata
@@ -194,7 +195,7 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
     }
 
     /**
-     * @param int[] $ids_to_remove
+     * @param string[] $ids_to_remove
      */
     private function deleteIndexedItemsFromIDs(array $ids_to_remove): void
     {

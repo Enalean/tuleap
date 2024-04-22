@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue\DB;
 
-use Ramsey\Uuid\Rfc4122\UuidV7;
-use Ramsey\Uuid\UuidInterface;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\UUID;
 use Tuleap\Option\Option;
 
 class DBPersistentQueueDAO extends DataAccessObject
@@ -42,7 +41,7 @@ class DBPersistentQueueDAO extends DataAccessObject
 
         $this->getDB()->run(
             $sql,
-            UuidV7::uuid7($current_time)->getBytes(),
+            $this->uuid_factory->buildUUIDBytesFromTime($current_time),
             $queue_name,
             $topic,
             $payload,
@@ -51,7 +50,7 @@ class DBPersistentQueueDAO extends DataAccessObject
         );
     }
 
-    public function incrementNumberOfProcessingAttemptsOfMessage(UuidInterface $message_id): void
+    public function incrementNumberOfProcessingAttemptsOfMessage(UUID $message_id): void
     {
         $this->getDB()->run(
             'UPDATE async_events SET nb_added_in_queue = nb_added_in_queue + 1 WHERE id = ?',
@@ -60,7 +59,7 @@ class DBPersistentQueueDAO extends DataAccessObject
     }
 
     /**
-     * @psalm-return array{id: UuidInterface, topic: string, payload: string, enqueue_timestamp: positive-int, enqueue_timestamp_microsecond: positive-int, nb_added_in_queue: positive-int}|null
+     * @psalm-return array{id: UUID, topic: string, payload: string, enqueue_timestamp: positive-int, enqueue_timestamp_microsecond: positive-int, nb_added_in_queue: positive-int}|null
      */
     public function retrieveAMessageToProcess(string $queue_name): ?array
     {
@@ -76,11 +75,11 @@ class DBPersistentQueueDAO extends DataAccessObject
         if ($row === null) {
             return null;
         }
-        $row['id'] = UuidV7::fromBytes($row['id']);
+        $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
         return $row;
     }
 
-    public function deleteMessage(UuidInterface $message_id): void
+    public function deleteMessage(UUID $message_id): void
     {
         $this->getDB()->run('DELETE FROM async_events WHERE id = ?', $message_id->getBytes());
     }

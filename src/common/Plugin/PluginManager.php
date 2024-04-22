@@ -74,6 +74,7 @@ class PluginManager implements RetrieveEnabledPlugins // phpcs:ignore PSR1.Class
                     new \Tuleap\ForgeUpgrade\ForgeUpgrade(
                         \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
                         new \Psr\Log\NullLogger(),
+                        new \Tuleap\DB\DatabaseUUIDV7Factory(),
                     )
                 ),
                 CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())

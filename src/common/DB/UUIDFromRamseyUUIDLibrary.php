@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-CREATE TABLE IF NOT EXISTS plugin_fts_db_search (
-    id BINARY(16) NOT NULL PRIMARY KEY,
-    type VARCHAR(255) NOT NULL,
-    project_id INT(11),
-    content MEDIUMTEXT NOT NULL,
-    INDEX idx_type(type),
-    INDEX idx_project(project_id),
-    FULLTEXT idx_content(content)
-) ENGINE=InnoDB;
+declare(strict_types=1);
 
-CREATE TABLE IF NOT EXISTS plugin_fts_db_metadata (
-    search_id BINARY(16) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    value VARCHAR(255) NOT NULL,
-    INDEX idx_key_value(name, value),
-    UNIQUE KEY idx_unique_search_id_name(search_id, name)
-) ENGINE=InnoDB;
+namespace Tuleap\DB;
+
+use Ramsey\Uuid\UuidInterface;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class UUIDFromRamseyUUIDLibrary implements UUID
+{
+    public function __construct(private UuidInterface $uuid)
+    {
+    }
+
+    public function getBytes(): string
+    {
+        return $this->uuid->getBytes();
+    }
+
+    public function toString(): string
+    {
+        return $this->uuid->toString();
+    }
+}

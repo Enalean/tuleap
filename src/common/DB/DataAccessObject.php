@@ -26,17 +26,15 @@ use ParagonIE\EasyDB\EasyDB;
 
 abstract class DataAccessObject
 {
-    /**
-     * @var DBConnection
-     */
-    private $db_connection;
+    private readonly DBConnection $db_connection;
+    public readonly DatabaseUUIDFactory $uuid_factory;
 
-    public function __construct(?DBConnection $db_connection = null)
-    {
-        $this->db_connection = $db_connection;
-        if ($this->db_connection === null) {
-            $this->db_connection = DBFactory::getMainTuleapDBConnection();
-        }
+    public function __construct(
+        ?DBConnection $db_connection = null,
+        ?DatabaseUUIDFactory $database_uuid_factory = null,
+    ) {
+        $this->db_connection = $db_connection ?? DBFactory::getMainTuleapDBConnection();
+        $this->uuid_factory  = $database_uuid_factory ?? new DatabaseUUIDV7Factory();
     }
 
     final protected function getDB(): EasyDB
