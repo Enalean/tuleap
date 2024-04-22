@@ -58,4 +58,10 @@ li {
     font-size: 0.9rem;
     font-weight: 600;
 }
+
+@media (max-width: 1024px) {
+    ol {
+        height: fit-content;
+    }
+}
 </style>

@@ -24,35 +24,58 @@
             <slot name="document-content"></slot>
         </section>
         <aside>
-            <div class="table-of-contents">
+            <div class="tlp-framed table-of-contents">
                 <slot name="table-of-contents"></slot>
             </div>
         </aside>
     </div>
 </template>
 
+<script setup lang="ts"></script>
 <style lang="scss" scoped>
 .document-layout {
     display: grid;
     grid-template-columns: 80% 20%;
     height: inherit;
     border-top: 1px solid var(--tlp-neutral-normal-color);
+}
+
+.document-content {
+    border-right: 1px solid var(--tlp-neutral-normal-color);
+    background-color: var(--tlp-white-color);
+}
+
+aside {
+    height: 100%;
+    background: var(--tlp-fade-background-color);
+}
+
+.table-of-contents {
+    position: sticky;
+    top: var(--header-height);
+    padding: var(--tlp-medium-spacing);
+    padding-top: var(--tlp-large-spacing);
+}
+
+@media (max-width: 1024px) {
+    .document-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: max-content auto;
+        height: inherit;
+    }
 
     .document-content {
-        padding: 1.5rem 3rem;
-        border-right: 1px solid var(--tlp-neutral-normal-color);
-        background-color: var(--tlp-white-color);
+        border-right: 0;
     }
 
     .table-of-contents {
-        position: sticky;
-        top: var(--header-height);
-        padding: 1.5rem 1rem 1rem;
+        top: 0;
     }
 
     aside {
-        height: 100%;
-        background: var(--tlp-fade-background-color);
+        order: -1;
+        height: fit-content;
+        border-bottom: 1px solid var(--tlp-neutral-normal-color);
     }
 }
 </style>
