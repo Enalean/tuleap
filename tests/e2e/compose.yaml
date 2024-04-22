@@ -14,7 +14,6 @@ services:
       - TULEAP_EMAIL_TRANSPORT=smtp
       - TULEAP_EMAIL_RELAYHOST=mailhog:1025
       - TULEAP_FPM_SESSION_MODE=redis
-      - TULEAP_REDIS_SERVER=redis
       - TULEAP_SRC=/usr/share/tuleap
     volumes:
       - .:/usr/share/tuleap:ro
@@ -22,15 +21,9 @@ services:
       - tuleap
     depends_on:
       - mailhog
-      - redis
 
   mailhog:
     image: ${DOCKER_REGISTRY:-docker.io}/mailhog/mailhog:v1.0.1
-    networks:
-      - tuleap
-
-  redis:
-    image: ${DOCKER_REGISTRY:-docker.io}/redis:7.0.2-alpine
     networks:
       - tuleap
 
