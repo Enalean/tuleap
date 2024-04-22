@@ -28,35 +28,40 @@ use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\Permission\UserPermissionsOnItems;
 
-final readonly class RetrieveUserPermissionOnTrackersStub implements RetrieveUserPermissionOnTrackers
+final class RetrieveUserPermissionOnTrackersStub implements RetrieveUserPermissionOnTrackers
 {
     /**
-     * @param list<int> $has_permission
+     * @var array<string, list<int>>
      */
-    private function __construct(private array $has_permission)
+    private array $has_permission_on = [];
+
+    private function __construct()
     {
     }
 
-    /**
-     * @param list<int> $tracker_ids
-     */
-    public static function buildWithPermissionOn(array $tracker_ids): self
+    public static function build(): self
     {
-        return new self($tracker_ids);
+        return new self();
     }
 
-    public static function buildWithNoPermissions(): self
+    public function withPermissionOn(array $tracker_ids, TrackerPermissionType $permission): self
     {
-        return new self([]);
+        $this->has_permission_on[$permission->name] = $tracker_ids;
+
+        return $this;
     }
 
-    public function retrieveUserPermissionOnTrackers(PFUser $user, array $trackers): UserPermissionsOnItems
+    public function retrieveUserPermissionOnTrackers(PFUser $user, array $trackers, TrackerPermissionType $permission): UserPermissionsOnItems
     {
-        return new UserPermissionsOnItems(
-            $user,
-            TrackerPermissionType::PERMISSION_VIEW,
-            array_filter($trackers, fn(Tracker $tracker) => in_array($tracker->getId(), $this->has_permission)),
-            array_filter($trackers, fn(Tracker $tracker) => ! in_array($tracker->getId(), $this->has_permission)),
-        );
+        if (isset($this->has_permission_on[$permission->name])) {
+            return new UserPermissionsOnItems(
+                $user,
+                $permission,
+                array_filter($trackers, fn(Tracker $tracker) => in_array($tracker->getId(), $this->has_permission_on[$permission->name])),
+                array_filter($trackers, fn(Tracker $tracker) => ! in_array($tracker->getId(), $this->has_permission_on[$permission->name])),
+            );
+        }
+
+        return new UserPermissionsOnItems($user, $permission, [], $trackers);
     }
 }

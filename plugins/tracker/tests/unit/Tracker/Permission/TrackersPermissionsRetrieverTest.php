@@ -32,7 +32,9 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\include\CheckUserCanAccessProjectStub;
+use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Permission\SearchUserGroupsPermissionOnFieldsStub;
@@ -52,8 +54,9 @@ final class TrackersPermissionsRetrieverTest extends TestCase
     {
         $permissions = new TrackersPermissionsRetriever(
             SearchUserGroupsPermissionOnFieldsStub::buildEmpty(),
-            SearchUserGroupsPermissionOnTrackersStub::buildEmpty(),
+            SearchUserGroupsPermissionOnTrackersStub::build(),
             CheckUserCanAccessProjectStub::build(),
+            EventDispatcherStub::withIdentityCallback(),
         );
         ForgeConfig::setFeatureFlag(TrackersPermissionsRetriever::FEATURE_FLAG, 0);
         self::assertFalse($permissions->isEnabled());
@@ -66,8 +69,9 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         ForgeConfig::setFeatureFlag(TrackersPermissionsRetriever::FEATURE_FLAG, 0);
         $permissions = new TrackersPermissionsRetriever(
             SearchUserGroupsPermissionOnFieldsStub::buildEmpty(),
-            SearchUserGroupsPermissionOnTrackersStub::buildEmpty(),
+            SearchUserGroupsPermissionOnTrackersStub::build(),
             CheckUserCanAccessProjectStub::build(),
+            EventDispatcherStub::withIdentityCallback(),
         );
         self::expectException(LogicException::class);
         $permissions->retrieveUserPermissionOnFields(UserTestBuilder::buildWithDefaults(), [], FieldPermissionType::PERMISSION_READ);
@@ -84,39 +88,15 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         $field4      = IntFieldBuilder::anIntField(304)->inTracker($tracker)->build();
         $permissions = new TrackersPermissionsRetriever(
             SearchUserGroupsPermissionOnFieldsStub::buildWithResults([301, 303, 304]),
-            SearchUserGroupsPermissionOnTrackersStub::buildEmpty(),
+            SearchUserGroupsPermissionOnTrackersStub::build(),
             CheckUserCanAccessProjectStub::build(),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         $user->method('getUgroups')->willReturn([]);
         $result = $permissions->retrieveUserPermissionOnFields($user, [$field1, $field2, $field3, $field4], FieldPermissionType::PERMISSION_READ);
         self::assertEqualsCanonicalizing([$field1, $field3, $field4], $result->allowed);
         self::assertEqualsCanonicalizing([$field2], $result->not_allowed);
-    }
-
-    public function testItReturnsAllowedTrackers(): void
-    {
-        $user        = $this->createMock(PFUser::class);
-        $project     = ProjectTestBuilder::aProject()->withId(101)->build();
-        $tracker1    = $this->createMock(Tracker::class);
-        $tracker2    = $this->createMock(Tracker::class);
-        $permissions = new TrackersPermissionsRetriever(
-            SearchUserGroupsPermissionOnFieldsStub::buildEmpty(),
-            SearchUserGroupsPermissionOnTrackersStub::buildWithResults([301]),
-            CheckUserCanAccessProjectStub::build(),
-        );
-        $user->method('getUgroups')->willReturn([]);
-        $user->method('getId')->willReturn(102);
-        $tracker1->method('getId')->willReturn(301);
-        $tracker1->method('getProject')->willReturn($project);
-        $tracker1->method('userIsAdmin')->willReturn(false);
-        $tracker2->method('getId')->willReturn(302);
-        $tracker2->method('getProject')->willReturn($project);
-        $tracker2->method('userIsAdmin')->willReturn(false);
-
-        $result = $permissions->retrieveUserPermissionOnTrackers($user, [$tracker1, $tracker2]);
-        self::assertEqualsCanonicalizing([$tracker1], $result->allowed);
-        self::assertEqualsCanonicalizing([$tracker2], $result->not_allowed);
     }
 
     public static function provideSpecialUsers(): iterable
@@ -141,8 +121,9 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         ];
         $permissions = new TrackersPermissionsRetriever(
             SearchUserGroupsPermissionOnFieldsStub::buildEmpty(),
-            SearchUserGroupsPermissionOnTrackersStub::buildEmpty(),
+            SearchUserGroupsPermissionOnTrackersStub::build(),
             CheckUserCanAccessProjectStub::build(),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         $result = $permissions->retrieveUserPermissionOnFields($user, $fields, FieldPermissionType::PERMISSION_READ);
@@ -150,24 +131,138 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         self::assertEmpty($result->not_allowed);
     }
 
-    public function testItAllowAllTrackersIfUserIsAdmin(): void
+    public function testItReturnsAllowedTrackersView(): void
+    {
+        $user        = $this->createMock(PFUser::class);
+        $project     = ProjectTestBuilder::aProject()->withId(101)->build();
+        $tracker1    = $this->createMock(Tracker::class);
+        $tracker2    = $this->createMock(Tracker::class);
+        $permissions = new TrackersPermissionsRetriever(
+            SearchUserGroupsPermissionOnFieldsStub::buildEmpty(),
+            SearchUserGroupsPermissionOnTrackersStub::build()->withViewResults([301]),
+            CheckUserCanAccessProjectStub::build(),
+            EventDispatcherStub::withIdentityCallback(),
+        );
+        $user->method('getUgroups')->willReturn([]);
+        $user->method('getId')->willReturn(102);
+        $tracker1->method('getId')->willReturn(301);
+        $tracker1->method('getProject')->willReturn($project);
+        $tracker1->method('userIsAdmin')->willReturn(false);
+        $tracker2->method('getId')->willReturn(302);
+        $tracker2->method('getProject')->willReturn($project);
+        $tracker2->method('userIsAdmin')->willReturn(false);
+
+        $result = $permissions->retrieveUserPermissionOnTrackers($user, [$tracker1, $tracker2], TrackerPermissionType::PERMISSION_VIEW);
+        self::assertEqualsCanonicalizing([$tracker1], $result->allowed);
+        self::assertEqualsCanonicalizing([$tracker2], $result->not_allowed);
+    }
+
+    public static function provideTrackerPermissionTypes(): iterable
+    {
+        yield 'Permission VIEW' => [TrackerPermissionType::PERMISSION_VIEW];
+        yield 'Permission SUBMIT' => [TrackerPermissionType::PERMISSION_SUBMIT];
+    }
+
+    /**
+     * @dataProvider provideTrackerPermissionTypes
+     */
+    public function testItAllowAllTrackersIfUserIsAdmin(TrackerPermissionType $permission): void
     {
         $permissions = new TrackersPermissionsRetriever(
             SearchUserGroupsPermissionOnFieldsStub::buildEmpty(),
-            SearchUserGroupsPermissionOnTrackersStub::buildEmpty(),
+            SearchUserGroupsPermissionOnTrackersStub::build(),
             CheckUserCanAccessProjectStub::build(),
+            EventDispatcherStub::withIdentityCallback(),
         );
         $tracker     = $this->createMock(Tracker::class);
         $trackers    = [$tracker, $tracker, $tracker, $tracker, $tracker];
         $user        = $this->createMock(PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
         $user->method('getUgroups')->willReturn([]);
         $user->method('getId')->willReturn(101);
         $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->withId(101)->build());
         $tracker->method('userIsAdmin')->with($user)->willReturn(true);
         $tracker->method('getId')->willReturn(301);
 
-        $result = $permissions->retrieveUserPermissionOnTrackers($user, $trackers);
+        $result = $permissions->retrieveUserPermissionOnTrackers($user, $trackers, $permission);
         self::assertEqualsCanonicalizing($trackers, $result->allowed);
         self::assertEmpty($result->not_allowed);
+    }
+
+    public function testItReturnsNotAllowedTrackersSubmitIfUserAnonymous(): void
+    {
+        $user        = $this->createMock(PFUser::class);
+        $tracker1    = $this->createMock(Tracker::class);
+        $tracker2    = $this->createMock(Tracker::class);
+        $permissions = new TrackersPermissionsRetriever(
+            SearchUserGroupsPermissionOnFieldsStub::buildEmpty(),
+            SearchUserGroupsPermissionOnTrackersStub::build(),
+            CheckUserCanAccessProjectStub::build(),
+            EventDispatcherStub::withIdentityCallback(),
+        );
+        $user->method('isAnonymous')->willReturn(true);
+
+        $result = $permissions->retrieveUserPermissionOnTrackers($user, [$tracker1, $tracker2], TrackerPermissionType::PERMISSION_SUBMIT);
+        self::assertEmpty($result->allowed);
+        self::assertEqualsCanonicalizing([$tracker1, $tracker2], $result->not_allowed);
+    }
+
+    public function testItReturnsAllowedTrackersSubmit(): void
+    {
+        $user        = $this->createMock(PFUser::class);
+        $project     = ProjectTestBuilder::aProject()->withId(101)->build();
+        $tracker1    = $this->createMock(Tracker::class);
+        $tracker2    = $this->createMock(Tracker::class);
+        $permissions = new TrackersPermissionsRetriever(
+            SearchUserGroupsPermissionOnFieldsStub::buildEmpty(),
+            SearchUserGroupsPermissionOnTrackersStub::build()->withSubmitResults([301]),
+            CheckUserCanAccessProjectStub::build(),
+            EventDispatcherStub::withIdentityCallback(),
+        );
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getUgroups')->willReturn([]);
+        $user->method('getId')->willReturn(102);
+        $tracker1->method('getId')->willReturn(301);
+        $tracker1->method('getProject')->willReturn($project);
+        $tracker1->method('userIsAdmin')->willReturn(false);
+        $tracker2->method('getId')->willReturn(302);
+        $tracker2->method('getProject')->willReturn($project);
+        $tracker2->method('userIsAdmin')->willReturn(false);
+
+        $result = $permissions->retrieveUserPermissionOnTrackers($user, [$tracker1, $tracker2], TrackerPermissionType::PERMISSION_SUBMIT);
+        self::assertEqualsCanonicalizing([$tracker1], $result->allowed);
+        self::assertEqualsCanonicalizing([$tracker2], $result->not_allowed);
+    }
+
+    public function testItReturnsAllowedTrackersSubmitFilteredByEvent(): void
+    {
+        $user        = $this->createMock(PFUser::class);
+        $project     = ProjectTestBuilder::aProject()->withId(101)->build();
+        $tracker1    = $this->createMock(Tracker::class);
+        $tracker2    = $this->createMock(Tracker::class);
+        $permissions = new TrackersPermissionsRetriever(
+            SearchUserGroupsPermissionOnFieldsStub::buildEmpty(),
+            SearchUserGroupsPermissionOnTrackersStub::build()->withSubmitResults([301, 302]),
+            CheckUserCanAccessProjectStub::build(),
+            EventDispatcherStub::withCallback(function (CanSubmitNewArtifact $event) {
+                if ($event->getTracker()->getId() !== 301) {
+                    $event->disableArtifactSubmission();
+                }
+                return $event;
+            }),
+        );
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getUgroups')->willReturn([]);
+        $user->method('getId')->willReturn(102);
+        $tracker1->method('getId')->willReturn(301);
+        $tracker1->method('getProject')->willReturn($project);
+        $tracker1->method('userIsAdmin')->willReturn(false);
+        $tracker2->method('getId')->willReturn(302);
+        $tracker2->method('getProject')->willReturn($project);
+        $tracker2->method('userIsAdmin')->willReturn(false);
+
+        $result = $permissions->retrieveUserPermissionOnTrackers($user, [$tracker1, $tracker2], TrackerPermissionType::PERMISSION_SUBMIT);
+        self::assertEqualsCanonicalizing([$tracker1], $result->allowed);
+        self::assertEqualsCanonicalizing([$tracker2], $result->not_allowed);
     }
 }

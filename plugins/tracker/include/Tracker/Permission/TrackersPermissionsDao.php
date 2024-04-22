@@ -44,7 +44,7 @@ final class TrackersPermissionsDao extends DataAccessObject implements SearchUse
         return array_map(static fn(array $row) => (int) $row['field_id'], $results);
     }
 
-    public function searchUserGroupsPermissionOnTrackers(array $user_groups_id, array $trackers_id): array
+    public function searchUserGroupsViewPermissionOnTrackers(array $user_groups_id, array $trackers_id): array
     {
         $ugroups_statement   = EasyStatement::open()->in('permissions.ugroup_id IN (?*)', $user_groups_id);
         $trackers_statement  = EasyStatement::open()->in('tracker.id IN (?*)', $trackers_id);
@@ -71,6 +71,34 @@ final class TrackersPermissionsDao extends DataAccessObject implements SearchUse
             ...$user_groups_id,
             ...array_values($perm_type_statement->values()),
             ...$trackers_id,
+        ]);
+        assert(is_array($results));
+        return array_map(static fn(array $row) => (int) $row['tracker_id'], $results);
+    }
+
+    public function searchUserGroupsSubmitPermissionOnTrackers(array $user_groups_id, array $trackers_id): array
+    {
+        $ugroups_tracker_statement = EasyStatement::open()->in('tracker_permission.ugroup_id IN (?*)', $user_groups_id);
+        $ugroups_field_statement   = EasyStatement::open()->in('field_permission.ugroup_id IN (?*)', $user_groups_id);
+        $trackers_statement        = EasyStatement::open()->in('tracker.id IN (?*)', $trackers_id);
+
+        $sql = <<<SQL
+        SELECT DISTINCT tracker.id AS tracker_id
+        FROM permissions AS tracker_permission
+        INNER JOIN tracker ON (tracker_permission.object_id = CAST(tracker.id AS CHAR CHARACTER SET utf8) AND tracker.deletion_date IS NULL)
+        INNER JOIN tracker_field AS field ON (tracker.id = field.tracker_id)
+        INNER JOIN permissions AS field_permission ON (
+            field_permission.object_id = CAST(field.id AS CHAR CHARACTER SET utf8) AND field_permission.permission_type = ?
+        )
+        WHERE $ugroups_tracker_statement AND $ugroups_field_statement AND $trackers_statement AND tracker_permission.permission_type <> ?
+        SQL;
+
+        $results = $this->getDB()->safeQuery($sql, [
+            FieldPermissionType::PERMISSION_SUBMIT->value,
+            ...$user_groups_id,
+            ...$user_groups_id,
+            ...$trackers_id,
+            Tracker::PERMISSION_NONE,
         ]);
         assert(is_array($results));
         return array_map(static fn(array $row) => (int) $row['tracker_id'], $results);
