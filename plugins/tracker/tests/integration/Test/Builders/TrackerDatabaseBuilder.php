@@ -52,6 +52,18 @@ final class TrackerDatabaseBuilder
         return $tracker;
     }
 
+    public function setViewPermissionOnTracker(int $tracker_id, string $permission, int $user_group_id): void
+    {
+        $this->db->insert(
+            'permissions',
+            [
+                'permission_type' => $permission,
+                'object_id'       => (string) $tracker_id,
+                'ugroup_id'       => $user_group_id,
+            ]
+        );
+    }
+
     public function buildIntField(int $tracker_id, string $name): int
     {
         $tracker_field_id = (int) $this->db->insertReturnId(

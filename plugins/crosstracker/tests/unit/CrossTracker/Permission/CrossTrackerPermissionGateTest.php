@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Permission;
 
 use ForgeConfig;
-use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -33,7 +32,9 @@ use Tuleap\Test\Stubs\include\CheckUserCanAccessProjectStub;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnTrackersStub;
 
 final class CrossTrackerPermissionGateTest extends TestCase
 {
@@ -51,8 +52,7 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $user    = UserTestBuilder::aUser()->build();
         $project = ProjectTestBuilder::aProject()->build();
 
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('userCanView')->willReturn(true);
+        $tracker      = TrackerTestBuilder::aTracker()->build();
         $column_field = ListFieldBuilder::aListField(101)->build();
         $search_field = ListFieldBuilder::aListField(102)->build();
         $report       = $this->createMock(CrossTrackerReport::class);
@@ -63,7 +63,8 @@ final class CrossTrackerPermissionGateTest extends TestCase
 
         $permission_gate = new CrossTrackerPermissionGate(
             CheckUserCanAccessProjectStub::build(),
-            RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn([$column_field->getId(), $search_field->getId()], FieldPermissionType::PERMISSION_READ)
+            RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn([$column_field->getId(), $search_field->getId()], FieldPermissionType::PERMISSION_READ),
+            RetrieveUserPermissionOnTrackersStub::buildWithPermissionOn([$tracker->getId()]),
         );
 
         $permission_gate->check($user, $report);
@@ -82,7 +83,8 @@ final class CrossTrackerPermissionGateTest extends TestCase
             CheckUserCanAccessProjectStub::build()
                 ->withPrivateProjectForUser($project1, $user)
                 ->withPrivateProjectForUser($project2, $user),
-            RetrieveUserPermissionOnFieldsStub::build()
+            RetrieveUserPermissionOnFieldsStub::build(),
+            RetrieveUserPermissionOnTrackersStub::buildWithNoPermissions(),
         );
 
         $this->expectException(CrossTrackerUnauthorizedProjectException::class);
@@ -94,10 +96,8 @@ final class CrossTrackerPermissionGateTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->build();
 
-        $tracker1 = $this->createMock(Tracker::class);
-        $tracker1->method('userCanView')->willReturn(false);
-        $tracker2 = $this->createMock(Tracker::class);
-        $tracker2->method('userCanView')->willReturn(false);
+        $tracker1 = TrackerTestBuilder::aTracker()->withId(51)->build();
+        $tracker2 = TrackerTestBuilder::aTracker()->withId(52)->build();
 
         $project = ProjectTestBuilder::aProject()->build();
 
@@ -107,7 +107,8 @@ final class CrossTrackerPermissionGateTest extends TestCase
 
         $permission_gate = new CrossTrackerPermissionGate(
             CheckUserCanAccessProjectStub::build(),
-            RetrieveUserPermissionOnFieldsStub::build()
+            RetrieveUserPermissionOnFieldsStub::build(),
+            RetrieveUserPermissionOnTrackersStub::buildWithNoPermissions(),
         );
 
         $this->expectException(CrossTrackerUnauthorizedTrackerException::class);
@@ -120,8 +121,7 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $user    = UserTestBuilder::aUser()->build();
         $project = ProjectTestBuilder::aProject()->build();
 
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('userCanView')->willReturn(true);
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
         $column_field1 = ListFieldBuilder::aListField(101)->build();
         $column_field2 = ListFieldBuilder::aListField(102)->build();
@@ -132,7 +132,8 @@ final class CrossTrackerPermissionGateTest extends TestCase
 
         $permission_gate = new CrossTrackerPermissionGate(
             CheckUserCanAccessProjectStub::build(),
-            RetrieveUserPermissionOnFieldsStub::build()
+            RetrieveUserPermissionOnFieldsStub::build(),
+            RetrieveUserPermissionOnTrackersStub::buildWithPermissionOn([$tracker->getId()]),
         );
 
         $this->expectException(CrossTrackerUnauthorizedColumnFieldException::class);
@@ -145,8 +146,7 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $user    = UserTestBuilder::aUser()->build();
         $project = ProjectTestBuilder::aProject()->build();
 
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('userCanView')->willReturn(true);
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
         $column_field  = ListFieldBuilder::aListField(101)->build();
         $search_field1 = ListFieldBuilder::aListField(102)->build();
@@ -159,7 +159,8 @@ final class CrossTrackerPermissionGateTest extends TestCase
 
         $permission_gate = new CrossTrackerPermissionGate(
             CheckUserCanAccessProjectStub::build(),
-            RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn([$column_field->getId()], FieldPermissionType::PERMISSION_READ)
+            RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn([$column_field->getId()], FieldPermissionType::PERMISSION_READ),
+            RetrieveUserPermissionOnTrackersStub::buildWithPermissionOn([$tracker->getId()]),
         );
 
         $this->expectException(CrossTrackerUnauthorizedSearchFieldException::class);
@@ -173,10 +174,8 @@ final class CrossTrackerPermissionGateTest extends TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
-        $tracker1 = $this->createMock(Tracker::class);
-        $tracker1->method('userCanView')->willReturn(true);
-        $tracker2 = $this->createMock(Tracker::class);
-        $tracker2->method('userCanView')->willReturn(false);
+        $tracker1 = TrackerTestBuilder::aTracker()->withId(51)->build();
+        $tracker2 = TrackerTestBuilder::aTracker()->withId(52)->build();
 
         $project1 = ProjectTestBuilder::aProject()->withId(101)->build();
         $project2 = ProjectTestBuilder::aProject()->withId(102)->build();
@@ -189,7 +188,8 @@ final class CrossTrackerPermissionGateTest extends TestCase
 
         $permission_gate = new CrossTrackerPermissionGate(
             CheckUserCanAccessProjectStub::build()->withPrivateProjectForUser($project2, $user),
-            RetrieveUserPermissionOnFieldsStub::build()
+            RetrieveUserPermissionOnFieldsStub::build(),
+            RetrieveUserPermissionOnTrackersStub::buildWithPermissionOn([$tracker2->getId()])
         );
 
         $permission_gate->check($user, $report);

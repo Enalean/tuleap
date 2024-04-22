@@ -26,7 +26,7 @@ use PFUser;
 use Tracker_FormElement;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
-use Tuleap\Tracker\Permission\UserPermissionsOnObjects;
+use Tuleap\Tracker\Permission\UserPermissionsOnItems;
 
 final class RetrieveUserPermissionOnFieldsStub implements RetrieveUserPermissionOnFields
 {
@@ -54,10 +54,10 @@ final class RetrieveUserPermissionOnFieldsStub implements RetrieveUserPermission
         return $this;
     }
 
-    public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnObjects
+    public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnItems
     {
         if (isset($this->has_permission_on[$permission->value])) {
-            return new UserPermissionsOnObjects(
+            return new UserPermissionsOnItems(
                 $user,
                 $permission,
                 array_filter($fields, fn(Tracker_FormElement $field) => in_array($field->getId(), $this->has_permission_on[$permission->value])),
@@ -65,6 +65,6 @@ final class RetrieveUserPermissionOnFieldsStub implements RetrieveUserPermission
             );
         }
 
-        return new UserPermissionsOnObjects($user, $permission, [], $fields);
+        return new UserPermissionsOnItems($user, $permission, [], $fields);
     }
 }

@@ -22,14 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission;
 
-use PFUser;
-use Tracker_FormElement;
-
-interface RetrieveUserPermissionOnFields
+enum TrackerPermissionType
 {
-    /**
-     * @param Tracker_FormElement[] $fields
-     * @return UserPermissionsOnItems<Tracker_FormElement, FieldPermissionType>
-     */
-    public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnItems;
+    case PERMISSION_VIEW;
 }

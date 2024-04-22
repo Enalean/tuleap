@@ -60,16 +60,16 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
-use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Permission\TrackersPermissionsDao;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractorForOpenList;
@@ -293,12 +293,18 @@ class crosstrackerPlugin extends Plugin
 
         $formatter_visitor = new CSVFormatterVisitor(new CSVFormatter());
 
-        $csv_representation_builder = new CSVRepresentationBuilder(
+        $csv_representation_builder     = new CSVRepresentationBuilder(
             $formatter_visitor,
             $user_manager,
             new SimilarFieldsFormatter($formatter_visitor, new BindToValueVisitor())
         );
-        $representation_factory     = new CSVRepresentationFactory($csv_representation_builder);
+        $representation_factory         = new CSVRepresentationFactory($csv_representation_builder);
+        $trackers_permissions_dao       = new TrackersPermissionsDao();
+        $trackers_permissions_retriever = new TrackersPermissionsRetriever(
+            $trackers_permissions_dao,
+            $trackers_permissions_dao,
+            new URLVerification(),
+        );
 
         return new CSVExportController(
             new CrossTrackerReportFactory(
@@ -311,7 +317,8 @@ class crosstrackerPlugin extends Plugin
             ProjectManager::instance(),
             new CrossTrackerPermissionGate(
                 new URLVerification(),
-                new TrackersPermissionsRetriever(new TrackersPermissionsDao())
+                $trackers_permissions_retriever,
+                $trackers_permissions_retriever,
             ),
             new SimilarFieldsMatcher(
                 new SupportedFieldsDao(),
