@@ -9,6 +9,7 @@
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/project-background": "workspace:^",
+    "@tuleap/tooltip": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "neverthrow": "6.0.0",
     "vue": "^3.3.4",

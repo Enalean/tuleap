@@ -29,7 +29,9 @@
                     />
                 </template>
                 <template #section-content="contentProps">
-                    <div v-dompurify-html="contentProps.description_value"></div>
+                    <section-description
+                        v-bind:description_value="contentProps.description_value"
+                    />
                 </template>
             </document-content>
         </template>
@@ -55,6 +57,7 @@ import TableOfContents from "@/components/TableOfContents.vue";
 import NoAccessState from "@/views/NoAccessState.vue";
 import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.vue";
 import DocumentLayout from "@/components/DocumentLayout.vue";
+import SectionDescription from "@/components/SectionDescription.vue";
 
 defineProps<{ sections: readonly ArtidocSection[] | undefined }>();
 </script>
