@@ -22,24 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission;
 
-use PFUser;
-
-/**
- * @template Item
- * @template PermissionType of FieldPermissionType|TrackerPermissionType|ArtifactPermissionType
- */
-final readonly class UserPermissionsOnItems
+interface SearchUserGroupsPermissionOnArtifacts
 {
     /**
-     * @param PermissionType $permission
-     * @param Item[] $allowed
-     * @param Item[] $not_allowed
+     * @param int[] $user_groups_id
+     * @param int[] $artifacts_id
+     * @return int[]
      */
-    public function __construct(
-        public PFUser $user,
-        public FieldPermissionType|TrackerPermissionType|ArtifactPermissionType $permission,
-        public array $allowed,
-        public array $not_allowed,
-    ) {
-    }
+    public function searchUserGroupsViewPermissionOnArtifacts(array $user_groups_id, array $artifacts_id): array;
 }

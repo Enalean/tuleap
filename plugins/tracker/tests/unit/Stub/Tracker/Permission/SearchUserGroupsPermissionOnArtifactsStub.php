@@ -20,26 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Permission;
+namespace Tuleap\Tracker\Test\Stub\Tracker\Permission;
 
-use PFUser;
+use Tuleap\Tracker\Permission\SearchUserGroupsPermissionOnArtifacts;
 
-/**
- * @template Item
- * @template PermissionType of FieldPermissionType|TrackerPermissionType|ArtifactPermissionType
- */
-final readonly class UserPermissionsOnItems
+final readonly class SearchUserGroupsPermissionOnArtifactsStub implements SearchUserGroupsPermissionOnArtifacts
 {
     /**
-     * @param PermissionType $permission
-     * @param Item[] $allowed
-     * @param Item[] $not_allowed
+     * @param list<int> $result
      */
-    public function __construct(
-        public PFUser $user,
-        public FieldPermissionType|TrackerPermissionType|ArtifactPermissionType $permission,
-        public array $allowed,
-        public array $not_allowed,
-    ) {
+    private function __construct(private array $result)
+    {
+    }
+
+    public static function buildEmpty(): self
+    {
+        return new self([]);
+    }
+
+    /**
+     * @param list<int> $results
+     */
+    public static function buildWithResults(array $results): self
+    {
+        return new self($results);
+    }
+
+    public function searchUserGroupsViewPermissionOnArtifacts(array $user_groups_id, array $artifacts_id): array
+    {
+        return $this->result;
     }
 }

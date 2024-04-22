@@ -27,6 +27,7 @@ use Tracker;
 use Tracker_FormElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class TrackerDatabaseBuilder
 {
@@ -320,6 +321,24 @@ final class TrackerDatabaseBuilder
                 'submitted_on'             => $submitted_on,
                 'use_artifact_permissions' => 0,
                 'per_tracker_artifact_id'  => 1,
+            ]
+        );
+    }
+
+    public function setViewPermissionOnArtifact(int $artifact_id, int $user_group_id): void
+    {
+        $this->db->update(
+            'tracker_artifact',
+            ['use_artifact_permissions' => 1],
+            ['id' => $artifact_id]
+        );
+
+        $this->db->insert(
+            'permissions',
+            [
+                'permission_type' => Artifact::PERMISSION_ACCESS,
+                'object_id'       => (string) $artifact_id,
+                'ugroup_id'       => $user_group_id,
             ]
         );
     }

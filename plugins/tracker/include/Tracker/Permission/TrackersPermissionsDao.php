@@ -25,8 +25,9 @@ namespace Tuleap\Tracker\Permission;
 use ParagonIE\EasyDB\EasyStatement;
 use Tracker;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\Artifact\Artifact;
 
-final class TrackersPermissionsDao extends DataAccessObject implements SearchUserGroupsPermissionOnFields, SearchUserGroupsPermissionOnTrackers
+final class TrackersPermissionsDao extends DataAccessObject implements SearchUserGroupsPermissionOnFields, SearchUserGroupsPermissionOnTrackers, SearchUserGroupsPermissionOnArtifacts
 {
     public function searchUserGroupsPermissionOnFields(array $user_groups_id, array $fields_id, string $permission): array
     {
@@ -102,6 +103,43 @@ final class TrackersPermissionsDao extends DataAccessObject implements SearchUse
         ]);
         assert(is_array($results));
         return array_map(static fn(array $row) => (int) $row['tracker_id'], $results);
+    }
+
+    public function searchUserGroupsViewPermissionOnArtifacts(array $user_groups_id, array $artifacts_id): array
+    {
+        $artifacts_statement       = EasyStatement::open()->in('artifact.id IN (?*)', $artifacts_id);
+        $ugroup_tracker_statement  = EasyStatement::open()->in('tracker_permission.ugroup_id IN (?*)', $user_groups_id);
+        $ugroup_artifact_statement = EasyStatement::open()->in('artifact_permission.ugroup_id IN (?*)', $user_groups_id);
+
+        $sql = <<<SQL
+        SELECT DISTINCT artifact.id AS artifact_id
+        FROM tracker_artifact AS artifact
+        INNER JOIN tracker ON (artifact.tracker_id = tracker.id AND tracker.deletion_date IS NULL)
+        INNER JOIN permissions AS tracker_permission ON (
+            tracker_permission.object_id = CAST(tracker.id AS CHAR CHARACTER SET utf8)
+            AND $ugroup_tracker_statement
+        )
+        LEFT JOIN permissions AS artifact_permission ON (
+            artifact.use_artifact_permissions = 1
+            AND artifact_permission.object_id = CAST(artifact.id AS CHAR CHARACTER SET utf8)
+            AND artifact_permission.permission_type = ?
+            AND $ugroup_artifact_statement
+        )
+        WHERE $artifacts_statement AND (
+            artifact.use_artifact_permissions = 0 OR (
+                artifact.use_artifact_permissions = 1 AND artifact_permission.object_id IS NOT NULL
+            )
+        )
+        SQL;
+
+        $results = $this->getDB()->safeQuery($sql, [
+            ...$user_groups_id,
+            Artifact::PERMISSION_ACCESS,
+            ...$user_groups_id,
+            ...$artifacts_id,
+        ]);
+        assert(is_array($results));
+        return array_map(static fn(array $row) => (int) $row['artifact_id'], $results);
     }
 
     /**
