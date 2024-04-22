@@ -1001,12 +1001,14 @@ class Docman_ItemDao extends DataAccessObject
     {
         $sql = ' SELECT SQL_CALC_FOUND_ROWS D.item_id as id, ' .
                       ' D.item_type, ' .
+                      ' original.other_type, ' .
                       ' D.title as title , I.title as location , ' .
                       ' D.user_id as user, D.delete_date  as date' .
-             ' FROM plugin_docman_item_deleted as D, plugin_docman_item as I' .
+             ' FROM plugin_docman_item_deleted as D, plugin_docman_item as I, plugin_docman_item AS original ' .
              ' WHERE  D.group_id=' . db_ei($groupId) .
              '        AND D.delete_date <= ' . $this->da->escapeInt($_SERVER['REQUEST_TIME']) .
              '        AND D.parent_id = I.item_id ' .
+             '        AND D.item_id = original.item_id ' .
              '        AND D.purge_date IS NULL ' .
              ' ORDER BY D.delete_date DESC ' .
              ' LIMIT ' . $this->da->escapeInt($offset) . ', ' . $this->da->escapeInt($limit);

@@ -36,6 +36,7 @@ import type {
     Property,
     Uploadable,
     ItemReferencingWikiPageRepresentation,
+    OtherTypeItem,
 } from "../type";
 import { SEARCH_LIMIT } from "../type";
 import { getRestBodyFromSearchParams } from "../helpers/get-rest-body-from-search-params";
@@ -387,6 +388,11 @@ export function deleteWiki(
 export function deleteFolder(item: Folder): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_folders/${escaped_item_id}`);
+}
+
+export function deleteOtherType(item: OtherTypeItem): Promise<Response> {
+    const escaped_item_id = encodeURIComponent(item.id);
+    return del(`/api/docman_other_type_documents/${escaped_item_id}`);
 }
 
 export function deleteEmptyDocument(item: Empty): Promise<Response> {

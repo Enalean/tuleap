@@ -187,6 +187,25 @@ describe("actions-delete", () => {
             expect(empty_clipboard).toHaveBeenCalled();
         });
 
+        it("when item is another type, then the delete other type route is called", async () => {
+            const other_item = {
+                id: 222,
+                title: "My other item",
+                type: "whatever",
+            } as Item;
+
+            const deleteOtherType = jest.spyOn(rest_querier, "deleteOtherType");
+            mockFetchSuccess(deleteOtherType);
+
+            await deleteItem(context, {
+                item: other_item,
+                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+            });
+            expect(deleteOtherType).toHaveBeenCalledWith(other_item);
+            expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
+            expect(empty_clipboard).toHaveBeenCalled();
+        });
+
         it("deletes the given item and removes it from the tree view", async () => {
             const item_to_delete = {
                 id: 123,

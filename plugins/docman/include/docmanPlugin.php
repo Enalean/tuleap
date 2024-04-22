@@ -55,6 +55,7 @@ use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
+use Tuleap\Docman\ItemType\GetItemTypeAsText;
 use Tuleap\Docman\LegacyRestoreDocumentsController;
 use Tuleap\Docman\LegacySendMessageController;
 use Tuleap\Docman\Metadata\Owner\AllOwnerRetriever;
@@ -895,11 +896,14 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             <tbody>';
 
         if ($nbItems > 0) {
+            $type_as_text = EventManager::instance()->dispatch(new GetItemTypeAsText());
             foreach ($res as $row) {
+                $type = $type_as_text->getLabel($row['item_type'], (string) $row['other_type']);
+
                 $purgeDate = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $row['date']);
                 $html     .= '<tr>' .
                 '<td class="tlp-table-cell-numeric">' . $row['id'] . '</td>' .
-                '<td>' . $itemFactory->getItemTypeAsText($row['item_type']) . '</td>' .
+                '<td>' . $hp->purify($type) . '</td>' .
                 '<td>' . $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId) . '</td>' .
                 '<td>' . $hp->purify($row['location']) . '</td>' .
                 '<td>' . $hp->purify($uh->getDisplayNameFromUserId($row['user'])) . '</td>' .

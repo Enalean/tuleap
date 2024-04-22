@@ -23,6 +23,7 @@ import {
     deleteFile,
     deleteFolder,
     deleteLink,
+    deleteOtherType,
     deleteWiki,
 } from "../api/rest-querier";
 import { handleErrorsForDeletionModal } from "./actions-helpers/handle-errors";
@@ -34,6 +35,7 @@ import {
     isFile,
     isFolder,
     isLink,
+    isOtherType,
     isWiki,
 } from "../helpers/type-check-helper";
 import emitter from "../helpers/emitter";
@@ -67,6 +69,8 @@ export const deleteItem = async (
             await deleteEmptyDocument(payload.item);
         } else if (isFolder(payload.item)) {
             await deleteFolder(payload.item);
+        } else if (isOtherType(payload.item)) {
+            await deleteOtherType(payload.item);
         }
 
         emitter.emit("item-has-just-been-deleted");

@@ -2284,6 +2284,9 @@ msgstr "Impossible de récupérer l'élément. Il a peut-être été supprimé."
 msgid "Unable to update element."
 msgstr "L'élément n'a pas été mis à jour."
 
+msgid "Unknown item type"
+msgstr "Type d'item inconnu"
+
 #, php-format
 msgid "Unknown property label '%1$s'."
 msgstr "Nom de propriété '%1$s' inconnu."
