@@ -39,9 +39,9 @@ final readonly class DBPersistentQueue implements PersistentQueue
     #[ConfigKeyInt(1)]
     public const FEATURE_FLAG = 'use_db_persisted_async_events_queue';
 
-    private const MAX_SLEEP_TIME_MSEC_WHILE_WAITING_FOR_MESSAGES = 1000;
-    private const MAX_RETRY_PROCESSING_EVENT                     = 3;
-    private const MAX_MESSAGES                                   = 1000;
+    private const MAX_SLEEP_TIME_MICROSEC_WHILE_WAITING_FOR_MESSAGES = 2_000_000;
+    private const MAX_RETRY_PROCESSING_EVENT                         = 3;
+    private const MAX_MESSAGES                                       = 1000;
 
     public function __construct(
         private string $queue_name,
@@ -97,7 +97,7 @@ final readonly class DBPersistentQueue implements PersistentQueue
             if ($has_something_been_processed) {
                 $message_counter++;
             } else {
-                usleep(random_int(0, self::MAX_SLEEP_TIME_MSEC_WHILE_WAITING_FOR_MESSAGES));
+                usleep(random_int(0, self::MAX_SLEEP_TIME_MICROSEC_WHILE_WAITING_FOR_MESSAGES));
             }
         }
         $this->logger->info('Max messages reached');
