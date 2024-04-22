@@ -187,16 +187,6 @@ msgstr ""
 "éléments et leurs versions seront supprimés.</p><p>Êtes-vous sûr de vouloir "
 "le supprimer ?</p>"
 
-#, php-format
-msgid ""
-"<h3>Confirm deletion of version %2$s of document %1$s</h3><p>You are going "
-"to delete a version of file. </p><p>Are you sure that you want to delete "
-"this version?</p>"
-msgstr ""
-"<h3>Confirmez la suppression de la version %2$s du document %1$s</h3><p>Vous "
-"êtes sur le point de supprimer une version du fichier.</p><p>Êtes-vous sûr "
-"de vouloir la supprimer ?</p>"
-
 msgid ""
 "<p><em>Please Note that if you check the 'Cascade deletion to wiki' option, "
 "the referenced wiki page will no longer exist in wiki service too.</em></p>"
@@ -426,17 +416,11 @@ msgstr ""
 "Une image est associée à ce rapport mais vous n'avez pas les permissions de "
 "la voir."
 
-msgid "Anonymous"
-msgstr "Anonyme"
-
 msgid "Append the members to the table:"
 msgstr "Ajouter les membres d'un groupe d'utilisateurs :"
 
 msgid "Apply a naming pattern on files."
 msgstr "Applique un modèle de nommage sur les fichiers."
-
-msgid "Approval"
-msgstr "Approbation"
 
 msgid "Approval Table"
 msgstr "Table d'approbation"
@@ -530,9 +514,6 @@ msgstr "À la fin"
 msgid "Attached to document version:"
 msgstr "Associée à la version :"
 
-msgid "Author"
-msgstr "Auteur"
-
 msgid "Available"
 msgstr "Disponible"
 
@@ -611,9 +592,6 @@ msgstr "Propager la suppression au service wiki"
 #, php-format
 msgid "Change \"%1$s\""
 msgstr "Changer \"%1$s\""
-
-msgid "Change Log"
-msgstr "Description des changements"
 
 msgid "Change Log:"
 msgstr "Description des changements :"
@@ -910,9 +888,6 @@ msgstr "Accès aux documents"
 msgid "Document Administrator"
 msgstr "Administrateur de document"
 
-msgid "Document History"
-msgstr "Historique du document"
-
 msgid "Document Id Search"
 msgstr "Recherche des Documents par Id"
 
@@ -1078,9 +1053,6 @@ msgstr ""
 "Erreur lors de la création de la news. Vérifiez que vous avez les bonnes "
 "permissions."
 
-msgid "Error while searching for old versions"
-msgstr "Erreur lors de la récupération des versions"
-
 msgid "Error while trying to delete the wiki page from wiki service."
 msgstr ""
 "Erreur lors de la suppression de la page wiki à partir du service wiki."
@@ -1218,9 +1190,6 @@ msgstr "Groupes autorisés"
 msgid "Hide related documents"
 msgstr "Cacher les documents liés"
 
-msgid "History"
-msgstr "Historique"
-
 msgid ""
 "How to use folder selector:<ul><li><em>[other folders: ]</em> link displays "
 "the whole folder tree.</li><li><em>Position</em> select box allows to select "
@@ -1348,9 +1317,6 @@ msgstr "Conserver l'ancienne table."
 
 msgid "Keep the lock:"
 msgstr "Garder la réservation :"
-
-msgid "Label"
-msgstr "Label"
 
 msgid "Last update date:"
 msgstr "Date de dernière mise à jour :"
@@ -1489,9 +1455,6 @@ msgstr "Nom"
 msgid "Name conflict"
 msgstr "Conflit de nommage"
 
-msgid "New Value"
-msgstr "Nouvelle valeur"
-
 msgid "New Version"
 msgstr "Nouvelle version"
 
@@ -1610,9 +1573,6 @@ msgstr "Date d'obsolescence"
 
 msgid "Obsolete today"
 msgstr "Aujourd'hui obsolète"
-
-msgid "Old Value"
-msgstr "Ancienne valeur"
 
 msgid "Only admin can delete Project wide reports."
 msgstr "Seuls les admins peuvent supprimer un rapport 'projet'."
@@ -1966,9 +1926,6 @@ msgstr "Les paramètres ont été sauvegardés avec succès"
 msgid "Settings have been updated."
 msgstr "Paramètres mis à jour."
 
-msgid "Show"
-msgstr "Afficher"
-
 msgid "Show actions"
 msgstr "Afficher les actions"
 
@@ -2242,12 +2199,6 @@ msgstr "Il y a une erreur dans les paramètres. Retour vers l'écran précédent
 msgid "There is no data attached to this item."
 msgstr "Il n'y a pas de donnée pour cet élément."
 
-msgid "There is no history yet"
-msgstr "Il n'y a pas encore d'historique"
-
-msgid "There is no version yet"
-msgstr "Il n'y a pas encore de versions"
-
 msgid "This is an automatic message. Please do not reply to this email"
 msgstr ""
 "Ceci est un message généré automatiquement. Merci de ne pas répondre à cet "
@@ -2417,9 +2368,6 @@ msgstr "Date de la version"
 msgid "Version label"
 msgstr "Label de la version"
 
-msgid "Version name"
-msgstr "Nom de la version"
-
 msgid "Version name:"
 msgstr "Nom de version :"
 
@@ -2443,9 +2391,6 @@ msgstr "Attendez une minute..."
 
 msgid "Weeks"
 msgstr "Semaines"
-
-msgid "What"
-msgstr "Quoi"
 
 msgid "When"
 msgstr "Quand"

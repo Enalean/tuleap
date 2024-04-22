@@ -21,10 +21,16 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\Docman;
+
+use Docman_Token;
+use Docman_TokenDao;
+use HTTPRequest;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 class TokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
 
     public function testGenerateRandomToken()
     {
@@ -137,7 +143,6 @@ class TokenTest extends \Tuleap\Test\PHPUnit\TestCase
                 '?action=show',
                 '?id=1&action=show',
                 '?action=details',
-                '?action=details&section=history',
             ] as $referer
         ) {
             $t = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();

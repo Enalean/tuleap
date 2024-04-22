@@ -28,6 +28,8 @@ import type { ConfigurationState } from "../../../../../store/configuration";
 import { nextTick } from "vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
+jest.mock("vue-router");
+
 describe("FileVersionHistory", () => {
     function createWrapper(
         has_error = false,
@@ -55,6 +57,7 @@ describe("FileVersionHistory", () => {
                         },
                     },
                 }),
+                stubs: ["router-link"],
             },
         });
     }

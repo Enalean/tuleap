@@ -827,7 +827,8 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
     },
     _getHistory: function () {
         var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=details&section=history",
+            href:
+                this.docman.options.document_path + "/versions/" + encodeURIComponent(this.item_id),
             class: "docman_item_option_history",
             title: this.docman.options.language.action_history,
         });

@@ -66,7 +66,6 @@ class DocumentLinkProvider implements ILinkUrlProvider
 
     public function getHistoryUrl(\Docman_Item $item): string
     {
-        return $this->base_url . '/plugins/docman/?group_id=' . urlencode((string) $this->project->getID()) .
-            '&action=details&section=history&id=' . urlencode((string) $item->getId());
+        return $this->base_url . '/plugins/document/' . urlencode($this->project->getUnixNameLowerCase()) . '/versions/' . urlencode((string) $item->getId());
     }
 }

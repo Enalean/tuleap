@@ -52,7 +52,7 @@
                     'action_newversion'        => dgettext('tuleap-docman', 'New version'),
                     'action_move'              => dgettext('tuleap-docman', 'Move'),
                     'action_permissions'       => dgettext('tuleap-docman', 'Permissions'),
-                    'action_history'           => dgettext('tuleap-docman', 'History'),
+                    'action_history'           => dgettext('tuleap-docman', 'Versions'),
                     'action_notifications'     => dgettext('tuleap-docman', 'Notifications'),
                     'action_delete'            => dgettext('tuleap-docman', 'Delete'),
                     'action_update'            => dgettext('tuleap-docman', 'Update'),

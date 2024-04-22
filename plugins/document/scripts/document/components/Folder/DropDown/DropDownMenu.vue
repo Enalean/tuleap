@@ -55,19 +55,7 @@
         ></i>
         <span>{{ $gettext("Versions") }}</span>
     </router-link>
-    <a
-        v-if="!should_display_history_in_document"
-        v-bind:href="getUrlForPane(HISTORY_PANE_NAME)"
-        class="tlp-dropdown-menu-item"
-        role="menuitem"
-        data-shortcut-history
-        data-test="document-history"
-    >
-        <i class="fa-solid fa-fw fa-clock-rotate-left tlp-dropdown-menu-item-icon"></i>
-        <span>{{ $gettext("History") }}</span>
-    </a>
     <router-link
-        v-else
         v-bind:to="{ name: 'history', params: { item_id: item.id } }"
         class="tlp-dropdown-menu-item"
         role="menuitem"
@@ -119,8 +107,6 @@ import type { Item } from "../../../type";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "vue";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { SHOULD_DISPLAY_HISTORY_IN_DOCUMENT } from "../../../injection-keys";
 
 const props = defineProps<{ item: Item }>();
 
@@ -129,19 +115,14 @@ const { project_id, is_deletion_allowed } = useNamespacedState<
 >("configuration", ["project_id", "is_deletion_allowed"]);
 
 const NOTIFS_PANE_NAME = "notifications";
-const HISTORY_PANE_NAME = "history";
 const APPROVAL_TABLES_PANE_NAME = "approval";
 
 const is_item_a_folder = computed((): boolean => isFolder(props.item));
 
 const is_item_an_empty_document = computed((): boolean => isEmpty(props.item));
 
-const should_display_history_in_document = strictInject(SHOULD_DISPLAY_HISTORY_IN_DOCUMENT);
-
 const should_display_versions_link = computed(
-    (): boolean =>
-        should_display_history_in_document &&
-        (isFile(props.item) || isLink(props.item) || isEmbedded(props.item)),
+    (): boolean => isFile(props.item) || isLink(props.item) || isEmbedded(props.item),
 );
 
 function getUrlForPane(pane_name: string): string {

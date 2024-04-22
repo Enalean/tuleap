@@ -24,9 +24,6 @@ namespace Tuleap\Document\Tree;
 
 use CSRFSynchronizerToken;
 use DocmanPlugin;
-use Tuleap\Config\ConfigKeyHidden;
-use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Date\DateHelper;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Docman\FilenamePattern\FilenamePattern;
@@ -38,11 +35,6 @@ use function Psl\Json\encode;
 
 class DocumentTreePresenter
 {
-    #[FeatureFlagConfigKey('Do not display logs in document')]
-    #[ConfigKeyInt(0)]
-    #[ConfigKeyHidden]
-    public const FEATURE_FLAG_HISTORY = 'do_not_display_logs_in_document';
-
     /**
      * @var int
      */
@@ -153,7 +145,6 @@ class DocumentTreePresenter
 
     public bool $is_filename_pattern_enforced;
     public bool $can_user_switch_to_old_ui;
-    public bool $should_display_history_in_document;
     public string $create_new_item_alternatives;
     public string $other_item_types;
 
@@ -214,8 +205,6 @@ class DocumentTreePresenter
         $this->is_filename_pattern_enforced = $filename_pattern->isEnforced();
 
         $this->can_user_switch_to_old_ui = SwitchToOldUi::isAllowed($user, $project);
-
-        $this->should_display_history_in_document = (int) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_HISTORY) === 0;
 
         $this->create_new_item_alternatives = json_encode($create_new_item_alternatives, JSON_THROW_ON_ERROR);
         $this->other_item_types             = encode($other_item_types);

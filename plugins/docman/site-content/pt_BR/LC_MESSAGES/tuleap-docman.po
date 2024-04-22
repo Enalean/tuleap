@@ -145,13 +145,6 @@ msgid ""
 "you sure that you want to delete this folder?</p>"
 msgstr ""
 
-#, php-format
-msgid ""
-"<h3>Confirm deletion of version %2$s of document %1$s</h3><p>You are going "
-"to delete a version of file. </p><p>Are you sure that you want to delete "
-"this version?</p>"
-msgstr ""
-
 msgid ""
 "<p><em>Please Note that if you check the 'Cascade deletion to wiki' option, "
 "the referenced wiki page will no longer exist in wiki service too.</em></p>"
@@ -329,16 +322,10 @@ msgid ""
 "see it."
 msgstr ""
 
-msgid "Anonymous"
-msgstr ""
-
 msgid "Append the members to the table:"
 msgstr ""
 
 msgid "Apply a naming pattern on files."
-msgstr ""
-
-msgid "Approval"
 msgstr ""
 
 msgid "Approval Table"
@@ -416,9 +403,6 @@ msgstr ""
 msgid "Attached to document version:"
 msgstr ""
 
-msgid "Author"
-msgstr "Autor"
-
 msgid "Available"
 msgstr ""
 
@@ -487,9 +471,6 @@ msgstr ""
 
 #, php-format
 msgid "Change \"%1$s\""
-msgstr ""
-
-msgid "Change Log"
 msgstr ""
 
 msgid "Change Log:"
@@ -759,9 +740,6 @@ msgstr ""
 msgid "Document Administrator"
 msgstr ""
 
-msgid "Document History"
-msgstr ""
-
 msgid "Document Id Search"
 msgstr ""
 
@@ -919,9 +897,6 @@ msgstr ""
 msgid "Error while creating news. Check that you have right permissions."
 msgstr ""
 
-msgid "Error while searching for old versions"
-msgstr ""
-
 msgid "Error while trying to delete the wiki page from wiki service."
 msgstr ""
 
@@ -1033,9 +1008,6 @@ msgstr ""
 msgid "Hide related documents"
 msgstr ""
 
-msgid "History"
-msgstr "Histórico"
-
 msgid ""
 "How to use folder selector:<ul><li><em>[other folders: ]</em> link displays "
 "the whole folder tree.</li><li><em>Position</em> select box allows to select "
@@ -1146,9 +1118,6 @@ msgid "Keep the current table."
 msgstr ""
 
 msgid "Keep the lock:"
-msgstr ""
-
-msgid "Label"
 msgstr ""
 
 msgid "Last update date:"
@@ -1280,9 +1249,6 @@ msgstr "Nome"
 msgid "Name conflict"
 msgstr ""
 
-msgid "New Value"
-msgstr ""
-
 msgid "New Version"
 msgstr ""
 
@@ -1399,9 +1365,6 @@ msgid "Obsolete date"
 msgstr ""
 
 msgid "Obsolete today"
-msgstr ""
-
-msgid "Old Value"
 msgstr ""
 
 msgid "Only admin can delete Project wide reports."
@@ -1731,9 +1694,6 @@ msgstr ""
 msgid "Settings have been updated."
 msgstr ""
 
-msgid "Show"
-msgstr ""
-
 msgid "Show actions"
 msgstr ""
 
@@ -1978,12 +1938,6 @@ msgstr ""
 msgid "There is no data attached to this item."
 msgstr ""
 
-msgid "There is no history yet"
-msgstr ""
-
-msgid "There is no version yet"
-msgstr ""
-
 msgid "This is an automatic message. Please do not reply to this email"
 msgstr ""
 
@@ -2141,9 +2095,6 @@ msgstr ""
 msgid "Version label"
 msgstr ""
 
-msgid "Version name"
-msgstr ""
-
 msgid "Version name:"
 msgstr ""
 
@@ -2166,9 +2117,6 @@ msgid "Wait a minute..."
 msgstr ""
 
 msgid "Weeks"
-msgstr ""
-
-msgid "What"
 msgstr ""
 
 msgid "When"

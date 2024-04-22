@@ -34,7 +34,6 @@ import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigatio
 import {
     NEW_ITEMS_ALTERNATIVES,
     OTHER_ITEM_TYPES,
-    SHOULD_DISPLAY_HISTORY_IN_DOCUMENT,
     SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
 } from "./injection-keys";
 import type { ConfigurationState } from "./store/configuration";
@@ -119,9 +118,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const can_user_switch_to_old_ui = Boolean(
         getDatasetItemOrThrow(vue_mount_point, "canUserSwitchToOldUi"),
     );
-    const should_display_history_in_document = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "shouldDisplayHistoryInDocument"),
-    );
     const should_display_source_column_for_versions = Boolean(
         getDatasetItemOrThrow(vue_mount_point, "shouldDisplaySourceColumn"),
     );
@@ -194,7 +190,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.use(gettext);
     app.use(createInitializedRouter(store, project_name, gettext.$gettext));
 
-    app.provide(SHOULD_DISPLAY_HISTORY_IN_DOCUMENT, should_display_history_in_document);
     app.provide(
         SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
         should_display_source_column_for_versions,

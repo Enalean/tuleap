@@ -29,19 +29,14 @@ use Docman_ItemFactory;
 use Docman_VersionFactory;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Request\DispatchableWithRequest;
 use Valid_WhiteList;
 
 final class LegacyRestoreDocumentsController implements DispatchableWithRequest
 {
-    /**
-     * @var \DocmanPlugin
-     */
-    private $plugin;
-
-    public function __construct(\DocmanPlugin $plugin)
+    public function __construct(private readonly \DocmanPlugin $plugin, private readonly ProjectByIDFactory $project_manager)
     {
-        $this->plugin = $plugin;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -49,7 +44,6 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
         \Tuleap\Project\ServiceInstrumentation::increment('docman');
         // Need to setup the controller so the notification & logging works (setup in controller constructor)
         new Docman_Controller($this->plugin, $this->plugin->getPluginPath(), $this->plugin->getThemePath(), $request);
-
         $current_user = $request->getCurrentUser();
         if (! $current_user->isSuperUser()) {
             $layout->redirect('/');
@@ -76,10 +70,13 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
                     }
                     // This does not fall-through the next case because all the branches "never-return"
                 case 'confirm_restore_version':
+                    $project        = $this->project_manager->getProjectById($groupId);
                     $versionFactory = new Docman_VersionFactory();
                     $version        = $versionFactory->getSpecificVersionById($id);
                     if ($version !== null && $versionFactory->restore($version)) {
-                        $url = $this->plugin->getPluginPath() . '/?group_id=' . $groupId . '&action=details&id=' . $version->getItemId() . '&section=history';
+                        $url = '/plugins/document/' . urlencode($project->getUnixNameLowerCase()) . '/versions/' . urlencode(
+                            (string) $version->getItemId()
+                        );
                         $layout->addFeedback('info', sprintf(dgettext('tuleap-docman', 'The <a href="%1$s">selected version</a> has been successfully restored.'), $url), CODENDI_PURIFIER_DISABLED);
                         $layout->redirect('/admin/show_pending_documents.php?group_id=' . $groupId . '&focus=version');
                     } else {

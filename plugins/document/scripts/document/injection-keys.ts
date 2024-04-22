@@ -22,9 +22,6 @@ import type { FeedbackHandler, NewItemAlternativeArray, OtherItemTypeCollection 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
 export const FEEDBACK: InjectionKey<FeedbackHandler> = Symbol("feedback");
-export const SHOULD_DISPLAY_HISTORY_IN_DOCUMENT: StrictInjectionKey<boolean> = Symbol(
-    "should_display_history_in_document",
-);
 export const SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS: StrictInjectionKey<boolean> = Symbol(
     "should_display_source_column_for_versions",
 );

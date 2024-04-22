@@ -32,24 +32,13 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
 
     public function getContent($params = [])
     {
-        $folder_or_document = $this->item instanceof \Docman_Folder ? 'folder' : ($this->item instanceof \Docman_File ? 'file' : 'document');
-        $item_type          = $this->_controller->getItemFactory()->getItemTypeForItem($this->item);
+        $item_type = $this->_controller->getItemFactory()->getItemTypeForItem($this->item);
 
-        $vVersion = new Valid_UInt('version');
-        $vVersion->required();
-        if ($this->_controller->request->valid($vVersion)) {
-            $version = $this->_controller->request->get('version');
-            $label   = $this->_controller->request->get('label');
-        } else {
-            $version = false;
-        }
         $content  = '';
         $content .= '<dl><dt>' . dgettext('tuleap-docman', 'Delete') . '</dt><dd>';
         $content .= '<form action="' . $this->url . '" method="POST">';
         $content .= '<div class="docman_confirm_delete">';
-        if ($version !== false) {
-            $content .= sprintf(dgettext('tuleap-docman', '<h3>Confirm deletion of version %2$s of document %1$s</h3><p>You are going to delete a version of file. </p><p>Are you sure that you want to delete this version?</p>'), $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $version);
-        } elseif (is_a($this->item, 'Docman_Folder')) {
+        if (is_a($this->item, 'Docman_Folder')) {
             $content .= sprintf(dgettext('tuleap-docman', '<h3>Confirm deletion of folder %1$s</h3><p>You are going to delete a folder. Please note that all sub-items and their versions will be deleted.</p><p>Are you sure that you want to delete this folder?</p>'), $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
         } elseif (is_a($this->item, 'Docman_File')) {
             $content .= sprintf(dgettext('tuleap-docman', '<h3>Confirm deletion of document %1$s</h3><p>You are going to delete a file. Please note that all versions will be deleted.</p><p>Are you sure that you want to delete this file?</p>'), $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
@@ -65,12 +54,8 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         }
         $content .= '     <input type="hidden" name="section" value="actions" />';
 
-        if ($version !== false) {
-            $content .= '     <input type="hidden" name="action" value="deleteVersion" />';
-            $content .= '     <input type="hidden" name="version" value="' . $version . '" />';
-        } else {
-            $content .= '     <input type="hidden" name="action" value="delete" />';
-        }
+        $content .= '     <input type="hidden" name="action" value="delete" />';
+
         $content .= '     <input type="hidden" name="id" value="' . $this->item->getId() . '" />';
         $content .= '     <input type="submit" tabindex="2" data-test="confirm-deletion" name="confirm" value="' . dgettext('tuleap-docman', 'Yes, I am sure!') . '" />';
         $content .= '     <input type="submit" tabindex="1" name="cancel" value="' . dgettext('tuleap-docman', 'No, I do not want to delete it') . '" />';

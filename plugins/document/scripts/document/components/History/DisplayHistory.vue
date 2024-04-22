@@ -19,11 +19,13 @@
   -->
 
 <template>
-    <section v-if="item && should_display_history_in_document">
+    <section v-if="item">
         <div class="document-header tlp-framed-horizontally">
             <document-title-lock-info v-bind:item="item" v-bind:is-displaying-in-header="true" />
 
-            <h1 class="document-header-title">{{ item.title }}</h1>
+            <h1 class="document-header-title">
+                {{ item.title }}
+            </h1>
         </div>
         <nav class="tlp-tabs">
             <router-link
@@ -31,8 +33,9 @@
                 v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
                 v-if="item_has_versions"
                 data-test="versions-link"
-                >{{ $gettext("Versions") }}</router-link
             >
+                {{ $gettext("Versions") }}
+            </router-link>
             <span class="tlp-tab tlp-tab-active">{{ $gettext("Logs") }}</span>
         </nav>
         <div class="tlp-framed-horizontally">
@@ -49,10 +52,6 @@ import { computed, onBeforeMount, ref } from "vue";
 import type { Item } from "../../type";
 import HistoryLogs from "./HistoryLogs.vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { SHOULD_DISPLAY_HISTORY_IN_DOCUMENT } from "../../injection-keys";
-
-const should_display_history_in_document = strictInject(SHOULD_DISPLAY_HISTORY_IN_DOCUMENT);
 
 const item = ref<Item | null>(null);
 const item_type_has_versions = ref(false);
