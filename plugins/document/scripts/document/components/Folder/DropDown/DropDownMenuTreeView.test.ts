@@ -20,7 +20,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DropDownMenuTreeView from "./DropDownMenuTreeView.vue";
-import type { Folder, Item, ItemFile } from "../../../type";
+import type { Folder, Item, ItemFile, OtherTypeItem } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { nextTick } from "vue";
 
@@ -59,14 +59,14 @@ describe("DropDownMenuTreeView", () => {
             false,
             false,
         );
-        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBe(false);
         expect(
             wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
-        ).toBeFalsy();
-        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+        ).toBe(false);
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBe(true);
     });
     it(`Given item is not a folder
         Then document can be locked/unlocked`, () => {
@@ -80,16 +80,14 @@ describe("DropDownMenuTreeView", () => {
             false,
             false,
         );
-        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
-        expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
-        ).toBeTruthy();
+        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBe(true);
         expect(
             wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
-        ).toBeTruthy();
-        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+        ).toBe(true);
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBe(true);
     });
 
     it(`Given item is a file
@@ -104,9 +102,9 @@ describe("DropDownMenuTreeView", () => {
             false,
             false,
         );
-        expect(
-            wrapper.find("[data-test=document-dropdown-menu-download-file]").exists(),
-        ).toBeTruthy();
+        expect(wrapper.find("[data-test=document-dropdown-menu-download-file]").exists()).toBe(
+            true,
+        );
     });
 
     it(`Given item is not a file
@@ -121,9 +119,9 @@ describe("DropDownMenuTreeView", () => {
             false,
             false,
         );
-        expect(
-            wrapper.find("[data-test=document-dropdown-menu-download-file]").exists(),
-        ).toBeFalsy();
+        expect(wrapper.find("[data-test=document-dropdown-menu-download-file]").exists()).toBe(
+            false,
+        );
     });
 
     it(`Given item is not a folder and user can write
@@ -140,17 +138,40 @@ describe("DropDownMenuTreeView", () => {
         );
         await nextTick();
 
-        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
-        expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
-        ).toBeTruthy();
+        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBe(true);
         expect(
             wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
-        ).toBeTruthy();
-        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+        ).toBe(true);
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBe(true);
     });
+
+    it(`Given item is another type
+        Then user cannot lock, unlock nor create new version of document`, async () => {
+        const wrapper = createWrapper(
+            {
+                id: 1,
+                title: "my item title",
+                type: "whatever",
+                user_can_write: true,
+            } as OtherTypeItem,
+            false,
+            false,
+        );
+        await nextTick();
+
+        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBe(false);
+        expect(
+            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
+        ).toBe(false);
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBe(true);
+    });
+
     it(`Given user can write
         Then he can update its properties and delete it`, () => {
         const wrapper = createWrapper(
@@ -163,16 +184,14 @@ describe("DropDownMenuTreeView", () => {
             false,
             false,
         );
-        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
-        expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
-        ).toBeTruthy();
+        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBe(true);
         expect(
             wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
-        ).toBeTruthy();
-        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+        ).toBe(true);
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBe(true);
     });
     it(`Given it is a file and user has read permission
         Then he can't manage document`, () => {
@@ -186,16 +205,14 @@ describe("DropDownMenuTreeView", () => {
             false,
             false,
         );
-        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
-        expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
-        ).toBeTruthy();
+        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBe(true);
         expect(
             wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
-        ).toBeFalsy();
-        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
+        ).toBe(false);
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBe(false);
     });
     it(`Given it is a folder and user has read permission
         Then he can't manage document`, () => {
@@ -209,14 +226,14 @@ describe("DropDownMenuTreeView", () => {
             false,
             false,
         );
-        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-folder-title]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBe(false);
         expect(
             wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
-        ).toBeFalsy();
-        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
+        ).toBe(false);
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBe(false);
     });
 
     it(`Given writers are not allowed to update properties
@@ -235,7 +252,7 @@ describe("DropDownMenuTreeView", () => {
             false,
         );
 
-        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBe(false);
     });
 
     it(`Given writers are not allowed to update properties
@@ -254,7 +271,7 @@ describe("DropDownMenuTreeView", () => {
             false,
         );
 
-        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBe(true);
     });
 
     it(`Given writers are not allowed to delete
@@ -273,7 +290,7 @@ describe("DropDownMenuTreeView", () => {
             true,
         );
 
-        expect(wrapper.find("[data-test=document-dropdown-delete]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-dropdown-delete]").exists()).toBe(false);
     });
 
     it(`Given writers are not allowed to delete
@@ -292,6 +309,6 @@ describe("DropDownMenuTreeView", () => {
             true,
         );
 
-        expect(wrapper.find("[data-test=document-dropdown-delete]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-dropdown-delete]").exists()).toBe(true);
     });
 });
