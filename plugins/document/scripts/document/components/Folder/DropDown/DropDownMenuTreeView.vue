@@ -31,7 +31,7 @@
             v-if="item.user_can_write && is_item_a_folder"
         />
 
-        <template v-if="!is_item_a_folder">
+        <template v-if="should_display_lock_unlock">
             <lock-item
                 v-bind:item="item"
                 data-test="document-dropdown-menu-lock-item"
@@ -55,7 +55,7 @@
             v-bind:item="item"
             v-bind:button-classes="`tlp-dropdown-menu-item`"
             v-bind:icon-classes="`fa-solid fa-fw fa-share tlp-dropdown-menu-item-icon`"
-            v-if="!is_item_an_empty && item.user_can_write && !is_item_a_folder"
+            v-if="should_display_new_version_button"
             data-test="document-dropdown-create-new-version-button"
             slot="new-item-version"
         />
@@ -99,7 +99,7 @@ import UnlockItem from "./Lock/UnlockItem.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
-import { isEmpty, isFile, isFolder } from "../../../helpers/type-check-helper";
+import { isEmpty, isFile, isFolder, isOtherType } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
@@ -120,6 +120,10 @@ const is_item_a_folder = computed((): boolean => {
     return isFolder(props.item);
 });
 
+const is_item_another_type = computed((): boolean => {
+    return isOtherType(props.item);
+});
+
 const is_item_a_file = computed((): boolean => {
     return isFile(props.item);
 });
@@ -135,4 +139,16 @@ const should_display_update_properties = computed((): boolean => {
 const should_display_delete_item = computed((): boolean => {
     return canDelete(forbid_writers_to_delete.value, props.item);
 });
+
+const should_display_lock_unlock = computed(
+    (): boolean => !is_item_another_type.value && !is_item_a_folder.value,
+);
+
+const should_display_new_version_button = computed(
+    (): boolean =>
+        !is_item_another_type.value &&
+        !is_item_an_empty.value &&
+        !is_item_a_folder.value &&
+        props.item.user_can_write,
+);
 </script>

@@ -20,7 +20,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DropDownQuickLook from "./DropDownQuickLook.vue";
-import type { Folder, Item, ItemFile } from "../../../type";
+import type { Folder, Item, ItemFile, OtherTypeItem } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("DropDownQuickLook", () => {
@@ -202,4 +202,23 @@ describe("DropDownQuickLook", () => {
             expect(wrapper.vm.should_display_delete).toBe(expected);
         },
     );
+
+    it(`Given the item is another type
+        When the menu is displayed
+        Then the lock, unlock, create new version options are not available`, () => {
+        const wrapper = createWrapper(
+            {
+                id: 1,
+                title: "my folder",
+                type: "whatever",
+                user_can_write: true,
+            } as OtherTypeItem,
+            false,
+            false,
+            true,
+        );
+
+        expect(wrapper.vm.should_display_lock_unlock).toBe(false);
+        expect(wrapper.vm.should_display_new_version_button).toBe(false);
+    });
 });

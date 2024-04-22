@@ -39,7 +39,7 @@
                 slot="new-item-version"
             />
 
-            <template v-if="!is_item_a_folder && item.user_can_write">
+            <template v-if="should_display_lock_unlock">
                 <lock-item
                     v-bind:item="item"
                     data-test="document-dropdown-menu-lock-item"
@@ -83,7 +83,7 @@ import UnlockItem from "./Lock/UnlockItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
-import { isEmpty, isFile, isFolder, isWiki } from "../../../helpers/type-check-helper";
+import { isEmpty, isFile, isFolder, isOtherType, isWiki } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
 import { computed } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
@@ -115,6 +115,8 @@ const is_item_a_folder = computed((): boolean => {
     return isFolder(props.item);
 });
 
+const is_item_another_type = computed((): boolean => isOtherType(props.item));
+
 const should_display_download_button = computed(
     (): boolean =>
         isFile(props.item) &&
@@ -125,6 +127,7 @@ const should_display_download_button = computed(
 const should_display_new_version_button = computed(
     (): boolean =>
         !is_item_a_wiki_with_approval_table.value &&
+        !is_item_another_type.value &&
         !is_item_a_folder.value &&
         !isEmpty(props.item) &&
         props.item.user_can_write &&
@@ -140,9 +143,15 @@ const should_display_delete = computed(
         is_deletion_allowed.value && canDelete(forbid_writers_to_delete.value, props.item),
 );
 
+const should_display_lock_unlock = computed(
+    (): boolean =>
+        !is_item_another_type.value && !is_item_a_folder.value && props.item.user_can_write,
+);
+
 defineExpose({
     should_display_delete,
     should_display_new_version_button,
     should_display_update_properties,
+    should_display_lock_unlock,
 });
 </script>
