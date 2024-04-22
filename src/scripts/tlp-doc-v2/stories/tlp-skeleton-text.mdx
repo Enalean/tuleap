@@ -1,0 +1,30 @@
+import { Canvas, Meta } from '@storybook/blocks';
+import * as SkeletonScreensStories from "./tlp-skeleton-text.stories.ts";
+
+<Meta of={SkeletonScreensStories}/>
+
+# Skeleton screens
+
+## Skeleton for typography
+
+<code>.tlp-skeleton-text</code>, <code>.tlp-skeleton-icon</code>
+
+You can specify a custom width on a <code>.tlp-skeleton-text</code> element.
+
+<Canvas withToolbar={true} of={SkeletonScreensStories.SkeletonForTypography}></Canvas>
+
+## Skeleton for fields
+
+<code>.tlp-skeleton-field</code>, <code>.tlp-label</code>, <code>.tlp-skeleton-text</code>
+
+<Canvas withToolbar={true} of={SkeletonScreensStories.SkeletonForFields}></Canvas>
+
+## Skeleton for cards
+
+<code>.tlp-card</code>, <code>.tlp-skeleton-card</code>
+
+<Canvas withToolbar={true} of={SkeletonScreensStories.SkeletonForCards}></Canvas>
+
+## Skeleton inside tables
+
+<Canvas withToolbar={true} of={SkeletonScreensStories.SkeletonInsideTables}></Canvas>
