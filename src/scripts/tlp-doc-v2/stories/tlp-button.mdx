@@ -1,0 +1,19 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as ButtonStories from "./tlp-button.stories.ts";
+
+<Meta of={ButtonStories}/>
+
+# Buttons
+<code>.tlp-button-[type]</code>
+
+<Canvas withToolbar={true} of={ButtonStories.Button}></Canvas>
+
+<Controls></Controls>
+
+## Ellipsis button
+
+<code>.tlp-button-ellipsis</code>
+
+Ellipsis button are necessary to have a proper size for the ellipsis icon.
+
+<Canvas withToolbar={true} of={ButtonStories.EllipsisButton}></Canvas>

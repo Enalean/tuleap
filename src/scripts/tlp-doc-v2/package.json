@@ -8,6 +8,7 @@
     "@tuleap/core-constants": "workspace:*",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
+    "@tuleap/tlp-button": "workspace:^",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tlp-styles": "workspace:^"
   },
