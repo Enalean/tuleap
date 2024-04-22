@@ -14,6 +14,9 @@ dependencies:
   '@tuleap/tlp-badge':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-badge
+  '@tuleap/tlp-relative-date':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-styles':
     specifier: workspace:^
     version: link:../../../lib/frontend/tlp-styles
