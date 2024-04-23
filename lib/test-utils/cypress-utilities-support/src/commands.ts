@@ -210,7 +210,7 @@ Cypress.Commands.add(
                     return Promise.resolve();
                 }
 
-                cy.wait(100);
+                cy.wait(500);
                 reloadCallback();
                 return cy.reloadUntilCondition(
                     reloadCallback,
