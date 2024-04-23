@@ -34,6 +34,12 @@ reason = "Angular and associated tools are EOL. Only used at build time. ReDoS."
 id = "GHSA-p6mc-m468-83gw" # CVE-2020-8203
 reason = "Angular and associated tools are EOL. Only used at build time. Prototype Pollution cannot be exploited in our context."
 
+# Angular ng-cache-loader
+## html-minifier
+[[IgnoredVulns]]
+id = "GHSA-pfq8-rq6v-vf5m" # CVE-2022-37620
+reason = "Angular and associated tools are EOL. Only used at build time. ReDoS."
+
 # ckeditor4
 [[IgnoredVulns]]
 id = "GHSA-fq6h-4g8v-qqvm" # CVE-2024-24815
