@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Test\Builders;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tracker;
+use Tracker_FormElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 
@@ -289,7 +290,19 @@ final class TrackerDatabaseBuilder
         $this->db->insert(
             'permissions',
             [
-                'permission_type' => \Tracker_FormElement::PERMISSION_READ,
+                'permission_type' => Tracker_FormElement::PERMISSION_READ,
+                'object_id'       => (string) $field_id,
+                'ugroup_id'       => $user_group_id,
+            ]
+        );
+    }
+
+    public function setSubmitPermission(int $field_id, int $user_group_id): void
+    {
+        $this->db->insert(
+            'permissions',
+            [
+                'permission_type' => Tracker_FormElement::PERMISSION_SUBMIT,
                 'object_id'       => (string) $field_id,
                 'ugroup_id'       => $user_group_id,
             ]

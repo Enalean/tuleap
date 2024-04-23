@@ -32,6 +32,7 @@ use Tuleap\include\CheckUserCanAccessProject;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
+use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 
 final readonly class CrossTrackerPermissionGate
@@ -81,7 +82,7 @@ final readonly class CrossTrackerPermissionGate
     private function checkTrackersAuthorization(PFUser $user, array $trackers): void
     {
         if (TrackersPermissionsRetriever::isEnabled()) {
-            $result = $this->trackers_access->retrieveUserPermissionOnTrackers($user, $trackers);
+            $result = $this->trackers_access->retrieveUserPermissionOnTrackers($user, $trackers, TrackerPermissionType::PERMISSION_VIEW);
             if (empty($result->allowed) && ! empty($trackers)) {
                 throw new CrossTrackerUnauthorizedTrackerException();
             }

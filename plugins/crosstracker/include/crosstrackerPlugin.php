@@ -60,7 +60,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
-use Tuleap\Tracker\Permission\TrackersPermissionsDao;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
@@ -299,12 +298,7 @@ class crosstrackerPlugin extends Plugin
             new SimilarFieldsFormatter($formatter_visitor, new BindToValueVisitor())
         );
         $representation_factory         = new CSVRepresentationFactory($csv_representation_builder);
-        $trackers_permissions_dao       = new TrackersPermissionsDao();
-        $trackers_permissions_retriever = new TrackersPermissionsRetriever(
-            $trackers_permissions_dao,
-            $trackers_permissions_dao,
-            new URLVerification(),
-        );
+        $trackers_permissions_retriever = TrackersPermissionsRetriever::build();
 
         return new CSVExportController(
             new CrossTrackerReportFactory(

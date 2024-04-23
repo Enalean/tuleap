@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Permission;
 
 use ProjectUGroup;
-use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class TrackersPermissionsDaoTest extends TestIntegrationTestCase
+final class TrackersPermissionsDaoOnFieldsTest extends TestIntegrationTestCase
 {
     /**
      * @var non-empty-list<int>
@@ -37,8 +36,6 @@ final class TrackersPermissionsDaoTest extends TestIntegrationTestCase
     private array $fields_id;
     private int $field1_id;
     private int $field3_id;
-    private int $tracker1_id;
-    private int $tracker2_id;
 
     protected function setUp(): void
     {
@@ -47,8 +44,6 @@ final class TrackersPermissionsDaoTest extends TestIntegrationTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
 
         $project = $core_builder->buildProject();
-        $user    = $core_builder->buildUser('mickael', 'Mickael', 'mickael@example.com');
-        $core_builder->addUserToProjectMembers((int) $user->getId(), (int) $project->getID());
 
         $tracker         = $tracker_builder->buildTracker((int) $project->getID(), 'Release');
         $this->field1_id = $tracker_builder->buildIntField($tracker->getId(), 'field1');
@@ -59,19 +54,6 @@ final class TrackersPermissionsDaoTest extends TestIntegrationTestCase
         $tracker_builder->setReadPermission($this->field1_id, ProjectUGroup::PROJECT_MEMBERS);
         $tracker_builder->setReadPermission($field2_id, ProjectUGroup::PROJECT_ADMIN);
         $tracker_builder->setReadPermission($this->field3_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $this->tracker1_id = $tracker_builder->buildTracker((int) $project->getID(), 'Tracker 1')->getId();
-        $this->tracker2_id = $tracker_builder->buildTracker((int) $project->getID(), 'Tracker 2')->getId();
-        $tracker_builder->setViewPermissionOnTracker(
-            $this->tracker1_id,
-            Tracker::PERMISSION_FULL,
-            ProjectUGroup::PROJECT_MEMBERS,
-        );
-        $tracker_builder->setViewPermissionOnTracker(
-            $this->tracker2_id,
-            Tracker::PERMISSION_FULL,
-            ProjectUGroup::PROJECT_ADMIN,
-        );
     }
 
     public function testItRetrieveFieldsReadPermissions(): void
@@ -90,23 +72,5 @@ final class TrackersPermissionsDaoTest extends TestIntegrationTestCase
 
         self::assertCount(3, $results);
         self::assertEqualsCanonicalizing($this->fields_id, $results);
-    }
-
-    public function testItRetrieveTrackersPermissions(): void
-    {
-        $dao     = new TrackersPermissionsDao();
-        $results = $dao->searchUserGroupsPermissionOnTrackers([ProjectUGroup::PROJECT_MEMBERS], [$this->tracker1_id, $this->tracker2_id]);
-
-        self::assertCount(1, $results);
-        self::assertEqualsCanonicalizing([$this->tracker1_id], $results);
-    }
-
-    public function testItRetrieveTrackersPermissionsWithAdmin(): void
-    {
-        $dao     = new TrackersPermissionsDao();
-        $results = $dao->searchUserGroupsPermissionOnTrackers([ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN], [$this->tracker1_id, $this->tracker2_id]);
-
-        self::assertCount(2, $results);
-        self::assertEqualsCanonicalizing([$this->tracker1_id, $this->tracker2_id], $results);
     }
 }

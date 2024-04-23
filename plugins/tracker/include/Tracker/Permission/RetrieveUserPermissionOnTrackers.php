@@ -31,5 +31,5 @@ interface RetrieveUserPermissionOnTrackers
      * @param Tracker[] $trackers
      * @return UserPermissionsOnItems<Tracker, TrackerPermissionType>
      */
-    public function retrieveUserPermissionOnTrackers(PFUser $user, array $trackers): UserPermissionsOnItems;
+    public function retrieveUserPermissionOnTrackers(PFUser $user, array $trackers, TrackerPermissionType $permission): UserPermissionsOnItems;
 }

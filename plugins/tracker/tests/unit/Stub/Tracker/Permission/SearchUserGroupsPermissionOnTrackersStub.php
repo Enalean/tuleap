@@ -24,30 +24,53 @@ namespace Tuleap\Tracker\Test\Stub\Tracker\Permission;
 
 use Tuleap\Tracker\Permission\SearchUserGroupsPermissionOnTrackers;
 
-final readonly class SearchUserGroupsPermissionOnTrackersStub implements SearchUserGroupsPermissionOnTrackers
+final class SearchUserGroupsPermissionOnTrackersStub implements SearchUserGroupsPermissionOnTrackers
 {
     /**
-     * @param list<int> $result
+     * @var list<int>
      */
-    private function __construct(private array $result)
+    private array $view_results = [];
+    /**
+     * @var list<int>
+     */
+    private array $submit_results = [];
+
+    private function __construct()
     {
     }
 
-    public static function buildEmpty(): self
+    public static function build(): self
     {
-        return new self([]);
+        return new self();
     }
 
     /**
      * @param list<int> $results
      */
-    public static function buildWithResults(array $results): self
+    public function withViewResults(array $results): self
     {
-        return new self($results);
+        $this->view_results = $results;
+
+        return $this;
     }
 
-    public function searchUserGroupsPermissionOnTrackers(array $user_groups_id, array $trackers_id): array
+    /**
+     * @param list<int> $results
+     */
+    public function withSubmitResults(array $results): self
     {
-        return $this->result;
+        $this->submit_results = $results;
+
+        return $this;
+    }
+
+    public function searchUserGroupsViewPermissionOnTrackers(array $user_groups_id, array $trackers_id): array
+    {
+        return $this->view_results;
+    }
+
+    public function searchUserGroupsSubmitPermissionOnTrackers(array $user_groups_id, array $trackers_id): array
+    {
+        return $this->submit_results;
     }
 }

@@ -29,5 +29,12 @@ interface SearchUserGroupsPermissionOnTrackers
      * @param int[] $trackers_id
      * @return int[]
      */
-    public function searchUserGroupsPermissionOnTrackers(array $user_groups_id, array $trackers_id): array;
+    public function searchUserGroupsViewPermissionOnTrackers(array $user_groups_id, array $trackers_id): array;
+
+    /**
+     * @param int[] $user_groups_id
+     * @param int[] $trackers_id
+     * @return int[]
+     */
+    public function searchUserGroupsSubmitPermissionOnTrackers(array $user_groups_id, array $trackers_id): array;
 }

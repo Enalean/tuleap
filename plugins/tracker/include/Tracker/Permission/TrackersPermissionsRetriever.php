@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission;
 
+use EventManager;
 use ForgeConfig;
 use LogicException;
 use PFUser;
 use Project;
 use Project_AccessException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tracker_FormElement;
 use Tracker_UserWithReadAllPermission;
@@ -35,7 +37,9 @@ use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\include\CheckUserCanAccessProject;
+use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\User\TuleapFunctionsUser;
+use URLVerification;
 
 final readonly class TrackersPermissionsRetriever implements RetrieveUserPermissionOnFields, RetrieveUserPermissionOnTrackers
 {
@@ -48,7 +52,15 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         private SearchUserGroupsPermissionOnFields $fields_dao,
         private SearchUserGroupsPermissionOnTrackers $trackers_dao,
         private CheckUserCanAccessProject $project_access,
+        private EventDispatcherInterface $dispatcher,
     ) {
+    }
+
+    public static function build(): self
+    {
+        $dao = new TrackersPermissionsDao();
+
+        return new self($dao, $dao, new URLVerification(), EventManager::instance());
     }
 
     public static function isEnabled(): bool
@@ -93,17 +105,29 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         return new UserPermissionsOnItems($user, $permission, $allowed, $not_allowed);
     }
 
-    public function retrieveUserPermissionOnTrackers(PFUser $user, array $trackers): UserPermissionsOnItems
+    public function retrieveUserPermissionOnTrackers(PFUser $user, array $trackers, TrackerPermissionType $permission): UserPermissionsOnItems
     {
         if (! self::isEnabled()) {
             throw new LogicException('Trackers permissions on tracker are disabled by feature flag.');
         }
 
         if ($trackers === []) {
-            return new UserPermissionsOnItems($user, TrackerPermissionType::PERMISSION_VIEW, [], []);
+            return new UserPermissionsOnItems($user, $permission, [], []);
         }
 
-        $results = $this->trackers_dao->searchUserGroupsPermissionOnTrackers(
+        return match ($permission) {
+            TrackerPermissionType::PERMISSION_VIEW   => $this->buildTrackerViewPermissions($user, $trackers),
+            TrackerPermissionType::PERMISSION_SUBMIT => $this->buildTrackerSubmitPermissions($user, $trackers),
+        };
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @return UserPermissionsOnItems<Tracker, TrackerPermissionType>
+     */
+    private function buildTrackerViewPermissions(PFUser $user, array $trackers): UserPermissionsOnItems
+    {
+        $results = $this->trackers_dao->searchUserGroupsViewPermissionOnTrackers(
             $this->getUserUGroupsFromTrackers($user, $trackers),
             array_map(static fn(Tracker $tracker) => $tracker->getId(), $trackers)
         );
@@ -122,6 +146,55 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         }
 
         return new UserPermissionsOnItems($user, TrackerPermissionType::PERMISSION_VIEW, $allowed, $not_allowed);
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @return UserPermissionsOnItems<Tracker, TrackerPermissionType>
+     */
+    private function buildTrackerSubmitPermissions(PFUser $user, array $trackers): UserPermissionsOnItems
+    {
+        if ($user->isAnonymous()) {
+            return new UserPermissionsOnItems($user, TrackerPermissionType::PERMISSION_SUBMIT, [], $trackers);
+        }
+
+        $results = $this->trackers_dao->searchUserGroupsSubmitPermissionOnTrackers(
+            $this->getUserUGroupsFromTrackers($user, $trackers),
+            array_map(static fn(Tracker $tracker) => $tracker->getId(), $trackers)
+        );
+
+        $allowed     = [];
+        $not_allowed = [];
+        foreach ($trackers as $tracker) {
+            if ($this->canUserSubmitArtifactFromTracker($user, $tracker, $results)) {
+                $allowed[] = $tracker;
+            } else {
+                $not_allowed[] = $tracker;
+            }
+        }
+
+        return new UserPermissionsOnItems($user, TrackerPermissionType::PERMISSION_SUBMIT, $allowed, $not_allowed);
+    }
+
+    /**
+     * @param int[] $allowed_trackers
+     */
+    private function canUserSubmitArtifactFromTracker(PFUser $user, Tracker $tracker, array $allowed_trackers): bool
+    {
+        $project_access = $this->userCanAccessProject($user, $tracker->getProject());
+        if (
+            in_array($tracker->getId(), $allowed_trackers, true)
+            && $this->dispatcher->dispatch(new CanSubmitNewArtifact($user, $tracker))->canSubmitNewArtifact()
+            && $project_access
+        ) {
+            return true;
+        }
+
+        if ($tracker->userIsAdmin($user) && $project_access) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

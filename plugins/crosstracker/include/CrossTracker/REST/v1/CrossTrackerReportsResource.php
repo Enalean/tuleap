@@ -72,7 +72,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
-use Tuleap\Tracker\Permission\TrackersPermissionsDao;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
@@ -279,12 +278,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new CrossTrackerExpertQueryReportDao(),
             $this->invalid_comparisons_collector
         );
-        $trackers_permissions_dao             = new TrackersPermissionsDao();
-        $trackers_permissions_retriever       = new TrackersPermissionsRetriever(
-            $trackers_permissions_dao,
-            $trackers_permissions_dao,
-            new URLVerification(),
-        );
+        $trackers_permissions_retriever       = TrackersPermissionsRetriever::build();
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(
             new URLVerification(),
             $trackers_permissions_retriever,

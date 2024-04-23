@@ -25,4 +25,5 @@ namespace Tuleap\Tracker\Permission;
 enum TrackerPermissionType
 {
     case PERMISSION_VIEW;
+    case PERMISSION_SUBMIT;
 }
