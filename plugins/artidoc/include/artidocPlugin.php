@@ -102,9 +102,19 @@ class ArtidocPlugin extends Plugin
     #[ListeningToEventClass]
     public function getDocmanItemOtherTypeEvent(GetDocmanItemOtherTypeEvent $event): void
     {
-        if ($event->type === ArtidocDocument::TYPE) {
-            $event->setInstance(new ArtidocDocument($event->row));
+        if ($event->type !== ArtidocDocument::TYPE) {
+            return;
         }
+
+        if (! isset($event->row['group_id'])) {
+            return;
+        }
+
+        if (! $this->isAllowed($event->row['group_id'])) {
+            return;
+        }
+
+        $event->setInstance(new ArtidocDocument($event->row));
     }
 
     #[ListeningToEventClass]
