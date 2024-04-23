@@ -58,6 +58,18 @@ import NoAccessState from "@/views/NoAccessState.vue";
 import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.vue";
 import DocumentLayout from "@/components/DocumentLayout.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
+import { onMounted } from "vue";
+import useScrollToAnchor from "@/composables/useScrollToAnchor";
 
 defineProps<{ sections: readonly ArtidocSection[] | undefined }>();
+
+const { scrollToAnchor } = useScrollToAnchor();
+
+onMounted(() => {
+    const hash = window.location.hash.slice(1);
+
+    if (hash) {
+        scrollToAnchor(hash);
+    }
+});
 </script>
