@@ -111,6 +111,7 @@ describe("DropDownMenu", () => {
         [TYPE_EMBEDDED, true],
         [TYPE_WIKI, false],
         [TYPE_EMPTY, false],
+        ["whatever", false],
     ])("should display a %s with versions link: %s", async (type, should_versions_be_displayed) => {
         const wrapper = createWrapper({
             id: 4,
@@ -122,5 +123,77 @@ describe("DropDownMenu", () => {
         await nextTick();
 
         expect(wrapper.vm.should_display_versions_link).toBe(should_versions_be_displayed);
+    });
+
+    it.each([
+        [TYPE_FOLDER, true],
+        [TYPE_FILE, true],
+        [TYPE_LINK, true],
+        [TYPE_EMBEDDED, true],
+        [TYPE_WIKI, true],
+        [TYPE_EMPTY, true],
+        ["whatever", false],
+    ])(
+        "should display a %s with notifications link: %s",
+        async (type, should_notifications_be_displayed) => {
+            const wrapper = createWrapper({
+                id: 4,
+                title: "my item title",
+                type,
+                can_user_manage: false,
+            } as Item);
+
+            await nextTick();
+
+            expect(wrapper.find("[data-test=notifications-menu-link]").exists()).toBe(
+                should_notifications_be_displayed,
+            );
+        },
+    );
+
+    it.each([
+        [TYPE_FOLDER, true],
+        [TYPE_FILE, true],
+        [TYPE_LINK, true],
+        [TYPE_EMBEDDED, true],
+        [TYPE_WIKI, true],
+        [TYPE_EMPTY, true],
+        ["whatever", false],
+    ])("should display a %s with history link: %s", async (type, should_history_be_displayed) => {
+        const wrapper = createWrapper({
+            id: 4,
+            title: "my item title",
+            type,
+            can_user_manage: false,
+        } as Item);
+
+        await nextTick();
+
+        expect(wrapper.find("[data-test=document-history]").exists()).toBe(
+            should_history_be_displayed,
+        );
+    });
+
+    it.each([
+        [TYPE_FOLDER, true],
+        [TYPE_FILE, true],
+        [TYPE_LINK, true],
+        [TYPE_EMBEDDED, true],
+        [TYPE_WIKI, true],
+        [TYPE_EMPTY, false],
+        ["whatever", false],
+    ])("should display a %s with approval link: %s", async (type, should_approval_be_displayed) => {
+        const wrapper = createWrapper({
+            id: 4,
+            title: "my item title",
+            type,
+            can_user_manage: false,
+        } as Item);
+
+        await nextTick();
+
+        expect(wrapper.find("[data-test=document-dropdown-approval-tables]").exists()).toBe(
+            should_approval_be_displayed,
+        );
     });
 });

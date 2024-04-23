@@ -37,6 +37,7 @@
         role="menuitem"
         data-shortcut-notifications
         data-test="notifications-menu-link"
+        v-if="should_display_notifications"
     >
         <i class="fa-regular fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
         <span>{{ $gettext("Notifications") }}</span>
@@ -57,6 +58,7 @@
     </router-link>
     <router-link
         v-bind:to="{ name: 'history', params: { item_id: item.id } }"
+        v-if="should_display_history"
         class="tlp-dropdown-menu-item"
         role="menuitem"
         data-shortcut-history
@@ -68,7 +70,7 @@
 
     <slot name="update-permissions" />
     <a
-        v-if="!is_item_an_empty_document"
+        v-if="should_display_approval"
         v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)"
         class="tlp-dropdown-menu-item"
         role="menuitem"
@@ -102,7 +104,14 @@ import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DownloadFolderAsZip from "./DownloadFolderAsZip/DownloadFolderAsZip.vue";
-import { isFolder, isEmpty, isFile, isLink, isEmbedded } from "../../../helpers/type-check-helper";
+import {
+    isFolder,
+    isEmpty,
+    isFile,
+    isLink,
+    isEmbedded,
+    isOtherType,
+} from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
@@ -123,6 +132,12 @@ const is_item_an_empty_document = computed((): boolean => isEmpty(props.item));
 
 const should_display_versions_link = computed(
     (): boolean => isFile(props.item) || isLink(props.item) || isEmbedded(props.item),
+);
+
+const should_display_notifications = computed((): boolean => !isOtherType(props.item));
+const should_display_history = computed((): boolean => !isOtherType(props.item));
+const should_display_approval = computed(
+    (): boolean => !is_item_an_empty_document.value && !isOtherType(props.item),
 );
 
 function getUrlForPane(pane_name: string): string {
