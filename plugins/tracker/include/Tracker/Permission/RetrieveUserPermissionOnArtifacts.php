@@ -23,23 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Permission;
 
 use PFUser;
+use Tuleap\Tracker\Artifact\Artifact;
 
-/**
- * @template Item
- * @template PermissionType of FieldPermissionType|TrackerPermissionType|ArtifactPermissionType
- */
-final readonly class UserPermissionsOnItems
+interface RetrieveUserPermissionOnArtifacts
 {
     /**
-     * @param PermissionType $permission
-     * @param Item[] $allowed
-     * @param Item[] $not_allowed
+     * @param Artifact[] $artifacts
+     * @return UserPermissionsOnItems<Artifact, ArtifactPermissionType>
      */
-    public function __construct(
-        public PFUser $user,
-        public FieldPermissionType|TrackerPermissionType|ArtifactPermissionType $permission,
-        public array $allowed,
-        public array $not_allowed,
-    ) {
-    }
+    public function retrieveUserPermissionOnArtifacts(PFUser $user, array $artifacts, ArtifactPermissionType $permission): UserPermissionsOnItems;
 }

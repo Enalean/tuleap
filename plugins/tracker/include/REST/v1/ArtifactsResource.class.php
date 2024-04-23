@@ -104,9 +104,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
@@ -130,7 +130,10 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Permission\ArtifactPermissionType;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -218,6 +221,7 @@ class ArtifactsResource extends AuthenticatedResource
     private ArtifactsDeletionConfig $artifacts_deletion_config;
     private EventManager $event_manager;
     private \Tracker_REST_TrackerRestBuilder $tracker_rest_builder;
+    private readonly RetrieveUserPermissionOnArtifacts $trackers_permissions_retriever;
 
     public function __construct()
     {
@@ -308,6 +312,8 @@ class ArtifactsResource extends AuthenticatedResource
             ),
             new WorkflowRestBuilder()
         );
+
+        $this->trackers_permissions_retriever = TrackersPermissionsRetriever::build();
     }
 
     /**
@@ -361,14 +367,26 @@ class ArtifactsResource extends AuthenticatedResource
             return [self::VALUES_FORMAT_COLLECTION => $artifact_representations];
         }
 
-        foreach ($artifacts as $artifact) {
-            if ($artifact->userCanView($user)) {
+        if (TrackersPermissionsRetriever::isEnabled()) {
+            $permissions = $this->trackers_permissions_retriever->retrieveUserPermissionOnArtifacts($user, $artifacts, ArtifactPermissionType::PERMISSION_VIEW);
+            foreach ($permissions->allowed as $artifact) {
                 $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
                     $user,
                     $artifact,
                     MinimalTrackerRepresentation::build($artifact->getTracker()),
                     StatusValueRepresentation::buildFromArtifact($artifact, $user)
                 );
+            }
+        } else {
+            foreach ($artifacts as $artifact) {
+                if ($artifact->userCanView($user)) {
+                    $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
+                        $user,
+                        $artifact,
+                        MinimalTrackerRepresentation::build($artifact->getTracker()),
+                        StatusValueRepresentation::buildFromArtifact($artifact, $user)
+                    );
+                }
             }
         }
 
@@ -728,8 +746,8 @@ class ArtifactsResource extends AuthenticatedResource
      * </ol>
      *
      * @url PUT {id}
-     * @param string                            $id      Id of the artifact
-     * @param array                             $values  Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
+     * @param string $id Id of the artifact
+     * @param array $values Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
      * @param NewChangesetCommentRepresentation $comment Comment about update {body, format} {@from body}
      *
      * @throws RestException 400
@@ -811,7 +829,7 @@ class ArtifactsResource extends AuthenticatedResource
             new NewArtifactLinkInitialChangesetValueBuilder()
         );
         $update_conditions_checker = new ArtifactRestUpdateConditionsChecker();
-        $artifact_factory          =  Tracker_ArtifactFactory::instance();
+        $artifact_factory          = Tracker_ArtifactFactory::instance();
 
         $reverse_link_retriever = new ReverseLinksRetriever(
             new ReverseLinksDao(),
@@ -1042,13 +1060,13 @@ class ArtifactsResource extends AuthenticatedResource
      *
      * @url DELETE {id}
      *
-     * @throws RestException 401 Unauthorized
+     * @param int $id Id of the artifact
      * @throws RestException 403 Forbidden
      * @throws RestException 404 Artifact Not found
      * @throws RestException 429 Too Many Requests (rate limit exceeded)
      *
      * @access hybrid
-     * @param int $id Id of the artifact
+     * @throws RestException 401 Unauthorized
      */
     public function deleteArtifact($id)
     {
