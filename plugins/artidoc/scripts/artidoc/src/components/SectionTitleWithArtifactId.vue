@@ -29,7 +29,7 @@ const artifact_url = `/plugins/tracker/?aid=${props.artifact_id}`;
 </script>
 <style lang="scss" scoped>
 h1 {
-    margin: 0 var(--tlp-small-spacing) 0 0;
+    margin: 0;
     color: var(--tlp-dark-color);
     font-size: 1.5rem;
     font-weight: 600;
