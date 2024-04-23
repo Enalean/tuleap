@@ -21,25 +21,20 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202404041430_add_artidoc_document_table extends \Tuleap\ForgeUpgrade\Bucket
+final class b202404230904_add_index_on_rank extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
-        return 'Add plugin_artidoc_document table';
+        return 'Add index on rank in plugin_artidoc_document table';
     }
 
     public function up(): void
     {
-        $this->api->createTable(
+        $this->api->addIndex(
             'plugin_artidoc_document',
+            'idx_rank',
             <<<EOS
-            CREATE TABLE plugin_artidoc_document
-            (
-                item_id     INT(11) UNSIGNED NOT NULL,
-                artifact_id INT(11)          NOT NULL,
-                `rank`      INT(11) unsigned NOT NULL,
-                PRIMARY KEY (item_id, artifact_id)
-            ) ENGINE = InnoDB
+            ALTER TABLE plugin_artidoc_document ADD INDEX idx_rank (item_id, `rank`)
             EOS
         );
     }
