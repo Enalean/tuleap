@@ -651,7 +651,7 @@ project_desc_name	req_soft	Logiciels Requis
 project_desc_name	int_prop	Propriété Intellectuelle
 
 project_desc_desc	full_desc	<b>*** REMARQUE IMPORTANTE ***</b> Veuillez fournir une description contenant tous les mots-clés qui permettront aux utilisateurs de trouver facilement votre projet lors d'une recherche. Une description trop courte ou incomplète ne fera que retarder l'approbation de votre projet.
-project_desc_desc	other_comments	Tout ce que vous souhaitez dire à propos de votre projet et qui n'a pas déjà été couvert plus haut. Vous pouvez par exemple mentionner les produits qui utilise votre logiciel. S'il s'agit d'un produit commercial vous pouvez aussi fournir des informations de prix ou un contact commercial, etc.
+project_desc_desc	other_comments	Tout ce que vous souhaitez dire à propos de votre projet et qui n'a pas déjà été couvert plus haut. Vous pouvez par exemple mentionner les produits qui utilisent votre logiciel. S'il s'agit d'un produit commercial, vous pouvez aussi fournir des informations de prix ou un contact commercial, etc.
 project_desc_desc	req_soft	Si votre projet nécessite l'emploi d'autres composants logicielles internes ou externes pour fonctionner correctement, merci de les mentionner ici.
 project_desc_desc	int_prop	Brevets ou propositions d'invention relatifs à ce projet.
 #-----------------------------------------------
