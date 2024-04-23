@@ -53,8 +53,6 @@ aside {
 .table-of-contents {
     position: sticky;
     top: var(--header-height);
-    padding: var(--tlp-medium-spacing);
-    padding-top: var(--tlp-large-spacing);
 }
 
 @media (max-width: 1024px) {

@@ -19,16 +19,18 @@
   -->
 
 <template>
-    <h1 class="tlp-pane-title">
-        {{ $gettext("Table of contents") }}
-    </h1>
-    <ol>
-        <li v-for="section in sections" v-bind:key="section.artifact.id">
-            <a v-bind:href="`#${section.artifact.id}`" class="section-title">
-                <slot v-bind:title="section.title"></slot>
-            </a>
-        </li>
-    </ol>
+    <div class="table-of-contents-container">
+        <h1 class="tlp-pane-title">
+            {{ $gettext("Table of contents") }}
+        </h1>
+        <ol>
+            <li v-for="section in sections" v-bind:key="section.artifact.id">
+                <a v-bind:href="`#${section.artifact.id}`" class="section-title">
+                    <slot v-bind:title="section.title"></slot>
+                </a>
+            </li>
+        </ol>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -40,6 +42,10 @@ defineProps<{ sections: readonly ArtidocSection[] }>();
 </script>
 
 <style scoped lang="scss">
+.table-of-contents-container {
+    padding-top: var(--tlp-small-spacing);
+}
+
 h1 {
     margin: 0 0 var(--tlp-medium-spacing);
 }
@@ -60,6 +66,10 @@ li {
 }
 
 @media (max-width: 1024px) {
+    .table-of-contents-container {
+        padding-top: 0;
+    }
+
     ol {
         height: fit-content;
     }
