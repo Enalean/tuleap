@@ -133,6 +133,7 @@ export default class ProjectShortName extends Vue {
             "*": "-",
             "©": "-",
             "®": "-",
+            _: "-",
         });
         this.slugified_project_name = slugify(value, { lower: true })
             .replace(/-+/, "-")
