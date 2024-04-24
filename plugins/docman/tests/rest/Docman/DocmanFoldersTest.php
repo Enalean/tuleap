@@ -255,6 +255,25 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
+    public function testPostOtherTypeDocumentIsRejectedForUnsupportedType(int $root_id): void
+    {
+        $query = json_encode(
+            [
+                'title' => 'NEW OTHER F1',
+                'type'  => 'whatever',
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/others')->withBody($this->stream_factory->createStream($query))
+        );
+        $this->assertEquals(400, $response1->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
     public function testPostFileDocumentIsRejectedIfFileIsTooBig(int $root_id): void
     {
         $headers = ['Content-Type' => 'application/json'];

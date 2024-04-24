@@ -31,6 +31,19 @@
             {{ $gettext("Folder") }}
         </button>
         <button
+            v-for="(other, key) of other_item_types"
+            v-bind:key="key"
+            v-on:click.prevent="showNewOtherTypeModal(key)"
+            class="tlp-dropdown-menu-item"
+            type="button"
+            role="menuitem"
+            data-test="other_item_type"
+            data-shortcut-create-folder
+        >
+            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="other.icon"></i>
+            {{ other.title }}
+        </button>
+        <button
             type="button"
             class="tlp-dropdown-menu-item"
             role="menuitem"
@@ -128,13 +141,14 @@ import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { NEW_ITEMS_ALTERNATIVES } from "../../../../injection-keys";
+import { NEW_ITEMS_ALTERNATIVES, OTHER_ITEM_TYPES } from "../../../../injection-keys";
 
 const { embedded_are_allowed, user_can_create_wiki } = useNamespacedState<
     Pick<ConfigurationState, "embedded_are_allowed" | "user_can_create_wiki">
 >("configuration", ["embedded_are_allowed", "user_can_create_wiki"]);
 
 const create_new_item_alternatives = strictInject(NEW_ITEMS_ALTERNATIVES);
+const other_item_types = strictInject(OTHER_ITEM_TYPES);
 
 const props = defineProps<{ item: Item }>();
 function showNewDocumentModal(type: ItemType): void {
@@ -151,5 +165,13 @@ function showNewDocumentAlternativeModal(alternative: NewItemAlternative): void 
 
 function showNewFolderModal(): void {
     emitter.emit("show-new-folder-modal", { detail: { parent: props.item } });
+}
+
+function showNewOtherTypeModal(key: string): void {
+    emitter.emit("createItem", {
+        item: props.item,
+        type: key,
+        is_other: true,
+    });
 }
 </script>

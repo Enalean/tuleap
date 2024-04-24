@@ -176,7 +176,8 @@ final class DocmanItemCreatorBuilder
                 $ugroup_manager,
                 new UserGroupRetriever($ugroup_manager),
                 ProjectManager::instance()
-            )
+            ),
+            $event_manager,
         );
     }
 }

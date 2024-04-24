@@ -62,6 +62,7 @@ class ItemImporter
             0,
             $properties->getOwner()->getId(),
             $properties->getItemTypeId(),
+            '',
             $properties->getCreateDate(),
             $properties->getUpdateDate(),
             null,

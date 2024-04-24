@@ -962,6 +962,7 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
         ?int $obsolescence_date,
         $user_id,
         $item_type_id,
+        string $other_type,
         DateTimeImmutable $create_date,
         DateTimeImmutable $update_date,
         $wiki_page = null,
@@ -978,6 +979,7 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
             'status'            => $status_id,
             'obsolescence_date' => $obsolescence_date,
             'item_type'         => $item_type_id,
+            'other_type'        => $other_type,
             'wiki_page'         => $wiki_page,
             'link_url'          => $link_url,
 

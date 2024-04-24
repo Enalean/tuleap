@@ -126,7 +126,9 @@ class AfterItemCreationVisitor implements ItemVisitor
 
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
-        throw new CannotCreateThisItemTypeException();
+        $this->instantiatePermissions($item, $params['permissions_for_groups']);
+        $this->storeCustomMetadata($item, $params['formatted_metadata']);
+        $this->triggerPostCreationEvents($params);
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])

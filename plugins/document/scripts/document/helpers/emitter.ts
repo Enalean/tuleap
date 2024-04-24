@@ -107,7 +107,9 @@ export type Events = {
     "show-new-folder-modal": { detail: { parent: Item } };
     "hide-action-menu": void;
     "update-multiple-properties-list-value": UpdateMultipleListValueEvent;
-    createItem: { item: Item; type: ItemType; from_alternative?: NewItemAlternative };
+    createItem:
+        | { item: Item; type: ItemType; from_alternative?: NewItemAlternative }
+        | { item: Item; type: string; is_other: true };
     deleteItem: DeleteItemEvent;
     "new-item-has-just-been-created": { id: number };
     "item-properties-have-just-been-updated": void;

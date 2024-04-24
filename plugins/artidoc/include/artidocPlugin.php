@@ -33,6 +33,7 @@ use Tuleap\Docman\ItemType\GetItemTypeAsText;
 use Tuleap\Docman\REST\v1\Folders\FilterItemOtherTypeProvider;
 use Tuleap\Docman\REST\v1\GetOtherDocumentItemRepresentationWrapper;
 use Tuleap\Docman\REST\v1\MoveItem\MoveOtherItemUriRetriever;
+use Tuleap\Docman\REST\v1\Others\VerifyOtherTypeIsSupported;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationOtherType;
 use Tuleap\Document\Tree\OtherItemTypeDefinition;
 use Tuleap\Document\Tree\OtherItemTypes;
@@ -139,7 +140,10 @@ class ArtidocPlugin extends Plugin
     {
         $event->addType(
             ArtidocDocument::TYPE,
-            new OtherItemTypeDefinition('fa-solid fa-tlp-artidoc document-other-type-badge tlp-swatch-peggy-pink')
+            new OtherItemTypeDefinition(
+                'fa-solid fa-tlp-artidoc document-other-type-badge tlp-swatch-peggy-pink',
+                dgettext('tuleap-artidoc', 'Artidoc'),
+            )
         );
     }
 
@@ -191,5 +195,13 @@ class ArtidocPlugin extends Plugin
     public function getItemTypeAsText(GetItemTypeAsText $event): void
     {
         $event->addOtherTypeLabel(ArtidocDocument::TYPE, dgettext('tuleap-artidoc', 'Artidoc'));
+    }
+
+    #[ListeningToEventClass]
+    public function checkOtherTypeIsSupported(VerifyOtherTypeIsSupported $event): void
+    {
+        if ($event->type === ArtidocDocument::TYPE) {
+            $event->flagAsSupported();
+        }
     }
 }

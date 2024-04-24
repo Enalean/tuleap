@@ -20,7 +20,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 import NewItemMenuOptions from "./NewItemMenuOptions.vue";
 import { shallowMount } from "@vue/test-utils";
-import type { Item, NewItemAlternativeArray } from "../../../../type";
+import type { Item, NewItemAlternativeArray, OtherItemTypeCollection } from "../../../../type";
 import type { ConfigurationState } from "../../../../store/configuration";
 import {
     TYPE_EMBEDDED,
@@ -33,6 +33,7 @@ import {
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import * as strict_inject from "@tuleap/vue-strict-inject";
+import { NEW_ITEMS_ALTERNATIVES, OTHER_ITEM_TYPES } from "../../../../injection-keys";
 
 jest.mock("../../../../helpers/emitter");
 
@@ -52,8 +53,16 @@ describe("NewItemMenuOptions", function () {
             user_can_create_wiki: false,
         },
         create_new_item_alternatives: NewItemAlternativeArray = [],
+        other_item_types: OtherItemTypeCollection = {},
     ): VueWrapper<InstanceType<typeof NewItemMenuOptions>> {
-        jest.spyOn(strict_inject, "strictInject").mockReturnValue(create_new_item_alternatives);
+        jest.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
+            switch (key) {
+                case NEW_ITEMS_ALTERNATIVES:
+                    return create_new_item_alternatives;
+                case OTHER_ITEM_TYPES:
+                    return other_item_types;
+            }
+        });
         return shallowMount(NewItemMenuOptions, {
             props: {
                 item: CURRENT_FOLDER,
@@ -172,6 +181,33 @@ describe("NewItemMenuOptions", function () {
             item: CURRENT_FOLDER,
             type: TYPE_FILE,
             from_alternative: { mime_type: "application/word", title: "Documents" },
+        });
+    });
+
+    it("should display a new other type item", async function () {
+        const wrapper = getWrapper(
+            { user_can_create_wiki: false, embedded_are_allowed: false },
+            [],
+            {
+                whatever: {
+                    icon: "my-icon",
+                    title: "Whatever title",
+                },
+                another: {
+                    icon: "another-icon",
+                    title: "Another title",
+                },
+            },
+        );
+        const other_item_types = wrapper.findAll("[data-test=other_item_type]");
+        expect(other_item_types).toHaveLength(2);
+
+        await other_item_types.at(0).trigger("click");
+
+        expect(emitter.emit).toHaveBeenCalledWith("createItem", {
+            item: CURRENT_FOLDER,
+            type: "whatever",
+            is_other: true,
         });
     });
 });
