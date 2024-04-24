@@ -19,9 +19,17 @@
   -->
 
 <template>
-    <div id="modal-big-content" class="tlp-modal" role="dialog" aria-labelledby="term-of-services">
+    <div
+        id="modal-big-content"
+        class="tlp-modal"
+        role="dialog"
+        aria-labelledby="term-of-services"
+        ref="modal_element"
+    >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="term-of-services" v-translate>Policy agreement</h1>
+            <h1 class="tlp-modal-title" id="term-of-services">
+                {{ $gettext("Policy agreement") }}
+            </h1>
             <button
                 class="tlp-modal-close"
                 type="button"
@@ -48,40 +56,37 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import EventBus from "../../../helpers/event-bus";
 import { getTermOfService } from "../../../api/rest-querier";
 
-@Component
-export default class AgreementModal extends Vue {
-    modal: Modal | null = null;
-    is_loading = false;
-    agreement_content = "";
+let modal: Modal | null = null;
 
-    mounted(): void {
-        EventBus.$on("show-agreement", this.show);
+const is_loading = ref<boolean>(false);
+const agreement_content = ref<string>("");
+const modal_element = ref<InstanceType<typeof Element>>();
+
+onMounted(() => {
+    EventBus.$on("show-agreement", show);
+});
+onBeforeUnmount(() => {
+    EventBus.$off("show-agreement", show);
+});
+
+async function show(): Promise<void> {
+    if (!modal_element.value) {
+        return;
     }
+    modal = createModal(modal_element.value, { destroy_on_hide: true });
+    if (modal) {
+        is_loading.value = true;
+        modal.show();
 
-    beforeDestroy(): void {
-        EventBus.$off("show-agreement", this.show);
-        if (this.modal !== null) {
-            this.modal.destroy();
-        }
-    }
-
-    async show(): Promise<void> {
-        this.modal = createModal(this.$el, { destroy_on_hide: true });
-        if (this.modal) {
-            this.is_loading = true;
-            this.modal.show();
-
-            this.agreement_content = await getTermOfService();
-            this.is_loading = false;
-        }
+        agreement_content.value = await getTermOfService();
+        is_loading.value = false;
     }
 }
 </script>
