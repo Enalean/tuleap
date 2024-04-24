@@ -44,23 +44,19 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
 import type { TroveCatData } from "../../../type";
 import EventBus from "../../../helpers/event-bus";
 
-@Component({})
-export default class TroveCategoryList extends Vue {
-    @Prop({ required: true })
-    readonly trovecat!: TroveCatData;
+defineProps<{
+    trovecat: TroveCatData;
+}>();
 
-    updateTroveCategories(category_id: string, event: Event): void {
-        if (!(event.target instanceof HTMLSelectElement)) {
-            return;
-        }
-        const value_id = event.target.value;
-        EventBus.$emit("choose-trove-cat", { category_id, value_id });
+function updateTroveCategories(category_id: string, event: Event): void {
+    if (!(event.target instanceof HTMLSelectElement)) {
+        return;
     }
+    const value_id = event.target.value;
+    EventBus.$emit("choose-trove-cat", { category_id, value_id });
 }
 </script>
