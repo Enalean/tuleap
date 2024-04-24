@@ -39,5 +39,6 @@ ln -s /data/home/groups groups
 
 cd /var/lib
 ln -s /data/lib/tuleap tuleap
+chown -R codendiadm:codendiadm /var/lib/tuleap/.ssh/
 [ -d /data/lib/gitolite ] && ln -s /data/lib/gitolite gitolite
 ln -s /var/lib/tuleap/svnroot /svnroot
