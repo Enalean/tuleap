@@ -275,14 +275,14 @@ describe("ProjectShortName", () => {
                 is_in_edit_mode: false,
             };
             const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "valid'*©®11");
+            EventBus.$emit("slugify-project-name", "valid'*_©®11");
 
             expect(wrapper.vm.$data.slugified_project_name).toBe("valid-11");
             expect(wrapper.vm.$data.has_slug_error).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
                 slugified_name: wrapper.vm.$data.slugified_project_name,
-                name: "valid'*©®11",
+                name: "valid'*_©®11",
             });
         });
 
