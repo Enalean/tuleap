@@ -23,9 +23,10 @@ import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import TroveCategoryList from "./TroveCategoryList.vue";
 import EventBus from "../../../helpers/event-bus";
+import type Vue from "vue";
 
 describe("TroveCategoryList -", () => {
-    let factory: Wrapper<TroveCategoryList>;
+    let factory: Wrapper<Vue, Element>;
     beforeEach(async () => {
         const trove_categories = {
             id: "1",
