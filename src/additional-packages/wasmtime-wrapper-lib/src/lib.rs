@@ -21,17 +21,16 @@ use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::sync::Arc;
 use std::time::Instant;
-use wasi_common::pipe::{ReadPipe, WritePipe};
 use wasmtime::*;
-use wasmtime_wasi::sync::WasiCtxBuilder;
-use wasi_common::WasiCtx;
+use wasmtime_wasi::preview1::WasiP1Ctx;
 use wire::{
     ExecConfig, InternalErrorJson, Limitations, MountPoint, Stats, SuccessResponseJson,
     UserErrorJson,
 };
 use std::path::Path;
+use wasmtime_wasi::pipe::{MemoryInputPipe, MemoryOutputPipe};
+use wasmtime_wasi::{DirPerms, FilePerms, WasiCtxBuilder};
 
-mod preview1;
 mod wire;
 
 /// # Safety
@@ -136,7 +135,7 @@ fn load_module(engine: &Engine, path: &String) -> Result<Module> {
 
 struct StoreState {
     limits: StoreLimits,
-    wasi: WasiCtx,
+    wasi: WasiP1Ctx,
 }
 
 struct OutputAndStats {
@@ -151,20 +150,8 @@ fn compile_and_exec(
     mount_points: &Vec<MountPoint>,
     limits: &Limitations,
 ) -> Result<OutputAndStats, anyhow::Error> {
-    let stdin = ReadPipe::from(module_input_json);
-    let stdout = WritePipe::new_in_memory();
-
-    let my_state = StoreState {
-        limits: StoreLimitsBuilder::new()
-            .memory_size(limits.max_memory_size_in_bytes)
-            .memories(1)
-            .instances(1)
-            .build(),
-        wasi: WasiCtxBuilder::new()
-            .stdin(Box::new(stdin))
-            .stdout(Box::new(stdout.clone()))
-            .build(),
-    };
+    let stdin = MemoryInputPipe::new(module_input_json.as_bytes().to_owned());
+    let stdout = MemoryOutputPipe::new(2_000_000);
 
     let mut config = Config::new();
     config.epoch_interruption(true);
@@ -178,23 +165,34 @@ fn compile_and_exec(
 
     let mut linker = Linker::new(&engine);
 
+    let mut ctx_builder = WasiCtxBuilder::new();
+    ctx_builder.stdin(stdin);
+    ctx_builder.stdout(stdout.clone());
+    ctx_builder.allow_tcp(false);
+    ctx_builder.allow_udp(false);
+
+    for mount_point in mount_points {
+        ctx_builder.preopened_dir(
+            &mount_point.host_path,
+            &mount_point.guest_path,
+            DirPerms::READ,
+            FilePerms::READ
+        )?;
+    }
+
+    let my_state = StoreState {
+        limits: StoreLimitsBuilder::new()
+            .memory_size(limits.max_memory_size_in_bytes)
+            .memories(1)
+            .instances(1)
+            .build(),
+        wasi: ctx_builder.build_p1(),
+    };
+
     let mut store = Store::new(&engine, my_state);
     store.limiter(|state| &mut state.limits);
 
-    for mount_point in mount_points {
-        let cap_std_dir = cap_std::fs::Dir::open_ambient_dir(
-            &mount_point.host_path,
-            cap_std::ambient_authority(),
-        )?;
-        let dir_host = Box::new(wasmtime_wasi::dir::Dir::from_cap_std(cap_std_dir));
-        let read_only_dir_host = Box::new(preview1::ReadOnlyDir(dir_host));
-        store
-            .data_mut()
-            .wasi
-            .push_preopened_dir(read_only_dir_host, &mount_point.guest_path)?;
-    }
-
-    wasmtime_wasi::add_to_linker(&mut linker, |state: &mut StoreState| &mut state.wasi)?;
+    wasmtime_wasi::preview1::add_to_linker_sync(&mut linker, |state: &mut StoreState| &mut state.wasi)?;
 
     store.epoch_deadline_trap();
     store.set_epoch_deadline(1);
@@ -233,12 +231,7 @@ fn compile_and_exec(
 
     match res {
         Ok(_) => {
-            let raw_output: Vec<u8> = stdout
-                .try_into_inner()
-                .expect("stdout reference still exists")
-                .into_inner();
-
-            let str = match String::from_utf8(raw_output) {
+            let str = match String::from_utf8(stdout.contents().to_vec()) {
                 Ok(s) => s,
                 Err(e) => return Err(anyhow!(e)),
             };
