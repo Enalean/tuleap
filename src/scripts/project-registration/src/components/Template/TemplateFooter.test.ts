@@ -31,7 +31,7 @@ let is_template_selected = false;
 describe("TemplateFooter", () => {
     let router: VueRouter;
 
-    async function createWrapper(): Promise<Wrapper<TemplateFooter>> {
+    async function createWrapper(): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             getters: {
                 is_template_selected: () => (): boolean => {
