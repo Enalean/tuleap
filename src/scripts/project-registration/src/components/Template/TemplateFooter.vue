@@ -23,6 +23,7 @@
         class="project-registration-button-container"
         data-test="project-template-footer"
         v-bind:class="pinned_class"
+        ref="element"
     >
         <div class="project-registration-content">
             <button
@@ -32,64 +33,67 @@
                 v-bind:disabled="!root_store.is_template_selected"
                 v-on:click.prevent="goToInformationPage"
             >
-                <span v-translate>Next</span>
+                <span>{{ $gettext("Next") }} </span>
                 <i class="fas fa-long-arrow-alt-right tlp-button-icon-right"></i>
             </button>
         </div>
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { isElementInViewport } from "../../helpers/is-element-in-viewport";
 import { useStore } from "../../stores/root";
+import { useRouter } from "../../helpers/use-router";
 
-@Component({})
-export default class TemplateFooter extends Vue {
-    root_store = useStore();
+const root_store = useStore();
+const element = ref<InstanceType<typeof Element>>();
+const router = useRouter();
 
-    private is_footer_in_viewport = false;
-    private ticking = false;
+const is_footer_in_viewport = ref(false);
+const ticking = ref(false);
 
-    mounted(): void {
-        this.is_footer_in_viewport = isElementInViewport(this.$el);
-        document.addEventListener("scroll", this.checkFooterIsInViewport);
-        window.addEventListener("resize", this.checkFooterIsInViewport);
+onMounted(() => {
+    if (element.value) {
+        is_footer_in_viewport.value = isElementInViewport(element.value);
     }
+    document.addEventListener("scroll", checkFooterIsInViewport);
+    window.addEventListener("resize", checkFooterIsInViewport);
+});
 
-    destroyed(): void {
-        this.removeFooterListener();
-    }
+onBeforeUnmount(() => {
+    removeFooterListener();
+});
 
-    removeFooterListener(): void {
-        document.removeEventListener("scroll", this.checkFooterIsInViewport);
-        window.removeEventListener("resize", this.checkFooterIsInViewport);
-    }
+function removeFooterListener(): void {
+    document.removeEventListener("scroll", checkFooterIsInViewport);
+    window.removeEventListener("resize", checkFooterIsInViewport);
+}
 
-    goToInformationPage(): void {
-        this.$router.push({ name: "information" });
-    }
+function goToInformationPage(): void {
+    router.push({ name: "information" });
+}
 
-    checkFooterIsInViewport(): void {
-        if (!this.ticking) {
-            requestAnimationFrame(() => {
-                this.is_footer_in_viewport = isElementInViewport(this.$el);
-                this.ticking = false;
-            });
+function checkFooterIsInViewport(): void {
+    if (!ticking.value) {
+        requestAnimationFrame(() => {
+            if (element.value) {
+                is_footer_in_viewport.value = isElementInViewport(element.value);
+            }
+            ticking.value = false;
+        });
 
-            this.ticking = true;
-        }
-    }
-
-    get pinned_class(): string {
-        if (!this.is_footer_in_viewport && this.root_store.is_template_selected) {
-            this.removeFooterListener();
-
-            return "pinned";
-        }
-
-        return "";
+        ticking.value = true;
     }
 }
+
+const pinned_class = computed((): string => {
+    if (!is_footer_in_viewport.value && root_store.is_template_selected) {
+        removeFooterListener();
+
+        return "pinned";
+    }
+
+    return "";
+});
 </script>
