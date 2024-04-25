@@ -25,7 +25,7 @@ import FieldsList from "./FieldsList.vue";
 import EventBus from "../../../helpers/event-bus";
 import type { FieldData } from "../../../type";
 
-async function getWrapper(field: FieldData): Promise<Wrapper<FieldsList>> {
+async function getWrapper(field: FieldData): Promise<Wrapper<Vue, Element>> {
     return shallowMount(FieldsList, {
         localVue: await createProjectRegistrationLocalVue(),
         propsData: { field },

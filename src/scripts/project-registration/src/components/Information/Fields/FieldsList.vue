@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="isRequired">
+    <div class="tlp-form-element" v-if="is_required">
         <label class="tlp-label" v-bind:for="`input-${field.group_desc_id}`">
             {{ field.desc_name }}
             <i class="fa fa-asterisk" data-test="asterisk"></i>
@@ -49,30 +49,27 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { FieldData } from "../../../type";
 import EventBus from "../../../helpers/event-bus";
 
-@Component
-export default class FieldList extends Vue {
-    @Prop({ required: true })
-    readonly field!: FieldData;
+const props = defineProps<{
+    field: FieldData;
+}>();
 
-    updateField(field_id: string, event: Event): void {
-        if (
-            !(event.target instanceof HTMLInputElement) &&
-            !(event.target instanceof HTMLTextAreaElement)
-        ) {
-            return;
-        }
-        const value = event.target.value;
-        EventBus.$emit("update-field-list", { field_id, value });
-    }
+const is_required = computed((): boolean => {
+    return props.field.desc_required === "1";
+});
 
-    get isRequired(): boolean {
-        return this.field.desc_required === "1";
+function updateField(field_id: string, event: Event): void {
+    if (
+        !(event.target instanceof HTMLInputElement) &&
+        !(event.target instanceof HTMLTextAreaElement)
+    ) {
+        return;
     }
+    const value = event.target.value;
+    EventBus.$emit("update-field-list", { field_id, value });
 }
 </script>
