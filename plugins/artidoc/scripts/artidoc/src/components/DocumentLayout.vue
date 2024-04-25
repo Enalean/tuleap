@@ -20,7 +20,7 @@
 
 <template>
     <div class="document-layout">
-        <section class="tlp-framed document-content">
+        <section class="document-content">
             <slot name="document-content"></slot>
         </section>
         <aside>
@@ -41,6 +41,7 @@
 }
 
 .document-content {
+    padding: var(--tlp-medium-spacing) var(--tlp-jumbo-spacing);
     border-right: 1px solid var(--tlp-neutral-normal-color);
     background-color: var(--tlp-white-color);
 }
@@ -63,6 +64,7 @@ aside {
     }
 
     .document-content {
+        padding: var(--tlp-medium-spacing);
         border-right: 0;
     }
 
