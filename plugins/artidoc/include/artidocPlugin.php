@@ -29,6 +29,7 @@ use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
 use Tuleap\Docman\Item\CloneOtherItemPostAction;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
+use Tuleap\Docman\ItemType\GetItemTypeAsText;
 use Tuleap\Docman\REST\v1\Folders\FilterItemOtherTypeProvider;
 use Tuleap\Docman\REST\v1\GetOtherDocumentItemRepresentationWrapper;
 use Tuleap\Docman\REST\v1\MoveItem\MoveOtherItemUriRetriever;
@@ -172,7 +173,7 @@ class ArtidocPlugin extends Plugin
             ->match(
                 fn () => $collection->addOptionAfter(
                     'folder',
-                    new SearchCriterionListOptionPresenter('artidoc', dgettext('tuleap-artidoc', 'Artidoc'))
+                    new SearchCriterionListOptionPresenter(ArtidocDocument::TYPE, dgettext('tuleap-artidoc', 'Artidoc'))
                 ),
                 static fn () => null
             );
@@ -181,8 +182,14 @@ class ArtidocPlugin extends Plugin
     #[ListeningToEventClass]
     public function filterItemOtherTypeProvider(FilterItemOtherTypeProvider $provider): void
     {
-        if ($provider->name === 'artidoc') {
-            $provider->setValue('artidoc');
+        if ($provider->name === ArtidocDocument::TYPE) {
+            $provider->setValue(ArtidocDocument::TYPE);
         }
+    }
+
+    #[ListeningToEventClass]
+    public function getItemTypeAsText(GetItemTypeAsText $event): void
+    {
+        $event->addOtherTypeLabel(ArtidocDocument::TYPE, dgettext('tuleap-artidoc', 'Artidoc'));
     }
 }

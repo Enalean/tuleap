@@ -2013,6 +2013,9 @@ msgstr ""
 msgid "Unable to update element."
 msgstr ""
 
+msgid "Unknown item type"
+msgstr ""
+
 #, php-format
 msgid "Unknown property label '%1$s'."
 msgstr ""

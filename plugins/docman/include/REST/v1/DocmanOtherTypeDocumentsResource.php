@@ -26,6 +26,7 @@ use Docman_PermissionsManager;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
+use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
@@ -55,6 +56,52 @@ class DocmanOtherTypeDocumentsResource extends AuthenticatedResource
         $this->user_manager    = UserManager::instance();
         $this->request_builder = new DocmanItemsRequestBuilder($this->user_manager, ProjectManager::instance());
         $this->event_manager   = \EventManager::instance();
+    }
+
+    /**
+     * @url OPTIONS {id}
+     */
+    public function optionsId(int $id): void
+    {
+        Header::allowOptionsDelete();
+    }
+
+    /**
+     * Delete an existing other type document
+     *
+     * @url    DELETE {id}
+     * @access hybrid
+     *
+     * @param int $id Id of the document
+     *
+     * @status 200
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws RestException 404
+     */
+    public function delete(int $id): void
+    {
+        $this->checkAccess();
+
+        $item_request   = $this->request_builder->buildFromItemId($id);
+        $item_to_delete = $item_request->getItem();
+        $current_user   = $this->user_manager->getCurrentUser();
+        $project        = $item_request->getProject();
+        $validator      = $this->getValidator($project, $current_user, $item_to_delete);
+        $item_to_delete->accept($validator);
+
+        $this->addAllEvent($item_request->getProject());
+
+        try {
+            (new \Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, false);
+        } catch (DeleteFailedException $exception) {
+            throw new I18NRestException(
+                403,
+                $exception->getI18NExceptionMessage()
+            );
+        }
+
+        $this->event_manager->processEvent('send_notifications', []);
     }
 
     /**

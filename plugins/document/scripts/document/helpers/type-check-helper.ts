@@ -27,6 +27,7 @@ import type {
     Item,
     ItemFile,
     Link,
+    OtherTypeItem,
     Wiki,
 } from "../type";
 import {
@@ -68,7 +69,9 @@ export function isFolder(
     return item.type === TYPE_FOLDER;
 }
 
-export function isOtherType(item: Item | Embedded | Empty | ItemFile | Link | Wiki): boolean {
+export function isOtherType(
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki,
+): item is OtherTypeItem {
     return (
         !isFolder(item) &&
         !isEmbedded(item) &&
