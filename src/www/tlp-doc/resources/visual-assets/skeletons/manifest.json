@@ -1,9 +1,3 @@
 {
-  "label": "Skeleton screens",
-  "children": [
-    "typo",
-    "fields",
-    "cards",
-    "tables"
-  ]
+  "label": "Skeleton screens"
 }
