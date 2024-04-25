@@ -1,4 +1,3 @@
 {
-  "label": "Alerts",
-  "shortcode": ".tlp-alert-[type]"
+  "label": "Alerts"
 }

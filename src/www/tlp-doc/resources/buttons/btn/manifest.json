@@ -1,13 +1,3 @@
 {
-  "label": "Buttons",
-  "children": [
-    "types",
-    "ellipsis",
-    "disabled",
-    "sizes",
-    "icon",
-    "outline",
-    "wide",
-    "bar"
-  ]
+  "label": "Buttons"
 }
