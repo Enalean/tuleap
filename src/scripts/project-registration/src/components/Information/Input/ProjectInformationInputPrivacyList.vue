@@ -27,33 +27,32 @@
         v-model="selected_visibility"
         v-on:change="onChange"
         required
+        ref="element"
     >
         <option
             v-if="root_store.are_restricted_users_allowed"
             value="unrestricted"
-            v-translate
             data-test="unrestricted"
         >
-            Public incl. restricted
+            {{ $gettext("Public incl. restricted") }}
         </option>
-        <option value="public" data-test="public" v-translate>Public</option>
-        <option value="private" data-test="private" v-translate>Private</option>
+        <option value="public" data-test="public">{{ $gettext("Public") }}</option>
+        <option value="private" data-test="private">{{ $gettext("Private") }}</option>
         <option
             value="private-wo-restr"
             v-if="root_store.are_restricted_users_allowed"
             data-test="private-wo-restr"
-            v-translate
         >
-            Private without restricted
+            {{ $gettext("Private without restricted") }}
         </option>
     </select>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
+import type { Ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
-import { Component } from "vue-property-decorator";
 import EventBus from "../../../helpers/event-bus";
 import {
     ACCESS_PRIVATE,
@@ -62,69 +61,69 @@ import {
     ACCESS_PUBLIC_UNRESTRICTED,
 } from "../../../constant";
 import { useStore } from "../../../stores/root";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class ProjectInformationInputPrivacyList extends Vue {
-    root_store = useStore();
+const root_store = useStore();
+const element = ref<InstanceType<typeof Element>>();
+const gettext_provider = useGettext();
 
-    private list_picker_instance: ListPicker | null = null;
+const list_picker_instance: Ref<ListPicker | null> = ref(null);
 
-    selected_visibility = this.root_store.project_default_visibility;
+const selected_visibility = ref(root_store.project_default_visibility);
 
-    mounted(): void {
-        setTimeout(() => {
-            // wait so that the handler of the event in an ancestor component has time to register itself
-            this.onChange();
-        });
-        if (!(this.$el instanceof HTMLSelectElement)) {
-            throw new Error("Element is supposed to be a select element");
-        }
-        this.list_picker_instance = createListPicker(this.$el, {
-            items_template_formatter: (html_processor, value_id, item_label) => {
-                const description = this.translatedVisibilityDetails(value_id);
-                const template = html_processor`<div>
+onMounted(() => {
+    setTimeout(() => {
+        // wait so that the handler of the event in an ancestor component has time to register itself
+        onChange();
+    });
+    if (!(element.value instanceof HTMLSelectElement)) {
+        throw new Error("Element is supposed to be a select element");
+    }
+    list_picker_instance.value = createListPicker(element.value, {
+        items_template_formatter: (html_processor, value_id, item_label) => {
+            const description = translatedVisibilityDetails(value_id);
+            const template = html_processor`<div>
                 <span class="project-information-input-privacy-list-option-label">${item_label}</span>
                 <p class="project-information-input-privacy-list-option-description">${description}</p>
             </div>`;
-                return template;
-            },
-        });
-    }
+            return template;
+        },
+    });
+});
 
-    destroy(): void {
-        if (this.list_picker_instance !== null) {
-            this.list_picker_instance.destroy();
-        }
+onBeforeUnmount((): void => {
+    if (list_picker_instance.value !== null) {
+        list_picker_instance.value.destroy();
     }
+});
 
-    translatedVisibilityDetails(visibility: string): string {
-        switch (visibility) {
-            case ACCESS_PUBLIC_UNRESTRICTED:
-                return this.$gettext(
-                    "Project content is available to all authenticated users, including restricted users. Please note that more restrictive permissions might exist on some items.",
+function translatedVisibilityDetails(visibility: string): string {
+    switch (visibility) {
+        case ACCESS_PUBLIC_UNRESTRICTED:
+            return gettext_provider.$gettext(
+                "Project content is available to all authenticated users, including restricted users. Please note that more restrictive permissions might exist on some items.",
+            );
+        case ACCESS_PUBLIC:
+            return gettext_provider.$gettext(
+                "Project content is available to all authenticated users. Please note that more restrictive permissions might exist on some items.",
+            );
+        case ACCESS_PRIVATE:
+            if (root_store.are_restricted_users_allowed) {
+                return gettext_provider.$gettext(
+                    "Only project members can access project content. Restricted users can be added to the project.",
                 );
-            case ACCESS_PUBLIC:
-                return this.$gettext(
-                    "Project content is available to all authenticated users. Please note that more restrictive permissions might exist on some items.",
-                );
-            case ACCESS_PRIVATE:
-                if (this.root_store.are_restricted_users_allowed) {
-                    return this.$gettext(
-                        "Only project members can access project content. Restricted users can be added to the project.",
-                    );
-                }
-                return this.$gettext("Only project members can access project content.");
-            case ACCESS_PRIVATE_WO_RESTRICTED:
-                return this.$gettext(
-                    "Only project members can access project content. Restricted users can NOT be added in this project.",
-                );
-            default:
-                throw new Error("Unable to retrieve the selected visibility type");
-        }
+            }
+            return gettext_provider.$gettext("Only project members can access project content.");
+        case ACCESS_PRIVATE_WO_RESTRICTED:
+            return gettext_provider.$gettext(
+                "Only project members can access project content. Restricted users can NOT be added in this project.",
+            );
+        default:
+            throw new Error("Unable to retrieve the selected visibility type");
     }
+}
 
-    onChange(): void {
-        EventBus.$emit("update-project-visibility", { new_visibility: this.selected_visibility });
-    }
+function onChange(): void {
+    EventBus.$emit("update-project-visibility", { new_visibility: selected_visibility.value });
 }
 </script>
