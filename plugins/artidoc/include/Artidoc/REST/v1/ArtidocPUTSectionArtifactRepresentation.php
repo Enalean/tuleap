@@ -20,25 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc;
+namespace Tuleap\Artidoc\REST\v1;
 
-use RestBase;
-
-final class ArtidocTest extends RestBase
+/**
+ * @psalm-immutable
+ */
+final class ArtidocPUTSectionArtifactRepresentation
 {
-    public function testOptionsDocument(): void
+    public int $id;
+
+    public function __construct(int $id)
     {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/123'));
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
-    }
-
-    public function testOptionsSections(): void
-    {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/123/sections'));
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->id = $id;
     }
 }

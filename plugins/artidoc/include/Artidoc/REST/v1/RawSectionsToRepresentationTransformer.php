@@ -31,6 +31,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
 final readonly class RawSectionsToRepresentationTransformer implements TransformRawSectionsToRepresentation
 {
@@ -116,8 +117,8 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
                 return Result::err(Fault::fromMessage("User cannot read title of artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
             }
 
-            $description = $description_field->getFullRESTValue($user, $last_changeset) ?: '';
-            if (! $description) {
+            $description = $description_field->getFullRESTValue($user, $last_changeset);
+            if (! $description instanceof ArtifactTextFieldValueRepresentation) {
                 return Result::err(Fault::fromMessage("There is no description data for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
             }
 
