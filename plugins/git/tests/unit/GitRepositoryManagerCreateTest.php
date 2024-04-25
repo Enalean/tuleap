@@ -21,6 +21,7 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\Git\Branch\BranchName;
+use Tuleap\Git\Exceptions\GitRepositoryInDeletionException;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -38,16 +39,20 @@ final class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $manager;
     private GitRepository $repository;
+    private \Tuleap\Git\SystemEvent\OngoingDeletionDAO&\PHPUnit\Framework\MockObject\MockObject $ongoing_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->creator    = \Mockery::spy(\GitRepositoryCreator::class);
         $this->repository = new GitRepository();
+        $this->repository->setPath('whatever/repo.git');
 
         $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
         $this->dao                      = Mockery::mock(GitDao::class);
         $this->backup_directory         = vfsStream::setup()->url();
+
+        $this->ongoing_dao = $this->createMock(\Tuleap\Git\SystemEvent\OngoingDeletionDAO::class);
 
         $this->manager = \Mockery::mock(
             \GitRepositoryManager::class,
@@ -60,6 +65,7 @@ final class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
                 Mockery::mock('ProjectHistoryDao'),
                 Mockery::mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
                 Mockery::mock(EventManager::class),
+                $this->ongoing_dao,
             ]
         )
             ->makePartial()
@@ -84,12 +90,24 @@ final class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
     }
 
-    public function testItCreatesOnRepositoryBackendIfEverythingIsClean()
+    public function testItThrowsAnExceptionIfNThereIsAnOngoingDeletion(): void
+    {
+        $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->with($this->repository)->andReturns(false);
+        $this->creator->shouldReceive('isNameValid')->andReturns(true);
+        $this->ongoing_dao->method('isADeletionForPathOngoingInProject')->willReturn(true);
+
+        $this->expectException(GitRepositoryInDeletionException::class);
+        $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
+    }
+
+    public function testItCreatesOnRepositoryBackendIfEverythingIsClean(): void
     {
         $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->with($this->repository)->andReturns(false);
         $this->creator->shouldReceive('isNameValid')->andReturns(true);
 
         $this->dao->shouldReceive('save')->with($this->repository)->once();
+        $this->ongoing_dao->method('isADeletionForPathOngoingInProject')->willReturn(false);
+
         $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
     }
 
@@ -101,6 +119,7 @@ final class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('save')->andReturns(54);
 
         $this->git_system_event_manager->shouldReceive('queueRepositoryUpdate')->with($this->repository, Mockery::any())->once();
+        $this->ongoing_dao->method('isADeletionForPathOngoingInProject')->willReturn(false);
 
         $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
     }
@@ -111,6 +130,7 @@ final class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->shouldReceive('isNameValid')->andReturns(true);
 
         $this->dao->shouldReceive('save')->andReturns(54);
+        $this->ongoing_dao->method('isADeletionForPathOngoingInProject')->willReturn(false);
 
         $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
         $this->assertEquals(54, $this->repository->getId());

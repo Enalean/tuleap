@@ -63,6 +63,7 @@ use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
+use Tuleap\Git\Exceptions\GitRepositoryInDeletionException;
 use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException;
@@ -93,6 +94,7 @@ use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 use Tuleap\Git\Repository\RepositoryCreator;
 use Tuleap\Git\REST\v1\Branch\BranchCreator;
+use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\REST\AuthenticatedResource;
@@ -304,7 +306,8 @@ class RepositoryResource extends AuthenticatedResource
                 $fine_grained_replicator,
                 $project_history_dao,
                 $history_value_formatter,
-                $event_manager
+                $event_manager,
+                new OngoingDeletionDAO(),
             ),
             $this->git_permission_manager,
             $fine_grained_replicator,
@@ -402,6 +405,8 @@ class RepositoryResource extends AuthenticatedResource
         } catch (GitRepositoryNameIsInvalidException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (GitRepositoryAlreadyExistsException $e) {
+            throw new RestException(400, $e->getMessage());
+        } catch (GitRepositoryInDeletionException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (Exception $e) {
             throw new RestException(500, $e->getMessage());

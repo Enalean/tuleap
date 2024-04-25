@@ -20,6 +20,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 
 require_once 'bootstrap.php';
 
@@ -52,7 +53,8 @@ final class GitRepositoryManagerDeleteAllRepositoriesTest extends \Tuleap\Test\P
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionReplicator::class),
             \Mockery::spy(\ProjectHistoryDao::class),
             \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
-            \Mockery::spy(EventManager::class)
+            \Mockery::spy(EventManager::class),
+            $this->createMock(OngoingDeletionDAO::class),
         );
     }
 

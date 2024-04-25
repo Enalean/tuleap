@@ -31,6 +31,7 @@ use ProjectHistoryDao;
 use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\CIBuilds\CITokenManager;
 use Tuleap\Git\Events\AfterRepositoryCreated;
+use Tuleap\Git\Exceptions\GitRepositoryInDeletionException;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 
@@ -101,6 +102,7 @@ class RepositoryCreator
      * @throws GitRepositoryNameIsInvalidException
      * @throws \GitDaoException
      * @throws \GitRepositoryAlreadyExistsException
+     * @throws GitRepositoryInDeletionException
      */
     public function create(Project $project, PFUser $creator, string $repository_name): \GitRepository
     {

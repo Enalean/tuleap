@@ -19,6 +19,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitRepositoryManagerRepositoryNameTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -54,7 +55,8 @@ class GitRepositoryManagerRepositoryNameTest extends \Tuleap\Test\PHPUnit\TestCa
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionReplicator::class),
             \Mockery::spy(\ProjectHistoryDao::class),
             \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
-            \Mockery::spy(EventManager::class)
+            \Mockery::spy(EventManager::class),
+            $this->createMock(OngoingDeletionDAO::class),
         );
     }
 
