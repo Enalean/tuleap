@@ -344,9 +344,12 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
         return $this->getProjectXMLFromArchive($archive)
             ->andThen(
                 function (SimpleXMLElement $xml_element) {
-                    $this->assertXMLisValid($xml_element);
-
-                    return Result::ok($xml_element);
+                    try {
+                        $this->assertXMLisValid($xml_element);
+                        return Result::ok($xml_element);
+                    } catch (ImportNotValidException $exception) {
+                        return Result::err(Fault::fromThrowable($exception));
+                    }
                 }
             )->andThen(fn (SimpleXMLElement $xml_element) => $check_archive_content->checkArchiveContent($xml_element))
             ->andThen(function (SimpleXMLElement $xml_element) use ($configuration, $project_id, $archive) {
@@ -642,7 +645,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
     }
 
     /**
-     * @throws ImportNotValidException
+     * @throw ImportNotValidException
      */
     private function assertXMLisValid(SimpleXMLElement $xml_element): void
     {
