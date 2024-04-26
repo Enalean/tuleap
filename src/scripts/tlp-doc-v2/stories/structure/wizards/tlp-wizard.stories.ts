@@ -27,6 +27,8 @@ type WizardProps = {
     first_label: string;
 };
 
+const new_line = "\n";
+
 function getClasses(args: WizardProps, step: number): string {
     let classes = "tlp-wizard-step-";
     const current_step_number = parseInt(args.current_step, 10);
@@ -42,19 +44,28 @@ function getClasses(args: WizardProps, step: number): string {
 
 function createSteps(args: WizardProps): TemplateResult[] {
     const steps: TemplateResult[] = [];
-    for (let i = 2; i <= parseInt(args.nb_step, 10); i++) {
-        steps.push(html`<span class="${getClasses(args, i)}">Step ${i}</span>`);
+    const nb_step = parseInt(args.nb_step, 10);
+    // prettier-ignore
+    steps.push(html`<span class="${getClasses(args, 1)}">${args.first_label}</span>${nb_step > 1 ? new_line : ``}`);
+    for (let i = 2; i <= nb_step; i++) {
+        // prettier-ignore
+        steps.push(html`    <span class="${getClasses(args, i)}">Step ${i}</span>${i !== nb_step ? new_line : ``}`);
     }
     return steps;
+}
+
+function getTemplate(args: WizardProps): TemplateResult {
+    // prettier-ignore
+    return html`
+<nav class="tlp-wizard">
+    ${createSteps(args)}
+</nav>`;
 }
 
 const meta: Meta<WizardProps> = {
     title: "TLP/Structure & Navigation/Wizards",
     render: (args: WizardProps) => {
-        return html` <nav class="tlp-wizard">
-            <span class="${getClasses(args, 1)}">${args.first_label}</span>
-            ${createSteps(args)}
-        </nav>`;
+        return getTemplate(args);
     },
     argTypes: {
         nb_step: {

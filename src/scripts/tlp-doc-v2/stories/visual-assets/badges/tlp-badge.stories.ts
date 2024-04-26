@@ -20,7 +20,7 @@
 import type { Meta, StoryObj } from "@storybook/web-components";
 import { USER_INTERFACE_EMPHASIS_COLORS, COLOR_VARIANTS } from "@tuleap/core-constants";
 import type { UserInterfaceEmphasisColorName } from "@tuleap/core-constants";
-import { html } from "lit";
+import { html, type TemplateResult } from "lit";
 import "@tuleap/tlp-badge";
 import { dark_background } from "../../../.storybook/backgrounds";
 import "./tlp-badge.scss";
@@ -52,6 +52,22 @@ function getClasses(args: BadgeProps): string {
     return classes.join(" ");
 }
 
+function getTemplate(args: BadgeProps): TemplateResult {
+    if (args.all_variations) {
+        // prettier-ignore
+        return html`
+<div class="doc-example-badges">
+    <span class="tlp-badge-primary ${getClasses(args)}">
+        <i class="fa-solid fa-tlp-tuleap tlp-badge-icon" aria-hidden="true"></i> ${args.label}
+    </span>${COLOR_VARIANTS.map((color) => html`
+    <span class="tlp-badge-${color} ${getClasses(args)}">Badge</span>`)}
+</div>`;
+    }
+    // prettier-ignore
+    return html`
+<span class="${getClasses(args)}">${args.with_icon ? html`<i class="fa-solid fa-tlp-tuleap tlp-badge-icon" aria-hidden="true"></i> ` : ``}${args.label}</span>`
+}
+
 const meta: Meta<BadgeProps> = {
     title: "TLP/Visual Assets/Badges",
     parameters: {
@@ -59,25 +75,9 @@ const meta: Meta<BadgeProps> = {
             exclude: ["all_variations", "on_dark_background"],
         },
     },
-    render: (args: BadgeProps) =>
-        args.all_variations
-            ? html`<div class="doc-example-badges">
-                  <span class="tlp-badge-primary ${getClasses(args)}">
-                      <i class="fa-solid fa-tlp-tuleap tlp-badge-icon" aria-hidden="true"></i> Badge
-                  </span>
-                  ${COLOR_VARIANTS.map(
-                      (color) =>
-                          html`<span class="tlp-badge-${color} ${getClasses(args)}">Badge</span>`,
-                  )}
-              </div>`
-            : html`<span class="${getClasses(args)}"
-                  >${args.with_icon
-                      ? html`<i
-                            class="fa-solid fa-tlp-tuleap tlp-badge-icon"
-                            aria-hidden="true"
-                        ></i>`
-                      : ``}${args.label}</span
-              >`,
+    render: (args: BadgeProps) => {
+        return getTemplate(args);
+    },
     argTypes: {
         type: {
             name: "Type",

@@ -18,7 +18,7 @@
  */
 
 import type { Meta, StoryObj } from "@storybook/web-components";
-import { html } from "lit";
+import { html, type TemplateResult } from "lit";
 import "./tlp-layout.scss";
 
 type LayoutProps = {
@@ -38,6 +38,14 @@ function getClasses(args: LayoutProps): string[] {
     return classes;
 }
 
+function getTemplate(args: LayoutProps): TemplateResult {
+    // prettier-ignore
+    return html`
+<div class="container">
+    <main class="${getClasses(args).join(" ")}">${args.content}</main>
+</div>`;
+}
+
 const meta: Meta<LayoutProps> = {
     title: "TLP/Structure & Navigation/Layout",
     parameters: {
@@ -47,9 +55,7 @@ const meta: Meta<LayoutProps> = {
         layout: "none",
     },
     render: (args: LayoutProps) => {
-        return html`<div class="container">
-            <main class="${getClasses(args).join(" ")}">${args.content}</main>
-        </div>`;
+        return getTemplate(args);
     },
     argTypes: {
         content: {

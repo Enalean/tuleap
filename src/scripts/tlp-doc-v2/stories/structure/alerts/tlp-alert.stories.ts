@@ -18,7 +18,7 @@
  */
 
 import type { Meta, StoryObj } from "@storybook/web-components";
-import { html } from "lit";
+import { html, type TemplateResult } from "lit";
 import { USER_INTERFACE_COLORS } from "@tuleap/core-constants";
 import type { UserInterfaceColorName } from "@tuleap/core-constants";
 
@@ -33,14 +33,18 @@ function getClasses(args: AlertProps): string[] {
     return [`tlp-alert-${args.type}`];
 }
 
+function getTemplate(args: AlertProps): TemplateResult {
+    // prettier-ignore
+    return html`
+<div class="${getClasses(args).join(" ")}">${args.with_title ? html`
+    <p class="tlp-alert-title">${args.title}</p>` : ``}${args.content}
+</div>`;
+}
+
 const meta: Meta<AlertProps> = {
     title: "TLP/Structure & Navigation/Alerts",
     render: (args) => {
-        return html`<div class="${getClasses(args).join(" ")}">
-            ${args.with_title
-                ? html`<p class="tlp-alert-title">${args.title}</p>`
-                : ``}${args.content}
-        </div>`;
+        return getTemplate(args);
     },
     argTypes: {
         type: {

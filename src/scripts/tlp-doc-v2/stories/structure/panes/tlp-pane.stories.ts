@@ -18,10 +18,11 @@
  */
 
 import type { Meta, StoryObj } from "@storybook/web-components";
-import { html } from "lit";
+import { html, type TemplateResult } from "lit";
 
 type PaneProps = {
     title: string;
+    title_with_icon: boolean;
     content: string;
     tabs: boolean;
     table: boolean;
@@ -29,93 +30,86 @@ type PaneProps = {
     split: string;
 };
 
+function getTemplate(args: PaneProps): TemplateResult {
+    // prettier-ignore
+    return html`
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">${args.title_with_icon ? html`
+                <i class="tlp-pane-title-icon fa-solid fa-list"
+                   aria-hidden="true"></i>` : ``}${args.title}
+            </h1>
+        </div>${args.tabs ? html`
+        <nav class="tlp-tabs">
+              <a class="tlp-tab">Overview</a>
+              <a class="tlp-tab tlp-tab-active">Comments</a>
+              <a class="tlp-tab">History</a>
+        </nav>` : ``}
+        <section class="tlp-pane-section">
+            <p>${args.content}</p>${args.table ? html`
+            <table class="tlp-table">
+                  <thead>
+                      <tr>
+                          <th>Firstname</th>
+                          <th>Lastname</th>
+                          <th>Status</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>Allen</td>
+                          <td>Woody</td>
+                          <td>
+                              <span class="tlp-badge-success tlp-badge-outline"
+                                  >Active</span
+                              >
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>George</td>
+                          <td>Harrison</td>
+                          <td>
+                              <span class="tlp-badge-danger tlp-badge-outline"
+                                  >Deleted</span
+                              >
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Graam</td>
+                          <td>Parson</td>
+                          <td>
+                              <span class="tlp-badge-success tlp-badge-outline"
+                                  >Active</span
+                              >
+                          </td>
+                      </tr>
+                  </tbody>
+            </table>` : ""}${args.submit_button ? html`
+            <div class="tlp-pane-section-submit">
+                  <button type="submit" class="tlp-button-primary">Submit</button>
+            </div>` : ""}
+        </section>${args.split === "Horizontally" || args.split === "Both" ? html`
+        <section class="tlp-pane-section">
+              <p>${args.content}</p>
+        </section>` : ``}
+    </div>${args.split === "Vertically" || args.split === "Both" ? html`
+    <div class="tlp-pane-container">
+        <section class="tlp-pane-section">
+            <p>${args.content}</p>
+        </section>
+    </div>` : ``}
+</section>`;
+}
+
 const meta: Meta<PaneProps> = {
     title: "TLP/Structure & Navigation/Panes",
     render: (args) => {
-        return html`<section class="tlp-pane">
-            <div class="tlp-pane-container">
-                <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title">
-                        ${args.table
-                            ? html`<i
-                                  class="tlp-pane-title-icon fa-solid fa-list"
-                                  aria-hidden="true"
-                              ></i>`
-                            : ``}${args.title}
-                    </h1>
-                </div>
-                ${args.tabs
-                    ? html` <nav class="tlp-tabs">
-                          <a class="tlp-tab">Overview</a>
-                          <a class="tlp-tab tlp-tab-active">Comments</a>
-                          <a class="tlp-tab">History</a>
-                      </nav>`
-                    : ``}
-                <section class="tlp-pane-section">
-                    <p>${args.content}</p>
-                    ${args.table
-                        ? html`<table class="tlp-table">
-                              <thead>
-                                  <tr>
-                                      <th>Firstname</th>
-                                      <th>Lastname</th>
-                                      <th>Status</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr>
-                                      <td>Allen</td>
-                                      <td>Woody</td>
-                                      <td>
-                                          <span class="tlp-badge-success tlp-badge-outline"
-                                              >Active</span
-                                          >
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                      <td>George</td>
-                                      <td>Harrison</td>
-                                      <td>
-                                          <span class="tlp-badge-danger tlp-badge-outline"
-                                              >Deleted</span
-                                          >
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                      <td>Graam</td>
-                                      <td>Parson</td>
-                                      <td>
-                                          <span class="tlp-badge-success tlp-badge-outline"
-                                              >Active</span
-                                          >
-                                      </td>
-                                  </tr>
-                              </tbody>
-                          </table>`
-                        : ""}
-                    ${args.submit_button
-                        ? html`<div class="tlp-pane-section-submit">
-                              <button type="submit" class="tlp-button-primary">Submit</button>
-                          </div>`
-                        : ""}
-                </section>
-                ${args.split === "Horizontally" || args.split === "Both"
-                    ? html`<section class="tlp-pane-section">
-                          <p>${args.content}</p>
-                      </section>`
-                    : ``}
-            </div>
-            ${args.split === "Vertically" || args.split === "Both"
-                ? html`<div class="tlp-pane-container">
-                      <section class="tlp-pane-section">
-                          <p>${args.content}</p>
-                      </section>
-                  </div>`
-                : ``}
-        </section>`;
+        return getTemplate(args);
     },
     args: {
         title: "Pane",
+        title_with_icon: false,
         content: "The content of the pane goes here. The pane can have more than one section.",
         tabs: false,
         table: false,
@@ -125,6 +119,13 @@ const meta: Meta<PaneProps> = {
     argTypes: {
         title: {
             name: "Title",
+        },
+        title_with_icon: {
+            name: "Title with icon",
+            description: "Add an icon to the title with the appropriate class",
+            table: {
+                type: { summary: ".tlp-pane-title-icon" },
+            },
         },
         content: {
             name: "Content",
@@ -177,6 +178,7 @@ export const PaneWithTabs: Story = {
 
 export const PaneWithTable: Story = {
     args: {
+        title_with_icon: true,
         table: true,
     },
 };

@@ -18,7 +18,7 @@
  */
 
 import type { Meta, StoryObj } from "@storybook/web-components";
-import { html } from "lit";
+import { html, type TemplateResult } from "lit";
 
 type TabsProps = {
     vertical: boolean;
@@ -47,39 +47,38 @@ function getTabClasses(args: TabsProps): string {
     return tab_classes.join(" ");
 }
 
+function getTemplate(args: TabsProps): TemplateResult {
+    // prettier-ignore
+    return html`
+<nav class="${getTabsClass(args)}">
+    <a class="tlp-tab">First tab</a>
+    <a class="${getTabClasses(args)}">${args.with_icon ? html`
+        <i class="tlp-tab-icon fa-solid fa-tlp-tuleap " aria-hidden="true"></i>` : ``}
+        Custom tab ${args.with_badge ? html`
+        <span class="tlp-tab-badge-append tlp-badge-primary tlp-badge-outline">3</span>` : ``}${args.with_menu ? html`
+        <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+        <nav class="tlp-tab-menu">
+            <span class="tlp-tab-menu-title">Exports</span>
+            <a class="tlp-tab-menu-item">CSV</a>
+            <a class="tlp-tab-menu-item">Excel (2010 version)</a>
+            <a class="tlp-tab-menu-item">PDF (Acrobat compat)</a>
+            <span class="tlp-tab-menu-title">Imports</span>
+            <a class="tlp-tab-menu-item">CSV</a>
+            <hr class="tlp-tab-menu-separator" />
+            <a class="tlp-tab-menu-item tlp-text-danger">Delete</a>
+        </nav>` : ``}
+    </a>
+    <a class="tlp-tab">Another one</a>
+</nav>`;
+}
+
 const meta: Meta<TabsProps> = {
     title: "TLP/Structure & Navigation/Tabs",
     parameters: {
         layout: "centered",
     },
     render: (args: TabsProps) => {
-        return html`<nav class="${getTabsClass(args)}">
-            <a class="tlp-tab">First tab</a>
-            <a class="${getTabClasses(args)}"
-                >${args.with_icon
-                    ? html`<i class="tlp-tab-icon fa-solid fa-tlp-tuleap " aria-hidden="true"></i>`
-                    : ``}
-                Custom tab
-                ${args.with_badge
-                    ? html`<span class="tlp-tab-badge-append tlp-badge-primary tlp-badge-outline"
-                          >3</span
-                      >`
-                    : ``}${args.with_menu
-                    ? html`<i class="fa-solid fa-caret-down" aria-hidden="true"></i>
-                          <nav class="tlp-tab-menu">
-                              <span class="tlp-tab-menu-title">Exports</span>
-                              <a class="tlp-tab-menu-item">CSV</a>
-                              <a class="tlp-tab-menu-item">Excel (2010 version)</a>
-                              <a class="tlp-tab-menu-item">PDF (Acrobat compat)</a>
-                              <span class="tlp-tab-menu-title">Imports</span>
-                              <a class="tlp-tab-menu-item">CSV</a>
-                              <hr class="tlp-tab-menu-separator" />
-                              <a class="tlp-tab-menu-item tlp-text-danger">Delete</a>
-                          </nav>`
-                    : ``}</a
-            >
-            <a class="tlp-tab">Another one</a>
-        </nav>`;
+        return getTemplate(args);
     },
     argTypes: {
         vertical: {
