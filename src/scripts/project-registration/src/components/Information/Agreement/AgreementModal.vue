@@ -44,13 +44,8 @@
         </div>
         <div class="tlp-modal-body" v-dompurify-html="agreement_content" v-else></div>
         <div class="tlp-modal-footer">
-            <button
-                type="button"
-                class="tlp-button-primary tlp-modal-action"
-                v-translate
-                data-dismiss="modal"
-            >
-                Close
+            <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+                {{ $gettext("Close") }}
             </button>
         </div>
     </div>

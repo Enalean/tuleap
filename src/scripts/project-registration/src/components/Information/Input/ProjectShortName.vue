@@ -27,7 +27,7 @@
             data-test="project-shortname-slugified-section"
         >
             ↳&nbsp;
-            <span v-translate>Project shortname:</span>
+            <span>{{ $gettext("Project shortname:") }}</span>
             <div class="project-shortname-slugified">{{ slugified_project_name }}</div>
             <i class="fas fa-pencil-alt project-shortname-edit-icon"></i>
         </div>
@@ -40,7 +40,7 @@
             data-test="project-shortname-edit-section"
         >
             <label class="tlp-label" for="project-short-name">
-                <span v-translate>Project shortname</span>
+                <span>{{ $gettext("Project shortname") }}</span>
                 <i class="fa fa-asterisk" />
             </label>
             <input
@@ -58,16 +58,13 @@
             />
             <p class="tlp-text-info">
                 <i class="far fa-fw fa-life-ring"></i>
-                <span v-translate>Must start with a letter, without spaces nor punctuation.</span>
+                <span>{{
+                    $gettext("Must start with a letter, without spaces nor punctuation.")
+                }}</span>
             </p>
             <p class="tlp-text-danger" v-if="has_slug_error" data-test="has-error-slug">
                 <i class="fa fa-fw fa-exclamation-circle"></i>
-                <translate
-                    v-bind:translate-params="{ min: min_project_length, max: max_project_length }"
-                >
-                    Project short name must have between %{ min } and %{ max } characters length. It
-                    can only contain alphanumerical characters and dashes. Must start with a letter.
-                </translate>
+                {{ error_project_short_name }}
             </p>
         </div>
     </div>
@@ -77,10 +74,12 @@ import EventBus from "../../../helpers/event-bus";
 import slugify from "slugify";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useStore } from "../../../stores/root";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const root_store = useStore();
 
 const shortname = ref<InstanceType<typeof HTMLFormElement>>();
+const gettext_provider = useGettext();
 
 const project_name = ref("");
 const slugified_project_name = ref("");
@@ -89,6 +88,16 @@ const is_in_edit_mode = ref(false);
 
 const min_project_length = ref(3);
 const max_project_length = ref(30);
+
+const error_project_short_name = gettext_provider.interpolate(
+    gettext_provider.$gettext(
+        "Project short name must have between %{ min } and %{ max } characters length. It can only contain alphanumerical characters and dashes. Must start with a letter.",
+    ),
+    {
+        min: min_project_length,
+        max: max_project_length,
+    },
+);
 
 const should_user_correct_shortname = computed((): string => {
     if (shouldDisplayEditShortName()) {

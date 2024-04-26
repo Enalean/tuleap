@@ -37,29 +37,32 @@
                 <div class="register-new-project-section">
                     <project-information-svg />
                     <div class="register-new-project-list register-new-project-information">
-                        <h1 class="project-registration-title" v-translate>Start a new project</h1>
+                        <h1 class="project-registration-title">
+                            {{ $gettext("Start a new project") }}
+                        </h1>
 
                         <nav class="tlp-wizard">
                             <router-link
                                 v-bind:to="{ name: 'template' }"
                                 v-on:click.native="resetProjectCreationError"
                                 class="tlp-wizard-step-previous"
-                                v-translate
                             >
-                                Template
+                                {{ $gettext("Template") }}
                             </router-link>
-                            <span class="tlp-wizard-step-current" v-translate>Information</span>
+                            <span class="tlp-wizard-step-current">{{
+                                $gettext("Information")
+                            }}</span>
                         </nav>
 
                         <h2>
-                            <span v-translate>Project information</span>
+                            <span>{{ $gettext("Project information") }}</span>
                         </h2>
                         <div
                             class="register-new-project-information-form-container"
                             data-test="register-new-project-information-form"
                         ></div>
                         <div class="tlp-property">
-                            <label class="tlp-label" v-translate>Chosen template</label>
+                            <label class="tlp-label">{{ $gettext("Chosen template") }}</label>
                             <p class="project-information-selected-template">
                                 {{ selected_template_name }}
                             </p>
@@ -75,7 +78,7 @@
                                 class="tlp-label"
                                 for="project-information-input-privacy-list-label"
                             >
-                                <span v-translate>Visibility</span>
+                                <span>{{ $gettext("Visibility") }}</span>
                                 <i class="fa fa-asterisk"></i>
                             </label>
                             <project-information-input-privacy-list

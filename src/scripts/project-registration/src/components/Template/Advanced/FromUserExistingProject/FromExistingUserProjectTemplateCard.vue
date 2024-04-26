@@ -37,8 +37,8 @@
         >
             <div class="project-registration-template-glyph"><svg-template /></div>
             <div class="project-registration-template-content">
-                <h4 class="project-registration-template-card-title" v-translate>
-                    From another project I'm admin of
+                <h4 class="project-registration-template-card-title">
+                    {{ $gettext("From another project I'm admin of") }}
                 </h4>
                 <div
                     v-if="
@@ -49,9 +49,9 @@
                     class="project-registration-template-card-description"
                     data-test="user-project-description"
                 >
-                    <translate>
-                        Project configuration will be duplicated into your new project.
-                    </translate>
+                    {{
+                        $gettext("Project configuration will be duplicated into your new project.")
+                    }}
                 </div>
                 <div
                     v-else-if="is_loading_project_list && !has_error"
@@ -60,7 +60,7 @@
                     <i class="fa fa-spinner fa-spin fa-circle-o-notch"></i>
                 </div>
                 <div v-else-if="has_error" class="tlp-text-danger" data-test="user-project-error">
-                    <translate>Oh snap! Failed to load project you are admin of.</translate>
+                    {{ $gettext("Oh snap! Failed to load project you are admin of.") }}
                 </div>
                 <user-project-list
                     v-else-if="root_store.is_advanced_option_selected(option_name)"
