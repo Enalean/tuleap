@@ -51,7 +51,7 @@ defineProps<{ sections: readonly ArtidocSection[] }>();
 .document-section {
     display: flex;
     flex-direction: column;
-    margin-bottom: 2rem;
+    margin-bottom: var(--tlp-x-large-spacing);
 }
 
 .section-header {
@@ -59,7 +59,17 @@ defineProps<{ sections: readonly ArtidocSection[] }>();
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
 }
 
+ol {
+    counter-reset: item-without-dot;
+}
+
+li {
+    padding: 0 0 0 var(--tlp-medium-spacing);
+    counter-increment: item-without-dot;
+}
+
 li::marker {
+    content: counter(item-without-dot);
     color: var(--tlp-dimmed-color-lighter-50);
     font-style: italic;
     font-weight: 600;

@@ -61,7 +61,7 @@ li {
 
 .section-title {
     color: var(--tlp-dark-color);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 600;
 }
 
