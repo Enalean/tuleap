@@ -1,5 +1,3 @@
-version: "2.1"
-
 services:
   tests:
     image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-rest:c7-${PHP_VERSION}

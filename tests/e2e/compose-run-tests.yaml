@@ -1,5 +1,3 @@
-version: "2"
-
 services:
   test-cypress:
     image: tuleap-run-e2e-tests-cypress

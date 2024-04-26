@@ -1,5 +1,3 @@
-version: "2"
-
 services:
   mysql80:
     image: ${DOCKER_REGISTRY:-docker.io}/mysql:8.0

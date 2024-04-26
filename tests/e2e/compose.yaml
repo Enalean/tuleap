@@ -1,5 +1,3 @@
-version: "2"
-
 services:
   tuleap:
     image: ${DOCKER_REGISTRY:-docker.io}/tuleap/tuleap-community-edition:latest
