@@ -415,8 +415,8 @@ packages:
     engines: {node: '>=0.3.1'}
     dev: false
 
-  /dompurify@3.0.9:
-    resolution: {integrity: sha512-uyb4NDIvQ3hRn6NiC+SIFaP4mJ/MdXlvtunaqK9Bn6dD3RuB/1S/gasEjDHD8eiaqdSael2vBv+hOs7Y+jhYOQ==}
+  /dompurify@3.1.1:
+    resolution: {integrity: sha512-tVP8C/GJwnABOn/7cx/ymx/hXpmBfWIPihC1aOEvS8GbMqy3pgeYtJk1HXN3CO7tu+8bpY18f6isjR5Cymj0TQ==}
     dev: false
 
   /elkjs@0.9.1:
@@ -501,7 +501,7 @@ packages:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.10
       dayjs: 1.11.8
-      dompurify: 3.0.9
+      dompurify: 3.1.1
       elkjs: 0.9.1
       khroma: 2.0.0
       lodash-es: 4.17.21
