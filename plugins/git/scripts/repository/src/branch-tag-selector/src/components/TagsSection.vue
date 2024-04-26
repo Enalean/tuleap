@@ -40,23 +40,23 @@
             {{ tag.name }}
         </a>
         <div class="tlp-dropdown-menu-item" v-if="has_error_while_loading_tags">
-            <div class="tlp-alert-danger" v-translate>An error occurred while loading tags</div>
+            <div class="tlp-alert-danger">
+                {{ $gettext("An error occurred while loading tags") }}
+            </div>
         </div>
         <div
             class="git-repository-branch-tag-selector-empty"
             v-if="are_tags_loaded && !tags.length && !has_error_while_loading_tags"
             key="no-tags"
-            v-translate
         >
-            There isn't any tags defined yet
+            {{ $gettext("There isn't any tags defined yet") }}
         </div>
         <div
             class="git-repository-branch-tag-selector-empty"
             v-if="are_tags_loaded && tags.length && !filtered_tags.length"
             key="no-matching-tags"
-            v-translate
         >
-            There isn't any matching tags
+            {{ $gettext("There isn't any matching tags") }}
         </div>
     </section>
 </template>

@@ -49,22 +49,20 @@ describe("BranchesSection", () => {
         await wrapper.vm.$nextTick(); // Display the loaded branches
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <section class="git-repository-branch-tag-selector-refs">
-              <!---->
-              <div class="git-repository-branch-tag-selector-filter"><input type="search" placeholder="Branch name" class="tlp-search tlp-search-small" value=""></div> <a href="https://example.com/repo/?hb=develop" role="menuitem" class="tlp-dropdown-menu-item">
-                <!---->
-                develop
-                <!----></a><a href="https://example.com/repo/?hb=main" role="menuitem" class="tlp-dropdown-menu-item"><i class="fa fa-check fa-fw tlp-dropdown-menu-item-icon"></i>
-                main
-                <span class="tlp-badge-secondary tlp-badge-outline" data-msgid="
-                        default
-                    " data-current-language="en_US">
-                        default
-                    </span></a>
-              <!---->
-              <!---->
-              <!---->
-            </section>
-        `);
+<section class="git-repository-branch-tag-selector-refs">
+  <!---->
+  <div class="git-repository-branch-tag-selector-filter"><input type="search" placeholder="Branch name" class="tlp-search tlp-search-small" value=""></div> <a href="https://example.com/repo/?hb=develop" role="menuitem" class="tlp-dropdown-menu-item">
+    <!---->
+    develop
+    <!----></a><a href="https://example.com/repo/?hb=main" role="menuitem" class="tlp-dropdown-menu-item"><i class="fa fa-check fa-fw tlp-dropdown-menu-item-icon"></i>
+    main
+    <span class="tlp-badge-secondary tlp-badge-outline">
+            default
+        </span></a>
+  <!---->
+  <!---->
+  <!---->
+</section>
+`);
     });
 });

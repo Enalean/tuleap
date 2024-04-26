@@ -25,18 +25,16 @@
                 class="tlp-tab"
                 v-bind:class="{ 'tlp-tab-active': is_displaying_branches }"
                 v-on:click.prevent="is_displaying_branches = true"
-                v-translate
             >
-                Branches
+                {{ $gettext("Branches") }}
             </a>
             <a
                 href=""
                 class="tlp-tab"
                 v-bind:class="{ 'tlp-tab-active': !is_displaying_branches }"
                 v-on:click.prevent="is_displaying_branches = false"
-                v-translate
             >
-                Tags
+                {{ $gettext("Tags") }}
             </a>
         </nav>
         <branches-section

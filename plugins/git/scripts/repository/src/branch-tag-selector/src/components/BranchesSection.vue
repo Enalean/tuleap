@@ -41,27 +41,26 @@
             <span
                 class="tlp-badge-secondary tlp-badge-outline"
                 v-if="branch.name === repository_default_branch"
-                v-translate
             >
-                default
+                {{ $gettext("default") }}
             </span>
         </a>
         <div class="tlp-dropdown-menu-item" v-if="has_error_while_loading_branches">
-            <div class="tlp-alert-danger" v-translate>An error occurred while loading branches</div>
+            <div class="tlp-alert-danger">
+                {{ $gettext("An error occurred while loading branches") }}
+            </div>
         </div>
         <div
             class="git-repository-branch-tag-selector-empty"
             v-if="are_branches_loaded && !branches.length && !has_error_while_loading_branches"
-            v-translate
         >
-            There isn't any branches defined yet
+            {{ $gettext("There isn't any branches defined yet") }}
         </div>
         <div
             class="git-repository-branch-tag-selector-empty"
             v-if="are_branches_loaded && branches.length && !filtered_branches.length"
-            v-translate
         >
-            There isn't any matching branches
+            {{ $gettext("There isn't any matching branches") }}
         </div>
     </section>
 </template>
