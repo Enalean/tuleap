@@ -18,13 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Docman\REST\v1\CopyItem;
 
-namespace Tuleap\Document\Tree;
+use DateTimeImmutable;
+use Docman_Folder;
+use PFUser;
+use Tuleap\Docman\REST\v1\CreatedItemRepresentation;
 
-final readonly class OtherItemTypeDefinition
+interface CopyItem
 {
-    public function __construct(public string $icon, public string $title)
-    {
-    }
+    public function copyItem(
+        DateTimeImmutable $current_time,
+        Docman_Folder $destination_folder,
+        PFUser $user,
+        DocmanCopyItemRepresentation $representation,
+    ): CreatedItemRepresentation;
 }

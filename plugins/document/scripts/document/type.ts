@@ -568,6 +568,7 @@ export interface NewItemAlternative {
 
 interface OtherItemType {
     readonly icon: string;
+    readonly title: string;
 }
 
 export type OtherItemTypeCollection = Record<string, OtherItemType>;

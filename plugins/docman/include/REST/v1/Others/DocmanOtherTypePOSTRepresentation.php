@@ -22,12 +22,60 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Others;
 
+use Tuleap\Docman\REST\v1\CopyItem\CanContainACopyRepresentation;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
+use Tuleap\Docman\REST\v1\ItemRepresentation;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 
 /**
  * @psalm-immutable
  */
-class DocmanOtherTypePOSTRepresentation
+final class DocmanOtherTypePOSTRepresentation implements CanContainACopyRepresentation
 {
-    public DocmanCopyItemRepresentation $copy;
+    private const REQUIRED_NON_COPY_PROPERTIES = ['title', 'type'];
+
+    /**
+     * @var string Item title {@from body} {@required false} Mandatory if copy is not set
+     */
+    public $title;
+    /**
+     * @var string Item description {@from body} {@required false}
+     */
+    public $description = '';
+
+    /**
+     * @var string | null Item status {@from body} {@required false} {@choice none,draft,approved,rejected}
+     */
+    public $status;
+
+    /**
+     * @var string | null Obsolescence date {@from body} {@required false}
+     */
+    public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+
+    /**
+     * @var array | null The metadata {@from body} {@required false} {@type \Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation}
+     */
+    public $metadata;
+
+    /**
+     * @var DocmanItemPermissionsForGroupsSetRepresentation The permissions {@from body} {@required false} {@type \Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation}
+     * @psalm-var DocmanItemPermissionsForGroupsSetRepresentation|null
+     */
+    public $permissions_for_groups;
+
+    /**
+     * @var string | null The type of the item {@from body} {@required false}
+     */
+    public ?string $type;
+
+    /**
+     * @var DocmanCopyItemRepresentation Where to copy paste the item. Mandatory if others parameters are not set. {@from body} {@required false} {@type \Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation}
+     */
+    public $copy;
+
+    public static function getNonCopyRequiredObjectProperties(): array
+    {
+        return self::REQUIRED_NON_COPY_PROPERTIES;
+    }
 }

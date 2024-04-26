@@ -29,6 +29,8 @@ use Docman_MetadataValueDao;
 use Docman_Wiki;
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Empties\DocmanEmptyPOSTRepresentation;
@@ -44,6 +46,8 @@ use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataToCreate;
+use Tuleap\Docman\REST\v1\Others\DocmanOtherTypePOSTRepresentation;
+use Tuleap\Docman\REST\v1\Others\VerifyOtherTypeIsSupported;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSet;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
@@ -52,6 +56,9 @@ use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -128,8 +135,11 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->metadata_value_dao = \Mockery::mock(Docman_MetadataValueDao::class);
 
         $this->permissions_for_groups_set_factory = \Mockery::mock(DocmanItemPermissionsForGroupsSetFactory::class);
+    }
 
-        $this->item_creator = new DocmanItemCreator(
+    private function getItemCreator(EventDispatcherInterface $dispatcher): DocmanItemCreator
+    {
+        return new DocmanItemCreator(
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
@@ -141,6 +151,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->custom_metadata_checker,
             $this->metadata_value_dao,
             $this->permissions_for_groups_set_factory,
+            $dispatcher,
         );
     }
 
@@ -178,7 +189,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, \Mockery::any(), \Mockery::any(), null, null)
+            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, '', \Mockery::any(), \Mockery::any(), null, null)
             ->once()
             ->andReturns($created_item);
 
@@ -204,15 +215,151 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this->item_creator->createEmpty(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createEmpty(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
 
         $this->assertSame(12, $created_item_representation->id);
+    }
+
+    /**
+     * @dataProvider permissionsForGroupsSetRepresentationDataProvider
+     */
+    public function testOtherTypeDocumentCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
+    {
+        $parent_item  = new Docman_Folder(['item_id' => 11]);
+        $user         = UserTestBuilder::aUser()->withId(222)->build();
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                         = new DocmanOtherTypePOSTRepresentation();
+        $post_representation->title                  = 'Title';
+        $post_representation->permissions_for_groups = $permissions_for_groups_set;
+        $post_representation->type                   = 'whatever';
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
+            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+
+        $this->metadata_obsolesence_date_retriever
+            ->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
+            ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE, $current_time])
+            ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
+
+        $created_item = \Mockery::mock(OtherDocument::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->makePartial();
+
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->with('Title', '', 11, 100, 0, 222, \Docman_Item::TYPE_OTHER, 'whatever', \Mockery::any(), \Mockery::any(), null, null)
+            ->once()
+            ->andReturns($created_item);
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        if ($permissions_for_groups_set !== null) {
+            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
+                ->once()
+                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+        }
+
+        $this->creator_visitor->shouldReceive('visitOtherDocument')
+            ->withArgs(function (OtherDocument $item, array $params) use ($permissions_for_groups_set): bool {
+                if ($permissions_for_groups_set === null) {
+                    $this->assertNull($params['permissions_for_groups']);
+                } else {
+                    $this->assertNotNull($params['permissions_for_groups']);
+                }
+                return true;
+            })->once();
+
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
+
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withCallback(function (object $event): object {
+                if ($event instanceof VerifyOtherTypeIsSupported) {
+                    $event->flagAsSupported();
+                }
+
+                return $event;
+            }))
+            ->createOtherType(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
+
+        $this->assertSame(12, $created_item_representation->id);
+    }
+
+    /**
+     * @dataProvider permissionsForGroupsSetRepresentationDataProvider
+     */
+    public function testOtherTypeDocumentCannotBeCreatedIfWeDontKnowTheGivenType(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
+    {
+        $parent_item  = new Docman_Folder(['item_id' => 11]);
+        $user         = UserTestBuilder::aUser()->withId(222)->build();
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                         = new DocmanOtherTypePOSTRepresentation();
+        $post_representation->title                  = 'Title';
+        $post_representation->permissions_for_groups = $permissions_for_groups_set;
+        $post_representation->type                   = 'whatever';
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
+            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+
+        $this->metadata_obsolesence_date_retriever
+            ->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
+            ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE, $current_time])
+            ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
+
+        $created_item = \Mockery::mock(OtherDocument::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->makePartial();
+
+        $this->item_factory->shouldReceive('createWithoutOrdering')->never();
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        $this->creator_visitor->shouldReceive('visitOtherDocument')->never();
+
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->getItemCreator(EventDispatcherStub::withCallback(function (object $event): object {
+            if ($event instanceof VerifyOtherTypeIsSupported) {
+                // we don't know the type, do nothing
+            }
+
+                return $event;
+        }))
+            ->createOtherType(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
     }
 
     /**
@@ -268,7 +415,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, \Mockery::any(), \Mockery::any(), 'Monchichi', null)
+            ->with('Title', '', 11, 100, (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, '', \Mockery::any(), \Mockery::any(), 'Monchichi', null)
             ->once()
             ->andReturns($created_item);
 
@@ -278,13 +425,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this->item_creator->createWiki(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createWiki(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
 
         $this->assertSame(12, $created_item_representation->id);
     }
@@ -327,13 +476,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->item_creator->createWiki(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createWiki(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
     }
 
     public function testFileDocumentCanBeCreated(): void
@@ -366,18 +517,20 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $metadata_to_create = MetadataToCreate::buildMetadataRepresentation([], false);
 
-        $created_item_representation = $this->item_creator->createFileDocument(
-            $parent_item,
-            $user,
-            $post_representation->title,
-            $post_representation->description,
-            'approved',
-            '2019-06-06',
-            $current_time,
-            $file_properties_post_representation,
-            $metadata_to_create,
-            null
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createFileDocument(
+                $parent_item,
+                $user,
+                $post_representation->title,
+                $post_representation->description,
+                'approved',
+                '2019-06-06',
+                $current_time,
+                $file_properties_post_representation,
+                $metadata_to_create,
+                null
+            );
 
         $this->assertSame(12, $created_item_representation->id);
         $this->assertNotNull($created_item_representation->file_properties);
@@ -409,18 +562,20 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->item_creator->createFileDocument(
-            $parent_item,
-            $user,
-            $post_representation->title,
-            $post_representation->description,
-            'approved',
-            '2019-06-06',
-            $current_time,
-            $file_properties_post_representation,
-            $metadata_to_create,
-            null
-        );
+        $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createFileDocument(
+                $parent_item,
+                $user,
+                $post_representation->title,
+                $post_representation->description,
+                'approved',
+                '2019-06-06',
+                $current_time,
+                $file_properties_post_representation,
+                $metadata_to_create,
+                null
+            );
     }
 
     public function testDocumentCreationWhenAFileIsBeingUploadedForItIsRejected(): void
@@ -445,13 +600,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(409);
 
-        $this->item_creator->createEmpty(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createEmpty(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
     }
 
     /**
@@ -514,6 +671,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 0,
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                '',
                 \Mockery::any(),
                 \Mockery::any(),
                 null,
@@ -530,13 +688,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this->item_creator->createLink(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createLink(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
 
         $this->assertSame(12, $created_item_representation->id);
     }
@@ -591,7 +751,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, \Mockery::any(), \Mockery::any(), null, null)
+            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, '', \Mockery::any(), \Mockery::any(), null, null)
             ->once()
             ->andReturns($created_item);
 
@@ -601,13 +761,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this->item_creator->createFolder(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createFolder(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
 
         $this->assertSame(12, $created_item_representation->id);
     }
@@ -665,7 +827,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Embedded file', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, \Mockery::any(), \Mockery::any(), null, null)
+            ->with('Embedded file', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, '', \Mockery::any(), \Mockery::any(), null, null)
             ->once()
             ->andReturns($created_item);
 
@@ -676,13 +838,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this->item_creator->createEmbedded(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createEmbedded(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
 
         $this->assertSame(12, $created_item_representation->id);
     }
@@ -705,13 +869,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->item_creator->createEmpty(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createEmpty(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
     }
 
     public function testItThrowsExceptionIfTheStatusMetadataIsNotUsedButSetInTheRepresentation(): void
@@ -757,13 +923,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(HardCodedMetadataException::class);
         $this->expectExceptionMessage('Status is not enabled for project');
 
-        $this->item_creator->createFolder(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createFolder(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
     }
 
     public function testFolderCanBeCreatedWithStatus(): void
@@ -809,6 +977,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 0,
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+                '',
                 \Mockery::any(),
                 \Mockery::any(),
                 null,
@@ -824,13 +993,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this->item_creator->createFolder(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createFolder(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
 
         $this->assertSame(12, $created_item_representation->id);
     }
@@ -872,7 +1043,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, $obsolescence_date_time_stamp, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, \Mockery::any(), \Mockery::any(), null, null)
+            ->with('Title', '', 11, 100, $obsolescence_date_time_stamp, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, '', \Mockery::any(), \Mockery::any(), null, null)
             ->once()
             ->andReturns($created_item);
 
@@ -883,13 +1054,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this->item_creator->createEmpty(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createEmpty(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
 
         $this->assertSame(12, $created_item_representation->id);
     }
@@ -941,6 +1114,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $obsolescence_date_time_stamp,
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+                '',
                 \Mockery::any(),
                 \Mockery::any(),
                 null,
@@ -956,13 +1130,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this->item_creator->createEmbedded(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createEmbedded(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
 
         $this->assertSame(12, $created_item_representation->id);
     }
@@ -1015,6 +1191,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $obsolescence_date_time_stamp,
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                '',
                 \Mockery::any(),
                 \Mockery::any(),
                 null,
@@ -1032,13 +1209,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->link_validity_checker->shouldReceive('checkLinkValidity')->once();
 
-        $created_item_representation = $this->item_creator->createLink(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createLink(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
 
         $this->assertSame(12, $created_item_representation->id);
     }
@@ -1092,6 +1271,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $obsolescence_date_time_stamp,
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+                '',
                 \Mockery::any(),
                 \Mockery::any(),
                 'Monchocho',
@@ -1107,13 +1287,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this->item_creator->createWiki(
-            $parent_item,
-            $user,
-            $post_representation,
-            $current_time,
-            $project
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createWiki(
+                $parent_item,
+                $user,
+                $post_representation,
+                $current_time,
+                $project
+            );
 
         $this->assertSame(12, $created_item_representation->id);
     }
@@ -1156,18 +1338,20 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();
 
         $metadata_to_create          = MetadataToCreate::buildMetadataRepresentation([], false);
-        $created_item_representation = $this->item_creator->createFileDocument(
-            $parent_item,
-            $user,
-            $post_representation->title,
-            $post_representation->description,
-            $post_representation->status,
-            $post_representation->obsolescence_date,
-            $current_time,
-            $file_properties_post_representation,
-            $metadata_to_create,
-            null
-        );
+        $created_item_representation = $this
+            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+            ->createFileDocument(
+                $parent_item,
+                $user,
+                $post_representation->title,
+                $post_representation->description,
+                $post_representation->status,
+                $post_representation->obsolescence_date,
+                $current_time,
+                $file_properties_post_representation,
+                $metadata_to_create,
+                null
+            );
 
         $this->assertSame(12, $created_item_representation->id);
         $this->assertNotNull($created_item_representation->file_properties);

@@ -85,6 +85,10 @@ export interface RestEmpty extends Omit<Empty, "properties"> {
     readonly metadata: Array<Property>;
 }
 
+export interface RestOtherType extends Omit<OtherTypeItem, "properties"> {
+    readonly metadata: Array<Property>;
+}
+
 export interface ProjectService {
     permissions_for_groups: AdminPermissions;
     root_item: RestFolder;
@@ -209,6 +213,13 @@ export function addNewWiki(item: RestWiki, parent_id: number): Promise<CreatedIt
 export function addNewLink(item: RestLink, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/links",
+        item,
+    );
+}
+
+export function addNewOtherType(item: RestOtherType, parent_id: number): Promise<CreatedItem> {
+    return addNewDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/others",
         item,
     );
 }

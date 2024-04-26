@@ -36,7 +36,7 @@ use Tuleap\Docman\DestinationCloneItem;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
 use Tuleap\Docman\REST\v1\CreatedItemRepresentation;
 
-final class DocmanItemCopier
+final class DocmanItemCopier implements CopyItem
 {
     /**
      * @var Docman_ItemFactory

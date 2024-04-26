@@ -25,6 +25,7 @@ use Docman_Item;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Empties\DocmanEmptyPOSTRepresentation;
@@ -38,6 +39,7 @@ use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataToCreate;
+use Tuleap\Docman\REST\v1\Others\VerifyOtherTypeIsSupported;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSet;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
@@ -48,7 +50,7 @@ use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 
-class DocmanItemCreator
+class DocmanItemCreator implements CreateOtherTypeItem
 {
     public function __construct(
         private \Docman_ItemFactory $item_factory,
@@ -62,6 +64,7 @@ class DocmanItemCreator
         private CustomMetadataRepresentationRetriever $custom_checker,
         private \Docman_MetadataValueDao $metadata_value_dao,
         private DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory,
+        private readonly EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -95,6 +98,7 @@ class DocmanItemCreator
      */
     private function createDocument(
         $item_type_id,
+        string $other_type,
         \DateTimeImmutable $current_time,
         Docman_Item $parent_item,
         PFUser $user,
@@ -129,6 +133,7 @@ class DocmanItemCreator
             $obsolescence_date_time_stamp,
             $user->getId(),
             $item_type_id,
+            $other_type,
             $current_date,
             $current_date,
             $wiki_page,
@@ -242,6 +247,7 @@ class DocmanItemCreator
 
         return $this->createDocument(
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+            '',
             $current_time,
             $parent_item,
             $user,
@@ -289,6 +295,56 @@ class DocmanItemCreator
 
         return $this->createDocument(
             PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
+            '',
+            $current_time,
+            $parent_item,
+            $user,
+            $project,
+            $representation->title,
+            $representation->description,
+            $metadata_to_create,
+            $representation->status,
+            $representation->obsolescence_date,
+            $this->getPermissionsForGroupsSet($parent_item, $representation->permissions_for_groups),
+            null,
+            null,
+            null
+        );
+    }
+
+    public function createOtherType(
+        Docman_Item $parent_item,
+        PFUser $user,
+        Others\DocmanOtherTypePOSTRepresentation $representation,
+        \DateTimeImmutable $current_time,
+        Project $project,
+    ): CreatedItemRepresentation {
+        if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, (int) $parent_item->getId())) {
+            throw new RestException(400, 'A document with same title already exists in the given folder.');
+        }
+
+        if (! $this->dispatcher->dispatch(new VerifyOtherTypeIsSupported((string) $representation->type))->isSupported()) {
+            throw new RestException(
+                400,
+                sprintf('The type of document "%s" is not supported.', (string) $representation->type)
+            );
+        }
+
+        $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(
+            $parent_item,
+            $representation->metadata
+        );
+
+        $this->checkDocumentIsNotBeingUploaded(
+            $parent_item,
+            Docman_Item::TYPE_OTHER,
+            $representation->title,
+            $current_time
+        );
+
+        return $this->createDocument(
+            Docman_Item::TYPE_OTHER,
+            (string) $representation->type,
             $current_time,
             $parent_item,
             $user,
@@ -343,6 +399,7 @@ class DocmanItemCreator
 
         return $this->createDocument(
             PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            '',
             $current_time,
             $parent_item,
             $user,
@@ -390,6 +447,7 @@ class DocmanItemCreator
 
         return $this->createDocument(
             PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+            '',
             $current_time,
             $parent_item,
             $user,
@@ -440,6 +498,7 @@ class DocmanItemCreator
 
         return $this->createDocument(
             PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+            '',
             $current_time,
             $parent_item,
             $user,

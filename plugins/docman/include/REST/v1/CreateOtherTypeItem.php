@@ -18,13 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Docman\REST\v1;
 
-namespace Tuleap\Document\Tree;
+use Docman_Folder;
+use Luracast\Restler\RestException;
+use PFUser;
+use Project;
+use Tuleap\Docman\Metadata\CustomMetadataException;
 
-final readonly class OtherItemTypeDefinition
+interface CreateOtherTypeItem
 {
-    public function __construct(public string $icon, public string $title)
-    {
-    }
+    /**
+     * @throws Metadata\HardCodedMetadataException
+     * @throws RestException
+     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     * @throws CustomMetadataException
+     */
+    public function createOtherType(
+        Docman_Folder $parent_item,
+        PFUser $user,
+        Others\DocmanOtherTypePOSTRepresentation $representation,
+        \DateTimeImmutable $current_time,
+        Project $project,
+    ): CreatedItemRepresentation;
 }

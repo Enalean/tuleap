@@ -23,6 +23,7 @@ import {
     addNewEmpty,
     addNewFolder,
     addNewLink,
+    addNewOtherType,
     addNewWiki,
     getItem,
 } from "../api/rest-querier";
@@ -88,11 +89,7 @@ export const createNewItem = async (
         } else if (isLink(item)) {
             item_reference = await addNewLink(item_to_create, parent.id);
         } else {
-            await context.dispatch(
-                "error/handleErrorsForModal",
-                new Error("Item type " + item_to_create.type + " is not supported for creation"),
-            );
-            return undefined;
+            item_reference = await addNewOtherType(item_to_create, parent.id);
         }
         emitter.emit("new-item-has-just-been-created", item_reference);
         await adjustItemToContentAfterItemCreationInAFolder(context, {

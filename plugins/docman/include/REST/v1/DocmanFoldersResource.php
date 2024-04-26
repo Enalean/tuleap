@@ -43,7 +43,6 @@ use PluginManager;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
-use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
@@ -66,6 +65,7 @@ use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\REST\v1\Others\DocmanOtherTypePOSTRepresentation;
+use Tuleap\Docman\REST\v1\Others\POSTOtherTypeHandler;
 use Tuleap\Docman\REST\v1\Permissions\DocmanFolderPermissionsForGroupsPUTRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
@@ -393,22 +393,17 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setCreationHeaders();
 
-        $current_user = $this->user_manager->getCurrentUser();
+        $post_handler = new POSTOtherTypeHandler(
+            new ItemCanHaveSubItemsChecker(),
+            new DocmanValidateRepresentationForCopy(),
+            $this->getDocmanItemsEventAdder(),
+            $this->getItemCopier(...),
+            static fn (Project $project) => DocmanItemCreatorBuilder::build($project),
+        );
 
-        $item_request = $this->request_builder->buildFromItemId($id);
-        $parent       = $item_request->getItem();
-        $this->checkItemCanHaveSubitems($parent);
-        $project = $item_request->getProject();
-        $this->getDocmanFolderPermissionChecker($project)
-            ->checkUserCanWriteFolder($current_user, $id);
-
-        $this->addAllEvent($project);
-
-        return $this->getItemCopier($project, OtherDocument::class)->copyItem(
-            new DateTimeImmutable(),
-            $parent,
-            $current_user,
-            $post_representation->copy
+        return $post_handler->handle(
+            $this->request_builder->buildFromItemId($id),
+            $post_representation,
         );
     }
 
@@ -916,10 +911,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      */
     private function getItemCopier(Project $project, string $expected_item_class_to_copy): DocmanItemCopier
     {
-        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
-        assert($docman_plugin instanceof DocmanPlugin);
-        $docman_plugin_info = $docman_plugin->getPluginInfo();
-        $item_factory       = new Docman_ItemFactory();
+        $item_factory = new Docman_ItemFactory();
         return new DocmanItemCopier(
             $item_factory,
             new BeforeCopyVisitor(
@@ -932,7 +924,7 @@ class DocmanFoldersResource extends AuthenticatedResource
             EventManager::instance(),
             ProjectManager::instance(),
             new Docman_LinkVersionFactory(),
-            $docman_plugin_info->getPropertyValueForName('docman_root')
+            $this->getDocmanRootPath(),
         );
     }
 
@@ -941,5 +933,13 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
+    }
+
+    private function getDocmanRootPath(): string
+    {
+        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
+        assert($docman_plugin instanceof DocmanPlugin);
+
+        return (string) $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
     }
 }

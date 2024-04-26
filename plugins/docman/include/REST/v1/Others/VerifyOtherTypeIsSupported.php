@@ -20,11 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Document\Tree;
+namespace Tuleap\Docman\REST\v1\Others;
 
-final readonly class OtherItemTypeDefinition
+final class VerifyOtherTypeIsSupported
 {
-    public function __construct(public string $icon, public string $title)
+    private bool $is_supported = false;
+
+    public function __construct(public readonly string $type)
     {
+    }
+
+    public function isSupported(): bool
+    {
+        return $this->is_supported;
+    }
+
+    public function flagAsSupported(): void
+    {
+        $this->is_supported = true;
     }
 }

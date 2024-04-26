@@ -24,8 +24,10 @@ import type {
     PostRestItemFile,
     RestLink,
     RestWiki,
+    RestOtherType,
 } from "./rest-querier";
 import {
+    addNewOtherType,
     addNewEmpty,
     addNewFile,
     addNewFolder,
@@ -224,6 +226,33 @@ describe("rest-querier", () => {
             });
         });
     });
+
+    describe("addNewOtherType()", () => {
+        it("Create a new other type", async () => {
+            const item = JSON.stringify({
+                title: "my new other type",
+                description: "",
+                type: "whatever",
+            });
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
+            mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
+
+            await addNewOtherType(
+                {
+                    title: "my new other type",
+                    description: "",
+                    type: "whatever",
+                } as RestOtherType,
+                2,
+            );
+
+            expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/others", {
+                headers: expect.objectContaining({ "content-type": "application/json" }),
+                body: item,
+            });
+        });
+    });
+
     describe("addNewFile()", () => {
         it("Create a new file", async () => {
             const item = JSON.stringify({

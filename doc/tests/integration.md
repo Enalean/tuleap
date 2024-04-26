@@ -28,3 +28,10 @@ order to parse logs for example:
 $> docker exec -ti <name-of-the-container> bash
 $root@d4601e92ca3f> tail -f /var/opt/remi/php82/log/php-fpm/error.log
 ```
+
+And if you need to run queries on the database, look at the password
+in ``/etc/tuleap/conf/database.inc`` and connect directly in the db container:
+```bash
+$> docker exec -ti <name-of-the-database-container> bash
+bash-4.4# mysql -h 127.0.0.1 -u tuleapadm -p tuleap
+```
