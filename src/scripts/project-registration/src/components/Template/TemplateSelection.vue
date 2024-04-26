@@ -53,9 +53,8 @@
                 v-bind:class="getTabsClasses(CATEGORY_ADVANCED)"
                 data-test="project-registration-advanced-templates-tab"
                 v-bind:href="'#' + CATEGORY_ADVANCED"
-                v-translate
             >
-                For advanced users
+                {{ $gettext("For advanced users") }}
             </a>
         </nav>
         <tuleap-template-list v-show="isTemplateCategorySelected(CATEGORY_TULEAP)" />
@@ -65,112 +64,113 @@
             v-for="category_name in categorised_external_templates_map.keys()"
             v-bind:key="category_name"
             v-show="isTemplateCategorySelected(category_name)"
-            v-bind:templates="categorised_external_templates_map.get(category_name)"
+            v-bind:templates="getTemplateSelected(category_name)"
         />
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import type { Ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
 import CompanyTemplatesList from "./Company/CompanyTemplateList.vue";
 import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
 import CategorisedExternalTemplatesList from "./CategorisedExternalTemplates/CategorisedExternalTemplatesList.vue";
 import type { ExternalTemplateCategory, ExternalTemplateData } from "../../type";
 import { useStore } from "../../stores/root";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component({
-    components: {
-        AdvancedTemplateList,
-        CompanyTemplatesList,
-        TuleapTemplateList,
-        CategorisedExternalTemplatesList,
-    },
-})
-export default class TemplateSelection extends Vue {
-    readonly CATEGORY_TULEAP = "Tuleap";
-    readonly CATEGORY_ACME = "ACME";
-    readonly CATEGORY_ADVANCED = "Advanced";
+const CATEGORY_TULEAP = "Tuleap";
+const CATEGORY_ACME = "ACME";
+const CATEGORY_ADVANCED = "Advanced";
 
-    external_templates_categories: ExternalTemplateCategory[] = [];
-    categorised_external_templates_map = new Map<string, ExternalTemplateData[]>();
+const external_templates_categories: Ref<ExternalTemplateCategory[]> = ref([]);
+const categorised_external_templates_map: Ref<Map<string, ExternalTemplateData[]>> = ref(new Map());
 
-    root_store = useStore();
-    mounted(): void {
-        this.root_store.external_templates.forEach((template) => {
-            const category_templates = this.categorised_external_templates_map.get(
-                template.template_category.shortname,
-            );
-            if (category_templates) {
-                category_templates.push(template);
-                return;
-            }
-            this.external_templates_categories.push(template.template_category);
-            this.categorised_external_templates_map.set(template.template_category.shortname, [
-                template,
-            ]);
-        });
+const gettext_provider = useGettext();
 
-        if (this.root_store.selected_template_category !== null) {
+const root_store = useStore();
+onMounted(() => {
+    root_store.external_templates.forEach((template) => {
+        const category_templates = categorised_external_templates_map.value.get(
+            template.template_category.shortname,
+        );
+        if (category_templates) {
+            category_templates.push(template);
             return;
         }
+        external_templates_categories.value.push(template.template_category);
+        categorised_external_templates_map.value.set(template.template_category.shortname, [
+            template,
+        ]);
+    });
 
-        if (this.root_store.company_templates.length > 0) {
-            this.setSelectedTemplateCategory(this.CATEGORY_ACME);
-            return;
-        }
-
-        if (this.root_store.tuleap_templates.length > 0) {
-            this.setSelectedTemplateCategory(this.CATEGORY_TULEAP);
-            return;
-        }
-
-        const first_external_template_category = this.categorised_external_templates_map
-            .keys()
-            .next().value;
-        if (first_external_template_category) {
-            this.setSelectedTemplateCategory(first_external_template_category);
-            return;
-        }
-
-        this.setSelectedTemplateCategory(this.CATEGORY_ADVANCED);
+    if (root_store.selected_template_category !== null) {
+        return;
     }
 
-    setSelectedTemplateCategory(template_category: string): void {
-        this.root_store.resetSelectedTemplate();
-        this.root_store.setSelectedTemplateCategory(template_category);
+    if (root_store.company_templates.length > 0) {
+        setSelectedTemplateCategory(CATEGORY_ACME);
+        return;
     }
 
-    isTemplateCategorySelected(template_category: string): boolean {
-        return this.root_store.selected_template_category === template_category;
+    if (root_store.tuleap_templates.length > 0) {
+        setSelectedTemplateCategory(CATEGORY_TULEAP);
+        return;
     }
 
-    getTabsClasses(template_category: string): string[] {
-        const classes = ["tlp-tab"];
-
-        if (this.isTemplateCategorySelected(template_category)) {
-            classes.push("tlp-tab-active");
-        }
-
-        return classes;
+    const first_external_template_category = categorised_external_templates_map.value
+        .keys()
+        .next().value;
+    if (first_external_template_category) {
+        setSelectedTemplateCategory(first_external_template_category);
+        return;
     }
 
-    getExternalCategoryClasses(category: ExternalTemplateCategory): string[] {
-        const classes = this.getTabsClasses(category.shortname);
+    setSelectedTemplateCategory(CATEGORY_ADVANCED);
+});
 
-        if (category.should_case_of_label_be_respected) {
-            classes.push("templates-category-tab-with-mixed-case");
-        }
-
-        return classes;
-    }
-
-    get platform_template_name(): string {
-        if (this.root_store.company_name === "Tuleap") {
-            return this.$gettext("Custom templates");
-        }
-        return this.root_store.company_name;
-    }
+function setSelectedTemplateCategory(template_category: string): void {
+    root_store.resetSelectedTemplate();
+    root_store.setSelectedTemplateCategory(template_category);
 }
+
+function isTemplateCategorySelected(template_category: string): boolean {
+    return root_store.selected_template_category === template_category;
+}
+
+function getTemplateSelected(template_category: string): ExternalTemplateData[] {
+    let external_template_data = categorised_external_templates_map.value.get(template_category);
+    if (external_template_data === undefined) {
+        return [];
+    }
+    return external_template_data;
+}
+
+function getTabsClasses(template_category: string): string[] {
+    const classes = ["tlp-tab"];
+
+    if (isTemplateCategorySelected(template_category)) {
+        classes.push("tlp-tab-active");
+    }
+
+    return classes;
+}
+
+function getExternalCategoryClasses(category: ExternalTemplateCategory): string[] {
+    const classes = getTabsClasses(category.shortname);
+
+    if (category.should_case_of_label_be_respected) {
+        classes.push("templates-category-tab-with-mixed-case");
+    }
+
+    return classes;
+}
+
+const platform_template_name = computed((): string => {
+    if (root_store.company_name === "Tuleap") {
+        return gettext_provider.$gettext("Custom templates");
+    }
+    return root_store.company_name;
+});
 </script>

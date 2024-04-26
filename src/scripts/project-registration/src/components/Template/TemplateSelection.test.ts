@@ -37,7 +37,7 @@ describe("TemplateSelection", () => {
         external_templates: ExternalTemplateData[],
         company_name: string,
         selected_template_category: null | string = null,
-    ): Promise<Wrapper<TemplateSelection>> {
+    ): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
                 tuleap_templates,
