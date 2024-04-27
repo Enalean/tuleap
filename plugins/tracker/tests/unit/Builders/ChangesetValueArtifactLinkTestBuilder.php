@@ -58,7 +58,7 @@ final class ChangesetValueArtifactLinkTestBuilder
 
     public function build(): Tracker_Artifact_ChangesetValue_ArtifactLink
     {
-        return new Tracker_Artifact_ChangesetValue_ArtifactLink(
+        $value = new Tracker_Artifact_ChangesetValue_ArtifactLink(
             $this->id,
             $this->changeset,
             $this->field,
@@ -66,5 +66,9 @@ final class ChangesetValueArtifactLinkTestBuilder
             $this->links,
             [],
         );
+
+        $this->changeset->setFieldValue($this->field, $value);
+
+        return $value;
     }
 }
