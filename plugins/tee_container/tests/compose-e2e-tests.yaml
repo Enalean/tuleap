@@ -1,5 +1,3 @@
-version: "2"
-
 services:
   tuleap:
     image: docker.tuleap.org/tuleap-enterprise-edition:dev

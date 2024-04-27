@@ -1,5 +1,3 @@
-version: "2.1"
-
 services:
   ldap:
     image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/ldap

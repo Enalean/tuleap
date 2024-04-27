@@ -1,7 +1,6 @@
 # Please see https://docs.tuleap.org/installation-guide/docker-image.html
 #
 # This docker-compose file is meant to be used by developers working on the Tuleap codebase
-version: "2"
 
 services:
   reverse-proxy:
