@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="artidoc-template-project" full-name="Artidoc Template Project" description="" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="docman" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+        <member format="username">ProjectMember</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <trackers use-natures="true">
+    <tracker id="T1860" parent_id="0" enable_move_artifacts="1" instantiate_for_new_projects="1">
+      <name><![CDATA[Requirements]]></name>
+      <item_name><![CDATA[requirements]]></item_name>
+      <description><![CDATA[]]></description>
+      <color><![CDATA[inca-silver]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="aid" ID="F57945" rank="0" id="57945" tracker_id="1860" parent_id="0">
+          <name><![CDATA[id]]></name>
+          <label><![CDATA[id]]></label>
+        </formElement>
+        <formElement type="string" ID="F57943" rank="1" id="57943" tracker_id="1860" parent_id="0">
+          <name><![CDATA[title]]></name>
+          <label><![CDATA[Title]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="text" ID="F57944" rank="2" id="57944" tracker_id="1860" parent_id="0">
+          <name><![CDATA[description]]></name>
+          <label><![CDATA[Description]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F57943"/>
+        </semantic>
+        <semantic type="description">
+          <shortname><![CDATA[description]]></shortname>
+          <label><![CDATA[Description]]></label>
+          <description><![CDATA[Define the description of an artifact]]></description>
+          <field REF="F57944"/>
+        </semantic>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report id="REPORT_3972" is_default="0">
+          <name><![CDATA[Default]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R5787" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Results]]></name>
+              <columns/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F57945" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F57943" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F57943" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F57943" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F57944" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F57944" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F57944" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+    </tracker>
+    <triggers/>
+  </trackers>
+  <docman>
+    <item type="folder">
+      <properties>
+        <title><![CDATA[Project Documentation]]></title>
+        <create_date format="ISO8601"><![CDATA[2023-02-24T16:39:39+00:00]]></create_date>
+        <update_date format="ISO8601"><![CDATA[2023-02-24T16:39:39+00:00]]></update_date>
+        <owner format="username">admin</owner>
+      </properties>
+      <permissions>
+        <permission ugroup="UGROUP_REGISTERED" type="PLUGIN_DOCMAN_READ"/>
+        <permission ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_DOCMAN_WRITE"/>
+        <permission ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_DOCMAN_MANAGE"/>
+      </permissions>
+    </item>
+  </docman>
+</project>

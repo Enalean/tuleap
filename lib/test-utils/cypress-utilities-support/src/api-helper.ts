@@ -40,8 +40,8 @@ Cypress.Commands.add("postFromTuleapApi", (url: string, payload: Record<string, 
     });
 });
 
-Cypress.Commands.add("putFromTuleapApi", (url: string, payload: Record<string, unknown>) => {
-    cy.request({
+Cypress.Commands.add("putFromTuleapApi", (url: string, payload: Cypress.RequestBody) => {
+    return cy.request({
         method: "PUT",
         url: url,
         body: payload,

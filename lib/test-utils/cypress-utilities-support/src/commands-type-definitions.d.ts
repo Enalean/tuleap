@@ -74,7 +74,11 @@ declare global {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ): Chainable<Response<any>>;
 
-            putFromTuleapApi(url: string, payload: Record<string, unknown>): void;
+            putFromTuleapApi(
+                url: string,
+                payload: Cypress.RequestBody,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ): Chainable<Response<any>>;
 
             patchFromTuleapAPI(url: string, payload: Record<string, unknown>): void;
 
