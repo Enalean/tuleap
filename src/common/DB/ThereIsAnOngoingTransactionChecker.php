@@ -28,7 +28,7 @@ use Tuleap\Config\FeatureFlagConfigKey;
 final class ThereIsAnOngoingTransactionChecker extends DataAccessObject implements CheckThereIsAnOngoingTransaction
 {
     #[FeatureFlagConfigKey('Reject actions that are going to be processed in a different context while being in a DB transaction')]
-    #[ConfigKeyInt(0)]
+    #[ConfigKeyInt(1)]
     public const FEATURE_FLAG = 'check_actions_context_in_transaction';
 
     public function checkNoOngoingTransaction(): void
