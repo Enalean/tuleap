@@ -20,11 +20,13 @@
 
 use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\Events\AfterRepositoryForked;
+use Tuleap\Git\Exceptions\GitRepositoryInDeletionException;
 use Tuleap\Git\PathJoinUtil;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
+use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 
 /**
  * This class is responsible of management of several repositories.
@@ -89,6 +91,7 @@ class GitRepositoryManager
         ProjectHistoryDao $history_dao,
         HistoryValueFormatter $history_value_formatter,
         EventManager $event_manager,
+        private readonly OngoingDeletionDAO $ongoing_deletion_dao,
     ) {
         $this->repository_factory       = $repository_factory;
         $this->git_system_event_manager = $git_system_event_manager;
@@ -119,6 +122,7 @@ class GitRepositoryManager
      * @throws GitDaoException
      * @throws GitRepositoryAlreadyExistsException
      * @throws GitRepositoryNameIsInvalidException
+     * @throws GitRepositoryInDeletionException
      */
     private function initRepository(GitRepository $repository, GitRepositoryCreator $creator)
     {
@@ -129,6 +133,7 @@ class GitRepositoryManager
         }
 
         $this->assertRepositoryNameNotAlreadyUsed($repository);
+        $this->assertRepositoryNotInDeletion($repository);
         $id = $this->dao->save($repository);
 
         $repository->setId($id);
@@ -138,6 +143,7 @@ class GitRepositoryManager
      * @throws GitDaoException
      * @throws GitRepositoryAlreadyExistsException
      * @throws GitRepositoryNameIsInvalidException
+     * @throws GitRepositoryInDeletionException
      */
     public function create(GitRepository $repository, GitRepositoryCreator $creator, BranchName $default_branch): void
     {
@@ -281,6 +287,29 @@ class GitRepositoryManager
                 sprintf(dgettext('tuleap-git', 'Repository %1$s already exists or would override an existing path'), $repository->getName())
             );
         }
+    }
+
+    /**
+     * @throws GitRepositoryInDeletionException
+     */
+    private function assertRepositoryNotInDeletion(GitRepository $repository): void
+    {
+        if ($this->isAnotherRepositoryWithSamePathWaitingForDeletion($repository)) {
+            throw new GitRepositoryInDeletionException(
+                sprintf(
+                    dgettext('tuleap-git', 'Another repository with the same path (%s) is waiting for deletion.'),
+                    $repository->getPath()
+                )
+            );
+        }
+    }
+
+    private function isAnotherRepositoryWithSamePathWaitingForDeletion(GitRepository $repository): bool
+    {
+        return $this->ongoing_deletion_dao->isADeletionForPathOngoingInProject(
+            $repository->getProjectId(),
+            $repository->getPath(),
+        );
     }
 
     /**

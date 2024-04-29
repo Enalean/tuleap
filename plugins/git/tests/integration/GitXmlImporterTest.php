@@ -53,6 +53,7 @@ use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
+use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -176,6 +177,9 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             $this->ugroup_manager
         );
 
+        $ongoing_deletion_dao = $this->createMock(OngoingDeletionDAO::class);
+        $ongoing_deletion_dao->method('isADeletionForPathOngoingInProject')->willReturn(false);
+
         $this->git_manager = new GitRepositoryManager(
             $this->git_factory,
             $this->git_systemeventmanager,
@@ -184,7 +188,8 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionReplicator::class),
             \Mockery::spy(\ProjectHistoryDao::class),
             \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
-            $this->event_manager
+            $this->event_manager,
+            $ongoing_deletion_dao,
         );
 
         $restricted_plugin_dao = \Mockery::spy(\RestrictedPluginDao::class);

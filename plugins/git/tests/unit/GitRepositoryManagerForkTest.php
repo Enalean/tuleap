@@ -58,6 +58,7 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var EventManager&\Mockery\MockInterface
      */
     private $event_manager;
+    private \Tuleap\Git\SystemEvent\OngoingDeletionDAO&\PHPUnit\Framework\MockObject\MockObject $ongoing_dao;
 
     protected function setUp(): void
     {
@@ -79,6 +80,8 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->history_value_formatter            = Mockery::mock('Tuleap\Git\Permissions\HistoryValueFormatter');
         $this->project_history_dao                = Mockery::mock('ProjectHistoryDao');
 
+        $this->ongoing_dao = $this->createMock(\Tuleap\Git\SystemEvent\OngoingDeletionDAO::class);
+
         $this->manager = \Mockery::mock(
             \GitRepositoryManager::class,
             [
@@ -90,6 +93,7 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->project_history_dao,
                 $this->history_value_formatter,
                 $this->event_manager,
+                $this->ongoing_dao,
             ]
         )
             ->makePartial()

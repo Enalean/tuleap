@@ -85,6 +85,7 @@ use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushProcessorBuilder;
 use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
 use Tuleap\Git\Hook\PreReceive\PreReceiveAction;
 use Tuleap\Git\Hook\PreReceive\PreReceiveCommand;
+use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
@@ -1819,7 +1820,8 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getFineGrainedPermissionReplicator(),
             new ProjectHistoryDao(),
             $this->getHistoryValueFormatter(),
-            EventManager::instance()
+            EventManager::instance(),
+            new OngoingDeletionDAO(),
         );
     }
 
