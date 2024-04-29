@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest\Reference;
 
 use GitRepoNotFoundException;
 use GitRepository;
-use Tuleap\PullRequest\FrontendApps\FeatureFlagSetOldHomepageViewByDefault;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\ServerHostname;
 
@@ -73,11 +72,8 @@ class HTMLURLBuilder
             'action' => 'pull-requests',
             'repo_id' => $repository->getId(),
             'group_id' => $project_id,
+            'tab' => 'homepage',
         ];
-
-        if (! FeatureFlagSetOldHomepageViewByDefault::isActive()) {
-            $query_params['tab'] = 'homepage';
-        }
 
         return '/plugins/git/?' . http_build_query($query_params);
     }

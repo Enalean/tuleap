@@ -23,7 +23,6 @@ namespace Tuleap\PullRequest;
 use Tuleap\Date\DateHelper;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Git\Repository\View\PresentPullRequest;
-use Tuleap\PullRequest\FrontendApps\FeatureFlagSetOldHomepageViewByDefault;
 use Tuleap\PullRequest\FrontendApps\PullRequestApp;
 use Tuleap\PullRequest\MergeSetting\MergeSetting;
 
@@ -40,7 +39,6 @@ final class PullRequestPresenter implements PresentPullRequest
     public bool $is_legacy_angular_app_shown;
     public bool $is_vue_overview_shown;
     public bool $is_vue_homepage_shown;
-    public bool $should_redirect_to_legacy_dashboard;
 
     public function __construct(
         \GitRepository $repository,
@@ -49,18 +47,17 @@ final class PullRequestPresenter implements PresentPullRequest
         MergeSetting $merge_setting,
         PullRequestApp $app,
     ) {
-        $this->repository_id                       = $repository->getId();
-        $this->project_id                          = $repository->getProjectId();
-        $this->is_there_at_least_one_pull_request  = $nb_pull_requests->isThereAtLeastOnePullRequest();
-        $this->is_merge_commit_allowed             = $merge_setting->isMergeCommitAllowed();
-        $this->user_id                             = (int) $user->getId();
-        $this->user_avatar_url                     = $user->getAvatarUrl();
-        $this->language                            = $user->getShortLocale();
-        $this->relative_date_display               = $user->getPreference(DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
-        $this->is_legacy_angular_app_shown         = $app === PullRequestApp::LEGACY_ANGULAR_APP;
-        $this->is_vue_overview_shown               = $app === PullRequestApp::OVERVIEW_APP;
-        $this->is_vue_homepage_shown               = $app === PullRequestApp::HOMEPAGE_APP;
-        $this->should_redirect_to_legacy_dashboard = FeatureFlagSetOldHomepageViewByDefault::isActive();
+        $this->repository_id                      = $repository->getId();
+        $this->project_id                         = $repository->getProjectId();
+        $this->is_there_at_least_one_pull_request = $nb_pull_requests->isThereAtLeastOnePullRequest();
+        $this->is_merge_commit_allowed            = $merge_setting->isMergeCommitAllowed();
+        $this->user_id                            = (int) $user->getId();
+        $this->user_avatar_url                    = $user->getAvatarUrl();
+        $this->language                           = $user->getShortLocale();
+        $this->relative_date_display              = $user->getPreference(DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
+        $this->is_legacy_angular_app_shown        = $app === PullRequestApp::LEGACY_ANGULAR_APP;
+        $this->is_vue_overview_shown              = $app === PullRequestApp::OVERVIEW_APP;
+        $this->is_vue_homepage_shown              = $app === PullRequestApp::HOMEPAGE_APP;
     }
 
     public function getTemplateName(): string

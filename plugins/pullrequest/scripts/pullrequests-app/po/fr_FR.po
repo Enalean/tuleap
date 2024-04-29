@@ -17,9 +17,6 @@ msgid_plural "... Skipped {{ $count }} common lines"
 msgstr[0] "... 1 ligne commune sautée"
 msgstr[1] "... {{ $count }} lignes communes sautées"
 
-msgid "Abandoned"
-msgstr "Abandonné"
-
 msgid "An error occured while doing one of your last actions."
 msgstr "Une erreur est survenue durant l’unes de vos dernières actions."
 
@@ -44,9 +41,6 @@ msgstr "Status intégration continue : Échec le %s"
 msgid "Continuous integration status: Success on %s"
 msgstr "Status intégration continue : Succès le %s"
 
-msgid "Error"
-msgstr "Erreur"
-
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
@@ -55,12 +49,6 @@ msgstr "Fichier Git LFS"
 
 msgid "It seems that the pull request does not have any commits."
 msgstr "Il semblerait que la pull request n'a aucun commit."
-
-msgid "Load closed pull requests"
-msgstr "Charger les pull requests fermées"
-
-msgid "Merged"
-msgstr "Intégré"
 
 msgid "OK"
 msgstr "OK"
@@ -76,12 +64,6 @@ msgstr "Voir les détails"
 
 msgid "Side by side diff"
 msgstr "Diff côte à côte"
-
-msgid "There are no closed pull requests"
-msgstr "Il n'existe pas de pull requests fermées"
-
-msgid "There are no open pull requests"
-msgstr "Il n'existe pas de pull requests ouvertes"
 
 msgid ""
 "This file contains bidirectional Unicode text. It may be interpreted "

@@ -18,10 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "@jest/globals";
-import {
-    getOldPullRequestsDashboardUrl,
-    getPullRequestsHomepageUrl,
-} from "./pull-requests-homepage-url-builder";
+import { getPullRequestsHomepageUrl } from "./pull-requests-homepage-url-builder";
 
 const project_id = 101;
 const repository_id = 5;
@@ -32,14 +29,6 @@ describe("pull-requests-homepage-url-builder", () => {
 
     beforeEach(() => {
         location = { origin } as unknown as Location;
-    });
-
-    it("getOldPullRequestsDashboardUrl() should return an url pointing to the old pull-requests dashboard", () => {
-        const url = getOldPullRequestsDashboardUrl(location, project_id, repository_id);
-
-        expect(url.toString()).toBe(
-            `${origin}/plugins/git/?action=pull-requests&group_id=${project_id}&repo_id=${repository_id}#/dashboard`,
-        );
     });
 
     it("getPullRequestsHomepageUrl() should return an url pointing to the new pull-requests homepage", () => {

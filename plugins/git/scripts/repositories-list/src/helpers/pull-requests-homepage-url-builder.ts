@@ -27,17 +27,6 @@ const getBaseUrl = (location: Location, project_id: number, repository_id: numbe
     return url;
 };
 
-export const getOldPullRequestsDashboardUrl = (
-    location: Location,
-    project_id: number,
-    repository_id: number,
-): URL => {
-    const url = getBaseUrl(location, project_id, repository_id);
-    url.hash = "#/dashboard";
-
-    return url;
-};
-
 export const getPullRequestsHomepageUrl = (
     location: Location,
     project_id: number,

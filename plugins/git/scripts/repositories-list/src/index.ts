@@ -77,7 +77,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         locale,
         JSON.parse(repositories_owners),
         JSON.parse(getDatasetItemOrThrow(vue_mount_point, "externalPlugins")),
-        Boolean(getDatasetItemOrThrow(vue_mount_point, "isOldPullRequestDashboardViewEnabled")),
     );
 
     const state: State = {

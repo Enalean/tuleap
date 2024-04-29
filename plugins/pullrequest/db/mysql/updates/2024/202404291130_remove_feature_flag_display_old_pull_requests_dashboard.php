@@ -20,27 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Events;
-
-use Tuleap\Event\Dispatchable;
-
-final class GetPullRequestDashboardViewEvent implements Dispatchable
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202404291130_remove_feature_flag_display_old_pull_requests_dashboard extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public const NAME = 'getPullRequestDashboardViewEvent';
-
-    private bool $is_old_view_enabled = false;
-
-    public function __construct()
+    public function description(): string
     {
+        return 'Remove feature flag named "feature_flag_display_old_pull_requests_dashboard" from forgeconfig.';
     }
 
-    public function isOldPullRequestDashboardViewEnabled(): bool
+    public function up(): void
     {
-        return $this->is_old_view_enabled;
-    }
-
-    public function setIsOldViewEnabled(bool $is_old_view_enabled): void
-    {
-        $this->is_old_view_enabled = $is_old_view_enabled;
+        $this->api->dbh->exec("DELETE FROM forgeconfig WHERE name='feature_flag_display_old_pull_requests_dashboard'");
     }
 }

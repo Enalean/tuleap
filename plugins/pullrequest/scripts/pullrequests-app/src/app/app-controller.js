@@ -45,26 +45,16 @@ function MainController($element, $document, $state, gettextCatalog, SharedPrope
         SharedPropertiesService.setUserLocale(document.body.dataset.userLocale);
         SharedPropertiesService.setUserAvatarUrl(pullrequest_init_data.userAvatarUrl);
 
-        useUiRouterInPullRequestTabLink(
-            project_id,
-            repository_id,
-            Boolean(pullrequest_init_data.shouldRedirectToLegacyDashboard),
-        );
+        useUiRouterInPullRequestTabLink(project_id, repository_id);
     }
 
     function initLocale(language) {
         gettextCatalog.setCurrentLanguage(language);
     }
 
-    function useUiRouterInPullRequestTabLink(
-        project_id,
-        repository_id,
-        should_redirect_to_legacy_dashboard,
-    ) {
+    function useUiRouterInPullRequestTabLink(project_id, repository_id) {
         const tab_element = $document[0].getElementById("tabs-pullrequest");
 
-        tab_element.href = should_redirect_to_legacy_dashboard
-            ? $state.href("dashboard")
-            : buildHomepageUrl(window.location, project_id, repository_id);
+        tab_element.href = buildHomepageUrl(window.location, project_id, repository_id);
     }
 }
