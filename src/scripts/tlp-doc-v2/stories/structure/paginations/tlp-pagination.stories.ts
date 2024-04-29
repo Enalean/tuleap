@@ -18,50 +18,56 @@
  */
 
 import type { Meta, StoryObj } from "@storybook/web-components";
-import { html } from "lit";
+import { html, type TemplateResult } from "lit";
+
+function getTemplate(): TemplateResult {
+    // prettier-ignore
+    return html`
+<div class="tlp-pagination">
+    <a
+        class="tlp-button-primary tlp-button-outline tlp-pagination-button"
+        role="button"
+        title="Begin"
+    >
+        <i class="fa-solid fa-angles-left" aria-hidden="true"></i>
+    </a>
+    <a
+        class="tlp-button-primary tlp-button-outline tlp-pagination-button"
+        role="button"
+        title="Previous"
+    >
+        <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
+    </a>
+
+    <span class="tlp-pagination-pages">
+        <span class="tlp-pagination-number">51</span>
+        –
+        <span class="tlp-pagination-number">79</span>
+        of
+        <span class="tlp-pagination-number">79</span>
+    </span>
+
+    <a
+        class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
+        role="button"
+        title="Next"
+    >
+        <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
+    </a>
+    <a
+        class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
+        role="button"
+        title="End"
+    >
+        <i class="fa-solid fa-angles-right" aria-hidden="true"></i>
+    </a>
+</div>`
+}
 
 const meta: Meta = {
     title: "TLP/Structure & Navigation/Pagination",
     render: () => {
-        return html`<div class="tlp-pagination">
-            <a
-                class="tlp-button-primary tlp-button-outline tlp-pagination-button"
-                role="button"
-                title="Begin"
-            >
-                <i class="fa-solid fa-angles-left" aria-hidden="true"></i>
-            </a>
-            <a
-                class="tlp-button-primary tlp-button-outline tlp-pagination-button"
-                role="button"
-                title="Previous"
-            >
-                <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
-            </a>
-
-            <span class="tlp-pagination-pages">
-                <span class="tlp-pagination-number">51</span>
-                –
-                <span class="tlp-pagination-number">79</span>
-                of
-                <span class="tlp-pagination-number">79</span>
-            </span>
-
-            <a
-                class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
-                role="button"
-                title="Next"
-            >
-                <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
-            </a>
-            <a
-                class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
-                role="button"
-                title="End"
-            >
-                <i class="fa-solid fa-angles-right" aria-hidden="true"></i>
-            </a>
-        </div> `;
+        return getTemplate();
     },
 };
 export default meta;
