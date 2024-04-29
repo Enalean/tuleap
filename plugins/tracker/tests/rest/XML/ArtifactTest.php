@@ -144,10 +144,18 @@ class ArtifactTest extends TrackerBase
 
         $response = $this->getXMLResponse($this->request_factory->createRequest('PUT', 'artifacts/' . $artifact_id)->withBody($this->stream_factory->createStream($xml)));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
         $artifact_xml = new SimpleXMLElement($this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id))->getBody()->getContents());
 
-        $this->assertEquals($new_value, (string) $artifact_xml->values->item[0]->value);
+        $field_value = null;
+        foreach ($artifact_xml->values->item as $field_content) {
+            if ($this->release_name_field_id === (int) $field_content->field_id) {
+                $field_value = $field_content->value;
+                break;
+            }
+        }
+
+        $this->assertEquals($new_value, (string) $field_value);
     }
 
     public function testPOSTArtifactInXMLTracker()
