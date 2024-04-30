@@ -25,7 +25,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006 -h localhost",
     "build-storybook": "storybook build",
     "build-storybook-docs": "storybook build --docs"
   }
