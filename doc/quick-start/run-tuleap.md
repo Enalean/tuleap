@@ -40,7 +40,7 @@ $ make composer
 $ pnpm install
 $ pnpm run build
 $ make dev-setup
-$ make start
+$ make start-el9
 $ make post-checkout
 ```
 
