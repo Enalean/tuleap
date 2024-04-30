@@ -492,8 +492,8 @@ packages:
       d3-path: 3.0.1
     dev: false
 
-  /dompurify@3.1.1:
-    resolution: {integrity: sha512-tVP8C/GJwnABOn/7cx/ymx/hXpmBfWIPihC1aOEvS8GbMqy3pgeYtJk1HXN3CO7tu+8bpY18f6isjR5Cymj0TQ==}
+  /dompurify@3.1.2:
+    resolution: {integrity: sha512-hLGGBI1tw5N8qTELr3blKjAML/LY4ANxksbS612UiJyDfyf/2D092Pvm+S7pmeTGJRqvlJkFzBoHBQKgQlOQVg==}
     dev: false
 
   /eastasianwidth@0.2.0:
@@ -988,7 +988,7 @@ packages:
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
     dependencies:
-      dompurify: 3.1.1
+      dompurify: 3.1.2
       vue: 3.4.19
       vue-demi: 0.13.11(@vue/composition-api@1.7.2)(vue@3.4.19)
     transitivePeerDependencies:
