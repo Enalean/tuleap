@@ -104,16 +104,27 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         );
     }
 
-    public function testHappyPath(): void
-    {
+    /**
+     * @testWith [false, false, false]
+     *           [false, true, false]
+     *           [true, false, false]
+     *           [true, true, true]
+     */
+    public function testHappyPath(
+        bool $can_user_edit_title,
+        bool $can_user_edit_description,
+        bool $expected_can_user_edit_section,
+    ): void {
         $user = UserTestBuilder::buildWithDefaults();
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
         $title->method('userCanRead')->willReturn(true);
+        $title->method('userCanUpdate')->willReturn($can_user_edit_title);
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
         $description->method('userCanRead')->willReturn(true);
+        $description->method('userCanUpdate')->willReturn($can_user_edit_description);
         $this->semantic_description->method('getField')->willReturn($description);
 
         $dao = $this->createMock(Tracker_ArtifactDao::class);
@@ -171,18 +182,19 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         self::assertCount(4, $result->value->sections);
 
         $expected = [
-            ['id' => 1, 'title' => 'Title for #1', 'description' => 'Desc <b>for</b> #1'],
-            ['id' => 2, 'title' => 'Title for #2', 'description' => 'Desc <b>for</b> #2'],
-            ['id' => 3, 'title' => 'Title for #3', 'description' => 'Desc <b>for</b> #3'],
-            ['id' => 4, 'title' => 'Title for #4', 'description' => 'Desc <b>for</b> #4'],
+            ['id' => 1, 'title' => 'Title for #1', 'description' => 'Desc <b>for</b> #1', 'can_user_edit_section' => $expected_can_user_edit_section],
+            ['id' => 2, 'title' => 'Title for #2', 'description' => 'Desc <b>for</b> #2', 'can_user_edit_section' => $expected_can_user_edit_section],
+            ['id' => 3, 'title' => 'Title for #3', 'description' => 'Desc <b>for</b> #3', 'can_user_edit_section' => $expected_can_user_edit_section],
+            ['id' => 4, 'title' => 'Title for #4', 'description' => 'Desc <b>for</b> #4', 'can_user_edit_section' => $expected_can_user_edit_section],
         ];
         array_walk(
             $expected,
-            static function (array $expected, int $index) use ($result) {
+            static function (array $expected, int $index) use ($result, $expected_can_user_edit_section) {
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
                 self::assertSame($expected['title'], $result->value->sections[$index]->title);
                 self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
                 self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
+                self::assertSame($expected['can_user_edit_section'], $result->value->sections[$index]->can_user_edit_section);
             }
         );
     }
@@ -193,10 +205,12 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
         $title->method('userCanRead')->willReturn(true);
+        $title->method('userCanUpdate')->willReturn(false);
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
         $description->method('userCanRead')->willReturn(true);
+        $description->method('userCanUpdate')->willReturn(false);
         $this->semantic_description->method('getField')->willReturn($description);
 
         $dao                          = $this->createMock(Tracker_ArtifactDao::class);

@@ -34,6 +34,7 @@ final readonly class ArtidocSectionRepresentation
         public ArtifactReference $artifact,
         public string $title,
         public ArtifactTextFieldValueRepresentation $description,
+        public bool $can_user_edit_section,
     ) {
     }
 }

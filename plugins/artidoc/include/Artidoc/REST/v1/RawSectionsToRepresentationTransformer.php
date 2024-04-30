@@ -122,10 +122,13 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
                 return Result::err(Fault::fromMessage("There is no description data for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
             }
 
+            $can_user_edit_section = $title_field->userCanUpdate($user) && $description_field->userCanUpdate($user);
+
             $sections[] = new ArtidocSectionRepresentation(
                 ArtifactReference::build($artifact),
                 $title,
                 $description,
+                $can_user_edit_section,
             );
         }
 
