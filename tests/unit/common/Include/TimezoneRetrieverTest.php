@@ -22,10 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
+use ForgeConfig;
+use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 class TimezoneRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
+    protected function setUp(): void
+    {
+        ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
+    }
+
     public function testItGetsUserTimezone(): void
     {
         $user = UserTestBuilder::anActiveUser()->build();

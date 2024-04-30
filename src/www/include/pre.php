@@ -31,9 +31,9 @@ use Tuleap\TimezoneRetriever;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-date_default_timezone_set(TimezoneRetriever::getServerTimezone());
-
 ForgeConfig::loadInSequence();
+
+date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 
 bindtextdomain('tuleap-core', ForgeConfig::get('sys_incdir'));
 textdomain('tuleap-core');

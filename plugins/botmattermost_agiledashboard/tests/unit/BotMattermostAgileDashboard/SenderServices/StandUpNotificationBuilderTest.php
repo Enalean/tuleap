@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
 use AgileDashboard_Milestone_MilestoneStatusCounter;
+use ForgeConfig;
 use PFUser;
 use Planning;
 use Planning_Milestone;
@@ -30,11 +31,20 @@ use Planning_MilestoneFactory;
 use PlanningFactory;
 use Project;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownMustacheRenderer;
+use Tuleap\Config\ConfigurationVariables;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class StandUpNotificationBuilderTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
+    protected function setUp(): void
+    {
+        ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
+    }
+
     public function testNotificationCanBeBuiltWhenTheParentOfTheMilestoneArtifactCanNotBeFound(): void
     {
         $planning_milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
