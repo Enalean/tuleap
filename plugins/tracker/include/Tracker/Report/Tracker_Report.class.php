@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use GuzzleHttp\Psr7\ServerRequest;
 use Tuleap\DB\DBFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Option\Option;
@@ -544,12 +545,20 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         if ($this->is_in_expert_mode) {
             $div_class = 'tracker-report-query-undisplayed';
         }
-        $html  = '';
-        $html .= '<div id="tracker-report-normal-query" class="' . $div_class . '" data-report-id="' . $this->id . '">';
-        $html .= '<form action="" method="POST" id="tracker_report_query_form" class="tracker-report-query-form">';
-        $html .= '<input type="hidden" name="report" value="' . $this->id . '" />';
-        $id    = 'tracker_report_query_' . $this->id;
-        $html .= '<h4 class="backlog-planning-search-title ' . Toggler::getClassname($id, $this->is_query_displayed ? true : false) . '" id="' . $id . '">';
+        $html          = '<div id="tracker-report-normal-query" class="' . $div_class . '" data-report-id="' . $this->id . '">';
+        $form_post_url = '/plugins/tracker/?';
+        foreach (ServerRequest::fromGlobals()->getQueryParams() as $name => $value) {
+            if ($name === 'offset') {
+                continue;
+            }
+            $form_post_url .= urlencode($name) . '=' . urlencode($value) . '&';
+        }
+        $html_purifier = Codendi_HTMLPurifier::instance();
+        $form_post_url = $html_purifier->purify(trim($form_post_url, '&'));
+        $html         .= '<form action="' . $form_post_url . '" method="POST" id="tracker_report_query_form" class="tracker-report-query-form">';
+        $html         .= '<input type="hidden" name="report" value="' . $this->id . '" />';
+        $id            = 'tracker_report_query_' . $this->id;
+        $html         .= '<h4 class="backlog-planning-search-title ' . Toggler::getClassname($id, $this->is_query_displayed ? true : false) . '" id="' . $id . '">';
 
         //  Query title
         $html            .= dgettext('tuleap-tracker', 'Search') . '</h4>';
