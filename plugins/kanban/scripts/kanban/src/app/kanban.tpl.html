@@ -37,8 +37,8 @@
                 class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-report-button"
                 ng-click="kanban.openReportModal()"
         >
-            <i class="far fa-chart-bar tlp-button-icon"
-                ng-class="{ 'fa-spinner fa-spin': kanban.is_report_loading }"
+            <i class="tlp-button-icon"
+                ng-class="{ 'fas fa-spinner fa-spin': kanban.is_report_loading, 'far fa-chart-bar': !kanban.is_report_loading }"
             ></i>
             <span translate>Show reports</span>
         </button>
