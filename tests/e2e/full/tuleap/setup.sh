@@ -45,6 +45,7 @@ enable_plugins() {
         enalean_licensemanager \
         mytuleap_contact_support \
         tracker_functions \
+        artidoc \
         webauthn
 
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
