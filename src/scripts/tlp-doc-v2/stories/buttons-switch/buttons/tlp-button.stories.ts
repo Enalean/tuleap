@@ -133,7 +133,7 @@ const meta: Meta<ButtonProps> = {
     argTypes: {
         type: {
             name: "Type",
-            description: "UI color of the button, applies the class",
+            description: "UI color of the button",
             control: "select",
             options: USER_INTERFACE_EMPHASIS_COLORS,
         },
