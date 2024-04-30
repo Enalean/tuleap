@@ -65,20 +65,19 @@ declare global {
 
             visitProjectAdministrationInCurrentProject(): void;
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            getFromTuleapAPI(url: string): Chainable<Response<any>>;
+            getFromTuleapAPI<TypeOfPayload>(
+                url: string,
+            ): Chainable<Cypress.Response<TypeOfPayload>>;
 
-            postFromTuleapApi(
+            postFromTuleapApi<TypeOfPayload>(
                 url: string,
                 payload: Record<string, unknown>,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ): Chainable<Response<any>>;
+            ): Chainable<Cypress.Response<TypeOfPayload>>;
 
-            putFromTuleapApi(
+            putFromTuleapApi<TypeOfPayload>(
                 url: string,
                 payload: Cypress.RequestBody,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ): Chainable<Response<any>>;
+            ): Chainable<Cypress.Response<TypeOfPayload>>;
 
             patchFromTuleapAPI(url: string, payload: Record<string, unknown>): void;
 

@@ -12,6 +12,7 @@
     "quoted-printable": "^1.0.1"
   },
   "devDependencies": {
+    "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@types/quoted-printable": "^1.0.0"
   },
