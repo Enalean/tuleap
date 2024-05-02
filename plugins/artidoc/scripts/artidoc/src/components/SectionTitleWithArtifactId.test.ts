@@ -22,24 +22,25 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionTitleWithArtifactId from "./SectionTitleWithArtifactId.vue";
 import type { ComponentPublicInstance } from "vue";
+const default_props = {
+    title: "expected title",
+    artifact_id: 555,
+};
 
 describe("SectionTitleWithArtifactId", () => {
-    let wrapper: VueWrapper<ComponentPublicInstance>;
-
-    beforeAll(() => {
-        wrapper = shallowMount(SectionTitleWithArtifactId, {
-            propsData: {
-                title: "expected title",
-                artifact_id: 555,
-            },
+    describe("when the sections are loaded", () => {
+        let wrapper: VueWrapper<ComponentPublicInstance>;
+        beforeAll(() => {
+            wrapper = shallowMount(SectionTitleWithArtifactId, {
+                propsData: default_props,
+            });
         });
-    });
-
-    it("should display the title", () => {
-        expect(wrapper.find("h1").text()).toContain("expected title");
-    });
-    it("should display the artifact id with artifact page link", () => {
-        expect(wrapper.find("a").text()).toContain("#555");
-        expect(wrapper.find("a").attributes().href).toBe("/plugins/tracker/?aid=555");
+        it("should display the title", () => {
+            expect(wrapper.find("h1").text()).toContain("expected title");
+        });
+        it("should display the artifact id with artifact page link", () => {
+            expect(wrapper.find("a").text()).toContain("#555");
+            expect(wrapper.find("a").attributes().href).toBe("/plugins/tracker/?aid=555");
+        });
     });
 });

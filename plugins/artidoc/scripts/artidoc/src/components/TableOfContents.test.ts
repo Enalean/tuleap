@@ -25,47 +25,63 @@ import type { ComponentPublicInstance } from "vue";
 import TableOfContents from "@/components/TableOfContents.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 
-describe("TableOfContents", () => {
-    let wrapper: VueWrapper<ComponentPublicInstance>;
+const defaultSection = ArtidocSectionFactory.create();
+const default_props = {
+    sections: [
+        ArtidocSectionFactory.override({
+            artifact: { ...defaultSection.artifact, id: 1 },
+        }),
+        ArtidocSectionFactory.override({
+            artifact: { ...defaultSection.artifact, id: 2 },
+        }),
+    ],
+    is_sections_loading: false,
+};
 
-    beforeAll(() => {
-        const defaultSection = ArtidocSectionFactory.create();
-        wrapper = shallowMount(TableOfContents, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
-            slots: {
-                default: "<p>section title</p>",
-            },
-            propsData: {
-                sections: [
-                    ArtidocSectionFactory.override({
-                        artifact: { ...defaultSection.artifact, id: 1 },
-                    }),
-                    ArtidocSectionFactory.override({
-                        artifact: { ...defaultSection.artifact, id: 2 },
-                    }),
-                ],
-            },
+describe("TableOfContents", () => {
+    describe("when the sections are loading", () => {
+        let wrapper: VueWrapper<ComponentPublicInstance>;
+        beforeAll(() => {
+            wrapper = shallowMount(TableOfContents, {
+                global: {
+                    plugins: [createGettext({ silent: true })],
+                },
+                propsData: { ...default_props, is_sections_loading: true },
+            });
+        });
+        it("should display the skeleton content", () => {
+            expect(wrapper.findAll('span[class="tlp-skeleton-text"]')).toHaveLength(2);
+            expect(wrapper.find("a").exists()).toBe(false);
+        });
+        it("should display the table of content title", () => {
+            expect(wrapper.find("h1").text()).toBe("Table of contents");
         });
     });
-
-    it("should display the table of content title", () => {
-        expect(wrapper.find("h1").text()).toBe("Table of contents");
-    });
-
-    it("should display the two title sections", () => {
-        const list = wrapper.findAll("li");
-        expect(list).toHaveLength(2);
-        expect(list[0].find("a").text()).toBe("section title");
-        expect(list[1].find("a").text()).toBe("section title");
-    });
-
-    it("should have an url to redirect to the section", () => {
-        const list = wrapper.find("ol");
-        const links = list.findAll("li a");
-        expect(links.length).toBe(2);
-        expect(links[0].attributes().href).toBe("#1");
-        expect(links[1].attributes().href).toBe("#2");
+    describe("when the sections are loaded", () => {
+        let wrapper: VueWrapper<ComponentPublicInstance>;
+        beforeAll(() => {
+            wrapper = shallowMount(TableOfContents, {
+                global: {
+                    plugins: [createGettext({ silent: true })],
+                },
+                propsData: { ...default_props, is_sections_loading: false },
+            });
+        });
+        it("should display the two title sections", () => {
+            const list = wrapper.findAll("li");
+            expect(list).toHaveLength(2);
+            expect(list[0].find("a").text()).toBe("Technologies section");
+            expect(list[1].find("a").text()).toBe("Technologies section");
+        });
+        it("should have an url to redirect to the section", () => {
+            const list = wrapper.find("ol");
+            const links = list.findAll("li a");
+            expect(links.length).toBe(2);
+            expect(links[0].attributes().href).toBe("#1");
+            expect(links[1].attributes().href).toBe("#2");
+        });
+        it("should display the table of content title", () => {
+            expect(wrapper.find("h1").text()).toBe("Table of contents");
+        });
     });
 });

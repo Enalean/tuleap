@@ -17,6 +17,9 @@ dependencies:
   '@tuleap/tooltip':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tooltip
+  '@tuleap/vue-strict-inject':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/vue-strict-inject
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue3-gettext-init

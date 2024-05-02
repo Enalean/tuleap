@@ -18,45 +18,31 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ref } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "@/App.vue";
-import * as rest from "./helpers/rest-querier";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
-import { okAsync } from "neverthrow";
 import type { ComponentPublicInstance } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
-import DocumentViewSkeleton from "@/views/DocumentViewSkeleton.vue";
+import * as sectionsStore from "@/stores/useSectionsStore";
 
 vi.mock("./rest-querier");
-
 describe("App", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
     beforeEach(() => {
+        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+            setIsSectionsLoading: vi.fn(),
+            setSections: vi.fn(),
+            is_sections_loading: ref(false),
+            sections: ref([]),
+        });
         wrapper = shallowMount(App, {
             props: {
                 item_id: 1,
             },
         });
     });
-    describe("when sections are loading", () => {
-        it("should display skeleton view", () => {
-            expect(wrapper.findComponent(DocumentView).exists()).toBe(false);
-            expect(wrapper.findComponent(DocumentViewSkeleton).exists()).toBe(true);
-        });
-    });
-
-    describe("when sections are loaded", () => {
-        it("should display document view", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([ArtidocSectionFactory.create()]),
-            );
-
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-
-            expect(wrapper.findComponent(DocumentView).exists()).toBe(true);
-            expect(wrapper.findComponent(DocumentViewSkeleton).exists()).toBe(false);
-        });
+    it("should display the document view", () => {
+        expect(wrapper.findComponent(DocumentView).exists()).toBe(true);
     });
 });

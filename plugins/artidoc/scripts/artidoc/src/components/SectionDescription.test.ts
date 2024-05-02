@@ -22,20 +22,34 @@ import { shallowMount } from "@vue/test-utils";
 import SectionDescription from "@/components/SectionDescription.vue";
 import * as tooltip from "@tuleap/tooltip";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
 
+const default_props = {
+    description_value: "Lorem ipsum",
+    is_sections_loading: false,
+    artifact_id: 1,
+};
+const default_global = {
+    plugins: [VueDOMPurifyHTML],
+};
 describe("SectionDescription", () => {
+    describe("while the sections are loading", () => {
+        it("should display the skeleton", () => {
+            const wrapper = shallowMount(SectionDescription, {
+                props: { ...default_props, is_sections_loading: true },
+                global: default_global,
+            });
+            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(true);
+            expect(wrapper.find("div").exists()).toBe(false);
+        });
+    });
+
     it("should display text with tooltips", () => {
         const loadTooltips = vi.spyOn(tooltip, "loadTooltips");
-
         const wrapper = shallowMount(SectionDescription, {
-            props: {
-                description_value: "Lorem ipsum",
-            },
-            global: {
-                plugins: [VueDOMPurifyHTML],
-            },
+            props: default_props,
+            global: default_global,
         });
-
         expect(wrapper.text()).toContain("Lorem ipsum");
         expect(loadTooltips).toHaveBeenCalled();
     });

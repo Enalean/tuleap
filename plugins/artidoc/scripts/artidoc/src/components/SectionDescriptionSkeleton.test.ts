@@ -16,31 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { beforeAll, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import { mount } from "@vue/test-utils";
-import DocumentLayoutSkeleton from "@/views/DocumentViewSkeleton.vue";
-import DocumentContent from "@/components/DocumentContent.vue";
-import TableOfContents from "@/components/TableOfContents.vue";
+import { shallowMount } from "@vue/test-utils";
 import type { ComponentPublicInstance } from "vue";
-
-describe("DocumentViewSkeleton", () => {
+import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
+describe("SectionDescriptionSkeleton", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
-
     beforeAll(() => {
-        wrapper = mount(DocumentLayoutSkeleton, {
-            global: {
-                stubs: ["table-of-contents", "document-content"],
-            },
-        });
+        wrapper = shallowMount(SectionDescriptionSkeleton);
     });
-    describe("when the component is mounted", () => {
-        it("should display a table of contents", () => {
-            expect(wrapper.findComponent(TableOfContents).exists()).toBe(true);
-        });
-        it("should display a document content", () => {
-            expect(wrapper.findComponent(DocumentContent).exists()).toBe(true);
-        });
+    it("should display mocked description content", () => {
+        expect(wrapper.find('span[class="tlp-skeleton-text"]').exists()).toBe(true);
     });
 });

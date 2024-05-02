@@ -17,29 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { ComponentPublicInstance } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentLayout from "@/components/DocumentLayout.vue";
-
+import DocumentContent from "@/components/DocumentContent.vue";
+import TableOfContents from "@/components/TableOfContents.vue";
+import { ref } from "vue";
+import * as sectionsStore from "@/stores/useSectionsStore";
 describe("DocumentLayout", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
-
     beforeAll(() => {
-        wrapper = shallowMount(DocumentLayout, {
-            slots: {
-                "document-content": "<div>document content</div>",
-                "table-of-contents": "<div>table of contents</div>",
-            },
+        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+            setIsSectionsLoading: vi.fn(),
+            setSections: vi.fn(),
+            is_sections_loading: ref(false),
+            sections: ref([]),
         });
+        wrapper = shallowMount(DocumentLayout);
     });
-
     it("should display document content", () => {
-        expect(wrapper.find("section").text()).toBe("document content");
+        expect(wrapper.findComponent(DocumentContent).exists()).toBe(true);
     });
-
     it("should display table of contents", () => {
-        expect(wrapper.find("aside").text()).toBe("table of contents");
+        expect(wrapper.findComponent(TableOfContents).exists()).toBe(true);
     });
 });

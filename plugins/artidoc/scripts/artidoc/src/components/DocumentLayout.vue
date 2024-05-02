@@ -21,17 +21,25 @@
 <template>
     <div class="document-layout">
         <section class="document-content">
-            <slot name="document-content"></slot>
+            <document-content v-bind:sections="sections" />
         </section>
         <aside>
             <div class="tlp-framed table-of-contents">
-                <slot name="table-of-contents"></slot>
+                <table-of-contents
+                    v-bind:sections="sections"
+                    v-bind:is_sections_loading="is_sections_loading"
+                />
             </div>
         </aside>
     </div>
 </template>
+<script setup lang="ts">
+import TableOfContents from "@/components/TableOfContents.vue";
+import DocumentContent from "@/components/DocumentContent.vue";
+import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 
-<script setup lang="ts"></script>
+const { sections, is_sections_loading } = useInjectSectionsStore();
+</script>
 <style lang="scss" scoped>
 .document-layout {
     display: grid;

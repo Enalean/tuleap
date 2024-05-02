@@ -23,18 +23,12 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentContent from "@/components/DocumentContent.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
-
+import SectionContent from "@/components/SectionContent.vue";
 describe("DocumentContent", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
-
     beforeAll(() => {
         const defaultSection = ArtidocSectionFactory.create();
-
         wrapper = shallowMount(DocumentContent, {
-            slots: {
-                "section-header": "<h1>section header</h1>",
-                "section-content": "<p>section content</p>",
-            },
             propsData: {
                 sections: [
                     ArtidocSectionFactory.override({
@@ -49,26 +43,10 @@ describe("DocumentContent", () => {
             },
         });
     });
-
     it("should display the two sections", () => {
         const list = wrapper.find("ol");
-        expect(list.findAll("li")).toHaveLength(2);
+        expect(list.findAllComponents(SectionContent)).toHaveLength(2);
     });
-
-    it("should contains section header", () => {
-        const list = wrapper.findAll("article");
-        expect(list).toHaveLength(2);
-        expect(list[0].find("h1").text()).toBe("section header");
-        expect(list[1].find("h1").text()).toBe("section header");
-    });
-
-    it("should contains section content", () => {
-        const list = wrapper.findAll("article");
-        expect(list).toHaveLength(2);
-        expect(list[0].find("p").text()).toBe("section content");
-        expect(list[1].find("p").text()).toBe("section content");
-    });
-
     it("sections should have an id for anchor feature", () => {
         const list = wrapper.find("ol");
         const sections = list.findAll("li");

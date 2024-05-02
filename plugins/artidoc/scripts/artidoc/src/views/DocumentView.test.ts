@@ -19,66 +19,63 @@
 
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import { mount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import EmptyState from "@/views/EmptyState.vue";
-import { createGettext } from "vue3-gettext";
-import DocumentContent from "@/components/DocumentContent.vue";
+import DocumentLayout from "@/components/DocumentLayout.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
-import TableOfContents from "@/components/TableOfContents.vue";
 import NoAccessState from "@/views/NoAccessState.vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { ComponentPublicInstance } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
-import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 describe("DocumentView", () => {
     describe("when sections not found", () => {
         it("should display empty state view", () => {
-            const wrapper = getWrapperWithProps({ sections: [] });
-
+            const wrapper = getWrapperWithProps({ sections: [], is_sections_loading: false });
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
-            expect(wrapper.findComponent(DocumentContent).exists()).toBe(false);
+            expect(wrapper.findComponent(DocumentLayout).exists()).toBe(false);
         });
     });
-
     describe("when sections found", () => {
         it("should display document content view", () => {
-            const wrapper = getWrapperWithProps({ sections: [ArtidocSectionFactory.create()] });
-
-            expect(wrapper.findComponent(DocumentContent).exists()).toBe(true);
+            const wrapper = getWrapperWithProps({
+                sections: [ArtidocSectionFactory.create()],
+                is_sections_loading: false,
+            });
+            expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
         });
-        it("should display table of contents", () => {
-            const wrapper = getWrapperWithProps({ sections: [ArtidocSectionFactory.create()] });
-
-            expect(wrapper.findComponent(TableOfContents).exists()).toBe(true);
+    });
+    describe("when sections are loading", () => {
+        it("should display document content view", () => {
+            const wrapper = getWrapperWithProps({
+                sections: [],
+                is_sections_loading: true,
+            });
+            expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);
+            expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
+            expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
         });
     });
-
     describe("when the user is not allowed to access the document", () => {
         it("should display no access state view", () => {
-            const wrapper = getWrapperWithProps({ sections: undefined });
-
+            const wrapper = getWrapperWithProps({
+                sections: undefined,
+                is_sections_loading: false,
+            });
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(true);
-            expect(wrapper.findComponent(DocumentContent).exists()).toBe(false);
+            expect(wrapper.findComponent(DocumentLayout).exists()).toBe(false);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
         });
     });
 });
-
 function getWrapperWithProps(props: {
     sections: readonly ArtidocSection[] | undefined;
+    is_sections_loading: boolean;
 }): VueWrapper<ComponentPublicInstance> {
-    return mount(DocumentView, {
-        global: {
-            plugins: [createGettext({ silent: true })],
-            stubs: ["table-of-contents", "document-content", "empty-state", "no-access-state"],
-            directives: {
-                "dompurify-html": buildVueDompurifyHTMLDirective(),
-            },
-        },
+    return shallowMount(DocumentView, {
         props,
     });
 }

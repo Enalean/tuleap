@@ -23,9 +23,22 @@
     </h1>
 </template>
 <script setup lang="ts">
-const props = defineProps<{ artifact_id: number; title: string }>();
+import { onMounted } from "vue";
+import useScrollToAnchor from "@/composables/useScrollToAnchor";
 
+const props = defineProps<{
+    artifact_id: number;
+    title: string;
+}>();
 const artifact_url = `/plugins/tracker/?aid=${props.artifact_id}`;
+
+const { scrollToAnchor } = useScrollToAnchor();
+onMounted(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+        scrollToAnchor(hash);
+    }
+});
 </script>
 <style lang="scss" scoped>
 h1 {

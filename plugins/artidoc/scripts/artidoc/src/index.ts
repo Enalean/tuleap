@@ -22,6 +22,8 @@ import { createGettext } from "vue3-gettext";
 import App from "./App.vue";
 import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import { provideSectionsStore } from "@/stores/useSectionsStore";
+import { sectionsStoreKey } from "@/stores/sectionsStoreKey";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -35,6 +37,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const app = createApp(App, {
         item_id: Number.parseInt(vue_mount_point.dataset.itemId || "", 10),
     });
+
+    const sectionsStore = provideSectionsStore();
+    app.provide(sectionsStoreKey, sectionsStore);
+
     app.use(gettext);
     app.use(VueDOMPurifyHTML);
     app.mount(vue_mount_point);
