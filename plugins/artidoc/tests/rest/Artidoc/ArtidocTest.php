@@ -41,23 +41,9 @@ final class ArtidocTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testArtidocCreation(int $root_id): void
+    public function testArtidocCreation(int $root_id): int
     {
-        $title = 'Artidoc F1 ' . $this->now;
-        $query = json_encode(
-            [
-                'title' => $title,
-                'type'  => 'artidoc',
-            ]
-        );
-
-        $post_response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/others')->withBody($this->stream_factory->createStream($query))
-        );
-        self::assertSame(201, $post_response->getStatusCode());
-        $post_response_json = json_decode($post_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        self::assertNull($post_response_json['file_properties']);
+        $post_response_json = $this->createArtidoc($root_id, 'Artidoc F1 ' . $this->now);
 
         $item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -66,7 +52,103 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(200, $item_response->getStatusCode());
         $item_response_json = json_decode($item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertSame('artidoc', $item_response_json['type']);
-        self::assertSame($title, $item_response_json['title']);
+        self::assertSame('Artidoc F1 ' . $this->now, $item_response_json['title']);
+
+        return $post_response_json['id'];
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testArtidocMove(int $root_id): void
+    {
+        $folder_source_id      = $this->createFolder($root_id, 'Folder source to contain item F2 to move. ' . $this->now)['id'];
+        $folder_destination_id = $this->createFolder($root_id, 'Folder target to move item F2 into. ' . $this->now)['id'];
+
+        $item_id = $this->createArtidoc($folder_source_id, 'Artidoc F2 ' . $this->now)['id'];
+
+        self::assertCount(1, $this->getFolderContent($folder_source_id));
+        self::assertCount(0, $this->getFolderContent($folder_destination_id));
+
+        $move_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('PATCH', 'artidoc/' . $item_id)
+                ->withBody(
+                    $this->stream_factory->createStream(
+                        json_encode(
+                            [
+                                'move' => [
+                                    'destination_folder_id' => $folder_destination_id,
+                                ],
+                            ]
+                        )
+                    )
+                )
+        );
+        self::assertSame(200, $move_item_response->getStatusCode());
+
+        self::assertCount(0, $this->getFolderContent($folder_source_id));
+        $folder_destination_content = $this->getFolderContent($folder_destination_id);
+        self::assertCount(1, $folder_destination_content);
+        self::assertSame($item_id, $folder_destination_content[0]['id']);
+    }
+
+    private function createArtidoc(int $parent_id, string $title): array
+    {
+        $post_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $parent_id . '/others')
+                ->withBody(
+                    $this->stream_factory->createStream(
+                        json_encode(
+                            [
+                                'title' => $title,
+                                'type'  => 'artidoc',
+                            ]
+                        )
+                    )
+                )
+        );
+        self::assertSame(201, $post_item_response->getStatusCode());
+
+        $post_response_json = json_decode($post_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertNull($post_response_json['file_properties']);
+
+        return $post_response_json;
+    }
+
+    private function createFolder(int $parent_id, string $title): array
+    {
+        $post_folder_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory
+                ->createRequest('POST', 'docman_folders/' . $parent_id . '/folders')
+                ->withBody(
+                    $this->stream_factory->createStream(
+                        json_encode(
+                            [
+                                'title' => $title,
+                            ]
+                        ),
+                    )
+                )
+        );
+        self::assertSame(201, $post_folder_response->getStatusCode());
+
+        return json_decode($post_folder_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    private function getFolderContent(int $id): array
+    {
+        return json_decode(
+            $this->getResponseByName(
+                DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+                $this->request_factory->createRequest('GET', 'docman_items/' . $id . '/docman_items'),
+            )->getBody()->getContents(),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
     }
 
     /**
@@ -89,17 +171,23 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(403, $response1->getStatusCode());
     }
 
-    public function testOptionsDocument(): void
+    /**
+     * @depends testArtidocCreation
+     */
+    public function testOptionsDocument(int $id): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/123'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/' . $id));
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(['OPTIONS', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    public function testOptionsSections(): void
+    /**
+     * @depends testArtidocCreation
+     */
+    public function testOptionsSections(int $id): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/123/sections'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/' . $id . '/sections'));
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
