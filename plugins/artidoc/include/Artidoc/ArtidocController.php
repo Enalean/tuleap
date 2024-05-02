@@ -74,9 +74,13 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         $title   = $document_information->document->getTitle();
         $service = $document_information->service_docman;
 
+        $permissions_manager = \Docman_PermissionsManager::instance((int) $service->getProject()->getID());
+        $user_can_write      = $permissions_manager->userCanWrite($user, $document_information->document->getId());
+
         $service->displayHeader($title, $this->breadcrumbs_provider->getBreadcrumbs($document_information, $user), []);
         \TemplateRendererFactory::build()->getRenderer(__DIR__)->renderToPage('artidoc', [
             'item_id' => $document_information->document->getId(),
+            'can_user_edit_document' => $user_can_write,
             'title' => $title,
         ]);
         $service->displayFooter();
