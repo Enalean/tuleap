@@ -27,12 +27,14 @@ use TestDataBuilder;
 
 class DocmanBase extends RestBase
 {
-    public const PROJECT_NAME     = 'docmanproject';
-    public const DOCMAN_USER_NAME = 'docman_regular_user';
+    public const PROJECT_NAME                            = 'docmanproject';
+    public const DOCMAN_USER_NAME                        = 'docman_regular_user';
+    private const ARTIDOC_REQUIREMENTS_TRACKER_SHORTNAME = 'requirements';
 
-    protected $project_id;
-    protected $docman_user_id;
-    protected $test_user_1_id;
+    protected int $project_id;
+    protected int $docman_user_id;
+    protected int $test_user_1_id;
+    protected int $requirements_tracker_id;
 
     public function setUp(): void
     {
@@ -41,7 +43,8 @@ class DocmanBase extends RestBase
 
         $this->initUserId(self::DOCMAN_USER_NAME);
 
-        $this->docman_user_id = $this->user_ids[self::DOCMAN_USER_NAME];
-        $this->test_user_1_id = $this->user_ids[TestDataBuilder::TEST_USER_1_NAME];
+        $this->docman_user_id          = $this->user_ids[self::DOCMAN_USER_NAME];
+        $this->test_user_1_id          = $this->user_ids[TestDataBuilder::TEST_USER_1_NAME];
+        $this->requirements_tracker_id = $this->tracker_ids[$this->project_id][self::ARTIDOC_REQUIREMENTS_TRACKER_SHORTNAME];
     }
 }

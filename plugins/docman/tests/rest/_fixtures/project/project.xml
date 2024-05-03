@@ -9,7 +9,7 @@
         <service shortname="wiki" enabled="1"/>
         <service shortname="plugin_svn" enabled="0"/>
         <service shortname="file" enabled="0"/>
-        <service shortname="plugin_tracker" enabled="0"/>
+        <service shortname="plugin_tracker" enabled="1"/>
         <service shortname="plugin_agiledashboard" enabled="0"/>
         <service shortname="hudson" enabled="0"/>
         <service shortname="plugin_git" enabled="0"/>
@@ -27,4 +27,54 @@
             </members>
         </ugroup>
     </ugroups>
+    <trackers>
+        <tracker id="T201" parent_id="0" is_displayed_in_new_dropdown="1" enable_move_artifacts="1">
+            <name><![CDATA[Requirements]]></name>
+            <item_name><![CDATA[requirements]]></item_name>
+            <description><![CDATA[]]></description>
+            <color><![CDATA[neon-green]]></color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="string" ID="F4566" rank="0" id="4566" tracker_id="201" parent_id="0">
+                    <name><![CDATA[title]]></name>
+                    <label><![CDATA[Title]]></label>
+                    <properties size="30"/>
+                </formElement>
+                <formElement type="text" ID="F4567" rank="1" id="4567" tracker_id="201" parent_id="0">
+                    <name><![CDATA[description]]></name>
+                    <label><![CDATA[Description]]></label>
+                    <properties rows="10" cols="50"/>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="title">
+                    <shortname><![CDATA[title]]></shortname>
+                    <label><![CDATA[Title]]></label>
+                    <description><![CDATA[Define the title of an artifact]]></description>
+                    <field REF="F4566"/>
+                </semantic>
+                <semantic type="description">
+                    <shortname><![CDATA[description]]></shortname>
+                    <label><![CDATA[Description]]></label>
+                    <description><![CDATA[Define the description of an artifact]]></description>
+                    <field REF="F4567"/>
+                </semantic>
+            </semantics>
+            <rules>
+              <date_rules/>
+              <list_rules/>
+            </rules>
+            <reports/>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F4566" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F4566" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F4566" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F4567" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F4567" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F4567" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+            <artifacts/>
+        </tracker>
+    </trackers>
 </project>

@@ -154,7 +154,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testPostOtherTypeDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
+    public function testPostOtherTypeDocumentDeniedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
     {
         $query = json_encode(
             [
@@ -191,5 +191,69 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPUTArtidocSections(int $root_id): void
+    {
+        $artidoc_id   = $this->createArtidoc($root_id, 'Artidoc F3 ' . $this->now)['id'];
+        $section_1_id = $this->createRequirementArtifact('Section 1', 'Content of section 1');
+        $section_2_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
+
+        self::assertCount(0, $this->getArtidocSections($artidoc_id));
+
+        $put_response = $this->getResponse(
+            $this->request_factory->createRequest('PUT', 'artidoc/' . $artidoc_id . '/sections')->withBody(
+                $this->stream_factory->createStream(json_encode([
+                    'sections' => [
+                        ['artifact' => ['id' => $section_1_id]],
+                        ['artifact' => ['id' => $section_2_id]],
+                    ],
+                ], JSON_THROW_ON_ERROR))
+            ),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        self::assertSame(200, $put_response->getStatusCode());
+
+        $document_content = $this->getArtidocSections($artidoc_id);
+
+        self::assertCount(2, $document_content);
+        self::assertSame($section_1_id, $document_content[0]['artifact']['id']);
+        self::assertSame($section_2_id, $document_content[1]['artifact']['id']);
+    }
+
+    private function createRequirementArtifact(string $title, string $description): int
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('POST', 'artifacts')->withBody(
+                $this->stream_factory->createStream(json_encode([
+                    'tracker' => ['id' => $this->requirements_tracker_id],
+                    'values_by_field' => [
+                        'title' => ['value' => $title],
+                        'description' => ['value' => $description],
+                    ],
+                ], JSON_THROW_ON_ERROR))
+            ),
+        );
+
+        $response_content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        return $response_content['id'];
+    }
+
+    private function getArtidocSections(int $artidoc_id): array
+    {
+        return json_decode(
+            $this->getResponse(
+                $this->request_factory->createRequest('GET', 'artidoc/' . $artidoc_id . '/sections')
+            )->getBody()->getContents(),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
     }
 }
