@@ -50,12 +50,16 @@ final class ChangesetValueIntegerTestBuilder
 
     public function build(): \Tracker_Artifact_ChangesetValue_Integer
     {
-        return new \Tracker_Artifact_ChangesetValue_Integer(
+        $value = new \Tracker_Artifact_ChangesetValue_Integer(
             $this->id,
             $this->changeset,
             $this->field,
             true,
             $this->value
         );
+
+        $this->changeset->setFieldValue($this->field, $value);
+
+        return $value;
     }
 }
