@@ -225,6 +225,26 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame($section_2_id, $document_content[1]['artifact']['id']);
     }
 
+    /**
+     * @depends testGetRootId
+     */
+    public function testDELETEArtidoc(int $root_id): void
+    {
+        $artidoc_id = $this->createArtidoc($root_id, 'Artidoc F5 ' . $this->now)['id'];
+
+        $delete_response = $this->getResponse(
+            $this->request_factory->createRequest('DELETE', 'docman_other_type_documents/' . $artidoc_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        self::assertSame(200, $delete_response->getStatusCode());
+
+        $get_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'docman_items/' . $artidoc_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        self::assertSame(404, $get_response->getStatusCode());
+    }
+
     private function createRequirementArtifact(string $title, string $description): int
     {
         $response = $this->getResponseByName(
