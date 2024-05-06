@@ -204,25 +204,71 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         self::assertCount(0, $this->getArtidocSections($artidoc_id));
 
-        $put_response = $this->getResponse(
-            $this->request_factory->createRequest('PUT', 'artidoc/' . $artidoc_id . '/sections')->withBody(
-                $this->stream_factory->createStream(json_encode([
-                    'sections' => [
-                        ['artifact' => ['id' => $section_1_id]],
-                        ['artifact' => ['id' => $section_2_id]],
-                    ],
-                ], JSON_THROW_ON_ERROR))
-            ),
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
-        );
-
-        self::assertSame(200, $put_response->getStatusCode());
+        $this->addSectionsToArtidoc($artidoc_id, $section_1_id, $section_2_id);
 
         $document_content = $this->getArtidocSections($artidoc_id);
 
         self::assertCount(2, $document_content);
         self::assertSame($section_1_id, $document_content[0]['artifact']['id']);
         self::assertSame($section_2_id, $document_content[1]['artifact']['id']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testArtidocCopy(int $root_id): void
+    {
+        $artidoc_id   = $this->createArtidoc($root_id, 'Artidoc F6 ' . $this->now)['id'];
+        $section_1_id = $this->createRequirementArtifact('Section 1', 'Content of section 1');
+        $section_2_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
+
+        $this->addSectionsToArtidoc($artidoc_id, $section_1_id, $section_2_id);
+
+        $folder_id = $this->createFolder($root_id, 'Folder to copy item F6 into. ' . $this->now)['id'];
+        self::assertCount(0, $this->getFolderContent($folder_id));
+
+        $copy_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_id . '/others')
+                ->withBody(
+                    $this->stream_factory->createStream(
+                        json_encode(
+                            [
+                                'copy' => [
+                                    'item_id'  => $artidoc_id,
+                                ],
+                            ]
+                        )
+                    )
+                )
+        );
+        self::assertSame(201, $copy_item_response->getStatusCode());
+
+        $copy_response_json = json_decode($copy_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertNull($copy_response_json['file_properties']);
+        $new_artidoc_id = $copy_response_json['id'];
+
+        self::assertNotSame($artidoc_id, $new_artidoc_id);
+
+        $document_content = $this->getArtidocSections($new_artidoc_id);
+
+        self::assertCount(2, $document_content);
+        self::assertSame($section_1_id, $document_content[0]['artifact']['id']);
+        self::assertSame($section_2_id, $document_content[1]['artifact']['id']);
+    }
+
+    private function addSectionsToArtidoc(int $artidoc_id, int ...$section_ids): void
+    {
+        $put_response = $this->getResponse(
+            $this->request_factory->createRequest('PUT', 'artidoc/' . $artidoc_id . '/sections')->withBody(
+                $this->stream_factory->createStream(json_encode([
+                    'sections' => array_map(static fn($id) => ['artifact' => ['id' => $id]], $section_ids),
+                ], JSON_THROW_ON_ERROR))
+            ),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        self::assertSame(200, $put_response->getStatusCode());
     }
 
     /**
