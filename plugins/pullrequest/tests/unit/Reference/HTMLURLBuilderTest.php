@@ -25,7 +25,6 @@ namespace Tuleap\PullRequest\Reference;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
-use Tuleap\PullRequest\FrontendApps\FeatureFlagSetOldHomepageViewByDefault;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
@@ -76,10 +75,8 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals($expected_url, $result);
     }
 
-    public function testItWillShowTheNewPullRequestsHomepageByDefault(): void
+    public function testItBuildsTheUrlToThePullRequestsHomepage(): void
     {
-        \ForgeConfig::setFeatureFlag(FeatureFlagSetOldHomepageViewByDefault::FEATURE_FLAG_KEY, 0);
-
         $repository_id = 10;
         $project_id    = 105;
 
@@ -90,24 +87,6 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals(
             "/plugins/git/?action=pull-requests&repo_id=$repository_id&group_id=$project_id&tab=homepage",
-            $this->html_url_builder->getPullRequestDashboardUrl($repository)
-        );
-    }
-
-    public function testItWillShowTheOldPullRequestsDashboardByDefault(): void
-    {
-        \ForgeConfig::setFeatureFlag(FeatureFlagSetOldHomepageViewByDefault::FEATURE_FLAG_KEY, 1);
-
-        $repository_id = 10;
-        $project_id    = 105;
-
-        $repository = GitRepositoryTestBuilder::aProjectRepository()
-            ->withId($repository_id)
-            ->inProject(ProjectTestBuilder::aProject()->withId($project_id)->build())
-            ->build();
-
-        self::assertEquals(
-            "/plugins/git/?action=pull-requests&repo_id=$repository_id&group_id=$project_id",
             $this->html_url_builder->getPullRequestDashboardUrl($repository)
         );
     }

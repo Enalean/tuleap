@@ -25,7 +25,6 @@ use GitPermissionsManager;
 use PFUser;
 use Project;
 use Tuleap\Git\Events\GetExternalGitHomepagePluginsEvent;
-use Tuleap\Git\Events\GetPullRequestDashboardViewEvent;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
@@ -77,9 +76,6 @@ class ListPresenterBuilder
         $external_git_actions_event = new GetExternalUsedServiceEvent($project, $current_user);
         $this->event_manager->dispatch($external_git_actions_event);
 
-        $dashboard_view_event = new GetPullRequestDashboardViewEvent();
-        $this->event_manager->dispatch($dashboard_view_event);
-
         return new GitRepositoryListPresenter(
             $current_user,
             $project,
@@ -88,7 +84,6 @@ class ListPresenterBuilder
             $external_git_homapage_plugin_event->getExternalPluginsInfos(),
             $this->project_flags_builder->buildProjectFlags($project),
             $external_git_actions_event->getExternalsUsedServices(),
-            $dashboard_view_event->isOldPullRequestDashboardViewEnabled()
         );
     }
 

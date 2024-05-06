@@ -22,6 +22,7 @@ import tuleap_pullrequest_module from "../app.js";
 
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
+import * as window_helpers from "../window-helper";
 
 describe("PullRequestRestService -", function () {
     var $httpBackend, PullRequestRestService, ErrorModalService, wrapPromise;
@@ -39,7 +40,9 @@ describe("PullRequestRestService -", function () {
             },
         );
 
-        jest.spyOn(ErrorModalService, "showErrorResponseMessage").mockImplementation(() => {});
+        const noop = () => {};
+        jest.spyOn(ErrorModalService, "showErrorResponseMessage").mockImplementation(noop);
+        jest.spyOn(window_helpers, "redirectToUrl").mockImplementation(noop);
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });

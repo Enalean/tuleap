@@ -25,7 +25,6 @@ let is_administrator = false;
 let locale: string;
 let repositories_owners: Array<RepositoryOwner> = [];
 let external_plugins: Array<ExternalPlugins> = [];
-let is_old_dashboard_view_enabled = false;
 
 export function build(
     user_id: number,
@@ -34,7 +33,6 @@ export function build(
     user_locale: string,
     owners: Array<RepositoryOwner>,
     external_plugins_enabled: Array<ExternalPlugins>,
-    is_old_pull_request_dashboard_view_enabled: boolean,
 ): void {
     current_user_id = user_id;
     current_project_id = project_id;
@@ -42,7 +40,6 @@ export function build(
     locale = user_locale;
     repositories_owners = owners;
     external_plugins = external_plugins_enabled;
-    is_old_dashboard_view_enabled = is_old_pull_request_dashboard_view_enabled;
 }
 
 export function getUserId(): number {
@@ -67,8 +64,4 @@ export function getRepositoriesOwners(): Array<RepositoryOwner> {
 
 export function getExternalPlugins(): Array<ExternalPlugins> {
     return external_plugins;
-}
-
-export function isOldPullRequestDashboardViewEnabled(): boolean {
-    return is_old_dashboard_view_enabled;
 }

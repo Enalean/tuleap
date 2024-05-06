@@ -20,27 +20,13 @@
 @use "codemirror/lib/codemirror";
 @use "codemirror/addon/merge/merge";
 @use "@tuleap/plugin-pullrequest-comments";
-@use "./includes/dashboard";
 @use "./includes/pull-request";
 @use "./includes/commits";
 @use "./includes/files";
 @use "./includes/file-diff";
-@use "./includes/pull-request-refs";
 @use "./includes/codemirror-overrides";
 
 main[role="main"] {
     display: flex;
-    flex-direction: column;
-}
-
-#pullrequest-app {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-}
-
-.pull-requests-app-ui-view {
-    display: flex;
-    flex: 1;
     flex-direction: column;
 }

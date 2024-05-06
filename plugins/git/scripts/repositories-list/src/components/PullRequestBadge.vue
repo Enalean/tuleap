@@ -36,11 +36,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { getProjectId, isOldPullRequestDashboardViewEnabled } from "../repository-list-presenter";
-import {
-    getOldPullRequestsDashboardUrl,
-    getPullRequestsHomepageUrl,
-} from "../helpers/pull-requests-homepage-url-builder";
+import { getProjectId } from "../repository-list-presenter";
+import { getPullRequestsHomepageUrl } from "../helpers/pull-requests-homepage-url-builder";
 
 @Component
 export default class PullRequestBadge extends Vue {
@@ -51,12 +48,6 @@ export default class PullRequestBadge extends Vue {
     readonly repositoryId!: number;
 
     pullrequest_url(): string {
-        if (isOldPullRequestDashboardViewEnabled()) {
-            return String(
-                getOldPullRequestsDashboardUrl(location, getProjectId(), this.repositoryId),
-            );
-        }
-
         return String(getPullRequestsHomepageUrl(location, getProjectId(), this.repositoryId));
     }
 }

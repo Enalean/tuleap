@@ -23,11 +23,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Events\AfterRepositoryForked;
-use Tuleap\Git\Events\GetPullRequestDashboardViewEvent;
 use Tuleap\Git\GitAdditionalActionEvent;
 use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Git\GitViews\RepoManagement\Pane\PanesCollection;
@@ -64,7 +62,6 @@ use Tuleap\PullRequest\DefaultSettings\DefaultSettingsController;
 use Tuleap\PullRequest\DefaultSettings\PullRequestPane as DefaultSettingsPullRequestPane;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\FileUniDiffBuilder;
-use Tuleap\PullRequest\FrontendApps\FeatureFlagSetOldHomepageViewByDefault;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceBulkConverter;
@@ -109,7 +106,7 @@ use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class pullrequestPlugin extends Plugin implements PluginWithConfigKeys
+class pullrequestPlugin extends Plugin
 {
     public const PR_REFERENCE_KEYWORD          = 'pr';
     public const PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest';
@@ -743,16 +740,5 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys
         );
 
         $pull_request_organizer->organizePullRequestReferences($organizer);
-    }
-
-    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
-    {
-        $event->addConfigClass(FeatureFlagSetOldHomepageViewByDefault::class);
-    }
-
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function getPullRequestDashboardViewEvent(GetPullRequestDashboardViewEvent $event): void
-    {
-        $event->setIsOldViewEnabled(FeatureFlagSetOldHomepageViewByDefault::isActive());
     }
 }
