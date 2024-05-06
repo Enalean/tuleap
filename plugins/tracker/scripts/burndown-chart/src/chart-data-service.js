@@ -27,8 +27,11 @@ export function getLastDayData(dataset) {
     return dataset[dataset.length - 1];
 }
 
-export function getDisplayableData(dataset) {
-    const filtered_data = dataset.filter(({ remaining_effort }) => remaining_effort !== null);
+export function getDisplayableData(dataset, x_axis) {
+    const filtered_data = dataset.filter(
+        ({ remaining_effort, date }) =>
+            remaining_effort !== null && x_axis.includes(date.substring(0, 10)),
+    );
 
     return getFormattedDates(filtered_data);
 }

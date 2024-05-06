@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\v1\Artifact;
 
 use Tuleap\AgileDashboard\FormElement\BurnupData;
 use Tuleap\AgileDashboard\REST\v1\Artifact\BurnupCountElementsPointRepresentation;
+use Tuleap\Date\OpeningDaysRetriever;
 use Tuleap\REST\JsonCast;
 
 class BurnupRepresentation
@@ -66,7 +67,7 @@ class BurnupRepresentation
         $this->start_date           = JsonCast::toDate($burnup_data->getDatePeriod()->getStartDate());
         $this->duration             = JsonCast::toInt($burnup_data->getDatePeriod()->getDuration());
         $this->is_under_calculation = JsonCast::toBoolean($burnup_data->isBeingCalculated());
-        $this->opening_days         = [1, 2, 3, 4, 5];
+        $this->opening_days         = OpeningDaysRetriever::getListOfOpenDays();
         foreach ($burnup_data->getEfforts() as $timestamp => $burnup_effort) {
             $this->points_with_date[] = new BurnupPointRepresentation($burnup_effort, $timestamp);
         }
