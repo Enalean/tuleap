@@ -20,14 +20,14 @@
 
 <template>
     <div class="document-layout">
-        <section class="document-content">
-            <document-content />
-        </section>
         <aside>
             <div class="tlp-framed table-of-contents">
                 <table-of-contents />
             </div>
         </aside>
+        <section class="document-content">
+            <document-content />
+        </section>
     </div>
 </template>
 
@@ -51,6 +51,7 @@ import DocumentContent from "@/components/DocumentContent.vue";
 }
 
 aside {
+    order: 1;
     height: 100%;
     background: var(--tlp-fade-background-color);
 }
