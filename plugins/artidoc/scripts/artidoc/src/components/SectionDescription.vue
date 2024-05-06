@@ -19,15 +19,19 @@
   -->
 
 <template>
-    <div v-dompurify-html="description_value"></div>
+    <section-description-skeleton v-if="is_sections_loading" />
+    <div v-else v-dompurify-html="description_value"></div>
 </template>
-
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { loadTooltips } from "@tuleap/tooltip";
+import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
 
-defineProps<{ description_value: string }>();
-
+defineProps<{
+    is_sections_loading: boolean;
+    artifact_id: number;
+    description_value: string;
+}>();
 onMounted(() => {
     loadTooltips();
 });

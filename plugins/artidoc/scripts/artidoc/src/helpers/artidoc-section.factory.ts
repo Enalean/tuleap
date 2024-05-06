@@ -22,10 +22,10 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 const ArtidocSectionFactory = {
     create: (): ArtidocSection => ({
         artifact: {
-            id: 1,
+            id: 0,
             uri: "artifacts/1",
             tracker: {
-                id: 1,
+                id: 0,
                 uri: "trackers/1",
                 label: "Bugs",
                 project: {

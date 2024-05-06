@@ -25,20 +25,20 @@
         </h1>
         <ol>
             <li v-for="section in sections" v-bind:key="section.artifact.id">
-                <a v-bind:href="`#${section.artifact.id}`" class="section-title">
-                    <slot v-bind:title="section.title"></slot>
+                <span v-if="is_sections_loading" class="tlp-skeleton-text"></span>
+                <a v-else v-bind:href="`#${section.artifact.id}`" class="section-title">
+                    {{ section.title }}
                 </a>
             </li>
         </ol>
     </div>
 </template>
-
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
-defineProps<{ sections: readonly ArtidocSection[] }>();
+defineProps<{ sections: readonly ArtidocSection[] | undefined; is_sections_loading: boolean }>();
 </script>
 
 <style scoped lang="scss">

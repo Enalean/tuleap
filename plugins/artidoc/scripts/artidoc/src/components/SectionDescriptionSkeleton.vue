@@ -18,19 +18,16 @@
   -
   -->
 <template>
-    <document-layout v-if="is_sections_loading || (sections && sections.length > 0)" />
-    <div v-else-if="!is_sections_loading && !sections" class="tlp-framed">
-        <no-access-state />
-    </div>
-    <div v-else class="tlp-framed">
-        <empty-state />
-    </div>
+    <h1><span class="tlp-skeleton-text"></span></h1>
+    <p>
+        <span class="tlp-skeleton-text"></span>
+        <span class="tlp-skeleton-text"></span>
+        <span class="tlp-skeleton-text"></span>
+    </p>
+    <h2><span class="tlp-skeleton-text"></span></h2>
+    <p>
+        <span class="tlp-skeleton-text"></span>
+        <span class="tlp-skeleton-text"></span>
+    </p>
 </template>
-<script setup lang="ts">
-import EmptyState from "@/views/EmptyState.vue";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import NoAccessState from "@/views/NoAccessState.vue";
-import DocumentLayout from "@/components/DocumentLayout.vue";
-
-defineProps<{ sections: readonly ArtidocSection[] | undefined; is_sections_loading: boolean }>();
-</script>
+<script setup lang="ts"></script>

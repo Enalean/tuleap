@@ -19,31 +19,31 @@
   -->
 
 <template>
-    <document-view-skeleton v-if="is_loading" class="artidoc-app-container" />
-    <document-view v-else v-bind:sections="sections" class="artidoc-app-container" />
+    <document-view
+        v-bind:is_sections_loading="is_sections_loading"
+        v-bind:sections="sections"
+        class="artidoc-app-container"
+    />
 </template>
-
 <script setup lang="ts">
-import type { Ref } from "vue";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
-import DocumentViewSkeleton from "@/views/DocumentViewSkeleton.vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { getAllSections } from "@/helpers/rest-querier";
-
+import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 const props = defineProps<{ item_id: number }>();
-
-const sections: Ref<readonly ArtidocSection[] | undefined> = ref(undefined);
-const is_loading = ref(true);
-
+const store = useInjectSectionsStore();
+const sections = store.sections;
+const is_sections_loading = store.is_sections_loading;
 onMounted(() => {
     getAllSections(props.item_id).match(
         (artidoc_sections: readonly ArtidocSection[]) => {
-            sections.value = artidoc_sections;
-            is_loading.value = false;
+            store.setSections(artidoc_sections);
+            store.setIsSectionsLoading(false);
         },
         () => {
-            is_loading.value = false;
+            store.setSections(undefined);
+            store.setIsSectionsLoading(false);
         },
     );
 });

@@ -25,40 +25,16 @@
             v-bind:key="section.artifact.id"
             v-bind:id="`${section.artifact.id}`"
         >
-            <article class="document-section">
-                <div class="section-header">
-                    <slot
-                        name="section-header"
-                        v-bind:title="section.title"
-                        v-bind:artifact_id="section.artifact.id"
-                    >
-                    </slot>
-                </div>
-                <slot
-                    name="section-content"
-                    v-bind:description_value="section.description.post_processed_value"
-                ></slot>
-            </article>
+            <section-content v-bind:section="section" />
         </li>
     </ol>
 </template>
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-
-defineProps<{ sections: readonly ArtidocSection[] }>();
+import SectionContent from "@/components/SectionContent.vue";
+defineProps<{ sections: readonly ArtidocSection[] | undefined }>();
 </script>
 <style lang="scss" scoped>
-.document-section {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: var(--tlp-x-large-spacing);
-}
-
-.section-header {
-    margin-bottom: var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
-}
-
 ol {
     counter-reset: item-without-dot;
 }

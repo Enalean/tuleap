@@ -11,6 +11,7 @@
     "@tuleap/project-background": "workspace:^",
     "@tuleap/tooltip": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
+    "@tuleap/vue-strict-inject": "workspace:*",
     "neverthrow": "6.0.0",
     "vue": "^3.3.4",
     "vue-dompurify-html": "^5.0.1",
