@@ -80,7 +80,7 @@ final class BurnupCacheCheckerTest extends TestCase
 
         $this->cache_generator->method('isCacheBurnupAlreadyAsked')->with($this->artifact)->willReturn(true);
         $this->cache_generator->method('forceBurnupCacheGeneration');
-        $this->burnup_cache_dao->method('getNumberOfCachedDays')->willReturn(['cached_days' => 1]);
+        $this->burnup_cache_dao->method('getNumberOfCachedDays')->willReturn(1);
         $this->cache_days_comparator->method('isNumberOfCachedDaysExpected')
             ->with($this->date_period, 1)
             ->willReturn(false);
@@ -93,7 +93,7 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->chart_value_checker->method('hasStartDate')->willReturn(true);
 
         $this->cache_generator->method('isCacheBurnupAlreadyAsked')->with($this->artifact)->willReturn(false);
-        $this->burnup_cache_dao->method('getNumberOfCachedDays')->willReturn(['cached_days' => 1]);
+        $this->burnup_cache_dao->method('getNumberOfCachedDays')->willReturn(1);
         $this->cache_days_comparator->method('isNumberOfCachedDaysExpected')
             ->with($this->date_period, 1)
             ->willReturn(false);
@@ -108,7 +108,7 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->chart_value_checker->method('hasStartDate')->willReturn(true);
 
         $this->cache_generator->method('isCacheBurnupAlreadyAsked')->with($this->artifact)->willReturn(false);
-        $this->burnup_cache_dao->method('getNumberOfCachedDays')->willReturn(['cached_days' => 1]);
+        $this->burnup_cache_dao->method('getNumberOfCachedDays')->willReturn(1);
         $this->cache_days_comparator->method('isNumberOfCachedDaysExpected')
             ->with($this->date_period, 1)
             ->willReturn(true);

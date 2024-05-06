@@ -82,7 +82,7 @@ class BurnupCacheChecker
                 $artifact->getId()
             );
 
-            return $this->cache_days_comparator->isNumberOfCachedDaysExpected($date_period, $cached_days['cached_days']);
+            return $this->cache_days_comparator->isNumberOfCachedDaysExpected($date_period, $cached_days);
         }
 
         return true;

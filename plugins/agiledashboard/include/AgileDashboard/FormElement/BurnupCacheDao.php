@@ -18,60 +18,66 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\FormElement;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class BurnupCacheDao extends DataAccessObject
 {
     public function saveCachedFieldValueAtTimestamp(
-        $artifact_id,
-        $timestamp,
-        $total_effort,
-        $team_effort,
-    ) {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
-        $timestamp    = $this->da->escapeInt($timestamp);
-        $team_effort  = $team_effort === null ? 'NULL' : $this->da->quoteSmart($team_effort);
-        $total_effort = $total_effort === null ? 'NULL' : $this->da->quoteSmart($total_effort);
-
-        $sql = "REPLACE INTO plugin_agiledashboard_tracker_field_burnup_cache
-                    (artifact_id, timestamp, total_effort, team_effort)
-                    VALUES ($artifact_id, $timestamp, $total_effort, $team_effort)";
-
-        return $this->update($sql);
+        int $artifact_id,
+        int $timestamp,
+        ?float $total_effort,
+        ?float $team_effort,
+    ): void {
+        $sql = <<<SQL
+        REPLACE INTO plugin_agiledashboard_tracker_field_burnup_cache
+            (artifact_id, timestamp, total_effort, team_effort)
+            VALUES (?, ?, ?, ?)
+        SQL;
+        $this->getDB()->safeQuery($sql, [
+            $artifact_id,
+            $timestamp,
+            $total_effort,
+            $team_effort,
+        ]);
     }
 
-    public function deleteArtifactCacheValue($artifact_id)
+    public function deleteArtifactCacheValue(int $artifact_id): void
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-
-        $sql = "DELETE FROM plugin_agiledashboard_tracker_field_burnup_cache
-                WHERE artifact_id = $artifact_id";
-
-        return $this->update($sql);
+        $this->getDB()->delete('plugin_agiledashboard_tracker_field_burnup_cache', ['artifact_id' => $artifact_id]);
     }
 
-    public function getNumberOfCachedDays($artifact_id)
+    public function getNumberOfCachedDays(int $artifact_id): int
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
+        $sql = <<<SQL
+        SELECT count(artifact_id) AS cached_days FROM plugin_agiledashboard_tracker_field_burnup_cache
+        WHERE artifact_id = ?
+        SQL;
 
-        $sql = "SELECT count(artifact_id) AS cached_days FROM plugin_agiledashboard_tracker_field_burnup_cache
-                WHERE artifact_id = $artifact_id";
-
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->single($sql, [$artifact_id]);
     }
 
-    public function searchCachedDaysValuesByArtifactId($artifact_id, $start_timestamp)
+    /**
+     * @return list<array{
+     *     timestamp: int,
+     *     team_effort: ?float,
+     *     total_effort: ?float,
+     * }>
+     */
+    public function searchCachedDaysValuesByArtifactId(int $artifact_id, int $start_timestamp): array
     {
-        $artifact_id     = $this->da->escapeInt($artifact_id);
-        $start_timestamp = $this->da->escapeInt($start_timestamp);
-
-        $sql = "SELECT timestamp, team_effort, total_effort
-                FROM plugin_agiledashboard_tracker_field_burnup_cache
-                WHERE artifact_id = $artifact_id
-                AND timestamp >= $start_timestamp";
-
-        return $this->retrieve($sql);
+        $sql = <<<SQL
+        SELECT timestamp, team_effort, total_effort
+        FROM plugin_agiledashboard_tracker_field_burnup_cache
+        WHERE artifact_id = ?
+        AND timestamp >= ?
+        SQL;
+        return $this->getDB()->safeQuery(
+            $sql,
+            [$artifact_id, $start_timestamp]
+        );
     }
 }
