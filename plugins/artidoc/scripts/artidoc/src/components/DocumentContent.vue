@@ -29,11 +29,14 @@
         </li>
     </ol>
 </template>
+
 <script setup lang="ts">
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionContent from "@/components/SectionContent.vue";
-defineProps<{ sections: readonly ArtidocSection[] | undefined }>();
+
+const { sections } = useInjectSectionsStore();
 </script>
+
 <style lang="scss" scoped>
 ol {
     counter-reset: item-without-dot;

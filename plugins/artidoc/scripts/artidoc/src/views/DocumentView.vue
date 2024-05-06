@@ -26,11 +26,12 @@
         <empty-state />
     </div>
 </template>
+
 <script setup lang="ts">
 import EmptyState from "@/views/EmptyState.vue";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import NoAccessState from "@/views/NoAccessState.vue";
 import DocumentLayout from "@/components/DocumentLayout.vue";
 
-defineProps<{ sections: readonly ArtidocSection[] | undefined; is_sections_loading: boolean }>();
+const { sections, is_sections_loading } = useInjectSectionsStore();
 </script>

@@ -17,31 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { ComponentPublicInstance } from "vue";
+import { ref } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentContent from "@/components/DocumentContent.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import SectionContent from "@/components/SectionContent.vue";
+import * as sectionsStore from "@/stores/useSectionsStore";
+
 describe("DocumentContent", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
     beforeAll(() => {
         const defaultSection = ArtidocSectionFactory.create();
-        wrapper = shallowMount(DocumentContent, {
-            propsData: {
-                sections: [
-                    ArtidocSectionFactory.override({
-                        title: "Title 1",
-                        artifact: { ...defaultSection.artifact, id: 1 },
-                    }),
-                    ArtidocSectionFactory.override({
-                        title: "Title 2",
-                        artifact: { ...defaultSection.artifact, id: 2 },
-                    }),
-                ],
-            },
+        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+            setIsSectionsLoading: vi.fn(),
+            setSections: vi.fn(),
+            is_sections_loading: ref(false),
+            sections: ref([
+                ArtidocSectionFactory.override({
+                    title: "Title 1",
+                    artifact: { ...defaultSection.artifact, id: 1 },
+                }),
+                ArtidocSectionFactory.override({
+                    title: "Title 2",
+                    artifact: { ...defaultSection.artifact, id: 2 },
+                }),
+            ]),
         });
+
+        wrapper = shallowMount(DocumentContent);
     });
     it("should display the two sections", () => {
         const list = wrapper.find("ol");
