@@ -63,7 +63,6 @@ const meta: Meta<LayoutProps> = {
         },
         frame: {
             name: "Frame",
-            defaultValue: "framed",
             description:
                 "Use .tlp-framed-vertically or .tlp-framed-horizontally if you need to add margin only at the top/bottom or to the left/right of the container.",
             options: ["framed", "framed-vertically", "framed-horizontally", "No frame"],
@@ -77,7 +76,6 @@ const meta: Meta<LayoutProps> = {
         centered: {
             name: "Centered",
             description: `In order to center content, you can use`,
-            defaultValue: false,
             table: {
                 type: { summary: ".tlp-centered" },
             },

@@ -131,7 +131,7 @@ const meta: Meta<TextareaProps> = {
             name: "With given dimensions",
             description: "Add cols and rows attributes",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         cols: {
@@ -145,7 +145,7 @@ const meta: Meta<TextareaProps> = {
         mandatory: {
             name: "Mandatory",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         disabled: {
@@ -158,7 +158,7 @@ const meta: Meta<TextareaProps> = {
         with_helper_text: {
             name: "With helper text",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
             if: { arg: "with_error", truthy: false },
         },

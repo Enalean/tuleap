@@ -104,7 +104,7 @@ const meta: Meta<ButtonBarProps> = {
             control: "select",
             options: ["radio", "checkbox"],
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         type: {

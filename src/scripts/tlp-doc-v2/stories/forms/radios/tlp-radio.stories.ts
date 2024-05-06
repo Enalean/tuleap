@@ -110,7 +110,7 @@ const meta: Meta<RadioProps> = {
         with_helper_text: {
             name: "With helper text",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
             if: { arg: "with_error", truthy: false },
         },
@@ -125,7 +125,7 @@ const meta: Meta<RadioProps> = {
             name: "With form label",
             description: "Add a label to the form",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         form_label: {

@@ -84,7 +84,6 @@ const meta: Meta<BadgeProps> = {
             description: "UI color of the badge",
             control: { type: "select" },
             options: USER_INTERFACE_EMPHASIS_COLORS,
-            defaultValue: { summary: "primary" },
         },
         label: {
             name: "Label",
@@ -92,7 +91,6 @@ const meta: Meta<BadgeProps> = {
         outline: {
             name: "Outline",
             description: "Applies the class",
-            defaultValue: false,
             table: {
                 type: { summary: ".tlp-badge-outline" },
             },
@@ -101,7 +99,6 @@ const meta: Meta<BadgeProps> = {
         rounded: {
             name: "Rounded",
             description: `To be used only in some cases (as a counter in pane header, as a representation for numeric values only…)`,
-            defaultValue: false,
             table: {
                 type: { summary: ".tlp-badge-rounded" },
             },

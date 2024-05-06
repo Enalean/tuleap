@@ -153,7 +153,7 @@ export const Checkbox: Story = {
         mandatory: {
             name: "Mandatory",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         disabled: {
@@ -166,7 +166,7 @@ export const Checkbox: Story = {
         with_helper_text: {
             name: "With helper text",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
             if: { arg: "with_error", truthy: false },
         },
@@ -181,7 +181,7 @@ export const Checkbox: Story = {
             name: "With form element label",
             description: "Add a label to the form element",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         form_label: {
@@ -192,7 +192,7 @@ export const Checkbox: Story = {
             name: "Checked",
             description: "Add checked attribute",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
     },
