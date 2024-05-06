@@ -29,6 +29,7 @@ use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use Project;
+use ProjectHistoryDao;
 use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\Dashboard\AssetsIncluder;
@@ -39,6 +40,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
 use Tuleap\Dashboard\Widget\WidgetMinimizor;
+use Tuleap\Dashboard\Widget\WidgetProjectAdminActionsHistoryEntry;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\HeaderConfigurationBuilder;
@@ -51,83 +53,24 @@ class ProjectDashboardController
     public const DASHBOARD_TYPE        = 'project';
     public const LEGACY_DASHBOARD_TYPE = 'g';
 
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf;
-    /**
-     * @var ProjectDashboardRetriever
-     */
-    private $retriever;
-    /**
-     * @var ProjectDashboardSaver
-     */
-    private $saver;
-    /**
-     * @var Project
-     */
-    private $project;
-    /**
-     * @var DashboardWidgetRetriever
-     */
-    private $widget_retriever;
-    /**
-     * @var DashboardWidgetPresenterBuilder
-     */
-    private $widget_presenter_builder;
-    /**
-     * @var WidgetDeletor
-     */
-    private $widget_deletor;
-    /**
-     * @var WidgetMinimizor
-     */
-    private $widget_minimizor;
-    /**
-     * @var AssetsIncluder
-     */
-    private $assets_includer;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var BaseLayout
-     */
-    private $layout;
-
-    private Codendi_HTMLPurifier $purifier;
-
     public function __construct(
-        CSRFSynchronizerToken $csrf,
-        Project $project,
-        ProjectDashboardRetriever $retriever,
-        ProjectDashboardSaver $saver,
-        DashboardWidgetRetriever $widget_retriever,
-        DashboardWidgetPresenterBuilder $widget_presenter_builder,
-        WidgetDeletor $widget_deletor,
-        WidgetMinimizor $widget_minimizor,
-        AssetsIncluder $assets_includer,
-        EventManager $event_manager,
-        BaseLayout $layout,
-        private JavascriptAssetGeneric $project_registration_assets,
-        Codendi_HTMLPurifier $purifier,
-        private FirstTimerPresenterBuilder $first_timer_presenter_builder,
+        private readonly CSRFSynchronizerToken $csrf,
+        private readonly Project $project,
+        private readonly ProjectDashboardRetriever $retriever,
+        private readonly ProjectDashboardSaver $saver,
+        private readonly DashboardWidgetRetriever $widget_retriever,
+        private readonly DashboardWidgetPresenterBuilder $widget_presenter_builder,
+        private readonly WidgetDeletor $widget_deletor,
+        private readonly WidgetMinimizor $widget_minimizor,
+        private readonly AssetsIncluder $assets_includer,
+        private readonly EventManager $event_manager,
+        private readonly BaseLayout $layout,
+        private readonly JavascriptAssetGeneric $project_registration_assets,
+        private readonly Codendi_HTMLPurifier $purifier,
+        private readonly FirstTimerPresenterBuilder $first_timer_presenter_builder,
         private readonly RecentlyVisitedProjectDashboardDao $recently_visited_project_dashboard_dao,
+        private readonly ProjectHistoryDao $project_history_dao,
     ) {
-        $this->csrf                     = $csrf;
-        $this->project                  = $project;
-        $this->retriever                = $retriever;
-        $this->saver                    = $saver;
-        $this->widget_retriever         = $widget_retriever;
-        $this->widget_presenter_builder = $widget_presenter_builder;
-        $this->widget_deletor           = $widget_deletor;
-        $this->widget_minimizor         = $widget_minimizor;
-        $this->assets_includer          = $assets_includer;
-        $this->event_manager            = $event_manager;
-        $this->layout                   = $layout;
-        $this->purifier                 = $purifier;
     }
 
     public function display(HTTPRequest $request)
@@ -459,7 +402,17 @@ class ProjectDashboardController
         $widget_id    = $request->get('widget-id');
 
         try {
+            $widget = $this->widget_retriever->getWidgetById($widget_id);
+
             $this->widget_deletor->delete($user, $project, $dashboard_id, self::DASHBOARD_TYPE, $widget_id);
+            $this->project_history_dao->addHistory(
+                $project,
+                $user,
+                new \DateTimeImmutable(),
+                WidgetProjectAdminActionsHistoryEntry::RemoveWidget->value,
+                $widget->getName(),
+                [],
+            );
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
                 dgettext(

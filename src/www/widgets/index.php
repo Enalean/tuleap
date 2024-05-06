@@ -50,7 +50,8 @@ $router = new Router(
         $dao,
         $widget_factory,
         new WidgetCreator(new DashboardWidgetDao($widget_factory)),
-        new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
+        new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao()),
+        new ProjectHistoryDao(),
     ),
     $widget_factory
 );

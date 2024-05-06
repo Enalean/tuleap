@@ -25,44 +25,25 @@ use DataAccessException;
 use Exception;
 use Feedback;
 use HTTPRequest;
+use ProjectHistoryDao;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\WidgetCreator;
+use Tuleap\Dashboard\Widget\WidgetProjectAdminActionsHistoryEntry;
 use Tuleap\Widget\WidgetFactory;
 use Widget;
 
 class AddWidgetController
 {
-    /**
-     * @var DashboardWidgetDao
-     */
-    private $dao;
-    /**
-     * @var WidgetFactory
-     */
-    private $factory;
-    /**
-     * @var WidgetCreator
-     */
-    private $creator;
-
-    /**
-     * @var DisabledProjectWidgetsChecker
-     */
-    private $disabled_project_widgets_checker;
-
     public function __construct(
-        DashboardWidgetDao $dao,
-        WidgetFactory $factory,
-        WidgetCreator $creator,
-        DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
+        private readonly DashboardWidgetDao $dao,
+        private readonly WidgetFactory $factory,
+        private readonly WidgetCreator $creator,
+        private readonly DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
+        private readonly ProjectHistoryDao $history_dao,
     ) {
-        $this->dao                              = $dao;
-        $this->factory                          = $factory;
-        $this->creator                          = $creator;
-        $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
     }
 
     public function display(HTTPRequest $request)
@@ -108,6 +89,17 @@ class AddWidgetController
                     $widget,
                     $request
                 );
+
+                if ($dashboard_type === ProjectDashboardController::DASHBOARD_TYPE) {
+                    $this->history_dao->addHistory(
+                        $request->getProject(),
+                        $request->getCurrentUser(),
+                        new \DateTimeImmutable(),
+                        WidgetProjectAdminActionsHistoryEntry::AddWidget->value,
+                        $name,
+                        [],
+                    );
+                }
 
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,

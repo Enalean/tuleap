@@ -26,6 +26,7 @@ use CSRFSynchronizerToken;
 use EventManager;
 use HTTPRequest;
 use Project;
+use ProjectHistoryDao;
 use ProjectManager;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Dashboard\AssetsIncluder;
@@ -147,6 +148,7 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                         UserManager::instance(),
                     ),
                     new RecentlyVisitedProjectDashboardDao(),
+                    new ProjectHistoryDao(),
                 ),
                 new WidgetDashboardController(
                     $csrf_token,
