@@ -20,9 +20,12 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
+use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -32,6 +35,7 @@ use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var string
@@ -54,6 +58,8 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
 
         $timezone_retriever      = new TimezoneRetriever();
         $this->original_timezone = $timezone_retriever::getServerTimezone();

@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use ColinODell\PsrTestLogger\TestLogger;
+use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
@@ -29,7 +30,9 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
+use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -39,6 +42,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     private BurnupDataBuilder $burnup_data_builder;
 
@@ -67,6 +71,8 @@ final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
 
         $this->logger                              = new TestLogger();
         $this->burnup_cache_checker                = Mockery::mock(BurnupCacheChecker::class);

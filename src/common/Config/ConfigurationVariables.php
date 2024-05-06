@@ -72,4 +72,8 @@ final class ConfigurationVariables
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyLegacyBool]
     public const DISABLE_SUBDOMAINS = 'sys_disable_subdomains';
+
+    #[ConfigKey('Server timezone')]
+    #[ConfigKeyString('Europe/Paris')]
+    public const SERVER_TIMEZONE = 'sys_server_timezone';
 }

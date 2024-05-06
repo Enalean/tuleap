@@ -18,18 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap;
 
+use DateTimeZone;
+use Exception;
+use ForgeConfig;
 use PFUser;
+use Tuleap\Config\ConfigurationVariables;
 
-class TimezoneRetriever
+final class TimezoneRetriever
 {
     /**
      * @psalm-return non-empty-string
      */
     public static function getServerTimezone(): string
     {
-        return ini_get('date.timezone') ? : 'Europe/Paris';
+        return ForgeConfig::get(ConfigurationVariables::SERVER_TIMEZONE);
     }
 
     /**
@@ -45,8 +51,8 @@ class TimezoneRetriever
             return self::getServerTimezone();
         }
         try {
-            new \DateTimeZone($timezone);
-        } catch (\Exception $ex) {
+            new DateTimeZone($timezone);
+        } catch (Exception) {
             $timezone = self::getServerTimezone();
         }
         return $timezone;
