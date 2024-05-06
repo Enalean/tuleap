@@ -1055,6 +1055,9 @@ msgstr ""
 msgid "Delete type"
 msgstr ""
 
+msgid "Deletion of artifacts is not allowed"
+msgstr ""
+
 msgid "Description"
 msgstr "Descrição"
 
@@ -3068,6 +3071,10 @@ msgid "The label will not appear in form."
 msgstr ""
 
 msgid "The last person to update the artifact"
+msgstr ""
+
+msgid ""
+"The limit of artifacts deletions has been reached for the previous 24 hours."
 msgstr ""
 
 msgid "The limit value is incorrect."

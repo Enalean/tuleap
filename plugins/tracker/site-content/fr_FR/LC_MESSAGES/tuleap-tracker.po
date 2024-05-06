@@ -1204,6 +1204,9 @@ msgstr "Supprimer l'outil de suivi"
 msgid "Delete type"
 msgstr "Supprimer une nature"
 
+msgid "Deletion of artifacts is not allowed"
+msgstr "La suppression d'artéfact n'est pas autorisée"
+
 msgid "Description"
 msgstr "Description"
 
@@ -3460,6 +3463,12 @@ msgstr "Le label n'apparaît pas dans le formulaire."
 
 msgid "The last person to update the artifact"
 msgstr "La dernière personne à avoir modifié l'artifact"
+
+msgid ""
+"The limit of artifacts deletions has been reached for the previous 24 hours."
+msgstr ""
+"La limite de suppressions d'artéfacts a été atteinte pour les dernières 24 "
+"heures."
 
 msgid "The limit value is incorrect."
 msgstr "La configuration est incorrecte."

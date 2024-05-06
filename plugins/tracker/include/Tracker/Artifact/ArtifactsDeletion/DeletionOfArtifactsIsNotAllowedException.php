@@ -30,4 +30,9 @@ class DeletionOfArtifactsIsNotAllowedException extends \Exception
     {
         parent::__construct('Deletion of artifacts is not allowed');
     }
+
+    public function getI18NMessage(): string
+    {
+        return dgettext('tuleap-tracker', 'Deletion of artifacts is not allowed');
+    }
 }
