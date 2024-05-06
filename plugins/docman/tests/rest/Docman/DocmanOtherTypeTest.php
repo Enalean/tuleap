@@ -35,7 +35,18 @@ class DocmanOtherTypeTest extends DocmanTestExecutionHelper
             \TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertSame(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertSame($response->getStatusCode(), 200);
+    }
+
+    public function testOptionsPermissions(): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('OPTIONS', 'docman_other_type_documents/123/permissions'),
+            \TestDataBuilder::ADMIN_USER_NAME
+        );
+
+        self::assertSame(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertSame($response->getStatusCode(), 200);
     }
 }

@@ -198,6 +198,32 @@ describe("UpdatePermissions()", () => {
         );
     });
 
+    it("Can update other type document permissions", async () => {
+        const putOtherTypeDocumentPermissions = jest
+            .spyOn(permissions_rest_querier, "putOtherTypeDocumentPermissions")
+            .mockResolvedValue();
+
+        await testPermissionsUpdateSuccess("whatever");
+
+        expect(putOtherTypeDocumentPermissions).toHaveBeenCalled();
+        expect(emitter.emit).toHaveBeenCalledWith("item-permissions-have-just-been-updated");
+        expect(context.commit).toHaveBeenCalledWith(
+            "removeItemFromFolderContent",
+            expect.any(Object),
+            { root: true },
+        );
+        expect(context.commit).toHaveBeenCalledWith(
+            "addJustCreatedItemToFolderContent",
+            expect.any(Object),
+            { root: true },
+        );
+        expect(context.commit).toHaveBeenCalledWith(
+            "updateCurrentItemForQuickLokDisplay",
+            expect.any(Object),
+            { root: true },
+        );
+    });
+
     it("Can update folder permissions", async () => {
         const putFolderPermissions = jest
             .spyOn(permissions_rest_querier, "putFolderPermissions")

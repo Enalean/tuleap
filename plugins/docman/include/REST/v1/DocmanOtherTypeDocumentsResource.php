@@ -22,18 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_ItemFactory;
 use Docman_PermissionsManager;
+use EventManager;
 use Luracast\Restler\RestException;
+use PermissionsManager;
 use Project;
 use ProjectManager;
+use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
+use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
+use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use UGroupManager;
 use UserManager;
 
 class DocmanOtherTypeDocumentsResource extends AuthenticatedResource
@@ -159,6 +169,69 @@ class DocmanOtherTypeDocumentsResource extends AuthenticatedResource
             $item,
             $current_user
         );
+    }
+
+    /**
+     * @url OPTIONS {id}/permissions
+     */
+    public function optionsPermissions(int $id): void
+    {
+        Header::allowOptionsPut();
+    }
+
+    /**
+     * Update permissions of the document
+     *
+     * @url    PUT {id}/permissions
+     * @access hybrid
+     *
+     * @param int $id Id of the document
+     * @param DocmanItemPermissionsForGroupsSetRepresentation $representation {@from body}
+     *
+     * @status 200
+     *
+     * @throws RestException 400
+     */
+    public function putPermissions(int $id, DocmanItemPermissionsForGroupsSetRepresentation $representation): void
+    {
+        $this->checkAccess();
+
+        $request_builder = new DocmanItemsRequestBuilder(UserManager::instance(), ProjectManager::instance());
+
+        $item_request = $request_builder->buildFromItemId($id);
+        $project      = $item_request->getProject();
+        $item         = $item_request->getItem();
+        $user         = $item_request->getUser();
+
+        $validator = new DocumentBeforeModificationValidatorVisitor(
+            $this->getPermissionManager($project),
+            $user,
+            $item,
+            new DoesItemHasExpectedTypeVisitor(ArtidocDocument::class),
+        );
+
+        $item->accept($validator);
+
+        $this->addAllEvent($project);
+
+        $docman_permission_manager     = $this->getPermissionManager($project);
+        $ugroup_manager                = new UGroupManager();
+        $permissions_rest_item_updater = new PermissionItemUpdaterFromRESTContext(
+            new PermissionItemUpdater(
+                new NullResponseFeedbackWrapper(),
+                Docman_ItemFactory::instance((int) $project->getID()),
+                $docman_permission_manager,
+                PermissionsManager::instance(),
+                EventManager::instance(),
+            ),
+            $docman_permission_manager,
+            new DocmanItemPermissionsForGroupsSetFactory(
+                $ugroup_manager,
+                new UserGroupRetriever($ugroup_manager),
+                ProjectManager::instance()
+            )
+        );
+        $permissions_rest_item_updater->updateItemPermissions($item, $user, $representation);
     }
 
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder

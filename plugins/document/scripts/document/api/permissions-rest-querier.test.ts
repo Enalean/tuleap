@@ -25,6 +25,7 @@ import {
     putFilePermissions,
     putFolderPermissions,
     putLinkPermissions,
+    putOtherTypeDocumentPermissions,
     putWikiPermissions,
 } from "./permissions-rest-querier";
 import type { Permissions } from "../type";
@@ -93,6 +94,20 @@ describe("Update item permissions", () => {
             headers: expect.objectContaining({ "Content-Type": "application/json" }),
             body: JSON.stringify(permissions),
         });
+    });
+
+    it("Update permissions of another type document", async () => {
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        mockFetchSuccess(tlpPut);
+        await putOtherTypeDocumentPermissions(item_id, permissions);
+
+        expect(tlpPut).toHaveBeenCalledWith(
+            `/api/docman_other_type_documents/${item_id}/permissions`,
+            {
+                headers: expect.objectContaining({ "Content-Type": "application/json" }),
+                body: JSON.stringify(permissions),
+            },
+        );
     });
 
     it("Update permissions of folder", async () => {
