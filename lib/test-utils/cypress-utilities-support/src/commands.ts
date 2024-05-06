@@ -18,6 +18,7 @@
  */
 
 import type { ConditionPredicate, ReloadCallback } from "./commands-type-definitions";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 
 export const WEB_UI_SESSION = "WebUI";
 
@@ -109,11 +110,9 @@ function visitServiceInCurrentProject(
 
 Cypress.Commands.add("getProjectId", (project_shortname: string): Cypress.Chainable<number> => {
     return cy
-        .getFromTuleapAPI(
-            `/api/projects?limit=1&query=${encodeURIComponent(
-                JSON.stringify({ shortname: project_shortname }),
-            )}`,
-        )
+        .getFromTuleapAPI<
+            ProjectResponse[]
+        >(`/api/projects?limit=1&query=${encodeURIComponent(JSON.stringify({ shortname: project_shortname }))}`)
         .then((response) => response.body[0].id);
 });
 
@@ -131,9 +130,11 @@ Cypress.Commands.add(
             allow_restricted: false,
         };
 
-        return cy.postFromTuleapApi("https://tuleap/api/projects/", payload).then((response) => {
-            return Number.parseInt(response.body.id, 10);
-        });
+        return cy
+            .postFromTuleapApi<ProjectResponse>("https://tuleap/api/projects/", payload)
+            .then((response) => {
+                return response.body.id;
+            });
     },
 );
 
@@ -144,8 +145,8 @@ Cypress.Commands.add(
             "https://tuleap/api/projects?query=" +
             encodeURIComponent(JSON.stringify({ shortname: project_template }));
 
-        return cy.getFromTuleapAPI(get_project_template_url).then((response) => {
-            const template_id = Number.parseInt(response.body[0].id, 10);
+        return cy.getFromTuleapAPI<ProjectResponse[]>(get_project_template_url).then((response) => {
+            const template_id = response.body[0].id;
 
             const payload = {
                 shortname: project_name,
@@ -159,9 +160,9 @@ Cypress.Commands.add(
             };
 
             return cy
-                .postFromTuleapApi("https://tuleap/api/projects/", payload)
+                .postFromTuleapApi<ProjectResponse>("https://tuleap/api/projects/", payload)
                 .then((response) => {
-                    return Number.parseInt(response.body.id, 10);
+                    return response.body.id;
                 });
         });
     },

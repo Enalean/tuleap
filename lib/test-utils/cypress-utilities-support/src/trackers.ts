@@ -21,19 +21,26 @@ import type {
     ListNewChangesetValue,
     StaticBoundListField,
     StructureFields,
+    TrackerResponseNoInstance,
 } from "@tuleap/plugin-tracker-rest-api-types";
 
-interface Tracker {
-    readonly id: number;
-    readonly item_name: string;
-}
+type Tracker = Pick<TrackerResponseNoInstance, "id" | "item_name" | "fields">;
 
 Cypress.Commands.add(
     "getTrackerIdFromREST",
     (project_id: number, tracker_name: string): Cypress.Chainable<number> => {
-        return cy.getFromTuleapAPI(`/api/projects/${project_id}/trackers`).then((response) => {
-            return response.body.find((tracker: Tracker) => tracker.item_name === tracker_name).id;
-        });
+        return cy
+            .getFromTuleapAPI<Tracker[]>(`/api/projects/${project_id}/trackers`)
+            .then((response) => {
+                const tracker = response.body.find(
+                    (tracker: Tracker) => tracker.item_name === tracker_name,
+                );
+                if (!tracker) {
+                    throw new Error(`Unable to find the id of the tracker named "${tracker_name}"`);
+                }
+
+                return tracker.id;
+            });
     },
 );
 
@@ -65,6 +72,7 @@ function getStatusPayload(
 }
 
 export interface ArtifactCreationPayload {
+    id: number;
     tracker_id: number;
     artifact_title: string;
     artifact_status?: string;
@@ -74,17 +82,22 @@ export interface ArtifactCreationPayload {
 Cypress.Commands.add(
     "createArtifact",
     (payload: ArtifactCreationPayload): Cypress.Chainable<number> =>
-        cy.getFromTuleapAPI(`/api/trackers/${payload.tracker_id}`).then((response) => {
+        cy.getFromTuleapAPI<Tracker>(`/api/trackers/${payload.tracker_id}`).then((response) => {
             const result = response.body;
 
-            const title_id = result.fields.find(
+            const title_field = result.fields.find(
                 (field: StructureFields) => field.name === payload.title_field_name,
-            ).field_id;
+            );
+
+            if (!title_field) {
+                throw new Error(`Unable to find a field named ${payload.title_field_name}`);
+            }
+
             const artifact_payload = {
                 tracker: { id: payload.tracker_id },
                 values: [
                     {
-                        field_id: title_id,
+                        field_id: title_field.field_id,
                         value: payload.artifact_title,
                     },
                     ...getStatusPayload(payload.artifact_status, result.fields),
@@ -92,7 +105,7 @@ Cypress.Commands.add(
             };
 
             return cy
-                .postFromTuleapApi("/api/artifacts/", artifact_payload)
+                .postFromTuleapApi<ArtifactCreationPayload>("/api/artifacts/", artifact_payload)
                 .then((response) => response.body.id);
         }),
 );
@@ -115,16 +128,25 @@ export interface ArtifactWithFieldCreationPayload {
 Cypress.Commands.add(
     "createArtifactWithFields",
     (payload: ArtifactWithFieldCreationPayload): Cypress.Chainable<number> =>
-        cy.getFromTuleapAPI(`/api/trackers/${payload.tracker_id}`).then((response) => {
+        cy.getFromTuleapAPI<Tracker>(`/api/trackers/${payload.tracker_id}`).then((response) => {
             const result = response.body;
 
             const fields_to_create: Array<ArtifactFieldToCreate> = [];
             payload.fields.forEach((field_to_add: TrackerField) => {
-                const tracker_field_id = result.fields.find(
+                const target_field = result.fields.find(
                     (field: StructureFields) => field.name === field_to_add.shortname,
-                ).field_id;
+                );
 
-                fields_to_create.push({ field_id: tracker_field_id, value: field_to_add.value });
+                if (!target_field) {
+                    throw new Error(
+                        `Unable to find a field using the shortname ${field_to_add.shortname}`,
+                    );
+                }
+
+                fields_to_create.push({
+                    field_id: target_field.field_id,
+                    value: field_to_add.value,
+                });
             });
 
             const artifact_payload = {
@@ -133,7 +155,7 @@ Cypress.Commands.add(
             };
 
             return cy
-                .postFromTuleapApi("/api/artifacts/", artifact_payload)
+                .postFromTuleapApi<ArtifactCreationPayload>("/api/artifacts/", artifact_payload)
                 .then((response) => response.body.id);
         }),
 );
