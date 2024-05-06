@@ -18,62 +18,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use DateTime;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BurnupCacheCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ChartCachedDaysComparator|MockInterface
-     */
-    private $cache_days_comparator;
-    /**
-     * @var BurnupCacheGenerator|MockInterface
-     */
-    private $cache_generator;
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-    /**
-     * @var DatePeriodWithoutWeekEnd
-     */
-    private $date_period;
-    /**
-     * @var BurnupCacheChecker
-     */
-    private $burnup_cache_Checker;
-    /**
-     * @var ChartConfigurationValueChecker
-     */
-    private $chart_value_checker;
-
-    private $burnup_cache_dao;
+    private ChartCachedDaysComparator&MockObject $cache_days_comparator;
+    private BurnupCacheGenerator&MockObject $cache_generator;
+    private PFUser $user;
+    private Artifact $artifact;
+    private DatePeriodWithoutWeekEnd $date_period;
+    private BurnupCacheChecker $burnup_cache_Checker;
+    private ChartConfigurationValueChecker&MockObject $chart_value_checker;
+    private BurnupCacheDao&MockObject $burnup_cache_dao;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->cache_generator       = Mockery::spy(BurnupCacheGenerator::class);
-        $this->chart_value_checker   = Mockery::mock(ChartConfigurationValueChecker::class);
-        $this->burnup_cache_dao      = Mockery::mock(BurnupCacheDao::class);
-        $this->cache_days_comparator = Mockery::mock(ChartCachedDaysComparator::class);
+        $this->cache_generator       = $this->createMock(BurnupCacheGenerator::class);
+        $this->chart_value_checker   = $this->createMock(ChartConfigurationValueChecker::class);
+        $this->burnup_cache_dao      = $this->createMock(BurnupCacheDao::class);
+        $this->cache_days_comparator = $this->createMock(ChartCachedDaysComparator::class);
         $this->burnup_cache_Checker  = new BurnupCacheChecker(
             $this->cache_generator,
             $this->chart_value_checker,
@@ -81,78 +59,62 @@ class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->cache_days_comparator
         );
 
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(101);
+        $this->artifact = ArtifactTestBuilder::anArtifact(101)->build();
 
-        $start_date        = new \DateTime();
-        $duration          = 10;
-        $this->date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), $duration);
+        $this->date_period = DatePeriodWithoutWeekEnd::buildFromDuration((new DateTime())->getTimestamp(), 10);
 
-        $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('getId')->andReturn(101);
+        $this->user = UserTestBuilder::buildWithId(101);
     }
 
-    public function testItReturnsFalseWhenStartDateFieldIsNotReadable()
+    public function testItReturnsFalseWhenStartDateFieldIsNotReadable(): void
     {
-        $this->chart_value_checker->shouldReceive('hasStartDate')->andReturnFalse();
+        $this->chart_value_checker->method('hasStartDate')->willReturn(false);
+        $this->cache_generator->method('isCacheBurnupAlreadyAsked');
 
-        $this->assertFalse(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user)
-        );
+        self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user));
     }
 
-    public function testItReturnsTrueWhenBurnupIsAlreadyUnderCalculation()
+    public function testItReturnsTrueWhenBurnupIsAlreadyUnderCalculation(): void
     {
-        $this->chart_value_checker->shouldReceive('hasStartDate')->andReturnTrue();
+        $this->chart_value_checker->method('hasStartDate')->willReturn(true);
 
-        $this->cache_generator->shouldReceive('isCacheBurnupAlreadyAsked')->with($this->artifact)->andReturnTrue();
-        $this->burnup_cache_dao->shouldReceive('getNumberOfCachedDays')->andReturn([
-            'cached_days' => 1,
-        ]);
-        $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')
+        $this->cache_generator->method('isCacheBurnupAlreadyAsked')->with($this->artifact)->willReturn(true);
+        $this->cache_generator->method('forceBurnupCacheGeneration');
+        $this->burnup_cache_dao->method('getNumberOfCachedDays')->willReturn(['cached_days' => 1]);
+        $this->cache_days_comparator->method('isNumberOfCachedDaysExpected')
             ->with($this->date_period, 1)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->assertTrue(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user)
-        );
+        self::assertTrue($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user));
     }
 
-    public function testItReturnsTrueAndSendAnEventWhenCacheIsIncompleteForBurnup()
+    public function testItReturnsTrueAndSendAnEventWhenCacheIsIncompleteForBurnup(): void
     {
-        $this->chart_value_checker->shouldReceive('hasStartDate')->andReturnTrue();
+        $this->chart_value_checker->method('hasStartDate')->willReturn(true);
 
-        $this->cache_generator->shouldReceive('isCacheBurnupAlreadyAsked')->with($this->artifact)->andReturnFalse();
-        $this->burnup_cache_dao->shouldReceive('getNumberOfCachedDays')->andReturn([
-            'cached_days' => 1,
-        ]);
-        $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')
+        $this->cache_generator->method('isCacheBurnupAlreadyAsked')->with($this->artifact)->willReturn(false);
+        $this->burnup_cache_dao->method('getNumberOfCachedDays')->willReturn(['cached_days' => 1]);
+        $this->cache_days_comparator->method('isNumberOfCachedDaysExpected')
             ->with($this->date_period, 1)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->cache_generator->shouldReceive('forceBurnupCacheGeneration')->once();
+        $this->cache_generator->expects(self::once())->method('forceBurnupCacheGeneration');
 
-        $this->assertTrue(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user)
-        );
+        self::assertTrue($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user));
     }
 
-    public function testItReturnsFalseWhenBurnupHasNoNeedToBeComputed()
+    public function testItReturnsFalseWhenBurnupHasNoNeedToBeComputed(): void
     {
-        $this->chart_value_checker->shouldReceive('hasStartDate')->andReturnTrue();
+        $this->chart_value_checker->method('hasStartDate')->willReturn(true);
 
-        $this->cache_generator->shouldReceive('isCacheBurnupAlreadyAsked')->with($this->artifact)->andReturnFalse();
-        $this->burnup_cache_dao->shouldReceive('getNumberOfCachedDays')->andReturn([
-            'cached_days' => 1,
-        ]);
-        $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')
+        $this->cache_generator->method('isCacheBurnupAlreadyAsked')->with($this->artifact)->willReturn(false);
+        $this->burnup_cache_dao->method('getNumberOfCachedDays')->willReturn(['cached_days' => 1]);
+        $this->cache_days_comparator->method('isNumberOfCachedDaysExpected')
             ->with($this->date_period, 1)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->cache_generator->shouldReceive('forceBurnupCacheGeneration')->with($this->artifact->getId())->never();
+        $this->cache_generator->expects(self::never())->method('forceBurnupCacheGeneration')->with($this->artifact->getId());
 
-        $this->assertFalse(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user)
-        );
+        self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user));
     }
 }
