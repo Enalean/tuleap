@@ -19,7 +19,7 @@
   -->
 <template>
     <h1>
-        {{ title }} <a v-bind:href="artifact_url" target="_blank"> #{{ artifact_id }} </a>
+        {{ title }} <a v-bind:href="artifact_url">#{{ artifact_id }}</a>
     </h1>
 </template>
 <script setup lang="ts">
