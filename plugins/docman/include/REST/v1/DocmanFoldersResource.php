@@ -373,8 +373,6 @@ class DocmanFoldersResource extends AuthenticatedResource
     /**
      * Create new other type document
      *
-     * For now it only accepts the copy of an existing one
-     *
      * @param int                                 $id   Id of the parent folder
      * @param DocmanOtherTypePOSTRepresentation $post_representation {@from body} {@type \Tuleap\Docman\REST\v1\Others\DocmanOtherTypePOSTRepresentation}
      *
