@@ -164,7 +164,17 @@ final class ArtidocResource extends AuthenticatedResource
     /**
      * Set sections
      *
-     * Set sections of an artidoc document
+     * Set sections of an artidoc document.
+     *
+     * <p>The sections will be saved in the given order.</p>
+     *
+     * <p>Example payload:</p>
+     * <pre>
+     * [<br>
+     * &nbsp;&nbsp;{ "artifact": { "id": 123 } },<br>
+     * &nbsp;&nbsp;{ "artifact": { "id": 426 } },<br>
+     * ]
+     * </pre>
      *
      * @url    PUT {id}/sections
      * @access hybrid
