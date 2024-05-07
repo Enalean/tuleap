@@ -423,37 +423,19 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCacheDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$start_timestamp]]></code>
-      <code><![CDATA[$team_effort]]></code>
-      <code><![CDATA[$timestamp]]></code>
-      <code><![CDATA[$total_effort]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[deleteArtifactCacheValue]]></code>
-      <code><![CDATA[getNumberOfCachedDays]]></code>
-      <code><![CDATA[saveCachedFieldValueAtTimestamp]]></code>
-      <code><![CDATA[searchCachedDaysValuesByArtifactId]]></code>
-    </MissingReturnType>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->getDB()->safeQuery(
+            $sql,
+            [$artifact_id, $start_timestamp]
+        )]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[list<array{
+     *     timestamp: int,
+     *     team_effort: ?float,
+     *     total_effort: ?float,
+     * }>]]></code>
+    </MoreSpecificReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCacheDateRetriever.php">
     <MissingReturnType>
@@ -2625,16 +2607,6 @@
     <MissingReturnType>
       <code><![CDATA[getWellFormattedArchivePath]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/artidoc/include/Artidoc/Document/ArtidocRetriever.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $row]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/artidoc/include/Artidoc/REST/v1/RawSectionsToRepresentationTransformer.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$description_field->getFullRESTValue($user, $last_changeset)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/baseline/include/Adapter/Administration/AdminPermissionsPresenterBuilder.php">
     <ArgumentTypeCoercion>
@@ -8505,7 +8477,6 @@
   <file src="plugins/docman/include/Docman_Log.class.php">
     <MissingParamType>
       <code><![CDATA[$date]]></code>
-      <code><![CDATA[$display_access_logs]]></code>
       <code><![CDATA[$event]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$itemId]]></code>
@@ -8524,9 +8495,6 @@
       <code><![CDATA[logsDaily]]></code>
       <code><![CDATA[userAccessedSince]]></code>
     </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$entry->diff_link]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/docman/include/Docman_LogDao.class.php">
     <DeprecatedMethod>
@@ -12050,7 +12018,6 @@
     <MissingParamType>
       <code><![CDATA[$controller]]></code>
       <code><![CDATA[$groupId]]></code>
-      <code><![CDATA[$groupId]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$keyword]]></code>
@@ -12644,22 +12611,6 @@
       <code><![CDATA[getContent]]></code>
       <code><![CDATA[getWikiDeleteInfo]]></code>
       <code><![CDATA[getWikiDocumentPath]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionHistory.class.php">
-    <MissingParamType>
-      <code><![CDATA[$display_access_logs]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$logger]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$display_access_logs]]></code>
-      <code><![CDATA[$logger]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionMove.class.php">
@@ -52394,11 +52345,6 @@
       <code><![CDATA[callback]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/common/DB/DataAccessObject.php">
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$db_connection]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-  </file>
   <file src="src/common/Dashboard/AssetsIncluder.php">
     <MissingPropertyType>
       <code><![CDATA[$dashboard->is_active]]></code>
@@ -60931,11 +60877,6 @@
       <code><![CDATA[empty($this->ugroupNewName)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="src/common/SVNCore/SVNAuthenticationCacheInvalidator.php">
-    <MissingReturnType>
-      <code><![CDATA[invalidateProjectCache]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/SVNCore/SVN_AccessFile_DAO.class.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
@@ -68631,11 +68572,6 @@
       <code><![CDATA[update]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/include/TimezoneRetriever.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[ini_get('date.timezone')]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="src/common/include/Toggler.class.php">
     <InvalidArgument>
       <code><![CDATA[1 - (int) $current_user->getPreference('toggle_' . $id)]]></code>
@@ -69576,19 +69512,9 @@
     </MissingParamType>
   </file>
   <file src="src/common/system_event/include/SystemEventProjectActive.php">
-    <MissingReturnType>
-      <code><![CDATA[injectDependencies]]></code>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
     <UndefinedMethod>
       <code><![CDATA[setSVNApacheConfNeedUpdate]]></code>
     </UndefinedMethod>
-  </file>
-  <file src="src/common/system_event/include/SystemEventSVNAuthenticationCacheRefresh.php">
-    <MissingReturnType>
-      <code><![CDATA[injectDependencies]]></code>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
   </file>
   <file src="src/common/system_event/include/SystemEventUserActiveStatusChange.php">
     <DeprecatedMethod>
@@ -69658,13 +69584,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getBackend('System')]]></code>
     </ArgumentTypeCoercion>
-    <MissingReturnType>
-      <code><![CDATA[injectDependencies]]></code>
-    </MissingReturnType>
-    <TooManyArguments>
-      <code><![CDATA[getIdFromParam]]></code>
-      <code><![CDATA[getIdFromParam]]></code>
-    </TooManyArguments>
   </file>
   <file src="src/common/system_event/include/SystemEvent_PROJECT_IS_PRIVATE.class.php">
     <MissingReturnType>
@@ -69699,12 +69618,6 @@
     <MissingReturnType>
       <code><![CDATA[process]]></code>
       <code><![CDATA[purgeSystemEventsDataOlderThanOneYear]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/system_event/include/SystemEvent_SVN_AUTH_CACHE_CHANGE.class.php">
-    <MissingReturnType>
-      <code><![CDATA[injectDependencies]]></code>
-      <code><![CDATA[process]]></code>
     </MissingReturnType>
   </file>
   <file src="src/common/system_event/include/SystemEvent_SYSTEM_CHECK.class.php">

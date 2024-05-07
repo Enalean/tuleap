@@ -99,9 +99,13 @@ class BurnupDataBuilder
 
     private function addEfforts(Artifact $artifact, BurnupData $burnup_data, array $backlog_trackers_ids): void
     {
+        $start_timestamp = $burnup_data->getDatePeriod()->getStartDate();
+        if ($start_timestamp === null) {
+            return;
+        }
         $cached_days_result = $this->burnup_cache_dao->searchCachedDaysValuesByArtifactId(
             $artifact->getId(),
-            $burnup_data->getDatePeriod()->getStartDate()
+            $start_timestamp
         );
 
         foreach ($cached_days_result as $cached_day) {
