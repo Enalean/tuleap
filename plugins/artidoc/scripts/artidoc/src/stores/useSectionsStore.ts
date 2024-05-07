@@ -23,12 +23,12 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { sectionsStoreKey } from "./sectionsStoreKey";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import { getAllSections } from "@/helpers/rest-querier";
 
 export interface SectionsStore {
     sections: Ref<readonly ArtidocSection[] | undefined>;
     is_sections_loading: Ref<boolean>;
-    setSections: (new_sections: readonly ArtidocSection[] | undefined) => void;
-    setIsSectionsLoading: (new_value: boolean) => void;
+    loadSections: (item_id: number) => void;
 }
 export function useSectionsStore(): SectionsStore {
     const skeleton_data = [
@@ -38,17 +38,24 @@ export function useSectionsStore(): SectionsStore {
     ];
     const sections: Ref<readonly ArtidocSection[] | undefined> = ref(skeleton_data);
     const is_sections_loading = ref(true);
-    function setSections(new_sections: readonly ArtidocSection[] | undefined): void {
-        sections.value = new_sections;
+
+    function loadSections(item_id: number): void {
+        getAllSections(item_id).match(
+            (artidoc_sections: readonly ArtidocSection[]) => {
+                sections.value = artidoc_sections;
+                is_sections_loading.value = false;
+            },
+            () => {
+                sections.value = undefined;
+                is_sections_loading.value = false;
+            },
+        );
     }
-    function setIsSectionsLoading(new_value: boolean): void {
-        is_sections_loading.value = new_value;
-    }
+
     return {
         sections: sections,
         is_sections_loading: is_sections_loading,
-        setSections,
-        setIsSectionsLoading,
+        loadSections,
     };
 }
 let sectionsStore: SectionsStore | null = null;

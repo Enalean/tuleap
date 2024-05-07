@@ -33,8 +33,7 @@ describe("TableOfContents", () => {
         beforeAll(() => {
             const defaultSection = ArtidocSectionFactory.create();
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                setIsSectionsLoading: vi.fn(),
-                setSections: vi.fn(),
+                loadSections: vi.fn(),
                 is_sections_loading: ref(true),
                 sections: ref([
                     ArtidocSectionFactory.override({
@@ -66,8 +65,7 @@ describe("TableOfContents", () => {
         beforeAll(() => {
             const defaultSection = ArtidocSectionFactory.create();
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                setIsSectionsLoading: vi.fn(),
-                setSections: vi.fn(),
+                loadSections: vi.fn(),
                 is_sections_loading: ref(false),
                 sections: ref([
                     ArtidocSectionFactory.override({
