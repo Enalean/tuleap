@@ -55,7 +55,7 @@ export function createBurndownChart({
 
     const DEFAULT_REMAINING_EFFORT = 5,
         x_axis_tick_values = getDaysToDisplay(burndown_data),
-        displayable_data = getDisplayableData(burndown_data.points_with_date),
+        displayable_data = getDisplayableData(burndown_data.points_with_date, x_axis_tick_values),
         last_day_data = getLastDayData(burndown_data.points_with_date),
         y_axis_maximum = getMaxRemainingEffort(burndown_data);
 

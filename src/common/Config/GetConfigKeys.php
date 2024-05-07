@@ -26,6 +26,7 @@ use ForgeAccess;
 use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
+use Tuleap\Date\OpeningDaysRetriever;
 use Tuleap\DB\DBConfig;
 use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Event\Dispatchable;
@@ -94,6 +95,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         CustomProjectArchive::class,
         ThereIsAnOngoingTransactionChecker::class,
         DBPersistentQueue::class,
+        OpeningDaysRetriever::class,
     ];
 
     /**

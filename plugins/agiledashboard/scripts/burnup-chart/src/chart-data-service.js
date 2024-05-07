@@ -31,10 +31,12 @@ function getLastDayData(generic_burnup_data) {
     return dataset[dataset.length - 1];
 }
 
-function getDisplayableData(generic_burnup_data) {
-    const filtered_data = generic_burnup_data.points_with_date.filter(({ progression, total }) => {
-        return progression !== null && total !== null;
-    });
+function getDisplayableData(generic_burnup_data, x_axis) {
+    const filtered_data = generic_burnup_data.points_with_date.filter(
+        ({ progression, total, date }) => {
+            return progression !== null && total !== null && x_axis.includes(date.substring(0, 10));
+        },
+    );
 
     return getFormattedDates(filtered_data);
 }

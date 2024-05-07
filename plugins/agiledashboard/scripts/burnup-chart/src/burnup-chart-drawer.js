@@ -51,7 +51,7 @@ export function createBurnupChart(
 
     const default_total_effort = 5,
         x_axis_tick_values = getDaysToDisplay(generic_burnup_data),
-        displayable_data = getDisplayableData(generic_burnup_data),
+        displayable_data = getDisplayableData(generic_burnup_data, x_axis_tick_values),
         last_day_data = getLastDayData(generic_burnup_data),
         total_effort = getTotal(generic_burnup_data);
 

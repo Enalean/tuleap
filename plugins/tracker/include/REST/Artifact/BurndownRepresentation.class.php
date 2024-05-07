@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use Tracker_Chart_Data_Burndown;
+use Tuleap\Date\OpeningDaysRetriever;
 use Tuleap\REST\JsonCast;
 
 /**
@@ -76,7 +77,7 @@ class BurndownRepresentation
             $this->points_with_date[] = new BurndownPointRepresentation($burndown_effort, $timestamp);
         }
 
-        $this->opening_days = [1, 2, 3, 4, 5];
+        $this->opening_days = OpeningDaysRetriever::getListOfOpenDays();
     }
 
     /**
