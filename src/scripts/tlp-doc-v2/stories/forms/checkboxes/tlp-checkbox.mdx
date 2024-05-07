@@ -1,0 +1,20 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as CheckboxesStories from "./tlp-checkbox.stories";
+
+<Meta of={CheckboxesStories}/>
+
+# Checkboxes
+
+<code>.tlp-checkbox</code>
+
+<Canvas withToolbar={true} of={CheckboxesStories.Checkbox}></Canvas>
+
+<Controls></Controls>
+
+## One form element
+
+<Canvas withToolbar={true} of={CheckboxesStories.OneFormElement}></Canvas>
+
+## Many form elements
+
+<Canvas withToolbar={true} of={CheckboxesStories.ManyFormElements}></Canvas>
