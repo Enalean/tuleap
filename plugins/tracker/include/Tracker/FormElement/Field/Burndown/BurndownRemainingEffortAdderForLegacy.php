@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 use DateTime;
 use PFUser;
 use Tracker_Chart_Data_Burndown;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
@@ -97,7 +97,7 @@ class BurndownRemainingEffortAdderForLegacy
     /**
      * @return DateTime
      */
-    private function getFirstDayDate(DatePeriodWithoutWeekEnd $time_period)
+    private function getFirstDayDate(DatePeriodWithOpenDays $time_period)
     {
         $date = new DateTime();
         $date->setTimestamp((int) $time_period->getStartDate());

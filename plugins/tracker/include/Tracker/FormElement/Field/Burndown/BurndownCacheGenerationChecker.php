@@ -24,7 +24,7 @@ use DateTime;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Chart_Data_Burndown;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -98,14 +98,14 @@ class BurndownCacheGenerationChecker
     public function isBurndownUnderCalculationBasedOnServerTimezone(
         Artifact $artifact,
         PFUser $user,
-        DatePeriodWithoutWeekEnd $date_period,
+        DatePeriodWithOpenDays $date_period,
         $capacity,
     ) {
         $start = $this->getDatePeriodStartDateAtMidnight($date_period);
 
         $this->logger->debug('Start date after updating timezone: ' . $start->getTimestamp());
 
-        $date_period_with_start_date_from_midnight = DatePeriodWithoutWeekEnd::buildFromDuration(
+        $date_period_with_start_date_from_midnight = DatePeriodWithOpenDays::buildFromDuration(
             $start->getTimestamp(),
             $date_period->getDuration()
         );
@@ -127,7 +127,7 @@ class BurndownCacheGenerationChecker
     }
 
     private function isCacheCompleteForBurndown(
-        DatePeriodWithoutWeekEnd $date_period,
+        DatePeriodWithOpenDays $date_period,
         Artifact $artifact,
         PFUser $user,
     ) {
@@ -146,7 +146,7 @@ class BurndownCacheGenerationChecker
         return true;
     }
 
-    private function getDatePeriodStartDateAtMidnight(DatePeriodWithoutWeekEnd $date_period): DateTime
+    private function getDatePeriodStartDateAtMidnight(DatePeriodWithOpenDays $date_period): DateTime
     {
         $start_date = $date_period->getStartDate();
 

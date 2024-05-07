@@ -31,7 +31,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\Config\ConfigurationVariables;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -115,7 +115,7 @@ final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getTracker')->andReturn($this->artifact_tracker);
         $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(1560760543, 3);
 
         $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
@@ -149,7 +149,7 @@ final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getTracker')->andReturn($this->artifact_tracker);
         $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(1560760543, 3);
 
         $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
@@ -188,7 +188,7 @@ final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(1560760543, 3);
 
         $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
@@ -222,7 +222,7 @@ final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date = new \DateTime();
         $start_date->setTime(0, 0, 0);
 
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), 3);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date->getTimestamp(), 3);
 
         $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)

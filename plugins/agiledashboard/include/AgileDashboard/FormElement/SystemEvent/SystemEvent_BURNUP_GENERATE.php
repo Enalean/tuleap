@@ -31,8 +31,8 @@ use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Date\TimezoneWrapper;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -136,13 +136,13 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
 
         $burnup_period = null;
         if (isset($burnup_information['end_date'])) {
-            $burnup_period = DatePeriodWithoutWeekEnd::buildFromEndDate(
+            $burnup_period = DatePeriodWithOpenDays::buildFromEndDate(
                 $burnup_information['start_date'],
                 $burnup_information['end_date'],
                 $this->logger
             );
         } elseif (isset($burnup_information['duration'])) {
-            $burnup_period = DatePeriodWithoutWeekEnd::buildFromDuration(
+            $burnup_period = DatePeriodWithOpenDays::buildFromDuration(
                 $burnup_information['start_date'],
                 $burnup_information['duration']
             );

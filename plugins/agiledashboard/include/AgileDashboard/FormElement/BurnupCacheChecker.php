@@ -25,7 +25,7 @@ namespace Tuleap\AgileDashboard\FormElement;
 use PFUser;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -42,7 +42,7 @@ class BurnupCacheChecker
     ) {
     }
 
-    public function isBurnupUnderCalculation(Artifact $artifact, DatePeriodWithoutWeekEnd $date_period, PFUser $user): bool
+    public function isBurnupUnderCalculation(Artifact $artifact, DatePeriodWithOpenDays $date_period, PFUser $user): bool
     {
         $is_burnup_under_calculation = false;
 
@@ -58,7 +58,7 @@ class BurnupCacheChecker
 
     private function isCacheCompleteForBurnup(
         Artifact $artifact,
-        DatePeriodWithoutWeekEnd $date_period,
+        DatePeriodWithOpenDays $date_period,
         PFUser $user,
     ): bool {
         if (! $this->chart_value_checker->hasStartDate($artifact, $user)) {

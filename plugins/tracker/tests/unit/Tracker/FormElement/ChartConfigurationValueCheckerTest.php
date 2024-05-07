@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\FormElement;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -192,7 +192,7 @@ final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\Test
     {
         $this->configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($this->artifact, $this->user)
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(null, $this->duration_value));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(null, $this->duration_value));
 
         $this->assertFalse(
             $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
@@ -203,7 +203,7 @@ final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\Test
     {
         $this->configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($this->artifact, $this->user)
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration($this->start_date_timestamp, null));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration($this->start_date_timestamp, null));
 
         $this->assertFalse(
             $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
@@ -226,7 +226,7 @@ final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\Test
         $this->configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($this->artifact, $this->user)
             ->andReturn(
-                DatePeriodWithoutWeekEnd::buildFromDuration($this->start_date_timestamp, $this->duration_value)
+                DatePeriodWithOpenDays::buildFromDuration($this->start_date_timestamp, $this->duration_value)
             );
 
         $this->assertTrue(
@@ -239,7 +239,7 @@ final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\Test
         $this->start_date_changeset->shouldReceive('getTimestamp')->andReturn($this->start_date_timestamp);
 
         $this->configuration_value_retriever->shouldReceive('getDatePeriod')
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(12345678, null));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(12345678, null));
 
         $this->assertFalse(
             $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
@@ -261,7 +261,7 @@ final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\Test
             ->andReturns(false);
 
         $this->configuration_value_retriever->shouldReceive('getDatePeriod')
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(12345678, 5));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(12345678, 5));
 
         $this->new_changeset->shouldReceive('getValue')
             ->with($this->start_date_field)
@@ -306,7 +306,7 @@ final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\Test
             ->andReturn($this->duration_changeset);
 
         $this->configuration_value_retriever->shouldReceive('getDatePeriod')
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(12345678, 5));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(12345678, 5));
 
         $this->start_date_changeset->shouldReceive('hasChanged')->andReturnTrue();
         $this->duration_changeset->shouldReceive('hasChanged')->andReturnFalse();
@@ -331,7 +331,7 @@ final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\Test
             ->andReturn($this->start_date_field);
 
         $this->configuration_value_retriever->shouldReceive('getDatePeriod')
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(12345678, 5));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(12345678, 5));
 
         $this->configuration_field_retriever->shouldReceive('doesEndDateFieldExist')
             ->with($this->tracker, $this->user)
@@ -368,7 +368,7 @@ final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\Test
             ->andReturn(true);
 
         $this->configuration_value_retriever->shouldReceive('getDatePeriod')
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(12345678, 5));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(12345678, 5));
 
         $this->configuration_field_retriever->shouldReceive('getEndDateField')
             ->with($this->tracker, $this->user)

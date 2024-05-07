@@ -25,7 +25,7 @@ namespace Tuleap\Roadmap\REST\v1;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Tracker_Semantic_Status;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -166,7 +166,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         return in_array($value_id, $semantic_status->getOpenValues());
     }
 
-    private function getDateTheTaskEnds(DatePeriodWithoutWeekEnd $date_period): ?DateTimeImmutable
+    private function getDateTheTaskEnds(DatePeriodWithOpenDays $date_period): ?DateTimeImmutable
     {
         $start_date = $date_period->getStartDate();
         $end_date   = $date_period->getEndDate();

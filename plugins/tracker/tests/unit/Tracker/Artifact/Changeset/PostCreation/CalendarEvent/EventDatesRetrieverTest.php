@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 use PFUser;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -141,7 +141,7 @@ final class EventDatesRetrieverTest extends TestCase
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),
                 IComputeTimeframesStub::fromStartAndEndDates(
-                    DatePeriodWithoutWeekEnd::buildFromEndDate($start, $end, new NullLogger()),
+                    DatePeriodWithOpenDays::buildFromEndDate($start, $end, new NullLogger()),
                     $this->start_field,
                     $this->end_field,
                 )
@@ -435,7 +435,7 @@ final class EventDatesRetrieverTest extends TestCase
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),
                 IComputeTimeframesStub::fromStartAndEndDates(
-                    DatePeriodWithoutWeekEnd::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
+                    DatePeriodWithOpenDays::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
                     $this->start_field,
                     $this->end_field,
                 )

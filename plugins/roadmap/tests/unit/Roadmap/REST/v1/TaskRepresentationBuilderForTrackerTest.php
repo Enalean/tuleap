@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Psr\Log\NullLogger;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
@@ -93,7 +93,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
         );
 
         $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangesetForREST')->willReturn(
-            DatePeriodWithoutWeekEnd::buildFromEndDate(
+            DatePeriodWithOpenDays::buildFromEndDate(
                 (new \DateTimeImmutable('@1234567890'))->getTimestamp(),
                 1234567891,
                 new NullLogger()

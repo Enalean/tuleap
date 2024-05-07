@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -68,7 +68,7 @@ class BurndownCommonDataBuilder
     public function getBurndownCalculationStatus(
         Artifact $artifact,
         PFUser $user,
-        DatePeriodWithoutWeekEnd $date_period,
+        DatePeriodWithOpenDays $date_period,
         $capacity,
         $user_timezone,
     ) {
@@ -106,10 +106,10 @@ class BurndownCommonDataBuilder
         return $capacity;
     }
 
-    public function getDatePeriod(DatePeriodWithoutWeekEnd $date_period): DatePeriodWithoutWeekEnd
+    public function getDatePeriod(DatePeriodWithOpenDays $date_period): DatePeriodWithOpenDays
     {
         if ($date_period->getStartDate() === null) {
-            return DatePeriodWithoutWeekEnd::buildFromDuration($_SERVER['REQUEST_TIME'], $date_period->getDuration());
+            return DatePeriodWithOpenDays::buildFromDuration($_SERVER['REQUEST_TIME'], $date_period->getDuration());
         }
 
         return $date_period;

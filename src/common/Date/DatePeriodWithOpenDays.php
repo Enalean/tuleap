@@ -22,24 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Date;
 
-class DatePeriodWithoutWeekEnd implements DatePeriod
+use DateTimeImmutable;
+use Psr\Log\LoggerInterface;
+
+/**
+ * Date period with only open days
+ *
+ * Open days are defined with config key 'opening_days'
+ * @see \Tuleap\Date\OpeningDaysRetriever
+ */
+class DatePeriodWithOpenDays implements DatePeriod
 {
     /**
-     * The time period start date, as a Unix timestamp.
+     * The date period start date, as a Unix timestamp.
      */
-    private ?int $start_date;
+    private readonly ?int $start_date;
 
     /**
-     * The time period duration, in days.
+     * The date period duration, in days.
      */
-    private ?int $duration;
+    private readonly ?int $duration;
 
     /**
-     * The time period end date, as a Unix timestamp.
+     * The date period end date, as a Unix timestamp.
      */
-    private ?int $end_date;
+    private readonly ?int $end_date;
 
-    private string $error_message;
+    private readonly string $error_message;
 
     private function __construct(?int $start_date, int|string|null $duration, ?int $end_date, string $error_message)
     {
@@ -49,21 +58,21 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
         $this->error_message = $error_message;
     }
 
-    public static function buildFromDuration(?int $start_date, int|float|string|null $duration): DatePeriodWithoutWeekEnd
+    public static function buildFromDuration(?int $start_date, int|float|string|null $duration): DatePeriodWithOpenDays
     {
         if (is_numeric($duration)) {
             $duration = (int) ceil((float) $duration);
         }
 
-        if ($duration === null || ! $start_date) {
-            return new DatePeriodWithoutWeekEnd($start_date, $duration, null, '');
+        if ($duration === null || $start_date === null || $start_date === 0) {
+            return new DatePeriodWithOpenDays($start_date, $duration, null, '');
         }
 
         $day_offsets = self::getDayOffsetsFromStartDateAndDuration($start_date, (int) $duration);
         $last_offset = end($day_offsets);
         $end_date    = (int) strtotime("+$last_offset days", $start_date);
 
-        return new DatePeriodWithoutWeekEnd(
+        return new DatePeriodWithOpenDays(
             $start_date,
             $duration,
             $end_date,
@@ -71,7 +80,7 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
         );
     }
 
-    public static function buildFromEndDate(?int $start_date, ?int $end_date, \Psr\Log\LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public static function buildFromEndDate(?int $start_date, ?int $end_date, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($start_date === null) {
             return new self(null, null, $end_date, '');
@@ -83,25 +92,25 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
         if ($end_date < $start_date) {
             $logger->warning(
                 sprintf(
-                    'Inconsistent TimePeriod: end date %s is lesser than start date %s.',
-                    (new \DateTimeImmutable())->setTimestamp($end_date)->format('Y-m-d'),
-                    (new \DateTimeImmutable())->setTimestamp($start_date)->format('Y-m-d')
+                    'Inconsistent DatePeriod: end date %s is lesser than start date %s.',
+                    (new DateTimeImmutable())->setTimestamp($end_date)->format('Y-m-d'),
+                    (new DateTimeImmutable())->setTimestamp($start_date)->format('Y-m-d')
                 )
             );
-            $duration = -self::getNumberOfDaysWithoutWeekEndBetweenTwoDates($end_date, $start_date);
+            $duration = -self::getNumberOfOpenDaysBetweenTwoDates($end_date, $start_date);
         } else {
-            $duration = self::getNumberOfDaysWithoutWeekEndBetweenTwoDates($start_date, $end_date);
+            $duration = self::getNumberOfOpenDaysBetweenTwoDates($start_date, $end_date);
         }
 
         return new self($start_date, $duration, $end_date, '');
     }
 
-    public static function buildFromNothingWithErrorMessage(string $error_message): DatePeriodWithoutWeekEnd
+    public static function buildFromNothingWithErrorMessage(string $error_message): DatePeriodWithOpenDays
     {
         return new self(null, null, null, $error_message);
     }
 
-    public static function buildWithoutAnyDates(): DatePeriodWithoutWeekEnd
+    public static function buildWithoutAnyDates(): DatePeriodWithOpenDays
     {
         return new self(null, null, null, '');
     }
@@ -114,12 +123,9 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
         return (int) strtotime("+$next_day_number days", $date);
     }
 
-    /**
-     * @psalm-pure
-     */
-    public static function isNotWeekendDay(int $day): bool
+    public static function isOpenDay(int $day): bool
     {
-        return ! ((int) date('N', $day) === 6 || (int) date('N', $day) === 7);
+        return in_array((int) date('N', $day), OpeningDaysRetriever::getListOfOpenDays());
     }
 
     public function getStartDate(): ?int
@@ -188,8 +194,6 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
      * To be used to iterate consistently over the time period
      *
      * @return int[]
-     *
-     * @psalm-mutation-free
      */
     public function getDayOffsets(): array
     {
@@ -198,8 +202,6 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
 
     /**
      * @return int[]
-     *
-     * @psalm-pure
      */
     private static function getDayOffsetsFromStartDateAndDuration(int $start_date, int $duration): array
     {
@@ -210,13 +212,10 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
         return self::getDayOffsetsWithConsistentDuration($start_date, $duration);
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function getCountDayUntilDate(int $date): int
     {
         if ($date < $this->getEndDate()) {
-            return self::getNumberOfDaysWithoutWeekEndBetweenTwoDates((int) $this->getStartDate(), $date);
+            return self::getNumberOfOpenDaysBetweenTwoDates((int) $this->getStartDate(), $date);
         } else {
             return count($this->getDayOffsets());
         }
@@ -224,8 +223,6 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
 
     /**
      * @return int[]
-     *
-     * @psalm-pure
      */
     private static function getDayOffsetsWithConsistentDuration(int $start_date, int $duration): array
     {
@@ -233,7 +230,7 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
         $day_offset               = 0;
         while (count($day_offsets_excluding_we) - 1 !== $duration) {
             $day = self::getNextDay($day_offset, $start_date);
-            if (self::isNotWeekendDay($day)) {
+            if (self::isOpenDay($day)) {
                 $day_offsets_excluding_we[] = $day_offset;
             }
             $day_offset++;
@@ -243,14 +240,12 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
 
     /**
      * @return int[]
-     *
-     * @psalm-pure
      */
     private static function getDayOffsetsWithInconsistentDuration(int $start_date): array
     {
         $day_offset = 0;
         $day        = self::getNextDay($day_offset, $start_date);
-        while (! self::isNotWeekendDay($day)) {
+        while (! self::isOpenDay($day)) {
             $day_offset++;
             $day = self::getNextDay($day_offset, $start_date);
         }
@@ -264,33 +259,30 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
     public function getNumberOfDaysUntilEnd(): int
     {
         if ($this->getTodayTimestamp() > $this->getEndDate()) {
-            return -self::getNumberOfDaysWithoutWeekEndBetweenTwoDates(
+            return -self::getNumberOfOpenDaysBetweenTwoDates(
                 (int) $this->getEndDate(),
                 $this->getTodayTimestamp()
             );
         } else {
-            return self::getNumberOfDaysWithoutWeekEndBetweenTwoDates(
+            return self::getNumberOfOpenDaysBetweenTwoDates(
                 $this->getTodayTimestamp(),
                 (int) $this->getEndDate()
             );
         }
     }
 
-    /**
-     * @psalm-pure
-     */
-    private static function getNumberOfDaysWithoutWeekEndBetweenTwoDates(int $start_date, int $end_date): int
+    private static function getNumberOfOpenDaysBetweenTwoDates(int $start_date, int $end_date): int
     {
         $real_number_of_days_after_start = 0;
         $day                             = $start_date;
-        if (self::isNotWeekendDay($day)) {
+        if (self::isOpenDay($day)) {
             $day_offset = -1;
         } else {
             $day_offset = 0;
         }
 
         do {
-            if (self::isNotWeekendDay($day)) {
+            if (self::isOpenDay($day)) {
                 $day_offset++;
             }
             $day = self::getNextDay($real_number_of_days_after_start, $start_date);
@@ -310,7 +302,7 @@ class DatePeriodWithoutWeekEnd implements DatePeriod
             return 0;
         }
 
-        return self::getNumberOfDaysWithoutWeekEndBetweenTwoDates(
+        return self::getNumberOfOpenDaysBetweenTwoDates(
             (int) $this->getStartDate(),
             $this->getTodayTimestamp()
         );

@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\FormElement\SystemEvent;
 
 use Psr\Log\LoggerInterface;
 use SystemEvent;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Date\TimezoneWrapper;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
@@ -83,20 +83,20 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
     private function cacheYesterdayValues(): void
     {
         $yesterday = $this->date_retriever->getYesterday();
-        if (! DatePeriodWithoutWeekEnd::isNotWeekendDay($yesterday)) {
+        if (! DatePeriodWithOpenDays::isOpenDay($yesterday)) {
             return;
         }
 
         foreach ($this->burndown_dao->getArtifactsWithBurndown() as $burndown) {
             $this->logger->debug('Calculating burndown for artifact #' . $burndown['id']);
             if (empty($burndown['duration'])) {
-                $burndown_period = DatePeriodWithoutWeekEnd::buildFromEndDate(
+                $burndown_period = DatePeriodWithOpenDays::buildFromEndDate(
                     $burndown['start_date'],
                     $burndown['end_date'],
                     $this->logger
                 );
             } else {
-                $burndown_period = DatePeriodWithoutWeekEnd::buildFromDuration(
+                $burndown_period = DatePeriodWithOpenDays::buildFromDuration(
                     $burndown['start_date'],
                     $burndown['duration']
                 );

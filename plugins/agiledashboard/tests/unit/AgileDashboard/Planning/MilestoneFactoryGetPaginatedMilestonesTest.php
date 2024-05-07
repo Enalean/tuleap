@@ -32,7 +32,7 @@ use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -198,7 +198,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->andReturn($this->top_planning);
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $milestones = $this->getTopMilestones();
 
@@ -249,7 +249,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->with($this->sub_milestone_tracker)
             ->andReturn($this->sub_planning);
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $sub_milestones = $this->getSubMilestones();
 
@@ -318,7 +318,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->with($top_milestone_tracker)
             ->andReturn($this->top_planning);
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $sibling_milestones = $this->getSiblingMilestones();
 
@@ -378,7 +378,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->with($this->sub_milestone_tracker)
             ->andReturn($this->sub_planning);
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $sibling_milestones = $this->getSiblingMilestones();
 

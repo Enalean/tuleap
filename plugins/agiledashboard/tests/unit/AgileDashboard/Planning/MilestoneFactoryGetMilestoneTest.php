@@ -39,7 +39,7 @@ use TestHelper;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
@@ -190,17 +190,17 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->with($sprint_1->getLastChangeset(), $this->user, $this->logger)
             ->once()
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->with($sprint_2->getLastChangeset(), $this->user, $this->logger)
             ->once()
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->with($hackfest_2012->getLastChangeset(), $this->user, $this->logger)
             ->once()
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $milestone = Mockery::mock(Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getArtifact')->andReturn($release_1_0);
@@ -242,7 +242,7 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->with($artifact->getLastChangeset(), $this->user, $this->logger)
             ->once()
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $this->planning_factory->shouldReceive('getPlanning')->andReturn(Mockery::mock(Planning::class));
 

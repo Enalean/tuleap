@@ -35,7 +35,7 @@ use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElementFactory;
 use TrackerManager;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 
@@ -262,7 +262,7 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
         $timestamp = mktime(0, 0, 0, 7, 3, 2011);
         $duration  = 5;
 
-        $date_period   = DatePeriodWithoutWeekEnd::buildFromDuration($timestamp, $duration);
+        $date_period   = DatePeriodWithOpenDays::buildFromDuration($timestamp, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period);
 
         $burndown_view = \Mockery::spy(\Tracker_Chart_BurndownView::class);

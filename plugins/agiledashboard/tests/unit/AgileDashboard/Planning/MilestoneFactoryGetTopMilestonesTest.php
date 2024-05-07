@@ -37,7 +37,7 @@ use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -143,12 +143,12 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->with($artifact_1->getLastChangeset(), $this->user, $this->logger)
             ->once()
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->with($artifact_2->getLastChangeset(), $this->user, $this->logger)
             ->once()
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $this->artifact_factory->shouldReceive('getArtifactsByTrackerId')->andReturn($my_artifacts);
 
@@ -190,7 +190,7 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->with($artifact_2->getLastChangeset(), $this->user, $this->logger)
             ->once()
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $this->artifact_factory->shouldReceive('getArtifactsByTrackerId')->andReturn($my_artifacts);
 

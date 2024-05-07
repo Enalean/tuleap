@@ -29,8 +29,8 @@ use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Date\TimezoneWrapper;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\TimezoneRetriever;
 
 final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
@@ -86,20 +86,20 @@ final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgno
     private function cacheYesterdayValues(): void
     {
         $yesterday = $this->date_retriever->getYesterday();
-        if (! DatePeriodWithoutWeekEnd::isNotWeekendDay($yesterday)) {
+        if (! DatePeriodWithOpenDays::isOpenDay($yesterday)) {
             return;
         }
 
         foreach ($this->burnup_dao->searchArtifactsWithBurnup() as $burnup) {
             $this->logger->debug('Calculating burnup for artifact #' . $burnup['id']);
             if (empty($burnup['duration'])) {
-                $burnup_period = DatePeriodWithoutWeekEnd::buildFromEndDate(
+                $burnup_period = DatePeriodWithOpenDays::buildFromEndDate(
                     $burnup['start_date'],
                     $burnup['end_date'],
                     $this->logger
                 );
             } else {
-                $burnup_period = DatePeriodWithoutWeekEnd::buildFromDuration(
+                $burnup_period = DatePeriodWithOpenDays::buildFromDuration(
                     $burnup['start_date'],
                     $burnup['duration']
                 );

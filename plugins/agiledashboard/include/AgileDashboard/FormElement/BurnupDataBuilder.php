@@ -27,7 +27,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
@@ -65,7 +65,7 @@ class BurnupDataBuilder
     /**
      * @return BurnupData
      */
-    private function getBurnupData(Artifact $artifact, DatePeriodWithoutWeekEnd $date_period, \PFUser $user)
+    private function getBurnupData(Artifact $artifact, DatePeriodWithOpenDays $date_period, \PFUser $user)
     {
         $user_timezone   = date_default_timezone_get();
         $server_timezone = TimezoneRetriever::getServerTimezone();
@@ -77,7 +77,7 @@ class BurnupDataBuilder
 
         $this->logger->debug('Start date after updating timezone: ' . $start->getTimestamp());
 
-        $date_period          = DatePeriodWithoutWeekEnd::buildFromDuration($start->getTimestamp(), $date_period->getDuration());
+        $date_period          = DatePeriodWithOpenDays::buildFromDuration($start->getTimestamp(), $date_period->getDuration());
         $is_under_calculation = $this->cache_checker->isBurnupUnderCalculation($artifact, $date_period, $user);
         $burnup_data          = new BurnupData($date_period, $is_under_calculation);
 

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
 use Psr\Log\NullLogger;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
@@ -80,7 +80,7 @@ final class TimeframeValueRetrieverTest extends TestCase
         $timeframe_semantic   = $this->createStub(SemanticTimeframe::class);
         $timeframe_calculator = $this->createStub(TimeframeWithEndDate::class);
         $timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangeset')->willReturn(
-            DatePeriodWithoutWeekEnd::buildFromDuration(1635412289, 20)
+            DatePeriodWithOpenDays::buildFromDuration(1635412289, 20)
         );
         $timeframe_semantic->method('getTimeframeCalculator')->willReturn($timeframe_calculator);
 

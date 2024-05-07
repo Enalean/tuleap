@@ -416,12 +416,6 @@
       <code><![CDATA[(int) $artifact->getId()]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCacheChecker.php">
-    <MissingReturnType>
-      <code><![CDATA[isBurnupUnderCalculation]]></code>
-      <code><![CDATA[isCacheCompleteForBurnup]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCacheDao.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->getDB()->safeQuery(
@@ -505,7 +499,6 @@
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/SystemEvent/SystemEvent_BURNUP_DAILY.php">
     <MissingReturnType>
-      <code><![CDATA[cacheYesterdayValues]]></code>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
     <RedundantCast>
@@ -29904,10 +29897,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/statistics/include/Statistics_Services_UsageFormatter.class.php">
-    <DeprecatedMethod>
-      <code><![CDATA[$query_results]]></code>
-      <code><![CDATA[$query_results]]></code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$query_result]]></code>
       <code><![CDATA[$query_result]]></code>
@@ -29919,7 +29908,6 @@
       <code><![CDATA[addValuesFromQueryResultForTitle]]></code>
       <code><![CDATA[buildDatas]]></code>
       <code><![CDATA[canAddValueFromQuery]]></code>
-      <code><![CDATA[formatSizeInMegaBytes]]></code>
       <code><![CDATA[initiateDatas]]></code>
     </MissingReturnType>
   </file>
@@ -39815,7 +39803,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/SystemEvent/SystemEvent_BURNDOWN_DAILY.php">
     <MissingReturnType>
-      <code><![CDATA[cacheYesterdayValues]]></code>
       <code><![CDATA[injectDependencies]]></code>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
@@ -53386,11 +53373,6 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="src/common/Date/DatePeriodWithoutWeekEnd.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $start_date]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/common/Date/TimezoneSwitcher.php">
     <RiskyTruthyFalsyComparison>
@@ -79263,38 +79245,12 @@
       <code><![CDATA[$name]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$backup_codendi_log]]></code>
       <code><![CDATA[$report->name]]></code>
       <code><![CDATA[$this->bugs_report->name]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[columnsContainOneColumnForField]]></code>
-      <code><![CDATA[compareValuesToLabel]]></code>
-      <code><![CDATA[criteriaContainOneCriterionForField]]></code>
       <code><![CDATA[getReportByName]]></code>
-      <code><![CDATA[resetForgeConfig]]></code>
-      <code><![CDATA[testItCreatedTrackerV5WithDefaultParameters]]></code>
-      <code><![CDATA[testItGivesFullAccessToAllUsers]]></code>
-      <code><![CDATA[testItHasAListFieldResolutionWithValues]]></code>
-      <code><![CDATA[testItHasAReportNamedBugs]]></code>
-      <code><![CDATA[testItHasAStatusSemantic]]></code>
-      <code><![CDATA[testItHasATableRenderer]]></code>
-      <code><![CDATA[testItHasATextFieldDescription]]></code>
-      <code><![CDATA[testItHasATitleSemantic]]></code>
-      <code><![CDATA[testItHasAnAssignedToSemantic]]></code>
-      <code><![CDATA[testItHasAnUnusedDateFieldCloseDate]]></code>
-      <code><![CDATA[testItHasAnUnusedField]]></code>
-      <code><![CDATA[testItHasFourCriteria]]></code>
-      <code><![CDATA[testItHasNoParent]]></code>
-      <code><![CDATA[testItHasOnlyOneOpenValueForStatusSemantic]]></code>
-      <code><![CDATA[testItHasSubmittedBy]]></code>
-      <code><![CDATA[testItHasTwoReports]]></code>
-      <code><![CDATA[thereAreColumnsForFields]]></code>
-      <code><![CDATA[thereAreCriteriaForFields]]></code>
     </MissingReturnType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$this->tracker_factory->getTrackerById(self::$defect_tracker_id)]]></code>
-    </PossiblyNullPropertyAssignmentValue>
     <PossiblyNullReference>
       <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getListValueById]]></code>
@@ -79307,7 +79263,6 @@
       <code><![CDATA[$field_label]]></code>
       <code><![CDATA[$field_label]]></code>
       <code><![CDATA[$field_labels]]></code>
-      <code><![CDATA[$name]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$report->name]]></code>

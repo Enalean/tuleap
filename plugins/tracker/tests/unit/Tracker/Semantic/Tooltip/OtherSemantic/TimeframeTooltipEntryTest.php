@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic\Tooltip\OtherSemantic;
 
 use Psr\Log\NullLogger;
 use TemplateRendererFactory;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -96,7 +96,7 @@ final class TimeframeTooltipEntryTest extends TestCase
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
             TrackerTestBuilder::aTracker()->build(),
             IComputeTimeframesStub::fromStartAndEndDates(
-                DatePeriodWithoutWeekEnd::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
+                DatePeriodWithOpenDays::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
                 $start,
                 $end,
             )
@@ -132,7 +132,7 @@ final class TimeframeTooltipEntryTest extends TestCase
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
             TrackerTestBuilder::aTracker()->build(),
             IComputeTimeframesStub::fromStartAndEndDates(
-                DatePeriodWithoutWeekEnd::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
+                DatePeriodWithOpenDays::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
                 $start,
                 $end,
             )
@@ -162,7 +162,7 @@ final class TimeframeTooltipEntryTest extends TestCase
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
             TrackerTestBuilder::aTracker()->build(),
             IComputeTimeframesStub::fromStartAndEndDates(
-                DatePeriodWithoutWeekEnd::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
+                DatePeriodWithOpenDays::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
                 $start,
                 $end,
             )
@@ -192,7 +192,7 @@ final class TimeframeTooltipEntryTest extends TestCase
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
             TrackerTestBuilder::aTracker()->build(),
             IComputeTimeframesStub::fromStartAndDuration(
-                DatePeriodWithoutWeekEnd::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
+                DatePeriodWithOpenDays::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
                 $start,
                 $duration,
             )
@@ -225,7 +225,7 @@ final class TimeframeTooltipEntryTest extends TestCase
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
             TrackerTestBuilder::aTracker()->build(),
             IComputeTimeframesStub::fromStartAndEndDates(
-                DatePeriodWithoutWeekEnd::buildFromEndDate(null, 1324567890, new NullLogger()),
+                DatePeriodWithOpenDays::buildFromEndDate(null, 1324567890, new NullLogger()),
                 $start,
                 $end,
             )
@@ -264,7 +264,7 @@ final class TimeframeTooltipEntryTest extends TestCase
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
             TrackerTestBuilder::aTracker()->build(),
             IComputeTimeframesStub::fromStartAndEndDates(
-                DatePeriodWithoutWeekEnd::buildFromEndDate(1234567890, null, new NullLogger()),
+                DatePeriodWithOpenDays::buildFromEndDate(1234567890, null, new NullLogger()),
                 $start,
                 $end,
             )
@@ -303,7 +303,7 @@ final class TimeframeTooltipEntryTest extends TestCase
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
             TrackerTestBuilder::aTracker()->build(),
             IComputeTimeframesStub::fromStartAndEndDates(
-                DatePeriodWithoutWeekEnd::buildWithoutAnyDates(),
+                DatePeriodWithOpenDays::buildWithoutAnyDates(),
                 $start,
                 $end,
             )
@@ -338,7 +338,7 @@ final class TimeframeTooltipEntryTest extends TestCase
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
             TrackerTestBuilder::aTracker()->build(),
             IComputeTimeframesStub::fromStartAndEndDates(
-                DatePeriodWithoutWeekEnd::buildFromEndDate(1324567890, 1234567890, new NullLogger()),
+                DatePeriodWithOpenDays::buildFromEndDate(1324567890, 1234567890, new NullLogger()),
                 $start,
                 $end,
             )

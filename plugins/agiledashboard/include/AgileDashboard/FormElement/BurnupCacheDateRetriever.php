@@ -21,7 +21,7 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use DateTime;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 
 class BurnupCacheDateRetriever
 {
@@ -35,7 +35,7 @@ class BurnupCacheDateRetriever
     /**
      * @return int[]
      */
-    public function getWorkedDaysToCacheForPeriod(DatePeriodWithoutWeekEnd $burnup_period, DateTime $yesterday)
+    public function getWorkedDaysToCacheForPeriod(DatePeriodWithOpenDays $burnup_period, DateTime $yesterday)
     {
         $start_date = $this->getFirstDayToCache($burnup_period);
         $end_date   = $this->getLastDayToCache($burnup_period);
@@ -43,7 +43,7 @@ class BurnupCacheDateRetriever
         $day = [];
 
         while ($start_date < $end_date && $start_date < $yesterday) {
-            if (DatePeriodWithoutWeekEnd::isNotWeekendDay($start_date->getTimestamp())) {
+            if (DatePeriodWithOpenDays::isOpenDay($start_date->getTimestamp())) {
                 $day[] = $start_date->getTimestamp();
             }
 
@@ -53,7 +53,7 @@ class BurnupCacheDateRetriever
         return $day;
     }
 
-    private function getFirstDayToCache(DatePeriodWithoutWeekEnd $burnup_period)
+    private function getFirstDayToCache(DatePeriodWithOpenDays $burnup_period)
     {
         $start_date = new DateTime();
         $start_date->setTimestamp((int) $burnup_period->getStartDate());
@@ -69,7 +69,7 @@ class BurnupCacheDateRetriever
         return $date;
     }
 
-    private function getLastDayToCache(DatePeriodWithoutWeekEnd $burnup_period)
+    private function getLastDayToCache(DatePeriodWithOpenDays $burnup_period)
     {
         $end_date = new DateTime();
         $end_date->setTimestamp((int) $burnup_period->getEndDate());

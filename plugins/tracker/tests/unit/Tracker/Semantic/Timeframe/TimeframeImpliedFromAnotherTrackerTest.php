@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\NullLogger;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
@@ -235,7 +235,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
         $this->timeframe_calculator->expects(self::once())
             ->method('buildDatePeriodWithoutWeekendForChangeset')
             ->with($linking_artifact->getLastChangeset(), $user, $this->logger)
-            ->willReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1622557210, 10));
+            ->willReturn(DatePeriodWithOpenDays::buildFromDuration(1622557210, 10));
 
         $this->links_retriever->expects(self::once())
             ->method('retrieveReverseLinksFromTracker')
@@ -331,7 +331,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
         $this->timeframe_calculator->expects(self::once())
             ->method('buildDatePeriodWithoutWeekendForChangesetForREST')
             ->with($linking_artifact->getLastChangeset(), $user, $this->logger)
-            ->willReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1622557210, 10));
+            ->willReturn(DatePeriodWithOpenDays::buildFromDuration(1622557210, 10));
 
         $this->links_retriever->expects(self::once())
             ->method('retrieveReverseLinksFromTracker')
@@ -424,7 +424,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
         $this->timeframe_calculator->expects(self::once())
             ->method('buildDatePeriodWithoutWeekendForChangesetChartRendering')
             ->with($linking_artifact->getLastChangeset(), $user, $this->logger)
-            ->willReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1622557210, 10));
+            ->willReturn(DatePeriodWithOpenDays::buildFromDuration(1622557210, 10));
 
         $this->links_retriever->expects(self::once())
             ->method('retrieveReverseLinksFromTracker')

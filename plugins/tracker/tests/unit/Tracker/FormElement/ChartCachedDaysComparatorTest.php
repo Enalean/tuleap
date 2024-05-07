@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 
 final class ChartCachedDaysComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,7 +34,7 @@ final class ChartCachedDaysComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date            = mktime(0, 0, 0, 20, 12, 2016);
         $duration              = 5;
 
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $cache_days_comparator = new ChartCachedDaysComparator(\Mockery::spy(LoggerInterface::class));
         $this->assertTrue($cache_days_comparator->isNumberOfCachedDaysExpected($date_period, $number_of_cached_days));
@@ -46,7 +46,7 @@ final class ChartCachedDaysComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date            = mktime(0, 0, 0, 20, 12, 2016);
         $duration              = 15;
 
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $cache_days_comparator = new ChartCachedDaysComparator(\Mockery::spy(LoggerInterface::class));
         $this->assertFalse($cache_days_comparator->isNumberOfCachedDaysExpected($date_period, $number_of_cached_days));

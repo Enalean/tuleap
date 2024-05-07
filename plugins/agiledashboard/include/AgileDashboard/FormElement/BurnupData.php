@@ -21,12 +21,12 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 
 class BurnupData
 {
     /**
-     * @var DatePeriodWithoutWeekEnd
+     * @var DatePeriodWithOpenDays
      */
     private $date_period;
 
@@ -45,14 +45,14 @@ class BurnupData
      */
     private $count_elements = [];
 
-    public function __construct(DatePeriodWithoutWeekEnd $date_period, $is_under_calculation)
+    public function __construct(DatePeriodWithOpenDays $date_period, $is_under_calculation)
     {
         $this->is_under_calculation = $is_under_calculation;
         $this->date_period          = $date_period;
     }
 
     /**
-     * @return DatePeriodWithoutWeekEnd
+     * @return DatePeriodWithOpenDays
      */
     public function getDatePeriod()
     {

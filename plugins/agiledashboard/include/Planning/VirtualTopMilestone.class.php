@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -210,7 +210,7 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
         return 0;
     }
 
-    public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void
+    public function setDatePeriod(DatePeriodWithOpenDays $date_period): void
     {
     }
 

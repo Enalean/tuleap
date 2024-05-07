@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\Exceptions\ArtifactHasNoLinkToArtifactOfTargetTracker;
@@ -77,10 +77,10 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         return null;
     }
 
-    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
 
         try {
@@ -92,16 +92,16 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
                     $logger
                 );
         } catch (ArtifactHasTooManyLinksToArtifactsOfTargetTracker $exception) {
-            return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage($exception->getMessage());
+            return DatePeriodWithOpenDays::buildFromNothingWithErrorMessage($exception->getMessage());
         } catch (ArtifactHasNoLinkToArtifactOfTargetTracker $exception) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
     }
 
-    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
 
         try {
@@ -113,19 +113,19 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
                     $logger
                 );
         } catch (ArtifactHasTooManyLinksToArtifactsOfTargetTracker $exception) {
-            return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage($exception->getMessage());
+            return DatePeriodWithOpenDays::buildFromNothingWithErrorMessage($exception->getMessage());
         } catch (ArtifactHasNoLinkToArtifactOfTargetTracker $exception) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
     }
 
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
 
         try {
