@@ -72,11 +72,14 @@ function getStatusPayload(
 }
 
 export interface ArtifactCreationPayload {
-    id: number;
     tracker_id: number;
     artifact_title: string;
     artifact_status?: string;
     title_field_name: string;
+}
+
+interface CreatedArtifactResponse {
+    id: number;
 }
 
 Cypress.Commands.add(
@@ -105,7 +108,7 @@ Cypress.Commands.add(
             };
 
             return cy
-                .postFromTuleapApi<ArtifactCreationPayload>("/api/artifacts/", artifact_payload)
+                .postFromTuleapApi<CreatedArtifactResponse>("/api/artifacts/", artifact_payload)
                 .then((response) => response.body.id);
         }),
 );
@@ -155,7 +158,7 @@ Cypress.Commands.add(
             };
 
             return cy
-                .postFromTuleapApi<ArtifactCreationPayload>("/api/artifacts/", artifact_payload)
+                .postFromTuleapApi<CreatedArtifactResponse>("/api/artifacts/", artifact_payload)
                 .then((response) => response.body.id);
         }),
 );
