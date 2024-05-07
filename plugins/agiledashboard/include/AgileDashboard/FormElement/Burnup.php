@@ -393,7 +393,8 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 
     private function getBurnupDataBuilder(): BurnupDataBuilder
     {
-        $burnup_cache_dao = new BurnupCacheDao();
+        $burnup_effort_cache_dao = new BurnupCacheDao();
+        $burnup_count_cache_dao  = new CountElementsCacheDao();
 
         return new BurnupDataBuilder(
             $this->getLogger(),
@@ -405,13 +406,15 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
                     $this->getConfigurationFieldRetriever(),
                     $this->getConfigurationValueRetriever()
                 ),
-                $burnup_cache_dao,
-                new ChartCachedDaysComparator($this->getLogger())
+                $burnup_effort_cache_dao,
+                $burnup_count_cache_dao,
+                new ChartCachedDaysComparator($this->getLogger()),
+                $this->getCountElementsModeChecker(),
             ),
             $this->getConfigurationValueRetriever(),
-            $burnup_cache_dao,
+            $burnup_effort_cache_dao,
             $this->getBurnupCalculator(),
-            new CountElementsCacheDao(),
+            $burnup_count_cache_dao,
             new CountElementsCalculator(
                 Tracker_Artifact_ChangesetFactoryBuilder::build(),
                 Tracker_ArtifactFactory::instance(),

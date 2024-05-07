@@ -18,8 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\FormElement;
 
+use PFUser;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
@@ -27,42 +32,21 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 
 class BurnupCacheChecker
 {
-    /**
-     * @var BurnupCacheGenerator
-     */
-    private $cache_generator;
-    /**
-     * @var ChartConfigurationValueChecker
-     */
-    private $chart_value_checker;
-    /**
-     * @var BurnupCacheDao
-     */
-    private $burnup_cache_dao;
-    /**
-     * @var ChartCachedDaysComparator
-     */
-    private $cache_days_comparator;
-
     public function __construct(
-        BurnupCacheGenerator $cache_generator,
-        ChartConfigurationValueChecker $chart_value_checker,
-        BurnupCacheDao $burnup_cache_dao,
-        ChartCachedDaysComparator $cache_days_comparator,
+        private readonly BurnupCacheGenerator $cache_generator,
+        private readonly ChartConfigurationValueChecker $chart_value_checker,
+        private readonly BurnupCacheDao $burnup_effort_cache_dao,
+        private readonly CountElementsCacheDao $burnup_count_cache_dao,
+        private readonly ChartCachedDaysComparator $cache_days_comparator,
+        private readonly CountElementsModeChecker $mode_checker,
     ) {
-        $this->cache_generator       = $cache_generator;
-        $this->chart_value_checker   = $chart_value_checker;
-        $this->burnup_cache_dao      = $burnup_cache_dao;
-        $this->cache_days_comparator = $cache_days_comparator;
     }
 
-    public function isBurnupUnderCalculation(Artifact $artifact, DatePeriodWithoutWeekEnd $date_period, \PFUser $user)
+    public function isBurnupUnderCalculation(Artifact $artifact, DatePeriodWithoutWeekEnd $date_period, PFUser $user): bool
     {
         $is_burnup_under_calculation = false;
 
-        if (
-            $this->isCacheCompleteForBurnup($artifact, $date_period, $user) === false
-        ) {
+        if (! $this->isCacheCompleteForBurnup($artifact, $date_period, $user)) {
             $this->cache_generator->forceBurnupCacheGeneration($artifact);
             $is_burnup_under_calculation = true;
         } elseif ($this->cache_generator->isCacheBurnupAlreadyAsked($artifact)) {
@@ -75,16 +59,24 @@ class BurnupCacheChecker
     private function isCacheCompleteForBurnup(
         Artifact $artifact,
         DatePeriodWithoutWeekEnd $date_period,
-        \PFUser $user,
-    ) {
-        if ($this->chart_value_checker->hasStartDate($artifact, $user)) {
-            $cached_days = $this->burnup_cache_dao->getNumberOfCachedDays(
-                $artifact->getId()
-            );
-
-            return $this->cache_days_comparator->isNumberOfCachedDaysExpected($date_period, $cached_days);
+        PFUser $user,
+    ): bool {
+        if (! $this->chart_value_checker->hasStartDate($artifact, $user)) {
+            return true;
         }
 
-        return true;
+        return $this->cache_days_comparator->isNumberOfCachedDaysExpected(
+            $date_period,
+            $this->getNumberOfCachedDays($artifact),
+        );
+    }
+
+    private function getNumberOfCachedDays(Artifact $artifact): int
+    {
+        $is_in_count_elements_mode = $this->mode_checker->burnupMustUseCountElementsMode($artifact->getTracker()->getProject());
+
+        return $is_in_count_elements_mode
+            ? $this->burnup_count_cache_dao->getNumberOfCachedDays($artifact->getId())
+            : $this->burnup_effort_cache_dao->getNumberOfCachedDays($artifact->getId());
     }
 }
