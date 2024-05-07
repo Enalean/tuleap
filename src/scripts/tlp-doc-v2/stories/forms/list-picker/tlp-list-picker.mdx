@@ -1,0 +1,61 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as ListPickerStories from "./tlp-list-picker.stories";
+
+<Meta of={ListPickerStories}/>
+
+# List picker
+
+List picker offers an easier way to pick values from a <code>&lt;select&gt;</code>. It is meant to be easier to use and to customise than Select2, while having a similar user experience.
+If you need an auto-completer, a way to search among a lot of values fetched asynchronously, if each group of items can be fetched separately from the others, if you need to add new values dynamically, please consider using Lazybox instead.
+
+Please note: There are predefined templates available by using special data-attributes on <code>&lt;option&gt;</code> tags:
+
+- Use <code>data-avatar-url</code> with the value of avatar url to display user avatar. Example: <code>data-avatar-url="https://my-avatar.example.com"</code>
+- Use <code>data-color-value</code> with the value of the color to display a colored circle next to the option label. The color must be either a tlp-color (for example <code>inca-silver</code>) or in hexadecimal (for example <code>#8f8f8f</code>). Example: <code>data-color-value</code>
+
+You cannot have both datasets on the same option.
+
+<Canvas withToolbar={true} of={ListPickerStories.ListPicker}></Canvas>
+
+<Controls></Controls>
+
+#### Typescript example
+
+```typescript
+import { createListPicker } from "@tuleap/list-picker";
+
+createListPicker(document.querySelector('#list-picker'), {
+    placeholder: "Choose an option",
+    is_filterable: false
+});
+```
+
+## With custom items template
+
+You can also use the <code>items_template_formatter</code> callback to display these templates.
+
+<code>items_template_formatter (default: none)</code>: A callback function returning a lit/html template result to customise items templates.
+It takes three parameters:
+- <code>html: HTMLTemplateStringProcessor</code> The lit/html tag function to help the developer to build a secured TemplateResult
+- <code>option_value: string</code> The value of the current select box <code>&lt;option&gt;</code>
+- <code>option_label: string</code> The text content of the current select box <code>&lt;option&gt;</code>
+
+
+<Canvas withToolbar={true} of={ListPickerStories.WithCustomItemsTemplate}></Canvas>
+
+#### Typescript example
+
+```typescript
+import { createListPicker } from "@tuleap/list-picker";
+import type { HTMLTemplateStringProcessor } from "@tuleap/list-picker";
+
+createListPicker(document.querySelector('#with-custom-items-template'), {
+    placeholder: "Choose GoT characters",
+    items_template_formatter: (html: HTMLTemplateStringProcessor, value_id: string, option_label: string): string => {
+        if (value_id === "103" || value_id === "108") {
+                    return html`<i class="fa-solid fa-fw fa-user-slash" aria-hidden="true"></i> ${option_label}`;
+        }
+        return html`<i class="fa-solid fa-fw fa-user" aria-hidden="true"></i> ${option_label}`;
+    }
+});
+```

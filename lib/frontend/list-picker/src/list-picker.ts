@@ -155,6 +155,7 @@ export function createListPicker(
             dropdown_manager.destroy();
             document.body.removeChild(dropdown_element);
             field_focus_manager.destroy();
+            wrapper_element.remove();
         },
     };
 }
