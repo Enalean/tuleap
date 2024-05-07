@@ -21,16 +21,37 @@ import type { Meta, StoryObj } from "@storybook/web-components";
 import { html, type TemplateResult } from "lit";
 
 type PaneProps = {
-    title: string;
-    title_with_icon: boolean;
-    content: string;
-    tabs: boolean;
-    table: boolean;
-    submit_button: boolean;
-    split: string;
+    title?: string;
+    title_with_icon?: boolean;
+    content?: string;
+    tabs?: boolean;
+    table?: boolean;
+    submit_button?: boolean;
+    split?: "No splitting" | "Horizontally" | "Vertically" | "Both";
+    story?: "tabs" | "table" | "submit" | "horizontal" | "vertical";
 };
 
+const DEFAULT_TITLE = "Pane title";
+const DEFAULT_CONTENT =
+    "The content of the pane goes here. The pane can have more than one section.";
+
 function getTemplate(args: PaneProps): TemplateResult {
+    const content = args.content ?? DEFAULT_CONTENT;
+    const title = args.title ?? DEFAULT_TITLE;
+
+    const table = args.story === "table" || (args.story === undefined && args.table);
+    const tabs = args.story === "tabs" || (args.story === undefined && args.tabs);
+    const submit_button =
+        args.story === "submit" || (args.story === undefined && args.submit_button);
+    const split: PaneProps["split"] =
+        args.story === "horizontal"
+            ? "Horizontally"
+            : args.story === "vertical"
+              ? "Vertically"
+              : args.story === undefined
+                ? args.split
+                : "No splitting";
+
     // prettier-ignore
     return html`
 <section class="tlp-pane">
@@ -38,16 +59,16 @@ function getTemplate(args: PaneProps): TemplateResult {
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">${args.title_with_icon ? html`
                 <i class="tlp-pane-title-icon fa-solid fa-list"
-                   aria-hidden="true"></i>` : ``}${args.title}
+                   aria-hidden="true"></i>` : ``}${title}
             </h1>
-        </div>${args.tabs ? html`
+        </div>${tabs ? html`
         <nav class="tlp-tabs">
               <a class="tlp-tab">Overview</a>
               <a class="tlp-tab tlp-tab-active">Comments</a>
               <a class="tlp-tab">History</a>
         </nav>` : ``}
         <section class="tlp-pane-section">
-            <p>${args.content}</p>${args.table ? html`
+            <p>${content}</p>${table ? html`
             <table class="tlp-table">
                   <thead>
                       <tr>
@@ -85,18 +106,18 @@ function getTemplate(args: PaneProps): TemplateResult {
                           </td>
                       </tr>
                   </tbody>
-            </table>` : ""}${args.submit_button ? html`
+            </table>` : ""}${submit_button ? html`
             <div class="tlp-pane-section-submit">
                   <button type="submit" class="tlp-button-primary">Submit</button>
             </div>` : ""}
-        </section>${args.split === "Horizontally" || args.split === "Both" ? html`
+        </section>${split === "Horizontally" || split === "Both" ? html`
         <section class="tlp-pane-section">
-              <p>${args.content}</p>
+              <p>${content}</p>
         </section>` : ``}
-    </div>${args.split === "Vertically" || args.split === "Both" ? html`
+    </div>${split === "Vertically" || split === "Both" ? html`
     <div class="tlp-pane-container">
         <section class="tlp-pane-section">
-            <p>${args.content}</p>
+            <p>${content}</p>
         </section>
     </div>` : ``}
 </section>`;
@@ -104,13 +125,24 @@ function getTemplate(args: PaneProps): TemplateResult {
 
 const meta: Meta<PaneProps> = {
     title: "TLP/Structure & Navigation/Panes",
+    parameters: {
+        layout: "padded",
+        controls: {
+            exclude: ["story"],
+        },
+    },
     render: (args) => {
         return getTemplate(args);
     },
+};
+export default meta;
+type Story = StoryObj<PaneProps>;
+
+export const Pane: Story = {
     args: {
-        title: "Pane",
+        title: DEFAULT_TITLE,
         title_with_icon: false,
-        content: "The content of the pane goes here. The pane can have more than one section.",
+        content: DEFAULT_CONTENT,
         tabs: false,
         table: false,
         submit_button: false,
@@ -165,38 +197,33 @@ const meta: Meta<PaneProps> = {
         },
     },
 };
-export default meta;
-type Story = StoryObj<PaneProps>;
-
-export const Pane: Story = {};
 
 export const PaneWithTabs: Story = {
     args: {
-        tabs: true,
+        story: "tabs",
     },
 };
 
 export const PaneWithTable: Story = {
     args: {
-        title_with_icon: true,
-        table: true,
+        story: "table",
     },
 };
 
 export const PaneWithSubmitButton: Story = {
     args: {
-        submit_button: true,
+        story: "submit",
     },
 };
 
 export const HorizontallySplitPane: Story = {
     args: {
-        split: "Horizontally",
+        story: "horizontal",
     },
 };
 
 export const VerticallySplitPane: Story = {
     args: {
-        split: "Vertically",
+        story: "vertical",
     },
 };
