@@ -30,6 +30,8 @@ use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\TimezoneWrapper;
+use Tuleap\TimezoneRetriever;
 
 final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
 {
@@ -72,13 +74,16 @@ final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgno
 
     public function process()
     {
-        $this->cacheYesterdayValues();
+        TimezoneWrapper::wrapTimezone(
+            TimezoneRetriever::getServerTimezone(),
+            fn() => $this->cacheYesterdayValues(),
+        );
         $this->done();
 
         return true;
     }
 
-    private function cacheYesterdayValues()
+    private function cacheYesterdayValues(): void
     {
         $yesterday = $this->date_retriever->getYesterday();
         if (! DatePeriodWithoutWeekEnd::isNotWeekendDay($yesterday)) {

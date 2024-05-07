@@ -25,6 +25,8 @@ use Psr\Log\LoggerInterface;
 use SystemEvent;
 use Tracker_ArtifactFactory;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\TimezoneWrapper;
+use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
@@ -101,6 +103,14 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
     }
 
     public function process()
+    {
+        return TimezoneWrapper::wrapTimezone(
+            TimezoneRetriever::getServerTimezone(),
+            fn() => $this->generateCache(),
+        );
+    }
+
+    private function generateCache(): bool
     {
         $artifact_id = $this->getArtifactIdFromParameters();
         $artifact    = $this->artifact_factory->getArtifactById($artifact_id);
