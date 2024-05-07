@@ -467,6 +467,9 @@ msgstr "Ajouter un lien à un groupe"
 msgid "Add widget"
 msgstr "Ajouter un widget"
 
+msgid "Add widget in project"
+msgstr "Ajout d'un widget au projet"
+
 msgid "Adding a non-project member"
 msgstr "Ajouter un utilisateur non membre du projet"
 
@@ -2963,6 +2966,9 @@ msgstr "Retirer un membre du groupe"
 
 msgid "Remove project administrator"
 msgstr "Suppression d'un administrateur du projet"
+
+msgid "Remove widget in project"
+msgstr "Suppression d'un widget au projet"
 
 msgid "Repeat new password"
 msgstr "Répétez le nouveau mot de passe"

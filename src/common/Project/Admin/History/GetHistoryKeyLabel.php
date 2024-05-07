@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\History;
 
+use Tuleap\Dashboard\Widget\WidgetProjectAdminActionsHistoryEntry;
 use Tuleap\Event\Dispatchable;
 use Tuleap\InviteBuddy\InvitationHistoryEntry;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectAdminHistoryEntry;
@@ -42,6 +43,11 @@ final class GetHistoryKeyLabel implements Dispatchable
         $project_admin_entry = ProjectAdminHistoryEntry::tryFrom($key);
         if ($project_admin_entry) {
             $this->label = $project_admin_entry->getLabel();
+        }
+
+        $project_admin_widget_entry = WidgetProjectAdminActionsHistoryEntry::tryFrom($key);
+        if ($project_admin_widget_entry) {
+            $this->label = $project_admin_widget_entry->getLabel();
         }
     }
 
