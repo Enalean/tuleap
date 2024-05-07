@@ -21,6 +21,11 @@
 
 require_once __DIR__ . '/../include/pre.php';
 
+if ($request->getCurrentUser()->isAnonymous()) {
+    $GLOBALS['Response']->addFeedback(Feedback::ERROR, gettext('Permission denied'));
+    $GLOBALS['Response']->redirect('/');
+}
+
 $hp       = Codendi_HTMLPurifier::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
