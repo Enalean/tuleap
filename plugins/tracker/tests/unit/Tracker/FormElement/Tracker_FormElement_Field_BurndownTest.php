@@ -124,7 +124,9 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->user = \Mockery::spy(\PFUser::class);
 
-        SystemEventManager::setInstance(\Mockery::spy(SystemEventManager::class));
+        $system_event_manager = \Mockery::spy(SystemEventManager::class);
+        SystemEventManager::setInstance($system_event_manager);
+        $system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(true);
 
         $this->sprint            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->sprint_tracker_id = 113;

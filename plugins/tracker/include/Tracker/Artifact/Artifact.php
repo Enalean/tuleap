@@ -136,6 +136,7 @@ use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\FieldsDataFromRequestRetriever;
+use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -2279,7 +2280,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             ),
             $computed_dao,
             new ChartCachedDaysComparator($logger),
-            new BurndownRemainingEffortAdderForREST($field_retriever, $computed_dao)
+            new BurndownRemainingEffortAdderForREST($field_retriever, $computed_dao),
+            new BurndownCacheDateRetriever(),
         );
     }
 

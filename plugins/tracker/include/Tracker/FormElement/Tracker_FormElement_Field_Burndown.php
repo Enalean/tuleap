@@ -22,6 +22,7 @@ use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
 use Tuleap\Tracker\FormElement\BurndownFieldPresenter;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
@@ -751,7 +752,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $this->getBurndownConfigurationValueChecker(),
             $this->getComputedDao(),
             $this->getCachedDaysComparator(),
-            $this->getRemainingEffortAdder()
+            $this->getRemainingEffortAdder(),
+            new BurndownCacheDateRetriever(),
         );
     }
 

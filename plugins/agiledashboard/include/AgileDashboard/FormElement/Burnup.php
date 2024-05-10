@@ -423,7 +423,8 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             ),
             $this->getCountElementsModeChecker(),
             new PlanningDao(),
-            \PlanningFactory::build()
+            \PlanningFactory::build(),
+            new BurnupCacheDateRetriever(),
         );
     }
 

@@ -404,6 +404,14 @@
       <code><![CDATA[postSaveNewChangeset]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup/CountElementsCacheDao.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->getDB()->safeQuery($sql, [$artifact_id])]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[list<array{timestamp:int}>]]></code>
+    </MoreSpecificReturnType>
+  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup/CountElementsCalculator.php">
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $artifact->getId()]]></code>
@@ -422,6 +430,7 @@
             $sql,
             [$artifact_id, $start_timestamp]
         )]]></code>
+      <code><![CDATA[$this->getDB()->safeQuery($sql, [$artifact_id])]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
       <code><![CDATA[list<array{
@@ -429,6 +438,7 @@
      *     team_effort: ?float,
      *     total_effort: ?float,
      * }>]]></code>
+      <code><![CDATA[list<array{timestamp:int}>]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCacheDateRetriever.php">
@@ -37720,27 +37730,6 @@
       <code><![CDATA[$warning]]></code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/ChartCachedDaysComparator.php">
-    <MissingParamType>
-      <code><![CDATA[$cache_days]]></code>
-      <code><![CDATA[$cache_days]]></code>
-      <code><![CDATA[$number_of_cached_days]]></code>
-      <code><![CDATA[$number_of_days_for_period]]></code>
-      <code><![CDATA[$number_of_days_for_period]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[compareCachedDaysWhenLastDayIsAComputedValue]]></code>
-      <code><![CDATA[compareCachedDaysWithPeriodDays]]></code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyNullArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/ChartConfigurationValueChecker.php">
     <MissingReturnType>
       <code><![CDATA[hasFieldChanged]]></code>
@@ -38347,11 +38336,6 @@
     <MissingParamType>
       <code><![CDATA[$capacity]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[isBurndownUnderCalculationBasedOnServerTimezone]]></code>
-      <code><![CDATA[isCacheBurndownAlreadyAsked]]></code>
-      <code><![CDATA[isCacheCompleteForBurndown]]></code>
-    </MissingReturnType>
     <PossiblyInvalidMethodCall>
       <code><![CDATA[getId]]></code>
     </PossiblyInvalidMethodCall>
@@ -38492,7 +38476,7 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
+      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[update]]></code>

@@ -18,37 +18,106 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
-use Tuleap\Date\DatePeriodWithOpenDays;
+use DateTime;
+use Psr\Log\NullLogger;
+use Tuleap\Test\PHPUnit\TestCase;
+use function Psl\Vec\shuffle;
 
-final class ChartCachedDaysComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ChartCachedDaysComparatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItVerifiesCacheIsCompleteForChartWhenCacheDaysAreTheSameThanDatePeriodDays(): void
     {
-        $number_of_cached_days = 6;
-        $start_date            = mktime(0, 0, 0, 20, 12, 2016);
-        $duration              = 5;
+        $expected_days = [
+            (new DateTime('2016-12-20 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-21 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-22 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-23 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-24 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-25 23:59'))->getTimestamp(),
+        ];
 
-        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
-
-        $cache_days_comparator = new ChartCachedDaysComparator(\Mockery::spy(LoggerInterface::class));
-        $this->assertTrue($cache_days_comparator->isNumberOfCachedDaysExpected($date_period, $number_of_cached_days));
+        $cache_days_comparator = new ChartCachedDaysComparator(new NullLogger());
+        $this->assertTrue($cache_days_comparator->areCachedDaysCorrect($expected_days, $expected_days));
     }
 
     public function testItVerifiesCacheIsCompleteForChartWhenCacheDaysAreNotTheSameThanDatePeriodDays(): void
     {
-        $number_of_cached_days = 6;
-        $start_date            = mktime(0, 0, 0, 20, 12, 2016);
-        $duration              = 15;
+        $cached_days = [
+            (new DateTime('2016-12-19 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-20 23:59'))->getTimestamp(),
+        ];
 
-        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
+        $expected_days = [
+            (new DateTime('2016-12-20 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-21 23:59'))->getTimestamp(),
+        ];
 
-        $cache_days_comparator = new ChartCachedDaysComparator(\Mockery::spy(LoggerInterface::class));
-        $this->assertFalse($cache_days_comparator->isNumberOfCachedDaysExpected($date_period, $number_of_cached_days));
+        $cache_days_comparator = new ChartCachedDaysComparator(new NullLogger());
+        $this->assertFalse($cache_days_comparator->areCachedDaysCorrect($expected_days, $cached_days));
+    }
+
+    public function testItReturnsFalseIfCacheHasOneMoreDayThanExpected(): void
+    {
+        $expected_days = [
+            (new DateTime('2016-12-19 23:59'))->getTimestamp(),
+        ];
+
+        $cached_days = [
+            ...$expected_days,
+            (new DateTime('2016-12-20 23:59'))->getTimestamp(),
+        ];
+
+        $cache_days_comparator = new ChartCachedDaysComparator(new NullLogger());
+        $this->assertFalse($cache_days_comparator->areCachedDaysCorrect($expected_days, $cached_days));
+    }
+
+    public function testItReturnsFalseIfCacheHasOneFewerDayThanExpected(): void
+    {
+        $cached_days = [
+            (new DateTime('2016-12-19 23:59'))->getTimestamp(),
+        ];
+
+        $expected_days = [
+            ...$cached_days,
+            (new DateTime('2016-12-20 23:59'))->getTimestamp(),
+        ];
+
+        $cache_days_comparator = new ChartCachedDaysComparator(new NullLogger());
+        $this->assertFalse($cache_days_comparator->areCachedDaysCorrect($expected_days, $cached_days));
+    }
+
+    public function testItReturnsFalseIfTimestampsAreNotExactlyTheSame(): void
+    {
+        $expected_days = [
+            (new DateTime('2016-12-19 23:59:00'))->getTimestamp(),
+            (new DateTime('2016-12-20 23:59:00'))->getTimestamp(),
+        ];
+
+        $cached_days = [
+            (new DateTime('2016-12-19 23:59:01'))->getTimestamp(),
+            (new DateTime('2016-12-20 23:59:01'))->getTimestamp(),
+        ];
+
+        $cache_days_comparator = new ChartCachedDaysComparator(new NullLogger());
+        $this->assertFalse($cache_days_comparator->areCachedDaysCorrect($expected_days, $cached_days));
+    }
+
+    public function testItReturnsTrueIfCacheIsValidNoMatterTheOrder(): void
+    {
+        $expected_days = [
+            (new DateTime('2016-12-20 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-21 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-22 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-23 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-24 23:59'))->getTimestamp(),
+            (new DateTime('2016-12-25 23:59'))->getTimestamp(),
+        ];
+
+        $cache_days_comparator = new ChartCachedDaysComparator(new NullLogger());
+        $this->assertTrue($cache_days_comparator->areCachedDaysCorrect(shuffle($expected_days), shuffle($expected_days)));
     }
 }

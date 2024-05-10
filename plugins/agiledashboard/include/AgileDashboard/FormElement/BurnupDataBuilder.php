@@ -18,9 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\FormElement;
 
 use DateTime;
+use PFUser;
+use PlanningFactory;
 use Psr\Log\LoggerInterface;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
@@ -35,23 +39,21 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 class BurnupDataBuilder
 {
     public function __construct(
-        private LoggerInterface $logger,
-        private BurnupCacheChecker $cache_checker,
-        private ChartConfigurationValueRetriever $chart_configuration_value_retriever,
-        private BurnupCacheDao $burnup_cache_dao,
-        private BurnupCalculator $burnup_calculator,
-        private CountElementsCacheDao $count_elements_cache_dao,
-        private CountElementsCalculator $count_elements_calculator,
-        private CountElementsModeChecker $mode_checker,
-        private PlanningDao $planning_dao,
-        private \PlanningFactory $planning_factory,
+        private readonly LoggerInterface $logger,
+        private readonly BurnupCacheChecker $cache_checker,
+        private readonly ChartConfigurationValueRetriever $chart_configuration_value_retriever,
+        private readonly BurnupCacheDao $burnup_cache_dao,
+        private readonly BurnupCalculator $burnup_calculator,
+        private readonly CountElementsCacheDao $count_elements_cache_dao,
+        private readonly CountElementsCalculator $count_elements_calculator,
+        private readonly CountElementsModeChecker $mode_checker,
+        private readonly PlanningDao $planning_dao,
+        private readonly PlanningFactory $planning_factory,
+        private readonly BurnupCacheDateRetriever $date_retriever,
     ) {
     }
 
-    /**
-     * @return BurnupData
-     */
-    public function buildBurnupData(Artifact $artifact, \PFUser $user)
+    public function buildBurnupData(Artifact $artifact, PFUser $user): BurnupData
     {
         $date_period = $this->chart_configuration_value_retriever->getDatePeriod($artifact, $user);
 
@@ -62,10 +64,7 @@ class BurnupDataBuilder
         );
     }
 
-    /**
-     * @return BurnupData
-     */
-    private function getBurnupData(Artifact $artifact, DatePeriodWithOpenDays $date_period, \PFUser $user)
+    private function getBurnupData(Artifact $artifact, DatePeriodWithOpenDays $date_period, PFUser $user): BurnupData
     {
         $user_timezone   = date_default_timezone_get();
         $server_timezone = TimezoneRetriever::getServerTimezone();
@@ -78,7 +77,11 @@ class BurnupDataBuilder
         $this->logger->debug('Start date after updating timezone: ' . $start->getTimestamp());
 
         $date_period          = DatePeriodWithOpenDays::buildFromDuration($start->getTimestamp(), $date_period->getDuration());
-        $is_under_calculation = $this->cache_checker->isBurnupUnderCalculation($artifact, $date_period, $user);
+        $is_under_calculation = $this->cache_checker->isBurnupUnderCalculation(
+            $artifact,
+            $this->date_retriever->getWorkedDaysToCacheForPeriod($date_period, new DateTime('now')),
+            $user,
+        );
         $burnup_data          = new BurnupData($date_period, $is_under_calculation);
 
         $planning_infos = $this->planning_dao->searchByMilestoneTrackerId($artifact->getTrackerId());
