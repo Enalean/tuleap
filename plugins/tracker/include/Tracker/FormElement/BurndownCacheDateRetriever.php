@@ -18,31 +18,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
 use DateTime;
 use Tuleap\Date\DatePeriodWithOpenDays;
 
-class BurndownCacheDateRetriever
+final class BurndownCacheDateRetriever
 {
-    public function getYesterday()
+    public function getYesterday(): int
     {
-        $date = new DateTime();
-        $date->setTime(0, 0, 0);
-        $date->modify('-1 second');
+        $date = new DateTime('yesterday 23:59:00');
+
         return $date->getTimestamp();
     }
 
-    public function getWorkedDaysToCacheForPeriod(DatePeriodWithOpenDays $burndown_period, DateTime $yesterday)
+    /**
+     * @return int[]
+     */
+    public function getWorkedDaysToCacheForPeriod(DatePeriodWithOpenDays $burndown_period, DateTime $end_time): array
     {
         $start_date = $this->getFirstDayToCache($burndown_period);
         $end_date   = $this->getLastDayToCache($burndown_period);
+        $end_time->setTime(23, 59, 00);
 
         $day = [];
 
-        while ($start_date <= $end_date && $start_date <= $yesterday) {
-            if (DatePeriodWithOpenDays::isOpenDay($this->removeLastSecondOfCachedDayForJPGraph($start_date))) {
-                $day[] = $this->removeLastSecondOfCachedDayForJPGraph($start_date);
+        while ($start_date <= $end_date && $start_date <= $end_time) {
+            if (DatePeriodWithOpenDays::isOpenDay($start_date->getTimestamp())) {
+                $day[] = $start_date->getTimestamp();
             }
 
             $start_date->modify('+1 day');
@@ -51,38 +56,21 @@ class BurndownCacheDateRetriever
         return $day;
     }
 
-    private function getFirstDayToCache(DatePeriodWithOpenDays $burndown_period)
+    private function getFirstDayToCache(DatePeriodWithOpenDays $burndown_period): DateTime
     {
         $start_date = new DateTime();
         $start_date->setTimestamp((int) $burndown_period->getStartDate());
-        $this->addOneDayToDateTime($start_date);
+        $start_date->setTime(23, 59, 00);
 
         return $start_date;
     }
 
-    private function getLastDayToCache(DatePeriodWithOpenDays $burndown_period)
+    private function getLastDayToCache(DatePeriodWithOpenDays $burndown_period): DateTime
     {
         $end_date = new DateTime();
         $end_date->setTimestamp((int) $burndown_period->getEndDate());
-        $this->addOneDayToDateTime($end_date);
+        $end_date->modify('+1 day');
 
         return $end_date;
-    }
-
-    private function addOneDayToDateTime(DateTime $date)
-    {
-        $date->setTime(0, 0, 0);
-        $date->modify('+1 day');
-
-        return $date;
-    }
-
-    private function removeLastSecondOfCachedDayForJPGraph(DateTime $date)
-    {
-        $return_date = new DateTime();
-        $return_date->setTimestamp($date->getTimestamp());
-        $return_date->modify('-1 second');
-
-        return $return_date->getTimestamp();
     }
 }

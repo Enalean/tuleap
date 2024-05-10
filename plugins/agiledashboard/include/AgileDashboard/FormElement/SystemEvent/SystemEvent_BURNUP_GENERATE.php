@@ -155,9 +155,6 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
             return false;
         }
 
-        $yesterday = new DateTime();
-        $yesterday->setTime(23, 59, 59);
-
         $this->cache_dao->deleteArtifactCacheValue($burnup_information['id']);
         $this->count_elements_cache_dao->deleteArtifactCacheValue($burnup_information['id']);
 
@@ -170,7 +167,7 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
         }
 
         $backlog_trackers_ids = $this->planning_factory->getBacklogTrackersIds($planning_infos['id']);
-        foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burnup_period, $yesterday) as $worked_day) {
+        foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burnup_period, new DateTime()) as $worked_day) {
             $this->logger->debug('Day ' . date('Y-m-d H:i:s', $worked_day));
 
             $effort       = $this->burnup_calculator->getValue($burnup_information['id'], $worked_day, $backlog_trackers_ids);
