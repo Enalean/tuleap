@@ -43,6 +43,13 @@ msgstr "Supprimer"
 msgid "Delete the time"
 msgstr "Supprimer ce temps"
 
+msgid ""
+"Displays aggregated time per user over a given period, with a view of time "
+"spent on each project."
+msgstr ""
+"Affiche le temps agrégé par utilisateur sur une période donnée, avec une vue "
+"du temps passé sur chaque projet."
+
 msgid "Displays time spent on multiple trackers"
 msgstr "Affiche les temps passés sur les différents trackers"
 
@@ -139,6 +146,9 @@ msgstr "Le suivi de temps est désactivé pour ce tracker."
 
 msgid "Time tracking is enabled for tracker."
 msgstr "Le suivi de temps est activé pour ce tracker."
+
+msgid "Timetracking management"
+msgstr "Gestion du suivi du temps"
 
 msgid "Timetracking overview"
 msgstr "Aperçu des suivis de temps"

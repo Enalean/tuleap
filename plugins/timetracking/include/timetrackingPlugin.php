@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Timetracking\Admin\AdminController;
@@ -44,6 +45,7 @@ use Tuleap\Timetracking\Time\TimePresenterBuilder;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimeUpdater;
+use Tuleap\Timetracking\Widget\TimetrackingManagementWidget;
 use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
 use Tuleap\Timetracking\XML\XMLImport;
@@ -61,7 +63,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStandardsIgnoreLine
+class timetrackingPlugin extends PluginWithLegacyInternalRouting implements PluginWithConfigKeys// @codingStandardsIgnoreLine
 {
     public function __construct($id)
     {
@@ -308,6 +310,9 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
                 )
             );
         }
+        if ($get_widget_event->getName() === TimetrackingManagementWidget::NAME && (int) \ForgeConfig::getFeatureFlag(TimetrackingManagementWidget::FEATURE_FLAG) === 1) {
+            $get_widget_event->setWidget(new TimetrackingManagementWidget());
+        }
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
@@ -315,6 +320,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
     {
         $event->addWidget(UserWidget::NAME);
         $event->addWidget(TimeTrackingOverview::NAME);
+        $event->addWidget(TimetrackingManagementWidget::NAME);
     }
 
     #[\Tuleap\Plugin\ListeningToEventName('fill_project_history_sub_events')]
@@ -438,5 +444,10 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
                 dgettext('tuleap-timetracking', 'Archive should not contain timetracking data.'),
             );
         }
+    }
+
+    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(TimetrackingManagementWidget::class);
     }
 }
