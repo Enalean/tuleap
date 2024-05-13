@@ -19,12 +19,18 @@
 
 import type { Card, ColumnDefinition } from "../../../../../scripts/taskboard/src/type";
 
+type Milestone = {
+    readonly id: number;
+};
+
 describe(`Taskboard`, function () {
     before(function () {
         cy.projectMemberSession();
         cy.getProjectId("taskboard-project")
             .then((project_id: number) =>
-                cy.getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`),
+                cy.getFromTuleapAPI<ReadonlyArray<Milestone>>(
+                    `/api/projects/${project_id}/milestones?fields=slim`,
+                ),
             )
             .then((response) => response.body[0].id)
             .as("release_id");

@@ -19,6 +19,10 @@
 
 import { disableSpecificErrorThrownByCkeditor } from "../support/disable-specific-error-thrown-by-ckeditor";
 import { deleteDocumentDisplayedInQuickLook, openQuickLook } from "../support/helpers";
+import type {
+    ProjectServiceResponse,
+    CreatedItemResponse,
+} from "@tuleap/plugin-document-rest-api-types";
 
 describe("Document new UI", () => {
     let now: number;
@@ -73,7 +77,9 @@ describe("Document new UI", () => {
                 const project_shortname = `doc-version-${now}`;
                 cy.createNewPublicProject(project_shortname, "issues").then((project_id) =>
                     cy
-                        .getFromTuleapAPI(`api/projects/${project_id}/docman_service`)
+                        .getFromTuleapAPI<ProjectServiceResponse>(
+                            `api/projects/${project_id}/docman_service`,
+                        )
                         .then((response) => {
                             const root_folder_id = response.body.root_item.id;
                             const embedded_payload = {
@@ -85,7 +91,7 @@ describe("Document new UI", () => {
                                 },
                                 should_lock_file: false,
                             };
-                            return cy.postFromTuleapApi(
+                            return cy.postFromTuleapApi<CreatedItemResponse>(
                                 `api/docman_folders/${root_folder_id}/embedded_files`,
                                 embedded_payload,
                             );
@@ -157,7 +163,9 @@ describe("Document new UI", () => {
                 cy.projectAdministratorSession();
                 cy.createNewPublicProject(permission_project_name, "issues")
                     .then((project_id) =>
-                        cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`),
+                        cy.getFromTuleapAPI<ProjectServiceResponse>(
+                            `api/projects/${project_id}/docman_service`,
+                        ),
                     )
                     .then((response) => {
                         const root_folder_id = response.body.root_item.id;
@@ -307,7 +315,9 @@ describe("Document new UI", () => {
             function createProjectWithDownloadableDocuments(): void {
                 cy.createNewPublicProject(`download-${now}`, "issues")
                     .then((document_project_id) =>
-                        cy.getFromTuleapAPI(`api/projects/${document_project_id}/docman_service`),
+                        cy.getFromTuleapAPI<ProjectServiceResponse>(
+                            `api/projects/${document_project_id}/docman_service`,
+                        ),
                     )
                     .then((response) => {
                         const root_folder_id = response.body.root_item.id;
@@ -317,7 +327,7 @@ describe("Document new UI", () => {
                             description: "",
                             type: "folder",
                         };
-                        return cy.postFromTuleapApi(
+                        return cy.postFromTuleapApi<CreatedItemResponse>(
                             `api/docman_folders/${root_folder_id}/folders`,
                             folder_payload,
                         );
@@ -387,21 +397,18 @@ describe("Document new UI", () => {
             document_name: string,
         ): void {
             cy.createNewPublicProject(project_name, "issues").then((project_id) => {
-                cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`).then(
-                    (response) => {
-                        const root_folder_id = response.body.root_item.id;
+                cy.getFromTuleapAPI<ProjectServiceResponse>(
+                    `api/projects/${project_id}/docman_service`,
+                ).then((response) => {
+                    const root_folder_id = response.body.root_item.id;
 
-                        const payload = {
-                            title: document_name,
-                            description: "",
-                            type: "empty",
-                        };
-                        cy.postFromTuleapApi(
-                            `api/docman_folders/${root_folder_id}/empties`,
-                            payload,
-                        );
-                    },
-                );
+                    const payload = {
+                        title: document_name,
+                        description: "",
+                        type: "empty",
+                    };
+                    cy.postFromTuleapApi(`api/docman_folders/${root_folder_id}/empties`, payload);
+                });
             });
         }
 

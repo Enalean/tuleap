@@ -374,17 +374,23 @@ describe(`Artifact Modal`, function () {
     });
 });
 
-function getArtifactLinkIdFromREST(tracker_id: number): Cypress.Chainable<number> {
-    return cy.getFromTuleapAPI(`/api/trackers/${tracker_id}/artifacts`).then((response) => {
-        return response.body.find(
-            (artifact: Artifact) => artifact.title === LINKABLE_ARTIFACT_TITLE,
-        ).id;
-    });
-}
-
 interface Artifact {
     id: number;
     title: string;
+}
+
+function getArtifactLinkIdFromREST(tracker_id: number): Cypress.Chainable<number> {
+    return cy
+        .getFromTuleapAPI<ReadonlyArray<Artifact>>(`/api/trackers/${tracker_id}/artifacts`)
+        .then((response) => {
+            const found = response.body.find(
+                (artifact: Artifact) => artifact.title === LINKABLE_ARTIFACT_TITLE,
+            );
+            if (!found) {
+                throw Error(`Could not find artifact with title "${LINKABLE_ARTIFACT_TITLE}"`);
+            }
+            return found.id;
+        });
 }
 
 type CypressWrapper = Cypress.Chainable<JQuery<HTMLElement>>;

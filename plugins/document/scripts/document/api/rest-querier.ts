@@ -20,23 +20,23 @@
 import { del, get, post, recursiveGet } from "@tuleap/tlp-fetch";
 import type {
     AdminPermissions,
+    AdvancedSearchParams,
     ApprovalTable,
+    CreatedItem,
+    CreatedItemFileProperties,
     Embedded,
     Empty,
     Folder,
     Item,
     ItemFile,
-    Link,
-    Wiki,
-    UserGroup,
-    SearchResult,
-    AdvancedSearchParams,
-    CreatedItem,
-    CreatedItemFileProperties,
-    Property,
-    Uploadable,
     ItemReferencingWikiPageRepresentation,
+    Link,
     OtherTypeItem,
+    Property,
+    SearchResult,
+    Uploadable,
+    UserGroup,
+    Wiki,
 } from "../type";
 import { SEARCH_LIMIT } from "../type";
 import { getRestBodyFromSearchParams } from "../helpers/get-rest-body-from-search-params";
@@ -47,6 +47,7 @@ import {
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { getJSON, uri } from "@tuleap/fetch-result";
+import type { ProjectServiceResponse } from "@tuleap/plugin-document-rest-api-types";
 
 export interface RestItem extends Omit<Item, "properties"> {
     readonly metadata: Array<Property>;
@@ -89,7 +90,7 @@ export interface RestOtherType extends Omit<OtherTypeItem, "properties"> {
     readonly metadata: Array<Property>;
 }
 
-export interface ProjectService {
+export interface ProjectService extends ProjectServiceResponse {
     permissions_for_groups: AdminPermissions;
     root_item: RestFolder;
 }

@@ -23,6 +23,7 @@ import {
     openQuickLook,
     updateWikiPage,
 } from "../support/helpers";
+import type { ProjectServiceResponse } from "@tuleap/plugin-document-rest-api-types";
 
 function createProjectFromTemplate(project_name: string): void {
     cy.getProjectId("document-phpwiki-template").then((template_id) => {
@@ -36,9 +37,7 @@ function createProjectFromTemplate(project_name: string): void {
             template_id: template_id,
             allow_restricted: false,
         };
-        return cy.postFromTuleapApi("https://tuleap/api/projects/", payload).then((response) => {
-            return Number.parseInt(response.body.id, 10);
-        });
+        return cy.postFromTuleapApi("https://tuleap/api/projects", payload);
     });
 }
 
@@ -65,7 +64,9 @@ function addUserToNotifiedPeople(user_name: string): void {
 
 function createFolderInProject(project_suscribers: string): void {
     cy.getProjectId(project_suscribers).then((project_id) => {
-        cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`).then((response) => {
+        cy.getFromTuleapAPI<ProjectServiceResponse>(
+            `api/projects/${project_id}/docman_service`,
+        ).then((response) => {
             const root_folder_id = response.body.root_item.id;
 
             const folder_payload = {

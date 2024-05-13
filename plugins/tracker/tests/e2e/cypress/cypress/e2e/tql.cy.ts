@@ -26,13 +26,21 @@ interface TrackerField {
     name: string;
     field_id: string;
 }
+
+type Tracker = {
+    readonly fields: ReadonlyArray<TrackerField>;
+};
+
 function getSummaryFieldId(tracker_id: string): Cypress.Chainable<string> {
-    return cy.getFromTuleapAPI(`/api/trackers/${tracker_id}`).then((response) => {
+    return cy.getFromTuleapAPI<Tracker>(`/api/trackers/${tracker_id}`).then((response) => {
         const tracker = response.body;
         const summary_field = tracker.fields.find(
             (field: TrackerField) => field.name === "summary",
         );
 
+        if (!summary_field) {
+            throw Error(`Expected to find field named "summary" but did not find it`);
+        }
         return String(summary_field.field_id);
     });
 }
@@ -73,8 +81,6 @@ function checkNoArtifactsAreListed(): void {
 }
 
 describe("Report expert queries", () => {
-    let summary_column_id: string;
-
     before(() => {
         cy.projectMemberSession();
         cy.getProjectId("tracker-project").as("project_id");
@@ -85,58 +91,55 @@ describe("Report expert queries", () => {
                 cy.visit(`/plugins/tracker/?tracker=${this.tql_tracker_id}`);
 
                 return getSummaryFieldId(this.tql_tracker_id).as("summary_field_id");
-            })
-            .then((summary_field_id: string) => {
-                summary_column_id = summary_field_id;
             });
     });
 
-    it("TQL queries", () => {
+    it("TQL queries", function () {
         cy.log("bug1 for summary='bug1'");
         cy.projectMemberSession();
         cy.visitProjectService("tql", "Trackers");
         cy.get("[data-test=tracker-link-tql]").click();
         findArtifactsWithExpertQuery("summary='bug1'");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1"]);
 
         findArtifactsWithExpertQuery("summary='bug'");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2", "bug3"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1", "bug2", "bug3"]);
 
         findArtifactsWithExpertQuery("summary='bug' and details='original2'");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug2"]);
 
         findArtifactsWithExpertQuery("remaining_effort between(1, 42)");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1"]);
 
         findArtifactsWithExpertQuery("remaining_effort > 3.14");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug2"]);
 
         findArtifactsWithExpertQuery("story_points <= 21");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1", "bug2"]);
 
         findArtifactsWithExpertQuery("story_points = ''");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug3"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug3"]);
 
         findArtifactsWithExpertQuery("story_points != ''");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1", "bug2"]);
 
         findArtifactsWithExpertQuery("due_date = '2017-01-10'");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug2"]);
 
         findArtifactsWithExpertQuery("timesheeting < '2017-01-18 14:36'");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1"]);
 
         findArtifactsWithExpertQuery("last_update_date between(now() - 1w, now())");
         checkNoArtifactsAreListed();
 
         findArtifactsWithExpertQuery("submitted_by = MYSELF()");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2", "bug3"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1", "bug2", "bug3"]);
 
         findArtifactsWithExpertQuery("submitted_by != MYSELF()");
         checkNoArtifactsAreListed();
 
         findArtifactsWithExpertQuery("submitted_by IN(MYSELF())");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2", "bug3"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1", "bug2", "bug3"]);
 
         findArtifactsWithExpertQuery("submitted_by NOT IN(MYSELF())");
         checkNoArtifactsAreListed();
@@ -144,16 +147,16 @@ describe("Report expert queries", () => {
         findArtifactsWithExpertQuery(
             "status IN ('todo', 'doing') OR ugroups = 'Membres du projet'",
         );
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1", "bug2"]);
 
         findArtifactsWithExpertQuery("status = ''");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2", "bug3"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug2", "bug3"]);
 
         findArtifactsWithExpertQuery("ugroups = 'FRS_Admin'");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1"]);
 
         findArtifactsWithExpertQuery("@comments = 'Lorem ipsum'");
-        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
+        checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1"]);
     });
 
     it("Shows error", () => {

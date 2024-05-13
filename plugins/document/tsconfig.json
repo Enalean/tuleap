@@ -4,5 +4,6 @@
         "types": ["jest"],
         "incremental": false
     },
-    "include": ["scripts/**/*"]
+    "include": ["scripts/**/*"],
+    "exclude": ["scripts/lib/**/*"]
 }

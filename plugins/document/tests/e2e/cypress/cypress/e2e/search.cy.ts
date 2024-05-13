@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ProjectServiceResponse } from "@tuleap/plugin-document-rest-api-types";
+
 describe("Document search", () => {
     let project_unixname: string, now: number;
 
@@ -27,7 +29,9 @@ describe("Document search", () => {
 
     function createAProjectWithSearchableDocument(title: string): void {
         cy.createNewPublicProject(project_unixname, "issues").then((project_id) => {
-            cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`).then((response) => {
+            cy.getFromTuleapAPI<ProjectServiceResponse>(
+                `api/projects/${project_id}/docman_service`,
+            ).then((response) => {
                 const root_folder_id = response.body.root_item.id;
 
                 const payload = {

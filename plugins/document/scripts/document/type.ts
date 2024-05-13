@@ -31,6 +31,7 @@ import {
     TYPE_LINK,
     TYPE_WIKI,
 } from "./constants";
+import type { CreatedItemResponse } from "@tuleap/plugin-document-rest-api-types";
 
 export type FolderContentItem = Item | FakeItem;
 
@@ -346,8 +347,7 @@ export interface FileProperties {
     level?: number;
 }
 
-export interface CreatedItem {
-    readonly id: number;
+export interface CreatedItem extends CreatedItemResponse {
     readonly uri: string;
     readonly file_properties: CreatedItemFileProperties | null;
 }

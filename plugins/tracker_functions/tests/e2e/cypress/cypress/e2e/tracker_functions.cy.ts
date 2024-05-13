@@ -76,7 +76,9 @@ describe("Tuleap Functions for Trackers", () => {
 
                         // More than one comment means artifact creation + update by async worker
                         return cy
-                            .getFromTuleapAPI(`/api/artifacts/${artifact_id}/changesets`)
+                            .getFromTuleapAPI<
+                                Array<Record<string, never>>
+                            >(`/api/artifacts/${artifact_id}/changesets`)
                             .then((response) => response.body.length > 1);
                     },
                     `Cannot find results of Tuleap Functions for Tracker computation`,
