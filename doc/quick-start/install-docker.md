@@ -53,6 +53,10 @@ $> sudo systemctl restart docker.service
 Follow the official Docker documentation: [Installation on
 Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
 
+### Installing Docker with Docker Desktop
+
+Go to https://www.docker.com/products/docker-desktop/ and download Docker for linux.
+
 ### Installing Docker on macOS
 
 Go to <https://docs.docker.com/desktop/install/mac-install/> and

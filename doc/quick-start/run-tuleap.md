@@ -32,6 +32,8 @@ Developers wanting to keep their custom shell configurations should take
 a look at [direnv](https://direnv.net/) and
 [lorri](https://github.com/nix-community/lorri).
 
+You can either use regular docker install on linux (for example your machine will run the docker server) or Docker Desktop. The documentation vary depending of this and will be denoted with "regular docker" for the former and "docker desktop" for the later.
+
 ## First start of Tuleap
 
 ``` bash
@@ -40,7 +42,13 @@ $ make composer
 $ pnpm install
 $ pnpm run build
 $ make dev-setup
+
+## Choose the start command depending of your usage of Docker :
+
+# When you use the regular docker :
 $ make start-el9
+# When you use Docker Desktop
+$ make start-dockerdesktop
 $ make post-checkout
 ```
 
@@ -50,6 +58,18 @@ patient!
 Then you need to know the IP address of the web container, with
 `make show-ips` and edit (as root) the `/etc/hosts` file:
 `172.17.0.4    tuleap-web.tuleap-aio-dev.docker`
+
+## Specific steps for Docker Desktop
+
+After that all containers have started, you can now connect to your container.
+Your `/etc/hosts` file should be: `127.0.0.1 tuleap-web.tuleap-aio-dev.docker`.
+
+This is the list of your port for your services :
+
+- Mailhog : 8025
+- db : 3306
+- web : 2222
+- reverse-proxy : 443 or 80
 
 ## Specific steps for macOS users
 
