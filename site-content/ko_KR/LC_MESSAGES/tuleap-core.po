@@ -1,0 +1,4881 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2024-05-14 18:18+0900\n"
+"Last-Translator: jhpark@solkolabs.com\n"
+"Language-Team: \n"
+"Language: ko_KR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.4.4\n"
+
+msgid " New user"
+msgstr "새 사용자"
+
+msgid " Please avoid to upload too big file (< 500kB)."
+msgstr "500kB 미만의 파일만 업로드 하십시오."
+
+#, php-format
+msgid ""
+"\"%s\" label already exists. If you save your modifications, both labels "
+"will be merged."
+msgstr "“%s” 레이블이 이미 존재합니다. 수정사항 저장 시 레이블이 병합됩니다."
+
+#, php-format
+msgid "\"%s\" label already exists. Please choose another one."
+msgstr "\"%s\" 레이블이 이미 존재합니다. 다른 레이블을 선택해 주세요."
+
+msgid "\"csrf_token\" field is missing from the request body"
+msgstr "요청 본문에서 “csrf_token” 필드가 누락되었습니다."
+
+msgid "\"key_id\" field is missing from the request body"
+msgstr "요청 본문에서 \"key_id\" 필드가 누락되었습니다"
+
+msgid "\"name\" field is missing from the request body"
+msgstr "요청 본문에서 “name” 필드가 누락되었습니다."
+
+msgid "\"response\" field is missing from the request body"
+msgstr "요청 본문에서 \"응답\" 필드가 누락되었습니다"
+
+msgid "\"username\" field is missing from the request body"
+msgstr "요청 본문에서 “아이디” 필드가 누락되었습니다"
+
+msgid "## Some notes"
+msgstr "## 참고 사항"
+
+#, php-format
+msgid "%1$d does not belong to %2$s (%3$d) category hierarchy"
+msgstr "%1$d은(는) %2$s (%3$d) 카테고리 계층에 속하지 않습니다."
+
+#, php-format
+msgid "%1$s : user %2$s removed from project '%3$s'"
+msgstr "%1$s : %2$s 사용자가 프로젝트 ‘%3$s’에서 제거됨"
+
+#, php-format
+msgid "%1$s Password Verification"
+msgstr "%1$s 비밀번호 확인"
+
+msgid "%1$s invited you to register to %2$s and join the project %3$s."
+msgstr ""
+"%1$s님이 사용자님을 %2$s에 등록하고 %3$s 프로젝트에 참여하도록 초대했습니다."
+
+msgid "%1$s invited you to register to %2$s."
+msgstr "%1$s 사용자가 %2$s에 등록하도록 초대했습니다."
+
+#, php-format
+msgid "%1$s message(s) deleted"
+msgstr "%1$s 메시지 삭제됨"
+
+#, php-format
+msgid "%1$s users will receive this email."
+msgstr "%1$s명의 유저들이 이 이메일을 받게됩니다."
+
+msgid "%1$s with email %2$s created an account on %3$s."
+msgstr "%1$s님이 %2$s 이메일로 %3$s에 계정을 만들었습니다."
+
+#, php-format
+msgid "%d Aggregated project"
+msgid_plural "%d Aggregated projects"
+msgstr[0] "%d개의 집계된 프로젝트"
+
+#, php-format
+msgid "%d Parent project"
+msgid_plural "%d Parent projects"
+msgstr[0] "%d개의 상위 프로젝트"
+
+#, php-format
+msgid "%d member"
+msgid_plural "%d members"
+msgstr[0] "멤버 %d명"
+
+#, php-format
+msgid "%d message"
+msgid_plural "%d messages"
+msgstr[0] "%d개의 메시지"
+
+#, php-format
+msgid "%s (opens in a new tab)"
+msgstr "%s (새 탭에서 열림)"
+
+#, php-format
+msgid "%s - Account suspension"
+msgstr "%s - 계정 정지"
+
+#, php-format
+msgid "%s - Account suspension notification"
+msgstr "%s - 계정 정지 알림"
+
+#, php-format
+msgid "%s ago"
+msgstr "%s 전"
+
+#, php-format
+msgid "%s full project listing"
+msgstr "전체 프로젝트 목록 %s"
+
+#, php-format
+msgid "%s has multiple corresponding users."
+msgstr "%s에는 해당 사용자가 여러 명 있습니다."
+
+msgid "%s invited you to %s."
+msgstr "%s님이 당신을 %s에 초대했습니다."
+
+msgid "%s invited you, so you’re now a fresh member of this platform."
+msgstr "%s님이 사용자님을 초대해 이 플랫폼의 새로운 회원이 되었습니다."
+
+msgid "%s invited you, so you’re now a fresh member of this project."
+msgstr "%s님이 사용자님을 초대해 이 프로젝트의 새로운 멤버가 되었습니다."
+
+#, php-format
+msgid "%s new projects"
+msgstr "%s 새 프로젝트"
+
+#, php-format
+msgid "%s news"
+msgstr "%s 뉴스"
+
+#, php-format
+msgid "%s project news highlights"
+msgstr "%s 프로젝트 뉴스 하이라이트"
+
+msgid "(day/month/year)"
+msgstr "(일/월/년)"
+
+msgid "(month/day/year)"
+msgstr "(월/일/년)"
+
+#, php-format
+msgid ""
+"*********** WARNING ***********  Do you want to delete the reference "
+"pattern? This will remove this reference pattern (%s) from ALL projects of "
+"this server. Are you SURE you want to continue ?"
+msgstr ""
+"*********** 경고 *********** 참조 패턴을 삭제하시겠습니까? 이렇게 하면 이 서"
+"버의 모든 프로젝트에서 이 참조 패턴(%s)이 제거됩니다. 계속하시겠습니까?"
+
+#, php-format
+msgid "- The team at %1$s."
+msgstr "- %1$s의 팀."
+
+msgid "-- None --"
+msgstr "없음"
+
+msgid "."
+msgstr "."
+
+msgid "5 days ago"
+msgstr "5일 전"
+
+#, php-format
+msgid ""
+"<A HREF=\"%1$s\"><u>Log in first</u></A><span class=\"highlight\"> to post "
+"messages</span>"
+msgstr ""
+"<A HREF=\"%1$s\"><u>먼저 로그인하여</u></A><span class=\"highlight\"> 메시지 "
+"게시</span>"
+
+#, php-format
+msgid ""
+"<h4><i class=\"fa fa-exclamation-triangle\"></i> Your local.inc file is "
+"outdated!</h4><p>It appears that your local.inc file contains definitions of "
+"variables that are unused and it may lead to confusion.</p><p>Please edit "
+"<code>%1$s</code> and remove the following variables: <code>$sys_allow_anon</"
+"code> and <code>$sys_allow_restricted_users</code>.</p>"
+msgstr ""
+"<h4><i class=\"fa fa-exclamation-triangle\"></i> local.inc 파일이 오래되었습"
+"니다!</h4><p>local.inc 파일에 사용되지 않는 변수의 정의가 포함되어 있어 혼동"
+"을 일으킬 수 있습니다.</p><p>코드 <code>%1$s</code>를 수정하고 변수 "
+"<code>$sys_allow_anon</code>와(과) <code>$sys_allow_restricted_users</code>을"
+"(를) 제거하십시오.</p>"
+
+msgid ""
+"<h4>ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap "
+"RPMs without running forgeupgrade command. Please check <a href=\"/doc/en//"
+"installation-guide/step-by-step/upgrade.html\">upgrade documentation</a>.</p>"
+msgstr ""
+"<h4>ForgeUpgrade가 실행되지 않았습니다!</h4><p>누군가 forgeupgrade 명령을 실"
+"행하지 않고 Tuleap RPM을 업그레이드한 것 같습니다. <a href=\"/doc/en//"
+"installation-guide/step-by-step/upgrade.html\">업그레이드 설명서를</a> 확인하"
+"십시오.</p>"
+
+#, php-format
+msgid ""
+"<h4>Heads up!</h4><p>Currently there are <a href=\"/admin/userlist.php?"
+"status_values[]=R\">%1$s user(s)</a> that have restricted status. Changing "
+"current access mode will not change their status, they will need to be dealt "
+"with manually.</p>"
+msgstr ""
+"<h4>주의!</h4><p>현재 <a href=\"/admin/userlist.php?status_values[]=R\">%1$s "
+"명의</a> 제한된 상태를 가진 사용자가 있습니다. 현재 액세스 모드를 변경해도 상"
+"태는 변경되지 않으며 수동으로 처리해야 합니다.</p>"
+
+msgid "<i>Disabled</i>"
+msgstr "<i>비활성화</i>"
+
+msgid ""
+"<p>An outbound HTTP request has been filtered in the last 24 hours in order "
+"to prevent a possible Server Side Request Forgery (SSRF) attack. You might "
+"want to adjust your configuration. Please check <a href=\"/doc/en/"
+"administration-guide/system-administration/filtering-outbound-requests."
+"html\">the documentation for more information</a>.</p>"
+msgstr ""
+"<p>SSRF(Server Side Request Forgery) 공격을 방지하기 위해 지난 24시간 동안 아"
+"웃바운드 HTTP 요청이 필터링되었습니다. 설정을 조정할 수 있습니다. 자세한 내용"
+"은 <a href=\"/doc/en/administration-guide/system-administration/filtering-"
+"outbound-requests.html\">설명서</a>를 확인하세요.</p>"
+
+msgid "<strong>Monitor this thread</strong>"
+msgstr "<strong>이 스레드 모니터링</strong>"
+
+msgid "A deleted project can not be restored."
+msgstr "삭제된 프로젝트는 복원할 수 없습니다."
+
+#, php-format
+msgid ""
+"A new user has just registered on %1$s.\n"
+"\n"
+"User Name:"
+msgstr ""
+"새 사용자가 방금 %1$s에 등록했습니다.\n"
+"\n"
+"아이디:"
+
+msgid ""
+"A non available service cannot be enabled. To enable this service, switch it "
+"to available before."
+msgstr ""
+"사용할 수 없는 서비스는 활성화할 수 없습니다. 이 서비스를 사용하려면 이전 사"
+"용 가능으로 전환하십시오."
+
+msgid ""
+"A parameter is missing, please press the \"Back\" button and complete the "
+"form"
+msgstr "매개변수가 누락되었습니다. \"뒤로\" 버튼을 누르고 양식을 작성하십시오."
+
+#, php-format
+msgid ""
+"A personal access key (%1$s) with the %2$s scope was recently added to your "
+"account %3$s.\n"
+"\n"
+"Visit %4$s for more information."
+msgid_plural ""
+"A personal access key (%1$s) with the %2$s scopes was recently added to your "
+"account %3$s.\n"
+"\n"
+"Visit %4$s for more information."
+msgstr[0] ""
+"%2$s 범위의 개인용 액세스 키(%1$s)가 최근에 계정 %3$s에 추가되었습니다.\n"
+"\n"
+"자세한 내용은 %4$s를 참조하십시오."
+
+msgid "A personal access key has been added to your account"
+msgstr "개인 액세스 키가 계정에 추가되었습니다."
+
+msgid ""
+"A personal access key will be automatically generated at the form "
+"submission. The description is not required but it can help you to manage "
+"your access keys."
+msgstr ""
+"개인 액세스 키는 양식 제출 시 자동으로 생성됩니다. 설명란은 필수는 아니지만 "
+"액세스 키를 관리하는 데 도움이 될 수 있습니다."
+
+msgid "A project cannot be its own parent."
+msgstr "프로젝트는 자기 자신의 parent가 될 수 없습니다."
+
+msgid ""
+"A service displayed in a iframe cannot be the first service of a project"
+msgstr "iframe에 표시되는 서비스는 프로젝트의 첫 번째 서비스가 될 수 없습니다"
+
+msgid "A template without any service enabled."
+msgstr "활성화된 서비스가 없는 템플릿입니다."
+
+msgid "API"
+msgstr "API"
+
+msgid "Absolute date first"
+msgstr "절대 날짜 우선"
+
+msgid "Absolute date only"
+msgstr "절대 날짜만"
+
+msgid "Access"
+msgstr "액세스"
+
+msgid "Access control"
+msgstr "액세스 제어"
+
+msgid "Access controls"
+msgstr "접근 제어"
+
+msgid "Access history"
+msgstr "접속 기록"
+
+msgid "Access key copied!"
+msgstr "액세스 키가 복사되었습니다."
+
+msgid "Access key description"
+msgstr "액세스 키 설명"
+
+msgid "Access key expiration date"
+msgstr "액세스 키 만료일"
+
+msgid "Access key scopes"
+msgstr "액세스 키 범위"
+
+msgid "Access key scopes are not well formed."
+msgstr "액세스 키 범위가 제대로 설정되지 않았습니다."
+
+msgid "Access keys have been successfully deleted."
+msgstr "액세스 키가 성공적으로 삭제되었습니다."
+
+msgid "Access logs"
+msgstr "액세스 로그"
+
+msgid "Access to SVN repositories"
+msgstr "SVN 리포지토리에 대한 액세스"
+
+msgid "Access to the REST API"
+msgstr "REST API에 대한 액세스"
+
+msgid "Access to your email address"
+msgstr "이메일 주소에 대한 액세스"
+
+msgid ""
+"Access to your user profile. Includes access to your real name, avatar "
+"picture, language and timezone."
+msgstr ""
+"사용자 프로필에 대한 액세스. 실명, 프로필 사진, 언어 및 시간대에 대한 액세스"
+"가 포함됩니다."
+
+msgid "Accesses from less than %s might not be visible"
+msgstr "%s 미만의 액세스에서는 보이지 않을 수 있습니다."
+
+msgid "Account"
+msgstr "계정"
+
+#, php-format
+msgid ""
+"Account %s is restricted and the project does not allow restricted users. "
+"User not added."
+msgstr ""
+"계정 %s은(는) 제한되어 있으며 프로젝트에서 제한된 사용자를 허용하지 않습니"
+"다. 사용자가 추가되지 않았습니다."
+
+msgid "Account creation!"
+msgstr "계정 생성"
+
+msgid "Account information"
+msgstr "계정 정보"
+
+msgid "Account must be active to change password"
+msgstr "비밀번호를 변경하려면 계정이 활성화 된 상태여야 합니다."
+
+msgid "Account status"
+msgstr "계정 상태"
+
+msgid "Action required"
+msgstr "조치 필요"
+
+msgid "Actions"
+msgstr "작업"
+
+msgid "Activate"
+msgstr "활성화"
+
+msgid "Activate synchronized project membership management"
+msgstr "동기화된 프로젝트 멤버십 관리 활성화"
+
+msgid "Active"
+msgstr "활동 중"
+
+msgid "Active sessions browser statistics"
+msgstr "활성 세션 브라우저 통계"
+
+msgid "Add Forum"
+msgstr "포럼 추가"
+
+msgid "Add SSH key"
+msgstr "SSH 키 추가"
+
+msgid "Add This Forum"
+msgstr "이 포럼 추가"
+
+msgid "Add a Forum"
+msgstr "포럼 추가"
+
+msgid "Add a new service"
+msgstr "새로운 서비스 추가"
+
+msgid "Add binding"
+msgstr "바인딩 추가"
+
+msgid "Add dashboard"
+msgstr "대시보드 추가"
+
+msgid "Add label"
+msgstr "레이블 추가"
+
+msgid "Add link"
+msgstr "링크 추가"
+
+msgid "Add member"
+msgstr "멤버 추가"
+
+msgid "Add new key"
+msgstr "새 키 추가"
+
+msgid "Add parent project"
+msgstr "상위 프로젝트 추가"
+
+msgid "Add project administrator"
+msgstr "프로젝트 관리자 추가"
+
+msgid "Add users group"
+msgstr "사용자 그룹 추가"
+
+msgid "Add users group binding"
+msgstr "사용자 그룹 바인딩 추가"
+
+msgid "Add widget"
+msgstr "위젯 추가"
+
+msgid "Add widget in project"
+msgstr "프로젝트에 위젯 추가"
+
+msgid "Adding a non-project member"
+msgstr "프로젝트 멤버가 아닌 멤버 추가"
+
+msgid "Admin service cannot be disabled."
+msgstr "관리 서비스는 비활성화할 수 없습니다."
+
+msgid "Administration"
+msgstr "관리"
+
+msgid "Administrator"
+msgstr "관리자"
+
+msgid "Administrators"
+msgstr "관리자"
+
+msgid "Agile Enterprise Planning - Full ALM"
+msgstr "애자일 엔터프라이즈 계획 - 전체 ALM"
+
+msgid "All emails are already validated"
+msgstr "모든 이메일이 이미 인증되었습니다."
+
+msgid "All fields are mandatory."
+msgstr "모든 입력란은 필수 항목입니다."
+
+msgid "All groups"
+msgstr "모든 그룹"
+
+msgid "All members of %s will remain project members."
+msgstr "%s의 모든 멤버는 프로젝트 멤버로 유지됩니다."
+
+msgid "All projects"
+msgstr "모든 프로젝트"
+
+msgid "All users"
+msgstr "모든 사용자"
+
+msgid "All users don't need to be validated"
+msgstr "모든 사용자를 승인할 필요는 없습니다."
+
+msgid "All users must be logged in"
+msgstr "모든 사용자가 로그인해야 합니다."
+
+msgid "All users must be logged in and restricted users are enabled"
+msgstr ""
+"모든 사용자가 로그인되어 있어야 하며 제한된 사용자가 활성화되어 있어야 합니"
+"다."
+
+#, php-format
+msgid "All users, regardless of their preferences (%1$s users)"
+msgstr "기본 설정에 관계없이 모든 사용자 (%1$s 사용자)"
+
+msgid "Allow for all projects"
+msgstr "모든 프로젝트에서 허용"
+
+msgid ""
+"Allow the app to access resources on your behalf for an extended period of "
+"time even while you are disconnected"
+msgstr ""
+"연결이 끊어진 동안에도 앱이 사용자를 대신하여 리소스에 액세스할 수 있도록 허"
+"용"
+
+msgid "Allow to connect to apps and services using your account"
+msgstr "계정을 사용하여 앱 및 서비스에 연결할 수 있도록 허용"
+
+msgid "Allow to write informations for users on your dashboards using Markdown"
+msgstr "마크다운을 사용해 대시보드에 사용자를 위한 정보 작성 허가"
+
+msgid "Allow to write notes on your dashboard using Markdown"
+msgstr "마크다운을 사용해 대시보드에 메모 작성 허가"
+
+msgid "Allowing for all projects"
+msgstr "모든 프로젝트에서 허용"
+
+msgid "Already used"
+msgstr "이미 사용됨"
+
+msgid ""
+"An email change was requested, please check your inbox to complete the "
+"change."
+msgstr "이메일 변경이 요청되었으니 받은 편지함에서 변경을 완료하세요."
+
+msgid "An email has been sent to the address we have on file,"
+msgstr "등록된 주소로 이메일이 전송되었습니다."
+
+msgid ""
+"An error occurred in form submission, a link is not valid. Please retry."
+msgstr ""
+"양식 제출 시 오류가 발생하였습니다. 링크가 유효하지 않습니다. 다시 시도하십시"
+"오."
+
+msgid "An error occurred when saving user group."
+msgstr "사용자 그룹을 저장할 때 오류가 발생했습니다."
+
+msgid "An error occurred while clearing the content of your history"
+msgstr "기록을 지우는 동안 오류가 발생했습니다."
+
+msgid "An error occurred while fetching the content of your history"
+msgstr "기록을 가져오는 동안 오류가 발생했습니다."
+
+msgid "An error occurred while trying to add the label."
+msgstr "레이블을 추가하는 동안 오류가 발생했습니다."
+
+msgid "An error occurred while trying to add the widget to the dashboard"
+msgstr "대시보드에 위젯을 추가하는 동안 오류가 발생했습니다."
+
+msgid "An error occurred while trying to edit the label."
+msgstr "레이블을 수정하는 동안 오류가 발생했습니다."
+
+msgid "An error occurred while trying to remove the label."
+msgstr "레이블을 제거하는 동안 오류가 발생했습니다."
+
+msgid "An error occurred while trying to send invitation"
+msgid_plural "An error occurred while trying to send invitations"
+msgstr[0] "초대장을 보내는 동안 오류가 발생했습니다."
+
+msgid "An error occurred while trying to update permissions delegations."
+msgstr "권한 위임을 업데이트하는 동안 오류가 발생했습니다."
+
+msgid ""
+"An error occurred with your upload. Please try again or choose another image."
+msgstr ""
+"업로드하는 동안 오류가 발생했습니다. 다시 시도하거나 다른 이미지를 선택하십시"
+"오."
+
+msgid "An error occurred, please retry"
+msgstr "오류가 발생했습니다. 다시 시도하십시오."
+
+msgid "An issue occurred while retrieving the RSS feed"
+msgstr "RSS 피드를 검색하는 동안 문제가 발생했습니다."
+
+msgid "And one other users group you are not allowed to administrate."
+msgid_plural "And %d other users groups you are not allowed to administrate."
+msgstr[0] "그리고 관리할 수 없는 다른 사용자 그룹이 %d개 있습니다."
+
+msgid "Anonymous user"
+msgstr "익명 사용자"
+
+msgid "Anonymous users are not allowed."
+msgstr "익명 사용자는 허용되지 않습니다."
+
+msgid "Anonymous users can access the platform"
+msgstr "익명 사용자가 플랫폼에 액세스할 수 있습니다."
+
+msgid ""
+"Anonymous users can browse the public part of the site without logging in."
+msgstr ""
+"익명 사용자는 로그인하지 않고도 사이트의 공개된 부분을 둘러볼 수 있습니다."
+
+msgid "Appearance & language"
+msgstr "외관 및 언어"
+
+msgid "Archive should not contain FRS packages."
+msgstr "아카이브에 FRS 패키지가 포함되어서는 안됩니다."
+
+msgid "Archive should not contain users."
+msgstr "아카이브에 사용자가 포함되어서는 안됩니다."
+
+msgid "Are you sure you want to remove this passkey?"
+msgstr "이 암호를 제거하시겠습니까?"
+
+msgid ""
+"As notified %1$s days ago and without any connection from you since, your "
+"user account is now suspended, in compliance with %2$s policies."
+msgstr ""
+"%1$s일 전에 전송된 통지 이후로 아무런 접속이 없어 %2$s 정책에 따라 사용자 계"
+"정이 정지되었습니다."
+
+msgid ""
+"As the Forum creator it is <u>strongly recommend</u> that you monitor this "
+"forum to be instantly notified via email of any new message posted to the "
+"Forum."
+msgstr ""
+"포럼 작성자는 이 포럼을 모니터링하여 포럼에 게시된 새 메시지에 대해 이메일을 "
+"통해 즉시 알림을 받을 것을<u>강력히 권장합니다</u>."
+
+msgid "Ask to join"
+msgstr "가입 요청"
+
+msgid "Ask to join this project"
+msgstr "이 프로젝트에 가입하도록 요청"
+
+msgid "Asynchronous workers must be available."
+msgstr "비동기 작업자를 사용할 수 있어야 합니다."
+
+msgid "Authenticated users (Registered + Restricted) label"
+msgstr "인증된 사용자 (등록됨 + 제한됨) 레이블"
+
+msgid "Author"
+msgstr "작성자"
+
+msgid "Automatically extract this keyword?"
+msgstr "이 키워드를 자동으로 추출하시겠습니까?"
+
+msgid "Available?"
+msgstr "이용 가능?"
+
+msgid "Avatar changed!"
+msgstr "사진이 변경되었습니다."
+
+msgid "Back"
+msgstr "뒤로"
+
+msgid "Back to the administration"
+msgstr "관리로 돌아가기"
+
+msgid "Background"
+msgstr "배경"
+
+msgid "Bad"
+msgstr "나쁨"
+
+msgid "Banner"
+msgstr "배너"
+
+#, php-format
+msgid ""
+"Be careful, \"%s\" does not match the case sensitivity. Its rule has been "
+"disabled."
+msgstr ""
+"\"%s\"는 대소문자 구분이 일치하지 않으므로 주의하십시오. 해당 규칙이 비활성"
+"화 되었습니다."
+
+msgid "Before you start, you need to know a few things:"
+msgstr "시작하기 전에 몇 가지 사항을 알아야 합니다."
+
+msgid "Best Regards."
+msgstr "감사합니다."
+
+msgid "Best regards,"
+msgstr "감사합니다,"
+
+msgid "Beyond 3 columns, each column<br>will have the same size."
+msgstr "3열을 초과하여 각 열은<br>같은 크기를 갖습니다."
+
+msgid "Block usage of passwords known as compromised"
+msgstr "유출된 것으로 알려진 비밀번호 사용 차단"
+
+msgid "Blue"
+msgstr "파란색"
+
+msgid "Bound to service"
+msgstr "서비스에 바인딩"
+
+msgid "Broken Thread"
+msgstr "끊어진 스레드"
+
+msgid "Built from template"
+msgstr "템플릿에서 구축"
+
+msgid "By"
+msgstr "작성자"
+
+msgid "By %s"
+msgstr "작성자 %s"
+
+msgid "By default, its content is available to all authenticated users."
+msgstr "기본적으로 해당 콘텐츠는 인증된 모든 사용자가 사용할 수 있습니다."
+
+msgid ""
+"By default, its content is available to all authenticated, but not "
+"restricted, users."
+msgstr ""
+"기본적으로 해당 콘텐츠는 인증은 되었지만 제한되지 않은 모든 사용자가 사용할 "
+"수 있습니다."
+
+msgid ""
+"By default, its content is available to everyone (authenticated or not)."
+msgstr ""
+"기본적으로 해당 콘텐츠는 인증 여부와 상관 없이 모든 사람이 사용할 수 있습니"
+"다."
+
+msgid ""
+"By downloading this software you implicitly recognize that you have <a "
+"href=\"%s\"><b>read the Policy</b></a> and agree with the terms and "
+"conditions."
+msgstr ""
+"이 소프트웨어를 다운로드하면 <a href=\"%s\"><b>정책을 읽었으며</b></a> 이용 "
+"약관에 암시적으로 동의하는 것을 의미합니다."
+
+msgid "Bypass filters <em>(Site administrators only)</em>:"
+msgstr "필터 무시<em>(사이트 관리자만 해당)</em>:"
+
+msgid "CSV date format"
+msgstr "CSV 날짜 형식"
+
+msgid "CSV separator"
+msgstr "CSV 구분 기호"
+
+msgid "Can only be updated when the category is not used as project flag."
+msgstr ""
+"카테고리가 프로젝트 플래그로 사용되지 않는 경우에만 업데이트할 수 있습니다."
+
+msgid "Cancel"
+msgstr "취소"
+
+msgid "Cannot bind a ugroup with another located on a non active project."
+msgstr ""
+"ugroup을 비활성화된 프로젝트에 있는 다른 ugroup과 바인딩할 수 없습니다."
+
+#, php-format
+msgid ""
+"Cannot create the label \"%s\" because another one already exists with same "
+"name."
+msgstr "동일한 이름의 레이블이 이미 존재하므로 “%s” 레이블은 만들 수 없습니다."
+
+msgid "Cannot delete the requested dashboard."
+msgstr "요청한 대시보드를 삭제할 수 없습니다."
+
+msgid "Cannot delete the widget."
+msgstr "위젯을 삭제할 수 없습니다."
+
+msgid ""
+"Cannot remove project admin from project. Must be removed from project "
+"administration first"
+msgstr ""
+"프로젝트에서 프로젝트 관리자를 제거할 수 없습니다. 먼저 프로젝트 관리자에서 "
+"제거돼야 합니다."
+
+msgid "Cannot remove user from group"
+msgstr "그룹에서 사용자를 삭제할 수 없습니다."
+
+msgid "Cannot remove users from bound groups"
+msgstr "바인딩된 그룹에서 사용자를 삭제할 수 없습니다."
+
+msgid ""
+"Cannot switch the project visibility because it will remove every restricted "
+"users from the project, and after that no administrator will be left."
+msgstr ""
+"프로젝트에서 모든 제한된 사용자를 삭제해 관리자가 남지 않으므로 프로젝트 표"
+"시 유형을 전환할 수 없습니다."
+
+msgid "Cannot update the requested dashboard."
+msgstr "요청된 대시보드를 업데이트할 수 없습니다."
+
+msgid "Cannot update users group."
+msgstr "사용자 그룹을 업데이트할 수 없습니다."
+
+msgid "Catchy email subject line"
+msgstr "눈에 띄는 이메일 제목"
+
+msgid "Categories"
+msgstr "카테고리"
+
+msgid "Categories successfully updated."
+msgstr "카테고리가 성공적으로 업데이트되었습니다."
+
+msgid ""
+"Categorizing your project will help potential developers and users to find "
+"your project and engage."
+msgstr ""
+"프로젝트를 분류하면 개발자와 사용자가 프로젝트를 찾아 참여하는 데 도움이 됩니"
+"다."
+
+msgid "Change Forum Status"
+msgstr "포럼 상태 변경"
+
+msgid "Change View"
+msgstr "보기 변경"
+
+msgid "Change avatar"
+msgstr "사진 변경"
+
+msgid ""
+"Check this option if you want to force the usage of this preference for all "
+"users."
+msgstr ""
+"모든 사용자가 이 기본 설정을 강제로 사용하게 하려면 이 옵션을 선택합니다."
+
+msgid "Child projects"
+msgstr "하위 프로젝트"
+
+msgid "Choose a category…"
+msgstr "카테고리 선택"
+
+msgid "Choose a forum First"
+msgstr "포럼 먼저 선택"
+
+msgid "Choose a forum and you can browse, search, and post messages."
+msgstr "포럼을 선택해 메시지를 찾아보고, 검색하고, 게시할 수 있습니다."
+
+msgid "Choose a timezone"
+msgstr "시간대 선택"
+
+msgid "Clear history"
+msgstr "사용기록 삭제하기"
+
+msgid "Close"
+msgstr "닫기"
+
+msgid "Close sidebar"
+msgstr "사이드바 닫기"
+
+msgid ""
+"Collect stories, plan releases, monitor sprints with a ready-to-use Scrum "
+"area"
+msgstr ""
+"스크럼 영역 스토리를 수집하고, 릴리스를 계획하고, 스프린트를 모니터링합니다."
+
+msgid "Color"
+msgstr "색상"
+
+msgid "Comfortable"
+msgstr "낮은 밀도"
+
+msgid "Comma"
+msgstr "쉼표(,)"
+
+msgid "Comment"
+msgstr "댓글"
+
+msgid "Completed invitation"
+msgstr "완료된 초대"
+
+msgid "Compromised password"
+msgstr "손상된 비밀번호"
+
+msgid "Condensed"
+msgstr "높은 밀도"
+
+msgid "Configure homepage"
+msgstr "홈페이지 설정"
+
+msgid "Configure how project creation is controlled by administrators"
+msgstr "관리자가 프로젝트 생성을 제어하는 방법 설정"
+
+msgid "Configure how user creation is controlled by administrators"
+msgstr "관리자가 사용자 생성을 제어하는 방법 설정"
+
+msgid "Configure services"
+msgstr "서비스 설정"
+
+msgid "Confirm"
+msgstr "확인"
+
+msgid "Confirm the account creation"
+msgstr "계정 생성 확인"
+
+msgid "Confirmation link sent"
+msgstr "확인 링크 전송됨"
+
+msgid "Congratulations!"
+msgstr "축하합니다!"
+
+msgid ""
+"Congratulations, you don't have any customisations in your language files!"
+msgstr "축하합니다, 언어 파일에 사용자 지정이 없습니다!"
+
+msgid "Contact"
+msgstr "연락처"
+
+msgid "Contact (help menu)"
+msgstr "연락처 (도움말 메뉴)"
+
+msgid "Content"
+msgstr "내용"
+
+msgid "Copy the SVN token"
+msgstr "SVN 토큰 복사"
+
+msgid "Copy the access key"
+msgstr "액세스 키 복사"
+
+#, php-format
+msgid "Copyright (c) %1$s, %2$s Team, 2001-%3$d. All Rights Reserved"
+msgstr "Copyright (c) %1$s, %2$s 팀, 2001-%3$d. All Rights Reserved"
+
+msgid "Could not commit repository initial layout"
+msgstr "리포지토리 초기 레이아웃을 커밋할 수 없습니다."
+
+msgid "Could not create/initialize SVN repository"
+msgstr "SVN 리포지토리를 생성/초기화 할 수 없습니다."
+
+msgid "Could not the access file of the SVN repository"
+msgstr "SVN 리포지토리의 파일을 액세스할 수 없습니다."
+
+msgid "Could not update hooks of the SVN repository"
+msgstr "SVN 리포지토리의 후크를 업데이트할 수 없습니다."
+
+msgid "Create"
+msgstr "생성"
+
+msgid "Create a new reference pattern"
+msgstr "새 참조 패턴 만들기"
+
+msgid "Create a new reference pattern."
+msgstr "새 참조 패턴을 만듭니다."
+
+msgid "Create a new user"
+msgstr "새 사용자 만들기"
+
+msgid "Create an account"
+msgstr "새 계정 만들기"
+
+msgid "Create from"
+msgstr "다음에서 만들기"
+
+msgid "Create label"
+msgstr "레이블 만들기"
+
+msgid "Create my account"
+msgstr "내 계정 만들기"
+
+msgid "Create new License Agreement"
+msgstr "새 사용권 계약 만들기"
+
+msgid "Create user group"
+msgstr "사용자 그룹 생성"
+
+msgid "Create your account"
+msgstr "계정 만들기"
+
+msgid ""
+"Creating new SVN tokens is no more possible, personal access keys should be "
+"used instead."
+msgstr ""
+"새 SVN 토큰을 만드는 것은 더 이상 불가능하며 대신 개인 액세스 키를 사용해야 "
+"합니다."
+
+msgid "Credential id is not well formed"
+msgstr "크리덴셜 ID가 제대로 설정되지 않았습니다."
+
+msgid "Current and new passwords are identical"
+msgstr "현재 비밀번호와 새 비밀번호가 동일합니다."
+
+msgid "Current password"
+msgstr "현재 비밀번호"
+
+msgid "Current password is incorrect"
+msgstr "현재 비밀번호가 틀렸습니다."
+
+msgid "Custom groups"
+msgstr "사용자 지정 그룹"
+
+msgid "Custom release note link successfully updated."
+msgstr "사용자 지정 릴리스 노트 링크가 성공적으로 업데이트되었습니다."
+
+msgid "Customisation"
+msgstr "사용자 정의"
+
+msgid "Customize homepage"
+msgstr "홈페이지 커스텀"
+
+msgid "DELETE FAILED!"
+msgstr "삭제 실패!"
+
+msgid "Dashboard creation failed."
+msgstr "대시보드를 생성에 실패했습니다."
+
+msgid "Dashboard has been successfully created."
+msgstr "대시보드가 성공적으로 생성되었습니다."
+
+msgid "Dashboard has been successfully deleted."
+msgstr "대시보드가 성공적으로 삭제되었습니다."
+
+msgid "Dashboard has been successfully updated."
+msgstr "대시보드가 성공적으로 업데이트되었습니다."
+
+msgid "Dashboard name"
+msgstr "대시보드 이름"
+
+msgid "Data"
+msgstr "데이터"
+
+msgid "Data (like artifacts or users) won't be included."
+msgstr "데이터 (예: 아티팩트 또는 사용자)는 포함되지 않습니다."
+
+msgid "Date"
+msgstr "날짜"
+
+msgid "Date of the invitation"
+msgstr "초대 날짜"
+
+msgid "Dates display"
+msgstr "날짜 표시"
+
+msgid "Day"
+msgstr "일"
+
+msgid "Dear   {{ tuleap_server_name}} user,"
+msgstr "{{ tuleap_server_name}} 사용자님께,"
+
+msgid "Dear %s user,"
+msgstr "%s 사용자님,"
+
+#, php-format
+msgid ""
+"Dear Files service user,\n"
+"\n"
+" An error occurs while trying to compute md5sum in your uploaded file %1$s.\n"
+"Please try to upload it again."
+msgstr ""
+"Files 서비스 사용자님,\n"
+"\n"
+"업로드된 파일 %1$s에서 md5sum을 계산하는 동안 오류가 발생했습니다.\n"
+"다시 업로드해 보세요."
+
+#, php-format
+msgid ""
+"Dear Files service user,\n"
+"\n"
+"The entered reference md5sum for the file %1$s differs from the computed one "
+"which equals = %2$s.\n"
+" Note that an error message will be shown each time you display the release "
+"content in the web interface.\n"
+"If you consider that the upload has been well done, you can modify the value "
+"in the md5sum field by putting the right value."
+msgstr ""
+"Files 서비스 사용자님,\n"
+"\n"
+"파일 %1$s에 대해 입력된 참조 md5sum은 계산된 %2$s와 다릅니다.\n"
+"웹 인터페이스에 릴리스 콘텐츠를 표시할 때마다 오류 메시지가 표시됩니다.\n"
+"업로드가 잘 되었다고 생각되면 올바른 값을 입력하여 md5sum 필드의 값을 수정할 "
+"수 있습니다."
+
+msgid "Default dates display"
+msgstr "날짜 표시 기본값"
+
+msgid "Default format for trackers text fields"
+msgstr "트래커 텍스트 필드의 기본 형식"
+
+msgid "Default license agreement"
+msgstr "기본 사용권 계약"
+
+msgid "Default project visibility"
+msgstr "프로젝트 공개 범위 기본값"
+
+msgid "Default relative dates display preference saved successfully."
+msgstr "기준 날짜 표시 기본 설정이 성공적으로 저장되었습니다."
+
+msgid "Delete"
+msgstr "삭제"
+
+#, php-format
+msgid "Delete %s"
+msgstr "%s 삭제"
+
+msgid "Delete Message"
+msgstr "메시지 삭제"
+
+msgid "Delete a message"
+msgstr "메시지 삭제"
+
+msgid "Delete binding"
+msgstr "바인딩 삭제"
+
+msgid "Delete current logo"
+msgstr "현재 로고 삭제"
+
+msgid "Delete dashboard"
+msgstr "대시보드 삭제"
+
+msgid "Delete parent"
+msgstr "상위 항목 삭제"
+
+msgid "Delete selected SSH keys"
+msgstr "선택한 SSH 키 삭제"
+
+msgid "Delete service"
+msgstr "서비스 삭제"
+
+msgid "Delete this reference pattern?"
+msgstr "이 참조 패턴을 삭제하시겠습니까?"
+
+msgid "Delete users group"
+msgstr "사용자 그룹 삭제"
+
+msgid "Delete widget"
+msgstr "위젯 삭제"
+
+msgid "Delete?"
+msgstr "삭제하시겠습니까?"
+
+msgid "Deleted"
+msgstr "삭제되었습니다."
+
+msgid "Deleted Account"
+msgstr "삭제된 계정"
+
+msgid "Deleted files"
+msgstr "삭제된 파일"
+
+msgid "Deleted wiki attachments"
+msgstr "삭제된 위키 첨부 파일"
+
+msgid "Deleting a passkey"
+msgstr "암호 키 삭제"
+
+msgid "Description"
+msgstr "설명"
+
+msgid "Details"
+msgstr "상세 정보"
+
+msgid "Didn't get a confirmation email? Check your spam folder."
+msgstr "확인 이메일을 받지 못하셨나요? 스팸 폴더를 확인하세요."
+
+msgid "Disallow for all projects"
+msgstr "모든 프로젝트에 대해 허용 안 함"
+
+msgid "Disallowing for all projects"
+msgstr "모든 프로젝트에 대해 허용되지 않음"
+
+msgid "Discussion Forums"
+msgstr "토론 포럼"
+
+msgid "Display density"
+msgstr "화면 밀도"
+
+msgid "Display platform statistics on home page."
+msgstr "홈페이지에 플랫폼 통계를 표시합니다."
+
+msgid "Display site news on home page."
+msgstr "홈페이지에 사이트 뉴스를 표시합니다."
+
+msgid "Displays the 30 last updated or created items in the project."
+msgstr ""
+"프로젝트에서 마지막으로 업데이트되거나 작성된 30개의 항목을 표시합니다."
+
+msgid "Do not reply to this mail."
+msgstr "이 메일에 회신하지 마십시오."
+
+msgid "Doc"
+msgstr "문서"
+
+msgid "Documentation"
+msgstr "문서"
+
+msgid "Done events"
+msgstr "완료된 이벤트"
+
+msgid "Download agreement"
+msgstr "계약 다운로드"
+
+#, php-format
+msgid "E.g %1$s employees"
+msgstr "예: 직원 %1$s명"
+
+#, php-format
+msgid "E.g %1$s employees & subco"
+msgstr "예: %1$s 직원 및 하위"
+
+msgid ""
+"Edge Legacy is not supported. Please upgrade to the latest version of Edge "
+"or use another modern alternative such as Firefox or Chrome."
+msgstr ""
+"Edge 레거시는 지원되지 않습니다. 최신 버전의 Edge로 업그레이드하거나 Firefox "
+"또는 Chrome과 같은 다른 대안을 사용하십시오."
+
+msgid "Edit"
+msgstr "편집"
+
+#, php-format
+msgid "Edit %s"
+msgstr "%s 편집"
+
+msgid "Edit dashboard"
+msgstr "대시보드 편집"
+
+msgid "Edit license agreement"
+msgstr "사용권 계약 편집"
+
+msgid "Edit reference pattern"
+msgstr "참조 패턴 편집"
+
+msgid "Edit widget"
+msgstr "위젯 편집"
+
+msgid "Editing Project"
+msgstr "프로젝트 편집"
+
+msgid "Editing reference patterns"
+msgstr "참조 패턴 편집"
+
+#, php-format
+msgid "Editing reference patterns for <B>%s</B>"
+msgstr "<B>%s</B>에 대한 참조 패턴 편집"
+
+msgid "Editing system reference patterns"
+msgstr "시스템 참조 패턴 편집"
+
+msgid "Edition & CSV"
+msgstr "버전 및 CSV"
+
+msgid "Email"
+msgstr "이메일"
+
+#, php-format
+msgid "Email %s is not valid"
+msgstr "이메일 %s이 유효하지 않습니다."
+
+msgid "Email address"
+msgstr "이메일 주소"
+
+msgid "Email format preference successfully updated"
+msgstr "이메일 형식 설정이 성공적으로 업데이트 되었습니다."
+
+msgid "Email is already validated"
+msgstr "이메일이 이미 인증되었습니다."
+
+msgid "Email me a recovery link"
+msgstr "복구 링크를 이메일로 보내주세요."
+
+msgid "Email not sent"
+msgstr "이메일이 전송되지 않음"
+
+msgid "Email sent"
+msgstr "이메일 전송됨"
+
+msgid "Email was not updated"
+msgstr "이메일이 업데이트되지 않았습니다."
+
+msgid "Email, username..."
+msgstr "이메일, 아이디..."
+
+msgid "Emergency"
+msgstr "긴급"
+
+msgid "Empty"
+msgstr "없음"
+
+msgid "Empty group"
+msgstr "빈 그룹"
+
+msgid ""
+"Enable \"remember me\" so your session is kept open and you don't have to "
+"login too often."
+msgstr ""
+"\"기억하기\"를 활성화하면 세션이 열린 상태로 유지되고 매번 로그인할 필요가 없"
+"습니다."
+
+msgid "Enable accessibility mode"
+msgstr "접근성 모드 활성화하기"
+
+msgid "Enabled"
+msgstr "활성화"
+
+msgid "Enabled?"
+msgstr "활성화"
+
+msgid "Enter comma separated list of emails"
+msgstr "쉼표로 구분된 이메일 목록을 입력하세요."
+
+msgid "Enter meaningful headline..."
+msgstr "의미 있는 헤드라인 입력"
+
+msgid ""
+"Enter people to invite to %s. We will send an invitation email on your "
+"behalf."
+msgstr ""
+"%s에 초대할 사람을 입력합니다. 사용자님을 대신해 초대 메일을 보내드립니다."
+
+msgid "Enter the Message ID"
+msgstr "메시지 ID를 입력하세요."
+
+msgid ""
+"Enter your login name below to receive a link allowing you to change your "
+"password."
+msgstr "아래에 로그인 이름을 입력해 비밀번호를 변경할 수 있는 링크를 받으세요."
+
+msgid "Error"
+msgstr "오류"
+
+msgid "Error - choose a forum first"
+msgstr "오류 - 포럼을 먼저 선택하세요."
+
+msgid "Error - this news item was not found"
+msgstr "오류 - 이 뉴스 항목을 찾을 수 없습니다."
+
+#, php-format
+msgid "Error Adding Forum '%1$s'."
+msgstr "포럼 '%1$s'을(를) 추가하는 동안 오류 발생"
+
+msgid "Error Updating Forum Info"
+msgstr "포럼 정보를 업데이트하는 중 오류 발생"
+
+msgid "Error inserting into forum_monitoring"
+msgstr "forum_monitoring에 삽입하는 중 오류 발생"
+
+msgid "Error inserting into forum_saved_place"
+msgstr "forum_saved_place에 삽입하는 중 오류 발생"
+
+msgid "Error updating time in forum_saved_place"
+msgstr "forum_saved_place에 시간 업데이트 중 오류 발생"
+
+msgid "Error:"
+msgstr "오류:"
+
+msgid "Errors"
+msgstr "오류"
+
+msgid "Events in error"
+msgstr "오류가 있는 이벤트"
+
+msgid "Events in warning"
+msgstr "경고 이벤트"
+
+msgid "Existing Forums"
+msgstr "기존 포럼"
+
+msgid ""
+"Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format."
+msgstr "만료 날짜 항목을 파싱할 수 없습니다. YYYY-MM-DD 형식이어야 합니다."
+
+msgid "Expiration date"
+msgstr "만료일"
+
+msgid "Expiration date is not well formed."
+msgstr "만료일이 잘못된 형식입니다."
+
+msgid "Expire on"
+msgstr "만료일"
+
+msgid "Export"
+msgstr "내보내기"
+
+msgid "Export project structure"
+msgstr "프로젝트 구조 내보내기"
+
+msgid "External system references"
+msgstr "외부 시스템 참조"
+
+msgid "FRS"
+msgstr "FRS"
+
+msgid "Fields"
+msgstr "필드"
+
+#, php-format
+msgid "File upload error (error code: %1$s)"
+msgstr "파일 업로드 오류 (오류 코드: %1$s)"
+
+msgid "Files"
+msgstr "파일"
+
+msgid "Files Administration"
+msgstr "파일 관리"
+
+msgid "Files service is disabled for this project."
+msgstr "이 프로젝트에서는 파일 서비스를 사용할 수 없습니다."
+
+msgid "Filled"
+msgstr "작성됨"
+
+msgid "Filter by name"
+msgstr "이름으로 필터링"
+
+msgid "Flat"
+msgstr "플랫"
+
+msgid ""
+"For all other services, you will receive an email when you are in the "
+"notification list"
+msgstr "다른 모든 서비스의 경우 알림 목록에 있을 때 이메일을 받게 됩니다"
+
+msgid "Forbidden"
+msgstr "금지됨"
+
+msgid "Force reference pattern creation"
+msgstr "참조 패턴 강제 생성"
+
+msgid "Force usage?"
+msgstr "강제 사용?"
+
+msgid "Forum"
+msgstr "포럼"
+
+#, php-format
+msgid "Forum '%1$s' Added."
+msgstr "포럼 '%1$s’이(가) 추가되었습니다."
+
+msgid "Forum Administration"
+msgstr "포럼 관리"
+
+msgid "Forum Info Updated Successfully"
+msgstr "포럼 정보가 성공적으로 업데이트되었습니다."
+
+msgid "Forum Name"
+msgstr "포럼명"
+
+msgid "Forum already monitored"
+msgstr "포럼이 이미 모니터링됨"
+
+msgid "Forum is now being monitored"
+msgstr "포럼은 현재 모니터링 중입니다."
+
+msgid "Forum is restricted"
+msgstr "포럼이 제한되어 있습니다."
+
+msgid "Forums"
+msgstr "포럼"
+
+#, php-format
+msgid "Forums for '%1$s'"
+msgstr "'%1$s'를 위한 포럼"
+
+msgid "Full name"
+msgstr "전체 이름"
+
+msgid "General"
+msgstr "일반"
+
+msgid "Generate"
+msgstr "생성"
+
+msgid "Generate new key"
+msgstr "새 키 생성"
+
+msgid "Generated on"
+msgstr "생성 날짜"
+
+msgid "Get help"
+msgstr "도움 받기"
+
+msgid "Global access"
+msgstr "글로벌 액세스"
+
+msgid "Global access rights"
+msgstr "글로벌 액세스 권한"
+
+msgid "Global configuration"
+msgstr "글로벌 설정"
+
+msgid "Global permissions"
+msgstr "글로벌 사용 권한"
+
+msgid "Global utils"
+msgstr "글로벌 유틸리티"
+
+msgid "Go to login page"
+msgstr "로그인 페이지로 이동"
+
+msgid "Go to my home page"
+msgstr "내 홈페이지로 이동"
+
+msgid "Go up"
+msgstr "오르다"
+
+msgid "Good"
+msgstr "좋음"
+
+msgid "Granted groups"
+msgstr "부여된 그룹"
+
+msgid "Green"
+msgstr "녹색"
+
+msgid "Grey"
+msgstr "회색"
+
+msgid "Group"
+msgstr "그룹"
+
+msgid "Group binding"
+msgstr "그룹 바인딩"
+
+msgid "Group details"
+msgstr "그룹 상세"
+
+msgid "Group members"
+msgstr "그룹 멤버"
+
+msgid "Groups"
+msgstr "그룹"
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "HTML tags will display in your post as text"
+msgstr "HTML 태그는 게시물에 텍스트로 표시됩니다."
+
+msgid "Header background"
+msgstr "머리글 배경"
+
+msgid "Headline"
+msgstr "헤드라인"
+
+msgid "Heartbeat"
+msgstr "하트비트"
+
+msgid "Hello"
+msgstr "안녕하세요"
+
+msgid "Hello %s,"
+msgstr "안녕하세요 %s님,"
+
+msgid "Hello,"
+msgstr "안녕하세요,"
+
+msgid "Help"
+msgstr "도움말"
+
+msgid ""
+"Here is your new SVN token. Please make sure you copy it, you won't be able "
+"to see it again!"
+msgstr "새로운 SVN 토큰입니다. 다시 볼 수 없으니 복사하십시오!"
+
+msgid ""
+"Here is your new access key. Please make sure to copy it, you won't be able "
+"to see it again!"
+msgstr "새 액세스 키입니다. 다시 볼 수 없으니 복사하십시오!"
+
+msgid "History"
+msgstr "기록"
+
+msgid "Homepage"
+msgstr "홈페이지"
+
+msgid "Homepage logo"
+msgstr "홈페이지 로고"
+
+msgid "How many invitations a user can send per day?"
+msgstr "사용자가 하루에 보낼 수 있는 초대는 몇 개인가요?"
+
+msgid "I accept"
+msgstr "동의합니다"
+
+msgid "I decline"
+msgstr "거절합니다"
+
+msgid "INSERT FAILED"
+msgstr "삽입 실패"
+
+msgid "Icon"
+msgstr "아이콘"
+
+msgid "Id"
+msgstr "ID"
+
+msgid "Id group"
+msgstr "ID 그룹"
+
+msgid "Id, unix name..."
+msgstr "ID, 유닉스 이름..."
+
+msgid ""
+"If enabled, an email will be sent to all the project members if the "
+"visibility of the project is changed."
+msgstr ""
+"활성화하면 프로젝트 공개 범위가 변경되면 모든 프로젝트 멤버에게 이메일이 전송"
+"됩니다."
+
+msgid "If the reference pattern is specific to one service, select it here"
+msgstr "참조 패턴이 한 서비스에만 적용되는 경우 선택하세요."
+
+msgid ""
+"If you requested this verification, visit the following URL to change your "
+"password:"
+msgstr "확인을 요청한 경우 다음 URL에 접속하여 암호를 변경하세요."
+
+msgid ""
+"If your instance can not access the Internet, it is preferable to disable "
+"the verification to avoid a slowness during password compliance check."
+msgstr ""
+"인스턴스가 인터넷에 접속할 수 없는 경우 비밀번호 규정 준수 검사 중에 속도가 "
+"느려지는 것을 방지하기 위해 확인을 비활성화하는 것이 좋습니다."
+
+msgid ""
+"If, in your organization, the strict privacy of the projects must be "
+"preserved by 'design', then you should uncheck this option so that project "
+"admins cannot disclose confidential resources to other platform users."
+msgstr ""
+"프로젝트의 엄격한 개인 정보를 '설계'에 따라 보호해야 하는 경우 프로젝트 관리"
+"자가 기밀 리소스를 다른 플랫폼 사용자에게 공개할 수 없도록 이 옵션을 선택하"
+"지 않아야 합니다."
+
+msgid "Image"
+msgstr "이미지"
+
+msgid "Import"
+msgstr "가져오기"
+
+msgid "Import members"
+msgstr "멤버 가져오기"
+
+msgid ""
+"In each project, you will find various tools such as Kanbans, Documents, "
+"Milestones…"
+msgstr ""
+"각 프로젝트에서는 칸반, 문서, 마일스톤과 같은 다양한 도구를 찾을 수 있습니다."
+
+msgid "In the meantime, you can get %1$sback to the homepage%2$s."
+msgstr "그동안 %1$s홈페이지로 돌아가기%2$s를 할 수 있습니다."
+
+msgid "Inactive service cannot be enabled."
+msgstr "비활성화된 서비스를 사용하도록 설정할 수 없습니다."
+
+msgid "Inherited?"
+msgstr "상속?"
+
+msgid "Initial layout creation"
+msgstr "초기 레이아웃 생성"
+
+msgid "Internal error: Could not update password"
+msgstr "내부 오류: 암호를 업데이트할 수 없습니다."
+
+msgid "Internal server error"
+msgstr "내부 서버 오류"
+
+msgid "Invalid Email Address"
+msgstr "유효하지 않은 이메일 주소"
+
+msgid "Invalid Password Or User Name"
+msgstr "잘못된 아이디 또는 패스워드"
+
+msgid "Invalid Short Name"
+msgstr "잘못된 약식 이름"
+
+msgid "Invalid confirmation hash."
+msgstr "잘못된 확인 해시"
+
+#, php-format
+msgid "Invalid group name: %s. Please use only alphanumerical characters."
+msgstr "잘못된 그룹 이름: %s. 영숫자만 사용하십시오."
+
+#, php-format
+msgid "Invalid line \"%s\""
+msgstr "잘못된 줄 \"%s\""
+
+msgid "Invalid project was passed in."
+msgstr "잘못된 프로젝트가 전달되었습니다."
+
+msgid "Invalid request"
+msgstr "유효하지 않은 요청"
+
+msgid "Invalid selection of categories"
+msgstr "잘못된 카테고리 선택"
+
+msgid "Invitation complete!"
+msgstr "초대 완료!"
+
+msgid "Invitation has been resent"
+msgstr "초대가 다시 전송되었습니다."
+
+msgid "Invitation has been withdrawn"
+msgstr "초대가 철회되었습니다."
+
+msgid "Invitation sent for project %1$s on %2$s"
+msgstr "%2$s에서 프로젝트 %1$s에 대한 초대가 전송되었습니다."
+
+msgid "Invitation sent on %s"
+msgstr "%s에 초대장이 전송됨"
+
+#, php-format
+msgid "Invitation to log on to %s"
+msgstr "%s에 로그인하도록 초대"
+
+#, php-format
+msgid "Invitation to register to %s"
+msgstr "%s애 등록하도록 초대"
+
+msgid "Invitations"
+msgstr "초대"
+
+msgid "Invitations are not enabled"
+msgstr "초대를 사용할 수 없습니다."
+
+msgid "Invitations settings"
+msgstr "초대 설정"
+
+msgid "Invitations settings successfully updated."
+msgstr "초대 설정이 성공적으로 업데이트되었습니다."
+
+msgid "Invite"
+msgstr "초대"
+
+msgid "Invite a co-worker"
+msgstr "동료 초대"
+
+msgid "Invite someone to join %s"
+msgstr "%s에 참여하도록 다른 사람을 초대"
+
+msgid "Invited by"
+msgstr "초대한 사람"
+
+msgid "Is Public?"
+msgstr "공개인가요?"
+
+msgid "Is default?"
+msgstr "기본값입니까?"
+
+msgid "Is this email not displaying correctly?"
+msgstr "이 이메일이 올바르게 표시되지 않습니까?"
+
+msgid "Is used?"
+msgstr "사용됩니까?"
+
+msgid "Issue tracking"
+msgstr "이슈 트래킹"
+
+msgid "It has just been automatically removed."
+msgid_plural "They have just been automatically removed."
+msgstr[0] "방금 자동으로 제거되었습니다."
+
+#, php-format
+msgid "JpGraph error for graph \"%1$s\": %2$s"
+msgstr "그래프 “%1$s” JpGraph 오류: %2$s"
+
+msgid "Kanban"
+msgstr "칸반"
+
+msgid "Key"
+msgstr "키"
+
+#, php-format
+msgid "Key %1$s already existing for user"
+msgstr "키 %1$s은(는) 사용자에게 이미 존재합니다."
+
+#, php-format
+msgid "Key '%s' successfully added"
+msgstr "'%s' 키가 성공적으로 추가되었습니다."
+
+#, php-format
+msgid "Key '%s' successfully deleted"
+msgstr "'%s' 키가 성공적으로 삭제되었습니다."
+
+msgid "Keyboard shortcuts"
+msgstr "키보드 단축키"
+
+msgid "Keys & Tokens"
+msgstr "키 & 토큰"
+
+msgid "Keys & tokens"
+msgstr "키 & 토큰"
+
+msgid "Keyword"
+msgstr "키워드"
+
+msgid "Keyword that will trigger a reference creation"
+msgstr "참조 생성을 트리거하는 키워드"
+
+msgid "Label"
+msgstr "레이블"
+
+msgid "Label has been added."
+msgstr "레이블이 추가되었습니다."
+
+msgid "Label has been deleted from the project."
+msgstr "레이블이 프로젝트에서 삭제되었습니다."
+
+msgid "Label has been edited."
+msgstr "레이블이 수정되었습니다."
+
+msgid "Label has not been edited."
+msgstr "레이블이 수정되지 않았습니다."
+
+msgid "Labels"
+msgstr "레이블"
+
+msgid "Language"
+msgstr "언어"
+
+msgid "Last login failure"
+msgstr "마지막 로그인 실패"
+
+msgid "Last login failure:"
+msgstr "마지막 로그인 실패:"
+
+msgid "Last successful login"
+msgstr "마지막으로 성공한 로그인"
+
+msgid "Last successful login:"
+msgstr "마지막으로 성공한 로그인:"
+
+msgid "Last used by"
+msgstr "마지막으로 사용한 사람"
+
+msgid "Last used on"
+msgstr "마지막 사용 날짜"
+
+msgid ""
+"Leave it blank to invite people to the platform without making them project "
+"member."
+msgstr "사용자를 프로젝트 멤버로 만들지 않고 플랫폼에 초대하려면 비워 둡니다."
+
+msgid "Leave project"
+msgstr "프로젝트 나가기"
+
+msgid "Legacy default template"
+msgstr "레거시 기본 템플릿"
+
+#, php-format
+msgid "License \"%s\" was successfully deleted"
+msgstr "라이센스 “%s”이(가) 성공적으로 삭제되었습니다."
+
+msgid "License Agreements"
+msgstr "사용권 계약"
+
+msgid "License Approval:"
+msgstr "라이센스 승인:"
+
+msgid "Link"
+msgstr "링크"
+
+msgid "Links"
+msgstr "링크"
+
+msgid "Lists the project members."
+msgstr "프로젝트 멤버를 나열합니다."
+
+msgid "Login"
+msgstr "로그인"
+
+msgid "Login Name"
+msgstr "로그인 이름"
+
+msgid "Login name"
+msgstr "로그인 이름"
+
+msgid "Logout"
+msgstr "로그아웃"
+
+msgid "Low traffic, highly recommended."
+msgstr "트래픽이 매우 낮고 보안 주의가 포함되어 있습니다. 강력 권장됩니다."
+
+msgid "Low traffic."
+msgstr "트래픽이 낮습니다."
+
+msgid "Manage all plugins"
+msgstr "모든 플러그인 관리"
+
+msgid "Manage help links"
+msgstr "도움말 링크 관리"
+
+msgid "Manage project reference patterns"
+msgstr "프로젝트 참조 패턴 관리"
+
+msgid "Manage system reference patterns"
+msgstr "시스템 참조 패턴 관리"
+
+#, php-format
+msgid "Mandatory categories where missing: %s"
+msgstr "누락된 필수 카테고리: %s"
+
+#, php-format
+msgid "Mandatory field where missing: %s"
+msgstr "누락된 필수 입력란: %s"
+
+msgid "Mass emailing"
+msgstr "대량 이메일 발송"
+
+msgid "Massmail sending"
+msgstr "대량 메일 발송"
+
+msgid "Massmail to project members is disabled."
+msgstr "프로젝트 멤버에게 대량 메일을 보내기가 비활성화되었습니다."
+
+msgid "Maximum number of projects waiting for validation (-1 means no limits)"
+msgstr "승인을 기다리는 최대 프로젝트 수 (-1은 제한이 없음을 의미)"
+
+msgid ""
+"Maximum number of projects waiting for validation for one requester (-1 "
+"means no limits)"
+msgstr ""
+"한 명의 요청자에 대한 승인을 기다리는 최대 프로젝트 수 (-1은 제한 없음을 의"
+"미)"
+
+msgid "Meaningful description of the group"
+msgstr "그룹에 대한 의미 있는 설명"
+
+msgid "Member"
+msgid_plural "Members"
+msgstr[0] "멤버"
+
+msgid "Member name"
+msgstr "멤버 이름"
+
+msgid "Member of {{ nb_projects }} project"
+msgid_plural "Member of {{ nb_projects }} projects"
+msgstr[0] "{{ nb_projects }} 프로젝트의 멤버"
+
+msgid "Member removal"
+msgstr "멤버 삭제"
+
+msgid "Member since"
+msgstr "가입일"
+
+msgid "Member since %s"
+msgstr "가입일: %s"
+
+msgid "Members"
+msgstr "맴버"
+
+msgid "Members of user groups"
+msgstr "사용자 그룹의 멤버"
+
+msgid "Membership in user groups (read only)"
+msgstr "사용자 그룹의 자격 (읽기 전용)"
+
+msgid "Membership management"
+msgstr "멤버 관리"
+
+msgid "Message"
+msgstr "메시지"
+
+msgid "Message Posted"
+msgstr "메시지 게시됨"
+
+msgid "Message from %s:"
+msgstr "%s에서 온 메시지:"
+
+msgid "Message is not in your group"
+msgstr "메시지가 그룹에 없습니다."
+
+msgid "Message not found"
+msgstr "메시지를 찾을 수 없음"
+
+msgid "Message sent to administrator should not be empty."
+msgstr "관리자에게 보낸 메시지는 비워 둘 수 없습니다."
+
+msgid "Message to project administrators"
+msgstr "프로젝트 관리자에게 보내는 메시지"
+
+msgid "Message..."
+msgstr "메시지..."
+
+msgid "Missing Information. PLEASE fill in all required information."
+msgstr "정보가 누락되었습니다. 필요한 모든 정보를 입력하십시오."
+
+msgid ""
+"Missing forum name or description, please press the \"Back\" button and "
+"complete this information"
+msgstr ""
+"포럼 이름이나 설명이 누락된 경우 \"뒤로\" 버튼을 눌러 정보를 작성하십시오."
+
+msgid "Moderation"
+msgstr "수정"
+
+msgid "Monitor Forum"
+msgstr "포럼 모니터링"
+
+msgid "Monitor a forum"
+msgstr "포럼 모니터링"
+
+msgid "Monitor?"
+msgstr "모니터 하겠습니까?"
+
+msgid "Monitoring has been turned off"
+msgstr "모니터링이 꺼져 있습니다."
+
+msgid "Month"
+msgstr "월"
+
+msgid "Must be project admin to add a project member"
+msgstr "프로젝트 관리자만 프로젝트 멤버를 추가할 수 있습니다."
+
+msgid "Must choose a message first"
+msgstr "메시지를 먼저 선택해야 합니다."
+
+msgid "Must include a message body and subject"
+msgstr "메시지 본문과 제목을 포함해야 합니다."
+
+msgid "My Dashboard"
+msgstr "내 대시보드"
+
+msgid "My dashboard"
+msgstr "내 대시보드"
+
+msgid "Name"
+msgstr "이름"
+
+msgid "Name of passkey can contain up to 250 characters maximum"
+msgstr "암호 키 이름은 최대 250자까지 작성할 수 있습니다."
+
+msgid "Name or description"
+msgstr "이름 또는 설명"
+
+msgid "Name, type..."
+msgstr "이름, 유형..."
+
+msgid "Nature"
+msgstr "성격"
+
+msgid "Nb maximum of allowed values"
+msgstr "허용되는 값의 최대값"
+
+msgid "Nb maximum of allowed values must be 1."
+msgstr "허용되는 값의 최대값은 1이어야 합니다."
+
+msgid "Nb members"
+msgstr "멤버 수"
+
+msgid "Nested"
+msgstr "중첩됨"
+
+msgid "Never"
+msgstr "안함"
+
+msgid "New"
+msgstr "신규"
+
+#, php-format
+msgid "New User Registered: %1$s"
+msgstr "신규 사용자 등록: %1$s"
+
+msgid "New avatar"
+msgstr "새로운 사진"
+
+msgid ""
+"New email was successfully saved. To complete the change, <strong>please "
+"click on the confirmation link</strong> you will receive by email (new "
+"address)."
+msgstr ""
+"새 이메일이 성공적으로 저장되었습니다. 변경을 완료하려면 이메일(새 주소)로 받"
+"은 <strong>확인 링크를 클릭하십시오</strong>."
+
+msgid "New events"
+msgstr "새 이벤트"
+
+msgid "New messages will be highlighted when you return."
+msgstr "돌아올시 새 메시지가 강조 표시됩니다."
+
+msgid "New password"
+msgstr "새 비밀번호"
+
+msgid "New personal access key"
+msgstr "새 개인 액세스 키"
+
+#, php-format
+msgid "New project registered: %s"
+msgstr "새 프로젝트 등록: %s"
+
+msgid "New reference pattern"
+msgstr "새 참조 패턴"
+
+msgid "New user"
+msgstr "신규 사용자"
+
+msgid "News"
+msgstr "뉴스"
+
+msgid "News approval"
+msgstr "뉴스 승인"
+
+msgid "News {{ user_group_name }} can see"
+msgstr "뉴스 {{ user_group_name }} 볼 수 있습니다"
+
+msgid "Next Messages"
+msgstr "다음 메시지"
+
+msgid "No"
+msgstr "아니오"
+
+msgid "No Comments"
+msgstr "댓글이 없습니다"
+
+msgid "No Forums Found"
+msgstr "포럼을 찾을 수 없습니다."
+
+#, php-format
+msgid "No Messages in %1$s"
+msgstr "%1$s에 메시지가 없습니다."
+
+msgid "No activity yet"
+msgstr "아직 활동이 없습니다."
+
+msgid "No background"
+msgstr "배경 없음"
+
+msgid "No children projects"
+msgstr "하위 프로젝트 없음"
+
+msgid "No email for user account"
+msgstr "사용자 계정에 대한 이메일 없음"
+
+msgid "No followup ID present when trying to post to an existing thread."
+msgstr "기존 스레드에 게시하려고 할 때 후속 ID가 없습니다."
+
+msgid "No forum for this project"
+msgstr "이 프로젝트에 포럼이 없습니다."
+
+#, php-format
+msgid "No forums found for '%1$s'"
+msgstr "'%1$s'에 대한 포럼을 찾을 수 없습니다."
+
+msgid "No items can use labels in this project."
+msgstr "이 프로젝트에서는 어떤 항목도 레이블을 사용할 수 없습니다."
+
+msgid "No labels defined in this project"
+msgstr "이 프로젝트에 정의된 레이블이 없습니다."
+
+msgid "No license to approve"
+msgstr "승인할 라이센스 없음"
+
+msgid "No matching labels"
+msgstr "일치하는 레이블이 없습니다."
+
+msgid "No need to register, you are already logged in."
+msgstr "이미 로그인되어 있어 등록할 필요가 없습니다."
+
+msgid "No one monitoring"
+msgstr "아무도 모니터링하지 않음"
+
+msgid "No project ID has been provided for the template"
+msgstr "템플릿에 대한 프로젝트 ID가 제공되지 않았습니다."
+
+msgid "No project trove categories"
+msgstr "프로젝트 트로브 카테고리 없음"
+
+msgid "No projects to validate"
+msgstr "승인할 프로젝트가 없습니다."
+
+msgid "No template information have been provided to create the project"
+msgstr "프로젝트 생성을 위한 템플릿 정보가 제공되지 않았습니다."
+
+msgid "No timezone set. Please select one."
+msgstr "시간대가 설정되지 않았습니다. 하나를 선택하십시오."
+
+msgid "No users to validate"
+msgstr "승인할 사용자 없음"
+
+msgid "No valid email to send the preview."
+msgstr "미리보기를 보낼 유효한 이메일이 없습니다."
+
+msgid "Nobody"
+msgstr "모두 제외"
+
+msgid "Not Found"
+msgstr "찾을 수 없습니다"
+
+msgid "Not a member yet?"
+msgstr "아직 멤버가 아니신가요?"
+
+msgid "Not categorized"
+msgstr "분류되지 않음"
+
+msgid "Not found"
+msgstr "찾을 수 없음"
+
+msgid "Note"
+msgstr "메모"
+
+msgid "Nothing changed"
+msgstr "변경 내역 없음"
+
+msgid "Notifications"
+msgstr "알림"
+
+msgid "Number of login failure:"
+msgstr "로그인 실패 횟수:"
+
+msgid "Obsolete invitation removal"
+msgid_plural "Obsolete invitations removal"
+msgstr[0] "더 이상 사용되지 않는 초대 제거"
+
+msgid "Offline access"
+msgstr "오프라인 액세스"
+
+msgid "Ok, got it"
+msgstr "네, 알겠습니다"
+
+msgid ""
+"Once approved, you will receive a confirmation email to <strong>%s</strong>"
+msgstr "승인되면 다음 주소로 확인 이메일을 받게 됩니다. <strong>%s</strong>"
+
+msgid "Once you add a forum, it cannot be modified or deleted!"
+msgstr "포럼을 추가한 후에는 수정하거나 삭제할 수 없습니다."
+
+msgid "Only project members can access its content."
+msgstr "프로젝트 멤버만 콘텐츠에 액세스할 수 있습니다."
+
+msgid "Only site administrators can create projects."
+msgstr "사이트 관리자만 프로젝트를 만들 수 있습니다."
+
+msgid "Ooops an error occured"
+msgstr "오류가 발생했습니다."
+
+msgid "Oops, I forgot my password"
+msgstr "비밀번호 찾기"
+
+msgid "Open sidebar"
+msgstr "사이드바 열기"
+
+msgid "Open user dropdown"
+msgstr "사용자 드롭다운 열기"
+
+msgid "Optional message…"
+msgstr "선택 사항"
+
+msgid "Orange"
+msgstr "주황색"
+
+msgid "Original"
+msgstr "원본"
+
+msgid "Outline"
+msgstr "테두리"
+
+msgid "Owner"
+msgstr "소유자"
+
+msgid "PHPWiki"
+msgstr "PHP위키"
+
+msgid "Page accessible to anonymous"
+msgstr "익명 사용자가 액세스할 수 있는 페이지"
+
+msgid "Page permissions are not listed."
+msgstr "페이지 사용 권한이 명시되지 않았습니다."
+
+msgid "Parent project"
+msgstr "상위 프로젝트"
+
+msgid "Password"
+msgstr "비밀번호"
+
+msgid "Password authentication is disabled, please use your passkey instead"
+msgstr "비밀번호 인증이 비활성화되어 있으니 패스키를 대신 사용하십시오."
+
+msgid "Password policy"
+msgstr "비밀번호 정책"
+
+msgid "Password recovered"
+msgstr "비밀번호 복구됨"
+
+msgid "Password recovery"
+msgstr "비밀번호 복구"
+
+msgid "Password robustness"
+msgstr "비밀번호 견고성"
+
+msgid "Password successfully updated"
+msgstr "비밀번호가 성공적으로 업데이트 되었습니다."
+
+msgid "Passwordless login is not available"
+msgstr "비밀번호 없이 로그인할 수 없습니다."
+
+msgid "Passwords do not match"
+msgstr "비밀번호가 일치하지 않습니다."
+
+msgid "Passwords do not match."
+msgstr "비밀번호가 일치하지 않습니다."
+
+msgid "Pending"
+msgstr "대기중"
+
+msgid "Pending invitations"
+msgstr "대기 중인 초대"
+
+msgid "Pending projects"
+msgstr "대기 중인 프로젝트"
+
+msgid "Pending trackers removal"
+msgstr "대기 중인 트래커 제거"
+
+msgid "Pending users"
+msgstr "대기 중인 사용자"
+
+msgid "People in this group will be able to manage project members."
+msgstr "이 그룹의 사용자는 프로젝트 멤버를 관리할 수 있습니다."
+
+msgid ""
+"People will be member of the project when they will accept your invitation."
+msgstr "초대 받은 분이 사용자님의 초대를 수락하면 프로젝트의 멤버가 됩니다."
+
+msgid "Per activities"
+msgstr "활동별"
+
+msgid "Per group"
+msgstr "그룹당"
+
+msgid "Permission"
+msgstr "권한"
+
+msgid "Permission Request"
+msgstr "권한 요청"
+
+msgid "Permission delegation"
+msgstr "권한 위임"
+
+msgid "Permission denied"
+msgstr "사용 권한이 거부되었습니다."
+
+msgid "Permissions delegation"
+msgstr "권한 위임"
+
+msgid "Permissions delegations have been successfully updated."
+msgstr "권한 위임이 성공적으로 업데이트되었습니다."
+
+msgid "Permissions for deprecated services"
+msgstr "사용되지 않는 서비스에 대한 권한"
+
+msgid "Permissions per group"
+msgstr "그룹별 권한"
+
+msgid "Personal access keys"
+msgstr "개인 액세스 키"
+
+msgid ""
+"Personalize your project by adding a background image in the header of "
+"dashboard and administration pages."
+msgstr ""
+"대시보드 및 관리 페이지의 헤더에 배경 이미지를 추가하여 프로젝트를 커스텀합니"
+"다."
+
+msgid "Platform access control"
+msgstr "플랫폼 접근 제어"
+
+msgid "Platform administration"
+msgstr "플랫폼 관리"
+
+msgid "Platform administrators have been notified."
+msgstr "플랫폼 관리자에게 통보되었습니다."
+
+msgid "Platform banner"
+msgstr "플랫폼 배너"
+
+msgid "Platform banner configuration"
+msgstr "플랫폼 배너 설정"
+
+msgid "Platform configuration forbid users to change password"
+msgstr "플랫폼 설정은 사용자가 암호를 변경할 수 없도록 합니다."
+
+msgid "Platform statistics"
+msgstr "플랫폼 통계"
+
+msgid "Please accept term of service"
+msgstr "이용약관에 동의해주십시오"
+
+msgid "Please avoid spaces and punctuation in users groups name."
+msgstr "사용자 그룹 이름에 공백과 구두점을 사용하지 마십시오."
+
+msgid ""
+"Please be aware that, in order to comply with {{ organization_name }} "
+"policies, all user accounts are subjected to a periodic renewal process. "
+"Inactive accounts are considered no longer used and will be suspended."
+msgstr ""
+"{{ organization_name }}의 정책을 준수하기 위해 모든 사용자 계정은 주기적인 갱"
+"신 절차를 거쳐야 합니다. 비활성 계정은 더 이상 사용되지 않는 것으로 간주되어 "
+"정지됩니다."
+
+msgid "Please categorize it."
+msgstr "분류해 주세요."
+
+msgid "Please choose a valid text file"
+msgstr "올바른 텍스트 파일을 선택하십시오."
+
+msgid "Please click on the following URL to approve the registration:"
+msgstr "다음 URL을 클릭하여 등록을 승인하십시오."
+
+msgid "Please confirm your action."
+msgstr "동작을 확인해주십시오."
+
+msgid "Please contact the administrators at:"
+msgstr "다음 연락처로 관리자에게 문의하십시오."
+
+msgid "Please explain why you are applying for registration on this site"
+msgstr "이 사이트에 등록을 신청하는 이유를 설명하십시오."
+
+msgid ""
+"Please make sure the users who will be imported are already registered and "
+"have an active account."
+msgstr ""
+"가져올 사용자가 이미 등록되어 있고 활성화 된 계정이 있는지 확인하십시오."
+
+msgid ""
+"Please note that more restrictive permissions might exist on some items."
+msgstr "일부 항목에는 더 제한적인 권한이 있을 수 있습니다."
+
+msgid ""
+"Please note the login <code>%1$s</code> and the password <code>%2$s</code>"
+msgstr ""
+"로그인 정보 <code>%1$s</code>와 비밀번호 <code>%2$s</code>를 기록해 두세요."
+
+msgid "Please select a file to upload"
+msgstr "업로드할 파일을 선택하세요."
+
+msgid ""
+"Please select a picture for your avatar. The uploaded image will be shrunk "
+"to 100×100 pixels."
+msgstr "프로필 사진을 선택하세요. 업로드된 이미지는 100×100픽셀로 축소됩니다."
+
+msgid "Please update your password first"
+msgstr "비밀번호를 먼저 업데이트하십시오."
+
+msgid "Please write something meaningful for the admin."
+msgstr "관리자에게 의미 있는 글을 써주세요."
+
+msgid "Please, enter a http:// or https:// link"
+msgstr "http:// 또는 https:// 링크를 입력하십시오."
+
+msgid "Plugins"
+msgstr "플러그인"
+
+msgid "Post Comment"
+msgstr "댓글 작성"
+
+msgid "Post a followup to this message"
+msgstr "이 메시지에 대한 후속 댓글 남기기"
+
+msgid "Posted By"
+msgstr "담당자"
+
+msgid "Posting Failed"
+msgstr "게시 실패"
+
+msgid "Predefined project references"
+msgstr "사전 정의된 프로젝트 참조"
+
+msgid "Preferences"
+msgstr "기본 설정"
+
+msgid "Preview"
+msgstr "미리보기"
+
+msgid "Preview could not be sent"
+msgstr "미리보기를 보낼 수 없습니다."
+
+msgid "Preview sent"
+msgstr "미리보기 전송됨"
+
+msgid "Preview:"
+msgstr "미리보기:"
+
+msgid "Previous Messages"
+msgstr "이전 메시지"
+
+msgid "Previous successful login"
+msgstr "이전에 성공한 로그인"
+
+msgid "Previous successful login:"
+msgstr "이전에 성공한 로그인:"
+
+msgid "Private"
+msgstr "비공개"
+
+msgid "Private incl. restricted"
+msgstr "개인 포함 제한"
+
+msgid "Private including restricted"
+msgstr "비공개 포함(제한됨 포함)"
+
+msgid "Processors"
+msgstr "프로세서"
+
+msgid "Project"
+msgstr "프로젝트"
+
+#, php-format
+msgid "Project \"%s\" imported"
+msgstr "프로젝트 “%s”를 불러왔습니다."
+
+#, php-format
+msgid "Project #%d is not active."
+msgstr "프로젝트 #%d은(는) 비활성화 상태입니다."
+
+msgid "Project (read only)"
+msgstr "프로젝트 (읽기 전용)"
+
+msgid "Project Latest News"
+msgstr "프로젝트 최신 뉴스"
+
+msgid "Project Name"
+msgstr "프로젝트 이름"
+
+msgid "Project Registration"
+msgstr "프로젝트 등록"
+
+msgid "Project Team"
+msgstr "프로젝트 팀"
+
+msgid "Project Type"
+msgstr "프로젝트 타입"
+
+msgid "Project XML export"
+msgstr "프로젝트 XML 내보내기"
+
+msgid "Project access error"
+msgstr "프로젝트 액세스 오류"
+
+msgid "Project administration"
+msgstr "프로젝트 관리"
+
+#, php-format
+msgid "Project administrators (%1$s users)"
+msgstr "프로젝트 관리자 (%1$s명의 사용자)"
+
+msgid "Project administrators can choose project visibility"
+msgstr "프로젝트 관리자는 프로젝트 공개 범위를 선택할 수 있습니다."
+
+msgid ""
+"Project admins can't be removed from project. You must remove them from "
+"Project administrators group first."
+msgstr ""
+"프로젝트 관리자는 프로젝트에서 삭제할 수 없습니다. 먼저 프로젝트 관리자 그룹"
+"에서 제거해야 합니다."
+
+msgid "Project announcement"
+msgstr "프로젝트 발표"
+
+msgid "Project background"
+msgstr "프로젝트 배경"
+
+msgid "Project banner"
+msgstr "프로젝트 배너"
+
+msgid "Project categories"
+msgstr "프로젝트 카테고리"
+
+msgid "Project creation moderation"
+msgstr "프로젝트 생성 조정"
+
+msgid "Project creation moderation settings"
+msgstr "프로젝트 생성 조정 설정"
+
+#, php-format
+msgid "Project dashboard: %s"
+msgstr "프로젝트 대시보드: %s"
+
+#, php-format
+msgid "Project developers (%1$s users)"
+msgstr "프로젝트 개발자 (%1$s명의 사용자)"
+
+msgid "Project does not exist"
+msgstr "프로젝트가 존재하지 않습니다."
+
+msgid "Project export"
+msgstr "프로젝트 내보내기"
+
+msgid "Project field has been successfully updated."
+msgstr "프로젝트 필드가 성공적으로 업데이트되었습니다."
+
+msgid "Project fields"
+msgstr "프로젝트 필드"
+
+msgid "Project flag?"
+msgstr "프로젝트 플래그?"
+
+msgid "Project flags are displayed in the navigation bar."
+msgstr "프로젝트 플래그가 탐색 모음에 표시됩니다."
+
+#, php-format
+msgid "Project fullname is invalid. The reason is: %s"
+msgstr "프로젝트 이름이 잘못되었습니다. 그 이유는 다음과 같습니다. %s"
+
+msgid "Project hierarchy"
+msgstr "프로젝트 계층 구조"
+
+msgid "Project history"
+msgstr "프로젝트 연혁"
+
+msgid ""
+"Project members and group members are synchronized. Whenever you add someone "
+"in a user group, they are automatically added here in project members."
+msgstr ""
+"프로젝트 멤버와 그룹 멤버가 동기화됩니다. 사용자 그룹에 누군가를 추가할 때마"
+"다 해당 사용자는 프로젝트 멤버에 자동으로 추가됩니다."
+
+msgid ""
+"Project members and group members are synchronized. Whenever you add someone "
+"in a user group, they are automatically added in project members."
+msgstr ""
+"프로젝트 멤버와 그룹 멤버가 동기화됩니다. 사용자 그룹에 누군가를 추가할 때마"
+"다 해당 사용자는 프로젝트 멤버에 자동으로 추가됩니다."
+
+msgid "Project must be approved by administrators"
+msgstr "프로젝트는 관리자의 승인을 받아야 합니다."
+
+msgid "Project name"
+msgstr "프로젝트 이름"
+
+msgid "Project name shouldn't exceed 40 characters."
+msgstr "프로젝트 이름은 40자를 초과할 수 없습니다."
+
+msgid ""
+"Project name update will be effective only after system event processing."
+msgstr "프로젝트 이름 업데이트는 시스템 이벤트 처리 후에만 적용됩니다."
+
+msgid "Project name..."
+msgstr "프로젝트 이름..."
+
+msgid "Project privacy set to private including restricted."
+msgstr "프로젝트 개인 정보가 비공개(제한됨을 포함)로 설정되었습니다."
+
+msgid "Project privacy set to private."
+msgstr "프로젝트 공개 범위를 비공개로 설정합니다."
+
+msgid "Project privacy set to public including restricted."
+msgstr "프로젝트 공개 범위가 공개(제한됨)로 설정되었습니다."
+
+msgid "Project privacy set to public."
+msgstr "프로젝트 공개 범위를 공개로 설정합니다."
+
+msgid "Project registration is disabled"
+msgstr "프로젝트 등록이 비활성화되었습니다."
+
+msgid "Project settings"
+msgstr "프로젝트 설정"
+
+#, php-format
+msgid "Project shortname is invalid. The reason is: %s"
+msgstr "프로젝트 단축 이름이 다음과 같은 이유로 잘못되었습니다. %s"
+
+msgid "Project templates"
+msgstr "프로젝트 템플릿"
+
+msgid "Project trove categories"
+msgstr "프로젝트 트로브 범주"
+
+msgid "Project type"
+msgstr "프로젝트 타입"
+
+msgid "Project visibility"
+msgstr "프로젝트 공개 범위"
+
+msgid "Projects"
+msgstr "프로젝트"
+
+msgid "Projects created from this template"
+msgstr "이 템플릿으로 만든 프로젝트"
+
+#, php-format
+msgid "Projects in <a href=\"%1$s\"><B>P</B> (pending) status</A>"
+msgstr "<a href=\"%1$s\"><B>P</B> (보류 중) 상태</A>의 프로젝트"
+
+msgid "Projects in category"
+msgstr "다음 카테고리의 프로젝트"
+
+msgid "Projects statistics"
+msgstr "프로젝트 통계"
+
+msgid "Projects visibility"
+msgstr "프로젝트 공개 범위"
+
+#, php-format
+msgid ""
+"Propagation of project's name update on system queued (%1$s -> %2$s). It "
+"will be processed in a little while."
+msgstr ""
+"프로젝트 이름 업데이트가 시스템에서 대기 중입니다 (%1$s -> %2$s). 잠시 후 처"
+"리됩니다."
+
+msgid "Provided release note URL is not well formed"
+msgstr "제공된 릴리스 노트 URL의 형식이 올바르지 않습니다."
+
+msgid "Public"
+msgstr "공개"
+
+msgid "Public incl. restricted"
+msgstr "공개 (제한됨 포함)"
+
+msgid "Public including restricted"
+msgstr "공개 (제한됨 포함)"
+
+msgid "Public information"
+msgstr "공개 정보"
+
+msgid "Public project categories"
+msgstr "공개 프로젝트 카테고리"
+
+msgid "Public?"
+msgstr "공개?"
+
+msgid "Purple"
+msgstr "보라색"
+
+msgid "Purpose"
+msgstr "목적"
+
+msgid "REST"
+msgstr "REST"
+
+msgid "REST Read only administrator"
+msgstr "REST 읽기 전용 관리자"
+
+msgid "REST projects management"
+msgstr "REST 프로젝트 관리"
+
+msgid "RSS"
+msgstr "RSS"
+
+msgid "Rank"
+msgstr "순위"
+
+msgid "Read and respond to this message at"
+msgstr "다음에서 이 메시지를 읽고 응답하십시오."
+
+msgid "Read only access to information about projects"
+msgstr "프로젝트에 정보에 대한 읽기 전용 액세스"
+
+msgid "Read only access to your membership in user groups"
+msgstr "사용자 그룹의 멤버 자격에 대한 읽기 전용 액세스"
+
+msgid "Real Name"
+msgstr "실명"
+
+msgid "Real Name (login)"
+msgstr "실명 (로그인)"
+
+msgid "Real name"
+msgstr "실명"
+
+msgid "Real name contains illegal characters."
+msgstr "실명에 잘못된 문자가 포함되어 있습니다."
+
+msgid "Real name is not valid"
+msgstr "실명이 유효하지 않습니다."
+
+msgid "Real name successfully updated"
+msgstr "실명이 성공적으로 업데이트되었습니다."
+
+msgid "Real name was not updated"
+msgstr "실명이 업데이트되지 않았습니다."
+
+msgid "Receive Email about Site Updates"
+msgstr "사이트 업데이트에 대한 이메일 수신"
+
+msgid "Receive additional community mailing"
+msgstr "추가 커뮤니티 메일 수신"
+
+msgid "Receive emails about site updates, including security notices"
+msgstr "보안 알림을 포함한 사이트 업데이트에 대한 이메일 수신"
+
+msgid "Receive emails for actions I do on the platform:"
+msgstr "플랫폼에서 수행하는 작업에 대한 이메일 수신:"
+
+msgid "Recently"
+msgstr "최근"
+
+msgid "Recovery link sent"
+msgstr "복구 링크 전송됨"
+
+msgid "Red"
+msgstr "빨간색"
+
+msgid "Redirecting..."
+msgstr "리다이렉팅 중입니다…"
+
+msgid "Reference ID"
+msgstr "참조 ID"
+
+msgid ""
+"Reference pattern creation failed: the selected keyword is invalid "
+"(reserved, or already exists)"
+msgstr ""
+"참조 패턴 생성 실패: 선택한 키워드가 유효하지 않습니다 (예약되었거나 이미 존"
+"재함)."
+
+msgid "Reference pattern deleted"
+msgstr "참조 패턴 삭제됨"
+
+msgid ""
+"Reference pattern edition failed: the selected keyword is invalid (reserved, "
+"or already exists)"
+msgstr ""
+"참조 패턴 수정 실패: 선택한 키워드가 유효하지 않습니다. (예약되었거나 이미 존"
+"재함)"
+
+msgid "References"
+msgstr "참조"
+
+msgid "Register"
+msgstr "회원가입"
+
+msgid "Registered users"
+msgstr "등록된 사용자"
+
+msgid "Registered users label"
+msgstr "등록된 사용자 레이블"
+
+msgid "Relative date first"
+msgstr "상대 날짜 먼저 표시"
+
+msgid "Relative date only"
+msgstr "상대 날짜만"
+
+msgid "Relative dates display"
+msgstr "상대 날짜 표시"
+
+msgid "Release Note"
+msgstr "릴리즈 노트"
+
+msgid "Release note link"
+msgstr "릴리즈 노트 링크"
+
+msgid "Release note link configuration"
+msgstr "릴리즈 노트 링크 설정"
+
+msgid "Removal from projects"
+msgstr "프로젝트에서 삭제"
+
+msgid "Remove"
+msgstr "삭제"
+
+msgid "Remove from project"
+msgstr "프로젝트에서 삭제"
+
+msgid "Remove from this group"
+msgstr "이 그룹에서 삭제"
+
+msgid "Remove from this group and project"
+msgstr "이 그룹 및 프로젝트에서 삭제"
+
+msgid "Remove from users group"
+msgstr "사용자 그룹에서 삭제"
+
+msgid "Remove group member"
+msgstr "그룹 멤버 삭제"
+
+msgid "Remove project administrator"
+msgstr "프로젝트 관리자 삭제"
+
+msgid "Remove widget in project"
+msgstr "프로젝트에서 위젯 삭제"
+
+msgid "Repeat new password"
+msgstr "새로운 비밀번호를 다시 입력하세요"
+
+msgid "Repeat password"
+msgstr "비밀번호 재확인"
+
+msgid "Replace the current logo"
+msgstr "현재 로고 바꾸기"
+
+msgid "Request body is empty"
+msgstr "요청 본문이 비어 있습니다."
+
+msgid "Request body is not well formed"
+msgstr "요청 본문의 형식이 올바르지 않습니다."
+
+#, php-format
+msgid ""
+"Requested page currently loading. If it does not, try <a href=\"%1$s\">%1$s</"
+"a>."
+msgstr ""
+"요청한 페이지가 현재 로드 중입니다. 로드 되지 않는 경우 <a "
+"href=\"%1$s\">%1$s</a>를 시도하십시오."
+
+msgid "Resend invitation"
+msgstr "초대 재발송"
+
+msgid "Resent invitation"
+msgstr "재발송된 초대"
+
+msgid "Restricted user"
+msgstr "제한된 사용자"
+
+msgid "Restricted users are allowed in this project."
+msgstr "이 프로젝트에는 제한된 사용자가 허용됩니다."
+
+msgid "Restricted users are not allowed in this project."
+msgstr "이 프로젝트에는 제한된 사용자가 허용되지 않습니다."
+
+msgid "Restricted users can create projects"
+msgstr "제한된 사용자가 프로젝트를 생성할 수 있습니다."
+
+msgid "Restricted users cannot create projects."
+msgstr "제한된 사용자는 프로젝트를 생성할 수 없습니다."
+
+msgid "Restricted users removal"
+msgstr "제한된 사용자 삭제"
+
+msgid "Review pending projects"
+msgstr "보류 중인 프로젝트 검토"
+
+msgid "Review pending users"
+msgstr "대기 중인 사용자 검토"
+
+msgid "Revoke selected SVN token"
+msgstr "선택한 SVN 토큰 취소"
+
+msgid "Revoke selected access keys"
+msgstr "선택한 액세스 키 해지"
+
+msgid "Running events"
+msgstr "이벤트 실행"
+
+msgid "SSH key"
+msgstr "SSH 키"
+
+msgid ""
+"SSH key(s) updated in database, will be propagated on filesystem in a few "
+"minutes, please be patient."
+msgstr ""
+"데이터베이스에서 업데이트 된 SSH 키는 몇 분 내에 파일 시스템에 전파됩니다."
+
+msgid "SSH keys"
+msgstr "SSH 키"
+
+msgid "SVN"
+msgstr "SVN"
+
+msgid "SVN Commits"
+msgstr "SVN 커밋"
+
+msgid "SVN token copied!"
+msgstr "SVN 토큰이 복사되었습니다."
+
+msgid "SVN tokens"
+msgstr "SVN 토큰"
+
+msgid "SVN tokens have been successfully deleted"
+msgstr "SVN 토큰이 성공적으로 삭제되었습니다."
+
+msgid "Save"
+msgstr "저장"
+
+msgid "Save Place"
+msgstr "장소 저장"
+
+msgid "Save Your Place"
+msgstr "당신의 장소를 저장하십시오"
+
+msgid "Save categories"
+msgstr "카테고리 저장"
+
+msgid "Save configuration"
+msgstr "설정 저장"
+
+msgid "Save delegated permissions"
+msgstr "위임된 권한 저장"
+
+msgid "Save header background"
+msgstr "머리글 배경 저장"
+
+msgid "Save information"
+msgstr "정보 저장"
+
+msgid "Save new avatar"
+msgstr "새 프로필 사진 저장"
+
+msgid "Save password"
+msgstr "비밀번호 저장"
+
+msgid "Save settings"
+msgstr "설정 저장"
+
+msgid "Save the link"
+msgstr "링크 저장"
+
+msgid "Save your place"
+msgstr "장소 저장"
+
+msgid "Scope"
+msgstr "범위"
+
+msgid "Scope of the reference pattern: project only or system-wide"
+msgstr "참조 패턴 범위: 프로젝트 또는 시스템 전체"
+
+msgid "Scopes"
+msgstr "범위"
+
+msgid "Scrum"
+msgstr "스크럼"
+
+msgid "Search"
+msgstr "검색"
+
+msgid "Security"
+msgstr "보안"
+
+msgid "See permissions"
+msgstr "권한 보기"
+
+msgid "Select"
+msgstr "선택"
+
+msgid "Semicolon"
+msgstr "세미콜론"
+
+msgid "Send a welcome email to the user"
+msgstr "사용자에게 환영 이메일 보내기"
+
+msgid "Send an email when the project visibility changes"
+msgstr "프로젝트 공개 범위가 변경될 때 이메일 보내기"
+
+msgid "Send email"
+msgstr "이메일 보내기"
+
+msgid "Send invitation"
+msgstr "초대 보내기"
+
+#, php-format
+msgid ""
+"Send only to users subscribed to \"Additional Community Mailings\" (%1$s "
+"users)"
+msgstr "\"추가 커뮤니티 메일링\"을 구독하는 사용자에게만 보내기 (%1$s 사용자)"
+
+msgid "Send preview"
+msgstr "미리보기 보내기"
+
+msgid "Send to"
+msgstr "수신자"
+
+msgid "Sent invitation"
+msgstr "보낸 초대장"
+
+msgid "Service is not allowed in project."
+msgstr "프로젝트에서 서비스가 허용되지 않습니다."
+
+msgid "Service news is disabled for this project."
+msgstr "이 프로젝트에서는 서비스 뉴스가 비활성되었습니다."
+
+msgid "Service not found in database"
+msgstr "데이터베이스에서 서비스를 찾을 수 없습니다."
+
+msgid "Service permissions"
+msgstr "서비스 권한"
+
+msgid "Service updated successfully"
+msgstr "서비스가 성공적으로 업데이트되었습니다."
+
+msgid "Services"
+msgstr "서비스"
+
+msgid "Session"
+msgstr "세션"
+
+msgid "Set default"
+msgstr "기본값 설정"
+
+msgid "Settings saved"
+msgstr "설정을 저장했습니다."
+
+msgid "Short description"
+msgstr "간단한 설명"
+
+msgid "Short description shouldn't exceed 255 characters."
+msgstr "간단한 설명은 255자를 초과할 수 없습니다."
+
+msgid "Short name must start with an alphanumeric character."
+msgstr "약식 이름은 영숫자로 시작해야 합니다."
+
+msgid "Shortcut"
+msgstr "바로가기"
+
+msgid "Shortcuts"
+msgstr "바로가기"
+
+msgid "Shortname edition is not allowed :"
+msgstr "약식 이름 편집은 허용되지 않습니다."
+
+msgid ""
+"Should you still need this account, please connect once to "
+"{{ tuleap_server_name}} web interface, this will automatically renew your "
+"access. Moreover we strongly advise you to take this opportunity to update "
+"your password."
+msgstr ""
+"이 계정이 여전히 필요한 경우 {{ tuleap_server_name}} 웹 인터페이스에 한번 연"
+"결하면 액세스 권한이 자동으로 갱신됩니다. 또한 이 기회에 비밀번호를 변경하는 "
+"것을 권장합니다."
+
+msgid ""
+"Should you still need your account, please notify your %s contact for this "
+"project."
+msgstr "이 계정이 필요한 경우 이 프로젝트의 %s 담당자에게 알려주십시오."
+
+#, php-format
+msgid "Show %1$s"
+msgstr "%1$s 보기"
+
+msgid "Show project announcement"
+msgstr "프로젝트 공지 보기"
+
+msgid "Sign you in"
+msgstr "로그인"
+
+msgid "Site administration"
+msgstr "사이트 관리"
+
+#, php-format
+msgid "Site administrators (%1$s users)"
+msgstr "사이트 관리자 (%1$s 사용자)"
+
+msgid "Site content customisations"
+msgstr "사이트 콘텐츠 맞춤설정"
+
+msgid "Site homepage"
+msgstr "사이트 홈페이지"
+
+msgid "Site news"
+msgstr "사이트 뉴스"
+
+msgid "Site news approval"
+msgstr "사이트 뉴스 승인"
+
+#, php-format
+msgid "Skip invalid key %1$s"
+msgstr "잘못된 키 %1$s 건너뛰기"
+
+msgid "Skip to main content"
+msgstr "주 내용으로 건너뛰기"
+
+#, php-format
+msgid "Some fields does not exists: %s"
+msgstr "일부 필드가 존재하지 않습니다: %s"
+
+msgid "Some mandatory categories are missing"
+msgstr "일부 필수 카테고리가 누락되었습니다."
+
+msgid ""
+"Someone (presumably you) on the %s site requested a password change through "
+"email verification. If this was not you, ignore this message and nothing "
+"will happen."
+msgstr ""
+"%s 사이트의 누군가가 이메일 확인을 통해 비밀번호 변경을 요청했습니다. 본인이 "
+"아닌 경우 이 메시지를 무시하세요."
+
+msgid "Specific project"
+msgstr "특정 프로젝트"
+
+msgid "Specify the nature of the reference, or Other if any."
+msgstr "참조의 특성을 지정하거나 기타(있는 경우)로 지정합니다."
+
+msgid "Start New Thread"
+msgstr "새 스레드 시작"
+
+msgid "Start a New Thread"
+msgstr "새 스레드 시작"
+
+msgid "Start a new project"
+msgstr "새 프로젝트 시작"
+
+msgid "Start by choosing a widget"
+msgstr "위젯을 선택하여 시작"
+
+msgid "Start working"
+msgstr "작업 시작"
+
+msgid "Status"
+msgstr "상태"
+
+msgid "Stop Monitoring Forum"
+msgstr "포럼 모니터링 중지"
+
+msgid ""
+"Streamline your workflow and focus on what's hot with an easy-to-use board"
+msgstr ""
+"작업 흐름을 간소화하고 사용하기 쉬운 보드로 지금 핫한 작업에 집중하세요."
+
+msgid "Style"
+msgstr "스타일"
+
+msgid "Subject"
+msgstr "제목"
+
+msgid "Submitted CSV date format is not valid"
+msgstr "제출된 CSV 날짜 형식이 잘못되었습니다."
+
+msgid "Submitted CSV separator is not valid"
+msgstr "제출된 CSV 구분 기호가 잘못되었습니다."
+
+msgid "Submitted relative dates display is not valid."
+msgstr "제출된 상대 날짜 표시가 유효하지 않습니다."
+
+msgid "Submitted text format is not valid"
+msgstr "제출된 텍스트 형식이 잘못되었습니다."
+
+msgid "Submitted username display is not valid."
+msgstr "제출된 아이디 표시가 잘못되었습니다."
+
+msgid "Successfully created reference pattern"
+msgstr "참조 패턴이 성공적으로 생성되었습니다."
+
+msgid ""
+"Successfully created system reference pattern - reference pattern added to "
+"all projects"
+msgstr ""
+"시스템 참조 패턴 생성 성공 - 모든 프로젝트에 참조 패턴이 추가되었습니다."
+
+msgid "Successfully updated."
+msgstr "성공적으로 업데이트되었습니다."
+
+msgid "Summary"
+msgstr "요약"
+
+msgid "Suspended"
+msgstr "중지됨"
+
+#, php-format
+msgid "Switch passwordless only to %s"
+msgstr "%s에만 비밀번호 없음으로 전환"
+
+msgid "Switch to…"
+msgstr "다음으로 전환..."
+
+msgid "Switching the project status back to \"pending\" is not possible."
+msgstr "프로젝트 상태를 다시 \"보류 중\"으로 전환할 수 없습니다."
+
+msgid ""
+"Synchronized project membership configuration has been updated successfully."
+msgstr "동기화된 프로젝트 멤버십 설정이 성공적으로 업데이트되었습니다."
+
+msgid "Synchronized project membership management"
+msgstr "동기화된 프로젝트 멤버십 관리"
+
+msgid "System"
+msgstr "시스템"
+
+msgid "System events"
+msgstr "시스템 이벤트"
+
+msgid "System events (last 48 hours)"
+msgstr "시스템 이벤트 (지난 48시간)"
+
+msgid "System groups"
+msgstr "시스템 그룹"
+
+msgid "System reference pattern deleted"
+msgstr "시스템 참조 패턴 삭제됨"
+
+msgid "Tab"
+msgstr "탭"
+
+#, php-format
+msgid "Tab section \"%s\" is not defined"
+msgstr "탭 섹션 \"%s\"가 정의되지 않았습니다."
+
+#, php-format
+msgid "Template #%d is not valid"
+msgstr "템플릿 #%d이(가) 유효하지 않습니다."
+
+#, php-format
+msgid ""
+"Template %d is not valid: you don't have the permission to the access the "
+"project."
+msgstr ""
+"템플릿 %d이(가) 유효하지 않음: 프로젝트에 액세스할 수 있는 권한이 없습니다."
+
+msgid "Template used by project"
+msgstr "프로젝트에서 사용하는 템플릿"
+
+msgid "Templates"
+msgstr "템플릿"
+
+msgid "Terms"
+msgstr "약관"
+
+msgid "Text"
+msgstr "텍스트"
+
+msgid "Thanks!"
+msgstr "감사합니다!"
+
+msgid "That user does not exist."
+msgstr "해당 사용자는 존재하지 않습니다."
+
+msgid "The %s team."
+msgstr "%s 팀."
+
+#, php-format
+msgid "The XML template \"%s\" provided is not valid"
+msgstr "제공된 XML 템플릿 “%s”이(가) 유효하지 않습니다."
+
+msgid ""
+"The account will be suspended when the date is reached. Leave blank if you "
+"don't want an expiration date."
+msgstr "계정이 선택된 날짜에 정지됩니다. 정지를 원하지 않는 경우 비워 두세요."
+
+msgid "The authentication cannot be checked"
+msgstr "인증을 확인할 수 없습니다."
+
+msgid ""
+"The base unit of Tuleap is the project, you can join or create as many "
+"projects as you want."
+msgstr ""
+"Tuleap의 기본 단위는 프로젝트이며, 원하는 만큼 프로젝트에 생성하거나 참여할 "
+"수 있습니다."
+
+#, php-format
+msgid "The category %d only allows %d values"
+msgstr "카테고리 %d은(는) %d 값만 허용합니다."
+
+#, php-format
+msgid "The category id %d is not a valid root category"
+msgstr "카테고리 ID %d은(는) 유효한 루트 카테고리가 아닙니다."
+
+msgid "The chosen color is not allowed."
+msgstr "선택한 색상은 허용되지 않습니다."
+
+msgid "The confirmation email couldn't be sent."
+msgstr "확인 이메일을 보낼 수 없습니다."
+
+msgid ""
+"The confirmation key is expired, please renew if needed your request for the "
+"retrieval of your lost password"
+msgstr "확인 키가 만료되었으므로 분실한 비밀번호를 찾으려면 갱신하십시오."
+
+#, php-format
+msgid "The dashboard \"%s\" already exists."
+msgstr "대시보드 “%s”은(는) 이미 존재합니다."
+
+#, php-format
+msgid "The dashboard '%s' doesn't exist."
+msgstr "대시보드 “%s”은(는) 존재하지 않습니다."
+
+msgid "The default Administration project cannot be deleted."
+msgstr "기본 관리 프로젝트는 삭제할 수 없습니다."
+
+#, php-format
+msgid "The directory %s is not valid"
+msgstr "디렉터리 %s은(는) 유효하지 않습니다."
+
+msgid "The display preference has been forced for each user successfully."
+msgstr "디스플레이 기본 설정이 모든 사용자에게 성공적으로 강제 적용되었습니다."
+
+#, php-format
+msgid "The entered value '%s' is invalid."
+msgstr "입력한 값 '%s'이(가) 유효하지 않습니다."
+
+#, php-format
+msgid "The file '%s' is already being uploaded"
+msgstr "“%s” 파일이 이미 업로드되고 있습니다."
+
+msgid "The file cannot be found"
+msgstr "파일을 찾을 수 없습니다."
+
+msgid ""
+"The following invitation has not been completed and becomes obsolete today."
+msgid_plural ""
+"The following invitations have not been completed and become obsolete today."
+msgstr[0] "다음 초대는 완료되지 않았으며 현재 폐기되었습니다."
+
+msgid "The given license agreement is not valid for this project"
+msgstr "지정된 사용권 계약은 이 프로젝트에 유효하지 않습니다."
+
+msgid ""
+"The given parent project does not exist or you are not its administrator."
+msgstr "지정된 상위 프로젝트가 없거나 관리자가 아닙니다."
+
+msgid "The group id is missing"
+msgstr "그룹 ID가 없습니다."
+
+msgid "The group name is missing"
+msgstr "그룹 이름이 없습니다."
+
+msgid "The header background has been successfully changed"
+msgstr "머리글 배경이 성공적으로 변경되었습니다."
+
+msgid "The import of project \"%s\" have failed."
+msgstr "프로젝트 “%s”를 불러오는데 실패했습니다."
+
+msgid ""
+"The invitation cannot be found. Maybe it has already been completed or "
+"removed?"
+msgstr "초대장을 찾을 수 없습니다. 이미 완료되었거나 삭제되었을 수 있습니다."
+
+msgid ""
+"The key will expire at the end of the selected date. Keep it empty if you "
+"don't want that this key will expire."
+msgstr ""
+"선택한 날짜가 종료 시 키가 만료됩니다. 이 키가 만료되지 않도록 하려면 비워 두"
+"세요."
+
+msgid "The last project administrator cannot be removed."
+msgstr "마지막 프로젝트 관리자는 삭제할 수 없습니다."
+
+msgid ""
+"The legacy default template. No more available soon. To be recreated as a "
+"\"Custom template\""
+msgstr ""
+"레거시 기본 템플릿입니다. 더 이상 사용할 수 없습니다. \"사용자 지정 템플릿"
+"\"으로 다시 만들 수 있습니다."
+
+msgid ""
+"The list of projects that were previously whitelisted will be permanently "
+"lost."
+msgstr "이전에 화이트리스트에 있던 프로젝트 목록은 영구적으로 삭제됩니다."
+
+#, php-format
+msgid ""
+"The mail was not accepted for the delivery. Please contact the administrator "
+"at %s."
+msgstr "이메일 전송이 수락되지 않았습니다. %s 관리자에게 문의하십시오."
+
+#, php-format
+msgid "The maximum number of invitations per day is %s."
+msgstr "하루 최대 초대 수는 %s입니다."
+
+msgid ""
+"The most complete project workspace to plan, build and ship quality "
+"products. Include Tuleap Test Management, Time Tracking and Cross-Tracker "
+"Search. Reach end-to-end traceability."
+msgstr ""
+"고품질 제품을 계획, 구축 및 배포할 수 있는 가장 완벽한 프로젝트 작업 공간입니"
+"다. Tuleap 테스트 관리자, 시간 추적 및 트래커 교차 검색이 포함됩니다. 엔드 "
+"투 엔드 추적성에 도달합니다."
+
+msgid "The name is missing for creating a dashboard."
+msgstr "대시보드 생성을 위한 이름이 누락되었습니다."
+
+msgid "The name is missing for editing the dashboard."
+msgstr "대시보드 편집을 위한 이름이 누락되었습니다."
+
+msgid "The page you are looking for does not exist"
+msgstr "원하는 페이지가 존재하지 않습니다."
+
+msgid ""
+"The password must not be considered as compromised (this password is present "
+"in known data breaches)"
+msgstr ""
+"암호는 유출된 것으로 간주되어서는 안 됩니다 (이 암호는 알려진 데이터 유출 사"
+"건에 포함되어 있습니다)."
+
+msgid "The password policy has been successfully updated."
+msgstr "비밀번호 정책이 성공적으로 업데이트되었습니다."
+
+msgid "The platform mandates a license agreement, none given"
+msgstr "플랫폼은 라이선스 계약을 의무시하지만, 제공되지 않았습니다."
+
+msgid "The project \"%s\" has just been successfully imported."
+msgstr "프로젝트 “%s”을(를) 성공적으로 불러왔습니다."
+
+#, php-format
+msgid ""
+"The project \"%s\" is not in a valid state and cannot be displayed in the "
+"list. Please do the necessary."
+msgstr ""
+"프로젝트 “%s”은(는) 유효한 상태가 아니므로 목록에 표시할 수 없습니다. 필요한 "
+"조치를 취해 주세요."
+
+#, php-format
+msgid ""
+"The project visibility \"%s\" can only be used when the instance have "
+"enabled the restricted users"
+msgstr ""
+"프로젝트 공개 범위 \"%s\"는 인스턴스가 제한된 사용자를 활성화한 경우에만 사용"
+"할 수 있습니다."
+
+#, php-format
+msgid ""
+"The project visibility cannot be chosen by the project administrator, only "
+"the access level \"%s\" can be used"
+msgstr ""
+"프로젝트 공개 범위는 프로젝트 관리자가 선택할 수 없으며 액세스 레벨 \"%s\"만 "
+"사용할 수 있습니다."
+
+msgid "The registration cannot be checked"
+msgstr "등록을 확인할 수 없습니다."
+
+msgid "The requested dashboard does not exist."
+msgstr "요청한 대시보드가 존재하지 않습니다."
+
+msgid "The result of passkey is invalid"
+msgstr "암호의 결과가 잘못되었습니다."
+
+msgid "The result of passkey is not for authentication"
+msgstr "암호의 결과는 인증을 위한 것이 아닙니다."
+
+msgid "The result of passkey is not for registration"
+msgstr "암호의 결과는 등록을 위한 것이 아닙니다."
+
+msgid "The result of passkey is not well formed"
+msgstr "암호의 결과의 형식이 올바르지 않습니다."
+
+#, php-format
+msgid "The sending of the mail has been <a href=\"%1$s\">put in the queue</a>"
+msgstr "메일 전송이 <a href=\"%1$s\">대기열에 추가되었습니다.</a>"
+
+msgid ""
+"The service cannot be opened in a new tab and in an iframe simultaneously. "
+"Please choose one."
+msgstr ""
+"서비스는 새 탭과 iframe에서 동시에 열 수 없습니다. 하나를 선택해 주세요."
+
+msgid "The submitted language is not supported."
+msgstr "제출된 언어는 지원되지 않습니다."
+
+msgid "The user doesn't need to be validated"
+msgstr "사용자가 승인될 필요가 없습니다."
+
+msgid "The user will automatically be added as project member."
+msgstr "사용자가 자동으로 프로젝트 멤버로 추가됩니다."
+
+msgid "The widget has been added successfully"
+msgstr "위젯이 성공적으로 추가되었습니다."
+
+msgid "The widget is already used"
+msgstr "위젯이 이미 사용 중입니다."
+
+msgid "The widget is disabled in project dashboard."
+msgstr "위젯은 프로젝트 대시보드에서 비활성화되었습니다."
+
+msgid "The {{tuleap_server_name}} team."
+msgstr "{{tuleap_server_name}} 팀."
+
+msgid "Theme color"
+msgstr "테마 색상"
+
+msgid "There are no items you can see"
+msgstr "볼 수 있는 항목이 없습니다."
+
+msgid "There are no projects in this category"
+msgstr "이 카테고리에는 프로젝트가 없습니다."
+
+msgid "There are no widgets here"
+msgstr "위젯이 없습니다"
+
+msgid ""
+"There is already an event scheduled to rename this project. Please check <a "
+"href=\"/admin/system_events/\">System Event Monitor</a>."
+msgstr ""
+"이 프로젝트의 이름을 변경하는 이벤트가 이미 등록되어 있습니다. <a href=\"/"
+"admin/system_events/\">시스템 이벤트 모니터</a>를 확인하십시오."
+
+msgid "There is no registered passkeys"
+msgstr "등록된 패스키가 없습니다."
+
+msgid "There is no users group bound to this one."
+msgstr "이 그룹에 바인딩된 사용자 그룹이 없습니다."
+
+msgid "There isn't any activity yet"
+msgstr "아직 활동이 없습니다."
+
+msgid "There isn't any matching members"
+msgstr "일치하는 멤버가 없습니다."
+
+msgid "There isn't any matching users groups"
+msgstr "일치하는 사용자 그룹이 없습니다."
+
+msgid "There isn't any matching widgets"
+msgstr "일치하는 위젯이 없습니다."
+
+msgid "There isn't any users groups yet"
+msgstr "사용자 그룹이 없습니다."
+
+msgid "These projects are already related."
+msgstr "이 프로젝트들은 이미 연관되어 있습니다."
+
+msgid "This archive is ready to be imported in a Tuleap instance."
+msgstr "이 아카이브는 Tuleap 인스턴스로 가져올 준비가 되었습니다."
+
+msgid "This description will be displayed in a tooltip above reference."
+msgstr "이 설명은 참조 위의 툴팁에 표시됩니다."
+
+msgid ""
+"This feature aims to provide a way to structure projects organizations from\n"
+"            permissions, user groups and control point of view. As of today, "
+"it's only used by Git/Gerrit for umbrella\n"
+"            projects (if relevant to your platform/project). However, "
+"setting a hierarchy between projects might have\n"
+"            future impacts (e.g. members of the parent project could "
+"possibly have access to all sub-projects even\n"
+"            without explicit permissions granted)."
+msgstr ""
+"이 기능은 권한, 사용자 그룹 및 관리의 관점에서 프로젝트 조직을 구조화하는 방"
+"법을 제공하는\n"
+"           것을 목표로 합니다. 현재로서는 상위 프로젝트에 Git / Gerrit에서만 "
+"사용됩니다\n"
+"           (플랫폼/프로젝트와 관련된 경우). 그러나 프로젝트 간에 계층을 설정"
+"하는 것은 향후\n"
+"           영향을 미칠 수 있습니다 (예: 상위 프로젝트의 멤버는 명시적 권한이 "
+"부여되지\n"
+"           않은 경우에도 모든 하위 프로젝트에 액세스할 수 있습니다)."
+
+msgid ""
+"This feature allows you to prevent the usage of passwords commonly found in "
+"known data breaches as these passwords are privileged targets."
+msgstr ""
+"이 기능을 사용하면 데이터 유출 사건들에서 자주 발견되는 암호의 사용을 방지할 "
+"수 있습니다."
+
+msgid "This group does not have any members yet."
+msgstr "이 그룹에는 아직 멤버가 없습니다."
+
+msgid "This is a preview"
+msgstr "미리보기입니다."
+
+msgid "This is a private project"
+msgstr "이것은 비공개 프로젝트입니다"
+
+msgid "This is a system group, you cannot delete it."
+msgstr "시스템 그룹이므로 삭제할 수 없습니다."
+
+msgid "This is a system service, you cannot delete it."
+msgstr "시스템 서비스이므로 삭제할 수 없습니다."
+
+msgid "This label is used in the project"
+msgstr "이 레이블은 프로젝트에서 사용됩니다."
+
+msgid ""
+"This license agreement cannot be deleted because it's used by following "
+"packages:"
+msgstr "이 사용권 계약은 다음 패키지에서 사용되므로 삭제할 수 없습니다."
+
+msgid "This mail has been automatically sent from %s application"
+msgstr "이 메일은 %s 응용 프로그램에서 자동으로 발송되었습니다."
+
+msgid ""
+"This mail has been automatically sent from {{tuleap_server_name}} application"
+msgstr ""
+"이 메일은 {{tuleap_server_name}} 응용 프로그램에서 자동으로 발송되었습니다."
+
+msgid "This message cannot be hidden until it has been taken into account"
+msgstr "이 메시지는 조치가 취해질 때까지 숨길 수 없습니다."
+
+#, php-format
+msgid ""
+"This message is being sent to notify the administrator(s) of\n"
+"project '%1$s' that user %2$s has chosen to\n"
+"remove him/herself from the project.\n"
+"\n"
+"Follow this link to see the current members of your project:\n"
+"%3$s\n"
+"\n"
+msgstr ""
+"이 메시지는 사용자 %2$s이(가) 프로젝트 ‘%1$s’에서 자신을\n"
+"삭제했다는 사실을 관리자에게 알리기 위해 전송되었습니다.\n"
+"\n"
+"이 링크에서 프로젝트의 현재 멤버를 볼 수 있습니다.\n"
+"%3$s\n"
+"\n"
+
+msgid ""
+"This option displays special patterns on colored cards in Agiledashboard and "
+"Cardwall tracker reports. This helps distinguish between colors and their "
+"variants."
+msgstr ""
+"이 옵션은 애자일 대시보드 및 카드월 트래커 보고서의 유색 카드에 패턴을 표시합"
+"니다. 이는 색상을 구별하는 데 도움이 됩니다."
+
+msgid ""
+"This permission grants the right to manage platform administration users. "
+"Every single user added here will be a platform administrator."
+msgstr ""
+"이 권한은 플랫폼 관리 사용자를 관리할 수 있는 권한을 부여합니다. 여기에 추가"
+"된 모든 사용자는 플랫폼 관리자가 됩니다."
+
+msgid ""
+"This permission grants the right to manage projects through the REST api"
+msgstr "이 권한은 REST API를 통해 프로젝트를 관리할 수 있는 권한을 부여합니다."
+
+msgid ""
+"This permission grants the user the right to see all the platform content "
+"through the REST API (GET/OPTIONS)"
+msgstr ""
+"이 권한은 사용자에게 REST API(GET/OPTIONS)를 통해 모든 플랫폼 콘텐츠를 볼 수 "
+"있는 권한을 부여합니다."
+
+msgid ""
+"This person will still be able to register by herself but won't be "
+"automatically a project member."
+msgstr ""
+"이 사람은 혼자서 등록할 수 있지만 자동으로 프로젝트 멤버가 되지는 않습니다."
+
+msgid "This project doesn't allow short name edition."
+msgstr "이 프로젝트는 약식 이름 변경을 허용하지 않습니다."
+
+msgid "This project doesn't use any services with permissions"
+msgstr "이 프로젝트는 권한이 있는 서비스를 사용하지 않습니다"
+
+msgid "This project is deleted"
+msgstr "이 프로젝트는 삭제되었습니다."
+
+msgid "This project is not active"
+msgstr "이 프로젝트는 활성화된 상태가 아닙니다."
+
+msgid "This project is not categorized yet."
+msgstr "이 프로젝트는 아직 분류되지 않았습니다."
+
+msgid "This project is not imported yet"
+msgstr "이 프로젝트는 아직 가져오지 않았습니다."
+
+msgid "This project is suspended"
+msgstr "이 프로젝트는 일시 중단되었습니다."
+
+msgid ""
+"This project is suspended. Only site administrators may access it.\n"
+"                However, the following services are not blocked and may "
+"still be used:"
+msgstr ""
+"이 프로젝트는 정지되었습니다. 사이트 관리자만 액세스할 수 있습니다.\n"
+"                그러나 다음 서비스는 차단되지 않았으며 계속 사용할 수 있습니"
+"다."
+
+msgid "This reference does not exist"
+msgstr "이 참조가 존재하지 않습니다."
+
+msgid "This service icon name is not allowed."
+msgstr "이 서비스 아이콘 이름은 허용되지 않습니다."
+
+msgid "This service is a system service, it cannot be deleted."
+msgstr "이 서비스는 시스템 서비스이므로 삭제할 수 없습니다."
+
+msgid "This user can't be restricted."
+msgstr "이 사용자는 제한할 수 없습니다."
+
+msgid ""
+"This user has the global REST read only administration permission and should "
+"not browse the application."
+msgstr ""
+"이 사용자는 글로벌 REST 읽기 전용 관리 권한을 가지며 애플리케이션을 둘러볼 "
+"수 없습니다."
+
+msgid ""
+"This users group is bound to a group you are not allowed to administrate."
+msgstr "이 사용자 그룹은 관리가 허용되지 않은 그룹에 바인딩되어 있습니다."
+
+msgid "This users group is bound to the following group:"
+msgstr "이 사용자 그룹은 다음 그룹에 바인딩됩니다."
+
+msgid "This users group is not bound to any users group."
+msgstr "이 사용자 그룹은 다른 사용자 그룹에 바인딩되지 않았습니다."
+
+msgid ""
+"This users group is the source of one other users group you are not allowed "
+"to administrate."
+msgid_plural ""
+"This users group is the source of %d other users groups you are not allowed "
+"to administrate."
+msgstr[0] ""
+"이 사용자 그룹은 관리가 허용되지 않은 다른 사용자 그룹의 소스입니다."
+
+msgid ""
+"This will generate a zip archive with a project.xml file that contains "
+"project structure."
+msgstr ""
+"이는 프로젝트 구조가 포함된 project.xml 파일이 있는 zip 아카이브를 생성합니"
+"다."
+
+msgid "This will remove this service from all projects."
+msgstr "이는 모든 프로젝트에서 이 서비스를 제거합니다."
+
+msgid "Thread"
+msgstr "Thread"
+
+msgid "Thread Monitoring Panel"
+msgstr "스레드 모니터링 패널"
+
+msgid "Thread View"
+msgstr "스레드 뷰"
+
+msgid "Thread monitoring update failed."
+msgstr "스레드 모니터링 업데이트에 실패했습니다."
+
+msgid "Thread monitoring updated."
+msgstr "스레드 모니터링이 업데이트되었습니다."
+
+msgid "Threaded"
+msgstr "Threaded"
+
+msgid "Timezone"
+msgstr "시간대"
+
+msgid "Timezone successfully updated"
+msgstr "시간대가 성공적으로 업데이트되었습니다."
+
+msgid "Timezone was not updated"
+msgstr "시간대가 업데이트되지 않았습니다."
+
+msgid "Title"
+msgstr "제목"
+
+msgid ""
+"To determine if a password is compromised, the Have I Been Pwned service is "
+"used."
+msgstr ""
+"암호가 유출되었는지 확인하기 위해 Have I Been Pwned 서비스가 사용됩니다."
+
+msgid ""
+"To proceed with the file download, click on '<b>I accept</b>'. If you do not "
+"want to download the file click on '<b>I decline</b>' and <a href=\"mailto:"
+"%s\"><b>contact us</b></a> if you need clarification or want to explain why "
+"you declined the agreement."
+msgstr ""
+"파일 다운로드를 진행하려면 '<b>동의함</b>'을 클릭하십시오. 파일을 다운로드하"
+"지 않으려면 '<b>거부함</b>'을 클릭하고 설명이 필요하거나 계약을 거부한 이유"
+"를 설명하려면 <a href=\"mailto:%s\"><b>당사에 문의하십시오</b></a>."
+
+msgid "To sign in (your username is %s):"
+msgstr "로그인하려면 (아이디 %s):"
+
+msgid "To sign up:"
+msgstr "가입 방법:"
+
+msgid "To turn off monitoring, simply click the <B>Stop Monitoring Forum</B>."
+msgstr "모니터링을 끄려면 <B>모니터링 중지 포럼</B>을 클릭하세요."
+
+msgid "Today"
+msgstr "오늘"
+
+msgid "Too many projects are waiting to be approved."
+msgstr "너무 많은 프로젝트가 승인 대기 중입니다."
+
+msgid "Too many projects for the user are waiting to be approved."
+msgstr "사용자에게 너무 많은 프로젝트가 승인 대기 중입니다."
+
+msgid "Tools"
+msgstr "도구"
+
+msgid "Trace and Track all types of activities."
+msgstr "모든 유형의 활동을 추적하고 감시합니다."
+
+msgid "Tracker email format"
+msgstr "트래커 이메일 형식"
+
+msgid "Trackers"
+msgstr "트래커"
+
+msgid "Trackers v3 import"
+msgstr "트래커 v3 가져오기"
+
+msgid "Trove categories"
+msgstr "Trove 카테고리"
+
+msgid "Trying to followup to a message that doesn't exist."
+msgstr "존재하지 않는 메시지에 대한 후속 조치를 시도하고 있습니다."
+
+msgid "Trying to post without a forum ID"
+msgstr "포럼 ID 없이 게시하려고 합니다."
+
+msgid ""
+"Tuleap helps teams to deliver awesome applications, better, faster, and "
+"easier.\n"
+"Here you plan, track, code, and collaborate on software projects."
+msgstr ""
+"Tuleap은 팀이 멋진 애플리케이션을 더 우수하고, 더 빠르고, 더 쉽게 제공할 수 "
+"있도록 지원합니다.\n"
+"여기에서 소프트웨어 프로젝트를 계획, 추적, 코딩 및 협업할 수 있습니다."
+
+msgid "URL pointed by the reference"
+msgstr "참조가 가리키는 URL"
+
+#, php-format
+msgid "Unable to add %s as project member"
+msgstr "%s을(를) 프로젝트 멤버로 추가할 수 없습니다."
+
+msgid "Unable to fetch the latest activities of the project"
+msgstr "프로젝트의 최신 활동을 가져올 수 없습니다."
+
+#, php-format
+msgid "Unable to import project from archive"
+msgstr "아카이브에서 프로젝트를 불러올 수 없습니다."
+
+#, php-format
+msgid "Unable to login under %1$s"
+msgstr "%1$s에서 로그인할 수 없습니다."
+
+#, php-format
+msgid "Unable to send email to user, please contact %s"
+msgstr "사용자에게 이메일을 보낼 수 없습니다. %s에 문의하십시오."
+
+msgid "Unable to update user preferences"
+msgstr "사용자 기본 설정을 업데이트할 수 없습니다."
+
+msgid "Unauthorized action for anonymous"
+msgstr "익명 사용자에게 권한이 없는 작업"
+
+msgid "Understood"
+msgstr "이해했음"
+
+msgid ""
+"Unfortunately we couldn't add %1$s as project member because they have "
+"restricted status and the project is configured to not accept restricted "
+"users."
+msgstr ""
+"프로젝트가 제한된 사용자를 허용하지 않도록 설정되어 있기 때문에 제한된 상태"
+"인 %1$s을(를) 프로젝트 멤버로 추가할 수 없습니다."
+
+msgid "Unix Group Name"
+msgstr "Unix 그룹 이름"
+
+msgid "Unix name"
+msgstr "유닉스 이름"
+
+msgid "Up to 2 categories can be used as flag."
+msgstr "최대 2개의 카테고리를 플래그로 사용할 수 있습니다."
+
+msgid "Update"
+msgstr "업데이트"
+
+msgid "Update Forum Info/Status"
+msgstr "포럼 정보/상태 업데이트"
+
+msgid "Update Forum Status"
+msgstr "포럼 상태 업데이트"
+
+msgid "Update failed"
+msgstr "업데이트 실패"
+
+msgid "Update failed: icon conversion error"
+msgstr "업데이트 실패: 아이콘 변환 오류"
+
+msgid "Update failed: invalid project icon selected"
+msgstr "업데이트 실패: 유효하지 않은 프로젝트 아이콘이 선택되었습니다."
+
+msgid "Update information"
+msgstr "업데이트 정보"
+
+msgid "Update label"
+msgstr "레이블 업데이트"
+
+msgid "Update notifications settings"
+msgstr "알림 설정 업데이트"
+
+msgid "Update password"
+msgstr "비밀번호 업데이트"
+
+msgid "Update successful"
+msgstr "업데이트 성공"
+
+msgid "Update your email preferences"
+msgstr "이메일 환경설정 업데이트하기"
+
+msgid "Updating Project Info"
+msgstr "프로젝트 정보 업데이트"
+
+msgid "Upload text file"
+msgstr "텍스트 파일 업로드"
+
+msgid "Upload your own logo"
+msgstr "나만의 로고 업로드"
+
+msgid "Uploaded file is too big"
+msgstr "업로드된 파일이 너무 큽니다."
+
+msgid "Use as project flag"
+msgstr "프로젝트 플래그로 사용"
+
+msgid "Use default avatar"
+msgstr "기본 사진 사용"
+
+#, php-format
+msgid "User #%d is not administrator of project #%d"
+msgstr "사용자 #%d은(는) 프로젝트 #%d의 관리자가 아닙니다."
+
+#, php-format
+msgid "User %s not found"
+msgstr "사용자 %s을(를) 찾을 수 없습니다."
+
+#, php-format
+msgid "User '%s' does not exist"
+msgstr "사용자 '%s'이(가) 없습니다."
+
+msgid "User account created"
+msgstr "사용자 계정 생성됨"
+
+msgid "User added"
+msgstr "사용자 추가됨"
+
+msgid "User and date"
+msgstr "사용자 및 날짜"
+
+msgid "User approval settings have been saved"
+msgstr "사용자 승인 설정이 저장되었습니다."
+
+msgid "User avatar"
+msgstr "프로필 사진"
+
+msgid "User cannot be found"
+msgstr "사용자를 찾을 수 없습니다."
+
+msgid "User creation moderation"
+msgstr "사용자 생성 조정"
+
+msgid "User does not exist"
+msgstr "사용자가 존재하지 않습니다."
+
+msgid "User email address"
+msgstr "사용자 이메일 주소"
+
+msgid "User group"
+msgstr "사용자 그룹"
+
+#, php-format
+msgid "User group \"%s\" is empty or does not exist"
+msgstr "사용자 그룹 “%s”이(가) 비어 있거나 존재하지 않습니다."
+
+msgid "User group already exists in this project. Please choose another name."
+msgstr "이 프로젝트에 사용자 그룹이 이미 있습니다. 다른 이름을 선택하십시오."
+
+msgid "User group created but cannot get Id."
+msgstr "사용자 그룹이 생성되었지만 ID를 가져올 수 없습니다."
+
+msgid "User group does not exist"
+msgstr "사용자 그룹이 없습니다."
+
+msgid "User is already member of the project"
+msgstr "사용자가 이미 프로젝트의 멤버입니다."
+
+msgid "User is already registered and has been added to project."
+msgstr "사용자가 이미 등록되어 프로젝트에 추가되어 있습니다."
+
+msgid "User is already registered and project member."
+msgstr "사용자가 이미 등록되어 있고 프로젝트 멤버입니다."
+
+msgid "User is already registered but is not active yet."
+msgstr "사용자가 이미 등록되었지만 아직 활성화되지 않았습니다."
+
+msgid ""
+"User is already registered but is restricted and the project does not accept "
+"restricted users."
+msgstr ""
+"사용자가 이미 등록되어 있지만 제한되어 있으며 프로젝트는 제한된 사용자를 허용"
+"하지 않습니다."
+
+msgid "User name"
+msgstr "아이디"
+
+msgid "User preferences successfully updated"
+msgstr "사용자 기본 설정이 성공적으로 업데이트되었습니다."
+
+msgid "User profile"
+msgstr "사용자 프로필"
+
+msgid "User provided template"
+msgstr "사용자 제공 템플릿"
+
+msgid "User settings"
+msgstr "사용자 설정"
+
+msgid "Username"
+msgstr "아이디"
+
+msgid "Username display"
+msgstr "아이디 표시"
+
+msgid "Users"
+msgstr "사용자"
+
+msgid "Users group"
+msgstr "사용자 그룹"
+
+msgid "Users groups"
+msgstr "사용자 그룹"
+
+msgid "Users groups bound to this one"
+msgstr "이것에 바인딩된 사용자 그룹"
+
+#, php-format
+msgid "Users in <a href=\"%1$s\"><B>P</B> (pending) status</a>"
+msgstr "<a href=\"%1$s\"><B>P</B>(대기 중) 상태</a>의 사용자"
+
+msgid "Users must be able to send at least one invitation by day."
+msgstr "사용자는 하루에 하나 이상의 초대장을 보낼 수 있어야 합니다."
+
+msgid "Users must be approved by administrators"
+msgstr "사용자는 관리자의 승인을 받아야 합니다."
+
+msgid "Users must first login before going further."
+msgstr "사용자는 더 진행하기 전에 먼저 로그인해야 합니다."
+
+msgid ""
+"Users must first login before going further. Some users may be restricted "
+"(restricted users have to be specifically granted access to projects and "
+"services)."
+msgstr ""
+"사용자는 더 진행하기 전에 먼저 로그인해야 합니다. 일부 사용자는 제한될 수 있"
+"습니다 (제한된 사용자에게는 프로젝트 및 서비스에 대한 액세스 권한을 구체적으"
+"로 부여해야 함)."
+
+msgid "Users pending email activation"
+msgstr "이메일 활성화 대기 중인 사용자"
+
+msgid "Users statistics"
+msgstr "사용자 통계"
+
+#, php-format
+msgid "Users that agreed to receive \"Site Updates\" (%1$s users)"
+msgstr "\"사이트 업데이트\" 수신에 동의한 사용자 (%1$s 사용자)"
+
+#, php-format
+msgid "Validated users <a href=\"%1$s\"><B>pending email activation</B></a>"
+msgstr "<a href=\"%1$s\"><B>이메일 활성화 대기 중인</B></a> 승인된 사용자"
+
+msgid "Very low traffic, includes security notices. Highly Recommended."
+msgstr "트래픽이 매우 낮고 보안 주의가 포함되어 있습니다. 강력 권장합니다."
+
+msgid "View all projects"
+msgstr "모든 프로젝트 보기"
+
+msgid "View all system events"
+msgstr "모든 시스템 이벤트 보기"
+
+msgid "View all users"
+msgstr "모든 사용자 보기"
+
+msgid "View members"
+msgstr "멤버 보기"
+
+msgid "View most recent logins"
+msgstr "가장 최근 로그인 보기"
+
+msgid "View recommended browsers"
+msgstr "권장 브라우저 보기"
+
+msgid "Visibility"
+msgstr "공개 범위"
+
+msgid ""
+"WARNING! You are about to permanently delete a message and all of its "
+"followups!!"
+msgstr "경고! 메시지와 모든 후속 메시지를 영구적으로 삭제하려고 합니다!!"
+
+msgid "Want to monitor this forum?"
+msgstr "이 포럼을 모니터링하고 싶으신가요?"
+
+msgid "Warnings"
+msgstr "경고"
+
+msgid ""
+"We are sorry you caught an error, something meaningful was logged for site "
+"administrators. You may want got get in touch with them."
+msgstr ""
+"죄송합니다. 오류가 발생했습니다. 사이트 관리자에게 오류 내용이 기록되었습니"
+"다. 관리자에게 문의하세요."
+
+msgid "We cannot find any edition information for the requested widget."
+msgstr "요청한 위젯에 대한 변경된 정보를 찾을 수 없습니다."
+
+msgid "We cannot find any widgets."
+msgstr "위젯을 찾을 수 없습니다."
+
+msgid "We emailed a confirmation link to <strong>%s</strong>,"
+msgstr "확인 링크를 이메일 <strong>%s</strong>로 보냈습니다."
+
+msgid "We need at least one email to send an invitation"
+msgstr "초대를 보내려면 하나 이상의 이메일이 필요합니다."
+
+msgid "WebAuthn"
+msgstr "WebAuthn (웹 인증)"
+
+msgid "Webhooks"
+msgstr "웹훅"
+
+msgid "Week"
+msgstr "주"
+
+msgid "Welcome aboard"
+msgstr "환영합니다"
+
+msgid "Welcome message and information for users"
+msgstr "사용자를 위한 환영 메시지 및 정보"
+
+#, php-format
+msgid "Welcome to %1$s"
+msgstr "%1$s에 오신 것을 환영합니다."
+
+#, php-format
+msgid "Welcome to %1$s!"
+msgstr "%1$s에 오신 것을 환영합니다!"
+
+msgid "Welcome to %s"
+msgstr "%s에 오신 것을 환영합니다."
+
+msgid "Welcome to your new project"
+msgstr "새 프로젝트에 오신 것을 환영합니다"
+
+msgid "Welcome, %1$s. You may now change your lost password."
+msgstr "어서오세요 %1$s님. 이제 분실한 비밀번호를 변경할 수 있습니다."
+
+msgid "What is the purpose of your project?"
+msgstr "프로젝트의 목적은 무엇입니까?"
+
+msgid "What's this access key for?"
+msgstr "이 액세스 키는 무엇을 위한 것입니까?"
+
+msgid ""
+"When this setting is active, whenever you add someone in any user group, "
+"they will be automatically added in project members."
+msgstr ""
+"이 설정이 활성화되면 사용자 그룹에 누군가를 추가할 때마다 프로젝트 멤버에 자"
+"동으로 추가됩니다."
+
+msgid "Why don't you start by editing your dashboard by adding some widgets?"
+msgstr "위젯을 추가하여 대시보드를 수정하는 것부터 시작해 보는 것은 어떠세요?"
+
+msgid "Widget has been successfully deleted."
+msgstr "위젯이 성공적으로 삭제되었습니다."
+
+msgid "Widget not found."
+msgstr "위젯을 찾을 수 없습니다."
+
+msgid "Widget successfully disabled."
+msgstr "위젯이 성공적으로 비활성화되었습니다."
+
+msgid "Widget successfully enabled."
+msgstr "위젯이 성공적으로 활성화되었습니다."
+
+msgid "Widgets"
+msgstr "위젯"
+
+msgid "Widgets availability"
+msgstr "위젯 가용성"
+
+msgid "Wiki"
+msgstr "위키"
+
+msgid "Withdraw invitation"
+msgstr "초대 철회"
+
+msgid "Withdrawn invitation"
+msgstr "철회된 초대"
+
+msgid "Without any action from you,"
+msgstr "사용자님의 조치 없이,"
+
+msgid "Work in progress, you might find untranslated strings."
+msgstr "번역 작업이 진행중이라 번역되지 않은 문자열이 있을 수 있습니다."
+
+msgid ""
+"Wow, wait a minute. You are about to remove the parent. Please confirm your "
+"action."
+msgstr "상위 항목을 제거하려고 합니다. 다시 한번 확인하십시오."
+
+#, php-format
+msgid ""
+"Wow, wait a minute. You're about to delete the label <b>%s</b>. Please "
+"confirm your action."
+msgstr "레이블 <b>%s</b>을(를) 삭제하려고 합니다. 다시 한번 확인하십시오."
+
+msgid ""
+"Writing a compelling headline is a necessary step in order to encourage your "
+"users to sign in. Choose a catchy headline to summarize what Tuleap in your "
+"context is about. Don't be verbose though, keep the headline short."
+msgstr ""
+"사용자를 유도하기 위해선 매력적인 헤드라인이 필요합니다. 눈길을 끄는 헤드라인"
+"을 선택하여 당신의 상황에서 Tuleap의 목적을 요약하세요. 장황하게 말하지 말고 "
+"짧게 유지하세요."
+
+msgid "XML content is empty"
+msgstr "XML 콘텐츠가 비어 있습니다."
+
+msgid "XML content is not valid"
+msgstr "XML 콘텐츠가 유효하지 않습니다."
+
+msgid "Year"
+msgstr "년"
+
+msgid "Yesterday"
+msgstr "어제"
+
+msgid ""
+"You already asked a recovery link recently, please check your email for the "
+"link to recover your password."
+msgstr ""
+"최근에 이미 복구 링크를 요청했으니 이메일에서 비밀번호를 복구할 수 있는 링크"
+"를 확인하세요."
+
+msgid ""
+"You appear to be double-posting this message, since it has the same subject "
+"and followup information as a prior post."
+msgstr ""
+"이 메시지는 이전 게시물과 동일한 제목 및 후속 정보를 가지고 있어 이 메시지를 "
+"중복 게시하는 것으로 보입니다."
+
+msgid ""
+"You are about to allow access to a resource for every projects on the "
+"platform."
+msgstr "플랫폼의 모든 프로젝트에 대해 리소스의 액세스를 허용하려고 합니다."
+
+msgid "You are about to delete <b>%s</b> binding. Please, confirm your action."
+msgstr "<b>%s</b> 바인딩을 삭제하려고 합니다. 다시 한번 확인하십시오."
+
+msgid ""
+"You are about to delete <b>%s</b> users group. Please, confirm your action."
+msgstr "<b>%s</b> 사용자 그룹을 삭제하려고 합니다. 다시 한번 확인하십시오."
+
+#, php-format
+msgid ""
+"You are about to delete the dashboard \"%s\".\n"
+"                This action is irreversible. Please confirm this deletion."
+msgstr ""
+"대시보드 “%s”을(를) 삭제하려고 합니다.\n"
+"                이 작업은 되돌릴 수 없습니다. 다시 한번 확인하십시오."
+
+#, php-format
+msgid ""
+"You are about to delete the widget \"%s\".\n"
+"                This action is irreversible. Please confirm this deletion."
+msgstr ""
+"위젯 “%s”을(를) 삭제하려고 합니다.\n"
+"                이 작업은 되돌릴 수 없습니다. 다시 한번 확인하십시오."
+
+msgid ""
+"You are about to disallow access to a resource for every projects on the "
+"platform."
+msgstr ""
+"플랫폼의 모든 프로젝트에 대해 리소스의 액세스를 허용하지 않으려고 합니다."
+
+msgid ""
+"You are about to download software from this site. Software re-use and "
+"sharing <b>inside</b> %1$s is subject to the <a href=\"%2$s\"><b>Code "
+"eXchange Corporate Policy</b></a>."
+msgstr ""
+"이 사이트에서 소프트웨어를 다운로드하려고 합니다. 소프트웨어 재사용 및 %1$s "
+"<b>내부</b> 공유에는 <a href=\"%2$s\"><b>Code eXchange 기업 정책이</b></a> 적"
+"용됩니다."
+
+msgid ""
+"You are about to mark this user as restricted, he will be removed from %s "
+"project not allowing restricted users. Please confirm your action."
+msgid_plural ""
+"You are about to mark this user as restricted, he will be removed from %s "
+"projects not allowing restricted users. Please confirm your action."
+msgstr[0] ""
+"이 사용자를 제한된 사용자로 설정하면 제한된 사용자를 허용하지 않는 %s개의 프"
+"로젝트에서 삭제됩니다. 다시 한번 확인하십시오."
+
+msgid ""
+"You are about to remove %s restricted user from this project. Please confirm "
+"your action. The removal will be done a few minutes after your confirmation."
+msgid_plural ""
+"You are about to remove %s restricted users from this project. Please "
+"confirm your action. The removal will be done a few minutes after your "
+"confirmation."
+msgstr[0] ""
+"이 프로젝트에서 제한된 %s 사용자를 삭제하려고 합니다. 다시 한번 확인하십시"
+"오. 확인 몇 분 후 삭제가 완료됩니다."
+
+msgid "You are going to be redirected"
+msgstr "곧 리디렉션됩니다."
+
+msgid ""
+"You are monitoring the whole forum. If you want to monitor only specific "
+"threads, Stop Monitoring Forum."
+msgstr ""
+"전체 포럼을 모니터링하고 있습니다. 특정 스레드만 모니터링하려면 모니터링 포럼"
+"을 중지하세요."
+
+msgid "You are not allowed to access this resource"
+msgstr "이 리소스에 액세스할 수 없습니다."
+
+msgid "You are not the user who asked for email change"
+msgstr "이메일 변경을 요청한 사용자가 아닙니다."
+
+msgid ""
+"You are on the redirection page. You may found useful links on your <a "
+"href=\"/my\">personal page</a>."
+msgstr ""
+"리디렉션 페이지에 있습니다. <a href=\"/my\">개인 페이지에서</a> 유용한 링크"
+"를 찾을 수 있습니다."
+
+#, php-format
+msgid ""
+"You are receiving this email because you elected to monitor this forum or "
+"this thread.\n"
+"To stop monitoring this forum, login and visit:\n"
+" %1$s .\n"
+"To change thread monitoring settings, visit:\n"
+" %2$s."
+msgstr ""
+"이 포럼 또는 이 스레드를 모니터링하도록 선택했기 때문에 이 이메일이 전송되었"
+"습니다.\n"
+"이 포럼 모니터링을 중지하려면 로그인한 후 다음을 방문하십시오.\n"
+" %1$s .\n"
+"스레드 모니터링 설정을 변경하려면 다음을 방문하십시오.\n"
+" %2$s."
+
+#, php-format
+msgid ""
+"You are trying to send %1$s invitation, but the maximum is %2$s per day."
+msgid_plural ""
+"You are trying to send %1$s invitations, but the maximum is %2$s per day."
+msgstr[0] "%1$s 초대를 보내려고 하지만, 최대 초대 개수는 하루에 %2$s개입니다."
+
+#, php-format
+msgid "You are trying to send %s invitation."
+msgid_plural "You are trying to send %s invitations."
+msgstr[0] "%s 초대를 보내려고 합니다."
+
+#, php-format
+msgid ""
+"You are using an outdated version of %s. You might encounter issues if you "
+"continue."
+msgstr ""
+"오래된 버전의 %s을(를) 사용하고 있습니다. 계속하면 문제가 발생할 수 있습니다."
+
+msgid "You can add a comment on this user registration"
+msgstr "이 사용자 등록에 대한 설명을 추가할 수 있습니다"
+
+msgid "You can choose up to %s category"
+msgid_plural "You can choose up to %s categories"
+msgstr[0] "최대 %s 카테고리를 선택할 수 있습니다."
+
+msgid ""
+"You can configure some pages to be accessible by anyone, even if the "
+"platform would forbid it."
+msgstr ""
+"플랫폼에서 금지하더라도 일부 페이지는 누구나 액세스할 수 있도록 설정할 수 있"
+"습니다."
+
+msgid ""
+"You can delegate to this group several permissions. All the members of this\n"
+"                        group will take advantage of these permissions."
+msgstr ""
+"이 그룹에 몇 가지 권한을 위임할 수 있습니다. 이 그룹의 멤버는\n"
+"                        이 권한을 활용할 수 있습니다."
+
+msgid ""
+"You can edit the release note link. It will change this link on the Help "
+"Drop-down.\n"
+"                            This link is auto updated on each major upgrade. "
+"By default, the official Tuleap release note link is used."
+msgstr ""
+"릴리스 노트 링크를 편집할 수 있습니다. 도움말 드롭다운에서 이 링크가 변경됩니"
+"다.\n"
+"                            이 링크는 각 주요 업그레이드에서 자동으로 업데이"
+"트됩니다. 기본적으로는 공식 Tuleap 릴리스 노트 링크가 사용됩니다."
+
+msgid "You can import users into your project by specifying a text file."
+msgstr "텍스트 파일을 지정하여 사용자를 프로젝트로 가져올 수 있습니다."
+
+msgid "You can include empty lines in the import file."
+msgstr "가져올 파일에 빈 줄을 포함할 수 있습니다."
+
+msgid ""
+"You can make forums private from here. Please note that private forums can "
+"still be viewed by members of your project, not the general public."
+msgstr ""
+"여기에서 포럼을 비공개로 설정할 수 있습니다. 비공개 포럼은 일반 유저가 아닌 "
+"프로젝트 멤버들은 계속 볼 수 있습니다."
+
+msgid ""
+"You can no longer invite people to use %1$s you have reached the limit of "
+"%2$s invitations by day."
+msgstr ""
+"하루에 초대할 수 있는 한도 %2$s에 도달해 더 이상 사람들을 %1$s을(를) 사용하도"
+"록 초대할 수 없습니다."
+
+msgid "You can not delete system user groups"
+msgstr "시스템 사용자 그룹은 삭제할 수 없습니다"
+
+msgid "You can now log in with your new password."
+msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
+
+msgid "You can only edit your own widgets."
+msgstr "자신의 위젯만 편집할 수 있습니다."
+
+#, php-format
+msgid "You can only send %s more invitation."
+msgid_plural "You can only send %s more invitations."
+msgstr[0] "초대 %s개를 더 전송할 수 있습니다."
+
+msgid ""
+"You can override default names for the two special groups. This only applies "
+"for git permissions at the moment."
+msgstr ""
+"두 특수 그룹의 기본 이름을 변경할 수 있습니다. 이는 현재 git 권한에만 적용됩"
+"니다."
+
+msgid ""
+"You can upload your own logo. In order to not ruin the design of the "
+"homepage, your logo should have a transparent background and a height of "
+"100px."
+msgstr ""
+"나만의 로고를 업로드 할 수 있습니다. 홈페이지 디자인을 위해선 로고의 배경이 "
+"투명하며 높이가 100px이어야 합니다."
+
+msgid "You can use Markdown to format your text"
+msgstr "Markdown을 사용하여 텍스트 서식을 지정할 수 있습니다"
+
+msgid ""
+"You can use SVN tokens as a replacement for your password on projects "
+"selected by the administrator."
+msgstr ""
+"관리자가 선택한 프로젝트에서는 SVN 토큰을 비밀번호 대신 사용할 수 있습니다."
+
+msgid ""
+"You can use access keys to access resources from scripts or command line. "
+"However, these access keys are like password and should be guarded carefully."
+msgstr ""
+"액세스 키를 사용하여 스크립트 또는 커맨드 라인에서 리소스에 액세스할 수 있습"
+"니다. 이런 액세스 키는 암호와 같으므로 주의해서 보호해야 합니다."
+
+msgid ""
+"You can't remove the last group containing site administrator permissions"
+msgstr "사이트 관리자 권한이 포함된 마지막 그룹은 제거할 수 없습니다."
+
+msgid ""
+"You can't remove the last group containing site administrator permissions."
+msgstr "사이트 관리자 권한이 포함된 마지막 그룹은 제거할 수 없습니다."
+
+msgid "You can't remove the last platform administration permission."
+msgstr "마지막 플랫폼 관리 권한은 제거할 수 없습니다."
+
+msgid "You cannot access to this page."
+msgstr "이 페이지에 액세스할 수 없습니다."
+
+msgid "You cannot ask for a dry-run when creating a project from an archive"
+msgstr "아카이브에서 프로젝트를 만들 때 드라이 런을 요청할 수 없습니다."
+
+msgid "You cannot create an already expired access key."
+msgstr "이미 만료된 액세스 키는 생성할 수 없습니다."
+
+msgid "You could post if you were logged in"
+msgstr "로그인한 경우 게시할 수 있습니다"
+
+msgid "You do not have permission to access the site administration."
+msgstr "사이트 관리에 액세스할 수 있는 권한이 없습니다."
+
+msgid "You don't have any SSH keys yet."
+msgstr "SSH 키가 아직 없습니다."
+
+msgid "You don't have any access keys yet."
+msgstr "액세스 키가 아직 없습니다."
+
+msgid "You don't have any dashboards"
+msgstr "대시보드가 없습니다."
+
+msgid "You don't have permission to access administration of this project."
+msgstr "이 프로젝트의 관리에 액세스할 수 있는 권한이 없습니다."
+
+msgid "You don't have permission to manage members of this project."
+msgstr "이 프로젝트의 멤버를 관리할 수 있는 권한이 없습니다."
+
+msgid "You don't have permissions to see user groups."
+msgstr "사용자 그룹을 볼 수 있는 권한이 없습니다."
+
+msgid "You have a restricted user account"
+msgstr "제한된 사용자 계정입니다."
+
+msgid "You have already used your invitation to register, you can now log in."
+msgstr "이미 초대장을 사용하여 등록했으므로 이제 로그인할 수 있습니다."
+
+#, php-format
+msgid "You have not rights to update dashboards of the project \"%s\"."
+msgstr "프로젝트 \"%s\"의 대시보드를 업데이트할 수 있는 권한이 없습니다."
+
+#, php-format
+msgid ""
+"You have requested a change of email address on %1$s.\n"
+"Please visit the following URL to complete the email change:\n"
+"\n"
+"%2$s%3$s\n"
+"\n"
+"-- The %4$s Team"
+msgstr ""
+"%1$s에 이메일 주소 변경을 요청했습니다.\n"
+"이메일 변경을 완료하려면 다음 URL을 방문하십시오.\n"
+"\n"
+"%2$s%3$s\n"
+"\n"
+"-- %4$s 팀"
+
+msgid "You have successfully recovered your password,"
+msgstr "비밀번호를 성공적으로 복구했습니다."
+
+msgid "You have to register your passkey before authenticate with it"
+msgstr "인증하기 전에 암호를 등록해야 합니다."
+
+msgid ""
+"You invited %1$s with email %2$s to register to %3$s and join the project "
+"%4$s."
+msgstr ""
+"사용자님이 %1$s님(이메일 주소: %2$s)을 %3$s에 등록하고 프로젝트 %4$s에 참여하"
+"도록 초대했습니다."
+
+msgid ""
+"You may have seen the invitation before but %s just sent you a reminder to "
+"join."
+msgstr ""
+"이미 초대를 보셨을 수도 있지만 %s님이 방금 가입하라는 알림을 보냈습니다."
+
+msgid "You may only have access to private projects you are member of."
+msgstr "자신이 속한 비공개 프로젝트에만 액세스할 수 있습니다."
+
+msgid "You may only have access to projects you are member of."
+msgstr "자신이 속한 프로젝트에만 액세스할 수 있습니다."
+
+msgid "You must be a project admin to edit this widget."
+msgstr "프로젝트 관리자만 이 위젯을 편집할 수 있습니다."
+
+msgid "You must explain the purpose of your registration."
+msgstr "등록 목적을 설명해야 합니다."
+
+msgid "You must supply a password."
+msgstr "암호를 제공해야 합니다."
+
+msgid "You must supply a timezone."
+msgstr "시간대를 제공해야 합니다."
+
+msgid "You need to logout & login again for this to be taken into account"
+msgstr "반영되려면 로그아웃 후 다시 로그인 해야 합니다."
+
+msgid ""
+"You need to provide a simple file, containing in each line the email address "
+"or the username of the user."
+msgstr ""
+"각 줄에 사용자의 이메일 주소 또는 아이디가 포함된 파일을 제공해야 합니다."
+
+msgid ""
+"You receive this mail because you have not accessed the %1$s application "
+"since %2$s."
+msgstr "%2$s 이후 %1$s 애플리케이션에 접속하지 않았기에 이 메일을 보냅니다."
+
+msgid ""
+"You receive this mail because you have not accessed the "
+"{{ tuleap_server_name }} application since {{last_access_date }}."
+msgstr ""
+"{{last_access_date }} 이후 {{ tuleap_server_name }} 애플리케이션에 접속하지 "
+"않았기 때문에 이 메일을 보냅니다."
+
+#, php-format
+msgid ""
+"You should not browse the platform with this user, you may experience "
+"inconsistent behaviour (%s)"
+msgstr ""
+"이 사용자로 플랫폼을 탐색해서는 안 되며 일관되지 않은 동작(%s)이 발생할 수 있"
+"습니다."
+
+msgid "You should provide a file in entry."
+msgstr "항목에 파일을 제공해야 합니다."
+
+msgid ""
+"You should remove user from news administrators before being able to remove "
+"him from writers."
+msgstr ""
+"사용자를 작성자에서 제거하기 전에 뉴스 관리자에서 사용자를 제거해야 합니다."
+
+msgid "You should send a png image"
+msgstr "png 이미지를 보내야 합니다."
+
+msgid "You should send an image with height smaller than 100px"
+msgstr "높이가 100px보다 작은 이미지를 보내야 합니다."
+
+msgid ""
+"You still have <code>$sys_display_homepage_news</code> variable defined in "
+"local.inc. It's now stored in DB, you should remove it from the file to "
+"avoid confusion."
+msgstr ""
+"local.inc에 정의된 변수 <code>$sys_display_homepage_news</code>가 여전히 존재"
+"합니다. 이제 DB에 저장되었으므로 혼동을 피하기 위해 파일에서 제거해야 합니다."
+
+msgid "You will not receive any more emails from this forum."
+msgstr "이 포럼에서 더 이상 이메일을 받지 않습니다."
+
+msgid "You will now be emailed followups to this entire forum."
+msgstr "이제 이 포럼 전체에 대한 후속을 이메일로 받게 됩니다."
+
+msgid "You will receive an email when the project is approved."
+msgstr "프로젝트가 승인되면 이메일을 받게 됩니다."
+
+msgid "You're about to withdraw %s invitation from this project."
+msgstr "이 프로젝트에서 %s 초대를 철회하려고 합니다."
+
+msgid "Your account has been created"
+msgstr "계정이 생성되었습니다."
+
+#, php-format
+msgid "Your account has been created on %s"
+msgstr "%s에 계정이 생성되었습니다."
+
+#, php-format
+msgid ""
+"Your account has been deleted. If you have questions regarding your "
+"deletion, please email <A HREF=\"mailto:%1$s\">%2$s</A>."
+msgstr ""
+"계정이 삭제되었습니다. 삭제와 관련해 질문이 있으신 경우 <A HREF=\"mailto:"
+"%1$s\">%2$s</A>로 이메일을 보내주십시오."
+
+msgid "Your account has been successfully confirmed."
+msgstr "계정이 성공적으로 확인되었습니다."
+
+#, php-format
+msgid ""
+"Your account has been suspended. If you have questions regarding your "
+"suspension, please email <a href=\"mailto:%s\">the site administrators</a>."
+msgstr ""
+"계정이 정지되었습니다. 정지와 관련해 질문이 있으신 경우 <a href=\"mailto:"
+"%s\">사이트 관리자에게</a> 이메일을 보내주십시오."
+
+msgid "Your avatar"
+msgstr "프로필 사진"
+
+msgid "Your catchy headline"
+msgstr "헤드라인"
+
+msgid ""
+"Your current timezone (%s) is not listed in the available timezones. Please "
+"select a new one."
+msgstr ""
+"현재 시간대(%s)가 사용 가능한 시간대에 등록되어있지 않습니다. 다시 선택하십시"
+"오."
+
+#, php-format
+msgid ""
+"Your email change is complete. Your new email address is <strong>%s</strong>"
+msgstr ""
+"이메일 변경이 완료되었습니다. 새 이메일 주소는 <strong>%s</strong>입니다."
+
+msgid "Your history is empty"
+msgstr "기록이 비어 있습니다."
+
+msgid ""
+"Your invitation cannot be found. Maybe it became obsolete and has been "
+"revoked."
+msgstr ""
+"초대장을 찾을 수 없습니다. 더 이상 사용되지 않아 폐기되었을 수도 있습니다."
+
+msgid "Your invitation link is not valid"
+msgstr "초대 링크가 유효하지 않습니다."
+
+msgid ""
+"Your invitation link is not valid. Maybe you already used it, in that case "
+"you can directly log in."
+msgstr ""
+"초대 링크가 유효하지 않습니다. 이미 사용했을 경우, 로그인할 수 있습니다."
+
+msgid "Your place was saved"
+msgstr "숙소가 저장되었습니다"
+
+msgid "Your platform does not allow restricted users."
+msgstr "플랫폼에서 제한된 사용자를 허용하지 않습니다."
+
+msgid "Your project has been submitted to the administrators for validation."
+msgstr "사용자님의 프로젝트가 승인을 위해 관리자에게 제출되었습니다."
+
+msgid "Your request is invalid"
+msgstr "요청이 유효하지 않습니다."
+
+msgid ""
+"Your web browser is no longer supported. Please upgrade to a modern, fully "
+"supported browser such as Firefox, Chrome or Edge."
+msgstr ""
+"웹 브라우저가 더 이상 지원되지 않습니다. Firefox, Chrome 또는 Edge와 같은 최"
+"신 브라우저로 업그레이드하십시오."
+
+msgid "Your web browser is not supported"
+msgstr "웹 브라우저가 지원되지 않습니다."
+
+#, php-format
+msgid "[%s] Email change confirmation"
+msgstr "[%s] 이메일 변경 확인"
+
+msgid "`description` is required."
+msgstr "‘설명란’은 필수입니다."
+
+msgid "active"
+msgstr "활동 중"
+
+msgid "active last 24 hours"
+msgstr "24시간 전 활동"
+
+msgid "active last 3 months"
+msgstr "3개월 전 활동"
+
+msgid "active last month"
+msgstr "지난달 활동"
+
+msgid "active last week"
+msgstr "지난주 활동"
+
+msgid "but it must be approved by an administrator"
+msgstr "그러나 관리자의 승인을 받아야 합니다."
+
+msgid "check your email for the link to activate your account."
+msgstr "이메일에서 계정을 활성화할 수 있는 링크를 확인하세요."
+
+msgid "check your email for the link to recover your password."
+msgstr "이메일에서 비밀번호를 복구할 수 있는 링크를 확인하세요."
+
+msgid "deleted"
+msgstr "삭제됨"
+
+msgid "edit"
+msgstr "편집"
+
+msgid "fields required"
+msgstr "필수 입력란"
+
+#, php-format
+msgid "in %s"
+msgstr "%s에서"
+
+msgid "in project %s"
+msgstr "프로젝트 %s에서"
+
+msgid "in projects:"
+msgstr "프로젝트에서:"
+
+msgid "last<br>month"
+msgstr "지난<br>달"
+
+msgid "login"
+msgstr "로그인"
+
+msgid "login (Real Name)"
+msgstr "로그인 (실명)"
+
+msgid "or"
+msgstr "또는"
+
+msgid "or login with"
+msgstr "또는 로그인"
+
+#, php-format
+msgid "parameter \"query\" syntax error: \"%s\" property not found"
+msgstr "매개 변수 “query” 구문 오류: \"%s\" 속성을 찾을 수 없습니다."
+
+#, php-format
+msgid "parameter \"query\", property \"%s\" invalid type: boolean expected"
+msgstr "매개 변수 \"query\", 속성 “%s”가 잘못된 유형입니다: 부울 예상됨"
+
+msgid "pending"
+msgstr "보류중"
+
+msgid "people monitoring"
+msgstr "인력 모니터링"
+
+msgid "permissions"
+msgstr "권한"
+
+msgid "project"
+msgstr "프로젝트"
+
+msgid "reply"
+msgstr "답글"
+
+msgid "restricted"
+msgstr "제한됨"
+
+msgid "supported browsers"
+msgstr "지원되는 브라우저"
+
+msgid "suspended"
+msgstr "중지됨"
+
+msgid "system"
+msgstr "시스템"
+
+msgid "unsupported browsers"
+msgstr "지원되지 않는 브라우저"
+
+msgid "view"
+msgstr "보기"
+
+msgid "waiting"
+msgstr "기다리는 중"
+
+msgid "with a link to activate your account."
+msgstr "계정을 활성화할 수 있는 링크"
+
+msgid "your account will be automatically suspended on {{suspension_date}}."
+msgstr "{{suspension_date}}에 계정이 자동으로 정지됩니다."
+
+msgid "{{ nb_members }} members"
+msgstr "{{ nb_members }} 멤버"
+
+msgid "{{ real_name }} doesn't seem to be member of any projects you can see."
+msgstr ""
+"{{ real_name }} 은(는) 당신이 볼 수 있는 프로젝트의 멤버가 아닌 것 같습니다."
+
+msgid "{{ user_group_name }} has no global permission"
+msgstr "{{ user_group_name }}에는 글로벌 권한이 없습니다."
