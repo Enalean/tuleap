@@ -33,12 +33,14 @@
         </ol>
     </div>
 </template>
+
 <script setup lang="ts">
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
-defineProps<{ sections: readonly ArtidocSection[] | undefined; is_sections_loading: boolean }>();
+
+const { sections, is_sections_loading } = useInjectSectionsStore();
 </script>
 
 <style scoped lang="scss">

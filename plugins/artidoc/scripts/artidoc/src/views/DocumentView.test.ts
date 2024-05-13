@@ -17,21 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
-import type { VueWrapper } from "@vue/test-utils";
+import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import EmptyState from "@/views/EmptyState.vue";
 import DocumentLayout from "@/components/DocumentLayout.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import NoAccessState from "@/views/NoAccessState.vue";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import type { ComponentPublicInstance } from "vue";
+import { ref } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
+import * as sectionsStore from "@/stores/useSectionsStore";
 
 describe("DocumentView", () => {
     describe("when sections not found", () => {
         it("should display empty state view", () => {
-            const wrapper = getWrapperWithProps({ sections: [], is_sections_loading: false });
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+                setIsSectionsLoading: vi.fn(),
+                setSections: vi.fn(),
+                is_sections_loading: ref(false),
+                sections: ref([]),
+            });
+            const wrapper = shallowMount(DocumentView);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(false);
@@ -39,10 +44,13 @@ describe("DocumentView", () => {
     });
     describe("when sections found", () => {
         it("should display document content view", () => {
-            const wrapper = getWrapperWithProps({
-                sections: [ArtidocSectionFactory.create()],
-                is_sections_loading: false,
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+                setIsSectionsLoading: vi.fn(),
+                setSections: vi.fn(),
+                is_sections_loading: ref(false),
+                sections: ref([ArtidocSectionFactory.create()]),
             });
+            const wrapper = shallowMount(DocumentView);
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
@@ -50,10 +58,13 @@ describe("DocumentView", () => {
     });
     describe("when sections are loading", () => {
         it("should display document content view", () => {
-            const wrapper = getWrapperWithProps({
-                sections: [],
-                is_sections_loading: true,
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+                setIsSectionsLoading: vi.fn(),
+                setSections: vi.fn(),
+                is_sections_loading: ref(true),
+                sections: ref([]),
             });
+            const wrapper = shallowMount(DocumentView);
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
@@ -61,21 +72,16 @@ describe("DocumentView", () => {
     });
     describe("when the user is not allowed to access the document", () => {
         it("should display no access state view", () => {
-            const wrapper = getWrapperWithProps({
-                sections: undefined,
-                is_sections_loading: false,
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+                setIsSectionsLoading: vi.fn(),
+                setSections: vi.fn(),
+                is_sections_loading: ref(false),
+                sections: ref(undefined),
             });
+            const wrapper = shallowMount(DocumentView);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(true);
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(false);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
         });
     });
 });
-function getWrapperWithProps(props: {
-    sections: readonly ArtidocSection[] | undefined;
-    is_sections_loading: boolean;
-}): VueWrapper<ComponentPublicInstance> {
-    return shallowMount(DocumentView, {
-        props,
-    });
-}

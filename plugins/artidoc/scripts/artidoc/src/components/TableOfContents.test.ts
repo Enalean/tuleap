@@ -17,36 +17,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import type { ComponentPublicInstance } from "vue";
+import { ref } from "vue";
 import TableOfContents from "@/components/TableOfContents.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
-
-const defaultSection = ArtidocSectionFactory.create();
-const default_props = {
-    sections: [
-        ArtidocSectionFactory.override({
-            artifact: { ...defaultSection.artifact, id: 1 },
-        }),
-        ArtidocSectionFactory.override({
-            artifact: { ...defaultSection.artifact, id: 2 },
-        }),
-    ],
-    is_sections_loading: false,
-};
+import * as sectionsStore from "@/stores/useSectionsStore";
 
 describe("TableOfContents", () => {
     describe("when the sections are loading", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
+            const defaultSection = ArtidocSectionFactory.create();
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+                setIsSectionsLoading: vi.fn(),
+                setSections: vi.fn(),
+                is_sections_loading: ref(true),
+                sections: ref([
+                    ArtidocSectionFactory.override({
+                        artifact: { ...defaultSection.artifact, id: 1 },
+                    }),
+                    ArtidocSectionFactory.override({
+                        artifact: { ...defaultSection.artifact, id: 2 },
+                    }),
+                ]),
+            });
+
             wrapper = shallowMount(TableOfContents, {
                 global: {
                     plugins: [createGettext({ silent: true })],
                 },
-                propsData: { ...default_props, is_sections_loading: true },
             });
         });
         it("should display the skeleton content", () => {
@@ -57,14 +60,29 @@ describe("TableOfContents", () => {
             expect(wrapper.find("h1").text()).toBe("Table of contents");
         });
     });
+
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
+            const defaultSection = ArtidocSectionFactory.create();
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+                setIsSectionsLoading: vi.fn(),
+                setSections: vi.fn(),
+                is_sections_loading: ref(false),
+                sections: ref([
+                    ArtidocSectionFactory.override({
+                        artifact: { ...defaultSection.artifact, id: 1 },
+                    }),
+                    ArtidocSectionFactory.override({
+                        artifact: { ...defaultSection.artifact, id: 2 },
+                    }),
+                ]),
+            });
+
             wrapper = shallowMount(TableOfContents, {
                 global: {
                     plugins: [createGettext({ silent: true })],
                 },
-                propsData: { ...default_props, is_sections_loading: false },
             });
         });
         it("should display the two title sections", () => {
