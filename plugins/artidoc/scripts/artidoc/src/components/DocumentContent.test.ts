@@ -19,22 +19,20 @@
 
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { ComponentPublicInstance } from "vue";
-import { ref } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentContent from "@/components/DocumentContent.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import SectionContent from "@/components/SectionContent.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
+import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
 
 describe("DocumentContent", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
     beforeAll(() => {
         const defaultSection = ArtidocSectionFactory.create();
-        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-            loadSections: vi.fn(),
-            is_sections_loading: ref(false),
-            sections: ref([
+        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+            InjectedSectionsStoreStub.withLoadedSections([
                 ArtidocSectionFactory.override({
                     title: "Title 1",
                     artifact: { ...defaultSection.artifact, id: 1 },
@@ -44,7 +42,7 @@ describe("DocumentContent", () => {
                     artifact: { ...defaultSection.artifact, id: 2 },
                 }),
             ]),
-        });
+        );
 
         wrapper = shallowMount(DocumentContent);
     });

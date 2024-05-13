@@ -24,16 +24,15 @@ import { shallowMount } from "@vue/test-utils";
 import DocumentLayout from "@/components/DocumentLayout.vue";
 import DocumentContent from "@/components/DocumentContent.vue";
 import TableOfContents from "@/components/TableOfContents.vue";
-import { ref } from "vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
+import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
+
 describe("DocumentLayout", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
     beforeAll(() => {
-        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-            loadSections: vi.fn(),
-            is_sections_loading: ref(false),
-            sections: ref([]),
-        });
+        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+            InjectedSectionsStoreStub.withLoadedSections([]),
+        );
         wrapper = shallowMount(DocumentLayout);
     });
     it("should display document content", () => {

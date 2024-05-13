@@ -20,22 +20,21 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionContent from "@/components/SectionContent.vue";
-import { ref } from "vue";
 import type { ComponentPublicInstance } from "vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
 import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArtifactIdSkeleton.vue";
+import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
+
 describe("SectionContent", () => {
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                loadSections: vi.fn(),
-                is_sections_loading: ref(false),
-                sections: ref([]),
-            });
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+                InjectedSectionsStoreStub.withLoadedSections([]),
+            );
             wrapper = shallowMount(SectionContent, {
                 props: {
                     section: ArtidocSectionFactory.create(),
@@ -53,11 +52,9 @@ describe("SectionContent", () => {
     describe("when the sections are loading", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                loadSections: vi.fn(),
-                is_sections_loading: ref(true),
-                sections: ref([]),
-            });
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+                InjectedSectionsStoreStub.withLoadingSections(),
+            );
             wrapper = shallowMount(SectionContent, {
                 props: {
                     section: ArtidocSectionFactory.create(),

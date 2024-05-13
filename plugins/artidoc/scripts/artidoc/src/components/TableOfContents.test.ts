@@ -22,20 +22,18 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import type { ComponentPublicInstance } from "vue";
-import { ref } from "vue";
 import TableOfContents from "@/components/TableOfContents.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import * as sectionsStore from "@/stores/useSectionsStore";
+import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
 
 describe("TableOfContents", () => {
     describe("when the sections are loading", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
             const defaultSection = ArtidocSectionFactory.create();
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                loadSections: vi.fn(),
-                is_sections_loading: ref(true),
-                sections: ref([
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+                InjectedSectionsStoreStub.withLoadingSections([
                     ArtidocSectionFactory.override({
                         artifact: { ...defaultSection.artifact, id: 1 },
                     }),
@@ -43,7 +41,7 @@ describe("TableOfContents", () => {
                         artifact: { ...defaultSection.artifact, id: 2 },
                     }),
                 ]),
-            });
+            );
 
             wrapper = shallowMount(TableOfContents, {
                 global: {
@@ -64,10 +62,8 @@ describe("TableOfContents", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
             const defaultSection = ArtidocSectionFactory.create();
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                loadSections: vi.fn(),
-                is_sections_loading: ref(false),
-                sections: ref([
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+                InjectedSectionsStoreStub.withLoadedSections([
                     ArtidocSectionFactory.override({
                         artifact: { ...defaultSection.artifact, id: 1 },
                     }),
@@ -75,7 +71,7 @@ describe("TableOfContents", () => {
                         artifact: { ...defaultSection.artifact, id: 2 },
                     }),
                 ]),
-            });
+            );
 
             wrapper = shallowMount(TableOfContents, {
                 global: {

@@ -18,22 +18,19 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { ref } from "vue";
 import { shallowMount } from "@vue/test-utils";
 import App from "@/App.vue";
 import DocumentView from "@/views/DocumentView.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
+import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
 
-vi.mock("./rest-querier");
 describe("App", () => {
     it("should display the document view", () => {
         const loadSections = vi.fn();
 
-        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-            loadSections,
-            is_sections_loading: ref(false),
-            sections: ref([]),
-        });
+        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+            InjectedSectionsStoreStub.withMockedLoadSections(loadSections),
+        );
 
         const wrapper = shallowMount(App, {
             props: {
