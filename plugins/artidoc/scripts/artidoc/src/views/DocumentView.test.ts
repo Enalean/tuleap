@@ -26,15 +26,14 @@ import NoAccessState from "@/views/NoAccessState.vue";
 import { ref } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
+import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
 
 describe("DocumentView", () => {
     describe("when sections not found", () => {
         it("should display empty state view", () => {
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                loadSections: vi.fn(),
-                is_sections_loading: ref(false),
-                sections: ref([]),
-            });
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+                InjectedSectionsStoreStub.withLoadedSections([]),
+            );
             const wrapper = shallowMount(DocumentView);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
@@ -43,11 +42,9 @@ describe("DocumentView", () => {
     });
     describe("when sections found", () => {
         it("should display document content view", () => {
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                loadSections: vi.fn(),
-                is_sections_loading: ref(false),
-                sections: ref([ArtidocSectionFactory.create()]),
-            });
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+                InjectedSectionsStoreStub.withLoadedSections([ArtidocSectionFactory.create()]),
+            );
             const wrapper = shallowMount(DocumentView);
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
@@ -56,6 +53,9 @@ describe("DocumentView", () => {
     });
     describe("when sections are loading", () => {
         it("should display document content view", () => {
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+                InjectedSectionsStoreStub.withLoadingSections(),
+            );
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
                 loadSections: vi.fn(),
                 is_sections_loading: ref(true),
@@ -69,11 +69,9 @@ describe("DocumentView", () => {
     });
     describe("when the user is not allowed to access the document", () => {
         it("should display no access state view", () => {
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                loadSections: vi.fn(),
-                is_sections_loading: ref(false),
-                sections: ref(undefined),
-            });
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+                InjectedSectionsStoreStub.withSectionsInError(),
+            );
             const wrapper = shallowMount(DocumentView);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(true);
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(false);
