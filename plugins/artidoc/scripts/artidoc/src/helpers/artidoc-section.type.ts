@@ -30,7 +30,7 @@ interface ArtifactFieldValueCommonmarkRepresentation extends ArtifactFieldValueT
     readonly commonmark: string;
 }
 
-type ArtifactTextFieldValueRepresentation =
+export type ArtifactTextFieldValueRepresentation =
     | ArtifactFieldValueCommonmarkRepresentation
     | ArtifactFieldValueTextRepresentation;
 
