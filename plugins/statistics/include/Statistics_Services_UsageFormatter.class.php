@@ -22,9 +22,6 @@ require_once 'Statistics_Formatter.class.php';
 
 class Statistics_Services_UsageFormatter
 {
-    /** @const number of bytes in a MegaByte */
-    public const BYTES_NUMBER_IN_MB = 1000;
-
     /** @var array */
     private $datas;
 
@@ -70,22 +67,6 @@ class Statistics_Services_UsageFormatter
         $this->addValuesFromQueryResultForTitle($query_result, $title);
 
         return $this->datas;
-    }
-
-    /**
-     * Format a query result containing size to put them in MegaBytes
-     *
-     * @param array|\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $query_results
-     */
-    public function formatSizeInMegaBytes($query_results)
-    {
-        $resized_results = [];
-        foreach ($query_results as $result) {
-            $result[self::VALUES] = round($result[self::VALUES] / self::BYTES_NUMBER_IN_MB);
-            $resized_results[]    = $result;
-        }
-
-        return $resized_results;
     }
 
     private function addDefaultValuesForTitle($title)

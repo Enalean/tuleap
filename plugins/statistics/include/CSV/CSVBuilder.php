@@ -178,8 +178,8 @@ class CSVBuilder
         }
 
         //Disk usage
-        $this->exportDiskUsageForDate($start_date, 'Disk usage at start date (MB)');
-        $this->exportDiskUsageForDate($end_date, 'Disk usage at end date (MB)');
+        $this->exportDiskUsageForDate($start_date, 'Disk usage at start date (bytes)');
+        $this->exportDiskUsageForDate($end_date, 'Disk usage at end date (bytes)');
 
         $this->event_manager->dispatch(
             new StatisticsServiceUsage($this->services_usage_formatter, $start_date, $end_date)
@@ -191,7 +191,6 @@ class CSVBuilder
     private function exportDiskUsageForDate($date, $column_name)
     {
         $disk_usage = $this->disk_usage_manager->returnTotalSizeOfProjects($date);
-        $disk_usage = $this->services_usage_formatter->formatSizeInMegaBytes($disk_usage);
 
         $this->services_usage_formatter->buildDatas($disk_usage, $column_name);
     }
