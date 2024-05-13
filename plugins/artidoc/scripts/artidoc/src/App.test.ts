@@ -17,32 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
-import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "@/App.vue";
-import type { ComponentPublicInstance } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
 
 vi.mock("./rest-querier");
 describe("App", () => {
-    let wrapper: VueWrapper<ComponentPublicInstance>;
-    beforeEach(() => {
+    it("should display the document view", () => {
+        const loadSections = vi.fn();
+
         vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-            setIsSectionsLoading: vi.fn(),
-            setSections: vi.fn(),
+            loadSections,
             is_sections_loading: ref(false),
             sections: ref([]),
         });
-        wrapper = shallowMount(App, {
+
+        const wrapper = shallowMount(App, {
             props: {
                 item_id: 1,
             },
         });
-    });
-    it("should display the document view", () => {
+
+        expect(loadSections).toHaveBeenCalled();
         expect(wrapper.findComponent(DocumentView).exists()).toBe(true);
     });
 });

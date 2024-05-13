@@ -19,33 +19,18 @@
   -->
 
 <template>
-    <document-view
-        v-bind:is_sections_loading="is_sections_loading"
-        v-bind:sections="sections"
-        class="artidoc-app-container"
-    />
+    <document-view class="artidoc-app-container" />
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { getAllSections } from "@/helpers/rest-querier";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
+
 const props = defineProps<{ item_id: number }>();
 const store = useInjectSectionsStore();
-const sections = store.sections;
-const is_sections_loading = store.is_sections_loading;
+
 onMounted(() => {
-    getAllSections(props.item_id).match(
-        (artidoc_sections: readonly ArtidocSection[]) => {
-            store.setSections(artidoc_sections);
-            store.setIsSectionsLoading(false);
-        },
-        () => {
-            store.setSections(undefined);
-            store.setIsSectionsLoading(false);
-        },
-    );
+    store.loadSections(props.item_id);
 });
 </script>
 

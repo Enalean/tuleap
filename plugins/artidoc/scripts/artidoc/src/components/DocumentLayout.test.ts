@@ -30,8 +30,7 @@ describe("DocumentLayout", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
     beforeAll(() => {
         vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-            setIsSectionsLoading: vi.fn(),
-            setSections: vi.fn(),
+            loadSections: vi.fn(),
             is_sections_loading: ref(false),
             sections: ref([]),
         });

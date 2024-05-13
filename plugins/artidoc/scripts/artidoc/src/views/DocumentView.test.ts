@@ -31,8 +31,7 @@ describe("DocumentView", () => {
     describe("when sections not found", () => {
         it("should display empty state view", () => {
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                setIsSectionsLoading: vi.fn(),
-                setSections: vi.fn(),
+                loadSections: vi.fn(),
                 is_sections_loading: ref(false),
                 sections: ref([]),
             });
@@ -45,8 +44,7 @@ describe("DocumentView", () => {
     describe("when sections found", () => {
         it("should display document content view", () => {
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                setIsSectionsLoading: vi.fn(),
-                setSections: vi.fn(),
+                loadSections: vi.fn(),
                 is_sections_loading: ref(false),
                 sections: ref([ArtidocSectionFactory.create()]),
             });
@@ -59,8 +57,7 @@ describe("DocumentView", () => {
     describe("when sections are loading", () => {
         it("should display document content view", () => {
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                setIsSectionsLoading: vi.fn(),
-                setSections: vi.fn(),
+                loadSections: vi.fn(),
                 is_sections_loading: ref(true),
                 sections: ref([]),
             });
@@ -73,8 +70,7 @@ describe("DocumentView", () => {
     describe("when the user is not allowed to access the document", () => {
         it("should display no access state view", () => {
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                setIsSectionsLoading: vi.fn(),
-                setSections: vi.fn(),
+                loadSections: vi.fn(),
                 is_sections_loading: ref(false),
                 sections: ref(undefined),
             });
