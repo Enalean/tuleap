@@ -18,7 +18,7 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import { getAllJSON, uri } from "@tuleap/fetch-result";
+import { getAllJSON, put, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
@@ -28,4 +28,24 @@ export function getAllSections(document_id: number): ResultAsync<readonly Artido
             limit: 50,
         },
     });
+}
+
+export function putArtifactDescription(
+    artifact_id: number,
+    new_description: string,
+): ResultAsync<unknown, Fault> {
+    return put(
+        uri`/api/artifacts/${artifact_id}`,
+        {},
+        {
+            values: [
+                {
+                    field_id: 111,
+                    format: "html",
+                    label: "Original Submission",
+                    value: new_description,
+                },
+            ],
+        },
+    );
 }

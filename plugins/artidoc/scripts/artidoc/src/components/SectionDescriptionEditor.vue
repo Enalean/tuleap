@@ -19,43 +19,23 @@
   -->
 <template>
     <div>
-        <h1>
-            {{ title }} <a v-bind:href="artifact_url" target="_blank"> #{{ artifact_id }} </a>
-        </h1>
-        <slot class="editor-cta" name="header-cta"></slot>
+        <ckeditor
+            v-bind:editor="editor"
+            v-bind:model-value="toValue(editable_description)"
+            v-bind:config="editorConfig"
+            v-on:input="input_current_description"
+        />
     </div>
 </template>
 <script setup lang="ts">
-import { onMounted } from "vue";
-import useScrollToAnchor from "@/composables/useScrollToAnchor";
-
-const props = defineProps<{
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import { toValue } from "vue";
+defineProps<{
     artifact_id: number;
-    title: string;
+    editable_description: string;
+    input_current_description: use_section_editor_type["inputCurrentDescription"];
 }>();
-const artifact_url = `/plugins/tracker/?aid=${props.artifact_id}`;
-
-const { scrollToAnchor } = useScrollToAnchor();
-onMounted(() => {
-    const hash = window.location.hash.slice(1);
-    if (hash) {
-        scrollToAnchor(hash);
-    }
-});
+const editorConfig = {};
+const editor = ClassicEditor;
 </script>
-<style lang="scss" scoped>
-h1 {
-    display: inline;
-    margin: 0 var(--tlp-small-spacing) 0 0;
-    color: var(--tlp-dark-color);
-    font-size: 1.5rem;
-    font-weight: 600;
-    line-height: 3rem;
-}
-
-a {
-    margin: 0 0 0 var(--tlp-medium-spacing);
-    font-size: 1rem;
-    font-weight: 400;
-}
-</style>

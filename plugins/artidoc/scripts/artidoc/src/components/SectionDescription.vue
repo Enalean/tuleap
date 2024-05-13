@@ -20,18 +20,31 @@
 
 <template>
     <section-description-skeleton v-if="is_sections_loading" />
+    <section-description-editor
+        v-else-if="is_edit_mode"
+        v-bind:artifact_id="artifact_id"
+        v-bind:editable_description="description_value"
+        v-bind:input_current_description="input_current_description"
+    />
     <div v-else v-dompurify-html="description_value"></div>
 </template>
 <script setup lang="ts">
+import SectionDescriptionEditor from "@/components/SectionDescriptionEditor.vue";
+import type { use_section_editor_type } from "@/composables/useSectionEditor";
 import { onMounted } from "vue";
 import { loadTooltips } from "@tuleap/tooltip";
 import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
+import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 
 defineProps<{
-    is_sections_loading: boolean;
     artifact_id: number;
     description_value: string;
+    is_edit_mode: boolean;
+    input_current_description: use_section_editor_type["inputCurrentDescription"];
 }>();
+
+const { is_sections_loading } = useInjectSectionsStore();
+
 onMounted(() => {
     loadTooltips();
 });

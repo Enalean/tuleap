@@ -17,26 +17,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SectionDescription from "@/components/SectionDescription.vue";
 import * as tooltip from "@tuleap/tooltip";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
+import SectionDescriptionEditor from "@/components/SectionDescriptionEditor.vue";
+import { ref } from "vue";
+import * as sectionsStore from "@/stores/useSectionsStore";
 
 const default_props = {
     description_value: "Lorem ipsum",
-    is_sections_loading: false,
     artifact_id: 1,
+    is_edit_mode: false,
+    input_current_description: vi.fn(),
+};
+const default_sections_store_mocks = {
+    loadSections: vi.fn(),
+    is_sections_loading: ref(false),
+    sections: ref([]),
 };
 const default_global = {
     plugins: [VueDOMPurifyHTML],
 };
 describe("SectionDescription", () => {
     describe("while the sections are loading", () => {
+        beforeEach(() => {
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+                ...default_sections_store_mocks,
+                is_sections_loading: ref(true),
+            });
+        });
         it("should display the skeleton", () => {
             const wrapper = shallowMount(SectionDescription, {
-                props: { ...default_props, is_sections_loading: true },
+                props: { ...default_props },
                 global: default_global,
             });
             expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(true);
@@ -44,7 +59,45 @@ describe("SectionDescription", () => {
         });
     });
 
+    describe("when the sections are loaded", () => {
+        beforeEach(() => {
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
+                ...default_sections_store_mocks,
+                is_sections_loading: ref(false),
+            });
+        });
+        describe("when the editor mode is disabled", () => {
+            it("should display the description", () => {
+                const wrapper = shallowMount(SectionDescription, {
+                    props: default_props,
+                    global: {
+                        plugins: [VueDOMPurifyHTML],
+                    },
+                });
+                const description_container = wrapper.find("div");
+                expect(description_container.exists()).toBe(true);
+                expect(description_container.text()).toBe("Lorem ipsum");
+                expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+                expect(wrapper.findComponent(SectionDescriptionEditor).exists()).toBe(false);
+            });
+        });
+        describe("when the editor mode is enabled", () => {
+            it("should display the editor", () => {
+                const wrapper = shallowMount(SectionDescription, {
+                    props: { ...default_props, is_edit_mode: true },
+                    global: default_global,
+                });
+                expect(wrapper.findComponent(SectionDescriptionEditor).exists()).toBe(true);
+                expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+                expect(wrapper.find("div").exists()).toBe(false);
+            });
+        });
+    });
+
     it("should display text with tooltips", () => {
+        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+            default_sections_store_mocks,
+        );
         const loadTooltips = vi.spyOn(tooltip, "loadTooltips");
         const wrapper = shallowMount(SectionDescription, {
             props: default_props,

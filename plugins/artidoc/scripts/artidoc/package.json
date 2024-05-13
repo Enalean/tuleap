@@ -12,6 +12,8 @@
     "@tuleap/tooltip": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "@tuleap/vue-strict-inject": "workspace:*",
+    "@ckeditor/ckeditor5-vue": "^5.1.0",
+    "@ckeditor/ckeditor5-build-classic": "^41.3.1",
     "neverthrow": "6.0.0",
     "vue": "^3.3.4",
     "vue-dompurify-html": "^5.0.1",
