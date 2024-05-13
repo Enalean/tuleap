@@ -31,6 +31,7 @@ import {
     putFilePermissions,
     putFolderPermissions,
     putLinkPermissions,
+    putOtherTypeDocumentPermissions,
     putWikiPermissions,
 } from "../../api/permissions-rest-querier";
 import type { ActionContext } from "vuex";
@@ -70,6 +71,7 @@ export const updatePermissions = async (
                 await putFolderPermissions(item_id, payload.updated_permissions);
                 break;
             default:
+                await putOtherTypeDocumentPermissions(item_id, payload.updated_permissions);
                 break;
         }
         const updated_item = await getItem(item_id);

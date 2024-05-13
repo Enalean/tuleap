@@ -71,6 +71,18 @@ export async function putEmptyDocumentPermissions(
     });
 }
 
+export async function putOtherTypeDocumentPermissions(
+    id: number,
+    permissions: Permissions,
+): Promise<void> {
+    await put(`/api/docman_other_type_documents/${encodeURIComponent(id)}/permissions`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(permissions),
+    });
+}
+
 export async function putFolderPermissions(id: number, permissions: Permissions): Promise<void> {
     await put(`/api/docman_folders/${encodeURIComponent(id)}/permissions`, {
         headers: {

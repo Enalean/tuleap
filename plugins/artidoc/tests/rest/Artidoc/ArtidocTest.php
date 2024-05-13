@@ -30,12 +30,18 @@ use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 
 final class ArtidocTest extends DocmanTestExecutionHelper
 {
-    private string $now = '';
+    private string $now                         = '';
+    private string $registered_users_identifier = '2';
+    private string $project_members_identifier;
+    private string $project_admins_identifier;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->now = (string) microtime();
+
+        $this->project_members_identifier = $this->project_id . '_3';
+        $this->project_admins_identifier  = $this->project_id . '_4';
     }
 
     /**
@@ -104,10 +110,27 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                             [
                                 'title' => $title,
                                 'type'  => 'artidoc',
-                            ]
-                        )
-                    )
-                )
+                                'permissions_for_groups' => [
+                                    'can_read' => [
+                                        [
+                                            'id' => $this->registered_users_identifier,
+                                        ],
+                                    ],
+                                    'can_write' => [
+                                        [
+                                            'id' => $this->project_members_identifier,
+                                        ],
+                                    ],
+                                    'can_manage' => [
+                                        [
+                                            'id' => $this->project_members_identifier,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ),
+                    ),
+                ),
         );
         self::assertSame(201, $post_item_response->getStatusCode());
 
@@ -321,5 +344,59 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             512,
             JSON_THROW_ON_ERROR
         );
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPUTPermissions(int $root_id): void
+    {
+        $artidoc_id = $this->createArtidoc($root_id, 'Artidoc Permissions ' . $this->now)['id'];
+
+        $get_by_regular_user_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'docman_items/' . $artidoc_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        self::assertSame(200, $get_by_regular_user_response->getStatusCode(), 'Regular user can read the document');
+
+        $put_permissions_response = $this->getResponseByName(
+            \TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory
+                ->createRequest('PUT', 'docman_other_type_documents/' . $artidoc_id . '/permissions')
+                ->withBody(
+                    $this->stream_factory->createStream(
+                        json_encode(
+                            [
+                                'can_read' => [],
+                                'can_write' => [],
+                                'can_manage' => [
+                                    [
+                                        'id' => $this->project_admins_identifier,
+                                    ],
+                                ],
+                            ],
+                        ),
+                    )
+                )
+        );
+        self::assertSame(200, $put_permissions_response->getStatusCode());
+
+        $get_by_regular_user_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'docman_items/' . $artidoc_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        self::assertSame(403, $get_by_regular_user_response->getStatusCode(), 'Regular user has no longer permissions to read the document');
+
+        $get_by_admin_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'docman_items/' . $artidoc_id),
+            \TestDataBuilder::ADMIN_USER_NAME
+        );
+        self::assertSame(200, $get_by_admin_response->getStatusCode(), 'Admin can read the document');
+
+        $permissions_for_groups_representation = json_decode($get_by_admin_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['permissions_for_groups'];
+        $this->assertEmpty($permissions_for_groups_representation['can_read']);
+        $this->assertEmpty($permissions_for_groups_representation['can_write']);
+        $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
+        $this->assertEquals($this->project_admins_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
     }
 }
