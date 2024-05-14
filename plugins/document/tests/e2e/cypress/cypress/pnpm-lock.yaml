@@ -1,0 +1,16 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/cypress-configurator':
+    specifier: workspace:^
+    version: link:../../../../../../lib/test-utils/cypress-configurator
+  '@tuleap/cypress-utilities-support':
+    specifier: workspace:^
+    version: link:../../../../../../lib/test-utils/cypress-utilities-support
+  '@tuleap/plugin-document-rest-api-types':
+    specifier: workspace:^
+    version: link:../../../../scripts/lib/rest-api-types

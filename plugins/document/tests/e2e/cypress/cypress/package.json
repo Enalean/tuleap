@@ -1,0 +1,12 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-document-e2e",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/cypress-configurator": "workspace:^",
+    "@tuleap/cypress-utilities-support": "workspace:^",
+    "@tuleap/plugin-document-rest-api-types": "workspace:^"
+  }
+}

@@ -115,15 +115,12 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../lib/frontend/build-system-configurator
-  '@tuleap/cypress-configurator':
-    specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support':
-    specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/gettext':
     specifier: workspace:*
     version: link:../../lib/frontend/gettext
+  '@tuleap/plugin-document-rest-api-types':
+    specifier: workspace:^
+    version: link:scripts/lib/rest-api-types
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../lib/frontend/po-gettext-plugin
