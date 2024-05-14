@@ -18,12 +18,9 @@
   -
   -->
 <template>
-    <div>
-        <h1>
-            {{ title }} <a v-bind:href="artifact_url" target="_blank"> #{{ artifact_id }} </a>
-        </h1>
-        <slot class="editor-cta" name="header-cta"></slot>
-    </div>
+    <h1>
+        {{ title }} <a v-bind:href="artifact_url">#{{ artifact_id }}</a>
+    </h1>
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue";
@@ -45,8 +42,7 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 h1 {
-    display: inline;
-    margin: 0 var(--tlp-small-spacing) 0 0;
+    margin: 0;
     color: var(--tlp-dark-color);
     font-size: 1.5rem;
     font-weight: 600;

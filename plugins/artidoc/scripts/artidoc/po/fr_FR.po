@@ -26,12 +26,3 @@ msgstr "Vous ne pouvez pas lire ou éditer ce document"
 
 msgid "You don't have access to this document"
 msgstr "Vous n'avez pas les droits d'accès à ce document"
-
-msgid "cancel"
-msgstr "annuler"
-
-msgid "edit"
-msgstr "éditer"
-
-msgid "save"
-msgstr "sauvegarder"
