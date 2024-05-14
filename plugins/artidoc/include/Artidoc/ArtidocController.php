@@ -30,6 +30,7 @@ use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\NeverThrow\Fault;
@@ -88,7 +89,15 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         $permissions_manager = \Docman_PermissionsManager::instance((int) $service->getProject()->getID());
         $user_can_write      = $permissions_manager->userCanWrite($user, $document_information->document->getId());
 
-        $service->displayHeader($title, $this->breadcrumbs_provider->getBreadcrumbs($document_information, $user), []);
+        $service->displayHeader(
+            $title,
+            $this->breadcrumbs_provider->getBreadcrumbs($document_information, $user),
+            [],
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($service->project, \DocmanPlugin::SERVICE_SHORTNAME)
+                ->withBodyClass(['has-sidebar-with-pinned-header'])
+                ->build()
+        );
         \TemplateRendererFactory::build()->getRenderer(__DIR__)->renderToPage('artidoc', [
             'item_id' => $document_information->document->getId(),
             'can_user_edit_document' => $user_can_write && \ForgeConfig::getFeatureFlag(self::EDIT_FEATURE_FLAG) === '1',

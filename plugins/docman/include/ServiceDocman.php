@@ -33,10 +33,12 @@ class ServiceDocman extends \Service
             $title,
             $breadcrumbs,
             $toolbar,
-            HeaderConfigurationBuilder::get($title)
-                ->inProject($this->project, \DocmanPlugin::SERVICE_SHORTNAME)
-                ->withBodyClass(['docman-body'])
-                ->build()
+            $params === []
+                ? HeaderConfigurationBuilder::get($title)
+                    ->inProject($this->project, \DocmanPlugin::SERVICE_SHORTNAME)
+                    ->withBodyClass(['docman-body'])
+                    ->build()
+                : $params
         );
     }
 
