@@ -22,5 +22,5 @@ namespace Tuleap\Artidoc\Document;
 
 interface SearchPaginatedRawSections
 {
-    public function searchPaginatedRawSectionsById(int $id, int $limit, int $offset): PaginatedRawSections;
+    public function searchPaginatedRawSectionsByItemId(int $item_id, int $limit, int $offset): PaginatedRawSections;
 }

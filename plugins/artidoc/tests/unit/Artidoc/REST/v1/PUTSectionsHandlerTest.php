@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SaveSectionsStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -69,7 +70,8 @@ final class PUTSectionsHandlerTest extends TestCase
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withCollection($dummy_collection),
-            $saver
+            $saver,
+            new DatabaseUUIDV7Factory(),
         );
 
         $result = $handler->handle(
@@ -99,7 +101,8 @@ final class PUTSectionsHandlerTest extends TestCase
         $handler = new PUTSectionsHandler(
             RetrieveArtidocStub::withoutDocument(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
-            $saver
+            $saver,
+            new DatabaseUUIDV7Factory(),
         );
 
         $result = $handler->handle(
@@ -133,7 +136,8 @@ final class PUTSectionsHandlerTest extends TestCase
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withoutCollection(),
-            $saver
+            $saver,
+            new DatabaseUUIDV7Factory(),
         );
 
         $result = $handler->handle(
@@ -167,7 +171,8 @@ final class PUTSectionsHandlerTest extends TestCase
                 ),
             ),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
-            $saver
+            $saver,
+            new DatabaseUUIDV7Factory(),
         );
 
         $result = $handler->handle(

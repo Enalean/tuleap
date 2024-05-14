@@ -48,6 +48,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
     private Tracker $tracker;
     private Tracker_Semantic_Title&MockObject $semantic_title;
     private Tracker_Semantic_Description&MockObject $semantic_description;
+    private \Tuleap\DB\DatabaseUUIDFactory $uuid_factory;
 
     protected function setUp(): void
     {
@@ -60,6 +61,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
 
         Tracker_Semantic_Title::setInstance($this->semantic_title, $this->tracker);
         Tracker_Semantic_Description::setInstance($this->semantic_description, $this->tracker);
+
+        $this->uuid_factory = new \Tuleap\DB\DatabaseUUIDV7Factory();
     }
 
     protected function tearDown(): void
@@ -167,10 +170,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1],
-                    ['artifact_id' => 2],
-                    ['artifact_id' => 3],
-                    ['artifact_id' => 4],
+                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
                 ],
                 10,
             ),
@@ -254,10 +257,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1],
-                    ['artifact_id' => 2],
-                    ['artifact_id' => 3],
-                    ['artifact_id' => 4],
+                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
                 ],
                 10,
             ),
@@ -337,10 +340,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1],
-                    ['artifact_id' => 2],
-                    ['artifact_id' => 3],
-                    ['artifact_id' => 4],
+                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
                 ],
                 10,
             ),
@@ -402,10 +405,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1],
-                    ['artifact_id' => 2],
-                    ['artifact_id' => 3],
-                    ['artifact_id' => 4],
+                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
                 ],
                 10,
             ),
@@ -467,10 +470,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1],
-                    ['artifact_id' => 2],
-                    ['artifact_id' => 3],
-                    ['artifact_id' => 4],
+                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
                 ],
                 10,
             ),
@@ -532,10 +535,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1],
-                    ['artifact_id' => 2],
-                    ['artifact_id' => 3],
-                    ['artifact_id' => 4],
+                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
                 ],
                 10,
             ),
@@ -589,10 +592,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1],
-                    ['artifact_id' => 2],
-                    ['artifact_id' => 3],
-                    ['artifact_id' => 4],
+                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
                 ],
                 10,
             ),

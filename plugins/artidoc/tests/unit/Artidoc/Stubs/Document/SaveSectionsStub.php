@@ -40,9 +40,9 @@ final class SaveSectionsStub implements SaveSections
         return new self();
     }
 
-    public function save(int $id, array $artifact_ids): void
+    public function save(int $item_id, array $artifact_ids): void
     {
-        $this->saved[$id] = $artifact_ids;
+        $this->saved[$item_id] = $artifact_ids;
     }
 
     public function isSaved(int $id): bool

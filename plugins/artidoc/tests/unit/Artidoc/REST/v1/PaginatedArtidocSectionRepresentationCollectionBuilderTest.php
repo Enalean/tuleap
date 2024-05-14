@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SearchPaginatedRawSectionsStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
+use Tuleap\DB\UUID;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -42,24 +43,28 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
         $collection = new PaginatedArtidocSectionRepresentationCollection(
             [
                 new ArtidocSectionRepresentation(
+                    'uuid',
                     $this->createMock(ArtifactReference::class),
                     'title 1',
                     $this->createMock(ArtifactTextFieldValueRepresentation::class),
                     true,
                 ),
                 new ArtidocSectionRepresentation(
+                    'uuid',
                     $this->createMock(ArtifactReference::class),
                     'title 2',
                     $this->createMock(ArtifactTextFieldValueRepresentation::class),
                     true,
                 ),
                 new ArtidocSectionRepresentation(
+                    'uuid',
                     $this->createMock(ArtifactReference::class),
                     'title 3',
                     $this->createMock(ArtifactTextFieldValueRepresentation::class),
                     true,
                 ),
                 new ArtidocSectionRepresentation(
+                    'uuid',
                     $this->createMock(ArtifactReference::class),
                     'title 4',
                     $this->createMock(ArtifactTextFieldValueRepresentation::class),
@@ -80,10 +85,10 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
                 new PaginatedRawSections(
                     123,
                     [
-                        ['artifact_id' => 1],
-                        ['artifact_id' => 2],
-                        ['artifact_id' => 3],
-                        ['artifact_id' => 4],
+                        ['artifact_id' => 1, 'id' => $this->createMock(UUID::class)],
+                        ['artifact_id' => 2, 'id' => $this->createMock(UUID::class)],
+                        ['artifact_id' => 3, 'id' => $this->createMock(UUID::class)],
+                        ['artifact_id' => 4, 'id' => $this->createMock(UUID::class)],
                     ],
                     10,
                 ),
@@ -121,10 +126,10 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
                 new PaginatedRawSections(
                     123,
                     [
-                        ['artifact_id' => 1],
-                        ['artifact_id' => 2],
-                        ['artifact_id' => 3],
-                        ['artifact_id' => 4],
+                        ['artifact_id' => 1, 'id' => $this->createMock(UUID::class)],
+                        ['artifact_id' => 2, 'id' => $this->createMock(UUID::class)],
+                        ['artifact_id' => 3, 'id' => $this->createMock(UUID::class)],
+                        ['artifact_id' => 4, 'id' => $this->createMock(UUID::class)],
                     ],
                     10,
                 ),

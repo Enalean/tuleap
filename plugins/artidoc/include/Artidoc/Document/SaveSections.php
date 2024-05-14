@@ -22,5 +22,5 @@ namespace Tuleap\Artidoc\Document;
 
 interface SaveSections
 {
-    public function save(int $id, array $artifact_ids): void;
+    public function save(int $item_id, array $artifact_ids): void;
 }
