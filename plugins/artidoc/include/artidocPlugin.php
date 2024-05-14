@@ -27,6 +27,7 @@ use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Docman\Item\CloneOtherItemPostAction;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
 use Tuleap\Docman\ItemType\GetItemTypeAsText;
@@ -48,7 +49,7 @@ require_once __DIR__ . '/../../docman/vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class ArtidocPlugin extends Plugin
+class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
 {
     public function __construct(?int $id)
     {
@@ -203,5 +204,10 @@ class ArtidocPlugin extends Plugin
         if ($event->type === ArtidocDocument::TYPE) {
             $event->flagAsSupported();
         }
+    }
+
+    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(ArtidocController::class);
     }
 }
