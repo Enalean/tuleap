@@ -24,6 +24,10 @@
     .artidoc-header-title {
         @include project-background.title-header-typography;
     }
+
+    .document-layout {
+        border-top: 0;
+    }
 }
 
 body {
