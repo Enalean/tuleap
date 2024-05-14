@@ -54,4 +54,19 @@ class CountElementsCacheDao extends DataAccessObject
             $start_timestamp
         );
     }
+
+    public function getNumberOfCachedDays(int $artifact_id): int
+    {
+        $sql = <<<SQL
+        SELECT count(artifact_id) AS cached_days FROM plugin_agiledashboard_tracker_field_burnup_cache_subelements
+        WHERE artifact_id = ?
+        SQL;
+
+        return $this->getDB()->single($sql, [$artifact_id]);
+    }
+
+    public function deleteArtifactCacheValue(int $artifact_id): void
+    {
+        $this->getDB()->delete('plugin_agiledashboard_tracker_field_burnup_cache_subelements', ['artifact_id' => $artifact_id]);
+    }
 }

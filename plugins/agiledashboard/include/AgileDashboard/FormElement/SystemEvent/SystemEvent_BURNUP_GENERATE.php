@@ -148,9 +148,8 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
         $yesterday = new DateTime();
         $yesterday->setTime(23, 59, 59);
 
-        $this->cache_dao->deleteArtifactCacheValue(
-            $burnup_information['id']
-        );
+        $this->cache_dao->deleteArtifactCacheValue($burnup_information['id']);
+        $this->count_elements_cache_dao->deleteArtifactCacheValue($burnup_information['id']);
 
         $planning_infos = $this->planning_dao->searchByMilestoneTrackerId($artifact->getTrackerId());
         if (! $planning_infos) {
