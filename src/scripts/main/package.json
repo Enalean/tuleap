@@ -18,6 +18,7 @@
     "@tuleap/html-escaper": "workspace:*",
     "@tuleap/keyboard-shortcuts": "workspace:*",
     "@tuleap/mention": "workspace:*",
+    "@tuleap/pinned-header": "workspace:^",
     "@tuleap/potentially-dangerous-bidirectional-characters": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/project-sidebar-internal": "workspace:*",

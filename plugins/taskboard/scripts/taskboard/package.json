@@ -9,6 +9,7 @@
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/drag-and-drop": "workspace:*",
     "@tuleap/keyboard-shortcuts": "workspace:*",
+    "@tuleap/pinned-header": "workspace:^",
     "@tuleap/plugin-agiledashboard-scrum-milestone-header": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp": "workspace:*",
