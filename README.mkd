@@ -50,6 +50,7 @@ be added.
 * Chloé Masoni
 * Guilhem Bonnefille
 * Lou-Evan Rouby
+* Jihyun Park
 
 ### Previous contributors (no longer active committers)
 
