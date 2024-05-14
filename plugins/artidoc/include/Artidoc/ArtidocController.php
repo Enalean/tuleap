@@ -27,6 +27,8 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -38,6 +40,15 @@ use Tuleap\Request\NotFoundException;
 
 final readonly class ArtidocController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
+    #[FeatureFlagConfigKey(<<<'EOF'
+    Feature flag to allow edition of artidoc documents.
+    0 to deactivate (default)
+    1 to activate
+    EOF
+    )]
+    #[ConfigKeyString('0')]
+    public const EDIT_FEATURE_FLAG = 'enable_artidoc_edition';
+
     public function __construct(
         private RetrieveArtidoc $retrieve_artidoc,
         private ArtidocBreadcrumbsProvider $breadcrumbs_provider,
@@ -80,7 +91,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         $service->displayHeader($title, $this->breadcrumbs_provider->getBreadcrumbs($document_information, $user), []);
         \TemplateRendererFactory::build()->getRenderer(__DIR__)->renderToPage('artidoc', [
             'item_id' => $document_information->document->getId(),
-            'can_user_edit_document' => $user_can_write,
+            'can_user_edit_document' => $user_can_write && \ForgeConfig::getFeatureFlag(self::EDIT_FEATURE_FLAG) === '1',
             'title' => $title,
         ]);
         $service->displayFooter();
