@@ -36,6 +36,11 @@ msgstr "Excluir"
 msgid "Delete the time"
 msgstr ""
 
+msgid ""
+"Displays aggregated time per user over a given period, with a view of time "
+"spent on each project."
+msgstr ""
+
 msgid "Displays time spent on multiple trackers"
 msgstr ""
 
@@ -127,6 +132,9 @@ msgid "Time tracking is disabled for tracker."
 msgstr ""
 
 msgid "Time tracking is enabled for tracker."
+msgstr ""
+
+msgid "Timetracking management"
 msgstr ""
 
 msgid "Timetracking overview"
