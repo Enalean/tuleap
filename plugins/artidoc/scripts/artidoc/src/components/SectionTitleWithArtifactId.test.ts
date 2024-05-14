@@ -26,16 +26,13 @@ const default_props = {
     title: "expected title",
     artifact_id: 555,
 };
-const default_slots = {
-    "header-cta": "<div><button>edit</button></div>",
-};
+
 describe("SectionTitleWithArtifactId", () => {
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
             wrapper = shallowMount(SectionTitleWithArtifactId, {
                 propsData: default_props,
-                slots: default_slots,
             });
         });
         it("should display the title", () => {
@@ -44,9 +41,6 @@ describe("SectionTitleWithArtifactId", () => {
         it("should display the artifact id with artifact page link", () => {
             expect(wrapper.find("a").text()).toContain("#555");
             expect(wrapper.find("a").attributes().href).toBe("/plugins/tracker/?aid=555");
-        });
-        it("should display the artifact id with artifact page link", () => {
-            expect(wrapper.find("div button").text()).toBe("edit");
         });
     });
 });

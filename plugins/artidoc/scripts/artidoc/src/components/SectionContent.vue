@@ -24,20 +24,12 @@
             v-if="!is_sections_loading"
             v-bind:title="section.title"
             v-bind:artifact_id="section.artifact.id"
-        >
-            <template #header-cta>
-                <section-editor-cta
-                    v-bind:editor_actions="editor_actions"
-                    v-bind:is_edit_mode="is_edit_mode"
-                />
-            </template>
-        </section-title-with-artifact-id>
+        />
         <section-title-with-artifact-id-skeleton v-else class="section-header" />
         <section-description
             v-bind:artifact_id="section.artifact.id"
-            v-bind:description_value="editable_description"
-            v-bind:input_current_description="inputCurrentDescription"
-            v-bind:is_edit_mode="is_edit_mode"
+            v-bind:is_sections_loading="is_sections_loading"
+            v-bind:description_value="section.description.value"
         />
     </article>
 </template>
@@ -45,14 +37,10 @@
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
-import useSectionEditor from "@/composables/useSectionEditor";
-import SectionEditorCta from "@/components/SectionEditorCta.vue";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArtifactIdSkeleton.vue";
 
-const props = defineProps<{ section: ArtidocSection }>();
-const { is_edit_mode, editable_description, editor_actions, inputCurrentDescription } =
-    useSectionEditor(props.section.description.value, props.section.artifact.id);
+defineProps<{ section: ArtidocSection }>();
 const { is_sections_loading } = useInjectSectionsStore();
 </script>
 <style lang="scss" scoped>
