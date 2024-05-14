@@ -20,6 +20,7 @@
 
 namespace Tuleap\Project;
 
+use Closure;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -31,6 +32,7 @@ use Tuleap\Project\XML\Import\ImportNotValidException;
 interface ImportFromArchive
 {
     /**
+     * @psalm-param pure-Closure(\SimpleXMLElement): \Tuleap\Project\Event\ProjectXMLImportPreChecks $pre_check_xml_is_valid_event
      * @return Ok<true>|Err<Fault>
      * @throws ImportNotValidException
      */
@@ -39,5 +41,6 @@ interface ImportFromArchive
         int $project_id,
         ArchiveInterface $archive,
         CheckArchiveContent $check_archive_content,
+        Closure $pre_check_xml_is_valid_event,
     ): Ok|Err;
 }

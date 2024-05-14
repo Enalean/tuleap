@@ -338,14 +338,15 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
         int $project_id,
         ArchiveInterface $archive,
         CheckArchiveContent $check_archive_content,
+        Closure $pre_check_xml_is_valid_event,
     ): Ok|Err {
         $this->logger->info('Start importing into existing project from archive ' . $archive->getExtractionPath());
 
         return $this->getProjectXMLFromArchive($archive)
             ->andThen(
-                function (SimpleXMLElement $xml_element) {
+                function (SimpleXMLElement $xml_element) use ($pre_check_xml_is_valid_event) {
                     try {
-                        $this->assertXMLisValid($xml_element);
+                        $this->event_manager->processEvent($pre_check_xml_is_valid_event($xml_element));
                         return Result::ok($xml_element);
                     } catch (ImportNotValidException $exception) {
                         return Result::err(Fault::fromThrowable($exception));

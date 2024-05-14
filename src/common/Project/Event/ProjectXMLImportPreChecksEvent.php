@@ -23,26 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\Project\Event;
 
 use SimpleXMLElement;
-use Tuleap\Event\Dispatchable;
 
-class ProjectXMLImportPreChecksEvent implements Dispatchable
+/**
+ * @psalm-immutable
+ */
+final class ProjectXMLImportPreChecksEvent implements ProjectXMLImportPreChecks
 {
     public const NAME = 'projectXMLImportPreChecksEvent';
 
-    /**
-     * @var SimpleXMLElement
-     * @psalm-readonly
-     */
-    private $xml_element;
-
-    public function __construct(SimpleXMLElement $xml_element)
+    public function __construct(private readonly SimpleXMLElement $xml_element)
     {
-        $this->xml_element = $xml_element;
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function getXmlElement(): SimpleXMLElement
     {
         return $this->xml_element;
