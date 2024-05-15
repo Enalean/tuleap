@@ -32,6 +32,7 @@ use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\DocmanItemsRequestBuilder;
@@ -254,6 +255,11 @@ final class ArtidocResource extends AuthenticatedResource
             \Tracker_ArtifactFactory::instance(),
         );
 
-        return new PUTSectionsHandler($retriever, $transformer, $dao);
+        return new PUTSectionsHandler(
+            $retriever,
+            $transformer,
+            $dao,
+            new DatabaseUUIDV7Factory(),
+        );
     }
 }

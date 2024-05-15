@@ -31,6 +31,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 final readonly class ArtidocSectionRepresentation
 {
     public function __construct(
+        public string $id,
         public ArtifactReference $artifact,
         public string $title,
         public ArtifactTextFieldValueRepresentation $description,

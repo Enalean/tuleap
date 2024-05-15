@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
+use Tuleap\DB\UUID;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -57,16 +58,21 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
     }
 
     /**
-     * @return Ok<list<Artifact>>|Err<Fault>
+     * @return Ok<list<array{artifact: Artifact, section_uuid: UUID}>>|Err<Fault>
      */
     private function instantiateArtifacts(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
     {
-        $artifact_ids = array_column($raw_sections->rows, 'artifact_id');
+        $uuids        = [];
+        $artifact_ids = [];
+        foreach ($raw_sections->rows as $row) {
+            $artifact_ids[]             = $row['artifact_id'];
+            $uuids[$row['artifact_id']] = $row['id'];
+        }
         if (count($artifact_ids) === 0) {
             return Result::ok([]);
         }
 
-        $order = array_flip($artifact_ids);
+        $artifact_order = array_flip($artifact_ids);
 
         $artifacts = [];
         foreach ($this->artifact_dao->searchByIds($artifact_ids) as $row) {
@@ -75,7 +81,12 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
                 return Result::err(Fault::fromMessage('User cannot read one of the artifact of artidoc #' . $raw_sections->id));
             }
 
-            $artifacts[$order[$artifact->getId()]] = $artifact;
+            $id = $artifact->getId();
+
+            $artifacts[$artifact_order[$id]] = [
+                'artifact'     => $artifact,
+                'section_uuid' => $uuids[$id],
+            ];
         }
 
         ksort($artifacts);
@@ -84,13 +95,15 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
     }
 
     /**
-     * @param list<Artifact> $artifacts
+     * @param list<array{artifact: Artifact, section_uuid: UUID}> $artifacts
      * @return Ok<list<ArtidocSectionRepresentation>>|Err<Fault>
      */
     private function instantiateSections(PaginatedRawSections $raw_sections, array $artifacts, \PFUser $user): Ok|Err
     {
         $sections = [];
-        foreach ($artifacts as $artifact) {
+        foreach ($artifacts as $section) {
+            $artifact = $section['artifact'];
+
             $last_changeset = $artifact->getLastChangeset();
             if ($last_changeset === null) {
                 return Result::err(Fault::fromMessage("No changeset for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
@@ -125,6 +138,7 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
             $can_user_edit_section = $title_field->userCanUpdate($user) && $description_field->userCanUpdate($user);
 
             $sections[] = new ArtidocSectionRepresentation(
+                $section['section_uuid']->toString(),
                 ArtifactReference::build($artifact),
                 $title,
                 $description,

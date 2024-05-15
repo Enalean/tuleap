@@ -24,10 +24,11 @@ namespace Tuleap\Artidoc\Document;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\UUID;
 
 final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchPaginatedRawSections, SaveSections
 {
-    public function searchById(int $id): ?array
+    public function searchByItemId(int $item_id): ?array
     {
         return $this->getDB()->row(
             <<<EOS
@@ -38,60 +39,95 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
               AND other_type = ?
               AND delete_date IS NULL
             EOS,
-            $id,
+            $item_id,
             \Docman_Item::TYPE_OTHER,
             ArtidocDocument::TYPE,
         );
     }
 
-    public function searchPaginatedRawSectionsById(int $id, int $limit, int $offset): PaginatedRawSections
+    public function searchPaginatedRawSectionsByItemId(int $item_id, int $limit, int $offset): PaginatedRawSections
     {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($id, $limit, $offset) {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $limit, $offset) {
             $rows = $db->run(
                 <<<EOS
-                SELECT artifact_id
+                SELECT id, artifact_id
                 FROM plugin_artidoc_document
                 WHERE item_id = ?
                 ORDER BY `rank`
                 LIMIT ? OFFSET ?
                 EOS,
-                $id,
+                $item_id,
                 $limit,
                 $offset,
             );
 
-            $total = $db->cell('SELECT COUNT(*) FROM plugin_artidoc_document WHERE item_id = ?', $id);
+            $total = $db->cell('SELECT COUNT(*) FROM plugin_artidoc_document WHERE item_id = ?', $item_id);
 
-            return new PaginatedRawSections($id, $rows, $total);
+            return new PaginatedRawSections(
+                $item_id,
+                array_values(
+                    array_map(
+                        /**
+                         * @param array{id: string, artifact_id: int} $row
+                         * @return array{id: UUID, artifact_id: int} $row
+                         */
+                        function (array $row): array {
+                            $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+
+                            return $row;
+                        },
+                        $rows,
+                    ),
+                ),
+                $total,
+            );
         });
     }
 
     public function cloneItem(int $source_id, int $target_id): void
     {
-        $this->getDB()->run(
-            <<<EOS
-            INSERT INTO plugin_artidoc_document (item_id, artifact_id, `rank`)
-            SELECT ?, artifact_id, `rank`
-            FROM plugin_artidoc_document
-            WHERE item_id = ?
-            EOS,
-            $target_id,
-            $source_id,
-        );
+        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($source_id, $target_id) {
+            $rows = $db->run(
+                'SELECT artifact_id, `rank`
+                FROM plugin_artidoc_document
+                WHERE item_id = ?',
+                $source_id
+            );
+
+            $db->insertMany(
+                'plugin_artidoc_document',
+                array_map(
+                    function (array $row) use ($target_id) {
+                        return [
+                            'id'          => $this->uuid_factory->buildUUIDBytes(),
+                            'item_id'     => $target_id,
+                            'artifact_id' => $row['artifact_id'],
+                            'rank'        => $row['rank'],
+                        ];
+                    },
+                    $rows,
+                )
+            );
+        });
     }
 
-    public function save(int $id, array $artifact_ids): void
+    public function save(int $item_id, array $artifact_ids): void
     {
-        $this->getDB()->tryFlatTransaction(static function (EasyDB $db) use ($id, $artifact_ids) {
-            $db->run('DELETE FROM plugin_artidoc_document WHERE item_id = ?', $id);
+        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $artifact_ids) {
+            $db->run('DELETE FROM plugin_artidoc_document WHERE item_id = ?', $item_id);
 
             if (count($artifact_ids) > 0) {
                 $rank = 0;
                 $db->insertMany(
                     'plugin_artidoc_document',
                     array_map(
-                        static function ($artifact_id) use ($id, &$rank) {
-                            return ['item_id' => $id, 'artifact_id' => $artifact_id, 'rank' => $rank++];
+                        function ($artifact_id) use ($item_id, &$rank) {
+                            return [
+                                'id'          => $this->uuid_factory->buildUUIDBytes(),
+                                'item_id'     => $item_id,
+                                'artifact_id' => $artifact_id,
+                                'rank'        => $rank++,
+                            ];
                         },
                         $artifact_ids,
                     ),

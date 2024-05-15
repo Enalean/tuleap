@@ -22,5 +22,5 @@ namespace Tuleap\Artidoc\Document;
 
 interface SearchArtidocDocument
 {
-    public function searchById(int $id): ?array;
+    public function searchByItemId(int $item_id): ?array;
 }

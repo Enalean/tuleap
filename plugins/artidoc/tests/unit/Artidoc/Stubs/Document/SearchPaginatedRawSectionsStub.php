@@ -41,7 +41,7 @@ final readonly class SearchPaginatedRawSectionsStub implements SearchPaginatedRa
         return new self(null);
     }
 
-    public function searchPaginatedRawSectionsById(int $id, int $limit, int $offset): PaginatedRawSections
+    public function searchPaginatedRawSectionsByItemId(int $item_id, int $limit, int $offset): PaginatedRawSections
     {
         if ($this->sections === null) {
             throw new \Exception('Unexpected call to searchPaginatedRawSectionsById()');

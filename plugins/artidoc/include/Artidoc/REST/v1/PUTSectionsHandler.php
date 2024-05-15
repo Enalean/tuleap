@@ -26,6 +26,7 @@ use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Artidoc\Document\SaveSections;
+use Tuleap\DB\DatabaseUUIDFactory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -37,6 +38,7 @@ final readonly class PUTSectionsHandler
         private RetrieveArtidoc $retrieve_artidoc,
         private TransformRawSectionsToRepresentation $transformer,
         private SaveSections $dao,
+        private DatabaseUUIDFactory $uuid_factory,
     ) {
     }
 
@@ -79,7 +81,12 @@ final readonly class PUTSectionsHandler
     {
         $artifact_ids = [];
         foreach ($sections as $section) {
-            $artifact_ids[] = ['artifact_id' => $section->artifact->id];
+            $dummy_uuid = $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes());
+
+            $artifact_ids[] = [
+                'artifact_id' => $section->artifact->id,
+                'id'          => $dummy_uuid,
+            ];
         }
 
         $raw_sections = new PaginatedRawSections($id, $artifact_ids, count($artifact_ids));
