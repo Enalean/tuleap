@@ -19,7 +19,9 @@
   -->
 <template>
     <h1>
-        {{ title }} <a v-bind:href="artifact_url">#{{ artifact_id }}</a>
+        {{ title }}
+        <a v-bind:href="artifact_url">#{{ artifact_id }}</a>
+        <span class="editor-cta"> <slot name="header-cta"></slot></span>
     </h1>
 </template>
 <script setup lang="ts">
@@ -42,11 +44,14 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 h1 {
+    align-items: center;
     margin: 0;
+    padding-bottom: var(--tlp-small-spacing);
     color: var(--tlp-dark-color);
-    font-size: 1.5rem;
-    font-weight: 600;
-    line-height: 3rem;
+}
+
+.editor-cta {
+    margin-left: var(--tlp-medium-spacing);
 }
 
 a {

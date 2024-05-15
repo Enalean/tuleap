@@ -17,35 +17,25 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -
   -->
-
 <template>
-    <section-description-skeleton v-if="is_sections_loading" />
-    <section-description-editor
-        v-else-if="is_edit_mode"
-        v-bind:artifact_id="artifact_id"
-        v-bind:editable_description="description_value"
-        v-bind:input_current_description="input_current_description"
-    />
-    <div v-else v-dompurify-html="description_value"></div>
+    <div>
+        <ckeditor
+            v-bind:editor="editor"
+            v-bind:model-value="toValue(editable_description)"
+            v-bind:config="editorConfig"
+            v-on:input="input_current_description"
+        />
+    </div>
 </template>
 <script setup lang="ts">
-import SectionDescriptionEditor from "@/components/SectionDescriptionEditor.vue";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import type { use_section_editor_type } from "@/composables/useSectionEditor";
-import { onMounted } from "vue";
-import { loadTooltips } from "@tuleap/tooltip";
-import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
-
+import { toValue } from "vue";
 defineProps<{
     artifact_id: number;
-    description_value: string;
-    is_edit_mode: boolean;
+    editable_description: string;
     input_current_description: use_section_editor_type["inputCurrentDescription"];
 }>();
-
-const { is_sections_loading } = useInjectSectionsStore();
-
-onMounted(() => {
-    loadTooltips();
-});
+const editorConfig = {};
+const editor = ClassicEditor;
 </script>

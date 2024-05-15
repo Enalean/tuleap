@@ -24,6 +24,7 @@ import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { provideSectionsStore } from "@/stores/useSectionsStore";
 import { sectionsStoreKey } from "@/stores/sectionsStoreKey";
+import CKEditor from "@ckeditor/ckeditor5-vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -41,6 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const sectionsStore = provideSectionsStore();
     app.provide(sectionsStoreKey, sectionsStore);
 
+    app.use(CKEditor);
     app.use(gettext);
     app.use(VueDOMPurifyHTML);
     app.mount(vue_mount_point);
