@@ -20,38 +20,43 @@
 import { describe, expect, it, vi } from "vitest";
 import useSectionEditor from "@/composables/useSectionEditor";
 import * as rest_querier from "@/helpers/rest-querier";
+import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import * as tuleap_strict_inject from "@tuleap/vue-strict-inject";
 
-const default_description = {
-    field_id: 1,
-    type: "",
-    label: "Original Submission",
-    value: "the original description",
-    format: "html",
-    post_processed_value: "the description",
-};
-const default_artifact_id = 1;
+const default_section = ArtidocSectionFactory.create();
+
+const section = ArtidocSectionFactory.override({
+    artifact: {
+        ...default_section.artifact,
+        id: 1,
+    },
+    description: {
+        ...default_section.description,
+        value: "the original description",
+        post_processed_value: "the description",
+    },
+});
+
 describe("useSectionEditor", () => {
     describe("getReadonlyDescription", () => {
         it("should return the post processed value", () => {
-            const store = useSectionEditor(default_description, default_artifact_id);
+            const store = useSectionEditor(section);
             expect(store.getReadonlyDescription().value).toBe("the description");
         });
     });
 
     describe("getEditableDescription", () => {
         it("should return the value when format is html", () => {
-            const store = useSectionEditor(
-                {
-                    field_id: 1,
-                    type: "",
-                    label: "Original Submission",
+            const store = useSectionEditor({
+                ...section,
+                description: {
+                    ...default_section.description,
                     value: "<p>the original description see art #1</p>",
                     format: "html",
                     post_processed_value:
                         "<p>the original description see <a href=''>art #1</a></p>",
                 },
-                default_artifact_id,
-            );
+            });
 
             expect(store.getEditableDescription().value).toBe(
                 "<p>the original description see art #1</p>",
@@ -59,18 +64,16 @@ describe("useSectionEditor", () => {
         });
 
         it("should return the value converted as html when format is text", () => {
-            const store = useSectionEditor(
-                {
-                    field_id: 1,
-                    type: "",
-                    label: "Original Submission",
+            const store = useSectionEditor({
+                ...section,
+                description: {
+                    ...default_section.description,
                     value: "the original description see art #1",
                     format: "text",
                     post_processed_value:
                         "<p>the original description see <a href=''>art #1</a></p>",
                 },
-                default_artifact_id,
-            );
+            });
 
             expect(store.getEditableDescription().value).toBe(
                 "<p>the original description see art #1</p>\n",
@@ -78,19 +81,17 @@ describe("useSectionEditor", () => {
         });
 
         it("should return the value converted as html when format is markdown", () => {
-            const store = useSectionEditor(
-                {
-                    field_id: 1,
-                    type: "",
-                    label: "Original Submission",
+            const store = useSectionEditor({
+                ...section,
+                description: {
+                    ...default_section.description,
                     value: "<p>the original description see <a href=''>art #1</a></p>",
                     format: "html",
                     commonmark: "the original description see art #1",
                     post_processed_value:
                         "<p>the original description see <a href=''>art #1</a></p>",
                 },
-                default_artifact_id,
-            );
+            });
 
             expect(store.getEditableDescription().value).toBe(
                 "<p>the original description see art #1</p>\n",
@@ -100,7 +101,7 @@ describe("useSectionEditor", () => {
 
     describe("inputCurrentDescription", () => {
         it("should input current description", () => {
-            const store = useSectionEditor(default_description, default_artifact_id);
+            const store = useSectionEditor(section);
             expect(store.getEditableDescription().value).toBe("the original description");
 
             store.inputCurrentDescription("new description");
@@ -111,7 +112,7 @@ describe("useSectionEditor", () => {
 
     describe("setEditMode", () => {
         it("should enable edit mode", () => {
-            const store = useSectionEditor(default_description, default_artifact_id);
+            const store = useSectionEditor(section);
             expect(store.getIsEditMode().value).toBe(false);
 
             store.editor_actions.setEditMode(true);
@@ -122,7 +123,7 @@ describe("useSectionEditor", () => {
 
     describe("cancelEditor", () => {
         it("should cancel edit mode", () => {
-            const store = useSectionEditor(default_description, default_artifact_id);
+            const store = useSectionEditor(section);
             store.editor_actions.setEditMode(true);
             expect(store.getIsEditMode().value).toBe(true);
             store.inputCurrentDescription("the description changed");
@@ -138,7 +139,7 @@ describe("useSectionEditor", () => {
     describe("saveEditor", () => {
         describe("when the description is the same as the original description", () => {
             it("should not put artifact description", () => {
-                const store = useSectionEditor(default_description, default_artifact_id);
+                const store = useSectionEditor(section);
                 const mock_put_artifact_description = vi.spyOn(
                     rest_querier,
                     "putArtifactDescription",
@@ -152,7 +153,7 @@ describe("useSectionEditor", () => {
 
         describe("when the description is different from the original description", () => {
             it("should put artifact description", () => {
-                const store = useSectionEditor(default_description, default_artifact_id);
+                const store = useSectionEditor(section);
                 const mock_put_artifact_description = vi.spyOn(
                     rest_querier,
                     "putArtifactDescription",
@@ -165,5 +166,27 @@ describe("useSectionEditor", () => {
                 expect(mock_put_artifact_description).toHaveBeenCalledOnce();
             });
         });
+    });
+
+    describe("is_section_editable", () => {
+        it.each([
+            [false, false, false],
+            [false, true, false],
+            [true, false, false],
+            [true, true, true],
+        ])(
+            `When user can edit document = %s
+    And can edit section = %s
+    Then the is_section_editable = %s`,
+            function (can_user_edit_document, can_user_edit_section, expected) {
+                vi.spyOn(tuleap_strict_inject, "strictInject").mockReturnValue(
+                    can_user_edit_document,
+                );
+
+                const store = useSectionEditor({ ...section, can_user_edit_section });
+
+                expect(store.is_section_editable.value).toBe(expected);
+            },
+        );
     });
 });

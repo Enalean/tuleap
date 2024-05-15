@@ -53,4 +53,5 @@ export type ArtidocSection = {
     };
     title: string;
     description: ArtifactTextFieldValueRepresentation;
+    can_user_edit_section: boolean;
 };

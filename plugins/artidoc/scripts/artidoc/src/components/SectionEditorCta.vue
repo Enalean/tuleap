@@ -18,39 +18,42 @@
 -
 -->
 <template>
-    <button
-        v-if="!is_edit_mode"
-        v-on:click="setEditMode(true)"
-        type="button"
-        class="tlp-button-primary tlp-button-mini"
-    >
-        <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
-        <span>{{ $gettext("Edit") }}</span>
-    </button>
-    <button
-        v-if="is_edit_mode"
-        v-on:click="cancelEditor"
-        type="button"
-        class="cancel-button tlp-button-primary tlp-button-mini"
-    >
-        <i class="fa-solid fa-xmark tlp-button-icon" aria-hidden="true"></i>
-        <span>{{ $gettext("Cancel") }}</span>
-    </button>
-    <button
-        v-if="is_edit_mode"
-        v-on:click="saveEditor"
-        type="button"
-        class="tlp-button-primary tlp-button-mini"
-    >
-        <i class="fa-solid fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
-        <span>{{ $gettext("Save") }}</span>
-    </button>
+    <span class="section-editor-cta" v-if="is_section_editable">
+        <button
+            v-if="!is_edit_mode"
+            v-on:click="setEditMode(true)"
+            type="button"
+            class="tlp-button-primary tlp-button-mini"
+        >
+            <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
+            <span>{{ $gettext("Edit") }}</span>
+        </button>
+        <button
+            v-if="is_edit_mode"
+            v-on:click="cancelEditor"
+            type="button"
+            class="cancel-button tlp-button-primary tlp-button-mini"
+        >
+            <i class="fa-solid fa-xmark tlp-button-icon" aria-hidden="true"></i>
+            <span>{{ $gettext("Cancel") }}</span>
+        </button>
+        <button
+            v-if="is_edit_mode"
+            v-on:click="saveEditor"
+            type="button"
+            class="tlp-button-primary tlp-button-mini"
+        >
+            <i class="fa-solid fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
+            <span>{{ $gettext("Save") }}</span>
+        </button>
+    </span>
 </template>
 <script setup lang="ts">
 import type { use_section_editor_actions_type } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
 const { $gettext } = useGettext();
 const props = defineProps<{
+    is_section_editable: boolean;
     is_edit_mode: boolean;
     editor_actions: use_section_editor_actions_type;
 }>();

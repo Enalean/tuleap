@@ -29,6 +29,7 @@ const default_props = {
         saveEditor: vi.fn(),
         cancelEditor: vi.fn(),
     },
+    is_section_editable: true,
 };
 const defaultGlobal = {
     plugins: [createGettext({ silent: true })],
@@ -68,6 +69,24 @@ describe("SectionEditorCta", () => {
             expect(editButton).toHaveLength(0);
             expect(cancelButton).toHaveLength(1);
             expect(saveButton).toHaveLength(1);
+        });
+    });
+    describe("when the user is not allowed to edit the section", () => {
+        let wrapper: VueWrapper<ComponentPublicInstance>;
+        beforeAll(() => {
+            wrapper = shallowMount(SectionEditorCta, {
+                propsData: { ...default_props, is_section_editable: false },
+                global: defaultGlobal,
+            });
+        });
+        it("should not display edit mode buttons", () => {
+            const buttons = wrapper.findAll("button");
+            const editButton = buttons.filter((button) => button.text() === "Edit");
+            const cancelButton = buttons.filter((button) => button.text() === "Cancel");
+            const saveButton = buttons.filter((button) => button.text() === "Save");
+            expect(editButton).toHaveLength(0);
+            expect(cancelButton).toHaveLength(0);
+            expect(saveButton).toHaveLength(0);
         });
     });
 });
