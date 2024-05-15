@@ -24,55 +24,38 @@ namespace Tuleap\Git\Account;
 
 use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_RemoteServer_GerritServerFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $factory;
-    /**
-     * @var AccountTabsBuilder
-     */
-    private $builder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AccountTabPresenterCollection
-     */
-    private $collection;
+    private readonly MockObject&Git_RemoteServer_GerritServerFactory $factory;
+    private readonly AccountTabsBuilder $builder;
+    private readonly MockObject&AccountTabPresenterCollection $collection;
 
     protected function setUp(): void
     {
-        $this->factory = \Mockery::mock(Git_RemoteServer_GerritServerFactory::class);
+        $this->factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
         $this->builder = new AccountTabsBuilder($this->factory);
 
-        $this->collection = Mockery::mock(AccountTabPresenterCollection::class);
+        $this->collection = $this->createMock(AccountTabPresenterCollection::class);
         $this->collection
-            ->shouldReceive(
-                [
-                    'getUser'        => Mockery::mock(\PFUser::class),
-                    'getCurrentHref' => '/account',
-                ]
-            );
+            ->method('getUser')->willReturn(UserTestBuilder::buildWithDefaults());
+        $this->collection
+            ->method('getCurrentHref')->willReturn('/account');
     }
 
     public function testItAddsTabs(): void
     {
         $this->factory
-            ->shouldReceive(
-                [
-                    'getRemoteServersForUser' => [Mockery::mock(Git_RemoteServer_GerritServer::class)],
-                    'hasRemotesSetUp'         => true,
-                ]
-            );
+            ->method('getRemoteServersForUser')->willReturn([$this->createMock(Git_RemoteServer_GerritServer::class)]);
+        $this->factory
+            ->method('hasRemotesSetUp')->willReturn(true);
 
         $this->collection
-            ->shouldReceive('add')
-            ->once();
+            ->expects(self::once())
+            ->method('add');
 
         $this->builder->addTabs($this->collection);
     }
@@ -80,16 +63,13 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAddsTabIfThereIsNoRemoteServersForUser(): void
     {
         $this->factory
-            ->shouldReceive(
-                [
-                    'getRemoteServersForUser' => [],
-                    'hasRemotesSetUp'         => true,
-                ]
-            );
+            ->method('getRemoteServersForUser')->willReturn([]);
+        $this->factory
+            ->method('hasRemotesSetUp')->willReturn(true);
 
         $this->collection
-            ->shouldReceive('add')
-            ->once();
+            ->expects(self::once())
+            ->method('add');
 
         $this->builder->addTabs($this->collection);
     }
@@ -97,16 +77,13 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAddsTabIfThereIsNoRemoteSetup(): void
     {
         $this->factory
-            ->shouldReceive(
-                [
-                    'getRemoteServersForUser' => [Mockery::mock(Git_RemoteServer_GerritServer::class)],
-                    'hasRemotesSetUp'         => false,
-                ]
-            );
+            ->method('getRemoteServersForUser')->willReturn([$this->createMock(Git_RemoteServer_GerritServer::class)]);
+        $this->factory
+            ->method('hasRemotesSetUp')->willReturn(false);
 
         $this->collection
-            ->shouldReceive('add')
-            ->once();
+            ->expects(self::once())
+            ->method('add');
 
         $this->builder->addTabs($this->collection);
     }
@@ -114,16 +91,12 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotAddTabIfThereIsNoRemoteSetupNorRemoteServersForUsers(): void
     {
         $this->factory
-            ->shouldReceive(
-                [
-                    'getRemoteServersForUser' => [],
-                    'hasRemotesSetUp'         => false,
-                ]
-            );
-
+            ->method('getRemoteServersForUser')->willReturn([]);
+        $this->factory
+            ->method('hasRemotesSetUp')->willReturn(false);
         $this->collection
-            ->shouldReceive('add')
-            ->never();
+            ->expects(self::never())
+            ->method('add');
 
         $this->builder->addTabs($this->collection);
     }
