@@ -1,0 +1,20 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-timetracking-management-widget",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "vue": "^3.4.27"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@vitejs/plugin-vue": "^4.2.3"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vite build",
+    "watch": "NODE_ENV=development vite build --watch --mode development --minify false"
+  }
+}

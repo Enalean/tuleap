@@ -24,6 +24,9 @@ use TemplateRendererFactory;
 use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptAssetGeneric;
+use Tuleap\Layout\JavascriptViteAsset;
 use Widget;
 
 class TimetrackingManagementWidget extends Widget
@@ -77,5 +80,21 @@ class TimetrackingManagementWidget extends Widget
     public function getIcon(): string
     {
         return 'fa-clock-o';
+    }
+
+    /**
+     * @return JavascriptAssetGeneric[]
+     */
+    public function getJavascriptAssets(): array
+    {
+        return [
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/timetracking-management-widget/frontend-assets',
+                    '/assets/timetracking/timetracking-management-widget'
+                ),
+                'src/index.ts'
+            ),
+        ];
     }
 }
