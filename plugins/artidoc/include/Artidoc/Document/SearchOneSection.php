@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Artidoc\Document;
 
-namespace Tuleap\DB;
+use Tuleap\DB\UUID;
 
-interface DatabaseUUIDFactory
+interface SearchOneSection
 {
-    public function buildUUIDBytes(): string;
-
-    public function buildUUIDBytesFromTime(\DateTimeInterface $time): string;
-
-    public function buildUUIDFromBytesData(string $bytes): UUID;
-
     /**
-     * @throws InvalidUuidStringException
+     * @return array{ id: UUID, item_id: int, artifact_id: int, rank: int }|null
      */
-    public function buildUUIDFromHexadecimalString(string $string): UUID;
+    public function searchSectionById(string $section_id): ?array;
 }

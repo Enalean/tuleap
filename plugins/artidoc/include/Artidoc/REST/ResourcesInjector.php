@@ -26,11 +26,13 @@ namespace Tuleap\Artidoc\REST;
 
 use Luracast\Restler\Restler;
 use Tuleap\Artidoc\REST\v1\ArtidocResource;
+use Tuleap\Artidoc\REST\v1\ArtidocSectionsResource;
 
 final readonly class ResourcesInjector
 {
     public function populate(Restler $restler): void
     {
         $restler->addAPIClass(ArtidocResource::class, ArtidocResource::ROUTE);
+        $restler->addAPIClass(ArtidocSectionsResource::class, ArtidocSectionsResource::ROUTE);
     }
 }

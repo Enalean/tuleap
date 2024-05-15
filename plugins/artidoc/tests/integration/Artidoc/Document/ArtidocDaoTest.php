@@ -168,4 +168,26 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             array_column($dao->searchPaginatedRawSectionsByItemId(102, 50, 0)->rows, 'artifact_id'),
         );
     }
+
+    public function testSearchSectionById(): void
+    {
+        $dao = new ArtidocDao();
+
+        self::assertNull($dao->searchSectionById('invalid-uuid'));
+
+        $dao->save(101, [1001, 1002, 1003]);
+        $rows = $dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->rows;
+
+        foreach ($rows as $row) {
+            $section = $dao->searchSectionById($row['id']->toString());
+            self::assertNotNull($section);
+            self::assertSame($row['id']->toString(), $section['id']->toString());
+            self::assertSame($row['artifact_id'], $section['artifact_id']);
+            self::assertSame(101, $section['item_id']);
+        }
+
+        $first_section_id = $rows[0]['id']->toString();
+        $dao->save(101, []);
+        self::assertNull($dao->searchSectionById($first_section_id));
+    }
 }

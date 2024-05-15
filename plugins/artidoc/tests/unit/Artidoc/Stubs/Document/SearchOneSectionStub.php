@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\DB;
+namespace Tuleap\Artidoc\Stubs\Document;
 
-interface DatabaseUUIDFactory
+use Tuleap\Artidoc\Document\SearchOneSection;
+
+final class SearchOneSectionStub implements SearchOneSection
 {
-    public function buildUUIDBytes(): string;
+    private function __construct(private ?array $row)
+    {
+    }
 
-    public function buildUUIDBytesFromTime(\DateTimeInterface $time): string;
+    public static function withResults(array $row): self
+    {
+        return new self($row);
+    }
 
-    public function buildUUIDFromBytesData(string $bytes): UUID;
+    public static function withoutResults(): self
+    {
+        return new self(null);
+    }
 
-    /**
-     * @throws InvalidUuidStringException
-     */
-    public function buildUUIDFromHexadecimalString(string $string): UUID;
+    public function searchSectionById(string $section_id): ?array
+    {
+        return $this->row;
+    }
 }
