@@ -39,18 +39,50 @@ const { sections } = useInjectSectionsStore();
 
 <style lang="scss" scoped>
 ol {
+    padding: 0;
     counter-reset: item-without-dot;
 }
 
+$section-horizontal-padding: calc(var(--tlp-jumbo-spacing) + var(--tlp-large-spacing));
+
 li {
-    padding: 0 0 0 var(--tlp-medium-spacing);
+    position: relative;
+    margin: 0 0 var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing) var(--tlp-jumbo-spacing) var(--tlp-medium-spacing)
+        $section-horizontal-padding;
     counter-increment: item-without-dot;
+
+    &:first-child {
+        padding-top: var(--tlp-large-spacing);
+    }
+
+    &:last-child {
+        margin: 0;
+    }
+
+    &:has(.ck-editor) {
+        --ck-color-base-background: var(--tlp-main-color-lighter-90);
+
+        background: var(--ck-color-base-background);
+    }
 }
 
-li::marker {
+$section-number-padding-left: var(--tlp-small-spacing);
+$section-number-padding-right: var(--tlp-medium-spacing);
+$section-title-height: 57px;
+
+li::before {
     content: counter(item-without-dot);
+    position: absolute;
+    left: 0;
+    width: calc(
+        #{$section-horizontal-padding} - #{$section-number-padding-left} - #{$section-number-padding-right}
+    );
+    padding: 0 $section-number-padding-right 0 $section-number-padding-left;
     color: var(--tlp-dimmed-color-lighter-50);
     font-style: italic;
     font-weight: 600;
+    line-height: $section-title-height;
+    text-align: right;
 }
 </style>
