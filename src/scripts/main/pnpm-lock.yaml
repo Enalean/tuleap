@@ -44,6 +44,9 @@ dependencies:
   '@tuleap/mention':
     specifier: workspace:*
     version: link:../../../lib/frontend/mention
+  '@tuleap/pinned-header':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/pinned-header
   '@tuleap/potentially-dangerous-bidirectional-characters':
     specifier: workspace:*
     version: link:../../../lib/frontend/potentially-dangerous-bidirectional-characters
@@ -323,7 +326,7 @@ packages:
   /jsonfile@4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.11
     dev: false
 
   /jsonfile@5.0.0:

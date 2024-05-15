@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { DEFAULT_THRESHOLD, pinHeaderWhileScrolling } from "@tuleap/pinned-header";
+
 export function init(): void {
     const header = document.querySelector("header");
     if (!header) {
@@ -34,28 +36,5 @@ export function init(): void {
         return;
     }
 
-    let ticking = false;
-    handlePinnedHeader(header);
-    window.addEventListener("scroll", () => {
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                handlePinnedHeader(header);
-                ticking = false;
-            });
-        }
-        ticking = true;
-    });
-}
-
-function handlePinnedHeader(header: HTMLElement): void {
-    const scroll_coordinates = {
-        x: window.pageXOffset,
-        y: window.pageYOffset,
-    };
-
-    if (scroll_coordinates.y > 35) {
-        header.classList.add("pinned");
-    } else {
-        header.classList.remove("pinned");
-    }
+    pinHeaderWhileScrolling(DEFAULT_THRESHOLD);
 }

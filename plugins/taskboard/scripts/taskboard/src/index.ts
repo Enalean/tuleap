@@ -27,6 +27,7 @@ import Vuex from "vuex";
 import type { UserState } from "./store/user/type";
 import type { RootState } from "./store/type";
 import type { ColumnState } from "./store/column/type";
+import { pinHeaderWhileScrolling } from "@tuleap/pinned-header";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("taskboard");
@@ -93,24 +94,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         store: createStore(initial_root_state, initial_user_state, initial_column_state),
     }).$mount(vue_mount_point);
 
-    const header = document.querySelector("header");
-    if (header) {
-        let ticking = false;
-        window.addEventListener("scroll", () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    // magic value 190 ≃ distance between top and swimlanes header
-                    if (window.pageYOffset > 190) {
-                        header.classList.add("header-taskboard-pinned");
-                        header.classList.add("pinned");
-                    } else {
-                        header.classList.remove("header-taskboard-pinned");
-                        header.classList.remove("pinned");
-                    }
-                    ticking = false;
-                });
-            }
-            ticking = true;
-        });
-    }
+    const distance_between_top_and_swimlanes_header_magic_value = 190;
+    pinHeaderWhileScrolling(
+        distance_between_top_and_swimlanes_header_magic_value,
+        "header-taskboard-pinned",
+    );
 });
