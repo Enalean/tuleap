@@ -32,6 +32,8 @@ use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\TimezoneWrapper;
+use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreLine
@@ -87,6 +89,14 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
     }
 
     public function process()
+    {
+        return TimezoneWrapper::wrapTimezone(
+            TimezoneRetriever::getServerTimezone(),
+            fn() => $this->generateCache(),
+        );
+    }
+
+    private function generateCache(): bool
     {
         $artifact_id = $this->getArtifactIdFromParameters();
         $artifact    = $this->artifact_factory->getArtifactById($artifact_id);

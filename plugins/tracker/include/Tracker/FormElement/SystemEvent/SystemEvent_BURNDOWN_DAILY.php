@@ -23,6 +23,8 @@ namespace Tuleap\Tracker\FormElement\SystemEvent;
 use Psr\Log\LoggerInterface;
 use SystemEvent;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\TimezoneWrapper;
+use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
@@ -69,13 +71,16 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
 
     public function process()
     {
-        $this->cacheYesterdayValues();
+        TimezoneWrapper::wrapTimezone(
+            TimezoneRetriever::getServerTimezone(),
+            fn() => $this->cacheYesterdayValues(),
+        );
         $this->done();
 
         return true;
     }
 
-    public function cacheYesterdayValues()
+    private function cacheYesterdayValues(): void
     {
         $yesterday = $this->date_retriever->getYesterday();
         if (! DatePeriodWithoutWeekEnd::isNotWeekendDay($yesterday)) {
