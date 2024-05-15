@@ -25,6 +25,8 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { provideSectionsStore } from "@/stores/useSectionsStore";
 import { sectionsStoreKey } from "@/stores/sectionsStoreKey";
 import CKEditor from "@ckeditor/ckeditor5-vue";
+import { CURRENT_LOCALE } from "@/locale-injection-key";
+import { userLocale } from "@/helpers/user-locale";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -32,15 +34,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    let user_locale = "en_US";
+
     const gettext = await initVueGettext(createGettext, (locale: string) => {
+        user_locale = locale;
         return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
     });
+
+    const current_locale = userLocale(user_locale);
+    if (current_locale.language !== "en") {
+        /* eslint-disable no-unsanitized/method -- The imports are safe, they will be replaced by the bundler anyway */
+        await import(
+            `@ckeditor/ckeditor5-build-classic/build/translations/${current_locale.language}`
+        );
+    }
+
     const app = createApp(App, {
         item_id: Number.parseInt(vue_mount_point.dataset.itemId || "", 10),
     });
 
     const sectionsStore = provideSectionsStore();
     app.provide(sectionsStoreKey, sectionsStore);
+    app.provide(CURRENT_LOCALE, current_locale);
 
     app.use(CKEditor);
     app.use(gettext);

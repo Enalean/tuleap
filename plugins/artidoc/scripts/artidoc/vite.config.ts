@@ -21,6 +21,7 @@ import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 import vue from "@vitejs/plugin-vue";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import dynamicImport from "vite-plugin-dynamic-import";
 
 export default vite.defineAppConfig(
     {
@@ -28,7 +29,18 @@ export default vite.defineAppConfig(
         sub_app_name: path.basename(__dirname),
     },
     {
-        plugins: [POGettextPlugin.vite(), vue()],
+        plugins: [
+            POGettextPlugin.vite(),
+            vue(),
+            dynamicImport({
+                filter(id) {
+                    // Allow ckeditor5 translation files to be bundled, so we can import them dynamically.
+                    if (id.includes("@ckeditor/ckeditor5-build-classic/build/translations/")) {
+                        return true;
+                    }
+                },
+            }),
+        ],
         build: {
             rollupOptions: {
                 input: {

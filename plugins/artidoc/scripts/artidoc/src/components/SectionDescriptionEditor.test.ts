@@ -21,9 +21,22 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionDescriptionEditor from "@/components/SectionDescriptionEditor.vue";
 import type { ComponentPublicInstance } from "vue";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+import { CURRENT_LOCALE } from "@/locale-injection-key";
+import { userLocale } from "@/helpers/user-locale";
+
+vi.mock("@tuleap/vue-strict-inject");
+
 describe("SectionDescriptionEditor", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
+
     beforeAll(() => {
+        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
+            if (key === CURRENT_LOCALE) {
+                return userLocale("fr_FR");
+            }
+        });
+
         wrapper = shallowMount(SectionDescriptionEditor, {
             props: {
                 artifact_id: 1,
@@ -32,6 +45,7 @@ describe("SectionDescriptionEditor", () => {
             },
         });
     });
+
     it("should display the editor", () => {
         expect(wrapper.find("ckeditor").exists()).toBe(true);
     });

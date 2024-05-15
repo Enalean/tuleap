@@ -31,11 +31,20 @@
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import type { use_section_editor_type } from "@/composables/useSectionEditor";
 import { toValue } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { CURRENT_LOCALE } from "@/locale-injection-key";
+import type { UserLocale } from "@/helpers/user-locale";
+
 defineProps<{
     artifact_id: number;
     editable_description: string;
     input_current_description: use_section_editor_type["inputCurrentDescription"];
 }>();
-const editorConfig = {};
+
+const { language } = strictInject<UserLocale>(CURRENT_LOCALE);
+
+const editorConfig = {
+    language,
+};
 const editor = ClassicEditor;
 </script>
