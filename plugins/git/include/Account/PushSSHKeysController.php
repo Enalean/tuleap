@@ -28,34 +28,18 @@ use Git_UserSynchronisationException;
 use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
-final class PushSSHKeysController implements DispatchableWithRequest
+final readonly class PushSSHKeysController implements DispatchableWithRequest
 {
-    /**
-     * @var Git_UserAccountManager
-     */
-    private $git_user_account_manager;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    private $csrf_token;
-    /**
-     * @var \Git_RemoteServer_GerritServerFactory
-     */
-    private $gerrit_server_factory;
-
-    public function __construct(\CSRFSynchronizerToken $csrf_token, Git_UserAccountManager $git_user_account_manager, \Git_RemoteServer_GerritServerFactory $gerrit_server_factory, LoggerInterface $logger)
-    {
-        $this->csrf_token               = $csrf_token;
-        $this->git_user_account_manager = $git_user_account_manager;
-        $this->logger                   = $logger;
-        $this->gerrit_server_factory    = $gerrit_server_factory;
+    public function __construct(
+        private CSRFSynchronizerTokenInterface $csrf_token,
+        private Git_UserAccountManager $git_user_account_manager,
+        private \Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        private LoggerInterface $logger,
+    ) {
     }
 
     /**

@@ -23,59 +23,44 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Account;
 
-use CSRFSynchronizerToken;
+use ColinODell\PsrTestLogger\TestLogger;
 use Feedback;
+use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
 use Git_UserAccountManager;
 use Git_UserSynchronisationException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder as UserTestBuilderAlias;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
-final class PushSSHKeysControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PushSSHKeysControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_UserAccountManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $user_account_manager;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $gerrit_server_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var PushSSHKeysController
-     */
-    private $controller;
+    private readonly MockObject&Git_UserAccountManager $user_account_manager;
+    private readonly MockObject&Git_RemoteServer_GerritServerFactory $gerrit_server_factory;
+    private readonly TestLogger $logger;
+    private readonly PFUser $user;
+    private readonly PushSSHKeysController $controller;
 
     protected function setUp(): void
     {
-        $this->user_account_manager = \Mockery::spy(\Git_UserAccountManager::class);
+        $this->user_account_manager = $this->createMock(Git_UserAccountManager::class);
 
-        $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->gerrit_server_factory->shouldReceive('getRemoteServersForUser')->andReturns([Mockery::mock('Git_RemoteServer_GerritServer')]);
+        $this->gerrit_server_factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $this->gerrit_server_factory->method('getRemoteServersForUser')->willReturn([$this->createMock(Git_RemoteServer_GerritServer::class)]);
 
-        $this->logger = \Mockery::spy(LoggerInterface::class);
+        $this->logger = new TestLogger();
 
         $this->user = UserTestBuilderAlias::aUser()->withId(120)->build();
 
         $this->controller = new PushSSHKeysController(
-            Mockery::mock(CSRFSynchronizerToken::class, ['check' => true]),
+            CSRFSynchronizerTokenStub::buildSelf(),
             $this->user_account_manager,
             $this->gerrit_server_factory,
             $this->logger,
@@ -84,9 +69,9 @@ final class PushSSHKeysControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotPushKeysIfUserIsInvalid()
     {
-        $this->expectException(\Tuleap\Request\ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
-        $this->user_account_manager->shouldReceive('pushSSHKeys')->never();
+        $this->user_account_manager->expects(self::never())->method('pushSSHKeys');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withAnonymousUser()->build(),
@@ -97,9 +82,7 @@ final class PushSSHKeysControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItLogsAnErrorIfSSHKeyPushFails(): void
     {
-        $this->user_account_manager->shouldReceive('pushSSHKeys')->andThrows(new Git_UserSynchronisationException());
-
-        $this->logger->shouldReceive('error')->once();
+        $this->user_account_manager->method('pushSSHKeys')->willThrowException(new Git_UserSynchronisationException());
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -107,13 +90,14 @@ final class PushSSHKeysControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             LayoutBuilder::build(),
             []
         );
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
     public function testItAddsResponseFeedbackIfSSHKeyPushFails(): void
     {
-        $this->user_account_manager->shouldReceive('pushSSHKeys')->andThrows(new Git_UserSynchronisationException());
+        $this->user_account_manager->method('pushSSHKeys')->willThrowException((new Git_UserSynchronisationException()));
 
-        $this->gerrit_server_factory->shouldReceive('getRemoteServersForUser')->andReturns([]);
+        $this->gerrit_server_factory->method('getRemoteServersForUser')->willReturn([]);
 
         $layout_inspector = new LayoutInspector();
 
@@ -130,7 +114,7 @@ final class PushSSHKeysControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertTrue($has_been_redirected);
         $feedback = $layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(Feedback::ERROR, $feedback[0]['level']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(Feedback::ERROR, $feedback[0]['level']);
     }
 }
