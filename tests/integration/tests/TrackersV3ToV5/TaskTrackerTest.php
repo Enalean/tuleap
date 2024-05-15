@@ -44,78 +44,88 @@ use Tracker_ReportFactory;
 use Tracker_SemanticFactory;
 use TrackerFactory;
 use Tuleap\DB\DBFactory;
+use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Test\Helpers\CodendiLogSwitcher;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
 
-final class TaskTrackerTest extends TestIntegrationTestCase
+final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    private static string|false $backup_codendi_log;
-
     private Tracker_FormElementFactory $form_element_factory;
-    private static int $task_tracker_id;
     private Tracker $task_tracker;
     private Tracker_ReportFactory $report_factory;
     private \Tracker_Report $tasks_report;
 
-    /**
-     * @beforeClass
-     */
-    public static function convertTaskTracker(): void
-    {
-        self::$backup_codendi_log = \ForgeConfig::get('backup_codendi_log');
-        \ForgeConfig::set('codendi_log', '/tmp');
-
-        $db      = DBFactory::getMainTuleapDBConnection()->getDB();
-        $results = $db->run('SELECT * FROM artifact_group_list WHERE item_name = "task" AND group_id = 100');
-        if (count($results) !== 1) {
-            throw new \RuntimeException('No Tracker v3 data. Migration impossible');
-        }
-        $row = $results[0];
-
-        $trackerv3_id = $row['group_artifact_id'];
-        $v3_migration = new Tracker_Migration_V3(TrackerFactory::instance());
-        $project      = ProjectManager::instance()->getProject(100);
-        $name         = 'Tasks';
-        $description  = 'tasks tracker';
-        $itemname     = 'tsk';
-        $tv3          = new ArtifactType($project, $trackerv3_id);
-
-        $task_tracker          = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
-        self::$task_tracker_id = $task_tracker->getId();
-        unset($GLOBALS['Language']);
-    }
-
-    /**
-     * @afterClass
-     */
-    public static function resetForgeConfig(): void
-    {
-        \ForgeConfig::set('codendi_log', self::$backup_codendi_log);
-    }
-
     protected function setUp(): void
     {
         $this->form_element_factory = Tracker_FormElementFactory::instance();
-        $tracker_factory            = TrackerFactory::instance();
-
-        $tasks_tracker =  $tracker_factory->getTrackerById(self::$task_tracker_id);
-        if (! $tasks_tracker) {
-            throw new \LogicException(
-                sprintf('Expected to find tracker with id #%d but it was not found', self::$task_tracker_id)
-            );
-        }
-        $this->task_tracker = $tasks_tracker;
-
-        $this->report_factory = Tracker_ReportFactory::instance();
-        $this->tasks_report   = $this->getReportByName('Tasks');
+        $this->report_factory       = Tracker_ReportFactory::instance();
     }
 
-    private function getReportByName($name): \Tracker_Report
+    protected function tearDown(): void
     {
-        foreach ($this->report_factory->getReportsByTrackerId(self::$task_tracker_id, null) as $report) {
+        if (isset($GLOBALS['_SESSION'])) {
+            unset($GLOBALS['_SESSION']);
+        }
+    }
+
+    public function testItConvertsTaskTracker(): void
+    {
+        Dispose::using(new CodendiLogSwitcher(), function () {
+            $db      = DBFactory::getMainTuleapDBConnection()->getDB();
+            $results = $db->run(
+                "SELECT group_artifact_id FROM artifact_group_list WHERE item_name = 'task' AND group_id = 100"
+            );
+            if (count($results) !== 1) {
+                throw new \RuntimeException('No Tracker v3 data. Migration impossible');
+            }
+            $row = $results[0];
+
+            $trackerv3_id = $row['group_artifact_id'];
+            $v3_migration = new Tracker_Migration_V3(TrackerFactory::instance());
+            $project      = ProjectManager::instance()->getProject(100);
+            $name         = 'Tasks';
+            $description  = 'tasks tracker';
+            $itemname     = 'tsk';
+            $tv3          = new ArtifactType($project, $trackerv3_id);
+
+            $this->task_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
+            unset($GLOBALS['Language']);
+
+            $this->tasks_report = $this->getReportByName('Tasks');
+
+            $this->checkItCreatedTrackerV5WithDefaultParameters();
+            $this->checkItHasNoParent();
+            $this->checkItGivesFullAccessToAllUsers();
+            $this->checkItHasATitleSemantic();
+            $this->checkItHasAStatusSemantic();
+            $this->checkItHasOnlyOneOpenValueForStatusSemantic();
+            $this->checkItHasAnAssignedToSemantic();
+            $this->checkItHasSubmittedBy();
+            $this->checkItHasATextFieldDescription();
+            $this->checkItHasADateFieldStartDate();
+            $this->checkItHasAnUnusedField();
+            $this->checkItHasAListFieldResolutionWithValues();
+            $this->checkItHasTwoReports();
+            $this->checkItHasAReportNamedTasks();
+            $this->checkItHasThreeCriteria();
+            $this->checkItHasATableRenderer();
+            $this->checkItSendsAnEmailToProjectAndTrackerAdminsTwoDaysBeforeStartDate();
+            $this->checkItSendsASecondEmailOnStartDate();
+            $this->checkItSendsTheLastEmailTwoDaysAfterStartDate();
+            $this->checkItSendsAnEmailToProjectMembersAndSubmitterOneDayAfterEndDate();
+            $this->checkItSendsAnEmailToProjectMembersAndSubmitterThreeDaysAfterEndDate();
+            $this->checkItSendsAnEmailToSubmitterOneDaysAfterDueDate();
+            $this->checkItSendsASecondEmailThreeDaysAfterDueDate();
+            $this->checkItCreateReminderWhenTheListOfUgroupsIsEmptyButNotTheTrackerRoles();
+        });
+    }
+
+    private function getReportByName(string $name): \Tracker_Report
+    {
+        foreach ($this->report_factory->getReportsByTrackerId($this->task_tracker->getId(), null) as $report) {
             if ($report->name === $name) {
                 return $report;
             }
@@ -123,7 +133,7 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         throw new \LogicException('Could not find the report');
     }
 
-    public function testItCreatedTrackerV5WithDefaultParameters(): void
+    private function checkItCreatedTrackerV5WithDefaultParameters(): void
     {
         self::assertSame('Tasks', $this->task_tracker->getName());
         self::assertSame('tasks tracker', $this->task_tracker->getDescription());
@@ -131,19 +141,21 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertSame('100', $this->task_tracker->getGroupId());
     }
 
-    public function testItHasNoParent(): void
+    private function checkItHasNoParent(): void
     {
         self::assertNull($this->task_tracker->getParent());
     }
 
-    public function testItGivesFullAccessToAllUsers(): void
+    private function checkItGivesFullAccessToAllUsers(): void
     {
         self::assertEqualsCanonicalizing([
-            ProjectUGroup::ANONYMOUS => [Tracker::PERMISSION_FULL,],
+            ProjectUGroup::ANONYMOUS => [
+                Tracker::PERMISSION_FULL,
+            ],
         ], $this->task_tracker->getPermissionsByUgroupId());
     }
 
-    public function testItHasATitleSemantic(): void
+    private function checkItHasATitleSemantic(): void
     {
         $field = $this->task_tracker->getTitleField();
         self::assertInstanceOf(Tracker_FormElement_Field_String::class, $field);
@@ -152,7 +164,7 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertTrue($field->isRequired());
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
-            ProjectUGroup::ANONYMOUS => [
+            ProjectUGroup::ANONYMOUS       => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
@@ -162,7 +174,7 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasAStatusSemantic(): void
+    private function checkItHasAStatusSemantic(): void
     {
         $field = $this->task_tracker->getStatusField();
         self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
@@ -171,7 +183,7 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertTrue($field->isRequired());
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
-            ProjectUGroup::ANONYMOUS => [
+            ProjectUGroup::ANONYMOUS       => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
@@ -180,16 +192,18 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasOnlyOneOpenValueForStatusSemantic(): void
+    private function checkItHasOnlyOneOpenValueForStatusSemantic(): void
     {
-        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker($this->task_tracker);
+        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker(
+            $this->task_tracker
+        );
         $open_values     = $semantic_status->getOpenValues();
         self::assertCount(1, $open_values);
         $open_value = $semantic_status->getField()->getListValueById($open_values[0]);
         self::assertSame('Open', $open_value->getLabel());
     }
 
-    public function testItHasAnAssignedToSemantic(): void
+    private function checkItHasAnAssignedToSemantic(): void
     {
         $field = $this->task_tracker->getContributorField();
         self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
@@ -199,7 +213,7 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertTrue($field->isUsed());
         self::assertTrue($field->isMultiple());
         self::assertEqualsCanonicalizing([
-            ProjectUGroup::ANONYMOUS => [
+            ProjectUGroup::ANONYMOUS       => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
@@ -209,9 +223,9 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasSubmittedBy(): void
+    private function checkItHasSubmittedBy(): void
     {
-        $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'submitted_by');
+        $field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'submitted_by');
         self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
         self::assertSame('submitted_by', $field->getName());
         self::assertSame('Submitted by', $field->getLabel());
@@ -224,16 +238,16 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasATextFieldDescription(): void
+    private function checkItHasATextFieldDescription(): void
     {
-        $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'details');
+        $field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'details');
         self::assertInstanceOf(Tracker_FormElement_Field_Text::class, $field);
         self::assertSame('details', $field->getName());
         self::assertSame('Original Submission', $field->getLabel());
         self::assertFalse($field->isRequired());
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
-            ProjectUGroup::ANONYMOUS => [
+            ProjectUGroup::ANONYMOUS       => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
@@ -243,16 +257,16 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasADateFieldStartDate(): void
+    private function checkItHasADateFieldStartDate(): void
     {
-        $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
+        $field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'start_date');
         self::assertInstanceOf(Tracker_FormElement_Field_Date::class, $field);
         self::assertSame('start_date', $field->getName());
         self::assertSame('Start Date', $field->getLabel());
         self::assertFalse($field->isRequired());
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
-            ProjectUGroup::ANONYMOUS => [
+            ProjectUGroup::ANONYMOUS       => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
@@ -262,25 +276,28 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasAnUnusedField(): void
+    private function checkItHasAnUnusedField(): void
     {
-        $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'stage');
+        $field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'stage');
         self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
         self::assertSame('stage', $field->getName());
         self::assertSame('Stage', $field->getLabel());
         self::assertFalse($field->isUsed());
     }
 
-    public function testItHasAListFieldResolutionWithValues(): void
+    private function checkItHasAListFieldResolutionWithValues(): void
     {
-        $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'severity');
+        $field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'severity');
         self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
         self::assertSame('severity', $field->getName());
         self::assertSame('Priority', $field->getLabel());
         self::assertTrue($field->isRequired());
         self::assertTrue($field->isUsed());
 
-        $this->compareValuesToLabel($field->getAllValues(), ['1 - Lowest', '2', '3', '4', '5 - Medium', '6', '7', '8', '9 - Highest']);
+        $this->compareValuesToLabel(
+            $field->getAllValues(),
+            ['1 - Lowest', '2', '3', '4', '5 - Medium', '6', '7', '8', '9 - Highest']
+        );
     }
 
     private function compareValuesToLabel(array $values, array $labels): void
@@ -294,17 +311,17 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         }
     }
 
-    public function testItHasTwoReports(): void
+    private function checkItHasTwoReports(): void
     {
-        self::assertCount(2, $this->report_factory->getReportsByTrackerId(self::$task_tracker_id, null));
+        self::assertCount(2, $this->report_factory->getReportsByTrackerId($this->task_tracker->getId(), null));
     }
 
-    public function testItHasAReportNamedBugs(): void
+    private function checkItHasAReportNamedTasks(): void
     {
         self::assertSame('Tasks', $this->tasks_report->name);
     }
 
-    public function testItHasThreeCriteria(): void
+    private function checkItHasThreeCriteria(): void
     {
         $criteria = $this->tasks_report->getCriteria();
         $this->thereAreCriteriaForFields($criteria, ['Subproject', 'Assigned to (multiple)', 'Status']);
@@ -328,7 +345,7 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         return false;
     }
 
-    public function testItHasATableRenderer(): void
+    private function checkItHasATableRenderer(): void
     {
         $renderers = $this->tasks_report->getRenderers();
         self::assertCount(1, $renderers);
@@ -337,10 +354,13 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertInstanceOf(Tracker_Report_Renderer_Table::class, $renderer);
 
         $columns = $renderer->getTableColumns(false, true, false);
-        $this->thereAreColumnsForFields($columns, ['Artifact ID', 'Assigned to (multiple)', 'Subproject', 'Effort', 'Status', 'Start Date', 'Summary']);
+        $this->thereAreColumnsForFields(
+            $columns,
+            ['Artifact ID', 'Assigned to (multiple)', 'Subproject', 'Effort', 'Status', 'Start Date', 'Summary']
+        );
     }
 
-    public function thereAreColumnsForFields($columns, $field_labels): void
+    private function thereAreColumnsForFields($columns, $field_labels): void
     {
         self::assertCount(count($field_labels), $columns);
         foreach ($field_labels as $label) {
@@ -348,7 +368,7 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         }
     }
 
-    public function columnsContainOneColumnForField($columns, $field_label): bool
+    private function columnsContainOneColumnForField($columns, $field_label): bool
     {
         foreach ($columns as $column) {
             if ($column['field']->getLabel() === $field_label) {
@@ -377,9 +397,12 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         );
     }
 
-    public function testItSendsAnEmailToProjectAndTrackerAdminsTwoDaysBeforeStartDate(): void
+    private function checkItSendsAnEmailToProjectAndTrackerAdminsTwoDaysBeforeStartDate(): void
     {
-        $start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
+        $start_date_field = $this->form_element_factory->getFormElementByName(
+            $this->task_tracker->getId(),
+            'start_date'
+        );
         $reminders        = $this->findReminders($start_date_field->getId(), 2, Tracker_DateReminder::BEFORE);
 
         self::assertCount(1, $reminders);
@@ -387,13 +410,19 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertSame(Tracker_DateReminder::BEFORE, $reminders[0]->getNotificationType());
         self::assertEquals($start_date_field, $reminders[0]->getField());
         self::assertSame(Tracker_DateReminder::ENABLED, $reminders[0]->getStatus());
-        self::assertEqualsCanonicalizing([ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN], $reminders[0]->getUgroups(true));
+        self::assertEqualsCanonicalizing(
+            [ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN],
+            $reminders[0]->getUgroups(true)
+        );
         self::assertEmpty($reminders[0]->getRoles());
     }
 
-    public function testItSendsASecondEmailOnStartDate(): void
+    private function checkItSendsASecondEmailOnStartDate(): void
     {
-        $start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
+        $start_date_field = $this->form_element_factory->getFormElementByName(
+            $this->task_tracker->getId(),
+            'start_date'
+        );
         $reminders        = $this->findReminders($start_date_field->getId(), 0, Tracker_DateReminder::BEFORE);
 
         self::assertCount(1, $reminders);
@@ -401,13 +430,19 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertSame(Tracker_DateReminder::BEFORE, $reminders[0]->getNotificationType());
         self::assertEquals($start_date_field, $reminders[0]->getField());
         self::assertSame(Tracker_DateReminder::ENABLED, $reminders[0]->getStatus());
-        self::assertEqualsCanonicalizing([ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN], $reminders[0]->getUgroups(true));
+        self::assertEqualsCanonicalizing(
+            [ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN],
+            $reminders[0]->getUgroups(true)
+        );
         self::assertEmpty($reminders[0]->getRoles());
     }
 
-    public function testItSendsTheLastEmailTwoDaysAfterStartDate(): void
+    private function checkItSendsTheLastEmailTwoDaysAfterStartDate(): void
     {
-        $start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
+        $start_date_field = $this->form_element_factory->getFormElementByName(
+            $this->task_tracker->getId(),
+            'start_date'
+        );
         $reminders        = $this->findReminders($start_date_field->getId(), 2, Tracker_DateReminder::AFTER);
 
         self::assertCount(1, $reminders);
@@ -415,13 +450,16 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertSame(Tracker_DateReminder::AFTER, $reminders[0]->getNotificationType());
         self::assertEquals($start_date_field, $reminders[0]->getField());
         self::assertSame(Tracker_DateReminder::ENABLED, $reminders[0]->getStatus());
-        self::assertEqualsCanonicalizing([ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN], $reminders[0]->getUgroups(true));
+        self::assertEqualsCanonicalizing(
+            [ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN],
+            $reminders[0]->getUgroups(true)
+        );
         self::assertEmpty($reminders[0]->getRoles());
     }
 
-    public function testItSendsAnEmailToProjectMembersAndSubmitterOneDayAfterEndDate(): void
+    private function checkItSendsAnEmailToProjectMembersAndSubmitterOneDayAfterEndDate(): void
     {
-        $end_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'end_date');
+        $end_date_field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'end_date');
         $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
         $reminders      = $this->findReminders($end_date_field->getId(), 1, Tracker_DateReminder::AFTER);
@@ -435,9 +473,9 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertEquals($notified_roles, $reminders[0]->getRoles());
     }
 
-    public function testItSendsAnEmailToProjectMembersAndSubmitterThreeDaysAfterEndDate(): void
+    private function checkItSendsAnEmailToProjectMembersAndSubmitterThreeDaysAfterEndDate(): void
     {
-        $end_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'end_date');
+        $end_date_field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'end_date');
         $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
         $reminders      = $this->findReminders($end_date_field->getId(), 3, Tracker_DateReminder::AFTER);
@@ -451,9 +489,9 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertEquals($notified_roles, $reminders[0]->getRoles());
     }
 
-    public function testItSendsAnEmailToSubmitterOneDaysAfterDueDate(): void
+    private function checkItSendsAnEmailToSubmitterOneDaysAfterDueDate(): void
     {
-        $due_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'due_date');
+        $due_date_field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'due_date');
         $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
         $reminders      = $this->findReminders($due_date_field->getId(), 1, Tracker_DateReminder::AFTER);
@@ -467,9 +505,9 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertEquals($notified_roles, $reminders[0]->getRoles());
     }
 
-    public function testItSendsASecondEmailThreeDaysAfterDueDate(): void
+    private function checkItSendsASecondEmailThreeDaysAfterDueDate(): void
     {
-        $due_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'due_date');
+        $due_date_field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'due_date');
         $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
         $reminders      = $this->findReminders($due_date_field->getId(), 3, Tracker_DateReminder::AFTER);
@@ -483,7 +521,7 @@ final class TaskTrackerTest extends TestIntegrationTestCase
         self::assertEquals($notified_roles, $reminders[0]->getRoles());
     }
 
-    public function testItCreateReminderWhenTheListOfUgroupsIsEmptyButNotTheTrackerRoles(): void
+    private function checkItCreateReminderWhenTheListOfUgroupsIsEmptyButNotTheTrackerRoles(): void
     {
         $factory   = new Tracker_DateReminderFactory(
             $this->task_tracker,
