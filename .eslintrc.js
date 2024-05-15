@@ -281,6 +281,7 @@ module.exports = {
                 "plugins/roadmap/scripts/configure-widget/**/*.vue",
                 "plugins/svn/scripts/permissions-per-group/**/*.vue",
                 "plugins/testplan/scripts/**/*.vue",
+                "plugins/timetracking/scripts/timetracking-management-widget/**/*.vue",
                 "plugins/tracker/scripts/permissions-per-group/**/*.vue",
                 "src/scripts/frs-permissions-per-group/**/*.vue",
                 "src/scripts/news-permissions-per-group/**/*.vue",

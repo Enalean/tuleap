@@ -1,0 +1,11 @@
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "From"
+msgstr "Du"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "To"
+msgstr "Au"

@@ -18,7 +18,33 @@
   -->
 
 <template>
-    <div>Hello world from vue</div>
+    <widget-query-displayer
+        v-if="!is_query_being_edited"
+        v-on:click="is_query_being_edited = true"
+        v-bind:start_date="start_date"
+        v-bind:end_date="end_date"
+    />
+    <widget-query-editor
+        v-else
+        v-on:set-dates="setDates"
+        v-on:close-edit-mode="is_query_being_edited = false"
+        v-bind:start_date="start_date"
+        v-bind:end_date="end_date"
+    />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
+import WidgetQueryEditor from "./WidgetQueryEditor.vue";
+import { ref } from "vue";
+
+const is_query_being_edited = ref(false);
+
+const start_date = ref(new Date().toISOString().split("T")[0]);
+const end_date = ref(new Date().toISOString().split("T")[0]);
+
+const setDates = (start: string, end: string): void => {
+    start_date.value = start;
+    end_date.value = end;
+};
+</script>

@@ -4,6 +4,10 @@
         "personal-timetracking-widget": {
             "src": "scripts/personal-timetracking-widget/src",
             "po": "scripts/personal-timetracking-widget/po"
+        },
+        "timetracking-management-widget": {
+            "src": "scripts/timetracking-management-widget/src",
+            "po": "scripts/timetracking-management-widget/po"
         }
     },
     "gettext-vue": {

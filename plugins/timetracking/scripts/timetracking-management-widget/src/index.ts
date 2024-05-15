@@ -18,8 +18,10 @@
  */
 import { createApp } from "vue";
 import TimetrackingManagementWidget from "./components/TimetrackingManagementWidget.vue";
+import { createGettext } from "vue3-gettext";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.getElementById("timetracking-management-widget");
     if (!(mount_point instanceof HTMLElement)) {
         return;
@@ -29,5 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    createApp(TimetrackingManagementWidget).mount(mount_point);
+    createApp(TimetrackingManagementWidget)
+        .use(
+            await initVueGettext(createGettext, (locale: string) => {
+                return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+            }),
+        )
+        .mount(mount_point);
 });
