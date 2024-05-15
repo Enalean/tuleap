@@ -22,30 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\CommonMarkExtension;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Git\GitPHP\Blob;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Project;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class LinkToGitFileBlobFinderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LinkToGitFileBlobFinderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Commit
-     */
-    private $current_commit;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project
-     */
-    private $project;
+    private readonly MockObject&Commit $current_commit;
+    private readonly MockObject&Project $project;
 
     protected function setUp(): void
     {
-        $this->current_commit = \Mockery::mock(Commit::class);
-        $this->project        = \Mockery::mock(Project::class);
+        $this->current_commit = $this->createMock(Commit::class);
+        $this->project        = $this->createMock(Project::class);
 
-        $this->current_commit->shouldReceive('GetProject')->andReturn($this->project);
+        $this->current_commit->method('GetProject')->willReturn($this->project);
     }
 
     /**
@@ -55,16 +48,16 @@ final class LinkToGitFileBlobFinderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $blob_finder = new LinkToGitFileBlobFinder($readme_path, $this->current_commit);
 
-        $this->current_commit->shouldReceive('PathToHash')->andReturn('blob_ref');
-        $this->current_commit->shouldReceive('GetHash')->andReturn('commit_ref');
-        $linked_blob = \Mockery::mock(Blob::class);
-        $linked_blob->shouldReceive('GetHash')->andReturn('blob_ref');
-        $this->project->shouldReceive('GetBlob')->andReturn($linked_blob);
+        $this->current_commit->method('PathToHash')->willReturn('blob_ref');
+        $this->current_commit->method('GetHash')->willReturn('commit_ref');
+        $linked_blob = $this->createMock(Blob::class);
+        $linked_blob->method('GetHash')->willReturn('blob_ref');
+        $this->project->method('GetBlob')->willReturn($linked_blob);
 
         $found_blob = $blob_finder->findBlob($url);
-        $this->assertEquals($expected_path, $found_blob->getPath());
-        $this->assertEquals('blob_ref', $found_blob->getBlobRef());
-        $this->assertEquals('commit_ref', $found_blob->getCommitRef());
+        self::assertSame($expected_path, $found_blob->getPath());
+        self::assertSame('blob_ref', $found_blob->getBlobRef());
+        self::assertSame('commit_ref', $found_blob->getCommitRef());
     }
 
     public static function dataProviderToExistingFile(): array
@@ -85,8 +78,8 @@ final class LinkToGitFileBlobFinderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnsNullIfFileCannotBeFound(): void
     {
         $blob_finder = new LinkToGitFileBlobFinder('README.md', $this->current_commit);
-        $this->current_commit->shouldReceive('PathToHash')->andReturn('');
-        $this->project->shouldReceive('GetBlob')->andReturn(null);
-        $this->assertNull($blob_finder->findBlob('https://example.com'));
+        $this->current_commit->method('PathToHash')->willReturn('');
+        $this->project->method('GetBlob')->willReturn(null);
+        self::assertNull($blob_finder->findBlob('https://example.com'));
     }
 }
