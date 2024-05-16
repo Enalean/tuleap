@@ -25,62 +25,57 @@ namespace Tuleap\Git\CommonMarkExtension;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\MarkdownConverter;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 
 final class LinkToGitFileExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LinkToGitFileBlobFinder
-     */
-    private $blob_finder;
-    private MarkdownConverter $converter;
+    private readonly MockObject&LinkToGitFileBlobFinder $blob_finder;
+    private readonly MarkdownConverter $converter;
 
     protected function setUp(): void
     {
         $environment = new Environment();
         $environment->addExtension(new CommonMarkCoreExtension());
-        $this->blob_finder = \Mockery::mock(LinkToGitFileBlobFinder::class);
+        $this->blob_finder = $this->createMock(LinkToGitFileBlobFinder::class);
         $environment->addExtension(new LinkToGitFileExtension($this->blob_finder));
         $this->converter = new MarkdownConverter($environment);
     }
 
     public function testDirectLinkIsConvertedIfItPointsToAGitFile(): void
     {
-        $this->blob_finder->shouldReceive('findBlob')->andReturn(
+        $this->blob_finder->method('findBlob')->willReturn(
             new BlobPointedByURL('blob_ref', 'commit_ref', 'file_in_repo.txt')
         );
-        $result = $this->converter->convertToHtml('[](file_in_repo.txt)');
+        $result = $this->converter->convert('[](file_in_repo.txt)');
 
-        $this->assertEquals("<p><a href=\"?a=blob&amp;hb=commit_ref&amp;h=blob_ref&amp;f=file_in_repo.txt\"></a></p>\n", $result);
+        self::assertSame("<p><a href=\"?a=blob&amp;hb=commit_ref&amp;h=blob_ref&amp;f=file_in_repo.txt\"></a></p>\n", $result->getContent());
     }
 
     public function testImageLinkIsConvertedIfItPointsToAGitFile(): void
     {
-        $this->blob_finder->shouldReceive('findBlob')->andReturn(
+        $this->blob_finder->method('findBlob')->willReturn(
             new BlobPointedByURL('blob_ref', 'commit_ref', 'image_in_repo.jpg')
         );
-        $result = $this->converter->convertToHtml('![](image_in_repo.jpg)');
+        $result = $this->converter->convert('![](image_in_repo.jpg)');
 
-        $this->assertEquals("<p><img src=\"?a=blob_plain&amp;hb=commit_ref&amp;h=blob_ref&amp;f=image_in_repo.jpg\" alt=\"\" /></p>\n", $result);
+        self::assertSame("<p><img src=\"?a=blob_plain&amp;hb=commit_ref&amp;h=blob_ref&amp;f=image_in_repo.jpg\" alt=\"\" /></p>\n", $result->getContent());
     }
 
     public function testDirectLinkIsLeftIntactIfItDoesNotPointToAGitFile(): void
     {
-        $this->blob_finder->shouldReceive('findBlob')->andReturn(null);
+        $this->blob_finder->method('findBlob')->willReturn(null);
 
-        $result = $this->converter->convertToHtml('[](https://example.com)');
+        $result = $this->converter->convert('[](https://example.com)');
 
-        $this->assertEquals("<p><a href=\"https://example.com\"></a></p>\n", $result);
+        self::assertSame("<p><a href=\"https://example.com\"></a></p>\n", $result->getContent());
     }
 
     public function testImageLinkIsLeftIntactIfItDoesNotPointToAGitFile(): void
     {
-        $this->blob_finder->shouldReceive('findBlob')->andReturn(null);
+        $this->blob_finder->method('findBlob')->willReturn(null);
 
-        $result = $this->converter->convertToHtml('![](https://example.com/a.jpg)');
+        $result = $this->converter->convert('![](https://example.com/a.jpg)');
 
-        $this->assertEquals("<p><img src=\"https://example.com/a.jpg\" alt=\"\" /></p>\n", $result);
+        self::assertSame("<p><img src=\"https://example.com/a.jpg\" alt=\"\" /></p>\n", $result->getContent());
     }
 }
