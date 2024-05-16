@@ -39,8 +39,10 @@ export function putArtifactDescription(
         values: [
             {
                 field_id: description_id,
-                format: "html",
-                value: new_description,
+                value: {
+                    content: new_description,
+                    format: "html",
+                },
             },
         ],
     });
