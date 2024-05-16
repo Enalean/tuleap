@@ -22,8 +22,8 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
-import * as predefined_time_periods from "../helper/predefined-time-periods";
-import type { PredefinedTimePeriod } from "../helper/predefined-time-periods";
+import * as predefined_time_periods from "@tuleap/plugin-timetracking-predefined-time-periods";
+import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import {
     CURRENT_WEEK,
     LAST_7_DAYS,
@@ -31,7 +31,7 @@ import {
     LAST_WEEK,
     TODAY,
     YESTERDAY,
-} from "../helper/predefined-time-periods";
+} from "@tuleap/plugin-timetracking-predefined-time-periods";
 import type { Option } from "@tuleap/option";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
 

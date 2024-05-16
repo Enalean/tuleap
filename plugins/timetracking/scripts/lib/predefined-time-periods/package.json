@@ -1,0 +1,26 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-timetracking-predefined-time-periods",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "main": "dist/plugin-timetracking-predefined-time-periods.umd.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/plugin-timetracking-predefined-time-periods.js",
+      "require": "./dist/plugin-timetracking-predefined-time-periods.umd.cjs"
+    }
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "test": "vitest",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

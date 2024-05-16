@@ -52,6 +52,9 @@ devDependencies:
   '@tuleap/plugin-timetracking-constants':
     specifier: workspace:*
     version: link:../lib/constants
+  '@tuleap/plugin-timetracking-predefined-time-periods':
+    specifier: workspace:*
+    version: link:../lib/predefined-time-periods
   '@tuleap/plugin-timetracking-rest-api-types':
     specifier: workspace:*
     version: link:../lib/rest-api-types

@@ -109,7 +109,10 @@ import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { onMounted, ref } from "vue";
 import type { Ref } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { Period, PredefinedTimePeriod } from "../helper/predefined-time-periods";
+import type {
+    Period,
+    PredefinedTimePeriod,
+} from "@tuleap/plugin-timetracking-predefined-time-periods";
 import {
     TODAY,
     YESTERDAY,
@@ -123,7 +126,7 @@ import {
     getLastWeekPeriod,
     getLastMonthPeriod,
     getLastSevenDaysPeriod,
-} from "../helper/predefined-time-periods";
+} from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { Option } from "@tuleap/option";
 
 const { $gettext } = useGettext();
