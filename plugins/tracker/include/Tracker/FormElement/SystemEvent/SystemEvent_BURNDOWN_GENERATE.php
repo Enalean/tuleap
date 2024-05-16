@@ -24,8 +24,8 @@ use DateTime;
 use Psr\Log\LoggerInterface;
 use SystemEvent;
 use Tracker_ArtifactFactory;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Date\TimezoneWrapper;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
@@ -142,13 +142,13 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
         $this->logger->debug('Calculating burndown for artifact #' . $artifact_id);
         if ($burndown_informations) {
             if (! isset($burndown_informations['duration'])) {
-                $burndown = DatePeriodWithoutWeekEnd::buildFromEndDate(
+                $burndown = DatePeriodWithOpenDays::buildFromEndDate(
                     $burndown_informations['start_date'],
                     $burndown_informations['end_date'],
                     $this->logger
                 );
             } else {
-                $burndown = DatePeriodWithoutWeekEnd::buildFromDuration(
+                $burndown = DatePeriodWithOpenDays::buildFromDuration(
                     $burndown_informations['start_date'],
                     $burndown_informations['duration']
                 );

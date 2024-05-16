@@ -28,7 +28,7 @@ use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -446,10 +446,10 @@ final class TaskOutOfDateDetectorTest extends TestCase
     private function getDatePeriodWithoutWeekend(
         string $start_date_string,
         ?string $end_date_string,
-    ): DatePeriodWithoutWeekEnd {
+    ): DatePeriodWithOpenDays {
         $end = $end_date_string !== null ? (new \DateTimeImmutable($end_date_string))->getTimestamp() : null;
 
-        return DatePeriodWithoutWeekEnd::buildFromEndDate(
+        return DatePeriodWithOpenDays::buildFromEndDate(
             (new \DateTimeImmutable($start_date_string))->getTimestamp(),
             $end,
             new NullLogger()

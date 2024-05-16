@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Chart_Data_Burndown;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -66,7 +66,7 @@ class BurndownDataBuilderForLegacy
         $this->remaining_effort_adder = $remaining_effort_adder;
     }
 
-    public function build(Artifact $artifact, PFUser $user, DatePeriodWithoutWeekEnd $date_period)
+    public function build(Artifact $artifact, PFUser $user, DatePeriodWithOpenDays $date_period)
     {
         $capacity      = $this->getCapacity($artifact, $user);
         $user_timezone = TimezoneRetriever::getUserTimezone($user);
@@ -109,7 +109,7 @@ class BurndownDataBuilderForLegacy
     private function getBurndownCalculationStatus(
         Artifact $artifact,
         PFUser $user,
-        DatePeriodWithoutWeekEnd $date_period,
+        DatePeriodWithOpenDays $date_period,
         $capacity,
         $user_timezone,
     ) {
@@ -136,7 +136,7 @@ class BurndownDataBuilderForLegacy
     private function addBurndownRemainingEffortDotsBasedOnServerTimezone(
         Artifact $artifact,
         PFUser $user,
-        DatePeriodWithoutWeekEnd $date_period,
+        DatePeriodWithOpenDays $date_period,
         $capacity,
         $is_burndown_under_calculation,
     ) {
@@ -156,10 +156,10 @@ class BurndownDataBuilderForLegacy
         return $user_burndown_data;
     }
 
-    private function getDatePeriod(DatePeriodWithoutWeekEnd $date_period): DatePeriodWithoutWeekEnd
+    private function getDatePeriod(DatePeriodWithOpenDays $date_period): DatePeriodWithOpenDays
     {
         if ($date_period->getStartDate() === null) {
-            return DatePeriodWithoutWeekEnd::buildFromDuration($_SERVER['REQUEST_TIME'], $date_period->getDuration());
+            return DatePeriodWithOpenDays::buildFromDuration($_SERVER['REQUEST_TIME'], $date_period->getDuration());
         }
 
         return $date_period;

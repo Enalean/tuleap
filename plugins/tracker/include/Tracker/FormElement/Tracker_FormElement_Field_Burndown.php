@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -331,7 +331,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $artifact_field_value_representation;
     }
 
-    private function getDatePeriodForRESTRepresentation(Artifact $artifact, PFUser $user): DatePeriodWithoutWeekEnd
+    private function getDatePeriodForRESTRepresentation(Artifact $artifact, PFUser $user): DatePeriodWithOpenDays
     {
         $calculator = $this->getTimeframeCalculator();
 
@@ -347,7 +347,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return Tracker_Chart_Data_Burndown
      * @throws BurndownCacheIsCurrentlyCalculatedException
      */
-    public function getBurndownData(Artifact $artifact, PFUser $user, DatePeriodWithoutWeekEnd $date_period)
+    public function getBurndownData(Artifact $artifact, PFUser $user, DatePeriodWithOpenDays $date_period)
     {
         $builder = $this->getBurndownDataBuilderForREST();
         return $builder->build($artifact, $user, $date_period);
@@ -357,7 +357,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return Tracker_Chart_Data_Burndown
      * @throws BurndownCacheIsCurrentlyCalculatedException
      */
-    public function getBurndownDataForREST(Artifact $artifact, PFUser $user, DatePeriodWithoutWeekEnd $date_period)
+    public function getBurndownDataForREST(Artifact $artifact, PFUser $user, DatePeriodWithOpenDays $date_period)
     {
         return $this->getBurndownData($artifact, $user, $date_period);
     }

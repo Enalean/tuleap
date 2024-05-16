@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
 
 /**
@@ -31,14 +31,14 @@ class Tracker_Chart_Data_Burndown
      */
     private $remaining_efforts_at_date;
 
-    private DatePeriodWithoutWeekEnd $date_period;
+    private DatePeriodWithOpenDays $date_period;
 
     private $remaining_effort;
     private $ideal_effort;
     private $capacity;
     private $is_under_calcul;
 
-    public function __construct(DatePeriodWithoutWeekEnd $time_period, $capacity = null, $is_under_calcul = false)
+    public function __construct(DatePeriodWithOpenDays $time_period, $capacity = null, $is_under_calcul = false)
     {
         $this->date_period               = $time_period;
         $this->capacity                  = $capacity;
@@ -73,8 +73,6 @@ class Tracker_Chart_Data_Burndown
      * Returns the remaining effort values for each day to display on Burndown
      *
      * @return Array
-     *
-     * @psalm-mutation-free
      */
     public function getRemainingEffort()
     {
@@ -188,7 +186,7 @@ class Tracker_Chart_Data_Burndown
         return $this->date_period->getDuration();
     }
 
-    public function getDatePeriod(): DatePeriodWithoutWeekEnd
+    public function getDatePeriod(): DatePeriodWithOpenDays
     {
         return $this->date_period;
     }

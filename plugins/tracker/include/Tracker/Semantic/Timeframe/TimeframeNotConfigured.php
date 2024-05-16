@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 
 class TimeframeNotConfigured implements IComputeTimeframes
 {
@@ -78,24 +78,24 @@ class TimeframeNotConfigured implements IComputeTimeframes
         return null;
     }
 
-    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
 
-        return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
+        return DatePeriodWithOpenDays::buildFromNothingWithErrorMessage(
             $this->getErrorMessage($changeset)
         );
     }
 
-    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
 
-        return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
+        return DatePeriodWithOpenDays::buildFromNothingWithErrorMessage(
             $this->getErrorMessage($changeset)
         );
     }
@@ -103,10 +103,10 @@ class TimeframeNotConfigured implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
 
         throw new \Tracker_FormElement_Chart_Field_Exception(

@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -115,7 +115,7 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
         $this->assertFalse(
@@ -143,7 +143,7 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
         $this->assertFalse(
@@ -177,7 +177,7 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
         $this->assertTrue(
@@ -210,7 +210,7 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
         $this->assertTrue(

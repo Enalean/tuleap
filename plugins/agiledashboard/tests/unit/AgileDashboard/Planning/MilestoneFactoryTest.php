@@ -35,7 +35,7 @@ use Project;
 use Psr\Log\NullLogger;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -125,23 +125,23 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $planning_permissions_manager = Mockery::mock(PlanningPermissionsManager::class);
         $milestone_dao                = Mockery::mock(AgileDashboard_Milestone_MilestoneDao::class);
 
-        $date_period_open_current_without_start_date = Mockery::mock(DatePeriodWithoutWeekEnd::class);
+        $date_period_open_current_without_start_date = Mockery::mock(DatePeriodWithOpenDays::class);
         $date_period_open_current_without_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(false);
         $date_period_open_current_without_start_date->shouldReceive('getStartDate')->andReturn(0);
 
-        $date_period_open_current_with_start_date = Mockery::mock(DatePeriodWithoutWeekEnd::class);
+        $date_period_open_current_with_start_date = Mockery::mock(DatePeriodWithOpenDays::class);
         $date_period_open_current_with_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(false);
         $date_period_open_current_with_start_date->shouldReceive('getStartDate')->andReturn(strtotime('2015-12-03T14:55:00'));
 
-        $date_period_open_future_with_start_date = Mockery::mock(DatePeriodWithoutWeekEnd::class);
+        $date_period_open_future_with_start_date = Mockery::mock(DatePeriodWithOpenDays::class);
         $date_period_open_future_with_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(true);
         $date_period_open_future_with_start_date->shouldReceive('getStartDate')->andReturn(strtotime('2015-12-03T14:55:00'));
 
-        $date_period_open_future_without_start_date = Mockery::mock(DatePeriodWithoutWeekEnd::class);
+        $date_period_open_future_without_start_date = Mockery::mock(DatePeriodWithOpenDays::class);
         $date_period_open_future_without_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(true);
         $date_period_open_future_without_start_date->shouldReceive('getStartDate')->andReturn(0);
 
-        $date_period_closed_passed = Mockery::mock(DatePeriodWithoutWeekEnd::class);
+        $date_period_closed_passed = Mockery::mock(DatePeriodWithOpenDays::class);
         $date_period_closed_passed->shouldReceive('getStartDate')->andReturn(0);
         $date_period_closed_passed->shouldReceive('getEndDate')->andReturn(strtotime('2015-12-03T14:55:00'));
 

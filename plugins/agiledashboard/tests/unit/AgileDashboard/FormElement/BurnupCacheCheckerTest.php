@@ -27,7 +27,7 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -45,7 +45,7 @@ final class BurnupCacheCheckerTest extends TestCase
     private BurnupCacheGenerator&MockObject $cache_generator;
     private PFUser $user;
     private Artifact $artifact;
-    private DatePeriodWithoutWeekEnd $date_period;
+    private DatePeriodWithOpenDays $date_period;
     private BurnupCacheChecker $burnup_cache_Checker;
     private ChartConfigurationValueChecker&MockObject $chart_value_checker;
     private BurnupCacheDao&MockObject $burnup_cache_dao;
@@ -77,7 +77,7 @@ final class BurnupCacheCheckerTest extends TestCase
             )
             ->build();
 
-        $this->date_period = DatePeriodWithoutWeekEnd::buildFromDuration((new DateTime())->getTimestamp(), 10);
+        $this->date_period = DatePeriodWithOpenDays::buildFromDuration((new DateTime())->getTimestamp(), 10);
 
         $this->user = UserTestBuilder::buildWithId(101);
     }

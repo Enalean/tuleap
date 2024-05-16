@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Chart_Data_Burndown;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -54,7 +54,7 @@ class BurndownDataBuilderForREST
         $this->common_data_builder    = $common_data_builder;
     }
 
-    public function build(Artifact $artifact, PFUser $user, DatePeriodWithoutWeekEnd $date_period)
+    public function build(Artifact $artifact, PFUser $user, DatePeriodWithOpenDays $date_period)
     {
         $capacity      = $this->common_data_builder->getCapacity($artifact, $user);
         $user_timezone = TimezoneRetriever::getUserTimezone($user);
@@ -85,7 +85,7 @@ class BurndownDataBuilderForREST
     private function addBurndownRemainingEffortDotsBasedOnServerTimezoneForREST(
         Artifact $artifact,
         PFUser $user,
-        DatePeriodWithoutWeekEnd $date_period,
+        DatePeriodWithOpenDays $date_period,
         $capacity,
         $is_burndown_under_calculation,
     ) {

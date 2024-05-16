@@ -36,7 +36,7 @@ use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
@@ -129,7 +129,7 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->with($artifact->getLastChangeset(), $this->user, $this->logger)
             ->once()
-            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
 
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id);
         $this->assertEquals($artifact, $milestone->getArtifact());

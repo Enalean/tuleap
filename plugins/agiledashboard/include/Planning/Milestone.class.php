@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -177,7 +177,7 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
 
     public function hasBurdownField(PFUser $user);
 
-    public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void;
+    public function setDatePeriod(DatePeriodWithOpenDays $date_period): void;
 
     public function setCapacity($capacity);
 

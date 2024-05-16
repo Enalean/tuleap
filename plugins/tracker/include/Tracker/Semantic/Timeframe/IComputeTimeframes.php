@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 
 interface IComputeTimeframes
 {
@@ -37,14 +37,14 @@ interface IComputeTimeframes
 
     public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker;
 
-    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd;
+    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays;
 
-    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd;
+    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays;
 
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd;
+    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays;
 
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void;
 

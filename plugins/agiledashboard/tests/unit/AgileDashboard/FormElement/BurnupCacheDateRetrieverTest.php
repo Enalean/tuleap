@@ -20,7 +20,7 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -30,7 +30,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '18-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '20-12-2017');
-        $period     = DatePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), 5);
+        $period     = DatePeriodWithOpenDays::buildFromDuration($start_date->getTimestamp(), 5);
 
         $date_cache_retriever = new BurnupCacheDateRetriever();
         $days_to_cache        = $date_cache_retriever->getWorkedDaysToCacheForPeriod($period, $yesterday);
@@ -47,7 +47,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '18-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '26-12-2017');
-        $period     = DatePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), 2);
+        $period     = DatePeriodWithOpenDays::buildFromDuration($start_date->getTimestamp(), 2);
 
         $date_cache_retriever = new BurnupCacheDateRetriever();
         $days_to_cache        = $date_cache_retriever->getWorkedDaysToCacheForPeriod($period, $yesterday);
@@ -65,7 +65,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '26-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '20-12-2017');
-        $period     = DatePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), 4);
+        $period     = DatePeriodWithOpenDays::buildFromDuration($start_date->getTimestamp(), 4);
 
         $date_cache_retriever = new BurnupCacheDateRetriever();
         $days_to_cache        = $date_cache_retriever->getWorkedDaysToCacheForPeriod($period, $yesterday);
@@ -79,7 +79,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '21-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '27-12-2017');
-        $period     = DatePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), 5);
+        $period     = DatePeriodWithOpenDays::buildFromDuration($start_date->getTimestamp(), 5);
 
         $date_cache_retriever = new BurnupCacheDateRetriever();
         $days_to_cache        = $date_cache_retriever->getWorkedDaysToCacheForPeriod($period, $yesterday);

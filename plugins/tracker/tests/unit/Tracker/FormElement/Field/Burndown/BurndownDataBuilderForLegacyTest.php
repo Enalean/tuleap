@@ -24,7 +24,7 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Config\ConfigurationVariables;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
@@ -112,7 +112,7 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 5;
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $date_period);
 
@@ -126,7 +126,7 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 5;
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $date_period);
 
@@ -140,7 +140,7 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 2;
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $second_day = strtotime('2018-11-02');
         $third_day  = strtotime('2018-11-03');
@@ -158,7 +158,7 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 2;
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $second_day = strtotime('2018-11-02');
         $third_day  = strtotime('2018-11-03');

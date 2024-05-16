@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\IRepresentSemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -81,16 +81,16 @@ class TimeframeConfigInvalid implements IComputeTimeframes
         return null;
     }
 
-    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
-        return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
+        return DatePeriodWithOpenDays::buildFromNothingWithErrorMessage(
             $this->getInvalidConfigDifferentProjectsMessage()
         );
     }
 
-    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
-        return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
+        return DatePeriodWithOpenDays::buildFromNothingWithErrorMessage(
             $this->getInvalidConfigDifferentProjectsMessage()
         );
     }
@@ -98,7 +98,7 @@ class TimeframeConfigInvalid implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         throw new \Tracker_FormElement_Chart_Field_Exception(
             $this->getInvalidConfigDifferentProjectsMessage()

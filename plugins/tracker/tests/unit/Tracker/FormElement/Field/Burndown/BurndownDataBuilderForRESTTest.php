@@ -25,7 +25,7 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Config\ConfigurationVariables;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
@@ -135,7 +135,7 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date = strtotime('2018-11-01');
         $duration   = 5;
 
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $this->computed_cache->shouldReceive('searchCachedDays')->andReturns([]);
 
@@ -152,7 +152,7 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date = strtotime('2018-11-01');
         $duration   = 5;
 
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $this->computed_cache->shouldReceive('searchCachedDays')->andReturns([]);
 
@@ -193,7 +193,7 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
 
@@ -233,7 +233,7 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $duration = 2;
 
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
 
@@ -251,7 +251,7 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration = 2;
 
         $start_date  = new DateTime('+1d');
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), $duration);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date->getTimestamp(), $duration);
 
         $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
         $this->assertSame([0 => null], $user_burndown_data->getRemainingEffort());

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -76,7 +76,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      */
     private $parent_milestones = [];
 
-    private ?DatePeriodWithoutWeekEnd $date_period = null;
+    private ?DatePeriodWithOpenDays $date_period = null;
 
     /**
      * The capacity of the milestone
@@ -358,7 +358,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return (bool) $burndown_field;
     }
 
-    public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void
+    public function setDatePeriod(DatePeriodWithOpenDays $date_period): void
     {
         $this->date_period = $date_period;
     }

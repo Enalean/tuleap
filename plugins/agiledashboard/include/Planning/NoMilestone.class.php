@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 
 /**
  * Null-object pattern for planning milestones.
@@ -177,7 +177,7 @@ class Planning_NoMilestone implements Planning_Milestone
         return 0;
     }
 
-    public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void
+    public function setDatePeriod(DatePeriodWithOpenDays $date_period): void
     {
     }
 

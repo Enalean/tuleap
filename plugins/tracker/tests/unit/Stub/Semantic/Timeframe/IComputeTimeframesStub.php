@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\IRepresentSemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -31,7 +31,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 final class IComputeTimeframesStub implements IComputeTimeframes
 {
     private function __construct(
-        private readonly DatePeriodWithoutWeekEnd $date_period,
+        private readonly DatePeriodWithOpenDays $date_period,
         private readonly ?\Tracker_FormElement_Field_Date $start,
         private readonly ?\Tracker_FormElement_Field_Date $end,
         private readonly ?\Tracker_FormElement_Field_Numeric $duration,
@@ -39,7 +39,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
     }
 
     public static function fromStartAndEndDates(
-        DatePeriodWithoutWeekEnd $date_period,
+        DatePeriodWithOpenDays $date_period,
         \Tracker_FormElement_Field_Date $start,
         \Tracker_FormElement_Field_Date $end,
     ): self {
@@ -47,7 +47,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
     }
 
     public static function fromStartAndDuration(
-        DatePeriodWithoutWeekEnd $date_period,
+        DatePeriodWithOpenDays $date_period,
         \Tracker_FormElement_Field_Date $start,
         \Tracker_FormElement_Field_Numeric $duration,
     ): self {
@@ -88,7 +88,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         ?\Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
         LoggerInterface $logger,
-    ): DatePeriodWithoutWeekEnd {
+    ): DatePeriodWithOpenDays {
         return $this->date_period;
     }
 
@@ -96,7 +96,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         ?\Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
         LoggerInterface $logger,
-    ): DatePeriodWithoutWeekEnd {
+    ): DatePeriodWithOpenDays {
         return $this->date_period;
     }
 
@@ -104,7 +104,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         ?\Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
         LoggerInterface $logger,
-    ): DatePeriodWithoutWeekEnd {
+    ): DatePeriodWithOpenDays {
         return $this->date_period;
     }
 

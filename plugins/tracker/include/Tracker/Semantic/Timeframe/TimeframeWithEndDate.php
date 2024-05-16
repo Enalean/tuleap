@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 
 class TimeframeWithEndDate implements IComputeTimeframes
@@ -132,10 +132,10 @@ class TimeframeWithEndDate implements IComputeTimeframes
         return null;
     }
 
-    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
 
         try {
@@ -149,13 +149,13 @@ class TimeframeWithEndDate implements IComputeTimeframes
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $end_date = null;
         }
-        return DatePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
+        return DatePeriodWithOpenDays::buildFromEndDate($start_date, $end_date, $logger);
     }
 
-    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
 
         try {
@@ -169,16 +169,16 @@ class TimeframeWithEndDate implements IComputeTimeframes
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $end_date = 0;
         }
-        return DatePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
+        return DatePeriodWithOpenDays::buildFromEndDate($start_date, $end_date, $logger);
     }
 
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
-            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithOpenDays::buildWithoutAnyDates();
         }
 
         try {
@@ -220,7 +220,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
         $logger->debug(
             'Checking timeframe for artifact #' . $changeset->getArtifact()->getId()
         );
-        return DatePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
+        return DatePeriodWithOpenDays::buildFromEndDate($start_date, $end_date, $logger);
     }
 
     public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker

@@ -27,7 +27,7 @@ use PFUser;
 use Planning;
 use Planning_ArtifactMilestone;
 use Project;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 
 require_once __DIR__ . '/../../bootstrap.php';
@@ -238,7 +238,7 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testEndDateIsNullIfNoStartDate()
     {
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(0, 10);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(0, 10);
         $this->milestone->setDatePeriod($date_period);
 
         $this->assertNull($this->milestone->getEndDate());
@@ -246,7 +246,7 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testEndDateIsNullIfNoDuration()
     {
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(10, 0);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(10, 0);
         $this->milestone->setDatePeriod($date_period);
 
         $this->assertNull($this->milestone->getEndDate());
@@ -254,7 +254,7 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testEndDateIsNullIfNegativeDuration()
     {
-        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(10, -2);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(10, -2);
         $this->milestone->setDatePeriod($date_period);
 
         $this->assertNull($this->milestone->getEndDate());
