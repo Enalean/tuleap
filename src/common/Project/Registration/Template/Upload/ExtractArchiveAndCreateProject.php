@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template\Upload;
 
 use Psr\Log\LoggerInterface;
+use SimpleXMLElement;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Project\Event\ProjectXMLImportFromArchiveTemplatePreChecksEvent;
 use Tuleap\Project\ImportFromArchive;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\XML\ArchiveException;
@@ -120,6 +122,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
                 (int) $project->getID(),
                 $archive,
                 $this->archive_does_not_contain_data_checker,
+                static fn(SimpleXMLElement $xml_element): ProjectXMLImportFromArchiveTemplatePreChecksEvent => new ProjectXMLImportFromArchiveTemplatePreChecksEvent($xml_element)
             )->match(
                 function () use ($project, $user): void {
                     $this->archive_for_project_dao->save(

@@ -57,6 +57,7 @@ final class ImportFromArchiveStub implements ImportFromArchive
         int $project_id,
         ArchiveInterface $archive,
         CheckArchiveContent $check_archive_content,
+        \Closure $pre_check_xml_is_valid_event,
     ): Ok|Err {
         $this->captured_project_id = $project_id;
 

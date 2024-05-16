@@ -98,6 +98,8 @@ use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware;
 use Tuleap\Project\CachedProjectAccessChecker;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Event\ProjectXMLImportFromArchiveTemplatePreChecksEvent;
+use Tuleap\Project\Event\ProjectXMLImportPreChecks;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
@@ -248,7 +250,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(ExternalPostActionSaveObjectEvent::NAME);
             $this->addHook(GetPostActionShortNameFromXmlTagNameEvent::NAME);
             $this->addHook(CreateTrackerFromXMLEvent::NAME);
-            $this->addHook(ProjectXMLImportPreChecksEvent::NAME);
             $this->addHook(GetExternalPostActionPluginsEvent::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
             $this->addHook(GetWorkflowExternalPostActionsValuesForUpdate::NAME);
@@ -1584,7 +1585,26 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     /**
      * @throws ImportNotValidException
      */
+    #[ListeningToEventClass]
     public function projectXMLImportPreChecksEvent(ProjectXMLImportPreChecksEvent $event): void
+    {
+        $this->projectXMLImportCheckEvent($event);
+    }
+
+    /**
+     * @throws ImportNotValidException
+     */
+    #[ListeningToEventClass]
+    public function projectXMLImportFromArchiveTemplatePreChecksEvent(
+        ProjectXMLImportFromArchiveTemplatePreChecksEvent $event,
+    ): void {
+        $this->projectXMLImportCheckEvent($event);
+    }
+
+    /**
+     * @throws ImportNotValidException
+     */
+    private function projectXMLImportCheckEvent(ProjectXMLImportPreChecks $event): void
     {
         $xml_content = $event->getXmlElement();
         $checker     = new CreateTrackerFromXMLChecker(new ExplicitBacklogDao());

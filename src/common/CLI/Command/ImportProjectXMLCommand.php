@@ -31,6 +31,7 @@ use SystemEventProcessor_Factory;
 use Tuleap\CLI\ConsoleLogger;
 use Tuleap\DB\DBConnection;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\Registration\RegistrationErrorException;
 use Tuleap\Project\Registration\Template\Upload\NoNeedToCheckArchiveContentForCliXmlImport;
 use Tuleap\Project\XML\Import;
@@ -197,6 +198,7 @@ class ImportProjectXMLCommand extends Command
                     (int) $project_id,
                     $archive,
                     new NoNeedToCheckArchiveContentForCliXmlImport(),
+                    static fn(\SimpleXMLElement $xml_element): ProjectXMLImportPreChecksEvent => new ProjectXMLImportPreChecksEvent($xml_element)
                 );
             }
 
