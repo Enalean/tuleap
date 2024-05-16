@@ -20,21 +20,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SectionDescription from "@/components/SectionDescription.vue";
-import * as tooltip from "@tuleap/tooltip";
-import VueDOMPurifyHTML from "vue-dompurify-html";
 import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
-import SectionDescriptionEditor from "@/components/SectionDescriptionEditor.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
+import SectionDescriptionReadOnly from "@/components/description/SectionDescriptionReadOnly.vue";
 
 const default_props = {
     description_value: "Lorem ipsum",
     artifact_id: 1,
     is_edit_mode: false,
     input_current_description: vi.fn(),
-};
-const default_global = {
-    plugins: [VueDOMPurifyHTML],
 };
 describe("SectionDescription", () => {
     describe("while the sections are loading", () => {
@@ -46,10 +41,11 @@ describe("SectionDescription", () => {
         it("should display the skeleton", () => {
             const wrapper = shallowMount(SectionDescription, {
                 props: { ...default_props },
-                global: default_global,
             });
+
+            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
             expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(true);
-            expect(wrapper.find("div").exists()).toBe(false);
+            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
         });
     });
 
@@ -63,40 +59,22 @@ describe("SectionDescription", () => {
             it("should display the description", () => {
                 const wrapper = shallowMount(SectionDescription, {
                     props: default_props,
-                    global: {
-                        plugins: [VueDOMPurifyHTML],
-                    },
                 });
-                const description_container = wrapper.find("div");
-                expect(description_container.exists()).toBe(true);
-                expect(description_container.text()).toBe("Lorem ipsum");
+                expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
                 expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-                expect(wrapper.findComponent(SectionDescriptionEditor).exists()).toBe(false);
+                expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
             });
         });
         describe("when the editor mode is enabled", () => {
             it("should display the editor", () => {
                 const wrapper = shallowMount(SectionDescription, {
                     props: { ...default_props, is_edit_mode: true },
-                    global: default_global,
                 });
-                expect(wrapper.findComponent(SectionDescriptionEditor).exists()).toBe(true);
+
+                expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
                 expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-                expect(wrapper.find("div").exists()).toBe(false);
+                expect(wrapper.find("[data-test=editor]").exists()).toBe(true);
             });
         });
-    });
-
-    it("should display text with tooltips", () => {
-        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
-            InjectedSectionsStoreStub.withLoadedSections([]),
-        );
-        const loadTooltips = vi.spyOn(tooltip, "loadTooltips");
-        const wrapper = shallowMount(SectionDescription, {
-            props: default_props,
-            global: default_global,
-        });
-        expect(wrapper.text()).toContain("Lorem ipsum");
-        expect(loadTooltips).toHaveBeenCalled();
     });
 });

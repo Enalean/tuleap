@@ -20,21 +20,25 @@
 
 <template>
     <section-description-skeleton v-if="is_sections_loading" />
-    <section-description-editor
-        v-else-if="is_edit_mode"
-        v-bind:artifact_id="artifact_id"
-        v-bind:editable_description="description_value"
-        v-bind:input_current_description="input_current_description"
-    />
-    <div v-else v-dompurify-html="description_value"></div>
+    <template v-else-if="is_edit_mode">
+        <component
+            v-bind:is="async_editor"
+            v-bind:artifact_id="artifact_id"
+            v-bind:editable_description="description_value"
+            v-bind:input_current_description="input_current_description"
+            v-bind:description_value="description_value"
+            data-test="editor"
+        />
+    </template>
+    <section-description-read-only v-else v-bind:description_value="description_value" />
 </template>
 <script setup lang="ts">
-import SectionDescriptionEditor from "@/components/SectionDescriptionEditor.vue";
 import type { use_section_editor_type } from "@/composables/useSectionEditor";
-import { onMounted } from "vue";
+import { defineAsyncComponent, onMounted } from "vue";
 import { loadTooltips } from "@tuleap/tooltip";
 import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
+import SectionDescriptionReadOnly from "@/components/description/SectionDescriptionReadOnly.vue";
 
 defineProps<{
     artifact_id: number;
@@ -44,6 +48,12 @@ defineProps<{
 }>();
 
 const { is_sections_loading } = useInjectSectionsStore();
+
+const async_editor = defineAsyncComponent({
+    loader: () => import("@/components/SectionDescriptionEditor.vue"),
+    loadingComponent: SectionDescriptionReadOnly,
+    delay: 0,
+});
 
 onMounted(() => {
     loadTooltips();
