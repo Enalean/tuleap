@@ -18,62 +18,60 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\CommitMetadata;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use GitRepository;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Git\CommitStatus\CommitStatus;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\GitPHP\Commit;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserEmailCollection;
+use UserManager;
 
-class CommitMetadataRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommitMetadataRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $status_retriever;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $user_manager;
+    private readonly MockObject&CommitStatusRetriever $status_retriever;
+    private readonly MockObject&UserManager $user_manager;
 
     protected function setUp(): void
     {
-        $this->status_retriever = \Mockery::mock(CommitStatusRetriever::class);
-        $this->user_manager     = \Mockery::mock(\UserManager::class);
+        $this->status_retriever = $this->createMock(CommitStatusRetriever::class);
+        $this->user_manager     = $this->createMock(UserManager::class);
     }
 
     public function testTuleapMetadataAssociatedWithCommitsAreRetrieved()
     {
         $metadata_retriever = new CommitMetadataRetriever($this->status_retriever, $this->user_manager);
 
-        $commit_1 = \Mockery::mock(Commit::class);
-        $commit_1->shouldReceive('GetHash')->andReturns('02e24c2314cb27f7b7c043345ca30c567c58e064');
-        $commit_1->shouldReceive('getAuthorEmail')->andReturns('user1@example.com');
-        $commit_1->shouldReceive('getCommitterEmail')->andReturns('user1@example.com');
-        $commit_2 = \Mockery::mock(Commit::class);
-        $commit_2->shouldReceive('GetHash')->andReturns('a37adf370551560c0b2ffd61a5737f8a836aac6d');
-        $commit_2->shouldReceive('getAuthorEmail')->andReturns('user1@example.com');
-        $commit_2->shouldReceive('getCommitterEmail')->andReturns('user1@example.com');
+        $commit_1 = $this->createMock(Commit::class);
+        $commit_1->method('GetHash')->willReturn('02e24c2314cb27f7b7c043345ca30c567c58e064');
+        $commit_1->method('getAuthorEmail')->willReturn('user1@example.com');
+        $commit_1->method('getCommitterEmail')->willReturn('user1@example.com');
+        $commit_2 = $this->createMock(Commit::class);
+        $commit_2->method('GetHash')->willReturn('a37adf370551560c0b2ffd61a5737f8a836aac6d');
+        $commit_2->method('getAuthorEmail')->willReturn('user1@example.com');
+        $commit_2->method('getCommitterEmail')->willReturn('user1@example.com');
 
-        $this->status_retriever->shouldReceive('getLastCommitStatuses')
-            ->andReturns([\Mockery::mock(CommitStatus::class), \Mockery::mock(CommitStatus::class)]);
+        $this->status_retriever->method('getLastCommitStatuses')
+            ->willReturn([$this->createMock(CommitStatus::class), $this->createMock(CommitStatus::class)]);
 
-        $user                  = \Mockery::mock(\PFUser::class);
-        $user_email_collection = \Mockery::mock(UserEmailCollection::class);
-        $user_email_collection->shouldReceive('getUserByEmail')->andReturns($user);
-        $this->user_manager->shouldReceive('getUserCollectionByEmails')->andReturns($user_email_collection);
+        $user                  = UserTestBuilder::buildWithDefaults();
+        $user_email_collection = $this->createMock(UserEmailCollection::class);
+        $user_email_collection->method('getUserByEmail')->willReturn($user);
+        $this->user_manager->method('getUserCollectionByEmails')->willReturn($user_email_collection);
 
-        $repository = \Mockery::mock(\GitRepository::class);
+        $repository = $this->createMock(GitRepository::class);
 
         $all_metadata = $metadata_retriever->getMetadataByRepositoryAndCommits($repository, $commit_1, $commit_2);
 
-        $this->assertCount(2, $all_metadata);
+        self::assertCount(2, $all_metadata);
         foreach ($all_metadata as $commit_metadata) {
-            $this->assertSame($user, $commit_metadata->getAuthor());
-            $this->assertInstanceOf(CommitStatus::class, $commit_metadata->getCommitStatus());
+            self::assertSame($user, $commit_metadata->getAuthor());
+            self::assertInstanceOf(CommitStatus::class, $commit_metadata->getCommitStatus());
         }
     }
 
@@ -81,22 +79,22 @@ class CommitMetadataRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $metadata_retriever = new CommitMetadataRetriever($this->status_retriever, $this->user_manager);
 
-        $commit = \Mockery::mock(Commit::class);
-        $commit->shouldReceive('GetHash')->andReturns('02e24c2314cb27f7b7c043345ca30c567c58e064');
-        $commit->shouldReceive('getAuthorEmail')->andReturns('');
-        $commit->shouldReceive('getCommitterEmail')->andReturns('');
+        $commit = $this->createMock(Commit::class);
+        $commit->method('GetHash')->willReturn('02e24c2314cb27f7b7c043345ca30c567c58e064');
+        $commit->method('getAuthorEmail')->willReturn('');
+        $commit->method('getCommitterEmail')->willReturn('');
 
-        $user_email_collection = \Mockery::mock(UserEmailCollection::class);
-        $user_email_collection->shouldReceive('getUserByEmail')->with('')->andReturnNull();
-        $this->user_manager->shouldReceive('getUserCollectionByEmails')->with([])->andReturns($user_email_collection);
+        $user_email_collection = $this->createMock(UserEmailCollection::class);
+        $user_email_collection->method('getUserByEmail')->with('')->willReturn(null);
+        $this->user_manager->method('getUserCollectionByEmails')->with([])->willReturn($user_email_collection);
 
-        $this->status_retriever->shouldReceive('getLastCommitStatuses')
-            ->andReturns([\Mockery::mock(CommitStatus::class)]);
+        $this->status_retriever->method('getLastCommitStatuses')
+            ->willReturn([$this->createMock(CommitStatus::class)]);
 
-        $repository = \Mockery::mock(\GitRepository::class);
+        $repository = $this->createMock(GitRepository::class);
 
         $all_metadata = $metadata_retriever->getMetadataByRepositoryAndCommits($repository, $commit);
-        $this->assertCount(1, $all_metadata);
-        $this->assertNull($all_metadata[0]->getAuthor());
+        self::assertCount(1, $all_metadata);
+        self::assertNull($all_metadata[0]->getAuthor());
     }
 }

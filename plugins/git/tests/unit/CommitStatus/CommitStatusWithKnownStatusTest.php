@@ -18,41 +18,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\CommitStatus;
 
-require_once __DIR__ . '/../bootstrap.php';
+use DateTimeImmutable;
+use DomainException;
+use Tuleap\Test\PHPUnit\TestCase;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class CommitStatusWithKnownStatusTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommitStatusWithKnownStatusTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private readonly DateTimeImmutable $date;
 
-    public function testCanBeBuiltFromStatusName()
+    protected function setUp(): void
+    {
+        $this->date = new DateTimeImmutable();
+    }
+
+    public function testCanBeBuiltFromStatusName(): void
     {
         $status_name = 'success';
-        $date        = \Mockery::mock(\DateTimeImmutable::class);
 
-        $commit_status = CommitStatusWithKnownStatus::buildFromStatusName($status_name, $date);
+        $commit_status = CommitStatusWithKnownStatus::buildFromStatusName($status_name, $this->date);
 
-        $this->assertEquals($status_name, $commit_status->getStatusName());
+        self::assertEquals($status_name, $commit_status->getStatusName());
     }
 
-    public function testInvalidStatusNameIsRejectedWhenBuilding()
+    public function testInvalidStatusNameIsRejectedWhenBuilding(): void
     {
-        $date = \Mockery::mock(\DateTimeImmutable::class);
+        self::expectException(DomainException::class);
 
-        $this->expectException(\DomainException::class);
-
-        CommitStatusWithKnownStatus::buildFromStatusName('invalid_status_name', $date);
+        CommitStatusWithKnownStatus::buildFromStatusName('invalid_status_name', $this->date);
     }
 
-    public function testInvalidStatusIdIsRejectedWhenBuilding()
+    public function testInvalidStatusIdIsRejectedWhenBuilding(): void
     {
-        $date = \Mockery::mock(\DateTimeImmutable::class);
+        self::expectException(DomainException::class);
 
-        $this->expectException(\DomainException::class);
-
-        new CommitStatusWithKnownStatus(999999999999999, $date);
+        new CommitStatusWithKnownStatus(999999999999999, $this->date);
     }
 }
