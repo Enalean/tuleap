@@ -55,7 +55,7 @@ const meta: Meta<AlertProps> = {
                 type: "select",
             },
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         content: {

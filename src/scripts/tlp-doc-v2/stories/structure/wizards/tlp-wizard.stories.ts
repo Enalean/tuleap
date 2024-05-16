@@ -74,7 +74,7 @@ const meta: Meta<WizardProps> = {
             control: { type: "select" },
             options: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         current_step: {

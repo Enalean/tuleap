@@ -148,7 +148,7 @@ const meta: Meta<ButtonProps> = {
             control: "select",
             options: ["button", "link", "input"],
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         size: {

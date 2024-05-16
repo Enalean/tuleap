@@ -77,7 +77,7 @@ const meta: Meta<SwitchProps> = {
             name: "In form",
             description: "Put the switch in a form.",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         form_label: {
@@ -97,14 +97,14 @@ const meta: Meta<SwitchProps> = {
             name: "Disabled",
             description: "Add disabled attribute.",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         checked: {
             name: "Checked",
             description: "Add checked attribute.",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
     },

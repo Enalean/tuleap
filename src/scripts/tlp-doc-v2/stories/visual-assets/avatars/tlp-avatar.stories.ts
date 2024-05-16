@@ -82,14 +82,14 @@ const meta: Meta<AvatarProps> = {
             options: SIZES,
             description: "Avatar size",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         img: {
             name: "With image",
             description: "Example replacing the default avatar",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
     },

@@ -129,20 +129,20 @@ const meta: Meta<InputProps> = {
             name: "With size attribute",
             description: "Add size attribute",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         size_attribute: {
             name: "Size attribute value",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
             if: { arg: "with_size_attribute" },
         },
         mandatory: {
             name: "Mandatory",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         disabled: {
@@ -155,7 +155,7 @@ const meta: Meta<InputProps> = {
         with_helper_text: {
             name: "With helper text",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
             if: { arg: "with_error", truthy: false },
         },

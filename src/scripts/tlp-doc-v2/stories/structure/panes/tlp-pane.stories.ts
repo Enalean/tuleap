@@ -171,28 +171,28 @@ export const Pane: Story = {
                 type: "select",
             },
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         tabs: {
             name: "With tabs",
             description: "Add an example of tabs",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         table: {
             name: "With table",
             description: "Add an example of table",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
         submit_button: {
             name: "With submit button",
             description: "Add an example of submit button",
             table: {
-                type: { summary: null },
+                type: { summary: undefined },
             },
         },
     },
