@@ -40,299 +40,291 @@ use Tracker_ReportFactory;
 use Tracker_SemanticFactory;
 use TrackerFactory;
 use Tuleap\DB\DBFactory;
+use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Test\Helpers\CodendiLogSwitcher;
 
-final class DefectTrackerTest extends TestIntegrationTestCase
+final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    private static $backup_codendi_log;
-
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var Tracker
-     */
-    private $defect_tracker;
-    /**
-     * @var int
-     */
-    private static $defect_tracker_id;
-    /**
-     * @var Tracker_ReportFactory
-     */
-    private $report_factory;
-    /**
-     * @var \Tracker_Report
-     */
-    private $bugs_report;
-
-    /**
-     * @beforeClass
-     */
-    public static function convertBugTracker(): void
-    {
-        self::$backup_codendi_log = \ForgeConfig::get('backup_codendi_log');
-        \ForgeConfig::set('codendi_log', '/tmp');
-
-        $db      = DBFactory::getMainTuleapDBConnection()->getDB();
-        $results = $db->run('SELECT * FROM artifact_group_list WHERE item_name = "bug" AND group_id = 100');
-        if (count($results) !== 1) {
-            throw new \RuntimeException('No Tracker v3 data. Migration impossible');
-        }
-        $row = $results[0];
-
-        $defect_trackerv3_id = $row['group_artifact_id'];
-        $v3_migration        = new Tracker_Migration_V3(TrackerFactory::instance());
-        $project             = ProjectManager::instance()->getProject(100);
-        $name                = 'Defect';
-        $description         = 'defect tracker';
-        $itemname            = 'defect';
-        $tv3                 = new ArtifactType($project, $defect_trackerv3_id);
-
-        $defect_tracker          = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
-        self::$defect_tracker_id = $defect_tracker->getId();
-        unset($GLOBALS['Language']);
-    }
-
-    /**
-     * @afterClass
-     */
-    public static function resetForgeConfig()
-    {
-        \ForgeConfig::set('codendi_log', self::$backup_codendi_log);
-    }
+    private Tracker_FormElementFactory $form_element_factory;
+    private Tracker $defect_tracker;
+    private Tracker_ReportFactory $report_factory;
+    private \Tracker_Report $bugs_report;
 
     protected function setUp(): void
     {
         $this->form_element_factory = Tracker_FormElementFactory::instance();
-        $this->tracker_factory      = TrackerFactory::instance();
-
-        $this->defect_tracker = $this->tracker_factory->getTrackerById(self::$defect_tracker_id);
-
-        $this->report_factory = Tracker_ReportFactory::instance();
-        $this->bugs_report    = $this->getReportByName('Bugs');
+        $this->report_factory       = Tracker_ReportFactory::instance();
     }
 
-    protected function getReportByName($name)
+    protected function tearDown(): void
     {
-        foreach ($this->report_factory->getReportsByTrackerId(self::$defect_tracker_id, null) as $report) {
+        if (isset($GLOBALS['_SESSION'])) {
+            unset($GLOBALS['_SESSION']);
+        }
+    }
+
+    public function testItConvertsBugTracker(): void
+    {
+        Dispose::using(new CodendiLogSwitcher(), function () {
+            $db      = DBFactory::getMainTuleapDBConnection()->getDB();
+            $results = $db->run("SELECT group_artifact_id FROM artifact_group_list WHERE item_name = 'bug' AND group_id = 100");
+            if (count($results) !== 1) {
+                throw new \RuntimeException('No Tracker v3 data. Migration impossible');
+            }
+            $row = $results[0];
+
+            $defect_trackerv3_id = $row['group_artifact_id'];
+            $v3_migration        = new Tracker_Migration_V3(TrackerFactory::instance());
+            $project             = ProjectManager::instance()->getProject(100);
+            $name                = 'Defect';
+            $description         = 'defect tracker';
+            $itemname            = 'defect';
+            $tv3                 = new ArtifactType($project, $defect_trackerv3_id);
+
+            $this->defect_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
+            unset($GLOBALS['Language']);
+
+            $this->bugs_report = $this->getReportByName('Bugs');
+
+            $this->checkItCreatedTrackerV5WithDefaultParameters();
+            $this->checkItHasNoParent();
+            $this->checkItGivesFullAccessToAllUsers();
+            $this->checkItHasATitleSemantic();
+            $this->checkItHasAStatusSemantic();
+            $this->checkItHasOnlyOneOpenValueForStatusSemantic();
+            $this->checkItHasAnAssignedToSemantic();
+            $this->checkItHasSubmittedBy();
+            $this->checkItHasATextFieldDescription();
+            $this->checkItHasAnUnusedDateFieldCloseDate();
+            $this->checkItHasAnUnusedField();
+            $this->checkItHasAListFieldResolutionWithValues();
+            $this->checkItHasTwoReports();
+            $this->checkItHasAReportNamedBugs();
+            $this->checkItHasFourCriteria();
+            $this->checkItHasATableRenderer();
+        });
+    }
+
+    private function getReportByName($name)
+    {
+        foreach ($this->report_factory->getReportsByTrackerId($this->defect_tracker->getId(), null) as $report) {
             if ($report->name === $name) {
                 return $report;
             }
         }
     }
 
-    public function testItCreatedTrackerV5WithDefaultParameters()
+    private function checkItCreatedTrackerV5WithDefaultParameters(): void
     {
-        $this->assertEquals($this->defect_tracker->getName(), 'Defect');
-        $this->assertEquals($this->defect_tracker->getDescription(), 'defect tracker');
-        $this->assertEquals($this->defect_tracker->getItemName(), 'defect');
-        $this->assertEquals($this->defect_tracker->getGroupId(), 100);
+        self::assertSame('Defect', $this->defect_tracker->getName());
+        self::assertSame('defect tracker', $this->defect_tracker->getDescription());
+        self::assertSame('defect', $this->defect_tracker->getItemName());
+        self::assertSame('100', $this->defect_tracker->getGroupId());
     }
 
-    public function testItHasNoParent()
+    private function checkItHasNoParent(): void
     {
-        $this->assertNull($this->defect_tracker->getParent());
+        self::assertNull($this->defect_tracker->getParent());
     }
 
-    public function testItGivesFullAccessToAllUsers()
+    private function checkItGivesFullAccessToAllUsers(): void
     {
-        $this->assertEquals($this->defect_tracker->getPermissionsByUgroupId(), [
+        self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS => [
                 Tracker::PERMISSION_FULL,
             ],
-        ]);
+        ], $this->defect_tracker->getPermissionsByUgroupId());
     }
 
-    public function testItHasATitleSemantic()
+    private function checkItHasATitleSemantic(): void
     {
         $field = $this->defect_tracker->getTitleField();
-        $this->assertInstanceOf(Tracker_FormElement_Field_String::class, $field);
-        $this->assertEquals($field->getName(), 'summary');
-        $this->assertEquals($field->getLabel(), 'Summary');
-        $this->assertEquals(1, $field->isRequired());
-        $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
-            ProjectUGroup::ANONYMOUS => [
+        self::assertInstanceOf(Tracker_FormElement_Field_String::class, $field);
+        self::assertSame('summary', $field->getName());
+        self::assertSame('Summary', $field->getLabel());
+        self::assertTrue($field->isRequired());
+        self::assertTrue($field->isUsed());
+        self::assertEqualsCanonicalizing([
+            ProjectUGroup::ANONYMOUS       => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
-            ProjectUGroup::REGISTERED => [
+            ProjectUGroup::REGISTERED      => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasAStatusSemantic()
+    private function checkItHasAStatusSemantic(): void
     {
         $field = $this->defect_tracker->getStatusField();
-        $this->assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        $this->assertEquals($field->getName(), 'status_id');
-        $this->assertEquals($field->getLabel(), 'Status');
-        $this->assertEquals(1, $field->isRequired());
-        $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
-            ProjectUGroup::ANONYMOUS => [
+        self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
+        self::assertSame('status_id', $field->getName());
+        self::assertSame('Status', $field->getLabel());
+        self::assertTrue($field->isRequired());
+        self::assertTrue($field->isUsed());
+        self::assertEqualsCanonicalizing([
+            ProjectUGroup::ANONYMOUS       => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasOnlyOneOpenValueForStatusSemantic()
+    private function checkItHasOnlyOneOpenValueForStatusSemantic(): void
     {
-        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker($this->defect_tracker);
+        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker(
+            $this->defect_tracker
+        );
         $open_values     = $semantic_status->getOpenValues();
-        $this->assertCount(1, $open_values);
+        self::assertCount(1, $open_values);
         $open_value = $semantic_status->getField()->getListValueById($open_values[0]);
-        $this->assertEquals($open_value->getLabel(), 'Open');
+        self::assertSame('Open', $open_value->getLabel());
     }
 
-    public function testItHasAnAssignedToSemantic()
+    private function checkItHasAnAssignedToSemantic(): void
     {
         $field = $this->defect_tracker->getContributorField();
-        $this->assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        $this->assertEquals($field->getName(), 'assigned_to');
-        $this->assertEquals($field->getLabel(), 'Assigned to');
-        $this->assertEquals(0, $field->isRequired());
-        $this->assertEquals(1, $field->isUsed());
-        $this->assertFalse($field->isMultiple());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
-            ProjectUGroup::ANONYMOUS => [
+        self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
+        self::assertSame('assigned_to', $field->getName());
+        self::assertSame('Assigned to', $field->getLabel());
+        self::assertFalse($field->isRequired());
+        self::assertTrue($field->isUsed());
+        self::assertFalse($field->isMultiple());
+        self::assertEqualsCanonicalizing([
+            ProjectUGroup::ANONYMOUS       => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
-            ProjectUGroup::REGISTERED => [
+            ProjectUGroup::REGISTERED      => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasSubmittedBy()
+    private function checkItHasSubmittedBy(): void
     {
-        $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'submitted_by');
-        $this->assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        $this->assertEquals($field->getName(), 'submitted_by');
-        $this->assertEquals($field->getLabel(), 'Submitted by');
-        $this->assertEquals(0, $field->isRequired());
-        $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
+        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker->getId(), 'submitted_by');
+        self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
+        self::assertSame('submitted_by', $field->getName());
+        self::assertSame('Submitted by', $field->getLabel());
+        self::assertFalse($field->isRequired());
+        self::assertTrue($field->isUsed());
+        self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasATextFieldDescription()
+    private function checkItHasATextFieldDescription(): void
     {
-        $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'details');
-        $this->assertInstanceOf(Tracker_FormElement_Field_Text::class, $field);
-        $this->assertEquals($field->getName(), 'details');
-        $this->assertEquals($field->getLabel(), 'Original Submission');
-        $this->assertEquals(0, $field->isRequired());
-        $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
-            ProjectUGroup::ANONYMOUS => [
+        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker->getId(), 'details');
+        self::assertInstanceOf(Tracker_FormElement_Field_Text::class, $field);
+        self::assertSame('details', $field->getName());
+        self::assertSame('Original Submission', $field->getLabel());
+        self::assertFalse($field->isRequired());
+        self::assertTrue($field->isUsed());
+        self::assertEqualsCanonicalizing([
+            ProjectUGroup::ANONYMOUS       => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
-            ProjectUGroup::REGISTERED => [
+            ProjectUGroup::REGISTERED      => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasAnUnusedDateFieldCloseDate()
+    private function checkItHasAnUnusedDateFieldCloseDate(): void
     {
-        $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'close_date');
-        $this->assertInstanceOf(Tracker_FormElement_Field_Date::class, $field);
-        $this->assertEquals($field->getName(), 'close_date');
-        $this->assertEquals($field->getLabel(), 'Close Date');
-        $this->assertEquals(0, $field->isRequired());
-        $this->assertEquals(0, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
-            ProjectUGroup::ANONYMOUS => [
+        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker->getId(), 'close_date');
+        self::assertInstanceOf(Tracker_FormElement_Field_Date::class, $field);
+        self::assertSame('close_date', $field->getName());
+        self::assertSame('Close Date', $field->getLabel());
+        self::assertFalse($field->isRequired());
+        self::assertFalse($field->isUsed());
+        self::assertEqualsCanonicalizing([
+            ProjectUGroup::ANONYMOUS       => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
-    public function testItHasAnUnusedField()
+    private function checkItHasAnUnusedField(): void
     {
-        $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'originator_name');
-        $this->assertInstanceOf(Tracker_FormElement_Field_String::class, $field);
-        $this->assertEquals($field->getName(), 'originator_name');
-        $this->assertEquals($field->getLabel(), 'Originator Name');
-        $this->assertEquals(0, $field->isUsed());
+        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker->getId(), 'originator_name');
+        self::assertInstanceOf(Tracker_FormElement_Field_String::class, $field);
+        self::assertSame('originator_name', $field->getName());
+        self::assertSame('Originator Name', $field->getLabel());
+        self::assertFalse($field->isUsed());
     }
 
-    public function testItHasAListFieldResolutionWithValues()
+    private function checkItHasAListFieldResolutionWithValues(): void
     {
-        $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'resolution_id');
-        $this->assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
-        $this->assertEquals($field->getName(), 'resolution_id');
-        $this->assertEquals($field->getLabel(), 'Resolution');
-        $this->assertEquals(0, $field->isRequired());
-        $this->assertEquals(1, $field->isUsed());
+        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker->getId(), 'resolution_id');
+        self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
+        self::assertSame('resolution_id', $field->getName());
+        self::assertSame('Resolution', $field->getLabel());
+        self::assertFalse($field->isRequired());
+        self::assertTrue($field->isUsed());
 
-        $this->compareValuesToLabel($field->getAllValues(), ['Fixed', 'Invalid', 'Wont Fix', 'Later', 'Remind', 'Works for me', 'Duplicate']);
+        $this->compareValuesToLabel(
+            $field->getAllValues(),
+            ['Fixed', 'Invalid', 'Wont Fix', 'Later', 'Remind', 'Works for me', 'Duplicate']
+        );
     }
 
-    private function compareValuesToLabel(array $values, array $labels)
+    private function compareValuesToLabel(array $values, array $labels): void
     {
-        $this->assertCount(count($labels), $values);
+        self::assertCount(count($labels), $values);
         $i = 0;
         while ($value = array_shift($values)) {
-            $this->assertInstanceOf(Tracker_FormElement_Field_List_Bind_StaticValue::class, $value);
-            $this->assertEquals($value->getLabel(), $labels[$i++]);
-            $this->assertEquals(0, $value->isHidden());
+            self::assertInstanceOf(Tracker_FormElement_Field_List_Bind_StaticValue::class, $value);
+            self::assertSame($labels[$i++], $value->getLabel());
+            self::assertSame('0', $value->isHidden());
         }
     }
 
-    public function testItHasTwoReports()
+    private function checkItHasTwoReports(): void
     {
-        $this->assertCount(2, $this->report_factory->getReportsByTrackerId(self::$defect_tracker_id, null));
+        self::assertCount(2, $this->report_factory->getReportsByTrackerId($this->defect_tracker->getId(), null));
     }
 
-    public function testItHasAReportNamedBugs()
+    private function checkItHasAReportNamedBugs(): void
     {
-        $this->assertEquals($this->bugs_report->name, 'Bugs');
+        $this->assertSame('Bugs', $this->bugs_report->name);
     }
 
-    public function testItHasFourCriteria()
+    private function checkItHasFourCriteria(): void
     {
         $criteria = $this->bugs_report->getCriteria();
         $this->thereAreCriteriaForFields($criteria, ['Category', 'Group', 'Assigned to', 'Status']);
     }
 
-    protected function thereAreCriteriaForFields(array $criteria, array $field_labels)
+    private function thereAreCriteriaForFields(array $criteria, array $field_labels): void
     {
-        $this->assertCount(count($field_labels), $criteria);
+        self::assertCount(count($field_labels), $criteria);
         foreach ($field_labels as $label) {
-            $this->assertTrue($this->criteriaContainOneCriterionForField($criteria, $label));
+            self::assertTrue($this->criteriaContainOneCriterionForField($criteria, $label));
         }
     }
 
-    protected function criteriaContainOneCriterionForField(array $criteria, $field_label)
+    private function criteriaContainOneCriterionForField(array $criteria, $field_label): bool
     {
         foreach ($criteria as $criterion) {
             if ($criterion->field->getLabel() === $field_label) {
@@ -342,30 +334,33 @@ final class DefectTrackerTest extends TestIntegrationTestCase
         return false;
     }
 
-    public function testItHasATableRenderer()
+    private function checkItHasATableRenderer(): void
     {
         $renderers = $this->bugs_report->getRenderers();
-        $this->assertCount(1, $renderers);
+        self::assertCount(1, $renderers);
 
         $renderer = array_shift($renderers);
-        $this->assertInstanceOf(Tracker_Report_Renderer_Table::class, $renderer);
+        self::assertInstanceOf(Tracker_Report_Renderer_Table::class, $renderer);
 
         $columns = $renderer->getTableColumns(false, true, false);
-        $this->thereAreColumnsForFields($columns, ['Submitted by', 'Submitted on', 'Artifact ID', 'Summary', 'Assigned to']);
+        $this->thereAreColumnsForFields(
+            $columns,
+            ['Submitted by', 'Submitted on', 'Artifact ID', 'Summary', 'Assigned to']
+        );
     }
 
-    public function thereAreColumnsForFields($columns, $field_labels)
+    private function thereAreColumnsForFields($columns, $field_labels): void
     {
-        $this->assertCount(count($field_labels), $columns);
+        self::assertCount(count($field_labels), $columns);
         foreach ($field_labels as $label) {
-            $this->assertTrue($this->columnsContainOneColumnForField($columns, $label));
+            self::assertTrue($this->columnsContainOneColumnForField($columns, $label));
         }
     }
 
-    public function columnsContainOneColumnForField($columns, $field_label)
+    private function columnsContainOneColumnForField($columns, $field_label): bool
     {
         foreach ($columns as $column) {
-            if ($column['field']->getLabel() == $field_label) {
+            if ($column['field']->getLabel() === $field_label) {
                 return true;
             }
         }
