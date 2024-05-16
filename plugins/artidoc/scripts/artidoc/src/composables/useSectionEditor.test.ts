@@ -31,6 +31,73 @@ const default_description = {
 };
 const default_artifact_id = 1;
 describe("useSectionEditor", () => {
+    describe("getReadonlyDescription", () => {
+        it("should return the post processed value", () => {
+            const store = useSectionEditor(default_description, default_artifact_id);
+            expect(store.getReadonlyDescription().value).toBe("the description");
+        });
+    });
+
+    describe("getEditableDescription", () => {
+        it("should return the value when format is html", () => {
+            const store = useSectionEditor(
+                {
+                    field_id: 1,
+                    type: "",
+                    label: "Original Submission",
+                    value: "<p>the original description see art #1</p>",
+                    format: "html",
+                    post_processed_value:
+                        "<p>the original description see <a href=''>art #1</a></p>",
+                },
+                default_artifact_id,
+            );
+
+            expect(store.getEditableDescription().value).toBe(
+                "<p>the original description see art #1</p>",
+            );
+        });
+
+        it("should return the value converted as html when format is text", () => {
+            const store = useSectionEditor(
+                {
+                    field_id: 1,
+                    type: "",
+                    label: "Original Submission",
+                    value: "the original description see art #1",
+                    format: "text",
+                    post_processed_value:
+                        "<p>the original description see <a href=''>art #1</a></p>",
+                },
+                default_artifact_id,
+            );
+
+            expect(store.getEditableDescription().value).toBe(
+                "<p>the original description see art #1</p>\n",
+            );
+        });
+
+        it("should return the value converted as html when format is markdown", () => {
+            const store = useSectionEditor(
+                {
+                    field_id: 1,
+                    type: "",
+                    label: "Original Submission",
+                    value: "<p>the original description see <a href=''>art #1</a></p>",
+                    format: "html",
+                    commonmark: "the original description see art #1",
+                    post_processed_value:
+                        "<p>the original description see <a href=''>art #1</a></p>",
+                },
+                default_artifact_id,
+            );
+
+            expect(store.getEditableDescription().value).toBe(
+                "<p>the original description see art #1</p>\n",
+            );
+        });
+    });
+
     describe("inputCurrentDescription", () => {
         it("should input current description", () => {
             const store = useSectionEditor(default_description, default_artifact_id);
@@ -41,6 +108,7 @@ describe("useSectionEditor", () => {
             expect(store.getEditableDescription().value).toBe("new description");
         });
     });
+
     describe("setEditMode", () => {
         it("should enable edit mode", () => {
             const store = useSectionEditor(default_description, default_artifact_id);
@@ -51,6 +119,7 @@ describe("useSectionEditor", () => {
             expect(store.getIsEditMode().value).toBe(true);
         });
     });
+
     describe("cancelEditor", () => {
         it("should cancel edit mode", () => {
             const store = useSectionEditor(default_description, default_artifact_id);
@@ -65,6 +134,7 @@ describe("useSectionEditor", () => {
             expect(store.getEditableDescription().value).toBe("the original description");
         });
     });
+
     describe("saveEditor", () => {
         describe("when the description is the same as the original description", () => {
             it("should not put artifact description", () => {
@@ -79,6 +149,7 @@ describe("useSectionEditor", () => {
                 expect(mock_put_artifact_description).not.toHaveBeenCalled();
             });
         });
+
         describe("when the description is different from the original description", () => {
             it("should put artifact description", () => {
                 const store = useSectionEditor(default_description, default_artifact_id);

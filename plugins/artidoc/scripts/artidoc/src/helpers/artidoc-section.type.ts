@@ -26,7 +26,8 @@ interface ArtifactFieldValueTextRepresentation {
     readonly post_processed_value: string;
 }
 
-interface ArtifactFieldValueCommonmarkRepresentation extends ArtifactFieldValueTextRepresentation {
+export interface ArtifactFieldValueCommonmarkRepresentation
+    extends ArtifactFieldValueTextRepresentation {
     readonly commonmark: string;
 }
 

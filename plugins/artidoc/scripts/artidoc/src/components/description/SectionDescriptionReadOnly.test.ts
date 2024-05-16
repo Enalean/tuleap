@@ -28,7 +28,7 @@ describe("SectionDescriptionReadOnly", () => {
         const loadTooltips = vi.spyOn(tooltip, "loadTooltips");
         const wrapper = shallowMount(SectionDescriptionReadOnly, {
             props: {
-                description_value: "Lorem ipsum",
+                readonly_value: "Lorem ipsum",
             },
             global: {
                 plugins: [VueDOMPurifyHTML],

@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div v-dompurify-html="description_value"></div>
+    <div v-dompurify-html="readonly_value"></div>
 </template>
 
 <script setup lang="ts">
@@ -27,7 +27,7 @@ import { loadTooltips } from "@tuleap/tooltip";
 import { onMounted } from "vue";
 
 defineProps<{
-    description_value: string;
+    readonly_value: string;
 }>();
 
 onMounted(() => {

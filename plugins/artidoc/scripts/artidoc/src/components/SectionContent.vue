@@ -35,12 +35,14 @@
         <section-title-with-artifact-id-skeleton v-else class="section-header" />
         <section-description
             v-bind:artifact_id="section.artifact.id"
-            v-bind:description_value="editable_description"
+            v-bind:editable_description="editable_description"
+            v-bind:readonly_description="readonly_description"
             v-bind:input_current_description="inputCurrentDescription"
             v-bind:is_edit_mode="is_edit_mode"
         />
     </article>
 </template>
+
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.vue";
@@ -51,12 +53,21 @@ import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArtifactIdSkeleton.vue";
 
 const props = defineProps<{ section: ArtidocSection }>();
-const { getIsEditMode, getEditableDescription, editor_actions, inputCurrentDescription } =
-    useSectionEditor(props.section.description, props.section.artifact.id);
+
+const {
+    getIsEditMode,
+    getEditableDescription,
+    getReadonlyDescription,
+    editor_actions,
+    inputCurrentDescription,
+} = useSectionEditor(props.section.description, props.section.artifact.id);
+
 const { is_sections_loading } = useInjectSectionsStore();
 const is_edit_mode = getIsEditMode();
 const editable_description = getEditableDescription();
+const readonly_description = getReadonlyDescription();
 </script>
+
 <style lang="scss" scoped>
 .document-section {
     display: flex;
