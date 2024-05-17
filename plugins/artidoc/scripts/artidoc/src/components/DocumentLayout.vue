@@ -45,7 +45,6 @@ import DocumentContent from "@/components/DocumentContent.vue";
 }
 
 .document-content {
-    padding: var(--tlp-medium-spacing) var(--tlp-jumbo-spacing);
     border-right: 1px solid var(--tlp-neutral-normal-color);
     background-color: var(--tlp-white-color);
 }
@@ -69,7 +68,6 @@ aside {
     }
 
     .document-content {
-        padding: var(--tlp-medium-spacing);
         border-right: 0;
     }
 
