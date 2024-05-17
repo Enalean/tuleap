@@ -43,9 +43,9 @@ const ArtidocSectionFactory = {
             label: "Original Submission",
             value: "<h2>Title 1</h2><p>description 1</p>",
             format: "html",
-            commonmark: "<h2>Title 1</h2><p>description 1</p>",
             post_processed_value: "<h2>Title 1</h2><p>description 1</p>",
         },
+        can_user_edit_section: true,
     }),
 
     override: (overrides: Partial<ArtidocSection>): ArtidocSection => ({

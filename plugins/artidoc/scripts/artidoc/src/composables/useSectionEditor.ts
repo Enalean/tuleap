@@ -16,14 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { ref } from "vue";
-import type { Ref } from "vue";
+import { computed, ref } from "vue";
+import type { Ref, ComputedRef } from "vue";
 import { putArtifactDescription } from "@/helpers/rest-querier";
+import { parse } from "marked";
 import type {
+    ArtidocSection,
     ArtifactFieldValueCommonmarkRepresentation,
     ArtifactTextFieldValueRepresentation,
 } from "@/helpers/artidoc-section.type";
-import { parse } from "marked";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 export type use_section_editor_actions_type = {
     setEditMode: (new_value: boolean) => void;
@@ -31,27 +34,29 @@ export type use_section_editor_actions_type = {
     cancelEditor: () => void;
 };
 export type use_section_editor_type = {
+    is_section_editable: ComputedRef<boolean>;
     getIsEditMode: () => Ref<boolean>;
     editor_actions: use_section_editor_actions_type;
     inputCurrentDescription: (new_value: string) => void;
     getEditableDescription: () => Ref<string>;
     getReadonlyDescription: () => Ref<string>;
 };
-function useSectionEditor(
-    description: ArtifactTextFieldValueRepresentation,
-    artifact_id: number,
-): use_section_editor_type {
+function useSectionEditor(section: ArtidocSection): use_section_editor_type {
     const is_edit_mode = ref(false);
     const original_description = ref(
-        isCommonmark(description)
-            ? parse(description.commonmark)
-            : description.format === "text"
-              ? parse(description.value)
-              : description.value,
+        isCommonmark(section.description)
+            ? parse(section.description.commonmark)
+            : section.description.format === "text"
+              ? parse(section.description.value)
+              : section.description.value,
     );
     const editable_description = ref(original_description.value);
-    const readonly_description = ref(description.post_processed_value);
+    const readonly_description = ref(section.description.post_processed_value);
 
+    const is_section_editable = computed(() => {
+        const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
+        return section.can_user_edit_section && can_user_edit_document;
+    });
     const setEditMode = (new_value: boolean): void => {
         is_edit_mode.value = new_value;
     };
@@ -59,7 +64,11 @@ function useSectionEditor(
     const saveEditor = (): void => {
         if (editable_description.value !== original_description.value) {
             original_description.value = editable_description.value;
-            putArtifactDescription(artifact_id, editable_description.value, description.field_id);
+            putArtifactDescription(
+                section.artifact.id,
+                editable_description.value,
+                section.description.field_id,
+            );
         }
         setEditMode(false);
     };
@@ -92,6 +101,7 @@ function useSectionEditor(
     };
 
     return {
+        is_section_editable,
         getEditableDescription,
         getReadonlyDescription,
         getIsEditMode,

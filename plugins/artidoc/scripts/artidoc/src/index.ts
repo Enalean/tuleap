@@ -27,6 +27,7 @@ import { sectionsStoreKey } from "@/stores/sectionsStoreKey";
 import CKEditor from "@ckeditor/ckeditor5-vue";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -56,6 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const sectionsStore = provideSectionsStore();
     app.provide(sectionsStoreKey, sectionsStore);
     app.provide(CURRENT_LOCALE, current_locale);
+    app.provide(CAN_USER_EDIT_DOCUMENT, Boolean(vue_mount_point.dataset.canUserEditDocument));
 
     app.use(CKEditor);
     app.use(gettext);

@@ -29,6 +29,7 @@
                 <section-editor-cta
                     v-bind:editor_actions="editor_actions"
                     v-bind:is_edit_mode="is_edit_mode"
+                    v-bind:is_section_editable="is_section_editable"
                 />
             </template>
         </section-title-with-artifact-id>
@@ -60,7 +61,8 @@ const {
     getReadonlyDescription,
     editor_actions,
     inputCurrentDescription,
-} = useSectionEditor(props.section.description, props.section.artifact.id);
+    is_section_editable,
+} = useSectionEditor(props.section);
 
 const { is_sections_loading } = useInjectSectionsStore();
 const is_edit_mode = getIsEditMode();

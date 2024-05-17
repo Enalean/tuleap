@@ -21,7 +21,7 @@
     <h1>
         {{ title }}
         <a v-bind:href="artifact_url">#{{ artifact_id }}</a>
-        <span class="editor-cta"> <slot name="header-cta"></slot></span>
+        <span class="editor-cta"><slot name="header-cta"></slot></span>
     </h1>
 </template>
 <script setup lang="ts">
