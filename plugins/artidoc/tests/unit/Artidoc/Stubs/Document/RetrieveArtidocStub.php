@@ -32,9 +32,9 @@ use Tuleap\NeverThrow\Result;
 final readonly class RetrieveArtidocStub implements RetrieveArtidoc
 {
     /**
-     * @param Ok<ArtidocDocumentInformation>|Err<Fault> $result
+     * @param Ok<ArtidocDocumentInformation>|Err<Fault>|null $result
      */
-    private function __construct(private Ok|Err $result)
+    private function __construct(private Ok|Err|null $result)
     {
     }
 
@@ -48,8 +48,17 @@ final readonly class RetrieveArtidocStub implements RetrieveArtidoc
         return new self(Result::err(Fault::fromMessage('Not found')));
     }
 
+    public static function shouldNotBeCalled(): self
+    {
+        return new self(null);
+    }
+
     public function retrieveArtidoc(int $id, \PFUser $user): Ok|Err
     {
+        if ($this->result === null) {
+            throw new \Exception('Unexpected call to retrieveArtidoc()');
+        }
+
         return $this->result;
     }
 }

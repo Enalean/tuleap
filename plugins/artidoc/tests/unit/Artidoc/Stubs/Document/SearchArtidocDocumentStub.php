@@ -26,7 +26,7 @@ use Tuleap\Artidoc\Document\SearchArtidocDocument;
 
 final readonly class SearchArtidocDocumentStub implements SearchArtidocDocument
 {
-    public function __construct(private ?array $results)
+    private function __construct(private ?array $results)
     {
     }
 

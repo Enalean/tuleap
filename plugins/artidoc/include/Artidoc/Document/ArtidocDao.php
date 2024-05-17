@@ -24,9 +24,10 @@ namespace Tuleap\Artidoc\Document;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\InvalidUuidStringException;
 use Tuleap\DB\UUID;
 
-final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchPaginatedRawSections, SaveSections
+final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, SearchPaginatedRawSections, SaveSections
 {
     public function searchByItemId(int $item_id): ?array
     {
@@ -43,6 +44,28 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
             \Docman_Item::TYPE_OTHER,
             ArtidocDocument::TYPE,
         );
+    }
+
+    public function searchSectionById(string $section_id): ?array
+    {
+        try {
+            $row = $this->getDB()->row(
+                <<<EOS
+            SELECT *
+            FROM plugin_artidoc_document
+            WHERE id = ?
+            EOS,
+                $this->uuid_factory->buildUUIDFromHexadecimalString($section_id)->getBytes(),
+            );
+        } catch (InvalidUuidStringException) {
+            return null;
+        }
+
+        if ($row) {
+            $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+        }
+
+        return $row;
     }
 
     public function searchPaginatedRawSectionsByItemId(int $item_id, int $limit, int $offset): PaginatedRawSections

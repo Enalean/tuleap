@@ -27,7 +27,7 @@ use Tuleap\DB\UUID;
 final readonly class PaginatedRawSections
 {
     /**
-     * @param list<array{id: UUID, artifact_id: int}> $rows
+     * @param list<array{id: UUID, artifact_id: int, ...}> $rows
      */
     public function __construct(public int $id, public array $rows, public int $total)
     {

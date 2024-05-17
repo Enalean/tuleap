@@ -40,4 +40,13 @@ final class DatabaseUUIDV7Factory implements DatabaseUUIDFactory
     {
         return new UUIDFromRamseyUUIDLibrary(UuidV7::fromBytes($bytes));
     }
+
+    public function buildUUIDFromHexadecimalString(string $string): UUID
+    {
+        try {
+            return new UUIDFromRamseyUUIDLibrary(UuidV7::fromString($string));
+        } catch (\Ramsey\Uuid\Exception\InvalidUuidStringException $exception) {
+            throw InvalidUuidStringException::fromException($exception);
+        }
+    }
 }

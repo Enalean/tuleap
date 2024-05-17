@@ -216,6 +216,15 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
+    public function testOptionsSectionsId(): void
+    {
+        $uuid     = 'dummy-uuid';
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc_sections/' . $uuid));
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
+    }
+
     /**
      * @depends testGetRootId
      */
@@ -398,5 +407,31 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $this->assertEmpty($permissions_for_groups_representation['can_write']);
         $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
         $this->assertEquals($this->project_admins_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testGetOneSection(int $root_id): void
+    {
+        $artidoc_id   = $this->createArtidoc($root_id, 'Artidoc test one section ' . $this->now)['id'];
+        $section_1_id = $this->createRequirementArtifact('Section 1', 'Content of section 1');
+        $section_2_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
+
+        $this->addSectionsToArtidoc($artidoc_id, $section_1_id, $section_2_id);
+
+        $document_content = $this->getArtidocSections($artidoc_id);
+
+        self::assertCount(2, $document_content);
+
+        $section_1_uuid       = $document_content[0]['id'];
+        $get_section_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'artidoc_sections/' . $section_1_uuid),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        self::assertSame(200, $get_section_response->getStatusCode());
+
+        $section_representation = json_decode($get_section_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame($document_content[0], $section_representation);
     }
 }

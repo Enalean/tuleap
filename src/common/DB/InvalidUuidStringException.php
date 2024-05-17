@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,16 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\DB;
 
-interface DatabaseUUIDFactory
+final class InvalidUuidStringException extends \Exception
 {
-    public function buildUUIDBytes(): string;
-
-    public function buildUUIDBytesFromTime(\DateTimeInterface $time): string;
-
-    public function buildUUIDFromBytesData(string $bytes): UUID;
-
-    /**
-     * @throws InvalidUuidStringException
-     */
-    public function buildUUIDFromHexadecimalString(string $string): UUID;
+    public static function fromException(\Exception $exception): self
+    {
+        return new self($exception->getMessage(), (int) $exception->getCode(), $exception);
+    }
 }
