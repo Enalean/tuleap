@@ -18,7 +18,7 @@
  */
 import { computed, ref } from "vue";
 import type { Ref, ComputedRef } from "vue";
-import { putArtifactDescription } from "@/helpers/rest-querier";
+import { getSection, putArtifactDescription } from "@/helpers/rest-querier";
 import { parse } from "marked";
 import type {
     ArtidocSection,
@@ -42,17 +42,19 @@ export type use_section_editor_type = {
     getReadonlyDescription: () => Ref<string>;
 };
 function useSectionEditor(section: ArtidocSection): use_section_editor_type {
+    const current_section: Ref<ArtidocSection> = ref(section);
     const is_edit_mode = ref(false);
     const original_description = ref(
-        isCommonmark(section.description)
-            ? parse(section.description.commonmark)
-            : section.description.format === "text"
-              ? parse(section.description.value)
-              : section.description.value,
+        isCommonmark(current_section.value.description)
+            ? parse(current_section.value.description.commonmark)
+            : current_section.value.description.format === "text"
+              ? parse(current_section.value.description.value)
+              : current_section.value.description.value,
     );
     const editable_description = ref(original_description.value);
-    const readonly_description = ref(section.description.post_processed_value);
-
+    const readonly_description = computed(
+        () => current_section.value.description.post_processed_value,
+    );
     const is_section_editable = computed(() => {
         const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
         return section.can_user_edit_section && can_user_edit_document;
@@ -65,12 +67,21 @@ function useSectionEditor(section: ArtidocSection): use_section_editor_type {
         if (editable_description.value !== original_description.value) {
             original_description.value = editable_description.value;
             putArtifactDescription(
-                section.artifact.id,
+                current_section.value.artifact.id,
                 editable_description.value,
-                section.description.field_id,
-            );
+                current_section.value.description.field_id,
+            )
+                .andThen(() => getSection(current_section.value.id))
+                .match(
+                    (artidoc_section: ArtidocSection) => {
+                        current_section.value = artidoc_section;
+                        setEditMode(false);
+                    },
+                    () => {},
+                );
+        } else {
+            setEditMode(false);
         }
-        setEditMode(false);
     };
 
     const cancelEditor = (): void => {

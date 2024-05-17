@@ -21,6 +21,7 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 const ArtidocSectionFactory = {
     create: (): ArtidocSection => ({
+        id: "section-id",
         artifact: {
             id: 0,
             uri: "artifacts/1",

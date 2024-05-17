@@ -22,6 +22,8 @@ import useSectionEditor from "@/composables/useSectionEditor";
 import * as rest_querier from "@/helpers/rest-querier";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import * as tuleap_strict_inject from "@tuleap/vue-strict-inject";
+import { okAsync } from "neverthrow";
+import { flushPromises } from "@vue/test-utils";
 
 const default_section = ArtidocSectionFactory.create();
 
@@ -164,6 +166,37 @@ describe("useSectionEditor", () => {
                 store.editor_actions.saveEditor();
 
                 expect(mock_put_artifact_description).toHaveBeenCalledOnce();
+            });
+            it("should get updated section", async () => {
+                const store = useSectionEditor(section);
+                const mock_put_artifact_description = vi
+                    .spyOn(rest_querier, "putArtifactDescription")
+                    .mockReturnValue(okAsync(new Response()));
+                const mock_get_section = vi.spyOn(rest_querier, "getSection").mockReturnValue(
+                    okAsync(
+                        ArtidocSectionFactory.override({
+                            description: {
+                                ...default_section.description,
+                                value: "the original description",
+                                post_processed_value: "the updated post_processed_value",
+                            },
+                        }),
+                    ),
+                );
+
+                store.inputCurrentDescription("new description");
+                expect(store.getEditableDescription().value).toBe("new description");
+                expect(store.getReadonlyDescription().value).toBe("the description");
+
+                store.editor_actions.saveEditor();
+
+                await flushPromises();
+
+                expect(mock_put_artifact_description).toHaveBeenCalled();
+                expect(mock_get_section).toHaveBeenCalled();
+                expect(store.getReadonlyDescription().value).toBe(
+                    "the updated post_processed_value",
+                );
             });
         });
     });

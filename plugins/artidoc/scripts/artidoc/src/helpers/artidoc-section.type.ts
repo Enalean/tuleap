@@ -36,6 +36,7 @@ export type ArtifactTextFieldValueRepresentation =
     | ArtifactFieldValueTextRepresentation;
 
 export type ArtidocSection = {
+    id: string;
     artifact: {
         id: number;
         uri: string;
