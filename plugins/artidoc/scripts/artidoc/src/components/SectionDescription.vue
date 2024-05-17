@@ -24,13 +24,13 @@
         <component
             v-bind:is="async_editor"
             v-bind:artifact_id="artifact_id"
-            v-bind:editable_description="description_value"
+            v-bind:editable_description="editable_description"
             v-bind:input_current_description="input_current_description"
-            v-bind:description_value="description_value"
+            v-bind:readonly_value="readonly_description"
             data-test="editor"
         />
     </template>
-    <section-description-read-only v-else v-bind:description_value="description_value" />
+    <section-description-read-only v-else v-bind:readonly_value="readonly_description" />
 </template>
 <script setup lang="ts">
 import type { use_section_editor_type } from "@/composables/useSectionEditor";
@@ -42,7 +42,8 @@ import SectionDescriptionReadOnly from "@/components/description/SectionDescript
 
 defineProps<{
     artifact_id: number;
-    description_value: string;
+    editable_description: string;
+    readonly_description: string;
     is_edit_mode: boolean;
     input_current_description: use_section_editor_type["inputCurrentDescription"];
 }>();

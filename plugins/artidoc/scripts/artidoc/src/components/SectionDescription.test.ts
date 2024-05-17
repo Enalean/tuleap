@@ -26,7 +26,8 @@ import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
 import SectionDescriptionReadOnly from "@/components/description/SectionDescriptionReadOnly.vue";
 
 const default_props = {
-    description_value: "Lorem ipsum",
+    editable_description: "Lorem ipsum",
+    readonly_description: "Lorem ipsum",
     artifact_id: 1,
     is_edit_mode: false,
     input_current_description: vi.fn(),
