@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\Logs;
 
+use Tracker_ArtifactFactory;
 use Tuleap\DB\DataAccessObject;
 
 final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, RetrieveLogsForTracker, DeleteLogsPerTracker
@@ -30,7 +31,7 @@ final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, 
 
     private const MAX_RECORD_PER_TRACKER = 50;
 
-    public function __construct(private readonly \Tracker_ArtifactFactory $artifact_factory)
+    public function __construct(private readonly Tracker_ArtifactFactory $artifact_factory)
     {
         parent::__construct();
     }
@@ -60,14 +61,14 @@ final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, 
                 match ($row['status']) {
                     FunctionLogLine::STATUS_PASSED => FunctionLogLine::buildPassed(
                         $row['changeset_id'],
-                        $row['source_payload_json'],
-                        $row['generated_payload_json'],
+                        $this->getDB()->cell('SELECT log.source_payload_json FROM plugin_tracker_functions_log AS log WHERE log.changeset_id = ?', $row['changeset_id']),
+                        $this->getDB()->cell('SELECT log.generated_payload_json FROM plugin_tracker_functions_log AS log WHERE log.changeset_id = ?', $row['changeset_id']),
                         $row['execution_date'],
                     ),
                     FunctionLogLine::STATUS_ERROR  => FunctionLogLine::buildError(
                         $row['changeset_id'],
-                        $row['source_payload_json'],
-                        $row['error_message'],
+                        $this->getDB()->cell('SELECT log.source_payload_json FROM plugin_tracker_functions_log AS log WHERE log.changeset_id = ?', $row['changeset_id']),
+                        $this->getDB()->cell('SELECT log.error_message FROM plugin_tracker_functions_log AS log WHERE log.changeset_id = ?', $row['changeset_id']),
                         $row['execution_date'],
                     )
                 },
@@ -78,9 +79,6 @@ final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, 
                 SELECT log.id AS log_id,
                        log.status,
                        log.changeset_id,
-                       log.source_payload_json,
-                       log.generated_payload_json,
-                       log.error_message,
                        log.execution_date,
                        artifact.*,
                        CVT.value AS title,
