@@ -18,68 +18,63 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\CommitStatus;
 
-require_once __DIR__ . '/../bootstrap.php';
+use GitRepository;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-
-class CommitStatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommitStatusRetrieverTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private readonly CommitStatusDAO&MockObject $dao;
+    private readonly CommitStatusRetriever $commit_status_retriever;
+    private readonly GitRepository $repository;
 
-    public function testCommitStatusIsRetrieved()
+    protected function setUp(): void
     {
-        $dao = \Mockery::mock(CommitStatusDAO::class);
+        $this->dao = $this->createMock(CommitStatusDAO::class);
 
-        $commit_status_retriever = new CommitStatusRetriever($dao);
+        $this->commit_status_retriever = new CommitStatusRetriever($this->dao);
 
-        $repository = \Mockery::mock(\GitRepository::class);
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->build();
+    }
 
-        $dao->shouldReceive('getLastCommitStatusByRepositoryIdAndCommitReferences')->andReturns([
+    public function testCommitStatusIsRetrieved(): void
+    {
+        $this->dao->method('getLastCommitStatusByRepositoryIdAndCommitReferences')->willReturn([
             [
                 'commit_reference' => '38762cf7f55934b34d179ae6a4c80cadccbb7f0a',
                 'status'           => CommitStatusWithKnownStatus::STATUS_SUCCESS,
                 'date'             => 1528892466,
             ],
         ]);
-        $repository->shouldReceive('getId');
 
-        $commit_status = $commit_status_retriever->getLastCommitStatus(
-            $repository,
+        $commit_status = $this->commit_status_retriever->getLastCommitStatus(
+            $this->repository,
             '38762cf7f55934b34d179ae6a4c80cadccbb7f0a'
         );
 
-        $this->assertInstanceOf(CommitStatus::class, $commit_status);
+        self::assertInstanceOf(CommitStatus::class, $commit_status);
     }
 
-    public function testCommitStatusUnknownIsRetrievedWhenNoStatusExist()
+    public function testCommitStatusUnknownIsRetrievedWhenNoStatusExist(): void
     {
-        $dao = \Mockery::mock(CommitStatusDAO::class);
+        $this->dao->method('getLastCommitStatusByRepositoryIdAndCommitReferences')->willReturn([]);
 
-        $commit_status_retriever = new CommitStatusRetriever($dao);
-
-        $repository = \Mockery::mock(\GitRepository::class);
-
-        $dao->shouldReceive('getLastCommitStatusByRepositoryIdAndCommitReferences')->andReturns([]);
-        $repository->shouldReceive('getId');
-
-        $commit_status = $commit_status_retriever->getLastCommitStatus(
-            $repository,
+        $commit_status = $this->commit_status_retriever->getLastCommitStatus(
+            $this->repository,
             '38762cf7f55934b34d179ae6a4c80cadccbb7f0a'
         );
 
-        $this->assertInstanceOf(CommitStatusUnknown::class, $commit_status);
+        self::assertInstanceOf(CommitStatusUnknown::class, $commit_status);
     }
 
-    public function testASetOfCommitStatusCanBeRetrieved()
+    public function testASetOfCommitStatusCanBeRetrieved(): void
     {
-        $dao = \Mockery::mock(CommitStatusDAO::class);
-
-        $commit_status_retriever = new CommitStatusRetriever($dao);
-
-        $repository = \Mockery::mock(\GitRepository::class);
-
-        $dao->shouldReceive('getLastCommitStatusByRepositoryIdAndCommitReferences')->andReturns([
+        $this->dao->method('getLastCommitStatusByRepositoryIdAndCommitReferences')->willReturn([
             [
                 'commit_reference' => '38762cf7f55934b34d179ae6a4c80cadccbb7f0a',
                 'status'           => CommitStatusWithKnownStatus::STATUS_SUCCESS,
@@ -91,17 +86,16 @@ class CommitStatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'date'             => 1528898888,
             ],
         ]);
-        $repository->shouldReceive('getId');
 
-        $commit_statuses = $commit_status_retriever->getLastCommitStatuses(
-            $repository,
+        $commit_statuses = $this->commit_status_retriever->getLastCommitStatuses(
+            $this->repository,
             ['38762cf7f55934b34d179ae6a4c80cadccbb7f0a', '23badb142cabe3e604ceb5fd5d243354e8e9f491']
         );
 
-        $this->assertCount(2, $commit_statuses);
-        $this->assertSame(1528892466, $commit_statuses[0]->getDate()->getTimestamp());
-        $this->assertSame(CommitStatusWithKnownStatus::STATUS_SUCCESS_NAME, $commit_statuses[0]->getStatusName());
-        $this->assertSame(1528898888, $commit_statuses[1]->getDate()->getTimestamp());
-        $this->assertSame(CommitStatusWithKnownStatus::STATUS_FAILURE_NAME, $commit_statuses[1]->getStatusName());
+        self::assertCount(2, $commit_statuses);
+        self::assertSame(1528892466, $commit_statuses[0]->getDate()->getTimestamp());
+        self::assertSame(CommitStatusWithKnownStatus::STATUS_SUCCESS_NAME, $commit_statuses[0]->getStatusName());
+        self::assertSame(1528898888, $commit_statuses[1]->getDate()->getTimestamp());
+        self::assertSame(CommitStatusWithKnownStatus::STATUS_FAILURE_NAME, $commit_statuses[1]->getStatusName());
     }
 }

@@ -18,76 +18,72 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\CommitStatus;
 
-require_once __DIR__ . '/../bootstrap.php';
+use Git_Exec;
+use GitRepository;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-
-class CommitStatusCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommitStatusCreatorTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private readonly MockObject&CommitStatusDAO $dao;
+    private readonly CommitStatusCreator $commit_status_creator;
+    private readonly GitRepository $repository;
+    private readonly Git_Exec&MockObject $git_exec;
 
-    public function testCommitStatusIsCreated()
+    protected function setUp(): void
     {
-        $dao = \Mockery::mock(CommitStatusDAO::class);
+        $this->dao = $this->createMock(CommitStatusDAO::class);
 
-        $commit_status_creator = new CommitStatusCreator($dao);
+        $this->commit_status_creator = new CommitStatusCreator($this->dao);
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $git_exec   = \Mockery::mock(\Git_Exec::class);
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->build();
+        $this->git_exec   = $this->createMock(Git_Exec::class);
+    }
 
-        $git_exec->shouldReceive('doesObjectExists')->andReturns(true);
-        $git_exec->shouldReceive('getObjectType')->andReturns('commit');
-        $repository->shouldReceive('getId');
+    public function testCommitStatusIsCreated(): void
+    {
+        $this->git_exec->method('doesObjectExists')->willReturn(true);
+        $this->git_exec->method('getObjectType')->willReturn('commit');
 
-        $dao->shouldReceive('create')->once();
+        $this->dao->expects(self::once())->method('create');
 
-        $commit_status_creator->createCommitStatus(
-            $repository,
-            $git_exec,
+        $this->commit_status_creator->createCommitStatus(
+            $this->repository,
+            $this->git_exec,
             '38762cf7f55934b34d179ae6a4c80cadccbb7f0a',
             'success'
         );
     }
 
-    public function testExistenceOfTheCommitReferenceIsVerified()
+    public function testExistenceOfTheCommitReferenceIsVerified(): void
     {
-        $dao = \Mockery::mock(CommitStatusDAO::class);
+        $this->git_exec->method('doesObjectExists')->willReturn(false);
 
-        $commit_status_creator = new CommitStatusCreator($dao);
+        self::expectException(CommitDoesNotExistException::class);
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $git_exec   = \Mockery::mock(\Git_Exec::class);
-
-        $git_exec->shouldReceive('doesObjectExists')->andReturns(false);
-
-        $this->expectException(CommitDoesNotExistException::class);
-
-        $commit_status_creator->createCommitStatus(
-            $repository,
-            $git_exec,
+        $this->commit_status_creator->createCommitStatus(
+            $this->repository,
+            $this->git_exec,
             '38762cf7f55934b34d179ae6a4c80cadccbb7f0a',
             'success'
         );
     }
 
-    public function testReferenceIsACommitIsVerified()
+    public function testReferenceIsACommitIsVerified(): void
     {
-        $dao = \Mockery::mock(CommitStatusDAO::class);
+        $this->git_exec->method('doesObjectExists')->willReturn(true);
+        $this->git_exec->method('getObjectType')->willReturn('tag');
 
-        $commit_status_creator = new CommitStatusCreator($dao);
+        self::expectException(InvalidCommitReferenceException::class);
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $git_exec   = \Mockery::mock(\Git_Exec::class);
-
-        $git_exec->shouldReceive('doesObjectExists')->andReturns(true);
-        $git_exec->shouldReceive('getObjectType')->andReturns('tag');
-
-        $this->expectException(InvalidCommitReferenceException::class);
-
-        $commit_status_creator->createCommitStatus(
-            $repository,
-            $git_exec,
+        $this->commit_status_creator->createCommitStatus(
+            $this->repository,
+            $this->git_exec,
             '10.2',
             'success'
         );
