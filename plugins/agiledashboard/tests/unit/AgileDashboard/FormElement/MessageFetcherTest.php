@@ -18,38 +18,51 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\AgileDashboard\FormElement;
 
-use AgileDashBoard_Semantic_InitialEffort;
 use AgileDashboard_Semantic_InitialEffortFactory;
-use PHPUnit\Framework\MockObject\MockObject;
-use PlanningFactory;
-use Tracker;
-use Tracker_FormElement_Field;
-use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
-use Tuleap\Test\PHPUnit\TestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class MessageFetcherTest extends TestCase
+final class MessageFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_FormElement_Field $field;
-    private Tracker $backlog_tracker;
-    private Tracker $tracker;
-    private PlanningFactory&MockObject $planning_factory;
-    private MessageFetcher $message_fetcher;
-    private AgileDashboard_Semantic_InitialEffortFactory&MockObject $initial_effort_factory;
-    private SemanticDoneFactory&MockObject $semantic_done_factory;
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field
+     */
+    private $field;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
+     */
+    private $backlog_tracker;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
+     */
+    private $tracker;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PlanningFactory
+     */
+    private $planning_factory;
+    /**
+     * @var MessageFetcher
+     */
+    private $message_fetcher;
+    /**
+     * @var \Mockery\MockInterface|AgileDashboard_Semantic_InitialEffortFactory
+     */
+    private $initial_effort_factory;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticDoneFactory
+     */
+    private $semantic_done_factory;
 
     protected function setUp(): void
     {
-        $this->planning_factory       = $this->createMock(PlanningFactory::class);
-        $this->initial_effort_factory = $this->createMock(AgileDashboard_Semantic_InitialEffortFactory::class);
-        $this->semantic_done_factory  = $this->createMock(SemanticDoneFactory::class);
+        $this->planning_factory       = \Mockery::spy(\PlanningFactory::class);
+        $this->initial_effort_factory = \Mockery::mock('AgileDashboard_Semantic_InitialEffortFactory');
+        $this->semantic_done_factory  = \Mockery::mock(SemanticDoneFactory::class);
 
         $this->message_fetcher = new MessageFetcher(
             $this->planning_factory,
@@ -57,82 +70,95 @@ final class MessageFetcherTest extends TestCase
             $this->semantic_done_factory
         );
 
-        $this->tracker         = TrackerTestBuilder::aTracker()->build();
-        $this->backlog_tracker = TrackerTestBuilder::aTracker()->withName('Backlog')->build();
-        $this->field           = IntFieldBuilder::anIntField(1)->build();
+        $this->tracker         = \Mockery::mock(\Tracker::class);
+        $this->backlog_tracker = \Mockery::mock(\Tracker::class);
+        $this->backlog_tracker->shouldReceive('getName');
+        $this->field = \Mockery::mock(\Tracker_FormElement_Field::class);
     }
 
     public function testItDoesNotAddWarningsIfAllIsWellConfigured(): void
     {
-        $planning       = PlanningBuilder::aPlanning(101)->withBacklogTrackers($this->backlog_tracker)->build();
+        $planning       = $this->getMockedPlanning();
         $semantic_done  = $this->getMockedSemanticDone(true);
         $initial_effort = $this->getMockInitialEffortField();
 
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->tracker)->willReturn($planning);
-        $this->semantic_done_factory->method('getInstanceByTracker')->with($this->backlog_tracker)->willReturn($semantic_done);
-        $this->initial_effort_factory->method('getByTracker')->with($this->backlog_tracker)->willReturn($initial_effort);
+        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->tracker)->andReturns($planning);
+        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')->with($this->backlog_tracker)->andReturn($semantic_done);
+        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->backlog_tracker)->andReturn($initial_effort);
 
         $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
 
-        self::assertEmpty($warnings);
+        $this->assertEmpty($warnings);
     }
 
     public function testItReturnsAWarningIfTrackerIsNotAPlanningTracker(): void
     {
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->tracker)->willReturn(null);
+        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->tracker)->andReturns(null);
 
         $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
 
-        self::assertNotEmpty($warnings);
+        $this->assertNotEmpty($warnings);
     }
 
     public function testItReturnsAWarningIfBacklogTrackerDoesNotHaveSemanticDone(): void
     {
-        $planning       = PlanningBuilder::aPlanning(101)->withBacklogTrackers($this->backlog_tracker)->build();
+        $planning       = $this->getMockedPlanning();
         $semantic_done  = $this->getMockedSemanticDone(false);
         $initial_effort = $this->getMockInitialEffortField();
-        $semantic_done->method('getUrl');
 
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->tracker)->willReturn($planning);
-        $this->semantic_done_factory->method('getInstanceByTracker')->with($this->backlog_tracker)->willReturn($semantic_done);
-        $this->initial_effort_factory->method('getByTracker')->with($this->backlog_tracker)->willReturn($initial_effort);
+        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->tracker)->andReturns($planning);
+        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')->with($this->backlog_tracker)->andReturn($semantic_done);
+        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->backlog_tracker)->andReturn($initial_effort);
 
         $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
 
-        self::assertNotEmpty($warnings);
+        $this->assertNotEmpty($warnings);
     }
 
     public function testItReturnsAWarningIfBacklogTrackerDoesNotHaveSemanticInitialEffort(): void
     {
-        $planning       = PlanningBuilder::aPlanning(101)->withBacklogTrackers($this->backlog_tracker)->build();
+        $planning       = $this->getMockedPlanning();
         $semantic_done  = $this->getMockedSemanticDone(true);
-        $initial_effort = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
-        $initial_effort->method('getField')->willReturn(null);
-        $initial_effort->method('getUrl');
-        $semantic_done->method('getUrl');
+        $initial_effort = \Mockery::spy(\AgileDashBoard_Semantic_InitialEffort::class)
+            ->shouldReceive('getField')
+            ->andReturns(null)->getMock();
 
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->tracker)->willReturn($planning);
-        $this->semantic_done_factory->method('getInstanceByTracker')->with($this->backlog_tracker)->willReturn($semantic_done);
-        $this->initial_effort_factory->method('getByTracker')->with($this->backlog_tracker)->willReturn($initial_effort);
+        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->tracker)->andReturns($planning);
+        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')->with($this->backlog_tracker)->andReturn($semantic_done);
+        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->backlog_tracker)->andReturn($initial_effort);
 
         $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
 
-        self::assertNotEmpty($warnings);
+        $this->assertNotEmpty($warnings);
     }
 
-    private function getMockedSemanticDone(bool $is_semantic_defined): SemanticDone&MockObject
+    /**
+     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    protected function getMockedPlanning()
     {
-        $semantic = $this->createMock(SemanticDone::class);
-        $semantic->method('isSemanticDefined')->willReturn($is_semantic_defined);
-
-        return $semantic;
+        return \Mockery::spy(\Planning::class)
+            ->shouldReceive('getBacklogTrackers')
+            ->andReturns([$this->backlog_tracker])->getMock();
     }
 
-    private function getMockInitialEffortField(): AgileDashBoard_Semantic_InitialEffort&MockObject
+    /**
+     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    protected function getMockedSemanticDone(bool $is_semantic_defined)
     {
-        $semantic = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
-        $semantic->method('getField')->willReturn($this->field);
+        return \Mockery::spy(SemanticDone::class)
+            ->shouldReceive('isSemanticDefined')
+            ->andReturns($is_semantic_defined)->getMock();
+    }
 
-        return $semantic;
+    /**
+     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    protected function getMockInitialEffortField()
+    {
+        return \Mockery::spy(\AgileDashBoard_Semantic_InitialEffort::class)
+            ->shouldReceive('getField')
+            ->andReturns($this->field)->getMock();
     }
 }
