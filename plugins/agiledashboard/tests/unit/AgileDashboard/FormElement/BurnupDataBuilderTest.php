@@ -18,15 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\AgileDashboard\FormElement;
 
-use DateTime;
+use ColinODell\PsrTestLogger\TestLogger;
 use ForgeConfig;
-use PHPUnit\Framework\MockObject\MockObject;
-use PlanningFactory;
-use Psr\Log\NullLogger;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
@@ -38,38 +35,55 @@ use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class BurnupDataBuilderTest extends TestCase
+final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     private BurnupDataBuilder $burnup_data_builder;
-    private BurnupCacheChecker&MockObject $burnup_cache_checker;
-    private ChartConfigurationValueRetriever&MockObject $chart_configuration_value_retriever;
-    private BurnupCacheDao&MockObject $burnup_cache_dao;
-    private BurnupCalculator&MockObject $burnup_calculator;
-    private CountElementsCacheDao&MockObject $count_cache_dao;
-    private CountElementsCalculator&MockObject $count_calculator;
-    private CountElementsModeChecker&MockObject $mode_checker;
+
+    private TestLogger $logger;
+    private $burnup_cache_checker;
+    private $chart_configuration_value_retriever;
+    private $burnup_cache_dao;
+    private $burnup_calculator;
+
+    /**
+     * @var Mockery\MockInterface|CountElementsCacheDao
+     */
+    private $count_cache_dao;
+
+    /**
+     * @var Mockery\MockInterface|CountElementsCalculator
+     */
+    private $count_calculator;
+
+    /**
+     * @var Mockery\MockInterface|CountElementsModeChecker
+     */
+    private $mode_checker;
     private Tracker $artifact_tracker;
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
 
-        $this->burnup_cache_checker                = $this->createMock(BurnupCacheChecker::class);
-        $this->chart_configuration_value_retriever = $this->createMock(ChartConfigurationValueRetriever::class);
-        $this->burnup_cache_dao                    = $this->createMock(BurnupCacheDao::class);
-        $this->burnup_calculator                   = $this->createMock(BurnupCalculator::class);
-        $this->count_cache_dao                     = $this->createMock(CountElementsCacheDao::class);
-        $this->count_calculator                    = $this->createMock(CountElementsCalculator::class);
-        $this->mode_checker                        = $this->createMock(CountElementsModeChecker::class);
+        $this->logger                              = new TestLogger();
+        $this->burnup_cache_checker                = Mockery::mock(BurnupCacheChecker::class);
+        $this->chart_configuration_value_retriever = Mockery::mock(ChartConfigurationValueRetriever::class);
+        $this->burnup_cache_dao                    = Mockery::mock(BurnupCacheDao::class);
+        $this->burnup_calculator                   = Mockery::mock(BurnupCalculator::class);
+        $this->count_cache_dao                     = Mockery::mock(CountElementsCacheDao::class);
+        $this->count_calculator                    = Mockery::mock(CountElementsCalculator::class);
+        $this->mode_checker                        = Mockery::mock(CountElementsModeChecker::class);
         $planning_dao                              = $this->createMock(PlanningDao::class);
-        $planning_factory                          = $this->createMock(PlanningFactory::class);
+        $planning_factory                          = $this->createMock(\PlanningFactory::class);
 
         $this->artifact_tracker = TrackerTestBuilder::aTracker()->withId(10)->withProject(ProjectTestBuilder::aProject()->build())->build();
 
@@ -77,7 +91,7 @@ final class BurnupDataBuilderTest extends TestCase
         $planning_factory->method('getBacklogTrackersIds')->willReturn([[$this->artifact_tracker->getId()]]);
 
         $this->burnup_data_builder = new BurnupDataBuilder(
-            new NullLogger(),
+            $this->logger,
             $this->burnup_cache_checker,
             $this->chart_configuration_value_retriever,
             $this->burnup_cache_dao,
@@ -86,54 +100,66 @@ final class BurnupDataBuilderTest extends TestCase
             $this->count_calculator,
             $this->mode_checker,
             $planning_dao,
-            $planning_factory,
+            $planning_factory
         );
     }
 
     public function testItBuildsBurnupData(): void
     {
-        $this->mode_checker->method('burnupMustUseCountElementsMode')->willReturn(false);
+        $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnFalse();
 
-        $artifact = ArtifactTestBuilder::anArtifact(101)->inTracker($this->artifact_tracker)->build();
+        $artifact = Mockery::mock(Artifact::class);
         $user     = UserTestBuilder::buildWithDefaults();
+
+        $artifact->shouldReceive('getId')->andReturn(101);
+        $artifact->shouldReceive('getTracker')->andReturn($this->artifact_tracker);
+        $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
         $date_period = DatePeriodWithOpenDays::buildFromDuration(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->expects(self::once())->method('getDatePeriod')
+        $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
-            ->willReturn($date_period);
+            ->once()
+            ->andReturn($date_period);
 
-        $this->burnup_cache_checker->expects(self::once())->method('isBurnupUnderCalculation')
-            ->with($artifact, self::anything(), $user)
-            ->willReturn(false);
+        $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
+            ->with($artifact, Mockery::any(), $user)
+            ->once()
+            ->andReturnFalse();
 
         $this->mockBurnupCacheDao();
 
-        $this->count_cache_dao->expects(self::never())->method('searchCachedDaysValuesByArtifactId');
+        $this->count_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')->never();
 
         $burnup_data = $this->burnup_data_builder->buildBurnupData($artifact, $user);
 
         $efforts = $burnup_data->getEfforts();
 
-        self::assertCount(4, $efforts);
+        $this->assertCount(4, $efforts);
     }
 
     public function testItBuildsBurnupDataWithCountElementsInformation(): void
     {
-        $this->mode_checker->method('burnupMustUseCountElementsMode')->willReturn(true);
+        $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnTrue();
 
-        $artifact = ArtifactTestBuilder::anArtifact(101)->inTracker($this->artifact_tracker)->build();
+        $artifact = Mockery::mock(Artifact::class);
         $user     = UserTestBuilder::buildWithDefaults();
+
+        $artifact->shouldReceive('getId')->andReturn(101);
+        $artifact->shouldReceive('getTracker')->andReturn($this->artifact_tracker);
+        $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
         $date_period = DatePeriodWithOpenDays::buildFromDuration(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->expects(self::once())->method('getDatePeriod')
+        $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
-            ->willReturn($date_period);
+            ->once()
+            ->andReturn($date_period);
 
-        $this->burnup_cache_checker->expects(self::once())->method('isBurnupUnderCalculation')
-            ->with($artifact, self::anything(), $user)
-            ->willReturn(false);
+        $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
+            ->with($artifact, Mockery::any(), $user)
+            ->once()
+            ->andReturnFalse();
 
         $this->mockBurnupCacheDao();
         $this->mockCountElementsCacheDao();
@@ -141,147 +167,160 @@ final class BurnupDataBuilderTest extends TestCase
         $burnup_data = $this->burnup_data_builder->buildBurnupData($artifact, $user);
 
         $count_elements = $burnup_data->getEfforts();
-        self::assertCount(4, $count_elements);
+        $this->assertCount(4, $count_elements);
 
         $count_elements = $burnup_data->getCountElements();
-        self::assertCount(4, $count_elements);
+        $this->assertCount(4, $count_elements);
 
         $last_count_elements = end($count_elements);
-        self::assertInstanceOf(CountElementsInfo::class, $last_count_elements);
-        self::assertSame(4, $last_count_elements->getClosedElements());
-        self::assertSame(5, $last_count_elements->getTotalElements());
+        $this->assertInstanceOf(CountElementsInfo::class, $last_count_elements);
+        $this->assertSame(4, $last_count_elements->getClosedElements());
+        $this->assertSame(5, $last_count_elements->getTotalElements());
     }
 
     public function testItReturnsEmptyEffortsIfUnderCalculation(): void
     {
-        $this->mode_checker->method('burnupMustUseCountElementsMode')->willReturn(false);
+        $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnFalse();
 
-        $artifact = ArtifactTestBuilder::anArtifact(101)->inTracker($this->artifact_tracker)->build();
+        $artifact = Mockery::mock(Artifact::class);
         $user     = UserTestBuilder::buildWithDefaults();
+
+        $artifact->shouldReceive('getId')->andReturn(101);
+        $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
         $date_period = DatePeriodWithOpenDays::buildFromDuration(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->method('getDatePeriod')
+        $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
-            ->willReturn($date_period);
+            ->once()
+            ->andReturn($date_period);
 
-        $this->burnup_cache_checker->method('isBurnupUnderCalculation')
-            ->with($artifact, self::anything(), $user)
-            ->willReturn(true);
+        $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
+            ->with($artifact, Mockery::any(), $user)
+            ->once()
+            ->andReturnTrue();
 
-        $this->burnup_cache_dao->expects(self::never())->method('searchCachedDaysValuesByArtifactId');
-        $this->count_cache_dao->expects(self::never())->method('searchCachedDaysValuesByArtifactId');
+        $this->burnup_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')->never();
+        $this->count_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')->never();
 
         $burnup_data = $this->burnup_data_builder->buildBurnupData($artifact, $user);
 
-        self::assertEmpty($burnup_data->getEfforts());
+        $this->assertEmpty($burnup_data->getEfforts());
     }
 
     public function testItBuildsBurnupDataWithCurrentDay(): void
     {
-        $this->mode_checker->method('burnupMustUseCountElementsMode')->willReturn(true);
+        $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnTrue();
 
-        $artifact = ArtifactTestBuilder::anArtifact(101)->inTracker($this->artifact_tracker)->build();
+        $artifact = Mockery::mock(Artifact::class);
         $user     = UserTestBuilder::buildWithDefaults();
 
-        $start_date  = new DateTime('today 00:00:00');
+        $artifact->shouldReceive('getId')->andReturn(101);
+        $artifact->shouldReceive('getTracker')->andReturn($this->artifact_tracker);
+        $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
+
+        $start_date = new \DateTime();
+        $start_date->setTime(0, 0, 0);
+
         $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date->getTimestamp(), 3);
 
-        $this->chart_configuration_value_retriever->expects(self::once())->method('getDatePeriod')
+        $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
-            ->willReturn($date_period);
+            ->once()
+            ->andReturn($date_period);
 
-        $this->burnup_cache_checker->expects(self::once())->method('isBurnupUnderCalculation')
-            ->with($artifact, self::anything(), $user)
-            ->willReturn(false);
+        $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
+            ->with($artifact, Mockery::any(), $user)
+            ->once()
+            ->andReturnFalse();
 
-        $this->burnup_cache_dao->method('searchCachedDaysValuesByArtifactId')
-            ->with(101, self::anything())
-            ->willReturn([]);
+        $this->burnup_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')
+            ->with(101, Mockery::any())
+            ->andReturn([]);
 
-        $this->count_cache_dao->method('searchCachedDaysValuesByArtifactId')
-            ->with(101, self::anything())
-            ->willReturn([]);
+        $this->count_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')
+            ->with(101, Mockery::any())
+            ->andReturn([]);
 
-        $this->burnup_calculator->method('getValue')
-            ->with(101, self::anything(), [[$this->artifact_tracker->getId()]])
-            ->willReturn(new BurnupEffort(5, 10));
+        $this->burnup_calculator->shouldReceive('getValue')
+            ->with(101, Mockery::any(), [[$this->artifact_tracker->getId()]])
+            ->andReturn(new BurnupEffort(5, 10));
 
-        $this->count_calculator->method('getValue')
-            ->with(101, self::anything(), [[$this->artifact_tracker->getId()]])
-            ->willReturn(new CountElementsInfo(3, 5));
+        $this->count_calculator->shouldReceive('getValue')
+            ->with(101, Mockery::any(), [[$this->artifact_tracker->getId()]])
+            ->andReturn(new CountElementsInfo(3, 5));
 
         $burnup_data = $this->burnup_data_builder->buildBurnupData($artifact, $user);
 
         $efforts = $burnup_data->getEfforts();
-        self::assertCount(1, $efforts);
+        $this->assertCount(1, $efforts);
 
         $first_effort = array_values($efforts)[0];
-        self::assertInstanceOf(BurnupEffort::class, $first_effort);
-        self::assertSame(5, $first_effort->getTeamEffort());
-        self::assertSame(10, $first_effort->getTotalEffort());
+        $this->assertInstanceOf(BurnupEffort::class, $first_effort);
+        $this->assertSame(5, $first_effort->getTeamEffort());
+        $this->assertSame(10, $first_effort->getTotalEffort());
 
         $count_elements = $burnup_data->getCountElements();
-        self::assertCount(1, $count_elements);
+        $this->assertCount(1, $count_elements);
 
         $first_count_elements = array_values($count_elements)[0];
-        self::assertInstanceOf(CountElementsInfo::class, $first_count_elements);
-        self::assertSame(3, $first_count_elements->getClosedElements());
-        self::assertSame(5, $first_count_elements->getTotalElements());
+        $this->assertInstanceOf(CountElementsInfo::class, $first_count_elements);
+        $this->assertSame(3, $first_count_elements->getClosedElements());
+        $this->assertSame(5, $first_count_elements->getTotalElements());
     }
 
     private function mockBurnupCacheDao(): void
     {
-        $this->burnup_cache_dao->method('searchCachedDaysValuesByArtifactId')
-            ->with(101, self::anything())
-            ->willReturn([
+        $this->burnup_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')
+            ->with(101, Mockery::any())
+            ->andReturn([
                 [
-                    'team_effort'  => 0,
+                    'team_effort' => 0,
                     'total_effort' => 10,
-                    'timestamp'    => 1560729600,
+                    'timestamp' => 1560729600,
                 ],
                 [
-                    'team_effort'  => 2,
+                    'team_effort' => 2,
                     'total_effort' => 10,
-                    'timestamp'    => 1560816000,
+                    'timestamp' => 1560816000,
                 ],
                 [
-                    'team_effort'  => 6,
+                    'team_effort' => 6,
                     'total_effort' => 10,
-                    'timestamp'    => 1560902400,
+                    'timestamp' => 1560902400,
                 ],
                 [
-                    'team_effort'  => 10,
+                    'team_effort' => 10,
                     'total_effort' => 10,
-                    'timestamp'    => 1560988800,
+                    'timestamp' => 1560988800,
                 ],
             ]);
     }
 
     private function mockCountElementsCacheDao(): void
     {
-        $this->count_cache_dao->method('searchCachedDaysValuesByArtifactId')
-            ->with(101, self::anything())
-            ->willReturn([
+        $this->count_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')
+            ->with(101, Mockery::any())
+            ->andReturn([
                 [
                     'closed_subelements' => 0,
-                    'total_subelements'  => 5,
-                    'timestamp'          => 1560729600,
+                    'total_subelements' => 5,
+                    'timestamp' => 1560729600,
                 ],
                 [
                     'closed_subelements' => 2,
-                    'total_subelements'  => 5,
-                    'timestamp'          => 1560816000,
+                    'total_subelements' => 5,
+                    'timestamp' => 1560816000,
                 ],
                 [
                     'closed_subelements' => 3,
-                    'total_subelements'  => 5,
-                    'timestamp'          => 1560902400,
+                    'total_subelements' => 5,
+                    'timestamp' => 1560902400,
                 ],
                 [
                     'closed_subelements' => 4,
-                    'total_subelements'  => 5,
-                    'timestamp'          => 1560988800,
+                    'total_subelements' => 5,
+                    'timestamp' => 1560988800,
                 ],
             ]);
     }
