@@ -100,7 +100,8 @@ final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->count_calculator,
             $this->mode_checker,
             $planning_dao,
-            $planning_factory
+            $planning_factory,
+            new BurnupCacheDateRetriever(),
         );
     }
 

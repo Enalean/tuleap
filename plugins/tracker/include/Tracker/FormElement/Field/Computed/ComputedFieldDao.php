@@ -392,12 +392,12 @@ class ComputedFieldDao extends SpecificPropertiesDao
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $field_id    = $this->da->escapeInt($field_id);
-        $sql         = "SELECT count(artifact_id) AS cached_days
+        $sql         = "SELECT timestamp
                           FROM tracker_field_computed_cache
                           WHERE artifact_id = $artifact_id
                           AND field_id      = $field_id";
 
-        return $this->retrieveFirstRow($sql);
+        return $this->retrieve($sql);
     }
 
     public function searchCachedDays($artifact_id, $field_id)

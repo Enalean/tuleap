@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\FormElement;
 use PFUser;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
-use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -42,11 +41,14 @@ class BurnupCacheChecker
     ) {
     }
 
-    public function isBurnupUnderCalculation(Artifact $artifact, DatePeriodWithOpenDays $date_period, PFUser $user): bool
+    /**
+     * @param int[] $expected_days
+     */
+    public function isBurnupUnderCalculation(Artifact $artifact, array $expected_days, PFUser $user): bool
     {
         $is_burnup_under_calculation = false;
 
-        if (! $this->isCacheCompleteForBurnup($artifact, $date_period, $user)) {
+        if (! $this->isCacheCompleteForBurnup($artifact, $expected_days, $user)) {
             $this->cache_generator->forceBurnupCacheGeneration($artifact);
             $is_burnup_under_calculation = true;
         } elseif ($this->cache_generator->isCacheBurnupAlreadyAsked($artifact)) {
@@ -56,27 +58,31 @@ class BurnupCacheChecker
         return $is_burnup_under_calculation;
     }
 
+    /**
+     * @param int[] $expected_days
+     */
     private function isCacheCompleteForBurnup(
         Artifact $artifact,
-        DatePeriodWithOpenDays $date_period,
+        array $expected_days,
         PFUser $user,
     ): bool {
         if (! $this->chart_value_checker->hasStartDate($artifact, $user)) {
             return true;
         }
 
-        return $this->cache_days_comparator->isNumberOfCachedDaysExpected(
-            $date_period,
-            $this->getNumberOfCachedDays($artifact),
+        return $this->cache_days_comparator->areCachedDaysCorrect(
+            $expected_days,
+            $this->getCachedDaysTimestamps($artifact),
         );
     }
 
-    private function getNumberOfCachedDays(Artifact $artifact): int
+    /**
+     * @return list<int>
+     */
+    private function getCachedDaysTimestamps(Artifact $artifact): array
     {
-        $is_in_count_elements_mode = $this->mode_checker->burnupMustUseCountElementsMode($artifact->getTracker()->getProject());
-
-        return $is_in_count_elements_mode
-            ? $this->burnup_count_cache_dao->getNumberOfCachedDays($artifact->getId())
-            : $this->burnup_effort_cache_dao->getNumberOfCachedDays($artifact->getId());
+        return $this->mode_checker->burnupMustUseCountElementsMode($artifact->getTracker()->getProject())
+            ? $this->burnup_count_cache_dao->getCachedDaysTimestamps($artifact->getId())
+            : $this->burnup_effort_cache_dao->getCachedDaysTimestamps($artifact->getId());
     }
 }

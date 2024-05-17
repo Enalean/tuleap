@@ -22,7 +22,9 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\NullLogger;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -49,10 +51,6 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $remaining_effort_adder;
     /**
-     * @var ChartCachedDaysComparator
-     */
-    private $cached_days_comparator;
-    /**
      * @var ComputedFieldDao
      */
     private $computed_dao;
@@ -73,6 +71,7 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var BurndownCacheGenerationChecker
      */
     private $cache_checker;
+    private BurndownCacheDateRetriever $date_retriever;
 
     protected function setUp(): void
     {
@@ -85,8 +84,8 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field_retriever        = Mockery::mock(ChartConfigurationFieldRetriever::class);
         $this->value_checker          = Mockery::mock(ChartConfigurationValueChecker::class);
         $this->computed_dao           = Mockery::mock(ComputedFieldDao::class);
-        $this->cached_days_comparator = Mockery::mock(ChartCachedDaysComparator::class);
         $this->remaining_effort_adder = Mockery::mock(BurndownRemainingEffortAdderForREST::class);
+        $this->date_retriever         = new BurndownCacheDateRetriever();
         $this->cache_checker          = new BurndownCacheGenerationChecker(
             $logger,
             $this->cache_generator,
@@ -94,8 +93,9 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_retriever,
             $this->value_checker,
             $this->computed_dao,
-            $this->cached_days_comparator,
-            $this->remaining_effort_adder
+            new ChartCachedDaysComparator(new NullLogger()),
+            $this->remaining_effort_adder,
+            $this->date_retriever,
         );
 
         $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
@@ -163,8 +163,7 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->value_checker->shouldReceive('hasStartDate')->withArgs([$this->artifact, $this->user])
             ->andReturn(true);
 
-        $this->computed_dao->shouldReceive('getCachedDays');
-        $this->cached_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')->andReturn(false);
+        $this->computed_dao->shouldReceive('getCachedDays')->andReturn([]);
         $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
 
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
@@ -192,13 +191,21 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoNoStackEventCallWhenMissingRemainingEffortAndCacheGenerationIsAlreadyAsked()
     {
+        $start_date  = 1543404090;
+        $duration    = 10;
+        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
+
         $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
             ->andReturn(true);
         $this->value_checker->shouldReceive('hasStartDate')->withArgs([$this->artifact, $this->user])
             ->andReturn(true);
 
-        $this->computed_dao->shouldReceive('getCachedDays');
-        $this->cached_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')->andReturn(true);
+        $this->computed_dao->shouldReceive('getCachedDays')->andReturn(
+            array_map(
+                static fn() => ['timestamp' => 2],
+                $this->date_retriever->getWorkedDaysToCacheForPeriod($date_period, new \DateTime('now'))
+            )
+        );
 
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
         $remaining_effort_field->shouldReceive('getId')->andReturn(10);
@@ -207,10 +214,6 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
         $this->event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(true);
         $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->never();
-
-        $start_date  = 1543404090;
-        $duration    = 10;
-        $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
         $this->assertTrue(

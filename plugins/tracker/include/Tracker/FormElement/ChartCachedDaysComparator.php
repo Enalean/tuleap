@@ -18,59 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Date\DatePeriodWithOpenDays;
 
-class ChartCachedDaysComparator
+final readonly class ChartCachedDaysComparator
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     /**
-     * @return bool
+     * @param int[] $expected_days
+     * @param int[] $cached_days
      */
-    public function isNumberOfCachedDaysExpected(DatePeriodWithOpenDays $date_period_without_week_end, $number_of_cached_days)
+    public function areCachedDaysCorrect(array $expected_days, array $cached_days): bool
     {
-        $days = $date_period_without_week_end->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
-
-        if ($this->isTodayAnOpenDayAndIsTodayBeforeDatePeriodEnd($date_period_without_week_end)) {
-            $this->logger->debug('Period is current');
-            $this->logger->debug('Day cached: ' . $number_of_cached_days);
-            $this->logger->debug('Period days: ' . $days);
-            $this->logger->debug('Period days without last computed value: ' . ($days - 1));
-
-            return $this->compareCachedDaysWhenLastDayIsAComputedValue((int) $number_of_cached_days, $days);
+        sort($expected_days);
+        sort($cached_days);
+        $result = $expected_days === $cached_days;
+        if ($result) {
+            $this->logger->debug('Cache is valid');
+        } else {
+            $this->logger->debug('Cache is NOT valid');
         }
 
-        $this->logger->debug('Period is in past');
-        $this->logger->debug('Day cached: ' . $number_of_cached_days);
-        $this->logger->debug('Period days: ' . $days);
-
-        return $this->compareCachedDaysWithPeriodDays((int) $number_of_cached_days, $days);
-    }
-
-    private function isTodayAnOpenDayAndIsTodayBeforeDatePeriodEnd(DatePeriodWithOpenDays $date_period_without_week_end): bool
-    {
-        return $date_period_without_week_end->isTodayWithinDatePeriod()
-               && DatePeriodWithOpenDays::isOpenDay($_SERVER['REQUEST_TIME']);
-    }
-
-    private function compareCachedDaysWhenLastDayIsAComputedValue($cache_days, $number_of_days_for_period)
-    {
-        return $cache_days === $number_of_days_for_period - 1;
-    }
-
-    private function compareCachedDaysWithPeriodDays($cache_days, $number_of_days_for_period)
-    {
-        return $cache_days === $number_of_days_for_period;
+        return $result;
     }
 }

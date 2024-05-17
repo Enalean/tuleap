@@ -50,14 +50,25 @@ class BurnupCacheDao extends DataAccessObject
         $this->getDB()->delete('plugin_agiledashboard_tracker_field_burnup_cache', ['artifact_id' => $artifact_id]);
     }
 
-    public function getNumberOfCachedDays(int $artifact_id): int
+    /**
+     * @return list<int>
+     */
+    public function getCachedDaysTimestamps(int $artifact_id): array
     {
         $sql = <<<SQL
-        SELECT count(artifact_id) AS cached_days FROM plugin_agiledashboard_tracker_field_burnup_cache
+        SELECT timestamp FROM plugin_agiledashboard_tracker_field_burnup_cache
         WHERE artifact_id = ?
         SQL;
 
-        return $this->getDB()->single($sql, [$artifact_id]);
+        $results = $this->getDB()->safeQuery($sql, [$artifact_id]);
+        if (! is_array($results)) {
+            return [];
+        }
+
+        return array_values(array_map(
+            static fn(array $row): int => $row['timestamp'],
+            $results,
+        ));
     }
 
     /**
