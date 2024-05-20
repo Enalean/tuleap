@@ -23,104 +23,60 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
-use PlanningFactory;
 use Project;
-use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 
-class TopBacklogElementsToAddCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TopBacklogElementsToAddCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var TopBacklogElementsToAddChecker
-     */
-    private $checker;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning
-     */
-    private $root_planning;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact_201;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact_202;
+    private readonly TopBacklogElementsToAddChecker $checker;
+    private readonly RetrieveRootPlanning&MockObject $planning_factory;
+    private readonly Project $project;
+    private readonly PFUser $user;
+    private readonly Planning $root_planning;
+    private readonly Artifact $artifact_201;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $tracker_104        = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $tracker_101        = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $this->artifact_201 = ArtifactTestBuilder::anArtifact(201)
+            ->inTracker($tracker_104)
+            ->build();
+        $artifact_202       = ArtifactTestBuilder::anArtifact(202)
+            ->inTracker($tracker_101)
+            ->build();
 
-        $this->planning_factory = Mockery::mock(PlanningFactory::class);
-        $this->artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
-
-        $this->checker = new TopBacklogElementsToAddChecker(
+        $this->planning_factory = $this->createMock(RetrieveRootPlanning::class);
+        $this->checker          = new TopBacklogElementsToAddChecker(
             $this->planning_factory,
-            $this->artifact_factory
+            RetrieveArtifactStub::withArtifacts($this->artifact_201, $artifact_202)
         );
 
-        $this->project = Mockery::mock(Project::class);
-        $this->user    = Mockery::mock(PFUser::class);
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->user    = UserTestBuilder::buildWithDefaults();
 
-        $this->project->shouldReceive('getID')->andReturn('101');
-
-        $this->root_planning = Mockery::mock(Planning::class);
-        $this->root_planning->shouldReceive('getBacklogTrackersIds')->andReturn([101, 104]);
-
-        $this->artifact_201 = Mockery::mock(Artifact::class);
-        $this->artifact_202 = Mockery::mock(Artifact::class);
+        $this->root_planning = PlanningBuilder::aPlanning(101)
+            ->withBacklogTrackers($tracker_101, $tracker_104)->build();
     }
 
     public function testItDoesNotThrowExceptionIfArtifactsAreInTopBacklogTracker(): void
     {
-        $this->planning_factory->shouldReceive('getRootPlanning')
+        $this->planning_factory->method('getRootPlanning')
             ->with($this->user, 101)
-            ->andReturn($this->root_planning);
+            ->willReturn($this->root_planning);
 
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(201)
-            ->andReturn($this->artifact_201);
-
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(202)
-            ->andReturn($this->artifact_202);
-
-        $this->artifact_201->shouldReceive('getTrackerId')->andReturn('104');
-        $this->artifact_202->shouldReceive('getTrackerId')->andReturn('101');
-
-        $added_artifact_ids = [
-            201,
-            202,
-        ];
+        $added_artifact_ids = [201, 202];
 
         $this->checker->checkAddedIdsBelongToTheProjectTopBacklogTrackers(
             $this->project,
@@ -128,17 +84,16 @@ class TopBacklogElementsToAddCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $added_artifact_ids
         );
 
-        // This asserts that there are no exception thrown
-        $this->assertTrue(true);
+        self::expectNotToPerformAssertions();
     }
 
     public function testItThrowsAnExceptionIfNoRootPlanning(): void
     {
-        $this->planning_factory->shouldReceive('getRootPlanning')
+        $this->planning_factory->method('getRootPlanning')
             ->with($this->user, 101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->expectException(NoRootPlanningException::class);
+        self::expectException(NoRootPlanningException::class);
 
         $this->checker->checkAddedIdsBelongToTheProjectTopBacklogTrackers(
             $this->project,
@@ -149,27 +104,15 @@ class TopBacklogElementsToAddCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfAtLeastOneArtifactIsNotInTopBacklogTracker(): void
     {
-        $this->planning_factory->shouldReceive('getRootPlanning')
+        $this->planning_factory->method('getRootPlanning')
             ->with($this->user, 101)
-            ->andReturn($this->root_planning);
+            ->willReturn($this->root_planning);
 
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(201)
-            ->andReturn($this->artifact_201);
+        $this->artifact_201->setTracker(TrackerTestBuilder::aTracker()->withId(999)->build());
 
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(202)
-            ->andReturn($this->artifact_202);
+        self::expectException(ProvidedAddedIdIsNotInPartOfTopBacklogException::class);
 
-        $this->artifact_201->shouldReceive('getTrackerId')->andReturn('999');
-        $this->artifact_202->shouldReceive('getTrackerId')->andReturn('101');
-
-        $this->expectException(ProvidedAddedIdIsNotInPartOfTopBacklogException::class);
-
-        $added_artifact_ids = [
-            201,
-            202,
-        ];
+        $added_artifact_ids = [201, 202];
 
         $this->checker->checkAddedIdsBelongToTheProjectTopBacklogTrackers(
             $this->project,
