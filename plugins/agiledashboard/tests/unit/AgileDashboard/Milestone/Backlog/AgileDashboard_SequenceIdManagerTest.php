@@ -24,131 +24,63 @@ namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItem;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollection;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use AgileDashboard_SequenceIdManager;
-use Mockery;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Planning_ArtifactMilestone;
+use Planning_VirtualTopMilestone;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-final class AgileDashboard_SequenceIdManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|null
-     */
-    private $virtual_top_milestone;
-    /**
-     * @var int
-     */
-    private $artifact_id_1;
-    /**
-     * @var int
-     */
-    private $artifact_id_2;
-    /**
-     * @var int
-     */
-    private $artifact_id_3;
-    /**
-     * @var int
-     */
-    private $artifact_id_6;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact_1;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact_2;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact_3;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact_4;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact_5;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact_6;
-    /**
-     * @var AgileDashboard_SequenceIdManager
-     */
-    private $sequence_id_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|null
-     */
-    private $milestone_1;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|null
-     */
-    private $milestone_2;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $backlog_factory;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_Backlog|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $backlog_1;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_Backlog|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $backlog_2;
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $backlog_item_collection_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|null
-     */
-    private $backlog_item_1;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|null
-     */
-    private $backlog_item_2;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|null
-     */
-    private $backlog_item_3;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogItemCollection
-     */
-    private $items_collection;
+    private Planning_VirtualTopMilestone&MockObject $virtual_top_milestone;
+    private int $artifact_id_1;
+    private int $artifact_id_2;
+    private int $artifact_id_3;
+    private int $artifact_id_6;
+    private Artifact $artifact_1;
+    private Artifact $artifact_2;
+    private Artifact $artifact_3;
+    private Artifact $artifact_4;
+    private Artifact $artifact_5;
+    private Artifact $artifact_6;
+    private AgileDashboard_SequenceIdManager $sequence_id_manager;
+    private Planning_ArtifactMilestone&MockObject $milestone_1;
+    private Planning_ArtifactMilestone&MockObject $milestone_2;
+    private AgileDashboard_Milestone_Backlog_BacklogFactory&MockObject $backlog_factory;
+    private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog_1;
+    private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog_2;
+    private PFUser $user;
+    private AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory&MockObject $backlog_item_collection_factory;
+    private AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item_1;
+    private AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item_2;
+    private AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item_3;
+    private AgileDashboard_Milestone_Backlog_BacklogItemCollection $items_collection;
 
     protected function setUp(): void
     {
         $milestone_1_id    = 132;
-        $this->milestone_1 = Mockery::spy(\Planning_ArtifactMilestone::class)
-            ->shouldReceive('getArtifactId')->andReturns($milestone_1_id)->getMock();
+        $this->milestone_1 = $this->createMock(Planning_ArtifactMilestone::class);
+        $this->milestone_1->method('getArtifactId')->willReturn($milestone_1_id);
 
         $milestone_2_id    = 853;
-        $this->milestone_2 = Mockery::spy(\Planning_ArtifactMilestone::class)
-            ->shouldReceive('getArtifactId')->andReturns($milestone_2_id)->getMock();
+        $this->milestone_2 = $this->createMock(Planning_ArtifactMilestone::class);
+        $this->milestone_2->method('getArtifactId')->willReturn($milestone_2_id);
 
-        $this->virtual_top_milestone = Mockery::spy(\Planning_VirtualTopMilestone::class)
-            ->shouldReceive('getArtifactId')->andReturns(null)->getMock();
+        $this->virtual_top_milestone = $this->createMock(Planning_VirtualTopMilestone::class);
+        $this->virtual_top_milestone->method('getArtifactId')->willReturn(null);
 
-        $this->backlog_1       = Mockery::spy(\AgileDashboard_Milestone_Backlog_Backlog::class);
-        $this->backlog_2       = Mockery::spy(\AgileDashboard_Milestone_Backlog_Backlog::class);
-        $this->backlog_factory = Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $this->backlog_1       = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
+        $this->backlog_2       = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
+        $this->backlog_factory = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
 
-        $this->backlog_item_collection_factory = Mockery::spy(
-            \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class
-        );
+        $this->backlog_item_collection_factory = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
 
         $this->sequence_id_manager = new AgileDashboard_SequenceIdManager(
             $this->backlog_factory,
@@ -159,44 +91,33 @@ final class AgileDashboard_SequenceIdManagerTest extends \Tuleap\Test\PHPUnit\Te
         $this->artifact_id_1 = 123;
         $this->artifact_id_2 = 456;
         $this->artifact_id_3 = 789;
-
-        $this->artifact_1 = Mockery::mock(Artifact::class);
-        $this->artifact_1->shouldReceive('getId')->andReturn($this->artifact_id_1);
-        $this->artifact_2 = Mockery::mock(Artifact::class);
-        $this->artifact_2->shouldReceive('getId')->andReturn($this->artifact_id_2);
-        $this->artifact_3 = Mockery::mock(Artifact::class);
-        $this->artifact_3->shouldReceive('getId')->andReturn($this->artifact_id_3);
-
         $artifact_id_4       = 254;
         $artifact_id_5       = 255;
         $this->artifact_id_6 = 256;
 
-        $this->artifact_4 = Mockery::mock(Artifact::class);
-        $this->artifact_4->shouldReceive('getId')->andReturn($artifact_id_4);
-        $this->artifact_5 = Mockery::mock(Artifact::class);
-        $this->artifact_5->shouldReceive('getId')->andReturn($artifact_id_5);
-        $this->artifact_6 = Mockery::mock(Artifact::class);
-        $this->artifact_6->shouldReceive('getId')->andReturn($this->artifact_id_6);
+        $this->artifact_1 = ArtifactTestBuilder::anArtifact($this->artifact_id_1)->build();
+        $this->artifact_2 = ArtifactTestBuilder::anArtifact($this->artifact_id_2)->build();
+        $this->artifact_3 = ArtifactTestBuilder::anArtifact($this->artifact_id_3)->build();
+        $this->artifact_4 = ArtifactTestBuilder::anArtifact($artifact_id_4)->build();
+        $this->artifact_5 = ArtifactTestBuilder::anArtifact($artifact_id_5)->build();
+        $this->artifact_6 = ArtifactTestBuilder::anArtifact($this->artifact_id_6)->build();
 
-        $this->backlog_item_1 = Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogItem::class)
-            ->shouldReceive('getArtifact')->andReturns($this->artifact_1)->getMock();
-        $this->backlog_item_2 = Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogItem::class)
-            ->shouldReceive('getArtifact')->andReturns($this->artifact_2)->getMock();
-        $this->backlog_item_3 = Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogItem::class)
-            ->shouldReceive('getArtifact')->andReturns($this->artifact_3)->getMock();
+        $this->backlog_item_1 = new AgileDashboard_Milestone_Backlog_BacklogItem($this->artifact_1, false);
+        $this->backlog_item_2 = new AgileDashboard_Milestone_Backlog_BacklogItem($this->artifact_2, false);
+        $this->backlog_item_3 = new AgileDashboard_Milestone_Backlog_BacklogItem($this->artifact_3, false);
 
         $this->items_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
     }
 
     public function testItReturnsNothingIfThereAreNoArtifactsInMilestonesBacklog(): void
     {
-        $this->backlog_1->shouldReceive('getArtifacts')->with($this->user)
-            ->andReturns(new AgileDashboard_Milestone_Backlog_DescendantItemsCollection())->once();
+        $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
+            ->willReturn(new AgileDashboard_Milestone_Backlog_DescendantItemsCollection());
 
-        $this->backlog_factory->shouldReceive('getBacklog')->with($this->milestone_1)
-            ->andReturns($this->backlog_1)->once();
+        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->milestone_1)
+            ->willReturn($this->backlog_1);
 
-        $this->assertNull($this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, 2));
+        self::assertNull($this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, 2));
     }
 
     public function testItReturnsNothingIfTheArtifactIsNotInTheMilestoneBacklog(): void
@@ -206,12 +127,12 @@ final class AgileDashboard_SequenceIdManagerTest extends \Tuleap\Test\PHPUnit\Te
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_3);
 
-        $this->backlog_factory->shouldReceive('getBacklog')->with($this->milestone_1)
-            ->andReturns($this->backlog_1)->once();
-        $this->backlog_1->shouldReceive('getArtifacts')->with($this->user)
-            ->andReturns($backlog_items)->once();
+        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->milestone_1)
+            ->willReturn($this->backlog_1);
+        $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
+            ->willReturn($backlog_items);
 
-        $this->assertNull($this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, 2));
+        self::assertNull($this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, 2));
     }
 
     public function testItReturns1IfTheArtifactIsInFirstPlace(): void
@@ -221,12 +142,12 @@ final class AgileDashboard_SequenceIdManagerTest extends \Tuleap\Test\PHPUnit\Te
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_3);
 
-        $this->backlog_factory->shouldReceive('getBacklog')->with($this->milestone_1)
-            ->andReturns($this->backlog_1)->once();
-        $this->backlog_1->shouldReceive('getArtifacts')->with($this->user)
-            ->andReturns($backlog_items)->once();
+        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->milestone_1)
+            ->willReturn($this->backlog_1);
+        $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
+            ->willReturn($backlog_items);
 
-        $this->assertEquals(
+        self::assertEquals(
             1,
             $this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, $this->artifact_id_1)
         );
@@ -239,12 +160,12 @@ final class AgileDashboard_SequenceIdManagerTest extends \Tuleap\Test\PHPUnit\Te
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_3);
 
-        $this->backlog_factory->shouldReceive('getBacklog')->with($this->milestone_1)
-            ->andReturns($this->backlog_1)->once();
-        $this->backlog_1->shouldReceive('getArtifacts')->with($this->user)
-            ->andReturns($backlog_items)->once();
+        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->milestone_1)
+            ->willReturn($this->backlog_1);
+        $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
+            ->willReturn($backlog_items);
 
-        $this->assertEquals(
+        self::assertEquals(
             2,
             $this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, $this->artifact_id_1)
         );
@@ -257,16 +178,16 @@ final class AgileDashboard_SequenceIdManagerTest extends \Tuleap\Test\PHPUnit\Te
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_3);
 
-        $this->backlog_factory->shouldReceive('getBacklog')->with($this->milestone_1)
-            ->andReturns($this->backlog_1)->once();
-        $this->backlog_1->shouldReceive('getArtifacts')->with($this->user)
-            ->andReturns($backlog_items)->once();
+        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->milestone_1)
+            ->willReturn($this->backlog_1);
+        $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
+            ->willReturn($backlog_items);
 
-        $this->assertEquals(
+        self::assertEquals(
             2,
             $this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, $this->artifact_id_1)
         );
-        $this->assertEquals(
+        self::assertEquals(
             2,
             $this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, $this->artifact_id_1)
         );
@@ -274,35 +195,35 @@ final class AgileDashboard_SequenceIdManagerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItCanDealWithMultipleCallWithDifferentMilestones(): void
     {
+        $this->backlog_factory->expects(self::exactly(2))->method('getBacklog')
+            ->withConsecutive([$this->milestone_1], [$this->milestone_2])
+            ->willReturnOnConsecutiveCalls($this->backlog_1, $this->backlog_2);
+
         $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_3);
 
-        $this->backlog_factory->shouldReceive('getBacklog')->with($this->milestone_1)
-            ->andReturns($this->backlog_1)->once();
-        $this->backlog_1->shouldReceive('getArtifacts')->with($this->user)
-            ->andReturns($backlog_items)->once();
+        $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
+            ->willReturn($backlog_items);
 
         $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $backlog_items->push($this->artifact_4);
         $backlog_items->push($this->artifact_5);
         $backlog_items->push($this->artifact_6);
 
-        $this->backlog_factory->shouldReceive('getBacklog')->with($this->milestone_2)
-            ->andReturns($this->backlog_2)->once();
-        $this->backlog_2->shouldReceive('getArtifacts')->with($this->user)
-            ->andReturns($backlog_items)->once();
+        $this->backlog_2->expects(self::once())->method('getArtifacts')->with($this->user)
+            ->willReturn($backlog_items);
 
-        $this->assertEquals(
+        self::assertEquals(
             2,
             $this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, $this->artifact_id_1)
         );
-        $this->assertEquals(
+        self::assertEquals(
             3,
             $this->sequence_id_manager->getSequenceId($this->user, $this->milestone_2, $this->artifact_id_6)
         );
-        $this->assertEquals(
+        self::assertEquals(
             1,
             $this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, $this->artifact_id_2)
         );
@@ -310,25 +231,25 @@ final class AgileDashboard_SequenceIdManagerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItCanDealWithTopBacklog(): void
     {
-        $this->virtual_top_milestone->shouldReceive('getArtifactId')->andReturn(2020);
+        $this->virtual_top_milestone->method('getArtifactId')->willReturn(2020);
         $this->items_collection->push($this->backlog_item_1);
         $this->items_collection->push($this->backlog_item_2);
         $this->items_collection->push($this->backlog_item_3);
 
-        $this->backlog_item_collection_factory->shouldReceive('getUnassignedOpenCollection')
-            ->andReturns($this->items_collection)->once();
-        $this->backlog_factory->shouldReceive('getSelfBacklog')
-            ->andReturns(Mockery::spy(AgileDashboard_Milestone_Backlog_Backlog::class))->once();
+        $this->backlog_item_collection_factory->expects(self::once())->method('getUnassignedOpenCollection')
+            ->willReturn($this->items_collection);
+        $this->backlog_factory->expects(self::once())->method('getSelfBacklog')
+            ->willReturn($this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class));
 
-        $this->assertEquals(
+        self::assertEquals(
             1,
             $this->sequence_id_manager->getSequenceId($this->user, $this->virtual_top_milestone, $this->artifact_id_1)
         );
-        $this->assertEquals(
+        self::assertEquals(
             3,
             $this->sequence_id_manager->getSequenceId($this->user, $this->virtual_top_milestone, $this->artifact_id_3)
         );
-        $this->assertEquals(
+        self::assertEquals(
             2,
             $this->sequence_id_manager->getSequenceId($this->user, $this->virtual_top_milestone, $this->artifact_id_2)
         );
