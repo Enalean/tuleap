@@ -24,33 +24,23 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
 use PFUser;
-use PlanningFactory;
 use Project;
-use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
 class TopBacklogElementsToAddChecker
 {
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    public function __construct(PlanningFactory $planning_factory, Tracker_ArtifactFactory $artifact_factory)
-    {
-        $this->planning_factory = $planning_factory;
-        $this->artifact_factory = $artifact_factory;
+    public function __construct(
+        private readonly RetrieveRootPlanning $planning_factory,
+        private readonly RetrieveArtifact $artifact_factory,
+    ) {
     }
 
     /**
      * @throws NoRootPlanningException
      * @throws ProvidedAddedIdIsNotInPartOfTopBacklogException
      */
-    public function checkAddedIdsBelongToTheProjectTopBacklogTrackers(Project $project, PFUser $user, array $added_artifact_ids)
+    public function checkAddedIdsBelongToTheProjectTopBacklogTrackers(Project $project, PFUser $user, array $added_artifact_ids): void
     {
         $root_planning = $this->planning_factory->getRootPlanning($user, (int) $project->getID());
         if (! $root_planning) {

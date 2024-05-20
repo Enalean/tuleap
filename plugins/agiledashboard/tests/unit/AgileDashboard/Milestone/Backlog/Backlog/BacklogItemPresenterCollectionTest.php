@@ -22,31 +22,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-final class BacklogItemPresenterCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
+namespace Tuleap\AgileDashboard\Milestone\Backlog\Backlog;
+
+use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
+use AgileDashboard_Milestone_Backlog_IBacklogItem;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class BacklogItemPresenterCollectionTest extends TestCase
+{
     public function testItReturnsFalseWhenCollectionIsEmpty(): void
     {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
-        $this->assertFalse($collection->containsId(5));
+        self::assertFalse($collection->containsId(5));
     }
 
     public function testItReturnsTrueWhenItemBelongsToCollection(): void
     {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
-        $item       = Mockery::mock(AgileDashboard_Milestone_Backlog_IBacklogItem::class);
-        $item->shouldReceive('id')->andReturn(5);
+        $item       = $this->createMock(AgileDashboard_Milestone_Backlog_IBacklogItem::class);
+        $item->method('id')->willReturn(5);
         $collection->push($item);
-        $this->assertTrue($collection->containsId(5));
+        self::assertTrue($collection->containsId(5));
     }
 
     public function testItReturnsFalseWhenItemDoesntBelongToCollection(): void
     {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
-        $item       = Mockery::mock(AgileDashboard_Milestone_Backlog_IBacklogItem::class);
-        $item->shouldReceive('id')->andReturn(5);
+        $item       = $this->createMock(AgileDashboard_Milestone_Backlog_IBacklogItem::class);
+        $item->method('id')->willReturn(5);
         $collection->push($item);
-        $this->assertFalse($collection->containsId(2));
+        self::assertFalse($collection->containsId(2));
     }
 }
