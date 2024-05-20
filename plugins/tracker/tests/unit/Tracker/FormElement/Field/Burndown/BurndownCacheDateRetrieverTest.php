@@ -47,30 +47,31 @@ class BurndownCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $period = $this->burndown_cache_retriever->getWorkedDaysToCacheForPeriod($octobre_month_period, $today_time);
 
         $expected_period = [
-            mktime(23, 59, 59, 10, 3, 2016),
-            mktime(23, 59, 59, 10, 4, 2016),
-            mktime(23, 59, 59, 10, 5, 2016),
-            mktime(23, 59, 59, 10, 6, 2016),
-            mktime(23, 59, 59, 10, 7, 2016),
-            mktime(23, 59, 59, 10, 10, 2016),
-            mktime(23, 59, 59, 10, 11, 2016),
-            mktime(23, 59, 59, 10, 12, 2016),
-            mktime(23, 59, 59, 10, 13, 2016),
-            mktime(23, 59, 59, 10, 14, 2016),
-            mktime(23, 59, 59, 10, 17, 2016),
-            mktime(23, 59, 59, 10, 18, 2016),
-            mktime(23, 59, 59, 10, 19, 2016),
-            mktime(23, 59, 59, 10, 20, 2016),
-            mktime(23, 59, 59, 10, 21, 2016),
-            mktime(23, 59, 59, 10, 24, 2016),
-            mktime(23, 59, 59, 10, 25, 2016),
-            mktime(23, 59, 59, 10, 26, 2016),
-            mktime(23, 59, 59, 10, 27, 2016),
-            mktime(23, 59, 59, 10, 28, 2016),
-            mktime(23, 59, 59, 10, 31, 2016),
+            mktime(23, 59, 00, 10, 03, 2016),
+            mktime(23, 59, 00, 10, 04, 2016),
+            mktime(23, 59, 00, 10, 05, 2016),
+            mktime(23, 59, 00, 10, 06, 2016),
+            mktime(23, 59, 00, 10, 07, 2016),
+            mktime(23, 59, 00, 10, 10, 2016),
+            mktime(23, 59, 00, 10, 11, 2016),
+            mktime(23, 59, 00, 10, 12, 2016),
+            mktime(23, 59, 00, 10, 13, 2016),
+            mktime(23, 59, 00, 10, 14, 2016),
+            mktime(23, 59, 00, 10, 17, 2016),
+            mktime(23, 59, 00, 10, 18, 2016),
+            mktime(23, 59, 00, 10, 19, 2016),
+            mktime(23, 59, 00, 10, 20, 2016),
+            mktime(23, 59, 00, 10, 21, 2016),
+            mktime(23, 59, 00, 10, 24, 2016),
+            mktime(23, 59, 00, 10, 25, 2016),
+            mktime(23, 59, 00, 10, 26, 2016),
+            mktime(23, 59, 00, 10, 27, 2016),
+            mktime(23, 59, 00, 10, 28, 2016),
+            mktime(23, 59, 00, 10, 31, 2016),
+            mktime(23, 59, 00, 11, 01, 2016),
         ];
 
-        $this->assertCount(21, $period);
+        $this->assertCount(22, $period);
         $this->assertEquals($expected_period, $period);
     }
 
@@ -86,16 +87,16 @@ class BurndownCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $period = $this->burndown_cache_retriever->getWorkedDaysToCacheForPeriod($octobre_month_period, $today_time);
 
         $expected_period = [
-            mktime(23, 59, 59, 10, 3, 2016),
-            mktime(23, 59, 59, 10, 4, 2016),
-            mktime(23, 59, 59, 10, 5, 2016),
-            mktime(23, 59, 59, 10, 6, 2016),
-            mktime(23, 59, 59, 10, 7, 2016),
-            mktime(23, 59, 59, 10, 10, 2016),
-            mktime(23, 59, 59, 10, 11, 2016),
-            mktime(23, 59, 59, 10, 12, 2016),
-            mktime(23, 59, 59, 10, 13, 2016),
-            mktime(23, 59, 59, 10, 14, 2016),
+            mktime(23, 59, 00, 10, 03, 2016),
+            mktime(23, 59, 00, 10, 04, 2016),
+            mktime(23, 59, 00, 10, 05, 2016),
+            mktime(23, 59, 00, 10, 06, 2016),
+            mktime(23, 59, 00, 10, 07, 2016),
+            mktime(23, 59, 00, 10, 10, 2016),
+            mktime(23, 59, 00, 10, 11, 2016),
+            mktime(23, 59, 00, 10, 12, 2016),
+            mktime(23, 59, 00, 10, 13, 2016),
+            mktime(23, 59, 00, 10, 14, 2016),
         ];
 
         $this->assertCount(10, $period);

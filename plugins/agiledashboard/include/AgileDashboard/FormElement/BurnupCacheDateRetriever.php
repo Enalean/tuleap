@@ -18,16 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\FormElement;
 
 use DateTime;
 use Tuleap\Date\DatePeriodWithOpenDays;
 
-class BurnupCacheDateRetriever
+final class BurnupCacheDateRetriever
 {
-    public function getYesterday()
+    public function getYesterday(): int
     {
-        $date = new DateTime('yesterday 23:59:59');
+        $date = new DateTime('yesterday 23:59:00');
 
         return $date->getTimestamp();
     }
@@ -35,45 +37,39 @@ class BurnupCacheDateRetriever
     /**
      * @return int[]
      */
-    public function getWorkedDaysToCacheForPeriod(DatePeriodWithOpenDays $burnup_period, DateTime $yesterday)
+    public function getWorkedDaysToCacheForPeriod(DatePeriodWithOpenDays $burnup_period, DateTime $end_time): array
     {
         $start_date = $this->getFirstDayToCache($burnup_period);
         $end_date   = $this->getLastDayToCache($burnup_period);
+        $end_time->setTime(23, 59, 00);
 
         $day = [];
 
-        while ($start_date < $end_date && $start_date < $yesterday) {
+        while ($start_date <= $end_date && $start_date <= $end_time) {
             if (DatePeriodWithOpenDays::isOpenDay($start_date->getTimestamp())) {
                 $day[] = $start_date->getTimestamp();
             }
 
-            $this->addOneDayToDateTime($start_date);
+            $start_date->modify('+1 day');
         }
 
         return $day;
     }
 
-    private function getFirstDayToCache(DatePeriodWithOpenDays $burnup_period)
+    private function getFirstDayToCache(DatePeriodWithOpenDays $burnup_period): DateTime
     {
         $start_date = new DateTime();
         $start_date->setTimestamp((int) $burnup_period->getStartDate());
-        $start_date->setTime(23, 59, 59);
+        $start_date->setTime(23, 59, 00);
 
         return $start_date;
     }
 
-    private function addOneDayToDateTime(DateTime $date)
-    {
-        $date->modify('+1 day');
-
-        return $date;
-    }
-
-    private function getLastDayToCache(DatePeriodWithOpenDays $burnup_period)
+    private function getLastDayToCache(DatePeriodWithOpenDays $burnup_period): DateTime
     {
         $end_date = new DateTime();
         $end_date->setTimestamp((int) $burnup_period->getEndDate());
-        $this->addOneDayToDateTime($end_date);
+        $end_date->modify('+1 day');
 
         return $end_date;
     }

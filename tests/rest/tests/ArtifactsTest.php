@@ -200,7 +200,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $start_date = new DateTime();
         $start_date->setTimezone(new DateTimeZone('UTC'));
         $start_date->setDate(2016, 11, 17);
-        $start_date->setTime(22, 59, 59);
+        $start_date->setTime(22, 59, 00);
 
         $expected_burndown_chart_with_date = [
             [
@@ -258,7 +258,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $start_date = new DateTime();
         $start_date->setTimezone(new DateTimeZone('UTC'));
         $start_date->setDate(2016, 11, 17);
-        $start_date->setTime(22, 59, 59);
+        $start_date->setTime(22, 59, 00);
 
         $expected_burndown_chart = [
             [
@@ -306,7 +306,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $start_date = new DateTime();
         $start_date->setTimezone(new DateTimeZone('UTC'));
         $start_date->setDate(2016, 11, 17);
-        $start_date->setTime(22, 59, 59);
+        $start_date->setTime(22, 59, 00);
 
         $expected_burndown_chart = [
             [

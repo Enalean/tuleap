@@ -75,7 +75,7 @@ class BurndownCacheGenerationChecker
         );
 
         $server_burndown_data = new Tracker_Chart_Data_Burndown($date_period_with_start_date_from_midnight, $capacity);
-        $worked_days          = $this->date_retriever->getWorkedDaysToCacheForPeriod($date_period_with_start_date_from_midnight, new DateTime('now'));
+        $worked_days          = $this->date_retriever->getWorkedDaysToCacheForPeriod($date_period_with_start_date_from_midnight, new DateTime());
 
         $this->remaining_effort_adder->addRemainingEffortDataForREST($server_burndown_data, $artifact, $user);
         if (
