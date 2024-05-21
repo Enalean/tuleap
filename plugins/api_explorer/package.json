@@ -16,5 +16,10 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch"
+  },
+  "pnpm": {
+    "overrides": {
+      "dompurify": "^3.1.4"
+    }
   }
 }
