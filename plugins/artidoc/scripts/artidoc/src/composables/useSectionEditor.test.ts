@@ -24,6 +24,7 @@ import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import * as tuleap_strict_inject from "@tuleap/vue-strict-inject";
 import { okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
+import * as on_before_unload from "@/helpers/on-before-unload";
 
 const default_section = ArtidocSectionFactory.create();
 
@@ -112,12 +113,12 @@ describe("useSectionEditor", () => {
         });
     });
 
-    describe("setEditMode", () => {
+    describe("enableEditor", () => {
         it("should enable edit mode", () => {
             const store = useSectionEditor(section);
             expect(store.getIsEditMode().value).toBe(false);
 
-            store.editor_actions.setEditMode(true);
+            store.editor_actions.enableEditor();
 
             expect(store.getIsEditMode().value).toBe(true);
         });
@@ -126,7 +127,7 @@ describe("useSectionEditor", () => {
     describe("cancelEditor", () => {
         it("should cancel edit mode", () => {
             const store = useSectionEditor(section);
-            store.editor_actions.setEditMode(true);
+            store.editor_actions.enableEditor();
             expect(store.getIsEditMode().value).toBe(true);
             store.inputCurrentDescription("the description changed");
             expect(store.getEditableDescription().value).toBe("the description changed");
@@ -167,6 +168,7 @@ describe("useSectionEditor", () => {
 
                 expect(mock_put_artifact_description).toHaveBeenCalledOnce();
             });
+
             it("should get updated section", async () => {
                 const store = useSectionEditor(section);
                 const mock_put_artifact_description = vi
@@ -221,5 +223,68 @@ describe("useSectionEditor", () => {
                 expect(store.is_section_editable.value).toBe(expected);
             },
         );
+    });
+
+    describe("page leave", () => {
+        it("should prevent page leave when section is in edit mode", () => {
+            const preventPageLeave = vi.spyOn(on_before_unload, "preventPageLeave");
+
+            const store = useSectionEditor(section);
+            store.clearGlobalNumberOfOpenEditorForTests();
+            expect(store.getIsEditMode().value).toBe(false);
+
+            store.editor_actions.enableEditor();
+
+            expect(preventPageLeave).toHaveBeenCalled();
+        });
+
+        it("should allow page leave when section is not anymore in edit mode", () => {
+            const allowPageLeave = vi.spyOn(on_before_unload, "allowPageLeave");
+
+            const store = useSectionEditor(section);
+            store.clearGlobalNumberOfOpenEditorForTests();
+            expect(store.getIsEditMode().value).toBe(false);
+
+            store.editor_actions.enableEditor();
+            store.editor_actions.cancelEditor();
+
+            expect(allowPageLeave).toHaveBeenCalled();
+        });
+
+        it("should still prevent page leave when at least one section is in edit mode", () => {
+            const allowPageLeave = vi.spyOn(on_before_unload, "allowPageLeave");
+
+            const first_store = useSectionEditor(
+                ArtidocSectionFactory.override({
+                    artifact: {
+                        ...default_section.artifact,
+                        id: 1,
+                    },
+                }),
+            );
+            first_store.clearGlobalNumberOfOpenEditorForTests();
+            const second_store = useSectionEditor(
+                ArtidocSectionFactory.override({
+                    artifact: {
+                        ...default_section.artifact,
+                        id: 2,
+                    },
+                }),
+            );
+
+            expect(first_store.getIsEditMode().value).toBe(false);
+            expect(second_store.getIsEditMode().value).toBe(false);
+
+            first_store.editor_actions.enableEditor();
+            second_store.editor_actions.enableEditor();
+            expect(first_store.getIsEditMode().value).toBe(true);
+            expect(second_store.getIsEditMode().value).toBe(true);
+
+            first_store.editor_actions.cancelEditor();
+            expect(first_store.getIsEditMode().value).toBe(false);
+            expect(second_store.getIsEditMode().value).toBe(true);
+
+            expect(allowPageLeave).not.toHaveBeenCalled();
+        });
     });
 });
