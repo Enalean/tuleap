@@ -57,6 +57,6 @@ pub struct InternalErrorJson {
 
 #[derive(Serialize, Deserialize)]
 pub struct UserErrorJson {
-    pub error: String,
+    pub user_error: String,
     pub stats: Stats,
 }

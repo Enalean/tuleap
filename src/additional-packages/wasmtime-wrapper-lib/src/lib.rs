@@ -122,7 +122,7 @@ fn internal_error(error_message: String) -> *mut c_char {
 
 fn user_error(error_message: String, statistics: Stats) -> *mut c_char {
     let err = UserErrorJson {
-        error: error_message,
+        user_error: error_message,
         stats: statistics,
     };
     let c_str = CString::new(serde_json::to_string(&err).unwrap()).unwrap();
