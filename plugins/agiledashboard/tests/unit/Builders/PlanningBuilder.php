@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Test\Builders;
 
+use Tracker;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -33,8 +34,8 @@ final class PlanningBuilder
     private string $plan_title    = 'Release Plan';
 
     /**
-     * @param Option<\Tracker> $milestone_tracker
-     * @param \Tracker[]       $backlog_trackers
+     * @param Option<Tracker> $milestone_tracker
+     * @param Tracker[] $backlog_trackers
      */
     private function __construct(
         private int $project_id,
@@ -57,7 +58,7 @@ final class PlanningBuilder
         return new self($project_id, Option::fromValue($release_tracker), [$user_stories_tracker]);
     }
 
-    public function withMilestoneTracker(\Tracker $tracker): self
+    public function withMilestoneTracker(Tracker $tracker): self
     {
         $this->milestone_tracker = Option::fromValue($tracker);
         return $this;
@@ -65,14 +66,14 @@ final class PlanningBuilder
 
     public function withBadConfigurationAndNoMilestoneTracker(): self
     {
-        $this->milestone_tracker = Option::nothing(\Tracker::class);
+        $this->milestone_tracker = Option::nothing(Tracker::class);
         return $this;
     }
 
     /**
      * @no-named-arguments
      */
-    public function withBacklogTrackers(\Tracker $first_backlog_tracker, \Tracker ...$other_backlog_trackers): self
+    public function withBacklogTrackers(Tracker $first_backlog_tracker, Tracker ...$other_backlog_trackers): self
     {
         $this->backlog_trackers = [$first_backlog_tracker, ...$other_backlog_trackers];
         return $this;
