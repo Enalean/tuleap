@@ -37,7 +37,6 @@ be added.
 * Martin Goyot
 * Joris Masson
 * Clarck Robinson
-* Yannis Rossetto
 * Nicolas Terray
 * Manuel Vacelet
 * Kevin Traini
@@ -54,6 +53,7 @@ be added.
 
 ### Previous contributors (no longer active committers)
 
+* Yannis Rossetto
 * Florian Caillol
 * Thomas Piras
 * Thomas Cottier
