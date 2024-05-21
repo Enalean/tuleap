@@ -34,11 +34,11 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class ProcessWASMResponse implements WASMResponseProcessor
+final readonly class ProcessWASMResponse implements WASMResponseProcessor
 {
     public function __construct(
-        public readonly LoggerInterface $logger,
-        private readonly TreeMapper $mapper,
+        private LoggerInterface $logger,
+        private TreeMapper $mapper,
     ) {
     }
 
@@ -63,7 +63,7 @@ final class ProcessWASMResponse implements WASMResponseProcessor
             /** @return Err<Fault> */
             function (Fault $wasm_fault): Err {
                 Fault::writeToLogger($wasm_fault, $this->logger, LogLevel::WARNING);
-                return Result::err(Fault::fromMessage('An error occurred while running artifact post action WASM function'));
+                return Result::err(Fault::fromMessage('An error occurred while running artifact post action WASM function: ' . $wasm_fault));
             }
         );
     }

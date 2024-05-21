@@ -210,7 +210,7 @@ mod tests {
 
         assert_eq!(
             "The module has exceeded the 80 ms of allowed computation time",
-            json_out.error
+            json_out.user_error
         );
 
         assert!(json_out.stats.exec_time_as_seconds > 0.080000);
@@ -242,7 +242,7 @@ mod tests {
 
         assert_eq!(
             "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the 4194304 bytes of memory that it is allowed to use",
-            json_out.error
+            json_out.user_error
         );
 
         assert!(json_out.stats.exec_time_as_seconds > 0.0);
