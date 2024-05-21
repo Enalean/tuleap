@@ -18,7 +18,7 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import { getAllJSON, putJSON, uri } from "@tuleap/fetch-result";
+import { getAllJSON, put, uri, getJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
@@ -34,16 +34,24 @@ export function putArtifactDescription(
     artifact_id: number,
     new_description: string,
     description_id: number,
-): ResultAsync<undefined, Fault> {
-    return putJSON(uri`/api/artifacts/${artifact_id}`, {
-        values: [
-            {
-                field_id: description_id,
-                value: {
-                    content: new_description,
-                    format: "html",
+): ResultAsync<Response, Fault> {
+    return put(
+        uri`/api/artifacts/${artifact_id}`,
+        {},
+        {
+            values: [
+                {
+                    field_id: description_id,
+                    value: {
+                        content: new_description,
+                        format: "html",
+                    },
                 },
-            },
-        ],
-    });
+            ],
+        },
+    );
+}
+
+export function getSection(section_id: string): ResultAsync<ArtidocSection, Fault> {
+    return getJSON(uri`/api/artidoc_sections/${section_id}`);
 }
