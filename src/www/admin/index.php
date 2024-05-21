@@ -101,18 +101,12 @@ if (ForgeConfig::areRestrictedUsersAllowed() && $restricted_users > 0) {
     $statistics_users_graph[] = ['key' => 'restricted', 'label' => _('restricted'), 'count' => $restricted_users];
 }
 
-function stats_getactiveusers($since)
+function stats_getactiveusers(DateTimeImmutable $since): int
 {
-    $time_totest = time() - $since;
-
-    $res_count = db_query("SELECT count(*) AS count FROM user_access WHERE last_access_date> $time_totest ");
-
-    if (db_numrows($res_count) > 0) {
-        $row_count = db_fetch_array($res_count);
-        return $row_count['count'];
-    } else {
-        return 'error';
-    }
+    return \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB()->single(
+        'SELECT COUNT(user_id) FROM user_access WHERE last_access_date > ?',
+        [$since->getTimestamp()]
+    );
 }
 
 $additional_statistics = [];
@@ -124,17 +118,18 @@ EventManager::instance()->processEvent(
     ]
 );
 
-$nb_seconds_in_a_day        = 84600;
-$nb_seconds_in_a_week       = 592200;
-$nb_seconds_in_a_month      = 2678400;
-$nb_seconds_in_three_months = 8031600;
+$now           = new DateTimeImmutable();
+$last_24_hours = $now->sub(new DateInterval('PT24H'));
+$last_week     = $now->sub(new DateInterval('P1W'));
+$last_month    = $now->sub(new DateInterval('P1M'));
+$last_3_months = $now->sub(new DateInterval('P3M'));
 
 $user_statistics_presenter = new UsersStatisticsPresenter(
     $statistics_users_graph,
-    stats_getactiveusers($nb_seconds_in_a_day),
-    stats_getactiveusers($nb_seconds_in_a_week),
-    stats_getactiveusers($nb_seconds_in_a_month),
-    stats_getactiveusers($nb_seconds_in_three_months),
+    stats_getactiveusers($last_24_hours),
+    stats_getactiveusers($last_week),
+    stats_getactiveusers($last_month),
+    stats_getactiveusers($last_3_months),
     $additional_statistics
 );
 $renderer                  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/admin/homepage/');
