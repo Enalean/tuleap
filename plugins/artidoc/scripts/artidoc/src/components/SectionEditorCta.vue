@@ -21,7 +21,7 @@
     <span class="section-editor-cta" v-if="is_section_editable">
         <button
             v-if="!is_edit_mode"
-            v-on:click="setEditMode(true)"
+            v-on:click="enableEditor()"
             type="button"
             class="tlp-button-primary tlp-button-mini"
         >
@@ -57,7 +57,7 @@ const props = defineProps<{
     is_edit_mode: boolean;
     editor_actions: use_section_editor_actions_type;
 }>();
-const { cancelEditor, setEditMode, saveEditor } = props.editor_actions;
+const { cancelEditor, enableEditor, saveEditor } = props.editor_actions;
 </script>
 <style lang="scss" scoped>
 .cancel-button {
