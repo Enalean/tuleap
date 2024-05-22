@@ -28,29 +28,16 @@ use Tuleap\Cryptography\ConcealedString;
 /**
  * @psalm-immutable
  */
-class JiraCredentials
+final readonly class JiraCredentials
 {
-    /**
-     * @var ConcealedString
-     */
-    private $jira_token;
-    /**
-     * @var string
-     */
-    private $jira_username;
-    /**
-     * @var string
-     */
-    private $jira_url;
+    private string $jira_url;
 
     public function __construct(
         string $jira_url,
-        string $jira_username,
-        ConcealedString $jira_token,
+        private string $jira_username,
+        private ConcealedString $jira_token,
     ) {
-        $this->jira_token    = $jira_token;
-        $this->jira_username = $jira_username;
-        $this->jira_url      = $jira_url;
+        $this->jira_url = rtrim($jira_url, '/');
     }
 
     public function getJiraToken(): ConcealedString
