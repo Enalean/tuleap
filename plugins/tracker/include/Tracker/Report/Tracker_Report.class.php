@@ -545,16 +545,16 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         if ($this->is_in_expert_mode) {
             $div_class = 'tracker-report-query-undisplayed';
         }
-        $html          = '<div id="tracker-report-normal-query" class="' . $div_class . '" data-report-id="' . $this->id . '">';
-        $form_post_url = '/plugins/tracker/?';
+        $html         = '<div id="tracker-report-normal-query" class="' . $div_class . '" data-report-id="' . $this->id . '">';
+        $query_params = [];
         foreach (ServerRequest::fromGlobals()->getQueryParams() as $name => $value) {
             if ($name === 'offset') {
                 continue;
             }
-            $form_post_url .= urlencode($name) . '=' . urlencode($value) . '&';
+            $query_params[$name] = $value;
         }
         $html_purifier = Codendi_HTMLPurifier::instance();
-        $form_post_url = $html_purifier->purify(trim($form_post_url, '&'));
+        $form_post_url = $html_purifier->purify('/plugins/tracker/?' . http_build_query($query_params));
         $html         .= '<form action="' . $form_post_url . '" method="POST" id="tracker_report_query_form" class="tracker-report-query-form">';
         $html         .= '<input type="hidden" name="report" value="' . $this->id . '" />';
         $id            = 'tracker_report_query_' . $this->id;
