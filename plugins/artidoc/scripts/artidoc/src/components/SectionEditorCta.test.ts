@@ -25,7 +25,7 @@ import { createGettext } from "vue3-gettext";
 const default_props = {
     is_edit_mode: false,
     editor_actions: {
-        enableEditor: vi.fn(),
+        setEditMode: vi.fn(),
         saveEditor: vi.fn(),
         cancelEditor: vi.fn(),
     },
