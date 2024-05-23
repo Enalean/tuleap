@@ -85,7 +85,7 @@ pipeline {
                 stage('Translations: check .tab files') {
                     agent {
                         docker {
-                            image 'perl:5.34-slim'
+                            image 'ghcr.io/enalean/tuleap-test-phpunit:el9-php82'
                             reuseNode true
                             args '--network none'
                         }
