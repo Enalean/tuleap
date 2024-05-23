@@ -30,8 +30,8 @@ function getTemplate(): TemplateResult {
 
 <div class="tlp-property">
     <label class="tlp-label">Paragraph value</label>
-    <p>Far fa-regular away, behind the word mountains,
-        fa-regular from the <a href="https://example.com">countries Vokalia and Consonantia</a>,
+    <p>Far, far away, behind the word mountains,
+        far from the <a href="https://example.com">countries Vokalia and Consonantia</a>,
         there live the blind texts. Separated they live
         in Bookmarksgrove right at the coast of the
         Semantics, a large language ocean. A small river
@@ -43,7 +43,7 @@ function getTemplate(): TemplateResult {
         blind texts it is an almost unorthographic life
         One day however a small line of blind text by
         the name of Lorem Ipsum decided to leave for the
-        fa-regular World of Grammar. The Big Oxmox advised her
+        far World of Grammar. The Big Oxmox advised her
         not to do so, because there were thousands of
         bad Commas, …
     </p>
@@ -51,8 +51,8 @@ function getTemplate(): TemplateResult {
 
 <div class="tlp-property">
     <label class="tlp-label">Blockquote value</label>
-    <blockquote>Far fa-regular away, behind the word mountains,
-        fa-regular from the countries Vokalia and Consonantia,
+    <blockquote>Far, far away, behind the word mountains,
+        far from the countries Vokalia and Consonantia,
         there live the blind texts. Separated they live
         in Bookmarksgrove right at the coast of the
         Semantics, a large language ocean.
