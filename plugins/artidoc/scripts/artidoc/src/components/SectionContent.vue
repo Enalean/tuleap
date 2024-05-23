@@ -18,7 +18,14 @@
   -
   -->
 <template>
-    <article class="document-section">
+    <article
+        class="document-section"
+        v-bind:class="{
+            'document-section-is-being-saved': is_being_saved,
+            'document-section-is-just-saved': is_just_saved,
+            'document-section-is-in-error': is_in_error,
+        }"
+    >
         <section-title-with-artifact-id
             class="section-header"
             v-if="!is_sections_loading"
@@ -56,16 +63,22 @@ import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArt
 const props = defineProps<{ section: ArtidocSection }>();
 
 const {
-    getIsEditMode,
+    isSectionInEditMode,
     getEditableDescription,
     getReadonlyDescription,
+    isBeeingSaved,
+    isJustSaved,
+    isInError,
     editor_actions,
     inputCurrentDescription,
     is_section_editable,
 } = useSectionEditor(props.section);
 
 const { is_sections_loading } = useInjectSectionsStore();
-const is_edit_mode = getIsEditMode();
+const is_edit_mode = isSectionInEditMode();
+const is_being_saved = isBeeingSaved();
+const is_just_saved = isJustSaved();
+const is_in_error = isInError();
 const editable_description = getEditableDescription();
 const readonly_description = getReadonlyDescription();
 </script>

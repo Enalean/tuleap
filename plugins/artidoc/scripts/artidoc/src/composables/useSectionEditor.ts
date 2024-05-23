@@ -36,7 +36,10 @@ export type use_section_editor_actions_type = {
 };
 export type use_section_editor_type = {
     is_section_editable: ComputedRef<boolean>;
-    getIsEditMode: () => Ref<boolean>;
+    isSectionInEditMode: () => Ref<boolean>;
+    isBeeingSaved: () => Ref<boolean>;
+    isJustSaved: () => Ref<boolean>;
+    isInError: () => Ref<boolean>;
     editor_actions: use_section_editor_actions_type;
     inputCurrentDescription: (new_value: string) => void;
     getEditableDescription: () => Ref<string>;
@@ -64,6 +67,10 @@ function useSectionEditor(section: ArtidocSection): use_section_editor_type {
         const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
         return section.can_user_edit_section && can_user_edit_document;
     });
+    const is_being_saved = ref(false);
+    const is_just_saved = ref(false);
+    const is_in_error = ref(false);
+
     const setEditMode = (new_value: boolean): void => {
         is_edit_mode.value = new_value;
 
@@ -81,8 +88,9 @@ function useSectionEditor(section: ArtidocSection): use_section_editor_type {
     };
 
     const saveEditor = (): void => {
+        is_in_error.value = false;
         if (editable_description.value !== original_description.value) {
-            original_description.value = editable_description.value;
+            is_being_saved.value = true;
             putArtifactDescription(
                 current_section.value.artifact.id,
                 editable_description.value,
@@ -93,13 +101,26 @@ function useSectionEditor(section: ArtidocSection): use_section_editor_type {
                     (artidoc_section: ArtidocSection) => {
                         current_section.value = artidoc_section;
                         setEditMode(false);
+                        is_being_saved.value = false;
+                        addTemporaryJustSavedFlag();
                     },
-                    () => {},
+                    () => {
+                        is_in_error.value = true;
+                        is_being_saved.value = false;
+                    },
                 );
         } else {
             setEditMode(false);
+            addTemporaryJustSavedFlag();
         }
     };
+
+    function addTemporaryJustSavedFlag(): void {
+        is_just_saved.value = true;
+        setTimeout(() => {
+            is_just_saved.value = false;
+        }, 1000);
+    }
 
     const enableEditor = (): void => {
         setEditMode(true);
@@ -114,9 +135,13 @@ function useSectionEditor(section: ArtidocSection): use_section_editor_type {
         editable_description.value = new_value;
     };
 
-    const getIsEditMode = (): Ref<boolean> => {
+    const isSectionInEditMode = (): Ref<boolean> => {
         return is_edit_mode;
     };
+
+    const isBeeingSaved = (): Ref<boolean> => is_being_saved;
+    const isJustSaved = (): Ref<boolean> => is_just_saved;
+    const isInError = (): Ref<boolean> => is_in_error;
 
     const getEditableDescription = (): Ref<string> => {
         return editable_description;
@@ -136,7 +161,10 @@ function useSectionEditor(section: ArtidocSection): use_section_editor_type {
         is_section_editable,
         getEditableDescription,
         getReadonlyDescription,
-        getIsEditMode,
+        isSectionInEditMode,
+        isBeeingSaved,
+        isJustSaved,
+        isInError,
         editor_actions,
         inputCurrentDescription,
         clearGlobalNumberOfOpenEditorForTests: (): void => {
