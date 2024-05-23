@@ -88,6 +88,9 @@ class GitExec extends Git_Exec
         $retVal = 1;
         $git    = self::getGitCommand();
 
+        // Make sure current user can clone the local repository
+        $this->gitCmd("config --global safe.directory '*'");
+
         // --work-tree --git-dir does not play well with git clone repo path
         exec("$git $cmd 2>&1", $output, $retVal);
 
