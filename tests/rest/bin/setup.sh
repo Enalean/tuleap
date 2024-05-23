@@ -141,5 +141,6 @@ setup_database
 tuleap_db_config
 sudo -u codendiadm PHP="$PHP_CLI" /usr/bin/tuleap worker:supervisor --quiet start &
 seed_data
+ulimit -n 409600
 $PHP_FPM --daemonize
 nginx
