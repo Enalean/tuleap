@@ -34,8 +34,9 @@ final class TrackersPermissionsDaoOnArtifactsTest extends TestIntegrationTestCas
     private TrackersPermissionsDao $dao;
     private int $artifact_open;
     private int $artifact_open_member;
-    private int $artifact_open_admin;
-    private int $artifact_close;
+    private int $artifact_closed;
+    private int $artifact_open_2;
+    private int $artifact_closed_2;
     /**
      * @var list<int>
      */
@@ -50,33 +51,36 @@ final class TrackersPermissionsDaoOnArtifactsTest extends TestIntegrationTestCas
 
         $project = $core_builder->buildProject();
 
-        $tracker_open_id       = $tracker_builder->buildTracker((int) $project->getID(), 'Open Tracker')->getId();
-        $tracker_restricted_id = $tracker_builder->buildTracker((int) $project->getID(), 'Restricted Tracker')->getId();
+        $story_tracker = $tracker_builder->buildTracker((int) $project->getID(), 'Story Tracker')->getId();
+        $task_tracker  = $tracker_builder->buildTracker((int) $project->getID(), 'Task Tracker')->getId();
         $tracker_builder->setViewPermissionOnTracker(
-            $tracker_open_id,
+            $story_tracker,
             Tracker::PERMISSION_FULL,
             ProjectUGroup::PROJECT_MEMBERS
         );
         $tracker_builder->setViewPermissionOnTracker(
-            $tracker_restricted_id,
+            $task_tracker,
             Tracker::PERMISSION_FULL,
-            ProjectUGroup::PROJECT_ADMIN
+            ProjectUGroup::PROJECT_MEMBERS
         );
 
-        $this->artifact_open        = $tracker_builder->buildArtifact($tracker_open_id);
-        $this->artifact_open_member = $tracker_builder->buildArtifact($tracker_open_id);
-        $this->artifact_open_admin  = $tracker_builder->buildArtifact($tracker_open_id);
-        $this->artifact_close       = $tracker_builder->buildArtifact($tracker_restricted_id);
-        $artifact_very_closed       = $tracker_builder->buildArtifact($tracker_restricted_id);
+        $this->artifact_open        = $tracker_builder->buildArtifact($story_tracker);
+        $this->artifact_open_member = $tracker_builder->buildArtifact($story_tracker);
+        $this->artifact_closed      = $tracker_builder->buildArtifact($story_tracker);
+        $this->artifact_open_2      = $tracker_builder->buildArtifact($task_tracker);
+        $this->artifact_closed_2    = $tracker_builder->buildArtifact($task_tracker);
+        $artifact_very_closed       = $tracker_builder->buildArtifact($task_tracker);
         $tracker_builder->setViewPermissionOnArtifact($this->artifact_open_member, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnArtifact($this->artifact_open_admin, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->setViewPermissionOnArtifact($this->artifact_closed, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->setViewPermissionOnArtifact($this->artifact_closed_2, ProjectUGroup::PROJECT_ADMIN);
         $tracker_builder->setViewPermissionOnArtifact($artifact_very_closed, ProjectUGroup::WIKI_ADMIN);
 
         $this->artifacts = [
             $this->artifact_open,
             $this->artifact_open_member,
-            $this->artifact_open_admin,
-            $this->artifact_close,
+            $this->artifact_closed,
+            $this->artifact_open_2,
+            $this->artifact_closed_2,
             $artifact_very_closed,
         ];
     }
@@ -84,17 +88,25 @@ final class TrackersPermissionsDaoOnArtifactsTest extends TestIntegrationTestCas
     public function testProjectMemberPermission(): void
     {
         $result = $this->dao->searchUserGroupsViewPermissionOnArtifacts([ProjectUGroup::PROJECT_MEMBERS], $this->artifacts);
-        self::assertEqualsCanonicalizing([$this->artifact_open, $this->artifact_open_member], $result);
+        self::assertEqualsCanonicalizing([
+            $this->artifact_open,
+            $this->artifact_open_member,
+            $this->artifact_open_2,
+        ], $result);
     }
 
     public function testProjectAdminPermission(): void
     {
-        $result = $this->dao->searchUserGroupsViewPermissionOnArtifacts([ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN], $this->artifacts);
+        $result = $this->dao->searchUserGroupsViewPermissionOnArtifacts(
+            [ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN],
+            $this->artifacts
+        );
         self::assertEqualsCanonicalizing([
             $this->artifact_open,
             $this->artifact_open_member,
-            $this->artifact_open_admin,
-            $this->artifact_close,
+            $this->artifact_closed,
+            $this->artifact_open_2,
+            $this->artifact_closed_2,
         ], $result);
     }
 }
