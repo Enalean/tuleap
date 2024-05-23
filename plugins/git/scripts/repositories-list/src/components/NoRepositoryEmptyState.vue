@@ -20,7 +20,9 @@
 <template>
     <section class="empty-state-page" v-if="show_empty_state()">
         <div class="empty-state-text">
-            <h1 class="empty-state-title" v-translate>There are no repositories in this project</h1>
+            <h1 class="empty-state-title">
+                {{ $gettext("There are no repositories in this project") }}
+            </h1>
             <div v-if="is_admin()" class="empty-state-action">
                 <dropdown-action-button
                     v-if="areExternalUsedServices"
@@ -34,7 +36,7 @@
                     data-test="create-repository-button"
                 >
                     <i class="fa fa-plus tlp-button-icon"></i>
-                    <translate>Add project repository</translate>
+                    {{ $gettext("Add project repository") }}
                 </button>
             </div>
         </div>

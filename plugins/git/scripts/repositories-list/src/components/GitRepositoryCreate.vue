@@ -28,7 +28,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
-                <translate>Add project repository</translate>
+                {{ $gettext("Add project repository") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -50,7 +50,7 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="repository_name">
-                    <translate>Repository name</translate>
+                    {{ $gettext("Repository name") }}
                     <i class="fa fa-asterisk"></i>
                 </label>
                 <input
@@ -67,10 +67,11 @@
                 />
                 <p class="tlp-text-info">
                     <i class="fa fa-info-circle"></i>
-                    <translate>
-                        Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the
-                        beginning or the end, and repositories names must not finish with ".git".
-                    </translate>
+                    {{
+                        $gettext(
+                            'Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, and repositories names must not finish with ".git".',
+                        )
+                    }}
                 </p>
             </div>
         </div>
@@ -80,7 +81,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
             >
-                <translate>Cancel</translate>
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
@@ -92,7 +93,7 @@
                     class="fa fa-plus tlp-button-icon"
                     v-bind:class="{ 'fa-spin fa-spinner': is_loading }"
                 ></i>
-                <translate>Add project repository</translate>
+                {{ $gettext("Add project repository") }}
             </button>
         </div>
     </form>

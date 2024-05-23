@@ -43,7 +43,7 @@
                 data-test="edit-access-token-gitlab-repository"
             >
                 <i class="fas fa-fw fa-key tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
-                <translate>Edit access token</translate>
+                {{ $gettext("Edit access token") }}
             </div>
             <div
                 class="tlp-dropdown-menu-item"
@@ -55,7 +55,7 @@
                     class="fas fa-tlp-webhooks fa-fw tlp-dropdown-menu-item-icon"
                     aria-hidden="true"
                 ></i>
-                <translate>Regenerate the GitLab webhook</translate>
+                {{ $gettext("Regenerate the GitLab webhook") }}
             </div>
             <div
                 class="tlp-dropdown-menu-item"
@@ -67,14 +67,14 @@
                     class="far fa-fw fa-times-circle tlp-dropdown-menu-item-icon"
                     aria-hidden="true"
                 ></i>
-                <translate>Allow artifact closure</translate>
+                {{ $gettext("Allow artifact closure") }}
             </div>
             <div class="tlp-dropdown-menu-item" role="menuitem" ref="create_branch_prefix">
                 <i
                     class="fas fa-code-branch fa-fw tlp-dropdown-menu-item-icon"
                     aria-hidden="true"
                 ></i>
-                <translate>Create branch prefix</translate>
+                {{ $gettext("Create branch prefix") }}
             </div>
             <div
                 class="tlp-dropdown-menu-item unlink-repository-gitlab"
@@ -86,7 +86,7 @@
                     class="far fa-fw fa-trash-alt tlp-dropdown-menu-item-icon"
                     v-bind:title="$gettext('Unlink the repository')"
                 ></i>
-                <translate>Unlink the repository</translate>
+                {{ $gettext("Unlink the repository") }}
             </div>
         </div>
     </div>

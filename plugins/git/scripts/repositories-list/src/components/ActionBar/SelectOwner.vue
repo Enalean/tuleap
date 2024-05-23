@@ -20,7 +20,7 @@
 <template>
     <div v-if="are_there_personal_repositories()" class="git-repository-actions-select-owners">
         <label class="tlp-label" for="git-repository-select-owner">
-            <translate>Forks:</translate>
+            {{ $gettext("Forks:") }}
         </label>
         <select
             id="git-repository-select-owner"
@@ -28,7 +28,7 @@
             v-model="owner_id"
             v-bind:disabled="isLoading"
         >
-            <option v-bind:value="project_key()" v-translate>Project repositories</option>
+            <option v-bind:value="project_key()">{{ $gettext("Project repositories") }}</option>
             <optgroup v-bind:label="$gettext('Users forks')">
                 <option
                     v-for="owner in sorted_repositories_owners()"

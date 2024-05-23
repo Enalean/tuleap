@@ -27,7 +27,7 @@
             role="menuitem"
         >
             <i class="fab fa-gitlab tlp-button-icon git-gitlab-icon" aria-hidden="true"></i>
-            <translate class="git-add-action-button">Add GitLab repository</translate>
+            <span class="git-add-action-button">{{ $gettext("Add GitLab repository") }}</span>
         </button>
     </div>
 </template>

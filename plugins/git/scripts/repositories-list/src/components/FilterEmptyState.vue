@@ -19,11 +19,11 @@
 
 <template>
     <section class="empty-state-page" v-if="show_filter_empty_state()">
-        <h1 class="empty-state-title" data-test="empty-state" v-translate>
-            No matching repository
+        <h1 class="empty-state-title" data-test="empty-state">
+            {{ $gettext("No matching repository") }}
         </h1>
-        <p class="empty-state-text" v-translate>
-            No repository name matching your query has been found.
+        <p class="empty-state-text">
+            {{ $gettext("No repository name matching your query has been found.") }}
         </p>
     </section>
 </template>

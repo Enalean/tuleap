@@ -26,7 +26,7 @@
                     class="far fa-fw fa-times-circle tlp-dropdown-menu-item-icon"
                     aria-hidden="true"
                 ></i>
-                <translate>Artifact closure</translate>
+                {{ $gettext("Artifact closure") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -50,13 +50,14 @@
             <div class="tlp-form-element">
                 <label class="tlp-label tlp-checkbox">
                     <input type="checkbox" v-model="allow_artifact_closure" />
-                    <translate>Allow artifact closure</translate>
+                    {{ $gettext("Allow artifact closure") }}
                 </label>
                 <p class="tlp-text-info">
-                    <translate>
-                        If selected, artifacts of this project can be closed with GitLab commit
-                        messages from the selected repository.
-                    </translate>
+                    {{
+                        $gettext(
+                            "If selected, artifacts of this project can be closed with GitLab commit messages from the selected repository.",
+                        )
+                    }}
                 </p>
             </div>
         </div>
@@ -80,7 +81,7 @@
                     class="fas fa-spin fa-circle-notch tlp-button-icon"
                     data-test="update-artifact-closure-modal-icon-spin"
                 ></i>
-                <translate>Save</translate>
+                {{ $gettext("Save") }}
             </button>
         </div>
     </div>

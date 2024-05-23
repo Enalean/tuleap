@@ -22,7 +22,7 @@
     <div>
         <git-breadcrumbs />
         <div class="git-repository-list-header">
-            <h1><translate>Git repositories</translate></h1>
+            <h1>{{ $gettext("Git repositories") }}</h1>
             <jenkins-servers v-if="has_jenkins_server()" v-bind:servers="jenkins_servers()" />
         </div>
         <action-bar />

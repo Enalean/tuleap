@@ -36,7 +36,7 @@
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="gitlab_server">
-                    <translate>GitLab server URL</translate>
+                    {{ $gettext("GitLab server URL") }}
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
@@ -54,7 +54,7 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="gitlab_project_token">
-                    <translate>GitLab access token (personal or project)</translate>
+                    {{ $gettext("GitLab access token (personal or project)") }}
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
@@ -68,13 +68,14 @@
                     autocomplete="off"
                 />
                 <p class="tlp-text-info gitlab-test-info-form-token-modal">
-                    <translate>
-                        The access token will be used to fetch repositories, configure project hooks
-                        and automatically write comments on GitLab commit and merge requests.
-                    </translate>
+                    {{
+                        $gettext(
+                            "The access token will be used to fetch repositories, configure project hooks and automatically write comments on GitLab commit and merge requests.",
+                        )
+                    }}"
                 </p>
                 <p class="tlp-text-info">
-                    <translate>GitLab access token scope must contain at least: api.</translate>
+                    {{ $gettext("GitLab access token scope must contain at least: api.") }}
                 </p>
             </div>
         </div>
@@ -85,7 +86,7 @@
                 data-dismiss="modal"
                 v-on:click="$emit('on-close-modal')"
             >
-                <translate>Cancel</translate>
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
@@ -101,7 +102,7 @@
                     }"
                     data-test="icon-spin"
                 ></i>
-                <translate>Fetch GitLab repositories</translate>
+                {{ $gettext("Fetch GitLab repositories") }}
             </button>
         </div>
     </form>

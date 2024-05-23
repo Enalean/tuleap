@@ -29,7 +29,7 @@
                 data-test="create-repository-button"
             >
                 <i class="fa fa-plus tlp-button-icon"></i>
-                <translate>Create a repository</translate>
+                {{ $gettext("Create a repository") }}
             </button>
         </div>
 
