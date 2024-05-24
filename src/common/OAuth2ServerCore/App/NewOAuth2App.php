@@ -144,7 +144,7 @@ final class NewOAuth2App
         // See https://tools.ietf.org/html/rfc6749#section-3.1.2
         $redirect_endpoint_validator = new \Valid_String();
         $redirect_endpoint_validator->required();
-        $redirect_endpoint_validator->addRule(new \Rule_Regexp('/^https:\/\/[^#]*$/i'));
+        $redirect_endpoint_validator->addRule(new \Rule_Regexp('/(?:^https:\/\/[^#]*$)|(?:^http:\/\/localhost(?::\d+)?(?:\/[^#]*)?$)/i'));
 
         return $string_validator->validate($name) && $redirect_endpoint_validator->validate($redirect_endpoint);
     }

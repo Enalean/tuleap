@@ -49,6 +49,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
             'Throws when App name is empty'               => ['', 'https://example.com/redirect'],
             'Throws when Redirect URI is empty'           => ['Jenkins', ''],
             'Throws when Redirect URI is not HTTPS'       => ['Jenkins', 'http://insecure.example.com'],
+            'Throws when Redirect URI is not localhost'   => ['Jenkins', 'http://localhost.example.com'],
             'Throws when Redirect URI contains an anchor' => ['Jenkins', 'https://example.com/redirect#fragment'],
         ];
     }
@@ -100,8 +101,10 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     public static function dataProviderValidData(): array
     {
         return [
-            'Valid data'                       => ['https://example.com/redirect', false],
-            'Valid with query in redirect URI' => ['https://example.com/redirect?key=value', true],
+            'Valid data'                         => ['https://example.com/redirect', false],
+            'Valid data with localhost'          => ['http://localhost', false],
+            'Valid data with localhost and port' => ['http://localhost:40000/redirect', false],
+            'Valid with query in redirect URI'   => ['https://example.com/redirect?key=value', true],
         ];
     }
 
