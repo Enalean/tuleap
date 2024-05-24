@@ -22,134 +22,83 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-require_once __DIR__ . '/../../../../bootstrap.php';
+namespace Tuleap\AgileDashboard\Milestone\Pane\Planning;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tuleap\Test\PHPUnit\TestCase
+use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
+use PHPUnit\Framework\MockObject\MockObject;
+use Planning;
+use Planning_ArtifactMilestone;
+use Planning_Milestone;
+use PlanningFactory;
+use Tracker;
+use Tracker_HierarchyFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class SubmilestoneFinderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Project
-     */
-    private $project;
-
-    /**
-     * @var AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
-     */
-    private $finder;
-
-    /**
-     * @var Tracker
-     */
-    private $user_story_tracker;
-
-    /**
-     * @var Tracker
-     */
-    private $release_tracker;
-
-    /**
-     * @var Tracker
-     */
-    private $sprint_tracker;
-
-    /**
-     * @var Tracker
-     */
-    private $epic_tracker;
-
-    /**
-     * @var Tracker
-     */
-    private $theme_tracker;
-
-    /**
-     * @var Tracker
-     */
-    private $team_tracker;
-
-    /**
-     * @var Tracker
-     */
-    private $requirement_tracker;
-
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var Tracker_HierarchyFactory
-     */
-    private $tracker_hierarchy_factory;
-
-    /**
-     * @var Planning
-     */
-    private $sprint_planning;
-
-    /**
-     * @var Planning
-     */
-    private $release_planning;
-
-    /**
-     * @var Planning
-     */
-    private $requirement_planning;
-
-    /**
-     * @var Planning_Milestone
-     */
-    private $release_milestone;
-    /**
-     * @var Planning_Milestone
-     */
-    private $sprint_milestone;
-
-    private $user_story_tracker_id  = 1;
-    private $release_tracker_id     = 2;
-    private $sprint_tracker_id      = 3;
-    private $epic_tracker_id        = 4;
-    private $theme_tracker_id       = 5;
-    private $team_tracker_id        = 6;
-    private $requirement_tracker_id = 7;
+    private AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $finder;
+    private Tracker $user_story_tracker;
+    private Tracker $sprint_tracker;
+    private Tracker $epic_tracker;
+    private Tracker $theme_tracker;
+    private Tracker $team_tracker;
+    private Tracker $requirement_tracker;
+    private PlanningFactory&MockObject $planning_factory;
+    private Tracker_HierarchyFactory&MockObject $tracker_hierarchy_factory;
+    private Planning $sprint_planning;
+    private Planning&MockObject $release_planning;
+    private Planning $requirement_planning;
+    private Planning_Milestone $release_milestone;
+    private Planning_Milestone $sprint_milestone;
+    private int $user_story_tracker_id  = 1;
+    private int $release_tracker_id     = 2;
+    private int $sprint_tracker_id      = 3;
+    private int $epic_tracker_id        = 4;
+    private int $theme_tracker_id       = 5;
+    private int $team_tracker_id        = 6;
+    private int $requirement_tracker_id = 7;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->user_story_tracker  = TrackerTestBuilder::aTracker()->withId($this->user_story_tracker_id)->build();
+        $this->sprint_tracker      = TrackerTestBuilder::aTracker()->withId($this->sprint_tracker_id)->build();
+        $this->epic_tracker        = TrackerTestBuilder::aTracker()->withId($this->epic_tracker_id)->build();
+        $this->theme_tracker       = TrackerTestBuilder::aTracker()->withId($this->theme_tracker_id)->build();
+        $this->team_tracker        = TrackerTestBuilder::aTracker()->withId($this->team_tracker_id)->build();
+        $this->requirement_tracker = TrackerTestBuilder::aTracker()->withId($this->requirement_tracker_id)->build();
+        $release_tracker           = TrackerTestBuilder::aTracker()->withId($this->release_tracker_id)->build();
 
-        $this->user_story_tracker  = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->user_story_tracker_id)->getMock();
-        $this->release_tracker     = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->release_tracker_id)->getMock();
-        $this->sprint_tracker      = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->sprint_tracker_id)->getMock();
-        $this->epic_tracker        = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->epic_tracker_id)->getMock();
-        $this->theme_tracker       = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->theme_tracker_id)->getMock();
-        $this->team_tracker        = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->team_tracker_id)->getMock();
-        $this->requirement_tracker = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->requirement_tracker_id)->getMock();
+        $project = ProjectTestBuilder::aProject()->withId(101)->withAccessPrivate()->build();
 
-        $this->sprint_planning      = \Mockery::spy(\Planning::class)->shouldReceive('getId')->andReturns(11)->getMock();
-        $this->release_planning     = \Mockery::spy(\Planning::class)->shouldReceive('getId')->andReturns(12)->getMock();
-        $this->requirement_planning = \Mockery::spy(\Planning::class)->shouldReceive('getId')->andReturns(13)->getMock();
+        $this->sprint_planning      = PlanningBuilder::aPlanning(101)->withId(11)->withBacklogTrackers($this->user_story_tracker)->build();
+        $this->requirement_planning = PlanningBuilder::aPlanning(101)->withId(13)->withBacklogTrackers($this->team_tracker)->build();
+        $this->release_planning     = $this->createMock(Planning::class);
+        $this->release_planning->method('getId')->willReturn(12);
 
-        $this->release_milestone = \Mockery::spy(\Planning_Milestone::class)->shouldReceive('getTrackerId')->andReturns($this->release_tracker_id)->getMock();
-        $this->sprint_milestone  = \Mockery::spy(\Planning_Milestone::class)->shouldReceive('getTrackerId')->andReturns($this->sprint_tracker_id)->getMock();
+        $this->release_milestone = new Planning_ArtifactMilestone(
+            $project,
+            $this->release_planning,
+            ArtifactTestBuilder::anArtifact(1)->inTracker($release_tracker)->build(),
+        );
+        $this->sprint_milestone  = new Planning_ArtifactMilestone(
+            $project,
+            $this->sprint_planning,
+            ArtifactTestBuilder::anArtifact(2)->inTracker($this->sprint_tracker)->build(),
+        );
 
-        $this->release_milestone->shouldReceive('getPlanning')->andReturns($this->release_planning);
-        $this->sprint_milestone->shouldReceive('getPlanning')->andReturns($this->sprint_planning);
-
-        $this->tracker_hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
-        $this->planning_factory          = \Mockery::spy(\PlanningFactory::class);
-
+        $this->tracker_hierarchy_factory = $this->createMock(Tracker_HierarchyFactory::class);
+        $this->planning_factory          = $this->createMock(PlanningFactory::class);
 
         $this->finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             $this->tracker_hierarchy_factory,
             $this->planning_factory,
         );
-
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
     }
 
     /**
@@ -157,15 +106,9 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
      */
     public function testItReturnsNullIfThereIsNoChildTrackerForMultiMilestoneConfiguration(): void
     {
-        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->sprint_tracker_id)->andReturns([]);
+        $this->tracker_hierarchy_factory->method('getChildren')->with($this->sprint_tracker_id)->willReturn([]);
 
-        $this->sprint_milestone->shouldReceive('getProject')->andReturns($this->project);
-        $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
-
-        $tracker = $this->finder->findFirstSubmilestoneTracker($this->sprint_milestone);
-
-        $this->assertNull($tracker);
+        self::assertNull($this->finder->findFirstSubmilestoneTracker($this->sprint_milestone));
     }
 
     /**
@@ -174,16 +117,11 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
      */
     public function testItReturnsSprintWhenBothPlanningsHaveSameBacklogTrackerForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
-        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->sprint_tracker]);
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
+        $this->release_planning->method('getBacklogTrackers')->willReturn([$this->user_story_tracker]);
+        $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->sprint_tracker]);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->sprint_tracker)->willReturn($this->sprint_planning);
 
-        $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
-
-        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
-
-        $this->assertEquals($this->sprint_tracker, $tracker);
+        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->release_milestone));
     }
 
     /**
@@ -192,15 +130,11 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
      */
     public function testItReturnsNullWhenChildHaveNoPlanningForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->sprint_tracker]);
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns(null);
+        $this->release_planning->method('getBacklogTrackers')->willReturn([$this->user_story_tracker]);
+        $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->sprint_tracker]);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->sprint_tracker)->willReturn(null);
 
-        $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
-
-        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
-
-        $this->assertNull($tracker);
+        self::assertNull($this->finder->findFirstSubmilestoneTracker($this->release_milestone));
     }
 
     /**
@@ -209,17 +143,12 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
      */
     public function testItReturnsSprintWhenTheBacklogTrackerIsParentForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->epic_tracker]);
-        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->sprint_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns([$this->epic_tracker]);
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
+        $this->release_planning->method('getBacklogTrackers')->willReturn([$this->epic_tracker]);
+        $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->sprint_tracker]);
+        $this->tracker_hierarchy_factory->method('getAllParents')->with($this->user_story_tracker)->willReturn([$this->epic_tracker]);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->sprint_tracker)->willReturn($this->sprint_planning);
 
-        $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
-
-        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
-
-        $this->assertEquals($this->sprint_tracker, $tracker);
+        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->release_milestone));
     }
 
     /**
@@ -230,37 +159,27 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
      */
     public function testItReturnsNullWhenTheBacklogTrackerIsNotRelatedForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->epic_tracker]);
-        $this->requirement_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->team_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->requirement_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->team_tracker)->andReturns([]);
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->requirement_tracker)->andReturns($this->requirement_planning);
+        $this->release_planning->method('getBacklogTrackers')->willReturn([$this->epic_tracker]);
+        $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->requirement_tracker]);
+        $this->tracker_hierarchy_factory->method('getAllParents')->with($this->team_tracker)->willReturn([]);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->requirement_tracker)->willReturn($this->requirement_planning);
 
-        $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
-
-        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
-
-        $this->assertNull($tracker);
+        self::assertNull($this->finder->findFirstSubmilestoneTracker($this->release_milestone));
     }
 
     /**
      * theme            ----> release*
      *  ` epic            ,->  ` sprint
      *     ` user_story -'
-      */
+     */
     public function testItReturnsSprintWhenTheBacklogTrackerIsAncestorForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->theme_tracker]);
-        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->sprint_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns([$this->epic_tracker, $this->theme_tracker]);
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
+        $this->release_planning->method('getBacklogTrackers')->willReturn([$this->theme_tracker]);
+        $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->sprint_tracker]);
+        $this->tracker_hierarchy_factory->method('getAllParents')->with($this->user_story_tracker)->willReturn([$this->epic_tracker, $this->theme_tracker]);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->sprint_tracker)->willReturn($this->sprint_planning);
 
-        $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
-
-        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
-
-        $this->assertEquals($this->sprint_tracker, $tracker);
+        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->release_milestone));
     }
 
     /**
@@ -273,19 +192,14 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
      */
     public function testItReturnsSprintEvenIfThereIsSiblingWithoutMatchingBacklogTrackerForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
-        $this->requirement_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->team_tracker]);
-        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->requirement_tracker, $this->sprint_tracker]);
-        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->team_tracker)->andReturns([]);
-        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns([]);
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->requirement_tracker)->andReturns($this->requirement_planning);
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
+        $this->release_planning->method('getBacklogTrackers')->willReturn([$this->user_story_tracker]);
+        $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->requirement_tracker, $this->sprint_tracker]);
+        $this->tracker_hierarchy_factory->method('getAllParents')
+            ->withConsecutive([$this->team_tracker], [$this->user_story_tracker])->willReturn([]);
+        $this->planning_factory->method('getPlanningByPlanningTracker')
+            ->withConsecutive([$this->requirement_tracker], [$this->sprint_tracker])
+            ->willReturnOnConsecutiveCalls($this->requirement_planning, $this->sprint_planning);
 
-        $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
-
-        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
-
-        $this->assertEquals($this->sprint_tracker, $tracker);
+        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->release_milestone));
     }
 }
