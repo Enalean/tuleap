@@ -14,7 +14,15 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=welcome0
     volumes:
-      - ../etc/DBConfig/mysql-server-80.cnf:/etc/mysql/conf.d/mysql-server.cnf:ro,cached
+      - ../etc/DBConfig/mysql-server-8.cnf:/etc/mysql/conf.d/mysql-server.cnf:ro,cached
+    tmpfs: /tmp
+
+  mysql84:
+    image: ${DOCKER_REGISTRY:-docker.io}/mysql:8.4
+    environment:
+      - MYSQL_ROOT_PASSWORD=welcome0
+    volumes:
+      - ../etc/DBConfig/mysql-server-8.cnf:/etc/mysql/conf.d/mysql-server.cnf:ro,cached
     tmpfs: /tmp
 
 networks:

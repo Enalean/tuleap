@@ -90,6 +90,15 @@ pipeline {
                 }
             }
         }
+        stage ('MySQL 8.4') {
+            failFast false
+            parallel {
+                stage('DB/Integration') {
+                    steps { script { actions.runDBTests('mysql84', '82') } }
+                    post { always { junit 'results/db/*/db_tests.xml' } }
+                }
+            }
+        }
     }
     post {
         always {
