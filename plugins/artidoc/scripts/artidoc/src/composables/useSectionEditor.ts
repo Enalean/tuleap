@@ -27,9 +27,10 @@ import type {
 } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import { preventPageLeave, allowPageLeave } from "@/helpers/on-before-unload";
 
 export type use_section_editor_actions_type = {
-    setEditMode: (new_value: boolean) => void;
+    enableEditor: () => void;
     saveEditor: () => void;
     cancelEditor: () => void;
 };
@@ -40,7 +41,11 @@ export type use_section_editor_type = {
     inputCurrentDescription: (new_value: string) => void;
     getEditableDescription: () => Ref<string>;
     getReadonlyDescription: () => Ref<string>;
+    clearGlobalNumberOfOpenEditorForTests: () => void;
 };
+
+let nb_active_edit_mode = 0;
+
 function useSectionEditor(section: ArtidocSection): use_section_editor_type {
     const current_section: Ref<ArtidocSection> = ref(section);
     const is_edit_mode = ref(false);
@@ -61,6 +66,18 @@ function useSectionEditor(section: ArtidocSection): use_section_editor_type {
     });
     const setEditMode = (new_value: boolean): void => {
         is_edit_mode.value = new_value;
+
+        if (new_value) {
+            nb_active_edit_mode++;
+        } else {
+            nb_active_edit_mode = Math.abs(nb_active_edit_mode - 1);
+        }
+
+        if (nb_active_edit_mode > 0) {
+            preventPageLeave();
+        } else {
+            allowPageLeave();
+        }
     };
 
     const saveEditor = (): void => {
@@ -82,6 +99,10 @@ function useSectionEditor(section: ArtidocSection): use_section_editor_type {
         } else {
             setEditMode(false);
         }
+    };
+
+    const enableEditor = (): void => {
+        setEditMode(true);
     };
 
     const cancelEditor = (): void => {
@@ -106,7 +127,7 @@ function useSectionEditor(section: ArtidocSection): use_section_editor_type {
     };
 
     const editor_actions = {
-        setEditMode,
+        enableEditor,
         saveEditor,
         cancelEditor,
     };
@@ -118,6 +139,9 @@ function useSectionEditor(section: ArtidocSection): use_section_editor_type {
         getIsEditMode,
         editor_actions,
         inputCurrentDescription,
+        clearGlobalNumberOfOpenEditorForTests: (): void => {
+            nb_active_edit_mode = 0;
+        },
     };
 }
 
