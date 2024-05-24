@@ -53,10 +53,10 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage ('Enterprise Linux 9 (el9)') {
+                stage ('CentOS 7') {
                     stages {
-                        stage ('Build and run el9') {
-                            steps { script { actions.runBuildAndRun('el9') } }
+                        stage ('Build and run CentOS 7') {
+                            steps { script { actions.runBuildAndRun('centos7') } }
                         }
                     }
                 }
