@@ -76,7 +76,7 @@ pipeline {
                     steps { script { execTestWithLimitedConcurrency({ actions.runDBTests('mysql80', '82') }) } }
                     post { always { junit 'results/db/*/db_tests.xml' } }
                 }
-                stage('Build and run CentOS 7') { steps { script { execTestWithLimitedConcurrency({ actions.runBuildAndRun('centos7') }) } } }
+                stage('Build and run el9') { steps { script { execTestWithLimitedConcurrency({ actions.runBuildAndRun('el9') }) } } }
                 stage('Translations: check .po files') {
                     steps { script {
                         actions.runFilesStatusChangesDetection('.', 'translation files', '"*.po\$"')
