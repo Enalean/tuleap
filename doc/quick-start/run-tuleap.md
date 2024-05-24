@@ -46,7 +46,7 @@ $ make dev-setup
 ## Choose the start command depending of your usage of Docker :
 
 # When you use the regular docker :
-$ make start-el9
+$ make start
 # When you use Docker Desktop
 $ make start-dockerdesktop
 $ make post-checkout

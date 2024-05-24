@@ -1,0 +1,3 @@
+services:
+    web:
+        image: ghcr.io/enalean/tuleap-aio-dev:c7-php82
