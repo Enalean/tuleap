@@ -1,6 +1,6 @@
 services:
   oauth2-server-rp-oidc:
-    image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-phpunit:c7-php82
+    image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-phpunit:el9-php82
     command: scl enable php82 -- php /tuleap/plugins/oauth2_server/tests/e2e/cypress/rp-oidc/app.php
     volumes:
       - .:/tuleap:ro

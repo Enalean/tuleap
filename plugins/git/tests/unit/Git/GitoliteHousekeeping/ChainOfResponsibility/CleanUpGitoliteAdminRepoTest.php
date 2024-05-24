@@ -58,6 +58,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
         $tar_command = new Process(['tar', '-xzf', "$this->fixtures/gitolite_admin.tgz", '--directory', $this->fixtures]);
         $tar_command->mustRun();
 
+        (new Process([Git_Exec::getGitCommand(), 'config', '--global', 'safe.directory', '*']))->mustRun();
+
         $clone_command = new Process([Git_Exec::getGitCommand(), 'clone', 'gitolite_admin', 'admin'], $this->fixtures);
         $clone_command->mustRun();
 
@@ -70,6 +72,11 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
             $this->remote_admin_repository
         );
         $this->command->clearExecuteAs();
+    }
+
+    protected function tearDown(): void
+    {
+        (new Process([Git_Exec::getGitCommand(), 'config', '--global', '--unset', 'safe.directory']))->mustRun();
     }
 
     public function testItAbortsIfThereIsAlreadyABackupDir(): void
