@@ -4,7 +4,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=welcome0
     volumes:
-      - ./tests/etc/DBConfig/mysql-server-80.cnf:/etc/mysql/conf.d/mysql-server.cnf:ro,cached
+      - ./tests/etc/DBConfig/mysql-server-8.cnf:/etc/mysql/conf.d/mysql-server.cnf:ro,cached
     tmpfs: /tmp
     cap_add:
       - SYS_NICE

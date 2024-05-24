@@ -28,9 +28,13 @@ case "${2:-}" in
     "mysql80")
     export DB_HOST="mysql80"
     ;;
+    "mysql84")
+    export DB_HOST="mysql84"
+    ;;
     *)
     echo "A database type must be provided as parameter. Allowed values are:"
     echo "* mysql80"
+    echo "* mysql84"
     exit 1
 esac
 
