@@ -23,124 +23,31 @@ declare(strict_types=1);
 namespace Tuleap\Queue;
 
 use Tuleap\Config\InvalidConfigKeyValueException;
-use Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\Plugin\RetrieveEnabledPluginsStub;
 
 final class NbBackendWorkersConfigValidatorTest extends TestCase
 {
     public function testLesserThanZero(): void
     {
-        $validator = NbBackendWorkersConfigValidator::buildWithPluginRetriever(
-            RetrieveEnabledPluginsStub::buildWithoutPlugins(),
-        );
+        $validator = NbBackendWorkersConfigValidator::buildSelf();
 
         $this->expectException(InvalidConfigKeyValueException::class);
 
         $validator->checkIsValid('-1');
     }
 
-    public function testEqualZeroWhenPluginsNeedWorkers(): void
+    public function testEqualZero(): void
     {
-        $cce = $this->createMock(\Plugin::class);
-        $cce->method('getName')->willReturn('CCE');
-        $cce->method('getInstallRequirements')->willReturn(
-            [
-                new MandatoryAsyncWorkerSetupPluginInstallRequirement(new WorkerAvailability()),
-            ]
-        );
-
-        $doc = $this->createMock(\Plugin::class);
-        $doc->method('getName')->willReturn('Doc');
-        $doc->method('getInstallRequirements')->willReturn([]);
-
-        $wiki = $this->createMock(\Plugin::class);
-        $wiki->method('getName')->willReturn('Wiki');
-        $wiki->method('getInstallRequirements')->willReturn(
-            [
-                new MandatoryAsyncWorkerSetupPluginInstallRequirement(new WorkerAvailability()),
-            ]
-        );
-
-        $validator = NbBackendWorkersConfigValidator::buildWithPluginRetriever(
-            RetrieveEnabledPluginsStub::buildWithPlugins($cce, $doc, $wiki),
-        );
+        $validator = NbBackendWorkersConfigValidator::buildSelf();
 
         $this->expectException(InvalidConfigKeyValueException::class);
-        $this->expectErrorMessage('Nb backend workers cannot be 0, the following plugins need workers: CCE, Wiki');
 
         $validator->checkIsValid('0');
     }
 
-    public function testEqualZeroWhenPluginsDoNotNeedWorkers(): void
+    public function testGreaterThanZero(): void
     {
-        $cce = $this->createMock(\Plugin::class);
-        $cce->method('getName')->willReturn('CCE');
-        $cce->method('getInstallRequirements')->willReturn([]);
-        $doc = $this->createMock(\Plugin::class);
-        $doc->method('getName')->willReturn('Doc');
-        $doc->method('getInstallRequirements')->willReturn([]);
-        $wiki = $this->createMock(\Plugin::class);
-        $wiki->method('getName')->willReturn('Wiki');
-        $wiki->method('getInstallRequirements')->willReturn([]);
-
-        $validator = NbBackendWorkersConfigValidator::buildWithPluginRetriever(
-            RetrieveEnabledPluginsStub::buildWithPlugins($cce, $doc, $wiki),
-        );
-
-        $this->expectNotToPerformAssertions();
-
-        $validator->checkIsValid('0');
-    }
-
-    public function testGreaterThanZeroWhenPluginsNeedWorkers(): void
-    {
-        $cce = $this->createMock(\Plugin::class);
-        $cce->method('getName')->willReturn('CCE');
-        $cce->method('getInstallRequirements')->willReturn(
-            [
-                new MandatoryAsyncWorkerSetupPluginInstallRequirement(new WorkerAvailability()),
-            ]
-        );
-
-        $doc = $this->createMock(\Plugin::class);
-        $doc->method('getName')->willReturn('Doc');
-        $doc->method('getInstallRequirements')->willReturn([]);
-
-        $wiki = $this->createMock(\Plugin::class);
-        $wiki->method('getName')->willReturn('Wiki');
-        $wiki->method('getInstallRequirements')->willReturn(
-            [
-                new MandatoryAsyncWorkerSetupPluginInstallRequirement(new WorkerAvailability()),
-            ]
-        );
-
-        $validator = NbBackendWorkersConfigValidator::buildWithPluginRetriever(
-            RetrieveEnabledPluginsStub::buildWithPlugins($cce, $doc, $wiki),
-        );
-
-        $this->expectNotToPerformAssertions();
-
-        $validator->checkIsValid('1');
-    }
-
-    public function testGreaterThanZeroWhenPluginsDoNotNeedWorkers(): void
-    {
-        $cce = $this->createMock(\Plugin::class);
-        $cce->method('getName')->willReturn('CCE');
-        $cce->method('getInstallRequirements')->willReturn([]);
-
-        $doc = $this->createMock(\Plugin::class);
-        $doc->method('getName')->willReturn('Doc');
-        $doc->method('getInstallRequirements')->willReturn([]);
-
-        $wiki = $this->createMock(\Plugin::class);
-        $wiki->method('getName')->willReturn('Wiki');
-        $wiki->method('getInstallRequirements')->willReturn([]);
-
-        $validator = NbBackendWorkersConfigValidator::buildWithPluginRetriever(
-            RetrieveEnabledPluginsStub::buildWithPlugins($cce, $doc, $wiki),
-        );
+        $validator = NbBackendWorkersConfigValidator::buildSelf();
 
         $this->expectNotToPerformAssertions();
 

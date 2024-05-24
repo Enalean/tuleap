@@ -30,24 +30,14 @@ final class WorkerAvailabilityTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDefaultTo2WorkersWhenAsyncActionsCanBeExecuted(): void
     {
-        \ForgeConfig::set('redis_server', 'redis.example.com');
-
         $worker_availability = new WorkerAvailability();
 
         self::assertTrue($worker_availability->canProcessAsyncTasks());
         self::assertEquals(2, $worker_availability->getWorkerCount());
     }
 
-    public function testNoWorkerIsAvailableWhenAsyncActionsCannotBeExecuted(): void
-    {
-        $worker_availability = new WorkerAvailability();
-        self::assertFalse($worker_availability->canProcessAsyncTasks());
-        self::assertEquals(0, $worker_availability->getWorkerCount());
-    }
-
     public function testProvidesTheNumberOfConfiguredWorkerWhenAsyncActionsCanBeExecuted(): void
     {
-        \ForgeConfig::set('redis_server', 'redis.example.com');
         \ForgeConfig::set(WorkerAvailability::NB_BACKEND_WORKERS_CONFIG_KEY, '5');
 
         $worker_availability = new WorkerAvailability();

@@ -24,7 +24,6 @@ use BackendLogger;
 use EventManager;
 use ProjectHistoryDao;
 use Tracker_ArtifactDao;
-use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Queue\ForceSynchronousMode;
 use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\QueueFactory;
@@ -51,7 +50,7 @@ class ArtifactDeletorBuilder
             new PendingArtifactRemovalDao(),
             $logger,
             \UserManager::instance(),
-            new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()),
+            new QueueFactory($logger),
             $task_processing_available,
             new ArchiveAndDeleteArtifactTaskBuilder()
         );

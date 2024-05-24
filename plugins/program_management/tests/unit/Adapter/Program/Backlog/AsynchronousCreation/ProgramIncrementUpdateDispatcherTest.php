@@ -23,34 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use PHPUnit\Framework\MockObject\Stub;
-use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Adapter\JSON\PendingProgramIncrementUpdateRepresentation;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\BuildIterationCreationProcessorStub;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementUpdateProcessorStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProcessIterationCreationStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementUpdateStub;
-use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\QueueServerConnectionException;
 
 final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_ID = 83;
     private const USER_ID              = 110;
     private const ITERATION_TRACKER_ID = 25;
-    private TestLogger $logger;
+
     /**
      * @var Stub&QueueFactory
      */
     private $queue_factory;
-    private ProcessProgramIncrementUpdateStub $update_processor;
-    private ProcessIterationCreationStub $iteration_processor;
     private ProgramIncrementUpdate $program_increment_update;
     /**
      * @var IterationCreation[]
@@ -59,10 +50,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
 
     protected function setUp(): void
     {
-        $this->logger              = new TestLogger();
-        $this->queue_factory       = $this->createStub(QueueFactory::class);
-        $this->update_processor    = ProcessProgramIncrementUpdateStub::withCount();
-        $this->iteration_processor = ProcessIterationCreationStub::withCount();
+        $this->queue_factory = $this->createStub(QueueFactory::class);
 
         $this->program_increment_update = ProgramIncrementUpdateBuilder::buildWithIds(
             self::USER_ID,
@@ -92,10 +80,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
     private function getDispatcher(): ProgramIncrementUpdateDispatcher
     {
         return new ProgramIncrementUpdateDispatcher(
-            $this->logger,
             $this->queue_factory,
-            BuildProgramIncrementUpdateProcessorStub::withProcessor($this->update_processor),
-            BuildIterationCreationProcessorStub::withProcessor($this->iteration_processor),
         );
     }
 
@@ -111,47 +96,5 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
 
         $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
-    }
-
-    public function testWhenThereIsNoQueueSystemItProcessesUpdateImmediately(): void
-    {
-        $this->queue_factory->method('getPersistentQueue')->willThrowException(
-            new NoQueueSystemAvailableException('No queue system')
-        );
-
-        $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
-
-        self::assertSame(1, $this->update_processor->getCallCount());
-        self::assertSame(2, $this->iteration_processor->getCallCount());
-        self::assertTrue(
-            $this->logger->hasError(
-                sprintf(
-                    'Unable to queue program increment mirrors update for program increment #%d',
-                    self::PROGRAM_INCREMENT_ID
-                )
-            )
-        );
-    }
-
-    public function testWhenThereIsAProblemWithQueueItProcessesUpdateImmediately(): void
-    {
-        $queue = $this->createStub(PersistentQueue::class);
-        $queue->method('pushSinglePersistentMessage')->willThrowException(
-            new QueueServerConnectionException('Error with queue')
-        );
-        $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
-
-        $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
-
-        self::assertSame(1, $this->update_processor->getCallCount());
-        self::assertSame(2, $this->iteration_processor->getCallCount());
-        self::assertTrue(
-            $this->logger->hasError(
-                sprintf(
-                    'Unable to queue program increment mirrors update for program increment #%d',
-                    self::PROGRAM_INCREMENT_ID
-                )
-            )
-        );
     }
 }

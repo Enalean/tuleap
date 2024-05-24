@@ -78,11 +78,6 @@ class AsyncJiraScheduler
         string $tracker_color,
         string $tracker_description,
     ): void {
-        if (! $this->jira_runner->canBeProcessedAsynchronously()) {
-            $this->logger->error('Unable to schedule the import of Jira: misconfiguration of the platform to queue the event.');
-            throw new TrackerCreationHasFailedException('Unable to schedule the import of Jira');
-        }
-
         try {
             $encryption_key = $this->key_factory->getEncryptionKey();
         } catch (CannotPerformIOOperationException $exception) {

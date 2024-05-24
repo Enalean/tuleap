@@ -24,26 +24,20 @@ namespace Tuleap\PullRequest\Notification;
 
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\WorkerAvailability;
 
-final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EventSubjectToNotificationAsynchronousQueueDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&QueueFactory
      */
     private $queue_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&WorkerAvailability
-     */
-    private $worker_availability;
-    private EventSubjectToNotificationAsynchronousRedisDispatcher $dispatcher;
+    private EventSubjectToNotificationAsynchronousQueueDispatcher $dispatcher;
 
     protected function setUp(): void
     {
-        $this->queue_factory       = $this->createMock(QueueFactory::class);
-        $this->worker_availability = $this->createMock(WorkerAvailability::class);
+        $this->queue_factory = $this->createMock(QueueFactory::class);
 
-        $this->dispatcher = new EventSubjectToNotificationAsynchronousRedisDispatcher($this->queue_factory, $this->worker_availability);
+        $this->dispatcher = new EventSubjectToNotificationAsynchronousQueueDispatcher($this->queue_factory);
     }
 
     public function testEventGetsDispatchedIntoAPersistentQueue(): void
@@ -61,37 +55,12 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends \T
             }
         };
 
-        $this->worker_availability->method('canProcessAsyncTasks')->willReturn(true);
-
         $queue = $this->createMock(PersistentQueue::class);
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
         $queue->expects(self::once())->method('pushSinglePersistentMessage');
         $returned_event = $this->dispatcher->dispatch($event);
 
         self::assertSame($event, $returned_event);
-    }
-
-    public function testDoesNotQueueWhenNoAsyncWorkerAreAvailable(): void
-    {
-        $event = new class implements EventSubjectToNotification
-        {
-            public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
-            {
-                return new self();
-            }
-
-            public function toWorkerEventPayload(): array
-            {
-                return [];
-            }
-        };
-
-        $this->worker_availability->method('canProcessAsyncTasks')->willReturn(false);
-
-        $this->queue_factory->expects(self::never())->method('getPersistentQueue');
-
-        $this->expectException(NoWorkerAvailableToProcessTheQueueException::class);
-        $this->dispatcher->dispatch($event);
     }
 
     public function testDoNothingWhenDispatchingSomethingThatIsNotAPREventSubjectToNotification(): void

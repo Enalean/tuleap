@@ -24,7 +24,6 @@ namespace Tuleap\Project\Registration\Template;
 
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 
 final readonly class CustomProjectArchive implements VerifyProjectCreationFromArchiveIsAllowed
 {
@@ -32,12 +31,8 @@ final readonly class CustomProjectArchive implements VerifyProjectCreationFromAr
     #[ConfigKeyInt(0)]
     public const CONFIG_KEY = 'disable_create_from_custom_archive';
 
-    public function __construct(private IsAsyncTaskProcessingAvailable $worker_availability)
-    {
-    }
-
     public function canCreateFromCustomArchive(): bool
     {
-        return (string) \ForgeConfig::get(self::CONFIG_KEY) === '0' && $this->worker_availability->canProcessAsyncTasks();
+        return (string) \ForgeConfig::get(self::CONFIG_KEY) === '0';
     }
 }

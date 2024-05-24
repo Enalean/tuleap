@@ -33,9 +33,7 @@ use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
-use Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement;
 use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
-use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Search\ItemToIndexQueueEventBased;
@@ -136,11 +134,6 @@ final class tracker_functionsPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         bindtextdomain('tuleap-tracker_functions', __DIR__ . '/../site-content');
-    }
-
-    public function getInstallRequirements(): array
-    {
-        return [new MandatoryAsyncWorkerSetupPluginInstallRequirement(new WorkerAvailability())];
     }
 
     public function getPluginInfo(): Tuleap\TrackerFunctions\Plugin\PluginInfo

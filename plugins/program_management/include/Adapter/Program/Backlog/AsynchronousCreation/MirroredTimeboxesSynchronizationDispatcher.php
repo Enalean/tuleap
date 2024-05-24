@@ -22,42 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Events\TeamSynchronizationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CommandTeamSynchronization;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchMirroredTimeboxesSynchronization;
-use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\QueueServerConnectionException;
 use Tuleap\Queue\Worker;
 
-final class MirroredTimeboxesSynchronizationDispatcher implements DispatchMirroredTimeboxesSynchronization
+final readonly class MirroredTimeboxesSynchronizationDispatcher implements DispatchMirroredTimeboxesSynchronization
 {
     public function __construct(
-        private LoggerInterface $logger,
         private QueueFactory $queue_factory,
     ) {
     }
 
     public function dispatchSynchronizationCommand(CommandTeamSynchronization $team_synchronization_command): void
     {
-        try {
-            $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
-            $queue->pushSinglePersistentMessage(TeamSynchronizationEvent::TOPIC, [
-                'program_id' => $team_synchronization_command->getProgramId(),
-                'team_id' => $team_synchronization_command->getTeamId(),
-                'user_id' => $team_synchronization_command->getUserId(),
-            ]);
-        } catch (NoQueueSystemAvailableException | QueueServerConnectionException $exception) {
-            $this->logger->error(
-                sprintf(
-                    'Unable to queue event %s for team %d of program %d: %s',
-                    TeamSynchronizationEvent::TOPIC,
-                    $team_synchronization_command->getTeamId(),
-                    $team_synchronization_command->getProgramId(),
-                    $exception->getMessage()
-                )
-            );
-        }
+        $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME);
+        $queue->pushSinglePersistentMessage(TeamSynchronizationEvent::TOPIC, [
+            'program_id' => $team_synchronization_command->getProgramId(),
+            'team_id' => $team_synchronization_command->getTeamId(),
+            'user_id' => $team_synchronization_command->getUserId(),
+        ]);
     }
 }

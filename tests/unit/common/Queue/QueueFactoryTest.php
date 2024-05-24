@@ -24,19 +24,15 @@ namespace Tuleap\Queue;
 
 use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\DB\CheckThereIsAnOngoingTransactionStub;
 
 final class QueueFactoryTest extends TestCase
 {
-    public function testExceptionIfRedisNotAvailable(): void
+    public function testGetPersistentQueue(): void
     {
         $factory = new QueueFactory(
             new NullLogger(),
-            CheckThereIsAnOngoingTransactionStub::notInTransaction(),
         );
 
-        $this->expectException(NoQueueSystemAvailableException::class);
-
-        $factory->getPersistentQueue('queue-name', QueueFactory::REDIS);
+        self::assertNotNull($factory->getPersistentQueue('queue-name'));
     }
 }

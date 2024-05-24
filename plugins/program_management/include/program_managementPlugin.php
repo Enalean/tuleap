@@ -28,7 +28,6 @@ use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
 use Tuleap\Dashboard\Project\DisplayCreatedProjectModalPresenter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
@@ -302,11 +301,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return ['tracker', 'agiledashboard', 'cardwall'];
     }
 
-    public function getInstallRequirements(): array
-    {
-        return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(new \Tuleap\Queue\WorkerAvailability())];
-    }
-
     protected function getServiceClass(): string
     {
         return ProgramService::class;
@@ -410,8 +404,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return new SynchronizeTeamController(
             $project_manager,
             new MirroredTimeboxesSynchronizationDispatcher(
-                $logger,
-                new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()),
+                new QueueFactory($logger),
             ),
             new VisibleTeamSearcher(
                 new ProgramDaoProject(),
@@ -893,9 +886,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new ArtifactsExplicitTopBacklogDAO(),
             new ProgramIncrementsDAO(),
             new ProgramIncrementCreationDispatcher(
-                $logger,
-                new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()),
-                new ProgramIncrementCreationProcessorBuilder()
+                new QueueFactory($logger),
             )
         );
         $handler->handle(ArtifactCreatedProxy::fromArtifactCreated($event));
@@ -915,7 +906,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $mirrored_timeboxes_dao         = new MirroredTimeboxesDao();
         $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
         $transaction_executor           = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
-        $queue_factory                  = new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker());
+        $queue_factory                  = new QueueFactory($logger);
         $form_element_factory           = \Tracker_FormElementFactory::instance();
         $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
         $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
@@ -1010,12 +1001,9 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 $iterations_DAO
             ),
             new ProgramIncrementUpdateDispatcher(
-                $logger,
                 $queue_factory,
-                new ProgramIncrementUpdateProcessorBuilder(),
-                new IterationCreationProcessorBuilder()
             ),
-            new IterationUpdateDispatcher($logger, new IterationUpdateProcessorBuilder(), $queue_factory),
+            new IterationUpdateDispatcher($queue_factory),
         );
 
         $event_proxy = ArtifactUpdatedProxy::fromArtifactUpdated($event);

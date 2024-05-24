@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Queue\DB;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\UUID;
 use Tuleap\Queue\PersistentQueue;
@@ -35,10 +33,6 @@ use Tuleap\Queue\WorkerEventContent;
 
 final readonly class DBPersistentQueue implements PersistentQueue
 {
-    #[FeatureFlagConfigKey('Use the database to maintain the queue of async events')]
-    #[ConfigKeyInt(1)]
-    public const FEATURE_FLAG = 'use_db_persisted_async_events_queue';
-
     private const MAX_SLEEP_TIME_MICROSEC_WHILE_WAITING_FOR_MESSAGES = 2_000_000;
     private const MAX_RETRY_PROCESSING_EVENT                         = 3;
     private const MAX_MESSAGES                                       = 1000;

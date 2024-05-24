@@ -181,7 +181,6 @@ use Tuleap\Project\Service\ServicesPresenterBuilder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Queue\EnqueueTask;
-use Tuleap\Queue\WorkerAvailability;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
@@ -957,7 +956,7 @@ class RouteCollector
                 new DefaultProjectVisibilityRetriever(),
                 new TroveCatFactory(new TroveCatDao()),
                 new DescriptionFieldsFactory(new DescriptionFieldsDao()),
-                new CustomProjectArchive(new WorkerAvailability()),
+                new CustomProjectArchive(),
             )
         );
     }

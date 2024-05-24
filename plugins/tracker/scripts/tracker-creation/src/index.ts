@@ -106,7 +106,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         (color_name: string) => ({ id: color_name, text: "" }),
     );
 
-    const display_jira_importer = vue_mount_point.dataset.displayJiraImporter;
     const are_there_tv3 = Boolean(vue_mount_point.dataset.areThereTv3);
 
     const initial_state: State = {
@@ -141,7 +140,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             project_list: null,
             tracker_list: null,
         },
-        display_jira_importer: Boolean(display_jira_importer),
         are_there_tv3,
         project_unix_name,
     };

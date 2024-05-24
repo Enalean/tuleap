@@ -23,9 +23,6 @@ namespace Tuleap\Queue;
 
 interface PersistentQueue
 {
-    /**
-     * @throws QueueServerConnectionException
-     */
     public function pushSinglePersistentMessage(string $topic, mixed $content): void;
 
     /**

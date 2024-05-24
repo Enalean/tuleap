@@ -185,14 +185,6 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         return $this->pluginInfo;
     }
 
-    public function getInstallRequirements(): array
-    {
-        return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(
-            new \Tuleap\Queue\WorkerAvailability()
-        ),
-        ];
-    }
-
     #[ListeningToEventClass]
     public function forgeUserGroupDeletedEvent(ForgeUserGroupDeletedEvent $event): void
     {
